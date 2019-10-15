@@ -1,0 +1,107 @@
+[
+    {
+        "id": "gz1", 
+        "name": ["Line 1", "1号线"],
+        "colour": "#F3D03E"
+    }, 
+    {
+        "id": "gz2", 
+        "name": ["Line 2", "2号线"],
+        "colour": "#00629B"
+    },
+    {
+        "id": "gz3", 
+        "name": ["Line 3", "3号线"],
+        "colour": "#ECA154"
+    }, 
+    {
+        "id": "gz4", 
+        "name": ["Line 4", "4号线"],
+        "colour": "#00843D"
+    }, 
+    {
+        "id": "gz5", 
+        "name": ["Line 5", "5号线"],
+        "colour": "#C5003E"
+    }, 
+    {
+        "id": "gz6", 
+        "name": ["Line 6", "6号线"],
+        "colour": "#80225F"
+    },
+    {
+        "id": "gz7",
+        "name": ["Line 7", "7号线"],
+        "colour": "#97D700"
+    },
+    {
+        "id": "gz8",
+        "name": ["Line 8", "8号线"],
+        "colour": "#008C95"
+    },
+    {
+        "id": "gz9",
+        "name": ["Line 9", "9号线"],
+        "colour": "#71CC98"
+    },
+    {
+        "id": "gz10",
+        "name": ["Line 10", "10号线"],
+        "colour": "#7D9BC1"
+    },
+    {
+        "id": "gz11",
+        "name": ["Line 11", "11号线"],
+        "colour": "#470A68"
+    },
+    {
+        "id": "gz12",
+        "name": ["Line 12", "12号线"],
+        "colour": "#59621D"
+    },
+    {
+        "id": "gz13",
+        "name":["Line 13", "13号线"],
+        "colour":"#8E8C13"
+    },
+    {
+        "id": "gz14",
+        "name": ["Line 14", "14号线"],
+        "colour": "#81312F"
+    },
+    {
+        "id": "gz18",
+        "name": ["Line 18", "18号线"],
+        "colour": "#D48BC8"
+    },
+    {
+        "id": "gz19",
+        "name": ["Line 19", "19号线"],
+        "colour": "#BB29BB"
+    },
+    {
+        "id": "gz21",
+        "name": ["Line 21", "21号线"],
+        "colour": "#201747"
+    },
+    {
+        "id": "gz22",
+        "name": ["Line 22", "22号线"],
+        "colour":"#041E42"
+    },
+    {
+        "id": "gf", 
+        "name": ["Guangfo Line", "广佛线"],
+        "colour":"#C4D600"
+    },
+    {
+        "id": "apm", 
+        "name": ["APM Line", "珠江新城旅客自动输送系统"],
+        "colour": "#00B5E2"
+    },
+    {
+        "id": "thz1", 
+        "name": ["THZ1", "海珠环岛新型有轨电车"],
+        "colour": "#44A729"
+    }
+]

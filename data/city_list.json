@@ -1,0 +1,12 @@
+[
+    {
+        "id": "guangzhou", 
+        "country": "CN", 
+        "name": ["Guangzhou", "广州"]
+    },
+    {
+        "id": "hongkong", 
+        "country": "HK", 
+        "name": ["Hong Kong", "香港"]
+    }
+]

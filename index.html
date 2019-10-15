@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Editor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    <!-- <script src="html2canvas.min.js"></script> -->
+    <script src="utils.js"></script>
+    <script src="Station.js"></script>
+    <script src="Line.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Noto+Serif+KR:700|Noto+Serif+JP:700|Noto+Serif+TC:700|Noto+Serif+SC:700&display=swap" rel="stylesheet">
+    <!-- <link href="fonts.css" rel="stylesheet"> -->
+
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+</head>
+<body>
+<div id="svgs" align="center">
+<svg 
+xmlns="http://www.w3.org/2000/svg"
+xmlns:xlink="http://www.w3.org/1999/xlink" 
+id="destination" width="0" height="0">
+
+    <style type="text/css">
+        .Strip {fill:none;stroke-width:20} 
+        .DestNameZH {
+            font-size:90px;
+            alignment-baseline:central;
+        }
+        .DestNameEN {
+            font-size:45px;
+            alignment-baseline:middle;
+        }
+        .PlatformNum {
+            font-size:135px;
+            alignment-baseline:central;
+            text-anchor: middle;
+            fill: #fff;
+        }
+    </style>
+
+    <defs>
+        <path id="arrow" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
+    </defs>
+
+    <g class="Strip">
+        <path id="dest_strip"/>
+    </g>
+
+    <g id="dest_name">
+        <use xlink:href="#arrow"/>
+        <g id="platform">
+            <circle cx="0" cy="0" r="75"/>
+            <text class="PlatformNum" dy="0"></text>
+            <!-- dy=12 if use Myriad Pro -->
+        </g>
+    </g>
+
+    <rect id="dest_outer" x="0" y="0" fill="none"/>
+</svg>
+<svg 
+xmlns="http://www.w3.org/2000/svg"
+xmlns:xlink="http://www.w3.org/1999/xlink" 
+id="railmap" width="0" height="0">
+    <style type="text/css">
+        @font-face {
+            font-family: 'Vegur';
+            src: url('fonts/Vegur-Regular.otf');
+        }
+
+        .LineDiagram {fill:none}
+
+        .LineDiagram.HK {stroke-width:11}
+        .LineDiagram.HK.Change {stroke-width:10}
+
+        .LineDiagram.GZ {stroke-width:4}
+        .LineDiagram.GZ.Pass {stroke-dasharray:4,4}
+
+        .Strip {fill:none;stroke-width:20}
+
+        .Name.Pass {fill: #AAAAAA;}
+        .Name.Current {fill: #FFFFFF;}
+        .Name.Future {fill: #000000;}
+
+
+        .PassedName {
+            fill: #AAAAAA;
+        }
+        .CurrentName {
+            fill: #FFFFFF;
+        }
+        .CurrentNameGZ {
+            fill: #FF0000;
+        }
+        .FutureName {
+            fill: #000000;
+        }
+
+        .StnNameEN {
+            font-size:10px;
+            alignment-baseline:middle;
+        }
+        .StnNameZH {
+            font-size:17px;
+            alignment-baseline:central;
+        }
+
+        .OSINameEN {
+            font-size:9px;
+            alignment-baseline:middle;
+        }
+        .OSINameZH {
+            font-size:14px;
+            alignment-baseline:central;
+        }
+
+        .IntNameEN {
+            font-size:7px;
+            alignment-baseline:middle;
+        }
+        .IntNameZH {
+            font-size:10px;
+            alignment-baseline:central;
+        }
+
+        .StnNum{
+            font-family: Arial;
+            font-size: 14px;
+            text-anchor: middle;
+            alignment-baseline: central;
+        }
+
+        .cpassed {stroke:#AAAAAA}
+        .cnone {stroke:none}
+        .cunknown {stroke:#999999}
+
+    </style>
+
+    <defs>
+        <path id="st" class="StationTick" d="M 2,0 H 7"/>
+        <path id="term" class="StationTick" d="M -7,0 H 7"/>
+        <g id="stn_hk">
+            <circle cx="0" cy="0" r="9" fill="#000"/>
+            <circle cx="0" cy="0" r="7" fill="#fff"/>
+        </g>
+        <g id="stn_hk_pass">
+            <circle cx="0" cy="0" r="9" fill="#AAAAAA"/>
+            <circle cx="0" cy="0" r="7" fill="#fff"/>
+        </g>
+        <g id="int3_hk">
+            <circle cx="0" cy="0" r="9" fill="#000"/>
+            <circle cx="0" cy="36" r="9" fill="#000"/>
+            <rect x="-9" y="0" width="18" height="36" fill="#000"/>
+            <circle cx="0" cy="0" r="7" fill="#fff"/>
+            <circle cx="0" cy="36" r="7" fill="#fff"/>
+            <rect x="-7" y="0" width="14" height="36" fill="#fff"/>
+        </g>
+        <g id="int3_hk_pass">
+            <circle cx="0" cy="0" r="9" fill="#aaa"/>
+            <circle cx="0" cy="36" r="9" fill="#aaa"/>
+            <rect x="-9" y="0" width="18" height="36" fill="#aaa"/>
+            <circle cx="0" cy="0" r="7" fill="#fff"/>
+            <circle cx="0" cy="36" r="7" fill="#fff"/>
+            <rect x="-7" y="0" width="14" height="36" fill="#fff"/>
+        </g>
+        <g id="osi11_hk">
+            <circle cx="0" cy="0" r="9" fill="#000"/>
+            <circle cx="0" cy="26" r="9" fill="#000"/>
+            <circle cx="0" cy="0" r="7" fill="#fff"/>
+            <circle cx="0" cy="26" r="7" fill="#fff"/>
+        </g>
+        <g id="osi11_hk_pass">
+            <circle cx="0" cy="0" r="9" fill="#aaa"/>
+            <circle cx="0" cy="26" r="9" fill="#aaa"/>
+            <circle cx="0" cy="0" r="7" fill="#fff"/>
+            <circle cx="0" cy="26" r="7" fill="#fff"/>
+        </g>
+        <g id="osi11u_hk">
+            <path stroke="black" stroke-width="2.5" stroke-dasharray="2,2" d="M 0,0 V 26"/>
+            <use xlink:href="#osi11_hk"/>
+        </g>
+        <g id="osi11u_hk_pass">
+            <path stroke="#AAA" stroke-width="2.5" stroke-dasharray="2,2" d="M 0,0 V 26"/>
+            <use xlink:href="#osi11_hk_pass"/>
+        </g>
+        <g id="osi11p_hk">
+            <path stroke="black" stroke-width="2.5" d="M 0,0 V 26"/>
+            <use xlink:href="#osi11_hk"/>
+        </g>
+        <g id="osi11p_hk_pass">
+            <path stroke="#AAA" stroke-width="2.5" d="M 0,0 V 26"/>
+            <use xlink:href="#osi11_hk_pass"/>
+        </g>
+        <g id="osi12_hk">
+            <circle cx="0" cy="0" r="9" fill="#000"/>
+            <circle cx="0" cy="26" r="9" fill="#000"/>
+            <circle cx="0" cy="44" r="9" fill="#000"/>
+            <rect x="-9" y="26" width="18" height="18" fill="#000"/>
+            <circle cx="0" cy="0" r="7" fill="#fff"/>
+            <circle cx="0" cy="26" r="7" fill="#fff"/>
+            <circle cx="0" cy="44" r="7" fill="#fff"/>
+            <rect x="-7" y="26" width="14" height="18" fill="#fff"/>
+        </g>
+        <g id="osi12_hk_pass">
+            <circle cx="0" cy="0" r="9" fill="#aaa"/>
+            <circle cx="0" cy="26" r="9" fill="#aaa"/>
+            <circle cx="0" cy="44" r="9" fill="#aaa"/>
+            <rect x="-9" y="26" width="18" height="18" fill="#aaa"/>
+            <circle cx="0" cy="0" r="7" fill="#fff"/>
+            <circle cx="0" cy="26" r="7" fill="#fff"/>
+            <circle cx="0" cy="44" r="7" fill="#fff"/>
+            <rect x="-7" y="26" width="14" height="18" fill="#fff"/>
+        </g>
+        <g id="osi12u_hk">
+            <path stroke="black" stroke-width="2.5" stroke-dasharray="2,2" d="M 0,0 V 26"/>
+            <use xlink:href="#osi12_hk"/>
+        </g>
+        <g id="osi12u_hk_pass">
+            <path stroke="#AAA" stroke-width="2.5" stroke-dasharray="2,2" d="M 0,0 V 26"/>
+            <use xlink:href="#osi12_hk_pass"/>
+        </g>
+        <g id="osi12p_hk">
+            <path stroke="black" stroke-width="2.5" d="M 0,0 V 28"/>
+            <use xlink:href="#osi12_hk"/>
+        </g>
+        <g id="osi12p_hk_pass">
+            <path stroke="#AAA" stroke-width="2.5" d="M 0,0 V 28"/>
+            <use xlink:href="#osi12_hk_pass"/>
+        </g>
+        <path id="stn_gz" stroke-width="2" fill="#fff" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
+
+        <path id="intline_up" d="M 0,0 v -17" stroke-linecap="round"/>
+        <path id="intline_down" d="M 0,0 v 17" stroke-linecap="round"/>
+    </defs>
+
+
+    
+    <g class="LineDiagram HK Pass" id="line_pass" stroke="#aaa">
+
+    </g>
+
+    <g class="LineDiagram HK" id="line_main">
+
+    </g>
+
+    <g class="Strip">
+        <path id="strip"/>
+    </g>
+
+    <g class="LineDiagram HK Change" id="stn_int2s"></g>
+    <g class="LineDiagram HK Change" id="stn_int3s"></g>
+    <g class="LineDiagram HK Change" id="stn_osi11s"></g>
+    <g class="LineDiagram HK Change" id="stn_osi12s"></g>
+
+    <rect id="current_bg" x="0" y="0" width="100" height="20" fill="#000"/>
+    <g id="stn_icons"></g>
+
+    <g id="station_number" style="display:none">
+        <g id="stn_num_0" class="FutureName">
+            <text transform="translate(16,100)scale(1)" class="StnNum" id="ln">1</text>
+            <text x="34" y="100" class="StnNum" id="stn">01</text>
+        </g>
+    </g>
+
+    <g id="stn_names"></g>
+    <g id="osi11_stn_names"></g>
+    <g id="osi12_stn_names"></g>
+
+    <g id="change_bgs" style="display:none;">
+        <rect id="int_bg_0" x="25" y="0" rx="3" ry="3" width="37" height="20" fill="none"/>
+    </g>
+
+    <g id="int2_names"></g>
+    <g id="int3_names"></g>
+    <g id="osi11_names"></g>
+    <g id="osi12_names"></g>
+
+    <rect id="outer" x="0" y="0" fill="none"/>
+</svg>
+</div>
+
+<div class="mdc-tab-bar" role="tablist">
+    <div class="mdc-tab-scroller">
+        <div class="mdc-tab-scroller__scroll-area">
+        <div class="mdc-tab-scroller__scroll-content">
+            <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
+            <span class="mdc-tab__content">
+                <span class="mdc-tab__icon material-icons" aria-hidden="true">favorite</span>
+                <span class="mdc-tab__text-label">Favorites</span>
+            </span>
+            <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+            </span>
+            <span class="mdc-tab__ripple"></span>
+            </button>
+            <button class="mdc-tab" role="tab" aria-selected="true" tabindex="0">
+                <span class="mdc-tab__content">
+                    <span class="mdc-tab__icon material-icons" aria-hidden="true">favorite</span>
+                    <span class="mdc-tab__text-label">Favorites</span>
+                </span>
+                <span class="mdc-tab-indicator ">
+                    <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                </span>
+                <span class="mdc-tab__ripple"></span>
+                </button>
+        </div>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <div id="theme_city" class="mdc-select mdc-select--outlined">
+        <i class="mdc-select__dropdown-icon"></i>
+        <select class="mdc-select__native-control">
+            <!-- <option value="nullcity" selected>Customise...</option> -->
+        </select>
+        <div class="mdc-notched-outline">
+            <div class="mdc-notched-outline__leading"></div>
+            <div class="mdc-notched-outline__notch">
+                <label class="mdc-floating-label">City</label>
+            </div>
+            <div class="mdc-notched-outline__trailing"></div>
+        </div>
+    </div>
+
+    <div id="theme_line" class="mdc-select mdc-select--outlined">
+        <i class="mdc-select__dropdown-icon"></i>
+        <select class="mdc-select__native-control">
+            <!-- <option value="nullcity" selected>Customise...</option> -->
+        </select>
+        <div class="mdc-notched-outline">
+            <div class="mdc-notched-outline__leading"></div>
+            <div class="mdc-notched-outline__notch">
+                <label class="mdc-floating-label">Line</label>
+            </div>
+            <div class="mdc-notched-outline__trailing"></div>
+        </div>
+    </div>
+
+    <!-- <div id="theme_colour" class="mdc-text-field mdc-text-field--outlined">
+        <input type="color" id="tf-outlined" class="mdc-text-field__input">
+        <div class="mdc-notched-outline">
+            <div class="mdc-notched-outline__leading"></div>
+            <div class="mdc-notched-outline__notch">
+            <label for="tf-outlined" class="mdc-floating-label">Your Name</label>
+            </div>
+            <div class="mdc-notched-outline__trailing"></div>
+        </div>
+    </div> -->
+</div>
+
+<script>
+    var template = 'test'
+    $.ajax({
+        url: 'templates/' + template + '.json', 
+        success: function (data) {
+            sessionStorage.all_params = JSON.stringify(data);
+            
+        }, 
+        async: false
+    });
+
+    var param_instance = getParams();
+    console.log(Date.now());
+    var ktl = new Line(param_instance);
+    ktl.drawSVGFrame();
+    ktl.showFrameOuter();
+    ktl.drawStns();
+    ktl.updateStnNameBg();
+    // ktl.fillThemeColour();
+    ktl.drawLine();
+    ktl.drawStrip();
+    ktl.drawDestInfo();
+    ktl.loadFonts();
+    console.log(Date.now());
+
+    // $.getJSON(`templates/${template}.json`, function (data) {
+    //     sessionStorage.all_params = JSON.stringify(data);
+    //     var param_instance = getParams();
+    //     console.log(Date.now());
+    //     var ktl = new Line(param_instance);
+    //     ktl.drawSVGFrame();
+    //     ktl.showFrameOuter();
+    //     ktl.drawStns();
+    //     ktl.updateStnNameBg();
+    //     ktl.fillThemeColour();
+    //     ktl.drawLine();
+    //     ktl.drawStrip();
+    //     ktl.drawDestInfo();
+    //     ktl.loadFonts();
+    //     console.log(Date.now());
+    // });
+    
+</script>
+
+<script>
+    // $('.mdc-tab-bar').each((i, elem) => mdc.tabBar.MDCTabBar.attachTo(elem));
+    var tabBar = new mdc.tabBar.MDCTabBar.attachTo($('.mdc-tab-bar')[0]);
+    tabBar.listen('MDCTabBar:activated', event => console.log(event.detail.index));
+
+    var themeCitySelect = new mdc.select.MDCSelect($('#theme_city')[0]);
+    var themeLineSelect = new mdc.select.MDCSelect($('#theme_line')[0]);
+    // var themeColourSelect = new mdc.textField.MDCTextField($('#theme_colour')[0]);
+    $.getJSON('data/city_list.json', function(data) {
+        data.forEach(function(c) {
+            $('#theme_city > select').append(
+                `<option value="${c.id}">${c.name[0]}</option>`
+            );
+        });
+
+        var [themeCity, themeLine, themeColour] = getParams().theme
+        var cityIdx = $(`#theme_city > select > [value="${themeCity}"]`).index();
+        themeCitySelect.selectedIndex = cityIdx;
+
+        if (themeCity == 'nullcity') {
+            // $('#theme_line > select').append(
+            //     `<option value="nullline">Customise...</option>`
+            // );
+            // themeLineSelect.selectedIndex = 0;
+        } else {
+            $.getJSON(`data/${themeCity}.json`, function(d) {
+                d.forEach(function(l) {
+                    $('#theme_line > select').append(
+                        `<option value="${l.id}">${l.name[0]}</option>`
+                    );
+                });
+                var lineIdx = $(`#theme_line > select > [value="${themeLine}"]`).index();
+                themeLineSelect.selectedIndex = lineIdx;
+            });
+        }
+    });
+
+    themeCitySelect.listen("MDCSelect:change", (event) => {
+        $('#theme_line > select').empty();
+
+        if (event.detail.value == 'nullcity') {
+            // $('#theme_line > select').append(
+            //     `<option value="nullline">Customise...</option>`
+            // );
+            // themeLineSelect.selectedIndex = 0;
+
+            // var param_instance = getParams();
+            // param_instance.theme[0] = 'nullcity';
+            // putParams(param_instance);
+        } else {
+            $.getJSON(`data/${event.detail.value}.json`, data => {
+                data.forEach(l => {
+                    $('#theme_line > select').append(
+                        `<option value="${l.id}">${l.name[0]}</option>`
+                    );
+                });
+                themeLineSelect.selectedIndex = 0;
+
+                var param_instance = getParams();
+                param_instance.theme[0] = event.detail.value;
+                putParams(param_instance);
+            });
+        }
+    });
+
+    themeLineSelect.listen("MDCSelect:change", event => {
+        if (themeCitySelect.value == 'nullcity') {
+            //
+        } else {
+            $.getJSON(`data/${themeCitySelect.value}.json`, (data) => {
+                var theme = data[event.detail.index];
+
+                ktl.themeLine = theme.id;
+                ktl.themeColour = theme.colour;
+                ktl.fillThemeColour();
+
+                var param_instance = getParams();
+                param_instance.theme[1] = theme.id;
+                param_instance.theme[2] = theme.colour;
+                putParams(param_instance);
+            })
+        }
+    });
+
+    console.log(`panel`, Date.now())
+</script>
+
+</body>
+</html>
