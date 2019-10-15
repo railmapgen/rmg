@@ -2,7 +2,7 @@
 
 class Line {
     #svgHeight; #svgWidth; #svgDestWidth; #showOuter;
-    themeCity; themeLine; themeColour;
+    themeCity; themeLine; #themeColour;
     #yPc; #padding; #stripPc; #longInterval = 0.2;
     #branchSpacing = 21; #txtFlip;
     #stations = {}; #currentStnId; #direction; #platformNum;
@@ -14,8 +14,8 @@ class Line {
         this.#svgDestWidth = param['svg_dest_width'];
         this.#showOuter = param['show_outer'];
 
-        [this.themeCity, this.themeLine, this.themeColour] = param['theme'];
-        // this.themeColour = colours[this.themeCity].line[this.themeLine].colour;
+        [this.themeCity, this.themeLine, this.#themeColour] = param['theme'];
+        // this.#themeColour = colours[this.themeCity].line[this.themeLine].colour;
 
         this.#yPc = param['y_pc'];
         this.#padding = param['padding'];
@@ -69,6 +69,50 @@ class Line {
             stnInstance._state = this._stnState(stnId);
             stnInstance.namePos = (this.#txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
         }
+    }
+
+    set themeColour(rgb) {
+        this.#themeColour = rgb;
+
+        var param = getParams();
+        param.theme[2] = rgb;
+        putParams(param);
+
+        this.fillThemeColour();
+    }
+
+    set direction(val) {
+        this.#direction = val;
+
+        var param = getParams();
+        param.direction = val;
+        putParams(param);
+
+        for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            stnInstance._state = this._stnState(stnId);
+        }
+
+        $('#stn_icons').empty();
+        this.drawStns();
+
+        $('#line_main').empty();
+        $('#line_pass').empty();
+        this.drawLine();
+
+        $('#dest_name g:last-child').remove()
+        this.drawDestInfo();
+
+        this.loadFonts();
+    }
+
+    set platformNum(val) {
+        this.#platformNum = val;
+
+        var param = getParams();
+        param.platform_num = val;
+        putParams(param);
+
+        $('#dest_name > #platform > text').text(val);
     }
 
     _pathWeight(stnId1, stnId2) {
@@ -489,9 +533,9 @@ class Line {
 
     fillThemeColour() {
         for (let elem of ['line_main', 'strip', 'dest_strip']) {
-            $(`#${elem}`).attr('stroke', this.themeColour);
+            $(`#${elem}`).attr('stroke', this.#themeColour);
         }
-        $('#dest_name > #platform > circle').attr('fill', this.themeColour);
+        $('#dest_name > #platform > circle').attr('fill', this.#themeColour);
     }
 
     drawDestInfo() {

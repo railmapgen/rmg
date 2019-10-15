@@ -278,7 +278,8 @@ class OSI12Station extends Int3Station {
 
     get osiNameHTML() {
         var dy = (this._namePos == 0) ? (26+18+10) + 8.34375  : -(26+18+10) + 8.34375 - 25.03125;
-        return `<g text-anchor="middle" transform="translate(${this._x},${this._y+dy})" class="Name ${this._nameClass}">
+        var nameClass = (this._state == -1) ? 'Pass' : 'Future';
+        return `<g text-anchor="middle" transform="translate(${this._x},${this._y+dy})" class="Name ${nameClass}">
                 <text class="OSINameZH"> ${this.#osiNameZH} </text>
                 <text x="0" dy="12" class="OSINameEN"> ${this.#osiNameEN} </text>
                 </g>`;

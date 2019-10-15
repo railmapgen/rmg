@@ -1,11 +1,13 @@
-# Rail Map Generator V2
+# Rail Map Generator
 
-Demo page: https://wongchito.github.io/RailMapGeneratorV2/
+Demo page: https://wongchito.github.io/RailMapGenerator/
 
 **Notice:**
 
-- Supported browser: Google Chrome (> 74.0) **ONLY**
+- Supported browser: Google Chrome (>= 74.0) **ONLY**
 - Supported feature:
-    - Change theme colour from selected mass transport systems
+    - Customise theme colour from selected mass transport systems
+    - Customise direction of train
+    - Customise platform number
 
 Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be deprecated)

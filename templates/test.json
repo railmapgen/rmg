@@ -11,7 +11,7 @@
 
     "direction": "r",
     "current_stn_idx": "a3", 
-    "platform_num": 2,
+    "platform_num": "2",
 
     "txt_bg_gap": 15,
     "txt_flip": false,
