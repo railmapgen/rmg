@@ -6,6 +6,6 @@ Demo page: https://wongchito.github.io/RailMapGeneratorV2/
 
 - Supported browser: Google Chrome (> 74.0) **ONLY**
 - Supported feature:
-    - Change theme colour from selected mass transport system
+    - Change theme colour from selected mass transport systems
 
 Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be deprecated)
