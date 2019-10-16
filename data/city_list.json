@@ -1,5 +1,25 @@
 [
     {
+        "id": "beijing",
+        "country": "CN",
+        "name": ["Beijing", "北京"]
+    },
+    {
+        "id": "edinburgh", 
+        "country": "GB", 
+        "name": ["Edinburgh"]
+    },
+    {
+        "id": "foshan", 
+        "country": "CN", 
+        "name": ["Foshan", "佛山"]
+    }, 
+    {
+        "id": "glasgow",
+        "country": "GB", 
+        "name": ["Glasgow"]
+    },
+    {
         "id": "guangzhou", 
         "country": "CN", 
         "name": ["Guangzhou", "广州"]
@@ -8,5 +28,20 @@
         "id": "hongkong", 
         "country": "HK", 
         "name": ["Hong Kong", "香港"]
+    },
+    {
+        "id": "london", 
+        "country": "GB", 
+        "name": ["London"]
+    },
+    {
+        "id": "shenzhen", 
+        "country": "CN", 
+        "name": ["Shenzhen", "深圳"]
+    },
+    {
+        "id": "toronto", 
+        "country": "CA", 
+        "name": ["Toronto"]
     }
 ]

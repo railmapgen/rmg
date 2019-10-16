@@ -1,0 +1,42 @@
+[
+    {
+		"id": "fs1",
+        "name": ["Guangfo Line (Line 1)", "广佛线（1号线）"],
+        "colour": "#C4D600"
+	},
+    {
+		"id": "fs2",
+        "name": ["Line 2", "2号线"],
+        "colour": "#009900"
+	},
+    {
+		"id": "fs3",
+        "name": ["Line 3", "3号线"],
+        "colour": "#0000FF"
+	},
+    {
+		"id": "fs4",
+        "name": ["Line 4", "4号线"],
+        "colour": "#FF00FF"
+	},
+    {
+		"id": "fs6",
+        "name": ["Line 6", "6号线"],
+        "colour": "#FFB81D"
+	},
+    {
+		"id": "fs9",
+        "name": ["Line 9", "9号线"],
+        "colour": "#A25EB5"
+	},
+    {
+		"id": "fs11",
+        "name": ["Line 11", "11号线"],
+        "colour": "#6600CC"
+	},
+    {
+		"id": "fs13",
+        "name": ["Line 13", "13号线"],
+        "colour": "#32B7EA"
+    }
+]

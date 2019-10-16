@@ -1,0 +1,42 @@
+[
+    {
+		"id": "l1",
+        "name": ["Line 1 Yonge-University"],
+        "colour": "#F8C300"
+    },
+    {
+		"id": "l2",
+        "name": ["Line 2 Bloor-Danforth"],
+        "colour": "#00923F"
+    },
+    {
+		"id": "l3",
+        "name": ["Line 3 Scarborough"],
+        "colour": "#0082C9"
+    },
+    {
+		"id": "l4",
+        "name": ["Line 4 Sheppard"],
+        "colour": "#A21A68"
+    },
+    {
+		"id": "l5",
+        "name": ["Line 5 Eglinton"],
+        "colour": "#E77817"
+    },
+    {
+		"id": "selrt",
+        "name": ["Sheppard East Rapid Transit Line"],
+        "colour": "#969594"
+    },
+    {
+		"id": "l6",
+        "name": ["Line 6 Finch West"],
+        "colour": "#8BCA98"
+    },
+    {
+		"id": "ttc",
+        "name": ["Surface Routes"], 
+        "colour": "#DA251D"
+    }
+]

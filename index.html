@@ -11,6 +11,7 @@
     <script src="utils.js"></script>
     <script src="Station.js"></script>
     <script src="Line.js"></script>
+    <script src="page_loader.js"></script>
 
     <link href="https://fonts.googleapis.com/css?family=Noto+Serif+KR:700|Noto+Serif+JP:700|Noto+Serif+TC:700|Noto+Serif+SC:700&display=swap" rel="stylesheet">
     <!-- <link href="fonts.css" rel="stylesheet"> -->
@@ -19,6 +20,13 @@
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
+    <style type="text/css">
+        body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: column; overflow: auto;}
+        #svgs {height: 305px; overflow: auto;}
+        #panels {flex-grow: 1; overflow: auto;}
+        .panel {display: none;}
+        .panel--active {display: block;}
+    </style>
 </head>
 <body>
 <div id="svgs" align="center">
@@ -285,24 +293,36 @@ id="railmap" width="0" height="0">
 </svg>
 </div>
 
+<div id="panels">
+
 <div class="mdc-tab-bar" role="tablist">
     <div class="mdc-tab-scroller">
         <div class="mdc-tab-scroller__scroll-area">
         <div class="mdc-tab-scroller__scroll-content">
             <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
+                <span class="mdc-tab__content">
+                    <span class="mdc-tab__icon material-icons" aria-hidden="true">panorama</span>
+                    <span class="mdc-tab__text-label">Layout</span>
+                </span>
+                <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                    <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                </span>
+                <span class="mdc-tab__ripple"></span>
+            </button>
+            <button class="mdc-tab" role="tab" aria-selected="true" tabindex="0">
             <span class="mdc-tab__content">
-                <span class="mdc-tab__icon material-icons" aria-hidden="true">favorite</span>
-                <span class="mdc-tab__text-label">Favorites</span>
+                <span class="mdc-tab__icon material-icons" aria-hidden="true">style</span>
+                <span class="mdc-tab__text-label">Design</span>
             </span>
-            <span class="mdc-tab-indicator mdc-tab-indicator--active">
+            <span class="mdc-tab-indicator">
                 <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
             </span>
             <span class="mdc-tab__ripple"></span>
             </button>
             <button class="mdc-tab" role="tab" aria-selected="true" tabindex="0">
                 <span class="mdc-tab__content">
-                    <span class="mdc-tab__icon material-icons" aria-hidden="true">favorite</span>
-                    <span class="mdc-tab__text-label">Favorites</span>
+                    <span class="mdc-tab__icon material-icons" aria-hidden="true">directions_transit</span>
+                    <span class="mdc-tab__text-label">Stations</span>
                 </span>
                 <span class="mdc-tab-indicator ">
                     <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
@@ -314,6 +334,11 @@ id="railmap" width="0" height="0">
     </div>
 </div>
 
+<div id="panel_layout" class="panel panel--active">
+
+</div>
+
+<div id="panel_design" class="panel">
 
 <div>
     <div id="theme_city" class="mdc-select mdc-select--outlined">
@@ -343,24 +368,17 @@ id="railmap" width="0" height="0">
             <div class="mdc-notched-outline__trailing"></div>
         </div>
     </div>
-
-    <!-- <div id="theme_colour" class="mdc-text-field mdc-text-field--outlined">
-        <input type="color" id="tf-outlined" class="mdc-text-field__input">
-        <div class="mdc-notched-outline">
-            <div class="mdc-notched-outline__leading"></div>
-            <div class="mdc-notched-outline__notch">
-            <label for="tf-outlined" class="mdc-floating-label">Your Name</label>
-            </div>
-            <div class="mdc-notched-outline__trailing"></div>
-        </div>
-    </div> -->
 </div>
 
 <div>
     <span>Train Direction</span>
-    <button id="direction" class="mdc-icon-button" aria-label="Add to favorites" aria-hidden="true" aria-pressed="false">
-        <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">arrow_forward</i>
-        <i class="material-icons mdc-icon-button__icon">arrow_back</i>
+    <button id="direction_l" class="mdc-icon-button" aria-label="Add to favorites" aria-hidden="true" aria-pressed="false">
+        <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on" style="transform:rotate(180deg)">play_circle_filled</i>
+        <i class="material-icons mdc-icon-button__icon" style="transform:rotate(180deg)">play_circle_outline</i>
+    </button>
+    <button id="direction_r" class="mdc-icon-button" aria-label="Add to favorites" aria-hidden="true" aria-pressed="false">
+        <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">play_circle_filled</i>
+        <i class="material-icons mdc-icon-button__icon">play_circle_outline</i>
     </button>
 </div>
 
@@ -375,6 +393,17 @@ id="railmap" width="0" height="0">
             <div class="mdc-notched-outline__trailing"></div>
         </div>
     </div>
+</div>
+
+</div>
+
+<div id="panel_stations" class="panel">
+
+    some text here
+
+</div>
+
+
 </div>
 
 <script>
@@ -395,136 +424,29 @@ id="railmap" width="0" height="0">
     ktl.showFrameOuter();
     ktl.drawStns();
     ktl.updateStnNameBg();
-    // ktl.fillThemeColour();
+    ktl.fillThemeColour();
     ktl.drawLine();
     ktl.drawStrip();
     ktl.drawDestInfo();
     ktl.loadFonts();
     console.log(Date.now());
-
-    // $.getJSON(`templates/${template}.json`, function (data) {
-    //     sessionStorage.all_params = JSON.stringify(data);
-    //     var param_instance = getParams();
-    //     console.log(Date.now());
-    //     var ktl = new Line(param_instance);
-    //     ktl.drawSVGFrame();
-    //     ktl.showFrameOuter();
-    //     ktl.drawStns();
-    //     ktl.updateStnNameBg();
-    //     ktl.fillThemeColour();
-    //     ktl.drawLine();
-    //     ktl.drawStrip();
-    //     ktl.drawDestInfo();
-    //     ktl.loadFonts();
-    //     console.log(Date.now());
-    // });
     
 </script>
 
 <script>
+    var firstInit = true;
     // $('.mdc-tab-bar').each((i, elem) => mdc.tabBar.MDCTabBar.attachTo(elem));
     var tabBar = new mdc.tabBar.MDCTabBar.attachTo($('.mdc-tab-bar')[0]);
-    tabBar.listen('MDCTabBar:activated', event => console.log(event.detail.index));
+    tabBar.listen('MDCTabBar:activated', event => {
+        $('.panel--active').removeClass('panel--active');
+        $('.panel').eq(event.detail.index).addClass('panel--active');
 
-    var themeCitySelect = new mdc.select.MDCSelect($('#theme_city')[0]);
-    var themeLineSelect = new mdc.select.MDCSelect($('#theme_line')[0]);
-    // var themeColourSelect = new mdc.textField.MDCTextField($('#theme_colour')[0]);
-    $.getJSON('data/city_list.json', function(data) {
-        data.forEach(function(c) {
-            $('#theme_city > select').append(
-                `<option value="${c.id}">${c.name[0]}</option>`
-            );
-        });
-
-        var [themeCity, themeLine, themeColour] = getParams().theme
-        var cityIdx = $(`#theme_city > select > [value="${themeCity}"]`).index();
-        themeCitySelect.selectedIndex = cityIdx;
-
-        // if (themeCity == 'nullcity') {
-        //     // $('#theme_line > select').append(
-        //     //     `<option value="nullline">Customise...</option>`
-        //     // );
-        //     // themeLineSelect.selectedIndex = 0;
-        // } else {
-        //     $.getJSON(`data/${themeCity}.json`, function(d) {
-        //         d.forEach(function(l) {
-        //             $('#theme_line > select').append(
-        //                 `<option value="${l.id}">${l.name[0]}</option>`
-        //             );
-        //         });
-        //         var lineIdx = $(`#theme_line > select > [value="${themeLine}"]`).index();
-        //         themeLineSelect.selectedIndex = lineIdx;
-        //     });
-        // }
-    });
-
-    themeCitySelect.listen("MDCSelect:change", (event) => {
-        $('#theme_line > select').empty();
-
-        if (event.detail.value == 'nullcity') {
-            // $('#theme_line > select').append(
-            //     `<option value="nullline">Customise...</option>`
-            // );
-            // themeLineSelect.selectedIndex = 0;
-
-            // var param_instance = getParams();
-            // param_instance.theme[0] = 'nullcity';
-            // putParams(param_instance);
-        } else {
-            $.getJSON(`data/${event.detail.value}.json`, data => {
-                data.forEach(l => {
-                    $('#theme_line > select').append(
-                        `<option value="${l.id}">${l.name[0]}</option>`
-                    );
-                });
-
-                var param_instance = getParams();
-                var themeLine = param_instance.theme[1];
-                var lineIdx = $(`#theme_line > select > [value="${themeLine}"]`).index();
-
-                if (lineIdx == -1) {
-                    themeLineSelect.selectedIndex = 0;
-                } else {
-                    themeLineSelect.selectedIndex = lineIdx;
-                }
-
-                param_instance.theme[0] = event.detail.value;
-                putParams(param_instance);
-            });
+        if (event.detail.index == 1 && firstInit) {
+            initDesignPanel();
+            firstInit = false;
         }
     });
 
-    themeLineSelect.listen("MDCSelect:change", event => {
-        if (themeCitySelect.value == 'nullcity') {
-            //
-        } else {
-            $.getJSON(`data/${themeCitySelect.value}.json`, (data) => {
-                var theme = data[event.detail.index];
-
-                ktl.themeLine = theme.id;
-                ktl.themeColour = theme.colour;
-                // ktl.fillThemeColour();
-
-                var param_instance = getParams();
-                param_instance.theme[1] = theme.id;
-                // param_instance.theme[2] = theme.colour;
-                putParams(param_instance);
-            })
-        }
-    });
-
-    var directionToggle = new mdc.iconButton.MDCIconButtonToggle($('#direction')[0]);
-    directionToggle.on = (getParams().direction == 'r') ? false : true;
-    directionToggle.listen('MDCIconButtonToggle:change', event => {
-        ktl.direction = (event.detail.isOn) ? 'l' : 'r';
-    })
-
-    var platformTextField = new mdc.textField.MDCTextField($('#platform_num')[0]);
-    platformTextField.value = getParams().platform_num;
-    $('#platform_num > input').on('change', event => {
-        ktl.platformNum = event.target.value;
-    });
-    
     console.log(`panel`, Date.now())
 </script>
 

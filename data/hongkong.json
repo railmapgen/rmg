@@ -75,6 +75,71 @@
         "colour": "#CD9700"
     },
     {
+        "id": "lrl505",
+        "name": ["Light Rail Route 505","輕鐵505綫"],
+        "colour": "#DB1F26"
+    },
+    {
+        "id": "lrl507",
+        "name": ["Light Rail Route 507","輕鐵507綫"],
+        "colour": "#00A650"
+    },
+    {
+        "id": "lrl610",
+        "name": ["Light Rail Route 610","輕鐵610綫"],
+        "colour": "#431115"
+    },
+    {
+        "id": "lrl610p",
+        "name": ["Light Rail Route 610P","輕鐵610P綫"],
+        "colour": "#4DC6F4"
+    },
+    {
+        "id": "lrl614",
+        "name": ["Light Rail Route 614","輕鐵614綫"],
+        "colour": "#4DC6F4"
+    },
+    {
+        "id": "lrl614p",
+        "name": ["Light Rail Route 614P","輕鐵614P綫"],
+        "colour": "#F46989"
+    },
+    {
+        "id": "lrl615",
+        "name": ["Light Rail Route 615","輕鐵615綫"],
+        "colour": "#FDDD04"
+    },
+    {
+        "id": "lrl615p",
+        "name": ["Light Rail Route 615P","輕鐵615P綫"],
+        "colour": "#215483"
+    },
+    {
+        "id": "lrl705",
+        "name": ["Light Rail Route 705","輕鐵705綫"],
+        "colour": "#64C542"
+    },
+    {
+        "id": "lrl706",
+        "name": ["Light Rail Route 706","輕鐵706綫"],
+        "colour": "#B365B9"
+    },
+    {
+        "id": "lrl751",
+        "name": ["Light Rail Route 751","輕鐵751綫"],
+        "colour": "#F47216"
+    },
+    {
+        "id": "lrl751p",
+        "name": ["Light Rail Route 751P","輕鐵751P綫"],
+        "colour": "#000000"
+    },
+    {
+        "id": "lrl761",
+        "name": ["Light Rail Route 761/761P","輕鐵761/761P綫"],
+        "colour": "#672290"
+    },
+    {
         "id": "efls",
         "name": ["Environmentally Friendly Linkage System","環保連接系統"],
         "colour": "#000000"
@@ -93,5 +158,25 @@
         "id": "tramways", 
         "name": ["Hong Kong Tramways", "香港電車"],
         "colour": "#007549"
+    },
+    {
+        "id": "ealkcr",
+        "name": ["KCR East Rail", "九廣東鐵"],
+        "colour": "#005DA0"
+    },
+    {
+        "id": "wrlkcr",
+        "name": ["KCR West Rail", "九廣西鐵"],
+        "colour": "#AC2571"
+    },
+    {
+        "id": "molkcr",
+        "name": ["Ma On Shan Rail", "九廣馬鐵"],
+        "colour": "#761E10"
+    },
+    {
+        "id": "lrlkcr",
+        "name": ["KCR Light Rail", "九廣輕鐵"],
+        "colour": "#FD722D"
     }
 ]

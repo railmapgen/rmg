@@ -1,0 +1,87 @@
+[
+    {
+        "id": "bakerloo", 
+        "name": ["Bakerloo Line"], 
+        "colour": "#B26300"
+    }, 
+    {
+        "id": "central", 
+        "name": ["Central Line"],
+        "colour": "#DC241F"
+    },
+    {
+        "id": "circle",
+        "name": ["Circle Line"], 
+        "colour": "#FFD329"
+    },
+    {
+        "id": "district",
+        "name": ["District Line"],
+        "colour": "#007D32"
+    },
+    {
+        "id": "hsmithcity",
+        "name": ["Hammersmith & City Line"],
+        "colour": "#F4A9BE"
+    },
+    {
+        "id": "jubilee",
+        "name": ["Jubilee Line"],
+        "colour": "#A1A5A7"
+    },
+    {
+        "id": "metropolitan",
+        "name": ["Metropolitan Line"],
+        "colour": "#9B0058"
+    },
+    {
+        "id": "northern",
+        "name": ["Northern Line"],
+        "colour": "#000000"
+    },
+    {
+        "id": "piccadily",
+        "name": ["Piccadily Line"],
+        "colour": "#0019A8"
+    },
+    {
+        "id": "victoria",
+        "name": ["Victoria Line"],
+        "colour": "#0098D8"
+    },
+    {
+        "id": "waterloocity",
+        "name": ["Waterloo & City Line"],
+        "colour": "#93CEBA"
+    },
+    {
+        "id": "dlr",
+        "name": ["Docklands Light Railway"],
+        "colour": "#00AFAD"
+    },
+    {
+        "id": "elizabeth",
+        "name": ["Elizabeth Line"],
+        "colour": "#9364CC"
+    },
+    {
+        "id": "tfl",
+        "name": ["TfL Rail"],
+        "colour": "#0019A8"
+    },
+    {
+        "id": "overground",
+        "name": ["London Overground"],
+        "colour": "#EF7B10"
+    },
+    {
+        "id": "trams",
+        "name": ["London Trams"],
+        "colour": "#00BD19"
+    },
+    {
+        "id": "emirates",
+        "name": ["Emirates Air Line"],
+        "colour": "#DC241F"
+    }
+]
