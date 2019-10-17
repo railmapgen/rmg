@@ -6,6 +6,7 @@
     "padding": 5, 
     "y_pc": 40, 
     "strip_pc": 90,
+    "branch_spacing": 42,
 
     "theme":["guangzhou","gz3","#ECA154"],
 
@@ -27,66 +28,64 @@
             "children": ["a1"],
             "name":["調00","Tiu Keng Leng"], 
             "change_type": "int2",
-            "int2":["hongkong","tkl","#A35EB5","將軍澳綫\\往寶琳/康城","Tseung Kwan O Line\\to Po Lam/LOHAS Park"]
+            "transfer":[[],["hongkong","tkl","#A35EB5","將軍澳綫\\往寶琳/康城","Tseung Kwan O Line\\to Po Lam/LOHAS Park"],[]]
         },
         "a01": {
             "parents": [],
             "children": ["a1"],
             "name":["調01","Tiu Keng Leng"], 
-            "change_type": "osi11pr",
-            "osi11":["石溪","Shixi","guangzhou","gz10","#7D9BC1","10号线","Line 10"]
+            "change_type": "osi11_pr",
+            "transfer":[["石溪","Shixi"],["guangzhou","gz10","#7D9BC1","10号线","Line 10"],[]]
         },
         "a1": {
             "parents": ["a00", "a01"],
             "children": ["a2", "a3"],
             "name":["調景1","Tiu Keng Leng"], 
-            "change_type": "int3l",
-            "int3":[["guangzhou","gz3","#ECA154","3号线","Line 3"],["guangzhou","gz14","#81312F","14号线","Line 14"]]
+            "change_type": "int3_l",
+            "transfer":[[],["guangzhou","gz3","#ECA154","3号线","Line 3"],["guangzhou","gz14","#81312F","14号线","Line 14"]]
         },
         "a2": {
             "parents": ["a1"],
             "children": ["a50"],
             "name":["調景2","Tiu Keng Leng"], 
             "change_type": "int2",
-            "int2":["hongkong","tkl","#A35EB5","將軍澳綫","Tseung Kwan O Line"]
+            "transfer":[[],["hongkong","tkl","#A35EB5","將軍澳綫","Tseung Kwan O Line"],[]]
         },
         "a3": {
             "parents": ["a1"],
             "children": ["a4"],
             "name":["調景3","Tiu Keng Leng"], 
             "change_type": "int2",
-            "int2":["hongkong","tkl","#A35EB5","將軍澳綫\\往寶琳/康城","Tseung Kwan O Line\\to Po Lam/LOHAS Park"]
+            "transfer":[[],["hongkong","tkl","#A35EB5","將軍澳綫\\往寶琳/康城","Tseung Kwan O Line\\to Po Lam/LOHAS Park"],[]]
         },
         "a4": {
             "parents": ["a3"],
             "children": ["a50"],
             "name":["調景4","Tiu Keng Leng"], 
             "change_type": "int2",
-            "int2":["hongkong","tkl","#A35EB5","將軍澳綫","Tseung Kwan O Line"]
+            "transfer":[[],["hongkong","tkl","#A35EB5","將軍澳綫","Tseung Kwan O Line"],[]]
         },
         "a50": {
             "parents": ["a2","a4"],
             "children": ["a5"],
             "name":["調50","Tiu Keng Leng"], 
             "change_type": "int2",
-            "int2":["hongkong","tkl","#A35EB5","將軍澳綫","Tseung Kwan O Line\\to Po Lam/LOHAS Park"]
+            "transfer":[[],["hongkong","tkl","#A35EB5","將軍澳綫","Tseung Kwan O Line\\to Po Lam/LOHAS Park"],[]]
         },
         "a5": {
             "parents": ["a50"],
             "children": ["a6","a8"],
             "name":["調景5","Tiu Keng Leng"], 
-            "change_type": "osi12ul",
-            "osi12":[["厦滘","Xiajiao"],["guangzhou","gz3","#ECA154","3号线","Line 3"],["guangzhou","gz18","#D48BC8","18号线","Line 18"]]
-        }
-        ,
+            "change_type": "osi12_ul",
+            "transfer":[["厦滘","Xiajiao"],["guangzhou","gz3","#ECA154","3号线","Line 3"],["guangzhou","gz18","#D48BC8","18号线","Line 18"]]
+        },
         "a6": {
             "parents": ["a5"],
             "children": ["a7"],
             "name":["調景6","Tiu Keng Leng"], 
-            "change_type": "osi12pr",
-            "osi12":[["厦滘","Xiajiao"],["guangzhou","gz3","#ECA154","3号线","Line 3"],["guangzhou","gz18","#D48BC8","18号线","Line 18"]]
-        }
-        ,
+            "change_type": "osi12_pr",
+            "transfer":[["厦滘","Xiajiao"],["guangzhou","gz3","#ECA154","3号线","Line 3"],["guangzhou","gz18","#D48BC8","18号线","Line 18"]]
+        },
         "a7": {
             "parents": ["a6"],
             "children": [],
@@ -98,21 +97,21 @@
             "children": ["a9"],
             "name":["調景8","Tiu Keng Leng"], 
             "change_type": "int2",
-            "int2":["hongkong","tkl","#A35EB5","將軍澳綫\\往寶琳/康城","Tseung Kwan O Line"]
+            "transfer":[[],["hongkong","tkl","#A35EB5","將軍澳綫\\往寶琳/康城","Tseung Kwan O Line"],[]]
         },
         "a9": {
             "parents": ["a8"],
             "children": ["a10"],
             "name":["調景9","Tiu Keng Leng"], 
             "change_type": "int2",
-            "int2":["hongkong","tkl","#A35EB5","將軍澳綫\\往寶琳/康城","Tseung Kwan O Line\\to Po Lam/LOHAS Park"]
+            "transfer":[[],["hongkong","tkl","#A35EB5","將軍澳綫\\往寶琳/康城","Tseung Kwan O Line\\to Po Lam/LOHAS Park"],[]]
         },
         "a10": {
             "parents": ["a9"],
             "children": [],
             "name":["銀河園","Galaxy Garden"], 
-            "change_type": "osi11ul",
-            "osi11":["石溪","Shixi","guangzhou","gz10","#7D9BC1","10号线","Line 10"]
+            "change_type": "osi11_ul",
+            "transfer":[["石溪","Shixi"],["guangzhou","gz10","#7D9BC1","10号线","Line 10"],[]]
         }
     }, 
 

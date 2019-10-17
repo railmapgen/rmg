@@ -4,7 +4,7 @@ class Line {
     #svgHeight; #svgWidth; #svgDestWidth; #showOuter;
     themeCity; themeLine; #themeColour;
     #yPc; #padding; #stripPc; #longInterval = 0.2;
-    #branchSpacing = 21; #txtFlip;
+    #branchSpacing; #txtFlip;
     #stations = {}; #currentStnId; #direction; #platformNum;
     #weightEN; #weightZH; #fontEN; #fontZH;
 
@@ -20,38 +20,40 @@ class Line {
         this.#yPc = param['y_pc'];
         this.#padding = param['padding'];
         this.#stripPc = param['strip_pc'];
+        this.#branchSpacing = param.branch_spacing;
         this.#txtFlip = param['txt_flip'];
 
         for (let [stnId, stnInfo] of Object.entries(param['stn_list'])) {
-            switch (stnInfo['change_type']) {
-                case 'int2':
-                    this.#stations[stnId] = new Int2Station(stnId, stnInfo);
-                    break;
-                case 'int3l':
-                    this.#stations[stnId] = new Int3LStation(stnId, stnInfo);
-                    break;
-                case 'int3r':
-                    this.#stations[stnId] = new Int3RStation(stnId, stnInfo);
-                    break;
-                case 'osi11ul':
-                case 'osi11pl':
-                    this.#stations[stnId] = new OSI11LStation(stnId, stnInfo);
-                    break;
-                case 'osi11ur':
-                case 'osi11pr':
-                    this.#stations[stnId] = new OSI11RStation(stnId, stnInfo);
-                    break;
-                case 'osi12ul':
-                case 'osi12pl':
-                    this.#stations[stnId] = new OSI12LStation(stnId, stnInfo);
-                    break;
-                case 'osi12ur':
-                case 'osi12pr':
-                    this.#stations[stnId] = new OSI12RStation(stnId, stnInfo);
-                    break;
-                default:
-                    this.#stations[stnId] = new Station(stnId, stnInfo);
-            }
+            // switch (stnInfo['change_type']) {
+            //     case 'int2':
+            //         this.#stations[stnId] = new Int2Station(stnId, stnInfo);
+            //         break;
+            //     case 'int3_l':
+            //         this.#stations[stnId] = new Int3LStation(stnId, stnInfo);
+            //         break;
+            //     case 'int3_r':
+            //         this.#stations[stnId] = new Int3RStation(stnId, stnInfo);
+            //         break;
+            //     case 'osi11_ul':
+            //     case 'osi11_pl':
+            //         this.#stations[stnId] = new OSI11LStation(stnId, stnInfo);
+            //         break;
+            //     case 'osi11_ur':
+            //     case 'osi11_pr':
+            //         this.#stations[stnId] = new OSI11RStation(stnId, stnInfo);
+            //         break;
+            //     case 'osi12_ul':
+            //     case 'osi12_pl':
+            //         this.#stations[stnId] = new OSI12LStation(stnId, stnInfo);
+            //         break;
+            //     case 'osi12_ur':
+            //     case 'osi12_pr':
+            //         this.#stations[stnId] = new OSI12RStation(stnId, stnInfo);
+            //         break;
+            //     default:
+            //         this.#stations[stnId] = new Station(stnId, stnInfo);
+            // }
+            this.#stations[stnId] = this._initStnInstance(stnId, stnInfo);
         }
         this.#currentStnId = param['current_stn_idx'];
         this.#direction = param['direction'];
@@ -69,6 +71,109 @@ class Line {
             stnInstance._state = this._stnState(stnId);
             stnInstance.namePos = (this.#txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
         }
+    }
+
+    _initStnInstance(stnId, stnInfo) {
+        switch (stnInfo.change_type) {
+            case 'int2':
+                return new Int2Station(stnId, stnInfo);
+            case 'int3_l':
+                return new Int3LStation(stnId, stnInfo);
+            case 'int3_r':
+                return new Int3RStation(stnId, stnInfo);
+            case 'osi11_ul':
+            case 'osi11_pl':
+                return new OSI11LStation(stnId, stnInfo);
+            case 'osi11_ur':
+            case 'osi11_pr':
+                return new OSI11RStation(stnId, stnInfo);
+            case 'osi12_ul':
+            case 'osi12_pl':
+                return new OSI12LStation(stnId, stnInfo);
+            case 'osi12_ur':
+            case 'osi12_pr':
+                return new OSI12RStation(stnId, stnInfo);
+            default:
+                return new Station(stnId, stnInfo);
+        }
+    }
+
+    set svgWidth(val) {
+        val = Number(val);
+        if (isNaN(val)) {return;}
+        if (val <= 0) {return;}
+        this.#svgWidth = val;
+        this.#svgDestWidth = val;
+
+        var param = getParams();
+        param.svg_width = val;
+        param.svg_dest_width = val;
+        putParams(param);
+
+        this.drawSVGFrame();
+
+        for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            stnInstance.x = this._stnRealX(stnId);
+            stnInstance.y = this._stnRealY(stnId);
+        }
+        $('#stn_icons').empty();
+        this.drawStns();
+        this.updateStnNameBg();
+
+        $('#line_main').empty();
+        $('#line_pass').empty();
+        this.drawLine();
+        this.drawStrip();
+
+        $('#dest_name g:last-child').remove()
+        this.drawDestInfo();
+
+        this.loadFonts();
+    }
+
+    set yPc(val) {
+        val = Number(val);
+        this.#yPc = val;
+
+        var param = getParams();
+        param.y_pc = val;
+        putParams(param);
+
+        for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            stnInstance.y = this._stnRealY(stnId);
+        }
+        $('#stn_icons').empty();
+        this.drawStns();
+        this.updateStnNameBg();
+
+        $('#line_main').empty();
+        $('#line_pass').empty();
+        this.drawLine();
+
+        this.loadFonts();
+    }
+
+    set branchSpacing(val) {
+        val = Number(val);
+        this.#branchSpacing = val;
+
+        var param = getParams();
+        param.branch_spacing = val;
+        putParams(param);
+
+        for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            stnInstance.x = this._stnRealX(stnId);
+            stnInstance.y = this._stnRealY(stnId);
+        }
+        $('#stn_icons').empty();
+        this.drawStns();
+        this.updateStnNameBg();
+
+        $('#line_main').empty();
+        $('#line_pass').empty();
+        this.drawLine();
+
+        this.loadFonts();
     }
 
     set themeColour(rgb) {
@@ -201,7 +306,7 @@ class Line {
     }
 
     get turningRadius() {
-        return this.#branchSpacing * (Math.sqrt(2) / (Math.sqrt(2)-1));
+        return this.#branchSpacing/2 * (Math.sqrt(2) / (Math.sqrt(2)-1));
     }
 
     get lineXs() {
@@ -310,39 +415,37 @@ class Line {
         if (this._stnIndegree(stnId) > 1 || this._stnOutdegree(stnId) > 1) {
             return 0;
         }
-        var tmpStn = stnId;
-        while (true) {
-            var stnPredecessor = this.#stations[tmpStn]._parents[0];
-            if (!stnPredecessor) {break;}
-            // not left open jaw
-            if (this._stnOutdegree(stnPredecessor) > 1) {
-                // siblings exist
-                if (this.#stations[stnPredecessor]._children.indexOf(tmpStn) == 0) {
-                    return 1;
-                } else {
-                    return -1;
-                }
+        var stnPred = this.#stations[stnId]._parents[0];
+        if (stnPred) {
+            // parent exist
+            if (this._stnOutdegree(stnPred) == 1) {
+                // no sibling, then y same as parent
+                return this._stnYShare(stnPred);
+            } else {
+                // sibling exists, then y depends on its idx of being children
+                return (this.#stations[stnPred]._children.indexOf(stnId) == 0) ? 1 : -1;
             }
-            tmpStn = stnPredecessor;
-        }
-        while (true) {
-            // left open jaw
-            var stnSuccessor = this.#stations[tmpStn]._children[0];
-            if (this._stnIndegree(stnSuccessor) > 1) {
-                // siblings exist
-                if (this.#stations[stnSuccessor]._parents.indexOf(tmpStn) == 0) {
-                    return 1;
-                } else {
-                    return -1;
-                }
+        } else {
+            // no parent
+            if (this.leftDests.length == 1) {
+                return 0
+            } else {
+                return (this.leftDests.indexOf(stnId) == 0) ? 1 : -1;
             }
-            tmpStn = stnSuccessor;
+            // var stnSuc = this.#stations[stnId]._children[0];
+            // if (this._stnIndegree(stnSuc) == 1) {
+            //     // no sibling, then y same as child
+            //     return this._stnYShare(stnSuc);
+            // } else {
+            //     // sibling exists
+            //     return (this.#stations[stnSuc]._parents.indexOf(stnId) == 0) ? 1 : -1;
+            // }
         }
-        return false;
+        return 0;
     }
 
     _stnRealY(stnId) {
-        return this.y - this._stnYShare(stnId) * this.#branchSpacing * 2;
+        return this.y - this._stnYShare(stnId) * this.#branchSpacing;
     }
 
     _isSuccessor(stnId1, stnId2) {
@@ -453,14 +556,14 @@ class Line {
     drawLine() {
         // for arc
         var r = this.turningRadius;
-        var dx = this.turningRadius - this.#branchSpacing;
-        var dy = this.#branchSpacing;
+        var dx = this.turningRadius - this.#branchSpacing/2;
+        var dy = this.#branchSpacing/2;
         var [lineStart, lineEnd] = this.lineXs;
         var cp = this.criticalPath;
         var extraH = (lineEnd - lineStart) / cp.len * this.#longInterval;
         var dh = ( (lineEnd-lineStart)/cp.len - 2*dx ) / 2;
         if (dh < 0) {
-            throw new Error('SVG width too small');
+            console.warn('SVG width too small!');
         }
 
         for (let [leftStnId, leftStnInstance] of Object.entries(this.#stations)) {
@@ -477,7 +580,11 @@ class Line {
                         `<path d="M ${x1},${y1} H ${x2}"/>`
                     );
                 } else if (y1 == this.y && y1 > y2) {
-                    if (leftStnInstance instanceof Int3RStation) {
+                    if ([
+                            'Int3RStation', 
+                            'OSI11RStation', 
+                            'OSI12RStation'
+                        ].includes(leftStnInstance.constructor.name)) {
                         $(`#${lineType}`).append(
                             `<path d="M ${x1},${y1} h ${extraH + dh} a ${r},${r} 0 0,0 ${dx},${-dy} a ${r},${r} 0 0,1 ${dx},${-dy} H ${x2}"/>`
                         );
@@ -488,7 +595,11 @@ class Line {
                     }
                     
                 } else if (y1 == this.y && y1 < y2) {
-                    if (leftStnInstance instanceof Int3RStation) {
+                    if ([
+                            'Int3RStation', 
+                            'OSI11RStation', 
+                            'OSI12RStation'
+                        ].includes(leftStnInstance.constructor.name)) {
                         $(`#${lineType}`).append(
                             `<path d="M ${x1},${y1} h ${extraH + dh} a ${r},${r} 0 0,1 ${dx},${dy} a ${r},${r} 0 0,0 ${dx},${dy} H ${x2}"/>`
                         );
@@ -498,7 +609,11 @@ class Line {
                         );
                     }
                 } else if (y2 == this.y && y2 > y1) {
-                    if (this.#stations[rightStnId] instanceof Int3LStation) {
+                    if ([
+                            'Int3LStation', 
+                            'OSI11LStation', 
+                            'OSI12LStation'
+                        ].includes(this.#stations[rightStnId].constructor.name)) {
                         $(`#${lineType}`).append(
                             `<path d="M ${x2},${y2} h ${-extraH-dh} a ${r},${r} 0 0,1 ${-dx},${-dy} a ${r},${r} 0 0,0 ${-dx},${-dy} H ${x1}"/>`
                         );
@@ -508,7 +623,11 @@ class Line {
                         );
                     }
                 } else {
-                    if (this.#stations[rightStnId] instanceof Int3LStation) {
+                    if ([
+                            'Int3LStation', 
+                            'OSI11LStation', 
+                            'OSI12LStation'
+                        ].includes(this.#stations[rightStnId].constructor.name)) {
                         $(`#${lineType}`).append(
                             `<path d="M ${x2},${y2} h ${-extraH-dh} a ${r},${r} 0 0,0 ${-dx},${dy} a ${r},${r} 0 0,1 ${-dx},${dy} H ${x1}"/>`
                         );
@@ -582,5 +701,185 @@ class Line {
         $('.DestNameZH').attr('font-family', fontZHToShow);
         $('.DestNameEN').attr('font-family', fontENToShow);
         $('#dest_name > #platform > text').attr('font-family', fontENToShow);
+    }
+
+    swapStnName() {
+        var param = getParams();
+        param.txt_flip = !param.txt_flip;
+        putParams(param);
+
+        this.#txtFlip = !this.#txtFlip;
+
+        for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            stnInstance.namePos = (this.#txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
+        }
+
+        $('#stn_icons').empty();
+        this.drawStns();
+        this.updateStnNameBg();
+
+        this.loadFonts();
+    }
+
+    updateStnName(stnId, nameZH, nameEN) {
+        var param = getParams();
+        param.stn_list[stnId].name = [nameZH, nameEN];
+        putParams(param);
+
+        this.#stations[stnId]._nameZH = nameZH;
+        this.#stations[stnId]._nameEN = nameEN;
+
+        $(`#stn_icons #${stnId}`).remove();
+        $('#stn_icons').append(this.#stations[stnId].html);
+        $('#stn_icons').html($('#stn_icons').html());
+        if (stnId == this.#currentStnId) {this.updateStnNameBg();}
+
+        if (this.leftDests.includes(stnId) && this.#direction == 'l') {
+            $('#dest_name g:last-child').remove()
+            this.drawDestInfo();
+        } else if (this.rightDests.includes(stnId) && this.#direction == 'r') {
+            $('#dest_name g:last-child').remove()
+            this.drawDestInfo();
+        }
+
+        this.loadFonts();
+    }
+
+    updateStnTransfer(stnId, type, info=null) {
+        var prevClass = this.#stations[stnId].constructor.name;
+
+        var param = getParams();
+        param.stn_list[stnId].change_type = type;
+        if (type == 'none') {
+            delete param.stn_list[stnId].transfer;
+        } else {
+            param.stn_list[stnId].transfer = info;
+        }
+        putParams(param);
+
+        this.#stations[stnId] = this._initStnInstance(stnId, param.stn_list[stnId]);
+
+        if (prevClass != this.#stations[stnId].constructor.name) {
+            // Not sure position, redraw all
+            for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+                stnInstance.x = this._stnRealX(stnId);
+                stnInstance.y = this._stnRealY(stnId);
+                stnInstance.namePos = (this.#txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
+                stnInstance._state = this._stnState(stnId);
+            }
+            $('#stn_icons').empty();
+            this.drawStns();
+            this.updateStnNameBg();
+    
+            $('#line_main').empty();
+            $('#line_pass').empty();
+            this.drawLine();
+            this.drawStrip();
+        } else {
+            this.#stations[stnId].x = this._stnRealX(stnId);
+            this.#stations[stnId].y = this._stnRealY(stnId);
+            this.#stations[stnId].namePos = (this.#txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
+            this.#stations[stnId]._state = this._stnState(stnId);
+            $(`#stn_icons #${stnId}`).remove();
+            $('#stn_icons').append(this.#stations[stnId].html);
+            $('#stn_icons').html($('#stn_icons').html());
+        }
+        this.loadFonts();
+    }
+
+    removeStn(stnId) {
+        var param = getParams();
+
+        var parents = param.stn_list[stnId].parents;
+        var children = param.stn_list[stnId].children;
+
+        var isLastMainBranchStn = true;
+        for (let [id, instance] of Object.entries(this.#stations)) {
+            if (id == stnId) {continue;}
+            if (instance._y == this.y) {
+                isLastMainBranchStn = false;
+                break;
+            }
+        }
+
+        if (parents.length == 2 && children.length == 2) {
+            // Cannot remove this station
+            return false;
+        } else if (isLastMainBranchStn) {
+            // Last main line station
+            return false;
+        } else if (Object.keys(param.stn_list).length == 2) {
+            // Last two stations
+            return false;
+        } else if (parents.length == 2 || children.length == 2) {
+            parents.forEach(parId => {
+                param.stn_list[parId].children = children;
+                this.#stations[parId]._children = children;
+            });
+            children.forEach(childId => {
+                param.stn_list[childId].parents = parents;
+                this.#stations[childId]._parents = parents;
+            })
+        } else {
+            // 1 par 1 child
+            parents.forEach(parId => {
+                var idx = param.stn_list[parId].children.indexOf(stnId);
+                if (children.length) {
+                    param.stn_list[parId].children[idx] = children[0];
+                    this.#stations[parId]._children[idx] = children[0];
+                } else {
+                    // Right dest
+                    param.stn_list[parId].children.splice(idx, 1);
+                    this.#stations[parId]._children.splice(idx, 1);
+                }
+            });
+            children.forEach(childId => {
+                var idx = param.stn_list[childId].parents.indexOf(stnId);
+                if (parents.length) {
+                    param.stn_list[childId].parents[idx] = parents[0];
+                    this.#stations[childId]._parents[idx] = parents[0];
+                } else {
+                    // Left dest
+                    param.stn_list[childId].parents.splice(idx, 1);
+                    this.#stations[childId]._parents.splice(idx, 1);
+                }
+            })
+        }
+
+        delete param.stn_list[stnId];
+        delete this.#stations[stnId];
+
+        var isCurrentStnChanged = false;
+        if (this.#currentStnId == stnId) {
+            var newCurrentStnId = Object.keys(this.#stations)[0];
+            this.#currentStnId = newCurrentStnId;
+            param.current_stn_idx = newCurrentStnId;
+            isCurrentStnChanged = true;
+        }
+        putParams(param);
+
+
+        for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            stnInstance.x = this._stnRealX(stnId);
+            stnInstance.y = this._stnRealY(stnId);
+            stnInstance.namePos = (this.#txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
+            if (isCurrentStnChanged) {
+                stnInstance._state = this._stnState(stnId);
+            }
+        }
+        $('#stn_icons').empty();
+        this.drawStns();
+        this.updateStnNameBg();
+
+        $('#line_main').empty();
+        $('#line_pass').empty();
+        this.drawLine();
+        this.drawStrip();
+
+        $('#dest_name g:last-child').remove()
+        this.drawDestInfo();
+
+        this.loadFonts();
+        return true;
     }
 }

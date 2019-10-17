@@ -93,7 +93,7 @@ class Int2Station extends Station {
 
     constructor (id, data) {
         super(id, data);
-        [this.#intCity, this.#intLine, this.#intColour, this.#intNameZH, this.#intNameEN] = data.int2;
+        [this.#intCity, this.#intLine, this.#intColour, this.#intNameZH, this.#intNameEN] = data.transfer[1];
     }
 
     get _dy() {return 0;}
@@ -134,7 +134,7 @@ class Int3Station extends Station {
     constructor (id, data) {
         super(id, data);
 
-        data.int3.forEach(intInfo => {
+        data.transfer.slice(1).forEach(intInfo => {
             this.#intCity.push(intInfo[0]);
             this.#intLine.push(intInfo[1]);
             this.#intColour.push(intInfo[2]);
@@ -144,7 +144,7 @@ class Int3Station extends Station {
             this.#intNameEN.push(intInfo[4]);
         });
 
-        this._int3Type = data.change_type.substring(4);
+        this._int3Type = data.change_type.substring(5);
     }
 
     get iconHTML() {
@@ -211,13 +211,13 @@ class OSI11Station extends Int2Station {
     // #intNameZH; #intNameEN;
     #osiType; #osiDirection;
     constructor (id, data) {
-        data.int2 = data.osi11.slice(-5);
+        // data.int2 = data.osi11;
         super(id, data);
 
-        [this.#osiNameZH, this.#osiNameEN] = data.osi11.slice(0,2);
+        [this.#osiNameZH, this.#osiNameEN] = data.transfer[0];
 
-        this.#osiType = data.change_type.substring(5,6); // u(npaid) or p(aid);
-        this.#osiDirection = data.change_type.substring(6); // l or r;
+        this.#osiType = data.change_type.substring(6,7); // u(npaid) or p(aid);
+        this.#osiDirection = data.change_type.substring(7); // l or r;
     }
 
     get iconHTML() {
@@ -259,13 +259,13 @@ class OSI12Station extends Int3Station {
     #osiNameZH; #osiNameEN; 
     #osiType; #osiDirection;
     constructor (id, data) {
-        data.int3 = data.osi12.slice(1);
+        // data.int3 = data.osi12;
         super(id, data);
 
-        [this.#osiNameZH, this.#osiNameEN] = data.osi12[0];
+        [this.#osiNameZH, this.#osiNameEN] = data.transfer[0];
 
-        this.#osiType = data.change_type.substring(5,6); // u(npaid) or p(aid);
-        this.#osiDirection = data.change_type.substring(6); // l or r;
+        this.#osiType = data.change_type.substring(6,7); // u(npaid) or p(aid);
+        this.#osiDirection = data.change_type.substring(7); // l or r;
     }
 
     get iconHTML() {

@@ -309,6 +309,7 @@ id="railmap" width="0" height="0">
                 </span>
                 <span class="mdc-tab__ripple"></span>
             </button>
+
             <button class="mdc-tab" role="tab" aria-selected="true" tabindex="0">
             <span class="mdc-tab__content">
                 <span class="mdc-tab__icon material-icons" aria-hidden="true">style</span>
@@ -319,6 +320,7 @@ id="railmap" width="0" height="0">
             </span>
             <span class="mdc-tab__ripple"></span>
             </button>
+
             <button class="mdc-tab" role="tab" aria-selected="true" tabindex="0">
                 <span class="mdc-tab__content">
                     <span class="mdc-tab__icon material-icons" aria-hidden="true">directions_transit</span>
@@ -328,13 +330,67 @@ id="railmap" width="0" height="0">
                     <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
                 </span>
                 <span class="mdc-tab__ripple"></span>
-                </button>
+            </button>
+
+            <button class="mdc-tab" role="tab" aria-selected="true" tabindex="0">
+                <span class="mdc-tab__content">
+                    <span class="mdc-tab__icon material-icons" aria-hidden="true">save_alt</span>
+                    <span class="mdc-tab__text-label">Save</span>
+                </span>
+                <span class="mdc-tab-indicator ">
+                    <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                </span>
+                <span class="mdc-tab__ripple"></span>
+            </button>
         </div>
         </div>
     </div>
 </div>
 
 <div id="panel_layout" class="panel panel--active">
+
+<div>
+    <div id="svg_width" class="mdc-text-field mdc-text-field--outlined">
+        <input type="text" id="tf-outlined" class="mdc-text-field__input">
+        <div class="mdc-notched-outline">
+            <div class="mdc-notched-outline__leading"></div>
+            <div class="mdc-notched-outline__notch">
+            <label for="tf-outlined" class="mdc-floating-label">Width</label>
+            </div>
+            <div class="mdc-notched-outline__trailing"></div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <span>Vertical Position of Line</span>
+    <div id="y_pc" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value">
+        <div class="mdc-slider__track-container">
+            <div class="mdc-slider__track"></div>
+        </div>
+        <div class="mdc-slider__thumb-container">
+            <svg class="mdc-slider__thumb" width="21" height="21">
+                <circle cx="10.5" cy="10.5" r="7.875"></circle>
+            </svg>
+        <div class="mdc-slider__focus-ring"></div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <span>Branch Spacing</span>
+    <div id="branch_spacing" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value">
+        <div class="mdc-slider__track-container">
+            <div class="mdc-slider__track"></div>
+        </div>
+        <div class="mdc-slider__thumb-container">
+            <svg class="mdc-slider__thumb" width="21" height="21">
+                <circle cx="10.5" cy="10.5" r="7.875"></circle>
+            </svg>
+        <div class="mdc-slider__focus-ring"></div>
+        </div>
+    </div>
+</div>
 
 </div>
 
@@ -395,11 +451,303 @@ id="railmap" width="0" height="0">
     </div>
 </div>
 
+<div>
+    <span>Station Name Position</span>
+    <button id="txt_flip" class="mdc-icon-button material-icons">swap_vert</button>
+</div>
+
 </div>
 
 <div id="panel_stations" class="panel">
 
-    some text here
+<div>
+    <span>Modify or delete a current station</span>
+    <div id="stn_list" class="mdc-select mdc-select--outlined">
+        <i class="mdc-select__dropdown-icon"></i>
+        <select class="mdc-select__native-control">
+            <option value="null" selected disabled>Select a station...</option>
+        </select>
+        <div class="mdc-notched-outline">
+            <div class="mdc-notched-outline__leading"></div>
+            <div class="mdc-notched-outline__notch">
+                <label class="mdc-floating-label">Station</label>
+            </div>
+            <div class="mdc-notched-outline__trailing"></div>
+        </div>
+    </div>
+    <button id="stn_modify" class="mdc-icon-button material-icons">text_fields</button>
+    <button id="stn_transfer" class="mdc-icon-button material-icons">transfer_within_a_station</button>
+    <button id="stn_delete" class="mdc-icon-button material-icons">delete</button>
+</div>
+
+<div id="stn_modify_diag" class="mdc-dialog"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="my-dialog-title"
+     aria-describedby="my-dialog-content">
+  <div class="mdc-dialog__container">
+    <div class="mdc-dialog__surface">
+      <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+      <h2 class="mdc-dialog__title" id="my-dialog-title">Edit station name</h2>
+      <div class="mdc-dialog__content" id="my-dialog-content">
+            <span>Please enter station name in both Chinese and Latin characters. </span>
+            <div id="name_zh" class="mdc-text-field mdc-text-field--outlined">
+                <input type="text" id="tf-outlined" class="mdc-text-field__input">
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                    <label for="tf-outlined" class="mdc-floating-label">Name in Chinese Characters</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+            <div id="name_en" class="mdc-text-field mdc-text-field--outlined">
+                <input type="text" id="tf-outlined" class="mdc-text-field__input">
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                    <label for="tf-outlined" class="mdc-floating-label">Name in Latin Characters</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+      </div>
+      <footer class="mdc-dialog__actions">
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
+          <span class="mdc-button__label">Done</span>
+        </button>
+      </footer>
+    </div>
+  </div>
+  <div class="mdc-dialog__scrim"></div>
+</div>
+
+<div id="stn_transfer_diag" class="mdc-dialog"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="my-dialog-title"
+     aria-describedby="my-dialog-content">
+  <div class="mdc-dialog__container">
+    <div class="mdc-dialog__surface">
+      <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+      <h2 class="mdc-dialog__title" id="my-dialog-title">Edit type of interchange</h2>
+      <div class="mdc-dialog__content" id="my-dialog-content">
+            <span>Please select the type of interchange. </span>
+            <div id="change_type" class="mdc-select mdc-select--outlined">
+                <i class="mdc-select__dropdown-icon"></i>
+                <select class="mdc-select__native-control">
+                    <option value="none" selected>None</option>
+                    <option value="int2">Interchange (2 stations)</option>
+                    <option value="int3">Interchange (3 stations)</option>
+                    <option value="osi11">Out-station-interchange (1-1)</option>
+                    <option value="osi12">Out-station-interchange (1-2)</option>
+                </select>
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                        <label class="mdc-floating-label">Interchange</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+            <button id="tick_direc" class="mdc-icon-button" aria-label="Interchange Direction" aria-hidden="false" aria-pressed="false">
+                <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">toggle_on</i>
+                <i class="material-icons mdc-icon-button__icon">toggle_off</i>
+            </button>
+
+            <br>
+
+            <div id="osi_name_zh" class="mdc-text-field mdc-text-field--outlined">
+                <input type="text" id="tf-outlined" class="mdc-text-field__input">
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                    <label for="tf-outlined" class="mdc-floating-label">OSI Name in Chinese Characters</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+            <div id="osi_name_en" class="mdc-text-field mdc-text-field--outlined">
+                <input type="text" id="tf-outlined" class="mdc-text-field__input">
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                    <label for="tf-outlined" class="mdc-floating-label">OSI Name in Latin Characters</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+            <button id="paid_area" class="mdc-icon-button" aria-label="Paid Area" aria-hidden="false" aria-pressed="false">
+                <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">attach_money</i>
+                <i class="material-icons mdc-icon-button__icon">money_off</i>
+            </button>
+
+            <br>
+
+            <div id="int_city_1" class="mdc-select mdc-select--outlined">
+                <i class="mdc-select__dropdown-icon"></i>
+                <select class="mdc-select__native-control">
+                    <!-- <option value="nullcity" selected>Customise...</option> -->
+                </select>
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                        <label class="mdc-floating-label">1st City</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+            <div id="int_line_1" class="mdc-select mdc-select--outlined">
+                <i class="mdc-select__dropdown-icon"></i>
+                <select class="mdc-select__native-control">
+                    <!-- <option value="nullcity" selected>Customise...</option> -->
+                </select>
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                        <label class="mdc-floating-label">1st Line</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+            <div id="int_name_zh_1" class="mdc-text-field mdc-text-field--outlined">
+                <input type="text" id="tf-outlined" class="mdc-text-field__input">
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                    <label for="tf-outlined" class="mdc-floating-label">1st Name in Chinese Characters</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+            <div id="int_name_en_1" class="mdc-text-field mdc-text-field--outlined">
+                <input type="text" id="tf-outlined" class="mdc-text-field__input">
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                    <label for="tf-outlined" class="mdc-floating-label">1st Name in Latin Characters</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+
+            <br>
+
+            <div id="int_city_2" class="mdc-select mdc-select--outlined">
+                <i class="mdc-select__dropdown-icon"></i>
+                <select class="mdc-select__native-control">
+                    <!-- <option value="nullcity" selected>Customise...</option> -->
+                </select>
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                        <label class="mdc-floating-label">2nd City</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+            <div id="int_line_2" class="mdc-select mdc-select--outlined">
+                <i class="mdc-select__dropdown-icon"></i>
+                <select class="mdc-select__native-control">
+                    <!-- <option value="nullcity" selected>Customise...</option> -->
+                </select>
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                        <label class="mdc-floating-label">2nd Line</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+            <div id="int_name_zh_2" class="mdc-text-field mdc-text-field--outlined">
+                <input type="text" id="tf-outlined" class="mdc-text-field__input">
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                    <label for="tf-outlined" class="mdc-floating-label">2nd Name in Chinese Characters</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+            <div id="int_name_en_2" class="mdc-text-field mdc-text-field--outlined">
+                <input type="text" id="tf-outlined" class="mdc-text-field__input">
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                    <label for="tf-outlined" class="mdc-floating-label">2nd Name in Latin Characters</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+
+            <br>
+
+            Please note that changes will not be applied to SVG until the 'save' button is pressed.
+      </div>
+      <footer class="mdc-dialog__actions">
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
+            <span class="mdc-button__label">Discard</span>
+        </button>
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="accept" data-mdc-dialog-button-default>
+          <span class="mdc-button__label">Save</span>
+        </button>
+      </footer>
+    </div>
+  </div>
+  <div class="mdc-dialog__scrim"></div>
+</div>
+
+
+<div id="stn_delete_diag" class="mdc-dialog"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="my-dialog-title"
+     aria-describedby="my-dialog-content">
+  <div class="mdc-dialog__container">
+    <div class="mdc-dialog__surface">
+      <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+      <h2 class="mdc-dialog__title" id="my-dialog-title">Warning</h2>
+      <div class="mdc-dialog__content" id="my-dialog-content">
+        Dialog body text goes here.
+      </div>
+      <footer class="mdc-dialog__actions">
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
+          <span class="mdc-button__label">Cancel</span>
+        </button>
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="accept" data-mdc-dialog-button-default>
+          <span class="mdc-button__label">Delete</span>
+        </button>
+      </footer>
+    </div>
+  </div>
+  <div class="mdc-dialog__scrim"></div>
+</div>
+
+<div id="stn_delete_err" class="mdc-dialog"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="my-dialog-title"
+     aria-describedby="my-dialog-content">
+  <div class="mdc-dialog__container">
+    <div class="mdc-dialog__surface">
+      <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+      <h2 class="mdc-dialog__title" id="my-dialog-title">Error</h2>
+      <div class="mdc-dialog__content" id="my-dialog-content">
+        You are not allowed to delete this station!
+      </div>
+      <footer class="mdc-dialog__actions">
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
+          <span class="mdc-button__label">OK</span>
+        </button>
+      </footer>
+    </div>
+  </div>
+  <div class="mdc-dialog__scrim"></div>
+</div>
+
+</div>
+
+<div id="panel_save" class="panel">
 
 </div>
 
@@ -434,18 +782,25 @@ id="railmap" width="0" height="0">
 </script>
 
 <script>
-    var firstInit = true;
+    var designPanelFirstInit = true;
+    var stationsPanelFirstInit = true;
     // $('.mdc-tab-bar').each((i, elem) => mdc.tabBar.MDCTabBar.attachTo(elem));
     var tabBar = new mdc.tabBar.MDCTabBar.attachTo($('.mdc-tab-bar')[0]);
     tabBar.listen('MDCTabBar:activated', event => {
         $('.panel--active').removeClass('panel--active');
         $('.panel').eq(event.detail.index).addClass('panel--active');
 
-        if (event.detail.index == 1 && firstInit) {
+        if (event.detail.index == 1 && designPanelFirstInit) {
             initDesignPanel();
-            firstInit = false;
+            designPanelFirstInit = false;
+        }
+        if (event.detail.index == 2 && stationsPanelFirstInit) {
+            initStationsPanel();
+            stationsPanelFirstInit = false;
         }
     });
+
+    initLayoutPanel();
 
     console.log(`panel`, Date.now())
 </script>
