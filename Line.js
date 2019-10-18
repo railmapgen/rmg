@@ -24,35 +24,6 @@ class Line {
         this.#txtFlip = param['txt_flip'];
 
         for (let [stnId, stnInfo] of Object.entries(param['stn_list'])) {
-            // switch (stnInfo['change_type']) {
-            //     case 'int2':
-            //         this.#stations[stnId] = new Int2Station(stnId, stnInfo);
-            //         break;
-            //     case 'int3_l':
-            //         this.#stations[stnId] = new Int3LStation(stnId, stnInfo);
-            //         break;
-            //     case 'int3_r':
-            //         this.#stations[stnId] = new Int3RStation(stnId, stnInfo);
-            //         break;
-            //     case 'osi11_ul':
-            //     case 'osi11_pl':
-            //         this.#stations[stnId] = new OSI11LStation(stnId, stnInfo);
-            //         break;
-            //     case 'osi11_ur':
-            //     case 'osi11_pr':
-            //         this.#stations[stnId] = new OSI11RStation(stnId, stnInfo);
-            //         break;
-            //     case 'osi12_ul':
-            //     case 'osi12_pl':
-            //         this.#stations[stnId] = new OSI12LStation(stnId, stnInfo);
-            //         break;
-            //     case 'osi12_ur':
-            //     case 'osi12_pr':
-            //         this.#stations[stnId] = new OSI12RStation(stnId, stnInfo);
-            //         break;
-            //     default:
-            //         this.#stations[stnId] = new Station(stnId, stnInfo);
-            // }
             this.#stations[stnId] = this._initStnInstance(stnId, stnInfo);
         }
         this.#currentStnId = param['current_stn_idx'];
@@ -428,9 +399,18 @@ class Line {
         } else {
             // no parent
             if (this.leftDests.length == 1) {
+                // no siblings
                 return 0
             } else {
-                return (this.leftDests.indexOf(stnId) == 0) ? 1 : -1;
+                // return (this.leftDests.indexOf(stnId) == 0) ? 1 : -1;
+                var tmpStn = stnId;
+                while (true) {
+                    var tmpSuc = this.#stations[tmpStn]._children[0];
+                    if (this._stnIndegree(tmpSuc) == 2) {
+                        return (this.#stations[tmpSuc]._parents.indexOf(tmpStn)==0) ? 1 : -1;
+                    }
+                    tmpStn = this.#stations[tmpStn]._children[0];
+                }
             }
             // var stnSuc = this.#stations[stnId]._children[0];
             // if (this._stnIndegree(stnSuc) == 1) {
@@ -790,8 +770,8 @@ class Line {
     removeStn(stnId) {
         var param = getParams();
 
-        var parents = param.stn_list[stnId].parents;
-        var children = param.stn_list[stnId].children;
+        var parents = this.#stations[stnId]._parents;
+        var children = this.#stations[stnId]._children;
 
         var isLastMainBranchStn = true;
         for (let [id, instance] of Object.entries(this.#stations)) {
@@ -803,7 +783,7 @@ class Line {
         }
 
         if (parents.length == 2 && children.length == 2) {
-            // Cannot remove this station
+            // To be rewritten, join two branches
             return false;
         } else if (isLastMainBranchStn) {
             // Last main line station
@@ -881,5 +861,253 @@ class Line {
 
         this.loadFonts();
         return true;
+    }
+
+    newStnPossibleLoc(prep, stnId) {
+        var len = (prep == 'before') ? this.#stations[stnId]._parents.length : this.#stations[stnId]._children.length;
+        switch (len) {
+            case 2:
+                return [1,1,1,0,0];
+            case 1:
+                if (this.#stations[stnId]._y == this.y) {
+                    return [1,0,0,0,0];
+                    // [1,0,0,1,1];
+                } else if (this.#stations[stnId]._y > this.y) {
+                    if (prep == 'before') {
+                        return [this._stnOutdegree(this.#stations[stnId]._parents[0])-1, 
+                            0,1,0,0
+                        ];
+                    } else {
+                        return [this._stnIndegree(this.#stations[stnId]._children[0])-1, 
+                            0,1,0,0
+                        ];
+                    }
+                } else {
+                    if (prep == 'before') {
+                        return [this._stnOutdegree(this.#stations[stnId]._parents[0])-1, 
+                            1,0,0,0
+                        ];
+                    } else {
+                        return [this._stnIndegree(this.#stations[stnId]._children[0])-1, 
+                            1,0,0,0
+                        ];
+                    }
+                }
+            case 0:
+                if (this.#stations[stnId]._y == this.y) {
+                    return [1,0,0,0,0];
+                } else if (this.#stations[stnId]._y > this.y) {
+                    return [1,0,1,0,0];
+                } else {
+                    return [1,1,0,0,0];
+                }
+        }
+        return [0,0,0,0,0];
+    }
+
+    newBranchPossibleEnd(prep, stnId) {
+        var res = [];
+        if (prep == 'before') {
+            while (true) {
+                stnId = this.#stations[stnId]._parents[0];
+                res.unshift(stnId);
+                switch (this._stnIndegree(stnId)) {
+                    case 0:
+                        res.unshift('linestart');
+                    case 2:
+                        return res;
+                    default:
+                        continue;
+                }
+            }
+        } else {
+            while (true) {
+                stnId = this.#stations[stnId]._children[0];
+                res.push(stnId);
+                switch (this._stnOutdegree(stnId)) {
+                    case 0:
+                        res.push('lineend');
+                    case 2:
+                        return res;
+                }
+            }
+        }
+    }
+
+    addStn(prep, stnId, loc, end) {
+        var newId = getRandomId();
+        while (Object.keys(this.#stations).includes(newId)) {
+            newId = getRandomId();
+        }
+
+        var param = getParams();
+        var newInfo = {};
+
+        if (prep == 'before') {
+            if (loc == 'centre') {
+                newInfo.parents = this.#stations[stnId]._parents;
+                if (this._stnIndegree(stnId)==0 && this.#stations[stnId]._y != this.y) {
+                    newInfo.children = this.leftDests;
+                } else if (this.#stations[stnId]._y != this.y) {
+                    newInfo.children = this.#stations[this.#stations[stnId]._parents[0]]._children;
+                } else {
+                    newInfo.children = [stnId];
+                }
+                newInfo.parents.forEach(par => {
+                    this.#stations[par]._children = [newId];
+                    param.stn_list[par].children = [newId];
+                });
+                newInfo.children.forEach(child => {
+                    this.#stations[child]._parents = [newId];
+                    param.stn_list[child].parents = [newId];
+                });
+            } else if (loc == 'upper') {
+                if (this._stnIndegree(stnId) == 2) {
+                    newInfo.parents = this.#stations[stnId]._parents.slice(0,1);
+                    newInfo.children = [stnId];
+                    newInfo.parents.forEach(par => {
+                        this.#stations[par]._children = [newId];
+                        param.stn_list[par].children = [newId];
+                    });
+                    this.#stations[stnId]._parents[0] = newId;
+                    param.stn_list[stnId].parents[0] = newId;
+                } else {
+                    // already on branch
+                    newInfo.parents = this.#stations[stnId]._parents;
+                    newInfo.children = [stnId];
+                    newInfo.parents.forEach(par => {
+                        this.#stations[par]._children[0] = newId;
+                        param.stn_list[par].children[0] = newId;
+                    });
+                    newInfo.children.forEach(child => {
+                        this.#stations[child]._parents = [newId];
+                        param.stn_list[child].parents = [newId];
+                    });
+                }
+            } else if (loc == 'lower') {
+                if (this._stnIndegree(stnId) == 2) {
+                    newInfo.parents = this.#stations[stnId]._parents.slice(1);
+                    newInfo.children = [stnId];
+                    newInfo.parents.forEach(par => {
+                        this.#stations[par]._children = [newId];
+                        param.stn_list[par].children = [newId];
+                    });
+                    this.#stations[stnId]._parents[1] = newId;
+                    param.stn_list[stnId].parents[1] = newId;
+                } else {
+                    // already on branch
+                    newInfo.parents = this.#stations[stnId]._parents;
+                    newInfo.children = [stnId];
+                    newInfo.parents.forEach(par => {
+                        this.#stations[par]._children[1] = newId;
+                        param.stn_list[par].children[1] = newId;
+                    });
+                    newInfo.children.forEach(child => {
+                        this.#stations[child]._parents = [newId];
+                        param.stn_list[child].parents = [newId];
+                    });
+                }
+            } else if (loc == 'newupper') {
+                //
+            }
+        } else {
+            if (loc == 'centre') {
+                newInfo.children = this.#stations[stnId]._children;
+                if (this._stnOutdegree(stnId)==0 && this.#stations[stnId]._y != this.y) {
+                    newInfo.parents = this.rightDests;
+                } else if (this.#stations[stnId]._y != this.y) {
+                    newInfo.parents = this.#stations[this.#stations[stnId]._children[0]]._parents;
+                } else {
+                    newInfo.parents = [stnId];
+                }
+                newInfo.children.forEach(child => {
+                    this.#stations[child]._parents = [newId];
+                    param.stn_list[child].parents = [newId];
+                });
+                newInfo.parents.forEach(par => {
+                    this.#stations[par]._children = [newId];
+                    param.stn_list[par].children = [newId];
+                });
+            } else if (loc == 'upper') {
+                if (this._stnOutdegree(stnId) == 2) {
+                    newInfo.children = this.#stations[stnId]._children.slice(0,1);
+                    newInfo.parents = [stnId];
+                    newInfo.children.forEach(child => {
+                        this.#stations[child]._parents = [newId];
+                        param.stn_list[child].parents = [newId];
+                    });
+                    this.#stations[stnId]._children[0] = newId;
+                    param.stn_list[stnId].children[0] = newId;
+                } else {
+                    // already on branch
+                    newInfo.children = this.#stations[stnId]._children;
+                    newInfo.parents = [stnId];
+                    newInfo.children.forEach(child => {
+                        this.#stations[child]._parents[0] = newId;
+                        param.stn_list[child].parents[0] = newId;
+                    });
+                    newInfo.parents.forEach(par => {
+                        this.#stations[par]._children = [newId];
+                        param.stn_list[par].children = [newId];
+                    });
+                }
+            } else if (loc == 'lower') {
+                if (this._stnOutdegree(stnId) == 2) {
+                    newInfo.children = this.#stations[stnId]._children.slice(1);
+                    newInfo.parents = [stnId];
+                    newInfo.children.forEach(child => {
+                        this.#stations[child]._parents = [newId];
+                        param.stn_list[child].parents = [newId];
+                    });
+                    this.#stations[stnId]._children[1] = newId;
+                    param.stn_list[stnId].children[1] = newId;
+                } else {
+                    // already on branch
+                    newInfo.children = this.#stations[stnId]._children;
+                    newInfo.parents = [stnId];
+                    newInfo.children.forEach(child => {
+                        this.#stations[child]._parents[1] = newId;
+                        param.stn_list[child].parents[1] = newId;
+                    });
+                    newInfo.parents.forEach(par => {
+                        this.#stations[par]._children = [newId];
+                        param.stn_list[par].children = [newId];
+                    });
+                }
+            }
+        }
+
+        newInfo.name = [`車站${newId.toUpperCase()}`, `Station ${newId.toUpperCase()}`];
+        newInfo.change_type = 'none';
+        
+        param.stn_list[newId] = newInfo;
+        putParams(param);
+
+        this.#stations[newId] = this._initStnInstance(newId, newInfo);
+
+        for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            stnInstance.x = this._stnRealX(stnId);
+            stnInstance.y = this._stnRealY(stnId);
+            stnInstance._state = this._stnState(stnId);
+            stnInstance.namePos = (this.#txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
+        }
+
+        $('#stn_icons').empty();
+        this.drawStns();
+        this.updateStnNameBg();
+
+        $('#line_main').empty();
+        $('#line_pass').empty();
+        this.drawLine();
+        this.drawStrip();
+
+        $('#dest_name g:last-child').remove()
+        this.drawDestInfo();
+
+        this.loadFonts();
+
+        return [newId, newInfo];
+        console.log(newInfo);
+        console.log(param);
     }
 }

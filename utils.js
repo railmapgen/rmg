@@ -146,3 +146,7 @@ function getStnState(param, i) {
         return Math.sign(current_stn_idx-i);
     }
 }
+
+function getRandomId() {
+    return Math.floor(Math.random() * Math.pow(36, 4)).toString(36).padStart(4, '0');
+}

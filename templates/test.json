@@ -1,7 +1,7 @@
 {
     "svg_height": 300, 
-    "svg_width": 1200, 
-    "svg_dest_width": 1200,
+    "svg_width": 1500, 
+    "svg_dest_width": 1500,
     "show_outer": true, 
     "padding": 5, 
     "y_pc": 40, 
@@ -15,10 +15,22 @@
     "platform_num": "2",
 
     "txt_bg_gap": 15,
-    "txt_flip": false,
+    "txt_flip": true,
     "stn_list": {
-        "a02": {
+        "a04": {
             "parents": [],
+            "children": ["a03"],
+            "name":["調04","Tiu Keng Leng"], 
+            "change_type": "none"
+        },
+        "a03": {
+            "parents": ["a04"],
+            "children": ["a02","a01"],
+            "name":["調03","Tiu Keng Leng"], 
+            "change_type": "none"
+        },
+        "a02": {
+            "parents": ["a03"],
             "children": ["a00"],
             "name":["調02","Tiu Keng Leng"], 
             "change_type": "none"
@@ -31,7 +43,7 @@
             "transfer":[[],["hongkong","tkl","#A35EB5","將軍澳綫\\往寶琳/康城","Tseung Kwan O Line\\to Po Lam/LOHAS Park"],[]]
         },
         "a01": {
-            "parents": [],
+            "parents": ["a03"],
             "children": ["a1"],
             "name":["調01","Tiu Keng Leng"], 
             "change_type": "osi11_pr",
@@ -67,13 +79,20 @@
         },
         "a50": {
             "parents": ["a2","a4"],
-            "children": ["a5"],
+            "children": ["a51"],
             "name":["調50","Tiu Keng Leng"], 
             "change_type": "int2",
             "transfer":[[],["hongkong","tkl","#A35EB5","將軍澳綫","Tseung Kwan O Line\\to Po Lam/LOHAS Park"],[]]
         },
-        "a5": {
+        "a51": {
             "parents": ["a50"],
+            "children": ["a5"],
+            "name":["調51","Tiu Keng Leng"], 
+            "change_type": "int2",
+            "transfer":[[],["hongkong","tkl","#A35EB5","將軍澳綫","Tseung Kwan O Line\\to Po Lam/LOHAS Park"],[]]
+        },
+        "a5": {
+            "parents": ["a51"],
             "children": ["a6","a8"],
             "name":["調景5","Tiu Keng Leng"], 
             "change_type": "osi12_ul",
