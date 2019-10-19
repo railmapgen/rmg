@@ -648,7 +648,7 @@ id="railmap" width="0" height="0">
     <div id="stn_list" class="mdc-select mdc-select--outlined">
         <i class="mdc-select__dropdown-icon"></i>
         <select class="mdc-select__native-control">
-            <option value="null" selected disabled>Select a station...</option>
+            <!-- <option value="null" selected disabled>Select a station...</option> -->
         </select>
         <div class="mdc-notched-outline">
             <div class="mdc-notched-outline__leading"></div>
@@ -658,9 +658,13 @@ id="railmap" width="0" height="0">
             <div class="mdc-notched-outline__trailing"></div>
         </div>
     </div>
+    <button id="stn_current" class="mdc-icon-button" aria-label="Set as current station" aria-hidden="false" aria-pressed="false">
+        <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">my_location</i>
+        <i class="material-icons mdc-icon-button__icon">location_searching</i>
+    </button>
     <button id="stn_modify" class="mdc-icon-button material-icons">text_fields</button>
     <button id="stn_transfer" class="mdc-icon-button material-icons">transfer_within_a_station</button>
-    <button id="stn_delete" class="mdc-icon-button material-icons">delete</button>
+    <button id="stn_delete" class="mdc-icon-button material-icons">delete_forever</button>
 </div>
 
 <div id="stn_modify_diag" class="mdc-dialog"

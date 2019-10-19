@@ -122,6 +122,7 @@ function initDesignPanel() {
 function initStationsPanel() {
     var stationSelect = new mdc.select.MDCSelect($('#stn_list')[0]);
     for (let [stnId, stnInfo] of Object.entries(getParams().stn_list)) {
+        if (['linestart', 'lineend'].includes(stnId)) {continue;}
         $('#stn_list > select').append(
             `<option value="${stnId}">${stnInfo.name.join(' - ')}</option>`
         );
@@ -129,6 +130,20 @@ function initStationsPanel() {
             `<option value="${stnId}">${stnInfo.name.join(' - ')}</option>`
         );
     }
+    var stnCurrentToggle = new mdc.iconButton.MDCIconButtonToggle($('#stn_current')[0]);
+    stationSelect.listen('MDCSelect:change', event => {
+        stnCurrentToggle.on = (getParams().current_stn_idx == event.detail.value)
+    });
+    stationSelect.selectedIndex = 0;
+    stnCurrentToggle.listen('MDCIconButtonToggle:change', event => {
+        if (!event.detail.isOn) {
+            console.log(event.detail);
+            stnCurrentToggle.on = true;
+            return;
+        }
+        console.log(stationSelect.value);
+        ktl.currentStnId = stationSelect.value;
+    })
 
     // Addition
     var stnAddButtonRipple = new mdc.ripple.MDCRipple($('#stn_add')[0]);
@@ -173,37 +188,52 @@ function initStationsPanel() {
     stnAddPivotSelect.listen('MDCSelect:change', event => {
         var prep = stnAddPrepSelect.value;
         var stnId = stnAddPivotSelect.value;
+        var stnList = getParams().stn_list;
         for (let [idx, state] of ktl.newStnPossibleLoc(prep, stnId).entries()) {
-            $('#stn_add_diag #loc option').eq(idx).prop('disabled', (state)?false:true);
+            if (state) {
+                $('#stn_add_diag #loc option').eq(idx).prop('disabled', false);
+                if (idx >= 3) {
+                    // newupper or newlower
+                    $('#stn_add_diag #end select').empty();
+                    state.forEach(stnId => {
+                        $('#stn_add_diag #end select').append(
+                            `<option value="${stnId}">${stnList[stnId].name.join(' - ')}</option>`
+                        );
+                    });
+                }
+            } else {
+                $('#stn_add_diag #loc option').eq(idx).prop('disabled', true);
+            }
+            // $('#stn_add_diag #loc option').eq(idx).prop('disabled', (state)?false:true);
         }
         stnAddLocSelect.value = $('#stn_add_diag #loc option:not([disabled]):first').attr('value');
     });
     stnAddLocSelect.listen('MDCSelect:change', event => {
         if (['newupper', 'newlower'].includes(event.detail.value)) {
             $('#stn_add_diag #new_branch').attr('style', '');
-            $('#stn_add_diag #end select').empty();
+            // $('#stn_add_diag #end select').empty();
 
-            var stnList = getParams().stn_list;
-            var prep = stnAddPrepSelect.value;
-            var stnId = stnAddPivotSelect.value;
-            ktl.newBranchPossibleEnd(prep, stnId).forEach(pStnId => {
-                switch (pStnId) {
-                    case 'linestart':
-                        $('#stn_add_diag #end select').append(
-                            `<option value="${pStnId}">Beginning of Line</option>`
-                        );
-                        break;
-                    case 'lineend':
-                        $('#stn_add_diag #end select').append(
-                            `<option value="${pStnId}">End of Line</option>`
-                        );
-                        break;
-                    default:
-                        $('#stn_add_diag #end select').append(
-                            `<option value="${pStnId}">${stnList[pStnId].name.join(' - ')}</option>`
-                        );
-                }
-            });
+            // var stnList = getParams().stn_list;
+            // var prep = stnAddPrepSelect.value;
+            // var stnId = stnAddPivotSelect.value;
+            // ktl.newBranchPossibleEnd(prep, stnId).forEach(pStnId => {
+            //     switch (pStnId) {
+            //         // case 'linestart':
+            //         //     $('#stn_add_diag #end select').append(
+            //         //         `<option value="${pStnId}">Beginning of Line</option>`
+            //         //     );
+            //         //     break;
+            //         // case 'lineend':
+            //         //     $('#stn_add_diag #end select').append(
+            //         //         `<option value="${pStnId}">End of Line</option>`
+            //         //     );
+            //         //     break;
+            //         default:
+            //             $('#stn_add_diag #end select').append(
+            //                 `<option value="${pStnId}">${stnList[pStnId].name.join(' - ')}</option>`
+            //             );
+            //     }
+            // });
             stnAddEndSelect.selectedIndex = 0;
         } else {
             $('#stn_add_diag #new_branch').attr('style', 'display:none');
@@ -509,18 +539,20 @@ function initStationsPanel() {
     });
     stnDeleteConfirmDialog.listen('MDCDialog:opening', event => {
         $('#stn_delete_diag .mdc-dialog__content').html(
-            `Are you sure to delete station ${$('#stn_list option').eq(stationSelect.selectedIndex).html()}?`
+            `Are you sure to delete station ${$('#stn_list option').eq(stationSelect.selectedIndex).html()}? You can't undo this action. `
         );
     });
     stnDeleteConfirmDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action == 'close') {return;}
         var stnId = stationSelect.value;
+        var idx = stationSelect.selectedIndex;
         // Remove from data and svg
         if (ktl.removeStn(stnId)) {
             // Remove station from selection
             $(`#stn_list [value=${stnId}]`).remove();
             // $('#stn_list option').eq(stationSelect.selectedIndex).remove();
             $(`#stn_add_diag #pivot [value=${stnId}]`).remove();
+            stationSelect.selectedIndex = (idx==0) ? 0 : idx-1;
         } else {
             stnDeleteErrorDialog.open();
         }

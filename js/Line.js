@@ -14,8 +14,7 @@ class Line {
         this.#svgDestWidth = param['svg_dest_width'];
         this.#showOuter = param['show_outer'];
 
-        [this.themeCity, this.themeLine, this.#themeColour] = param['theme'];
-        // this.#themeColour = colours[this.themeCity].line[this.themeLine].colour;
+        [this.themeCity, this.themeLine, this.#themeColour] = param.theme;
 
         this.#yPc = param['y_pc'];
         this.#padding = param['padding'];
@@ -37,6 +36,7 @@ class Line {
 
         // Calculate other properties of stations
         for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
             stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
             stnInstance._state = this._stnState(stnId);
@@ -84,6 +84,7 @@ class Line {
         this.drawSVGFrame();
 
         for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
             stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
         }
@@ -111,6 +112,7 @@ class Line {
         putParams(param);
 
         for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
             stnInstance.y = this._stnRealY(stnId);
         }
         $('#stn_icons').empty();
@@ -133,6 +135,7 @@ class Line {
         putParams(param);
 
         for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
             stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
         }
@@ -165,6 +168,7 @@ class Line {
         putParams(param);
 
         for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
             stnInstance._state = this._stnState(stnId);
         }
 
@@ -189,6 +193,30 @@ class Line {
         putParams(param);
 
         $('#dest_name > #platform > text').text(val);
+    }
+    set currentStnId(val) {
+        this.#currentStnId = val;
+
+        var param = getParams();
+        param.current_stn_idx = val;
+        putParams(param);
+
+        for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
+            stnInstance._state = this._stnState(stnId);
+        }
+        $('#stn_icons').empty();
+        this.drawStns();
+        this.updateStnNameBg();
+
+        $('#line_main').empty();
+        $('#line_pass').empty();
+        this.drawLine();
+
+        $('#dest_name g:last-child').remove()
+        this.drawDestInfo();
+
+        this.loadFonts();
     }
 
     _pathWeight(stnId1, stnId2) {
@@ -288,28 +316,25 @@ class Line {
     }
 
     get leftDests() {
-        var dests = [];
-        for (let stnId in this.#stations) {
-            if (!this._stnIndegree(stnId)) {dests.push(stnId)};
-        }
-        return dests;
+        // var dests = [];
+        // for (let stnId in this.#stations) {
+        //     if (!this._stnIndegree(stnId)) {dests.push(stnId)};
+        // }
+        // return dests;
+        return this.#stations.linestart._children;
     }
 
     get rightDests() {
-        var dests = [];
-        for (let stnId in this.#stations) {
-            if (!this._stnOutdegree(stnId)) {dests.push(stnId)};
-        }
-        return dests;
+        // var dests = [];
+        // for (let stnId in this.#stations) {
+        //     if (!this._stnOutdegree(stnId)) {dests.push(stnId)};
+        // }
+        // return dests;
+        return this.#stations.lineend._parents;
     }
 
-    _stnIndegree(stnId) {
-        return this.#stations[stnId]._parents.length;
-    }
-
-    _stnOutdegree(stnId) {
-        return this.#stations[stnId]._children.length;
-    }
+    _stnIndegree(stnId) {return this.#stations[stnId].inDegree;}
+    _stnOutdegree(stnId) {return this.#stations[stnId].outDegree}
 
     get stnRealXs() {
         var xs = {};
@@ -332,7 +357,7 @@ class Line {
 
         while (true) {
             var parent = this.#stations[partSource]._parents[0];
-            if (!parent) {
+            if (parent == 'linestart') {
                 leftOpenJaw = true;
                 break;
             }
@@ -344,7 +369,7 @@ class Line {
 
         while (true) {
             var children = this.#stations[partSink]._children;
-            if (children.length) {
+            if (children[0] != 'lineend') {
                 partSink = children[0];
             } else {
                 rightOpenJaw = true;
@@ -373,17 +398,17 @@ class Line {
         return lineStart + this._stnXShare(stnId) / this.criticalPath.len * (lineEnd - lineStart);
     }
 
-    get stnRealYs() {
-        var ys = {};
+    // get stnRealYs() {
+    //     var ys = {};
 
-        for (let stnId in this.#stations) {
-            ys[stnId] = this._stnRealY(stnId);
-        }
-        return ys;
-    }
+    //     for (let stnId in this.#stations) {
+    //         ys[stnId] = this._stnRealY(stnId);
+    //     }
+    //     return ys;
+    // }
 
     _stnYShare(stnId) {
-        if (this._stnIndegree(stnId) > 1 || this._stnOutdegree(stnId) > 1) {
+        if (['linestart', 'lineend'].includes(stnId) || this._stnIndegree(stnId) > 1 || this._stnOutdegree(stnId) > 1) {
             return 0;
         }
         var stnPred = this.#stations[stnId]._parents[0];
@@ -397,6 +422,9 @@ class Line {
                 return (this.#stations[stnPred]._children.indexOf(stnId) == 0) ? 1 : -1;
             }
         } else {
+            // no parent, must be linestart
+            return 0;
+            // never accessed
             // no parent
             if (this.leftDests.length == 1) {
                 // no siblings
@@ -509,6 +537,7 @@ class Line {
 
     drawStns() {
         for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
             // $('#stn_icons').append(
             //     stnInstance.drawStnIcon()
             // );
@@ -547,9 +576,11 @@ class Line {
         }
 
         for (let [leftStnId, leftStnInstance] of Object.entries(this.#stations)) {
+            if (['linestart', 'lineend'].includes(leftStnId)) {continue;}
             var x1 = this._stnRealX(leftStnId);
             var y1 = this._stnRealY(leftStnId);
             for (let rightStnId of leftStnInstance._children) {
+                if (['linestart', 'lineend'].includes(rightStnId)) {continue;}
                 var x2 = this._stnRealX(rightStnId);
                 var y2 = this._stnRealY(rightStnId);
 
@@ -691,6 +722,7 @@ class Line {
         this.#txtFlip = !this.#txtFlip;
 
         for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
             stnInstance.namePos = (this.#txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
         }
 
@@ -774,9 +806,20 @@ class Line {
         var children = this.#stations[stnId]._children;
 
         var isLastMainBranchStn = true;
-        for (let [id, instance] of Object.entries(this.#stations)) {
-            if (id == stnId) {continue;}
-            if (instance._y == this.y) {
+        // for (let [id, instance] of Object.entries(this.#stations)) {
+        //     if (id == stnId) {continue;}
+        //     if (instance._y == this.y) {
+        //         isLastMainBranchStn = false;
+        //         break;
+        //     }
+        // }
+        // Object.keys(this.#stations).forEach(id => {
+        //     if ([stnId, 'linestart', 'lineend'].includes(id)) {return;}
+
+        // })
+        for (let id in this.#stations) {
+            if ([stnId, 'linestart', 'lineend'].includes(id)) {continue;}
+            if (this._stnYShare(id) == 0) {
                 isLastMainBranchStn = false;
                 break;
             }
@@ -788,7 +831,7 @@ class Line {
         } else if (isLastMainBranchStn) {
             // Last main line station
             return false;
-        } else if (Object.keys(param.stn_list).length == 2) {
+        } else if (Object.keys(param.stn_list).length == 4) {
             // Last two stations
             return false;
         } else if (parents.length == 2 || children.length == 2) {
@@ -800,6 +843,14 @@ class Line {
                 param.stn_list[childId].parents = parents;
                 this.#stations[childId]._parents = parents;
             })
+        } else if (this._stnOutdegree(parents[0])==2 && this._stnIndegree(children[0])==2) {
+            // 1 par 1 child, last station on upper/lower branch
+            var childIdxOfPar = this.#stations[parents[0]]._children.indexOf(stnId);
+            var parIdxOfChild = this.#stations[children[0]]._parents.indexOf(stnId);
+            param.stn_list[parents[0]].children.splice(childIdxOfPar, 1);
+            this.#stations[parents[0]]._children.splice(childIdxOfPar, 1);
+            param.stn_list[children[0]].parents.splice(parIdxOfChild, 1);
+            this.#stations[children[0]]._parents.splice(parIdxOfChild, 1);
         } else {
             // 1 par 1 child
             parents.forEach(parId => {
@@ -831,7 +882,7 @@ class Line {
 
         var isCurrentStnChanged = false;
         if (this.#currentStnId == stnId) {
-            var newCurrentStnId = Object.keys(this.#stations)[0];
+            var newCurrentStnId = Object.keys(this.#stations)[1];
             this.#currentStnId = newCurrentStnId;
             param.current_stn_idx = newCurrentStnId;
             isCurrentStnChanged = true;
@@ -840,6 +891,7 @@ class Line {
 
 
         for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
             stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
             stnInstance.namePos = (this.#txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
@@ -864,13 +916,17 @@ class Line {
     }
 
     newStnPossibleLoc(prep, stnId) {
-        var len = (prep == 'before') ? this.#stations[stnId]._parents.length : this.#stations[stnId]._children.length;
-        switch (len) {
+        var deg = (prep == 'before') ? this._stnIndegree(stnId) : this._stnOutdegree(stnId);
+        switch (deg) {
             case 2:
+                // 1 -> 2
                 return [1,1,1,0,0];
             case 1:
-                if (this.#stations[stnId]._y == this.y) {
-                    return [1,0,0,0,0];
+                if (this._stnYShare(stnId) == 0) {
+                    // 1 -> 1
+                    var state = this.newBranchPossibleEnd(prep, stnId);
+                    state = (state.length) ? state : 0;
+                    return [1,0,0,state,state];
                     // [1,0,0,1,1];
                 } else if (this.#stations[stnId]._y > this.y) {
                     if (prep == 'before') {
@@ -893,14 +949,14 @@ class Line {
                         ];
                     }
                 }
-            case 0:
-                if (this.#stations[stnId]._y == this.y) {
-                    return [1,0,0,0,0];
-                } else if (this.#stations[stnId]._y > this.y) {
-                    return [1,0,1,0,0];
-                } else {
-                    return [1,1,0,0,0];
-                }
+            // case 0:
+            //     if (this.#stations[stnId]._y == this.y) {
+            //         return [1,0,0,0,0];
+            //     } else if (this.#stations[stnId]._y > this.y) {
+            //         return [1,0,1,0,0];
+            //     } else {
+            //         return [1,1,0,0,0];
+            //     }
         }
         return [0,0,0,0,0];
     }
@@ -908,30 +964,22 @@ class Line {
     newBranchPossibleEnd(prep, stnId) {
         var res = [];
         if (prep == 'before') {
-            while (true) {
+            while (this._stnIndegree(stnId) == 1) {
                 stnId = this.#stations[stnId]._parents[0];
                 res.unshift(stnId);
-                switch (this._stnIndegree(stnId)) {
-                    case 0:
-                        res.unshift('linestart');
-                    case 2:
-                        return res;
-                    default:
-                        continue;
-                }
+                // if (stnId == 'linestart') {return res;}
+                // if (this._stnIndegree(stnId) == 2) {return res;}
+
             }
+            res.pop();
         } else {
-            while (true) {
+            while (this._stnOutdegree(stnId) == 1) {
                 stnId = this.#stations[stnId]._children[0];
                 res.push(stnId);
-                switch (this._stnOutdegree(stnId)) {
-                    case 0:
-                        res.push('lineend');
-                    case 2:
-                        return res;
-                }
             }
+            res.shift();
         }
+        return res;
     }
 
     addStn(prep, stnId, loc, end) {
@@ -999,8 +1047,8 @@ class Line {
                     newInfo.parents = this.#stations[stnId]._parents;
                     newInfo.children = [stnId];
                     newInfo.parents.forEach(par => {
-                        this.#stations[par]._children[1] = newId;
-                        param.stn_list[par].children[1] = newId;
+                        this.#stations[par]._children[0] = newId;
+                        param.stn_list[par].children[0] = newId;
                     });
                     newInfo.children.forEach(child => {
                         this.#stations[child]._parents = [newId];
@@ -1008,7 +1056,23 @@ class Line {
                     });
                 }
             } else if (loc == 'newupper') {
-                //
+                newInfo.parents = [end];
+                newInfo.children = [stnId];
+                
+                this.#stations[end]._children.unshift(newId);
+                param.stn_list[end].children.unshift(newId);
+
+                this.#stations[stnId]._parents.unshift(newId);
+                param.stn_list[stnId].parents.unshift(newId);
+            } else if (loc == 'newlower') {
+                newInfo.parents = [end];
+                newInfo.children = [stnId];
+                
+                this.#stations[end]._children.push(newId);
+                param.stn_list[end].children.push(newId);
+
+                this.#stations[stnId]._parents.push(newId);
+                param.stn_list[stnId].parents.push(newId);
             }
         } else {
             if (loc == 'centre') {
@@ -1066,14 +1130,32 @@ class Line {
                     newInfo.children = this.#stations[stnId]._children;
                     newInfo.parents = [stnId];
                     newInfo.children.forEach(child => {
-                        this.#stations[child]._parents[1] = newId;
-                        param.stn_list[child].parents[1] = newId;
+                        this.#stations[child]._parents[0] = newId;
+                        param.stn_list[child].parents[0] = newId;
                     });
                     newInfo.parents.forEach(par => {
                         this.#stations[par]._children = [newId];
                         param.stn_list[par].children = [newId];
                     });
                 }
+            } else if (loc == 'newupper') {
+                newInfo.children = [end];
+                newInfo.parents = [stnId];
+                
+                this.#stations[end]._parents.unshift(newId);
+                param.stn_list[end].parents.unshift(newId);
+
+                this.#stations[stnId]._children.unshift(newId);
+                param.stn_list[stnId].children.unshift(newId);
+            } else if (loc == 'newlower') {
+                newInfo.children = [end];
+                newInfo.parents = [stnId];
+                
+                this.#stations[end]._parents.push(newId);
+                param.stn_list[end].parents.push(newId);
+
+                this.#stations[stnId]._children.push(newId);
+                param.stn_list[stnId].children.push(newId);
             }
         }
 
@@ -1086,6 +1168,7 @@ class Line {
         this.#stations[newId] = this._initStnInstance(newId, newInfo);
 
         for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
             stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
             stnInstance._state = this._stnState(stnId);

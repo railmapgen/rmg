@@ -39,6 +39,9 @@ class Station {
         this._namePos = pos;
     }
 
+    get inDegree() {return this._parents.length;}
+    get outDegree() {return this._children.length;}
+
     get nameClass() {
         switch (this._state) {
             case -1:

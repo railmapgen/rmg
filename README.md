@@ -11,6 +11,23 @@ Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be d
 
 ## Version History
 
+### 0.4 ()
+
+#### New Features
+
+- Adding branches is now available.
+- Setting current station is now available. 
+
+#### Known Issues
+
+- Station selector may not sort options in a reasonable order. 
+- Notched outline and floating labels of `MDCTextField` and `MDCSelect` overflow to the top. 
+- Sliders may stop working if the browser window is resized while Layout tab is not focused. 
+
+#### Resolved Issues
+
+- Removing all stations from a branch no longer affects subsequent manipulations of the line. 
+
 ### 0.3 (18 Oct 2019)
 
 #### New Features
@@ -23,7 +40,6 @@ Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be d
   - Workaround: Use branches provided in the template and add/edit/remove stations within these branches. 
 - Removing all stations from a branch may have unexpectedly results in subsequent manipulations. 
 - Station selector may not sort options in a reasonable order. 
-- While deleting station, pressing `enter` on keyboard does not confirm but cancel the deletion process. 
 - Notched outline and floating labels of `MDCTextField` and `MDCSelect` overflow to the top. 
 - Sliders may stop working if the browser window is resized while Layout tab is not focused. 
 

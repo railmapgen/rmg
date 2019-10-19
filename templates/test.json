@@ -17,10 +17,16 @@
     "txt_bg_gap": 15,
     "txt_flip": true,
     "stn_list": {
-        "a04": {
+        "linestart": {
             "parents": [],
+            "children": ["a04"],
+            "name":["路綫左端","LEFT END"], 
+            "change_type": "none"
+        },
+        "a04": {
+            "parents": ["linestart"],
             "children": ["a03"],
-            "name":["調04","Tiu Keng Leng"], 
+            "name":["左04","Left"], 
             "change_type": "none"
         },
         "a03": {
@@ -107,7 +113,7 @@
         },
         "a7": {
             "parents": ["a6"],
-            "children": [],
+            "children": ["lineend"],
             "name":["機塲T2","Airport T2"], 
             "change_type": "none"
         },
@@ -127,10 +133,16 @@
         },
         "a10": {
             "parents": ["a9"],
-            "children": [],
+            "children": ["lineend"],
             "name":["銀河園","Galaxy Garden"], 
             "change_type": "osi11_ul",
             "transfer":[["石溪","Shixi"],["guangzhou","gz10","#7D9BC1","10号线","Line 10"],[]]
+        },
+        "lineend": {
+            "parents": ["a7", "a10"], 
+            "children": [], 
+            "name": ["路綫右端", "RIGHT END"], 
+            "change_type": "none"
         }
     }, 
 
