@@ -8,10 +8,10 @@
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
     <!-- <script src="html2canvas.min.js"></script> -->
-    <script src="utils.js"></script>
-    <script src="Station.js"></script>
-    <script src="Line.js"></script>
-    <script src="page_loader.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/Station.js"></script>
+    <script src="js/Line.js"></script>
+    <script src="js/page_loader.js"></script>
 
     <link href="https://fonts.googleapis.com/css?family=Noto+Serif+KR:700|Noto+Serif+JP:700|Noto+Serif+TC:700|Noto+Serif+SC:700&display=swap" rel="stylesheet">
 
@@ -935,50 +935,98 @@ id="railmap" width="0" height="0">
 </div>
 
 <div id="panel_save" class="panel">
-    <span>To save your work, please execute the following command in the console of your browser's DevTools and save the result as plain text. Importing configuration file feature will be added in the future. <br>
-        <tt>&gt; JSON.stringify(getParams())</tt>
-    </span>
+    
+<button id="download_json" class="mdc-icon-button material-icons">cloud_download</button>
+<button id="upload_json" class="mdc-icon-button material-icons">cloud_upload</button>
+<input type="file" id="upload_file" style="display: none;">
+
+<div id="import_diag" class="mdc-dialog"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="my-dialog-title"
+     aria-describedby="my-dialog-content">
+  <div class="mdc-dialog__container">
+    <div class="mdc-dialog__surface">
+      <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+      <h2 class="mdc-dialog__title" id="my-dialog-title">Your configuration</h2>
+      <div class="mdc-dialog__content" id="my-dialog-content">
+        Dialog body text goes here.
+      </div>
+      <footer class="mdc-dialog__actions">
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
+          <span class="mdc-button__label">Cancel</span>
+        </button>
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="accept" data-mdc-dialog-button-default>
+          <span class="mdc-button__label">Import</span>
+        </button>
+      </footer>
+    </div>
+  </div>
+  <div class="mdc-dialog__scrim"></div>
+</div>
 </div>
 
 
 </div>
 
 <script>
-    var template = 'test'
-    $.ajax({
-        url: 'templates/' + template + '.json', 
-        success: function (data) {
-            sessionStorage.all_params = JSON.stringify(data);
-            
-        }, 
-        async: false
-    });
+    var template = 'test';
+    var myLine;
 
-    var param_instance = getParams();
-    console.log(Date.now());
-    var ktl = new Line(param_instance);
-    ktl.drawSVGFrame();
-    ktl.showFrameOuter();
-    ktl.drawStns();
-    ktl.updateStnNameBg();
-    ktl.fillThemeColour();
-    ktl.drawLine();
-    ktl.drawStrip();
-    ktl.drawDestInfo();
-    ktl.loadFonts();
-    console.log(Date.now());
+    if (sessionStorage.all_params != null) {
+        myLine = new Line(getParams());
+        myLine.drawSVGFrame();
+        myLine.showFrameOuter();
+        myLine.drawStns();
+        myLine.updateStnNameBg();
+        myLine.fillThemeColour();
+        myLine.drawLine();
+        myLine.drawStrip();
+        myLine.drawDestInfo();
+        myLine.loadFonts();
+        console.log(Date.now());
+
+        initLayoutPanel();
+        layoutPanelFirstInit = false;
+    } else {
+        $.getJSON(`templates/${template}.json`, data => {
+            sessionStorage.all_params = JSON.stringify(data);
+            myLine = new Line(getParams());
+            myLine.drawSVGFrame();
+            myLine.showFrameOuter();
+            myLine.drawStns();
+            myLine.updateStnNameBg();
+            myLine.fillThemeColour();
+            myLine.drawLine();
+            myLine.drawStrip();
+            myLine.drawDestInfo();
+            myLine.loadFonts();
+            console.log(Date.now());
+
+            initLayoutPanel();
+            layoutPanelFirstInit = false;
+        });
+    }
+
+
     
 </script>
 
 <script>
+    var layoutPanelFirstInit = true;
     var designPanelFirstInit = true;
     var stationsPanelFirstInit = true;
+    var savePanelFirstInit = true;
     // $('.mdc-tab-bar').each((i, elem) => mdc.tabBar.MDCTabBar.attachTo(elem));
     var tabBar = new mdc.tabBar.MDCTabBar.attachTo($('.mdc-tab-bar')[0]);
     tabBar.listen('MDCTabBar:activated', event => {
         $('.panel--active').removeClass('panel--active');
         $('.panel').eq(event.detail.index).addClass('panel--active');
 
+        if (event.detail.index == 0 && layoutPanelFirstInit) {
+            initLayoutPanel();
+            layoutPanelFirstInit = false;
+        }
         if (event.detail.index == 1 && designPanelFirstInit) {
             initDesignPanel();
             designPanelFirstInit = false;
@@ -987,9 +1035,13 @@ id="railmap" width="0" height="0">
             initStationsPanel();
             stationsPanelFirstInit = false;
         }
+        if (event.detail.index == 3 && savePanelFirstInit) {
+            initSavePanel();
+            savePanelFirstInit = false;
+        }
     });
 
-    initLayoutPanel();
+    // initLayoutPanel();
 
     console.log(`panel`, Date.now())
 </script>

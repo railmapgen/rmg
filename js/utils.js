@@ -150,3 +150,7 @@ function getStnState(param, i) {
 function getRandomId() {
     return Math.floor(Math.random() * Math.pow(36, 4)).toString(36).padStart(4, '0');
 }
+
+function describeParams(param) {
+    return `Number of stations: ${Object.keys(param.stn_list).length-2}`;
+}

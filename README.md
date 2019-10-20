@@ -11,12 +11,13 @@ Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be d
 
 ## Version History
 
-### 0.4 ()
+### 0.4 (20 Oct 2019)
 
 #### New Features
 
 - Adding branches is now available.
 - Setting current station is now available. 
+- Exporting and importing configuration file are now available. 
 
 #### Known Issues
 
@@ -27,6 +28,7 @@ Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be d
 #### Resolved Issues
 
 - Removing all stations from a branch no longer affects subsequent manipulations of the line. 
+- Fixed the initial value of vertical position slider. 
 
 ### 0.3 (18 Oct 2019)
 

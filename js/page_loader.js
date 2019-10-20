@@ -4,19 +4,19 @@ function initLayoutPanel() {
     var svgWidthTextField = new mdc.textField.MDCTextField($('#svg_width')[0]);
     svgWidthTextField.value = getParams().svg_width;
     $('#svg_width > input').on('input', event => {
-        ktl.svgWidth = event.target.value;
+        myLine.svgWidth = event.target.value;
     });
 
     var branchSpacingSlider = new mdc.slider.MDCSlider($('#branch_spacing')[0]);
     branchSpacingSlider.value = getParams().branch_spacing;
     branchSpacingSlider.listen('MDCSlider:input', () => {
-        ktl.branchSpacing = branchSpacingSlider.value;
+        myLine.branchSpacing = branchSpacingSlider.value;
     });
 
     var yPcSlider = new mdc.slider.MDCSlider($('#y_pc')[0]);
-    yPcSlider.value = getParams().branch_spacing;
+    yPcSlider.value = getParams().y_pc;
     yPcSlider.listen('MDCSlider:input', () => {
-        ktl.yPc = yPcSlider.value;
+        myLine.yPc = yPcSlider.value;
     });
 }
 
@@ -73,8 +73,8 @@ function initDesignPanel() {
             param.theme[1] = event.detail.value;
             putParams(param);
 
-            ktl.themeLine = event.detail.value;
-            ktl.themeColour = $('#theme_line option').eq(event.detail.index).attr('colour');
+            myLine.themeLine = event.detail.value;
+            myLine.themeColour = $('#theme_line option').eq(event.detail.index).attr('colour');
         }
     });
 
@@ -93,7 +93,7 @@ function initDesignPanel() {
     }
     directionRToggle.listen('MDCIconButtonToggle:change', event => {
         if (event.detail.isOn) {
-            ktl.direction = 'r';
+            myLine.direction = 'r';
             directionLToggle.on = false;
             $('#direction_r').prop('disabled', true);
             $('#direction_l').prop('disabled', false);
@@ -101,7 +101,7 @@ function initDesignPanel() {
     })
     directionLToggle.listen('MDCIconButtonToggle:change', event => {
         if (event.detail.isOn) {
-            ktl.direction = 'l';
+            myLine.direction = 'l';
             directionRToggle.on = false;
             $('#direction_l').prop('disabled', true);
             $('#direction_r').prop('disabled', false);
@@ -111,12 +111,12 @@ function initDesignPanel() {
     var platformTextField = new mdc.textField.MDCTextField($('#platform_num')[0]);
     platformTextField.value = getParams().platform_num;
     $('#platform_num > input').on('input', event => {
-        ktl.platformNum = event.target.value;
+        myLine.platformNum = event.target.value;
     });
 
     var txtFilpButtonRipple = new mdc.ripple.MDCRipple($('#txt_flip')[0]);
     txtFilpButtonRipple.unbounded = true;
-    $('#txt_flip').on('click', event => {ktl.swapStnName();});
+    $('#txt_flip').on('click', event => {myLine.swapStnName();});
 }
 
 function initStationsPanel() {
@@ -142,7 +142,7 @@ function initStationsPanel() {
             return;
         }
         console.log(stationSelect.value);
-        ktl.currentStnId = stationSelect.value;
+        myLine.currentStnId = stationSelect.value;
     })
 
     // Addition
@@ -169,7 +169,7 @@ function initStationsPanel() {
         var loc = stnAddLocSelect.value;
         var end = stnAddEndSelect.value;
         
-        var [newId, newInfo] = ktl.addStn(prep, stnId, loc, end);
+        var [newId, newInfo] = myLine.addStn(prep, stnId, loc, end);
 
         $('#stn_list > select').append(
             `<option value="${newId}">${newInfo.name.join(' - ')}</option>`
@@ -189,7 +189,7 @@ function initStationsPanel() {
         var prep = stnAddPrepSelect.value;
         var stnId = stnAddPivotSelect.value;
         var stnList = getParams().stn_list;
-        for (let [idx, state] of ktl.newStnPossibleLoc(prep, stnId).entries()) {
+        for (let [idx, state] of myLine.newStnPossibleLoc(prep, stnId).entries()) {
             if (state) {
                 $('#stn_add_diag #loc option').eq(idx).prop('disabled', false);
                 if (idx >= 3) {
@@ -216,7 +216,7 @@ function initStationsPanel() {
             // var stnList = getParams().stn_list;
             // var prep = stnAddPrepSelect.value;
             // var stnId = stnAddPivotSelect.value;
-            // ktl.newBranchPossibleEnd(prep, stnId).forEach(pStnId => {
+            // myLine.newBranchPossibleEnd(prep, stnId).forEach(pStnId => {
             //     switch (pStnId) {
             //         // case 'linestart':
             //         //     $('#stn_add_diag #end select').append(
@@ -263,7 +263,7 @@ function initStationsPanel() {
     $('#stn_modify_diag #name_zh, #name_en').on('input', event => {
         var nameZH = stnModifyNameZHField.value;
         var nameEN = stnModifyNameENField.value;
-        ktl.updateStnName(stationSelect.value, nameZH, nameEN);
+        myLine.updateStnName(stationSelect.value, nameZH, nameEN);
         $('#stn_list option').eq(stationSelect.selectedIndex).html(`${nameZH} - ${nameEN}`);
         $('#stn_add_diag #pivot option').eq(stationSelect.selectedIndex-1).html(`${nameZH} - ${nameEN}`);
     });
@@ -420,7 +420,7 @@ function initStationsPanel() {
         ];
         console.log(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, intInfo2]);
         if (type == 'none') {
-            ktl.updateStnTransfer(stnId, type);
+            myLine.updateStnTransfer(stnId, type);
         } else {
             intInfo1.splice(
                 2, 0, 
@@ -428,10 +428,10 @@ function initStationsPanel() {
             );
             switch (type) {
                 case 'int2':
-                    ktl.updateStnTransfer(stnId, type, [[], intInfo1, []]);
+                    myLine.updateStnTransfer(stnId, type, [[], intInfo1, []]);
                     break;
                 case 'osi11':
-                    ktl.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, []]);
+                    myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, []]);
                     break;
                 default:
                     intInfo2.splice(
@@ -440,10 +440,10 @@ function initStationsPanel() {
                     )
                     switch (type) {
                         case 'int3':
-                            ktl.updateStnTransfer(stnId, `${type}_${tickDirec}`, [[], intInfo1, intInfo2]);
+                            myLine.updateStnTransfer(stnId, `${type}_${tickDirec}`, [[], intInfo1, intInfo2]);
                             break;
                         case 'osi12':
-                            ktl.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, intInfo2]);
+                            myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, intInfo2]);
                     }
             }
         }
@@ -547,7 +547,7 @@ function initStationsPanel() {
         var stnId = stationSelect.value;
         var idx = stationSelect.selectedIndex;
         // Remove from data and svg
-        if (ktl.removeStn(stnId)) {
+        if (myLine.removeStn(stnId)) {
             // Remove station from selection
             $(`#stn_list [value=${stnId}]`).remove();
             // $('#stn_list option').eq(stationSelect.selectedIndex).remove();
@@ -556,5 +556,64 @@ function initStationsPanel() {
         } else {
             stnDeleteErrorDialog.open();
         }
+    });
+}
+
+function initSavePanel() {
+    var downloadButtonRipple = new mdc.ripple.MDCRipple($('#download_json')[0]);
+    downloadButtonRipple.unbounded = true;
+    $('#download_json').on('click', event => {
+        var link = document.createElement('a');
+        var data = new Blob([sessionStorage.all_params], {type: 'application/json;charset=utf-8'});
+        var url = window.URL.createObjectURL(data);
+        link.href = url;
+        link.download = 'railmap_config.json';
+        // $('body').append(link);
+        link.click();
+        // document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    })
+
+    var uploadButtonRipple = new mdc.ripple.MDCRipple($('#upload_json')[0]);
+    uploadButtonRipple.unbounded = true;
+    var importDialog = new mdc.dialog.MDCDialog($('#import_diag')[0]);
+    var importedFile = undefined;
+    $('#upload_json').on('click', event => {
+        $('#upload_file').click();
+    });
+    $('#upload_file').on('change', event => {
+        console.log(event.target.files[0]);
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            importedFile = JSON.parse(e.target.result);
+            $('#import_diag .mdc-dialog__content').html(
+                describeParams(importedFile)
+            );
+            importDialog.open();
+        };
+        reader.readAsText(event.target.files[0]);
+    });
+    importDialog.listen('MDCDialog:closed', event => {
+        if (event.detail.action == 'close') {return;}
+
+        Line.clearSVG();
+        sessionStorage.all_params = JSON.stringify(importedFile);
+        location.reload(true);
+        // myLine = new Line(getParams());
+        // myLine.drawSVGFrame();
+        // myLine.showFrameOuter();
+        // myLine.drawStns();
+        // myLine.updateStnNameBg();
+        // myLine.fillThemeColour();
+        // myLine.drawLine();
+        // myLine.drawStrip();
+        // myLine.drawDestInfo();
+        // myLine.loadFonts();
+
+        // layoutPanelFirstInit = true;
+        // designPanelFirstInit = true;
+        // stationsPanelFirstInit = true;
+        // savePanelFirstInit = true;
+        // console.log(importedFile);
     });
 }

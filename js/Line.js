@@ -1184,7 +1184,7 @@ class Line {
         this.drawLine();
         this.drawStrip();
 
-        $('#dest_name g:last-child').remove()
+        $('#dest_name g:last-child').remove();
         this.drawDestInfo();
 
         this.loadFonts();
@@ -1192,5 +1192,12 @@ class Line {
         return [newId, newInfo];
         console.log(newInfo);
         console.log(param);
+    }
+
+    static clearSVG() {
+        $('#stn_icons').empty();
+        $('#line_main').empty();
+        $('#line_pass').empty();
+        $('#dest_name g:last-child').remove();
     }
 }
