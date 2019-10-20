@@ -935,10 +935,12 @@ id="railmap" width="0" height="0">
 </div>
 
 <div id="panel_save" class="panel">
-    
+
 <button id="download_json" class="mdc-icon-button material-icons">cloud_download</button>
 <button id="upload_json" class="mdc-icon-button material-icons">cloud_upload</button>
 <input type="file" id="upload_file" style="display: none;">
+<button id="reset_json" class="mdc-icon-button material-icons">cached</button>
+<span>Reset</span>
 
 <div id="import_diag" class="mdc-dialog"
      role="alertdialog"
@@ -966,11 +968,37 @@ id="railmap" width="0" height="0">
 </div>
 </div>
 
+<div id="reset_diag" class="mdc-dialog"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="my-dialog-title"
+     aria-describedby="my-dialog-content">
+  <div class="mdc-dialog__container">
+    <div class="mdc-dialog__surface">
+      <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+      <h2 class="mdc-dialog__title" id="my-dialog-title">Reset</h2>
+      <div class="mdc-dialog__content" id="my-dialog-content">
+        All your work may be lost!
+      </div>
+      <footer class="mdc-dialog__actions">
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
+          <span class="mdc-button__label">Cancel</span>
+        </button>
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="accept" data-mdc-dialog-button-default>
+          <span class="mdc-button__label">Reset to default</span>
+        </button>
+      </footer>
+    </div>
+  </div>
+  <div class="mdc-dialog__scrim"></div>
+</div>
+</div>
+
 
 </div>
 
 <script>
-    var template = 'test';
+    var template = 'default';
     var myLine;
 
     if (sessionStorage.all_params != null) {

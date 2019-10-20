@@ -572,6 +572,7 @@ class Line {
         var extraH = (lineEnd - lineStart) / cp.len * this.#longInterval;
         var dh = ( (lineEnd-lineStart)/cp.len - 2*dx ) / 2;
         if (dh < 0) {
+            console.log(dh);
             console.warn('SVG width too small!');
         }
 
@@ -774,6 +775,7 @@ class Line {
         if (prevClass != this.#stations[stnId].constructor.name) {
             // Not sure position, redraw all
             for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+                if (['linestart', 'lineend'].includes(stnId)) {continue;}
                 stnInstance.x = this._stnRealX(stnId);
                 stnInstance.y = this._stnRealY(stnId);
                 stnInstance.namePos = (this.#txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);

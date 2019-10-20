@@ -265,7 +265,7 @@ function initStationsPanel() {
         var nameEN = stnModifyNameENField.value;
         myLine.updateStnName(stationSelect.value, nameZH, nameEN);
         $('#stn_list option').eq(stationSelect.selectedIndex).html(`${nameZH} - ${nameEN}`);
-        $('#stn_add_diag #pivot option').eq(stationSelect.selectedIndex-1).html(`${nameZH} - ${nameEN}`);
+        $('#stn_add_diag #pivot option').eq(stationSelect.selectedIndex).html(`${nameZH} - ${nameEN}`);
     });
 
 
@@ -599,21 +599,20 @@ function initSavePanel() {
         Line.clearSVG();
         sessionStorage.all_params = JSON.stringify(importedFile);
         location.reload(true);
-        // myLine = new Line(getParams());
-        // myLine.drawSVGFrame();
-        // myLine.showFrameOuter();
-        // myLine.drawStns();
-        // myLine.updateStnNameBg();
-        // myLine.fillThemeColour();
-        // myLine.drawLine();
-        // myLine.drawStrip();
-        // myLine.drawDestInfo();
-        // myLine.loadFonts();
-
-        // layoutPanelFirstInit = true;
-        // designPanelFirstInit = true;
-        // stationsPanelFirstInit = true;
-        // savePanelFirstInit = true;
-        // console.log(importedFile);
     });
+
+    var resetButtonRipple = new mdc.ripple.MDCRipple($('#reset_json')[0]);
+    resetButtonRipple.unbounded = true;
+    var resetDialog = new mdc.dialog.MDCDialog($('#reset_diag')[0]);
+    $('#reset_json').on('click', event => {
+        resetDialog.open();
+    });
+    resetDialog.listen('MDCDialog:closed', event => {
+        if (event.detail.action == 'close') {return;}
+
+        $.getJSON(`templates/default.json`, data => {
+            sessionStorage.all_params = JSON.stringify(data);
+            location.reload(true);
+        });
+    })
 }
