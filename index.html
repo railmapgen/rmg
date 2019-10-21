@@ -22,9 +22,26 @@
     <style type="text/css">
         body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: column; overflow: auto;}
         #svgs {height: 305px; overflow: auto;}
-        #panels {flex-grow: 1; overflow: auto; font-family: "Vegur";}
+        #panels {flex-grow: 1; overflow: hidden; font-family: "Vegur";}
         .panel {display: none;}
         .panel--active {display: block;}
+
+        .mdc-text-field {
+          height: 40px;
+        }
+        .mdc-text-field--outlined .mdc-floating-label {
+          top: 10px;
+        }
+        .mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+          transform: translateY(-90%) scale(0.75);
+        }
+
+        /* .mdc-select {height: 40px;}
+        .mdc-select--outlined .mdc-floating-label {top: 10px;}
+        .mdc-select--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+          transform: translateY(-130%) scale(0.75);
+        } */
+
     </style>
 </head>
 <body>
@@ -348,7 +365,74 @@ id="railmap" width="0" height="0">
 
 <div id="panel_layout" class="panel panel--active">
 
-<div>
+<div class="mdc-layout-grid" style="max-width: 500px;">
+<div class="mdc-layout-grid__inner">
+
+    <div class="mdc-layout-grid__cell--span-12 mdc-card">
+    <ul class="mdc-list">
+        <li class="mdc-list-item" tabindex="0">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">panorama_horizontal</span>
+            Canvas Width &emsp;&emsp;&emsp;
+            <div id="svg_width" class="mdc-text-field mdc-text-field--outlined">
+                <input type="text" id="tf-outlined" class="mdc-text-field__input">
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                    <label for="tf-outlined" class="mdc-floating-label">Width</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+        </li>
+        <li role="separator" class="mdc-list-divider"></li>
+        <li class="mdc-list-item">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">vertical_align_center</span>
+            Vertical Position
+        </li>
+        <li class="mdc-list-item">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">arrow_drop_down</span>
+            <div id="y_pc" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value">
+                <div class="mdc-slider__track-container">
+                    <div class="mdc-slider__track"></div>
+                </div>
+                <div class="mdc-slider__thumb-container">
+                    <svg class="mdc-slider__thumb" width="21" height="21">
+                        <circle cx="10.5" cy="10.5" r="7.875"></circle>
+                    </svg>
+                <div class="mdc-slider__focus-ring"></div>
+                </div>
+            </div>
+            &emsp;&emsp;&emsp;
+            <span class="mdc-list-item__meta material-icons" aria-hidden="true">arrow_drop_up</span>
+        </li>
+        <li role="separator" class="mdc-list-divider"></li>
+        <li class="mdc-list-item">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">format_line_spacing</span>
+            Branch Spacing
+        </li>
+        <li class="mdc-list-item">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">arrow_drop_down</span>
+            <div id="branch_spacing" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value">
+                <div class="mdc-slider__track-container">
+                    <div class="mdc-slider__track"></div>
+                </div>
+                <div class="mdc-slider__thumb-container">
+                    <svg class="mdc-slider__thumb" width="21" height="21">
+                        <circle cx="10.5" cy="10.5" r="7.875"></circle>
+                    </svg>
+                <div class="mdc-slider__focus-ring"></div>
+                </div>
+            </div>
+            &emsp;&emsp;&emsp;
+            <span class="mdc-list-item__meta material-icons" aria-hidden="true">arrow_drop_up</span>
+        </li>
+    </ul>
+    </div>
+
+</div>
+</div>
+
+<!-- <div>
     <div id="svg_width" class="mdc-text-field mdc-text-field--outlined">
         <input type="text" id="tf-outlined" class="mdc-text-field__input">
         <div class="mdc-notched-outline">
@@ -359,9 +443,9 @@ id="railmap" width="0" height="0">
             <div class="mdc-notched-outline__trailing"></div>
         </div>
     </div>
-</div>
+</div> -->
 
-<div>
+<!-- <div>
     <span>Vertical Position of Line</span>
     <div id="y_pc" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value">
         <div class="mdc-slider__track-container">
@@ -374,9 +458,9 @@ id="railmap" width="0" height="0">
         <div class="mdc-slider__focus-ring"></div>
         </div>
     </div>
-</div>
+</div> -->
 
-<div>
+<!-- <div>
     <span>Branch Spacing</span>
     <div id="branch_spacing" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value">
         <div class="mdc-slider__track-container">
@@ -389,7 +473,7 @@ id="railmap" width="0" height="0">
         <div class="mdc-slider__focus-ring"></div>
         </div>
     </div>
-</div>
+</div> -->
 
 </div>
 
@@ -459,93 +543,47 @@ id="railmap" width="0" height="0">
 
 <div id="panel_stations" class="panel">
 
-<div>
-    <span>Add a station</span>
-    <button id="stn_add" class="mdc-icon-button material-icons">add_box</button>
+<div class="mdc-layout-grid" style="max-width: 500px;">
+<div class="mdc-layout-grid__inner">
+
+    <div class="mdc-layout-grid__cell--span-12 mdc-card">
+    <ul id="stations_list" class="mdc-list">
+        <li class="mdc-list-item" tabindex="0">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">add_box</span>
+            New Station
+        </li>
+        <li role="separator" class="mdc-list-divider"></li>
+        <li id="selected_stn" class="mdc-list-item" stn="none">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">edit</span>
+            <span class="mdc-list-item__text">Modify Station: Not Selected</span>
+        </li>
+        <li class="mdc-list-item mdc-list-item--disabled" tabindex="0">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">my_location</span>
+            Set as Current Station
+        </li>
+        <li class="mdc-list-item mdc-list-item--disabled" tabindex="0">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">text_fields</span>
+            Edit Station Names
+        </li>
+        <li class="mdc-list-item mdc-list-item--disabled" tabindex="0">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">transfer_within_a_station</span>
+            Edit Interchange
+        </li>
+        <li class="mdc-list-item mdc-list-item--disabled" tabindex="0">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">delete_forever</span>
+            Remove This Station
+        </li>
+    </ul>
+    </div>
+
+</div>
 </div>
 
-<!-- <div id="stn_add_diag" class="mdc-dialog"
-     role="alertdialog"
-     aria-modal="true"
-     aria-labelledby="my-dialog-title"
-     aria-describedby="my-dialog-content">
-  <div class="mdc-dialog__container">
-    <div class="mdc-dialog__surface">
-      
-      <h2 class="mdc-dialog__title" id="my-dialog-title">Add a station</h2>
-      <div class="mdc-dialog__content" id="my-dialog-content">
-        <span>Please select the existing station(s) followed by the new station. </span>
-
-        <div id="stn_l1" class="mdc-select mdc-select--outlined">
-            <i class="mdc-select__dropdown-icon"></i>
-            <select class="mdc-select__native-control">
-                
-            </select>
-            <div class="mdc-notched-outline">
-                <div class="mdc-notched-outline__leading"></div>
-                <div class="mdc-notched-outline__notch">
-                    <label class="mdc-floating-label">Station Left 1</label>
-                </div>
-                <div class="mdc-notched-outline__trailing"></div>
-            </div>
-        </div>
-        <div id="stn_l2" class="mdc-select mdc-select--outlined">
-            <i class="mdc-select__dropdown-icon"></i>
-            <select class="mdc-select__native-control">
-                
-            </select>
-            <div class="mdc-notched-outline">
-                <div class="mdc-notched-outline__leading"></div>
-                <div class="mdc-notched-outline__notch">
-                    <label class="mdc-floating-label">Station Left 2</label>
-                </div>
-                <div class="mdc-notched-outline__trailing"></div>
-            </div>
-        </div>
-
-        <br>
-
-        <span>Please select the existing station(s) following the new station. </span>
-
-        <div id="stn_r1" class="mdc-select mdc-select--outlined">
-            <i class="mdc-select__dropdown-icon"></i>
-            <select class="mdc-select__native-control">
-                <option value="null" selected>Select a station...</option>
-            </select>
-            <div class="mdc-notched-outline">
-                <div class="mdc-notched-outline__leading"></div>
-                <div class="mdc-notched-outline__notch">
-                    <label class="mdc-floating-label">Station Right 1</label>
-                </div>
-                <div class="mdc-notched-outline__trailing"></div>
-            </div>
-        </div>
-        <div id="stn_r2" class="mdc-select mdc-select--outlined">
-            <i class="mdc-select__dropdown-icon"></i>
-            <select class="mdc-select__native-control">
-                <option value="null" selected>Select a station...</option>
-            </select>
-            <div class="mdc-notched-outline">
-                <div class="mdc-notched-outline__leading"></div>
-                <div class="mdc-notched-outline__notch">
-                    <label class="mdc-floating-label">Station Right 2</label>
-                </div>
-                <div class="mdc-notched-outline__trailing"></div>
-            </div>
-        </div>
-      </div>
-      <footer class="mdc-dialog__actions">
-        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
-          <span class="mdc-button__label">Cancel</span>
-        </button>
-        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="accept" data-mdc-dialog-button-default>
-          <span class="mdc-button__label">Confirm</span>
-        </button>
-      </footer>
-    </div>
-  </div>
-  <div class="mdc-dialog__scrim"></div>
+<!-- <div>
+    <span>Add a station</span>
+    <button id="stn_add" class="mdc-icon-button material-icons">add_box</button>
 </div> -->
+
 
 <div id="stn_add_diag" class="mdc-dialog"
      role="alertdialog"
@@ -643,12 +681,38 @@ id="railmap" width="0" height="0">
   <div class="mdc-dialog__scrim"></div>
 </div>
 
+<div id="stn_select_diag" class="mdc-dialog"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="my-dialog-title"
+     aria-describedby="my-dialog-content">
+  <div class="mdc-dialog__container">
+    <div class="mdc-dialog__surface">
+      <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+      <h2 class="mdc-dialog__title" id="my-dialog-title"><!--
+     -->Select a station<!--
+   --></h2>
+      <div class="mdc-dialog__content" id="my-dialog-content">
+        <ul class="mdc-list mdc-list--avatar-list">
+          <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="none">
+            <span class="mdc-list-item__text">Not Selected</span>
+          </li>
+          <!-- <li class="mdc-list-item" data-mdc-dialog-action="callisto">
+            <span class="mdc-list-item__text">Callisto</span>
+          </li> -->
+          <!-- ... -->
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="mdc-dialog__scrim"></div>
+</div>
+
 <div>
-    <span>Modify or delete a current station</span>
+    <!-- <span>Modify or delete a current station</span>
     <div id="stn_list" class="mdc-select mdc-select--outlined">
         <i class="mdc-select__dropdown-icon"></i>
         <select class="mdc-select__native-control">
-            <!-- <option value="null" selected disabled>Select a station...</option> -->
         </select>
         <div class="mdc-notched-outline">
             <div class="mdc-notched-outline__leading"></div>
@@ -657,14 +721,14 @@ id="railmap" width="0" height="0">
             </div>
             <div class="mdc-notched-outline__trailing"></div>
         </div>
-    </div>
-    <button id="stn_current" class="mdc-icon-button" aria-label="Set as current station" aria-hidden="false" aria-pressed="false">
+    </div> -->
+    <!-- <button id="stn_current" class="mdc-icon-button" aria-label="Set as current station" aria-hidden="false" aria-pressed="false">
         <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">my_location</i>
         <i class="material-icons mdc-icon-button__icon">location_searching</i>
-    </button>
-    <button id="stn_modify" class="mdc-icon-button material-icons">text_fields</button>
-    <button id="stn_transfer" class="mdc-icon-button material-icons">transfer_within_a_station</button>
-    <button id="stn_delete" class="mdc-icon-button material-icons">delete_forever</button>
+    </button> -->
+    <!-- <button id="stn_modify" class="mdc-icon-button material-icons">text_fields</button> -->
+    <!-- <button id="stn_transfer" class="mdc-icon-button material-icons">transfer_within_a_station</button> -->
+    <!-- <button id="stn_delete" class="mdc-icon-button material-icons">delete_forever</button> -->
 </div>
 
 <div id="stn_modify_diag" class="mdc-dialog"
@@ -936,11 +1000,35 @@ id="railmap" width="0" height="0">
 
 <div id="panel_save" class="panel">
 
-<button id="download_json" class="mdc-icon-button material-icons">cloud_download</button>
+<div class="mdc-layout-grid" style="max-width: 500px;">
+<div class="mdc-layout-grid__inner">
+
+    <div class="mdc-layout-grid__cell--span-12 mdc-card">
+    <ul class="mdc-list">
+        <li class="mdc-list-item" tabindex="0">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">cloud_download</span>
+            Export Configuration
+        </li>
+        <li class="mdc-list-item">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">cloud_upload</span>
+            Import Configuration
+        </li>
+        <li class="mdc-list-item">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">cached</span>
+            Reset to Default
+        </li>
+    </ul>
+    </div>
+
+</div>
+</div>
+
+<input type="file" id="upload_file" style="display: none;">
+<!-- <button id="download_json" class="mdc-icon-button material-icons">cloud_download</button>
 <button id="upload_json" class="mdc-icon-button material-icons">cloud_upload</button>
 <input type="file" id="upload_file" style="display: none;">
 <button id="reset_json" class="mdc-icon-button material-icons">cached</button>
-<span>Reset</span>
+<span>Reset</span> -->
 
 <div id="import_diag" class="mdc-dialog"
      role="alertdialog"

@@ -1,6 +1,9 @@
 'use strict';
 
 function initLayoutPanel() {
+    var layoutList = new mdc.list.MDCList($('#panel_layout .mdc-list')[0]);
+    var layoutListItemRipple = layoutList.listElements.map((listItemEl) => new mdc.ripple.MDCRipple(listItemEl));
+
     var svgWidthTextField = new mdc.textField.MDCTextField($('#svg_width')[0]);
     svgWidthTextField.value = getParams().svg_width;
     $('#svg_width > input').on('input', event => {
@@ -120,36 +123,109 @@ function initDesignPanel() {
 }
 
 function initStationsPanel() {
-    var stationSelect = new mdc.select.MDCSelect($('#stn_list')[0]);
+    var stationsList = new mdc.list.MDCList($('#panel_stations .mdc-list:first-child')[0]);
+    var stationsListItemRipple = stationsList.listElements.map((listItemEl) => new mdc.ripple.MDCRipple(listItemEl));
+    stationsList.listen('MDCList:action', event => {
+        console.log(event.detail);
+        // console.log(event.detail.index);
+        switch (event.detail.index) {
+            case 0:
+                stnAddDialog.open();
+                break;
+            case 1:
+                stnSelectDialog.open();
+                break;
+            case 2:
+                var stnId = $('#panel_stations #selected_stn').attr('stn');
+                if (stnId == 'none') {break;}
+                myLine.currentStnId = stnId;
+                break;
+            case 3:
+                var stnId = $('#panel_stations #selected_stn').attr('stn');
+                if (stnId == 'none') {break;}
+                stnModifyDialog.open();
+                break;
+            case 4:
+                var stnId = $('#panel_stations #selected_stn').attr('stn');
+                if (stnId == 'none') {break;}
+                stnTransferDialog.open();
+                break;
+            case 5:
+                var stnId = $('#panel_stations #selected_stn').attr('stn');
+                if (stnId == 'none') {break;}
+                stnDeleteConfirmDialog.open();
+                break;
+        }
+    });
+
+
+    // Selection
+    var stnSelectDialog = new mdc.dialog.MDCDialog($('#stn_select_diag')[0]);
+    var stnSelectDialogList = new mdc.list.MDCList($('#stn_select_diag .mdc-list')[0]);
     for (let [stnId, stnInfo] of Object.entries(getParams().stn_list)) {
         if (['linestart', 'lineend'].includes(stnId)) {continue;}
-        $('#stn_list > select').append(
-            `<option value="${stnId}">${stnInfo.name.join(' - ')}</option>`
+        $('#stn_select_diag ul').append(
+            `<li class="mdc-list-item" data-mdc-dialog-action="${stnId}">
+            <span class="mdc-list-item__text">${stnInfo.name.join(' - ')}</span>
+            </li>`
         );
+    }
+    $('#stn_select_diag li:first-child').attr('tabindex', 0);
+    stnSelectDialog.listen('MDCDialog:opening', event => {
+        //
+    });
+    stnSelectDialog.listen('MDCDialog:opened', () => {
+        stnSelectDialogList.layout();
+        var stnSelectDialogListItemRipple = stnSelectDialogList.listElements.map(
+            listItemEl => new mdc.ripple.MDCRipple(listItemEl)
+        );
+    });
+    stnSelectDialog.listen('MDCDialog:closed', event => {
+        if (event.detail.action == 'close') {return;}
+
+        var selectedStnNames = $(`#stn_select_diag ul [data-mdc-dialog-action=${event.detail.action}] span`).html();
+        $('#panel_stations #selected_stn span:nth-child(2)').html(
+            `Modify Station: ${selectedStnNames}`
+        );
+        $('#panel_stations #selected_stn').attr('stn', event.detail.action);
+
+        if (event.detail.action == 'none') {
+            [4,5,6,7].forEach(i => $(`#panel_stations #stations_list li:nth-child(${i})`).addClass('mdc-list-item--disabled'));
+        } else {
+            [4,5,6,7].forEach(i => $(`#panel_stations #stations_list li:nth-child(${i})`).removeClass('mdc-list-item--disabled'));
+        }
+    });
+
+    // var stationSelect = new mdc.select.MDCSelect($('#stn_list')[0]);
+    for (let [stnId, stnInfo] of Object.entries(getParams().stn_list)) {
+        if (['linestart', 'lineend'].includes(stnId)) {continue;}
+        // $('#stn_list > select').append(
+        //     `<option value="${stnId}">${stnInfo.name.join(' - ')}</option>`
+        // );
         $('#stn_add_diag #pivot select').append(
             `<option value="${stnId}">${stnInfo.name.join(' - ')}</option>`
         );
     }
-    var stnCurrentToggle = new mdc.iconButton.MDCIconButtonToggle($('#stn_current')[0]);
-    stationSelect.listen('MDCSelect:change', event => {
-        stnCurrentToggle.on = (getParams().current_stn_idx == event.detail.value)
-    });
-    stationSelect.selectedIndex = 0;
-    stnCurrentToggle.listen('MDCIconButtonToggle:change', event => {
-        if (!event.detail.isOn) {
-            console.log(event.detail);
-            stnCurrentToggle.on = true;
-            return;
-        }
-        console.log(stationSelect.value);
-        myLine.currentStnId = stationSelect.value;
-    })
+    // var stnCurrentToggle = new mdc.iconButton.MDCIconButtonToggle($('#stn_current')[0]);
+    // stationSelect.listen('MDCSelect:change', event => {
+    //     // stnCurrentToggle.on = (getParams().current_stn_idx == event.detail.value)
+    // });
+    // stationSelect.selectedIndex = 0;
+    // stnCurrentToggle.listen('MDCIconButtonToggle:change', event => {
+    //     if (!event.detail.isOn) {
+    //         console.log(event.detail);
+    //         stnCurrentToggle.on = true;
+    //         return;
+    //     }
+    //     console.log(stationSelect.value);
+    //     myLine.currentStnId = stationSelect.value;
+    // })
 
     // Addition
-    var stnAddButtonRipple = new mdc.ripple.MDCRipple($('#stn_add')[0]);
-    stnAddButtonRipple.unbounded = true;
+    // var stnAddButtonRipple = new mdc.ripple.MDCRipple($('#stn_add')[0]);
+    // stnAddButtonRipple.unbounded = true;
     var stnAddDialog = new mdc.dialog.MDCDialog($('#stn_add_diag')[0]);
-    $('#stn_add').on('click', event => stnAddDialog.open());
+    // $('#stn_add').on('click', event => stnAddDialog.open());
 
     var stnAddPrepSelect = new mdc.select.MDCSelect($('#stn_add_diag #prep')[0]);
     var stnAddPivotSelect = new mdc.select.MDCSelect($('#stn_add_diag #pivot')[0]);
@@ -174,13 +250,22 @@ function initStationsPanel() {
         $('#stn_list > select').append(
             `<option value="${newId}">${newInfo.name.join(' - ')}</option>`
         );
+        $('#stn_select_diag ul').append(
+            `<li class="mdc-list-item" data-mdc-dialog-action="${newId}">
+            <span class="mdc-list-item__text">${newInfo.name.join(' - ')}</span>
+            </li>`
+        );
         $('#stn_add_diag #pivot select').append(
             `<option value="${newId}">${newInfo.name.join(' - ')}</option>`
         );
 
         // Trigger station name modification
-        stationSelect.value = newId;
-        $('#stn_modify')[0].dispatchEvent(new Event('click'));
+        // stationSelect.value = newId;
+        // $('#panel_stations #selected_stn').attr('stn', newId);
+        // $('#panel_stations #selected_stn span:last-child').html(`Modify Station: ${newInfo.name.join(' - ')}`);
+        // $('#stn_modify')[0].dispatchEvent(new Event('click'));
+        $('#stn_select_diag')[0].dispatchEvent(new CustomEvent('MDCDialog:closed', {'detail':{'action':newId}}));
+        $('#panel_stations #stations_list')[0].dispatchEvent(new CustomEvent('MDCList:action', {'detail':{'index':3}}));
     });
     stnAddPrepSelect.listen('MDCSelect:change', event => {
         $('#stn_add_diag #pivot')[0].dispatchEvent(new Event('MDCSelect:change'));
@@ -211,29 +296,6 @@ function initStationsPanel() {
     stnAddLocSelect.listen('MDCSelect:change', event => {
         if (['newupper', 'newlower'].includes(event.detail.value)) {
             $('#stn_add_diag #new_branch').attr('style', '');
-            // $('#stn_add_diag #end select').empty();
-
-            // var stnList = getParams().stn_list;
-            // var prep = stnAddPrepSelect.value;
-            // var stnId = stnAddPivotSelect.value;
-            // myLine.newBranchPossibleEnd(prep, stnId).forEach(pStnId => {
-            //     switch (pStnId) {
-            //         // case 'linestart':
-            //         //     $('#stn_add_diag #end select').append(
-            //         //         `<option value="${pStnId}">Beginning of Line</option>`
-            //         //     );
-            //         //     break;
-            //         // case 'lineend':
-            //         //     $('#stn_add_diag #end select').append(
-            //         //         `<option value="${pStnId}">End of Line</option>`
-            //         //     );
-            //         //     break;
-            //         default:
-            //             $('#stn_add_diag #end select').append(
-            //                 `<option value="${pStnId}">${stnList[pStnId].name.join(' - ')}</option>`
-            //             );
-            //     }
-            // });
             stnAddEndSelect.selectedIndex = 0;
         } else {
             $('#stn_add_diag #new_branch').attr('style', 'display:none');
@@ -242,17 +304,18 @@ function initStationsPanel() {
 
 
     // Modification (Name)
-    var stnModifyButtonRipple = new mdc.ripple.MDCRipple($('#stn_modify')[0]);
-    stnModifyButtonRipple.unbounded = true;
+    // var stnModifyButtonRipple = new mdc.ripple.MDCRipple($('#stn_modify')[0]);
+    // stnModifyButtonRipple.unbounded = true;
     var stnModifyDialog = new mdc.dialog.MDCDialog($('#stn_modify_diag')[0]);
     var stnModifyNameZHField = new mdc.textField.MDCTextField($('#stn_modify_diag #name_zh')[0]);
     var stnModifyNameENField = new mdc.textField.MDCTextField($('#stn_modify_diag #name_en')[0]);
-    $('#stn_modify').on('click', event => {
-        if (stationSelect.value == 'null') {return;}
-        stnModifyDialog.open();
-    });
+    // $('#stn_modify').on('click', event => {
+    //     if (stationSelect.value == 'null') {return;}
+    //     stnModifyDialog.open();
+    // });
     stnModifyDialog.listen('MDCDialog:opening', event => {
-        var stnId = stationSelect.value;
+        // var stnId = stationSelect.value;
+        var stnId = $('#panel_stations #selected_stn').attr('stn');
         var param = getParams();
         [stnModifyNameZHField.value, stnModifyNameENField.value] = param.stn_list[stnId].name;
     });
@@ -263,15 +326,18 @@ function initStationsPanel() {
     $('#stn_modify_diag #name_zh, #name_en').on('input', event => {
         var nameZH = stnModifyNameZHField.value;
         var nameEN = stnModifyNameENField.value;
-        myLine.updateStnName(stationSelect.value, nameZH, nameEN);
-        $('#stn_list option').eq(stationSelect.selectedIndex).html(`${nameZH} - ${nameEN}`);
-        $('#stn_add_diag #pivot option').eq(stationSelect.selectedIndex).html(`${nameZH} - ${nameEN}`);
+        var stnId = $('#panel_stations #selected_stn').attr('stn');
+        myLine.updateStnName(stnId, nameZH, nameEN);
+        $(`#stn_select_diag ul [data-mdc-dialog-action="${stnId}"] span`).html(`${nameZH} - ${nameEN}`);
+        $('#panel_stations #selected_stn span:last-child').html(`Modify Station: ${nameZH} - ${nameEN}`);
+        // $('#stn_list option').eq(stationSelect.selectedIndex).html(`${nameZH} - ${nameEN}`);
+        $(`#stn_add_diag #pivot select [value=${stnId}]`).html(`${nameZH} - ${nameEN}`);
     });
 
 
     // Modification (Interchange)
-    var stnTransferButtonRipple = new mdc.ripple.MDCRipple($('#stn_transfer')[0]);
-    stnTransferButtonRipple.unbounded = true;
+    // var stnTransferButtonRipple = new mdc.ripple.MDCRipple($('#stn_transfer')[0]);
+    // stnTransferButtonRipple.unbounded = true;
     var stnTransferDialog = new mdc.dialog.MDCDialog($('#stn_transfer_diag')[0]);
     var stnTransferSelect = new mdc.select.MDCSelect($('#stn_transfer_diag #change_type')[0]);
     var stnIntTickDirectionToggle = new mdc.iconButton.MDCIconButtonToggle($('#stn_transfer_diag #tick_direc')[0]);
@@ -337,12 +403,13 @@ function initStationsPanel() {
         $('#stn_transfer_diag #paid_area').attr('style', sty)
     }
 
-    $('#stn_transfer').on('click', event => {
-        if (stationSelect.value == 'null') {return;}
-        stnTransferDialog.open();
-    });
+    // $('#stn_transfer').on('click', event => {
+    //     if (stationSelect.value == 'null') {return;}
+    //     stnTransferDialog.open();
+    // });
     stnTransferDialog.listen('MDCDialog:opening', event => {
-        var stnId = stationSelect.value;
+        // var stnId = stationSelect.value;
+        var stnId = $('#panel_stations #selected_stn').attr('stn');
         var stnInfo = getParams().stn_list[stnId];
         stnTransferSelect.value = stnInfo.change_type.split('_')[0];
 
@@ -401,7 +468,7 @@ function initStationsPanel() {
     stnTransferDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action == 'close') {return;}
 
-        var stnId = stationSelect.value;
+        var stnId = $('#panel_stations #selected_stn').attr('stn');
         var type = stnTransferSelect.value;
         var tickDirec = stnIntTickDirectionToggle.on ? 'r' : 'l';
         var osi = [stnOSINameZHField.value, stnOSINameENField.value];
@@ -494,7 +561,7 @@ function initStationsPanel() {
                 );
             });
 
-            var stnId = stationSelect.value;
+            var stnId = $('#panel_stations #selected_stn').attr('stn');
             var stnInfo = getParams().stn_list[stnId];
 
             if (stnInfo.transfer) {
@@ -515,7 +582,7 @@ function initStationsPanel() {
                 );
             });
 
-            var stnId = stationSelect.value;
+            var stnId = $('#panel_stations #selected_stn').attr('stn');
             var stnInfo = getParams().stn_list[stnId];
 
             if (stnInfo.transfer) {
@@ -529,30 +596,32 @@ function initStationsPanel() {
 
 
     // Deletion
-    var stnDeleteButtonRipple = new mdc.ripple.MDCRipple($('#stn_delete')[0]);
-    stnDeleteButtonRipple.unbounded = true;
+    // var stnDeleteButtonRipple = new mdc.ripple.MDCRipple($('#stn_delete')[0]);
+    // stnDeleteButtonRipple.unbounded = true;
     var stnDeleteConfirmDialog = new mdc.dialog.MDCDialog($('#stn_delete_diag')[0]);
     var stnDeleteErrorDialog = new mdc.dialog.MDCDialog($('#stn_delete_err')[0]);
-    $('#stn_delete').on('click', event => {
-        if (stationSelect.value == 'null') {return;}
-        stnDeleteConfirmDialog.open();
-    });
+    // $('#stn_delete').on('click', event => {
+    //     if (stationSelect.value == 'null') {return;}
+    //     stnDeleteConfirmDialog.open();
+    // });
     stnDeleteConfirmDialog.listen('MDCDialog:opening', event => {
+        var stnNames = $('#stations_list #selected_stn span:last-child').html().split(':')[1];
         $('#stn_delete_diag .mdc-dialog__content').html(
-            `Are you sure to delete station ${$('#stn_list option').eq(stationSelect.selectedIndex).html()}? You can't undo this action. `
+            `Are you sure to delete station ${stnNames}? You can't undo this action. `
         );
     });
     stnDeleteConfirmDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action == 'close') {return;}
-        var stnId = stationSelect.value;
-        var idx = stationSelect.selectedIndex;
+        var stnId = $('#panel_stations #selected_stn').attr('stn');
+        // var idx = stationSelect.selectedIndex;
         // Remove from data and svg
         if (myLine.removeStn(stnId)) {
             // Remove station from selection
-            $(`#stn_list [value=${stnId}]`).remove();
+            // $(`#stn_list [value=${stnId}]`).remove();
+            $('#stn_select_diag')[0].dispatchEvent(new CustomEvent('MDCDialog:closed', {'detail':{'action':'none'}}));
             // $('#stn_list option').eq(stationSelect.selectedIndex).remove();
             $(`#stn_add_diag #pivot [value=${stnId}]`).remove();
-            stationSelect.selectedIndex = (idx==0) ? 0 : idx-1;
+            // stationSelect.selectedIndex = (idx==0) ? 0 : idx-1;
         } else {
             stnDeleteErrorDialog.open();
         }
@@ -560,27 +629,39 @@ function initStationsPanel() {
 }
 
 function initSavePanel() {
-    var downloadButtonRipple = new mdc.ripple.MDCRipple($('#download_json')[0]);
-    downloadButtonRipple.unbounded = true;
-    $('#download_json').on('click', event => {
-        var link = document.createElement('a');
-        var data = new Blob([sessionStorage.all_params], {type: 'application/json;charset=utf-8'});
-        var url = window.URL.createObjectURL(data);
-        link.href = url;
-        link.download = 'railmap_config.json';
-        // $('body').append(link);
-        link.click();
-        // document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-    })
+    var saveList = new mdc.list.MDCList($('#panel_save .mdc-list')[0]);
+    var saveListItemRipple = saveList.listElements.map((listItemEl) => new mdc.ripple.MDCRipple(listItemEl));
 
-    var uploadButtonRipple = new mdc.ripple.MDCRipple($('#upload_json')[0]);
-    uploadButtonRipple.unbounded = true;
+    saveList.listen('MDCList:action', event => {
+        console.log(event.detail);
+        switch (event.detail.index) {
+            case 0:
+                var link = document.createElement('a');
+                var data = new Blob([sessionStorage.all_params], {type: 'application/json;charset=utf-8'});
+                var url = window.URL.createObjectURL(data);
+                link.href = url;
+                link.download = 'railmap_config.json';
+                // $('body').append(link);
+                link.click();
+                // document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                break;
+            case 1:
+                $('#upload_file').click();
+                break;
+            case 2:
+                resetDialog.open();
+                break;
+        }
+    });
+
+    // var uploadButtonRipple = new mdc.ripple.MDCRipple($('#upload_json')[0]);
+    // uploadButtonRipple.unbounded = true;
     var importDialog = new mdc.dialog.MDCDialog($('#import_diag')[0]);
     var importedFile = undefined;
-    $('#upload_json').on('click', event => {
-        $('#upload_file').click();
-    });
+    // $('#upload_json').on('click', event => {
+    //     $('#upload_file').click();
+    // });
     $('#upload_file').on('change', event => {
         console.log(event.target.files[0]);
         var reader = new FileReader();
@@ -601,12 +682,12 @@ function initSavePanel() {
         location.reload(true);
     });
 
-    var resetButtonRipple = new mdc.ripple.MDCRipple($('#reset_json')[0]);
-    resetButtonRipple.unbounded = true;
+    // var resetButtonRipple = new mdc.ripple.MDCRipple($('#reset_json')[0]);
+    // resetButtonRipple.unbounded = true;
     var resetDialog = new mdc.dialog.MDCDialog($('#reset_diag')[0]);
-    $('#reset_json').on('click', event => {
-        resetDialog.open();
-    });
+    // $('#reset_json').on('click', event => {
+    //     resetDialog.open();
+    // });
     resetDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action == 'close') {return;}
 
