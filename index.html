@@ -22,11 +22,11 @@
     <style type="text/css">
         body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: column; overflow: auto;}
         #svgs {height: 305px; overflow: auto;}
-        #panels {flex-grow: 1; overflow: hidden; font-family: "Vegur";}
+        #panels {flex-grow: 1; overflow: hidden;}
         .panel {display: none;}
         .panel--active {display: block;}
 
-        .mdc-text-field {
+        /* .mdc-text-field {
           height: 40px;
         }
         .mdc-text-field--outlined .mdc-floating-label {
@@ -34,7 +34,7 @@
         }
         .mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
           transform: translateY(-90%) scale(0.75);
-        }
+        } */
 
         /* .mdc-select {height: 40px;}
         .mdc-select--outlined .mdc-floating-label {top: 10px;}
@@ -390,7 +390,7 @@ id="railmap" width="0" height="0">
             Vertical Position
         </li>
         <li class="mdc-list-item">
-            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">arrow_drop_down</span>
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">arrow_drop_up</span>
             <div id="y_pc" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value">
                 <div class="mdc-slider__track-container">
                     <div class="mdc-slider__track"></div>
@@ -403,7 +403,7 @@ id="railmap" width="0" height="0">
                 </div>
             </div>
             &emsp;&emsp;&emsp;
-            <span class="mdc-list-item__meta material-icons" aria-hidden="true">arrow_drop_up</span>
+            <span class="mdc-list-item__meta material-icons" aria-hidden="true">arrow_drop_down</span>
         </li>
         <li role="separator" class="mdc-list-divider"></li>
         <li class="mdc-list-item">
@@ -411,7 +411,7 @@ id="railmap" width="0" height="0">
             Branch Spacing
         </li>
         <li class="mdc-list-item">
-            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">arrow_drop_down</span>
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">remove</span>
             <div id="branch_spacing" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value">
                 <div class="mdc-slider__track-container">
                     <div class="mdc-slider__track"></div>
@@ -424,56 +424,13 @@ id="railmap" width="0" height="0">
                 </div>
             </div>
             &emsp;&emsp;&emsp;
-            <span class="mdc-list-item__meta material-icons" aria-hidden="true">arrow_drop_up</span>
+            <span class="mdc-list-item__meta material-icons" aria-hidden="true">add</span>
         </li>
     </ul>
     </div>
 
 </div>
 </div>
-
-<!-- <div>
-    <div id="svg_width" class="mdc-text-field mdc-text-field--outlined">
-        <input type="text" id="tf-outlined" class="mdc-text-field__input">
-        <div class="mdc-notched-outline">
-            <div class="mdc-notched-outline__leading"></div>
-            <div class="mdc-notched-outline__notch">
-            <label for="tf-outlined" class="mdc-floating-label">Width</label>
-            </div>
-            <div class="mdc-notched-outline__trailing"></div>
-        </div>
-    </div>
-</div> -->
-
-<!-- <div>
-    <span>Vertical Position of Line</span>
-    <div id="y_pc" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value">
-        <div class="mdc-slider__track-container">
-            <div class="mdc-slider__track"></div>
-        </div>
-        <div class="mdc-slider__thumb-container">
-            <svg class="mdc-slider__thumb" width="21" height="21">
-                <circle cx="10.5" cy="10.5" r="7.875"></circle>
-            </svg>
-        <div class="mdc-slider__focus-ring"></div>
-        </div>
-    </div>
-</div> -->
-
-<!-- <div>
-    <span>Branch Spacing</span>
-    <div id="branch_spacing" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value">
-        <div class="mdc-slider__track-container">
-            <div class="mdc-slider__track"></div>
-        </div>
-        <div class="mdc-slider__thumb-container">
-            <svg class="mdc-slider__thumb" width="21" height="21">
-                <circle cx="10.5" cy="10.5" r="7.875"></circle>
-            </svg>
-        <div class="mdc-slider__focus-ring"></div>
-        </div>
-    </div>
-</div> -->
 
 </div>
 
@@ -564,10 +521,12 @@ id="railmap" width="0" height="0">
         <li class="mdc-list-item mdc-list-item--disabled" tabindex="0">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">text_fields</span>
             Edit Station Names
+            <span class="mdc-list-item__meta material-icons" aria-hidden="true">arrow_forward_ios</span>
         </li>
         <li class="mdc-list-item mdc-list-item--disabled" tabindex="0">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">transfer_within_a_station</span>
             Edit Interchange
+            <span class="mdc-list-item__meta material-icons" aria-hidden="true">arrow_forward_ios</span>
         </li>
         <li class="mdc-list-item mdc-list-item--disabled" tabindex="0">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">delete_forever</span>
@@ -739,28 +698,42 @@ id="railmap" width="0" height="0">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
-      <h2 class="mdc-dialog__title" id="my-dialog-title">Edit station name</h2>
+      <h2 class="mdc-dialog__title" id="my-dialog-title">Edit Station Names</h2>
       <div class="mdc-dialog__content" id="my-dialog-content">
-            <span>Please enter station name in both Chinese and Latin characters. </span>
-            <div id="name_zh" class="mdc-text-field mdc-text-field--outlined">
-                <input type="text" id="tf-outlined" class="mdc-text-field__input">
-                <div class="mdc-notched-outline">
-                    <div class="mdc-notched-outline__leading"></div>
-                    <div class="mdc-notched-outline__notch">
-                    <label for="tf-outlined" class="mdc-floating-label">Name in Chinese Characters</label>
+            <div class="mdc-layout-grid">
+            <div class="mdc-layout-grid__inner">
+                <div class="mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--align-middle">
+                    <i class="material-icons">漢</i>
+                </div>
+                <div class="mdc-layout-grid__cell--span-10">
+                <div id="name_zh" class="mdc-text-field mdc-text-field--outlined">
+                    <input type="text" id="tf-outlined" class="mdc-text-field__input">
+                    <div class="mdc-notched-outline">
+                        <div class="mdc-notched-outline__leading"></div>
+                        <div class="mdc-notched-outline__notch">
+                        <label for="tf-outlined" class="mdc-floating-label">名字</label>
+                        </div>
+                        <div class="mdc-notched-outline__trailing"></div>
                     </div>
-                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--align-middle">
+                    <i class="material-icons">A</i>
+                </div>
+                <div class="mdc-layout-grid__cell--span-10">
+                <div id="name_en" class="mdc-text-field mdc-text-field--outlined">
+                    <input type="text" id="tf-outlined" class="mdc-text-field__input">
+                    <div class="mdc-notched-outline">
+                        <div class="mdc-notched-outline__leading"></div>
+                        <div class="mdc-notched-outline__notch">
+                        <label for="tf-outlined" class="mdc-floating-label">Name</label>
+                        </div>
+                        <div class="mdc-notched-outline__trailing"></div>
+                    </div>
+                </div>
                 </div>
             </div>
-            <div id="name_en" class="mdc-text-field mdc-text-field--outlined">
-                <input type="text" id="tf-outlined" class="mdc-text-field__input">
-                <div class="mdc-notched-outline">
-                    <div class="mdc-notched-outline__leading"></div>
-                    <div class="mdc-notched-outline__notch">
-                    <label for="tf-outlined" class="mdc-floating-label">Name in Latin Characters</label>
-                    </div>
-                    <div class="mdc-notched-outline__trailing"></div>
-                </div>
             </div>
       </div>
       <footer class="mdc-dialog__actions">
@@ -1017,6 +990,10 @@ id="railmap" width="0" height="0">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">cached</span>
             Reset to Default
         </li>
+        <li class="mdc-list-item">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">insert_drive_file</span>
+            Reset to Blank
+        </li>
     </ul>
     </div>
 
@@ -1074,6 +1051,32 @@ id="railmap" width="0" height="0">
         </button>
         <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="accept" data-mdc-dialog-button-default>
           <span class="mdc-button__label">Reset to default</span>
+        </button>
+      </footer>
+    </div>
+  </div>
+  <div class="mdc-dialog__scrim"></div>
+</div>
+</div>
+
+<div id="blank_diag" class="mdc-dialog"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="my-dialog-title"
+     aria-describedby="my-dialog-content">
+  <div class="mdc-dialog__container">
+    <div class="mdc-dialog__surface">
+      <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+      <h2 class="mdc-dialog__title" id="my-dialog-title">Blank</h2>
+      <div class="mdc-dialog__content" id="my-dialog-content">
+        All your work may be lost!
+      </div>
+      <footer class="mdc-dialog__actions">
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
+          <span class="mdc-button__label">Cancel</span>
+        </button>
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="accept" data-mdc-dialog-button-default>
+          <span class="mdc-button__label">Reset to blank</span>
         </button>
       </footer>
     </div>
