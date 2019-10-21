@@ -24,6 +24,52 @@ function initLayoutPanel() {
 }
 
 function initDesignPanel() {
+    var designList = new mdc.list.MDCList($('#panel_design #design_list')[0]);
+    var designListItemRipple = designList.listElements.map(listItemEl => new mdc.ripple.MDCRipple(listItemEl));
+
+    $('#panel_design #design_list li:nth-child(2) .mdc-list-item__secondary-text').html(
+        (getParams().direction == 'r') ? 'Right' : 'Left'
+    );
+
+    $('#panel_design #design_list li:nth-child(5) .mdc-list-item__secondary-text').html(
+        $(`#design_char_diag ul [data-mdc-dialog-action="${
+            (region => {switch (region) {
+                case 'KR': return 'trad';
+                case 'TC': return 'tw';
+                case 'SC': return 'cn';
+                case 'JP': return 'jp';
+            }})(getParams().fontZH[0].split(' ').reverse()[0])
+        }"] span`).html()
+    );
+
+    designList.listen('MDCList:action', event => {
+        switch (event.detail.index) {
+            case 0:
+                themeDialog.open();
+                break;
+            case 1:
+                if (getParams().direction == 'r') {
+                    myLine.direction = 'l';
+                    $('#panel_design #design_list li:nth-child(2) .mdc-list-item__secondary-text').html('Left');
+                } else {
+                    myLine.direction = 'r';
+                    $('#panel_design #design_list li:nth-child(2) .mdc-list-item__secondary-text').html('Right');
+                }
+                break;
+            case 3:
+                myLine.swapStnName();
+                break;
+            case 4:
+                charDialog.open();
+        }
+    });
+
+    var themeDialog = new mdc.dialog.MDCDialog($('#design_theme_diag')[0]);
+    themeDialog.listen('MDCDialog:opened', () => {
+        themeCitySelect.layout();
+        themeLineSelect.layout();
+    });
+
     var themeCitySelect = new mdc.select.MDCSelect($('#theme_city')[0]);
     var themeLineSelect = new mdc.select.MDCSelect($('#theme_line')[0]);
     // var themeColourSelect = new mdc.textField.MDCTextField($('#theme_colour')[0]);
@@ -53,6 +99,9 @@ function initDesignPanel() {
                 });
 
                 var param_instance = getParams();
+                param_instance.theme[0] = event.detail.value;
+                putParams(param_instance);
+
                 var themeLine = param_instance.theme[1];
                 var lineIdx = $(`#theme_line > select > [value="${themeLine}"]`).index();
 
@@ -61,9 +110,6 @@ function initDesignPanel() {
                 } else {
                     themeLineSelect.selectedIndex = lineIdx;
                 }
-
-                param_instance.theme[0] = event.detail.value;
-                putParams(param_instance);
             });
         }
     });
@@ -78,38 +124,42 @@ function initDesignPanel() {
 
             myLine.themeLine = event.detail.value;
             myLine.themeColour = $('#theme_line option').eq(event.detail.index).attr('colour');
+
+            $('#panel_design #design_list li:first-child .mdc-list-item__secondary-text').html(
+                `${$('#theme_city option').eq(themeCitySelect.selectedIndex).html()} - ${$('#theme_line option').eq(event.detail.index).html()}`
+            );
         }
     });
 
-    var directionLToggle = new mdc.iconButton.MDCIconButtonToggle($('#direction_l')[0]);
-    var directionRToggle = new mdc.iconButton.MDCIconButtonToggle($('#direction_r')[0]);
-    directionLToggle.unbounded = true;
-    directionRToggle.unbounded = true;
-    if (getParams().direction == 'l') {
-        directionLToggle.on = true;
-        directionRToggle.on = false;
-        $('#direction_l').prop('disabled', true);
-    } else {
-        directionLToggle.on = false;
-        directionRToggle.on = true;
-        $('#direction_r').prop('disabled', true);
-    }
-    directionRToggle.listen('MDCIconButtonToggle:change', event => {
-        if (event.detail.isOn) {
-            myLine.direction = 'r';
-            directionLToggle.on = false;
-            $('#direction_r').prop('disabled', true);
-            $('#direction_l').prop('disabled', false);
-        }
-    })
-    directionLToggle.listen('MDCIconButtonToggle:change', event => {
-        if (event.detail.isOn) {
-            myLine.direction = 'l';
-            directionRToggle.on = false;
-            $('#direction_l').prop('disabled', true);
-            $('#direction_r').prop('disabled', false);
-        }
-    })
+    // var directionLToggle = new mdc.iconButton.MDCIconButtonToggle($('#direction_l')[0]);
+    // var directionRToggle = new mdc.iconButton.MDCIconButtonToggle($('#direction_r')[0]);
+    // directionLToggle.unbounded = true;
+    // directionRToggle.unbounded = true;
+    // if (getParams().direction == 'l') {
+    //     directionLToggle.on = true;
+    //     directionRToggle.on = false;
+    //     $('#direction_l').prop('disabled', true);
+    // } else {
+    //     directionLToggle.on = false;
+    //     directionRToggle.on = true;
+    //     $('#direction_r').prop('disabled', true);
+    // }
+    // directionRToggle.listen('MDCIconButtonToggle:change', event => {
+    //     if (event.detail.isOn) {
+    //         myLine.direction = 'r';
+    //         directionLToggle.on = false;
+    //         $('#direction_r').prop('disabled', true);
+    //         $('#direction_l').prop('disabled', false);
+    //     }
+    // })
+    // directionLToggle.listen('MDCIconButtonToggle:change', event => {
+    //     if (event.detail.isOn) {
+    //         myLine.direction = 'l';
+    //         directionRToggle.on = false;
+    //         $('#direction_l').prop('disabled', true);
+    //         $('#direction_r').prop('disabled', false);
+    //     }
+    // })
 
     var platformTextField = new mdc.textField.MDCTextField($('#platform_num')[0]);
     platformTextField.value = getParams().platform_num;
@@ -117,9 +167,26 @@ function initDesignPanel() {
         myLine.platformNum = event.target.value;
     });
 
-    var txtFilpButtonRipple = new mdc.ripple.MDCRipple($('#txt_flip')[0]);
-    txtFilpButtonRipple.unbounded = true;
-    $('#txt_flip').on('click', event => {myLine.swapStnName();});
+    // var txtFilpButtonRipple = new mdc.ripple.MDCRipple($('#txt_flip')[0]);
+    // txtFilpButtonRipple.unbounded = true;
+    // $('#txt_flip').on('click', event => {myLine.swapStnName();});
+
+    var charDialog = new mdc.dialog.MDCDialog($('#design_char_diag')[0]);
+    var charDialogList = new mdc.list.MDCList($('#design_char_diag .mdc-list')[0]);
+    charDialog.listen('MDCDialog:opened', () => {
+        charDialogList.layout();
+        var charDialogListItemRipple = charDialogList.listElements.map(
+            listItemEl => new mdc.ripple.MDCRipple(listItemEl)
+        );
+    });
+    charDialog.listen('MDCDialog:closed', event => {
+        if (event.detail.action == 'close') {return;}
+
+        myLine.switchCharForm(event.detail.action);
+        $('#panel_design #design_list li:nth-child(5) .mdc-list-item__secondary-text').html(
+            $(`#design_char_diag ul [data-mdc-dialog-action="${event.detail.action}"] span`).html()
+        );
+    });
 }
 
 function initStationsPanel() {

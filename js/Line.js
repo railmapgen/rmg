@@ -715,6 +715,27 @@ class Line {
         $('#dest_name > #platform > text').attr('font-family', fontENToShow);
     }
 
+    switchCharForm(region) {
+        var param = getParams();
+        switch (region) {
+            case 'trad':
+                param.fontZH = ['Noto Serif KR', 'Noto Serif JP', 'Noto Serif TC', 'Noto Serif SC'];
+                break;
+            case 'cn':
+                param.fontZH = ['Noto Serif SC', 'Noto Serif TC']; 
+                break;
+            case 'tw':
+                param.fontZH = ['Noto Serif TC', 'Noto Serif KR', 'Noto Serif JP', 'Noto Serif SC'];
+                break;
+            case 'jp':
+                param.fontZH = ['Noto Serif JP', 'Noto Serif KR', 'Noto Serif TC', 'Noto Serif SC'];
+                break;
+        }
+        putParams(param);
+        this.#fontZH = param.fontZH;
+        this.loadFonts();
+    }
+
     swapStnName() {
         var param = getParams();
         param.txt_flip = !param.txt_flip;

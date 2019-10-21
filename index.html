@@ -369,7 +369,7 @@ id="railmap" width="0" height="0">
 <div class="mdc-layout-grid__inner">
 
     <div class="mdc-layout-grid__cell--span-12 mdc-card">
-    <ul class="mdc-list">
+    <ul class="mdc-list mdc-list--two-line mdc-list--avatar-list">
         <li class="mdc-list-item" tabindex="0">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">panorama_horizontal</span>
             Canvas Width &emsp;&emsp;&emsp;
@@ -436,37 +436,153 @@ id="railmap" width="0" height="0">
 
 <div id="panel_design" class="panel">
 
-<div>
-    <div id="theme_city" class="mdc-select mdc-select--outlined">
-        <i class="mdc-select__dropdown-icon"></i>
-        <select class="mdc-select__native-control">
-            <!-- <option value="nullcity" selected>Customise...</option> -->
-        </select>
-        <div class="mdc-notched-outline">
-            <div class="mdc-notched-outline__leading"></div>
-            <div class="mdc-notched-outline__notch">
-                <label class="mdc-floating-label">City</label>
+<div class="mdc-layout-grid" style="max-width: 500px;">
+<div class="mdc-layout-grid__inner">
+
+    <div class="mdc-layout-grid__cell--span-12 mdc-card">
+    <ul id="design_list" class="mdc-list mdc-list--two-line mdc-list--avatar-list">
+        <li class="mdc-list-item">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">color_lens</span>
+            <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text">Theme</span>
+                <span class="mdc-list-item__secondary-text"></span>
+            </span>
+        </li>
+        <li class="mdc-list-item">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">directions</span>
+            <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text">Train Direction</span>
+                <span class="mdc-list-item__secondary-text"></span>
+            </span>
+        </li>
+        <li class="mdc-list-item">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">looks_one</span>
+            <div id="platform_num" class="mdc-text-field mdc-text-field--outlined">
+                <input type="text" id="tf-outlined" class="mdc-text-field__input">
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                    <label for="tf-outlined" class="mdc-floating-label">Platform</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
             </div>
-            <div class="mdc-notched-outline__trailing"></div>
-        </div>
+        </li>
+        <li class="mdc-list-item">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">swap_vert</span>
+            Flip Station Names Position
+        </li>
+        <li class="mdc-list-item">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">font_download</span>
+            <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text">Character Form</span>
+                <span class="mdc-list-item__secondary-text"></span>
+            </span>
+        </li>
+    </ul>
     </div>
 
-    <div id="theme_line" class="mdc-select mdc-select--outlined">
-        <i class="mdc-select__dropdown-icon"></i>
-        <select class="mdc-select__native-control">
-            <!-- <option value="nullcity" selected>Customise...</option> -->
-        </select>
-        <div class="mdc-notched-outline">
-            <div class="mdc-notched-outline__leading"></div>
-            <div class="mdc-notched-outline__notch">
-                <label class="mdc-floating-label">Line</label>
-            </div>
-            <div class="mdc-notched-outline__trailing"></div>
-        </div>
-    </div>
+</div>
 </div>
 
-<div>
+<div id="design_theme_diag" class="mdc-dialog"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="my-dialog-title"
+     aria-describedby="my-dialog-content">
+  <div class="mdc-dialog__container">
+    <div class="mdc-dialog__surface">
+      <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+      <h2 class="mdc-dialog__title" id="my-dialog-title">Edit Theme</h2>
+      <div class="mdc-dialog__content" id="my-dialog-content">
+            <div class="mdc-layout-grid">
+            <div class="mdc-layout-grid__inner">
+                <div class="mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--align-middle">
+                    <i class="material-icons">location_city</i>
+                </div>
+                <div class="mdc-layout-grid__cell--span-10">
+                <div id="theme_city" class="mdc-select mdc-select--outlined">
+                    <i class="mdc-select__dropdown-icon"></i>
+                    <select class="mdc-select__native-control">
+                    </select>
+                    <div class="mdc-notched-outline">
+                        <div class="mdc-notched-outline__leading"></div>
+                        <div class="mdc-notched-outline__notch">
+                            <label class="mdc-floating-label">City</label>
+                        </div>
+                        <div class="mdc-notched-outline__trailing"></div>
+                    </div>
+                </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--align-middle">
+                    <i class="material-icons">subway</i>
+                </div>
+                <div class="mdc-layout-grid__cell--span-10">
+                <div id="theme_line" class="mdc-select mdc-select--outlined">
+                    <i class="mdc-select__dropdown-icon"></i>
+                    <select class="mdc-select__native-control">
+                        <!-- <option value="nullcity" selected>Customise...</option> -->
+                    </select>
+                    <div class="mdc-notched-outline">
+                        <div class="mdc-notched-outline__leading"></div>
+                        <div class="mdc-notched-outline__notch">
+                            <label class="mdc-floating-label">Line</label>
+                        </div>
+                        <div class="mdc-notched-outline__trailing"></div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+      </div>
+      <footer class="mdc-dialog__actions">
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes" data-mdc-dialog-button-default>
+          <span class="mdc-button__label">Done</span>
+        </button>
+      </footer>
+    </div>
+  </div>
+  <div class="mdc-dialog__scrim"></div>
+</div>
+
+<div id="design_char_diag" class="mdc-dialog"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="my-dialog-title"
+     aria-describedby="my-dialog-content">
+  <div class="mdc-dialog__container">
+    <div class="mdc-dialog__surface">
+      <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+      <h2 class="mdc-dialog__title" id="my-dialog-title"><!--
+     -->Select Character Form<!--
+   --></h2>
+      <div class="mdc-dialog__content" id="my-dialog-content">
+        <ul class="mdc-list mdc-list--avatar-list">
+            <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="trad">
+                <span class="mdc-list-item__text">Traditional (Kangxi Dictionary)</span>
+            </li>
+            <li class="mdc-list-item" data-mdc-dialog-action="cn">
+                <span class="mdc-list-item__text">PRC (General Standard Chinese Characters)</span>
+            </li>
+            <li class="mdc-list-item" data-mdc-dialog-action="tw">
+                <span class="mdc-list-item__text">ROC (Standard Typefaces for Chinese Character)</span>
+            </li>
+            <li class="mdc-list-item" data-mdc-dialog-action="jp">
+                <span class="mdc-list-item__text">Japan (Jōyō Kanji)</span>
+            </li>
+          <!-- <li class="mdc-list-item" data-mdc-dialog-action="callisto">
+            <span class="mdc-list-item__text">Callisto</span>
+          </li> -->
+          <!-- ... -->
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="mdc-dialog__scrim"></div>
+</div>
+
+<!-- <div>
     <span>Train Direction</span>
     <button id="direction_l" class="mdc-icon-button" aria-label="Add to favorites" aria-hidden="true" aria-pressed="false">
         <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on" style="transform:rotate(180deg)">play_circle_filled</i>
@@ -476,9 +592,9 @@ id="railmap" width="0" height="0">
         <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">play_circle_filled</i>
         <i class="material-icons mdc-icon-button__icon">play_circle_outline</i>
     </button>
-</div>
+</div> -->
 
-<div>
+<!-- <div>
     <div id="platform_num" class="mdc-text-field mdc-text-field--outlined">
         <input type="text" id="tf-outlined" class="mdc-text-field__input">
         <div class="mdc-notched-outline">
@@ -489,12 +605,12 @@ id="railmap" width="0" height="0">
             <div class="mdc-notched-outline__trailing"></div>
         </div>
     </div>
-</div>
+</div> -->
 
-<div>
+<!-- <div>
     <span>Station Name Position</span>
     <button id="txt_flip" class="mdc-icon-button material-icons">swap_vert</button>
-</div>
+</div> -->
 
 </div>
 
@@ -532,17 +648,18 @@ id="railmap" width="0" height="0">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">delete_forever</span>
             Remove This Station
         </li>
+        <!-- <li id="selected_stn" class="mdc-list-item" stn="none">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">edit</span>
+            <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text">Modify</span>
+                <span class="mdc-list-item__secondary-text">Modify</span>
+            </span>
+        </li> -->
     </ul>
     </div>
 
 </div>
 </div>
-
-<!-- <div>
-    <span>Add a station</span>
-    <button id="stn_add" class="mdc-icon-button material-icons">add_box</button>
-</div> -->
-
 
 <div id="stn_add_diag" class="mdc-dialog"
      role="alertdialog"
