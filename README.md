@@ -11,6 +11,22 @@ Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be d
 
 ## Version History
 
+### 0.5 (22 Oct 2019)
+
+#### New Features
+
+- More browsers are now supported. 
+- Customisation of Chinese character-form is now available. 
+- Material Design is applied to all setting panels. 
+
+#### Known Issues
+
+- Station selector may not sort options in a reasonable order. 
+- Notched outline and floating labels of `MDCTextField` and `MDCSelect` overflow to the top. 
+- Sliders may stop working if the browser window is resized while Layout tab is not focused. 
+- Slider values may not be initialised correctly after importing or resetting configuration. 
+  - Workaround: Refresh page to re-initial sliders. Your work will not be lost if you are not using incognito mode. 
+
 ### 0.4 (20 Oct 2019)
 
 #### New Features
