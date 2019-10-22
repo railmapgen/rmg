@@ -2,10 +2,9 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Editor</title>
+    <title>Rail Map Generator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
     <!-- <script src="html2canvas.min.js"></script> -->
     <script src="js/utils.js"></script>
@@ -25,23 +24,6 @@
         #panels {flex-grow: 1; overflow: hidden;}
         .panel {display: none;}
         .panel--active {display: block;}
-
-        /* .mdc-text-field {
-          height: 40px;
-        }
-        .mdc-text-field--outlined .mdc-floating-label {
-          top: 10px;
-        }
-        .mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
-          transform: translateY(-90%) scale(0.75);
-        } */
-
-        /* .mdc-select {height: 40px;}
-        .mdc-select--outlined .mdc-floating-label {top: 10px;}
-        .mdc-select--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
-          transform: translateY(-130%) scale(0.75);
-        } */
-
     </style>
 </head>
 <body>
@@ -553,7 +535,6 @@ id="railmap" width="0" height="0">
      aria-describedby="my-dialog-content">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
-      <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
       <h2 class="mdc-dialog__title" id="my-dialog-title"><!--
      -->Select Character Form<!--
    --></h2>
@@ -571,46 +552,12 @@ id="railmap" width="0" height="0">
             <li class="mdc-list-item" data-mdc-dialog-action="jp">
                 <span class="mdc-list-item__text">Japan (Jōyō Kanji)</span>
             </li>
-          <!-- <li class="mdc-list-item" data-mdc-dialog-action="callisto">
-            <span class="mdc-list-item__text">Callisto</span>
-          </li> -->
-          <!-- ... -->
         </ul>
       </div>
     </div>
   </div>
   <div class="mdc-dialog__scrim"></div>
 </div>
-
-<!-- <div>
-    <span>Train Direction</span>
-    <button id="direction_l" class="mdc-icon-button" aria-label="Add to favorites" aria-hidden="true" aria-pressed="false">
-        <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on" style="transform:rotate(180deg)">play_circle_filled</i>
-        <i class="material-icons mdc-icon-button__icon" style="transform:rotate(180deg)">play_circle_outline</i>
-    </button>
-    <button id="direction_r" class="mdc-icon-button" aria-label="Add to favorites" aria-hidden="true" aria-pressed="false">
-        <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">play_circle_filled</i>
-        <i class="material-icons mdc-icon-button__icon">play_circle_outline</i>
-    </button>
-</div> -->
-
-<!-- <div>
-    <div id="platform_num" class="mdc-text-field mdc-text-field--outlined">
-        <input type="text" id="tf-outlined" class="mdc-text-field__input">
-        <div class="mdc-notched-outline">
-            <div class="mdc-notched-outline__leading"></div>
-            <div class="mdc-notched-outline__notch">
-            <label for="tf-outlined" class="mdc-floating-label">Platform</label>
-            </div>
-            <div class="mdc-notched-outline__trailing"></div>
-        </div>
-    </div>
-</div> -->
-
-<!-- <div>
-    <span>Station Name Position</span>
-    <button id="txt_flip" class="mdc-icon-button material-icons">swap_vert</button>
-</div> -->
 
 </div>
 
@@ -648,13 +595,6 @@ id="railmap" width="0" height="0">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">delete_forever</span>
             Remove This Station
         </li>
-        <!-- <li id="selected_stn" class="mdc-list-item" stn="none">
-            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">edit</span>
-            <span class="mdc-list-item__text">
-                <span class="mdc-list-item__primary-text">Modify</span>
-                <span class="mdc-list-item__secondary-text">Modify</span>
-            </span>
-        </li> -->
     </ul>
     </div>
 
@@ -784,29 +724,6 @@ id="railmap" width="0" height="0">
   <div class="mdc-dialog__scrim"></div>
 </div>
 
-<div>
-    <!-- <span>Modify or delete a current station</span>
-    <div id="stn_list" class="mdc-select mdc-select--outlined">
-        <i class="mdc-select__dropdown-icon"></i>
-        <select class="mdc-select__native-control">
-        </select>
-        <div class="mdc-notched-outline">
-            <div class="mdc-notched-outline__leading"></div>
-            <div class="mdc-notched-outline__notch">
-                <label class="mdc-floating-label">Station</label>
-            </div>
-            <div class="mdc-notched-outline__trailing"></div>
-        </div>
-    </div> -->
-    <!-- <button id="stn_current" class="mdc-icon-button" aria-label="Set as current station" aria-hidden="false" aria-pressed="false">
-        <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">my_location</i>
-        <i class="material-icons mdc-icon-button__icon">location_searching</i>
-    </button> -->
-    <!-- <button id="stn_modify" class="mdc-icon-button material-icons">text_fields</button> -->
-    <!-- <button id="stn_transfer" class="mdc-icon-button material-icons">transfer_within_a_station</button> -->
-    <!-- <button id="stn_delete" class="mdc-icon-button material-icons">delete_forever</button> -->
-</div>
-
 <div id="stn_modify_diag" class="mdc-dialog"
      role="alertdialog"
      aria-modal="true"
@@ -849,6 +766,10 @@ id="railmap" width="0" height="0">
                         <div class="mdc-notched-outline__trailing"></div>
                     </div>
                 </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-12 mdc-layout-grid__cell--align-middle">
+                    <span>Hint: You may add a backslash (&bsol;) at where you want to wrap name. (For station name in Latin characters only. )</span>
                 </div>
             </div>
             </div>
@@ -1118,11 +1039,6 @@ id="railmap" width="0" height="0">
 </div>
 
 <input type="file" id="upload_file" style="display: none;">
-<!-- <button id="download_json" class="mdc-icon-button material-icons">cloud_download</button>
-<button id="upload_json" class="mdc-icon-button material-icons">cloud_upload</button>
-<input type="file" id="upload_file" style="display: none;">
-<button id="reset_json" class="mdc-icon-button material-icons">cached</button>
-<span>Reset</span> -->
 
 <div id="import_diag" class="mdc-dialog"
      role="alertdialog"

@@ -1,23 +1,8 @@
 'use strict';
 
-// var colours;
-// $.ajax({
-//     url: 'colours.json', 
-//     success: function (data) {
-//         colours = data;
-//     }, 
-//     async: false
-// });
-
 class Station {
     _x; _y; _id; _state; 
     _namePos;
-    // constructor (id, par, child, names) {
-    //     this._id = id;
-    //     this._parents = par;
-    //     this._children = child;
-    //     [this._nameZH, this._nameEN] = names;
-    // }
 
     constructor (id, data) {
         this._id = id;
@@ -54,7 +39,8 @@ class Station {
     }
 
     get nameHTML() {
-        var dy = (this._namePos == 1) ? 12 + 11.843775 : -12 - 21.921875;
+        var nameENLn = this._nameEN.split('\\').length;
+        var dy = (this._namePos == 1) ? 12 + 11.843775 : -12 - 21.921875 - ((nameENLn == 2) ? 10 : 0);
         switch (this._state) {
             case -1:
                 var nameClass = 'Pass';
@@ -67,7 +53,8 @@ class Station {
         }
         return `<g text-anchor="middle" class="Name ${nameClass}" transform="translate(${this._x},${this._y + dy})">
                 <text class="StnNameZH"> ${this._nameZH} </text> 
-                <text dy="15" class="StnNameEN"> ${this._nameEN} </text> 
+                <text dy="15" class="StnNameEN">${this._nameEN.split('\\')[0]}
+                <tspan x="0" dy="12">${(nameENLn==2)?this._nameEN.split('\\')[1]:''}</tspan></text> 
                 </g>`;
     }
 
