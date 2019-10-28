@@ -296,6 +296,26 @@ class Line {
         };
     }
 
+    _topoOrder(from, tpo=[]) {
+        var self = this;
+        tpo.push(from);
+        this.#stations[from]._children.forEach(child => {
+            if (this._stnIndegree(child) == 2 && this.#stations[child]._parents.indexOf(from)==0) {
+                // wait the other branch
+                return;
+            } 
+            tpo.concat(self._topoOrder(child, tpo));
+        });
+        return tpo;
+    }
+
+    get tpo() {
+        var res = this._topoOrder('linestart');
+        res.pop();
+        res.shift();
+        return res;
+    }
+
     get y() {
         return this.#yPc * this.#svgHeight / 100; 
     }
@@ -315,23 +335,8 @@ class Line {
         ];
     }
 
-    get leftDests() {
-        // var dests = [];
-        // for (let stnId in this.#stations) {
-        //     if (!this._stnIndegree(stnId)) {dests.push(stnId)};
-        // }
-        // return dests;
-        return this.#stations.linestart._children;
-    }
-
-    get rightDests() {
-        // var dests = [];
-        // for (let stnId in this.#stations) {
-        //     if (!this._stnOutdegree(stnId)) {dests.push(stnId)};
-        // }
-        // return dests;
-        return this.#stations.lineend._parents;
-    }
+    get leftDests() {return this.#stations.linestart._children;}
+    get rightDests() {return this.#stations.lineend._parents;}
 
     _stnIndegree(stnId) {return this.#stations[stnId].inDegree;}
     _stnOutdegree(stnId) {return this.#stations[stnId].outDegree}

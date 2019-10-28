@@ -11,6 +11,24 @@ Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be d
 
 ## Version History
 
+### 0.6 (28 Oct 2019)
+
+#### New Features
+
+- Got a ridiculously long station name (e.g. Sino-Singapore Guangzhou Knowledge City)? Now you can wrap the name by adding a backslash (`\`). 
+- More templates are available now. You can design your line based on existing railway without entering all the details manually. 
+- You can now export canvas as SVG. The exported SVG keeps fonts and all other information which allow you to share your work to your friends. 
+
+#### Known Issues
+
+- Sliders may stop working if the browser window is resized while Layout tab is not focused. 
+- Slider values may not be initialised correctly after importing or resetting configuration. 
+  - Workaround: Refresh page to re-initial sliders. Your work will not be lost if you are not using incognito mode. 
+
+#### Resolved Issues
+
+- Station selector now sorts options in topological ordering. 
+
 ### 0.5 (22 Oct 2019)
 
 #### New Features
