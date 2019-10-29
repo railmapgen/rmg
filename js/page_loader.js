@@ -667,10 +667,19 @@ function initSavePanel() {
                 newFileDialog.open();
                 break;
             case 1:
-                exportDialog.open();
+                $('#upload_file').click();
                 break;
             case 2:
-                $('#upload_file').click();
+                var link = document.createElement('a');
+                var data = new Blob([sessionStorage.all_params], {type: 'application/json;charset=utf-8'});
+                var url = window.URL.createObjectURL(data);
+                link.href = url;
+                link.download = 'railmap_config.json';
+                link.click();
+                URL.revokeObjectURL(url);
+                break;
+            case 3:
+                exportDialog.open();
                 break;
         }
     });
@@ -738,17 +747,6 @@ function initSavePanel() {
     exportDialog.listen('MDCDialog:closed', event => {
         switch (event.detail.action) {
             case 'close':
-                break;
-            case 'json':
-                var link = document.createElement('a');
-                var data = new Blob([sessionStorage.all_params], {type: 'application/json;charset=utf-8'});
-                var url = window.URL.createObjectURL(data);
-                link.href = url;
-                link.download = 'railmap_config.json';
-                // $('body').append(link);
-                link.click();
-                // document.body.removeChild(link);
-                URL.revokeObjectURL(url);
                 break;
             case 'svg1':
                 var link = document.createElement('a');

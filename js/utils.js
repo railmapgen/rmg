@@ -152,5 +152,6 @@ function getRandomId() {
 }
 
 function describeParams(param) {
-    return `Number of stations: ${Object.keys(param.stn_list).length-2}`;
+    return `Number of stations: ${Object.keys(param.stn_list).length-2}
+            ${Object.entries(param.stn_list).map(x => ['linestart','lineend'].includes(x[0]) ? '' : x[1].name.join(' - ')).join('<br>').trim().replace(/\\/,' ')}`;
 }

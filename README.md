@@ -28,6 +28,7 @@ Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be d
 #### Resolved Issues
 
 - Station selector now sorts options in topological ordering. 
+- Fixed the issue that notched outline and floating labels of `MDCTextField` and `MDCSelect` overflow. 
 
 ### 0.5 (22 Oct 2019)
 
