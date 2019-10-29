@@ -11,6 +11,18 @@ Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be d
 
 ## Version History
 
+### 0.7 (29 Oct 2019)
+
+#### New Features
+
+- New themes from numerous cities are available: Dongguan, Kaohsiung, Macau, New Taipei, San Francisco, Shanghai, Taipei, Tokyo.
+- You can now customise the padding size of the line to avoid long station names overflow. 
+
+#### Known Issues
+
+- Sliders may stop working randomly. We are investigating this issue. 
+  - Workaround: Refresh page to re-initial sliders. Your work will not be lost if you are not using incognito mode. 
+
 ### 0.6 (28 Oct 2019)
 
 #### New Features

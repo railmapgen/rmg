@@ -21,6 +21,12 @@ function initLayoutPanel() {
     yPcSlider.listen('MDCSlider:input', () => {
         myLine.yPc = yPcSlider.value;
     });
+
+    var paddingSlider = new mdc.slider.MDCSlider($('#padding')[0]);
+    paddingSlider.value = getParams().padding;
+    paddingSlider.listen('MDCSlider:input', () => {
+        myLine.padding = paddingSlider.value;
+    });
 }
 
 function initDesignPanel() {
@@ -699,10 +705,10 @@ function initSavePanel() {
             return;
         }
 
-        $.getJSON(`templates/${event.detail.action}.json`, data => {
-            sessionStorage.all_params = JSON.stringify(data);
-            location.reload(true);
-        });
+        // $.getJSON(`templates/${event.detail.action}.json`, data => {
+        //     sessionStorage.all_params = JSON.stringify(data);
+        //     location.reload(true);
+        // });
     });
 
     var templateDialog = new mdc.dialog.MDCDialog($('#template_diag')[0]);

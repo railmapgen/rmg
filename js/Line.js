@@ -126,6 +126,29 @@ class Line {
         this.loadFonts();
     }
 
+    set padding(val) {
+        val = Number(val);
+        this.#padding = val;
+
+        var param = getParams();
+        param.padding = val;
+        putParams(param);
+
+        for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
+            stnInstance.x = this._stnRealX(stnId);
+        }
+        $('#stn_icons').empty();
+        this.drawStns();
+        this.updateStnNameBg();
+
+        $('#line_main').empty();
+        $('#line_pass').empty();
+        this.drawLine();
+
+        this.loadFonts();
+    }
+
     set branchSpacing(val) {
         val = Number(val);
         this.#branchSpacing = val;

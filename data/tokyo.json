@@ -1,0 +1,367 @@
+[
+    {
+        "id": "g", 
+        "name": ["Ginza Line (G)", "銀座線"], 
+        "colour": "#ff9500"
+    },
+    {
+        "id": "m", 
+        "name": ["Marunouchi Line (M)", "丸之内線"], 
+        "colour": "#f62e36"
+    }, 
+    {
+        "id": "h", 
+        "name": ["Hibiya Line (H)", "日比谷線"], 
+        "colour": "#b5b5ac"
+    }, 
+    {
+        "id": "t", 
+        "name": ["Tōsai Line (T)", "東西線"], 
+        "colour": "#009bbf"
+    }, 
+    {
+        "id": "c", 
+        "name": ["Chiyoda Line (C)", "千代田線"], 
+        "colour": "#00bb85"
+    }, 
+    {
+        "id": "y", 
+        "name": ["Yūrakuchō Line (C)", "有楽町線"], 
+        "colour": "#c1a470"
+    }, 
+    {
+        "id": "z", 
+        "name": ["Hanzōmon Line (Z)", "半蔵門線"], 
+        "colour": "#8f76d6"
+    }, 
+    {
+        "id": "n", 
+        "name": ["Namboku Line (N)", "南北線"], 
+        "colour": "#00ac9b"
+    }, 
+    {
+        "id": "f", 
+        "name": ["Fukutoshin Line (F)", "副都心線"], 
+        "colour": "#9c5e31"
+    }, 
+    {
+        "id": "a", 
+        "name": ["Asakusa Line (A)", "浅草線"], 
+        "colour": "#ec6e65"
+    }, 
+    {
+        "id": "i", 
+        "name": ["Mita Line (I)", "三田線"], 
+        "colour": "#006ab8"
+    }, 
+    {
+        "id": "s", 
+        "name": ["Shinjuku Line (S)", "新宿線"], 
+        "colour": "#b0bf1e"
+    },
+    {
+        "id": "o", 
+        "name": ["Ōedo Line (O)", "大江戸線"], 
+        "colour": "#ce045b"
+    }, 
+    {
+        "id": "jy", 
+        "name": ["Yamanote Line (JY)", "山手線"], 
+        "colour": "#B1CB39"
+    }, 
+    {
+        "id": "jk", 
+        "name": ["Keihin-Tōhoku Line/Negishi Line (JK)", "京浜東北線・根岸線"], 
+        "colour": "#1DAED1"
+    }, 
+    {
+        "id": "jb", 
+        "name": ["Chūō Line/Sōbu Line (Local) (JB)", "中央・総武線"], 
+        "colour": "#F2D01F"
+    }, 
+    {
+        "id": "jc", 
+        "name": ["Chūō Line (Rapid)/Chūō Line/Ōme Line/Itsukaichi Line (JC)", "中央線快速・中央本線・青梅線・五日市線"], 
+        "colour": "#DD6935"
+    }, 
+    {
+        "id": "jo", 
+        "name": ["Yokosuka Line/Sōbu Line (Rapid)/Sōbu Line/Narita Line (JO)", "横須賀線・総武快速線・総武本線・成田線"], 
+        "colour": "#1069B4"
+    }, 
+    {
+        "id": "ju", 
+        "name": ["Utsunomiya Line/Takasaki Line (JU)", "宇都宮線・高崎線"], 
+        "colour": "#F18E41"
+    }, 
+    {
+        "id": "jt", 
+        "name": ["Tōkaidō Line/Itō Line (JT)", "東海道線・伊東線"], 
+        "colour": "#F0862B"
+    }, 
+    {
+        "id": "ja", 
+        "name": ["Saikyō Line (JA)", "埼京線"], 
+        "colour": "#14A676"
+    }, 
+    {
+        "id": "js", 
+        "name": ["Shōnan-Shinjuku Line (JS)", "湘南新宿ライン"], 
+        "colour": "#DB2027"
+    }, 
+    {
+        "id": "jj", 
+        "name": ["Jōban Line (Rapid) (JJ)", "常磐線快速電車"], 
+        "colour": "#1DAF7E"
+    }, 
+    {
+        "id": "jl", 
+        "name": ["Jōban Line (Local) (JL)", "常磐線各駅停車"], 
+        "colour": "#868587"
+    }, 
+    {
+        "id": "je", 
+        "name": ["Keiyō Line (JE)", "京葉線"], 
+        "colour": "#D01827"
+    }, 
+    {
+        "id": "jh", 
+        "name": ["Yokohama Line (JH)", "横浜線"], 
+        "colour": "#B1CB39"
+    }, 
+    {
+        "id": "jm", 
+        "name": ["Musashino Line (JM)", "武蔵野線"], 
+        "colour": "#EB5A28"
+    }, 
+    {
+        "id": "jn", 
+        "name": ["Nambu Line (JN)", "南武線"], 
+        "colour": "#F2D01F"
+    }, 
+    {
+        "id": "ji", 
+        "name": ["Tsurumi Line (JI)", "鶴見線"], 
+        "colour": "#F2D01F"
+    }, 
+    {
+        "id": "mo", 
+        "name": ["Tokyo Monorail Haneda Airport Line (MO)", "東京モノレール羽田空港線"], 
+        "colour": "#26326A"
+    }, 
+    {
+        "id": "yb", 
+        "name": ["Yokohama Municipal Subway Blue Line (B)", "横浜市営地下鉄ブルーライン"], 
+        "colour": "#2F56A5"
+    }, 
+    {
+        "id": "yg", 
+        "name": ["Yokohama Municipal Subway Green Line (G)", "横浜市営地下鉄グリーンライン"],
+        "colour": "#28846E"
+    },
+    {
+        "id": "ty", 
+        "name": ["Tōkyū Tōyoko Line (TY)", "東急東横線"], 
+        "colour": "#DA0042"
+    }, 
+    {
+        "id": "mg", 
+        "name": ["Tōkyū Meguro Line (MG)", "東急目黒線"], 
+        "colour": "#009CD3"
+    }, 
+    {
+        "id": "dt", 
+        "name": ["Tōkyū Den-en-toshi Line (DT)", "東急田園都市線"], 
+        "colour": "#00AA8D"
+    }, 
+    {
+        "id": "om", 
+        "name": ["Tōkyū Ōimachi Line (OM)", "東急大井町線"], 
+        "colour": "#F18C43"
+    }, 
+    {
+        "id": "ik", 
+        "name": ["Tōkyū Ikegami Line (IK)", "東急池上線"], 
+        "colour": "#EE86A8"
+    }, 
+    {
+        "id": "tm", 
+        "name": ["Tōkyū Tamagawa Line (TM)", "東急多摩川線"], 
+        "colour": "#AE0079"
+    }, 
+    {
+        "id": "kd", 
+        "name": ["Kodomonokuni Line (KD)", "こどもの国線"], 
+        "colour": "#0071BE"
+    },
+    {
+        "id": "sg", 
+        "name": ["Tōkyū Setagaya Line (SG)", "東急世田谷線"], 
+        "colour": "#FCC800"
+    }, 
+    {
+        "id": "si", 
+        "name": ["Seibu Ikebukuro Line (SI)", "西武池袋線"], 
+        "colour": "#EF7A00"
+    },
+    {
+        "id": "ss", 
+        "name": ["Seibu Shinjuku Line (SS)", "西武新宿線"], 
+        "colour": "#00A6BF"
+    },
+    {
+        "id": "sk", 
+        "name": ["Seibu Kokubunji Line (SK)", "西武国分寺線"], 
+        "colour": "#38b35c"
+    }, 
+    {
+        "id": "sw", 
+        "name": ["Seibu Tamagawa Line (SW)", "西武多摩川線"], 
+        "colour": "#f17c24"
+    }, 
+    {
+        "id": "st", 
+        "name": ["Seibu Tamako Line (ST)", "西武多摩湖線"], 
+        "colour": "#f7aa2c"
+    }, 
+    {
+        "id": "sy", 
+        "name": ["Seibu Yamaguchi Line (SY)", "西武山口線"], 
+        "colour": "#ec4840"
+    },
+    {
+        "id": "ts", 
+        "name": ["Tōbu Skytree Line (TS)", "東武スカイツリーライン"], 
+        "colour": "#006CBA"
+    }, 
+    {
+        "id": "ti", 
+        "name": ["Tōbu Isesaki Line (TI)", "東武伊勢崎線"], 
+        "colour": "#E61919"
+    }, 
+    {
+        "id": "tn", 
+        "name": ["Tōbu Nikkō Line (TN)", "東武日光線"], 
+        "colour": "#F5A200"
+    }, 
+    {
+        "id": "td", 
+        "name": ["Tōbu Urban Park Line (TD)", "東武アーバンパークライン"], 
+        "colour": "#40B4E5"
+    }, 
+    {
+        "id": "tj", 
+        "name": ["Tōbu Tōjō Line (TJ)", "東武東上線"], 
+        "colour": "#00428E"
+    }, 
+    {
+        "id": "ks", 
+        "name": ["Keisei Main Line (KS)", "京成本線"], 
+        "colour": "#005AAA"
+    }, 
+    {
+        "id": "ksnrt", 
+        "name": ["Keisei Narita Airport Line (KS)", "京成成田空港線"], 
+        "colour": "#FF8620"
+    }, 
+    {
+        "id": "sl", 
+        "name": ["Shin-Keisei Line (SL)", "新京成線"], 
+        "colour": "#EF59A1"
+    }, 
+    {
+        "id": "hs", 
+        "name": ["Hokusō Line (HS)", "北総線"], 
+        "colour": "#00bdf2"
+    }, 
+    {
+        "id": "sr", 
+        "name": ["Shibayama Railway Line (SR)", "芝山鉄道線"], 
+        "colour": "#00A650"
+    }, 
+    {
+        "id": "oh", 
+        "name": ["Odakyū Lines (OH/OE/OT)", "小田急線"], 
+        "colour": "#0085CE"
+    },
+    {
+        "id": "ko", 
+        "name": ["Keiō Line (KO)", "京王線"], 
+        "colour": "#D5007F"
+    }, 
+    {
+        "id": "in", 
+        "name": ["Keiō Inokashira Line (IN)", "京王井の頭線"], 
+        "colour": "#103675"
+    }, 
+    {
+        "id": "kk", 
+        "name": ["Keikyū Main Line (KK)", "京急本線"], 
+        "colour": "#00BFFF"
+    }, 
+    {
+        "id": "so", 
+        "name": ["Sōtetsu Main Line (SO)", "相鉄本線"], 
+        "colour": "#0071C1"
+    }, 
+    {
+        "id": "r", 
+        "name": ["Rinkai Line (R)", "りんかい線"], 
+        "colour": "00418e"
+    }, 
+    {
+        "id": "u", 
+        "name": ["New Transit Yurikamome (U)", "新交通ゆりかもめ"], 
+        "colour": "#1662B8"
+    }, 
+    {
+        "id": "sa", 
+        "name": ["Toden Arakawa Line (SA)", "都電荒川線"], 
+        "colour": "#d75b80"
+    }, 
+    {
+        "id": "nt", 
+        "name": ["Nippori-Toneri Liner (NT)", "日暮里・舎人ライナー"], 
+        "colour": "#D53A77"
+    }, 
+    {
+        "id": "mm", 
+        "name": ["Minatomirai Line (MM)", "みなとみらい線"], 
+        "colour": "#19559F"
+    }, 
+    {
+        "id": "en", 
+        "name": ["Enoshima Dentetsu Line (EN)", "江ノ島電鉄線"], 
+        "colour": "#f6be18"
+    }, 
+    {
+        "id": "tr", 
+        "name": ["Tōyō Rapid Railway Line (TR)", "東葉高速線"], 
+        "colour": "#5AB65C"
+    }, 
+    {
+        "id": "sr", 
+        "name": ["Saitama Rapid Railway Line (SR)", "埼玉高速鉄道線"], 
+        "colour": "#3564AF"
+    }, 
+    {
+        "id": "tt", 
+        "name": ["Tama Toshi Monorail Line", "多摩都市モノレール線"], 
+        "colour": "#27625E"
+    }, 
+    {
+        "id": "ns", 
+        "name": ["Ina Line (NS)", "伊奈線"], 
+        "colour": "#18A698"
+    }, 
+    {
+        "id": "cd", 
+        "name": ["Chōshi Electric Railway Line (CD)", "銚子電気鉄道線"], 
+        "colour": "#a52a2a"
+    }, 
+    {
+        "id": "cm", 
+        "name": ["Chiba Urban Monorail (CM)", "千葉都市モノレール"], 
+        "colour": "#2843ba"
+    }
+]

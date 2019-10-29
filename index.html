@@ -10,7 +10,7 @@
     <!-- <script src="html2canvas.min.js"></script> -->
     <script src="js/utils.js"></script>
     <script src="lib/Station.js"></script>
-    <script src="lib/Line.js"></script>
+    <script src="js/Line.js"></script>
     <script src="js/page_loader.js"></script>
 
     <!-- <link href="https://fonts.googleapis.com/css?family=Noto+Serif+KR:700|Noto+Serif+JP:700|Noto+Serif+TC:700|Noto+Serif+SC:700&display=swap" rel="stylesheet"> -->
@@ -20,6 +20,12 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <style type="text/css">
+        /* :root {
+            --mdc-theme-primary: #fcb8ab;
+            --mdc-theme-secondary: #feeae6;
+            --mdc-theme-on-primary: #fff;
+            --mdc-theme-on-secondary: #fff;
+        } */
         body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: column; overflow: auto;}
         #svgs {height: 305px; overflow: auto;}
         #panels {flex-grow: 1; overflow: hidden;}
@@ -377,11 +383,8 @@ id="railmap" width="0" height="0">
           <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="blank">
             <span class="mdc-list-item__text">Blank</span>
           </li>
-          <li class="mdc-list-item" data-mdc-dialog-action="default">
-            <span class="mdc-list-item__text">Default Template</span>
-          </li>
           <li class="mdc-list-item" data-mdc-dialog-action="template">
-            <span class="mdc-list-item__text">Other Templates</span>
+            <span class="mdc-list-item__text">Template</span>
           </li>
         </ul>
         <span>Please note that all unsaved changes will be lost. </span>
@@ -568,6 +571,26 @@ id="railmap" width="0" height="0">
         <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">remove</span>
             <div id="branch_spacing" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value">
+                <div class="mdc-slider__track-container">
+                    <div class="mdc-slider__track"></div>
+                </div>
+                <div class="mdc-slider__thumb-container">
+                    <svg class="mdc-slider__thumb" width="21" height="21">
+                        <circle cx="10.5" cy="10.5" r="7.875"></circle>
+                    </svg>
+                <div class="mdc-slider__focus-ring"></div>
+                </div>
+            </div>
+            &emsp;&emsp;&emsp;
+            <span class="mdc-list-item__meta material-icons" aria-hidden="true">add</span>
+        </li>
+        <li class="mdc-list-item">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">stay_current_landscape</span>
+            Line Padding
+        </li>
+        <li class="mdc-list-item">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">remove</span>
+            <div id="padding" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value">
                 <div class="mdc-slider__track-container">
                     <div class="mdc-slider__track"></div>
                 </div>

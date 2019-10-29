@@ -1,0 +1,22 @@
+[
+    {
+        "id": "r1", 
+        "name": ["Line 1", "1号线"], 
+        "colour": "#034EA2"
+    }, 
+    {
+        "id": "r2", 
+        "name": ["Line 2", "2号线"], 
+        "colour": "#ED1C24"
+    }, 
+    {
+        "id": "r3", 
+        "name": ["Line 3", "3号线"], 
+        "colour": "#FAA61A"
+    }, 
+    {
+        "id": "r4", 
+        "name": ["Line 4", "4号线"], 
+        "colour": "#00AB4E"
+    }
+]

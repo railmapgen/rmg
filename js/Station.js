@@ -53,8 +53,7 @@ class Station {
         }
         return `<g text-anchor="middle" class="Name ${nameClass}" transform="translate(${this._x},${this._y + dy})">
                 <text class="StnNameZH"> ${this._nameZH} </text> 
-                <text dy="15" class="StnNameEN">${this._nameEN.split('\\')[0]}
-                <tspan x="0" dy="12">${(nameENLn==2)?this._nameEN.split('\\')[1]:''}</tspan></text> 
+                <text dy="15" class="StnNameEN">${this._nameEN.split('\\')[0]}<tspan x="0" dy="12">${(nameENLn==2)?this._nameEN.split('\\')[1]:''}</tspan></text> 
                 </g>`;
     }
 

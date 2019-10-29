@@ -1,0 +1,67 @@
+[
+    {
+        "id": "br", 
+        "name": ["Wenhu Line (BR)", "文湖線"], 
+        "colour": "#c48c31"
+    }, 
+    {
+        "id": "r", 
+        "name": ["Tamsui-Xinyi Line (R)", "淡水信義線"], 
+        "colour": "#e3002c"
+    }, 
+    {
+        "id": "rb", 
+        "name": ["Xinbeitou Branch Line", "新北投支線"], 
+        "colour": "#fd92a3"
+    }, 
+    {
+        "id": "g", 
+        "name": ["Songshan-Xindian Line (G)", "松山新店線"], 
+        "colour": "#008659"
+    }, 
+    {
+        "id": "gb", 
+        "name": ["Xiaobitan Branch Line", "小碧潭支線"], 
+        "colour": "#cfdb00"
+    }, 
+    {
+        "id": "o", 
+        "name": ["Zhonghe-Xinlu Line (O)", "中和新蘆線"], 
+        "colour": "#f8b61c"
+    }, 
+    {
+        "id": "bl", 
+        "name": ["Bannan Line (BL)", "板南線"], 
+        "colour": "#0070bd"
+    },
+    {
+        "id": "y",
+        "name": ["Circular Line (Y)", "環狀線"], 
+        "colour": "#fedb00"
+    }, 
+    {
+        "id": "lg", 
+        "name": ["Wanda-Zhonghe-Shulin Line (LG)", "萬大-中和-樹林線"], 
+        "colour": "#a1d884"
+    }, 
+    {
+        "id": "sb", 
+        "name": ["Minsheng-Xizhi Line", "民生汐止線"], 
+        "colour": "#25aae1"
+    }, 
+    {
+        "id": "sbb", 
+        "name": ["Donghu Branch Line", "東湖支線"], 
+        "colour": "#283991"
+    }, 
+    {
+        "id": "lr", 
+        "name": ["Shezi Line", "社子線"], 
+        "colour": "#e40078"
+    }, 
+    {
+        "id": "mao", 
+        "name": ["Maokong Gondola", "貓空䌫車"], 
+        "colour": "#77bc1f"
+    }
+]

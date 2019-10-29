@@ -5,6 +5,11 @@
         "name": ["Beijing", "北京"]
     },
     {
+        "id": "dongguan",
+        "country": "CN",
+        "name": ["Dongguan", "东莞"]
+    },
+    {
         "id": "edinburgh", 
         "country": "GB", 
         "name": ["Edinburgh"]
@@ -30,14 +35,49 @@
         "name": ["Hong Kong", "香港"]
     },
     {
+        "id": "kaohsiung", 
+        "country": "TW", 
+        "name": ["Kaohsiung", "高雄"]
+    },
+    {
         "id": "london", 
         "country": "GB", 
         "name": ["London"]
     },
     {
+        "id": "macau", 
+        "country": "MO", 
+        "name": ["Macau", "澳門"]
+    },
+    {
+        "id": "newtaipei", 
+        "country": "TW", 
+        "name": ["New Taipei", "新北"]
+    },
+    {
+        "id": "sanfrancisco", 
+        "country": "US", 
+        "name": ["San Francisco"]
+    },
+    {
+        "id": "shanghai", 
+        "country": "CN", 
+        "name": ["Shanghai", "上海"]
+    },
+    {
         "id": "shenzhen", 
         "country": "CN", 
         "name": ["Shenzhen", "深圳"]
+    },
+    {
+        "id": "taipei", 
+        "country": "TW", 
+        "name": ["Taipei", "台北"]
+    },
+    {
+        "id": "tokyo", 
+        "country": "JP", 
+        "name": ["Tokyo (Greater Tokyo Area)", "東京（首都圏）"]
     },
     {
         "id": "toronto", 

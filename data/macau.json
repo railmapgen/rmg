@@ -1,0 +1,37 @@
+[
+    {
+        "id": "taipa",
+        "name": ["Linha da Taipa", "氹仔線"], 
+        "colour": "#A4D65E"
+    }, 
+    {
+        "id": "peninsula", 
+        "name": ["Linha da Península de Macau", "澳門線"], 
+        "colour": "#FF0000"
+    }, 
+    {
+        "id": "2afase",
+        "name": ["2.a Fase", "第二期"],
+        "colour": "#00BFFF"
+    }, 
+    {
+        "id": "seacpaivan", 
+        "name": ["Linha Seac Pai Van", "石排灣線"], 
+        "colour": "#8CE600"
+    }, 
+    {
+        "id": "hengqin", 
+        "name": ["Linha de Extensão da Ilha de Hengqin", "橫琴延伸線"], 
+        "colour": "#FFA500"
+    }, 
+    {
+        "id": "leste", 
+        "name": ["Linha Leste", "澳氹東線"], 
+        "colour": "#F400A1"
+    }, 
+    {
+        "id": "hmz", 
+        "name": ["Linha da Ponte HMZ", "港珠澳大橋線"],
+        "colour": "#8A2BE2"
+    }
+]
