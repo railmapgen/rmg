@@ -81,26 +81,39 @@ function initDesignPanel() {
     // var themeColourSelect = new mdc.textField.MDCTextField($('#theme_colour')[0]);
     $.getJSON('data/city_list.json', function(data) {
         data.forEach(function(c) {
-            $('#theme_city > select').append(
-                `<option value="${c.id}">${c.name[0]}</option>`
+            // $('#theme_city > select').append(
+            //     `<option value="${c.id}">${c.name[0]}</option>`
+            // );
+            $('#theme_city__selection').append(
+                `<li class="mdc-list-item" data-value="${c.id}">
+                ${countryCode2Emoji(c.country)}${c.name[0]}
+                </li>`
             );
         });
 
         var [themeCity, themeLine, themeColour] = getParams().theme
-        var cityIdx = $(`#theme_city > select > [value="${themeCity}"]`).index();
+        // var cityIdx = $(`#theme_city > select > [value="${themeCity}"]`).index();
+        var cityIdx = $(`#theme_city__selection > [data-value="${themeCity}"]`).index();
         themeCitySelect.selectedIndex = cityIdx;
     });
 
     themeCitySelect.listen("MDCSelect:change", (event) => {
-        $('#theme_line > select').empty();
+        console.log(event.detail);
+        // $('#theme_line > select').empty();
+        $('#theme_line__selection').empty();
 
         if (event.detail.value == 'nullcity') {
             //
         } else {
             $.getJSON(`data/${event.detail.value}.json`, data => {
                 data.forEach(l => {
-                    $('#theme_line > select').append(
-                        `<option value="${l.id}" colour="${l.colour}">${l.name[0]}</option>`
+                    // $('#theme_line > select').append(
+                    //     `<option value="${l.id}" colour="${l.colour}">${l.name[0]}</option>`
+                    // );
+                    $('#theme_line__selection').append(
+                        `<li class="mdc-list-item" data-value="${l.id}">
+                        <span style="background:${l.colour};">&nbsp;</span>&nbsp;${l.name[0]}
+                        </li>`
                     );
                 });
 
@@ -109,7 +122,8 @@ function initDesignPanel() {
                 putParams(param_instance);
 
                 var themeLine = param_instance.theme[1];
-                var lineIdx = $(`#theme_line > select > [value="${themeLine}"]`).index();
+                // var lineIdx = $(`#theme_line > select > [value="${themeLine}"]`).index();
+                var lineIdx = $(`#theme_line__selection > [data-value="${themeLine}"]`).index();
 
                 if (lineIdx == -1) {
                     themeLineSelect.selectedIndex = 0;
@@ -129,10 +143,14 @@ function initDesignPanel() {
             putParams(param);
 
             myLine.themeLine = event.detail.value;
-            myLine.themeColour = $('#theme_line option').eq(event.detail.index).attr('colour');
+            // myLine.themeColour = $('#theme_line option').eq(event.detail.index).attr('colour');
+            // myLine.themeColour = $('#theme_line__selection li').eq(event.detail.index).attr('colour');
+            myLine.themeColour = $('#theme_line__selection li span')
+                                .eq(event.detail.index).attr('style')
+                                .match(/(?!background:)#[\w\d]+(?=;)/g)[0]
 
             $('#panel_design #design_list li:first-child .mdc-list-item__secondary-text').html(
-                `${$('#theme_city option').eq(themeCitySelect.selectedIndex).html()} - ${$('#theme_line option').eq(event.detail.index).html()}`
+                `${$('#theme_city__selection li').eq(themeCitySelect.selectedIndex).html().trim()} - ${$('#theme_line__selection li').eq(event.detail.index).html().split('&nbsp;').reverse()[0].trim()}`
             );
         }
     });
@@ -163,6 +181,9 @@ function initDesignPanel() {
             $(`#design_char_diag ul [data-mdc-dialog-action="${event.detail.action}"] span`).html()
         );
     });
+
+
+    // var test = new mdc.select.MDCSelect($('#test')[0]);
 }
 
 function initStationsPanel() {
@@ -220,8 +241,12 @@ function initStationsPanel() {
                 <span class="mdc-list-item__text">${stnList[stnId].name.join(' - ')}</span>
                 </li>`
             );
-            $('#stn_add_diag #pivot select').append(
-                `<option value="${stnId}">${stnList[stnId].name.join(' - ')}</option>`
+            // $('#stn_add_diag #pivot select').append(
+            //     `<option value="${stnId}">${stnList[stnId].name.join(' - ')}</option>`
+            // );
+            $('#pivot__selection').append(
+                `<li class="mdc-list-item" data-value="${stnId}">
+                ${stnList[stnId].name.join(' - ')}</li>`
             );
         });
     }
@@ -254,17 +279,15 @@ function initStationsPanel() {
 
 
     // Addition
-    // var stnAddButtonRipple = new mdc.ripple.MDCRipple($('#stn_add')[0]);
-    // stnAddButtonRipple.unbounded = true;
     var stnAddDialog = new mdc.dialog.MDCDialog($('#stn_add_diag')[0]);
-    // $('#stn_add').on('click', event => stnAddDialog.open());
 
     var stnAddPrepSelect = new mdc.select.MDCSelect($('#stn_add_diag #prep')[0]);
     var stnAddPivotSelect = new mdc.select.MDCSelect($('#stn_add_diag #pivot')[0]);
     var stnAddLocSelect = new mdc.select.MDCSelect($('#stn_add_diag #loc')[0]);
     var stnAddEndSelect = new mdc.select.MDCSelect($('#stn_add_diag #end')[0]);
     stnAddDialog.listen('MDCDialog:opening', event => {
-        $('#stn_add_diag #pivot')[0].dispatchEvent(new Event('MDCSelect:change'));
+        // $('#stn_add_diag #pivot')[0].dispatchEvent(new Event('MDCSelect:change'));
+        stnAddPivotSelect.selectedIndex = 0;
     });
     stnAddDialog.listen('MDCDialog:opened', event => {
         [stnAddPrepSelect, stnAddPivotSelect, stnAddLocSelect].forEach(select => select.layout());
@@ -279,24 +302,13 @@ function initStationsPanel() {
         
         var [newId, newInfo] = myLine.addStn(prep, stnId, loc, end);
 
-        $('#stn_list > select').append(
-            `<option value="${newId}">${newInfo.name.join(' - ')}</option>`
-        );
-        // $('#stn_select_diag ul').append(
-        //     `<li class="mdc-list-item" data-mdc-dialog-action="${newId}">
-        //     <span class="mdc-list-item__text">${newInfo.name.join(' - ')}</span>
-        //     </li>`
-        // );
-        _genStnList();
-        // $('#stn_add_diag #pivot select').append(
+        // $('#stn_list > select').append(
         //     `<option value="${newId}">${newInfo.name.join(' - ')}</option>`
         // );
+        console.log(prep, stnId, loc, end);
+        _genStnList();
 
         // Trigger station name modification
-        // stationSelect.value = newId;
-        // $('#panel_stations #selected_stn').attr('stn', newId);
-        // $('#panel_stations #selected_stn span:last-child').html(`Modify Station: ${newInfo.name.join(' - ')}`);
-        // $('#stn_modify')[0].dispatchEvent(new Event('click'));
         $('#stn_select_diag')[0].dispatchEvent(new CustomEvent('MDCDialog:closed', {'detail':{'action':newId}}));
         $('#panel_stations #stations_list')[0].dispatchEvent(new CustomEvent('MDCList:action', {'detail':{'index':3}}));
     });
@@ -309,22 +321,29 @@ function initStationsPanel() {
         var stnList = getParams().stn_list;
         for (let [idx, state] of myLine.newStnPossibleLoc(prep, stnId).entries()) {
             if (state) {
-                $('#stn_add_diag #loc option').eq(idx).prop('disabled', false);
+                // $('#stn_add_diag #loc option').eq(idx).prop('disabled', false);
+                $('#loc__selection li').eq(idx).removeClass('mdc-list-item--disabled');
                 if (idx >= 3) {
                     // newupper or newlower
-                    $('#stn_add_diag #end select').empty();
+                    // $('#stn_add_diag #end select').empty();
+                    $('#end__selection').empty();
                     state.forEach(stnId => {
-                        $('#stn_add_diag #end select').append(
-                            `<option value="${stnId}">${stnList[stnId].name.join(' - ')}</option>`
+                        // $('#stn_add_diag #end select').append(
+                        //     `<option value="${stnId}">${stnList[stnId].name.join(' - ')}</option>`
+                        // );
+                        $('#end__selection').append(
+                            `<li class="mdc-list-item" data-value="${stnId}">${stnList[stnId].name.join(' - ')}</li>`
                         );
                     });
                 }
             } else {
-                $('#stn_add_diag #loc option').eq(idx).prop('disabled', true);
+                // $('#stn_add_diag #loc option').eq(idx).prop('disabled', true);
+                $('#loc__selection li').eq(idx).addClass('mdc-list-item--disabled');
             }
             // $('#stn_add_diag #loc option').eq(idx).prop('disabled', (state)?false:true);
         }
-        stnAddLocSelect.value = $('#stn_add_diag #loc option:not([disabled]):first').attr('value');
+        // stnAddLocSelect.value = $('#stn_add_diag #loc option:not([disabled]):first').attr('value');
+        stnAddLocSelect.value = $('#loc__selection li:not(.mdc-list-item--disabled):first').attr('data-value');
     });
     stnAddLocSelect.listen('MDCSelect:change', event => {
         if (['newupper', 'newlower'].includes(event.detail.value)) {
@@ -380,9 +399,16 @@ function initStationsPanel() {
     var stnIntCity2Select = new mdc.select.MDCSelect($('#stn_transfer_diag #int_city_2')[0]);
     $.getJSON('data/city_list.json', function(data) {
         data.forEach(function(c) {
-            [1,2].forEach(i => 
-                $(`#stn_transfer_diag #int_city_${i} select`).append(`<option value="${c.id}">${c.name[0]}</option>`)
-            );
+            [1,2].forEach(i => {
+                // $(`#stn_transfer_diag #int_city_${i} select`).append(
+                //     `<option value="${c.id}">${c.name[0]}</option>`
+                // );
+                $(`#int_city_${i}__selection`).append(
+                    `<li class="mdc-list-item" data-value="${c.id}">
+                    ${countryCode2Emoji(c.country)}${c.name[0]}
+                    </li>`
+                );
+            });
         });
     });
 
@@ -524,7 +550,8 @@ function initStationsPanel() {
         } else {
             intInfo1.splice(
                 2, 0, 
-                $('#stn_transfer_diag #int_line_1 option').eq(stnIntLine1Select.selectedIndex).attr('colour')
+                $('#int_line_1__selection li span').eq(stnIntLine1Select.selectedIndex)
+                .attr('style').match(/(?!background:)#[\w\d]+(?=;)/g)[0]
             );
             switch (type) {
                 case 'int2':
@@ -536,7 +563,8 @@ function initStationsPanel() {
                 default:
                     intInfo2.splice(
                         2, 0, 
-                        $('#stn_transfer_diag #int_line_2 option').eq(stnIntLine2Select.selectedIndex).attr('colour')
+                        $('#int_line_2__selection li span').eq(stnIntLine2Select.selectedIndex)
+                        .attr('style').match(/(?!background:)#[\w\d]+(?=;)/g)[0]
                     )
                     switch (type) {
                         case 'int3':
@@ -587,10 +615,16 @@ function initStationsPanel() {
     stnIntCity1Select.listen('MDCSelect:change', event => {
         if (event.detail.index == -1) {return;}
         $.getJSON(`data/${event.detail.value}.json`, data => {
-            $('#stn_transfer_diag #int_line_1 select').empty();
+            // $('#stn_transfer_diag #int_line_1 select').empty();
+            $('#int_line_1__selection').empty();
             data.forEach(l => {
-                $('#stn_transfer_diag #int_line_1 select').append(
-                    `<option value="${l.id}" colour="${l.colour}">${l.name[0]}</option>`
+                // $('#stn_transfer_diag #int_line_1 select').append(
+                //     `<option value="${l.id}" colour="${l.colour}">${l.name[0]}</option>`
+                // );
+                $('#int_line_1__selection').append(
+                    `<li class="mdc-list-item" data-value="${l.id}">
+                    <span style="background:${l.colour};">&nbsp;</span>&nbsp;${l.name[0]}
+                    </li>`
                 );
             });
 
@@ -598,7 +632,8 @@ function initStationsPanel() {
             var stnInfo = getParams().stn_list[stnId];
 
             if (stnInfo.transfer) {
-                var idx = $(`#stn_transfer_diag #int_line_1 select > [value="${stnInfo.transfer[1][1]}"]`).index();
+                // var idx = $(`#stn_transfer_diag #int_line_1 select > [value="${stnInfo.transfer[1][1]}"]`).index();
+                var idx = $(`#int_line_1__selection > [data-value="${stnInfo.transfer[1][1]}"]`).index();
                 stnIntLine1Select.selectedIndex = (idx == -1) ? 0 : idx;
             } else {
                 stnIntLine1Select.selectedIndex = 0;
@@ -608,10 +643,16 @@ function initStationsPanel() {
     stnIntCity2Select.listen('MDCSelect:change', event => {
         if (event.detail.index == -1) {return;}
         $.getJSON(`data/${event.detail.value}.json`, data => {
-            $('#stn_transfer_diag #int_line_2 select').empty();
+            // $('#stn_transfer_diag #int_line_2 select').empty();
+            $('#int_line_2__selection').empty();
             data.forEach(l => {
-                $('#stn_transfer_diag #int_line_2 select').append(
-                    `<option value="${l.id}" colour="${l.colour}">${l.name[0]}</option>`
+                // $('#stn_transfer_diag #int_line_2 select').append(
+                //     `<option value="${l.id}" colour="${l.colour}">${l.name[0]}</option>`
+                // );
+                $('#int_line_2__selection').append(
+                    `<li class="mdc-list-item" data-value="${l.id}">
+                    <span style="background:${l.colour};">&nbsp;</span>&nbsp;${l.name[0]}
+                    </li>`
                 );
             });
 
@@ -619,7 +660,8 @@ function initStationsPanel() {
             var stnInfo = getParams().stn_list[stnId];
 
             if (stnInfo.transfer) {
-                var idx = $(`#stn_transfer_diag #int_line_2 select > [value="${stnInfo.transfer[2][1]}"]`).index();
+                // var idx = $(`#stn_transfer_diag #int_line_2 select > [value="${stnInfo.transfer[2][1]}"]`).index();
+                var idx = $(`#int_line_2__selection > [data-value="${stnInfo.transfer[2][1]}"]`).index();
                 stnIntLine2Select.selectedIndex = (idx == -1) ? 0 : idx;
             } else {
                 stnIntLine2Select.selectedIndex = 0;
@@ -660,6 +702,7 @@ function initStationsPanel() {
             stnDeleteErrorDialog.open();
         }
     });
+
 }
 
 function initSavePanel() {

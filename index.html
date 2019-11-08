@@ -678,7 +678,8 @@ id="railmap" width="0" height="0">
                 <div class="mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--align-middle">
                     <i class="material-icons">location_city</i>
                 </div>
-                <div class="mdc-layout-grid__cell--span-10">
+
+                <!-- <div class="mdc-layout-grid__cell--span-10">
                 <div id="theme_city" class="mdc-select mdc-select--outlined">
                     <i class="mdc-select__dropdown-icon"></i>
                     <select class="mdc-select__native-control">
@@ -691,16 +692,32 @@ id="railmap" width="0" height="0">
                         <div class="mdc-notched-outline__trailing"></div>
                     </div>
                 </div>
+                </div> -->
+
+                <div class="mdc-layout-grid__cell--span-10">
+                <div id="theme_city" class="mdc-select">
+                    <div class="mdc-select__anchor" style="width: 200px;">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text"></div>
+                        <span class="mdc-floating-label">City</span>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" style="min-width: 200px;">
+                        <ul id="theme_city__selection" class="mdc-list">
+                        </ul>
+                    </div>
+                </div>
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--align-middle">
                     <i class="material-icons">subway</i>
                 </div>
-                <div class="mdc-layout-grid__cell--span-10">
+
+                <!-- <div class="mdc-layout-grid__cell--span-10">
                 <div id="theme_line" class="mdc-select mdc-select--outlined">
                     <i class="mdc-select__dropdown-icon"></i>
                     <select class="mdc-select__native-control">
-                        <!-- <option value="nullcity" selected>Customise...</option> -->
                     </select>
                     <div class="mdc-notched-outline">
                         <div class="mdc-notched-outline__leading"></div>
@@ -708,6 +725,22 @@ id="railmap" width="0" height="0">
                             <label class="mdc-floating-label">Line</label>
                         </div>
                         <div class="mdc-notched-outline__trailing"></div>
+                    </div>
+                </div>
+                </div> -->
+
+                <div class="mdc-layout-grid__cell--span-10">
+                <div id="theme_line" class="mdc-select">
+                    <div class="mdc-select__anchor" style="width: 200px;">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text"></div>
+                        <span class="mdc-floating-label">Line</span>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" style="min-width: 200px;">
+                        <ul id="theme_line__selection" class="mdc-list">
+                        </ul>
                     </div>
                 </div>
                 </div>
@@ -808,7 +841,7 @@ id="railmap" width="0" height="0">
       <h2 class="mdc-dialog__title" id="my-dialog-title">Add a station</h2>
       <div class="mdc-dialog__content" id="my-dialog-content">
         <div>
-        <div id="prep" class="mdc-select mdc-select--outlined">
+        <!-- <div id="prep" class="mdc-select mdc-select--outlined">
             <i class="mdc-select__dropdown-icon"></i>
             <select class="mdc-select__native-control">
                 <option value="before" selected>Before</option>
@@ -821,14 +854,28 @@ id="railmap" width="0" height="0">
                 </div>
                 <div class="mdc-notched-outline__trailing"></div>
             </div>
+        </div> -->
+
+        <div id="prep" class="mdc-select">
+            <div class="mdc-select__anchor">
+                <i class="mdc-select__dropdown-icon"></i>
+                <div class="mdc-select__selected-text"></div>
+                <span class="mdc-floating-label">Preposition</span>
+                <div class="mdc-line-ripple"></div>
+            </div>
+            <div class="mdc-select__menu mdc-menu mdc-menu-surface">
+                <ul class="mdc-list">
+                    <li class="mdc-list-item mdc-list-item--selected" data-value="before">Before</li>
+                    <li class="mdc-list-item" data-value="after">After</li>
+                </ul>
+            </div>
         </div>
 
         <span>station</span>
 
-        <div id="pivot" class="mdc-select mdc-select--outlined">
+        <!-- <div id="pivot" class="mdc-select mdc-select--outlined">
             <i class="mdc-select__dropdown-icon"></i>
             <select class="mdc-select__native-control">
-                <!-- <option value="null" selected>Select a station...</option> -->
             </select>
             <div class="mdc-notched-outline">
                 <div class="mdc-notched-outline__leading"></div>
@@ -837,13 +884,26 @@ id="railmap" width="0" height="0">
                 </div>
                 <div class="mdc-notched-outline__trailing"></div>
             </div>
+        </div> -->
+
+        <div id="pivot" class="mdc-select">
+            <div class="mdc-select__anchor">
+                <i class="mdc-select__dropdown-icon"></i>
+                <div class="mdc-select__selected-text"></div>
+                <span class="mdc-floating-label">Pivot</span>
+                <div class="mdc-line-ripple"></div>
+            </div>
+            <div class="mdc-select__menu mdc-menu mdc-menu-surface">
+                <ul id="pivot__selection" class="mdc-list">
+                </ul>
+            </div>
         </div>
         </div>
 
         <div>
         <span>On</span>
 
-        <div id="loc" class="mdc-select mdc-select--outlined">
+        <!-- <div id="loc" class="mdc-select mdc-select--outlined">
             <i class="mdc-select__dropdown-icon"></i>
             <select class="mdc-select__native-control">
                 <option value="centre" selected>centre line</option>
@@ -859,12 +919,31 @@ id="railmap" width="0" height="0">
                 </div>
                 <div class="mdc-notched-outline__trailing"></div>
             </div>
+        </div> -->
+
+        <div id="loc" class="mdc-select">
+            <div class="mdc-select__anchor">
+                <i class="mdc-select__dropdown-icon"></i>
+                <div class="mdc-select__selected-text"></div>
+                <span class="mdc-floating-label">Location</span>
+                <div class="mdc-line-ripple"></div>
+            </div>
+            <div class="mdc-select__menu mdc-menu mdc-menu-surface">
+                <ul id="loc__selection" class="mdc-list">
+                    <li class="mdc-list-item" data-value="centre">centre line</li>
+                    <li class="mdc-list-item" data-value="upper">upper branch</li>
+                    <li class="mdc-list-item" data-value="lower">lower branch</li>
+                    <li class="mdc-list-item" data-value="newupper">new upper branch</li>
+                    <li class="mdc-list-item" data-value="newlower">new lower branch</li>
+                </ul>
+            </div>
         </div>
         </div>
 
         <div id="new_branch">
         <span>Bypass all stations until</span>
-        <div id="end" class="mdc-select mdc-select--outlined">
+
+        <!-- <div id="end" class="mdc-select mdc-select--outlined">
             <i class="mdc-select__dropdown-icon"></i>
             <select class="mdc-select__native-control">
 
@@ -875,6 +954,19 @@ id="railmap" width="0" height="0">
                     <label class="mdc-floating-label">End of Branch</label>
                 </div>
                 <div class="mdc-notched-outline__trailing"></div>
+            </div>
+        </div> -->
+
+        <div id="end" class="mdc-select">
+            <div class="mdc-select__anchor">
+                <i class="mdc-select__dropdown-icon"></i>
+                <div class="mdc-select__selected-text"></div>
+                <span class="mdc-floating-label">Pivot</span>
+                <div class="mdc-line-ripple"></div>
+            </div>
+            <div class="mdc-select__menu mdc-menu mdc-menu-surface">
+                <ul id="end__selection" class="mdc-list">
+                </ul>
             </div>
         </div>
         </div>
@@ -991,7 +1083,8 @@ id="railmap" width="0" height="0">
       <div class="mdc-dialog__content" id="my-dialog-content">
             <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner">
-                <div class="mdc-layout-grid__cell--span-10 mdc-layout-grid__cell--align-middle">
+                
+                <!-- <div class="mdc-layout-grid__cell--span-10 mdc-layout-grid__cell--align-middle">
                     <div id="change_type" class="mdc-select mdc-select--outlined">
                         <i class="mdc-select__dropdown-icon"></i>
                         <select class="mdc-select__native-control">
@@ -1009,6 +1102,26 @@ id="railmap" width="0" height="0">
                             <div class="mdc-notched-outline__trailing"></div>
                         </div>
                     </div>
+                </div> -->
+
+                <div class="mdc-layout-grid__cell--span-10">
+                <div id="change_type" class="mdc-select">
+                    <div class="mdc-select__anchor" style="width: 400px;">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text"></div>
+                        <span class="mdc-floating-label">Interchange</span>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface demo-width-class">
+                        <ul class="mdc-list">
+                            <li class="mdc-list-item" data-value="none">None</li>
+                            <li class="mdc-list-item" data-value="int2">Interchange (2 stations)</li>
+                            <li class="mdc-list-item" data-value="int3">Interchange (3 stations)</li>
+                            <li class="mdc-list-item" data-value="osi11">Out-station-interchange (1-1)</li>
+                            <li class="mdc-list-item" data-value="osi12">Out-station-interchange (1-2)</li>
+                        </ul>
+                    </div>
+                </div>
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--align-middle">
@@ -1051,7 +1164,7 @@ id="railmap" width="0" height="0">
                     </button>
                 </div>
 
-                <div id="int_city_1" class="mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--align-middle">
+                <!-- <div id="int_city_1" class="mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--align-middle">
                     <div class="mdc-select mdc-select--outlined">
                         <i class="mdc-select__dropdown-icon"></i>
                         <select class="mdc-select__native-control">
@@ -1064,9 +1177,24 @@ id="railmap" width="0" height="0">
                             <div class="mdc-notched-outline__trailing"></div>
                         </div>
                     </div>
+                </div> -->
+
+                <div id="int_city_1" class="mdc-layout-grid__cell--span-6">
+                <div class="mdc-select">
+                    <div class="mdc-select__anchor" style="width: 200px;">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text"></div>
+                        <span class="mdc-floating-label">1st City</span>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface demo-width-class">
+                        <ul id="int_city_1__selection" class="mdc-list">
+                        </ul>
+                    </div>
+                </div>
                 </div>
 
-                <div id="int_line_1" class="mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--align-middle">
+                <!-- <div id="int_line_1" class="mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--align-middle">
                     <div class="mdc-select mdc-select--outlined">
                         <i class="mdc-select__dropdown-icon"></i>
                         <select class="mdc-select__native-control">
@@ -1079,6 +1207,21 @@ id="railmap" width="0" height="0">
                             <div class="mdc-notched-outline__trailing"></div>
                         </div>
                     </div>
+                </div> -->
+
+                <div id="int_line_1" class="mdc-layout-grid__cell--span-6">
+                <div class="mdc-select">
+                    <div class="mdc-select__anchor" style="width: 200px;">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text"></div>
+                        <span class="mdc-floating-label">1st Line</span>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" style="min-width: 200px;">
+                        <ul id="int_line_1__selection" class="mdc-list">
+                        </ul>
+                    </div>
+                </div>
                 </div>
 
                 <div id="int_name_zh_1" class="mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--align-middle">
@@ -1107,7 +1250,7 @@ id="railmap" width="0" height="0">
                     </div>
                 </div>
 
-                <div id="int_city_2" class="mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--align-middle">
+                <!-- <div id="int_city_2" class="mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--align-middle">
                     <div class="mdc-select mdc-select--outlined">
                         <i class="mdc-select__dropdown-icon"></i>
                         <select class="mdc-select__native-control">
@@ -1120,9 +1263,24 @@ id="railmap" width="0" height="0">
                             <div class="mdc-notched-outline__trailing"></div>
                         </div>
                     </div>
+                </div> -->
+
+                <div id="int_city_2" class="mdc-layout-grid__cell--span-6">
+                <div class="mdc-select">
+                    <div class="mdc-select__anchor" style="width: 200px;">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text"></div>
+                        <span class="mdc-floating-label">2nd City</span>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface demo-width-class">
+                        <ul id="int_city_2__selection" class="mdc-list">
+                        </ul>
+                    </div>
+                </div>
                 </div>
 
-                <div id="int_line_2" class="mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--align-middle">
+                <!-- <div id="int_line_2" class="mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--align-middle">
                     <div class="mdc-select mdc-select--outlined">
                         <i class="mdc-select__dropdown-icon"></i>
                         <select class="mdc-select__native-control">
@@ -1135,6 +1293,21 @@ id="railmap" width="0" height="0">
                             <div class="mdc-notched-outline__trailing"></div>
                         </div>
                     </div>
+                </div> -->
+
+                <div id="int_line_2" class="mdc-layout-grid__cell--span-6">
+                <div class="mdc-select">
+                    <div class="mdc-select__anchor" style="width: 200px;">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text"></div>
+                        <span class="mdc-floating-label">2nd Line</span>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" style="min-width: 200px;">
+                        <ul id="int_line_2__selection" class="mdc-list">
+                        </ul>
+                    </div>
+                </div>
                 </div>
 
                 <div id="int_name_zh_2" class="mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--align-middle">
@@ -1228,7 +1401,7 @@ id="railmap" width="0" height="0">
 
 </div>
 
-
+</div>
 
 
 <script>

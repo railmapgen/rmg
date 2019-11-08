@@ -11,7 +11,7 @@
     },
     {
         "id": "edinburgh", 
-        "country": "GB", 
+        "country": "GBSCT", 
         "name": ["Edinburgh"]
     },
     {
@@ -21,7 +21,7 @@
     }, 
     {
         "id": "glasgow",
-        "country": "GB", 
+        "country": "GBENG", 
         "name": ["Glasgow"]
     },
     {
@@ -41,7 +41,7 @@
     },
     {
         "id": "london", 
-        "country": "GB", 
+        "country": "GBENG", 
         "name": ["London"]
     },
     {

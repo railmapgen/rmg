@@ -155,3 +155,12 @@ function describeParams(param) {
     return `Number of stations: ${Object.keys(param.stn_list).length-2}
             ${Object.entries(param.stn_list).map(x => ['linestart','lineend'].includes(x[0]) ? '' : x[1].name.join(' - ')).join('<br>').trim().replace(/\\/,' ')}`;
 }
+
+function countryCode2Emoji(code) {
+    var chars = code.toUpperCase().split('');
+    if (code.length == 2) {
+        return chars.map(char => '&#' + (char.charCodeAt()+127397).toString() + ';').join('');
+    } else {
+        return '&#127988;' + chars.map(char => '&#' + (char.charCodeAt()+917536).toString() + ';').join('') + '&#917631;';
+    }
+}
