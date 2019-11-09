@@ -720,7 +720,7 @@ function initSavePanel() {
                 break;
             case 2:
                 var link = document.createElement('a');
-                var data = new Blob([sessionStorage.all_params], {type: 'application/json;charset=utf-8'});
+                var data = new Blob([localStorage.rmgParam], {type: 'application/json;charset=utf-8'});
                 var url = window.URL.createObjectURL(data);
                 link.href = url;
                 link.download = 'railmap_config.json';
@@ -749,7 +749,7 @@ function initSavePanel() {
         }
 
         // $.getJSON(`templates/${event.detail.action}.json`, data => {
-        //     sessionStorage.all_params = JSON.stringify(data);
+        //     localStorage.rmgParam = JSON.stringify(data);
         //     location.reload(true);
         // });
     });
@@ -780,7 +780,7 @@ function initSavePanel() {
         }
         
         $.getJSON(`templates/${event.detail.action}.json`, data => {
-            sessionStorage.all_params = JSON.stringify(data);
+            localStorage.rmgParam = JSON.stringify(data);
             location.reload(true);
         });
     });
@@ -830,7 +830,471 @@ function initSavePanel() {
         if (event.detail.action == 'close') {return;}
 
         Line.clearSVG();
-        sessionStorage.all_params = JSON.stringify(importedFile);
+        localStorage.rmgParam = JSON.stringify(importedFile);
         location.reload(true);
+    });
+}
+
+function initTestPanel() {
+    // var ripples = $('#panel_test .mdc-icon-button, .mdc-card__primary-action')
+    //                 .each((idx,el) => {
+    //                     return new mdc.ripple.MDCRipple(el);
+    //                 });
+    function _stationCard(id, names) {
+        return `<div class="mdc-card mdc-layout-grid__cell--span-2 station-card" id="${id}">
+        <div class="mdc-card__primary-action">
+            <div class="mdc-card__media mdc-card__media--16-9">
+            <div class="mdc-card__media-content station-card__content">${names.join('<br>')}</div>
+            </div>
+        </div>
+        <div class="mdc-card__actions">
+            <div class="mdc-card__action-icons">
+            <button class="material-icons mdc-icon-button mdc-card__action mdc-card__action--icon" title="Set As Current">my_location</button>
+            <button class="material-icons mdc-icon-button mdc-card__action mdc-card__action--icon" title="Interchange">transfer_within_a_station</button>
+            <button class="material-icons mdc-icon-button mdc-card__action mdc-card__action--icon" title="Remove">delete_forever</button>
+            </div>
+        </div>
+        </div>`
+    }
+
+    var stnList = getParams().stn_list;
+    myLine.tpo.forEach(stnId => {
+        $('#panel_test .mdc-layout-grid__inner:first').append(_stationCard(stnId, stnList[stnId].name));
+        $('#pivot__selection').append(
+            `<li class="mdc-list-item" data-value="${stnId}">
+            ${stnList[stnId].name.join(' - ')}</li>`
+        );
+    });
+
+    $('#panel_test .mdc-card__primary-action').on('click', event => {
+        var stnId = event.target.closest('.mdc-card').id;
+        if (stnId == 'add_stn') {return;}
+        $('#stn_modify_diag').attr('for', stnId);
+        stnModifyDialog.open();
+    });
+    $('#panel_test .mdc-card__action-icons > [title="Add"]').on('click', event => {
+        stnAddDialog.open();
+    });
+    $('#panel_test .mdc-card__action-icons > [title="Set As Current"]').on('click', event => {
+        var stnId = event.target.closest('.mdc-card').id;
+        myLine.currentStnId = stnId;
+    });
+    $('#panel_test .mdc-card__action-icons > [title="Interchange"]').on('click', event => {
+        var stnId = event.target.closest('.mdc-card').id;
+        $('#stn_transfer_diag').attr('for', stnId);
+        stnTransferDialog.open();
+    });
+    $('#panel_test .mdc-card__action-icons > [title="Remove"]').on('click', event => {
+        var stnId = event.target.closest('.mdc-card').id;
+        $('#stn_delete_diag').attr('for', stnId);
+        stnDeleteConfirmDialog.open();
+    });
+
+
+    // Addition
+    var stnAddDialog = new mdc.dialog.MDCDialog($('#stn_add_diag')[0]);
+    var stnAddPrepSelect = new mdc.select.MDCSelect($('#stn_add_diag #prep')[0]);
+    var stnAddPivotSelect = new mdc.select.MDCSelect($('#stn_add_diag #pivot')[0]);
+    var stnAddLocSelect = new mdc.select.MDCSelect($('#stn_add_diag #loc')[0]);
+    var stnAddEndSelect = new mdc.select.MDCSelect($('#stn_add_diag #end')[0]);
+    stnAddDialog.listen('MDCDialog:opening', event => {
+        stnAddPivotSelect.selectedIndex = 0;
+    });
+    stnAddDialog.listen('MDCDialog:opened', event => {
+        [stnAddPrepSelect, stnAddPivotSelect, stnAddLocSelect].forEach(select => select.layout());
+    });
+    stnAddDialog.listen('MDCDialog:closed', event => {
+        if (event.detail.action == 'close') {return;}
+
+        var prep = stnAddPrepSelect.value;
+        var stnId = stnAddPivotSelect.value;
+        var loc = stnAddLocSelect.value;
+        var end = stnAddEndSelect.value;
+        
+        var [newId, newInfo] = myLine.addStn(prep, stnId, loc, end);
+
+        console.log(prep, stnId, loc, end);
+        // _genStnList();
+        var prevId = myLine.tpo[myLine.tpo.indexOf(newId) - 1] || 'add_stn';
+        $(`#panel_test .mdc-layout-grid__inner:first #${prevId}`).after(_stationCard(newId, newInfo.name));
+        if (prevId == 'add_stn') {
+            $('#pivot__selection').prepend(
+                `<li class="mdc-list-item" data-value="${newId}">
+                ${newInfo.name.join(' - ')}</li>`
+            );
+        } else {
+            $(`#pivot__selection [data-value="${prevId}"`).after(
+                `<li class="mdc-list-item" data-value="${newId}">
+                ${newInfo.name.join(' - ')}</li>`
+            );
+        }
+
+        // Trigger station name modification
+        $('#stn_modify_diag').attr('for', newId);
+        stnModifyDialog.open();
+    });
+    stnAddPrepSelect.listen('MDCSelect:change', event => {
+        $('#stn_add_diag #pivot')[0].dispatchEvent(new Event('MDCSelect:change'));
+    });
+    stnAddPivotSelect.listen('MDCSelect:change', event => {
+        var prep = stnAddPrepSelect.value;
+        var stnId = stnAddPivotSelect.value;
+        var stnList = getParams().stn_list;
+        for (let [idx, state] of myLine.newStnPossibleLoc(prep, stnId).entries()) {
+            if (state) {
+                // $('#stn_add_diag #loc option').eq(idx).prop('disabled', false);
+                $('#loc__selection li').eq(idx).removeClass('mdc-list-item--disabled');
+                if (idx >= 3) {
+                    // newupper or newlower
+                    // $('#stn_add_diag #end select').empty();
+                    $('#end__selection').empty();
+                    state.forEach(stnId => {
+                        // $('#stn_add_diag #end select').append(
+                        //     `<option value="${stnId}">${stnList[stnId].name.join(' - ')}</option>`
+                        // );
+                        $('#end__selection').append(
+                            `<li class="mdc-list-item" data-value="${stnId}">${stnList[stnId].name.join(' - ')}</li>`
+                        );
+                    });
+                }
+            } else {
+                // $('#stn_add_diag #loc option').eq(idx).prop('disabled', true);
+                $('#loc__selection li').eq(idx).addClass('mdc-list-item--disabled');
+            }
+            // $('#stn_add_diag #loc option').eq(idx).prop('disabled', (state)?false:true);
+        }
+        // stnAddLocSelect.value = $('#stn_add_diag #loc option:not([disabled]):first').attr('value');
+        stnAddLocSelect.value = $('#loc__selection li:not(.mdc-list-item--disabled):first').attr('data-value');
+    });
+    stnAddLocSelect.listen('MDCSelect:change', event => {
+        if (['newupper', 'newlower'].includes(event.detail.value)) {
+            $('#stn_add_diag #new_branch').attr('style', '');
+            stnAddEndSelect.selectedIndex = 0;
+        } else {
+            $('#stn_add_diag #new_branch').attr('style', 'display:none');
+        }
+    });
+
+
+    // Modification (Name)
+    var stnModifyDialog = new mdc.dialog.MDCDialog($('#stn_modify_diag')[0]);
+    var stnModifyNameZHField = new mdc.textField.MDCTextField($('#stn_modify_diag #name_zh')[0]);
+    var stnModifyNameENField = new mdc.textField.MDCTextField($('#stn_modify_diag #name_en')[0]);
+    stnModifyDialog.listen('MDCDialog:opening', event => {
+        var stnId = event.target.getAttribute('for');
+        [stnModifyNameZHField.value, stnModifyNameENField.value] = getParams().stn_list[stnId].name;
+    })
+    stnModifyDialog.listen('MDCDialog:opened', () => {
+        stnModifyNameZHField.layout();
+        stnModifyNameENField.layout();
+    })
+    $('#stn_modify_diag #name_zh, #name_en').on('input', () => {
+        var nameZH = stnModifyNameZHField.value;
+        var nameEN = stnModifyNameENField.value;
+        var stnId = $('#stn_modify_diag').attr('for');
+        myLine.updateStnName(stnId, nameZH, nameEN);
+        $(`#panel_test .mdc-layout-grid__inner:first #${stnId} .mdc-card__media-content`).text(`${nameZH} ${nameEN}`);
+        $(`#pivot__selection [data-value="${stnId}`).text(`${nameZH} ${nameEN}`);
+    });
+
+
+    // Modification (Interchange)
+    var stnTransferDialog = new mdc.dialog.MDCDialog($('#stn_transfer_diag')[0]);
+    var stnTransferSelect = new mdc.select.MDCSelect($('#stn_transfer_diag #change_type')[0]);
+    var stnIntTickDirectionToggle = new mdc.iconButton.MDCIconButtonToggle($('#stn_transfer_diag #tick_direc')[0]);
+    stnIntTickDirectionToggle.unbounded = true;
+
+    var stnIntCity1Select = new mdc.select.MDCSelect($('#stn_transfer_diag #int_city_1')[0]);
+    var stnIntCity2Select = new mdc.select.MDCSelect($('#stn_transfer_diag #int_city_2')[0]);
+    $.getJSON('data/city_list.json', function(data) {
+        data.forEach(function(c) {
+            [1,2].forEach(i => {
+                $(`#int_city_${i}__selection`).append(
+                    `<li class="mdc-list-item" data-value="${c.id}">
+                    ${countryCode2Emoji(c.country)}${c.name[0]}
+                    </li>`
+                );
+            });
+        });
+    });
+
+    var stnOSINameZHField = new mdc.textField.MDCTextField($('#stn_transfer_diag #osi_name_zh')[0]);
+    var stnOSINameENField = new mdc.textField.MDCTextField($('#stn_transfer_diag #osi_name_en')[0]);
+    var paidAreaToggle = new mdc.iconButton.MDCIconButtonToggle($('#stn_transfer_diag #paid_area')[0]);
+    paidAreaToggle.unbounded = true;
+
+    var stnIntLine1Select = new mdc.select.MDCSelect($('#stn_transfer_diag #int_line_1')[0]);
+    var stnIntNameZH1Field = new mdc.textField.MDCTextField($('#stn_transfer_diag #int_name_zh_1')[0]);
+    var stnIntNameEN1Field = new mdc.textField.MDCTextField($('#stn_transfer_diag #int_name_en_1')[0]);
+
+    var stnIntLine2Select = new mdc.select.MDCSelect($('#stn_transfer_diag #int_line_2')[0]);
+    var stnIntNameZH2Field = new mdc.textField.MDCTextField($('#stn_transfer_diag #int_name_zh_2')[0]);
+    var stnIntNameEN2Field = new mdc.textField.MDCTextField($('#stn_transfer_diag #int_name_en_2')[0]);
+
+    function _notchAllOutlines(n) {
+        if (n == 1) {
+            stnIntCity1Select.layout();
+            stnIntLine1Select.layout();
+            stnIntNameZH1Field.layout();
+            stnIntNameEN1Field.layout();
+        }
+        if (n == 2) {
+            stnIntCity2Select.layout();
+            stnIntLine2Select.layout();
+            stnIntNameZH2Field.layout();
+            stnIntNameEN2Field.layout();
+        }
+        if (n == 0) {
+            // OSI fields
+            stnOSINameZHField.layout();
+            stnOSINameENField.layout();
+        }
+    }
+
+    function _showAllFields(n, show) {
+        var sty = show ? '' : 'display:none';
+        $(`#stn_transfer_diag #int_city_${n}, #int_line_${n}, #int_name_zh_${n}, #int_name_en_${n}`).attr('style', sty);
+    }
+
+    function _showIntTickDirecToggle(show) {
+        var sty = show ? '' : 'display:none';
+        $('#stn_transfer_diag #tick_direc').attr('style', sty);
+    }
+
+    function _showOSIFields(show) {
+        var sty = show ? '' : 'display:none';
+        $('#stn_transfer_diag #osi_name_zh').attr('style', sty);
+        $('#stn_transfer_diag #osi_name_en').attr('style', sty);
+        $('#stn_transfer_diag #paid_area').attr('style', sty)
+    }
+
+    stnTransferDialog.listen('MDCDialog:opening', event => {
+        // var stnId = stationSelect.value;
+        // var stnId = $('#panel_stations #selected_stn').attr('stn');
+        var stnId = event.target.getAttribute('for');
+        var stnInfo = getParams().stn_list[stnId];
+        stnTransferSelect.value = stnInfo.change_type.split('_')[0];
+
+        if (stnInfo.change_type != 'none') {
+            if (stnInfo.transfer[1].length) {
+                stnIntCity1Select.value = stnInfo.transfer[1][0];
+                stnIntNameZH1Field.value = stnInfo.transfer[1][3];
+                stnIntNameEN1Field.value = stnInfo.transfer[1][4];
+            } else {
+                stnIntCity1Select.selectedIndex = 0;
+                stnIntNameZH1Field.value = '';
+                stnIntNameEN1Field.value = '';
+            }
+            if (stnInfo.transfer[2].length) {
+                stnIntCity2Select.value = stnInfo.transfer[2][0];
+                stnIntNameZH2Field.value = stnInfo.transfer[2][3];
+                stnIntNameEN2Field.value = stnInfo.transfer[2][4];
+            } else {
+                stnIntCity2Select.selectedIndex = 0;
+                stnIntNameZH2Field.value = '';
+                stnIntNameEN2Field.value = '';
+            }
+        } else {
+            stnIntCity1Select.selectedIndex = 0;
+            stnIntCity2Select.selectedIndex = 0;
+            stnIntNameZH1Field.value = '';
+            stnIntNameEN1Field.value = '';
+            stnIntNameZH2Field.value = '';
+            stnIntNameEN2Field.value = '';
+        }
+
+        if (['none', 'int2'].includes(stnInfo.change_type)) {
+            stnIntTickDirectionToggle.on = true;
+        } else {
+            stnIntTickDirectionToggle.on = (stnInfo.change_type.slice(-1) == 'r');
+        }
+
+        if (stnInfo.change_type.substring(0,3) == 'osi') {
+            stnOSINameZHField.value = stnInfo.transfer[0][0];
+            stnOSINameENField.value = stnInfo.transfer[0][1];
+
+            paidAreaToggle.on = (stnInfo.change_type.substring(6,7) == 'p');
+        } else {
+            stnOSINameZHField.value = '';
+            stnOSINameENField.value = '';
+
+            paidAreaToggle.on = true;
+        }
+    });
+    stnTransferDialog.listen('MDCDialog:opened', event => {
+        stnTransferSelect.layout();
+        _notchAllOutlines(1);
+        _notchAllOutlines(2);
+        _notchAllOutlines(0);
+    });
+    stnTransferDialog.listen('MDCDialog:closed', event => {
+        if (event.detail.action == 'close') {return;}
+
+        // var stnId = $('#panel_stations #selected_stn').attr('stn');
+        var stnId = event.target.getAttribute('for');
+        var type = stnTransferSelect.value;
+        var tickDirec = stnIntTickDirectionToggle.on ? 'r' : 'l';
+        var osi = [stnOSINameZHField.value, stnOSINameENField.value];
+        var osiPaidArea = paidAreaToggle.on ? 'p' : 'u';
+        var intInfo1 = [
+            stnIntCity1Select.value, 
+            stnIntLine1Select.value, 
+            stnIntNameZH1Field.value, 
+            stnIntNameEN1Field.value
+        ];
+        var intInfo2 = [
+            stnIntCity2Select.value, 
+            stnIntLine2Select.value, 
+            stnIntNameZH2Field.value, 
+            stnIntNameEN2Field.value
+        ];
+        console.log(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, intInfo2]);
+        if (type == 'none') {
+            myLine.updateStnTransfer(stnId, type);
+        } else {
+            intInfo1.splice(
+                2, 0, 
+                $('#int_line_1__selection li span').eq(stnIntLine1Select.selectedIndex)
+                .attr('style').match(/(?!background:)#[\w\d]+(?=;)/g)[0]
+            );
+            switch (type) {
+                case 'int2':
+                    myLine.updateStnTransfer(stnId, type, [[], intInfo1, []]);
+                    break;
+                case 'osi11':
+                    myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, []]);
+                    break;
+                default:
+                    intInfo2.splice(
+                        2, 0, 
+                        $('#int_line_2__selection li span').eq(stnIntLine2Select.selectedIndex)
+                        .attr('style').match(/(?!background:)#[\w\d]+(?=;)/g)[0]
+                    )
+                    switch (type) {
+                        case 'int3':
+                            myLine.updateStnTransfer(stnId, `${type}_${tickDirec}`, [[], intInfo1, intInfo2]);
+                            break;
+                        case 'osi12':
+                            myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, intInfo2]);
+                    }
+            }
+        }
+    })
+    stnTransferSelect.listen('MDCSelect:change', event => {
+        if (event.detail.value == 'int2') {
+            _showAllFields(1, true);
+            _showAllFields(2, false);
+            _showIntTickDirecToggle(false);
+            _showOSIFields(false);
+            _notchAllOutlines(1);
+        } else if (event.detail.value == 'int3') {
+            _showAllFields(1, true);
+            _showAllFields(2, true);
+            _showIntTickDirecToggle(true);
+            _showOSIFields(false);
+            _notchAllOutlines(1);
+            _notchAllOutlines(2);
+        } else if (event.detail.value == 'osi11') {
+            _showAllFields(1, true);
+            _showAllFields(2, false);
+            _showIntTickDirecToggle(true);
+            _showOSIFields(true);
+            _notchAllOutlines(1);
+            _notchAllOutlines(0);
+        } else if (event.detail.value == 'osi12') {
+            _showAllFields(1, true);
+            _showAllFields(2, true);
+            _showIntTickDirecToggle(true);
+            _showOSIFields(true);
+            _notchAllOutlines(1);
+            _notchAllOutlines(2);
+            _notchAllOutlines(0);
+        } else {
+            _showAllFields(1, false);
+            _showAllFields(2, false);
+            _showIntTickDirecToggle(false);
+            _showOSIFields(false);
+        }    
+    });
+    stnIntCity1Select.listen('MDCSelect:change', event => {
+        if (event.detail.index == -1) {return;}
+        $.getJSON(`data/${event.detail.value}.json`, data => {
+            // $('#stn_transfer_diag #int_line_1 select').empty();
+            $('#int_line_1__selection').empty();
+            data.forEach(l => {
+                // $('#stn_transfer_diag #int_line_1 select').append(
+                //     `<option value="${l.id}" colour="${l.colour}">${l.name[0]}</option>`
+                // );
+                $('#int_line_1__selection').append(
+                    `<li class="mdc-list-item" data-value="${l.id}">
+                    <span style="background:${l.colour};">&nbsp;</span>&nbsp;${l.name[0]}
+                    </li>`
+                );
+            });
+
+            // var stnId = $('#panel_stations #selected_stn').attr('stn');
+            var stnId = $('#stn_transfer_diag').attr('for');
+            var stnInfo = getParams().stn_list[stnId];
+
+            if (stnInfo.transfer) {
+                // var idx = $(`#stn_transfer_diag #int_line_1 select > [value="${stnInfo.transfer[1][1]}"]`).index();
+                var idx = $(`#int_line_1__selection > [data-value="${stnInfo.transfer[1][1]}"]`).index();
+                stnIntLine1Select.selectedIndex = (idx == -1) ? 0 : idx;
+            } else {
+                stnIntLine1Select.selectedIndex = 0;
+            }
+        });
+    });
+    stnIntCity2Select.listen('MDCSelect:change', event => {
+        if (event.detail.index == -1) {return;}
+        $.getJSON(`data/${event.detail.value}.json`, data => {
+            // $('#stn_transfer_diag #int_line_2 select').empty();
+            $('#int_line_2__selection').empty();
+            data.forEach(l => {
+                // $('#stn_transfer_diag #int_line_2 select').append(
+                //     `<option value="${l.id}" colour="${l.colour}">${l.name[0]}</option>`
+                // );
+                $('#int_line_2__selection').append(
+                    `<li class="mdc-list-item" data-value="${l.id}">
+                    <span style="background:${l.colour};">&nbsp;</span>&nbsp;${l.name[0]}
+                    </li>`
+                );
+            });
+
+            // var stnId = $('#panel_stations #selected_stn').attr('stn');
+            var stnId = $('#stn_transfer_diag').attr('for');
+            var stnInfo = getParams().stn_list[stnId];
+
+            if (stnInfo.transfer) {
+                // var idx = $(`#stn_transfer_diag #int_line_2 select > [value="${stnInfo.transfer[2][1]}"]`).index();
+                var idx = $(`#int_line_2__selection > [data-value="${stnInfo.transfer[2][1]}"]`).index();
+                stnIntLine2Select.selectedIndex = (idx == -1) ? 0 : idx;
+            } else {
+                stnIntLine2Select.selectedIndex = 0;
+            }
+        });
+    });
+
+
+    // Deletion
+    var stnDeleteConfirmDialog = new mdc.dialog.MDCDialog($('#stn_delete_diag')[0]);
+    var stnDeleteErrorDialog = new mdc.dialog.MDCDialog($('#stn_delete_err')[0]);
+    stnDeleteConfirmDialog.listen('MDCDialog:opening', event => {
+        var stnId = event.target.getAttribute('for');
+        $('#stn_delete_diag .mdc-dialog__content').html(
+            `Are you sure to delete station ${getParams().stn_list[stnId].name.join(' - ')}? You can't undo this action. `
+        );
+    });
+    stnDeleteConfirmDialog.listen('MDCDialog:closed', event => {
+        if (event.detail.action == 'close') {return;}
+        var stnId = event.target.getAttribute('for');
+        // Remove from data and svg
+        if (myLine.removeStn(stnId)) {
+            // Remove station from selection
+            $(`#panel_test .mdc-layout-grid__inner #${stnId}`).remove();
+            $(`#pivot__selection [data-value="${stnId}"]`).remove();
+        } else {
+            stnDeleteErrorDialog.open();
+        }
     });
 }

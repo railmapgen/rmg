@@ -11,11 +11,11 @@
 // }
 
 function putParams(instance) {
-    sessionStorage.setItem('all_params', JSON.stringify(instance));
+    localStorage.setItem('rmgParam', JSON.stringify(instance));
 }
 
 function getParams() {
-    return JSON.parse(sessionStorage.all_params);
+    return JSON.parse(localStorage.rmgParam);
 }
 
 function loadLink() {
