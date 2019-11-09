@@ -36,7 +36,14 @@
             height: 100px;
         }
         .station-card__content {
-            font-family: Roboto, sans-serif;
+            font-family: "Helvetica Neue",
+                         "Helvetica",
+                         "Noto Serif KR", 
+                         "Noto Serif JP", 
+                         "Noto Serif TC", 
+                         "Noto Serif SC", 
+                         "Hiragino Mincho ProN", 
+                         sans-serif;
             -moz-osx-font-smoothing: grayscale;
             -webkit-font-smoothing: antialiased;
             font-size: 1rem;
@@ -697,14 +704,14 @@ id="railmap" width="0" height="0">
     <div class="mdc-dialog__surface">
       <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
       <h2 class="mdc-dialog__title" id="my-dialog-title">Edit Theme</h2>
-      <div class="mdc-dialog__content" id="my-dialog-content">
+      <div class="mdc-dialog__content" id="my-dialog-content" style="max-width: 350px;">
             <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner">
-                <div class="mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--align-middle">
+                <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
                     <i class="material-icons">location_city</i>
                 </div>
 
-                <div class="mdc-layout-grid__cell--span-10">
+                <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
                 <div id="theme_city" class="mdc-select">
                     <div class="mdc-select__anchor" style="width: 200px;">
                         <i class="mdc-select__dropdown-icon"></i>
@@ -720,11 +727,11 @@ id="railmap" width="0" height="0">
                 </div>
                 </div>
 
-                <div class="mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--align-middle">
+                <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
                     <i class="material-icons">subway</i>
                 </div>
 
-                <div class="mdc-layout-grid__cell--span-10">
+                <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
                 <div id="theme_line" class="mdc-select">
                     <div class="mdc-select__anchor" style="width: 200px;">
                         <i class="mdc-select__dropdown-icon"></i>
@@ -1251,7 +1258,7 @@ id="railmap" width="0" height="0">
 <div class="mdc-layout-grid" style="/*max-width: 500px;*/">
 <div class="mdc-layout-grid__inner">
 
-    <div class="mdc-card mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-4-tablet station-card" id="add_stn">
+    <div class="mdc-card mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone station-card" id="add_stn">
     <div class="mdc-card__primary-action">
         <div class="mdc-card__media mdc-card__media--16-9">
         <div class="mdc-card__media-content station-card__content">New Station</div>
@@ -1372,13 +1379,13 @@ id="railmap" width="0" height="0">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" id="my-dialog-title">Edit Station Names</h2>
-      <div class="mdc-dialog__content" id="my-dialog-content">
+      <div class="mdc-dialog__content" id="my-dialog-content" style="max-width: 400px;">
             <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner">
-                <div class="mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--align-middle">
+                <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
                     <i class="material-icons">漢</i>
                 </div>
-                <div class="mdc-layout-grid__cell--span-10">
+                <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
                 <div id="name_zh" class="mdc-text-field mdc-text-field--outlined">
                     <input type="text" id="tf-outlined" class="mdc-text-field__input">
                     <div class="mdc-notched-outline">
@@ -1391,10 +1398,10 @@ id="railmap" width="0" height="0">
                 </div>
                 </div>
 
-                <div class="mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--align-middle">
+                <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
                     <i class="material-icons">A</i>
                 </div>
-                <div class="mdc-layout-grid__cell--span-10">
+                <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
                 <div id="name_en" class="mdc-text-field mdc-text-field--outlined">
                     <input type="text" id="tf-outlined" class="mdc-text-field__input">
                     <div class="mdc-notched-outline">
@@ -1407,7 +1414,7 @@ id="railmap" width="0" height="0">
                 </div>
                 </div>
 
-                <div class="mdc-layout-grid__cell--span-12 mdc-layout-grid__cell--align-middle">
+                <div class="mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--align-middle">
                     <span>Hint: You may add a backslash (&bsol;) at where you want to wrap name. (For station name in Latin characters only. )</span>
                 </div>
             </div>
@@ -1435,7 +1442,7 @@ id="railmap" width="0" height="0">
             <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner">
 
-                <div class="mdc-layout-grid__cell--span-10">
+                <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
                 <div id="change_type" class="mdc-select">
                     <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
@@ -1455,14 +1462,14 @@ id="railmap" width="0" height="0">
                 </div>
                 </div>
 
-                <div class="mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--align-middle">
+                <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
                     <button id="tick_direc" class="mdc-icon-button" aria-label="Interchange Direction" aria-hidden="false" aria-pressed="false">
                         <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">toggle_on</i>
                         <i class="material-icons mdc-icon-button__icon">toggle_off</i>
                     </button>
                 </div>
 
-                <div id="osi_name_zh" class="mdc-layout-grid__cell--span-5 mdc-layout-grid__cell--align-middle">
+                <div id="osi_name_zh" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
                     <div class="mdc-text-field mdc-text-field--outlined">
                         <input type="text" id="tf-outlined" class="mdc-text-field__input">
                         <div class="mdc-notched-outline">
@@ -1475,7 +1482,7 @@ id="railmap" width="0" height="0">
                     </div>
                 </div>
 
-                <div id="osi_name_en" class="mdc-layout-grid__cell--span-5 mdc-layout-grid__cell--align-middle">
+                <div id="osi_name_en" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
                     <div class="mdc-text-field mdc-text-field--outlined">
                         <input type="text" id="tf-outlined" class="mdc-text-field__input">
                         <div class="mdc-notched-outline">
@@ -1488,16 +1495,16 @@ id="railmap" width="0" height="0">
                     </div>
                 </div>
 
-                <div id="paid_area" class="mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--align-middle">
+                <div id="paid_area" class="mdc-layout-grid__cell--span-12 mdc-layout-grid__cell--align-middle">
                     <button class="mdc-icon-button" aria-label="Paid Area" aria-hidden="false" aria-pressed="false">
                         <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">attach_money</i>
                         <i class="material-icons mdc-icon-button__icon">money_off</i>
                     </button>
                 </div>
 
-                <div id="int_city_1" class="mdc-layout-grid__cell--span-6">
+                <div id="int_city_1" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
                 <div class="mdc-select">
-                    <div class="mdc-select__anchor" style="width: 200px;">
+                    <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
                         <span class="mdc-floating-label">1st City</span>
@@ -1510,22 +1517,22 @@ id="railmap" width="0" height="0">
                 </div>
                 </div>
 
-                <div id="int_line_1" class="mdc-layout-grid__cell--span-6">
+                <div id="int_line_1" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
                 <div class="mdc-select">
-                    <div class="mdc-select__anchor" style="width: 200px;">
+                    <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
                         <span class="mdc-floating-label">1st Line</span>
                         <div class="mdc-line-ripple"></div>
                     </div>
-                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" style="min-width: 200px;">
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface">
                         <ul id="int_line_1__selection" class="mdc-list">
                         </ul>
                     </div>
                 </div>
                 </div>
 
-                <div id="int_name_zh_1" class="mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--align-middle">
+                <div id="int_name_zh_1" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
                     <div class="mdc-text-field mdc-text-field--outlined">
                         <input type="text" id="tf-outlined" class="mdc-text-field__input">
                         <div class="mdc-notched-outline">
@@ -1538,7 +1545,7 @@ id="railmap" width="0" height="0">
                     </div>
                 </div>
 
-                <div id="int_name_en_1" class="mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--align-middle">
+                <div id="int_name_en_1" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
                     <div class="mdc-text-field mdc-text-field--outlined">
                         <input type="text" id="tf-outlined" class="mdc-text-field__input">
                         <div class="mdc-notched-outline">
@@ -1551,9 +1558,9 @@ id="railmap" width="0" height="0">
                     </div>
                 </div>
 
-                <div id="int_city_2" class="mdc-layout-grid__cell--span-6">
+                <div id="int_city_2" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
                 <div class="mdc-select">
-                    <div class="mdc-select__anchor" style="width: 200px;">
+                    <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
                         <span class="mdc-floating-label">2nd City</span>
@@ -1566,22 +1573,22 @@ id="railmap" width="0" height="0">
                 </div>
                 </div>
 
-                <div id="int_line_2" class="mdc-layout-grid__cell--span-6">
+                <div id="int_line_2" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
                 <div class="mdc-select">
-                    <div class="mdc-select__anchor" style="width: 200px;">
+                    <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
                         <span class="mdc-floating-label">2nd Line</span>
                         <div class="mdc-line-ripple"></div>
                     </div>
-                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" style="min-width: 200px;">
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface">
                         <ul id="int_line_2__selection" class="mdc-list">
                         </ul>
                     </div>
                 </div>
                 </div>
 
-                <div id="int_name_zh_2" class="mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--align-middle">
+                <div id="int_name_zh_2" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
                     <div class="mdc-text-field mdc-text-field--outlined">
                         <input type="text" id="tf-outlined" class="mdc-text-field__input">
                         <div class="mdc-notched-outline">
@@ -1594,7 +1601,7 @@ id="railmap" width="0" height="0">
                     </div>
                 </div>
 
-                <div id="int_name_en_2" class="mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--align-middle">
+                <div id="int_name_en_2" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
                     <div class="mdc-text-field mdc-text-field--outlined">
                         <input type="text" id="tf-outlined" class="mdc-text-field__input">
                         <div class="mdc-notched-outline">
