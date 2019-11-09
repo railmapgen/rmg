@@ -841,7 +841,7 @@ function initTestPanel() {
     //                     return new mdc.ripple.MDCRipple(el);
     //                 });
     function _stationCard(id, names) {
-        return `<div class="mdc-card mdc-layout-grid__cell--span-2 station-card" id="${id}">
+        return `<div class="mdc-card mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-4-tablet station-card" id="${id}">
         <div class="mdc-card__primary-action">
             <div class="mdc-card__media mdc-card__media--16-9">
             <div class="mdc-card__media-content station-card__content">${names.join('<br>')}</div>
