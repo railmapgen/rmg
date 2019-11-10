@@ -12,7 +12,7 @@
     {
         "id": "edinburgh", 
         "country": "GBSCT", 
-        "name": ["Edinburgh"]
+        "name": ["Edinburgh", "Dùn Èideann"]
     },
     {
         "id": "foshan", 
@@ -21,8 +21,8 @@
     }, 
     {
         "id": "glasgow",
-        "country": "GBENG", 
-        "name": ["Glasgow"]
+        "country": "GBSCT", 
+        "name": ["Glasgow", "Glaschu"]
     },
     {
         "id": "guangzhou", 
@@ -60,6 +60,11 @@
         "name": ["San Francisco"]
     },
     {
+        "id": "seoul", 
+        "country": "KR", 
+        "name": ["Seoul (Metropolitan Area)", "서울(수도권)"]
+    },
+    {
         "id": "shanghai", 
         "country": "CN", 
         "name": ["Shanghai", "上海"]
@@ -72,7 +77,7 @@
     {
         "id": "taipei", 
         "country": "TW", 
-        "name": ["Taipei", "台北"]
+        "name": ["Taipei", "臺北"]
     },
     {
         "id": "tokyo", 
