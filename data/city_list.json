@@ -5,6 +5,11 @@
         "name": ["Beijing", "北京"]
     },
     {
+        "id": "chongqing", 
+        "country": "CN", 
+        "name": ["Chongqing", "重庆"]
+    },
+    {
         "id": "dongguan",
         "country": "CN",
         "name": ["Dongguan", "东莞"]

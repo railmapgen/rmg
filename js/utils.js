@@ -18,8 +18,9 @@ function getParams() {
     return JSON.parse(localStorage.rmgParam);
 }
 
-function loadLink() {
-    var uri = $('#editor', parent.document).contents().find('body').get(0);
+function loadLink(id) {
+    // var uri = $('#editor', parent.document).contents().find('body').get(0);
+    var uri = $(`#${id}`)[0];
     html2canvas(uri).then(function(canvas) {
         var png = canvas.toDataURL('image/png');
         saveAs(png, '1.png')
