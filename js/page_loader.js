@@ -33,11 +33,15 @@ function initDesignPanel() {
     var designList = new mdc.list.MDCList($('#panel_design #design_list')[0]);
     var designListItemRipple = designList.listElements.map(listItemEl => new mdc.ripple.MDCRipple(listItemEl));
 
-    $('#panel_design #design_list li:nth-child(2) .mdc-list-item__secondary-text').html(
+    $('#panel_design #design_list li:nth-child(2) .mdc-list-item__secondary-text').text(
+        getParams().line_name.join(' - ')
+    );
+
+    $('#panel_design #design_list li:nth-child(3) .mdc-list-item__secondary-text').html(
         (getParams().direction == 'r') ? 'Right' : 'Left'
     );
 
-    $('#panel_design #design_list li:nth-child(5) .mdc-list-item__secondary-text').html(
+    $('#panel_design #design_list li:nth-child(7) .mdc-list-item__secondary-text').html(
         $(`#design_char_diag ul [data-mdc-dialog-action="${
             (region => {switch (region) {
                 case 'KR': return 'trad';
@@ -54,18 +58,21 @@ function initDesignPanel() {
                 themeDialog.open();
                 break;
             case 1:
+                lineNameDialog.open();
+                break;
+            case 2:
                 if (getParams().direction == 'r') {
                     myLine.direction = 'l';
-                    $('#panel_design #design_list li:nth-child(2) .mdc-list-item__secondary-text').html('Left');
+                    $('#panel_design #design_list li:nth-child(3) .mdc-list-item__secondary-text').html('Left');
                 } else {
                     myLine.direction = 'r';
-                    $('#panel_design #design_list li:nth-child(2) .mdc-list-item__secondary-text').html('Right');
+                    $('#panel_design #design_list li:nth-child(3) .mdc-list-item__secondary-text').html('Right');
                 }
                 break;
-            case 3:
+            case 5:
                 myLine.swapStnName();
                 break;
-            case 4:
+            case 6:
                 charDialog.open();
         }
     });
@@ -155,6 +162,24 @@ function initDesignPanel() {
         }
     });
 
+    var lineNameDialog = new mdc.dialog.MDCDialog($('#line_name_diag')[0]);
+    var lineNameZHField = new mdc.textField.MDCTextField($('#line_name_diag #name_zh')[0]);
+    var lineNameENField = new mdc.textField.MDCTextField($('#line_name_diag #name_en')[0]);
+    [lineNameZHField.value, lineNameENField.value] = getParams().line_name;
+    lineNameDialog.listen('MDCDialog:opened', () => {
+        lineNameZHField.layout();
+        lineNameENField.layout();
+    });
+    $('#line_name_diag #name_zh, #name_en').on('input', event => {
+        var nameZH = lineNameZHField.value;
+        var nameEN = lineNameENField.value;
+        myLine.lineNames = [nameZH, nameEN];
+        $('#panel_design #design_list li:nth-child(2) .mdc-list-item__secondary-text').text(
+            `${nameZH} - ${nameEN}`
+        );
+    });
+
+
     var platformTextField = new mdc.textField.MDCTextField($('#platform_num')[0]);
     platformTextField.value = getParams().platform_num;
     $('#platform_num > input').on('input', event => {
@@ -164,6 +189,13 @@ function initDesignPanel() {
     // var txtFilpButtonRipple = new mdc.ripple.MDCRipple($('#txt_flip')[0]);
     // txtFilpButtonRipple.unbounded = true;
     // $('#txt_flip').on('click', event => {myLine.swapStnName();});
+
+    var legacySwitch = new mdc.switchControl.MDCSwitch($('#legacy')[0]);
+    legacySwitch.checked = getParams().dest_legacy;
+    $('#legacy input').on('change', event => {
+        console.log(event.target.checked);
+        myLine.destLegacy = event.target.checked;
+    });
 
     var charDialog = new mdc.dialog.MDCDialog($('#design_char_diag')[0]);
     var charDialogList = new mdc.list.MDCList($('#design_char_diag .mdc-list')[0]);
@@ -177,7 +209,7 @@ function initDesignPanel() {
         if (event.detail.action == 'close') {return;}
 
         myLine.switchCharForm(event.detail.action);
-        $('#panel_design #design_list li:nth-child(5) .mdc-list-item__secondary-text').html(
+        $('#panel_design #design_list li:nth-child(7) .mdc-list-item__secondary-text').html(
             $(`#design_char_diag ul [data-mdc-dialog-action="${event.detail.action}"] span`).html()
         );
     });

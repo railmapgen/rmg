@@ -7,6 +7,7 @@ class Line {
     #branchSpacing; #txtFlip;
     #stations = {}; #currentStnId; #direction; #platformNum;
     #weightEN; #weightZH; #fontEN; #fontZH;
+    #lineNames; #destLegacy;
 
     constructor (param) {
         this.#svgHeight = param['svg_height'];
@@ -28,6 +29,8 @@ class Line {
         this.#currentStnId = param['current_stn_idx'];
         this.#direction = param['direction'];
         this.#platformNum = param['platform_num'];
+        this.#lineNames = param['line_name'];
+        this.#destLegacy = param['dest_legacy'];
 
         this.#weightEN = param['weightEN'];
         this.#weightZH = param['weightZH'];
@@ -217,6 +220,33 @@ class Line {
 
         $('#dest_name > #platform > text').text(val);
     }
+    
+    set lineNames(val) {
+        this.#lineNames = val;
+
+        var param = getParams();
+        param.line_name = val;
+        putParams(param);
+
+        $('#dest_name g:last-child').remove()
+        this.drawDestInfo();
+
+        this.loadFonts();
+    }
+
+    set destLegacy(val) {
+        this.#destLegacy = val;
+
+        var param = getParams();
+        param.dest_legacy = val;
+        putParams(param);
+
+        $('#dest_name g:last-child').remove()
+        this.drawDestInfo();
+
+        this.loadFonts();
+    }
+
     set currentStnId(val) {
         this.#currentStnId = val;
 
@@ -529,16 +559,18 @@ class Line {
 
     _stnNamePos(stnId) {
         var self = this;
-        var pos = this.criticalPath.nodes.indexOf(stnId) % 2;
+        var cp = this.criticalPath.nodes;
+        if (stnId == 'linestart') {return 1;}
+        var pos = cp.indexOf(stnId) % 2;
         if (pos == -1) {
-            if (this.leftDests.includes(stnId)) {
-                pos = 0;
-            } else {
-                pos = Number(!self._stnNamePos(this.#stations[stnId]._parents[0]));
-            }
+            // if (this.leftDests.includes(stnId)) {
+            //     pos = 0;
+            // } else {
+                pos = Number(self._stnNamePos(this.#stations[stnId]._parents[0]));
+            // }
         }
         return pos;
-        return (this.#txtFlip) ? Number(!pos) : pos;
+        // return (this.#txtFlip) ? Number(!pos) : pos;
     }
 
     drawSVGFrame() {
@@ -713,9 +745,12 @@ class Line {
         }
         var destNameZH = validDest.map(stnId => this.#stations[stnId]._nameZH.replace(/\\/g, ' ')).join('/');
         var destNameEN = validDest.map(stnId => this.#stations[stnId]._nameEN.replace(/\\/g, ' ')).join('/');
+
+        var lineNameZH = (this.#destLegacy) ? this.#lineNames[0] : '';
+        var lineNameEN = (this.#destLegacy) ? `${this.#lineNames[1]} ` : '';
         
         $('#dest_name').append(
-            `<g text-anchor="${txtAnchor}"> <text class="DestNameZH">往${destNameZH}</text> <text dy="80" class="DestNameEN">to ${destNameEN}</text> </g>`
+            `<g text-anchor="${txtAnchor}"> <text class="DestNameZH">${lineNameZH}往${destNameZH}</text> <text dy="80" class="DestNameEN">${lineNameEN}to ${destNameEN}</text> </g>`
         );
         $('#dest_name').html($('#dest_name').html());
 

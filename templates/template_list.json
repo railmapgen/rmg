@@ -8,7 +8,19 @@
         "description": "Guangzhou Metro - Line 1"
     }, 
     {
+        "filename": "guangzhou_gz8", 
+        "description": "Guangzhou Metro - Line 8"
+    }, 
+    {
+        "filename": "guangzhou_gz21", 
+        "description": "Guangzhou Metro - Line 21"
+    }, 
+    {
         "filename": "macau_taipa", 
         "description": "Metro Ligeiro de Macau - Linha Taipa"
+    },
+    {
+        "filename": "hongkong_eal", 
+        "description": "MTR - East Rail Line"
     }
 ]

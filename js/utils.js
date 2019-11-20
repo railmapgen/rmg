@@ -165,3 +165,16 @@ function countryCode2Emoji(code) {
         return '&#127988;' + chars.map(char => '&#' + (char.charCodeAt()+917536).toString() + ';').join('') + '&#917631;';
     }
 }
+
+function updateParam() {
+    var param = getParams();
+
+    if (!('line_name' in param)) {
+        param.line_name = ['路線名', 'Name of Line'];
+    }
+    if (!('dest_legacy' in param)) {
+        param.dest_legacy = false;
+    }
+
+    putParams(param);
+}
