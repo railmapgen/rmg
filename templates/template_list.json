@@ -8,6 +8,10 @@
         "description": "Guangzhou Metro - Line 1"
     }, 
     {
+        "filename": "guangzhou_gz3", 
+        "description": "Guangzhou Metro - Line 3"
+    }, 
+    {
         "filename": "guangzhou_gz8", 
         "description": "Guangzhou Metro - Line 8"
     }, 

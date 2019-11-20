@@ -105,7 +105,6 @@ function initDesignPanel() {
     });
 
     themeCitySelect.listen("MDCSelect:change", (event) => {
-        console.log(event.detail);
         // $('#theme_line > select').empty();
         $('#theme_line__selection').empty();
 
@@ -208,7 +207,8 @@ function initDesignPanel() {
     charDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action == 'close') {return;}
 
-        myLine.switchCharForm(event.detail.action);
+        // myLine.switchCharForm(event.detail.action);
+        myLine.charForm = event.detail.action;
         $('#panel_design #design_list li:nth-child(7) .mdc-list-item__secondary-text').html(
             $(`#design_char_diag ul [data-mdc-dialog-action="${event.detail.action}"] span`).html()
         );
@@ -874,11 +874,28 @@ function initSavePanel() {
 }
 
 function initTestPanel() {
-    // var ripples = $('#panel_test .mdc-icon-button, .mdc-card__primary-action')
+    // var ripples = $('#panel_stations .mdc-icon-button, .mdc-card__primary-action')
     //                 .each((idx,el) => {
     //                     return new mdc.ripple.MDCRipple(el);
     //                 });
     function _stationCard(id, names) {
+        return $('<div>', {'id':id}).addClass('mdc-card mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone station-card').append(
+            $('<div>').addClass('mdc-card__primary-action').append(
+                $('<div>').addClass('mdc-card__media mdc-card__media--16-9')
+            ).append(
+                $('<div>').addClass('mdc-card__media-content station-card__content').html(names.join('<br>'))
+            )
+        ).append(
+            $('<div>').addClass('mdc-card__actions').append(
+                $('<div>').addClass('mdc-card__action-icons').append(
+                    $('<button>', {'title':'Set As Current'}).addClass('material-icons mdc-icon-button mdc-card__action mdc-card__action--icon').text('my_location')
+                ).append(
+                    $('<button>', {'title':'Interchange'}).addClass('material-icons mdc-icon-button mdc-card__action mdc-card__action--icon').text('transfer_within_a_station')
+                ).append(
+                    $('<button>', {'title': 'Remove'}).addClass('material-icons mdc-icon-button mdc-card__action mdc-card__action--icon').text('delete_forever')
+                )
+            )
+        );
         return `<div class="mdc-card mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone station-card" id="${id}">
         <div class="mdc-card__primary-action">
             <div class="mdc-card__media mdc-card__media--16-9">
@@ -897,32 +914,31 @@ function initTestPanel() {
 
     var stnList = getParams().stn_list;
     myLine.tpo.forEach(stnId => {
-        $('#panel_test .mdc-layout-grid__inner:first').append(_stationCard(stnId, stnList[stnId].name));
+        $('#panel_stations .mdc-layout-grid__inner:first').append(_stationCard(stnId, stnList[stnId].name));
         $('#pivot__selection').append(
-            `<li class="mdc-list-item" data-value="${stnId}">
-            ${stnList[stnId].name.join(' - ')}</li>`
+            $('<li>', {'data-value':stnId}).addClass('mdc-list-item').text(stnList[stnId].name.join(' - '))
         );
     });
 
-    $('#panel_test .mdc-card__primary-action').on('click', event => {
+    $('#panel_stations .mdc-card__primary-action').on('click', event => {
         var stnId = event.target.closest('.mdc-card').id;
         if (stnId == 'add_stn') {return;}
         $('#stn_modify_diag').attr('for', stnId);
         stnModifyDialog.open();
     });
-    $('#panel_test .mdc-card__action-icons > [title="Add"]').on('click', event => {
+    $('#panel_stations .mdc-card__action-icons > [title="Add"]').on('click', event => {
         stnAddDialog.open();
     });
-    $('#panel_test .mdc-card__action-icons > [title="Set As Current"]').on('click', event => {
+    $('#panel_stations .mdc-card__action-icons > [title="Set As Current"]').on('click', event => {
         var stnId = event.target.closest('.mdc-card').id;
         myLine.currentStnId = stnId;
     });
-    $('#panel_test .mdc-card__action-icons > [title="Interchange"]').on('click', event => {
+    $('#panel_stations .mdc-card__action-icons > [title="Interchange"]').on('click', event => {
         var stnId = event.target.closest('.mdc-card').id;
         $('#stn_transfer_diag').attr('for', stnId);
         stnTransferDialog.open();
     });
-    $('#panel_test .mdc-card__action-icons > [title="Remove"]').on('click', event => {
+    $('#panel_stations .mdc-card__action-icons > [title="Remove"]').on('click', event => {
         var stnId = event.target.closest('.mdc-card').id;
         $('#stn_delete_diag').attr('for', stnId);
         stnDeleteConfirmDialog.open();
@@ -954,24 +970,24 @@ function initTestPanel() {
         console.log(prep, stnId, loc, end);
         // _genStnList();
         var prevId = myLine.tpo[myLine.tpo.indexOf(newId) - 1] || 'add_stn';
-        $(`#panel_test .mdc-layout-grid__inner:first #${prevId}`).after(_stationCard(newId, newInfo.name));
+        $(`#panel_stations .mdc-layout-grid__inner:first #${prevId}`).after(_stationCard(newId, newInfo.name));
         // Add event listeners
-        $(`#panel_test #${newId} .mdc-card__primary-action`).on('click', event => {
+        $(`#panel_stations #${newId} .mdc-card__primary-action`).on('click', event => {
             var stnId = event.target.closest('.mdc-card').id;
             if (stnId == 'add_stn') {return;}
             $('#stn_modify_diag').attr('for', stnId);
             stnModifyDialog.open();
         });
-        $(`#panel_test #${newId} .mdc-card__action-icons > [title="Set As Current"]`).on('click', event => {
+        $(`#panel_stations #${newId} .mdc-card__action-icons > [title="Set As Current"]`).on('click', event => {
             var stnId = event.target.closest('.mdc-card').id;
             myLine.currentStnId = stnId;
         });
-        $(`#panel_test #${newId} .mdc-card__action-icons > [title="Interchange"]`).on('click', event => {
+        $(`#panel_stations #${newId} .mdc-card__action-icons > [title="Interchange"]`).on('click', event => {
             var stnId = event.target.closest('.mdc-card').id;
             $('#stn_transfer_diag').attr('for', stnId);
             stnTransferDialog.open();
         });
-        $(`#panel_test #${newId} .mdc-card__action-icons > [title="Remove"]`).on('click', event => {
+        $(`#panel_stations #${newId} .mdc-card__action-icons > [title="Remove"]`).on('click', event => {
             var stnId = event.target.closest('.mdc-card').id;
             $('#stn_delete_diag').attr('for', stnId);
             stnDeleteConfirmDialog.open();
@@ -1053,7 +1069,7 @@ function initTestPanel() {
         var nameEN = stnModifyNameENField.value;
         var stnId = $('#stn_modify_diag').attr('for');
         myLine.updateStnName(stnId, nameZH, nameEN);
-        $(`#panel_test .mdc-layout-grid__inner:first #${stnId} .mdc-card__media-content`).html(`${nameZH}<br>${nameEN}`);
+        $(`#panel_stations .mdc-layout-grid__inner:first #${stnId} .mdc-card__media-content`).html(`${nameZH}<br>${nameEN}`);
         $(`#pivot__selection [data-value="${stnId}`).html(`${nameZH} - ${nameEN}`);
     });
 
@@ -1280,7 +1296,7 @@ function initTestPanel() {
     stnIntCity1Select.listen('MDCSelect:change', event => {
         if (event.detail.index == -1) {return;}
         $.getJSON(`data/${event.detail.value}.json`, data => {
-            // $('#stn_transfer_diag #int_line_1 select').empty();
+            // $('#stn_transfer_diag #int_line_1 select').();
             $('#int_line_1__selection').empty();
             data.forEach(l => {
                 // $('#stn_transfer_diag #int_line_1 select').append(
@@ -1352,10 +1368,22 @@ function initTestPanel() {
         // Remove from data and svg
         if (myLine.removeStn(stnId)) {
             // Remove station from selection
-            $(`#panel_test .mdc-layout-grid__inner #${stnId}`).remove();
+            $(`#panel_stations .mdc-layout-grid__inner #${stnId}`).remove();
             $(`#pivot__selection [data-value="${stnId}"]`).remove();
         } else {
             stnDeleteErrorDialog.open();
         }
+    });
+}
+
+function initInfoPanel() {
+    // var ripples = [].map.call($('#panel_info .mdc-button, .mdc-icon-button, .mdc-card__primary-action'), el => {
+    //     new mdc.ripple.MDCRipple(el);
+    // });
+    $('#panel_info .mdc-card__action-icons [title="Star"]').on('click', () => {
+        window.open('https://github.com/wongchito/RailMapGenerator', '_blank');
+    });
+    $('#panel_info .mdc-card__action-icons [title="Fork"]').on('click', () => {
+        window.open('https://github.com/wongchito/RailMapGenerator/fork', '_blank');
     });
 }

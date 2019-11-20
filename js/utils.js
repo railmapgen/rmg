@@ -18,6 +18,12 @@ function getParams() {
     return JSON.parse(localStorage.rmgParam);
 }
 
+function setParams(key, data) {
+    var param = getParams();
+    param[key] = data;
+    putParams(param);
+}
+
 function loadLink(id) {
     // var uri = $('#editor', parent.document).contents().find('body').get(0);
     var uri = $(`#${id}`)[0];
@@ -125,16 +131,25 @@ function wrapTxt(txt, dy, cls, dd) {
 
 function joinIntName(names, dy1, dy2) {
     var [nameZH, nameEN] = names.map(txt => txt.split(/\\/g));
-    var res = `<text class="IntNameZH"> ${nameZH[0]}`;
+    var res = $('<text>').addClass('NameZH IntName').text(nameZH[0]);
     for (let i=1; i<nameZH.length; i++) {
-        res += `<tspan x="0" dy="${dy1}"> ${nameZH[i]} </tspan>`;
+        res = res.append(
+            $('<tspan>', {'x':0, 'dy':dy1}).text(nameZH[i])
+        );
     }
     var btwGap = (nameZH.length == 1) ? 10 : dy2;
-    res += `<tspan x="0" dy="${btwGap}" class="IntNameEN"> ${nameEN[0]} </tspan>`
+    res = res.append(
+        $('<tspan>', {
+            'x':0, 'dy':btwGap, 'class': 'NameEN IntName'
+        }).text(nameEN[0])
+    );
     for (let i=1; i<nameEN.length; i++) {
-        res += `<tspan x="0" dy="${dy2}" class="IntNameEN"> ${nameEN[i]} </tspan>`;
+        res = res.append(
+            $('<tspan>', {
+                'x':0, 'dy':dy2, 'class': 'NameEN IntName'
+            }).text(nameEN[i])
+        );
     }
-    res += '</text>';
     return [res, nameZH.length, nameEN.length];
 }
 
@@ -169,11 +184,22 @@ function countryCode2Emoji(code) {
 function updateParam() {
     var param = getParams();
 
+    // Version 0.10
     if (!('line_name' in param)) {
         param.line_name = ['路線名', 'Name of Line'];
     }
     if (!('dest_legacy' in param)) {
         param.dest_legacy = false;
+    }
+
+    // Version 0.11
+    if (!('char_form' in param)) {
+        param.char_form = (region => {switch (region) {
+            case 'KR': return 'trad';
+            case 'TC': return 'tw';
+            case 'SC': return 'cn';
+            case 'JP': return 'jp';
+        }})(param.fontZH[0].split(' ').reverse()[0])
     }
 
     putParams(param);

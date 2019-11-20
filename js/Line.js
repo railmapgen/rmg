@@ -3,10 +3,10 @@
 class Line {
     #svgHeight; #svgWidth; #svgDestWidth; #showOuter;
     themeCity; themeLine; #themeColour;
-    #yPc; #padding; #stripPc; #longInterval = 0.2;
+    #yPc; #padding; #stripPc; #longInterval = 1;
     #branchSpacing; #txtFlip;
     #stations = {}; #currentStnId; #direction; #platformNum;
-    #weightEN; #weightZH; #fontEN; #fontZH;
+    #weightEN; #weightZH; #fontEN; #fontZH; #charForm;
     #lineNames; #destLegacy;
 
     constructor (param) {
@@ -36,6 +36,7 @@ class Line {
         this.#weightZH = param['weightZH'];
         this.#fontEN = param['fontEN'];
         this.#fontZH = param['fontZH'];
+        this.#charForm = param.char_form;
 
         // Calculate other properties of stations
         for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
@@ -91,16 +92,12 @@ class Line {
             stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
         }
-        $('#stn_icons').empty();
+        Line.clearSVG(this);
         this.drawStns();
         this.updateStnNameBg();
-
-        $('#line_main').empty();
-        $('#line_pass').empty();
         this.drawLine();
         this.drawStrip();
 
-        $('#dest_name g:last-child').remove()
         this.drawDestInfo();
 
         this.loadFonts();
@@ -109,21 +106,15 @@ class Line {
     set yPc(val) {
         val = Number(val);
         this.#yPc = val;
-
-        var param = getParams();
-        param.y_pc = val;
-        putParams(param);
+        setParams('y_pc', val);
 
         for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
             stnInstance.y = this._stnRealY(stnId);
         }
-        $('#stn_icons').empty();
+        Line.clearSVG(this);
         this.drawStns();
         this.updateStnNameBg();
-
-        $('#line_main').empty();
-        $('#line_pass').empty();
         this.drawLine();
 
         this.loadFonts();
@@ -132,21 +123,15 @@ class Line {
     set padding(val) {
         val = Number(val);
         this.#padding = val;
-
-        var param = getParams();
-        param.padding = val;
-        putParams(param);
+        setParams('padding', val);
 
         for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
             stnInstance.x = this._stnRealX(stnId);
         }
-        $('#stn_icons').empty();
+        Line.clearSVG(this);
         this.drawStns();
         this.updateStnNameBg();
-
-        $('#line_main').empty();
-        $('#line_pass').empty();
         this.drawLine();
 
         this.loadFonts();
@@ -155,22 +140,16 @@ class Line {
     set branchSpacing(val) {
         val = Number(val);
         this.#branchSpacing = val;
-
-        var param = getParams();
-        param.branch_spacing = val;
-        putParams(param);
+        setParams('branch_spacing', val);
 
         for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
             stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
         }
-        $('#stn_icons').empty();
+        Line.clearSVG(this);
         this.drawStns();
         this.updateStnNameBg();
-
-        $('#line_main').empty();
-        $('#line_pass').empty();
         this.drawLine();
 
         this.loadFonts();
@@ -198,14 +177,10 @@ class Line {
             stnInstance._state = this._stnState(stnId);
         }
 
-        $('#stn_icons').empty();
+        Line.clearSVG(this);
         this.drawStns();
-
-        $('#line_main').empty();
-        $('#line_pass').empty();
         this.drawLine();
 
-        $('#dest_name g:last-child').remove()
         this.drawDestInfo();
 
         this.loadFonts();
@@ -213,60 +188,48 @@ class Line {
 
     set platformNum(val) {
         this.#platformNum = val;
-
-        var param = getParams();
-        param.platform_num = val;
-        putParams(param);
-
+        setParams('platform_num', val);
         $('#dest_name > #platform > text').text(val);
+    }
+
+    set charForm(val) {
+        this.#charForm = val;
+        setParams('char_form', val);
+
+        var prevCharForm = $('.NameZH').eq(0).attr('class').match(/char-\w{2,4}/g)[0];
+        $('.NameZH').removeClass(prevCharForm);
+        $('.NameZH').addClass(`char-${val}`);
     }
     
     set lineNames(val) {
         this.#lineNames = val;
+        setParams('line_name', val);
 
-        var param = getParams();
-        param.line_name = val;
-        putParams(param);
-
-        $('#dest_name g:last-child').remove()
         this.drawDestInfo();
-
         this.loadFonts();
     }
 
     set destLegacy(val) {
         this.#destLegacy = val;
+        setParams('dest_legacy', val);
 
-        var param = getParams();
-        param.dest_legacy = val;
-        putParams(param);
-
-        $('#dest_name g:last-child').remove()
         this.drawDestInfo();
-
         this.loadFonts();
     }
 
     set currentStnId(val) {
         this.#currentStnId = val;
-
-        var param = getParams();
-        param.current_stn_idx = val;
-        putParams(param);
+        setParams('current_stn_idx', val);
 
         for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
             stnInstance._state = this._stnState(stnId);
         }
-        $('#stn_icons').empty();
+        Line.clearSVG(this);
         this.drawStns();
         this.updateStnNameBg();
-
-        $('#line_main').empty();
-        $('#line_pass').empty();
         this.drawLine();
 
-        $('#dest_name g:last-child').remove()
         this.drawDestInfo();
 
         this.loadFonts();
@@ -293,6 +256,8 @@ class Line {
         ].includes(this.#stations[stnId2].constructor.name)) {
             w += this.#longInterval;
         }
+        if (this._stnOutdegree(stnId1) == 2) {w += this.#longInterval}
+        if (this._stnIndegree(stnId2) == 2) {w += this.#longInterval}
         return w;
     }
 
@@ -331,7 +296,6 @@ class Line {
         };
     }
 
-
     get criticalPath() {
         var allLengths = [];
         var criticalPaths = [];
@@ -369,17 +333,9 @@ class Line {
         return res;
     }
 
-    get y() {
-        return this.#yPc * this.#svgHeight / 100; 
-    }
-
-    get stripY() {
-        return this.#stripPc * this.#svgHeight / 100;
-    }
-
-    get turningRadius() {
-        return this.#branchSpacing/2 * (Math.sqrt(2) / (Math.sqrt(2)-1));
-    }
+    get y() {return this.#yPc * this.#svgHeight / 100; }
+    get stripY() {return this.#stripPc * this.#svgHeight / 100;}
+    get turningRadius() {return this.#branchSpacing/2 * (Math.sqrt(2) / (Math.sqrt(2)-1));}
 
     get lineXs() {
         return [
@@ -456,15 +412,6 @@ class Line {
         return lineStart + this._stnXShare(stnId) / this.criticalPath.len * (lineEnd - lineStart);
     }
 
-    // get stnRealYs() {
-    //     var ys = {};
-
-    //     for (let stnId in this.#stations) {
-    //         ys[stnId] = this._stnRealY(stnId);
-    //     }
-    //     return ys;
-    // }
-
     _stnYShare(stnId) {
         if (['linestart', 'lineend'].includes(stnId) || this._stnIndegree(stnId) > 1 || this._stnOutdegree(stnId) > 1) {
             return 0;
@@ -498,14 +445,6 @@ class Line {
                     tmpStn = this.#stations[tmpStn]._children[0];
                 }
             }
-            // var stnSuc = this.#stations[stnId]._children[0];
-            // if (this._stnIndegree(stnSuc) == 1) {
-            //     // no sibling, then y same as child
-            //     return this._stnYShare(stnSuc);
-            // } else {
-            //     // sibling exists
-            //     return (this.#stations[stnSuc]._parents.indexOf(stnId) == 0) ? 1 : -1;
-            // }
         }
         return 0;
     }
@@ -563,51 +502,34 @@ class Line {
         if (stnId == 'linestart') {return 1;}
         var pos = cp.indexOf(stnId) % 2;
         if (pos == -1) {
-            // if (this.leftDests.includes(stnId)) {
-            //     pos = 0;
-            // } else {
-                pos = Number(self._stnNamePos(this.#stations[stnId]._parents[0]));
-            // }
+            if (this.#stations[stnId]._parents == 'linestart') {return 1;}
+            return Number(!self._stnNamePos(this.#stations[stnId]._parents[0]));
         }
         return pos;
-        // return (this.#txtFlip) ? Number(!pos) : pos;
     }
 
     drawSVGFrame() {
-        for (let elem of ['railmap', 'outer']) {
-            $(`#${elem}`).attr({
-                'width': this.#svgWidth, 
-                'height': this.#svgHeight
-            });
-        }
-
-        for (let elem of ['destination', 'dest_outer']) {
-            $(`#${elem}`).attr({
-                'width': this.#svgDestWidth, 
-                'height': this.#svgHeight
-            });
-        }
+        $('#railmap, #outer').attr({
+            'width': this.#svgWidth, 
+            'height': this.#svgHeight
+        });
+        $('#destination, #dest_outer').attr({
+            'width': this.#svgDestWidth, 
+            'height': this.#svgHeight
+        });
     }
 
     showFrameOuter() {
         var outerColour = this.#showOuter ? 'black' : 'none';
-        $('#outer').attr('stroke', outerColour);
-        $('#dest_outer').attr('stroke', outerColour);
+        $('#outer, #dest_outer').attr('stroke', outerColour);
     }
 
     drawStns() {
         for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
-            // $('#stn_icons').append(
-            //     stnInstance.drawStnIcon()
-            // );
-            // $('#stn_names').append(
-            //     stnInstance.drawStnName()
-            // );
             $('#stn_icons').append(stnInstance.html);
         }
         $('#stn_icons').html($('#stn_icons').html()); // Refresh DOM
-        // $('#stn_names').html($('#stn_names').html()); // Refresh DOM
     }
 
     updateStnNameBg() {
@@ -632,8 +554,7 @@ class Line {
         var extraH = (lineEnd - lineStart) / cp.len * this.#longInterval;
         var dh = ( (lineEnd-lineStart)/cp.len - 2*dx ) / 2;
         if (dh < 0) {
-            console.log(dh);
-            console.warn('SVG width too small!');
+            console.warn(`SVG width too small! ${dh}`);
         }
 
         for (let [leftStnId, leftStnInstance] of Object.entries(this.#stations)) {
@@ -649,7 +570,7 @@ class Line {
 
                 if (y1 == y2) {
                     $(`#${lineType}`).append(
-                        `<path d="M ${x1},${y1} H ${x2}"/>`
+                        $('<path/>').attr('d', `M ${x1},${y1} H ${x2}`)
                     );
                 } else if (y1 == this.y && y1 > y2) {
                     if ([
@@ -658,11 +579,11 @@ class Line {
                             'OSI12RStation'
                         ].includes(leftStnInstance.constructor.name)) {
                         $(`#${lineType}`).append(
-                            `<path d="M ${x1},${y1} h ${extraH + dh} a ${r},${r} 0 0,0 ${dx},${-dy} a ${r},${r} 0 0,1 ${dx},${-dy} H ${x2}"/>`
+                            `<path d="M ${x1},${y1} h ${extraH/2 + dh} a ${r},${r} 0 0,0 ${dx},${-dy} a ${r},${r} 0 0,1 ${dx},${-dy} H ${x2}"/>`
                         );
                     } else {
                         $(`#${lineType}`).append(
-                            `<path d="M ${x1},${y1} h ${dh} a ${r},${r} 0 0,0 ${dx},${-dy} a ${r},${r} 0 0,1 ${dx},${-dy} H ${x2}"/>`
+                            `<path d="M ${x1},${y1} h ${extraH/2 + dh} a ${r},${r} 0 0,0 ${dx},${-dy} a ${r},${r} 0 0,1 ${dx},${-dy} H ${x2}"/>`
                         );
                     }
                     
@@ -673,11 +594,11 @@ class Line {
                             'OSI12RStation'
                         ].includes(leftStnInstance.constructor.name)) {
                         $(`#${lineType}`).append(
-                            `<path d="M ${x1},${y1} h ${extraH + dh} a ${r},${r} 0 0,1 ${dx},${dy} a ${r},${r} 0 0,0 ${dx},${dy} H ${x2}"/>`
+                            `<path d="M ${x1},${y1} h ${extraH/2 + dh} a ${r},${r} 0 0,1 ${dx},${dy} a ${r},${r} 0 0,0 ${dx},${dy} H ${x2}"/>`
                         );
                     } else {
                         $(`#${lineType}`).append(
-                            `<path d="M ${x1},${y1} h ${dh} a ${r},${r} 0 0,1 ${dx},${dy} a ${r},${r} 0 0,0 ${dx},${dy} H ${x2}"/>`
+                            `<path d="M ${x1},${y1} h ${extraH/2 + dh} a ${r},${r} 0 0,1 ${dx},${dy} a ${r},${r} 0 0,0 ${dx},${dy} H ${x2}"/>`
                         );
                     }
                 } else if (y2 == this.y && y2 > y1) {
@@ -687,11 +608,11 @@ class Line {
                             'OSI12LStation'
                         ].includes(this.#stations[rightStnId].constructor.name)) {
                         $(`#${lineType}`).append(
-                            `<path d="M ${x2},${y2} h ${-extraH-dh} a ${r},${r} 0 0,1 ${-dx},${-dy} a ${r},${r} 0 0,0 ${-dx},${-dy} H ${x1}"/>`
+                            `<path d="M ${x2},${y2} h ${-extraH/2-dh} a ${r},${r} 0 0,1 ${-dx},${-dy} a ${r},${r} 0 0,0 ${-dx},${-dy} H ${x1}"/>`
                         );
                     } else {
                         $(`#${lineType}`).append(
-                            `<path d="M ${x2},${y2} h ${-dh} a ${r},${r} 0 0,1 ${-dx},${-dy} a ${r},${r} 0 0,0 ${-dx},${-dy} H ${x1}"/>`
+                            `<path d="M ${x2},${y2} h ${-extraH/2-dh} a ${r},${r} 0 0,1 ${-dx},${-dy} a ${r},${r} 0 0,0 ${-dx},${-dy} H ${x1}"/>`
                         );
                     }
                 } else {
@@ -701,11 +622,11 @@ class Line {
                             'OSI12LStation'
                         ].includes(this.#stations[rightStnId].constructor.name)) {
                         $(`#${lineType}`).append(
-                            `<path d="M ${x2},${y2} h ${-extraH-dh} a ${r},${r} 0 0,0 ${-dx},${dy} a ${r},${r} 0 0,1 ${-dx},${dy} H ${x1}"/>`
+                            `<path d="M ${x2},${y2} h ${-extraH/2-dh} a ${r},${r} 0 0,0 ${-dx},${dy} a ${r},${r} 0 0,1 ${-dx},${dy} H ${x1}"/>`
                         );
                     } else {
                         $(`#${lineType}`).append(
-                            `<path d="M ${x2},${y2} h ${-dh} a ${r},${r} 0 0,0 ${-dx},${dy} a ${r},${r} 0 0,1 ${-dx},${dy} H ${x1}"/>`
+                            `<path d="M ${x2},${y2} h ${-extraH/2-dh} a ${r},${r} 0 0,0 ${-dx},${dy} a ${r},${r} 0 0,1 ${-dx},${dy} H ${x1}"/>`
                         );
                     }
                     
@@ -723,9 +644,10 @@ class Line {
     }
 
     fillThemeColour() {
-        for (let elem of ['line_main', 'strip', 'dest_strip']) {
-            $(`#${elem}`).attr('stroke', this.#themeColour);
-        }
+        // for (let elem of ['line_main', 'strip', 'dest_strip']) {
+        //     $(`#${elem}`).attr('stroke', this.#themeColour);
+        // }
+        $('#line_main, #strip, #dest_strip').attr('stroke', this.#themeColour);
         $('#dest_name > #platform > circle').attr('fill', this.#themeColour);
     }
 
@@ -743,14 +665,24 @@ class Line {
         for (let stnId of destinations) {
             if (this.#stations[stnId]._state >= 0) {validDest.push(stnId)}; 
         }
-        var destNameZH = validDest.map(stnId => this.#stations[stnId]._nameZH.replace(/\\/g, ' ')).join('/');
-        var destNameEN = validDest.map(stnId => this.#stations[stnId]._nameEN.replace(/\\/g, ' ')).join('/');
 
-        var lineNameZH = (this.#destLegacy) ? this.#lineNames[0] : '';
-        var lineNameEN = (this.#destLegacy) ? `${this.#lineNames[1]} ` : '';
+        var [destNameZH, destNameEN] = [].map.call(['_nameZH', '_nameEN'], key => {
+            return validDest.map(stnId => this.#stations[stnId][key].replace(/\\/g, ' ')).join('/');
+        });
+
+        if (this.#destLegacy) {
+            var [lineNameZH, lineNameEN] = this.#lineNames;
+            lineNameEN += ' ';
+        } else {
+            var lineNameZH = lineNameEN = '';
+        }
         
-        $('#dest_name').append(
-            `<g text-anchor="${txtAnchor}"> <text class="DestNameZH">${lineNameZH}往${destNameZH}</text> <text dy="80" class="DestNameEN">${lineNameEN}to ${destNameEN}</text> </g>`
+        $('#dest_name > g:last-child').empty().attr('text-anchor', txtAnchor).append(
+            $('<text>').addClass('NameZH DestName').text(`${lineNameZH}往${destNameZH}`)
+        ).append(
+            $('<text>', {
+                'dy':80, 'class': 'NameEN DestName'
+            }).text(`${lineNameEN}to ${destNameEN}`)
         );
         $('#dest_name').html($('#dest_name').html());
 
@@ -767,36 +699,7 @@ class Line {
     }
 
     loadFonts() {
-        var fontZHToShow = this.#fontEN.concat(this.#fontZH).join(',');
-        var fontENToShow = this.#fontEN.join(',');
-        
-        $('#stn_icons .StnNameZH, .IntNameZH, .OSINameZH').attr('font-family', fontZHToShow);
-        $('#stn_icons .StnNameEN, .IntNameEN, .OSINameEN').attr('font-family', fontENToShow);
-
-        $('.DestNameZH').attr('font-family', fontZHToShow);
-        $('.DestNameEN').attr('font-family', fontENToShow);
-        $('#dest_name > #platform > text').attr('font-family', fontENToShow);
-    }
-
-    switchCharForm(region) {
-        var param = getParams();
-        switch (region) {
-            case 'trad':
-                param.fontZH = ['Noto Serif KR', 'Noto Serif JP', 'Noto Serif TC', 'Noto Serif SC'];
-                break;
-            case 'cn':
-                param.fontZH = ['Noto Serif SC', 'Noto Serif TC']; 
-                break;
-            case 'tw':
-                param.fontZH = ['Noto Serif TC', 'Noto Serif KR', 'Noto Serif JP', 'Noto Serif SC'];
-                break;
-            case 'jp':
-                param.fontZH = ['Noto Serif JP', 'Noto Serif KR', 'Noto Serif TC', 'Noto Serif SC'];
-                break;
-        }
-        putParams(param);
-        this.#fontZH = param.fontZH;
-        this.loadFonts();
+        $('.NameZH').addClass(`char-${this.#charForm}`);
     }
 
     swapStnName() {
@@ -832,10 +735,8 @@ class Line {
         if (stnId == this.#currentStnId) {this.updateStnNameBg();}
 
         if (this.leftDests.includes(stnId) && this.#direction == 'l') {
-            $('#dest_name g:last-child').remove()
             this.drawDestInfo();
         } else if (this.rightDests.includes(stnId) && this.#direction == 'r') {
-            $('#dest_name g:last-child').remove()
             this.drawDestInfo();
         }
 
@@ -892,17 +793,6 @@ class Line {
         var children = this.#stations[stnId]._children;
 
         var isLastMainBranchStn = true;
-        // for (let [id, instance] of Object.entries(this.#stations)) {
-        //     if (id == stnId) {continue;}
-        //     if (instance._y == this.y) {
-        //         isLastMainBranchStn = false;
-        //         break;
-        //     }
-        // }
-        // Object.keys(this.#stations).forEach(id => {
-        //     if ([stnId, 'linestart', 'lineend'].includes(id)) {return;}
-
-        // })
         for (let id in this.#stations) {
             if ([stnId, 'linestart', 'lineend'].includes(id)) {continue;}
             if (this._stnYShare(id) == 0) {
@@ -985,16 +875,12 @@ class Line {
                 stnInstance._state = this._stnState(stnId);
             }
         }
-        $('#stn_icons').empty();
+        Line.clearSVG(this);
         this.drawStns();
         this.updateStnNameBg();
-
-        $('#line_main').empty();
-        $('#line_pass').empty();
         this.drawLine();
         this.drawStrip();
 
-        $('#dest_name g:last-child').remove()
         this.drawDestInfo();
 
         this.loadFonts();
@@ -1133,8 +1019,8 @@ class Line {
                     newInfo.parents = this.#stations[stnId]._parents;
                     newInfo.children = [stnId];
                     newInfo.parents.forEach(par => {
-                        this.#stations[par]._children[0] = newId;
-                        param.stn_list[par].children[0] = newId;
+                        this.#stations[par]._children[1] = newId;
+                        param.stn_list[par].children[1] = newId;
                     });
                     newInfo.children.forEach(child => {
                         this.#stations[child]._parents = [newId];
@@ -1216,8 +1102,8 @@ class Line {
                     newInfo.children = this.#stations[stnId]._children;
                     newInfo.parents = [stnId];
                     newInfo.children.forEach(child => {
-                        this.#stations[child]._parents[0] = newId;
-                        param.stn_list[child].parents[0] = newId;
+                        this.#stations[child]._parents[1] = newId;
+                        param.stn_list[child].parents[1] = newId;
                     });
                     newInfo.parents.forEach(par => {
                         this.#stations[par]._children = [newId];
@@ -1261,16 +1147,12 @@ class Line {
             stnInstance.namePos = (this.#txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
         }
 
-        $('#stn_icons').empty();
+        Line.clearSVG(this);
         this.drawStns();
         this.updateStnNameBg();
-
-        $('#line_main').empty();
-        $('#line_pass').empty();
         this.drawLine();
         this.drawStrip();
 
-        $('#dest_name g:last-child').remove();
         this.drawDestInfo();
 
         this.loadFonts();
@@ -1281,9 +1163,6 @@ class Line {
     }
 
     static clearSVG() {
-        $('#stn_icons').empty();
-        $('#line_main').empty();
-        $('#line_pass').empty();
-        $('#dest_name g:last-child').remove();
+        $('#stn_icons, #line_main, #line_pass').empty();
     }
 }

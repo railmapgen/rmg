@@ -70,19 +70,60 @@ id="destination" width="0" height="0">
         }
 
         .Strip {fill:none;stroke-width:20} 
-        .DestNameZH {
-            font-size:90px;
-            alignment-baseline:central;
-        }
-        .DestNameEN {
-            font-size:45px;
+        .NameZH {alignment-baseline:central;}
+        .NameEN{
             alignment-baseline:middle;
+            font-family: Vegur;
         }
+
+        .NameZH.DestName {font-size: 90px;}
+        .NameEN.DestName {font-size: 45px;}
+
         .PlatformNum {
             font-size:135px;
             alignment-baseline:central;
             text-anchor: middle;
             fill: #fff;
+            font-family: Vegur;
+        }
+
+        .NameZH.char-trad {
+            font-family: 
+                Vegur,
+                Noto Serif KR,
+                Noto Serif JP,
+                Noto Serif TC,
+                Noto Serif SC,
+                Hiragino Mincho ProN,
+                serif;
+        }
+        .NameZH.char-cn {
+            font-family: 
+                Vegur,
+                Noto Serif SC,
+                Noto Serif TC,
+                Hiragino Mincho ProN,
+                serif;
+        }
+        .NameZH.char-jp {
+            font-family: 
+                Vegur,
+                Noto Serif JP,
+                Noto Serif KR,
+                Noto Serif TC,
+                Noto Serif SC,
+                Hiragino Mincho ProN,
+                serif;
+        }
+        .NameZH.char-tw {
+            font-family: 
+                Vegur,
+                Noto Serif TC,
+                Noto Serif KR,
+                Noto Serif JP,
+                Noto Serif SC,
+                Hiragino Mincho ProN,
+                serif;
         }
     </style>
 
@@ -92,17 +133,15 @@ id="destination" width="0" height="0">
         <path id="arrow" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
     </defs>
 
-    <g class="Strip">
-        <path id="dest_strip"/>
-    </g>
+    <path id="dest_strip" class="Strip"/>
 
     <g id="dest_name">
         <use xlink:href="#arrow"/>
         <g id="platform">
             <circle cx="0" cy="0" r="75"/>
             <text class="PlatformNum" dy="0"></text>
-            <!-- dy=12 if use Myriad Pro -->
         </g>
+        <g></g>
     </g>
 
     <rect id="dest_outer" x="0" y="0" fill="none"/>
@@ -136,36 +175,63 @@ id="railmap" width="0" height="0">
         .Name.Current {fill: #fff;}
         .Name.Future {fill: #000;}
 
+        .NameZH {alignment-baseline:central;}
+        .NameEN{
+            alignment-baseline:middle;
+            font-family: Vegur;
+        }
+
+        .NameZH.char-trad {
+            font-family: 
+                Vegur,
+                Noto Serif KR,
+                Noto Serif JP,
+                Noto Serif TC,
+                Noto Serif SC,
+                Hiragino Mincho ProN,
+                serif;
+        }
+        .NameZH.char-cn {
+            font-family: 
+                Vegur,
+                Noto Serif SC,
+                Noto Serif TC,
+                Hiragino Mincho ProN,
+                serif;
+        }
+        .NameZH.char-jp {
+            font-family: 
+                Vegur,
+                Noto Serif JP,
+                Noto Serif KR,
+                Noto Serif TC,
+                Noto Serif SC,
+                Hiragino Mincho ProN,
+                serif;
+        }
+        .NameZH.char-tw {
+            font-family: 
+                Vegur,
+                Noto Serif TC,
+                Noto Serif KR,
+                Noto Serif JP,
+                Noto Serif SC,
+                Hiragino Mincho ProN,
+                serif;
+        }
+
         .CurrentNameGZ {
             fill: #f00;
         }
 
-        .StnNameEN {
-            font-size:10px;
-            alignment-baseline:middle;
-        }
-        .StnNameZH {
-            font-size:17px;
-            alignment-baseline:central;
-        }
+        .NameEN.StnName {font-size: 10px;}
+        .NameZH.StnName {font-size: 17px;}
 
-        .OSINameEN {
-            font-size:9px;
-            alignment-baseline:middle;
-        }
-        .OSINameZH {
-            font-size:14px;
-            alignment-baseline:central;
-        }
+        .NameEN.OSIName {font-size: 9px;}
+        .NameZH.OSIName {font-size: 14px;}
 
-        .IntNameEN {
-            font-size:7px;
-            alignment-baseline:middle;
-        }
-        .IntNameZH {
-            font-size:10px;
-            alignment-baseline:central;
-        }
+        .NameEN.IntName {font-size: 7px;}
+        .NameZH.IntName {font-size: 10px;}
 
         .StnNum{
             font-family: Arial;
@@ -345,7 +411,7 @@ id="railmap" width="0" height="0">
             <span class="mdc-tab__ripple"></span>
             </button>
 
-            <!-- <button class="mdc-tab" role="tab" aria-selected="true">
+            <button class="mdc-tab" role="tab" aria-selected="true">
                 <span class="mdc-tab__content">
                     <span class="mdc-tab__icon material-icons" aria-hidden="true">directions_transit</span>
                     <span class="mdc-tab__text-label">Stations</span>
@@ -354,12 +420,12 @@ id="railmap" width="0" height="0">
                     <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
                 </span>
                 <span class="mdc-tab__ripple"></span>
-            </button> -->
+            </button>
 
             <button class="mdc-tab" role="tab" aria-selected="true">
                 <span class="mdc-tab__content">
-                    <span class="mdc-tab__icon material-icons" aria-hidden="true">directions_transit</span>
-                    <span class="mdc-tab__text-label">Stations</span>
+                    <span class="mdc-tab__icon material-icons" aria-hidden="true">info</span>
+                    <span class="mdc-tab__text-label">Info</span>
                 </span>
                 <span class="mdc-tab-indicator ">
                     <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
@@ -869,7 +935,7 @@ id="railmap" width="0" height="0">
 </div>
 
 
-<div id="panel_test" class="panel">
+<div id="panel_stations" class="panel">
 
 <div class="mdc-layout-grid" style="/*max-width: 500px;*/">
 <div class="mdc-layout-grid__inner">
@@ -1292,6 +1358,38 @@ id="railmap" width="0" height="0">
 
 </div>
 
+
+<div id="panel_info" class="panel">
+
+<div class="mdc-layout-grid" style="max-width: 500px;">
+<div class="mdc-layout-grid__inner">
+
+    <div class="mdc-layout-grid__cell--span-12 mdc-card">
+        <div class="mdc-card__primary-action" tabindex="0" style="display: flex; flex-direction: row;">
+            <div class="mdc-card__media mdc-card__media--square" style="background-image: url(GitHub-Mark-120px-plus.png); width: 120px; height:120px;">
+            </div>
+            <div style="padding: 1rem;">
+                <h2 class="mdc-typography mdc-typography--headline6">Rail Map Generator</h2>
+                <h3 class="mdc-typography mdc-typography--subtitle2">by Chito Wong (wongchito)</h3>
+            </div>
+        </div>
+        <div class="mdc-card__actions">
+            <div class="mdc-card__action-icons">
+                <button class="material-icons mdc-icon-button mdc-card__action mdc-card__action--icon" title="Star">
+                    star
+                </button>
+                <button class="material-icons mdc-icon-button mdc-card__action mdc-card__action--icon" title="Fork">
+                    <svg class="octicon octicon-repo-forked v-align-text-bottom" viewBox="0 0 10 16" version="1.1" width="10" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 00-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 002 1a1.993 1.993 0 00-1 3.72V6.5l3 3v1.78A1.993 1.993 0 005 15a1.993 1.993 0 001-3.72V9.5l3-3V4.72A1.993 1.993 0 008 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"></path></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+</div>
+
 </div>
 
 
@@ -1318,6 +1416,7 @@ id="railmap" width="0" height="0">
     } else {
         $.getJSON(`templates/${template}.json`, data => {
             localStorage.rmgParam = JSON.stringify(data);
+            updateParam();
             myLine = new Line(getParams());
             myLine.drawSVGFrame();
             myLine.showFrameOuter();
@@ -1344,6 +1443,7 @@ id="railmap" width="0" height="0">
     var designPanelFirstInit = true;
     var stationsPanelFirstInit = true;
     var testPanelFirstInit = true;
+    var infoPanelFirstInit = true;
     // var savePanelFirstInit = true;
     // $('.mdc-tab-bar').each((i, elem) => mdc.tabBar.MDCTabBar.attachTo(elem));
     var tabBar = new mdc.tabBar.MDCTabBar.attachTo($('.mdc-tab-bar')[0]);
@@ -1366,6 +1466,10 @@ id="railmap" width="0" height="0">
         if (event.detail.index == 3 && testPanelFirstInit) {
             initTestPanel();
             testPanelFirstInit = false;
+        }
+        if (event.detail.index == 4 && infoPanelFirstInit) {
+            initInfoPanel();
+            infoPanelFirstInit = false;
         }
         // if (event.detail.index == 0 && savePanelFirstInit) {
         //     initSavePanel();

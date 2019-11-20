@@ -11,6 +11,21 @@ Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be d
 
 ## Version History
 
+### 0.11 (21 Nov 2019)
+
+#### New Features
+
+- An information panel is added. Please star, fork or support my work!
+- New templates available. 
+
+#### Resolved Issues
+
+- Improved robustness.
+- Fixed the issue that text does not align. 
+- Fixed the error of the position of station names. 
+- Fixed the issue that the horizontal interval being too narrow when line splits. 
+- Fixed an internal error of adding station to branch.  
+
 ### 0.10 (20 Nov 2019)
 
 #### New Features
