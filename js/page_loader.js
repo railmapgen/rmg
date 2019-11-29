@@ -42,14 +42,7 @@ function initDesignPanel() {
     );
 
     $('#panel_design #design_list li:nth-child(7) .mdc-list-item__secondary-text').html(
-        $(`#design_char_diag ul [data-mdc-dialog-action="${
-            (region => {switch (region) {
-                case 'KR': return 'trad';
-                case 'TC': return 'tw';
-                case 'SC': return 'cn';
-                case 'JP': return 'jp';
-            }})(getParams().fontZH[0].split(' ').reverse()[0])
-        }"] span`).html()
+        $(`#design_char_diag ul [data-mdc-dialog-action="${getParams().char_form}"] span`).html()
     );
 
     designList.listen('MDCList:action', event => {
@@ -70,7 +63,8 @@ function initDesignPanel() {
                 }
                 break;
             case 5:
-                myLine.swapStnName();
+                myLine.txtFlip = !getParams().txt_flip;
+                // myLine.swapStnName();
                 break;
             case 6:
                 charDialog.open();
@@ -837,13 +831,15 @@ function initSavePanel() {
                 break;
             case 'svg1':
                 var link = document.createElement('a');
-                link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent($('#svgs svg:first-child')[0].outerHTML)));
+                var svgContent = $('#svgs svg:first-child').prepend($('style#svg_share'));
+                link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgContent[0].outerHTML)));
                 link.download = 'railmap_dest.svg';
                 link.click();
                 break;
             case 'svg2':
                 var link = document.createElement('a');
-                link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent($('#svgs svg:last-child')[0].outerHTML)));
+                var svgContent = $('#svgs svg:last-child').prepend($('style#svg_share'));
+                link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgContent[0].outerHTML)));
                 link.download = 'railmap_map.svg';
                 link.click();
                 break;
@@ -993,16 +989,13 @@ function initTestPanel() {
             stnDeleteConfirmDialog.open();
         });
 
+        var listElem = $('<li>', {
+            'data-value': newId, 'class': 'mdc-list-item'
+        }).text(newInfo.name.join(' - '));
         if (prevId == 'add_stn') {
-            $('#pivot__selection').prepend(
-                `<li class="mdc-list-item" data-value="${newId}">
-                ${newInfo.name.join(' - ')}</li>`
-            );
+            $('#pivot__selection').prepend(listElem);
         } else {
-            $(`#pivot__selection [data-value="${prevId}"`).after(
-                `<li class="mdc-list-item" data-value="${newId}">
-                ${newInfo.name.join(' - ')}</li>`
-            );
+            $(`#pivot__selection [data-value="${prevId}"`).after(listElem);
         }
 
         // Trigger station name modification
@@ -1153,24 +1146,41 @@ function initTestPanel() {
         stnTransferSelect.value = stnInfo.change_type.split('_')[0];
 
         if (stnInfo.change_type != 'none') {
-            if (stnInfo.transfer[1].length) {
-                stnIntCity1Select.value = stnInfo.transfer[1][0];
-                stnIntNameZH1Field.value = stnInfo.transfer[1][3];
-                stnIntNameEN1Field.value = stnInfo.transfer[1][4];
+            if (stnInfo.interchange[0][0]) {
+                stnIntCity1Select.value = stnInfo.interchange[0][0][0];
+                stnIntNameZH1Field.value = stnInfo.interchange[0][0][3];
+                stnIntNameEN1Field.value = stnInfo.interchange[0][0][4];
+            } else if (stnInfo.interchange[1][1]) {
+                stnIntCity1Select.value = stnInfo.interchange[1][1][0];
+                stnIntNameZH1Field.value = stnInfo.interchange[1][1][3];
+                stnIntNameEN1Field.value = stnInfo.interchange[1][1][4];
             } else {
                 stnIntCity1Select.value = lineThemeCity;
                 stnIntNameZH1Field.value = '';
                 stnIntNameEN1Field.value = '';
             }
-            if (stnInfo.transfer[2].length) {
-                stnIntCity2Select.value = stnInfo.transfer[2][0];
-                stnIntNameZH2Field.value = stnInfo.transfer[2][3];
-                stnIntNameEN2Field.value = stnInfo.transfer[2][4];
+            if (stnInfo.interchange[0][1]) {
+                stnIntCity2Select.value = stnInfo.interchange[0][1][0];
+                stnIntNameZH2Field.value = stnInfo.interchange[0][1][3];
+                stnIntNameEN2Field.value = stnInfo.interchange[0][1][4];
+            } else if (stnInfo.interchange[1] && stnInfo.interchange[1][2]) {
+                stnIntCity2Select.value = stnInfo.interchange[1][2][0];
+                stnIntNameZH2Field.value = stnInfo.interchange[1][2][3];
+                stnIntNameEN2Field.value = stnInfo.interchange[1][2][4];
             } else {
                 stnIntCity2Select.value = lineThemeCity;
                 stnIntNameZH2Field.value = '';
                 stnIntNameEN2Field.value = '';
             }
+            // if (stnInfo.transfer[2].length) {
+            //     stnIntCity2Select.value = stnInfo.transfer[2][0];
+            //     stnIntNameZH2Field.value = stnInfo.transfer[2][3];
+            //     stnIntNameEN2Field.value = stnInfo.transfer[2][4];
+            // } else {
+            //     stnIntCity2Select.value = lineThemeCity;
+            //     stnIntNameZH2Field.value = '';
+            //     stnIntNameEN2Field.value = '';
+            // }
         } else {
             stnIntCity1Select.value = lineThemeCity;
             stnIntCity2Select.value = lineThemeCity;
@@ -1187,8 +1197,9 @@ function initTestPanel() {
         }
 
         if (stnInfo.change_type.substring(0,3) == 'osi') {
-            stnOSINameZHField.value = stnInfo.transfer[0][0];
-            stnOSINameENField.value = stnInfo.transfer[0][1];
+            [stnOSINameZHField.value, stnOSINameENField.value] = stnInfo.interchange[1][0];
+            // stnOSINameZHField.value = stnInfo.transfer[0][0];
+            // stnOSINameENField.value = stnInfo.transfer[0][1];
 
             paidAreaToggle.on = (stnInfo.change_type.substring(6,7) == 'p');
         } else {
@@ -1236,10 +1247,12 @@ function initTestPanel() {
             );
             switch (type) {
                 case 'int2':
-                    myLine.updateStnTransfer(stnId, type, [[], intInfo1, []]);
+                    // myLine.updateStnTransfer(stnId, type, [[], intInfo1, []]);
+                    myLine.updateStnTransfer(stnId, type, [[intInfo1]]);
                     break;
                 case 'osi11':
-                    myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, []]);
+                    // myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, []]);
+                    myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [[], [osi, intInfo1]]);
                     break;
                 default:
                     intInfo2.splice(
@@ -1249,10 +1262,12 @@ function initTestPanel() {
                     )
                     switch (type) {
                         case 'int3':
-                            myLine.updateStnTransfer(stnId, `${type}_${tickDirec}`, [[], intInfo1, intInfo2]);
+                            // myLine.updateStnTransfer(stnId, `${type}_${tickDirec}`, [[], intInfo1, intInfo2]);
+                            myLine.updateStnTransfer(stnId, `${type}_${tickDirec}`, [[intInfo1, intInfo2]]);
                             break;
                         case 'osi12':
-                            myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, intInfo2]);
+                            // myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, intInfo2]);
+                            myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [[], [osi, intInfo1, intInfo2]]);
                     }
             }
         }
@@ -1313,9 +1328,12 @@ function initTestPanel() {
             var stnId = $('#stn_transfer_diag').attr('for');
             var stnInfo = getParams().stn_list[stnId];
 
-            if (stnInfo.transfer) {
+            if (stnInfo.interchange && stnInfo.interchange[0].length) {
                 // var idx = $(`#stn_transfer_diag #int_line_1 select > [value="${stnInfo.transfer[1][1]}"]`).index();
-                var idx = $(`#int_line_1__selection > [data-value="${stnInfo.transfer[1][1]}"]`).index();
+                var idx = $(`#int_line_1__selection > [data-value="${stnInfo.interchange[0][0][1]}"]`).index();
+                stnIntLine1Select.selectedIndex = (idx == -1) ? 0 : idx;
+            } else if (stnInfo.interchange && stnInfo.interchange[1][1]) {
+                var idx = $(`#int_line_1__selection > [data-value="${stnInfo.interchange[1][1][1]}"]`).index();
                 stnIntLine1Select.selectedIndex = (idx == -1) ? 0 : idx;
             } else {
                 stnIntLine1Select.selectedIndex = 0;
@@ -1342,9 +1360,12 @@ function initTestPanel() {
             var stnId = $('#stn_transfer_diag').attr('for');
             var stnInfo = getParams().stn_list[stnId];
 
-            if (stnInfo.transfer) {
+            if (stnInfo.interchange && stnInfo.interchange[0] && stnInfo.interchange[0][1]) {
                 // var idx = $(`#stn_transfer_diag #int_line_2 select > [value="${stnInfo.transfer[2][1]}"]`).index();
-                var idx = $(`#int_line_2__selection > [data-value="${stnInfo.transfer[2][1]}"]`).index();
+                var idx = $(`#int_line_2__selection > [data-value="${stnInfo.interchange[0][1][1]}"]`).index();
+                stnIntLine2Select.selectedIndex = (idx == -1) ? 0 : idx;
+            } else if (stnInfo.interchange && stnInfo.interchange[1] && stnInfo.interchange[1][2]) {
+                var idx = $(`#int_line_2__selection > [data-value="${stnInfo.interchange[1][2][1]}"]`).index();
                 stnIntLine2Select.selectedIndex = (idx == -1) ? 0 : idx;
             } else {
                 stnIntLine2Select.selectedIndex = 0;

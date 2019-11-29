@@ -2,13 +2,14 @@
 
 class Station {
     _x; _y; _id; _state; 
-    _namePos;
+    _namePos; _branch;
 
     constructor (id, data) {
         this._id = id;
         this._parents = data.parents;
         this._children = data.children;
         [this._nameZH, this._nameEN] = data.name;
+        this._branch = data.branch;
     }
 
     set x(val) {this._x = val;}
@@ -42,10 +43,10 @@ class Station {
             'text-anchor': 'middle', 
             'class': `Name ${this.nameClass}`
         }).append(
-            $('<text>').addClass('NameZH StnName').text(this._nameZH)
+            $('<text>').addClass('rmg-name__zh rmg-name__mtr--station').text(this._nameZH)
         ).append(
             $('<text>', {
-                'dy': 15, 'class': 'NameEN StnName'
+                'dy': 15, 'class': 'rmg-name__en rmg-name__mtr--station'
             }).text(this._nameEN.split('\\')[0]).append(
                 $('<tspan>', {
                     'x': 0, 'dy': 12
@@ -79,21 +80,27 @@ class Int2Station extends Station {
 
     constructor (id, data) {
         super(id, data);
-        [this.#intCity, this.#intLine, this.#intColour, this.#intNameZH, this.#intNameEN] = data.transfer[1];
+        // [this.#intCity, this.#intLine, this.#intColour, this.#intNameZH, this.#intNameEN] = data.transfer[1];
+        [this.#intCity, this.#intLine, this.#intColour, this.#intNameZH, this.#intNameEN] = data.interchange[0][0];
     }
 
     get _dy() {return 0;}
 
     get intTickHTML() {
         var tickDirection = (this._namePos == 1) ? 'up' : 'down';
-        var tickColour = (this._state == -1) ? '#aaa' : this.#intColour;
-        return $('<use>', {
+        // var tickColour = (this._state == -1) ? '#aaa' : this.#intColour;
+        var tickColour = this.#intColour;
+        var tick = $('<use>', {
             'xlink:href': '#intline_' + tickDirection, 
             'stroke': tickColour, 
             'x': this._x, 
             'y': this._y + this._dy, 
-            'class': 'LineDiagram HK Change'
+            'class': 'rmg-line rmg-line__mtr rmg-line__change'
         });
+        if (this._state == -1) {
+            tick.addClass('rmg-line__pass');
+        }
+        return tick;
     }
 
     get _nameClass() {
@@ -128,7 +135,7 @@ class Int3Station extends Station {
     constructor (id, data) {
         super(id, data);
 
-        data.transfer.slice(1).forEach(intInfo => {
+        data.interchange[0].forEach(intInfo => {
             this.#intCity.push(intInfo[0]);
             this.#intLine.push(intInfo[1]);
             this.#intColour.push(intInfo[2]);
@@ -136,6 +143,15 @@ class Int3Station extends Station {
             this.#intNameZH.push(intInfo[3]);
             this.#intNameEN.push(intInfo[4]);
         });
+
+        // data.transfer.slice(1).forEach(intInfo => {
+        //     this.#intCity.push(intInfo[0]);
+        //     this.#intLine.push(intInfo[1]);
+        //     this.#intColour.push(intInfo[2]);
+
+        //     this.#intNameZH.push(intInfo[3]);
+        //     this.#intNameEN.push(intInfo[4]);
+        // });
 
         this._int3Type = data.change_type.substring(5);
     }
@@ -163,7 +179,7 @@ class Int3Station extends Station {
                     'xlink:href': '#intline_down', 
                     'stroke': tickColour, 
                     'transform': `translate(${this._x},${this._y + dy})rotate(${this._tickRotation})`, 
-                    'class': 'LineDiagram HK Change'
+                    'class': 'rmg-line rmg-line__mtr rmg-line__change'
                 })
             );
         });
@@ -216,9 +232,11 @@ class OSI11Station extends Int2Station {
     #osiType; #osiDirection;
     constructor (id, data) {
         // data.int2 = data.osi11;
+        data.interchange[0].push(data.interchange[1][1]);
         super(id, data);
 
-        [this.#osiNameZH, this.#osiNameEN] = data.transfer[0];
+        // [this.#osiNameZH, this.#osiNameEN] = data.transfer[0];
+        [this.#osiNameZH, this.#osiNameEN] = data.interchange[1][0];
 
         this.#osiType = data.change_type.substring(6,7); // u(npaid) or p(aid);
         this.#osiDirection = data.change_type.substring(7); // l or r;
@@ -244,10 +262,10 @@ class OSI11Station extends Int2Station {
             'transform': `translate(${this._x+this._osiNameDX},${this._y+dy})`, 
             'class': 'Name ' + this._nameClass
         }).append(
-            $('<text>').addClass('NameZH OSIName').text(this.#osiNameZH)
+            $('<text>').addClass('rmg-name__zh OSIName').text(this.#osiNameZH)
         ).append(
             $('<text>', {
-                'x':0, 'dy':12, 'class':'NameEN OSIName'
+                'x':0, 'dy':12, 'class':'rmg-name__en OSIName'
             }).text(this.#osiNameEN)
         );
     }
@@ -274,9 +292,11 @@ class OSI12Station extends Int3Station {
     #osiType; #osiDirection;
     constructor (id, data) {
         // data.int3 = data.osi12;
+        data.interchange[0].push(...data.interchange[1].slice(1,3));
         super(id, data);
 
-        [this.#osiNameZH, this.#osiNameEN] = data.transfer[0];
+        // [this.#osiNameZH, this.#osiNameEN] = data.transfer[0];
+        [this.#osiNameZH, this.#osiNameEN] = data.interchange[1][0];
 
         this.#osiType = data.change_type.substring(6,7); // u(npaid) or p(aid);
         this.#osiDirection = data.change_type.substring(7); // l or r;
@@ -301,11 +321,13 @@ class OSI12Station extends Int3Station {
             'transform': `translate(${this._x},${this._y+dy})`, 
             'class': `Name ${nameClass}`
         }).append(
-            $('<text>').addClass('NameZH OSIName').text(this.#osiNameZH)
+            $('<text>').addClass('rmg-name__zh OSIName').text(this.#osiNameZH)
         ).append(
             $('<text>', {
-                'x':0, 'dy':12, 'class':'NameEN OSIName'
-            }).text(this.#osiNameEN)
+                'x':0, 'dy':12, 'class':'rmg-name__en OSIName'
+            }).text(this.#osiNameEN.split('\\')[0]).append(
+                $('<tspan>', {'x':0, 'dy':10}).text(this.#osiNameEN.split('\\')[1] || '')
+            )
         );
     }
 
@@ -324,4 +346,57 @@ class OSI12RStation extends OSI12Station {
     get _tickRotation() {return -90;}
     get _txtAnchor() {return 'start';}
     get _intNameDX() {return 24;}
+}
+
+class StationGZ extends Station {
+    constructor(id, data) {
+        super(id, data);
+    }
+
+    get nameClass() {
+        switch (this._state) {
+            case -1:
+                return 'Pass';
+            case 0:
+                return 'CurrentGZ';
+            default:
+                return 'Future';
+        }
+    }
+
+    get iconHTML() {
+        var iconType = (this._state == -1) ? 'stn_gz_pass' : 'stn_gz';
+        return $('<use>', {
+            'xlink:href': '#' + iconType, 
+            'x': this._x, 
+            'y': this._y
+        });
+    }
+
+    get nameHTML() {
+        var nameENLn = 1
+        var dx = 30 * Math.cos(-45) * 0.8
+        var dy = -4 - 21.921875;
+        return $('<g>', {
+            'transform': `translate(${this._x - dx},${this._y + dy})rotate(-45)`, 
+            'text-anchor': 'start', 
+            'class': `Name ${this.nameClass}`
+        }).append(
+            $('<text>').addClass('rmg-name__zh rmg-name__gzmtr--station').text(this._nameZH)
+        ).append(
+            $('<text>', {
+                'dy': 14, 'class': 'rmg-name__en rmg-name__gzmtr--station'
+            }).text(this._nameEN.replace('\\', ' ')).append(
+                $('<tspan>', {
+                    'x': 0, 'dy': 12
+                }).text()
+            )
+        );
+    }
+}
+
+class Int2StationGZ extends StationGZ {
+    constructor(id, data) {
+        super(id, data);
+    }
 }

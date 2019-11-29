@@ -131,22 +131,22 @@ function wrapTxt(txt, dy, cls, dd) {
 
 function joinIntName(names, dy1, dy2) {
     var [nameZH, nameEN] = names.map(txt => txt.split(/\\/g));
-    var res = $('<text>').addClass('NameZH IntName').text(nameZH[0]);
+    var res = $('<text>').addClass('rmg-name__zh IntName').text(nameZH[0]);
     for (let i=1; i<nameZH.length; i++) {
         res = res.append(
             $('<tspan>', {'x':0, 'dy':dy1}).text(nameZH[i])
         );
     }
-    var btwGap = (nameZH.length == 1) ? 10 : dy2;
+    var btwGap = (nameZH.length == 1) ? 9 : dy2;
     res = res.append(
         $('<tspan>', {
-            'x':0, 'dy':btwGap, 'class': 'NameEN IntName'
+            'x':0, 'dy':btwGap, 'class': 'rmg-name__en IntName'
         }).text(nameEN[0])
     );
     for (let i=1; i<nameEN.length; i++) {
         res = res.append(
             $('<tspan>', {
-                'x':0, 'dy':dy2, 'class': 'NameEN IntName'
+                'x':0, 'dy':dy2, 'class': 'rmg-name__en IntName'
             }).text(nameEN[i])
         );
     }
@@ -201,6 +201,76 @@ function updateParam() {
             case 'JP': return 'jp';
         }})(param.fontZH[0].split(' ').reverse()[0])
     }
+    delete param.fontZH;
+    delete param.fontEN;
+    delete param.weightZH;
+    delete param.weightEN;
+
+    // Version 0.12
+    for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
+        // if (['linestart', 'lineend'].includes(stnId)) {continue;}
+        if ('transfer' in stnInfo) {
+            delete param.stn_list[stnId].interchange;
+            switch (stnInfo.change_type) {
+                case 'int2':
+                    param.stn_list[stnId].interchange = [[stnInfo.transfer[1]]];
+                    break;
+                case 'int3_l':
+                case 'int3_r':
+                    param.stn_list[stnId].interchange = [stnInfo.transfer.slice(1,3)];
+                    break;
+                case 'osi11_pl':
+                case 'osi11_pr':
+                case 'osi11_ul':
+                case 'osi11_ur':
+                    param.stn_list[stnId].interchange = [[], stnInfo.transfer.slice(0,2)];
+                    break;
+                case 'osi12_pl':
+                case 'osi12_pr':
+                case 'osi12_ul':
+                case 'osi12_ur':
+                    param.stn_list[stnId].interchange = [[], stnInfo.transfer];
+                    break;
+            }
+        }
+        delete param.stn_list[stnId].transfer;
+        
+        if (!('branch' in stnInfo)) {
+            param.stn_list[stnId].branch = { left:[], right:[] };
+        }
+        if (stnInfo.children.length == 2) {
+            param.stn_list[stnId].branch.right = ['through', stnInfo.children[1]];
+        } else {
+            param.stn_list[stnId].branch.right = [];
+        }
+        if (stnInfo.parents.length == 2) {
+            param.stn_list[stnId].branch.left = ['through', stnInfo.parents[1]];
+        } else {
+            param.stn_list[stnId].branch.left = [];
+        }
+    }
+    if (!('style' in param)) {
+        param.style = 'mtr';
+    }
 
     putParams(param);
+}
+
+function testStyle(style) {
+    if (style == 'gzmtr') {
+        window.myLine = new LineGZ(getParams());
+        Line.clearSVG();
+        Line.initSVG(myLine);
+    }
+    if (style == 'mtr') {
+        window.myLine = new Line(getParams());
+        Line.clearSVG();
+        Line.initSVG(myLine);
+    }
+    
+}
+
+function changeStyle(style) {
+    setParams('style', style);
+    location.reload(true);
 }

@@ -11,6 +11,26 @@ Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be d
 
 ## Version History
 
+### 0.12 (29 Nov 2019)
+
+#### New Features
+
+- New templates available. 
+
+#### Known Issues
+
+- Sliders may stop working randomly. We are investigating this issue. 
+  - Workaround: Refresh page to re-initial sliders. Your work will not be lost if you are not using incognito mode. 
+- The styles of selectors and text fields are not agreed. This is part of the migration process of the elements from MDC 3.2.0 to MDC 4.0.0. 
+- Disabled options in some selectors are selectable, which may cause an internal error and damage your line configuration. 
+  - Workaround: Avoid selecting disabled options. 
+
+#### Resolved Issues
+
+- Improved data structure as a preparation for coming features. 
+- Simplified `path` elements of the line. 
+- Fixed an error in colour configuration of Tokyo. 
+
 ### 0.11 (21 Nov 2019)
 
 #### New Features

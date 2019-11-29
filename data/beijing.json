@@ -65,24 +65,24 @@
         "colour": "#6BA539"
     },
     {
-        "id": "yzl",
-        "name": ["Yizhuang Line", "亦庄线"],
-        "colour": "#D0006F"
-    },
-    {
         "id": "yfl",
         "name": ["Fangshan/Yanfang Line", "房山/燕房线"],
         "colour": "#D86018"
     },
     {
-        "id": "s1l",
-        "name": ["S1 Line", "S1线"],
-        "colour": "#A45A2A"
+        "id": "yzl",
+        "name": ["Yizhuang Line", "亦庄线"],
+        "colour": "#D0006F"
     },
     {
         "id": "cpl",
         "name": ["Changping Line", "昌平线"],
         "colour": "#D986BA"
+    },
+    {
+        "id": "s1l",
+        "name": ["S1 Line", "S1线"],
+        "colour": "#A45A2A"
     },
     {
         "id": "xjl",

@@ -16,6 +16,10 @@
         "description": "Guangzhou Metro - Line 8"
     }, 
     {
+        "filename": "guangzhou_gz14", 
+        "description": "Guangzhou Metro - Line 14"
+    }, 
+    {
         "filename": "guangzhou_gz21", 
         "description": "Guangzhou Metro - Line 21"
     }, 
@@ -26,5 +30,13 @@
     {
         "filename": "hongkong_eal", 
         "description": "MTR - East Rail Line"
+    },
+    {
+        "filename": "hongkong_tkl", 
+        "description": "MTR - Tseung Kwan O Line"
+    },
+    {
+        "filename": "prdir_guangzhu", 
+        "description": "PRDIR - Guangzhou-Zhuhai Intercity"
     }
 ]
