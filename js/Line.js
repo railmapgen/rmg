@@ -68,6 +68,11 @@ class Line {
             case 'osi12_ur':
             case 'osi12_pr':
                 return new OSI12RStation(stnId, stnInfo);
+            case 'osi22_end_p':
+            case 'osi22_end_u':
+                if (stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') {
+                    return new OSI22EndStation(stnId, stnInfo);
+                }
             default:
                 return new Station(stnId, stnInfo);
         }
@@ -756,12 +761,9 @@ class Line {
                 stnInstance.namePos = (this.#txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
                 stnInstance._state = this._stnState(stnId);
             }
-            $('#stn_icons').empty();
+            Line.clearSVG(this);
             this.drawStns();
             this.updateStnNameBg();
-    
-            $('#line_main').empty();
-            $('#line_pass').empty();
             this.drawLine();
             this.drawStrip();
         } else {
@@ -925,14 +927,6 @@ class Line {
                         ];
                     }
                 }
-            // case 0:
-            //     if (this.#stations[stnId]._y == this.y) {
-            //         return [1,0,0,0,0];
-            //     } else if (this.#stations[stnId]._y > this.y) {
-            //         return [1,0,1,0,0];
-            //     } else {
-            //         return [1,1,0,0,0];
-            //     }
         }
         return [0,0,0,0,0];
     }
@@ -1196,6 +1190,7 @@ class Line {
         putParams(param);
 
         this.#stations[newId] = this._initStnInstance(newId, newInfo);
+        this.#stations[stnId] = this._initStnInstance(stnId, getParams().stn_list[stnId]);
 
         for (let [stnId, stnInstance] of Object.entries(this.#stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
@@ -1248,7 +1243,7 @@ class Line {
             if (prevId) {curBranch.unshift(prevId);}
             while (true) {
                 if (curId == 'lineend') {break;}
-                if (curId != 'linestart' && prevId == getParams().stn_list[curId].branch.left[1]) {
+                if (curId != 'linestart' && prevId == this.#stations[curId]._branch.left[1]) {
                     // branch ends  
                     break;
                 } else {
@@ -1263,7 +1258,7 @@ class Line {
                             if (prevId == 'linestart') {
                                 var branchNextId = children[1];
                             } else {
-                                var branchNextId = getParams().stn_list[prevId].branch.right[1];
+                                var branchNextId = this.#stations[prevId]._branch.right[1];
                             }
                             // var branchNextId = getParams().stn_list[prevId].branch.right[1];
                             stack.push(branchNextId);
