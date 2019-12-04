@@ -42,7 +42,7 @@
     "Design.Char.JP": "Japan (Jōyō Kanji)",
 
     "Stations.New": "New Station",
-    "Station.Name.Title": "Edit Station Name",
+    "Stations.Name.Title": "Edit Station Name",
     "Stations.Name.Hint": "Hint: You may add a backslash (\\) at where you want to wrap name. (For station name in Latin characters only. )",
     "Stations.Interchange.Title": "Edit Detail of Interchange",
     "Stations.Interchange.Type.Title": "Interchange",

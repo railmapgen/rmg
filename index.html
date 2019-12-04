@@ -6,16 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        if (!urlParams.get('lang')) {
+        if (!new URLSearchParams(window.location.search).get('lang')) {
             var userLang = localStorage.rmgLang || navigator.language.split('-')[0];
-            window.location = '?lang=' + (lang => {
+            var lang = '?lang=' + (lang => {
                 switch (lang) {
                     case 'zh': return 'zh';
                     default: return 'en';
                 }
             })(userLang);
+            history.pushState({url:window.location.href}, null, lang);
         }
+        const urlParams = new URLSearchParams(window.location.search);
     </script>
 
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">

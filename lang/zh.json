@@ -42,7 +42,7 @@
     "Design.Char.JP": "日本（常用漢字表）",
 
     "Stations.New": "新增車站",
-    "Station.Name.Title": "編輯車站名稱",
+    "Stations.Name.Title": "編輯車站名稱",
     "Stations.Name.Hint": "小貼士：你可以用反斜線（\\）使名稱換行。（僅限拉丁字母名稱）",
     "Stations.Interchange.Title": "編輯轉車站詳情",
     "Stations.Interchange.Type.Title": "轉車站類型",
