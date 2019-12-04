@@ -1,46 +1,74 @@
 [
     {
+        "filename": "blank",
+        "desc": {
+            "en": "Blank", "zh": "空白"
+        }
+    },
+    {
         "filename": "default", 
-        "description": "Default"
+        "desc": {
+            "en": "Default", "zh": "預設"
+        }
     },
     {
         "filename": "guangzhou_gz1", 
-        "description": "Guangzhou Metro - Line 1"
+        "desc": {
+            "en": "Guangzhou Metro Line 1", "zh": "廣州地鐵1號線"
+        }
     }, 
     {
         "filename": "guangzhou_gz3", 
-        "description": "Guangzhou Metro - Line 3"
+        "desc": {
+            "en": "Guangzhou Metro Line 3", "zh": "廣州地鐵3號線"
+        }
     }, 
     {
         "filename": "guangzhou_gz8", 
-        "description": "Guangzhou Metro - Line 8"
+        "desc": {
+            "en": "Guangzhou Metro Line 8", "zh": "廣州地鐵8號線"
+        }
     }, 
     {
         "filename": "guangzhou_gz14", 
-        "description": "Guangzhou Metro - Line 14"
+        "desc": {
+            "en": "Guangzhou Metro Line 14", "zh": "廣州地鐵14號線"
+        }
     }, 
     {
         "filename": "guangzhou_gz21", 
-        "description": "Guangzhou Metro - Line 21"
+        "desc": {
+            "en": "Guangzhou Metro Line 21", "zh": "廣州地鐵21號線"
+        }
     }, 
     {
         "filename": "macau_taipa", 
-        "description": "Metro Ligeiro de Macau - Linha Taipa"
+        "desc": {
+            "en": "Metro Ligeiro de Macau Linha Taipa", "zh": "澳門輕軌氹仔線"
+        }
     },
     {
         "filename": "hongkong_eal", 
-        "description": "MTR - East Rail Line"
+        "desc": {
+            "en": "MTR East Rail Line", "zh": "港鐵東鐵綫"
+        }
     },
     {
         "filename": "hongkong_tkl", 
-        "description": "MTR - Tseung Kwan O Line"
+        "desc": {
+            "en": "MTR Tseung Kwan O Line", "zh": "港鐵將軍澳綫"
+        }
     },
     {
         "filename": "hongkong_twl", 
-        "description": "MTR - Tsuen Wan Line"
+        "desc": {
+            "en": "MTR Tsuen Wan Line", "zh": "港鐵荃灣綫"
+        }
     },
     {
         "filename": "prdir_guangzhu", 
-        "description": "PRDIR - Guangzhou-Zhuhai Intercity"
+        "desc": {
+            "en": "PRDIR Guangzhou-Zhuhai Intercity", "zh": "珠三角城際鐵路廣珠城軌"
+        }
     }
 ]

@@ -450,22 +450,6 @@ class Line {
         } else {
             // no parent, must be linestart
             return 0;
-            // never accessed
-            // no parent
-            if (this.leftDests.length == 1) {
-                // no siblings
-                return 0
-            } else {
-                // return (this.leftDests.indexOf(stnId) == 0) ? 1 : -1;
-                var tmpStn = stnId;
-                while (true) {
-                    var tmpSuc = this.#stations[tmpStn]._children[0];
-                    if (this._stnIndegree(tmpSuc) == 2) {
-                        return (this.#stations[tmpSuc]._parents.indexOf(tmpStn)==0) ? 1 : -1;
-                    }
-                    tmpStn = this.#stations[tmpStn]._children[0];
-                }
-            }
         }
         return 0;
     }
@@ -534,18 +518,23 @@ class Line {
 
     drawSVGFrame() {
         $('#railmap, #outer').attr({
-            'width': this.#svgWidth, 
-            'height': this.#svgHeight
+            width: this.#svgWidth, 
+            height: this.#svgHeight
         });
         $('#destination, #dest_outer').attr({
-            'width': this.#svgDestWidth, 
-            'height': this.#svgHeight
+            width: this.#svgDestWidth, 
+            height: this.#svgHeight
         });
     }
 
     showFrameOuter() {
-        var outerColour = this.#showOuter ? 'black' : 'none';
-        $('#outer, #dest_outer').attr('stroke', outerColour);
+        // var outerColour = this.#showOuter ? 'black' : 'none';
+        // $('#outer, #dest_outer').attr('stroke', outerColour);
+        if (this.#showOuter) {
+            $('#outer, #dest_outer').show();
+        } else {
+            $('#outer, #dest_outer').hide();
+        }
     }
 
     drawStns() {
@@ -561,10 +550,10 @@ class Line {
             $(`#stn_icons > #${this.#currentStnId} > .Name`)[0], 'railmap'
         );
         $('#current_bg').attr({
-            'x': stnNameDim.x-2, 
-            'y': stnNameDim.y-2, 
-            'width': stnNameDim.width+4, 
-            'height': stnNameDim.height+4
+            x: stnNameDim.x-2, 
+            y: stnNameDim.y-2, 
+            width: stnNameDim.width+4, 
+            height: stnNameDim.height+4
         }).show();
     }
 
@@ -648,15 +637,10 @@ class Line {
     }
 
     drawStrip() {
-        for (let elem of ['strip', 'dest_strip']) {
-            $(`#${elem}`).attr('d', `M 0,${this.stripY} H ${this.#svgWidth}`);
-        }
+        $('#strip, #dest_strip').attr('d', `M 0,${this.stripY} H ${this.#svgWidth}`)
     }
 
     fillThemeColour() {
-        // for (let elem of ['line_main', 'strip', 'dest_strip']) {
-        //     $(`#${elem}`).attr('stroke', this._themeColour);
-        // }
         $('#line_main, #strip, #dest_strip, #stn_gz').attr('stroke', this._themeColour);
         $('#dest_name > #platform > circle').attr('fill', this._themeColour);
     }
@@ -710,7 +694,6 @@ class Line {
     }
 
     loadFonts() {
-        $('.rmg-name__gzmtr').removeClass('rmg-name__gzmtr');
         $('.rmg-name__zh').addClass(`rmg-name__char-${this._charForm}`);
     }
 
@@ -1293,7 +1276,6 @@ class LineGZ extends Line {
     }
 
     loadFonts() {
-        $('.rmg-name__zh').removeClass(`rmg-name__char-${this._charForm}`);
         $('.rmg-name__zh, .rmg-name__en').addClass('rmg-name__gzmtr');
     }
 

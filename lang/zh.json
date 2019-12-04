@@ -1,0 +1,66 @@
+{
+    "Title": "鐵路路綫圖生成器", 
+
+    "Tab.File": "檔案", 
+    "Tab.Layout": "Layout", 
+    "Tab.Design": "設計",
+    "Tab.Stations": "車站",
+    "Tab.Info": "資訊", 
+
+    "File.New": "新增畫布", 
+    "File.New.Title": "選擇範本",
+    "File.New.Notice": "請注意：所有未儲存之變更將會丟失。",
+
+    "File.Open": "開啟自JSON檔案", 
+    "File.Open.Title": "Your Configuration", 
+
+    "File.Save": "儲存為JSON檔案",
+
+    "File.Export": "輸出至⋯",
+    "File.Export.Title": "輸出圖檔", 
+    "File.Export.SVGDest": "SVG（目的地）", 
+    "File.Export.SVGMap": "SVG（路綫圖）",
+
+    "Design.Theme": "主題顏色", 
+    "Design.Theme.Title": "選擇主題顏色",
+    "Design.Theme.City": "城市", 
+    "Design.Theme.Line": "路綫",
+
+    "Design.Name": "路綫名",
+    "Design.Name.Title": "編輯路綫名稱", 
+
+    "Design.Direction": "行駛方向", 
+    "Design.Platform": "月台編號",
+    "Design.MTRLegacy": "港鐵舊款樣式",
+    "Design.FlipName": "翻轉車站名稱位置",
+
+    "Design.Char": "漢字字形",
+    "Design.Char.Title": "Select Character Form",
+    "Design.Char.Trad": "傳承字形（康熙字典）",
+    "Design.Char.CN": "中華人民共和國（通用規範漢字表）",
+    "Design.Char.TW": "中華民國（國字標準字體）",
+    "Design.Char.JP": "日本（常用漢字表）",
+
+    "Stations.New": "新增車站",
+    "Station.Name.Title": "編輯車站名稱",
+    "Stations.Name.Hint": "小貼士：你可以用反斜線（\\）使名稱換行。（僅限拉丁字母名稱）",
+    "Stations.Interchange.Title": "編輯轉車站詳情",
+    "Stations.Interchange.Type.Title": "轉車站類型",
+    "Stations.Interchange.Type.None": "無", 
+    "Stations.Interchange.Type.Int2": "雙綫轉車站", 
+    "Stations.Interchange.Type.Int3": "三綫轉車站", 
+    "Stations.Interchange.Type.OSI11": "出站轉車 (1-1)", 
+    "Stations.Interchange.Type.OSI12": "出站轉車 (1-2)",
+    "Stations.Interchange.Type.OSI22": "出站轉車 (2-2)", 
+    "Stations.Delete.Title": "警告", 
+
+    "Info.Notice": "請注意：由於著作權、授權及其他法律限制，鐵路路綫圖生成器使用思源宋體及Vegur，以代替港鐵樣式路綫圖所使用之地鐵宋及Myriad Pro。如閣下擁有該字型之授權，可自行於輸出之SVG檔案內修改相關源代碼。", 
+    "Info.Report": "回報問題", 
+
+    "Dialog.Cancel": "取消",
+    "Dialog.Delete": "刪除",
+    "Dialog.Done": "完成", 
+
+    "Editor.Name.ZH": "名稱（漢字）",
+    "Editor.Name.EN": "名稱（拉丁字母）"
+}

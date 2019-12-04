@@ -1,87 +1,121 @@
 [
     {
         "id": "bakerloo", 
-        "name": ["Bakerloo Line"], 
+        "name": {
+			"en": "Bakerloo Line"
+		}, 
         "colour": "#B26300"
     }, 
     {
         "id": "central", 
-        "name": ["Central Line"],
+        "name": {
+			"en": "Central Line"
+		},
         "colour": "#DC241F"
     },
     {
         "id": "circle",
-        "name": ["Circle Line"], 
+        "name": {
+			"en": "Circle Line"
+		}, 
         "colour": "#FFD329"
     },
     {
         "id": "district",
-        "name": ["District Line"],
+        "name": {
+			"en": "District Line"
+		},
         "colour": "#007D32"
     },
     {
         "id": "hsmithcity",
-        "name": ["Hammersmith & City Line"],
+        "name": {
+			"en": "Hammersmith & City Line"
+		},
         "colour": "#F4A9BE"
     },
     {
         "id": "jubilee",
-        "name": ["Jubilee Line"],
+        "name": {
+			"en": "Jubilee Line"
+		},
         "colour": "#A1A5A7"
     },
     {
         "id": "metropolitan",
-        "name": ["Metropolitan Line"],
+        "name": {
+			"en": "Metropolitan Line"
+		},
         "colour": "#9B0058"
     },
     {
         "id": "northern",
-        "name": ["Northern Line"],
+        "name": {
+			"en": "Northern Line"
+		},
         "colour": "#000000"
     },
     {
         "id": "piccadily",
-        "name": ["Piccadily Line"],
+        "name": {
+			"en": "Piccadily Line"
+		},
         "colour": "#0019A8"
     },
     {
         "id": "victoria",
-        "name": ["Victoria Line"],
+        "name": {
+			"en": "Victoria Line"
+		},
         "colour": "#0098D8"
     },
     {
         "id": "waterloocity",
-        "name": ["Waterloo & City Line"],
+        "name": {
+			"en": "Waterloo & City Line"
+		},
         "colour": "#93CEBA"
     },
     {
         "id": "dlr",
-        "name": ["Docklands Light Railway"],
+        "name": {
+			"en": "Docklands Light Railway"
+		},
         "colour": "#00AFAD"
     },
     {
         "id": "elizabeth",
-        "name": ["Elizabeth Line"],
+        "name": {
+			"en": "Elizabeth Line"
+		},
         "colour": "#9364CC"
     },
     {
         "id": "tfl",
-        "name": ["TfL Rail"],
+        "name": {
+			"en": "TfL Rail"
+		},
         "colour": "#0019A8"
     },
     {
         "id": "overground",
-        "name": ["London Overground"],
+        "name": {
+			"en": "London Overground"
+		},
         "colour": "#EF7B10"
     },
     {
         "id": "trams",
-        "name": ["London Trams"],
+        "name": {
+			"en": "London Trams"
+		},
         "colour": "#00BD19"
     },
     {
         "id": "emirates",
-        "name": ["Emirates Air Line"],
+        "name": {
+			"en": "Emirates Air Line"
+		},
         "colour": "#DC241F"
     }
 ]

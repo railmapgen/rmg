@@ -1,37 +1,58 @@
 [
     {
         "id": "taipa",
-        "name": ["Linha da Taipa", "氹仔線"], 
+        "name": {
+			"en": "Linha da Taipa", 
+			"zh": "氹仔線"
+		}, 
         "colour": "#A4D65E"
     }, 
     {
         "id": "peninsula", 
-        "name": ["Linha da Península de Macau", "澳門線"], 
+        "name": {
+			"en": "Linha da Península de Macau", 
+			"zh": "澳門線"
+		}, 
         "colour": "#FF0000"
     }, 
     {
         "id": "2afase",
-        "name": ["2.a Fase", "第二期"],
+        "name": {
+			"en": "2.a Fase", 
+			"zh": "第二期"
+		},
         "colour": "#00BFFF"
     }, 
     {
         "id": "seacpaivan", 
-        "name": ["Linha Seac Pai Van", "石排灣線"], 
+        "name": {
+			"en": "Linha Seac Pai Van", 
+			"zh": "石排灣線"
+		}, 
         "colour": "#8CE600"
     }, 
     {
         "id": "hengqin", 
-        "name": ["Linha de Extensão da Ilha de Hengqin", "橫琴延伸線"], 
+        "name": {
+			"en": "Linha de Extensão da Ilha de Hengqin", 
+			"zh": "橫琴延伸線"
+		}, 
         "colour": "#FFA500"
     }, 
     {
         "id": "leste", 
-        "name": ["Linha Leste", "澳氹東線"], 
+        "name": {
+			"en": "Linha Leste", 
+			"zh": "澳氹東線"
+		}, 
         "colour": "#F400A1"
     }, 
     {
         "id": "hmz", 
-        "name": ["Linha da Ponte HMZ", "港珠澳大橋線"],
+        "name": {
+			"en": "Linha da Ponte HMZ", 
+			"zh": "港珠澳大橋線"
+		},
         "colour": "#8A2BE2"
     }
 ]

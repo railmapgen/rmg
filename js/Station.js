@@ -36,36 +36,41 @@ class Station {
     }
 
     get nameHTML() {
-        var nameENLn = this._nameEN.split('\\').length;
-        var dy = (this._namePos == 1) ? 12 + 11.843775 : -12 - 21.921875 - ((nameENLn == 2) ? 10 : 0);
+        var nameENs = this._nameEN.split('\\');
+        var dy = (this._namePos == 1) ? 12 + 11.843775 : -12 - 21.921875 - (nameENs.length-1)*10;
+        var nameENp = nameENs.shift();
+
+        var nameENElem = $('<text>', {
+            dy: 15, class: 'rmg-name__en rmg-name__mtr--station'
+        }).text(nameENp);
+        while (nameENp = nameENs.shift()) {
+            nameENElem.append(
+                $('<tspan>', { x: 0, dy: 10, 'alignment-baseline':'middle' }).text(nameENp)
+            );
+        }
+
         return $('<g>', {
-            'transform': `translate(${this._x},${this._y + dy})`, 
+            transform: `translate(${this._x},${this._y + dy})`, 
             'text-anchor': 'middle', 
             'class': `Name ${this.nameClass}`
         }).append(
             $('<text>').addClass('rmg-name__zh rmg-name__mtr--station').text(this._nameZH)
         ).append(
-            $('<text>', {
-                'dy': 15, 'class': 'rmg-name__en rmg-name__mtr--station'
-            }).text(this._nameEN.split('\\')[0]).append(
-                $('<tspan>', {
-                    'x': 0, 'dy': 12
-                }).text((nameENLn==2)?this._nameEN.split('\\')[1]:'')
-            )
+            nameENElem
         );
     }
 
+    get iconClass() {return this._state == -1 ? 'rmg-stn__mtr--pass' : 'rmg-stn__mtr--future';}
+
     get iconHTML() {
-        var iconType = (this._state == -1) ? 'stn_hk_pass' : 'stn_hk';
         return $('<use>', {
-            'xlink:href': '#' + iconType, 
-            'x': this._x, 
-            'y': this._y
+            'xlink:href': '#stn_hk', 
+            x: this._x, y: this._y, 
+            class: this.iconClass
         });
     }
 
     get ungrpHTML() {
-        // return this.iconHTML + this.nameHTML;
         return [this.iconHTML, this.nameHTML];
     }
 
@@ -80,21 +85,18 @@ class Int2Station extends Station {
 
     constructor (id, data) {
         super(id, data);
-        // [this.#intCity, this.#intLine, this.#intColour, this.#intNameZH, this.#intNameEN] = data.transfer[1];
         [this.#intCity, this.#intLine, this.#intColour, this.#intNameZH, this.#intNameEN] = data.interchange[0][0];
     }
 
     get _dy() {return 0;}
 
     get intTickHTML() {
-        var tickDirection = (this._namePos == 1) ? 'up' : 'down';
-        // var tickColour = (this._state == -1) ? '#aaa' : this.#intColour;
+        var tickRotation = (this._namePos == 1) ? 180 : 0;
         var tickColour = this.#intColour;
         var tick = $('<use>', {
-            'xlink:href': '#intline_' + tickDirection, 
+            'xlink:href': '#inttick_hk', 
             'stroke': tickColour, 
-            'x': this._x, 
-            'y': this._y + this._dy, 
+            transform: `translate(${this._x},${this._y+this._dy})rotate(${tickRotation})`, 
             'class': 'rmg-line rmg-line__mtr rmg-line__change'
         });
         if (this._state == -1) {
@@ -148,11 +150,13 @@ class Int3Station extends Station {
     }
 
     get iconHTML() {
-        var iconType = (this._state == -1) ? 'int3_hk_pass' : 'int3_hk';
+        // var iconType = (this._state == -1) ? 'int3_hk_pass' : 'int3_hk';
+        // var iconClass = this._state == -1 ? 'rmg-stn__mtr--pass' : 'rmg-stn__mtr--future';
         var iconRotation = (this._namePos != 1) ? 0 : 180;
         return $('<use>', {
-            'xlink:href': '#' + iconType, 
-            'transform': `translate(${this._x},${this._y})rotate(${iconRotation})`
+            'xlink:href': '#int3_hk', 
+            'transform': `translate(${this._x},${this._y})rotate(${iconRotation})`, 
+            class: this.iconClass
         });
     }
 
@@ -170,10 +174,10 @@ class Int3Station extends Station {
             dy *= this._tickFlip;
             elems.push(
                 $('<use>', {
-                    'xlink:href': '#intline_down', 
-                    'stroke': tickColour, 
-                    'transform': `translate(${this._x + this._dx},${this._y + dy})rotate(${this._tickRotation})`, 
-                    'class': 'rmg-line rmg-line__mtr rmg-line__change'
+                    'xlink:href': '#inttick_hk', 
+                    stroke: tickColour, 
+                    transform: `translate(${this._x + this._dx},${this._y + dy})rotate(${this._tickRotation})`, 
+                    class: 'rmg-line rmg-line__mtr rmg-line__change'
                 })
             );
         });
@@ -239,13 +243,14 @@ class OSI11Station extends Int2Station {
         this.#osiType = data.change_type.substring(6,7); // u(npaid) or p(aid);
         this.#osiDirection = data.change_type.substring(7); // l or r;
     }
-
+    
+    get osiClass() {return this.#osiType == 'u' ? 'rmg-stn__mtr--unpaid-osi' : 'rmg-stn__mtr--paid-osi';}
     get iconHTML() {
-        var iconType = `osi11${this.#osiType}_hk${(this._state == -1) ? '_pass' : ''}`;
         var iconRotation = (this._namePos != 1) ? 0 : 180;
         return $('<use>', {
-            'xlink:href': '#' + iconType, 
-            'transform': `translate(${this._x},${this._y})rotate(${iconRotation})`
+            'xlink:href': '#osi11_hk', 
+            'transform': `translate(${this._x},${this._y})rotate(${iconRotation})`, 
+            class: [this.iconClass, this.osiClass].join(' ')
         });
     }
 
@@ -260,10 +265,10 @@ class OSI11Station extends Int2Station {
             'transform': `translate(${this._x+this._osiNameDX},${this._y+dy})`, 
             'class': 'Name ' + this._nameClass
         }).append(
-            $('<text>').addClass('rmg-name__zh OSIName').text(this.#osiNameZH)
+            $('<text>').addClass('rmg-name__zh rmg-name__mtr--osi').text(this.#osiNameZH)
         ).append(
             $('<text>', {
-                'x':0, 'dy':12, 'class':'rmg-name__en OSIName'
+                'x':0, 'dy':12, 'class':'rmg-name__en rmg-name__mtr--osi'
             }).text(this.#osiNameEN)
         );
     }
@@ -296,16 +301,18 @@ class OSI12Station extends Int3Station {
         // [this.#osiNameZH, this.#osiNameEN] = data.transfer[0];
         [this.#osiNameZH, this.#osiNameEN] = data.interchange[1][0];
 
-        this.#osiType = data.change_type.substring(6,7); // u(npaid) or p(aid);
+        // this.#osiType = data.change_type.substring(6,7); // u(npaid) or p(aid);
+        this.#osiType = data.change_type.split('_').reverse()[0];
         this.#osiDirection = data.change_type.substring(7); // l or r;
     }
 
+    get osiClass() {return this.#osiType == 'u' ? 'rmg-stn__mtr--unpaid-osi' : 'rmg-stn__mtr--paid-osi';}
     get iconHTML() {
-        var iconType = `osi12${this.#osiType}_hk${(this._state == -1) ? '_pass' : ''}`;
         var iconRotation = (this._namePos != 1) ? 0 : 180;
         return $('<use>', {
-            'xlink:href': '#' + iconType, 
-            'transform': `translate(${this._x},${this._y})rotate(${iconRotation})`
+            'xlink:href': '#osi12_hk', 
+            'transform': `translate(${this._x},${this._y})rotate(${iconRotation})`,
+            class: [this.iconClass, this.osiClass].join(' ')
         });
     }
 
@@ -315,17 +322,16 @@ class OSI12Station extends Int3Station {
     get _osiDX() {return 0;}
 
     get osiNameHTML() {
-        // var dy = (this._namePos == 0) ? (26+18+10) + 8.34375  : -(26+18+10) + 8.34375 - 25.03125;
         var nameClass = (this._state == -1) ? 'Pass' : 'Future';
         return $('<g>', {
             'text-anchor': this._osiTxtAnchor, 
             'transform': `translate(${this._x+this._dx+this._osiDX},${this._y+this._osiDY})`, 
             'class': `Name ${nameClass}`
         }).append(
-            $('<text>').addClass('rmg-name__zh OSIName').text(this.#osiNameZH)
+            $('<text>').addClass('rmg-name__zh rmg-name__mtr--osi').text(this.#osiNameZH)
         ).append(
             $('<text>', {
-                'x':0, 'dy':12, 'class':'rmg-name__en OSIName'
+                'x':0, 'dy':12, 'class':'rmg-name__en rmg-name__mtr--osi'
             }).text(this.#osiNameEN.split('\\')[0]).append(
                 $('<tspan>', {'x':0, 'dy':10}).text(this.#osiNameEN.split('\\')[1] || '')
             )
@@ -350,26 +356,22 @@ class OSI12RStation extends OSI12Station {
 }
 
 class OSI22EndStation extends OSI12Station {
-    #osiType;
     #origIntCity; #origIntLine; #origIntColour;
     #origIntNameZH; #origIntNameEN;
 
     constructor (id, data) {
         super(id, data);
         // data mutated by OSI12Station!!!
-        this.#osiType = data.change_type.split('_')[2];
         [this.#origIntCity, this.#origIntLine, this.#origIntColour, this.#origIntNameZH, this.#origIntNameEN] = data.interchange[0][2];
     }
 
     get origIntTickHTML() {
-        var tickDirection = (this._namePos == 1) ? 'up' : 'down';
-        // var tickColour = (this._state == -1) ? '#aaa' : this.#intColour;
+        var tickRotation = (this._namePos == 1) ? 180 : 0;
         var tickColour = this.#origIntColour;
         var tick = $('<use>', {
-            'xlink:href': '#intline_' + tickDirection, 
-            'stroke': tickColour, 
-            'x': this._x, 
-            'y': this._y, 
+            'xlink:href': '#inttick_hk', 
+            stroke: tickColour, 
+            transform: `translate(${this._x},${this._y})rotate(${tickRotation})`,
             'class': 'rmg-line rmg-line__mtr rmg-line__change'
         });
         if (this._state == -1) {
@@ -393,11 +395,11 @@ class OSI22EndStation extends OSI12Station {
     get iconHTML() {
         var iconYFlip = (this._namePos == 1) ? 1 : -1;
         var iconXFlip = (this._children == 'lineend') ? 1 : -1;
-        var iconType = `osi22end${this.#osiType}_hk${this._state==-1 ? '_pass' : ''}`;
         var iconRotation = (this._children == 'lineend') ? 0 : 180;
         return $('<use>', {
-            'xlink:href': '#' + iconType, 
-            'transform': `translate(${this._x},${this._y})scale(${iconXFlip},${iconYFlip})`
+            'xlink:href': '#osi22end_hk', 
+            'transform': `translate(${this._x},${this._y})scale(${iconXFlip},${iconYFlip})`, 
+            class: [this.iconClass, this.osiClass].join(' ')
         });
     }
 

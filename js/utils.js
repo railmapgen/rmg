@@ -74,15 +74,6 @@ function isOSI11(param, i) {
     }
 }
 
-// function isOSI12(param, i) {
-//     var stn_type = param['stn_list'][i]['change_type'];
-//     if (stn_type.substring(0,5) == 'osi12') {
-//         return [stn_type.substring(5,6), stn_type.substring(6,7)];
-//     } else {
-//         return false;
-//     }
-// }
-
 function isOSI12(stn) {
     var stn_type = stn['change_type'];
     if (stn_type.substring(0,5) == 'osi12') {

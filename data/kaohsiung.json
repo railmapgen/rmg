@@ -1,62 +1,98 @@
 [
     {
         "id": "red", 
-        "name": ["Red Line", "紅線"], 
+        "name": {
+			"en": "Red Line", 
+			"zh": "紅線"
+		}, 
         "colour": "#e20b65"
     }, 
     {
         "id": "orange", 
-        "name": ["Orange Line", "橘線"], 
+        "name": {
+			"en": "Orange Line", 
+			"zh": "橘線"
+		}, 
         "colour": "#faa73f"
     }, 
     {
         "id": "circular", 
-        "name": ["Circular Line (KLRT)", "環狀輕軌"], 
+        "name": {
+			"en": "Circular Line (KLRT)", 
+			"zh": "環狀輕軌"
+		}, 
         "colour": "#7cbd52"
     }, 
     {
         "id": "green", 
-        "name": ["Green Line", "綠線"], 
+        "name": {
+			"en": "Green Line", 
+			"zh": "綠線"
+		}, 
         "colour": "#50cb00"
     }, 
     {
         "id": "silver", 
-        "name": ["Silver Line", "銀線"], 
+        "name": {
+			"en": "Silver Line", 
+			"zh": "銀線"
+		}, 
         "colour": "#929292"
     }, 
     {
         "id": "blue", 
-        "name": ["Blue Line", "藍線"], 
+        "name": {
+			"en": "Blue Line", 
+			"zh": "藍線"
+		}, 
         "colour": "#007fff"
     }, 
     {
         "id": "cyan", 
-        "name": ["Cyan Line", "青線"], 
+        "name": {
+			"en": "Cyan Line", 
+			"zh": "青線"
+		}, 
         "colour": "#00bfff"
     }, 
     {
         "id": "foguangshan", 
-        "name": ["Foguangshan Line", "佛光山線"], 
+        "name": {
+			"en": "Foguangshan Line", 
+			"zh": "佛光山線"
+		}, 
         "colour": "#aa34c0"
     }, 
     {
         "id": "purple", 
-        "name": ["Purple Line", "紫線"], 
+        "name": {
+			"en": "Purple Line", 
+			"zh": "紫線"
+		}, 
         "colour": "#c100ff"
     }, 
     {
         "id": "yh", 
-        "name": ["Youchang Line", "右昌線"], 
+        "name": {
+			"en": "Youchang Line", 
+			"zh": "右昌線"
+		}, 
         "colour": "#008583"
     }, 
     {
         "id": "pink", 
-        "name": ["Pink Line", "粉紅線"], 
+        "name": {
+			"en": "Pink Line", 
+			"zh": "粉紅線"
+		}, 
         "colour": "#FFC0CB"
     }, 
     {
         "id": "tra", 
-        "name": ["TRA", "台灣鐵路"], 
+        "name": {
+			"en": "TRA", 
+			"zh": "台灣鐵路"
+		}, 
         "colour": "#0008bd"
     }
 ]

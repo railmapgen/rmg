@@ -1,132 +1,210 @@
 [
     {
         "id": "sh1", 
-        "name": ["Line 1", "1号线"], 
+        "name": {
+			"en": "Line 1", 
+			"zh": "1号线"
+		}, 
         "colour": "#EA0437"
     },
     {
         "id": "sh2", 
-        "name": ["Line 2", "2号线"], 
+        "name": {
+			"en": "Line 2", 
+			"zh": "2号线"
+		}, 
         "colour": "#87D300"
     },
     {
         "id": "sh3", 
-        "name": ["Line 3", "3号线"], 
+        "name": {
+			"en": "Line 3", 
+			"zh": "3号线"
+		}, 
         "colour": "#FFD100"
     },
     {
         "id": "sh4", 
-        "name": ["Line 4", "4号线"], 
+        "name": {
+			"en": "Line 4", 
+			"zh": "4号线"
+		}, 
         "colour": "#4F1F91"
     },
     {
         "id": "sh5", 
-        "name": ["Line 5", "5号线"], 
+        "name": {
+			"en": "Line 5", 
+			"zh": "5号线"
+		}, 
         "colour": "#A24CC8"
     },
     {
         "id": "sh6", 
-        "name": ["Line 6", "6号线"], 
+        "name": {
+			"en": "Line 6", 
+			"zh": "6号线"
+		}, 
         "colour": "#D71671"
     },
     {
         "id": "sh7", 
-        "name": ["Line 7", "7号线"], 
+        "name": {
+			"en": "Line 7", 
+			"zh": "7号线"
+		}, 
         "colour": "#FF7200"
     },
     {
         "id": "sh8", 
-        "name": ["Line 8", "8号线"], 
+        "name": {
+			"en": "Line 8", 
+			"zh": "8号线"
+		}, 
         "colour": "#009EDB"
     },
     {
         "id": "sh9", 
-        "name": ["Line 9", "9号线"], 
+        "name": {
+			"en": "Line 9", 
+			"zh": "9号线"
+		}, 
         "colour": "#78C7EB"
     },
     {
         "id": "sh1", 
-        "name": ["Line 10", "10号线"], 
+        "name": {
+			"en": "Line 10", 
+			"zh": "10号线"
+		}, 
         "colour": "#BC87E6"
     },
     {
         "id": "sh11", 
-        "name": ["Line 11", "11号线"], 
+        "name": {
+			"en": "Line 11", 
+			"zh": "11号线"
+		}, 
         "colour": "#7C2230"
     },
     {
         "id": "sh12", 
-        "name": ["Line 12", "12号线"], 
+        "name": {
+			"en": "Line 12", 
+			"zh": "12号线"
+		}, 
         "colour": "#007B63"
     },
     {
         "id": "sh13", 
-        "name": ["Line 13", "13号线"], 
+        "name": {
+			"en": "Line 13", 
+			"zh": "13号线"
+		}, 
         "colour": "#F293D1"
     },
     {
         "id": "sh14", 
-        "name": ["Line 14", "14号线"], 
+        "name": {
+			"en": "Line 14", 
+			"zh": "14号线"
+		}, 
         "colour": "#7F7800"
     },
     {
         "id": "sh15", 
-        "name": ["Line 15", "15号线"], 
+        "name": {
+			"en": "Line 15", 
+			"zh": "15号线"
+		}, 
         "colour": "#BBA786"
     },
     {
         "id": "sh16", 
-        "name": ["Line 16", "16号线"], 
+        "name": {
+			"en": "Line 16", 
+			"zh": "16号线"
+		}, 
         "colour": "#32D4CB"
     },
     {
         "id": "sh17", 
-        "name": ["Line 17", "17号线"], 
+        "name": {
+			"en": "Line 17", 
+			"zh": "17号线"
+		}, 
         "colour": "#B67770"
     },
     {
         "id": "sh18", 
-        "name": ["Line 18", "18号线"], 
+        "name": {
+			"en": "Line 18", 
+			"zh": "18号线"
+		}, 
         "colour": "#D6A461"
     },
     {
         "id": "pjl", 
-        "name": ["Pujiang Line", "浦江线"], 
+        "name": {
+			"en": "Pujiang Line", 
+			"zh": "浦江线"
+		}, 
         "colour": "#999999"
     },
     {
         "id": "t1", 
-        "name": ["Songjiang Tram T1", "松江有轨电车1号线"], 
+        "name": {
+			"en": "Songjiang Tram T1", 
+			"zh": "松江有轨电车1号线"
+		}, 
         "colour": "#FF0000"
     },
     {
         "id": "t2", 
-        "name": ["Songjiang Tram T2", "松江有轨电车2号线"], 
+        "name": {
+			"en": "Songjiang Tram T2", 
+			"zh": "松江有轨电车2号线"
+		}, 
         "colour": "#46837B"
     },
     {
         "id": "t3", 
-        "name": ["Songjiang Tram T3", "松江有轨电车3号线"], 
+        "name": {
+			"en": "Songjiang Tram T3", 
+			"zh": "松江有轨电车3号线"
+		}, 
         "colour": "#009400"
     },
     {
         "id": "t4", 
-        "name": ["Songjiang Tram T4", "松江有轨电车4号线"], 
+        "name": {
+			"en": "Songjiang Tram T4", 
+			"zh": "松江有轨电车4号线"
+		}, 
         "colour": "#FF00FF"
     },
     {
         "id": "t5", 
-        "name": ["Songjiang Tram T5", "松江有轨电车5号线"], 
+        "name": {
+			"en": "Songjiang Tram T5", 
+			"zh": "松江有轨电车5号线"
+		}, 
         "colour": "#00FD00"
     },
     {
         "id": "t6", 
-        "name": ["Songjiang Tram T6", "松江有轨电车6号线"], 
+        "name": {
+			"en": "Songjiang Tram T6", 
+			"zh": "松江有轨电车6号线"
+		}, 
         "colour": "#6E00DD"
     },
     {
         "id": "maglev", 
-        "name": ["Shanghai Maglev Train", "磁浮线"], 
+        "name": {
+			"en": "Shanghai Maglev Train", 
+			"zh": "磁浮线"
+		}, 
         "colour": "#009090"
     }
 ]

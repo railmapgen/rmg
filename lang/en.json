@@ -1,0 +1,66 @@
+{
+    "Title": "Rail Map Generator", 
+
+    "Tab.File": "File", 
+    "Tab.Layout": "Layout", 
+    "Tab.Design": "Design", 
+    "Tab.Stations": "Stations",
+    "Tab.Info": "Info", 
+
+    "File.New": "New Canvas", 
+    "File.New.Title": "Choose a Template", 
+    "File.New.Notice": "Please note that all unsaved changes will be lost.",
+
+    "File.Open": "Open From JSON", 
+    "File.Open.Title": "Your Configuration", 
+
+    "File.Save": "Save As JSON",
+
+    "File.Export": "Export As...",
+    "File.Export.Title": "Export As", 
+    "File.Export.SVGDest": "SVG (Destination)", 
+    "File.Export.SVGMap": "SVG (Rail Map)",
+
+    "Design.Theme": "Theme Colour", 
+    "Design.Theme.Title": "Choose a Theme Colour",
+    "Design.Theme.City": "City", 
+    "Design.Theme.Line": "Line",
+
+    "Design.Name": "Name of Line",
+    "Design.Name.Title": "Edit Line Name", 
+
+    "Design.Direction": "Train Direction", 
+    "Design.Platform": "Platform Number",
+    "Design.MTRLegacy": "MTR Legacy Style",
+    "Design.FlipName": "Flip Station Names Position",
+
+    "Design.Char": "Chinese Character Form",
+    "Design.Char.Title": "Select Character Form",
+    "Design.Char.Trad": "Traditional (Kangxi Dictionary)",
+    "Design.Char.CN": "PRC (General Standard Chinese Characters)",
+    "Design.Char.TW": "ROC (Standard Typefaces for Chinese Character)",
+    "Design.Char.JP": "Japan (Jōyō Kanji)",
+
+    "Stations.New": "New Station",
+    "Station.Name.Title": "Edit Station Name",
+    "Stations.Name.Hint": "Hint: You may add a backslash (\\) at where you want to wrap name. (For station name in Latin characters only. )",
+    "Stations.Interchange.Title": "Edit Detail of Interchange",
+    "Stations.Interchange.Type.Title": "Interchange",
+    "Stations.Interchange.Type.None": "None", 
+    "Stations.Interchange.Type.Int2": "Interchange (2 lines)", 
+    "Stations.Interchange.Type.Int3": "Interchange (3 lines)", 
+    "Stations.Interchange.Type.OSI11": "Out-station-interchange (1-1)", 
+    "Stations.Interchange.Type.OSI12": "Out-station-interchange (1-2)",
+    "Stations.Interchange.Type.OSI22": "Out-station-interchange (2-2)", 
+    "Stations.Delete.Title": "Warning", 
+
+    "Info.Notice": "Notice: Due to copyright, licensing and other legal restrictions, Rail Map Generator uses Noto Serif CJK and Vegur instead of MTRSung and Myriad Pro respectively for MTR-style maps. If you have obtained the license of either font, please feel free to edit the relevant code chunk of the exported SVG file.", 
+    "Info.Report": "Report An Issue", 
+
+    "Dialog.Cancel": "Cancel",
+    "Dialog.Delete": "Delete",
+    "Dialog.Done": "Done",
+
+    "Editor.Name.ZH": "Name (in Chinese Character)",
+    "Editor.Name.EN": "Name (in Latin Character)"
+}

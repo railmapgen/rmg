@@ -1,12 +1,16 @@
 [
     {
         "id": "inner", 
-        "name": ["Inner Circle"], 
+        "name": {
+			"en": "Inner Circle"
+		}, 
         "colour": "#4f4c4d"
     }, 
     {
         "id": "outer", 
-        "name": ["Outer Circle"], 
+        "name": {
+			"en": "Outer Circle"
+		}, 
         "colour": "#f57c14"
     }
 ]

@@ -1,87 +1,138 @@
 [
     {
 		"id": "sz1",
-		"name": ["Line 1 (Luobao Line)", "1号线（罗宝线）"],
+		"name": {
+			"en": "Line 1 (Luobao Line)", 
+			"zh": "1号线（罗宝线）"
+		},
 		"colour":"#00B140"
 	},
     {
 		"id": "sz2",
-		"name": ["Line 2 (Shekou Line)", "2号线（蛇口线）"],
+		"name": {
+			"en": "Line 2 (Shekou Line)", 
+			"zh": "2号线（蛇口线）"
+		},
 		"colour":"#B94700"
 	},
     {
 		"id": "sz3",
-		"name": ["Line 3 (Longgang Line)", "3号线（龙岗线）"],
+		"name": {
+			"en": "Line 3 (Longgang Line)", 
+			"zh": "3号线（龙岗线）"
+		},
 		"colour":"#00A9E0"
 	},
     {
 		"id": "sz4",
-		"name": ["Line 4 (Longhua Line)", "4号线（龙华线）"],
+		"name": {
+			"en": "Line 4 (Longhua Line)", 
+			"zh": "4号线（龙华线）"
+		},
 		"colour":"#DA291C"
 	},
     {
 		"id": "sz5",
-		"name": ["Line 5 (Huanzhong Line)", "5号线（环中线）"],
+		"name": {
+			"en": "Line 5 (Huanzhong Line)", 
+			"zh": "5号线（环中线）"
+		},
 		"colour":"#A05EB5"
 	},
     {
 		"id": "sz6",
-		"name": ["Line 6 (Guangming Line)", "6号线（光明线）"],
+		"name": {
+			"en": "Line 6 (Guangming Line)", 
+			"zh": "6号线（光明线）"
+		},
 		"colour":"#00C7B1"
 	},
     {
 		"id": "sz7",
-		"name": ["Line 7 (Xili Line)", "7号线（西丽线）"],
+		"name": {
+			"en": "Line 7 (Xili Line)", 
+			"zh": "7号线（西丽线）"
+		},
 		"colour":"#0033A0"
 	},
     {
 		"id": "sz8",
-		"name": ["Line 8 (Yantian Line)", "8号线（盐田线）"],
+		"name": {
+			"en": "Line 8 (Yantian Line)", 
+			"zh": "8号线（盐田线）"
+		},
 		"colour":"#E45DBF"
 	},
     {
 		"id": "sz9",
-		"name": ["Line 9 (Meilin Line)", "9号线（梅林线）"],
+		"name": {
+			"en": "Line 9 (Meilin Line)", 
+			"zh": "9号线（梅林线）"
+		},
 		"colour":"#7B6469"
 	},
     {
 		"id": "sz10",
-		"name": ["Line 10 (Bantian Line)", "10号线（坂田线）"],
+		"name": {
+			"en": "Line 10 (Bantian Line)", 
+			"zh": "10号线（坂田线）"
+		},
 		"colour":"#0092BC"
 	},
     {
 		"id": "sz11",
-		"name": ["Line 11 (Airport Line)", "11号线（机场线）"],
+		"name": {
+			"en": "Line 11 (Airport Line)", 
+			"zh": "11号线（机场线）"
+		},
 		"colour":"#672146"
 	},
     {
 		"id": "sz12",
-		"name": ["Line 12 (Nanbao Line)", "12号线（南宝线）"],
+		"name": {
+			"en": "Line 12 (Nanbao Line)", 
+			"zh": "12号线（南宝线）"
+		},
 		"colour":"#A192B2"
 	},
     {
 		"id": "sz13",
-		"name": ["Line 13 (Shiyan Line)", "13号线（石岩线）"],
+		"name": {
+			"en": "Line 13 (Shiyan Line)", 
+			"zh": "13号线（石岩线）"
+		},
 		"colour":"#DE7C00"
 	},
     {
 		"id": "sz14",
-		"name": ["Line 14 (Eastern Express)", "14号线（东部快线）"],
+		"name": {
+			"en": "Line 14 (Eastern Express)", 
+			"zh": "14号线（东部快线）"
+		},
 		"colour":"#919D9D"
 	},
     {
 		"id": "sz15",
-		"name": ["Line 15", "15号线"],
+		"name": {
+			"en": "Line 15", 
+			"zh": "15号线"
+		},
 		"colour":"#84BD00"
 	},
     {
 		"id": "sz16",
-		"name": ["Line 16 (Longping Line)", "16号线（龙坪线）"],
+		"name": {
+			"en": "Line 16 (Longping Line)", 
+			"zh": "16号线（龙坪线）"
+		},
 		"colour":"#F67599"
 	},
     {
 		"id": "sz20",
-		"name": ["Line 20 (Fuyong Line)", "20号线（福永线）"],
+		"name": {
+			"en": "Line 20 (Fuyong Line)", 
+			"zh": "20号线（福永线）"
+		},
         "colour":"#FFD700"
     }
 ]

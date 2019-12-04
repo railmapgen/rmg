@@ -2,96 +2,158 @@
     {
         "id": "beijing",
         "country": "CN",
-        "name": ["Beijing", "北京"]
+        "name": {
+            "en": "Beijing", 
+            "zh": "北京"
+        }
     },
     {
         "id": "chongqing", 
         "country": "CN", 
-        "name": ["Chongqing", "重庆"]
+        "name": {
+            "en": "Chongqing", 
+            "zh": "重慶"
+		}
     },
     {
         "id": "dongguan",
         "country": "CN",
-        "name": ["Dongguan", "东莞"]
+        "name": {
+            "en": "Dongguan", 
+            "zh": "東莞"
+		}
     },
     {
         "id": "edinburgh", 
         "country": "GBSCT", 
-        "name": ["Edinburgh", "Dùn Èideann"]
+        "name": {
+            "en": "Edinburgh",
+            "ga": "Dùn Èideann", 
+            "zh": "愛丁堡"
+		}
     },
     {
         "id": "foshan", 
         "country": "CN", 
-        "name": ["Foshan", "佛山"]
+        "name": {
+            "en": "Foshan", 
+            "zh": "佛山"
+		}
     }, 
     {
         "id": "glasgow",
         "country": "GBSCT", 
-        "name": ["Glasgow", "Glaschu"]
+        "name": {
+            "en": "Glasgow",
+            "ga": "Glaschu", 
+            "zh": "格拉斯哥"
+		}
     },
     {
         "id": "guangzhou", 
         "country": "CN", 
-        "name": ["Guangzhou", "广州"]
+        "name": {
+            "en": "Guangzhou", 
+            "zh": "廣州"
+		}
     },
     {
         "id": "hongkong", 
         "country": "HK", 
-        "name": ["Hong Kong", "香港"]
+        "name": {
+            "en": "Hong Kong", 
+            "zh": "香港"
+		}
     },
     {
         "id": "kaohsiung", 
         "country": "TW", 
-        "name": ["Kaohsiung", "高雄"]
+        "name": {
+            "en": "Kaohsiung", 
+            "zh": "高雄"
+		}
     },
     {
         "id": "london", 
         "country": "GBENG", 
-        "name": ["London"]
+        "name": {
+            "en": "London", 
+            "zh": "倫敦"
+		}
     },
     {
         "id": "macau", 
         "country": "MO", 
-        "name": ["Macau", "澳門"]
+        "name": {
+            "en": "Macao", 
+            "pt": "Macau",
+            "zh": "澳門"
+		}
     },
     {
         "id": "newtaipei", 
         "country": "TW", 
-        "name": ["New Taipei", "新北"]
+        "name": {
+            "en": "New Taipei", 
+            "zh": "新北"
+		}
     },
     {
         "id": "sanfrancisco", 
         "country": "US", 
-        "name": ["San Francisco"]
+        "name": {
+            "en": "San Francisco", 
+            "zh": "三藩市"
+		}
     },
     {
         "id": "seoul", 
         "country": "KR", 
-        "name": ["Seoul (Metropolitan Area)", "서울(수도권)"]
+        "name": {
+            "en": "Seoul (Metropolitan Area)",
+            "ko": "서울(수도권)", 
+            "zh": "首爾（首都圈）"
+		}
     },
     {
         "id": "shanghai", 
         "country": "CN", 
-        "name": ["Shanghai", "上海"]
+        "name": {
+            "en": "Shanghai", 
+            "zh": "上海"
+		}
     },
     {
         "id": "shenzhen", 
         "country": "CN", 
-        "name": ["Shenzhen", "深圳"]
+        "name": {
+            "en": "Shenzhen", 
+            "zh": "深圳"
+		}
     },
     {
         "id": "taipei", 
         "country": "TW", 
-        "name": ["Taipei", "臺北"]
+        "name": {
+            "en": "Taipei", 
+            "zh": "臺北"
+		}
     },
     {
         "id": "tokyo", 
         "country": "JP", 
-        "name": ["Tokyo (Greater Tokyo Area)", "東京（首都圏）"]
+        "name": {
+            "en": "Tokyo (Greater Tokyo Area)",
+            "ja": "東京（首都圏）", 
+            "zh": "東京（首都圈）"
+		}
     },
     {
         "id": "toronto", 
         "country": "CA", 
-        "name": ["Toronto"]
+        "name": {
+            "en": "Toronto", 
+            "zh": "多倫多"
+		}
     }
 ]

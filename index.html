@@ -2,8 +2,21 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Rail Map Generator</title>
+    <title trans-tag="Title"></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.get('lang')) {
+            var userLang = localStorage.rmgLang || navigator.language.split('-')[0];
+            window.location = '?lang=' + (lang => {
+                switch (lang) {
+                    case 'zh': return 'zh';
+                    default: return 'en';
+                }
+            })(userLang);
+        }
+    </script>
 
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -14,6 +27,7 @@
     <script src="https://unpkg.com/jquery@latest/dist/jquery.min.js"></script>
     <script async src="https://unpkg.com/html2canvas@latest/dist/html2canvas.min.js"></script>
 
+    <script src="js/lang.js"></script>
     <script src="js/utils.js"></script>
     <script src="lib/Station.js"></script>
     <script src="lib/Line.js"></script>
@@ -112,14 +126,14 @@
         }
     </style>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
     gtag('config', 'UA-152882192-1');
-    </script>
+    </script> -->
 </head>
 <body>
 <div id="svgs" align="center">
@@ -166,6 +180,21 @@ xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink" 
 id="railmap" width="0" height="0">
     <style type="text/css">
+        .rmg-stn__mtr {
+            fill: #fff;
+            stroke-width: 2;
+            stroke-dasharray: 0;
+        }
+        .rmg-stn__mtr--future {stroke: #000;}
+        .rmg-stn__mtr--pass {stroke: #aaa;}
+        .rmg-stn__mtr--unpaid-osi {
+            stroke-width: 2.5;
+            stroke-dasharray: 2,2;
+        }
+        .rmg-stn__mtr--paid-osi {
+            stroke-width: 2.5;
+        }
+
         .rmg-line {fill:none}
 
         .rmg-line__mtr {stroke-width: 11;}
@@ -190,8 +219,8 @@ id="railmap" width="0" height="0">
         .rmg-name__en.rmg-name__gzmtr--station {font-size: 10px;}
         .rmg-name__zh.rmg-name__gzmtr--station {font-size: 18px;}
 
-        .rmg-name__en.OSIName {font-size: 9px;}
-        .rmg-name__zh.OSIName {font-size: 14px;}
+        .rmg-name__en.rmg-name__mtr--osi {font-size: 9px;}
+        .rmg-name__zh.rmg-name__mtr--osi {font-size: 14px;}
 
         .rmg-name__en.IntName {font-size: 7px;}
         .rmg-name__zh.IntName {font-size: 10px;}
@@ -207,140 +236,33 @@ id="railmap" width="0" height="0">
     <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Noto+Serif+KR:700|Noto+Serif+JP:700|Noto+Serif+TC:700|Noto+Serif+SC:700&display=swap);</style>
 
     <defs>
-        <path id="st" class="StationTick" d="M 2,0 H 7"/>
-        <path id="term" class="StationTick" d="M -7,0 H 7"/>
+        <circle id="stn_hk" r="8" class="rmg-stn__mtr"/>
+        <path id="stn2_hk" d="M -5.809475019,5.5 a 8,8 0 1,1 11.61895004,0 a 8,8 0 1,1 -11.61895004,0 Z" class="rmg-stn__mtr"/>
+        <path id="int2_hk" d="M -8,0 v 18 a 8,8 0 0,0 16,0 v -18 a 8,8 0 0,0 -16,0 Z" class="rmg-stn__mtr"/>
+        <path id="int3_hk" d="M -8,0 v 36 a 8,8 0 0,0 16,0 v -36 a 8,8 0 0,0 -16,0 Z" class="rmg-stn__mtr"/>
 
-        <circle id="circ_bg" r="9" fill="#000"/>
-        <circle id="circ_bg_p" r="9" fill="#aaa"/>
-        <circle id="circ_fg" r="7" fill="#fff"/>
-
-        <g id="stn_hk">
-            <use xlink:href="#circ_bg"/>
-            <use xlink:href="#circ_fg"/>
-        </g>
-        <g id="stn_hk_pass">
-            <use xlink:href="#circ_bg_p"/>
-            <use xlink:href="#circ_fg"/>
-        </g>
-        <g id="int3_hk">
-            <use xlink:href="#circ_bg"/>
-            <use xlink:href="#circ_bg" y="36"/>
-            <rect x="-9" width="18" height="36" fill="#000"/>
-            <use xlink:href="#circ_fg"/>
-            <use xlink:href="#circ_fg" y="36"/>
-            <rect x="-7" width="14" height="36" fill="#fff"/>
-        </g>
-        <g id="int3_hk_pass">
-            <use xlink:href="#circ_bg_p"/>
-            <use xlink:href="#circ_bg_p" y="36"/>
-            <rect x="-9" width="18" height="36" fill="#aaa"/>
-            <use xlink:href="#circ_fg"/>
-            <use xlink:href="#circ_fg" y="36"/>
-            <rect x="-7" width="14" height="36" fill="#fff"/>
-        </g>
         <g id="osi11_hk">
-            <use xlink:href="#circ_bg"/>
-            <use xlink:href="#circ_bg" y="26"/>
-            <use xlink:href="#circ_fg"/>
-            <use xlink:href="#circ_fg" y="26"/>
-        </g>
-        <g id="osi11_hk_pass">
-            <use xlink:href="#circ_bg_p"/>
-            <use xlink:href="#circ_bg_p" y="26"/>
-            <use xlink:href="#circ_fg"/>
-            <use xlink:href="#circ_fg" y="26"/>
-        </g>
-        <g id="osi11u_hk">
-            <path stroke="#000" stroke-width="2.5" stroke-dasharray="2,2" d="M 0,0 V 26"/>
-            <use xlink:href="#osi11_hk"/>
-        </g>
-        <g id="osi11u_hk_pass">
-            <path stroke="#AAA" stroke-width="2.5" stroke-dasharray="2,2" d="M 0,0 V 26"/>
-            <use xlink:href="#osi11_hk_pass"/>
-        </g>
-        <g id="osi11p_hk">
-            <path stroke="#000" stroke-width="2.5" d="M 0,0 V 26"/>
-            <use xlink:href="#osi11_hk"/>
-        </g>
-        <g id="osi11p_hk_pass">
-            <path stroke="#AAA" stroke-width="2.5" d="M 0,0 V 26"/>
-            <use xlink:href="#osi11_hk_pass"/>
-        </g>
-        <g id="osi12_hk">
-            <use xlink:href="#circ_bg"/>
-            <use xlink:href="#circ_bg" y="26"/>
-            <use xlink:href="#circ_bg" y="44"/>
-            <rect x="-9" y="26" width="18" height="18" fill="#000"/>
-            <use xlink:href="#circ_fg"/>
-            <use xlink:href="#circ_fg" y="26"/>
-            <use xlink:href="#circ_fg" y="44"/>
-            <rect x="-7" y="26" width="14" height="18" fill="#fff"/>
-        </g>
-        <g id="osi12_hk_pass">
-            <use xlink:href="#circ_bg_p"/>
-            <use xlink:href="#circ_bg_p" y="26"/>
-            <use xlink:href="#circ_bg_p" y="44"/>
-            <rect x="-9" y="26" width="18" height="18" fill="#aaa"/>
-            <use xlink:href="#circ_fg"/>
-            <use xlink:href="#circ_fg" y="26"/>
-            <use xlink:href="#circ_fg" y="44"/>
-            <rect x="-7" y="26" width="14" height="18" fill="#fff"/>
-        </g>
-        <g id="osi12u_hk">
-            <path stroke="black" stroke-width="2.5" stroke-dasharray="2,2" d="M 0,0 V 26"/>
-            <use xlink:href="#osi12_hk"/>
-        </g>
-        <g id="osi12u_hk_pass">
-            <path stroke="#AAA" stroke-width="2.5" stroke-dasharray="2,2" d="M 0,0 V 26"/>
-            <use xlink:href="#osi12_hk_pass"/>
-        </g>
-        <g id="osi12p_hk">
-            <path stroke="black" stroke-width="2.5" d="M 0,0 V 28"/>
-            <use xlink:href="#osi12_hk"/>
-        </g>
-        <g id="osi12p_hk_pass">
-            <path stroke="#AAA" stroke-width="2.5" d="M 0,0 V 28"/>
-            <use xlink:href="#osi12_hk_pass"/>
-        </g>
-        <g id="osi22end_hk">
+            <path d="M 0,0 V 26"/>
             <use xlink:href="#stn_hk"/>
-            <use xlink:href="#circ_bg" x="41"/>
-            <use xlink:href="#circ_bg" x="41" y="18"/>
-            <rect x="32" width="18" height="18" fill="#000"/>
-            <use xlink:href="#circ_fg" x="41"/>
-            <use xlink:href="#circ_fg" x="41" y="18"/>
-            <rect x="34" width="14" height="18" fill="#fff"/>
+            <use xlink:href="#stn_hk" y="26"/>
         </g>
-        <g id="osi22end_hk_pass">
-            <use xlink:href="#stn_hk_pass"/>
-            <use xlink:href="#circ_bg_p" x="41"/>
-            <use xlink:href="#circ_bg_p" x="41" y="18"/>
-            <rect x="32" width="18" height="18" fill="#aaa"/>
-            <use xlink:href="#circ_fg" x="41"/>
-            <use xlink:href="#circ_fg" x="41" y="18"/>
-            <rect x="34" width="14" height="18" fill="#fff"/>
+
+        <g id="osi12_hk">
+            <path d="M 0,0 V 26"/>
+            <use xlink:href="#stn_hk"/>
+            <use xlink:href="#int2_hk" y="26"/>
         </g>
-        <g id="osi22endp_hk">
-            <path stroke="black" stroke-width="2.5" d="M 0,0 H 41"/>
-            <use xlink:href="#osi22end_hk"/>
+
+        <g id="osi22end_hk">
+            <path d="M 0,0 H 41"/>
+            <use xlink:href="#stn_hk"/>
+            <use xlink:href="#int2_hk" x="41"/>
         </g>
-        <g id="osi22endu_hk">
-            <path stroke="black" stroke-width="2.5" stroke-dasharray="2,2" d="M 0,0 H 41"/>
-            <use xlink:href="#osi22end_hk"/>
-        </g>
-        <g id="osi22endp_hk_pass">
-            <path stroke="#aaa" stroke-width="2.5" d="M 0,0 H 26"/>
-            <use xlink:href="#osi22end_hk_pass"/>
-        </g>
-        <g id="osi22endu_hk_pass">
-            <path stroke="#aaa" stroke-width="2.5" stroke-dasharray="2,2" d="M 0,0 H 26"/>
-            <use xlink:href="#osi22end_hk_pass"/>
-        </g>
+
         <path id="stn_gz" stroke-width="2" fill="#fff" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
         <path id="stn_gz_pass" stroke="#aaa" stroke-width="2" fill="#fff" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
 
-        <path id="intline_up" d="M 0,0 v -17" stroke-linecap="round"/>
-        <path id="intline_down" d="M 0,0 v 17" stroke-linecap="round"/>
+        <path id="inttick_hk" d="M 0,0 v 17" stroke-linecap="round"/>
     </defs>
 
 
@@ -348,9 +270,7 @@ id="railmap" width="0" height="0">
     <g class="rmg-line rmg-line__mtr rmg-line__pass" id="line_pass"></g>
     <g class="rmg-line rmg-line__mtr" id="line_main"></g>
 
-    <g class="Strip">
-        <path id="strip"/>
-    </g>
+    <path id="strip" class="Strip"/>
 
     <rect id="current_bg" x="0" y="0" width="100" height="20" fill="#000"/>
     <g id="stn_icons"></g>
@@ -379,7 +299,7 @@ id="railmap" width="0" height="0">
             <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
                 <span class="mdc-tab__content">
                     <span class="mdc-tab__icon material-icons" aria-hidden="true">insert_drive_file</span>
-                    <span class="mdc-tab__text-label">File</span>
+                    <span class="mdc-tab__text-label" trans-tag="Tab.File"></span>
                 </span>
                 <span class="mdc-tab-indicator mdc-tab-indicator--active">
                     <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
@@ -390,7 +310,7 @@ id="railmap" width="0" height="0">
             <button class="mdc-tab" role="tab" aria-selected="true">
                 <span class="mdc-tab__content">
                     <span class="mdc-tab__icon material-icons" aria-hidden="true">panorama</span>
-                    <span class="mdc-tab__text-label">Layout</span>
+                    <span class="mdc-tab__text-label" trans-tag="Tab.Layout"></span>
                 </span>
                 <span class="mdc-tab-indicator">
                     <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
@@ -401,7 +321,7 @@ id="railmap" width="0" height="0">
             <button class="mdc-tab" role="tab" aria-selected="true">
             <span class="mdc-tab__content">
                 <span class="mdc-tab__icon material-icons" aria-hidden="true">style</span>
-                <span class="mdc-tab__text-label">Design</span>
+                <span class="mdc-tab__text-label" trans-tag="Tab.Design"></span>
             </span>
             <span class="mdc-tab-indicator">
                 <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
@@ -412,7 +332,7 @@ id="railmap" width="0" height="0">
             <button class="mdc-tab" role="tab" aria-selected="true">
                 <span class="mdc-tab__content">
                     <span class="mdc-tab__icon material-icons" aria-hidden="true">directions_transit</span>
-                    <span class="mdc-tab__text-label">Stations</span>
+                    <span class="mdc-tab__text-label" trans-tag="Tab.Stations"></span>
                 </span>
                 <span class="mdc-tab-indicator ">
                     <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
@@ -423,7 +343,7 @@ id="railmap" width="0" height="0">
             <button class="mdc-tab" role="tab" aria-selected="true">
                 <span class="mdc-tab__content">
                     <span class="mdc-tab__icon material-icons" aria-hidden="true">info</span>
-                    <span class="mdc-tab__text-label">Info</span>
+                    <span class="mdc-tab__text-label" trans-tag="Tab.Info"></span>
                 </span>
                 <span class="mdc-tab-indicator ">
                     <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
@@ -444,19 +364,19 @@ id="railmap" width="0" height="0">
     <ul class="mdc-list">
         <li class="mdc-list-item" tabindex="0">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">note_add</span>
-            New Canvas
+            <span class="mdc-list-item__text" trans-tag="File.New"></span>
         </li>
         <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">folder_open</span>
-            Open From JSON
+            <span class="mdc-list-item__text" trans-tag="File.Open"></span>
         </li>
         <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">save</span>
-            Save As JSON
+            <span class="mdc-list-item__text" trans-tag="File.Save"></span>
         </li>
         <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">cloud_download</span>
-            Export As
+            <span class="mdc-list-item__text" trans-tag="File.Export"></span>
         </li>
     </ul>
     </div>
@@ -466,30 +386,6 @@ id="railmap" width="0" height="0">
 
 <input type="file" id="upload_file" style="display: none;">
 
-<div id="new_file_diag" class="mdc-dialog"
-     role="alertdialog"
-     aria-modal="true"
-     aria-labelledby="my-dialog-title"
-     aria-describedby="my-dialog-content">
-  <div class="mdc-dialog__container">
-    <div class="mdc-dialog__surface">
-      <h2 class="mdc-dialog__title" id="my-dialog-title">New Canvas</h2>
-      <div class="mdc-dialog__content" id="my-dialog-content">
-        <ul class="mdc-list mdc-list--avatar-list">
-          <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="blank">
-            <span class="mdc-list-item__text">Blank</span>
-          </li>
-          <li class="mdc-list-item" data-mdc-dialog-action="template">
-            <span class="mdc-list-item__text">Template</span>
-          </li>
-        </ul>
-        <span>Please note that all unsaved changes will be lost. </span>
-      </div>
-    </div>
-  </div>
-  <div class="mdc-dialog__scrim"></div>
-</div>
-
 <div id="template_diag" class="mdc-dialog"
      role="alertdialog"
      aria-modal="true"
@@ -497,16 +393,15 @@ id="railmap" width="0" height="0">
      aria-describedby="my-dialog-content">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
-      <h2 class="mdc-dialog__title" id="my-dialog-title"><!--
-     -->New Canvas From Template<!--
-   --></h2>
+      <h2 class="mdc-dialog__title" id="my-dialog-title" trans-tag="File.New.Title"></h2>
       <div class="mdc-dialog__content" id="my-dialog-content">
         <ul class="mdc-list mdc-list--avatar-list">
           
         </ul>
+        <span trans-tag="File.New.Notice"></span>
         <footer class="mdc-dialog__actions">
-            <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="back">
-                <span class="mdc-button__label">Back</span>
+            <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
+                <span class="mdc-button__label" trans-tag="Dialog.Cancel"></span>
             </button>
         </footer>
       </div>
@@ -522,16 +417,14 @@ id="railmap" width="0" height="0">
      aria-describedby="my-dialog-content">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
-      <h2 class="mdc-dialog__title" id="my-dialog-title"><!--
-     -->Export As<!--
-   --></h2>
+      <h2 class="mdc-dialog__title" id="my-dialog-title" trans-tag="File.Export.Title"></h2>
       <div class="mdc-dialog__content" id="my-dialog-content">
         <ul class="mdc-list mdc-list--avatar-list">
           <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="svg1">
-            <span class="mdc-list-item__text">SVG (Destination)</span>
+            <span class="mdc-list-item__text" trans-tag="File.Export.SVGDest"></span>
           </li>
           <li class="mdc-list-item" data-mdc-dialog-action="svg2">
-            <span class="mdc-list-item__text">SVG (Rail Map)</span>
+            <span class="mdc-list-item__text" trans-tag="File.Export.SVGMap"></span>
           </li>
         </ul>
       </div>
@@ -548,16 +441,16 @@ id="railmap" width="0" height="0">
     <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
         <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
-        <h2 class="mdc-dialog__title" id="my-dialog-title">Your configuration</h2>
+        <h2 class="mdc-dialog__title" id="my-dialog-title" trans-tag="File.Open.Title"></h2>
         <div class="mdc-dialog__content" id="my-dialog-content">
         Dialog body text goes here.
         </div>
         <footer class="mdc-dialog__actions">
         <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
-            <span class="mdc-button__label">Cancel</span>
+            <span class="mdc-button__label" trans-tag="Dialog.Cancel"></span>
         </button>
         <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="accept" data-mdc-dialog-button-default>
-            <span class="mdc-button__label">Import</span>
+            <span class="mdc-button__label">Confirm</span>
         </button>
         </footer>
     </div>
@@ -565,56 +458,6 @@ id="railmap" width="0" height="0">
     <div class="mdc-dialog__scrim"></div>
 </div>
 
-<div id="reset_diag" class="mdc-dialog"
-        role="alertdialog"
-        aria-modal="true"
-        aria-labelledby="my-dialog-title"
-        aria-describedby="my-dialog-content">
-    <div class="mdc-dialog__container">
-    <div class="mdc-dialog__surface">
-        <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
-        <h2 class="mdc-dialog__title" id="my-dialog-title">Reset</h2>
-        <div class="mdc-dialog__content" id="my-dialog-content">
-        All your work may be lost!
-        </div>
-        <footer class="mdc-dialog__actions">
-        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
-            <span class="mdc-button__label">Cancel</span>
-        </button>
-        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="accept" data-mdc-dialog-button-default>
-            <span class="mdc-button__label">Reset to default</span>
-        </button>
-        </footer>
-    </div>
-    </div>
-    <div class="mdc-dialog__scrim"></div>
-</div>
-
-
-<div id="blank_diag" class="mdc-dialog"
-        role="alertdialog"
-        aria-modal="true"
-        aria-labelledby="my-dialog-title"
-        aria-describedby="my-dialog-content">
-    <div class="mdc-dialog__container">
-    <div class="mdc-dialog__surface">
-        <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
-        <h2 class="mdc-dialog__title" id="my-dialog-title">Blank</h2>
-        <div class="mdc-dialog__content" id="my-dialog-content">
-        All your work may be lost!
-        </div>
-        <footer class="mdc-dialog__actions">
-        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
-            <span class="mdc-button__label">Cancel</span>
-        </button>
-        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="accept" data-mdc-dialog-button-default>
-            <span class="mdc-button__label">Reset to blank</span>
-        </button>
-        </footer>
-    </div>
-    </div>
-    <div class="mdc-dialog__scrim"></div>
-</div>
 </div>
 
 <div id="panel_layout" class="panel">
@@ -718,21 +561,21 @@ id="railmap" width="0" height="0">
         <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">color_lens</span>
             <span class="mdc-list-item__text">
-                <span class="mdc-list-item__primary-text">Theme</span>
+                <span class="mdc-list-item__primary-text" trans-tag="Design.Theme"></span>
                 <span class="mdc-list-item__secondary-text"></span>
             </span>
         </li>
         <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">title</span>
             <span class="mdc-list-item__text">
-                <span class="mdc-list-item__primary-text">Name</span>
+                <span class="mdc-list-item__primary-text" trans-tag="Design.Name"></span>
                 <span class="mdc-list-item__secondary-text"></span>
             </span>
         </li>
         <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">directions</span>
             <span class="mdc-list-item__text">
-                <span class="mdc-list-item__primary-text">Train Direction</span>
+                <span class="mdc-list-item__primary-text" trans-tag="Design.Direction"></span>
                 <span class="mdc-list-item__secondary-text"></span>
             </span>
         </li>
@@ -743,7 +586,7 @@ id="railmap" width="0" height="0">
                 <div class="mdc-notched-outline">
                     <div class="mdc-notched-outline__leading"></div>
                     <div class="mdc-notched-outline__notch">
-                    <label for="tf-outlined" class="mdc-floating-label">Platform</label>
+                    <label for="tf-outlined" class="mdc-floating-label" trans-tag="Design.Platform"></label>
                     </div>
                     <div class="mdc-notched-outline__trailing"></div>
                 </div>
@@ -751,7 +594,7 @@ id="railmap" width="0" height="0">
         </li>
         <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">rotate_left</span>
-            MTR Legacy Style
+            <span class="mdc-list-item__text-label" trans-tag="Design.MTRLegacy"></span>
             <span class="mdc-list-item__meta">
                 <div class="mdc-switch" id="legacy">
                     <div class="mdc-switch__track"></div>
@@ -765,12 +608,12 @@ id="railmap" width="0" height="0">
         </li>
         <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">swap_vert</span>
-            Flip Station Names Position
+            <span class="mdc-list-item__text-label" trans-tag="Design.FlipName"></span>
         </li>
         <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">font_download</span>
             <span class="mdc-list-item__text">
-                <span class="mdc-list-item__primary-text">Chinese Character Form</span>
+                <span class="mdc-list-item__primary-text" trans-tag="Design.Char"></span>
                 <span class="mdc-list-item__secondary-text"></span>
             </span>
         </li>
@@ -788,7 +631,7 @@ id="railmap" width="0" height="0">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
-      <h2 class="mdc-dialog__title" id="my-dialog-title">Edit Theme</h2>
+      <h2 class="mdc-dialog__title" id="my-dialog-title" trans-tag="Design.Theme.Title"></h2>
       <div class="mdc-dialog__content" id="my-dialog-content" style="max-width: 350px;">
             <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner">
@@ -801,7 +644,7 @@ id="railmap" width="0" height="0">
                     <div class="mdc-select__anchor" style="width: 200px;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
-                        <span class="mdc-floating-label">City</span>
+                        <span class="mdc-floating-label" trans-tag="Design.Theme.City"></span>
                         <div class="mdc-line-ripple"></div>
                     </div>
                     
@@ -821,7 +664,7 @@ id="railmap" width="0" height="0">
                     <div class="mdc-select__anchor" style="width: 200px;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
-                        <span class="mdc-floating-label">Line</span>
+                        <span class="mdc-floating-label" trans-tag="Design.Theme.Line"></span>
                         <div class="mdc-line-ripple"></div>
                     </div>
                     
@@ -836,7 +679,7 @@ id="railmap" width="0" height="0">
       </div>
       <footer class="mdc-dialog__actions">
         <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes" data-mdc-dialog-button-default>
-          <span class="mdc-button__label">Done</span>
+          <span class="mdc-button__label" trans-tag="Dialog.Done"></span>
         </button>
       </footer>
     </div>
@@ -851,7 +694,7 @@ id="railmap" width="0" height="0">
      aria-describedby="my-dialog-content">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
-      <h2 class="mdc-dialog__title" id="my-dialog-title">Edit Line Names</h2>
+      <h2 class="mdc-dialog__title" id="my-dialog-title" trans-tag="Design.Name.Title"></h2>
       <div class="mdc-dialog__content" id="my-dialog-content" style="max-width: 400px;">
             <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner">
@@ -864,7 +707,7 @@ id="railmap" width="0" height="0">
                     <div class="mdc-notched-outline">
                         <div class="mdc-notched-outline__leading"></div>
                         <div class="mdc-notched-outline__notch">
-                        <label for="tf-outlined" class="mdc-floating-label">名字</label>
+                        <label for="tf-outlined" class="mdc-floating-label" trans-tag="Editor.Name.ZH"></label>
                         </div>
                         <div class="mdc-notched-outline__trailing"></div>
                     </div>
@@ -880,7 +723,7 @@ id="railmap" width="0" height="0">
                     <div class="mdc-notched-outline">
                         <div class="mdc-notched-outline__leading"></div>
                         <div class="mdc-notched-outline__notch">
-                        <label for="tf-outlined" class="mdc-floating-label">Name</label>
+                        <label for="tf-outlined" class="mdc-floating-label" trans-tag="Editor.Name.EN"></label>
                         </div>
                         <div class="mdc-notched-outline__trailing"></div>
                     </div>
@@ -891,7 +734,7 @@ id="railmap" width="0" height="0">
       </div>
       <footer class="mdc-dialog__actions">
         <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes" data-mdc-dialog-button-default>
-          <span class="mdc-button__label">Done</span>
+          <span class="mdc-button__label" trans-tag="Dialog.Done"></span>
         </button>
       </footer>
     </div>
@@ -906,22 +749,20 @@ id="railmap" width="0" height="0">
      aria-describedby="my-dialog-content">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
-      <h2 class="mdc-dialog__title" id="my-dialog-title"><!--
-     -->Select Character Form<!--
-   --></h2>
+      <h2 class="mdc-dialog__title" id="my-dialog-title" trans-tag="Design.Char.Title"></h2>
       <div class="mdc-dialog__content" id="my-dialog-content">
         <ul class="mdc-list mdc-list--avatar-list">
             <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="trad">
-                <span class="mdc-list-item__text">Traditional (Kangxi Dictionary)</span>
+                <span class="mdc-list-item__text" trans-tag="Design.Char.Trad"></span>
             </li>
             <li class="mdc-list-item" data-mdc-dialog-action="cn">
-                <span class="mdc-list-item__text">PRC (General Standard Chinese Characters)</span>
+                <span class="mdc-list-item__text" trans-tag="Design.Char.CN"></span>
             </li>
             <li class="mdc-list-item" data-mdc-dialog-action="tw">
-                <span class="mdc-list-item__text">ROC (Standard Typefaces for Chinese Character)</span>
+                <span class="mdc-list-item__text" trans-tag="Design.Char.TW"></span>
             </li>
             <li class="mdc-list-item" data-mdc-dialog-action="jp">
-                <span class="mdc-list-item__text">Japan (Jōyō Kanji)</span>
+                <span class="mdc-list-item__text" trans-tag="Design.Char.JP"></span>
             </li>
         </ul>
       </div>
@@ -941,7 +782,7 @@ id="railmap" width="0" height="0">
     <div class="mdc-card mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone station-card" id="add_stn">
     <div class="mdc-card__primary-action">
         <div class="mdc-card__media mdc-card__media--16-9">
-        <div class="mdc-card__media-content station-card__content">New Station</div>
+        <div class="mdc-card__media-content station-card__content" trans-tag="Stations.New"></div>
         </div>
     </div>
     <div class="mdc-card__actions">
@@ -1040,7 +881,7 @@ id="railmap" width="0" height="0">
       </div>
       <footer class="mdc-dialog__actions">
         <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
-          <span class="mdc-button__label">Cancel</span>
+          <span class="mdc-button__label" trans-tag="Dialog.Cancel"></span>
         </button>
         <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="accept" data-mdc-dialog-button-default>
           <span class="mdc-button__label">Confirm</span>
@@ -1058,7 +899,7 @@ id="railmap" width="0" height="0">
      aria-describedby="my-dialog-content">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
-      <h2 class="mdc-dialog__title" id="my-dialog-title">Edit Station Names</h2>
+      <h2 class="mdc-dialog__title" id="my-dialog-title" trans-tag="Stations.Name.Title"></h2>
       <div class="mdc-dialog__content" id="my-dialog-content" style="max-width: 400px;">
             <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner">
@@ -1071,7 +912,7 @@ id="railmap" width="0" height="0">
                     <div class="mdc-notched-outline">
                         <div class="mdc-notched-outline__leading"></div>
                         <div class="mdc-notched-outline__notch">
-                        <label for="tf-outlined" class="mdc-floating-label">名字</label>
+                        <label for="tf-outlined" class="mdc-floating-label" trans-tag="Editor.Name.ZH"></label>
                         </div>
                         <div class="mdc-notched-outline__trailing"></div>
                     </div>
@@ -1087,7 +928,7 @@ id="railmap" width="0" height="0">
                     <div class="mdc-notched-outline">
                         <div class="mdc-notched-outline__leading"></div>
                         <div class="mdc-notched-outline__notch">
-                        <label for="tf-outlined" class="mdc-floating-label">Name</label>
+                        <label for="tf-outlined" class="mdc-floating-label" trans-tag="Editor.Name.EN"></label>
                         </div>
                         <div class="mdc-notched-outline__trailing"></div>
                     </div>
@@ -1095,14 +936,14 @@ id="railmap" width="0" height="0">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--align-middle">
-                    <span>Hint: You may add a backslash (&bsol;) at where you want to wrap name. (For station name in Latin characters only. )</span>
+                    <span trans-tag="Stations.Name.Hint"></span>
                 </div>
             </div>
             </div>
       </div>
       <footer class="mdc-dialog__actions">
         <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes" data-mdc-dialog-button-default>
-          <span class="mdc-button__label">Done</span>
+          <span class="mdc-button__label" trans-tag="Dialog.Done"></span>
         </button>
       </footer>
     </div>
@@ -1117,7 +958,7 @@ id="railmap" width="0" height="0">
      aria-describedby="my-dialog-content">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
-      <h2 class="mdc-dialog__title" id="my-dialog-title">Edit type of interchange</h2>
+      <h2 class="mdc-dialog__title" id="my-dialog-title" trans-tag="Stations.Interchange.Title"></h2>
       <div class="mdc-dialog__content" id="my-dialog-content">
             <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner">
@@ -1127,17 +968,17 @@ id="railmap" width="0" height="0">
                     <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
-                        <span class="mdc-floating-label">Interchange</span>
+                        <span class="mdc-floating-label" trans-tag="Stations.Interchange.Type.Title"></span>
                         <div class="mdc-line-ripple"></div>
                     </div>
                     <div class="mdc-select__menu mdc-menu mdc-menu-surface">
                         <ul class="mdc-list" id="change_type__selection">
-                            <li class="mdc-list-item" data-value="none">None</li>
-                            <li class="mdc-list-item" data-value="int2">Interchange (2 stations)</li>
-                            <li class="mdc-list-item" data-value="int3">Interchange (3 stations)</li>
-                            <li class="mdc-list-item" data-value="osi11">Out-station-interchange (1-1)</li>
-                            <li class="mdc-list-item" data-value="osi12">Out-station-interchange (1-2)</li>
-                            <li class="mdc-list-item" data-value="osi22">Out-station-interchange (2-2)</li>
+                            <li class="mdc-list-item" data-value="none" trans-tag="Stations.Interchange.Type.None"></li>
+                            <li class="mdc-list-item" data-value="int2" trans-tag="Stations.Interchange.Type.Int2"></li>
+                            <li class="mdc-list-item" data-value="int3" trans-tag="Stations.Interchange.Type.Int3"></li>
+                            <li class="mdc-list-item" data-value="osi11" trans-tag="Stations.Interchange.Type.OSI11"></li>
+                            <li class="mdc-list-item" data-value="osi12" trans-tag="Stations.Interchange.Type.OSI12"></li>
+                            <li class="mdc-list-item" data-value="osi22" trans-tag="Stations.Interchange.Type.OSI22"></li>
                         </ul>
                     </div>
                 </div>
@@ -1355,7 +1196,7 @@ id="railmap" width="0" height="0">
       </div>
       <footer class="mdc-dialog__actions">
         <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
-            <span class="mdc-button__label">Discard</span>
+            <span class="mdc-button__label" trans-tag="Dialog.Cancel"></span>
         </button>
         <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="accept" data-mdc-dialog-button-default>
           <span class="mdc-button__label">Save</span>
@@ -1373,16 +1214,16 @@ id="railmap" width="0" height="0">
      aria-describedby="my-dialog-content">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
-      <h2 class="mdc-dialog__title" id="my-dialog-title">Warning</h2>
+      <h2 class="mdc-dialog__title" id="my-dialog-title" trans-tag="Stations.Delete.Title"></h2>
       <div class="mdc-dialog__content" id="my-dialog-content">
         Dialog body text goes here.
       </div>
       <footer class="mdc-dialog__actions">
         <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
-          <span class="mdc-button__label">Cancel</span>
+          <span class="mdc-button__label" trans-tag="Dialog.Cancel"></span>
         </button>
         <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="accept" data-mdc-dialog-button-default>
-          <span class="mdc-button__label">Delete</span>
+          <span class="mdc-button__label" trans-tag="Dialog.Delete"></span>
         </button>
       </footer>
     </div>
@@ -1418,6 +1259,9 @@ id="railmap" width="0" height="0">
 
 <div class="mdc-layout-grid" style="max-width: 500px;">
 <div class="mdc-layout-grid__inner">
+    <div class="mdc-layout-grid__cell--span-12">
+        <p class="mdc-typography--body2" trans-tag="Info.Notice"></p>
+    </div>
 
     <div class="mdc-layout-grid__cell--span-12 mdc-card">
         <div class="mdc-card__primary-action" tabindex="0" style="display: flex; flex-direction: row;">
@@ -1430,7 +1274,7 @@ id="railmap" width="0" height="0">
         </div>
         <div class="mdc-card__actions">
             <button class="mdc-button mdc-card__action mdc-card__action--button" id="report">
-                <span class="mdc-button__label">Report An Issue</span>
+                <span class="mdc-button__label" trans-tag="Info.Report"></span>
             </button>
             <div class="mdc-card__action-icons">
                 <button class="material-icons mdc-icon-button mdc-card__action mdc-card__action--icon" title="Star">
