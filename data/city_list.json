@@ -12,7 +12,8 @@
         "country": "CN", 
         "name": {
             "en": "Chongqing", 
-            "zh": "重慶"
+            "zh-Hans": "重庆",
+            "zh-Hant": "重慶"
 		}
     },
     {
@@ -20,7 +21,8 @@
         "country": "CN",
         "name": {
             "en": "Dongguan", 
-            "zh": "東莞"
+            "zh-Hans": "东莞",
+            "zh-Hant": "東莞"
 		}
     },
     {
@@ -29,7 +31,8 @@
         "name": {
             "en": "Edinburgh",
             "ga": "Dùn Èideann", 
-            "zh": "愛丁堡"
+            "zh-Hans": "爱丁堡",
+            "zh-Hant": "愛丁堡"
 		}
     },
     {
@@ -54,7 +57,8 @@
         "country": "CN", 
         "name": {
             "en": "Guangzhou", 
-            "zh": "廣州"
+            "zh-Hans": "广州",
+            "zh-Hant": "廣州"
 		}
     },
     {
@@ -78,7 +82,8 @@
         "country": "GBENG", 
         "name": {
             "en": "London", 
-            "zh": "倫敦"
+            "zh-Hans": "伦敦",
+            "zh-Hant": "倫敦"
 		}
     },
     {
@@ -87,7 +92,8 @@
         "name": {
             "en": "Macao", 
             "pt": "Macau",
-            "zh": "澳門"
+            "zh-Hans": "澳门",
+            "zh-Hant": "澳門"
 		}
     },
     {
@@ -103,7 +109,9 @@
         "country": "US", 
         "name": {
             "en": "San Francisco", 
-            "zh": "三藩市"
+            "zh-Hans": "旧金山",
+            "zh-HK": "三藩市", 
+            "zh-TW": "舊金山"
 		}
     },
     {
@@ -112,7 +120,8 @@
         "name": {
             "en": "Seoul (Metropolitan Area)",
             "ko": "서울(수도권)", 
-            "zh": "首爾（首都圈）"
+            "zh-Hans": "首尔（首都圈）",
+            "zh-Hant": "首爾（首都圈）"
 		}
     },
     {
@@ -136,7 +145,8 @@
         "country": "TW", 
         "name": {
             "en": "Taipei", 
-            "zh": "臺北"
+            "zh-Hans": "台北",
+            "zh-Hant": "臺北"
 		}
     },
     {
@@ -145,7 +155,8 @@
         "name": {
             "en": "Tokyo (Greater Tokyo Area)",
             "ja": "東京（首都圏）", 
-            "zh": "東京（首都圈）"
+            "zh-Hans": "东京（首都圈）",
+            "zh-Hant": "東京（首都圈）"
 		}
     },
     {
@@ -153,7 +164,8 @@
         "country": "CA", 
         "name": {
             "en": "Toronto", 
-            "zh": "多倫多"
+            "zh-Hans": "多伦多",
+            "zh-Hant": "多倫多"
 		}
     }
 ]

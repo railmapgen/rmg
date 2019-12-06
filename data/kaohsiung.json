@@ -3,7 +3,7 @@
         "id": "red", 
         "name": {
 			"en": "Red Line", 
-			"zh": "紅線"
+			"zh-Hant": "紅線"
 		}, 
         "colour": "#e20b65"
     }, 
@@ -11,7 +11,7 @@
         "id": "orange", 
         "name": {
 			"en": "Orange Line", 
-			"zh": "橘線"
+			"zh-Hant": "橘線"
 		}, 
         "colour": "#faa73f"
     }, 
@@ -19,7 +19,7 @@
         "id": "circular", 
         "name": {
 			"en": "Circular Line (KLRT)", 
-			"zh": "環狀輕軌"
+			"zh-Hant": "環狀輕軌"
 		}, 
         "colour": "#7cbd52"
     }, 
@@ -27,7 +27,7 @@
         "id": "green", 
         "name": {
 			"en": "Green Line", 
-			"zh": "綠線"
+			"zh-Hant": "綠線"
 		}, 
         "colour": "#50cb00"
     }, 
@@ -35,7 +35,7 @@
         "id": "silver", 
         "name": {
 			"en": "Silver Line", 
-			"zh": "銀線"
+			"zh-Hant": "銀線"
 		}, 
         "colour": "#929292"
     }, 
@@ -43,7 +43,7 @@
         "id": "blue", 
         "name": {
 			"en": "Blue Line", 
-			"zh": "藍線"
+			"zh-Hant": "藍線"
 		}, 
         "colour": "#007fff"
     }, 
@@ -51,7 +51,7 @@
         "id": "cyan", 
         "name": {
 			"en": "Cyan Line", 
-			"zh": "青線"
+			"zh-Hant": "青線"
 		}, 
         "colour": "#00bfff"
     }, 
@@ -59,7 +59,7 @@
         "id": "foguangshan", 
         "name": {
 			"en": "Foguangshan Line", 
-			"zh": "佛光山線"
+			"zh-Hant": "佛光山線"
 		}, 
         "colour": "#aa34c0"
     }, 
@@ -67,7 +67,7 @@
         "id": "purple", 
         "name": {
 			"en": "Purple Line", 
-			"zh": "紫線"
+			"zh-Hant": "紫線"
 		}, 
         "colour": "#c100ff"
     }, 
@@ -75,7 +75,7 @@
         "id": "yh", 
         "name": {
 			"en": "Youchang Line", 
-			"zh": "右昌線"
+			"zh-Hant": "右昌線"
 		}, 
         "colour": "#008583"
     }, 
@@ -83,7 +83,7 @@
         "id": "pink", 
         "name": {
 			"en": "Pink Line", 
-			"zh": "粉紅線"
+			"zh-Hant": "粉紅線"
 		}, 
         "colour": "#FFC0CB"
     }, 
@@ -91,7 +91,7 @@
         "id": "tra", 
         "name": {
 			"en": "TRA", 
-			"zh": "台灣鐵路"
+			"zh-Hant": "台灣鐵路"
 		}, 
         "colour": "#0008bd"
     }

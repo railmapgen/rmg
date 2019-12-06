@@ -2,73 +2,98 @@
     {
         "filename": "blank",
         "desc": {
-            "en": "Blank", "zh": "空白"
+            "en": "Blank", 
+            "zh": "空白"
         }
     },
     {
         "filename": "default", 
         "desc": {
-            "en": "Default", "zh": "預設"
+            "en": "Default", 
+            "zh-Hans": "默认",
+            "zh-Hant": "預設"
         }
     },
     {
         "filename": "guangzhou_gz1", 
         "desc": {
-            "en": "Guangzhou Metro Line 1", "zh": "廣州地鐵1號線"
+            "en": "Guangzhou Metro Line 1", 
+            "zh-Hans": "广州地铁1号线",
+            "zh-Hant": "廣州地鐵1號線"
         }
     }, 
     {
         "filename": "guangzhou_gz3", 
         "desc": {
-            "en": "Guangzhou Metro Line 3", "zh": "廣州地鐵3號線"
+            "en": "Guangzhou Metro Line 3", "zh-Hant": "廣州地鐵3號線"
+        }
+    }, 
+    {
+        "filename": "guangzhou_gz4", 
+        "desc": {
+            "en": "Guangzhou Metro Line 4", "zh-Hant": "廣州地鐵4號線"
+        }
+    }, 
+    {
+        "filename": "guangzhou_gz5", 
+        "desc": {
+            "en": "Guangzhou Metro Line 5", "zh-Hant": "廣州地鐵5號線"
+        }
+    }, 
+    {
+        "filename": "guangzhou_gz6", 
+        "desc": {
+            "en": "Guangzhou Metro Line 6", "zh-Hant": "廣州地鐵6號線"
         }
     }, 
     {
         "filename": "guangzhou_gz8", 
         "desc": {
-            "en": "Guangzhou Metro Line 8", "zh": "廣州地鐵8號線"
+            "en": "Guangzhou Metro Line 8", "zh-Hant": "廣州地鐵8號線"
         }
     }, 
     {
         "filename": "guangzhou_gz14", 
         "desc": {
-            "en": "Guangzhou Metro Line 14", "zh": "廣州地鐵14號線"
+            "en": "Guangzhou Metro Line 14", "zh-Hant": "廣州地鐵14號線"
         }
     }, 
     {
         "filename": "guangzhou_gz21", 
         "desc": {
-            "en": "Guangzhou Metro Line 21", "zh": "廣州地鐵21號線"
+            "en": "Guangzhou Metro Line 21", "zh-Hant": "廣州地鐵21號線"
         }
     }, 
     {
         "filename": "macau_taipa", 
         "desc": {
-            "en": "Metro Ligeiro de Macau Linha Taipa", "zh": "澳門輕軌氹仔線"
+            "en": "Metro Ligeiro de Macau Linha Taipa", "zh-Hant": "澳門輕軌氹仔線"
         }
     },
     {
         "filename": "hongkong_eal", 
         "desc": {
-            "en": "MTR East Rail Line", "zh": "港鐵東鐵綫"
+            "en": "MTR East Rail Line", 
+            "zh-Hans": "港铁东铁线",
+            "zh-Hant": "港鐵東鐵綫"
         }
     },
     {
         "filename": "hongkong_tkl", 
         "desc": {
-            "en": "MTR Tseung Kwan O Line", "zh": "港鐵將軍澳綫"
+            "en": "MTR Tseung Kwan O Line", "zh-Hant": "港鐵將軍澳綫"
         }
     },
     {
         "filename": "hongkong_twl", 
         "desc": {
-            "en": "MTR Tsuen Wan Line", "zh": "港鐵荃灣綫"
+            "en": "MTR Tsuen Wan Line", "zh-Hant": "港鐵荃灣綫"
         }
     },
     {
         "filename": "prdir_guangzhu", 
         "desc": {
-            "en": "PRDIR Guangzhou-Zhuhai Intercity", "zh": "珠三角城際鐵路廣珠城軌"
+            "en": "PRDIR Guangzhou-Zhuhai Intercity", "zh-Hant": "珠三角城際鐵路廣珠城軌"
         }
     }
 ]

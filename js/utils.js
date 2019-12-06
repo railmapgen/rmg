@@ -265,3 +265,16 @@ function changeStyle(style) {
     setParams('style', style);
     location.reload(true);
 }
+
+const langFallback = lang => {
+    switch (lang) {
+        case 'en': return ['en'];
+        case 'zh-Hans': return ['zh-Hans', 'zh', 'en'];
+        case 'zh-HK': return ['zh-HK', 'zh-Hant', 'zh', 'en'];
+        default: return [lang, 'en'];
+    }
+}
+
+const getTransText = (obj, lang) => {
+    return obj[langFallback(lang).find(l => obj[l])];
+}

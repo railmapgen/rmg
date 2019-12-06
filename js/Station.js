@@ -1,6 +1,11 @@
 'use strict';
 
 class Station {
+    STN_NAME_Y = -10.5;
+    STN_NAME_BASE_HEIGHT = 30.390625;
+    STN_NAME_LINE_GAP = 14;
+    STN_NAME_BG_ADJUST = 0.5;
+
     _x; _y; _id; _state; 
     _namePos; _branch;
 
@@ -37,7 +42,14 @@ class Station {
 
     get nameHTML() {
         var nameENs = this._nameEN.split('\\');
-        var dy = (this._namePos == 1) ? 12 + 11.843775 : -12 - 21.921875 - (nameENs.length-1)*10;
+        
+        if (this._namePos == 1) {
+            var dy = this.STN_NAME_LINE_GAP - this.STN_NAME_Y;
+        } else {
+            var dy = -this.STN_NAME_LINE_GAP - this.STN_NAME_Y - this.STN_NAME_BASE_HEIGHT - (nameENs.length-1)*10;
+        }
+        dy -= this.STN_NAME_BG_ADJUST;
+
         var nameENp = nameENs.shift();
 
         var nameENElem = $('<text>', {

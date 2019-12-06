@@ -4,7 +4,7 @@
         "name": {
 			"en": "Ginza Line (G)", 
             "ja": "銀座線", 
-            "zh": "銀座線"
+            "zh-Hant": "銀座線"
 		}, 
         "colour": "#ff9500"
     },
@@ -13,7 +13,7 @@
         "name": {
 			"en": "Marunouchi Line (M)", 
             "ja": "丸ノ内線", 
-            "zh": "丸之內線"
+            "zh-Hant": "丸之內線"
 		}, 
         "colour": "#f62e36"
     }, 
@@ -22,7 +22,7 @@
         "name": {
 			"en": "Hibiya Line (H)", 
             "ja": "日比谷線", 
-            "zh": "日比谷線"
+            "zh-Hant": "日比谷線"
 		}, 
         "colour": "#b5b5ac"
     }, 
@@ -31,7 +31,7 @@
         "name": {
 			"en": "Tōsai Line (T)", 
             "ja": "東西線", 
-            "zh": "東西線"
+            "zh-Hant": "東西線"
 		}, 
         "colour": "#009bbf"
     }, 
@@ -40,7 +40,7 @@
         "name": {
 			"en": "Chiyoda Line (C)", 
             "ja": "千代田線", 
-            "zh": "千代田線"
+            "zh-Hant": "千代田線"
 		}, 
         "colour": "#00bb85"
     }, 
@@ -49,7 +49,7 @@
         "name": {
 			"en": "Yūrakuchō Line (C)", 
             "ja": "有楽町線", 
-            "zh": "有樂町線"
+            "zh-Hant": "有樂町線"
 		}, 
         "colour": "#c1a470"
     }, 
@@ -58,7 +58,7 @@
         "name": {
 			"en": "Hanzōmon Line (Z)", 
             "ja": "半蔵門線", 
-            "zh": "半藏門線"
+            "zh-Hant": "半藏門線"
 		}, 
         "colour": "#8f76d6"
     }, 
@@ -67,7 +67,7 @@
         "name": {
 			"en": "Namboku Line (N)", 
             "ja": "南北線", 
-            "zh": "南北線"
+            "zh-Hant": "南北線"
 		}, 
         "colour": "#00ac9b"
     }, 
@@ -76,7 +76,7 @@
         "name": {
 			"en": "Fukutoshin Line (F)", 
             "ja": "副都心線", 
-            "zh": "副都心線"
+            "zh-Hant": "副都心線"
 		}, 
         "colour": "#9c5e31"
     }, 
@@ -85,7 +85,7 @@
         "name": {
 			"en": "Asakusa Line (A)", 
             "ja": "浅草線", 
-            "zh": "淺草線"
+            "zh-Hant": "淺草線"
 		}, 
         "colour": "#ec6e65"
     }, 
@@ -94,7 +94,7 @@
         "name": {
 			"en": "Mita Line (I)", 
             "ja": "三田線", 
-            "zh": "三田線"
+            "zh-Hant": "三田線"
 		}, 
         "colour": "#006ab8"
     }, 
@@ -103,7 +103,7 @@
         "name": {
 			"en": "Shinjuku Line (S)", 
             "ja": "新宿線", 
-            "zh": "新宿線"
+            "zh-Hant": "新宿線"
 		}, 
         "colour": "#b0bf1e"
     },
@@ -112,7 +112,7 @@
         "name": {
 			"en": "Ōedo Line (O)", 
             "ja": "大江戸線", 
-            "zh": "大江戶線"
+            "zh-Hant": "大江戶線"
 		}, 
         "colour": "#ce045b"
     }, 
@@ -121,7 +121,7 @@
         "name": {
 			"en": "Yamanote Line (JY)", 
             "ja": "山手線", 
-            "zh": "山手線"
+            "zh-Hant": "山手線"
 		}, 
         "colour": "#B1CB39"
     }, 

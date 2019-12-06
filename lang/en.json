@@ -21,6 +21,15 @@
     "File.Export.SVGDest": "SVG (Destination)", 
     "File.Export.SVGMap": "SVG (Rail Map)",
 
+    "File.Lang": "Language",
+    "File.Lang.Title": "Choose a Language", 
+
+    "Layout.Width": "Rail Map Width",
+    "Layout.DestWidth": "Dest Board Width",
+    "Layout.Y": "Vertical Position",
+    "Layout.BranchSpacing": "Branch Spacing", 
+    "Layout.Padding": "Line Padding", 
+
     "Design.Theme": "Theme Colour", 
     "Design.Theme.Title": "Choose a Theme Colour",
     "Design.Theme.City": "City", 
@@ -42,6 +51,22 @@
     "Design.Char.JP": "Japan (Jōyō Kanji)",
 
     "Stations.New": "New Station",
+    "Stations.New.Title": "Choose a location",
+    "Stations.New.Prep": "Relative Position",
+    "Stations.New.Before": "Before",
+    "Stations.New.After": "After",
+    "Stations.New.Station": "station",
+    "Stations.New.Pivot": "Pivot",
+    "Stations.New.On": "On",
+    "Stations.New.Loc": "Location",
+    "Stations.New.Centre": "centre line",
+    "Stations.New.Upper": "upper branch",
+    "Stations.New.Lower": "lower branch",
+    "Stations.New.NewUpper": "new upper branch",
+    "Stations.New.NewLower": "new lower branch",
+    "Stations.New.Bypass": "Bypass all stations until",
+    "Stations.New.End": "End of Branch",
+
     "Stations.Name.Title": "Edit Station Name",
     "Stations.Name.Hint": "Hint: You may add a backslash (\\) at where you want to wrap name. (For station name in Latin characters only. )",
     "Stations.Interchange.Title": "Edit Detail of Interchange",
@@ -60,6 +85,7 @@
     "Dialog.Cancel": "Cancel",
     "Dialog.Delete": "Delete",
     "Dialog.Done": "Done",
+    "Dialog.OK": "OK",
 
     "Editor.Name.ZH": "Name (in Chinese Character)",
     "Editor.Name.EN": "Name (in Latin Character)"

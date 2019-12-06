@@ -32,10 +32,6 @@ class Line {
         this.#lineNames = param['line_name'];
         this.#destLegacy = param['dest_legacy'];
 
-        // this.#weightEN = param['weightEN'];
-        // this.#weightZH = param['weightZH'];
-        // this.#fontEN = param['fontEN'];
-        // this.#fontZH = param['fontZH'];
         this._charForm = param.char_form;
 
         // Calculate other properties of stations
@@ -78,16 +74,30 @@ class Line {
         }
     }
 
+    set svgDestWidth(val) {
+        val = Number(val);
+        if (isNaN(val)) {return;}
+        if (val <= 0) {return;}
+        this.#svgDestWidth = val;
+
+        setParams('svg_dest_width', val);
+
+        this.drawSVGFrame();
+        this.drawStrip();
+        this.drawDestInfo();
+        this.loadFonts();
+    }
+
     set svgWidth(val) {
         val = Number(val);
         if (isNaN(val)) {return;}
         if (val <= 0) {return;}
         this.#svgWidth = val;
-        this.#svgDestWidth = val;
+        // this.#svgDestWidth = val;
 
         var param = getParams();
         param.svg_width = val;
-        param.svg_dest_width = val;
+        // param.svg_dest_width = val;
         putParams(param);
 
         this.drawSVGFrame();
@@ -103,7 +113,7 @@ class Line {
         this.drawLine();
         this.drawStrip();
 
-        this.drawDestInfo();
+        // this.drawDestInfo();
 
         this.loadFonts();
     }
@@ -295,10 +305,7 @@ class Line {
     _cp(from, to) {
         var self = this;
         if (from == to) {
-            return {
-                'len': 0, 
-                'nodes': [from]
-            };
+            return { len: 0, nodes: [from] };
         }
         var allLengths = [];
         var criticalPaths = [];
@@ -349,9 +356,6 @@ class Line {
     get tpo() {
         var res = this._topoOrder('linestart');
         return res.slice(1, res.length-1);
-        // res.pop();
-        // res.shift();
-        // return res;
     }
 
     get y() {return this.#yPc * this.#svgHeight / 100; }
@@ -550,10 +554,10 @@ class Line {
             $(`#stn_icons > #${this.#currentStnId} > .Name`)[0], 'railmap'
         );
         $('#current_bg').attr({
-            x: stnNameDim.x-2, 
-            y: stnNameDim.y-2, 
-            width: stnNameDim.width+4, 
-            height: stnNameDim.height+4
+            x: stnNameDim.x-3, 
+            y: stnNameDim.y, 
+            width: stnNameDim.width+6, 
+            height: stnNameDim.height+2
         }).show();
     }
 
@@ -637,7 +641,9 @@ class Line {
     }
 
     drawStrip() {
-        $('#strip, #dest_strip').attr('d', `M 0,${this.stripY} H ${this.#svgWidth}`)
+        // $('#strip, #dest_strip').attr('d', `M 0,${this.stripY} H ${this.#svgWidth}`)
+        $('#strip').attr('d', `M 0,${this.stripY} H ${this.#svgWidth}`);
+        $('#dest_strip').attr('d', `M 0,${this.stripY} H ${this.#svgDestWidth}`);
     }
 
     fillThemeColour() {
