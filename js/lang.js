@@ -26,9 +26,18 @@ const getTransJSON = async(lang) => {
     return response.ok ? response.json() : {};
 }
 
+const pageLangFallback = lang => {
+    if (lang !== 'en') {
+        return [lang, 'en'];
+    } else {
+        return [lang];
+    }
+}
+
 const translate1 = async(lang) => {
-    let datas = langFallback(lang).map(l => getTransJSON(l));
+    var datas = pageLangFallback(lang).map(l => getTransJSON(l));
     $('[trans-tag]').each(async (idx,val) => {
+        console.log(idx);
         var transStr = '';
         for await (let data of datas) {
             transStr = data[$(val).attr('trans-tag')];

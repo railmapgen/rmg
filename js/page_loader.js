@@ -489,19 +489,22 @@ function initStationsPanel() {
 
 
     // Modification (Interchange)
+    // Duplicate element
+    var intNameEl = $('#stn_transfer_diag .mdc-layout-grid__inner #int_name_zh,#int_name_en').slice(0,2).clone();
+    intNameEl.find('.mdc-text-field').removeAttr('data-mdc-auto-init-state');
+    $('div#int_line').slice(1,3).after(intNameEl);
+    window.mdc.autoInit();
+
     var stnTransferDialog = new mdc.dialog.MDCDialog($('#stn_transfer_diag')[0]);
-    var stnTransferSelect = new mdc.select.MDCSelect($('#stn_transfer_diag #change_type')[0]);
+    // var $('#change_type')[0].MDCSelect = new mdc.select.MDCSelect($('#stn_transfer_diag #change_type')[0]);
     var stnIntTickDirectionToggle = new mdc.iconButton.MDCIconButtonToggle($('#stn_transfer_diag #tick_direc')[0]);
     stnIntTickDirectionToggle.unbounded = true;
 
-    var stnIntCity0Select = new mdc.select.MDCSelect($('#stn_transfer_diag #int_city_0')[0]);
-    var stnIntCity1Select = new mdc.select.MDCSelect($('#stn_transfer_diag #int_city_1')[0]);
-    var stnIntCity2Select = new mdc.select.MDCSelect($('#stn_transfer_diag #int_city_2')[0]);
-    $.getJSON('data/city_list.json', function(data) {
+    $.getJSON('data/city_list.json', data => {
         var lang = urlParams.get('lang');
-        data.forEach(function(c) {
-            [0,1,2].forEach(i => {
-                $(`#int_city_${i}__selection`).append(
+        data.forEach(c => {
+            $('#int_city__selection.mdc-list').each((_,el) => {
+                $(el).append(
                     $('<li>', {
                         class: 'mdc-list-item', 
                         'data-value': c.id
@@ -511,54 +514,16 @@ function initStationsPanel() {
         });
     });
 
-    var stnIntLine0Select = new mdc.select.MDCSelect($('#stn_transfer_diag #int_line_0')[0]);
-    var stnIntNameZH0Field = new mdc.textField.MDCTextField($('#stn_transfer_diag #int_name_zh_0')[0]);
-    var stnIntNameEN0Field = new mdc.textField.MDCTextField($('#stn_transfer_diag #int_name_en_0')[0]);
-
     var stnOSINameZHField = new mdc.textField.MDCTextField($('#stn_transfer_diag #osi_name_zh')[0]);
     var stnOSINameENField = new mdc.textField.MDCTextField($('#stn_transfer_diag #osi_name_en')[0]);
     var paidAreaToggle = new mdc.iconButton.MDCIconButtonToggle($('#stn_transfer_diag #paid_area')[0]);
     paidAreaToggle.unbounded = true;
 
-    var stnIntLine1Select = new mdc.select.MDCSelect($('#stn_transfer_diag #int_line_1')[0]);
-    var stnIntNameZH1Field = new mdc.textField.MDCTextField($('#stn_transfer_diag #int_name_zh_1')[0]);
-    var stnIntNameEN1Field = new mdc.textField.MDCTextField($('#stn_transfer_diag #int_name_en_1')[0]);
-
-    var stnIntLine2Select = new mdc.select.MDCSelect($('#stn_transfer_diag #int_line_2')[0]);
-    var stnIntNameZH2Field = new mdc.textField.MDCTextField($('#stn_transfer_diag #int_name_zh_2')[0]);
-    var stnIntNameEN2Field = new mdc.textField.MDCTextField($('#stn_transfer_diag #int_name_en_2')[0]);
-
-    function _notchAllOutlines(n) {
-        if (n == 1) {
-            stnIntCity1Select.layout();
-            stnIntLine1Select.layout();
-            stnIntNameZH1Field.layout();
-            stnIntNameEN1Field.layout();
-        }
-        if (n == 2) {
-            stnIntCity2Select.layout();
-            stnIntLine2Select.layout();
-            stnIntNameZH2Field.layout();
-            stnIntNameEN2Field.layout();
-        }
-        if (n == 0) {
-            stnIntCity0Select.layout();
-            stnIntLine0Select.layout();
-            stnIntNameZH0Field.layout();
-            stnIntNameEN0Field.layout();
-        }
-        if (n == -1) {
-            // OSI fields
-            stnOSINameZHField.layout();
-            stnOSINameENField.layout();
-        }
-    }
-
     function _showAllFields(n, show) {
         if (show) {
-            $(`#stn_transfer_diag #int_city_${n}, #int_line_${n}, #int_name_zh_${n}, #int_name_en_${n}`).show();
+            $('#int_city, #int_line, #int_name_zh, #int_name_en').slice(n*4, (n+1)*4).show();
         } else {
-            $(`#stn_transfer_diag #int_city_${n}, #int_line_${n}, #int_name_zh_${n}, #int_name_en_${n}`).hide();
+            $('#int_city, #int_line, #int_name_zh, #int_name_en').slice(n*4, (n+1)*4).hide();
         }
     }
 
@@ -582,74 +547,27 @@ function initStationsPanel() {
             $('#change_type__selection li:last-child').addClass('mdc-list-item--disabled');
         }
 
-        stnTransferSelect.value = stnInfo.change_type.split('_')[0];
+        $('#change_type')[0].MDCSelect.value = stnInfo.change_type.split('_')[0];
 
-        switch (stnInfo.change_type.split('_')[0]) {
-            case 'int2':
-                stnIntCity0Select.value = '';
-                stnIntNameZH0Field.value = '';
-                stnIntNameEN0Field.value = '';
-                stnIntCity1Select.value = stnInfo.interchange[0][0][0];
-                stnIntNameZH1Field.value = stnInfo.interchange[0][0][3];
-                stnIntNameEN1Field.value = stnInfo.interchange[0][0][4];
-                stnIntCity2Select.value = lineThemeCity;
-                stnIntNameZH2Field.value = '';
-                stnIntNameEN2Field.value = '';
-                break;
-            case 'int3':
-                stnIntCity0Select.value = '';
-                stnIntNameZH0Field.value = '';
-                stnIntNameEN0Field.value = '';
-                stnIntCity1Select.value = stnInfo.interchange[0][0][0];
-                stnIntNameZH1Field.value = stnInfo.interchange[0][0][3];
-                stnIntNameEN1Field.value = stnInfo.interchange[0][0][4];
-                stnIntCity2Select.value = stnInfo.interchange[0][1][0];
-                stnIntNameZH2Field.value = stnInfo.interchange[0][1][3];
-                stnIntNameEN2Field.value = stnInfo.interchange[0][1][4];
-                break;
-            case 'osi11':
-                stnIntCity0Select.value = '';
-                stnIntNameZH0Field.value = '';
-                stnIntNameEN0Field.value = '';
-                stnIntCity1Select.value = stnInfo.interchange[1][1][0];
-                stnIntNameZH1Field.value = stnInfo.interchange[1][1][3];
-                stnIntNameEN1Field.value = stnInfo.interchange[1][1][4];
-                stnIntCity2Select.value = lineThemeCity;
-                stnIntNameZH2Field.value = '';
-                stnIntNameEN2Field.value = '';
-                break;
-            case 'osi12':
-                stnIntCity0Select.value = '';
-                stnIntNameZH0Field.value = '';
-                stnIntNameEN0Field.value = '';
-                stnIntCity1Select.value = stnInfo.interchange[1][1][0];
-                stnIntNameZH1Field.value = stnInfo.interchange[1][1][3];
-                stnIntNameEN1Field.value = stnInfo.interchange[1][1][4];
-                stnIntCity2Select.value = stnInfo.interchange[1][2][0];
-                stnIntNameZH2Field.value = stnInfo.interchange[1][2][3];
-                stnIntNameEN2Field.value = stnInfo.interchange[1][2][4];
-                break;
-            case 'osi22':
-                stnIntCity0Select.value = stnInfo.interchange[0][0][0];
-                stnIntNameZH0Field.value = stnInfo.interchange[0][0][3];
-                stnIntNameEN0Field.value = stnInfo.interchange[0][0][4];
-                stnIntCity1Select.value = stnInfo.interchange[1][1][0];
-                stnIntNameZH1Field.value = stnInfo.interchange[1][1][3];
-                stnIntNameEN1Field.value = stnInfo.interchange[1][1][4];
-                stnIntCity2Select.value = stnInfo.interchange[1][2][0];
-                stnIntNameZH2Field.value = stnInfo.interchange[1][2][3];
-                stnIntNameEN2Field.value = stnInfo.interchange[1][2][4];
-                break;
-            default:
-                stnIntCity0Select.value = lineThemeCity;
-                stnIntCity1Select.value = lineThemeCity;
-                stnIntCity2Select.value = lineThemeCity;
-                stnIntNameZH0Field.value = '';
-                stnIntNameEN0Field.value = '';
-                stnIntNameZH1Field.value = '';
-                stnIntNameEN1Field.value = '';
-                stnIntNameZH2Field.value = '';
-                stnIntNameEN2Field.value = '';
+        if (stnInfo.change_type !== 'none') {
+            var allInterchanges = stnInfo.interchange[0].concat(
+                stnInfo.interchange[1] ? stnInfo.interchange[1].slice(1,stnInfo.interchange[1].length) : []
+            );
+            if (allInterchanges.length < 3) {
+                allInterchanges.unshift([,,,,,]);
+            }
+            if (allInterchanges.length < 3) {
+                allInterchanges.push([,,,,,]);
+            }
+            console.log(allInterchanges)
+            allInterchanges.forEach((intInfo, idx) => {
+                $('#int_city .mdc-select')[idx].MDCSelect.value = intInfo[0] || lineThemeCity;
+                $('#int_name_zh .mdc-text-field')[idx].MDCTextField.value = intInfo[3] || '';
+                $('#int_name_en .mdc-text-field')[idx].MDCTextField.value = intInfo[4] || '';
+            })
+        } else {
+            $('#int_city .mdc-select').each((_,el) => el.MDCSelect.value = lineThemeCity);
+            $('#int_name_zh, #int_name_en').find('.mdc-text-field').each((_,el) => el.MDCTextField.value = '');
         }
 
         if (['none', 'int2', 'osi22'].includes(stnInfo.change_type.split('_')[0])) {
@@ -667,66 +585,42 @@ function initStationsPanel() {
             paidAreaToggle.on = true;
         }
     });
+
     stnTransferDialog.listen('MDCDialog:opened', event => {
-        stnTransferSelect.layout();
-        _notchAllOutlines(1);
-        _notchAllOutlines(2);
-        _notchAllOutlines(0);
-        _notchAllOutlines(-1);
+        $('#change_type')[0].MDCSelect.layout();
+        $('#int_city, #int_line').find('.mdc-select').each((_,el) => el.MDCSelect.layout());
+        $('#int_name_zh, #int_name_en').find('.mdc-text-field').each((_,el) => el.MDCTextField.layout());
+        stnOSINameENField.layout();
+        stnOSINameZHField.layout();
     });
+
     stnTransferDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action == 'close') {return;}
 
         // var stnId = $('#panel_stations #selected_stn').attr('stn');
         var stnId = event.target.getAttribute('for');
-        var type = stnTransferSelect.value;
+        var type = $('#change_type')[0].MDCSelect.value;
         var tickDirec = stnIntTickDirectionToggle.on ? 'r' : 'l';
         var osi = [stnOSINameZHField.value, stnOSINameENField.value];
         var osiPaidArea = paidAreaToggle.on ? 'p' : 'u';
-        var intInfo0 = [
-            stnIntCity0Select.value, 
-            stnIntLine0Select.value, 
-            stnIntNameZH0Field.value, 
-            stnIntNameEN0Field.value
-        ];
-        var intInfo1 = [
-            stnIntCity1Select.value, 
-            stnIntLine1Select.value, 
-            stnIntNameZH1Field.value, 
-            stnIntNameEN1Field.value
-        ];
-        var intInfo2 = [
-            stnIntCity2Select.value, 
-            stnIntLine2Select.value, 
-            stnIntNameZH2Field.value, 
-            stnIntNameEN2Field.value
-        ];
+
+        var [intInfo0, intInfo1, intInfo2] = [0,1,2].map(idx => {
+            return $('#int_city, #int_line')
+                .find('.mdc-select').slice(idx*2,(idx+1)*2).get().map(el => el.MDCSelect.value)
+                .concat(
+                    $('ul#int_line__selection').eq(idx).find('li span')
+                        .eq($('#int_line .mdc-select')[idx].MDCSelect.selectedIndex)
+                        .attr('style').match(/(?!background:)#[\w\d]+(?=;)/g)[0], 
+                    $('#int_name_zh, #int_name_en').find('.mdc-text-field').slice(idx*2,(idx+1)*2).get().map(el => el.MDCTextField.value)
+                );
+        });
+        console.log(intInfo0, intInfo1, intInfo2);
         console.log(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, intInfo2]);
         if (type == 'none') {
             myLine.updateStnTransfer(stnId, type);
         } else if (type == 'osi22') {
-            intInfo0.splice(
-                2, 0, 
-                $('#int_line_0__selection li span').eq(stnIntLine0Select.selectedIndex)
-                .attr('style').match(/(?!background:)#[\w\d]+(?=;)/g)[0]
-            );
-            intInfo1.splice(
-                2, 0, 
-                $('#int_line_1__selection li span').eq(stnIntLine1Select.selectedIndex)
-                .attr('style').match(/(?!background:)#[\w\d]+(?=;)/g)[0]
-            );
-            intInfo2.splice(
-                2, 0, 
-                $('#int_line_2__selection li span').eq(stnIntLine2Select.selectedIndex)
-                .attr('style').match(/(?!background:)#[\w\d]+(?=;)/g)[0]
-            );
             myLine.updateStnTransfer(stnId, `${type}_end_${osiPaidArea}`, [[intInfo0], [osi, intInfo1, intInfo2]]);
         } else {
-            intInfo1.splice(
-                2, 0, 
-                $('#int_line_1__selection li span').eq(stnIntLine1Select.selectedIndex)
-                .attr('style').match(/(?!background:)#[\w\d]+(?=;)/g)[0]
-            );
             switch (type) {
                 case 'int2':
                     // myLine.updateStnTransfer(stnId, type, [[], intInfo1, []]);
@@ -737,11 +631,6 @@ function initStationsPanel() {
                     myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [[], [osi, intInfo1]]);
                     break;
                 default:
-                    intInfo2.splice(
-                        2, 0, 
-                        $('#int_line_2__selection li span').eq(stnIntLine2Select.selectedIndex)
-                        .attr('style').match(/(?!background:)#[\w\d]+(?=;)/g)[0]
-                    )
                     switch (type) {
                         case 'int3':
                             // myLine.updateStnTransfer(stnId, `${type}_${tickDirec}`, [[], intInfo1, intInfo2]);
@@ -754,150 +643,80 @@ function initStationsPanel() {
             }
         }
     })
-    stnTransferSelect.listen('MDCSelect:change', event => {
+    $('#change_type')[0].MDCSelect.listen('MDCSelect:change', event => {
         if (event.detail.value == 'int2') {
             _showAllFields(0, false);
             _showAllFields(1, true);
             _showAllFields(2, false);
             $('#stn_transfer_diag #tick_direc').hide();
             _showOSIFields(false);
-            _notchAllOutlines(1);
         } else if (event.detail.value == 'int3') {
             _showAllFields(0, false);
             _showAllFields(1, true);
             _showAllFields(2, true);
             $('#stn_transfer_diag #tick_direc').show();
             _showOSIFields(false);
-            _notchAllOutlines(1);
-            _notchAllOutlines(2);
         } else if (event.detail.value == 'osi11') {
             _showAllFields(0, false);
             _showAllFields(1, true);
             _showAllFields(2, false);
             $('#stn_transfer_diag #tick_direc').show();
             _showOSIFields(true);
-            _notchAllOutlines(1);
-            _notchAllOutlines(-1);
         } else if (event.detail.value == 'osi12') {
             _showAllFields(0, false);
             _showAllFields(1, true);
             _showAllFields(2, true);
             $('#stn_transfer_diag #tick_direc').show();
             _showOSIFields(true);
-            _notchAllOutlines(1);
-            _notchAllOutlines(2);
-            _notchAllOutlines(-1);
         } else if (event.detail.value == 'osi22') {
             _showAllFields(0, true);
             _showAllFields(1, true);
             _showAllFields(2, true);
             $('#stn_transfer_diag #tick_direc').hide();
             _showOSIFields(true);
-            _notchAllOutlines(1);
-            _notchAllOutlines(2);
-            _notchAllOutlines(0);
-            _notchAllOutlines(-1);
         } else {
             _showAllFields(0, false);
             _showAllFields(1, false);
             _showAllFields(2, false);
             $('#stn_transfer_diag #tick_direc').hide();
             _showOSIFields(false);
-        }    
+        }
     });
-    stnIntCity0Select.listen('MDCSelect:change', event => {
-        if (event.detail.index == -1) {return;}
-        $.getJSON(`data/${event.detail.value}.json`, data => {
-            var lang = urlParams.get('lang');
-            // $('#stn_transfer_diag #int_line_1 select').();
-            $('#int_line_0__selection').empty();
-            data.forEach(l => {
-                // $('#stn_transfer_diag #int_line_1 select').append(
-                //     `<option value="${l.id}" colour="${l.colour}">${l.name[0]}</option>`
-                // );
-                $('#int_line_0__selection').append(
-                    `<li class="mdc-list-item" data-value="${l.id}">
-                    <span style="background:${l.colour};">&nbsp;</span>&nbsp;${getTransText(l.name, lang)}
-                    </li>`
-                );
+
+    $('#int_city .mdc-select').each((idx,el) => {
+        el.MDCSelect.listen('MDCSelect:change', event => {
+            if (event.detail.index === -1) {return;}
+            $.getJSON(`data/${event.detail.value}.json`, data => {
+                var lang = urlParams.get('lang');
+                $('#int_line__selection.mdc-list').eq(idx).empty();
+                data.forEach(l => {
+                    $('#int_line__selection.mdc-list').eq(idx).append(
+                        `<li class="mdc-list-item" data-value="${l.id}">
+                        <span style="background:${l.colour};">&nbsp;</span>&nbsp;${getTransText(l.name, lang)}
+                        </li>`
+                    );
+                });
+
+                var stnId = $('#stn_transfer_diag').attr('for');
+                var stnInfo = getParams().stn_list[stnId];
+                if (stnInfo.change_type !== 'none') {
+                    var allInterchanges = stnInfo.interchange[0].concat(
+                        stnInfo.interchange[1] ? stnInfo.interchange[1].slice(1,stnInfo.interchange[1].length) : []
+                    );
+                    if (allInterchanges.length < 3) {
+                        allInterchanges.unshift([,,,,,]);
+                    }
+                    if (allInterchanges.length < 3) {
+                        allInterchanges.push([,,,,,]);
+                    }
+                    var lIdx = $('#int_line__selection.mdc-list').eq(idx).find(`[data-value="${allInterchanges[idx][1]}"`).index();
+                    $('#int_line .mdc-select')[idx].MDCSelect.selectedIndex = (lIdx == -1) ? 0 : lIdx;
+                } else {
+                    $('#int_line .mdc-select')[idx].MDCSelect.selectedIndex = 0;
+                }
             });
-
-            // var stnId = $('#panel_stations #selected_stn').attr('stn');
-            var stnId = $('#stn_transfer_diag').attr('for');
-            var stnInfo = getParams().stn_list[stnId];
-
-            if (stnInfo.change_type.split('_')[0] == 'osi22') {
-                var idx = $(`#int_line_0__selection > [data-value="${stnInfo.interchange[0][0][1]}"]`).index();
-                stnIntLine0Select.selectedIndex = (idx == -1) ? 0 : idx;
-            } else {
-                stnIntLine0Select.selectedIndex = 0;
-            }
-        });
-    });
-    stnIntCity1Select.listen('MDCSelect:change', event => {
-        if (event.detail.index == -1) {return;}
-        $.getJSON(`data/${event.detail.value}.json`, data => {
-            var lang = urlParams.get('lang');
-            // $('#stn_transfer_diag #int_line_1 select').();
-            $('#int_line_1__selection').empty();
-            data.forEach(l => {
-                $('#int_line_1__selection').append(
-                    `<li class="mdc-list-item" data-value="${l.id}">
-                    <span style="background:${l.colour};">&nbsp;</span>&nbsp;${getTransText(l.name, lang)}
-                    </li>`
-                );
-            });
-
-            var stnId = $('#stn_transfer_diag').attr('for');
-            var stnInfo = getParams().stn_list[stnId];
-
-            switch (stnInfo.change_type.split('_')[0]) {
-                case 'int2':
-                case 'int3':
-                    var idx = $(`#int_line_1__selection > [data-value="${stnInfo.interchange[0][0][1]}"]`).index();
-                    stnIntLine1Select.selectedIndex = (idx == -1) ? 0 : idx;
-                    break;
-                case 'osi11':
-                case 'osi12':
-                case 'osi22':
-                    var idx = $(`#int_line_1__selection > [data-value="${stnInfo.interchange[1][1][1]}"]`).index();
-                    stnIntLine1Select.selectedIndex = (idx == -1) ? 0 : idx;
-                    break;
-                default:
-                    stnIntLine1Select.selectedIndex = 0;
-            }
-        });
-    });
-    stnIntCity2Select.listen('MDCSelect:change', event => {
-        if (event.detail.index == -1) {return;}
-        $.getJSON(`data/${event.detail.value}.json`, data => {
-            var lang = urlParams.get('lang');
-            // $('#stn_transfer_diag #int_line_2 select').empty();
-            $('#int_line_2__selection').empty();
-            data.forEach(l => {
-                $('#int_line_2__selection').append(
-                    `<li class="mdc-list-item" data-value="${l.id}">
-                    <span style="background:${l.colour};">&nbsp;</span>&nbsp;${getTransText(l.name, lang)}
-                    </li>`
-                );
-            });
-
-            // var stnId = $('#panel_stations #selected_stn').attr('stn');
-            var stnId = $('#stn_transfer_diag').attr('for');
-            var stnInfo = getParams().stn_list[stnId];
-
-            if (stnInfo.interchange && stnInfo.interchange[0] && stnInfo.interchange[0][1]) {
-                // var idx = $(`#stn_transfer_diag #int_line_2 select > [value="${stnInfo.transfer[2][1]}"]`).index();
-                var idx = $(`#int_line_2__selection > [data-value="${stnInfo.interchange[0][1][1]}"]`).index();
-                stnIntLine2Select.selectedIndex = (idx == -1) ? 0 : idx;
-            } else if (stnInfo.interchange && stnInfo.interchange[1] && stnInfo.interchange[1][2]) {
-                var idx = $(`#int_line_2__selection > [data-value="${stnInfo.interchange[1][2][1]}"]`).index();
-                stnIntLine2Select.selectedIndex = (idx == -1) ? 0 : idx;
-            } else {
-                stnIntLine2Select.selectedIndex = 0;
-            }
-        });
-    });
+        })
+    })
 
 
     // Deletion

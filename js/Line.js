@@ -553,11 +553,10 @@ class Line {
         var stnNameDim = getTxtBoxDim(
             $(`#stn_icons > #${this.#currentStnId} > .Name`)[0], 'railmap'
         );
+        // console.log(stnNameDim);
         $('#current_bg').attr({
             x: stnNameDim.x-3, 
-            y: stnNameDim.y, 
             width: stnNameDim.width+6, 
-            height: stnNameDim.height+2
         }).show();
     }
 

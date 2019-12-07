@@ -67,7 +67,10 @@
     {
         "filename": "macau_taipa", 
         "desc": {
-            "en": "Metro Ligeiro de Macau Linha Taipa", "zh-Hant": "澳門輕軌氹仔線"
+            "en": "Macao Light Rapid Transit", 
+            "pt": "Metro Ligeiro de Macau Linha Taipa", 
+            "zh-Hans": "澳门轻轨氹仔线",
+            "zh-Hant": "澳門輕軌氹仔線"
         }
     },
     {
@@ -76,6 +79,14 @@
             "en": "MTR East Rail Line", 
             "zh-Hans": "港铁东铁线",
             "zh-Hant": "港鐵東鐵綫"
+        }
+    },
+    {
+        "filename": "hongkong_ktl", 
+        "desc": {
+            "en": "MTR Kwun Tong Line", 
+            "zh-Hans": "港铁观塘线",
+            "zh-Hant": "港鐵觀塘綫"
         }
     },
     {

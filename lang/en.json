@@ -32,8 +32,6 @@
 
     "Design.Theme": "Theme Colour", 
     "Design.Theme.Title": "Choose a Theme Colour",
-    "Design.Theme.City": "City", 
-    "Design.Theme.Line": "Line",
 
     "Design.Name": "Name of Line",
     "Design.Name.Title": "Edit Line Name", 
@@ -87,6 +85,8 @@
     "Dialog.Done": "Done",
     "Dialog.OK": "OK",
 
+    "Editor.City": "City", 
+    "Editor.Line": "Line",
     "Editor.Name.ZH": "Name (in Chinese Character)",
     "Editor.Name.EN": "Name (in Latin Character)"
 }

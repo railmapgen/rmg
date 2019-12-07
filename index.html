@@ -6,22 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script>
-        // if (!new URLSearchParams(window.location.search).get('lang')) {
-            var userLang = new URLSearchParams(window.location.search).get('lang') || localStorage.rmgLang || navigator.language;
-            var lang = '?lang=' + (lang => {
-                switch (lang.toLowerCase()) {
-                    case 'zh-cn':
-                    case 'zh-hans':
-                        return 'zh-Hans';
-                    case 'zh':
-                    case 'zh-hk':
-                        return 'zh-HK';
-                    default: return 'en';
-                }
-            })(userLang);
-            // var lang = `?lang=${userLang}`;
-            history.pushState({url:window.location.href}, null, lang);
-        // }
+        var userLang = new URLSearchParams(window.location.search).get('lang') || localStorage.rmgLang || navigator.language;
+        var lang = '?lang=' + (lang => {
+            switch (lang.toLowerCase()) {
+                case 'zh-cn':
+                case 'zh-hans':
+                    return 'zh-Hans';
+                case 'zh':
+                case 'zh-hk':
+                    return 'zh-HK';
+                default: return 'en';
+            }
+        })(userLang);
+        history.pushState({url:window.location.href}, null, lang);
         const urlParams = new URLSearchParams(window.location.search);
     </script>
 
@@ -35,7 +32,6 @@
     <script async src="https://unpkg.com/html2canvas@latest/dist/html2canvas.min.js"></script>
 
     <script src="js/utils.js"></script>
-    <script async src="js/lang.js"></script>
     <script src="lib/Station.js"></script>
     <script src="lib/Line.js"></script>
     <script src="js/page_loader.js"></script>
@@ -693,7 +689,7 @@ id="railmap" width="0" height="0">
                     <div class="mdc-select__anchor" style="width: 200px;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
-                        <span class="mdc-floating-label" trans-tag="Design.Theme.City"></span>
+                        <span class="mdc-floating-label" trans-tag="Editor.City"></span>
                         <div class="mdc-line-ripple"></div>
                     </div>
                     
@@ -713,7 +709,7 @@ id="railmap" width="0" height="0">
                     <div class="mdc-select__anchor" style="width: 200px;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
-                        <span class="mdc-floating-label" trans-tag="Design.Theme.Line"></span>
+                        <span class="mdc-floating-label" trans-tag="Editor.Line"></span>
                         <div class="mdc-line-ripple"></div>
                     </div>
                     
@@ -1015,7 +1011,7 @@ id="railmap" width="0" height="0">
             <div class="mdc-layout-grid__inner">
 
                 <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
-                <div id="change_type" class="mdc-select">
+                <div id="change_type" class="mdc-select" data-mdc-auto-init="MDCSelect">
                     <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
@@ -1042,56 +1038,56 @@ id="railmap" width="0" height="0">
                     </button>
                 </div>
 
-                <div id="int_city_0" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select">
+                <div id="int_city" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
+                <div class="mdc-select" data-mdc-auto-init="MDCSelect">
                     <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
-                        <span class="mdc-floating-label">City</span>
+                        <span class="mdc-floating-label" trans-tag="Editor.City"></span>
                         <div class="mdc-line-ripple"></div>
                     </div>
                     <div class="mdc-select__menu mdc-menu mdc-menu-surface demo-width-class">
-                        <ul id="int_city_0__selection" class="mdc-list">
+                        <ul id="int_city__selection" class="mdc-list">
                         </ul>
                     </div>
                 </div>
                 </div>
 
-                <div id="int_line_0" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select">
+                <div id="int_line" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
+                <div class="mdc-select" data-mdc-auto-init="MDCSelect">
                     <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
-                        <span class="mdc-floating-label">Line</span>
+                        <span class="mdc-floating-label" trans-tag="Editor.Line"></span>
                         <div class="mdc-line-ripple"></div>
                     </div>
                     <div class="mdc-select__menu mdc-menu mdc-menu-surface">
-                        <ul id="int_line_0__selection" class="mdc-list">
+                        <ul id="int_line__selection" class="mdc-list">
                         </ul>
                     </div>
                 </div>
                 </div>
 
-                <div id="int_name_zh_0" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
-                    <div class="mdc-text-field mdc-text-field--outlined">
+                <div id="int_name_zh" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
+                    <div class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
                         <input type="text" id="tf-outlined" class="mdc-text-field__input">
                         <div class="mdc-notched-outline">
                             <div class="mdc-notched-outline__leading"></div>
                             <div class="mdc-notched-outline__notch">
-                            <label for="tf-outlined" class="mdc-floating-label">Name in Chinese Characters</label>
+                            <label for="tf-outlined" class="mdc-floating-label" trans-tag="Editor.Name.ZH"></label>
                             </div>
                             <div class="mdc-notched-outline__trailing"></div>
                         </div>
                     </div>
                 </div>
 
-                <div id="int_name_en_0" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
-                    <div class="mdc-text-field mdc-text-field--outlined">
+                <div id="int_name_en" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
+                    <div class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
                         <input type="text" id="tf-outlined" class="mdc-text-field__input">
                         <div class="mdc-notched-outline">
                             <div class="mdc-notched-outline__leading"></div>
                             <div class="mdc-notched-outline__notch">
-                            <label for="tf-outlined" class="mdc-floating-label">Name in Latin Characters</label>
+                            <label for="tf-outlined" class="mdc-floating-label" trans-tag="Editor.Name.EN"></label>
                             </div>
                             <div class="mdc-notched-outline__trailing"></div>
                         </div>
@@ -1131,116 +1127,64 @@ id="railmap" width="0" height="0">
                     </button>
                 </div>
 
-                <div id="int_city_1" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select">
+                <div id="int_city" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
+                <div class="mdc-select" data-mdc-auto-init="MDCSelect">
                     <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
-                        <span class="mdc-floating-label">1st City</span>
+                        <span class="mdc-floating-label" trans-tag="Editor.City"></span>
                         <div class="mdc-line-ripple"></div>
                     </div>
                     <div class="mdc-select__menu mdc-menu mdc-menu-surface demo-width-class">
-                        <ul id="int_city_1__selection" class="mdc-list">
+                        <ul id="int_city__selection" class="mdc-list">
                         </ul>
                     </div>
                 </div>
                 </div>
 
-                <div id="int_line_1" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select">
+                <div id="int_line" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
+                <div class="mdc-select" data-mdc-auto-init="MDCSelect">
                     <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
-                        <span class="mdc-floating-label">1st Line</span>
+                        <span class="mdc-floating-label" trans-tag="Editor.Line"></span>
                         <div class="mdc-line-ripple"></div>
                     </div>
                     <div class="mdc-select__menu mdc-menu mdc-menu-surface">
-                        <ul id="int_line_1__selection" class="mdc-list">
+                        <ul id="int_line__selection" class="mdc-list">
                         </ul>
                     </div>
                 </div>
                 </div>
 
-                <div id="int_name_zh_1" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
-                    <div class="mdc-text-field mdc-text-field--outlined">
-                        <input type="text" id="tf-outlined" class="mdc-text-field__input">
-                        <div class="mdc-notched-outline">
-                            <div class="mdc-notched-outline__leading"></div>
-                            <div class="mdc-notched-outline__notch">
-                            <label for="tf-outlined" class="mdc-floating-label">1st Name in Chinese Characters</label>
-                            </div>
-                            <div class="mdc-notched-outline__trailing"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="int_name_en_1" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
-                    <div class="mdc-text-field mdc-text-field--outlined">
-                        <input type="text" id="tf-outlined" class="mdc-text-field__input">
-                        <div class="mdc-notched-outline">
-                            <div class="mdc-notched-outline__leading"></div>
-                            <div class="mdc-notched-outline__notch">
-                            <label for="tf-outlined" class="mdc-floating-label">1st Name in Latin Characters</label>
-                            </div>
-                            <div class="mdc-notched-outline__trailing"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="int_city_2" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select">
+                <div id="int_city" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
+                <div class="mdc-select" data-mdc-auto-init="MDCSelect">
                     <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
-                        <span class="mdc-floating-label">2nd City</span>
+                        <span class="mdc-floating-label" trans-tag="Editor.City"></span>
                         <div class="mdc-line-ripple"></div>
                     </div>
                     <div class="mdc-select__menu mdc-menu mdc-menu-surface demo-width-class">
-                        <ul id="int_city_2__selection" class="mdc-list">
+                        <ul id="int_city__selection" class="mdc-list">
                         </ul>
                     </div>
                 </div>
                 </div>
 
-                <div id="int_line_2" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select">
+                <div id="int_line" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
+                <div class="mdc-select" data-mdc-auto-init="MDCSelect">
                     <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
-                        <span class="mdc-floating-label">2nd Line</span>
+                        <span class="mdc-floating-label" trans-tag="Editor.Line"></span>
                         <div class="mdc-line-ripple"></div>
                     </div>
                     <div class="mdc-select__menu mdc-menu mdc-menu-surface">
-                        <ul id="int_line_2__selection" class="mdc-list">
+                        <ul id="int_line__selection" class="mdc-list">
                         </ul>
                     </div>
                 </div>
-                </div>
-
-                <div id="int_name_zh_2" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
-                    <div class="mdc-text-field mdc-text-field--outlined">
-                        <input type="text" id="tf-outlined" class="mdc-text-field__input">
-                        <div class="mdc-notched-outline">
-                            <div class="mdc-notched-outline__leading"></div>
-                            <div class="mdc-notched-outline__notch">
-                            <label for="tf-outlined" class="mdc-floating-label">2nd Name in Chinese Characters</label>
-                            </div>
-                            <div class="mdc-notched-outline__trailing"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="int_name_en_2" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
-                    <div class="mdc-text-field mdc-text-field--outlined">
-                        <input type="text" id="tf-outlined" class="mdc-text-field__input">
-                        <div class="mdc-notched-outline">
-                            <div class="mdc-notched-outline__leading"></div>
-                            <div class="mdc-notched-outline__notch">
-                            <label for="tf-outlined" class="mdc-floating-label">2nd Name in Latin Characters</label>
-                            </div>
-                            <div class="mdc-notched-outline__trailing"></div>
-                        </div>
-                    </div>
                 </div>
             </div>
             </div>
@@ -1345,6 +1289,8 @@ id="railmap" width="0" height="0">
 
 </div>
 
+
+<script async src="js/lang.js"></script>
 
 <script>
     var template = 'default';

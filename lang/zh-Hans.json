@@ -30,8 +30,6 @@
 
     "Design.Theme": "主题颜色", 
     "Design.Theme.Title": "选择主题颜色",
-    "Design.Theme.City": "城市", 
-    "Design.Theme.Line": "路线",
 
     "Design.Name": "路线名",
     "Design.Name.Title": "编辑路线名称", 
@@ -85,6 +83,8 @@
     "Dialog.Done": "完成", 
     "Dialog.OK": "好",
 
+    "Editor.City": "城市", 
+    "Editor.Line": "路线",
     "Editor.Name.ZH": "名称（汉字）",
     "Editor.Name.EN": "名称（拉丁字母）"
 }
