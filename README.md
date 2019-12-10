@@ -11,7 +11,27 @@ Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be d
 
 ## Version History
 
-### 1.1.1 (7 Nov 2019)
+### 1.2 (11 Dec 2019)
+
+#### New Features
+
+- Station info board in Guangzhou Metro style is now available!
+
+#### Known Issues
+
+- Sliders may stop working randomly. We are investigating this issue. 
+  - Workaround: Refresh page to re-initial sliders. Your work will not be lost if you are not using incognito mode. 
+- The styles of selectors and text fields are not agreed. This is part of the migration process of the elements from MDC 3.2.0 to MDC 4.0.0. 
+- Disabled options in some selectors are selectable, which may cause an internal error and damage your line configuration. 
+  - Workaround: Avoid selecting disabled options. 
+- Text are not completely translated. 
+
+#### Resolved Issues
+
+- Updated data structure for upcoming features. 
+- Improved structure of some panels. 
+
+### 1.1.1 (7 Dec 2019)
 
 #### New Features
 
@@ -32,7 +52,7 @@ Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be d
 - Fixed the error that station name background does not align. 
 - Improved robustness.
 
-### 1.1 (6 Nov 2019)
+### 1.1 (6 Dec 2019)
 
 #### New Features
 
@@ -47,7 +67,7 @@ Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be d
   - Workaround: Avoid selecting disabled options. 
 - Text are not completely translated. 
 
-### 1.0 (3 Nov 2019)
+### 1.0 (3 Dec 2019)
 
 #### New Features
 

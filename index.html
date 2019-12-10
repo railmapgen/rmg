@@ -6,20 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script>
-        var userLang = new URLSearchParams(window.location.search).get('lang') || localStorage.rmgLang || navigator.language;
-        var lang = '?lang=' + (lang => {
-            switch (lang.toLowerCase()) {
-                case 'zh-cn':
-                case 'zh-hans':
-                    return 'zh-Hans';
-                case 'zh':
-                case 'zh-hk':
-                    return 'zh-HK';
-                default: return 'en';
-            }
-        })(userLang);
-        history.pushState({url:window.location.href}, null, lang);
-        const urlParams = new URLSearchParams(window.location.search);
+        var urlParams = new URLSearchParams(window.location.search);
+        var requestLang = urlParams.get('lang') || localStorage.rmgLang || navigator.language.split('-').slice(0,2).join('-');
+        switch (requestLang.toLowerCase()) {
+            case 'zh-cn':
+            case 'zh-hans':
+                urlParams.set('lang', 'zh-Hans');
+                break;
+            case 'zh':
+            case 'zh-hk':
+            case 'zh-tw':
+                urlParams.set('lang', 'zh-HK');
+                break;
+            default: urlParams.set('lang', 'en');
+        }
+
+        switch (urlParams.get('style')) {
+            case 'mtr':
+            case 'gzmtr':
+                break;
+            default: urlParams.set('style', 'mtr');
+        }
+        history.pushState({url:window.location.href}, null, '?' + urlParams.toString());
     </script>
 
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -68,6 +76,9 @@
             letter-spacing: .03125em;
             text-align: center;
         }
+        .int-selection {
+            max-width: 100%;
+        }
     </style>
 
     <style type="text/css" id="svg_share">
@@ -75,14 +86,19 @@
             font-family: 'Vegur';
             src: url('data:font/otf;base64,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');
         }
-        .Strip {fill:none;stroke-width:20} 
+        .Strip {
+            fill: none;
+            stroke-width: 20;
+        }
+        .rmg-strip__gzmtr--1 {
+            fill: none;
+            stroke-width: 60;
+        } 
 
         .rmg-name__zh {alignment-baseline:central;}
-        .rmg-name__en{
-            alignment-baseline:middle;
-            font-family: Vegur;
-        }
-        .rmg-name__zh.rmg-name__char-trad {
+        .rmg-name__en {alignment-baseline:middle;}
+
+        .rmg-name__char-trad {
             font-family: 
                 Vegur,
                 Noto Serif KR,
@@ -92,7 +108,7 @@
                 Hiragino Mincho ProN,
                 serif;
         }
-        .rmg-name__zh.rmg-name__char-cn {
+        .rmg-name__char-cn {
             font-family: 
                 Vegur,
                 Noto Serif SC,
@@ -100,7 +116,7 @@
                 Hiragino Mincho ProN,
                 serif;
         }
-        .rmg-name__zh.rmg-name__char-jp {
+        .rmg-name__char-jp {
             font-family: 
                 Vegur,
                 Noto Serif JP,
@@ -110,7 +126,7 @@
                 Hiragino Mincho ProN,
                 serif;
         }
-        .rmg-name__zh.rmg-name__char-tw {
+        .rmg-name__char-tw {
             font-family: 
                 Vegur,
                 Noto Serif TC,
@@ -121,12 +137,10 @@
                 serif;
         }
 
-        .rmg-name__zh.rmg-name__gzmtr {
+        .rmg-name__gzmtr {
             font-family: Arial, STHeiti, SimHei;
         }
-        .rmg-name__en.rmg-name__gzmtr {
-            font-family: Arial;
-        }
+        .rmg-name__gzmtr--white-fg {fill: #fff;}
     </style>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
@@ -146,23 +160,74 @@ xmlns:xlink="http://www.w3.org/1999/xlink"
 id="destination" width="0" height="0">
 
     <style type="text/css">
-        .rmg-name__zh.DestName {font-size: 90px;}
-        .rmg-name__en.DestName {font-size: 45px;}
+        .rmg-strip__gzmtr--light-1 {
+            fill:orange;
+        }
+        .rmg-name__zh.rmg-name__mtr--dest {font-size: 90px;}
+        .rmg-name__en.rmg-name__mtr--dest {font-size: 45px;}
+
+        .rmg-name__zh.rmg-name__gzmtr--dest {font-size: 90px;}
+        .rmg-name__en.rmg-name__gzmtr--dest {font-size: 36px;}
+        .rmg-name__zh.rmg-name__gzmtr--next {
+            font-size: 35px;
+        }
+        .rmg-name__en.rmg-name__gzmtr--next {
+            font-size: 17px;
+        }
+
+        .rmg-name__zh.rmg-name__gzmtr--platform {
+            font-size: 13px;
+            text-anchor: middle;
+        }
+        .rmg-name__en.rmg-name__gzmtr--platform {
+            font-size: 9px;
+            text-anchor: middle;
+        }
+
+        .rmg-psd-num {
+            text-anchor: middle;
+            alignment-baseline:central;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .rmg-psd-num.rmg-psd-num__gzmtr {
+            font-size: 20px;
+        }
+        .rmg-name__zh.rmg-name__gzmtr--psd {
+            font-size: 12px;
+            text-anchor: middle;
+        }
+        .rmg-name__en.rmg-name__gzmtr--psd {
+            font-size: 6.5px;
+            text-anchor: middle;
+        }
 
         .rmg-platform-num {
-            font-size:135px;
             alignment-baseline:central;
             text-anchor: middle;
+        }
+        .rmg-platform-num.rmg-platform-num__mtr {
+            font-size:135px;
+            font-family: Vegur;
             fill: #fff;
         }
-        .rmg-platform-num.rmg-platform-num__mtr {font-family: Vegur;}
-        .rmg-platform-num.rmg-platform-num__gzmtr {font-family: Arial, sans-serif;}
+        .rmg-name__platformnum {
+            text-anchor: middle;
+        }
+        .rmg-name__gzmtr--platformnum {
+            font-size:38px;
+        }
+        .rmg-name__mtr--platformnum {
+            font-size:135px;
+            fill: #fff;
+        }
     </style>
 
     <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Noto+Serif+KR:700|Noto+Serif+JP:700|Noto+Serif+TC:700|Noto+Serif+SC:700&display=swap);</style>
 
     <defs>
         <path id="arrow" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
+        <ellipse id="gzmtr_light_1" rx="24" ry="12" class="rmg-strip__gzmtr--light-1"/>
+        <rect id="psd" height="40" width="40" rx="4" fill="white"/>
     </defs>
 
     <path id="dest_strip" class="Strip"/>
@@ -171,9 +236,43 @@ id="destination" width="0" height="0">
         <use xlink:href="#arrow"/>
         <g id="platform">
             <circle cx="0" cy="0" r="75"/>
-            <text class="rmg-platform-num rmg-platform-num__mtr" dy="0"></text>
+            <text class="rmg-name__zh rmg-name__platformnum rmg-name__mtr--platformnum" dy="0"></text>
         </g>
         <g></g>
+    </g>
+
+    <g id="station_info_gzmtr" style="display: none;">
+        <g id="big_next">
+            <g transform="translate(80,110)" text-anchor="middle">
+                <text class="rmg-name__zh rmg-name__gzmtr--next">下站</text>
+                <text class="rmg-name__en rmg-name__gzmtr--next" dy="30">Next</text>
+            </g>
+            <g text-anchor="start">
+                <text class="rmg-name__zh rmg-name__gzmtr--next"></text>
+                <text class="rmg-name__en rmg-name__gzmtr--next" dy="30"></text>
+            </g>
+            
+        </g>
+        <use xlink:href="#arrow" transform="translate(200,120)scale(0.25)"/>
+        <g id="platform">
+            <circle cx="0" cy="0" r="30"/>
+            <text class="rmg-name__zh rmg-name__platformnum rmg-name__gzmtr--platformnum" dy="-12"></text>
+            <text class="rmg-name__zh rmg-name__gzmtr--platform" dy="10">站台</text>
+            <text class="rmg-name__en rmg-name__gzmtr--platform" dy="21">Platform</text>
+        </g>
+        <g id="big_stn_num" transform="scale(1.4)">
+            <use xlink:href="#stn_gz"/>
+            <text class="rmg-name__zh rmg-name__gzmtr--line-num"></text>
+            <text x="9.25" class="rmg-name__zh rmg-name__gzmtr--station-num">06</text>
+        </g>
+        <g id="big_name" text-anchor="middle"></g>
+        <use xlink:href="#gzmtr_light_1"/>
+        <g id="big_psd">
+            <use xlink:href="#psd" x="-20"/>
+            <text class="rmg-psd-num rmg-psd-num__gzmtr" dy="10"></text>
+            <text class="rmg-name__zh rmg-name__gzmtr--psd" dy="26">屏蔽门</text>
+            <text class="rmg-name__en rmg-name__gzmtr--psd" dy="36">Screen Door</text>
+        </g>
     </g>
 
     <rect id="dest_outer" x="0" y="0" fill="none" stroke="black"/>
@@ -234,6 +333,14 @@ id="railmap" width="0" height="0">
             text-anchor: middle;
             alignment-baseline: central;
         }
+        .rmg-name__gzmtr--station-num {
+            font-size: 14px;
+            text-anchor: middle;
+        }
+        .rmg-name__gzmtr--line-num {
+            font-size: 14px;
+            text-anchor: middle;
+        }
     </style>
 
     <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Noto+Serif+KR:700|Noto+Serif+JP:700|Noto+Serif+TC:700|Noto+Serif+SC:700&display=swap);</style>
@@ -278,13 +385,6 @@ id="railmap" width="0" height="0">
     <rect id="current_bg" x="0" y="0" width="100" height="20" fill="#000"/>
     <g id="stn_icons"></g>
 
-    <g id="station_number" style="display:none">
-        <g id="stn_num_0" class="FutureName">
-            <text transform="translate(16,100)scale(1)" class="StnNum" id="ln">1</text>
-            <text x="34" y="100" class="StnNum" id="stn">01</text>
-        </g>
-    </g>
-
     <g id="change_bgs" style="display:none;">
         <rect id="int_bg_0" x="25" y="0" rx="3" ry="3" width="37" height="20" fill="none"/>
     </g>
@@ -295,7 +395,7 @@ id="railmap" width="0" height="0">
 
 <div id="panels">
 
-<div class="mdc-tab-bar" role="tablist">
+<div class="mdc-tab-bar" role="tablist" data-mdc-auto-init="MDCTabBar">
     <div class="mdc-tab-scroller">
         <div class="mdc-tab-scroller__scroll-area">
         <div class="mdc-tab-scroller__scroll-content">
@@ -323,7 +423,7 @@ id="railmap" width="0" height="0">
 
             <button class="mdc-tab" role="tab" aria-selected="true">
             <span class="mdc-tab__content">
-                <span class="mdc-tab__icon material-icons" aria-hidden="true">style</span>
+                <span class="mdc-tab__icon material-icons" aria-hidden="true">brush</span>
                 <span class="mdc-tab__text-label" trans-tag="Tab.Design"></span>
             </span>
             <span class="mdc-tab-indicator">
@@ -364,7 +464,7 @@ id="railmap" width="0" height="0">
 <div class="mdc-layout-grid__inner">
 
     <div class="mdc-layout-grid__cell--span-12 mdc-card">
-    <ul class="mdc-list" data-mdc-auto-init="MDCList">
+    <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
         <li class="mdc-list-item" tabindex="0" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">note_add</span>
             <span class="mdc-list-item__text" trans-tag="File.New"></span>
@@ -381,9 +481,22 @@ id="railmap" width="0" height="0">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">cloud_download</span>
             <span class="mdc-list-item__text" trans-tag="File.Export"></span>
         </li>
+        <li role="separator" class="mdc-list-divider"></li>
+    </ul>
+    <ul class="mdc-list mdc-list--two-line mdc-list--avatar-list" data-mdc-auto-init="MDCList">
+        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">style</span>
+            <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text" trans-tag="File.Style"></span>
+                <span class="mdc-list-item__secondary-text"></span>
+            </span>
+        </li>
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">language</span>
-            <span class="mdc-list-item__text" trans-tag="File.Lang">Language</span>
+            <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text" trans-tag="File.Lang"></span>
+                <span class="mdc-list-item__secondary-text"></span>
+            </span>
         </li>
     </ul>
     </div>
@@ -465,6 +578,30 @@ id="railmap" width="0" height="0">
     <div class="mdc-dialog__scrim"></div>
 </div>
 
+<div id="style_diag" class="mdc-dialog"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="my-dialog-title"
+     aria-describedby="my-dialog-content"
+     data-mdc-auto-init="MDCDialog">
+  <div class="mdc-dialog__container">
+    <div class="mdc-dialog__surface">
+      <h2 class="mdc-dialog__title" id="my-dialog-title" trans-tag="File.Style.Title"></h2>
+      <div class="mdc-dialog__content" id="my-dialog-content">
+        <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
+          <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="mtr" data-mdc-auto-init="MDCRipple">
+            <span class="mdc-list-item__text" trans-tag="File.Style.MTR"></span>
+          </li>
+          <li class="mdc-list-item" data-mdc-dialog-action="gzmtr" data-mdc-auto-init="MDCRipple">
+            <span class="mdc-list-item__text" trans-tag="File.Style.GZMTR"></span>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="mdc-dialog__scrim"></div>
+</div>
+
 <div id="lang_diag" class="mdc-dialog"
      role="alertdialog"
      aria-modal="true"
@@ -472,7 +609,7 @@ id="railmap" width="0" height="0">
      aria-describedby="my-dialog-content">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
-      <h2 class="mdc-dialog__title" id="my-dialog-title" trans-tag="File.Lang.Title"></h2>
+      <h2 class="mdc-dialog__title" id="my-dialog-title" trans-tag="File.Lang.Title">Choos a Language</h2>
       <div class="mdc-dialog__content" id="my-dialog-content">
         <ul class="mdc-list mdc-list--avatar-list">
           <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="en">
@@ -598,10 +735,10 @@ id="railmap" width="0" height="0">
 
 <div id="panel_design" class="panel">
 
-<div class="mdc-layout-grid" style="max-width: 500px;">
+<div class="mdc-layout-grid" style="max-width: 1000px;">
 <div class="mdc-layout-grid__inner">
 
-    <div class="mdc-layout-grid__cell--span-12 mdc-card">
+    <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card" style="max-width: 100%;">
     <ul id="design_list" class="mdc-list mdc-list--two-line mdc-list--avatar-list">
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">color_lens</span>
@@ -638,6 +775,22 @@ id="railmap" width="0" height="0">
             </div>
         </li>
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">swap_vert</span>
+            <span class="mdc-list-item__text-label" trans-tag="Design.FlipName"></span>
+        </li>
+    </ul>
+    </div>
+
+    <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card" style="max-width: 100%; display: none;" mtr-specific>
+    <ul id="design_list_mtr" class="mdc-list mdc-list--two-line mdc-list--avatar-list" data-mdc-auto-init="MDCList">
+        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">font_download</span>
+            <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text" trans-tag="Design.Char"></span>
+                <span class="mdc-list-item__secondary-text"></span>
+            </span>
+        </li>
+        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">rotate_left</span>
             <span class="mdc-list-item__text-label" trans-tag="Design.MTRLegacy"></span>
             <span class="mdc-list-item__meta">
@@ -651,16 +804,36 @@ id="railmap" width="0" height="0">
                 </div>
             </span>
         </li>
+    </ul>
+    </div>
+
+    <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card" style="max-width: 100%; display: none;" gzmtr-specific>
+    <ul id="design_list_gzmtr" class="mdc-list mdc-list--two-line mdc-list--avatar-list" data-mdc-auto-init="MDCList">
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
-            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">swap_vert</span>
-            <span class="mdc-list-item__text-label" trans-tag="Design.FlipName"></span>
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">looks_one</span>
+            <div id="line_num" class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
+                <input type="text" id="tf-outlined" class="mdc-text-field__input">
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                    <label for="tf-outlined" class="mdc-floating-label" trans-tag="Design.Line"></label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
         </li>
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
-            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">font_download</span>
-            <span class="mdc-list-item__text">
-                <span class="mdc-list-item__primary-text" trans-tag="Design.Char"></span>
-                <span class="mdc-list-item__secondary-text"></span>
-            </span>
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">looks_one</span>
+            <div id="psd_num" class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
+                <input type="text" id="tf-outlined" class="mdc-text-field__input">
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                    <label for="tf-outlined" class="mdc-floating-label" trans-tag="Design.PSD"></label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
         </li>
     </ul>
     </div>
@@ -685,8 +858,8 @@ id="railmap" width="0" height="0">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
-                <div id="theme_city" class="mdc-select" data-mdc-auto-init="MDCSelect">
-                    <div class="mdc-select__anchor" style="width: 200px;">
+                <div id="theme_city" class="mdc-select" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                    <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
                         <span class="mdc-floating-label" trans-tag="Editor.City"></span>
@@ -705,8 +878,8 @@ id="railmap" width="0" height="0">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
-                <div id="theme_line" class="mdc-select" data-mdc-auto-init="MDCSelect">
-                    <div class="mdc-select__anchor" style="width: 200px;">
+                <div id="theme_line" class="mdc-select" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                    <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
                         <span class="mdc-floating-label" trans-tag="Editor.Line"></span>
@@ -748,7 +921,7 @@ id="railmap" width="0" height="0">
                     <i class="material-icons">漢</i>
                 </div>
                 <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
-                <div id="name_zh" class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
+                <div id="name_zh" class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField" style="width: 100%;">
                     <input type="text" id="tf-outlined" class="mdc-text-field__input">
                     <div class="mdc-notched-outline">
                         <div class="mdc-notched-outline__leading"></div>
@@ -764,7 +937,7 @@ id="railmap" width="0" height="0">
                     <i class="material-icons">A</i>
                 </div>
                 <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
-                <div id="name_en" class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
+                <div id="name_en" class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField" style="width: 100%;">
                     <input type="text" id="tf-outlined" class="mdc-text-field__input">
                     <div class="mdc-notched-outline">
                         <div class="mdc-notched-outline__leading"></div>
@@ -954,7 +1127,7 @@ id="railmap" width="0" height="0">
                     <i class="material-icons">漢</i>
                 </div>
                 <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
-                <div id="name_zh" class="mdc-text-field mdc-text-field--outlined">
+                <div id="name_zh" class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
                     <input type="text" id="tf-outlined" class="mdc-text-field__input">
                     <div class="mdc-notched-outline">
                         <div class="mdc-notched-outline__leading"></div>
@@ -970,7 +1143,7 @@ id="railmap" width="0" height="0">
                     <i class="material-icons">A</i>
                 </div>
                 <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
-                <div id="name_en" class="mdc-text-field mdc-text-field--outlined">
+                <div id="name_en" class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
                     <input type="text" id="tf-outlined" class="mdc-text-field__input">
                     <div class="mdc-notched-outline">
                         <div class="mdc-notched-outline__leading"></div>
@@ -984,6 +1157,22 @@ id="railmap" width="0" height="0">
 
                 <div class="mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--align-middle">
                     <span trans-tag="Stations.Name.Hint"></span>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle" style="display: none;" gzmtr-specific>
+                    <i class="material-icons">looks_one</i>
+                </div>
+                <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone" style="display: none;" gzmtr-specific>
+                <div id="stn_num" class="mdc-text-field mdc-text-field--outlined" style="width: 100%;" data-mdc-auto-init="MDCTextField">
+                    <input type="text" id="tf-outlined" class="mdc-text-field__input">
+                    <div class="mdc-notched-outline">
+                        <div class="mdc-notched-outline__leading"></div>
+                        <div class="mdc-notched-outline__notch">
+                        <label for="tf-outlined" class="mdc-floating-label" trans-tag="Stations.Name.StnNum"></label>
+                        </div>
+                        <div class="mdc-notched-outline__trailing"></div>
+                    </div>
+                </div>
                 </div>
             </div>
             </div>
@@ -1010,9 +1199,9 @@ id="railmap" width="0" height="0">
             <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner">
 
-                <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
-                <div id="change_type" class="mdc-select" data-mdc-auto-init="MDCSelect">
-                    <div class="mdc-select__anchor">
+                <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone">
+                <div id="change_type" class="mdc-select" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                    <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
                         <span class="mdc-floating-label" trans-tag="Stations.Interchange.Type.Title"></span>
@@ -1032,15 +1221,22 @@ id="railmap" width="0" height="0">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
-                    <button id="tick_direc" class="mdc-icon-button" aria-label="Interchange Direction" aria-hidden="false" aria-pressed="false">
+                    <button id="tick_direc" class="mdc-icon-button" aria-label="Interchange Direction" aria-hidden="false" aria-pressed="false" data-mdc-auto-init="MDCIconButtonToggle">
                         <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">toggle_on</i>
                         <i class="material-icons mdc-icon-button__icon">toggle_off</i>
                     </button>
                 </div>
 
+                <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
+                    <button id="paid_area" class="mdc-icon-button" aria-label="Paid Area" aria-hidden="false" aria-pressed="false" data-mdc-auto-init="MDCIconButtonToggle">
+                        <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">attach_money</i>
+                        <i class="material-icons mdc-icon-button__icon">money_off</i>
+                    </button>
+                </div>
+
                 <div id="int_city" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select" data-mdc-auto-init="MDCSelect">
-                    <div class="mdc-select__anchor">
+                <div class="mdc-select" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                    <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
                         <span class="mdc-floating-label" trans-tag="Editor.City"></span>
@@ -1054,8 +1250,8 @@ id="railmap" width="0" height="0">
                 </div>
 
                 <div id="int_line" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select" data-mdc-auto-init="MDCSelect">
-                    <div class="mdc-select__anchor">
+                <div class="mdc-select" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                    <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
                         <span class="mdc-floating-label" trans-tag="Editor.Line"></span>
@@ -1069,7 +1265,7 @@ id="railmap" width="0" height="0">
                 </div>
 
                 <div id="int_name_zh" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
-                    <div class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
+                    <div class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField" style="width: 100%;">
                         <input type="text" id="tf-outlined" class="mdc-text-field__input">
                         <div class="mdc-notched-outline">
                             <div class="mdc-notched-outline__leading"></div>
@@ -1082,7 +1278,7 @@ id="railmap" width="0" height="0">
                 </div>
 
                 <div id="int_name_en" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
-                    <div class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
+                    <div class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField" style="width: 100%;">
                         <input type="text" id="tf-outlined" class="mdc-text-field__input">
                         <div class="mdc-notched-outline">
                             <div class="mdc-notched-outline__leading"></div>
@@ -1095,7 +1291,7 @@ id="railmap" width="0" height="0">
                 </div>
 
                 <div id="osi_name_zh" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
-                    <div class="mdc-text-field mdc-text-field--outlined">
+                    <div class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
                         <input type="text" id="tf-outlined" class="mdc-text-field__input">
                         <div class="mdc-notched-outline">
                             <div class="mdc-notched-outline__leading"></div>
@@ -1108,7 +1304,7 @@ id="railmap" width="0" height="0">
                 </div>
 
                 <div id="osi_name_en" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
-                    <div class="mdc-text-field mdc-text-field--outlined">
+                    <div class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
                         <input type="text" id="tf-outlined" class="mdc-text-field__input">
                         <div class="mdc-notched-outline">
                             <div class="mdc-notched-outline__leading"></div>
@@ -1120,16 +1316,11 @@ id="railmap" width="0" height="0">
                     </div>
                 </div>
 
-                <div id="paid_area" class="mdc-layout-grid__cell--span-12 mdc-layout-grid__cell--align-middle">
-                    <button class="mdc-icon-button" aria-label="Paid Area" aria-hidden="false" aria-pressed="false">
-                        <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">attach_money</i>
-                        <i class="material-icons mdc-icon-button__icon">money_off</i>
-                    </button>
-                </div>
+
 
                 <div id="int_city" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select" data-mdc-auto-init="MDCSelect">
-                    <div class="mdc-select__anchor">
+                <div class="mdc-select" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                    <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
                         <span class="mdc-floating-label" trans-tag="Editor.City"></span>
@@ -1143,8 +1334,8 @@ id="railmap" width="0" height="0">
                 </div>
 
                 <div id="int_line" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select" data-mdc-auto-init="MDCSelect">
-                    <div class="mdc-select__anchor">
+                <div class="mdc-select" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                    <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
                         <span class="mdc-floating-label" trans-tag="Editor.Line"></span>
@@ -1158,8 +1349,8 @@ id="railmap" width="0" height="0">
                 </div>
 
                 <div id="int_city" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select" data-mdc-auto-init="MDCSelect">
-                    <div class="mdc-select__anchor">
+                <div class="mdc-select" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                    <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
                         <span class="mdc-floating-label" trans-tag="Editor.City"></span>
@@ -1173,8 +1364,8 @@ id="railmap" width="0" height="0">
                 </div>
 
                 <div id="int_line" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select" data-mdc-auto-init="MDCSelect">
-                    <div class="mdc-select__anchor">
+                <div class="mdc-select" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                    <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text"></div>
                         <span class="mdc-floating-label" trans-tag="Editor.Line"></span>
@@ -1295,6 +1486,7 @@ id="railmap" width="0" height="0">
 <script>
     var template = 'default';
     var myLine;
+    $(`[${window.urlParams.get('style')}-specific]`).show();
     window.mdc.autoInit();
 
     if (localStorage.rmgParam != null) {
@@ -1305,7 +1497,7 @@ id="railmap" width="0" height="0">
                 return Line;
             case 'gzmtr':
                 return LineGZ;
-        }})(param.style);
+        }})(window.urlParams.get('style'));
         // myLine = new Line(getParams());
         myLine = new lineClass(param);
         lineClass.initSVG(myLine);
@@ -1323,7 +1515,7 @@ id="railmap" width="0" height="0">
                     return Line;
                 case 'gzmtr':
                     return LineGZ;
-            }})(param.style);
+            }})(window.urlParams.get('style'));
             // myLine = new Line(getParams());
             myLine = new lineClass(param);
             lineClass.initSVG(myLine);
@@ -1344,10 +1536,8 @@ id="railmap" width="0" height="0">
     var stationsPanelFirstInit = true;
     var testPanelFirstInit = true;
     var infoPanelFirstInit = true;
-    // var savePanelFirstInit = true;
-    // $('.mdc-tab-bar').each((i, elem) => mdc.tabBar.MDCTabBar.attachTo(elem));
-    var tabBar = new mdc.tabBar.MDCTabBar.attachTo($('.mdc-tab-bar')[0]);
-    tabBar.listen('MDCTabBar:activated', event => {
+
+    $('.mdc-tab-bar')[0].MDCTabBar.listen('MDCTabBar:activated', event => {
         $('.panel--active').removeClass('panel--active');
         $('.panel').eq(event.detail.index).addClass('panel--active');
 

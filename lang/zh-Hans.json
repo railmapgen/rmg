@@ -1,5 +1,5 @@
 {
-    "Title": "铁路路线图生成器", 
+    "Title": "铁路线路图生成器", 
 
     "Tab.File": "文件", 
     "Tab.Design": "设计",
@@ -17,27 +17,34 @@
     "File.Export": "输出至⋯",
     "File.Export.Title": "输出图片文件", 
     "File.Export.SVGDest": "SVG（目的地）", 
-    "File.Export.SVGMap": "SVG（路线图）",
+    "File.Export.SVGMap": "SVG（线路图）",
+
+    "File.Style": "风格",
+    "File.Style.Title": "选择风格", 
+    "File.Style.MTR": "港铁", 
+    "File.Style.GZMTR": "广州地铁 (Alpha)",
 
     "File.Lang": "语言/Language",
     "File.Lang.Title": "选择语言", 
 
-    "Layout.Width": "路线图宽度",
+    "Layout.Width": "线路图宽度",
     "Layout.DestWidth": "驿名标宽度",
     "Layout.Y": "垂直位置",
     "Layout.BranchSpacing": "支线间距", 
-    "Layout.Padding": "路线兩端留白", 
+    "Layout.Padding": "线路兩端留白", 
 
     "Design.Theme": "主题颜色", 
     "Design.Theme.Title": "选择主题颜色",
 
-    "Design.Name": "路线名",
-    "Design.Name.Title": "编辑路线名称", 
+    "Design.Name": "线路名",
+    "Design.Name.Title": "编辑线路名称", 
 
     "Design.Direction": "行驶方向", 
     "Design.Platform": "站台编号",
     "Design.MTRLegacy": "港铁旧款样式",
     "Design.FlipName": "翻转车站名称位置",
+    "Design.Line": "线路编号",
+    "Design.PSD": "屏蔽门编号",
 
     "Design.Char": "汉字字形",
     "Design.Char.Title": "选择字形",
@@ -54,7 +61,7 @@
     "Stations.New.Station": "车站",
     "Stations.New.Pivot": "定位车站",
     "Stations.New.On": "在",
-    "Stations.New.Loc": "路线位置",
+    "Stations.New.Loc": "线路位置",
     "Stations.New.Centre": "主线",
     "Stations.New.Upper": "上方支线",
     "Stations.New.Lower": "下方支线",
@@ -65,6 +72,8 @@
 
     "Stations.Name.Title": "编辑车站名称",
     "Stations.Name.Hint": "提示：你可以用反斜杠（\\）使名称换行。（仅限拉丁字母名称）",
+    "Stations.Name.StnNum": "车站编号", 
+
     "Stations.Interchange.Title": "编辑换乘站详情",
     "Stations.Interchange.Type.Title": "换乘站类型",
     "Stations.Interchange.Type.None": "无", 
@@ -75,7 +84,7 @@
     "Stations.Interchange.Type.OSI22": "出站换乘 (2-2)", 
     "Stations.Delete.Title": "警告", 
 
-    "Info.Notice": "请注意：由于著作权、授权及其他法律限制，铁路路线图生成器使用思源宋体及Vegur，以代替港铁样式路线图所使用之地铁宋及Myriad Pro。如您拥有该字体之授权，可自行于输出之SVG文件内修改相关代码。", 
+    "Info.Notice": "请注意：由于著作权、授权及其他法律限制，铁路线路图生成器使用思源宋体及Vegur，以代替港铁样式线路图所使用之地铁宋及Myriad Pro。如您拥有该字体之授权，可自行于输出之SVG文件内修改相关代码。", 
     "Info.Report": "反馈问题", 
 
     "Dialog.Cancel": "取消",
@@ -84,7 +93,7 @@
     "Dialog.OK": "好",
 
     "Editor.City": "城市", 
-    "Editor.Line": "路线",
+    "Editor.Line": "线路",
     "Editor.Name.ZH": "名称（汉字）",
     "Editor.Name.EN": "名称（拉丁字母）"
 }

@@ -6,7 +6,8 @@
             "zh-Hans": "1号线", 
             "zh-Hant": "1號線"
 		},
-        "colour": "#F3D03E"
+        "colour": "#F3D03E", 
+        "fg": "#000"
     }, 
     {
         "id": "gz2", 
@@ -24,7 +25,8 @@
             "zh-Hans": "3号线",
             "zh-Hant": "3號線"
 		},
-        "colour": "#ECA154"
+        "colour": "#ECA154", 
+        "fg": "#000"
     }, 
     {
         "id": "gz4", 

@@ -240,10 +240,24 @@ function updateParam() {
             param.stn_list[stnId].branch.left = [];
         }
     }
-    if (!('style' in param)) {
-        param.style = 'mtr';
-    }
 
+    // Version 1.2
+    if (!('psd_num' in param)) {
+        param.psd_num = 1;
+    }
+    if (!('line_num' in param)) {
+        param.line_num = 1;
+    }
+    delete param.style;
+    if (param.theme.length == 3) {
+        param.theme.push('#fff');
+    }
+    for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
+        if (['linestart', 'lineend'].includes(stnId)) {continue;}
+        if (!('num' in stnInfo)) {
+            param.stn_list[stnId].num = '00';
+        }
+    }
     putParams(param);
 }
 

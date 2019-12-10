@@ -442,8 +442,12 @@ class OSI22EndStation extends OSI12Station {
 }
 
 class StationGZ extends Station {
+    _stnNum;
+
     constructor(id, data) {
         super(id, data);
+
+        this._stnNum = data.num;
     }
 
     get nameClass() {
@@ -458,18 +462,20 @@ class StationGZ extends Station {
     }
 
     get iconHTML() {
-        var iconType = (this._state == -1) ? 'stn_gz_pass' : 'stn_gz';
-        return $('<use>', {
-            'xlink:href': '#' + iconType, 
-            'x': this._x, 
-            'y': this._y
-        });
+        var [iconType, numClass] = (this._state == -1) ? ['stn_gz_pass','Pass'] : ['stn_gz','Future'];
+        return $('<g>', { transform:`translate(${this._x},${this._y})` })
+            .append($('<use>', { 'xlink:href': '#' + iconType}))
+            .append(
+                $('<g>', { class: 'Name ' + numClass })
+                    .append($('<text>', { class:'rmg-name__zh rmg-name__gzmtr--line-num' }))
+                    .append($('<text>', { class:'rmg-name__zh rmg-name__gzmtr--station-num', x:9.25 }).text(this._stnNum))
+            );
     }
 
     get nameHTML() {
-        var nameENLn = 1
-        var dx = 30 * Math.cos(-45) * 0.8
-        var dy = -4 - 21.921875;
+        var nameENLn = this._nameEN.split('\\').length
+        var dx = (24 + (nameENLn-1)*12.5) * Math.cos(-45)
+        var dy = -4 - 21.921875 - (nameENLn-1)*12.5*Math.cos(-45);
         return $('<g>', {
             'transform': `translate(${this._x - dx},${this._y + dy})rotate(-45)`, 
             'text-anchor': 'start', 
@@ -479,10 +485,10 @@ class StationGZ extends Station {
         ).append(
             $('<text>', {
                 'dy': 14, 'class': 'rmg-name__en rmg-name__gzmtr--station'
-            }).text(this._nameEN.replace('\\', ' ')).append(
+            }).text(this._nameEN.split('\\')[0]).append(
                 $('<tspan>', {
-                    'x': 0, 'dy': 12
-                }).text()
+                    'x': 0, 'dy': 12.5
+                }).text(this._nameEN.split('\\')[1])
             )
         );
     }

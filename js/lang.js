@@ -37,7 +37,7 @@ const pageLangFallback = lang => {
 const translate1 = async(lang) => {
     var datas = pageLangFallback(lang).map(l => getTransJSON(l));
     $('[trans-tag]').each(async (idx,val) => {
-        console.log(idx);
+        // console.log(idx);
         var transStr = '';
         for await (let data of datas) {
             transStr = data[$(val).attr('trans-tag')];
@@ -47,5 +47,5 @@ const translate1 = async(lang) => {
     });
 }
 
-translate1(urlParams.get('lang'));
-$('html').attr('lang', urlParams.get('lang'));
+translate1(window.urlParams.get('lang'));
+$('html').attr('lang', window.urlParams.get('lang'));

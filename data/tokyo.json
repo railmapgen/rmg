@@ -4,6 +4,7 @@
         "name": {
 			"en": "Ginza Line (G)", 
             "ja": "銀座線", 
+            "zh-Hans": "银座线", 
             "zh-Hant": "銀座線"
 		}, 
         "colour": "#ff9500"
@@ -13,6 +14,7 @@
         "name": {
 			"en": "Marunouchi Line (M)", 
             "ja": "丸ノ内線", 
+            "zh-Hans": "丸之内线",
             "zh-Hant": "丸之內線"
 		}, 
         "colour": "#f62e36"
@@ -22,6 +24,7 @@
         "name": {
 			"en": "Hibiya Line (H)", 
             "ja": "日比谷線", 
+            "zh-Hans": "日比谷线",
             "zh-Hant": "日比谷線"
 		}, 
         "colour": "#b5b5ac"
@@ -31,6 +34,7 @@
         "name": {
 			"en": "Tōsai Line (T)", 
             "ja": "東西線", 
+            "zh-Hans": "东西线",
             "zh-Hant": "東西線"
 		}, 
         "colour": "#009bbf"
@@ -40,6 +44,7 @@
         "name": {
 			"en": "Chiyoda Line (C)", 
             "ja": "千代田線", 
+            "zh-Hans": "千代田线",
             "zh-Hant": "千代田線"
 		}, 
         "colour": "#00bb85"
@@ -49,6 +54,7 @@
         "name": {
 			"en": "Yūrakuchō Line (C)", 
             "ja": "有楽町線", 
+            "zh-Hans": "有乐町线",
             "zh-Hant": "有樂町線"
 		}, 
         "colour": "#c1a470"
@@ -58,6 +64,7 @@
         "name": {
 			"en": "Hanzōmon Line (Z)", 
             "ja": "半蔵門線", 
+            "zh-Hans": "半藏门线",
             "zh-Hant": "半藏門線"
 		}, 
         "colour": "#8f76d6"
@@ -67,6 +74,7 @@
         "name": {
 			"en": "Namboku Line (N)", 
             "ja": "南北線", 
+            "zh-Hans": "南北线",
             "zh-Hant": "南北線"
 		}, 
         "colour": "#00ac9b"
@@ -76,6 +84,7 @@
         "name": {
 			"en": "Fukutoshin Line (F)", 
             "ja": "副都心線", 
+            "zh-Hans": "副都心线",
             "zh-Hant": "副都心線"
 		}, 
         "colour": "#9c5e31"
@@ -85,6 +94,7 @@
         "name": {
 			"en": "Asakusa Line (A)", 
             "ja": "浅草線", 
+            "zh-Hans": "浅草线",
             "zh-Hant": "淺草線"
 		}, 
         "colour": "#ec6e65"
@@ -94,6 +104,7 @@
         "name": {
 			"en": "Mita Line (I)", 
             "ja": "三田線", 
+            "zh-Hans": "三田线",
             "zh-Hant": "三田線"
 		}, 
         "colour": "#006ab8"
@@ -103,6 +114,7 @@
         "name": {
 			"en": "Shinjuku Line (S)", 
             "ja": "新宿線", 
+            "zh-Hans": "新宿线",
             "zh-Hant": "新宿線"
 		}, 
         "colour": "#b0bf1e"
@@ -112,6 +124,7 @@
         "name": {
 			"en": "Ōedo Line (O)", 
             "ja": "大江戸線", 
+            "zh-Hans": "大江户线",
             "zh-Hant": "大江戶線"
 		}, 
         "colour": "#ce045b"
@@ -209,7 +222,9 @@
         "id": "je", 
         "name": {
 			"en": "Keiyō Line (JE)", 
-			"ja": "京葉線"
+            "ja": "京葉線", 
+            "zh-Hans": "京叶线", 
+            "zh-Hant": "京葉線"
 		}, 
         "colour": "#D01827"
     }, 
@@ -337,7 +352,9 @@
         "id": "si", 
         "name": {
 			"en": "Seibu Ikebukuro Line (SI)", 
-			"ja": "西武池袋線"
+            "ja": "西武池袋線", 
+            "zh-Hans": "西武池袋线", 
+            "zh-Hant": "西武池袋線"
 		}, 
         "colour": "#EF7A00"
     },
@@ -345,7 +362,9 @@
         "id": "ss", 
         "name": {
 			"en": "Seibu Shinjuku Line (SS)", 
-			"ja": "西武新宿線"
+            "ja": "西武新宿線", 
+            "zh-Hans": "西武新宿线", 
+            "zh-Hant": "西武新宿線"
 		}, 
         "colour": "#00A6BF"
     },
@@ -385,7 +404,9 @@
         "id": "ts", 
         "name": {
 			"en": "Tōbu Skytree Line (TS)", 
-			"ja": "東武スカイツリーライン"
+            "ja": "東武スカイツリーライン", 
+            "zh-Hans": "东武晴空塔线", 
+            "zh-Hant": "東武晴空塔線"
 		}, 
         "colour": "#006CBA"
     }, 
@@ -417,7 +438,9 @@
         "id": "tj", 
         "name": {
 			"en": "Tōbu Tōjō Line (TJ)", 
-			"ja": "東武東上線"
+            "ja": "東武東上線", 
+            "zh-Hans": "东武东上线", 
+            "zh-Hant": "東武東上線"
 		}, 
         "colour": "#00428E"
     }, 
@@ -457,7 +480,9 @@
         "id": "sr", 
         "name": {
 			"en": "Shibayama Railway Line (SR)", 
-			"ja": "芝山鉄道線"
+            "ja": "芝山鉄道線", 
+            "zh-Hans": "芝山铁道线", 
+            "zh-Hant": "芝山鐵道線"
 		}, 
         "colour": "#00A650"
     }, 
@@ -473,7 +498,9 @@
         "id": "ko", 
         "name": {
 			"en": "Keiō Line (KO)", 
-			"ja": "京王線"
+            "ja": "京王線", 
+            "zh-Hans": "京王线",
+            "zh-Hant": "京王線"
 		}, 
         "colour": "#D5007F"
     }, 
@@ -481,7 +508,9 @@
         "id": "in", 
         "name": {
 			"en": "Keiō Inokashira Line (IN)", 
-			"ja": "京王井の頭線"
+            "ja": "京王井の頭線", 
+            "zh-Hans": "京王井之头线",
+            "zh-Hant": "京王井之頭線"
 		}, 
         "colour": "#103675"
     }, 
@@ -505,7 +534,9 @@
         "id": "r", 
         "name": {
 			"en": "Rinkai Line (R)", 
-			"ja": "りんかい線"
+            "ja": "りんかい線", 
+            "zh-Hans": "临海线", 
+            "zh-Hant": "臨海線"
 		}, 
         "colour": "#00418e"
     }, 
@@ -513,15 +544,19 @@
         "id": "u", 
         "name": {
 			"en": "New Transit Yurikamome (U)", 
-			"ja": "新交通ゆりかもめ"
+            "ja": "新交通ゆりかもめ", 
+            "zh-Hans": "百合海鸥线", 
+            "zh-Hant": "百合海鷗線"
 		}, 
         "colour": "#1662B8"
     }, 
     {
         "id": "sa", 
         "name": {
-			"en": "Toden Arakawa Line (SA)", 
-			"ja": "都電荒川線"
+			"en": "Tokyo Sakura Tram (SA)", 
+            "ja": "東京さくらトラム（都電荒川線）", 
+            "zh-Hans": "东京樱花有轨电车",
+            "zh-Hant": "東京櫻花路面電車"
 		}, 
         "colour": "#d75b80"
     }, 
@@ -529,7 +564,9 @@
         "id": "nt", 
         "name": {
 			"en": "Nippori-Toneri Liner (NT)", 
-			"ja": "日暮里・舎人ライナー"
+            "ja": "日暮里・舎人ライナー",
+            "zh-Hans": "日暮里-舍人线",
+            "zh-Hant": "日暮里-舍人線"
 		}, 
         "colour": "#D53A77"
     }, 
@@ -553,7 +590,9 @@
         "id": "tr", 
         "name": {
 			"en": "Tōyō Rapid Railway Line (TR)", 
-			"ja": "東葉高速線"
+            "ja": "東葉高速線", 
+            "zh-Hans": "东叶高速线", 
+            "zh-Hant": "東葉高速線"
 		}, 
         "colour": "#5AB65C"
     }, 

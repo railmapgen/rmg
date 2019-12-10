@@ -20,6 +20,11 @@
     "File.Export.SVGDest": "SVG（目的地）", 
     "File.Export.SVGMap": "SVG（路線圖）",
 
+    "File.Style": "風格",
+    "File.Style.Title": "選擇風格", 
+    "File.Style.MTR": "港鐵", 
+    "File.Style.GZMTR": "廣州地鐵 (Alpha)",
+
     "File.Lang": "語言/Language",
     "File.Lang.Title": "選擇語言", 
 
@@ -39,6 +44,8 @@
     "Design.Platform": "月台編號",
     "Design.MTRLegacy": "港鐵舊款樣式",
     "Design.FlipName": "反轉車站名稱位置",
+    "Design.Line": "路線編號",
+    "Design.PSD": "月台幕門編號",
 
     "Design.Char": "漢字字形",
     "Design.Char.Title": "選擇字形",
@@ -66,6 +73,8 @@
 
     "Stations.Name.Title": "編輯車站名稱",
     "Stations.Name.Hint": "小貼士：你可以用反斜線（\\）使名稱換行。（僅限拉丁字母名稱）",
+    "Stations.Name.StnNum": "車站編號", 
+
     "Stations.Interchange.Title": "編輯轉車站詳情",
     "Stations.Interchange.Type.Title": "轉車站類型",
     "Stations.Interchange.Type.None": "無", 

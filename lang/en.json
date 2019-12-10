@@ -21,6 +21,11 @@
     "File.Export.SVGDest": "SVG (Destination)", 
     "File.Export.SVGMap": "SVG (Rail Map)",
 
+    "File.Style": "Style",
+    "File.Style.Title": "Choose a Style", 
+    "File.Style.MTR": "MTR", 
+    "File.Style.GZMTR": "Guangzhou Metro (Alpha)",
+
     "File.Lang": "Language",
     "File.Lang.Title": "Choose a Language", 
 
@@ -40,6 +45,8 @@
     "Design.Platform": "Platform Number",
     "Design.MTRLegacy": "MTR Legacy Style",
     "Design.FlipName": "Flip Station Names Position",
+    "Design.Line": "Line Number",
+    "Design.PSD": "Platform Door Number",
 
     "Design.Char": "Chinese Character Form",
     "Design.Char.Title": "Select Character Form",
@@ -67,6 +74,8 @@
 
     "Stations.Name.Title": "Edit Station Name",
     "Stations.Name.Hint": "Hint: You may add a backslash (\\) at where you want to wrap name. (For station name in Latin characters only. )",
+    "Stations.Name.StnNum": "Station Number", 
+    
     "Stations.Interchange.Title": "Edit Detail of Interchange",
     "Stations.Interchange.Type.Title": "Interchange",
     "Stations.Interchange.Type.None": "None", 
