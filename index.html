@@ -141,16 +141,25 @@
             font-family: Arial, STHeiti, SimHei;
         }
         .rmg-name__gzmtr--white-fg {fill: #fff;}
+
+        .rmg-name__gzmtr--station-num {
+            font-size: 14px;
+            text-anchor: middle;
+        }
+        .rmg-name__gzmtr--line-num {
+            font-size: 14px;
+            text-anchor: middle;
+        }
     </style>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
     gtag('config', 'UA-152882192-1');
-    </script>
+    </script> -->
 </head>
 <body>
 <div id="svgs" align="center">
@@ -228,6 +237,7 @@ id="destination" width="0" height="0">
         <path id="arrow" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
         <ellipse id="gzmtr_light_1" rx="24" ry="12" class="rmg-strip__gzmtr--light-1"/>
         <rect id="psd" height="40" width="40" rx="4" fill="white"/>
+        <path id="stn_gz" stroke-width="2" fill="#fff" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
     </defs>
 
     <path id="dest_strip" class="Strip"/>
@@ -333,14 +343,7 @@ id="railmap" width="0" height="0">
             text-anchor: middle;
             alignment-baseline: central;
         }
-        .rmg-name__gzmtr--station-num {
-            font-size: 14px;
-            text-anchor: middle;
-        }
-        .rmg-name__gzmtr--line-num {
-            font-size: 14px;
-            text-anchor: middle;
-        }
+
     </style>
 
     <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Noto+Serif+KR:700|Noto+Serif+JP:700|Noto+Serif+TC:700|Noto+Serif+SC:700&display=swap);</style>

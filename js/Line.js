@@ -1356,7 +1356,7 @@ class LineGZ extends Line {
 
     fillThemeColour() {
         super.fillThemeColour();
-        $('#stn_gz').attr('stroke', this._themeColour);
+        $('path#stn_gz]').attr('stroke', this._themeColour);
         $('#station_info_gzmtr > #platform > circle').attr('fill', this._themeColour);
         if (this._fgColour === '#fff') {
             $('#station_info_gzmtr > #platform text').addClass('rmg-name__gzmtr--white-fg');
