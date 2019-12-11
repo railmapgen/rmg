@@ -1424,7 +1424,7 @@ class LineGZ extends Line {
         // Position big name
         var bigNameDim = getTxtBoxDim($('#station_info_gzmtr #big_name text')[0], 'destination');
         $('#station_info_gzmtr #big_stn_num')
-            .attr('transform', `translate(${(this._svgDestWidth+bigNameDim.width)/2+55},${120 - (nextNameEN.split('\\').length - 1)*20})scale(1.4)`);
+            .attr('transform', `translate(${(this._svgDestWidth+bigNameDim.width)/2+55},${120 - (this._stations[this._currentStnId]._nameEN.split('\\').length - 1)*20})scale(1.4)`);
 
         var bigNextDim = getTxtBoxDim($('#station_info_gzmtr #big_next g:nth-child(2)')[0], 'destination');
         var nextNameZHCount = nextNameZH.length;

@@ -4,7 +4,7 @@ function initLayoutPanel() {
     Promise.resolve(getParams())
         .then(param => {
             $('#svg_dest_width')[0].MDCTextField.value = param.svg_dest_width;
-            $('#svg_width')[0].MDCTextField.value = param.svg_dest_width;
+            $('#svg_width')[0].MDCTextField.value = param.svg_width;
         })
 
     $('#svg_dest_width > input').on('input', event => {
@@ -356,12 +356,14 @@ function initStationsPanel() {
     //                 .each((idx,el) => {
     //                     return new mdc.ripple.MDCRipple(el);
     //                 });
-    function _stationCard(id, names) {
+    function _stationCard(id, names, num) {
         return $('<div>', {'id':id}).addClass('mdc-card mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone station-card').append(
             $('<div>').addClass('mdc-card__primary-action').append(
                 $('<div>').addClass('mdc-card__media mdc-card__media--16-9')
             ).append(
-                $('<div>').addClass('mdc-card__media-content station-card__content').html(names.join('<br>'))
+                $('<div>').addClass('mdc-card__media-content station-card__content')
+                    .html(names.join('<br>'))
+                    .prepend($('<span>', { style:(window.urlParams.get('style')=='gzmtr' ? '' : 'display:none;')}).text(num+' '))
             )
         ).append(
             $('<div>').addClass('mdc-card__actions').append(
@@ -378,7 +380,7 @@ function initStationsPanel() {
 
     var stnList = getParams().stn_list;
     myLine.tpo.forEach(stnId => {
-        $('#panel_stations .mdc-layout-grid__inner:first').append(_stationCard(stnId, stnList[stnId].name));
+        $('#panel_stations .mdc-layout-grid__inner:first').append(_stationCard(stnId, stnList[stnId].name, stnList[stnId].num));
         $('#pivot__selection').append(
             $('<li>', {'data-value':stnId}).addClass('mdc-list-item').text(stnList[stnId].name.join(' - '))
         );
@@ -434,7 +436,7 @@ function initStationsPanel() {
         console.log(prep, stnId, loc, end);
         // _genStnList();
         var prevId = myLine.tpo[myLine.tpo.indexOf(newId) - 1] || 'add_stn';
-        $(`#panel_stations .mdc-layout-grid__inner:first #${prevId}`).after(_stationCard(newId, newInfo.name));
+        $(`#panel_stations .mdc-layout-grid__inner:first #${prevId}`).after(_stationCard(newId, newInfo.name, newInfo.num));
         // Add event listeners
         $(`#panel_stations #${newId} .mdc-card__primary-action`).on('click', event => {
             var stnId = event.target.closest('.mdc-card').id;
@@ -534,7 +536,9 @@ function initStationsPanel() {
 
         var stnId = $('#stn_modify_diag').attr('for');
         myLine.updateStnName(stnId, nameZH, nameEN, stnNum);
-        $(`#panel_stations .mdc-layout-grid__inner:first #${stnId} .mdc-card__media-content`).html(`${nameZH}<br>${nameEN}`);
+        $(`#panel_stations .mdc-layout-grid__inner:first #${stnId} .mdc-card__media-content`)
+            .html([nameZH, nameEN].join('<br>'))
+            .prepend($('<span>', { style:(window.urlParams.get('style')=='gzmtr' ? '' : 'display:none;')}).text(stnNum+' '));
         $(`#pivot__selection [data-value="${stnId}`).html(`${nameZH} - ${nameEN}`);
     });
 

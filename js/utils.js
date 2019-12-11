@@ -144,16 +144,6 @@ function joinIntName(names, dy1, dy2) {
     return [res, nameZH.length, nameEN.length];
 }
 
-function getStnState(param, i) {
-    var current_stn_idx = param['current_stn_idx'];
-    var direction = param['direction'];
-    if (direction == 'right') {
-        return Math.sign(i-current_stn_idx);
-    } else {
-        return Math.sign(current_stn_idx-i);
-    }
-}
-
 function getRandomId() {
     return Math.floor(Math.random() * Math.pow(36, 4)).toString(36).padStart(4, '0');
 }
@@ -261,24 +251,6 @@ function updateParam() {
     putParams(param);
 }
 
-function testStyle(style) {
-    if (style == 'gzmtr') {
-        window.myLine = new LineGZ(getParams());
-        Line.clearSVG();
-        Line.initSVG(myLine);
-    }
-    if (style == 'mtr') {
-        window.myLine = new Line(getParams());
-        Line.clearSVG();
-        Line.initSVG(myLine);
-    }
-    
-}
-
-function changeStyle(style) {
-    setParams('style', style);
-    location.reload(true);
-}
 
 const langFallback = lang => {
     switch (lang) {
