@@ -1492,22 +1492,28 @@ id="railmap" width="0" height="0">
     $(`[${window.urlParams.get('style')}-specific]`).show();
     window.mdc.autoInit();
 
-    if (localStorage.rmgParam != null) {
-        updateParam();
-        var param = getParams();
-        var lineClass = (style => {switch (style) {
-            case 'mtr':
-                return Line;
-            case 'gzmtr':
-                return LineGZ;
-        }})(window.urlParams.get('style'));
-        myLine = new Line(getParams());
-        myLine = new lineClass(param);
-        lineClass.initSVG(myLine);
-        console.log(Date.now());
+    initSavePanel();
+    savePanelFirstInit = false;
 
-        initSavePanel();
-        savePanelFirstInit = false;
+    if (localStorage.rmgParam != null) {
+        try {
+            updateParam();
+            var param = getParams();
+            var lineClass = (style => {switch (style) {
+                case 'mtr':
+                    return Line;
+                case 'gzmtr':
+                    return LineGZ;
+            }})(window.urlParams.get('style'));
+            myLine = new Line(getParams());
+            myLine = new lineClass(param);
+            lineClass.initSVG(myLine);
+            console.log(Date.now());
+
+        } catch (err) {
+            alert('Oops, we have run into an error and we cannot fix it! Please report to us by coping or screen capturing the following error message. We will fix it as soon as possible.\n\n' + err + '\n\nPlease also send us your JSON configuration file by pressing the "Save" button. To start a new canvas, press "New Canvas". ')
+        }
+        
     } else {
         $.getJSON(`templates/${template}.json`, data => {
             localStorage.rmgParam = JSON.stringify(data);
@@ -1523,9 +1529,6 @@ id="railmap" width="0" height="0">
             myLine = new lineClass(param);
             lineClass.initSVG(myLine);
             console.log(Date.now());
-
-            initSavePanel();
-            savePanelFirstInit = false;
         });
     }
 
