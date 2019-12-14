@@ -11,6 +11,25 @@ Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be d
 
 ## Version History
 
+### 1.2.2 (14 Dec 2019)
+
+#### New Features
+
+- The preview feature is available. You may have a full-screen view of your railway map or destination info board now. 
+
+#### Known Issues
+
+- Sliders may stop working randomly. We are investigating this issue. 
+  - Workaround: Refresh page to re-initial sliders. Your work will not be lost if you are not using incognito mode. 
+- Text are not completely translated. 
+
+#### Resolved Issues
+
+- Fixed the issue of disagreement of the styles of selectors
+- Fixed the error that disabled options in selectors are selectable. 
+- Improved positioning of the two canvas. 
+- Changed the CDN server of external JS files. 
+
 ### 1.2.1 (12 Dec 2019)
 
 #### Known Issues

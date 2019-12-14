@@ -1456,7 +1456,7 @@ class LineGZ extends Line {
         }
 
         $('#station_info_gzmtr > use').eq(1).attr({ x:this._svgDestWidth/2, y:270 });
-        $('#station_info_gzmtr #big_psd').attr('transform', `translate(${this._svgDestWidth/2+70},242)`);
+        $('#station_info_gzmtr #big_psd').attr('transform', `translate(${this._svgDestWidth/2+80},242)`);
     }
 
     addStn(prep, stnId, loc, end) {

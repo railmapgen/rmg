@@ -196,6 +196,20 @@ function initDesignPanel() {
 
 
 function initSavePanel() {
+    // $('#test').on('mousedown', event => {
+    //     $('#destination').attr({
+    //         viewBox: '0 0 1000 300', 
+    //         width: 500, 
+    //         height: 150
+    //     })
+    // })
+    // $('#test').on('mouseup', event => {
+    //     $('#destination').attr({
+    //         width: 1000, 
+    //         height: 300
+    //     }).removeAttr('viewBox')
+    // })
+    
     $('#panel_save .mdc-list')[0].MDCList.listen('MDCList:action', event => {
         switch (event.detail.index) {
             case 0:
@@ -281,20 +295,85 @@ function initSavePanel() {
             case 'close':
                 break;
             case 'svg1':
-                var link = document.createElement('a');
-                var svgContent = $('#svgs svg:first-child').prepend($('style#svg_share'));
-                link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgContent[0].outerHTML)));
-                link.download = 'rmg_dest.svg';
-                link.click();
+                $('#preview_diag').attr('for', 'destination');
+                $('#preview_diag')[0].MDCDialog.open();
+                // var link = document.createElement('a');
+                // var svgContent = $('#svgs svg:first-child').prepend($('style#svg_share'));
+                // link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgContent[0].outerHTML)));
+                // link.download = 'rmg_dest.svg';
+                // link.click();
                 break;
             case 'svg2':
-                var link = document.createElement('a');
-                var svgContent = $('#svgs svg:last-child').prepend($('style#svg_share'));
-                link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgContent[0].outerHTML)));
-                link.download = 'rmg_map.svg';
-                link.click();
+                $('#preview_diag').attr('for', 'railmap');
+                $('#preview_diag')[0].MDCDialog.open();
+                // var link = document.createElement('a');
+                // var svgContent = $('#svgs svg:last-child').prepend($('style#svg_share'));
+                // link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgContent[0].outerHTML)));
+                // link.download = 'rmg_map.svg';
+                // link.click();
                 break;
         }
+    });
+
+    $(window).on('resize', _ => {
+        resizeSVGPreview();
+        // $('#preview_diag .mdc-dialog__surface').attr('style', `max-width:${$(window).width()-32}px;`);
+    });
+    const resizeSVGPreview = _ => {
+        var svgId = $('preview_diag').attr('for');
+        var [thisSVGWidth, thisSVGHeight] = [
+            svgId=='destination' ? getParams().svg_dest_width : getParams().svg_width, 
+            getParams().svg_height
+        ]
+
+        var MAX_WIDTH = $(window).width() - 32 - 50;
+        var MAX_HEIGHT = $(window).height() - 60 - 53 - 60;
+        var scaleFactor = Math.min(MAX_WIDTH/thisSVGWidth, MAX_HEIGHT/thisSVGHeight);
+
+        $('#preview_diag svg').attr({
+            width: thisSVGWidth * scaleFactor, 
+            height: thisSVGHeight * scaleFactor
+        });
+
+        $('#preview_diag .mdc-dialog__surface').attr('style', `max-width:${MAX_WIDTH+50}px;`);
+    }
+    $('#preview_diag')[0].MDCDialog.listen('MDCDialog:opened', event => {
+        var svgId = $(event.target).attr('for');
+        var [thisSVGWidth, thisSVGHeight] = [
+            svgId=='destination' ? getParams().svg_dest_width : getParams().svg_width, 
+            getParams().svg_height
+        ]
+
+        // $('#preview_diag .mdc-dialog__surface').attr('style', `max-width:${$(window).width()-32}px;`);
+
+        var MAX_WIDTH = $(window).width() - 32 - 50;
+        var MAX_HEIGHT = $(window).height() - 60 - 53 - 60;
+        var scaleFactor = Math.min(MAX_WIDTH/thisSVGWidth, MAX_HEIGHT/thisSVGHeight);
+
+        $(event.target).find('.mdc-dialog__content')
+            .append(
+                $('#'+$(event.target).attr('for')).clone().attr({
+                    style: 'all:initial;', 
+                    viewBox: `0 0 ${thisSVGWidth} ${thisSVGHeight}`, 
+                    width: thisSVGWidth * scaleFactor, 
+                    height: thisSVGHeight * scaleFactor
+                })
+            );
+        // $(event.target).find('.mdc-dialog__surface').attr('style', `max-width:100%;`)
+    });
+    $('#preview_diag')[0].MDCDialog.listen('MDCDialog:closed', event => {
+        if (event.detail.action === 'close') {
+            $(event.target).removeAttr('for').find('.mdc-dialog__content').empty();
+            return;
+        }
+
+        var link = document.createElement('a');
+        var svgContent = $(event.target).find('.mdc-dialog__content svg').prepend($('style#svg_share').clone());
+        link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgContent[0].outerHTML)));
+        link.download = 'rmg_export.svg';
+        link.click();
+
+        $(event.target).removeAttr('for').find('.mdc-dialog__content').empty();
     });
 
     var importDialog = new mdc.dialog.MDCDialog($('#import_diag')[0]);
@@ -482,7 +561,8 @@ function initStationsPanel() {
         for (let [idx, state] of myLine.newStnPossibleLoc(prep, stnId).entries()) {
             if (state) {
                 // $('#stn_add_diag #loc option').eq(idx).prop('disabled', false);
-                $('#loc__selection li').eq(idx).removeClass('mdc-list-item--disabled');
+                // $('#loc__selection li').eq(idx).removeClass('mdc-list-item--disabled');
+                $('#loc__selection li').eq(idx).show();
                 if (idx >= 3) {
                     // newupper or newlower
                     // $('#stn_add_diag #end select').empty();
@@ -498,19 +578,23 @@ function initStationsPanel() {
                 }
             } else {
                 // $('#stn_add_diag #loc option').eq(idx).prop('disabled', true);
-                $('#loc__selection li').eq(idx).addClass('mdc-list-item--disabled');
+                // $('#loc__selection li').eq(idx).addClass('mdc-list-item--disabled');
+                $('#loc__selection li').eq(idx).hide();
             }
             // $('#stn_add_diag #loc option').eq(idx).prop('disabled', (state)?false:true);
         }
         // stnAddLocSelect.value = $('#stn_add_diag #loc option:not([disabled]):first').attr('value');
-        stnAddLocSelect.value = $('#loc__selection li:not(.mdc-list-item--disabled):first').attr('data-value');
+        // stnAddLocSelect.value = $('#loc__selection li:not(.mdc-list-item--disabled):first').attr('data-value');
+        stnAddLocSelect.value = $('#loc__selection li:not([style="display: none;"]):first').attr('data-value');
     });
     stnAddLocSelect.listen('MDCSelect:change', event => {
         if (['newupper', 'newlower'].includes(event.detail.value)) {
-            $('#stn_add_diag #new_branch').show();
+            // $('#stn_add_diag #new_branch').show();
+            $('#stn_add_diag [new-branch]').show();
             stnAddEndSelect.selectedIndex = 0;
         } else {
-            $('#stn_add_diag #new_branch').hide();
+            // $('#stn_add_diag #new_branch').hide();
+            $('#stn_add_diag [new-branch]').hide();
         }
     });
 
@@ -592,9 +676,11 @@ function initStationsPanel() {
         var lineThemeCity = getParams().theme[0];
 
         if (stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') {
-            $('#change_type__selection li:last-child').removeClass('mdc-list-item--disabled');
+            $('#change_type__selection li:last-child').show();
+            // $('#change_type__selection li:last-child').removeClass('mdc-list-item--disabled');
         } else {
-            $('#change_type__selection li:last-child').addClass('mdc-list-item--disabled');
+            // $('#change_type__selection li:last-child').addClass('mdc-list-item--disabled');
+            $('#change_type__selection li:last-child').hide();
         }
 
         $('#change_type')[0].MDCSelect.value = stnInfo.change_type.split('_')[0];
@@ -660,7 +746,7 @@ function initStationsPanel() {
                 .concat(
                     $('ul#int_line__selection').eq(idx).find('li span')
                         .eq($('#int_line .mdc-select')[idx].MDCSelect.selectedIndex)
-                        .attr('style').match(/(?!background:)#[\w\d]+(?=;)/g)[0], 
+                        .attr('style').match(/#[\w\d]+/g)[0], 
                     $('#int_name_zh, #int_name_en').find('.mdc-text-field').slice(idx*2,(idx+1)*2).get().map(el => el.MDCTextField.value)
                 );
         });
@@ -731,6 +817,7 @@ function initStationsPanel() {
             $('#stn_transfer_diag #tick_direc').hide();
             _showOSIFields(false);
         }
+        $('#stn_transfer_diag .mdc-select').each((_,el) => el.MDCSelect.layout())
     });
 
     $('#int_city .mdc-select').each((idx,el) => {
@@ -742,7 +829,7 @@ function initStationsPanel() {
                 data.forEach(l => {
                     $('#int_line__selection.mdc-list').eq(idx).append(
                         `<li class="mdc-list-item" data-value="${l.id}">
-                        <span style="background:${l.colour};">&nbsp;</span>&nbsp;${getTransText(l.name, lang)}
+                        <span style="background:${l.colour};color:${l.fg || '#fff'};">&nbsp;${getTransText(l.name, lang)}&nbsp;</span>
                         </li>`
                     );
                 });
@@ -759,7 +846,7 @@ function initStationsPanel() {
                     if (allInterchanges.length < 3) {
                         allInterchanges.push([,,,,,]);
                     }
-                    var lIdx = $('#int_line__selection.mdc-list').eq(idx).find(`[data-value="${allInterchanges[idx][1]}"`).index();
+                    var lIdx = $('#int_line__selection.mdc-list').eq(idx).find(`[data-value="${allInterchanges[idx][1]}"]`).index();
                     $('#int_line .mdc-select')[idx].MDCSelect.selectedIndex = (lIdx == -1) ? 0 : lIdx;
                 } else {
                     $('#int_line .mdc-select')[idx].MDCSelect.selectedIndex = 0;

@@ -16,10 +16,12 @@
 
     "File.Save": "Save As JSON",
 
-    "File.Export": "Export As...",
-    "File.Export.Title": "Export As", 
+    "File.Export": "Preview And Export",
+    "File.Export.Title": "Choose a Canvas", 
     "File.Export.SVGDest": "SVG (Destination)", 
     "File.Export.SVGMap": "SVG (Rail Map)",
+    "File.Preview.Title": "Preview And Export", 
+    "File.Preview.Download": "Download As SVG", 
 
     "File.Style": "Style",
     "File.Style.Title": "Choose a Style", 

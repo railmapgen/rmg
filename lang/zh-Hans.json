@@ -2,6 +2,7 @@
     "Title": "铁路线路图生成器", 
 
     "Tab.File": "文件", 
+    "Tab.Layout": "布局", 
     "Tab.Design": "设计",
     "Tab.Stations": "车站",
     "Tab.Info": "信息", 
@@ -14,10 +15,12 @@
 
     "File.Save": "保存为JSON文件",
 
-    "File.Export": "输出至⋯",
-    "File.Export.Title": "输出图片文件", 
+    "File.Export": "预览和输出",
+    "File.Export.Title": "选择画布", 
     "File.Export.SVGDest": "SVG（目的地）", 
     "File.Export.SVGMap": "SVG（线路图）",
+    "File.Preview.Title": "预览和输出", 
+    "File.Preview.Download": "下载SVG", 
 
     "File.Style": "风格",
     "File.Style.Title": "选择风格", 
@@ -31,7 +34,7 @@
     "Layout.DestWidth": "驿名标宽度",
     "Layout.Y": "垂直位置",
     "Layout.BranchSpacing": "支线间距", 
-    "Layout.Padding": "线路兩端留白", 
+    "Layout.Padding": "线路两端留白", 
 
     "Design.Theme": "主题颜色", 
     "Design.Theme.Title": "选择主题颜色",
