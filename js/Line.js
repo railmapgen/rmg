@@ -109,13 +109,14 @@ class Line {
         }
         Line.clearSVG(this);
         this.drawStns();
-        this.updateStnNameBg();
         this.drawLine();
         this.drawStrip();
 
         // this.drawDestInfo();
 
         this.loadFonts();
+
+        this.updateStnNameBg();
     }
 
     set yPc(val) {
@@ -129,10 +130,11 @@ class Line {
         }
         Line.clearSVG(this);
         this.drawStns();
-        this.updateStnNameBg();
         this.drawLine();
 
         this.loadFonts();
+
+        this.updateStnNameBg();
     }
 
     set padding(val) {
@@ -146,10 +148,11 @@ class Line {
         }
         Line.clearSVG(this);
         this.drawStns();
-        this.updateStnNameBg();
         this.drawLine();
 
         this.loadFonts();
+
+        this.updateStnNameBg();
     }
 
     set branchSpacing(val) {
@@ -164,10 +167,11 @@ class Line {
         }
         Line.clearSVG(this);
         this.drawStns();
-        this.updateStnNameBg();
         this.drawLine();
 
         this.loadFonts();
+
+        this.updateStnNameBg();
     }
 
     set txtFlip(val) {
@@ -181,9 +185,10 @@ class Line {
 
         $('#stn_icons').empty();
         this.drawStns();
-        this.updateStnNameBg();
 
         this.loadFonts();
+
+        this.updateStnNameBg();
     }
 
     set themeColour(rgbs) {
@@ -257,12 +262,13 @@ class Line {
         }
         Line.clearSVG(this);
         this.drawStns();
-        this.updateStnNameBg();
         this.drawLine();
 
         this.drawDestInfo();
 
         this.loadFonts();
+
+        this.updateStnNameBg();
     }
 
     _rightWideFactor(stnId) {
@@ -555,7 +561,7 @@ class Line {
         var stnNameDim = getTxtBoxDim(
             $(`#stn_icons > #${this._currentStnId} > .Name`)[0], 'railmap'
         );
-        // console.log(stnNameDim);
+        console.log(stnNameDim);
         $('#current_bg').attr({
             x: stnNameDim.x-3, 
             width: stnNameDim.width+6, 
@@ -717,7 +723,6 @@ class Line {
         $(`#stn_icons #${stnId}`).remove();
         $('#stn_icons').append(this._stations[stnId].html);
         $('#stn_icons').html($('#stn_icons').html());
-        if (stnId == this._currentStnId) {this.updateStnNameBg();}
 
         if (this.leftDests.includes(stnId) && this._direction == 'l') {
             this.drawDestInfo();
@@ -726,6 +731,7 @@ class Line {
         }
 
         this.loadFonts();
+        if (stnId == this._currentStnId) {this.updateStnNameBg();}
     }
 
     updateStnTransfer(stnId, type, info=null) {
@@ -755,7 +761,6 @@ class Line {
             }
             Line.clearSVG(this);
             this.drawStns();
-            this.updateStnNameBg();
             this.drawLine();
             this.drawStrip();
         } else {
@@ -768,6 +773,8 @@ class Line {
             $('#stn_icons').html($('#stn_icons').html());
         }
         this.loadFonts();
+
+        this.updateStnNameBg();
     }
 
     removeStn(stnId) {
@@ -875,13 +882,14 @@ class Line {
         }
         Line.clearSVG(this);
         this.drawStns();
-        this.updateStnNameBg();
         this.drawLine();
         this.drawStrip();
 
         this.drawDestInfo();
 
         this.loadFonts();
+
+        this.updateStnNameBg();
         return true;
     }
 
@@ -1195,13 +1203,14 @@ class Line {
 
         Line.clearSVG(this);
         this.drawStns();
-        this.updateStnNameBg();
         this.drawLine();
         this.drawStrip();
 
         this.drawDestInfo();
 
         this.loadFonts();
+
+        this.updateStnNameBg();
 
         return [newId, newInfo];
     }
@@ -1214,12 +1223,12 @@ class Line {
         line.drawSVGFrame();
         line.showFrameOuter();
         line.drawStns();
-        line.updateStnNameBg();
         line.fillThemeColour();
         line.drawLine();
         line.drawStrip();
         line.drawDestInfo();
         line.loadFonts();
+        line.updateStnNameBg();
     }
 
     get branches() {
@@ -1356,7 +1365,7 @@ class LineGZ extends Line {
 
     fillThemeColour() {
         super.fillThemeColour();
-        $('path#stn_gz]').attr('stroke', this._themeColour);
+        $('path#stn_gz').attr('stroke', this._themeColour);
         $('#station_info_gzmtr > #platform > circle').attr('fill', this._themeColour);
         if (this._fgColour === '#fff') {
             $('#station_info_gzmtr > #platform text').addClass('rmg-name__gzmtr--white-fg');

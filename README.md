@@ -11,6 +11,23 @@ Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be d
 
 ## Version History
 
+### 1.3 (15 Dec 2019)
+
+#### New Features
+
+- Add support of interchange station with 2 lines for Guangzhou Metro style. 
+- Add support of black foreground colour in Guangzhou Metro style. 
+
+#### Known Issues
+
+- Sliders may stop working randomly. We are investigating this issue. 
+  - Workaround: Refresh page to re-initial sliders. Your work will not be lost if you are not using incognito mode. 
+- Text are not completely translated. 
+
+#### Resolved Issues
+
+- Fixed the error of misalignment of current station indicator in MTR style. 
+
 ### 1.2.2 (14 Dec 2019)
 
 #### New Features

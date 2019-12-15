@@ -35,7 +35,6 @@ function initLayoutPanel() {
 }
 
 function initDesignPanel() {
-    var designList = new mdc.list.MDCList($('#panel_design #design_list')[0]);
     var designListMTR = new mdc.list.MDCList($('#panel_design #design_list_mtr')[0]);
 
     $('#panel_design #design_list li:nth-child(2) .mdc-list-item__secondary-text').text(
@@ -50,7 +49,7 @@ function initDesignPanel() {
         $(`#design_char_diag ul [data-mdc-dialog-action="${getParams().char_form}"] span`).html()
     );
 
-    designList.listen('MDCList:action', event => {
+    $('#design_list')[0].MDCList.listen('MDCList:action', event => {
         switch (event.detail.index) {
             case 0:
                 $('#design_theme_diag')[0].MDCDialog.open();
@@ -195,21 +194,7 @@ function initDesignPanel() {
 }
 
 
-function initSavePanel() {
-    // $('#test').on('mousedown', event => {
-    //     $('#destination').attr({
-    //         viewBox: '0 0 1000 300', 
-    //         width: 500, 
-    //         height: 150
-    //     })
-    // })
-    // $('#test').on('mouseup', event => {
-    //     $('#destination').attr({
-    //         width: 1000, 
-    //         height: 300
-    //     }).removeAttr('viewBox')
-    // })
-    
+function initSavePanel() {    
     $('#panel_save .mdc-list')[0].MDCList.listen('MDCList:action', event => {
         switch (event.detail.index) {
             case 0:
@@ -297,20 +282,10 @@ function initSavePanel() {
             case 'svg1':
                 $('#preview_diag').attr('for', 'destination');
                 $('#preview_diag')[0].MDCDialog.open();
-                // var link = document.createElement('a');
-                // var svgContent = $('#svgs svg:first-child').prepend($('style#svg_share'));
-                // link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgContent[0].outerHTML)));
-                // link.download = 'rmg_dest.svg';
-                // link.click();
                 break;
             case 'svg2':
                 $('#preview_diag').attr('for', 'railmap');
                 $('#preview_diag')[0].MDCDialog.open();
-                // var link = document.createElement('a');
-                // var svgContent = $('#svgs svg:last-child').prepend($('style#svg_share'));
-                // link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgContent[0].outerHTML)));
-                // link.download = 'rmg_map.svg';
-                // link.click();
                 break;
         }
     });
@@ -344,7 +319,7 @@ function initSavePanel() {
             getParams().svg_height
         ]
 
-        // $('#preview_diag .mdc-dialog__surface').attr('style', `max-width:${$(window).width()-32}px;`);
+        $('#preview_diag .mdc-dialog__surface').attr('style', `max-width:${$(window).width()-32}px;`);
 
         var MAX_WIDTH = $(window).width() - 32 - 50;
         var MAX_HEIGHT = $(window).height() - 60 - 53 - 60;
@@ -568,23 +543,15 @@ function initStationsPanel() {
                     // $('#stn_add_diag #end select').empty();
                     $('#end__selection').empty();
                     state.forEach(stnId => {
-                        // $('#stn_add_diag #end select').append(
-                        //     `<option value="${stnId}">${stnList[stnId].name.join(' - ')}</option>`
-                        // );
                         $('#end__selection').append(
-                            `<li class="mdc-list-item" data-value="${stnId}">${stnList[stnId].name.join(' - ')}</li>`
+                            $('<li>', { class:'mdc-list-item', 'data-value':stnId }).text(stnList[stnId].name.join(' - '))
                         );
                     });
                 }
             } else {
-                // $('#stn_add_diag #loc option').eq(idx).prop('disabled', true);
-                // $('#loc__selection li').eq(idx).addClass('mdc-list-item--disabled');
                 $('#loc__selection li').eq(idx).hide();
             }
-            // $('#stn_add_diag #loc option').eq(idx).prop('disabled', (state)?false:true);
         }
-        // stnAddLocSelect.value = $('#stn_add_diag #loc option:not([disabled]):first').attr('value');
-        // stnAddLocSelect.value = $('#loc__selection li:not(.mdc-list-item--disabled):first').attr('data-value');
         stnAddLocSelect.value = $('#loc__selection li:not([style="display: none;"]):first').attr('data-value');
     });
     stnAddLocSelect.listen('MDCSelect:change', event => {
@@ -690,16 +657,16 @@ function initStationsPanel() {
                 stnInfo.interchange[1] ? stnInfo.interchange[1].slice(1,stnInfo.interchange[1].length) : []
             );
             if (allInterchanges.length < 3) {
-                allInterchanges.unshift([,,,,,]);
+                allInterchanges.unshift([,,,,,,]);
             }
             if (allInterchanges.length < 3) {
-                allInterchanges.push([,,,,,]);
+                allInterchanges.push([,,,,,,]);
             }
             console.log(allInterchanges)
             allInterchanges.forEach((intInfo, idx) => {
                 $('#int_city .mdc-select')[idx].MDCSelect.value = intInfo[0] || lineThemeCity;
-                $('#int_name_zh .mdc-text-field')[idx].MDCTextField.value = intInfo[3] || '';
-                $('#int_name_en .mdc-text-field')[idx].MDCTextField.value = intInfo[4] || '';
+                $('#int_name_zh .mdc-text-field')[idx].MDCTextField.value = intInfo[4] || '';
+                $('#int_name_en .mdc-text-field')[idx].MDCTextField.value = intInfo[5] || '';
             })
         } else {
             $('#int_city .mdc-select').each((_,el) => el.MDCSelect.value = lineThemeCity);
@@ -746,12 +713,10 @@ function initStationsPanel() {
                 .concat(
                     $('ul#int_line__selection').eq(idx).find('li span')
                         .eq($('#int_line .mdc-select')[idx].MDCSelect.selectedIndex)
-                        .attr('style').match(/#[\w\d]+/g)[0], 
+                        .attr('style').match(/#[\w\d]+/g), 
                     $('#int_name_zh, #int_name_en').find('.mdc-text-field').slice(idx*2,(idx+1)*2).get().map(el => el.MDCTextField.value)
                 );
         });
-        console.log(intInfo0, intInfo1, intInfo2);
-        console.log(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, intInfo2]);
         if (type == 'none') {
             myLine.updateStnTransfer(stnId, type);
         } else if (type == 'osi22') {
@@ -841,10 +806,10 @@ function initStationsPanel() {
                         stnInfo.interchange[1] ? stnInfo.interchange[1].slice(1,stnInfo.interchange[1].length) : []
                     );
                     if (allInterchanges.length < 3) {
-                        allInterchanges.unshift([,,,,,]);
+                        allInterchanges.unshift([,,,,,,]);
                     }
                     if (allInterchanges.length < 3) {
-                        allInterchanges.push([,,,,,]);
+                        allInterchanges.push([,,,,,,]);
                     }
                     var lIdx = $('#int_line__selection.mdc-list').eq(idx).find(`[data-value="${allInterchanges[idx][1]}"]`).index();
                     $('#int_line .mdc-select')[idx].MDCSelect.selectedIndex = (lIdx == -1) ? 0 : lIdx;

@@ -99,12 +99,12 @@ class Station {
 }
 
 class Int2Station extends Station {
-    #intCity; #intLine; #intColour;
+    #intCity; #intLine; #intColour; #intFg;
     #intNameZH; #intNameEN;
 
     constructor (id, data) {
         super(id, data);
-        [this.#intCity, this.#intLine, this.#intColour, this.#intNameZH, this.#intNameEN] = data.interchange[0][0];
+        [this.#intCity, this.#intLine, this.#intColour, this.#intFg, this.#intNameZH, this.#intNameEN] = data.interchange[0][0];
     }
 
     get _dy() {return 0;}
@@ -161,8 +161,8 @@ class Int3Station extends Station {
             this.#intLine.push(intInfo[1]);
             this.#intColour.push(intInfo[2]);
 
-            this.#intNameZH.push(intInfo[3]);
-            this.#intNameEN.push(intInfo[4]);
+            this.#intNameZH.push(intInfo[4]);
+            this.#intNameEN.push(intInfo[5]);
         });
 
         this._int3Type = data.change_type.substring(5);
@@ -375,13 +375,13 @@ class OSI12RStation extends OSI12Station {
 }
 
 class OSI22EndStation extends OSI12Station {
-    #origIntCity; #origIntLine; #origIntColour;
+    #origIntCity; #origIntLine; #origIntColour; #origIntFg;
     #origIntNameZH; #origIntNameEN;
 
     constructor (id, data) {
         super(id, data);
         // data mutated by OSI12Station!!!
-        [this.#origIntCity, this.#origIntLine, this.#origIntColour, this.#origIntNameZH, this.#origIntNameEN] = data.interchange[0][2];
+        [this.#origIntCity, this.#origIntLine, this.#origIntColour, this.#origIntFg, this.#origIntNameZH, this.#origIntNameEN] = data.interchange[0][2];
     }
 
     get origIntTickHTML() {
@@ -474,8 +474,8 @@ class StationGZ extends Station {
 
     get nameHTML() {
         var nameENLn = this._nameEN.split('\\').length
-        var dx = (24 + (nameENLn-1)*12.5) * Math.cos(-45)
-        var dy = -4 - 21.921875 - (nameENLn-1)*12.5*Math.cos(-45);
+        var dx = (24 + (nameENLn-1)*12) * Math.cos(-45)
+        var dy = -4 - 21.921875 - (nameENLn-1)*12*Math.cos(-45);
         return $('<g>', {
             'transform': `translate(${this._x - dx},${this._y + dy})rotate(-45)`, 
             'text-anchor': 'start', 
@@ -487,7 +487,7 @@ class StationGZ extends Station {
                 'dy': 14, 'class': 'rmg-name__en rmg-name__gzmtr--station'
             }).text(this._nameEN.split('\\')[0]).append(
                 $('<tspan>', {
-                    'x': 0, 'dy': 12.5
+                    'x': 0, 'dy': 12
                 }).text(this._nameEN.split('\\')[1])
             )
         );
@@ -495,7 +495,71 @@ class StationGZ extends Station {
 }
 
 class Int2StationGZ extends StationGZ {
+    #intCity; #intLine; #intColour; #intFg;
+    #intNameZH; #intNameEN;
+
     constructor(id, data) {
         super(id, data);
+        [this.#intCity, this.#intLine, this.#intColour, this.#intFg, this.#intNameZH, this.#intNameEN] = data.interchange[0][0];
+    }
+
+    get intTickHTML() {
+        var tickColour = this.#intColour;
+        var tick = $('<use>', {
+            'xlink:href': '#inttick_gz', 
+            stroke: tickColour, 
+            x: this._x, y:this._y,
+            class: 'rmg-line rmg-line__gzmtr rmg-line__change'
+        });
+        if (this._state == -1) {
+            tick.addClass('rmg-line__pass');
+        }
+        return tick;
+    }
+
+    get intNameHTML() {
+        var intNameZHs = this.#intNameZH.match(/[\d]+|[\D]+/g);
+        var intTextZHEl = $('<text>', {y:8.5, class:'rmg-name__zh rmg-name__gzmtr--int'})
+                .append(
+                    $('<tspan>', {'font-size':'17px', 'alignment-baseline':'central'})
+                        .text(intNameZHs.length==1 ? '' : intNameZHs[0])
+                )
+                .append(
+                    $('<tspan>', {dy:-1, 'alignment-baseline':'central'})
+                        .text(intNameZHs[intNameZHs.length-1])
+                );
+
+        var intTextENEl = $('<text>', {
+            y: 19.5, 
+            class: 'rmg-name__en rmg-name__gzmtr--int'
+        }).text(this.#intNameEN);
+
+        if (this.#intFg == '#fff' || this._state == -1) {
+            intTextZHEl = intTextZHEl.addClass('rmg-name__gzmtr--white-fg');
+            intTextENEl = intTextENEl.addClass('rmg-name__gzmtr--white-fg');
+        }
+
+        var intBoxEl = $('<use>', {
+            'xlink:href':'#intbox_gz', 
+            fill: this._state==-1 ? '#aaa' : this.#intColour
+        })
+
+        return $('<g>', {
+            'text-anchor': 'middle', 
+            transform: `translate(${this._x},${this._y+23})`
+        }).append(intBoxEl, intTextZHEl, intTextENEl);
+        // var [nameHTML, nameZHLn, nameENLn] = joinIntName([this.#intNameZH, this.#intNameEN], 15, 7);
+        // var dy = (this._namePos == 0) ? 25 + 5.953125 : -25 + 5.953125 - 18.65625 - 13*(nameZHLn-1) - 7*(nameENLn-1);
+        // dy += this._dy;
+        // // var nameClass = (this._state == -1) ? 'Pass' : 'Future';
+        // return $('<g>', {
+        //     'text-anchor': 'middle', 
+        //     'transform': `translate(${this._x},${this._y + dy})`, 
+        //     'class': `Name ${this._nameClass}`
+        // }).html(nameHTML);
+    }
+
+    get ungrpHTML() {
+        return [this.intTickHTML, this.iconHTML, this.nameHTML, this.intNameHTML];
     }
 }

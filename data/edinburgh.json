@@ -25,7 +25,8 @@
 		"name": {
 			"en": "Lothian City 3"
 		},
-		"colour": "#DECE00"
+		"colour": "#DECE00", 
+        "fg": "#000"
 	},
     {
 		"id": "city4",
@@ -228,7 +229,8 @@
 		"name": {
 			"en": "Lothian City 38"
 		},
-		"colour": "#D4C663"
+		"colour": "#D4C663", 
+        "fg": "#000"
 	},
     {
 		"id": "city41",
@@ -242,7 +244,8 @@
 		"name": {
 			"en": "Lothian City 42"
 		},
-		"colour": "#AFCA0B"
+		"colour": "#AFCA0B", 
+        "fg": "#000"
 	},
     {
 		"id": "city44",
@@ -298,7 +301,8 @@
 		"name": {
 			"en": "Lothian City Express"
 		},
-		"colour": "#FFEB3B"
+		"colour": "#FFEB3B", 
+        "fg": "#000"
 	},
     {
 		"id": "nb",

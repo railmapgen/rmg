@@ -248,6 +248,19 @@ function updateParam() {
             param.stn_list[stnId].num = '00';
         }
     }
+
+
+    for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
+        if ('interchange' in stnInfo) {
+            stnInfo.interchange.map(arr => {
+                arr.map(intInfo => {
+                    if (intInfo.length == 5) {
+                        intInfo.splice(3,0,'#fff');
+                    }
+                });
+            });
+        }
+    }
     putParams(param);
 }
 
