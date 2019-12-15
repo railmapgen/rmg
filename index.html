@@ -40,8 +40,8 @@
     <!-- <script async src="https://unpkg.com/html2canvas@latest/dist/html2canvas.min.js"></script> -->
 
     <script src="js/utils.js"></script>
-    <script src="lib/Station.js"></script>
-    <script src="lib/Line.js"></script>
+    <script src="js/Station.js"></script>
+    <script src="js/Line.js"></script>
     <script src="js/page_loader.js"></script>
 
     <!-- <link href="https://unpkg.com/material-components-web@3.2.0/dist/material-components-web.min.css" rel="stylesheet"> -->
@@ -911,12 +911,6 @@ id="railmap" width="0" height="0">
                           <div class="mdc-notched-outline__trailing"></div>
                         </div>
                     </div>
-                    <!-- <div class="mdc-select__anchor" style="width: 100%;">
-                        <i class="mdc-select__dropdown-icon"></i>
-                        <div class="mdc-select__selected-text"></div>
-                        <span class="mdc-floating-label" trans-tag="Editor.City"></span>
-                        <div class="mdc-line-ripple"></div>
-                    </div> -->
                     
                     <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
                         <ul id="theme_city__selection" class="mdc-list">
@@ -942,12 +936,6 @@ id="railmap" width="0" height="0">
                           <div class="mdc-notched-outline__trailing"></div>
                         </div>
                     </div>
-                    <!-- <div class="mdc-select__anchor" style="width: 100%;">
-                        <i class="mdc-select__dropdown-icon"></i>
-                        <div class="mdc-select__selected-text"></div>
-                        <span class="mdc-floating-label" trans-tag="Editor.Line"></span>
-                        <div class="mdc-line-ripple"></div>
-                    </div> -->
                     
                     <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
                         <ul id="theme_line__selection" class="mdc-list">
@@ -1647,6 +1635,7 @@ id="railmap" width="0" height="0">
 
         } catch (err) {
             alert('Oops, we have run into an error! Please report to us by coping or screen capturing the following error message. We will fix it as soon as possible.\n\n' + err + '\n\nPlease also send us your JSON configuration file by pressing the "Save" button. To start a new canvas, press "New Canvas". ')
+            console.error(err);
         }
         
     } else {

@@ -1292,6 +1292,24 @@ class LineGZ extends Line {
         switch (stnInfo.change_type) {
             case 'int2':
                 return new Int2StationGZ(stnId, stnInfo);
+            case 'int3_l':
+            case 'int3_r':
+                return new Int3StationGZ(stnId, stnInfo);
+            case 'osi11_ul':
+            case 'osi11_pl':
+            case 'osi11_ur':
+            case 'osi11_pr':
+                return new OSI11StationGZ(stnId, stnInfo);
+            case 'osi12_ul':
+            case 'osi12_pl':
+            case 'osi12_ur':
+            case 'osi12_pr':
+                return new OSI12StationGZ(stnId, stnInfo);
+            case 'osi22_end_p':
+            case 'osi22_end_u':
+                if (stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') {
+                    return new OSI22EndStationGZ(stnId, stnInfo);
+                }
             default:
                 return new StationGZ(stnId, stnInfo);
         }

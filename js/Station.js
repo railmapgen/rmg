@@ -495,30 +495,29 @@ class StationGZ extends Station {
 }
 
 class Int2StationGZ extends StationGZ {
-    #intCity; #intLine; #intColour; #intFg;
-    #intNameZH; #intNameEN;
+    _intCity; _intLine; _intColour; _intFg;
+    _intNameZH; _intNameEN;
 
     constructor(id, data) {
         super(id, data);
-        [this.#intCity, this.#intLine, this.#intColour, this.#intFg, this.#intNameZH, this.#intNameEN] = data.interchange[0][0];
+        [this._intCity, this._intLine, this._intColour, this._intFg, this._intNameZH, this._intNameEN] = [0,1,2,3,4,5].map(idx => data.interchange[0].map(x => x[idx]));
     }
 
     get intTickHTML() {
-        var tickColour = this.#intColour;
-        var tick = $('<use>', {
-            'xlink:href': '#inttick_gz', 
-            stroke: tickColour, 
-            x: this._x, y:this._y,
-            class: 'rmg-line rmg-line__gzmtr rmg-line__change'
+        var ticks = this._intColour.map((colour,idx) => {
+            return $('<use>', {
+                'xlink:href': '#inttick_gz', 
+                stroke: this._state==-1 ? '#aaa' : colour, 
+                x: this._x - 2*(this._intColour.length-1) + 4*idx, 
+                y: this._y
+            });
         });
-        if (this._state == -1) {
-            tick.addClass('rmg-line__pass');
-        }
-        return tick;
+        return $('<g>', {class:'rmg-line rmg-line__gzmtr rmg-line__change'})
+                    .append(...ticks);
     }
 
     get intNameHTML() {
-        var intNameZHs = this.#intNameZH.match(/[\d]+|[\D]+/g);
+        var intNameZHs = this._intNameZH[0].match(/[\d]+|[\D]+/g);
         var intTextZHEl = $('<text>', {y:8.5, class:'rmg-name__zh rmg-name__gzmtr--int'})
                 .append(
                     $('<tspan>', {'font-size':'17px', 'alignment-baseline':'central'})
@@ -528,38 +527,75 @@ class Int2StationGZ extends StationGZ {
                     $('<tspan>', {dy:-1, 'alignment-baseline':'central'})
                         .text(intNameZHs[intNameZHs.length-1])
                 );
+        var intNameZHss = this._intNameZH.map(name => name.match(/[\d]+|[\D]+/g));
+        var intTextZHEls = intNameZHss.map(
+            (names, idx) => $('<text>', {y: 8.5 + idx*28, class: 'rmg-name__zh rmg-name__gzmtr--int'})
+                                .append(
+                                    $('<tspan>', {'font-size':'17px', 'alignment-baseline':'central'})
+                                        .text(names.length==1 ? '' : names[0])
+                                )
+                                .append(
+                                    $('<tspan>', {dy:-1, 'alignment-baseline':'central'})
+                                        .text(names[names.length-1])
+                                )
+            );
 
-        var intTextENEl = $('<text>', {
-            y: 19.5, 
-            class: 'rmg-name__en rmg-name__gzmtr--int'
-        }).text(this.#intNameEN);
+        var intTextENEls = this._intNameEN.map((name,idx) => {
+            return $('<text>', {
+                y: 19.5 + idx*28, 
+                class: 'rmg-name__en rmg-name__gzmtr--int'
+            }).text(name);
+        });
 
-        if (this.#intFg == '#fff' || this._state == -1) {
-            intTextZHEl = intTextZHEl.addClass('rmg-name__gzmtr--white-fg');
-            intTextENEl = intTextENEl.addClass('rmg-name__gzmtr--white-fg');
+        if (this._intFg[0] == '#fff' || this._state == -1) {
+            [intTextZHEls, intTextENEls] = [intTextZHEls, intTextENEls].map(els => {
+                return els.map(el => el.addClass('rmg-name__gzmtr--white-fg'));
+            });
         }
 
-        var intBoxEl = $('<use>', {
-            'xlink:href':'#intbox_gz', 
-            fill: this._state==-1 ? '#aaa' : this.#intColour
-        })
+        var intBoxEls = this._intColour.map((colour,idx) => {
+            return $('<use>', {
+                'xlink:href':'#intbox_gz', 
+                fill: this._state==-1 ? '#aaa' : colour, 
+                y: idx*28
+            });
+        });
 
         return $('<g>', {
             'text-anchor': 'middle', 
             transform: `translate(${this._x},${this._y+23})`
-        }).append(intBoxEl, intTextZHEl, intTextENEl);
-        // var [nameHTML, nameZHLn, nameENLn] = joinIntName([this.#intNameZH, this.#intNameEN], 15, 7);
-        // var dy = (this._namePos == 0) ? 25 + 5.953125 : -25 + 5.953125 - 18.65625 - 13*(nameZHLn-1) - 7*(nameENLn-1);
-        // dy += this._dy;
-        // // var nameClass = (this._state == -1) ? 'Pass' : 'Future';
-        // return $('<g>', {
-        //     'text-anchor': 'middle', 
-        //     'transform': `translate(${this._x},${this._y + dy})`, 
-        //     'class': `Name ${this._nameClass}`
-        // }).html(nameHTML);
+        }).append(...intBoxEls, ...intTextZHEls, ...intTextENEls);
     }
 
     get ungrpHTML() {
         return [this.intTickHTML, this.iconHTML, this.nameHTML, this.intNameHTML];
+    }
+}
+
+class Int3StationGZ extends Int2StationGZ {
+    constructor (id, data) {
+        super(id, data);
+    }
+}
+
+class OSI11StationGZ extends Int2StationGZ {
+    constructor (id, data) {
+        data.interchange[0] = data.interchange[1].slice(1,2);
+        super(id, data);
+    }
+}
+
+class OSI12StationGZ extends Int2StationGZ {
+    constructor (id, data) {
+        data.interchange[0] = data.interchange[1].slice(1,3);
+        super(id, data);
+    }
+}
+
+class OSI22EndStationGZ extends Int2StationGZ {
+    constructor (id, data) {
+        data.interchange[0].push(...data.interchange[1].slice(1,3));
+        console.log(data.interchange);
+        super(id, data);
     }
 }

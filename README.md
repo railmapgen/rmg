@@ -7,9 +7,19 @@ Demo page: https://wongchito.github.io/RailMapGenerator/
 - The Rail Map Generator is tested on Google Chrome (>= 74.0) **ONLY**. Using other browsers may have unexpectedly results. 
 - The railway map shown initially is a template for designing new your own railway and for debugging. It does not reflect the actual situation. 
 
-Previous version: [GenRailMap](https://github.com/wongchito/GenRailMap) (to be deprecated)
-
 ## Version History
+
+### 1.3.1 (15 Dec 2019)
+
+#### New Features
+
+- Add basic support of all types of interchange stations for Guangzhou Metro style. 
+
+#### Known Issues
+
+- Sliders may stop working randomly. We are investigating this issue. 
+  - Workaround: Refresh page to re-initial sliders. Your work will not be lost if you are not using incognito mode. 
+- Text are not completely translated. 
 
 ### 1.3 (15 Dec 2019)
 
