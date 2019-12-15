@@ -3,11 +3,11 @@
 class Line {
     #svgHeight; _svgWidth; _svgDestWidth; #showOuter;
     themeCity; themeLine; _themeColour; _fgColour;
-    #yPc; #padding; #stripPc; #longInterval = 1;
+    #yPc; _padding; #stripPc; #longInterval = 1;
     #branchSpacing; #txtFlip;
     _stations = {}; _currentStnId; _direction; _platformNum;
     #weightEN; #weightZH; #fontEN; #fontZH; _charForm;
-    #lineNames; #destLegacy;
+    _lineNames; #destLegacy;
 
     constructor (param) {
         this.#svgHeight = param['svg_height'];
@@ -18,7 +18,7 @@ class Line {
         [this.themeCity, this.themeLine, this._themeColour, this._fgColour] = param.theme;
 
         this.#yPc = param['y_pc'];
-        this.#padding = param['padding'];
+        this._padding = param['padding'];
         this.#stripPc = param['strip_pc'];
         this.#branchSpacing = param.branch_spacing;
         this.#txtFlip = param['txt_flip'];
@@ -29,7 +29,7 @@ class Line {
         this._currentStnId = param['current_stn_idx'];
         this._direction = param['direction'];
         this._platformNum = param['platform_num'];
-        this.#lineNames = param['line_name'];
+        this._lineNames = param['line_name'];
         this.#destLegacy = param['dest_legacy'];
 
         this._charForm = param.char_form;
@@ -139,7 +139,7 @@ class Line {
 
     set padding(val) {
         val = Number(val);
-        this.#padding = val;
+        this._padding = val;
         setParams('padding', val);
 
         for (let [stnId, stnInstance] of Object.entries(this._stations)) {
@@ -237,7 +237,7 @@ class Line {
     }
     
     set lineNames(val) {
-        this.#lineNames = val;
+        this._lineNames = val;
         setParams('line_name', val);
 
         this.drawDestInfo();
@@ -372,8 +372,8 @@ class Line {
 
     get lineXs() {
         return [
-            this._svgWidth * this.#padding / 100, 
-            this._svgWidth * (1 - this.#padding/100)
+            this._svgWidth * this._padding / 100, 
+            this._svgWidth * (1 - this._padding/100)
         ];
     }
 
@@ -679,7 +679,7 @@ class Line {
         });
 
         if (this.#destLegacy) {
-            var [lineNameZH, lineNameEN] = this.#lineNames;
+            var [lineNameZH, lineNameEN] = this._lineNames;
             lineNameEN += ' ';
         } else {
             var lineNameZH = lineNameEN = '';
@@ -1315,19 +1315,37 @@ class LineGZ extends Line {
         }
     }
 
+    get lineXs() {
+        if (this._direction == 'r') {
+            return [
+                this._svgWidth * this._padding / 100 + 60, 
+                this._svgWidth * (1 - this._padding/100)
+            ];
+        } else {
+            return [
+                this._svgWidth * this._padding / 100, 
+                this._svgWidth * (1 - this._padding/100) - 60
+            ];
+        }
+    }
+
     set svgWidth(val) {
         super.svgWidth = val;
         this.loadLineNum();
+        this.loadLineName();
+        this.loadDirection();
     }
 
     set yPc(val) {
         super.yPc = val;
         this.loadLineNum();
+        this.loadLineName();
     }
 
     set padding(val) {
         super.padding = val;
         this.loadLineNum();
+        this.loadLineName();
     }
 
     set branchSpacing(val) {
@@ -1336,8 +1354,24 @@ class LineGZ extends Line {
     }
 
     set direction(val) {
-        super.direction = val;
+        this._direction = val;
+        setParams('direction', val);
+
+        for (let [stnId, stnInstance] of Object.entries(this._stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
+            stnInstance._x = this._stnRealX(stnId);
+            stnInstance._y = this._stnRealY(stnId);
+            stnInstance._state = this._stnState(stnId);
+        }
+
+        LineGZ.clearSVG(this);
+        this.drawStns();
+        this.drawLine();
+        this.drawDestInfo();
         this.loadLineNum();
+        this.loadLineName();
+        this.loadDirection();
+        this.loadFonts();
     }
 
     set txtFlip(val) {
@@ -1357,6 +1391,14 @@ class LineGZ extends Line {
         // $('.rmg-name__gzmtr--line-num').text(val);
 
         this.loadLineNum();
+        this.loadFonts();
+    }
+
+    set lineNames(val) {
+        this._lineNames = val;
+        setParams('line_name', val);
+
+        this.loadLineName();
         this.loadFonts();
     }
 
@@ -1404,6 +1446,55 @@ class LineGZ extends Line {
         var lineNumDim = getTxtBoxDim($('.rmg-name__gzmtr--line-num')[1], 'railmap');
         var lineNumScale = lineNumDim.width>LINE_NUM_MAX_WIDTH ? LINE_NUM_MAX_WIDTH/lineNumDim.width : 1;
         $('.rmg-name__gzmtr--line-num').attr('transform', `translate(-9.25,0)scale(${lineNumScale})`);
+    }
+
+    loadLineName() {
+        $('#line_name').empty();
+        var lineNameZHs = this._lineNames[0].match(/[\d]+|[\D]+/g) || '';
+        var lineTextZHEl = $('<text>', {y: 8.5, class: 'rmg-name__zh rmg-name__gzmtr--int'})
+                                .append(
+                                    $('<tspan>', {'font-size':'17px', 'alignment-baseline':'central'})
+                                        .text(lineNameZHs.length==1 ? '' : lineNameZHs[0])
+                                )
+                                .append(
+                                    $('<tspan>', {dy:-1, 'alignment-baseline':'central'})
+                                        .text(lineNameZHs[lineNameZHs.length-1])
+                                );
+
+        var lineTextENEl = $('<text>', {
+                y: 19.5, 
+                class: 'rmg-name__en rmg-name__gzmtr--int'
+            }).text(this._lineNames[1]);
+
+        if (this._fgColour == '#fff') {
+            [lineTextZHEl, lineTextENEl] = [lineTextZHEl, lineTextENEl].map(el => el.addClass('rmg-name__gzmtr--white-fg'));
+        }
+
+        var lineBoxEl = $('<use>', {
+                'xlink:href':'#intbox_gz', 
+                fill: this._themeColour
+            });
+
+        var lineNameX = this._direction=='r' ? this.lineXs[0]-60 : this.lineXs[1]+60;
+
+        $('#line_name')
+            .attr({
+                'text-anchor': 'middle', 
+                transform: `translate(${lineNameX},${this.y-14.4})scale(1.2)`
+            })
+            .append(lineBoxEl, lineTextZHEl, lineTextENEl);
+        $('#line_name').html($('#line_name').html());
+    }
+
+    loadDirection() {
+        if (this._direction == 'l') {
+            $('#direction_gz use').attr('transform', `translate(${this._svgWidth/2 - 65},205)scale(0.35)`);
+            $('#direction_gz g').attr('text-anchor', 'start');
+        } else {
+            $('#direction_gz use').attr('transform', `translate(${this._svgWidth/2 + 65},205)scale(0.35)rotate(180)`);
+            $('#direction_gz g').attr('text-anchor', 'end');
+        }
+        $('#direction_gz g').attr('transform', `translate(${this._svgWidth/2},200)`);
     }
 
     updateStnName(stnId, nameZH, nameEN, stnNum) {
@@ -1509,5 +1600,7 @@ class LineGZ extends Line {
     static initSVG(line) {
         super.initSVG(line);
         line.loadLineNum();
+        line.loadLineName();
+        line.loadDirection();
     }
 }

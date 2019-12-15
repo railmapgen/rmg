@@ -270,7 +270,7 @@ id="destination" width="0" height="0">
             </g>
             
         </g>
-        <use xlink:href="#arrow" transform="translate(200,120)scale(0.25)"/>
+        <use xlink:href="#arrow"/>
         <g id="platform">
             <circle cx="0" cy="0" r="30"/>
             <text class="rmg-name__zh rmg-name__platformnum rmg-name__gzmtr--platformnum" dy="-12"></text>
@@ -354,6 +354,9 @@ id="railmap" width="0" height="0">
             alignment-baseline: central;
         }
 
+        .rmg-name__zh.rmg-name__gzmtr--direc {font-size: 28px;}
+        .rmg-name__en.rmg-name__gzmtr--direc {font-size: 14px;}
+
     </style>
 
     <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Noto+Serif+KR:700|Noto+Serif+JP:700|Noto+Serif+TC:700|Noto+Serif+SC:700&display=swap);</style>
@@ -399,10 +402,15 @@ id="railmap" width="0" height="0">
     <path id="strip" class="Strip"/>
 
     <rect id="current_bg" x="0" y="0" width="100" height="20" fill="#000"/>
+    <g id="line_name"></g>
     <g id="stn_icons"></g>
 
-    <g id="change_bgs" style="display:none;">
-        <rect id="int_bg_0" x="25" y="0" rx="3" ry="3" width="37" height="20" fill="none"/>
+    <g id="direction_gz">
+        <use xlink:href="#arrow"/>
+        <g transform="translate(630,200)" text-anchor="start">
+            <text class="rmg-name__zh rmg-name__gzmtr--direc">方向</text>
+            <text class="rmg-name__en rmg-name__gzmtr--direc" dy="22">Towards</text>
+        </g>
     </g>
 
     <rect id="outer" x="0" y="0" fill="none" stroke="black"/>
@@ -1299,12 +1307,6 @@ id="railmap" width="0" height="0">
                           <div class="mdc-notched-outline__trailing"></div>
                         </div>
                     </div>
-                    <!-- <div class="mdc-select__anchor" style="width: 100%;">
-                        <i class="mdc-select__dropdown-icon"></i>
-                        <div class="mdc-select__selected-text"></div>
-                        <span class="mdc-floating-label" trans-tag="Stations.Interchange.Type.Title"></span>
-                        <div class="mdc-line-ripple"></div>
-                    </div> -->
                     <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
                         <ul class="mdc-list" id="change_type__selection">
                             <li class="mdc-list-item" data-value="none" trans-tag="Stations.Interchange.Type.None"></li>
@@ -1634,7 +1636,7 @@ id="railmap" width="0" height="0">
             console.log(Date.now());
 
         } catch (err) {
-            alert('Oops, we have run into an error! Please report to us by coping or screen capturing the following error message. We will fix it as soon as possible.\n\n' + err + '\n\nPlease also send us your JSON configuration file by pressing the "Save" button. To start a new canvas, press "New Canvas". ')
+            alert('Oops, we have run into an error! Please report to us by copying or screen capturing the following error message. We will fix it as soon as possible.\n\n' + err + '\n\nPlease also send us your JSON configuration file by pressing the "Save" button. To start a new canvas, press "New Canvas". ')
             console.error(err);
         }
         

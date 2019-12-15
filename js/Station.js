@@ -517,17 +517,7 @@ class Int2StationGZ extends StationGZ {
     }
 
     get intNameHTML() {
-        var intNameZHs = this._intNameZH[0].match(/[\d]+|[\D]+/g);
-        var intTextZHEl = $('<text>', {y:8.5, class:'rmg-name__zh rmg-name__gzmtr--int'})
-                .append(
-                    $('<tspan>', {'font-size':'17px', 'alignment-baseline':'central'})
-                        .text(intNameZHs.length==1 ? '' : intNameZHs[0])
-                )
-                .append(
-                    $('<tspan>', {dy:-1, 'alignment-baseline':'central'})
-                        .text(intNameZHs[intNameZHs.length-1])
-                );
-        var intNameZHss = this._intNameZH.map(name => name.match(/[\d]+|[\D]+/g));
+        var intNameZHss = this._intNameZH.map(name => name.match(/[\d]+|[\D]+/g) || '');
         var intTextZHEls = intNameZHss.map(
             (names, idx) => $('<text>', {y: 8.5 + idx*28, class: 'rmg-name__zh rmg-name__gzmtr--int'})
                                 .append(

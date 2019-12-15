@@ -581,7 +581,7 @@ function initStationsPanel() {
         stnModifyNameENField.layout();
         $('#stn_modify_diag #stn_num')[0].MDCTextField.layout();
     })
-    $('#stn_modify_diag #name_zh, #name_en, #stn_num').on('input', () => {
+    $('#stn_modify_diag #name_zh, #stn_modify_diag #name_en, #stn_num').on('input', () => {
         var nameZH = stnModifyNameZHField.value;
         var nameEN = stnModifyNameENField.value;
         var stnNum = $('#stn_modify_diag #stn_num')[0].MDCTextField.value;
