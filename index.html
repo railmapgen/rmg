@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script>
+        if (navigator.userAgent.indexOf('Safari')===-1 && navigator.userAgent.indexOf('Chrome')===-1) {
+            alert('Your browser is not supported. We recommend Chrome and Safari.\n你的瀏覽器不被支援。我們推薦使用Chrome或Safari。\n你的浏览器不受支持。我们推荐使用Chrome或Safari。')
+        }
+
         var urlParams = new URLSearchParams(window.location.search);
         var requestLang = urlParams.get('lang') || localStorage.rmgLang || navigator.language.split('-').slice(0,2).join('-');
         switch (requestLang.toLowerCase()) {
@@ -677,6 +681,33 @@ id="railmap" width="0" height="0">
   <div class="mdc-dialog__scrim"></div>
 </div>
 
+<div id="init_err_diag" class="mdc-dialog"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="my-dialog-title"
+     aria-describedby="my-dialog-content"
+     data-mdc-auto-init="MDCDialog">
+  <div class="mdc-dialog__container">
+    <div class="mdc-dialog__surface">
+      <h2 class="mdc-dialog__title" trans-tag="File.Error.Title"></h2>
+      <div class="mdc-dialog__content">
+          <p trans-tag="File.Error.Msg0"></p>
+          <p trans-tag="File.Error.Msg1"></p>
+          <p id="err_stack" style="overflow-wrap: break-word; word-break: break-word;"></p>
+          <p trans-tag="File.Error.Msg2"></p>
+          <p trans-tag="File.Error.Msg3"></p>
+          <p trans-tag="File.Error.Msg4"></p>
+      </div>
+      <footer class="mdc-dialog__actions">
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
+          <span class="mdc-button__label">OK</span>
+        </button>
+      </footer>
+    </div>
+  </div>
+  <div class="mdc-dialog__scrim"></div>
+</div>
+
 </div>
 
 <div id="panel_layout" class="panel">
@@ -688,8 +719,6 @@ id="railmap" width="0" height="0">
     <ul class="mdc-list mdc-list--two-line mdc-list--avatar-list" data-mdc-auto-init="MDCList">
         <li class="mdc-list-item" tabindex="0" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">panorama_horizontal</span>
-            <!-- <span class="mdc-list-item__text-label" trans-tag="Layout.Width"></span>
-            &emsp;&emsp;&emsp; -->
             <div id="svg_dest_width" class="mdc-text-field mdc-text-field--outlined" style="width: 40%;" data-mdc-auto-init="MDCTextField">
                 <input type="text" id="tf-outlined" class="mdc-text-field__input">
                 <div class="mdc-notched-outline">
@@ -1528,9 +1557,11 @@ id="railmap" width="0" height="0">
      aria-describedby="my-dialog-content">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
-      <h2 class="mdc-dialog__title" id="my-dialog-title" trans-tag="Stations.Delete.Title"></h2>
-      <div class="mdc-dialog__content" id="my-dialog-content">
-        Dialog body text goes here.
+      <h2 class="mdc-dialog__title" trans-tag="Stations.Delete.Title"></h2>
+      <div class="mdc-dialog__content">
+        <span trans-tag="Stations.Delete.Msg1"></span>
+        <span id="err_stn"></span>
+        <span trans-tag="Stations.Delete.Msg2"></span>
       </div>
       <footer class="mdc-dialog__actions">
         <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
@@ -1552,13 +1583,12 @@ id="railmap" width="0" height="0">
      aria-describedby="my-dialog-content">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
-      <h2 class="mdc-dialog__title" id="my-dialog-title">Error</h2>
-      <div class="mdc-dialog__content" id="my-dialog-content">
-        You are not allowed to delete this station!
+      <h2 class="mdc-dialog__title" trans-tag="Stations.DeleteErr.Title"></h2>
+      <div class="mdc-dialog__content" trans-tag="Stations.DeleteErr.Msg">
       </div>
       <footer class="mdc-dialog__actions">
         <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
-          <span class="mdc-button__label">OK</span>
+          <span class="mdc-button__label" trans-tag="Dialog.OK"></span>
         </button>
       </footer>
     </div>
@@ -1609,17 +1639,14 @@ id="railmap" width="0" height="0">
 </div>
 
 
-<script async src="js/lang.js"></script>
+
 
 <script>
     var template = 'blank';
     var myLine;
     $(`[${window.urlParams.get('style')}-specific]`).show();
     window.mdc.autoInit();
-
     initSavePanel();
-    // savePanelFirstInit = false;
-
     if (localStorage.rmgParam != null) {
         try {
             updateParam();
@@ -1636,7 +1663,8 @@ id="railmap" width="0" height="0">
             console.log(Date.now());
 
         } catch (err) {
-            alert('Oops, we have run into an error! Please report to us by copying or screen capturing the following error message. We will fix it as soon as possible.\n\n' + err + '\n\nPlease also send us your JSON configuration file by pressing the "Save" button. To start a new canvas, press "New Canvas". ')
+            $('#init_err_diag #err_stack').html(err.stack);
+            $('#init_err_diag')[0].MDCDialog.open();
             console.error(err);
         }
         
@@ -1658,9 +1686,9 @@ id="railmap" width="0" height="0">
         });
     }
 
-
-    
 </script>
+
+<script async src="js/lang.js"></script>
 
 <script>
     var layoutPanelFirstInit = true;

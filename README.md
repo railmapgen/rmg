@@ -9,6 +9,19 @@ Demo page: https://wongchito.github.io/RailMapGenerator/
 
 ## Version History
 
+### 1.3.3 (16 Dec 2019)
+
+#### Known Issues
+
+- Sliders may stop working randomly. We are investigating this issue. 
+  - Workaround: Refresh page to re-initial sliders. Your work will not be lost if you are not using incognito mode. 
+
+#### Resolved Issues
+
+- Completely translated all text. 
+- Fixed the error of foreground colour misuse in Guangzhou Metro style. 
+- Improved error handling. 
+
 ### 1.3.2 (16 Dec 2019)
 
 #### Known Issues

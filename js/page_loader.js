@@ -212,11 +212,15 @@ function initSavePanel() {
                 // link.click();
                 // URL.revokeObjectURL(url);
                 // break;
-                var link = document.createElement('a');
-                var data = localStorage.rmgParam;
-                link.href = 'data:application/json;base64,'+btoa(unescape(encodeURIComponent(data)));
-                link.download = 'rmg_param.json';
-                link.click();
+                var link = $('<a>', {
+                    href: 'data:application/json;base64,'+btoa(unescape(encodeURIComponent(localStorage.rmgParam))), 
+                    download: 'rmg_param.json'
+                });
+                // var link = document.createElement('a');
+                // var data = localStorage.rmgParam;
+                // link.href = 'data:application/json;base64,'+btoa(unescape(encodeURIComponent(data)));
+                // link.download = 'rmg_param.json';
+                link[0].click();
                 break;
             case 3:
                 exportDialog.open();
@@ -832,9 +836,10 @@ function initStationsPanel() {
     var stnDeleteErrorDialog = new mdc.dialog.MDCDialog($('#stn_delete_err')[0]);
     stnDeleteConfirmDialog.listen('MDCDialog:opening', event => {
         var stnId = event.target.getAttribute('for');
-        $('#stn_delete_diag .mdc-dialog__content').html(
-            `Are you sure to delete station ${getParams().stn_list[stnId].name.join(' - ')}? You can't undo this action. `
-        );
+        $('#stn_delete_diag #err_stn').text(getParams().stn_list[stnId].name.join(' - '));
+        // $('#stn_delete_diag .mdc-dialog__content').html(
+        //     `Are you sure to delete station ${getParams().stn_list[stnId].name.join(' - ')}? You can't undo this action. `
+        // );
     });
     stnDeleteConfirmDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action == 'close') {return;}
