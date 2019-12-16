@@ -684,15 +684,18 @@ class Line {
         } else {
             var lineNameZH = lineNameEN = '';
         }
+
+        $('#dest_name > g:last-child text').eq(0).text(`${lineNameZH}往${destNameZH}`);
+        $('#dest_name > g:last-child text').eq(1).text(`${lineNameEN}to ${destNameEN}`);
         
-        $('#dest_name > g:last-child').empty().attr('text-anchor', txtAnchor).append(
-            $('<text>').addClass('rmg-name__zh rmg-name__mtr--dest').text(`${lineNameZH}往${destNameZH}`)
-        ).append(
-            $('<text>', {
-                'dy':80, 'class': 'rmg-name__en rmg-name__mtr--dest'
-            }).text(`${lineNameEN}to ${destNameEN}`)
-        );
-        $('#dest_name').html($('#dest_name').html());
+        // $('#dest_name > g:last-child').empty().attr('text-anchor', txtAnchor).append(
+        //     $('<text>').addClass('rmg-name__zh rmg-name__mtr--dest').text(`${lineNameZH}往${destNameZH}`)
+        // ).append(
+        //     $('<text>', {
+        //         'dy':80, 'class': 'rmg-name__en rmg-name__mtr--dest'
+        //     }).text(`${lineNameEN}to ${destNameEN}`)
+        // );
+        // $('#dest_name').html($('#dest_name').html());
 
         var bcr = $('#dest_name > g:last-child')[0].getBoundingClientRect();
         var flagLength = 160 + 150 + bcr.width + 45 + 50;
@@ -703,7 +706,10 @@ class Line {
         var destNameX = platformNumX + isLeft * (75 + 45);
         $('#dest_name > use').attr('transform', `translate(${arrowX},130)rotate(${arrowRotate})`);
         $('#dest_name > #platform').attr('transform', `translate(${platformNumX},130)`);
-        $('#dest_name > g:last-child').attr('transform', `translate(${destNameX},105)`);
+        $('#dest_name > g:last-child').attr({
+            transform: `translate(${destNameX},105)`, 
+            'text-anchor': txtAnchor
+        });
     }
 
     loadFonts() {

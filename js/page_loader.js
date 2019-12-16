@@ -204,13 +204,19 @@ function initSavePanel() {
                 $('#upload_file').click();
                 break;
             case 2:
+                // var link = document.createElement('a');
+                // var data = new Blob([localStorage.rmgParam], {type: 'application/json;charset=utf-8'});
+                // var url = window.URL.createObjectURL(data);
+                // link.href = url;
+                // link.download = 'rmg_config.json';
+                // link.click();
+                // URL.revokeObjectURL(url);
+                // break;
                 var link = document.createElement('a');
-                var data = new Blob([localStorage.rmgParam], {type: 'application/json;charset=utf-8'});
-                var url = window.URL.createObjectURL(data);
-                link.href = url;
-                link.download = 'rmg_config.json';
+                var data = localStorage.rmgParam;
+                link.href = 'data:application/json;base64,'+btoa(unescape(encodeURIComponent(data)));
+                link.download = 'rmg_param.json';
                 link.click();
-                URL.revokeObjectURL(url);
                 break;
             case 3:
                 exportDialog.open();
@@ -223,7 +229,6 @@ function initSavePanel() {
         .text($(`#style_diag [data-mdc-dialog-action="${window.urlParams.get('style')}"] span`).text());
 
     $('#panel_save .mdc-list:nth-child(2) li:nth-child(2) span:nth-child(2) span:last-child')
-        .attr('trans-tag', $(`#lang_diag [data-mdc-dialog-action="${window.urlParams.get('lang')}"] span`).attr('trans-tag'))
         .text($(`#lang_diag [data-mdc-dialog-action="${window.urlParams.get('lang')}"] span`).text());
         
     $('#panel_save .mdc-list')[1].MDCList.listen('MDCList:action', event => {

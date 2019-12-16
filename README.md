@@ -9,6 +9,20 @@ Demo page: https://wongchito.github.io/RailMapGenerator/
 
 ## Version History
 
+### 1.3.2 (16 Dec 2019)
+
+#### Known Issues
+
+- Sliders may stop working randomly. We are investigating this issue. 
+  - Workaround: Refresh page to re-initial sliders. Your work will not be lost if you are not using incognito mode. 
+- Text are not completely translated. 
+
+#### Resolved Issues
+
+- Fixed the issue of misalignment of destination information in MTR style. 
+- Fixed the error of displaying Guangzhou-Metro-style destination in MTR style. 
+- Fixed the issue that JSON configuration file is not able to be downloaded in Safari for iOS. 
+
 ### 1.3.1 (15 Dec 2019)
 
 #### New Features
