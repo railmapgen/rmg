@@ -16,6 +16,7 @@ Demo page: https://wongchito.github.io/RailMapGenerator/
 - Direction is now shown in the railway map when using Guangzhou Metro style. 
 - Reversing entire line is now available. You may make rail map for either side of a platform without re-entering the details. 
 - More types of platform screen door indicator light are available. 
+- New templates available. 
 
 #### Known Issues
 
