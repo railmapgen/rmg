@@ -15,6 +15,14 @@
         }
     },
     {
+        "filename": "guangzhou_gf", 
+        "desc": {
+            "en": "Guangfo Metro", 
+            "zh-Hans": "广佛地铁",
+            "zh-Hant": "廣佛地鐵"
+        }
+    }, 
+    {
         "filename": "guangzhou_gz1", 
         "desc": {
             "en": "Guangzhou Metro Line 1", 

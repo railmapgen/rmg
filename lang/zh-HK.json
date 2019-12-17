@@ -25,20 +25,20 @@
     "File.Style": "風格",
     "File.Style.Title": "選擇風格", 
     "File.Style.MTR": "港鐵", 
-    "File.Style.GZMTR": "廣州地鐵 (Alpha)",
+    "File.Style.GZMTR": "廣州地鐵 (Beta)",
 
     "File.Lang": "語言/Language",
     "File.Lang.Title": "選擇語言", 
 
     "File.Error.Title": "載入錯誤",
     "File.Error.Msg0": "大鑊，我們遇到了錯誤！請你按照以下步驟向我們回報問題。",
-    "File.Error.Msg1": "1. 螢幕截圖此錯誤訊息。",
+    "File.Error.Msg1": "1. 螢幕截圖或複製此錯誤訊息。",
     "File.Error.Msg2": "2. 選擇「儲存為JSON檔案」以取得設定檔案。",
     "File.Error.Msg3": "3. 透過GitHub Issues或社交媒體與我們聯絡。", 
     "File.Error.Msg4": "請妥善儲存你的JSON設定檔案，當頁面錯誤被修復後，你可以使用此設定檔案復原所有路線變更。如要開啟新畫布，請選擇「新增畫布」。",
 
     "Layout.Width": "路線圖闊度",
-    "Layout.DestWidth": "驛名標闊度",
+    "Layout.DestWidth": "站名牌闊度",
     "Layout.Y": "垂直位置",
     "Layout.BranchSpacing": "支線間距", 
     "Layout.Padding": "路線兩端留白", 
@@ -53,8 +53,15 @@
     "Design.Platform": "月台編號",
     "Design.MTRLegacy": "港鐵舊款樣式",
     "Design.FlipName": "反轉車站名稱位置",
+    "Design.Reverse": "反轉全線車站順序", 
     "Design.Line": "路線編號",
     "Design.PSD": "月台幕門編號",
+
+    "Design.PanelType": "資訊板樣式", 
+    "Design.PanelType.Title": "選擇資訊板樣式", 
+    "Design.PanelType.GZ1": "I型", 
+    "Design.PanelType.GZ2": "II型", 
+
 
     "Design.Char": "漢字字形",
     "Design.Char.Title": "選擇字形",

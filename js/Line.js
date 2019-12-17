@@ -1054,6 +1054,8 @@ class Line {
                 newInfo.branch = { left:[], right:[] };
                 this._stations[stnId]._branch.left[1] = newId;
                 param.stn_list[stnId].branch.left[1] = newId;
+                this._stations[end]._branch.right[1] = newId;
+                param.stn_list[end].branch.right[1] = newId;
 
                 newInfo.parents = [end];
                 newInfo.children = [stnId];
@@ -1067,6 +1069,8 @@ class Line {
                 newInfo.branch = { left:[], right:[] };
                 this._stations[stnId]._branch.left[1] = newId;
                 param.stn_list[stnId].branch.left[1] = newId;
+                this._stations[end]._branch.right[1] = newId;
+                param.stn_list[end].branch.right[1] = newId;
 
                 newInfo.parents = [end];
                 newInfo.children = [stnId];
@@ -1164,6 +1168,8 @@ class Line {
                 newInfo.branch = { left:[], right:[] };
                 this._stations[stnId]._branch.right[1] = newId;
                 param.stn_list[stnId].branch.right[1] = newId;
+                this._stations[end]._branch.left[1] = newId;
+                param.stn_list[end].branch.left[1] = newId;
 
                 newInfo.children = [end];
                 newInfo.parents = [stnId];
@@ -1177,6 +1183,8 @@ class Line {
                 newInfo.branch = { left:[], right:[] };
                 this._stations[stnId]._branch.right[1] = newId;
                 param.stn_list[stnId].branch.right[1] = newId;
+                this._stations[end]._branch.left[1] = newId;
+                param.stn_list[end].branch.left[1] = newId;
 
                 newInfo.children = [end];
                 newInfo.parents = [stnId];
@@ -1221,6 +1229,45 @@ class Line {
         return [newId, newInfo];
     }
 
+    static reverseStns(line) {
+        var param = getParams();
+        for (let [stnId, stnInstance] of Object.entries(line._stations)) {
+            if (stnId === 'linestart') {
+                param.stn_list['lineend'].parents = stnInstance._children.reverse();
+                param.stn_list['lineend'].branch = {
+                    left: stnInstance._branch.right, 
+                    right: []
+                };
+            } else if (stnId === 'lineend') {
+                param.stn_list['linestart'].children = stnInstance._parents.reverse();
+                param.stn_list['linestart'].branch = {
+                    left: [], 
+                    right: stnInstance._branch.left
+                }
+            } else {
+                var tmpArr = stnInstance._children.reverse().map(id => {
+                    switch (id) {
+                        case 'linestart': return 'lineend';
+                        case 'lineend': return 'linestart';
+                        default: return id;
+                    }
+                });
+                param.stn_list[stnId].children = stnInstance._parents.reverse().map(id => {
+                    switch (id) {
+                        case 'linestart': return 'lineend';
+                        case 'lineend': return 'linestart';
+                        default: return id;
+                    }
+                });
+                param.stn_list[stnId].parents = tmpArr;
+                param.stn_list[stnId].branch.left = stnInstance._branch.right;
+                param.stn_list[stnId].branch.right = stnInstance._branch.left;
+            }
+        }
+        putParams(param);
+        location.reload(true);
+    }
+
     static clearSVG() {
         $('#stn_icons, #line_main, #line_pass').empty();
     }
@@ -1250,7 +1297,7 @@ class Line {
             while (true) {
                 if (curId == 'lineend') {break;}
                 if (curId != 'linestart' && prevId == this._stations[curId]._branch.left[1]) {
-                    // branch ends  
+                    // branch ends
                     break;
                 } else {
                     prevId = curId;
@@ -1262,7 +1309,7 @@ class Line {
                         case 2:
                             branches.push([prevId]);
                             if (prevId == 'linestart') {
-                                var branchNextId = children[1];
+                                var branchNextId = this._stations[prevId]._branch.right[1];
                             } else {
                                 var branchNextId = this._stations[prevId]._branch.right[1];
                             }
@@ -1285,36 +1332,37 @@ class Line {
 }
 
 class LineGZ extends Line {
-    #psdNum; #lineNum;
+    #psdNum; #lineNum; #infoPanelType;
 
     constructor (param) {
         super(param);
 
         this.#psdNum = param.psd_num;
         this.#lineNum = param.line_num;
+        this.#infoPanelType = param.info_panel_type;
     }
 
     _initStnInstance(stnId, stnInfo) {
         switch (stnInfo.change_type) {
             case 'int2':
-                return new Int2StationGZ(stnId, stnInfo);
+                // return new Int2StationGZ(stnId, stnInfo);
             case 'int3_l':
             case 'int3_r':
-                return new Int3StationGZ(stnId, stnInfo);
+                return new IntStationGZ(stnId, stnInfo);
             case 'osi11_ul':
             case 'osi11_pl':
             case 'osi11_ur':
             case 'osi11_pr':
-                return new OSI11StationGZ(stnId, stnInfo);
+                // return new OSI11StationGZ(stnId, stnInfo);
             case 'osi12_ul':
             case 'osi12_pl':
             case 'osi12_ur':
             case 'osi12_pr':
-                return new OSI12StationGZ(stnId, stnInfo);
+                return new OSIStationGZ(stnId, stnInfo);
             case 'osi22_end_p':
             case 'osi22_end_u':
                 if (stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') {
-                    return new OSI22EndStationGZ(stnId, stnInfo);
+                    return new OSIStationGZ(stnId, stnInfo);
                 }
             default:
                 return new StationGZ(stnId, stnInfo);
@@ -1388,14 +1436,12 @@ class LineGZ extends Line {
     set currentStnId(val) {
         super.currentStnId = val;
         this.loadLineNum();
+        this.loadDirection();
     }
 
     set lineNum(val) {
         this.#lineNum = val;
         setParams('line_num', val);
-        // $('#big_stn_num text').eq(0).text(val);
-        // $('.rmg-name__gzmtr--line-num').text(val);
-
         this.loadLineNum();
         this.loadFonts();
     }
@@ -1414,10 +1460,78 @@ class LineGZ extends Line {
         $('.rmg-psd-num').text(val);
     }
 
+    set infoPanelType(val) {
+        this.#infoPanelType = val;
+        setParams('info_panel_type', val);
+        $('#station_info_gzmtr #indicator_light').attr('xlink:href', '#indicator_'+val);
+    }
+
+    _stnYShare(stnId) {
+        if (['linestart', 'lineend'].includes(stnId)) {
+            return 0;
+        }
+        var branches = this.branches;
+        if (branches[0].includes(stnId)) {
+            return 0; 
+        } else {
+            let i = 1;
+            while (!branches[i].includes(stnId)) {
+                i++;
+            }
+            if (branches[0].includes(branches[i][0])) {
+                var branchingStnId = branches[i][0];
+                var neToFind = '_children';
+                if (this._stations[branchingStnId][neToFind].indexOf(branches[i][1]) == 0) {
+                    return 2;
+                } else {
+                    return -2;
+                }
+            } else {
+                var branchingStnId = branches[i].slice().reverse()[0];
+                var neToFind = '_parents';
+                if (this._stations[branchingStnId][neToFind].indexOf(branches[i].slice().reverse()[1]) == 0) {
+                    return 2;
+                } else {
+                    return -2;
+                }
+            }
+        }
+    }
+
     drawStrip() {
         // $('#strip, #dest_strip').attr('d', `M 0,${this.stripY} H ${this._svgWidth}`)
         super.drawStrip();
         $('.Strip').removeClass('.Strip').addClass('rmg-strip__gzmtr--1');
+    }
+
+    _linePath(stnIds) {
+        var [prevId, prevY, prevX] = [];
+        var path = [];
+
+        var { stnExtraH, stnSpareH, pathTurnESE, pathTurnSEE, pathTurnENE, pathTurnNEE, stnDX } = this;
+
+        stnIds.forEach(stnId => {
+            var [x,y] = ['_stnRealX', '_stnRealY'].map(fun => this[fun](stnId));
+            if (!prevY) {
+                [prevId, prevX, prevY] = [stnId, x, y];
+                path.push(`M ${x},${y}`);
+                return;
+            }
+            if (y != prevY && y == this.y) {
+                path.push(
+                    `H ${x}`, `V ${y}`
+                )
+            } else if (y != prevY && y != this.y) {
+                path.push(
+                    `V ${y}`, `H ${x}`
+                )
+            }
+            path.push(`H ${x}`);
+            [prevId, prevX, prevY] = [stnId, x, y];
+        });
+
+        // simplify path
+        return path.join(' ').replace(/( H ([\d.]+))+/g, ' H $2');
     }
 
     drawLine() {
@@ -1433,10 +1547,13 @@ class LineGZ extends Line {
         super.fillThemeColour();
         $('path#stn_gz').attr('stroke', this._themeColour);
         $('#station_info_gzmtr > #platform > circle').attr('fill', this._themeColour);
+        $('#line_name use').attr('fill', this._themeColour);
         if (this._fgColour === '#fff') {
             $('#station_info_gzmtr > #platform text').addClass('rmg-name__gzmtr--white-fg');
+            $('#line_name text').addClass('rmg-name__gzmtr--white-fg');
         } else {
             $('#station_info_gzmtr > #platform text').removeClass('rmg-name__gzmtr--white-fg');
+            $('#line_name text').removeClass('rmg-name__gzmtr--white-fg');
         }
         
     }
@@ -1450,56 +1567,59 @@ class LineGZ extends Line {
         $('.rmg-name__gzmtr--line-num').text(this.#lineNum).attr('transform', `translate(-9.25,0)`);
 
         var lineNumDim = getTxtBoxDim($('.rmg-name__gzmtr--line-num')[1], 'railmap');
-        var lineNumScale = lineNumDim.width>LINE_NUM_MAX_WIDTH ? LINE_NUM_MAX_WIDTH/lineNumDim.width : 1;
-        $('.rmg-name__gzmtr--line-num').attr('transform', `translate(-9.25,0)scale(${lineNumScale})`);
+        if (this.#lineNum === 'GF') {
+            var lineNumScale = 0.8009630818619583;
+            $('.rmg-name__gzmtr--line-num').attr('transform', `translate(-9.25,0)scale(${lineNumScale})`);
+            $('.rmg-name__gzmtr--station-num').attr('transform', `translate(9.25,0)scale(${lineNumScale})`);
+        } else {
+            var lineNumScale = lineNumDim.width>LINE_NUM_MAX_WIDTH ? LINE_NUM_MAX_WIDTH/lineNumDim.width : 1;
+            $('.rmg-name__gzmtr--line-num').attr('transform', `translate(-9.25,0)scale(${lineNumScale})`);
+            $('.rmg-name__gzmtr--station-num').attr('transform', `translate(9.25,0)`);
+        }
     }
 
     loadLineName() {
-        $('#line_name').empty();
         var lineNameZHs = this._lineNames[0].match(/[\d]+|[\D]+/g) || '';
-        var lineTextZHEl = $('<text>', {y: 8.5, class: 'rmg-name__zh rmg-name__gzmtr--int'})
-                                .append(
-                                    $('<tspan>', {'font-size':'17px', 'alignment-baseline':'central'})
-                                        .text(lineNameZHs.length==1 ? '' : lineNameZHs[0])
-                                )
-                                .append(
-                                    $('<tspan>', {dy:-1, 'alignment-baseline':'central'})
-                                        .text(lineNameZHs[lineNameZHs.length-1])
-                                );
+        if (lineNameZHs.length === 1) {
+            $('#line_name tspan').eq(0).text('');
+            $('#line_name tspan').eq(1).attr('dy', '0');
+        } else {
+            $('#line_name tspan').eq(0).text(lineNameZHs[0]);
+            $('#line_name tspan').eq(1).attr('dy', '-1');
+        }
+        $('#line_name tspan').eq(1).text(lineNameZHs[lineNameZHs.length-1])
 
-        var lineTextENEl = $('<text>', {
-                y: 19.5, 
-                class: 'rmg-name__en rmg-name__gzmtr--int'
-            }).text(this._lineNames[1]);
+        $('#line_name text:last-child').text(this._lineNames[1]);
 
         if (this._fgColour == '#fff') {
-            [lineTextZHEl, lineTextENEl] = [lineTextZHEl, lineTextENEl].map(el => el.addClass('rmg-name__gzmtr--white-fg'));
+            $('#line_name text').addClass('rmg-name__gzmtr--white-fg');
         }
-
-        var lineBoxEl = $('<use>', {
-                'xlink:href':'#intbox_gz', 
-                fill: this._themeColour
-            });
 
         var lineNameX = this._direction=='r' ? this.lineXs[0]-60 : this.lineXs[1]+60;
 
         $('#line_name')
             .attr({
-                'text-anchor': 'middle', 
                 transform: `translate(${lineNameX},${this.y-14.4})scale(1.2)`
             })
-            .append(lineBoxEl, lineTextZHEl, lineTextENEl);
-        $('#line_name').html($('#line_name').html());
     }
 
     loadDirection() {
         if (this._direction == 'l') {
             $('#direction_gz use').attr('transform', `translate(${this._svgWidth/2 - 65},205)scale(0.35)`);
             $('#direction_gz g').attr('text-anchor', 'start');
+            var destinations = this.leftDests;
         } else {
             $('#direction_gz use').attr('transform', `translate(${this._svgWidth/2 + 65},205)scale(0.35)rotate(180)`);
             $('#direction_gz g').attr('text-anchor', 'end');
+            var destinations = this.rightDests;
         }
+        var validDest = destinations.filter(stnId => this._stations[stnId]._state >= 0);
+        var [destNameZH, destNameEN] = [].map.call(['_nameZH', '_nameEN'], key => {
+            return validDest.map(stnId => this._stations[stnId][key].replace(/\\/g, ' ')).join('/');
+        });
+        $('#direction_gz text').eq(0).text(destNameZH + '方向');
+        $('#direction_gz text').eq(1).text('Towards ' + destNameEN);
+
         $('#direction_gz g').attr('transform', `translate(${this._svgWidth/2},200)`);
     }
 
@@ -1508,16 +1628,22 @@ class LineGZ extends Line {
 
         this.loadLineNum();
 
+        if (this._stations[this._currentStnId]._parents.includes(stnId) || this._stations[this._currentStnId]._parents.includes(stnId)) {
+            this.drawDestInfo();
+            this.loadFonts();
+        }
+
         if (this._currentStnId === stnId) {
             this.drawDestInfo(); 
             this.loadFonts();
         }
+
+        if (this.leftDests.includes(stnId) || this.rightDests.includes(stnId)) {
+            this.loadDirection();
+        }
     }
     
     drawDestInfo() {
-        $('#dest_name').hide();
-        $('#station_info_gzmtr').show();
-
         $('#station_info_gzmtr #big_stn_num text').eq(1).text(this._stations[this._currentStnId]._stnNum);
 
         $('#station_info_gzmtr > #platform > text').eq(0).text(this._platformNum);
@@ -1579,19 +1705,24 @@ class LineGZ extends Line {
             }
         }
 
-        $('#station_info_gzmtr > use').eq(1).attr({ x:this._svgDestWidth/2, y:270 });
+        $('#station_info_gzmtr #indicator_light').attr({
+            x:this._svgDestWidth/2, y:270, 
+            'xlink:href': '#indicator_' + this.#infoPanelType
+        });
         $('#station_info_gzmtr #big_psd').attr('transform', `translate(${this._svgDestWidth/2+80},242)`);
     }
 
     addStn(prep, stnId, loc, end) {
         var res = super.addStn(prep, stnId, loc, end);
         this.loadLineNum();
+        this.loadDirection();
         return res;
     }
 
     removeStn(stnId) {
         if (super.removeStn(stnId)) {
             this.loadLineNum();
+            this.loadDirection();
             return true;
         } else {
             return false;

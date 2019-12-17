@@ -218,16 +218,16 @@ function updateParam() {
         
         if (!('branch' in stnInfo)) {
             param.stn_list[stnId].branch = { left:[], right:[] };
-        }
-        if (stnInfo.children.length == 2) {
-            param.stn_list[stnId].branch.right = ['through', stnInfo.children[1]];
-        } else {
-            param.stn_list[stnId].branch.right = [];
-        }
-        if (stnInfo.parents.length == 2) {
-            param.stn_list[stnId].branch.left = ['through', stnInfo.parents[1]];
-        } else {
-            param.stn_list[stnId].branch.left = [];
+            if (stnInfo.children.length == 2) {
+                param.stn_list[stnId].branch.right = ['through', stnInfo.children[1]];
+            } else {
+                param.stn_list[stnId].branch.right = [];
+            }
+            if (stnInfo.parents.length == 2) {
+                param.stn_list[stnId].branch.left = ['through', stnInfo.parents[1]];
+            } else {
+                param.stn_list[stnId].branch.left = [];
+            }
         }
     }
 
@@ -249,7 +249,7 @@ function updateParam() {
         }
     }
 
-
+    // Version 1.3
     for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
         if ('interchange' in stnInfo) {
             stnInfo.interchange.map(arr => {
@@ -260,6 +260,11 @@ function updateParam() {
                 });
             });
         }
+    }
+
+    // Version 1.4
+    if (!('info_panel_type' in param)) {
+        param.info_panel_type = 'gz_1';
     }
     putParams(param);
 }

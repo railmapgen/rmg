@@ -5,6 +5,9 @@ function initLayoutPanel() {
         .then(param => {
             $('#svg_dest_width')[0].MDCTextField.value = param.svg_dest_width;
             $('#svg_width')[0].MDCTextField.value = param.svg_width;
+            $('#y_pc')[0].MDCSlider.value = param.y_pc;
+            $('#branch_spacing')[0].MDCSlider.value = param.branch_spacing;
+            $('#padding')[0].MDCSlider.value = param.padding;
         })
 
     $('#svg_dest_width > input').on('input', event => {
@@ -15,28 +18,20 @@ function initLayoutPanel() {
         myLine.svgWidth = event.target.value;
     });
 
-    var branchSpacingSlider = new mdc.slider.MDCSlider($('#branch_spacing')[0]);
-    branchSpacingSlider.value = getParams().branch_spacing;
-    branchSpacingSlider.listen('MDCSlider:input', () => {
-        myLine.branchSpacing = branchSpacingSlider.value;
+    $('#branch_spacing')[0].MDCSlider.listen('MDCSlider:input', event => {
+        myLine.branchSpacing = event.target.MDCSlider.value;
     });
 
-    var yPcSlider = new mdc.slider.MDCSlider($('#y_pc')[0]);
-    yPcSlider.value = getParams().y_pc;
-    yPcSlider.listen('MDCSlider:input', () => {
-        myLine.yPc = yPcSlider.value;
+    $('#y_pc')[0].MDCSlider.listen('MDCSlider:input', event => {
+        myLine.yPc = event.target.MDCSlider.value;
     });
 
-    var paddingSlider = new mdc.slider.MDCSlider($('#padding')[0]);
-    paddingSlider.value = getParams().padding;
-    paddingSlider.listen('MDCSlider:input', () => {
-        myLine.padding = paddingSlider.value;
+    $('#padding')[0].MDCSlider.listen('MDCSlider:input', event => {
+        myLine.padding = event.target.MDCSlider.value;
     });
 }
 
 function initDesignPanel() {
-    var designListMTR = new mdc.list.MDCList($('#panel_design #design_list_mtr')[0]);
-
     $('#panel_design #design_list li:nth-child(2) .mdc-list-item__secondary-text').text(
         getParams().line_name.join(' - ')
     );
@@ -69,15 +64,24 @@ function initDesignPanel() {
             case 4:
                 myLine.txtFlip = !getParams().txt_flip;
                 break;
-            // case 6:
-            //     $('#design_char_diag')[0].MDCDialog.open();
+            case 5:
+                window.lineClass.reverseStns(myLine);
+                break;
         }
     });
 
-    designListMTR.listen('MDCList:action', event => {
+    $('#design_list_mtr')[0].MDCList.listen('MDCList:action', event => {
         switch (event.detail.index) {
             case 0:
                 $('#design_char_diag')[0].MDCDialog.open();
+                break;
+        }
+    });
+
+    $('#design_list_gzmtr')[0].MDCList.listen('MDCList:action', event => {
+        switch (event.detail.index) {
+            case 1:
+                $('#panel_type_diag')[0].MDCDialog.open();
                 break;
         }
     })
@@ -90,7 +94,7 @@ function initDesignPanel() {
 
     $.getJSON('data/city_list.json', function(data) {
         var lang = window.urlParams.get('lang');
-        data.forEach(function(c) {
+        data.forEach(c => {
             $('#theme_city__selection').append(
                 `<li class="mdc-list-item" data-value="${c.id}">
                 ${countryCode2Emoji(c.country)}${getTransText(c.name, lang)}
@@ -98,7 +102,7 @@ function initDesignPanel() {
             );
         });
 
-        var [themeCity, themeLine, themeColour] = getParams().theme
+        var [themeCity] = getParams().theme
         // var cityIdx = $(`#theme_city > select > [value="${themeCity}"]`).index();
         var cityIdx = $(`#theme_city__selection > [data-value="${themeCity}"]`).index();
         $('#theme_city')[0].MDCSelect.selectedIndex = cityIdx;
@@ -160,7 +164,7 @@ function initDesignPanel() {
             .find('.mdc-text-field')
             .each((_,el) => el.MDCTextField.layout());
     });
-    $('#line_name_diag #name_zh, #name_en').on('input', event => {
+    $('#line_name_diag .mdc-text-field').on('input', event => {
         var lineNames = $('#line_name_diag .mdc-text-field').get().map(el => el.MDCTextField.value);
         myLine.lineNames = lineNames;
         $('#panel_design #design_list li:nth-child(2) .mdc-list-item__secondary-text').text(
@@ -172,6 +176,7 @@ function initDesignPanel() {
         myLine.platformNum = event.target.value;
     });
 
+    // mtr-specific
     $('#legacy input').on('change', event => {
         myLine.destLegacy = event.target.checked;
     });
@@ -185,12 +190,18 @@ function initDesignPanel() {
         );
     });
 
+    // gzmtr-specific
     $('#line_num > input').on('input', event => {
         myLine.lineNum = event.target.value;
     });
     $('#psd_num > input').on('input', event => {
         myLine.psdNum = event.target.value;
     });
+
+    $('#panel_type_diag')[0].MDCDialog.listen('MDCDialog:closed', event => {
+        if (event.detail.action === 'close') {return;}
+        myLine.infoPanelType = event.detail.action;
+    })
 }
 
 
@@ -216,10 +227,6 @@ function initSavePanel() {
                     href: 'data:application/json;base64,'+btoa(unescape(encodeURIComponent(localStorage.rmgParam))), 
                     download: 'rmg_param.json'
                 });
-                // var link = document.createElement('a');
-                // var data = localStorage.rmgParam;
-                // link.href = 'data:application/json;base64,'+btoa(unescape(encodeURIComponent(data)));
-                // link.download = 'rmg_param.json';
                 link[0].click();
                 break;
             case 3:
@@ -241,7 +248,7 @@ function initSavePanel() {
                 $('#style_diag')[0].MDCDialog.open();
                 break;
             case 1:
-                langDialog.open();
+                $('#lang_diag')[0].MDCDialog.open();
                 break;
         }
     });
@@ -278,13 +285,7 @@ function initSavePanel() {
     });
 
     var exportDialog = new mdc.dialog.MDCDialog($('#export_diag')[0]);
-    var exportDialogList = new mdc.list.MDCList($('#export_diag .mdc-list')[0]);
-    exportDialog.listen('MDCDialog:opened', () => {
-        exportDialogList.layout();
-        var exportDialogListItemRipple = exportDialogList.listElements.map(
-            listItemEl => new mdc.ripple.MDCRipple(listItemEl)
-        );
-    });
+
     exportDialog.listen('MDCDialog:closed', event => {
         switch (event.detail.action) {
             case 'close':
@@ -344,7 +345,6 @@ function initSavePanel() {
                     height: thisSVGHeight * scaleFactor
                 })
             );
-        // $(event.target).find('.mdc-dialog__surface').attr('style', `max-width:100%;`)
     });
     $('#preview_diag')[0].MDCDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action === 'close') {
@@ -384,25 +384,17 @@ function initSavePanel() {
     });
 
     $('#style_diag')[0].MDCDialog.listen('MDCDialog:closed', event => {
-        if (event.detail.action === 'close') {return;}
-
-        if (event.detail.action === window.urlParams.get('style')) {
-            return;
-        } else {
-            window.urlParams.set('style', event.detail.action);
-            window.location = '?' + window.urlParams.toString();
+        switch (event.detail.action) {
+            case 'close': 
+            case window.urlParams.get('style'):
+                return;
+            default:
+                window.urlParams.set('style', event.detail.action);
+                window.location = '?' + window.urlParams.toString();
         }
     });
 
-    var langDialog = new mdc.dialog.MDCDialog($('#lang_diag')[0]);
-    var langDialogList = new mdc.list.MDCList($('#lang_diag .mdc-list')[0]);
-    langDialog.listen('MDCDialog:opened', () => {
-        langDialogList.layout();
-        var langDialogListItemRipple = langDialogList.listElements.map(
-            listItemEl => new mdc.ripple.MDCRipple(listItemEl)
-        );
-    });
-    langDialog.listen('MDCDialog:closed', event => {
+    $('#lang_diag')[0].MDCDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action == 'close') {return;}
         var nextLang = event.detail.action;
         localStorage.rmgLang = nextLang;
@@ -465,13 +457,11 @@ function initStationsPanel() {
     });
     $('#panel_stations .mdc-card__action-icons > [title="Interchange"]').on('click', event => {
         var stnId = event.target.closest('.mdc-card').id;
-        $('#stn_transfer_diag').attr('for', stnId);
-        stnTransferDialog.open();
+        $('#stn_transfer_diag').attr('for', stnId)[0].MDCDialog.open();
     });
     $('#panel_stations .mdc-card__action-icons > [title="Remove"]').on('click', event => {
         var stnId = event.target.closest('.mdc-card').id;
-        $('#stn_delete_diag').attr('for', stnId);
-        stnDeleteConfirmDialog.open();
+        $('#stn_delete_diag').attr('for', stnId)[0].MDCDialog.open();
     });
 
 
@@ -515,7 +505,7 @@ function initStationsPanel() {
         $(`#panel_stations #${newId} .mdc-card__action-icons > [title="Interchange"]`).on('click', event => {
             var stnId = event.target.closest('.mdc-card').id;
             $('#stn_transfer_diag').attr('for', stnId);
-            stnTransferDialog.open();
+            $('#stn_transfer_diag')[0].MDCDialog.open();
         });
         $(`#panel_stations #${newId} .mdc-card__action-icons > [title="Remove"]`).on('click', event => {
             var stnId = event.target.closest('.mdc-card').id;
@@ -545,12 +535,9 @@ function initStationsPanel() {
         var stnList = getParams().stn_list;
         for (let [idx, state] of myLine.newStnPossibleLoc(prep, stnId).entries()) {
             if (state) {
-                // $('#stn_add_diag #loc option').eq(idx).prop('disabled', false);
-                // $('#loc__selection li').eq(idx).removeClass('mdc-list-item--disabled');
                 $('#loc__selection li').eq(idx).show();
                 if (idx >= 3) {
                     // newupper or newlower
-                    // $('#stn_add_diag #end select').empty();
                     $('#end__selection').empty();
                     state.forEach(stnId => {
                         $('#end__selection').append(
@@ -611,17 +598,13 @@ function initStationsPanel() {
     $('div#int_line').slice(1,3).after(intNameEl);
     window.mdc.autoInit();
 
-    var stnTransferDialog = new mdc.dialog.MDCDialog($('#stn_transfer_diag')[0]);
-
     $.getJSON('data/city_list.json', data => {
         var lang = window.urlParams.get('lang');
         data.forEach(c => {
             $('#int_city__selection.mdc-list').each((_,el) => {
                 $(el).append(
-                    $('<li>', {
-                        class: 'mdc-list-item', 
-                        'data-value': c.id
-                    }).html(countryCode2Emoji(c.country) + getTransText(c.name, lang))
+                    $('<li>', { class: 'mdc-list-item', 'data-value': c.id})
+                        .html(countryCode2Emoji(c.country) + getTransText(c.name, lang))
                 );
             });
         });
@@ -638,25 +621,14 @@ function initStationsPanel() {
         }
     }
 
-    function _showOSIFields(show) {
-        var sty = show ? '' : 'display:none';
-        $('#stn_transfer_diag #osi_name_zh').attr('style', sty);
-        $('#stn_transfer_diag #osi_name_en').attr('style', sty);
-        $('#stn_transfer_diag #paid_area').attr('style', sty)
-    }
-
-    stnTransferDialog.listen('MDCDialog:opening', event => {
-        // var stnId = stationSelect.value;
-        // var stnId = $('#panel_stations #selected_stn').attr('stn');
-        var stnId = event.target.getAttribute('for');
+    $('#stn_transfer_diag')[0].MDCDialog.listen('MDCDialog:opening', event => {
+        var stnId = $(event.target).attr('for');
         var stnInfo = getParams().stn_list[stnId];
         var lineThemeCity = getParams().theme[0];
 
-        if (stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') {
+        if ((stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') && window.urlParams.get('style') === 'mtr') {
             $('#change_type__selection li:last-child').show();
-            // $('#change_type__selection li:last-child').removeClass('mdc-list-item--disabled');
         } else {
-            // $('#change_type__selection li:last-child').addClass('mdc-list-item--disabled');
             $('#change_type__selection li:last-child').hide();
         }
 
@@ -699,7 +671,7 @@ function initStationsPanel() {
         }
     });
 
-    stnTransferDialog.listen('MDCDialog:opened', event => {
+    $('#stn_transfer_diag')[0].MDCDialog.listen('MDCDialog:opened', event => {
         $('#change_type')[0].MDCSelect.layout();
         $('#int_city, #int_line').find('.mdc-select').each((_,el) => el.MDCSelect.layout());
         $('#int_name_zh, #int_name_en').find('.mdc-text-field').each((_,el) => el.MDCTextField.layout());
@@ -707,7 +679,7 @@ function initStationsPanel() {
         stnOSINameZHField.layout();
     });
 
-    stnTransferDialog.listen('MDCDialog:closed', event => {
+    $('#stn_transfer_diag')[0].MDCDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action == 'close') {return;}
 
         // var stnId = $('#panel_stations #selected_stn').attr('stn');
@@ -760,37 +732,31 @@ function initStationsPanel() {
             _showAllFields(1, true);
             _showAllFields(2, false);
             $('#stn_transfer_diag #tick_direc').hide();
-            _showOSIFields(false);
+            $('#osi_name_zh, #osi_name_en, #paid_area').hide();
         } else if (event.detail.value == 'int3') {
             _showAllFields(0, false);
             _showAllFields(1, true);
             _showAllFields(2, true);
             $('#stn_transfer_diag #tick_direc').show();
-            _showOSIFields(false);
+            $('#osi_name_zh, #osi_name_en, #paid_area').hide();
         } else if (event.detail.value == 'osi11') {
             _showAllFields(0, false);
             _showAllFields(1, true);
             _showAllFields(2, false);
             $('#stn_transfer_diag #tick_direc').show();
-            _showOSIFields(true);
+            $('#osi_name_zh, #osi_name_en, #paid_area').show();
         } else if (event.detail.value == 'osi12') {
             _showAllFields(0, false);
             _showAllFields(1, true);
             _showAllFields(2, true);
             $('#stn_transfer_diag #tick_direc').show();
-            _showOSIFields(true);
+            $('#osi_name_zh, #osi_name_en, #paid_area').show();
         } else if (event.detail.value == 'osi22') {
-            _showAllFields(0, true);
-            _showAllFields(1, true);
-            _showAllFields(2, true);
-            $('#stn_transfer_diag #tick_direc').hide();
-            _showOSIFields(true);
+            $('#stn_transfer_diag .mdc-dialog__content [id]div, #paid_area').slice(1).show()
+            $('#tick_direc').hide()
         } else {
-            _showAllFields(0, false);
-            _showAllFields(1, false);
-            _showAllFields(2, false);
-            $('#stn_transfer_diag #tick_direc').hide();
-            _showOSIFields(false);
+            $('#stn_transfer_diag .mdc-dialog__content [id]div').slice(1).hide()
+            $('#stn_transfer_diag .mdc-dialog__content [id]button').hide()
         }
         $('#stn_transfer_diag .mdc-select').each((_,el) => el.MDCSelect.layout())
     });
@@ -832,25 +798,20 @@ function initStationsPanel() {
 
 
     // Deletion
-    var stnDeleteConfirmDialog = new mdc.dialog.MDCDialog($('#stn_delete_diag')[0]);
-    var stnDeleteErrorDialog = new mdc.dialog.MDCDialog($('#stn_delete_err')[0]);
-    stnDeleteConfirmDialog.listen('MDCDialog:opening', event => {
-        var stnId = event.target.getAttribute('for');
+    $('#stn_delete_diag')[0].MDCDialog.listen('MDCDialog:opening', event => {
+        var stnId = $(event.target).attr('for');
         $('#stn_delete_diag #err_stn').text(getParams().stn_list[stnId].name.join(' - '));
-        // $('#stn_delete_diag .mdc-dialog__content').html(
-        //     `Are you sure to delete station ${getParams().stn_list[stnId].name.join(' - ')}? You can't undo this action. `
-        // );
     });
-    stnDeleteConfirmDialog.listen('MDCDialog:closed', event => {
+    $('#stn_delete_diag')[0].MDCDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action == 'close') {return;}
-        var stnId = event.target.getAttribute('for');
+        var stnId = $(event.target).attr('for');
         // Remove from data and svg
         if (myLine.removeStn(stnId)) {
             // Remove station from selection
             $(`#panel_stations .mdc-layout-grid__inner #${stnId}`).remove();
             $(`#pivot__selection [data-value="${stnId}"]`).remove();
         } else {
-            stnDeleteErrorDialog.open();
+            $('#stn_delete_err')[0].MDCDialog.open();
         }
     });
 }

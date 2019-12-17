@@ -22,7 +22,8 @@ async function translate(lang) {
 
 const getTransJSON = async(lang) => {
     let response = await fetch(`lang/${lang}.json`);
-    console.log(lang, Date.now());
+    var d = new Date();
+    console.log(lang, d.toLocaleTimeString() + ':' + d.getMilliseconds());
     return response.ok ? response.json() : {};
 }
 

@@ -25,20 +25,20 @@
     "File.Style": "风格",
     "File.Style.Title": "选择风格", 
     "File.Style.MTR": "港铁", 
-    "File.Style.GZMTR": "广州地铁 (Alpha)",
+    "File.Style.GZMTR": "广州地铁 (Beta)",
 
     "File.Lang": "语言/Language",
     "File.Lang.Title": "选择语言", 
 
     "File.Error.Title": "加载错误",
     "File.Error.Msg0": "喔唷，我们遇到错误了！请你按照以下步骤向我們反馈问题。",
-    "File.Error.Msg1": "1. 屏幕截图此错误信息。",
+    "File.Error.Msg1": "1. 屏幕截图或拷贝此错误信息。",
     "File.Error.Msg2": "2. 选择“保存为JSON文件”来获取配置文件。",
     "File.Error.Msg3": "3. 通过GitHub Issues或社交媒体与我们联系。", 
     "File.Error.Msg4": "请妥善保管你的JSON配置文件，当页面错误被修复后，你可以使用这个配置文件恢复所有线路更改。如要打开新画布，请选择“新建画布”。",
 
     "Layout.Width": "线路图宽度",
-    "Layout.DestWidth": "驿名标宽度",
+    "Layout.DestWidth": "站名牌宽度",
     "Layout.Y": "垂直位置",
     "Layout.BranchSpacing": "支线间距", 
     "Layout.Padding": "线路两端留白", 
@@ -53,8 +53,14 @@
     "Design.Platform": "站台编号",
     "Design.MTRLegacy": "港铁旧款样式",
     "Design.FlipName": "翻转车站名称位置",
+    "Design.Reverse": "翻转全线车站顺序", 
     "Design.Line": "线路编号",
     "Design.PSD": "屏蔽门编号",
+
+    "Design.PanelType": "信息面板样式",     
+    "Design.PanelType.Title": "選擇信息面板样式", 
+    "Design.PanelType.GZ1": "I型", 
+    "Design.PanelType.GZ2": "II型", 
 
     "Design.Char": "汉字字形",
     "Design.Char.Title": "选择字形",

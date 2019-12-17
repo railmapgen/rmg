@@ -26,20 +26,20 @@
     "File.Style": "Style",
     "File.Style.Title": "Choose a Style", 
     "File.Style.MTR": "MTR", 
-    "File.Style.GZMTR": "Guangzhou Metro (Alpha)",
+    "File.Style.GZMTR": "Guangzhou Metro (Beta)",
 
     "File.Lang": "Language",
     "File.Lang.Title": "Choose a Language", 
 
     "File.Error.Title": "Loading Error",
     "File.Error.Msg0": "Oops, we have run into an error! Please follow the procedure below and report to us.",
-    "File.Error.Msg1": "1. Screenshot this error message.",
+    "File.Error.Msg1": "1. Screenshot or copy this error message.",
     "File.Error.Msg2": "2. Select \"Save As JSON\" to retrieve the configuration file.",
     "File.Error.Msg3": "3. Contact us via GitHub Issues or social media.", 
     "File.Error.Msg4": "Please keep you JSON configuration as you may use it to restore your work after we fix the error. To start a new canvas, select \"New Canvas\".",
 
     "Layout.Width": "Rail Map Width",
-    "Layout.DestWidth": "Dest Board Width",
+    "Layout.DestWidth": "Destination Panel Width",
     "Layout.Y": "Vertical Position",
     "Layout.BranchSpacing": "Branch Spacing", 
     "Layout.Padding": "Line Padding", 
@@ -54,8 +54,14 @@
     "Design.Platform": "Platform Number",
     "Design.MTRLegacy": "MTR Legacy Style",
     "Design.FlipName": "Flip Station Names Position",
+    "Design.Reverse": "Reverse Entire Line", 
     "Design.Line": "Line Number",
     "Design.PSD": "Platform Door Number",
+
+    "Design.PanelType": "Info Panel Type", 
+    "Design.PanelType.Title": "Choose a Type for Info Panel", 
+    "Design.PanelType.GZ1": "Type I", 
+    "Design.PanelType.GZ2": "Type II", 
 
     "Design.Char": "Chinese Character Form",
     "Design.Char.Title": "Select Character Form",

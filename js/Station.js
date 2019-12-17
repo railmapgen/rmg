@@ -468,7 +468,7 @@ class StationGZ extends Station {
             .append(
                 $('<g>', { class: 'Name ' + numClass })
                     .append($('<text>', { class:'rmg-name__zh rmg-name__gzmtr--line-num' }))
-                    .append($('<text>', { class:'rmg-name__zh rmg-name__gzmtr--station-num', x:9.25 }).text(this._stnNum))
+                    .append($('<text>', { class:'rmg-name__zh rmg-name__gzmtr--station-num', x:0 }).text(this._stnNum))
             );
     }
 
@@ -494,7 +494,7 @@ class StationGZ extends Station {
     }
 }
 
-class Int2StationGZ extends StationGZ {
+class IntStationGZ extends StationGZ {
     _intCity; _intLine; _intColour; _intFg;
     _intNameZH; _intNameEN;
 
@@ -544,11 +544,6 @@ class Int2StationGZ extends StationGZ {
                 });
             }
         })
-        // if (this._intFg[0] == '#fff' || this._state == -1) {
-        //     [intTextZHEls, intTextENEls] = [intTextZHEls, intTextENEls].map(els => {
-        //         return els.map(el => el.addClass('rmg-name__gzmtr--white-fg'));
-        //     });
-        // }
 
         var intBoxEls = this._intColour.map((colour,idx) => {
             return $('<use>', {
@@ -569,30 +564,9 @@ class Int2StationGZ extends StationGZ {
     }
 }
 
-class Int3StationGZ extends Int2StationGZ {
+class OSIStationGZ extends IntStationGZ {
     constructor (id, data) {
-        super(id, data);
-    }
-}
-
-class OSI11StationGZ extends Int2StationGZ {
-    constructor (id, data) {
-        data.interchange[0] = data.interchange[1].slice(1,2);
-        super(id, data);
-    }
-}
-
-class OSI12StationGZ extends Int2StationGZ {
-    constructor (id, data) {
-        data.interchange[0] = data.interchange[1].slice(1,3);
-        super(id, data);
-    }
-}
-
-class OSI22EndStationGZ extends Int2StationGZ {
-    constructor (id, data) {
-        data.interchange[0].push(...data.interchange[1].slice(1,3));
-        console.log(data.interchange);
+        data.interchange[0].push(...data.interchange[1].slice(1));
         super(id, data);
     }
 }

@@ -9,6 +9,25 @@ Demo page: https://wongchito.github.io/RailMapGenerator/
 
 ## Version History
 
+### 1.4 (17 Dec 2019)
+
+#### New Features
+
+- Direction is now shown in the railway map when using Guangzhou Metro style. 
+- Reversing entire line is now available. You may make rail map for either side of a platform without re-entering the details. 
+- More types of platform screen door indicator light are available. 
+
+#### Known Issues
+
+- "Next stop" and "Towards" information may be wrong when line includes branches. 
+
+#### Resolved Issues
+
+- Fixed the issue that sliders may stop working randomly. 
+- Fixed the error of unstyled name of line in Guangzhou Metro style. 
+- Simplified code to reduce loading time. 
+- Improved robustness. 
+
 ### 1.3.3 (16 Dec 2019)
 
 #### Known Issues
