@@ -9,6 +9,21 @@ Demo page: https://wongchito.github.io/RailMapGenerator/
 
 ## Version History
 
+### 1.4.1 (22 Dec 2019)
+
+#### New Features
+
+- Exporting to PNG is available for Guangzhou Metro style now. 
+
+#### Known Issues
+
+- "Next stop" and "Towards" information may be wrong when line includes branches. 
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+#### Resolved Issues
+
+- Fixed the error when splitting and styling the line names in Guangzhou Metro style [(#1)](https://github.com/wongchito/RailMapGenerator/issues/1).
+
 ### 1.4 (17 Dec 2019)
 
 #### New Features

@@ -352,13 +352,21 @@ function initSavePanel() {
             return;
         }
 
-        var link = document.createElement('a');
-        var svgContent = $(event.target).find('.mdc-dialog__content svg').prepend($('style#svg_share').clone());
-        link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgContent[0].outerHTML)));
-        link.download = 'rmg_export.svg';
-        link.click();
+        if (event.detail.action === 'png') {
+            test($(event.target).removeAttr('for').find('svg'));
+            $(event.target).find('.mdc-dialog__content').empty();
+            return;
+        }
 
-        $(event.target).removeAttr('for').find('.mdc-dialog__content').empty();
+        if (event.detail.action === 'svg') {
+            var link = document.createElement('a');
+            var svgContent = $(event.target).find('.mdc-dialog__content svg').prepend($('style#svg_share').clone());
+            link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgContent[0].outerHTML)));
+            link.download = 'rmg_export.svg';
+            link.click();
+    
+            $(event.target).removeAttr('for').find('.mdc-dialog__content').empty();
+        }
     });
 
     var importDialog = new mdc.dialog.MDCDialog($('#import_diag')[0]);

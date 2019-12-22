@@ -165,14 +165,14 @@
         }
     </style>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
     gtag('config', 'UA-152882192-1');
-    </script>
+    </script> -->
 </head>
 <body>
 <div id="svgs" align="center">
@@ -422,8 +422,8 @@ id="railmap" width="0" height="0">
     <g id="line_name" text-anchor="middle" style="display: none;" gzmtr-specific>
         <use xlink:href="#intbox_gz"/>
         <text y="8.5">
-            <tspan font-size="17px" class="rmg-name__zh"></tspan><!--
-         --><tspan dy="-1" class="rmg-name__zh rmg-name__gzmtr--int"></tspan>
+            <tspan font-size="16px" class="rmg-name__zh"></tspan><!--
+         --><tspan dy="-0.5" class="rmg-name__zh rmg-name__gzmtr--int"></tspan>
         </text>
         <text y="19.5" class="rmg-name__en rmg-name__gzmtr--int"></text>
     </g>
@@ -690,8 +690,11 @@ id="railmap" width="0" height="0">
         <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
             <span class="mdc-button__label" trans-tag="Dialog.Cancel"></span>
         </button>
-        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="download" data-mdc-dialog-button-default>
-            <span class="mdc-button__label" trans-tag="File.Preview.Download"></span>
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="png" data-mdc-dialog-button-default>
+            <span class="mdc-button__label" trans-tag="File.Preview.PNG"></span>
+        </button>
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="svg" data-mdc-dialog-button-default>
+            <span class="mdc-button__label" trans-tag="File.Preview.SVG"></span>
         </button>
       </footer>
     </div>
@@ -1689,8 +1692,7 @@ id="railmap" width="0" height="0">
 
 </div>
 
-
-
+<canvas style="display: none;"></canvas>
 
 <script>
     var template = 'blank';

@@ -24,6 +24,109 @@ function setParams(key, data) {
     putParams(param);
 }
 
+function take(targetElem) {
+    // First render all SVGs to canvases
+    var elements = targetElem.find('svg').map(function() {
+        var svg = $(this);
+        var canvas = $('<canvas></canvas>');
+        svg.replaceWith(canvas);
+
+        // Get the raw SVG string and curate it
+        var content = svg.wrap('<p></p>').parent().html();
+        content = content.replace(/xlink:title="hide\/show"/g, "");
+        content = encodeURIComponent(content);
+        svg.unwrap();
+
+        // Create an image from the svg
+        var image = new Image();
+        image.src = 'data:image/svg+xml,' + content;
+        image.onload = function() {
+            canvas[0].width = image.width;
+            canvas[0].height = image.height;
+
+            // Render the image to the canvas
+            var context = canvas[0].getContext('2d');
+            context.drawImage(image, 0, 0);
+        };
+        return {
+            svg: svg,
+            canvas: canvas
+        };
+    });
+    targetElem.imagesLoaded(function() {
+        // At this point the container has no SVG, it only has HTML and Canvases.
+        html2canvas(targetElem[0], {
+            onrendered: function(canvas) {
+                // Put the SVGs back in place
+                elements.each(function() {
+                    this.canvas.replaceWith(this.svg);
+                });
+
+                // Do something with the canvas, for example put it at the bottom
+             $(canvas).appendTo('body');
+            }
+        })
+    })
+}
+
+function svgToCanvas() {
+    // var svgElem = targetElem.getElementsByTagName("svg");
+    // for (const node of svgElem) {
+    //   node.setAttribute("font-family", window.getComputedStyle(node).getPropertyValue("font-family"));
+    //   node.replaceWith(node);
+    // }
+    $('#destination text').each((idx, el) => {
+        $(el).attr({
+            'font-family': window.getComputedStyle(el).getPropertyValue('font-family'), 
+            fill: window.getComputedStyle(el).getPropertyValue('fill')
+        });
+    })
+}
+
+function test(svgEl) {
+    var [_, _, svgW, svgH] = svgEl.attr('viewBox').split(' ');
+
+    var canvas = $('canvas')[0];
+    $('canvas').attr({
+        width: svgW*2, height:svgH*2
+    })
+    var ctx = canvas.getContext("2d");
+
+    svgEl.find('text').each((_,el) => {
+        var elStyle = window.getComputedStyle(el);
+        $(el).attr({
+            'font-family': elStyle.getPropertyValue('font-family'), 
+            'fill': elStyle.getPropertyValue('fill'), 
+            'alignment-baseline': elStyle.getPropertyValue('alignment-baseline'), 
+            'text-anchor': elStyle.getPropertyValue('text-anchor')
+        });
+    });
+
+    svgEl.find('tspan').each((_,el) => {
+        var elStyle = window.getComputedStyle(el);
+        $(el).attr({
+            'font-family': elStyle.getPropertyValue('font-family'), 
+            'fill': elStyle.getPropertyValue('fill'), 
+            'alignment-baseline': elStyle.getPropertyValue('alignment-baseline'), 
+            'text-anchor': elStyle.getPropertyValue('text-anchor')
+        });
+    });
+
+    svgEl.find('#strip, #dest_strip').each((idx,el) => {
+        var elStyle = window.getComputedStyle(el);
+        $(el).attr({
+            'stroke-width': elStyle.getPropertyValue('stroke-width')
+        });
+    });
+
+    var img = new Image();
+    img.onload = function() {
+        ctx.drawImage(img, 0, 0, svgW*2, svgH*2);
+        saveAs($('canvas')[0].toDataURL('image/png'));
+    }
+    img.src ='data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl[0].outerHTML)));
+}
+
 function loadLink(id) {
     // var uri = $('#editor', parent.document).contents().find('body').get(0);
     var uri = $(`#${id}`)[0];

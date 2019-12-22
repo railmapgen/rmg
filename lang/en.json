@@ -21,7 +21,8 @@
     "File.Export.SVGDest": "SVG (Destination)", 
     "File.Export.SVGMap": "SVG (Rail Map)",
     "File.Preview.Title": "Preview And Export", 
-    "File.Preview.Download": "Download As SVG", 
+    "File.Preview.PNG": "Download As PNG (Beta)", 
+    "File.Preview.SVG": "Download As SVG", 
 
     "File.Style": "Style",
     "File.Style.Title": "Choose a Style", 
