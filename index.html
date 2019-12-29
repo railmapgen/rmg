@@ -62,7 +62,7 @@
         } */
         body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: column; overflow: auto;}
         #svgs {
-            height: 300px;
+            height: 100%;
             display: flex;
             overflow-x: scroll;
         }
@@ -165,21 +165,21 @@
         }
     </style>
 
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
     gtag('config', 'UA-152882192-1');
-    </script> -->
+    </script>
 </head>
 <body>
 <div id="svgs" align="center">
 <svg 
 xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink" 
-id="destination" width="0" height="0">
+id="destination" width="0" height="0" style="border: 1px solid black;">
 
     <style type="text/css">
         .rmg-indicator__gzmtr--1 {
@@ -259,6 +259,8 @@ id="destination" width="0" height="0">
         <path id="stn_gz" stroke-width="2" fill="#fff" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
     </defs>
 
+    <rect id="dest_outer" x="0" y="0" fill="white" stroke="none"/>
+
     <path id="dest_strip" class="Strip"/>
 
     <g id="dest_name" style="display: none;" mtr-specific>
@@ -306,13 +308,11 @@ id="destination" width="0" height="0">
             <text class="rmg-name__en rmg-name__gzmtr--psd" dy="36">Screen Door</text>
         </g>
     </g>
-
-    <rect id="dest_outer" x="0" y="0" fill="none" stroke="black"/>
 </svg><!--
 --><svg 
 xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink" 
-id="railmap" width="0" height="0">
+id="railmap" width="0" height="0" style="border: 1px solid black;">
     <style type="text/css">
         .rmg-stn__mtr {
             fill: #fff;
@@ -411,7 +411,7 @@ id="railmap" width="0" height="0">
         <rect id="intbox_gz" x="-22.5" height="24" width="45" rx="4.5"/>
     </defs>
 
-
+    <rect id="outer" x="0" y="0" fill="white" stroke="none"/>
     
     <g class="rmg-line rmg-line__mtr rmg-line__pass" id="line_pass"></g>
     <g class="rmg-line rmg-line__mtr" id="line_main"></g>
@@ -436,8 +436,6 @@ id="railmap" width="0" height="0">
             <text class="rmg-name__en rmg-name__gzmtr--direc" dy="22">Towards</text>
         </g>
     </g>
-
-    <rect id="outer" x="0" y="0" fill="none" stroke="black"/>
 </svg>
 </div>
 

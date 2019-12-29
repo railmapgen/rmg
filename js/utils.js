@@ -88,9 +88,10 @@ function test(svgEl) {
 
     var canvas = $('canvas')[0];
     $('canvas').attr({
-        width: svgW*2, height:svgH*2
-    })
+        width: svgW*2.5, height:svgH*2.5
+    });
     var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     svgEl.find('text').each((_,el) => {
         var elStyle = window.getComputedStyle(el);
@@ -121,7 +122,7 @@ function test(svgEl) {
 
     var img = new Image();
     img.onload = function() {
-        ctx.drawImage(img, 0, 0, svgW*2, svgH*2);
+        ctx.drawImage(img, 0, 0, svgW*2.5, svgH*2.5);
         saveAs($('canvas')[0].toDataURL('image/png'));
     }
     img.src ='data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl[0].outerHTML)));
@@ -369,7 +370,18 @@ function updateParam() {
     if (!('info_panel_type' in param)) {
         param.info_panel_type = 'gz_1';
     }
+
+    // Version 1.5
+    for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
+        if (stnInfo.change_type === 'osi22_end_p') {
+            param.stn_list[stnId].change_type = 'osi22_pr';
+        }
+        if (stnInfo.change_type === 'osi22_end_u') {
+            param.stn_list[stnId].change_type = 'osi22_ur';
+        }
+    }
     putParams(param);
+
 }
 
 

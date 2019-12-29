@@ -64,10 +64,19 @@ class Line {
             case 'osi12_ur':
             case 'osi12_pr':
                 return new OSI12RStation(stnId, stnInfo);
-            case 'osi22_end_p':
-            case 'osi22_end_u':
+            case 'osi22_pl':
+            case 'osi22_ul':
                 if (stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') {
                     return new OSI22EndStation(stnId, stnInfo);
+                } else {
+                    return new OSI22LStation(stnId, stnInfo);
+                }
+            case 'osi22_pr':
+            case 'osi22_ur':
+                if (stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') {
+                    return new OSI22EndStation(stnId, stnInfo);
+                } else {
+                    return new OSI22RStation(stnId, stnInfo);
                 }
             default:
                 return new Station(stnId, stnInfo);
@@ -273,7 +282,7 @@ class Line {
 
     _rightWideFactor(stnId) {
         var res = 0;
-        var stnClasses = ['Int3RStation', 'OSI11RStation', 'OSI12RStation'];
+        var stnClasses = ['Int3RStation', 'OSI11RStation', 'OSI12RStation', 'OSI22LStation', 'OSI22RStation'];
         if (stnClasses.includes(this._stations[stnId].constructor.name)) {res += this.#longInterval;}
         if (this._stnOutdegree(stnId) == 2) {res += this.#longInterval/2;}
         if (this._stnIndegree(this._stations[stnId]._children[0]) == 2) {res += this.#longInterval/2;}
@@ -282,7 +291,7 @@ class Line {
 
     _leftWideFactor(stnId) {
         var res = 0;
-        var stnClasses = ['Int3LStation', 'OSI11LStation', 'OSI12LStation'];
+        var stnClasses = ['Int3LStation', 'OSI11LStation', 'OSI12LStation', 'OSI22LStation', 'OSI22RStation'];
         if (stnClasses.includes(this._stations[stnId].constructor.name)) {res += this.#longInterval;}
         if (this._stnIndegree(stnId) == 2) {res += this.#longInterval/2;}
         if (this._stnOutdegree(this._stations[stnId]._parents[0]) == 2) {res += this.#longInterval/2;}
@@ -876,15 +885,18 @@ class Line {
         }
         putParams(param);
 
+        parents.concat(children).forEach(neId => {
+            if (['linestart', 'lineend'].includes(neId)) {return;}
+            this._stations[neId] = this._initStnInstance(neId, param.stn_list[neId]);
+        });
+
 
         for (let [stnId, stnInstance] of Object.entries(this._stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
             stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
             stnInstance.namePos = (this.#txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
-            if (isCurrentStnChanged) {
-                stnInstance._state = this._stnState(stnId);
-            }
+            stnInstance._state = this._stnState(stnId);
         }
         Line.clearSVG(this);
         this.drawStns();
@@ -1358,6 +1370,10 @@ class LineGZ extends Line {
             case 'osi12_pl':
             case 'osi12_ur':
             case 'osi12_pr':
+            case 'osi22_ul':
+            case 'osi22_pl':
+            case 'osi22_ur':
+            case 'osi22_pr':
                 return new OSIStationGZ(stnId, stnInfo);
             case 'osi22_end_p':
             case 'osi22_end_u':

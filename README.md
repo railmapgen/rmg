@@ -9,6 +9,17 @@ Demo page: https://wongchito.github.io/RailMapGenerator/
 
 ## Version History
 
+### 1.5 (29 Dec 2019)
+
+#### New Features
+
+- Out-station-interchange (2-2) is now available for all stations in MTR style. 
+
+#### Known Issues
+
+- "Next stop" and "Towards" information may be wrong when line includes branches. 
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
 ### 1.4.1 (22 Dec 2019)
 
 #### New Features

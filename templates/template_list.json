@@ -104,6 +104,14 @@
         }
     },
     {
+        "filename": "hongkong_isl", 
+        "desc": {
+            "en": "MTR Island Line", 
+            "zh-Hans": "港铁港岛线",
+            "zh-Hant": "港鐵港島綫"
+        }
+    },
+    {
         "filename": "hongkong_ktl", 
         "desc": {
             "en": "MTR Kwun Tong Line", 

@@ -518,7 +518,7 @@ function initStationsPanel() {
         $(`#panel_stations #${newId} .mdc-card__action-icons > [title="Remove"]`).on('click', event => {
             var stnId = event.target.closest('.mdc-card').id;
             $('#stn_delete_diag').attr('for', stnId);
-            stnDeleteConfirmDialog.open();
+            $('#stn_delete_diag')[0].MDCDialog.open();
         });
 
         var listElem = $('<li>', {
@@ -634,11 +634,11 @@ function initStationsPanel() {
         var stnInfo = getParams().stn_list[stnId];
         var lineThemeCity = getParams().theme[0];
 
-        if ((stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') && window.urlParams.get('style') === 'mtr') {
-            $('#change_type__selection li:last-child').show();
-        } else {
-            $('#change_type__selection li:last-child').hide();
-        }
+        // if ((stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') && window.urlParams.get('style') === 'mtr') {
+        //     $('#change_type__selection li:last-child').show();
+        // } else {
+        //     $('#change_type__selection li:last-child').hide();
+        // }
 
         $('#change_type')[0].MDCSelect.value = stnInfo.change_type.split('_')[0];
 
@@ -663,7 +663,7 @@ function initStationsPanel() {
             $('#int_name_zh, #int_name_en').find('.mdc-text-field').each((_,el) => el.MDCTextField.value = '');
         }
 
-        if (['none', 'int2', 'osi22'].includes(stnInfo.change_type.split('_')[0])) {
+        if (['none', 'int2'].includes(stnInfo.change_type.split('_')[0])) {
             $('#stn_transfer_diag #tick_direc')[0].MDCIconButtonToggle.on = true;
         } else {
             $('#stn_transfer_diag #tick_direc')[0].MDCIconButtonToggle.on = (stnInfo.change_type.slice(-1) == 'r');
@@ -710,7 +710,7 @@ function initStationsPanel() {
         if (type == 'none') {
             myLine.updateStnTransfer(stnId, type);
         } else if (type == 'osi22') {
-            myLine.updateStnTransfer(stnId, `${type}_end_${osiPaidArea}`, [[intInfo0], [osi, intInfo1, intInfo2]]);
+            myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [[intInfo0], [osi, intInfo1, intInfo2]]);
         } else {
             switch (type) {
                 case 'int2':
@@ -761,7 +761,12 @@ function initStationsPanel() {
             $('#osi_name_zh, #osi_name_en, #paid_area').show();
         } else if (event.detail.value == 'osi22') {
             $('#stn_transfer_diag .mdc-dialog__content [id]div, #paid_area').slice(1).show()
-            $('#tick_direc').hide()
+            let stnInfo = getParams().stn_list[$('#stn_transfer_diag').attr('for')];
+            if (stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') {
+                $('#tick_direc').hide();
+            } else {
+                $('#tick_direc').show();
+            }
         } else {
             $('#stn_transfer_diag .mdc-dialog__content [id]div').slice(1).hide()
             $('#stn_transfer_diag .mdc-dialog__content [id]button').hide()

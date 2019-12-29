@@ -40,6 +40,10 @@ class Station {
         }
     }
 
+    get _nameTxtAnchor() {return 'middle';}
+    get _nameDX() {return 0;}
+    get _nameDY() {return 0;}
+
     get nameHTML() {
         var nameENs = this._nameEN.split('\\');
 
@@ -52,7 +56,7 @@ class Station {
 
         if (this._state === 0) {
             $('#current_bg').attr({
-                y: this._y + dy + this.STN_NAME_Y - 1.5, 
+                y: this._y + dy + this.STN_NAME_Y - 1.5 + this._nameDY, 
                 height: this.STN_NAME_BASE_HEIGHT + (nameENs.length-1)*10 +2 +1.5
             });
         }
@@ -69,8 +73,8 @@ class Station {
         }
 
         return $('<g>', {
-            transform: `translate(${this._x},${this._y + dy})`, 
-            'text-anchor': 'middle', 
+            transform: `translate(${this._x + this._nameDX},${this._y + dy + this._nameDY})`, 
+            'text-anchor': this._nameTxtAnchor, 
             'class': `Name ${this.nameClass}`
         }).append(
             $('<text>').addClass('rmg-name__zh rmg-name__mtr--station').text(this._nameZH)
@@ -249,15 +253,15 @@ class Int3RStation extends Int3Station {
 }
 
 class OSI11Station extends Int2Station {
-    #osiNameZH; #osiNameEN; 
+    _osiNameZH; _osiNameEN; 
     #osiType; #osiDirection;
     constructor (id, data) {
         // data.int2 = data.osi11;
         data.interchange[0].push(data.interchange[1][1]);
         super(id, data);
 
-        // [this.#osiNameZH, this.#osiNameEN] = data.transfer[0];
-        [this.#osiNameZH, this.#osiNameEN] = data.interchange[1][0];
+        // [this._osiNameZH, this._osiNameEN] = data.transfer[0];
+        [this._osiNameZH, this._osiNameEN] = data.interchange[1][0];
 
         this.#osiType = data.change_type.substring(6,7); // u(npaid) or p(aid);
         this.#osiDirection = data.change_type.substring(7); // l or r;
@@ -284,11 +288,11 @@ class OSI11Station extends Int2Station {
             'transform': `translate(${this._x+this._osiNameDX},${this._y+dy})`, 
             'class': 'Name ' + this._nameClass
         }).append(
-            $('<text>').addClass('rmg-name__zh rmg-name__mtr--osi').text(this.#osiNameZH)
+            $('<text>').addClass('rmg-name__zh rmg-name__mtr--osi').text(this._osiNameZH)
         ).append(
             $('<text>', {
                 'x':0, 'dy':12, 'class':'rmg-name__en rmg-name__mtr--osi'
-            }).text(this.#osiNameEN)
+            }).text(this._osiNameEN)
         );
     }
 
@@ -310,18 +314,18 @@ class OSI11RStation extends OSI11Station {
 }
 
 class OSI12Station extends Int3Station {
-    #osiNameZH; #osiNameEN; 
+    _osiNameZH; _osiNameEN; 
     #osiType; #osiDirection;
     constructor (id, data) {
         // data.int3 = data.osi12;
         data.interchange[0].unshift(...data.interchange[1].slice(1,3));
         super(id, data);
 
-        // [this.#osiNameZH, this.#osiNameEN] = data.transfer[0];
-        [this.#osiNameZH, this.#osiNameEN] = data.interchange[1][0];
+        // [this._osiNameZH, this._osiNameEN] = data.transfer[0];
+        [this._osiNameZH, this._osiNameEN] = data.interchange[1][0];
 
         // this.#osiType = data.change_type.substring(6,7); // u(npaid) or p(aid);
-        this.#osiType = data.change_type.split('_').reverse()[0];
+        this.#osiType = data.change_type.split('_').reverse()[0][0];
         this.#osiDirection = data.change_type.substring(7); // l or r;
     }
 
@@ -347,12 +351,12 @@ class OSI12Station extends Int3Station {
             'transform': `translate(${this._x+this._dx+this._osiDX},${this._y+this._osiDY})`, 
             'class': `Name ${nameClass}`
         }).append(
-            $('<text>').addClass('rmg-name__zh rmg-name__mtr--osi').text(this.#osiNameZH)
+            $('<text>').addClass('rmg-name__zh rmg-name__mtr--osi').text(this._osiNameZH)
         ).append(
             $('<text>', {
                 'x':0, 'dy':12, 'class':'rmg-name__en rmg-name__mtr--osi'
-            }).text(this.#osiNameEN.split('\\')[0]).append(
-                $('<tspan>', {'x':0, 'dy':10}).text(this.#osiNameEN.split('\\')[1] || '')
+            }).text(this._osiNameEN.split('\\')[0]).append(
+                $('<tspan>', {x:0, dy:10}).text(this._osiNameEN.split('\\')[1] || '')
             )
         );
     }
@@ -372,6 +376,90 @@ class OSI12RStation extends OSI12Station {
     get _tickRotation() {return -90;}
     get _txtAnchor() {return 'start';}
     get _intNameDX() {return 24;}
+}
+
+class OSI22Station extends OSI12Station {
+    #origIntCity; #origIntLine; #origIntColour; #origIntFg;
+    #origIntNameZH; #origIntNameEN;
+
+    constructor (id, data) {
+        super(id, data);
+        // data mutated by OSI12Station!!!
+        [this.#origIntCity, this.#origIntLine, this.#origIntColour, this.#origIntFg, this.#origIntNameZH, this.#origIntNameEN] = data.interchange[0][2];
+    }
+
+    get _nameTxtAnchor() {return this._osiTxtAnchor;}
+    get _nameDY() {
+        return (this._namePos === 1) ? 11.515625 : -11.515625;
+    }
+
+    get origIntTickHTML() {
+        var tickRotation = (this._namePos == 1) ? 0 : 180;
+        var tickColour = this.#origIntColour;
+        var tick = $('<use>', {
+            'xlink:href': '#inttick_hk', 
+            stroke: tickColour, 
+            transform: `translate(${this._x},${this._y})rotate(${tickRotation})`,
+            'class': 'rmg-line rmg-line__mtr rmg-line__change'
+        });
+        if (this._state == -1) {
+            tick.addClass('rmg-line__pass');
+        }
+        return tick;
+    }
+
+    get origIntNameHTML() {
+        var [nameHTML, nameZHLn, nameENLn] = joinIntName([this.#origIntNameZH, this.#origIntNameEN], 15, 7);
+        var dy = (this._namePos == 1) ? 25 + 5.953125 : -25 + 5.953125 - 18.65625 - 13*(nameZHLn-1) - 7*(nameENLn-1);
+        // dy += this._dy;
+        // var nameClass = (this._state == -1) ? 'Pass' : 'Future';
+        return $('<g>', {
+            'text-anchor': this._txtAnchor, 
+            transform: `translate(${this._x - this._nameDX},${this._y + dy})`, 
+            class: `Name ${this._nameClass}`
+        }).html(nameHTML);
+    }
+
+    get osiNameHTML() {
+        var dy = this._dy - (this._namePos===1 ? 18+9 : -27) + 8.34375 - 25.03125/2;
+        return $('<g>', {
+            'text-anchor': this._osiTxtAnchor, 
+            transform: `translate(${this._x+this._osiNameDX},${this._y+dy})`, 
+            class: 'Name ' + this._nameClass
+        }).append(
+            $('<text>').addClass('rmg-name__zh rmg-name__mtr--osi').text(this._osiNameZH)
+        ).append(
+            $('<text>', {
+                x:0, dy:12, class:'rmg-name__en rmg-name__mtr--osi'
+            }).text(this._osiNameEN)
+        );
+    }
+
+    get ungrpHTML() {
+        return [
+            this.intTickHTML, this.origIntTickHTML, 
+            this.iconHTML, this.nameHTML, 
+            this.intNameHTML, this.origIntNameHTML, this.osiNameHTML
+        ]
+    }
+}
+
+class OSI22LStation extends OSI22Station {
+    get _nameDX() {return 3;}
+    get _tickRotation() {return 90;}
+    get _txtAnchor() {return 'end';}
+    get _intNameDX() {return -24;}
+    get _osiNameDX() {return 13;}
+    get _osiTxtAnchor() {return 'start';}
+}
+
+class OSI22RStation extends OSI22Station {
+    get _nameDX() {return -3;}
+    get _tickRotation() {return -90;}
+    get _txtAnchor() {return 'start';}
+    get _intNameDX() {return 24;}
+    get _osiNameDX() {return -13;}
+    get _osiTxtAnchor() {return 'end';}
 }
 
 class OSI22EndStation extends OSI12Station {
