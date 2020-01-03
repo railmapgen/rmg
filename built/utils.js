@@ -1,137 +1,48 @@
 'use strict';
-
-// function switchBoard(elem) {
-//     if (elem.value == 'dest') {
-//         $('#editor', parent.document).contents().find('#destination').attr('visibility', 'visible');
-//         $('#editor', parent.document).contents().find('#railmap').attr('visibility', 'hidden');
-//     } else {
-//         $('#editor', parent.document).contents().find('#destination').attr('visibility', 'hidden');
-//         $('#editor', parent.document).contents().find('#railmap').attr('visibility', 'visible');
-//     }
-// }
-
 function putParams(instance) {
     localStorage.setItem('rmgParam', JSON.stringify(instance));
 }
-
 function getParams() {
     return JSON.parse(localStorage.rmgParam);
 }
-
 function setParams(key, data) {
     var param = getParams();
     param[key] = data;
     putParams(param);
 }
-
-function take(targetElem) {
-    // First render all SVGs to canvases
-    var elements = targetElem.find('svg').map(function() {
-        var svg = $(this);
-        var canvas = $('<canvas></canvas>');
-        svg.replaceWith(canvas);
-
-        // Get the raw SVG string and curate it
-        var content = svg.wrap('<p></p>').parent().html();
-        content = content.replace(/xlink:title="hide\/show"/g, "");
-        content = encodeURIComponent(content);
-        svg.unwrap();
-
-        // Create an image from the svg
-        var image = new Image();
-        image.src = 'data:image/svg+xml,' + content;
-        image.onload = function() {
-            canvas[0].width = image.width;
-            canvas[0].height = image.height;
-
-            // Render the image to the canvas
-            var context = canvas[0].getContext('2d');
-            context.drawImage(image, 0, 0);
-        };
-        return {
-            svg: svg,
-            canvas: canvas
-        };
-    });
-    targetElem.imagesLoaded(function() {
-        // At this point the container has no SVG, it only has HTML and Canvases.
-        html2canvas(targetElem[0], {
-            onrendered: function(canvas) {
-                // Put the SVGs back in place
-                elements.each(function() {
-                    this.canvas.replaceWith(this.svg);
-                });
-
-                // Do something with the canvas, for example put it at the bottom
-             $(canvas).appendTo('body');
-            }
-        })
-    })
-}
-
-function svgToCanvas() {
-    // var svgElem = targetElem.getElementsByTagName("svg");
-    // for (const node of svgElem) {
-    //   node.setAttribute("font-family", window.getComputedStyle(node).getPropertyValue("font-family"));
-    //   node.replaceWith(node);
-    // }
-    $('#destination text').each((idx, el) => {
-        $(el).attr({
-            'font-family': window.getComputedStyle(el).getPropertyValue('font-family'), 
-            fill: window.getComputedStyle(el).getPropertyValue('fill')
-        });
-    })
-}
-
 function test(svgEl) {
     var [_, _, svgW, svgH] = svgEl.attr('viewBox').split(' ');
-
     var canvas = $('canvas')[0];
     $('canvas').attr({
-        width: svgW*2.5, height:svgH*2.5
+        width: svgW * 2.5, height: svgH * 2.5
     });
     var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    svgEl.find('text, tspan').each((_,el) => {
+    svgEl.find('text, tspan').each((_, el) => {
         var elStyle = window.getComputedStyle(el);
         $(el).attr({
-            'font-family': elStyle.getPropertyValue('font-family'), 
-            'fill': elStyle.getPropertyValue('fill'), 
-            'alignment-baseline': elStyle.getPropertyValue('alignment-baseline'), 
+            'font-family': elStyle.getPropertyValue('font-family'),
+            'fill': elStyle.getPropertyValue('fill'),
+            'alignment-baseline': elStyle.getPropertyValue('alignment-baseline'),
             'text-anchor': elStyle.getPropertyValue('text-anchor'),
             'font-size': elStyle.getPropertyValue('font-size')
         });
     });
-
-    svgEl.find('#strip, #dest_strip').each((_,el) => {
+    svgEl.find('#strip, #dest_strip').each((_, el) => {
         var elStyle = window.getComputedStyle(el);
         $(el).attr({
             'stroke-width': elStyle.getPropertyValue('stroke-width')
         });
     });
-
     var img = new Image();
-    img.onload = function() {
-        ctx.drawImage(img, 0, 0, svgW*2.5, svgH*2.5);
-        saveAs($('canvas')[0].toDataURL('image/png'));
-    }
+    img.onload = function () {
+        ctx.drawImage(img, 0, 0, svgW * 2.5, svgH * 2.5);
+        saveAs($('canvas')[0].toDataURL('image/png'), 'rmg_export');
+    };
     img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl[0].outerHTML)));
 }
-
-function loadLink(el) {
-    // var uri = $('#editor', parent.document).contents().find('body').get(0);
-    var uri = el;
-    html2canvas(uri).then(function(canvas) {
-        var png = canvas.toDataURL('image/png');
-        saveAs(png, '1.png')
-    });
-}
-
 function saveAs(uri, filename) {
-
     var link = document.createElement('a');
-
     if (typeof link.download === 'string') {
         link.href = uri;
         link.download = filename;
@@ -141,43 +52,11 @@ function saveAs(uri, filename) {
         link.click();
         //remove the link when done
         document.body.removeChild(link);
-
-    } else {
+    }
+    else {
         window.open(uri);
     }
 }
-
-function isInt2(param, i) {
-    return param['stn_list'][i]['change_type']=='int2'
-}
-
-function isInt3(param, i) {
-    var stn_type = param['stn_list'][i]['change_type'];
-    if (['int3l','int3r'].includes(stn_type)) {
-        return stn_type;
-    } else {
-        return false;
-    }
-}
-
-function isOSI11(param, i) {
-    var stn_type = param['stn_list'][i]['change_type'];
-    if (stn_type.substring(0,5) == 'osi11') {
-        return [stn_type.substring(5,6), stn_type.substring(6,7)];
-    } else {
-        return false;
-    }
-}
-
-function isOSI12(stn) {
-    var stn_type = stn['change_type'];
-    if (stn_type.substring(0,5) == 'osi12') {
-        return [stn_type.substring(5,6), stn_type.substring(6,7)];
-    } else {
-        return false;
-    }
-}
-
 function getTxtBoxDim(elem, svg) {
     var bcr = elem.getBoundingClientRect();
     var pt = document.getElementById(svg).createSVGPoint();
@@ -185,81 +64,69 @@ function getTxtBoxDim(elem, svg) {
     pt.y = bcr.top;
     var ctm = document.getElementById(svg).getScreenCTM();
     var pos = pt.matrixTransform(ctm.inverse());
-    return {x:pos.x, y:pos.y, width:bcr.width, height:bcr.height};
+    return { x: pos.x, y: pos.y, width: bcr.width, height: bcr.height };
 }
-
 function wrapText(arr, dy) {
-    return $.map(arr, function(txt) {
+    return $.map(arr, function (txt) {
         var t = txt.split(/\\/g);
         if (t.length == 1) {
             return t;
-        } else {
+        }
+        else {
             var res = t[0];
-            for (let i=1; i<t.length; i++) {
+            for (let i = 1; i < t.length; i++) {
                 res = res + '<tspan x="0" dy="' + dy + '">' + t[i] + '</tspan>';
             }
             return res;
         }
-    })
+    });
 }
-
 function wrapTxt(txt, dy, cls, dd) {
     var dattr = (dd) ? 'dy="10"' : '';
     var t = txt.split(/\\/g);
     // if (t.length == 1) {return [t, 1];}
     var res = `<text class="${cls}" ${dattr}> ${t[0]} `;
-    for (let i=1; i<t.length; i++) {
+    for (let i = 1; i < t.length; i++) {
         res = res + '<tspan x="0" dy="' + dy + '">' + t[i] + '</tspan>';
     }
-    res += '</text>'
+    res += '</text>';
     return [res, t.length];
 }
-
 function joinIntName(names, dy1, dy2) {
     var [nameZH, nameEN] = names.map(txt => txt.split(/\\/g));
     var res = $('<text>').addClass('rmg-name__zh IntName').text(nameZH[0]);
-    for (let i=1; i<nameZH.length; i++) {
-        res = res.append(
-            $('<tspan>', {'x':0, 'dy':dy1}).text(nameZH[i])
-        );
+    for (let i = 1; i < nameZH.length; i++) {
+        res = res.append($('<tspan>', { 'x': 0, 'dy': dy1 }).text(nameZH[i]));
     }
     var btwGap = (nameZH.length == 1) ? 9 : dy2;
-    res = res.append(
-        $('<tspan>', {
-            'x':0, 'dy':btwGap, 'class': 'rmg-name__en IntName'
-        }).text(nameEN[0])
-    );
-    for (let i=1; i<nameEN.length; i++) {
-        res = res.append(
-            $('<tspan>', {
-                'x':0, 'dy':dy2, 'class': 'rmg-name__en IntName'
-            }).text(nameEN[i])
-        );
+    res = res.append($('<tspan>', {
+        'x': 0, 'dy': btwGap, 'class': 'rmg-name__en IntName'
+    }).text(nameEN[0]));
+    for (let i = 1; i < nameEN.length; i++) {
+        res = res.append($('<tspan>', {
+            'x': 0, 'dy': dy2, 'class': 'rmg-name__en IntName'
+        }).text(nameEN[i]));
     }
     return [res, nameZH.length, nameEN.length];
 }
-
 function getRandomId() {
     return Math.floor(Math.random() * Math.pow(36, 4)).toString(36).padStart(4, '0');
 }
-
 function describeParams(param) {
-    return `Number of stations: ${Object.keys(param.stn_list).length-2}
-            ${Object.entries(param.stn_list).map(x => ['linestart','lineend'].includes(x[0]) ? '' : x[1].name.join(' - ')).join('<br>').trim().replace(/\\/,' ')}`;
+    return `Number of stations: ${Object.keys(param.stn_list).length - 2}
+            ${Object.entries(param.stn_list).map(x => ['linestart', 'lineend'].includes(x[0]) ? '' : x[1].name.join(' - ')).join('<br>').trim().replace(/\\/, ' ')}`;
 }
-
 function countryCode2Emoji(code) {
     var chars = code.toUpperCase().split('');
     if (code.length == 2) {
-        return chars.map(char => '&#' + (char.charCodeAt()+127397).toString() + ';').join('');
-    } else {
-        return '&#127988;' + chars.map(char => '&#' + (char.charCodeAt()+917536).toString() + ';').join('') + '&#917631;';
+        return chars.map(char => '&#' + (char.charCodeAt() + 127397).toString() + ';').join('');
+    }
+    else {
+        return '&#127988;' + chars.map(char => '&#' + (char.charCodeAt() + 917536).toString() + ';').join('') + '&#917631;';
     }
 }
-
 function updateParam() {
     var param = getParams();
-
     // Version 0.10
     if (!('line_name' in param)) {
         param.line_name = ['路線名', 'Name of Line'];
@@ -267,21 +134,21 @@ function updateParam() {
     if (!('dest_legacy' in param)) {
         param.dest_legacy = false;
     }
-
     // Version 0.11
     if (!('char_form' in param)) {
-        param.char_form = (region => {switch (region) {
-            case 'KR': return 'trad';
-            case 'TC': return 'tw';
-            case 'SC': return 'cn';
-            case 'JP': return 'jp';
-        }})(param.fontZH[0].split(' ').reverse()[0])
+        param.char_form = (region => {
+            switch (region) {
+                case 'KR': return 'trad';
+                case 'TC': return 'tw';
+                case 'SC': return 'cn';
+                case 'JP': return 'jp';
+            }
+        })(param.fontZH[0].split(' ').reverse()[0]);
     }
     delete param.fontZH;
     delete param.fontEN;
     delete param.weightZH;
     delete param.weightEN;
-
     // Version 0.12
     for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
         // if (['linestart', 'lineend'].includes(stnId)) {continue;}
@@ -293,13 +160,13 @@ function updateParam() {
                     break;
                 case 'int3_l':
                 case 'int3_r':
-                    param.stn_list[stnId].interchange = [stnInfo.transfer.slice(1,3)];
+                    param.stn_list[stnId].interchange = [stnInfo.transfer.slice(1, 3)];
                     break;
                 case 'osi11_pl':
                 case 'osi11_pr':
                 case 'osi11_ul':
                 case 'osi11_ur':
-                    param.stn_list[stnId].interchange = [[], stnInfo.transfer.slice(0,2)];
+                    param.stn_list[stnId].interchange = [[], stnInfo.transfer.slice(0, 2)];
                     break;
                 case 'osi12_pl':
                 case 'osi12_pr':
@@ -310,22 +177,22 @@ function updateParam() {
             }
         }
         delete param.stn_list[stnId].transfer;
-        
         if (!('branch' in stnInfo)) {
-            param.stn_list[stnId].branch = { left:[], right:[] };
+            param.stn_list[stnId].branch = { left: [], right: [] };
             if (stnInfo.children.length == 2) {
                 param.stn_list[stnId].branch.right = ['through', stnInfo.children[1]];
-            } else {
+            }
+            else {
                 param.stn_list[stnId].branch.right = [];
             }
             if (stnInfo.parents.length == 2) {
                 param.stn_list[stnId].branch.left = ['through', stnInfo.parents[1]];
-            } else {
+            }
+            else {
                 param.stn_list[stnId].branch.left = [];
             }
         }
     }
-
     // Version 1.2
     if (!('psd_num' in param)) {
         param.psd_num = 1;
@@ -338,30 +205,29 @@ function updateParam() {
         param.theme.push('#fff');
     }
     for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
-        if (['linestart', 'lineend'].includes(stnId)) {continue;}
+        if (['linestart', 'lineend'].includes(stnId)) {
+            continue;
+        }
         if (!('num' in stnInfo)) {
             param.stn_list[stnId].num = '00';
         }
     }
-
     // Version 1.3
     for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
         if ('interchange' in stnInfo) {
             stnInfo.interchange.map(arr => {
                 arr.map(intInfo => {
                     if (intInfo.length == 5) {
-                        intInfo.splice(3,0,'#fff');
+                        intInfo.splice(3, 0, '#fff');
                     }
                 });
             });
         }
     }
-
     // Version 1.4
     if (!('info_panel_type' in param)) {
         param.info_panel_type = 'gz_1';
     }
-
     // Version 1.5
     for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
         if (stnInfo.change_type === 'osi22_end_p') {
@@ -372,10 +238,7 @@ function updateParam() {
         }
     }
     putParams(param);
-
 }
-
-
 const langFallback = lang => {
     switch (lang) {
         case 'en': return ['en'];
@@ -383,8 +246,7 @@ const langFallback = lang => {
         case 'zh-HK': return ['zh-HK', 'zh-Hant', 'zh', 'en'];
         default: return [lang, 'en'];
     }
-}
-
+};
 const getTransText = (obj, lang) => {
     return obj[langFallback(lang).find(l => obj[l])];
-}
+};

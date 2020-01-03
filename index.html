@@ -42,11 +42,9 @@
     <link rel="manifest" href="site.webmanifest">
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
-    <!-- <script async src="https://unpkg.com/html2canvas@latest/dist/html2canvas.min.js"></script> -->
+    <script async src="https://unpkg.com/html2canvas@latest/dist/html2canvas.min.js"></script>
 
-    <script src="js/utils.js"></script>
-    <script src="lib/Station.js"></script>
-    <script src="lib/Line.js"></script>
+    <script src="built/utils.js"></script>
     <script src="js/page_loader.js"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/material-components-web@4.0.0/dist/material-components-web.min.css" rel="stylesheet">
@@ -113,7 +111,7 @@
 
         .rmg-name__char-trad {
             font-family: 
-                Vegur,
+                Vegur, Helvetica,
                 Noto Serif KR,
                 Noto Serif JP,
                 Noto Serif TC,
@@ -123,7 +121,7 @@
         }
         .rmg-name__char-cn {
             font-family: 
-                Vegur,
+                Vegur, Helvetica,
                 Noto Serif SC,
                 Noto Serif TC,
                 HiraMinProN-W6,
@@ -131,7 +129,7 @@
         }
         .rmg-name__char-jp {
             font-family: 
-                Vegur,
+                Vegur, Helvetica,
                 Noto Serif JP,
                 Noto Serif KR,
                 Noto Serif TC,
@@ -141,7 +139,7 @@
         }
         .rmg-name__char-tw {
             font-family: 
-                Vegur,
+                Vegur, Helvetica,
                 Noto Serif TC,
                 Noto Serif KR,
                 Noto Serif JP,
@@ -247,7 +245,7 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
         }
     </style>
 
-    <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Noto+Serif+KR:700|Noto+Serif+JP:700|Noto+Serif+TC:700|Noto+Serif+SC:700&display=swap);</style>
+    <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Noto+Serif+KR:600|Noto+Serif+JP:600|Noto+Serif+TC:600|Noto+Serif+SC:600&display=swap);</style>
 
     <defs>
         <path id="arrow" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
@@ -361,6 +359,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
         .rmg-name__zh.rmg-name__gzmtr--int {font-size: 12px;}
         .rmg-name__en.rmg-name__gzmtr--int {font-size: 8px;}
+        .rmg-name__en.rmg-name__gzmtr--int-small {font-size: 7px;}
 
         .StnNum{
             font-family: Arial;
@@ -374,7 +373,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
     </style>
 
-    <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Noto+Serif+KR:700|Noto+Serif+JP:700|Noto+Serif+TC:700|Noto+Serif+SC:700&display=swap);</style>
+    <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Noto+Serif+KR:600|Noto+Serif+JP:600|Noto+Serif+TC:600|Noto+Serif+SC:600&display=swap);</style>
 
     <defs>
         <path id="arrow" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
@@ -435,6 +434,10 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             <text class="rmg-name__zh rmg-name__gzmtr--direc">方向</text>
             <text class="rmg-name__en rmg-name__gzmtr--direc" dy="22">Towards</text>
         </g>
+    </g>
+
+    <g id="terminus_gz" style="display: none;">
+        <text x="300" y="150" font-size="90">终点站模板</text>
     </g>
 </svg>
 </div>
@@ -760,10 +763,12 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
             </div>
         </li>
+    </ul>
+    <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
         <li role="separator" class="mdc-list-divider"></li>
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">vertical_align_center</span>
-            <span class="mdc-list-item__text-label" trans-tag="Layout.Y"></span>
+            <span class="mdc-list-item__text" trans-tag="Layout.Y"></span>
         </li>
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">arrow_drop_up</span>
@@ -784,7 +789,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
         <li role="separator" class="mdc-list-divider"></li>
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">format_line_spacing</span>
-            <span class="mdc-list-item__text-label" trans-tag="Layout.BranchSpacing"></span>
+            <span class="mdc-list-item__text" trans-tag="Layout.BranchSpacing"></span>
         </li>
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">remove</span>
@@ -804,7 +809,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
         </li>
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">stay_current_landscape</span>
-            <span class="mdc-list-item__text-label" trans-tag="Layout.Padding"></span>
+            <span class="mdc-list-item__text" trans-tag="Layout.Padding"></span>
         </li>
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">remove</span>
@@ -1375,7 +1380,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
                 <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone">
                 <div id="change_type" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
-                    <div class="mdc-select__anchor">
+                    <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
                         <div class="mdc-notched-outline">
@@ -1702,7 +1707,9 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
 <script async src="js/lang.js"></script>
 
-<script>
+<script type="module">
+    import { RMGLine, RMGLineGZ } from './built/Line.js';
+    window.RMGLine = RMGLine;
     // localStorage.rmgParam = 'abc';
     var lineClass;
     if (localStorage.rmgParam != null) {
@@ -1711,9 +1718,9 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             var param = getParams();
             lineClass = (style => {switch (style) {
                 case 'mtr':
-                    return Line;
+                    return RMGLine;
                 case 'gzmtr':
-                    return LineGZ;
+                    return RMGLineGZ;
             }})(window.urlParams.get('style'));
             myLine = new lineClass(param);
             lineClass.initSVG(myLine);
@@ -1731,9 +1738,9 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             var param = getParams();
             lineClass = (style => {switch (style) {
                 case 'mtr':
-                    return Line;
+                    return RMGLine;
                 case 'gzmtr':
-                    return LineGZ;
+                    return RMGLineGZ;
             }})(window.urlParams.get('style'));
             myLine = new lineClass(param);
             lineClass.initSVG(myLine);

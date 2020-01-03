@@ -18,8 +18,8 @@
 
     "File.Export": "Preview And Export",
     "File.Export.Title": "Choose a Canvas", 
-    "File.Export.SVGDest": "SVG (Destination)", 
-    "File.Export.SVGMap": "SVG (Rail Map)",
+    "File.Export.SVGDest": "Destination Panel/Running In Board", 
+    "File.Export.SVGMap": "Line Diagrams",
     "File.Preview.Title": "Preview And Export", 
     "File.Preview.PNG": "Download As PNG (Beta)", 
     "File.Preview.SVG": "Download As SVG", 
@@ -39,7 +39,7 @@
     "File.Error.Msg3": "3. Contact us via GitHub Issues or social media.", 
     "File.Error.Msg4": "Please keep you JSON configuration as you may use it to restore your work after we fix the error. To start a new canvas, select \"New Canvas\".",
 
-    "Layout.Width": "Rail Map Width",
+    "Layout.Width": "Line Diagrams Panel Width",
     "Layout.DestWidth": "Destination Panel Width",
     "Layout.Y": "Vertical Position",
     "Layout.BranchSpacing": "Branch Spacing", 

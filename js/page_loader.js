@@ -11,7 +11,7 @@ function initLayoutPanel() {
         })
 
     $('#svg_dest_width > input').on('input', event => {
-        myLine.svgDestWidth = event.target.value;
+        myLine.svgDestWidth = Number(event.target.value);
     });
 
     $('#svg_width > input').on('input', event => {
@@ -65,7 +65,7 @@ function initDesignPanel() {
                 myLine.txtFlip = !getParams().txt_flip;
                 break;
             case 5:
-                window.lineClass.reverseStns(myLine);
+                myLine.reverseStns();
                 break;
         }
     });
@@ -345,6 +345,8 @@ function initSavePanel() {
                     height: thisSVGHeight * scaleFactor
                 })
             );
+        
+        $(event.target).find('svg [style="display: none;"]').remove();
     });
     $('#preview_diag')[0].MDCDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action === 'close') {
@@ -386,7 +388,7 @@ function initSavePanel() {
     importDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action == 'close') {return;}
 
-        Line.clearSVG();
+        RMGLine.clearSVG();
         localStorage.rmgParam = JSON.stringify(importedFile);
         location.reload(true);
     });

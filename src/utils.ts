@@ -1,15 +1,5 @@
 'use strict';
 
-// function switchBoard(elem) {
-//     if (elem.value == 'dest') {
-//         $('#editor', parent.document).contents().find('#destination').attr('visibility', 'visible');
-//         $('#editor', parent.document).contents().find('#railmap').attr('visibility', 'hidden');
-//     } else {
-//         $('#editor', parent.document).contents().find('#destination').attr('visibility', 'hidden');
-//         $('#editor', parent.document).contents().find('#railmap').attr('visibility', 'visible');
-//     }
-// }
-
 function putParams(instance) {
     localStorage.setItem('rmgParam', JSON.stringify(instance));
 }
@@ -18,75 +8,16 @@ function getParams() {
     return JSON.parse(localStorage.rmgParam);
 }
 
-function setParams(key, data) {
+function setParams(key: string, data: any) {
     var param = getParams();
     param[key] = data;
     putParams(param);
 }
 
-function take(targetElem) {
-    // First render all SVGs to canvases
-    var elements = targetElem.find('svg').map(function() {
-        var svg = $(this);
-        var canvas = $('<canvas></canvas>');
-        svg.replaceWith(canvas);
-
-        // Get the raw SVG string and curate it
-        var content = svg.wrap('<p></p>').parent().html();
-        content = content.replace(/xlink:title="hide\/show"/g, "");
-        content = encodeURIComponent(content);
-        svg.unwrap();
-
-        // Create an image from the svg
-        var image = new Image();
-        image.src = 'data:image/svg+xml,' + content;
-        image.onload = function() {
-            canvas[0].width = image.width;
-            canvas[0].height = image.height;
-
-            // Render the image to the canvas
-            var context = canvas[0].getContext('2d');
-            context.drawImage(image, 0, 0);
-        };
-        return {
-            svg: svg,
-            canvas: canvas
-        };
-    });
-    targetElem.imagesLoaded(function() {
-        // At this point the container has no SVG, it only has HTML and Canvases.
-        html2canvas(targetElem[0], {
-            onrendered: function(canvas) {
-                // Put the SVGs back in place
-                elements.each(function() {
-                    this.canvas.replaceWith(this.svg);
-                });
-
-                // Do something with the canvas, for example put it at the bottom
-             $(canvas).appendTo('body');
-            }
-        })
-    })
-}
-
-function svgToCanvas() {
-    // var svgElem = targetElem.getElementsByTagName("svg");
-    // for (const node of svgElem) {
-    //   node.setAttribute("font-family", window.getComputedStyle(node).getPropertyValue("font-family"));
-    //   node.replaceWith(node);
-    // }
-    $('#destination text').each((idx, el) => {
-        $(el).attr({
-            'font-family': window.getComputedStyle(el).getPropertyValue('font-family'), 
-            fill: window.getComputedStyle(el).getPropertyValue('fill')
-        });
-    })
-}
-
 function test(svgEl) {
     var [_, _, svgW, svgH] = svgEl.attr('viewBox').split(' ');
 
-    var canvas = $('canvas')[0];
+    var canvas = <HTMLCanvasElement> $('canvas')[0];
     $('canvas').attr({
         width: svgW*2.5, height:svgH*2.5
     });
@@ -114,18 +45,9 @@ function test(svgEl) {
     var img = new Image();
     img.onload = function() {
         ctx.drawImage(img, 0, 0, svgW*2.5, svgH*2.5);
-        saveAs($('canvas')[0].toDataURL('image/png'));
+        saveAs($('canvas')[0].toDataURL('image/png'), 'rmg_export');
     }
     img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl[0].outerHTML)));
-}
-
-function loadLink(el) {
-    // var uri = $('#editor', parent.document).contents().find('body').get(0);
-    var uri = el;
-    html2canvas(uri).then(function(canvas) {
-        var png = canvas.toDataURL('image/png');
-        saveAs(png, '1.png')
-    });
 }
 
 function saveAs(uri, filename) {
@@ -144,37 +66,6 @@ function saveAs(uri, filename) {
 
     } else {
         window.open(uri);
-    }
-}
-
-function isInt2(param, i) {
-    return param['stn_list'][i]['change_type']=='int2'
-}
-
-function isInt3(param, i) {
-    var stn_type = param['stn_list'][i]['change_type'];
-    if (['int3l','int3r'].includes(stn_type)) {
-        return stn_type;
-    } else {
-        return false;
-    }
-}
-
-function isOSI11(param, i) {
-    var stn_type = param['stn_list'][i]['change_type'];
-    if (stn_type.substring(0,5) == 'osi11') {
-        return [stn_type.substring(5,6), stn_type.substring(6,7)];
-    } else {
-        return false;
-    }
-}
-
-function isOSI12(stn) {
-    var stn_type = stn['change_type'];
-    if (stn_type.substring(0,5) == 'osi12') {
-        return [stn_type.substring(5,6), stn_type.substring(6,7)];
-    } else {
-        return false;
     }
 }
 
@@ -248,7 +139,7 @@ function describeParams(param) {
             ${Object.entries(param.stn_list).map(x => ['linestart','lineend'].includes(x[0]) ? '' : x[1].name.join(' - ')).join('<br>').trim().replace(/\\/,' ')}`;
 }
 
-function countryCode2Emoji(code) {
+function countryCode2Emoji(code: string) {
     var chars = code.toUpperCase().split('');
     if (code.length == 2) {
         return chars.map(char => '&#' + (char.charCodeAt()+127397).toString() + ';').join('');

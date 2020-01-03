@@ -17,8 +17,8 @@
 
     "File.Export": "預覽及輸出",
     "File.Export.Title": "選擇畫布", 
-    "File.Export.SVGDest": "SVG（目的地）", 
-    "File.Export.SVGMap": "SVG（路線圖）",
+    "File.Export.SVGDest": "目的地/站名牌", 
+    "File.Export.SVGMap": "路線圖",
     "File.Preview.Title": "預覽及輸出", 
     "File.Preview.PNG": "下载PNG（測試）", 
     "File.Preview.SVG": "下載SVG", 
@@ -55,7 +55,7 @@
     "Design.MTRLegacy": "港鐵舊款樣式",
     "Design.FlipName": "反轉車站名稱位置",
     "Design.Reverse": "反轉全線車站順序", 
-    "Design.Line": "路線編號",
+    "Design.Line": "路線編碼",
     "Design.PSD": "月台幕門編號",
 
     "Design.PanelType": "資訊板樣式", 
@@ -90,7 +90,7 @@
 
     "Stations.Name.Title": "編輯車站名稱",
     "Stations.Name.Hint": "小貼士：你可以用反斜線（\\）使名稱換行。（僅限拉丁字母名稱）",
-    "Stations.Name.StnNum": "車站編號", 
+    "Stations.Name.StnNum": "車站編碼", 
 
     "Stations.Interchange.Title": "編輯轉車站詳情",
     "Stations.Interchange.Type.Title": "轉車站類型",
