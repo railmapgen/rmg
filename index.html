@@ -166,14 +166,14 @@
         }
     </style>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
     gtag('config', 'UA-152882192-1');
-    </script>
+    </script> -->
 </head>
 <body>
 <div id="svgs" align="center">
@@ -257,7 +257,7 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
         <ellipse id="indicator_gz_2" rx="24" ry="12" class="rmg-indicator__gzmtr--2"/>
 
         <rect id="psd" height="40" width="40" rx="4" fill="white"/>
-        <path id="stn_gz" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
+        <path id="stn_gz" fill="#fff" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
     </defs>
 
     <rect id="dest_outer" x="0" y="0" fill="white" stroke="none"/>
@@ -404,8 +404,8 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             <use xlink:href="#int2_hk" x="41"/>
         </g>
 
-        <path id="stn_gz" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
-        <path id="stn_gz_pass" stroke="#aaa" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
+        <path id="stn_gz" fill="#fff" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
+        <path id="stn_gz_pass" stroke="#aaa" fill="#fff" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
 
         <path id="inttick_hk" d="M 0,0 v 17" stroke-linecap="round"/>
         <path id="inttick_gz" d="M 0,0 v 18" stroke-linecap="square"/>
@@ -1915,7 +1915,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 <canvas style="display: none;"></canvas>
 
 <script type="module">
-    import { initSavePanel } from './js/page_loader.js';
+    import { initSavePanel } from './built/page_loader.js';
     window.myLine = null;
     $(`[${window.urlParams.get('style')}-specific]`).show();
     window.mdc.autoInit();
