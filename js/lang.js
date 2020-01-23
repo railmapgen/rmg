@@ -47,5 +47,17 @@ const translate1 = async(lang) => {
     });
 }
 
-translate1(window.urlParams.get('lang'));
+const translate2 = async (lang) => {
+    var datas = pageLangFallback(lang).map(l => getTransJSON(l));
+    for (let el of $('[trans-tag')) {
+        let transStr = '';
+        for await (let data of datas) {
+            transStr = data[$(el).attr('trans-tag')];
+            if (transStr) {break;}
+        }
+        $(el).text(transStr);
+    }
+}
+
+translate2(window.urlParams.get('lang'));
 $('html').attr('lang', window.urlParams.get('lang'));

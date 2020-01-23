@@ -5,6 +5,7 @@
     "Tab.Layout": "Layout", 
     "Tab.Design": "Design", 
     "Tab.Stations": "Stations",
+    "Tab.Branches": "Branches", 
     "Tab.Info": "Info", 
 
     "File.New": "New Canvas", 
@@ -92,14 +93,27 @@
     "Stations.Name.Hint": "Hint: You may add a backslash (\\) at where you want to wrap name. (For station name in Latin characters only. )",
     "Stations.Name.StnNum": "Station Number", 
     
-    "Stations.Interchange.Title": "Edit Detail of Interchange",
+    "Stations.Edit.Title": "Edit Station Detail",
+    "Stations.Edit.Interchange": "Interchange", 
+    "Stations.Edit.Branch": "Branch", 
+
+
     "Stations.Interchange.Type.Title": "Interchange",
     "Stations.Interchange.Type.None": "None", 
     "Stations.Interchange.Type.Int2": "Interchange (2 lines)", 
     "Stations.Interchange.Type.Int3": "Interchange (3 lines)", 
-    "Stations.Interchange.Type.OSI11": "Out-station-interchange (1-1)", 
-    "Stations.Interchange.Type.OSI12": "Out-station-interchange (1-2)",
-    "Stations.Interchange.Type.OSI22": "Out-station-interchange (2-2)", 
+    "Stations.Interchange.Type.OSI11": "Out-of-station interchange (1-1)", 
+    "Stations.Interchange.Type.OSI12": "Out-of-station interchange (1-2)",
+    "Stations.Interchange.Type.OSI22": "Out-of-station interchange (2-2)", 
+
+    "Stations.Branch.Type.Title": "Branch Type", 
+    "Stations.Branch.Type.NA": "(N/A)", 
+    "Stations.Branch.Type.Through": "Through", 
+    "Stations.Branch.Type.NonThrough": "Non-through", 
+    "Stations.Branch.First.Title": "First Station on Branch", 
+    "Stations.Branch.Pos.Title": "Branch Position", 
+    "Stations.Branch.Pos.Upper": "Upper", 
+    "Stations.Branch.Pos.Lower": "Lower", 
 
     "Stations.Delete.Title": "Warning", 
     "Stations.Delete.Msg1": "Are you sure to delete station", 
@@ -107,6 +121,8 @@
 
     "Stations.DeleteErr.Title": "Deletion Error",
     "Stations.DeleteErr.Msg": "You are not allowed to delete this station!", 
+
+    "Branches.Main": "Main",
 
     "Info.Notice": "Notice: Due to copyright, licensing and other legal restrictions, Rail Map Generator uses Noto Serif CJK and Vegur instead of MTRSung and Myriad Pro respectively for MTR-style maps. If you have obtained the license of either font, please feel free to edit the relevant code chunk of the exported SVG file.", 
     "Info.Report": "Report An Issue", 

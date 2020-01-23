@@ -1,16 +1,15 @@
-'use strict';
-function putParams(instance) {
+export function putParams(instance) {
     localStorage.setItem('rmgParam', JSON.stringify(instance));
 }
-function getParams() {
+export function getParams() {
     return JSON.parse(localStorage.rmgParam);
 }
-function setParams(key, data) {
-    var param = getParams();
+export function setParams(key, data) {
+    let param = getParams();
     param[key] = data;
     putParams(param);
 }
-function test(svgEl) {
+export function test(svgEl) {
     var [_, _, svgW, svgH] = svgEl.attr('viewBox').split(' ');
     var canvas = $('canvas')[0];
     $('canvas').attr({
@@ -57,42 +56,17 @@ function saveAs(uri, filename) {
         window.open(uri);
     }
 }
-function getTxtBoxDim(elem, svg) {
-    var bcr = elem.getBoundingClientRect();
-    var pt = document.getElementById(svg).createSVGPoint();
+export function getTxtBoxDim(elem, svg) {
+    let svgNode = $('#' + svg)[0];
+    let bcr = elem.getBoundingClientRect();
+    let pt = svgNode.createSVGPoint();
+    let ctm = svgNode.getScreenCTM();
     pt.x = bcr.left;
     pt.y = bcr.top;
-    var ctm = document.getElementById(svg).getScreenCTM();
-    var pos = pt.matrixTransform(ctm.inverse());
+    let pos = pt.matrixTransform(ctm.inverse());
     return { x: pos.x, y: pos.y, width: bcr.width, height: bcr.height };
 }
-function wrapText(arr, dy) {
-    return $.map(arr, function (txt) {
-        var t = txt.split(/\\/g);
-        if (t.length == 1) {
-            return t;
-        }
-        else {
-            var res = t[0];
-            for (let i = 1; i < t.length; i++) {
-                res = res + '<tspan x="0" dy="' + dy + '">' + t[i] + '</tspan>';
-            }
-            return res;
-        }
-    });
-}
-function wrapTxt(txt, dy, cls, dd) {
-    var dattr = (dd) ? 'dy="10"' : '';
-    var t = txt.split(/\\/g);
-    // if (t.length == 1) {return [t, 1];}
-    var res = `<text class="${cls}" ${dattr}> ${t[0]} `;
-    for (let i = 1; i < t.length; i++) {
-        res = res + '<tspan x="0" dy="' + dy + '">' + t[i] + '</tspan>';
-    }
-    res += '</text>';
-    return [res, t.length];
-}
-function joinIntName(names, dy1, dy2) {
+export function joinIntName(names, dy1, dy2) {
     var [nameZH, nameEN] = names.map(txt => txt.split(/\\/g));
     var res = $('<text>').addClass('rmg-name__zh IntName').text(nameZH[0]);
     for (let i = 1; i < nameZH.length; i++) {
@@ -109,23 +83,23 @@ function joinIntName(names, dy1, dy2) {
     }
     return [res, nameZH.length, nameEN.length];
 }
-function getRandomId() {
+export function getRandomId() {
     return Math.floor(Math.random() * Math.pow(36, 4)).toString(36).padStart(4, '0');
 }
-function describeParams(param) {
+export function describeParams(param) {
     return `Number of stations: ${Object.keys(param.stn_list).length - 2}
             ${Object.entries(param.stn_list).map(x => ['linestart', 'lineend'].includes(x[0]) ? '' : x[1].name.join(' - ')).join('<br>').trim().replace(/\\/, ' ')}`;
 }
-function countryCode2Emoji(code) {
+export function countryCode2Emoji(code) {
     var chars = code.toUpperCase().split('');
     if (code.length == 2) {
-        return chars.map(char => '&#' + (char.charCodeAt() + 127397).toString() + ';').join('');
+        return chars.map(char => '&#' + (char.charCodeAt(0) + 127397).toString() + ';').join('');
     }
     else {
-        return '&#127988;' + chars.map(char => '&#' + (char.charCodeAt() + 917536).toString() + ';').join('') + '&#917631;';
+        return '&#127988;' + chars.map(char => '&#' + (char.charCodeAt(0) + 917536).toString() + ';').join('') + '&#917631;';
     }
 }
-function updateParam() {
+export function updateParam() {
     var param = getParams();
     // Version 0.10
     if (!('line_name' in param)) {
@@ -239,7 +213,7 @@ function updateParam() {
     }
     putParams(param);
 }
-const langFallback = lang => {
+const langFallback = (lang) => {
     switch (lang) {
         case 'en': return ['en'];
         case 'zh-Hans': return ['zh-Hans', 'zh', 'en'];
@@ -247,6 +221,6 @@ const langFallback = lang => {
         default: return [lang, 'en'];
     }
 };
-const getTransText = (obj, lang) => {
+export const getTransText = (obj, lang) => {
     return obj[langFallback(lang).find(l => obj[l])];
 };

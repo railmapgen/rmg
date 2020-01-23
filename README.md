@@ -9,6 +9,23 @@ Demo page: https://wongchito.github.io/RailMapGenerator/
 
 ## Version History
 
+### 2.0 (23 Jan 2020)
+
+#### New Features
+
+- Wish you a happy Lunar New Year!
+- Full control of branches is now available! You may decide the type and position of each branch now. 
+
+#### Known Issues
+
+- "Next stop" and "Towards" information may be wrong when line includes branches. 
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+- Vertical height of the canvas may not sufficient for line with branched in Guangzhou Metro style. 
+
+#### Resolved Issues
+
+- Improved robustness after migrating to TypeScript. 
+
 ### 1.5.1 (3 Jan 2020)
 
 #### New Features

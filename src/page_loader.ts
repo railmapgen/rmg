@@ -1,6 +1,14 @@
-'use strict';
+import { getTransText, getParams, putParams, describeParams, countryCode2Emoji, test, StationInfo } from './utils.js';
+import { RMGLine } from './Line.js';
 
-import { getTransText, getParams, putParams, countryCode2Emoji } from '../built/utils.js';
+import { ID } from './utils.js';
+// import { MDCTextField } from '@material/textfield';
+
+declare global {
+    interface Window {
+        myLine?: RMGLine;
+    }
+}
 
 export function initLayoutPanel() {
     Promise.resolve(getParams())
@@ -13,23 +21,23 @@ export function initLayoutPanel() {
         })
 
     $('#svg_dest_width > input').on('input', event => {
-        myLine.svgDestWidth = Number(event.target.value);
+        window.myLine.svgDestWidth = Number(event.target.value);
     });
 
     $('#svg_width > input').on('input', event => {
-        myLine.svgWidth = event.target.value;
+        window.myLine.svgWidth = Number(event.target.value);
     });
 
     $('#branch_spacing')[0].MDCSlider.listen('MDCSlider:input', event => {
-        myLine.branchSpacing = event.target.MDCSlider.value;
+        window.myLine.branchSpacing = event.target.MDCSlider.value;
     });
 
     $('#y_pc')[0].MDCSlider.listen('MDCSlider:input', event => {
-        myLine.yPc = event.target.MDCSlider.value;
+        window.myLine.yPc = Number(event.target.MDCSlider.value);
     });
 
     $('#padding')[0].MDCSlider.listen('MDCSlider:input', event => {
-        myLine.padding = event.target.MDCSlider.value;
+        window.myLine.padding = event.target.MDCSlider.value;
     });
 }
 
@@ -56,18 +64,18 @@ export function initDesignPanel() {
                 break;
             case 2:
                 if (getParams().direction == 'r') {
-                    myLine.direction = 'l';
+                    window.myLine.direction = 'l';
                     $('#panel_design #design_list li:nth-child(3) .mdc-list-item__secondary-text').html('Left');
                 } else {
-                    myLine.direction = 'r';
+                    window.myLine.direction = 'r';
                     $('#panel_design #design_list li:nth-child(3) .mdc-list-item__secondary-text').html('Right');
                 }
                 break;
             case 4:
-                myLine.txtFlip = !getParams().txt_flip;
+                window.myLine.txtFlip = !getParams().txt_flip;
                 break;
             case 5:
-                myLine.reverseStns();
+                window.myLine.reverseStns();
                 break;
         }
     });
@@ -136,8 +144,8 @@ export function initDesignPanel() {
         param.theme[1] = event.detail.value;
         putParams(param);
 
-        myLine.themeLine = event.detail.value;
-        myLine.themeColour = $('#theme_line__selection li span')
+        window.myLine.themeLine = event.detail.value;
+        window.myLine.themeColour = $('#theme_line__selection li span')
                 .eq(event.detail.index).attr('style')
                 .match(/#[\w\d]+/g); 
 
@@ -168,25 +176,25 @@ export function initDesignPanel() {
     });
     $('#line_name_diag .mdc-text-field').on('input', event => {
         var lineNames = $('#line_name_diag .mdc-text-field').get().map(el => el.MDCTextField.value);
-        myLine.lineNames = lineNames;
+        window.myLine.lineNames = lineNames;
         $('#panel_design #design_list li:nth-child(2) .mdc-list-item__secondary-text').text(
             lineNames.join(' - ')
         );
     });
 
     $('#platform_num > input').on('input', event => {
-        myLine.platformNum = event.target.value;
+        window.myLine.platformNum = event.target.value;
     });
 
     // mtr-specific
     $('#legacy input').on('change', event => {
-        myLine.destLegacy = event.target.checked;
+        window.myLine.destLegacy = event.target.checked;
     });
 
     $('#design_char_diag')[0].MDCDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action == 'close') {return;}
 
-        myLine.charForm = event.detail.action;
+        window.myLine.charForm = event.detail.action;
         $('#panel_design #design_list_mtr li:nth-child(1) .mdc-list-item__secondary-text').html(
             $(`#design_char_diag ul [data-mdc-dialog-action="${event.detail.action}"] span`).html()
         );
@@ -194,15 +202,15 @@ export function initDesignPanel() {
 
     // gzmtr-specific
     $('#line_num > input').on('input', event => {
-        myLine.lineNum = event.target.value;
+        window.myLine.lineNum = event.target.value;
     });
     $('#psd_num > input').on('input', event => {
-        myLine.psdNum = event.target.value;
+        window.myLine.psdNum = event.target.value;
     });
 
     $('#panel_type_diag')[0].MDCDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action === 'close') {return;}
-        myLine.infoPanelType = event.detail.action;
+        window.myLine.infoPanelType = event.detail.action;
     })
 }
 
@@ -438,7 +446,7 @@ export function initStationsPanel() {
                 $('<div>').addClass('mdc-card__action-icons').append(
                     $('<button>', {title:'Set As Current'}).addClass('material-icons mdc-icon-button mdc-card__action mdc-card__action--icon').text('my_location')
                 ).append(
-                    $('<button>', {title:'Interchange'}).addClass('material-icons mdc-icon-button mdc-card__action mdc-card__action--icon').text('transfer_within_a_station')
+                    $('<button>', {title:'Interchange'}).addClass('material-icons mdc-icon-button mdc-card__action mdc-card__action--icon').text('edit')
                 ).append(
                     $('<button>', {title: 'Remove'}).addClass('material-icons mdc-icon-button mdc-card__action mdc-card__action--icon').text('delete_forever')
                 )
@@ -447,7 +455,7 @@ export function initStationsPanel() {
     }
 
     var stnList = getParams().stn_list;
-    myLine.tpo.forEach(stnId => {
+    window.myLine.tpo.forEach(stnId => {
         $('#panel_stations .mdc-layout-grid__inner:first').append(_stationCard(stnId, stnList[stnId].name, stnList[stnId].num));
         $('#pivot__selection').append(
             $('<li>', {'data-value':stnId}).addClass('mdc-list-item').text(stnList[stnId].name.join(' - '))
@@ -465,7 +473,7 @@ export function initStationsPanel() {
     });
     $('#panel_stations .mdc-card__action-icons > [title="Set As Current"]').on('click', event => {
         var stnId = event.target.closest('.mdc-card').id;
-        myLine.currentStnId = stnId;
+        window.myLine.currentStnId = stnId;
     });
     $('#panel_stations .mdc-card__action-icons > [title="Interchange"]').on('click', event => {
         var stnId = event.target.closest('.mdc-card').id;
@@ -497,11 +505,11 @@ export function initStationsPanel() {
         var loc = stnAddLocSelect.value;
         var end = stnAddEndSelect.value;
         
-        var [newId, newInfo] = myLine.addStn(prep, stnId, loc, end);
+        var [newId, newInfo] = window.myLine.addStn(prep, stnId, loc, end);
 
         console.log(prep, stnId, loc, end);
         // _genStnList();
-        var prevId = myLine.tpo[myLine.tpo.indexOf(newId) - 1] || 'add_stn';
+        var prevId = window.myLine.tpo[window.myLine.tpo.indexOf(newId) - 1] || 'add_stn';
         $(`#panel_stations .mdc-layout-grid__inner:first #${prevId}`).after(_stationCard(newId, newInfo.name, newInfo.num));
         // Add event listeners
         $(`#panel_stations #${newId} .mdc-card__primary-action`).on('click', event => {
@@ -512,7 +520,7 @@ export function initStationsPanel() {
         });
         $(`#panel_stations #${newId} .mdc-card__action-icons > [title="Set As Current"]`).on('click', event => {
             var stnId = event.target.closest('.mdc-card').id;
-            myLine.currentStnId = stnId;
+            window.myLine.currentStnId = stnId;
         });
         $(`#panel_stations #${newId} .mdc-card__action-icons > [title="Interchange"]`).on('click', event => {
             var stnId = event.target.closest('.mdc-card').id;
@@ -545,13 +553,13 @@ export function initStationsPanel() {
         var prep = stnAddPrepSelect.value;
         var stnId = stnAddPivotSelect.value;
         var stnList = getParams().stn_list;
-        for (let [idx, state] of myLine.newStnPossibleLoc(prep, stnId).entries()) {
-            if (state) {
+        for (let [idx, state] of window.myLine.newStnPossibleLoc(prep, stnId).entries()) {
+            if (state === 1 || (<ID[]>state).length) {
                 $('#loc__selection li').eq(idx).show();
                 if (idx >= 3) {
                     // newupper or newlower
                     $('#end__selection').empty();
-                    state.forEach(stnId => {
+                    (<ID[]>state).forEach(stnId => {
                         $('#end__selection').append(
                             $('<li>', { class:'mdc-list-item', 'data-value':stnId }).text(stnList[stnId].name.join(' - '))
                         );
@@ -595,7 +603,7 @@ export function initStationsPanel() {
         var stnNum = $('#stn_modify_diag #stn_num')[0].MDCTextField.value;
 
         var stnId = $('#stn_modify_diag').attr('for');
-        myLine.updateStnName(stnId, nameZH, nameEN, stnNum);
+        window.myLine.updateStnName(stnId, [nameZH, nameEN], stnNum);
         $(`#panel_stations .mdc-layout-grid__inner:first #${stnId} .mdc-card__media-content`)
             .html([nameZH, nameEN].join('<br>'))
             .prepend($('<span>', { style:(window.urlParams.get('style')=='gzmtr' ? '' : 'display:none;')}).text(stnNum+' '));
@@ -604,6 +612,90 @@ export function initStationsPanel() {
 
 
     // Modification (Interchange)
+    const focusInterchange = () => {
+        $('#change_type')[0].MDCSelect.layout();
+        $('#int_city, #int_line').find('.mdc-select').each((_,el) => el.MDCSelect.layout());
+        $('#int_name_zh, #int_name_en').find('.mdc-text-field').each((_,el) => el.MDCTextField.layout());
+        stnOSINameENField.layout();
+        stnOSINameZHField.layout();
+    };
+    const focusBranch = () => {
+        ['left', 'right'].forEach(direc => {
+            $(`#${direc}_through, #${direc}_first, #${direc}_pos`).each((_,el) => el.MDCSelect.layout());
+        });
+    };
+
+    const initBranch = (stnInfo: StationInfo) => {
+        // through type
+        ['left', 'right'].forEach(direc => {
+            let throughType = stnInfo.branch[direc][0];
+            if (throughType) {
+                $(`#${direc}_through`)[0].MDCSelect.value = throughType;
+                $(`#${direc}_through__selection [data-value="na"]`).hide();
+                $(`#${direc}_through__selection [data-value="through"]`).show();
+                $(`#${direc}_through__selection [data-value="nonthrough"]`).show();
+
+                $(`[${direc}-first-group], [${direc}-pos-group]`).show();
+            } else {
+                $(`#${direc}_through`)[0].MDCSelect.value = 'na';
+                $(`#${direc}_through__selection [data-value="na"]`).show();
+                $(`#${direc}_through__selection [data-value="through"]`).hide();
+                $(`#${direc}_through__selection [data-value="nonthrough"]`).hide();
+
+                $(`[${direc}-first-group], [${direc}-pos-group]`).hide();
+            }
+        });
+
+        // first station
+        $('#left_first__selection, #right_first__selection').empty();
+        Promise.resolve(getParams().stn_list)
+            .then(stnList => {
+                stnInfo.parents.forEach(par => {
+                    $('#left_first__selection').append(
+                        $('<li>', {
+                            class: 'mdc-list-item', 
+                            'data-value': par
+                        }).text(stnList[par].name.join(' - '))
+                    );
+                });
+                stnInfo.children.forEach(child => {
+                    $('#right_first__selection').append(
+                        $('<li>', {
+                            class: 'mdc-list-item', 
+                            'data-value': child
+                        }).text(stnList[child].name.join(' - '))
+                    );
+                });
+            })
+            .then(() => {
+                ['left', 'right'].forEach(direc => {
+                    if ($(`#${direc}_through`)[0].MDCSelect.value !== 'na') {
+                        $(`#${direc}_first`)[0].MDCSelect.value = stnInfo.branch[direc][1];
+                    } else {
+                        $(`#${direc}_first`)[0].MDCSelect.selectedIndex = 0;
+                    }
+                })
+            });
+        
+        // swap position
+        $('#left_pos')[0].MDCSelect.selectedIndex = stnInfo.parents.indexOf(stnInfo.branch.left[1]);
+        $('#right_pos')[0].MDCSelect.selectedIndex = stnInfo.children.indexOf(stnInfo.branch.right[1]);
+    };
+
+    $('#stn_transfer_diag .mdc-tab-bar')[0].MDCTabBar.listen('MDCTabBar:activated', event => {
+        switch (event.detail.index) {
+            case 0:
+                $('#panel_interchange').show();
+                $('#panel_branch').hide();
+                focusInterchange();
+                break;
+            case 1:
+                $('#panel_interchange').hide();
+                $('#panel_branch').show();
+                focusBranch();
+        }
+    });
+
     // Duplicate element
     var intNameEl = $('#stn_transfer_diag .mdc-layout-grid__inner #int_name_zh,#int_name_en').slice(0,2).clone();
     intNameEl.find('.mdc-text-field').removeAttr('data-mdc-auto-init-state');
@@ -681,14 +773,14 @@ export function initStationsPanel() {
             stnOSINameENField.value = '';
             $('#paid_area')[0].MDCIconButtonToggle.on = true;
         }
+
+        // Branch
+        initBranch(stnInfo);
     });
 
     $('#stn_transfer_diag')[0].MDCDialog.listen('MDCDialog:opened', event => {
-        $('#change_type')[0].MDCSelect.layout();
-        $('#int_city, #int_line').find('.mdc-select').each((_,el) => el.MDCSelect.layout());
-        $('#int_name_zh, #int_name_en').find('.mdc-text-field').each((_,el) => el.MDCTextField.layout());
-        stnOSINameENField.layout();
-        stnOSINameZHField.layout();
+        focusInterchange();
+        focusBranch();
     });
 
     $('#stn_transfer_diag')[0].MDCDialog.listen('MDCDialog:closed', event => {
@@ -712,28 +804,28 @@ export function initStationsPanel() {
                 );
         });
         if (type == 'none') {
-            myLine.updateStnTransfer(stnId, type);
+            window.myLine.updateStnTransfer(stnId, type);
         } else if (type == 'osi22') {
-            myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [[intInfo0], [osi, intInfo1, intInfo2]]);
+            window.myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [[intInfo0], [osi, intInfo1, intInfo2]]);
         } else {
             switch (type) {
                 case 'int2':
-                    // myLine.updateStnTransfer(stnId, type, [[], intInfo1, []]);
-                    myLine.updateStnTransfer(stnId, type, [[intInfo1]]);
+                    // window.myLine.updateStnTransfer(stnId, type, [[], intInfo1, []]);
+                    window.myLine.updateStnTransfer(stnId, type, [[intInfo1]]);
                     break;
                 case 'osi11':
-                    // myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, []]);
-                    myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [[], [osi, intInfo1]]);
+                    // window.myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, []]);
+                    window.myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [[], [osi, intInfo1]]);
                     break;
                 default:
                     switch (type) {
                         case 'int3':
-                            // myLine.updateStnTransfer(stnId, `${type}_${tickDirec}`, [[], intInfo1, intInfo2]);
-                            myLine.updateStnTransfer(stnId, `${type}_${tickDirec}`, [[intInfo1, intInfo2]]);
+                            // window.myLine.updateStnTransfer(stnId, `${type}_${tickDirec}`, [[], intInfo1, intInfo2]);
+                            window.myLine.updateStnTransfer(stnId, `${type}_${tickDirec}`, [[intInfo1, intInfo2]]);
                             break;
                         case 'osi12':
-                            // myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, intInfo2]);
-                            myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [[], [osi, intInfo1, intInfo2]]);
+                            // window.myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [osi, intInfo1, intInfo2]);
+                            window.myLine.updateStnTransfer(stnId, `${type}_${osiPaidArea}${tickDirec}`, [[], [osi, intInfo1, intInfo2]]);
                     }
             }
         }
@@ -772,8 +864,8 @@ export function initStationsPanel() {
                 $('#tick_direc').show();
             }
         } else {
-            $('#stn_transfer_diag .mdc-dialog__content [id]div').slice(1).hide()
-            $('#stn_transfer_diag .mdc-dialog__content [id]button').hide()
+            $('#stn_transfer_diag #panel_interchange [id]div').slice(1).hide()
+            $('#tick_direc, #paid_area').hide()
         }
         $('#stn_transfer_diag .mdc-select').each((_,el) => el.MDCSelect.layout())
     });
@@ -811,8 +903,40 @@ export function initStationsPanel() {
                 }
             });
         })
-    })
+    }); 
 
+    // Modification (Branch)
+    $('#left_through, #right_through').each((_, el) => {
+        el.MDCSelect.listen('MDCSelect:change', event => {
+            if (event.detail.value === 'na') {return;}
+            let stnId = $('#stn_transfer_diag').attr('for');
+            window.myLine.updateBranchType(stnId, event.target.id.split('_')[0], event.detail.value);
+        });
+    });
+
+    $('#left_first, #right_first').each((_, el) => {
+        el.MDCSelect.listen('MDCSelect:change', event => {
+            let direc = event.target.id.split('_')[0];
+            if ($(`#${direc}_first__selection`).children().length === 1) {return;}
+            let stnId = $('#stn_transfer_diag').attr('for');
+            if (window.myLine.updateBranchFirst(stnId, direc, event.detail.value)) {
+                if ($(`#${direc}_pos`)[0].MDCSelect.selectedIndex === 0) {
+                    $(`#${direc}_pos`)[0].MDCSelect.selectedIndex = 1;
+                } else {
+                    $(`#${direc}_pos`)[0].MDCSelect.selectedIndex = 0;
+                }
+            }
+        });
+    });
+
+    $('#left_pos, #right_pos').each((_, el) => {
+        el.MDCSelect.listen('MDCSelect:change', event => {
+            let direc = event.target.id.split('_')[0];
+            if ($(`#${direc}_through`)[0].MDCSelect.value === 'na') {return;}
+            let stnId = $('#stn_transfer_diag').attr('for');
+            window.myLine.updateBranchPos(stnId, direc, event.detail.index);
+        })
+    })
 
     // Deletion
     $('#stn_delete_diag')[0].MDCDialog.listen('MDCDialog:opening', event => {
@@ -823,7 +947,7 @@ export function initStationsPanel() {
         if (event.detail.action == 'close') {return;}
         var stnId = $(event.target).attr('for');
         // Remove from data and svg
-        if (myLine.removeStn(stnId)) {
+        if (window.myLine.removeStn(stnId)) {
             // Remove station from selection
             $(`#panel_stations .mdc-layout-grid__inner #${stnId}`).remove();
             $(`#pivot__selection [data-value="${stnId}"]`).remove();
@@ -845,5 +969,20 @@ export function initInfoPanel() {
     });
     $('#panel_info .mdc-card__action-icons [title="Fork"]').on('click', () => {
         window.open('https://github.com/wongchito/RailMapGenerator/fork', '_blank');
+    });
+}
+
+export function initBranchesPanel() {
+    $('#panel_branches #branch_main [title="Show"]').on('click', () => {
+        let blinkCount = 0;
+        let intervalID: number;
+        intervalID = setInterval(() => {
+            blinkCount++;
+            if (blinkCount === 6) {clearInterval(intervalID);}
+            $('#stn_icons')
+                .find(window.myLine.branches[0].map(stnId => '#' + stnId).join(', '))
+                .find('.rmg-stn')
+                .toggleClass('rmg-stn__highlight');
+        }, 500);
     });
 }

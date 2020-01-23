@@ -42,10 +42,7 @@
     <link rel="manifest" href="site.webmanifest">
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
-    <script async src="https://unpkg.com/html2canvas@latest/dist/html2canvas.min.js"></script>
-
-    <script src="built/utils.js"></script>
-    <script src="js/page_loader.js"></script>
+    <!-- <script async src="https://unpkg.com/html2canvas@latest/dist/html2canvas.min.js"></script> -->
 
     <link href="https://cdn.jsdelivr.net/npm/material-components-web@4.0.0/dist/material-components-web.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/material-components-web@3.2.0/dist/material-components-web.min.js"></script>
@@ -161,16 +158,22 @@
             font-size: 14px;
             text-anchor: middle;
         }
+        .rmg-stn {
+            fill: white;
+        }
+        .rmg-stn__highlight {
+            fill: yellow;
+        }
     </style>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
     gtag('config', 'UA-152882192-1');
-    </script>
+    </script> -->
 </head>
 <body>
 <div id="svgs" align="center">
@@ -254,7 +257,7 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
         <ellipse id="indicator_gz_2" rx="24" ry="12" class="rmg-indicator__gzmtr--2"/>
 
         <rect id="psd" height="40" width="40" rx="4" fill="white"/>
-        <path id="stn_gz" stroke-width="2" fill="#fff" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
+        <path id="stn_gz" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
     </defs>
 
     <rect id="dest_outer" x="0" y="0" fill="white" stroke="none"/>
@@ -293,7 +296,7 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
             <text class="rmg-name__en rmg-name__gzmtr--platform" dy="21">Platform</text>
         </g>
         <g id="big_stn_num" transform="scale(1.4)">
-            <use xlink:href="#stn_gz"/>
+            <use xlink:href="#stn_gz" class="rmg-stn"/>
             <text class="rmg-name__zh rmg-name__gzmtr--line-num"></text>
             <text class="rmg-name__zh rmg-name__gzmtr--station-num">06</text>
         </g>
@@ -401,8 +404,8 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             <use xlink:href="#int2_hk" x="41"/>
         </g>
 
-        <path id="stn_gz" stroke-width="2" fill="#fff" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
-        <path id="stn_gz_pass" stroke="#aaa" stroke-width="2" fill="#fff" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
+        <path id="stn_gz" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
+        <path id="stn_gz_pass" stroke="#aaa" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
 
         <path id="inttick_hk" d="M 0,0 v 17" stroke-linecap="round"/>
         <path id="inttick_gz" d="M 0,0 v 18" stroke-linecap="square"/>
@@ -1373,8 +1376,39 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
      data-mdc-auto-init="MDCDialog">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
-      <h2 class="mdc-dialog__title" trans-tag="Stations.Interchange.Title"></h2>
+      <h2 class="mdc-dialog__title" trans-tag="Stations.Edit.Title"></h2>
       <div class="mdc-dialog__content">
+            <div class="mdc-tab-bar" role="tablist" data-mdc-auto-init="MDCTabBar">
+                <div class="mdc-tab-scroller">
+                    <div class="mdc-tab-scroller__scroll-area">
+                    <div class="mdc-tab-scroller__scroll-content">
+                        <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
+                            <span class="mdc-tab__content">
+                                <span class="mdc-tab__icon material-icons" aria-hidden="true">transfer_within_a_station</span>
+                                <span class="mdc-tab__text-label" trans-tag="Stations.Edit.Interchange"></span>
+                            </span>
+                            <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                                <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                            </span>
+                            <span class="mdc-tab__ripple"></span>
+                        </button>
+
+                        <button class="mdc-tab" role="tab" aria-selected="true">
+                            <span class="mdc-tab__content">
+                                <span class="mdc-tab__icon material-icons" aria-hidden="true">share</span>
+                                <span class="mdc-tab__text-label" trans-tag="Stations.Edit.Branch"></span>
+                            </span>
+                            <span class="mdc-tab-indicator">
+                                <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                            </span>
+                            <span class="mdc-tab__ripple"></span>
+                        </button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="panel_interchange">
             <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner">
 
@@ -1591,6 +1625,167 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
             </div>
             </div>
+            </div>
+
+            <div id="panel_branch" style="display: none;">
+            <div class="mdc-layout-grid">
+            <div class="mdc-layout-grid__inner">
+                <div class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-2-phone">
+                    Left
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone">
+                <div id="left_through" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                    <div class="mdc-select__anchor" style="width: 100%;">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label id="outlined-select-label" class="mdc-floating-label" trans-tag="Stations.Branch.Type.Title"></label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
+                        <ul class="mdc-list" id="left_through__selection">
+                            <li class="mdc-list-item" data-value="na" trans-tag="Stations.Branch.Type.NA"></li>
+                            <li class="mdc-list-item" data-value="through" trans-tag="Stations.Branch.Type.Through"></li>
+                            <li class="mdc-list-item" data-value="nonthrough" trans-tag="Stations.Branch.Type.NonThrough"></li>
+                        </ul>
+                    </div>
+                </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-2-phone" left-first-group>
+                    Branch stn
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone" left-first-group>
+                <div id="left_first" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                    <div class="mdc-select__anchor" style="width: 100%;">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label id="outlined-select-label" class="mdc-floating-label" trans-tag="Stations.Branch.First.Title"></label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
+                        <ul class="mdc-list" id="left_first__selection">
+                        </ul>
+                    </div>
+                </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-2-phone" left-pos-group>
+                    Left Pos
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone" left-pos-group>
+                <div id="left_pos" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                    <div class="mdc-select__anchor" style="width: 100%;">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label id="outlined-select-label" class="mdc-floating-label" trans-tag="Stations.Branch.Pos.Title"></label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
+                        <ul class="mdc-list" id="left_pos__selection">
+                            <li class="mdc-list-item" data-value="upper" trans-tag="Stations.Branch.Pos.Upper"></li>
+                            <li class="mdc-list-item" data-value="lower" trans-tag="Stations.Branch.Pos.Lower"></li>
+                        </ul>
+                    </div>
+                </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-2-phone">
+                    Right
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone">
+                <div id="right_through" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                    <div class="mdc-select__anchor" style="width: 100%;">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label id="outlined-select-label" class="mdc-floating-label" trans-tag="Stations.Branch.Type.Title"></label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
+                        <ul class="mdc-list" id="right_through__selection">
+                            <li class="mdc-list-item" data-value="na" trans-tag="Stations.Branch.Type.NA"></li>
+                            <li class="mdc-list-item" data-value="through" trans-tag="Stations.Branch.Type.Through"></li>
+                            <li class="mdc-list-item" data-value="nonthrough" trans-tag="Stations.Branch.Type.NonThrough"></li>
+                        </ul>
+                    </div>
+                </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-2-phone" right-first-group>
+                    Branch stn
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone" right-first-group>
+                <div id="right_first" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                    <div class="mdc-select__anchor" style="width: 100%;">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label id="outlined-select-label" class="mdc-floating-label" trans-tag="Stations.Branch.First.Title"></label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
+                        <ul class="mdc-list" id="right_first__selection">
+                        </ul>
+                    </div>
+                </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-2-phone" right-pos-group>
+                    Right Pos
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone" right-pos-group>
+                <div id="right_pos" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                    <div class="mdc-select__anchor" style="width: 100%;">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label id="outlined-select-label" class="mdc-floating-label" trans-tag="Stations.Branch.Pos.Title"></label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
+                        <ul class="mdc-list" id="right_pos__selection">
+                            <li class="mdc-list-item" data-value="upper" trans-tag="Stations.Branch.Pos.Upper"></li>
+                            <li class="mdc-list-item" data-value="lower" trans-tag="Stations.Branch.Pos.Lower"></li>
+                        </ul>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            </div>
       </div>
       <footer class="mdc-dialog__actions">
         <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
@@ -1655,6 +1850,28 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
 </div>
 
+<!-- <div id="panel_branches" class="panel">
+
+<div class="mdc-layout-grid" style="/*max-width: 500px;*/">
+<div class="mdc-layout-grid__inner">
+
+    <div class="mdc-card mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone station-card" id="branch_main">
+    <div class="mdc-card__primary-action">
+        <div class="mdc-card__media mdc-card__media--16-9">
+        <div class="mdc-card__media-content station-card__content" trans-tag="Branches.Main"></div>
+        </div>
+    </div>
+    <div class="mdc-card__actions">
+        <div class="mdc-card__action-icons">
+        <button class="material-icons mdc-icon-button mdc-card__action mdc-card__action--icon" title="Show">add_box</button>
+        </div>
+    </div>
+    </div>
+
+</div>
+</div>
+    
+</div> -->
 
 <div id="panel_info" class="panel">
 
@@ -1697,18 +1914,20 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
 <canvas style="display: none;"></canvas>
 
-<script>
-    var template = 'blank';
-    var myLine;
+<script type="module">
+    import { initSavePanel } from './js/page_loader.js';
+    window.myLine = null;
     $(`[${window.urlParams.get('style')}-specific]`).show();
     window.mdc.autoInit();
     initSavePanel();
 </script>
 
-<script async src="js/lang.js"></script>
+<script async src="built/lang.js"></script>
 
 <script type="module">
     import { RMGLine, RMGLineGZ } from './built/Line.js';
+    import { updateParam, getParams } from './built/utils.js';
+    var template = 'blank';
     window.RMGLine = RMGLine;
     // localStorage.rmgParam = 'abc';
     var lineClass;
@@ -1749,14 +1968,16 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
 </script>
 
-<script>
+<script type="module">
+    import { initLayoutPanel, initDesignPanel, initStationsPanel, initBranchesPanel, initInfoPanel } from './built/page_loader.js';
     var layoutPanelFirstInit = true;
     var designPanelFirstInit = true;
     var stationsPanelFirstInit = true;
     var testPanelFirstInit = true;
+    // var branchesPanelFirstInit = true;
     var infoPanelFirstInit = true;
 
-    $('.mdc-tab-bar')[0].MDCTabBar.listen('MDCTabBar:activated', event => {
+    $('#panels .mdc-tab-bar')[0].MDCTabBar.listen('MDCTabBar:activated', event => {
         $('.panel--active').removeClass('panel--active');
         $('.panel').eq(event.detail.index).addClass('panel--active');
 

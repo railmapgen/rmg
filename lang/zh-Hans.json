@@ -5,6 +5,7 @@
     "Tab.Layout": "布局", 
     "Tab.Design": "设计",
     "Tab.Stations": "车站",
+    "Tab.Branches": "支线",
     "Tab.Info": "信息", 
 
     "File.New": "新建画布", 
@@ -91,7 +92,11 @@
     "Stations.Name.Hint": "提示：你可以用反斜杠（\\）使名称换行。（仅限拉丁字母名称）",
     "Stations.Name.StnNum": "车站编号", 
 
-    "Stations.Interchange.Title": "编辑换乘站详情",
+    "Stations.Edit.Title": "编辑车站详情",
+    "Stations.Edit.Interchange": "换乘", 
+    "Stations.Edit.Branch": "支线", 
+
+
     "Stations.Interchange.Type.Title": "换乘站类型",
     "Stations.Interchange.Type.None": "无", 
     "Stations.Interchange.Type.Int2": "双线换乘站", 
@@ -99,6 +104,15 @@
     "Stations.Interchange.Type.OSI11": "出站换乘 (1-1)", 
     "Stations.Interchange.Type.OSI12": "出站换乘 (1-2)",
     "Stations.Interchange.Type.OSI22": "出站换乘 (2-2)", 
+
+    "Stations.Branch.Type.Title": "支线类型", 
+    "Stations.Branch.Type.NA": "（不适用）", 
+    "Stations.Branch.Type.Through": "贯通（无需换乘）", 
+    "Stations.Branch.Type.NonThrough": "非贯通（需换乘）", 
+    "Stations.Branch.First.Title": "支线首站", 
+    "Stations.Branch.Pos.Title": "支线位置", 
+    "Stations.Branch.Pos.Upper": "上方", 
+    "Stations.Branch.Pos.Lower": "下方", 
     
     "Stations.Delete.Title": "警告", 
     "Stations.Delete.Msg1": "是否确认删除车站", 

@@ -1,20 +1,38 @@
-'use strict';
+export type ID = string;
+export interface BranchInfo {
+    left: [string, ID] | [], 
+    right: [string, ID] | []
+}
+export type Name = [string, string];
+export interface StationInfo {
+    branch: BranchInfo;
+    parents: ID[];
+    children: ID[];
+    [propName: string]: any;
+}
+export interface StationInfoDict {
+    [index: string]: StationInfo;
+}
+export interface RMGParam {
+    stn_list: StationInfoDict;
+    [propName: string]: any;
+}
 
-function putParams(instance) {
+export function putParams(instance: RMGParam) {
     localStorage.setItem('rmgParam', JSON.stringify(instance));
 }
 
-function getParams() {
-    return JSON.parse(localStorage.rmgParam);
+export function getParams() {
+    return JSON.parse(localStorage.rmgParam) as RMGParam;
 }
 
-function setParams(key: string, data: any) {
-    var param = getParams();
+export function setParams(key: string, data: any) {
+    let param = getParams();
     param[key] = data;
     putParams(param);
 }
 
-function test(svgEl) {
+export function test(svgEl) {
     var [_, _, svgW, svgH] = svgEl.attr('viewBox').split(' ');
 
     var canvas = <HTMLCanvasElement> $('canvas')[0];
@@ -45,12 +63,15 @@ function test(svgEl) {
     var img = new Image();
     img.onload = function() {
         ctx.drawImage(img, 0, 0, svgW*2.5, svgH*2.5);
-        saveAs($('canvas')[0].toDataURL('image/png'), 'rmg_export');
+        saveAs(
+            (<HTMLCanvasElement>$('canvas')[0]).toDataURL('image/png'), 
+            'rmg_export'
+        );
     }
     img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl[0].outerHTML)));
 }
 
-function saveAs(uri, filename) {
+function saveAs(uri: string, filename: string) {
 
     var link = document.createElement('a');
 
@@ -69,44 +90,18 @@ function saveAs(uri, filename) {
     }
 }
 
-function getTxtBoxDim(elem, svg) {
-    var bcr = elem.getBoundingClientRect();
-    var pt = document.getElementById(svg).createSVGPoint();
+export function getTxtBoxDim(elem: SVGGraphicsElement, svg: string) {
+    let svgNode = $('#' + svg)[0] as Element as SVGSVGElement;
+    let bcr = elem.getBoundingClientRect();
+    let pt = svgNode.createSVGPoint();
+    let ctm = svgNode.getScreenCTM();
     pt.x = bcr.left;
     pt.y = bcr.top;
-    var ctm = document.getElementById(svg).getScreenCTM();
-    var pos = pt.matrixTransform(ctm.inverse());
+    let pos = pt.matrixTransform(ctm.inverse());
     return {x:pos.x, y:pos.y, width:bcr.width, height:bcr.height};
 }
 
-function wrapText(arr, dy) {
-    return $.map(arr, function(txt) {
-        var t = txt.split(/\\/g);
-        if (t.length == 1) {
-            return t;
-        } else {
-            var res = t[0];
-            for (let i=1; i<t.length; i++) {
-                res = res + '<tspan x="0" dy="' + dy + '">' + t[i] + '</tspan>';
-            }
-            return res;
-        }
-    })
-}
-
-function wrapTxt(txt, dy, cls, dd) {
-    var dattr = (dd) ? 'dy="10"' : '';
-    var t = txt.split(/\\/g);
-    // if (t.length == 1) {return [t, 1];}
-    var res = `<text class="${cls}" ${dattr}> ${t[0]} `;
-    for (let i=1; i<t.length; i++) {
-        res = res + '<tspan x="0" dy="' + dy + '">' + t[i] + '</tspan>';
-    }
-    res += '</text>'
-    return [res, t.length];
-}
-
-function joinIntName(names, dy1, dy2) {
+export function joinIntName(names: Name, dy1, dy2): [JQuery<HTMLElement>, number, number] {
     var [nameZH, nameEN] = names.map(txt => txt.split(/\\/g));
     var res = $('<text>').addClass('rmg-name__zh IntName').text(nameZH[0]);
     for (let i=1; i<nameZH.length; i++) {
@@ -130,25 +125,25 @@ function joinIntName(names, dy1, dy2) {
     return [res, nameZH.length, nameEN.length];
 }
 
-function getRandomId() {
+export function getRandomId() {
     return Math.floor(Math.random() * Math.pow(36, 4)).toString(36).padStart(4, '0');
 }
 
-function describeParams(param) {
+export function describeParams(param: RMGParam) {
     return `Number of stations: ${Object.keys(param.stn_list).length-2}
             ${Object.entries(param.stn_list).map(x => ['linestart','lineend'].includes(x[0]) ? '' : x[1].name.join(' - ')).join('<br>').trim().replace(/\\/,' ')}`;
 }
 
-function countryCode2Emoji(code: string) {
+export function countryCode2Emoji(code: string): string {
     var chars = code.toUpperCase().split('');
     if (code.length == 2) {
-        return chars.map(char => '&#' + (char.charCodeAt()+127397).toString() + ';').join('');
+        return chars.map(char => '&#' + (char.charCodeAt(0)+127397).toString() + ';').join('');
     } else {
-        return '&#127988;' + chars.map(char => '&#' + (char.charCodeAt()+917536).toString() + ';').join('') + '&#917631;';
+        return '&#127988;' + chars.map(char => '&#' + (char.charCodeAt(0)+917536).toString() + ';').join('') + '&#917631;';
     }
 }
 
-function updateParam() {
+export function updateParam() {
     var param = getParams();
 
     // Version 0.10
@@ -263,11 +258,10 @@ function updateParam() {
         }
     }
     putParams(param);
-
 }
 
 
-const langFallback = lang => {
+const langFallback = (lang: string) => {
     switch (lang) {
         case 'en': return ['en'];
         case 'zh-Hans': return ['zh-Hans', 'zh', 'en'];
@@ -276,6 +270,6 @@ const langFallback = lang => {
     }
 }
 
-const getTransText = (obj, lang) => {
+export const getTransText = (obj: {[index: string]: string}, lang: string) => {
     return obj[langFallback(lang).find(l => obj[l])];
 }

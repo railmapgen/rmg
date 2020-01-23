@@ -5,6 +5,7 @@
     "Tab.Layout": "佈局", 
     "Tab.Design": "設計",
     "Tab.Stations": "車站",
+    "Tab.Branches": "支線", 
     "Tab.Info": "資訊", 
 
     "File.New": "新增畫布", 
@@ -92,7 +93,11 @@
     "Stations.Name.Hint": "小貼士：你可以用反斜線（\\）使名稱換行。（僅限拉丁字母名稱）",
     "Stations.Name.StnNum": "車站編碼", 
 
-    "Stations.Interchange.Title": "編輯轉車站詳情",
+    "Stations.Edit.Title": "編輯車站詳情",
+    "Stations.Edit.Interchange": "轉乘", 
+    "Stations.Edit.Branch": "支線", 
+
+
     "Stations.Interchange.Type.Title": "轉車站類型",
     "Stations.Interchange.Type.None": "無", 
     "Stations.Interchange.Type.Int2": "雙線轉車站", 
@@ -100,6 +105,15 @@
     "Stations.Interchange.Type.OSI11": "出站轉車 (1-1)", 
     "Stations.Interchange.Type.OSI12": "出站轉車 (1-2)",
     "Stations.Interchange.Type.OSI22": "出站轉車 (2-2)", 
+
+    "Stations.Branch.Type.Title": "支線類型", 
+    "Stations.Branch.Type.NA": "（不適用）", 
+    "Stations.Branch.Type.Through": "直通（毋需轉車）", 
+    "Stations.Branch.Type.NonThrough": "非直通（需轉車）", 
+    "Stations.Branch.First.Title": "支線首站", 
+    "Stations.Branch.Pos.Title": "支線位置", 
+    "Stations.Branch.Pos.Upper": "上方", 
+    "Stations.Branch.Pos.Lower": "下方", 
 
     "Stations.Delete.Title": "警告", 
     "Stations.Delete.Msg1": "是否確定刪除車站", 
