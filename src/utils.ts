@@ -50,7 +50,7 @@ export function test(svgEl) {
             'alignment-baseline': elStyle.getPropertyValue('alignment-baseline'), 
             'text-anchor': elStyle.getPropertyValue('text-anchor'),
             'font-size': elStyle.getPropertyValue('font-size')
-        });
+        }).removeAttr('class');
     });
 
     svgEl.find('#strip, #dest_strip').each((_,el) => {
@@ -257,6 +257,13 @@ export function updateParam() {
             param.stn_list[stnId].change_type = 'osi22_ur';
         }
     }
+
+   // Version 2.1
+   for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
+       if (!('interchange' in stnInfo)) {
+           param.stn_list[stnId].interchange = [[]];
+       }
+   } 
     putParams(param);
 }
 

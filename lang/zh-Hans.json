@@ -60,8 +60,8 @@
     "Design.PSD": "屏蔽门编号",
 
     "Design.PanelType": "信息面板样式",     
-    "Design.PanelType.Title": "選擇信息面板样式", 
-    "Design.PanelType.GZ1": "I型", 
+    "Design.PanelType.Title": "选择信息面板样式", 
+    "Design.PanelType.Panasonic": "松下", 
     "Design.PanelType.GZ2": "II型", 
 
     "Design.Char": "汉字字形",
@@ -121,7 +121,7 @@
     "Stations.DeleteErr.Title": "删除错误",
     "Stations.DeleteErr.Msg": "此车站不能被删除！", 
 
-    "Info.Notice": "请注意：由于著作权、授权及其他法律限制，铁路线路图生成器使用思源宋体及Vegur，以代替港铁样式线路图所使用之地铁宋及Myriad Pro。如您拥有该字体之授权，可自行于输出之SVG文件内修改相关代码。", 
+    "Info.Notice": "请注意：由于著作权及其他法律限制，铁路线路图生成器使用思源宋体及Vegur，以代替港铁样式线路图所使用之地铁宋及Myriad Pro。如您拥有该字体之授权，可自行于输出之SVG文件内修改相关代码。", 
     "Info.Report": "反馈问题", 
 
     "Dialog.Cancel": "取消",

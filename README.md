@@ -9,6 +9,25 @@ Demo page: https://wongchito.github.io/RailMapGenerator/
 
 ## Version History
 
+### 2.1 (30 Jan 2020)
+
+#### New Features
+
+- Terminal-station-specific panel is now available. 
+- Branching-out stations are now show as expected in Guangzhou Metro style. 
+
+#### Known Issues
+
+- 'Next stop' information may be wrong when line includes branches. 
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+- Vertical height of the canvas may not sufficient for line with branches in Guangzhou Metro style. 
+
+#### Resolved Issues
+
+- Improved smoothness whilst changing vertical position. 
+- Fixed the error of 'Towards' information on station name panel. 
+- Fixed the error of drawing branches which bypass part of the stations on main line (sidings). 
+
 ### 2.0 (23 Jan 2020)
 
 #### New Features
@@ -18,9 +37,9 @@ Demo page: https://wongchito.github.io/RailMapGenerator/
 
 #### Known Issues
 
-- "Next stop" and "Towards" information may be wrong when line includes branches. 
+- 'Next stop' and 'Towards' information may be wrong when line includes branches. 
 - PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
-- Vertical height of the canvas may not sufficient for line with branched in Guangzhou Metro style. 
+- Vertical height of the canvas may not sufficient for line with branches in Guangzhou Metro style. 
 
 #### Resolved Issues
 
@@ -34,7 +53,7 @@ Demo page: https://wongchito.github.io/RailMapGenerator/
 
 #### Known Issues
 
-- "Next stop" and "Towards" information may be wrong when line includes branches. 
+- 'Next stop' and 'Towards' information may be wrong when line includes branches. 
 - PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 
 #### Resolved Issues
@@ -49,7 +68,7 @@ Demo page: https://wongchito.github.io/RailMapGenerator/
 
 #### Known Issues
 
-- "Next stop" and "Towards" information may be wrong when line includes branches. 
+- 'Next stop' and 'Towards' information may be wrong when line includes branches. 
 - PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 
 ### 1.4.1 (22 Dec 2019)
@@ -60,7 +79,7 @@ Demo page: https://wongchito.github.io/RailMapGenerator/
 
 #### Known Issues
 
-- "Next stop" and "Towards" information may be wrong when line includes branches. 
+- 'Next stop' and 'Towards' information may be wrong when line includes branches. 
 - PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 
 #### Resolved Issues
@@ -78,7 +97,7 @@ Demo page: https://wongchito.github.io/RailMapGenerator/
 
 #### Known Issues
 
-- "Next stop" and "Towards" information may be wrong when line includes branches. 
+- 'Next stop' and 'Towards' information may be wrong when line includes branches. 
 
 #### Resolved Issues
 

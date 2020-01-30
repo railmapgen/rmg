@@ -62,7 +62,7 @@
 
     "Design.PanelType": "Info Panel Type", 
     "Design.PanelType.Title": "Choose a Type for Info Panel", 
-    "Design.PanelType.GZ1": "Type I", 
+    "Design.PanelType.Panasonic": "Panasonic", 
     "Design.PanelType.GZ2": "Type II", 
 
     "Design.Char": "Chinese Character Form",

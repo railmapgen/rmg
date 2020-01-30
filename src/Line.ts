@@ -1,11 +1,14 @@
 import { getTxtBoxDim, setParams, getParams, putParams, getRandomId } from './utils.js';
-import { RMGStationGZ, IntStationGZ, OSIStationGZ } from './Station.js';
+import { RMGStationGZ, IntStationGZ, BranchStationGZ, OSIStationGZ } from './Station.js';
 import { RMGStation, Int2Station, Int3LStation, Int3RStation, OSI11LStation, OSI11RStation, OSI12LStation, OSI12RStation, OSI22LStation, OSI22RStation, OSI22EndStation } from './Station.js';
 
 import { ID, Name, StationInfo, RMGParam } from './utils';
 
 interface StationDict {
     [index: string]: RMGStation;
+}
+interface StationDictGZ {
+    [index: string]: RMGStationGZ;
 }
 
 class RMGLine {
@@ -35,19 +38,21 @@ class RMGLine {
 
         [this.themeCity, this.themeLine, this._themeColour, this._fgColour] = param.theme;
 
-        this._yPc = param['y_pc'];
+        this.yPc = param['y_pc'];
         this._padding = param['padding'];
         this._stripPc = param['strip_pc'];
         this._branchSpacing = param.branch_spacing;
         this._txtFlip = param['txt_flip'];
 
+        this._lineNames = param['line_name'];
+        
         for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
             this.stations[stnId] = this._initStnInstance(stnId, stnInfo);
         }
         this._currentStnId = param['current_stn_idx'];
         this._direction = param['direction'];
         this._platformNum = param['platform_num'];
-        this._lineNames = param['line_name'];
+        
         this._destLegacy = param['dest_legacy'];
 
         this._charForm = param.char_form;
@@ -139,17 +144,20 @@ class RMGLine {
         this._yPc = val;
         setParams('y_pc', val);
 
-        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
-            if (['linestart', 'lineend'].includes(stnId)) {continue;}
-            stnInstance.y = this._stnRealY(stnId);
-        }
-        RMGLine.clearSVG();
-        this.drawStns();
-        this.drawLine();
+        let y = val * this._svgHeight / 100;
+        $('g#main').attr('transform', `translate(0,${y})`);
 
-        this.loadFonts();
+        // for (let [stnId, stnInstance] of Object.entries(this.stations)) {
+        //     if (['linestart', 'lineend'].includes(stnId)) {continue;}
+        //     stnInstance.y = this._stnRealY(stnId);
+        // }
+        // RMGLine.clearSVG();
+        // this.drawStns();
+        // this.drawLine();
 
-        this.updateStnNameBg();
+        // this.loadFonts();
+
+        // this.updateStnNameBg();
     }
 
     set padding(val) {
@@ -381,7 +389,10 @@ class RMGLine {
         return res.slice(1, res.length-1);
     }
 
-    get y() {return this._yPc * this._svgHeight / 100; }
+    get y() {
+        // return this._yPc * this._svgHeight / 100; 
+        return 0;
+    }
     get stripY() {return this._stripPc * this._svgHeight / 100;}
     get turningRadius() {return this._branchSpacing/2 * (Math.sqrt(2) / (Math.sqrt(2)-1));}
 
@@ -647,7 +658,7 @@ class RMGLine {
 
         stnIds.forEach(stnId => {
             var [x,y] = ['_stnRealX', '_stnRealY'].map(fun => this[fun](stnId));
-            if (!prevY) {
+            if (!prevY && prevY !== 0) {
                 [prevId, prevX, prevY] = [stnId, x, y];
                 path.push(`M ${x},${y}`);
                 return;
@@ -685,6 +696,9 @@ class RMGLine {
                 if (linePassStns[0] === branch[0]) {
                     // -1 -1 1 1
                     linePassStns.push(lineMainStns[0]);
+                } else if (lineMainStns[0] === branch[0] && lineMainStns[lineMainStns.length-1] === branch[branch.length-1] && linePassStns.length) {
+                    linePassStns = branch;
+                    lineMainStns = [];
                 } else {
                     // 1 1 -1 -1
                     linePassStns.unshift(lineMainStns[lineMainStns.length-1]);
@@ -785,7 +799,8 @@ class RMGLine {
         param.stn_list[stnId].change_type = type;
         if (type == 'none') {
             delete param.stn_list[stnId].transfer;
-            delete param.stn_list[stnId].interchange;
+            // delete param.stn_list[stnId].interchange;
+            param.stn_list[stnId].interchange = [[]];
         } else {
             // param.stn_list[stnId].transfer = info;
             param.stn_list[stnId].interchange = info;
@@ -1295,6 +1310,7 @@ class RMGLine {
         newInfo.name = [`車站${newId.toUpperCase()}`, `Station ${newId.toUpperCase()}`];
         newInfo.change_type = 'none';
         newInfo.num = '00';
+        newInfo.interchange = [[]];
         
         param.stn_list[newId] = newInfo;
         putParams(param);
@@ -1580,6 +1596,7 @@ class RMGLineGZ extends RMGLine {
     private _psdNum: string;
     private _lineNum: string;
     private _infoPanelType: string;
+    stations: StationDictGZ;
 
     constructor (param: RMGParam) {
         super(param);
@@ -1590,6 +1607,9 @@ class RMGLineGZ extends RMGLine {
     }
 
     _initStnInstance(stnId: ID, stnInfo: StationInfo): RMGStation {
+        if (stnInfo.children.length === 2 || stnInfo.parents.length === 2) {
+            return new BranchStationGZ(stnId, stnInfo, [this.themeCity, this.themeLine, this._themeColour, this._fgColour, ...this._lineNames]);
+        }
         switch (stnInfo.change_type) {
             case 'int2':
                 // return new Int2StationGZ(stnId, stnInfo);
@@ -1623,13 +1643,13 @@ class RMGLineGZ extends RMGLine {
     get lineXs() {
         if (this._direction == 'r') {
             return [
-                this._svgWidth * this._padding / 100 + 60, 
+                this._svgWidth * this._padding / 100 + 65, 
                 this._svgWidth * (1 - this._padding/100)
             ];
         } else {
             return [
                 this._svgWidth * this._padding / 100, 
-                this._svgWidth * (1 - this._padding/100) - 60
+                this._svgWidth * (1 - this._padding/100) - 65
             ];
         }
     }
@@ -1641,11 +1661,11 @@ class RMGLineGZ extends RMGLine {
         this.loadDirection();
     }
 
-    set yPc(val: number) {
-        super.yPc = val;
-        this.loadLineNum();
-        this.loadLineName();
-    }
+    // set yPc(val: number) {
+    //     super.yPc = val;
+    //     // this.loadLineNum();
+    //     // this.loadLineName();
+    // }
 
     set padding(val) {
         super.padding = val;
@@ -1702,6 +1722,7 @@ class RMGLineGZ extends RMGLine {
         setParams('line_name', val);
 
         this.loadLineName();
+        // (to be fixed) redraw branching station
         this.loadFonts();
     }
 
@@ -1755,8 +1776,27 @@ class RMGLineGZ extends RMGLine {
         $('.Strip').removeClass('.Strip').addClass('rmg-strip__gzmtr--1');
     }
 
-    _pathWeight(stnId1, stnId2) {
-        return 1;
+    _rightWideFactor(stnId: ID) {
+        if (this.stations[stnId].constructor.name === 'BranchStationGZ' && this.stations[stnId]._tickRotation === 0) {
+            return 0.25;
+        } else {
+            return 0;
+        }
+    }
+
+    _leftWideFactor(stnId: ID) {
+        if (this.stations[stnId].constructor.name === 'BranchStationGZ' && this.stations[stnId]._tickRotation !== 0) {
+            return 0.5;
+        } else {
+            return 0;
+        }
+    }
+
+    _pathWeight(stnId1: ID, stnId2: ID) {
+        if (!this.stations[stnId1].children.includes(stnId2)) {return -Infinity;}
+
+        return 1 + this._rightWideFactor(stnId1) + this._leftWideFactor(stnId2);
+        // return 1;
     }
 
     _linePath(stnIds) {
@@ -1767,24 +1807,24 @@ class RMGLineGZ extends RMGLine {
 
         stnIds.forEach(stnId => {
             var [x,y] = ['_stnRealX', '_stnRealY'].map(fun => this[fun](stnId));
-            if (!prevY) {
+            if (!prevY && prevY !== 0) {
                 [prevId, prevX, prevY] = [stnId, x, y];
                 path.push(`M ${x},${y}`);
                 return;
             }
             if (y === this.y) {
                 if (y < prevY) {
-                    path.push(`H ${x-15}`, 'a 15,15 0 0,0 15,-15', `V ${y}`)
+                    path.push(`H ${x-25}`, 'a 25,25 0 0,0 25,-25', `V ${y}`)
                 }
                 if (y > prevY) {
-                    path.push(`H ${x-15}`, 'a 15,15 0 0,1 15,15', `V ${y}`)
+                    path.push(`H ${x-25}`, 'a 25,25 0 0,1 25,25', `V ${y}`)
                 }
             } else {
                 if (y < prevY) {
-                    path.push(`V ${y+15}`, 'a 15,15 0 0,1 15,-15', `H ${x}`)
+                    path.push(`V ${y+25}`, 'a 25,25 0 0,1 25,-25', `H ${x}`)
                 }
                 if (y > prevY) {
-                    path.push(`V ${y-15}`, 'a 15,15 0 0,0 15,15', `H ${x}`)
+                    path.push(`V ${y-25}`, 'a 25,25 0 0,0 25,25', `H ${x}`)
                 }
             }
             // if (y != prevY && y == this.y) {
@@ -1886,11 +1926,11 @@ class RMGLineGZ extends RMGLine {
             $('#line_name text').addClass('rmg-name__gzmtr--white-fg');
         }
 
-        var lineNameX = this._direction=='r' ? this.lineXs[0]-60 : this.lineXs[1]+60;
+        var lineNameX = this._direction=='r' ? this.lineXs[0]-65 : this.lineXs[1]+65;
 
         $('#line_name')
             .attr({
-                transform: `translate(${lineNameX},${this.y-14.4})scale(1.2)`
+                transform: `translate(${lineNameX},${this.y-18})scale(1.5)`
             })
     }
 
@@ -1919,7 +1959,7 @@ class RMGLineGZ extends RMGLine {
 
         this.loadLineNum();
 
-        if (this.stations[this._currentStnId].parents.includes(stnId) || this.stations[this._currentStnId].parents.includes(stnId)) {
+        if (this.stations[this._currentStnId].parents.includes(stnId) || this.stations[this._currentStnId].children.includes(stnId)) {
             this.drawDestInfo();
             this.loadFonts();
         }
@@ -1953,25 +1993,81 @@ class RMGLineGZ extends RMGLine {
                         $('<tspan>', { x:0, dy:40, 'alignment-baseline':'middle' }).text(this.stations[this._currentStnId].name[1].split('\\')[1] || '')
                     )
             );
+        
+        $('#terminus_gz').attr('transform', `translate(${this._svgWidth/2},100)`);
 
-        var nextStnId = this._direction==='l' ? this.stations[this._currentStnId].parents[0] : this.stations[this._currentStnId].children[0];
-        if (['linestart', 'lineend'].includes(nextStnId)) {
-            $('#station_info_gzmtr #big_next').hide();
+        let nextStnId = this
+            .stations[this._currentStnId][this._direction === 'l' ? 'parents' : 'children']
+            .filter(stnId => {
+                let branchTmp = this.stations[this._currentStnId].branch[this._direction === 'l' ? 'left' : 'right']
+                if (branchTmp.length) {
+                    return true;
+                    // return branchTmp[0] === 'through' ? true : stnId !== branchTmp[1];
+                } else {
+                    return true;
+                }
+            });
+
+        if (['linestart', 'lineend'].includes(nextStnId[0])) {
+            $('#station_info_gzmtr').find('#big_next, #big_next_2').hide();
             $('#station_info_gzmtr > use').eq(0).hide();
             $('#line_main, #line_pass, #line_name, #stn_icons, #direction_gz').hide();
             $('#terminus_gz').show();
         } else {
-            $('#station_info_gzmtr #big_next').show();
+            if (nextStnId.length === 1) {
+                $('#station_info_gzmtr #big_next').show();
+                $('#station_info_gzmtr #big_next_2').hide();
+            } else {
+                $('#station_info_gzmtr #big_next').hide();
+                $('#station_info_gzmtr #big_next_2').show();
+            }
             $('#station_info_gzmtr > use').eq(0).show();
             $('#line_main, #line_pass, #line_name, #stn_icons, #direction_gz').show();
             $('#terminus_gz').hide();
         }
-        var nextStnInfo = this.stations[nextStnId];
-        var [nextNameZH, nextNameEN] = nextStnInfo.name;
 
-        $('#station_info_gzmtr #big_next g:nth-child(2) text').eq(0).text(nextNameZH);
-        $('#station_info_gzmtr #big_next g:nth-child(2) text').eq(1).text(nextNameEN.split('\\')[0])
-            .append($('<tspan>', { x:0, dy:17, 'alignment-baseline':'middle' }).text(nextNameEN.split('\\')[1] || ''));
+        let [nextNameZH, nextNameEN] = ['', ''];
+        let nextNameZHCount = 0;
+        if (nextStnId.length === 1) {
+            var nextStnInfo = this.stations[nextStnId[0]];
+            [nextNameZH, nextNameEN] = nextStnInfo.name;
+            nextNameZHCount = nextNameZH.length;
+
+            $('#station_info_gzmtr #big_next g:nth-child(2) text').eq(0).text(nextNameZH);
+            $('#station_info_gzmtr #big_next g:nth-child(2) text').eq(1).text(nextNameEN.split('\\')[0])
+                .append($('<tspan>', { x:0, dy:17, 'alignment-baseline':'middle' }).text(nextNameEN.split('\\')[1] || ''));
+        } else {
+            nextStnId.forEach((stnId, idx) => {
+                let nextStnInfo = this.stations[stnId];
+                [nextNameZH, nextNameEN] = nextStnInfo.name;
+                if (nextNameZH.length > nextNameZHCount) {
+                    nextNameZHCount = nextNameZH.length;
+                }
+
+                $(`#station_info_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(2).text(nextNameZH);
+                $(`#station_info_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(3).text(nextNameEN.split('\\')[0])
+                    .append($('<tspan>', { x:0, dy:13, 'alignment-baseline':'middle' }).text(nextNameEN.split('\\')[1] || ''));
+
+                let validRoutes = this.routes
+                    .filter(route => route.indexOf(stnId) !== -1)
+                    .map(route => route.filter(s => s !== 'linestart' && s !== 'lineend'));
+                let validEnds: ID[];
+                if (this._direction === 'l') {
+                    validEnds = Array.from(
+                        new Set(validRoutes.map(route => route[0]))
+                    ).reverse();
+                } else {
+                    validEnds = Array.from(
+                        new Set(validRoutes.map(route => route.reverse()[0]))
+                    );
+                }
+                $(`#station_info_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(0)
+                    .text(validEnds.map(s => this.stations[s].name[0]).join('/') + '方向');
+                $(`#station_info_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(1)
+                    .text('Towards ' + validEnds.map(s => this.stations[s].name[1]).join('/'));
+            });
+        }
+        
         $('#station_info_gzmtr').html($('#station_info_gzmtr').html());
 
         // Position big name
@@ -1982,35 +2078,71 @@ class RMGLineGZ extends RMGLine {
         $('#station_info_gzmtr #big_stn_num')
             .attr('transform', `translate(${(this._svgDestWidth+bigNameDim.width)/2+55},${120 - (this.stations[this._currentStnId].name[1].split('\\').length - 1)*20})scale(1.4)`);
 
-        var bigNextDim = getTxtBoxDim(
-            $('#station_info_gzmtr #big_next g:nth-child(2)')[0] as Element as SVGGraphicsElement,
-            'destination'
-        );
-        var nextNameZHCount = nextNameZH.length;
+        let bigNextDim = {x:0, y:0, width:0, height:0};
+        if (nextStnId.length === 1) {
+            bigNextDim = getTxtBoxDim(
+                $('#station_info_gzmtr #big_next g:nth-child(2)')[0] as Element as SVGGraphicsElement,
+                'destination'
+            );
+        } else {
+            let bigNextDims = [
+                getTxtBoxDim(
+                    $('#station_info_gzmtr #big_next_2 g:nth-child(2)')[0] as Element as SVGGraphicsElement,
+                    'destination'
+                ), 
+                getTxtBoxDim(
+                    $('#station_info_gzmtr #big_next_2 g:nth-child(4)')[0] as Element as SVGGraphicsElement,
+                    'destination'
+                )
+            ];
+            if (bigNextDims[0].width > bigNextDims[1].width) {
+                bigNextDim = bigNextDims[0];
+            } else {
+                bigNextDim = bigNextDims[1];
+            }
+        }
+        // var nextNameZHCount = nextNameZH.length;
 
         if (this._direction == 'l') {
             $('#station_info_gzmtr #platform').attr('transform', `translate(${this._svgDestWidth-100},120)`);
-
-            if (nextNameZHCount <= 2) {
-                $('#station_info_gzmtr #big_next g:nth-child(2)').attr('transform', `translate(${115+35},110)`);
-                $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(115+35*(1+nextNameZHCount)+bigNameDim.x)/2-20},120)scale(0.25)`);
+            if (nextStnId.length === 1) {
+                if (nextNameZHCount <= 2) {
+                    $('#station_info_gzmtr #big_next g:nth-child(2)').attr('transform', `translate(${115+35},110)`);
+                    $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(115+35*(1+nextNameZHCount)+bigNameDim.x)/2-20},120)scale(0.25)`);
+                } else {
+                    $('#station_info_gzmtr #big_next g:nth-child(2)').attr('transform', `translate(${115+35*0.5},110)`);
+                    $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(115+35*(0.5+nextNameZHCount)+bigNameDim.x)/2-20},120)scale(0.25)`);
+                }
             } else {
-                $('#station_info_gzmtr #big_next g:nth-child(2)').attr('transform', `translate(${115+35*0.5},110)`);
-                $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(115+35*(0.5+nextNameZHCount)+bigNameDim.x)/2-20},120)scale(0.25)`);
+                $('#station_info_gzmtr #big_next_2 g:nth-child(2)').attr('transform', `translate(113,80)`);
+                $('#station_info_gzmtr #big_next_2 g:nth-child(4)').attr('transform', `translate(113,190)`);
+                $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(99+27*(1+nextNameZHCount)+bigNameDim.x)/2-20},120)scale(0.25)`);
             }
 
             $('#station_info_gzmtr #big_next g:first-child').attr('transform', `translate(80,110)`);
+            $('#station_info_gzmtr #big_next_2 g:first-child').attr('transform', `translate(72,80)`);
+            $('#station_info_gzmtr #big_next_2 g:nth-child(3)').attr('transform', `translate(72,190)`);
         } else {
             $('#station_info_gzmtr #platform').attr('transform', `translate(100,120)`);
 
-            $('#station_info_gzmtr #big_next g:nth-child(2)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width},110)`);
+            if (nextStnId.length === 1) {
+                $('#station_info_gzmtr #big_next g:nth-child(2)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width},110)`);
 
-            if (nextNameZHCount <= 2) {
-                $('#station_info_gzmtr #big_next g:first-child').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-70},110)`);
-                $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this._svgDestWidth-45-bigNextDim.width-70-35+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
+                if (nextNameZHCount <= 2) {
+                    $('#station_info_gzmtr #big_next g:first-child').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-70},110)`);
+                    $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this._svgDestWidth-45-bigNextDim.width-70-35+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
+                } else {
+                    $('#station_info_gzmtr #big_next g:first-child').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-35*1.5},110)`);
+                    $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this._svgDestWidth-45-bigNextDim.width-35*2.5+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
+                }
             } else {
-                $('#station_info_gzmtr #big_next g:first-child').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-35*1.5},110)`);
-                $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this._svgDestWidth-45-bigNextDim.width-35*2.5+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
+                $('#station_info_gzmtr #big_next_2 g:nth-child(2)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width},80)`);
+                $('#station_info_gzmtr #big_next_2 g:nth-child(4)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width},190)`);
+
+                $('#station_info_gzmtr #big_next_2 g:first-child').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-41},80)`);
+                $('#station_info_gzmtr #big_next_2 g:nth-child(3)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-41},190)`);
+
+                $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this._svgDestWidth-45-bigNextDim.width-41-27+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
             }
         }
 

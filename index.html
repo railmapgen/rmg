@@ -194,12 +194,13 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
 
         .rmg-name__zh.rmg-name__gzmtr--dest {font-size: 90px;}
         .rmg-name__en.rmg-name__gzmtr--dest {font-size: 36px;}
-        .rmg-name__zh.rmg-name__gzmtr--next {
-            font-size: 35px;
-        }
-        .rmg-name__en.rmg-name__gzmtr--next {
-            font-size: 17px;
-        }
+        
+        .rmg-name__zh.rmg-name__gzmtr--next {font-size: 35px;}
+        .rmg-name__en.rmg-name__gzmtr--next {font-size: 17px;}
+        .rmg-name__zh.rmg-name__gzmtr--next2 {font-size: 27px;}
+        .rmg-name__en.rmg-name__gzmtr--next2 {font-size: 13px;}
+        .rmg-name__zh.rmg-name__gzmtr--next2-dest {font-size: 18.5px;}
+        .rmg-name__en.rmg-name__gzmtr--next2-dest {font-size: 8.5px;}
 
         .rmg-name__zh.rmg-name__gzmtr--platform {
             font-size: 13px;
@@ -286,7 +287,28 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
                 <text class="rmg-name__zh rmg-name__gzmtr--next"></text>
                 <text class="rmg-name__en rmg-name__gzmtr--next" dy="30"></text>
             </g>
-            
+        </g>
+        <g id="big_next_2" gzmtr-specific>
+            <g text-anchor="middle">
+                <text class="rmg-name__zh rmg-name__gzmtr--next2">下站</text>
+                <text class="rmg-name__en rmg-name__gzmtr--next2" y="22">Next</text>
+            </g>
+            <g text-anchor="start">
+                <text class="rmg-name__zh rmg-name__gzmtr--next2-dest" y="-35">方向</text>
+                <text class="rmg-name__en rmg-name__gzmtr--next2-dest" y="-20">Towards</text>
+                <text class="rmg-name__zh rmg-name__gzmtr--next2">石牌桥</text>
+                <text class="rmg-name__en rmg-name__gzmtr--next2" y="22">Shipaiqiao</text>
+            </g>
+            <g text-anchor="middle">
+                <text class="rmg-name__zh rmg-name__gzmtr--next2">下站</text>
+                <text class="rmg-name__en rmg-name__gzmtr--next2" y="22">Next</text>
+            </g>
+            <g text-anchor="start">
+                <text class="rmg-name__zh rmg-name__gzmtr--next2-dest" y="-35">方向</text>
+                <text class="rmg-name__en rmg-name__gzmtr--next2-dest" y="-20">Towards</text>
+                <text class="rmg-name__zh rmg-name__gzmtr--next2">林和西</text>
+                <text class="rmg-name__en rmg-name__gzmtr--next2" y="22">Linhexi</text>
+            </g>
         </g>
         <use xlink:href="#arrow"/>
         <g id="platform">
@@ -415,21 +437,26 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
     <rect id="outer" x="0" y="0" fill="white" stroke="none"/>
     
-    <g class="rmg-line rmg-line__mtr rmg-line__pass" id="line_pass"></g>
-    <g class="rmg-line rmg-line__mtr" id="line_main"></g>
-
     <path id="strip" class="Strip"/>
 
-    <rect id="current_bg" x="0" y="0" width="100" height="20" fill="#000"/>
-    <g id="line_name" text-anchor="middle" style="display: none;" gzmtr-specific>
-        <use xlink:href="#intbox_gz"/>
-        <text y="8.5">
-            <tspan font-size="16px" class="rmg-name__zh"></tspan><!--
-         --><tspan dy="-0.5" class="rmg-name__zh rmg-name__gzmtr--int"></tspan>
-        </text>
-        <text y="19.5" class="rmg-name__en rmg-name__gzmtr--int"></text>
+    <g id="main">
+        <g class="rmg-line rmg-line__mtr rmg-line__pass" id="line_pass"></g>
+        <g class="rmg-line rmg-line__mtr" id="line_main"></g>
+
+        <rect id="current_bg" x="0" y="0" width="100" height="20" fill="#000"/>
+
+        <g id="line_name" text-anchor="middle" style="display: none;" gzmtr-specific>
+            <use xlink:href="#intbox_gz"/>
+            <text y="8.5">
+                <tspan font-size="16px" class="rmg-name__zh"></tspan><!--
+             --><tspan dy="-0.5" class="rmg-name__zh rmg-name__gzmtr--int"></tspan>
+            </text>
+            <text y="19.5" class="rmg-name__en rmg-name__gzmtr--int"></text>
+        </g>
+    
+        <g id="stn_icons"></g>
     </g>
-    <g id="stn_icons"></g>
+    
 
     <g id="direction_gz" style="display: none;" gzmtr-specific>
         <use xlink:href="#arrow"/>
@@ -439,8 +466,13 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
         </g>
     </g>
 
-    <g id="terminus_gz" style="display: none;">
-        <text x="300" y="150" font-size="90">终点站模板</text>
+    <g id="terminus_gz" style="display: none;" text-anchor="middle">
+        <text class="rmg-name__zh rmg-name__gzmtr--dest">终 点 站</text>
+        <text dy="70" class="rmg-name__en rmg-name__gzmtr--dest">Terminal</text>
+        <g stroke-width="8" stroke="#000">
+            <path d="M -160,68 h -160"/>
+            <path d="M 160,68 h 160"/>
+        </g>
     </g>
 </svg>
 </div>
@@ -1124,7 +1156,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
       <div class="mdc-dialog__content">
         <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
             <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="gz_1" data-mdc-auto-init="MDCRipple">
-                <span class="mdc-list-item__text" trans-tag="Design.PanelType.GZ1"></span>
+                <span class="mdc-list-item__text" trans-tag="Design.PanelType.Panasonic"></span>
             </li>
             <li class="mdc-list-item" data-mdc-dialog-action="gz_2" data-mdc-auto-init="MDCRipple">
                 <span class="mdc-list-item__text" trans-tag="Design.PanelType.GZ2"></span>
@@ -2002,6 +2034,8 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
         }
     });
 
+    import { test } from './built/utils.js';
+    window.test = test;
 </script>
 
 </body>
