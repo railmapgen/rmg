@@ -15,9 +15,9 @@ The core modules of this project consist of 2 parts - drawing SVG and providing 
 
 **Drawing SVG**
 
-`/src/Station/` [(README)](tree/master/Station) - Classes for calculating all properties of station icon including name, interchange, position etc., in different styles. The base-class is `RMGStation` (default for MTR style) and all other classes inherit from `RMGStation` (e.g. `Int2Station`, `RMGStationGZ`, etc.). 
+`/src/Station/` [(README)](tree/master/src/Station) - Classes for calculating all properties of station icon including name, interchange, position etc., in different styles. The base-class is `RMGStation` (default for MTR style) and all other classes inherit from `RMGStation` (e.g. `Int2Station`, `RMGStationGZ`, etc.). 
 
-`/src/Line/` [(README)](tree/master/src/Line) - Classes for drawing line and stations (with properties calculated from `Station.ts`) in different styles. The base-class is `Line` which is default for MTR and `LineGZ` is for Guangzhou Metro. 
+`/src/Line/` [(README)](tree/master/src/src/Line) - Classes for drawing line and stations (with properties calculated from `Station.ts`) in different styles. The base-class is `Line` which is default for MTR and `LineGZ` is for Guangzhou Metro. 
 
 `index.html` - Styles and elements that are used repeatedly are defined in `<style>` and `<def>`. 
 
