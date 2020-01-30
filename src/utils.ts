@@ -245,7 +245,7 @@ export function updateParam() {
 
     // Version 1.4
     if (!('info_panel_type' in param)) {
-        param.info_panel_type = 'gz_1';
+        param.info_panel_type = 'panasonic';
     }
 
     // Version 1.5
@@ -259,11 +259,16 @@ export function updateParam() {
     }
 
    // Version 2.1
-   for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
-       if (!('interchange' in stnInfo)) {
-           param.stn_list[stnId].interchange = [[]];
-       }
-   } 
+    for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
+        if (!('interchange' in stnInfo)) {
+            param.stn_list[stnId].interchange = [[]];
+        }
+    }
+
+    // Version 2.2
+    if (param.info_panel_type === 'gz_1') {
+        param.info_panel_type = 'panasonic';
+    }
     putParams(param);
 }
 

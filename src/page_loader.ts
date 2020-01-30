@@ -1,5 +1,5 @@
 import { getTransText, getParams, putParams, describeParams, countryCode2Emoji, test, StationInfo } from './utils.js';
-import { RMGLine } from './Line.js';
+import { RMGLine } from './Line/Line.js';
 
 import { ID } from './utils.js';
 // import { MDCTextField } from '@material/textfield';

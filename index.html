@@ -98,10 +98,18 @@
             fill: none;
             stroke-width: 20;
         }
-        .rmg-strip__gzmtr--1 {
+        .rmg-strip__gzmtr--panasonic {
+            fill: none;
+            stroke-width: 60;
+        }
+        .rmg-strip__gzmtr--gz_2 {
             fill: none;
             stroke-width: 60;
         } 
+        .rmg-strip__gzmtr--gz_3 {
+            fill: none;
+            stroke-width: 40;
+        }
 
         .rmg-name__zh {alignment-baseline:central;}
         .rmg-name__en {alignment-baseline:middle;}
@@ -183,12 +191,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink"
 id="destination" width="0" height="0" style="border: 1px solid black;">
 
     <style type="text/css">
-        .rmg-indicator__gzmtr--1 {
-            fill:orange;
-        }
-        .rmg-indicator__gzmtr--2 {
-            fill:whitesmoke;
-        }
         .rmg-name__zh.rmg-name__mtr--dest {font-size: 90px;}
         .rmg-name__en.rmg-name__mtr--dest {font-size: 45px;}
 
@@ -254,16 +256,18 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
     <defs>
         <path id="arrow" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
 
-        <ellipse id="indicator_gz_1" rx="24" ry="12" class="rmg-indicator__gzmtr--1"/>
-        <ellipse id="indicator_gz_2" rx="24" ry="12" class="rmg-indicator__gzmtr--2"/>
+        <ellipse id="indicator_panasonic" rx="24" ry="12" fill="orange"/>
+        <ellipse id="indicator_gz_2" rx="24" ry="12" fill="white"/>
+        <rect id="indicator_gz_3" x="0" y="-25" height="30" width="30" fill="red"/>
 
-        <rect id="psd" height="40" width="40" rx="4" fill="white"/>
+        <rect id="psd" height="40" width="40" rx="4"/>
         <path id="stn_gz" fill="#fff" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
     </defs>
 
     <rect id="dest_outer" x="0" y="0" fill="white" stroke="none"/>
 
-    <path id="dest_strip" class="Strip"/>
+    <path id="dest_strip" class="Strip" style="display: none;" mtr-specific/>
+    <rect id="dest_strip_gz" style="display: none;" gzmtr-specific/>
 
     <g id="dest_name" style="display: none;" mtr-specific>
         <use xlink:href="#arrow"/>
@@ -296,8 +300,8 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
             <g text-anchor="start">
                 <text class="rmg-name__zh rmg-name__gzmtr--next2-dest" y="-35">方向</text>
                 <text class="rmg-name__en rmg-name__gzmtr--next2-dest" y="-20">Towards</text>
-                <text class="rmg-name__zh rmg-name__gzmtr--next2">石牌桥</text>
-                <text class="rmg-name__en rmg-name__gzmtr--next2" y="22">Shipaiqiao</text>
+                <text class="rmg-name__zh rmg-name__gzmtr--next2"></text>
+                <text class="rmg-name__en rmg-name__gzmtr--next2" y="22"></text>
             </g>
             <g text-anchor="middle">
                 <text class="rmg-name__zh rmg-name__gzmtr--next2">下站</text>
@@ -306,8 +310,8 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
             <g text-anchor="start">
                 <text class="rmg-name__zh rmg-name__gzmtr--next2-dest" y="-35">方向</text>
                 <text class="rmg-name__en rmg-name__gzmtr--next2-dest" y="-20">Towards</text>
-                <text class="rmg-name__zh rmg-name__gzmtr--next2">林和西</text>
-                <text class="rmg-name__en rmg-name__gzmtr--next2" y="22">Linhexi</text>
+                <text class="rmg-name__zh rmg-name__gzmtr--next2"></text>
+                <text class="rmg-name__en rmg-name__gzmtr--next2" y="22"></text>
             </g>
         </g>
         <use xlink:href="#arrow"/>
@@ -437,7 +441,8 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
     <rect id="outer" x="0" y="0" fill="white" stroke="none"/>
     
-    <path id="strip" class="Strip"/>
+    <path id="strip" class="Strip" style="display: none;" mtr-specific/>
+    <rect id="strip_gz" style="display: none;" gzmtr-specific/>
 
     <g id="main">
         <g class="rmg-line rmg-line__mtr rmg-line__pass" id="line_pass"></g>
@@ -1155,11 +1160,14 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
       <h2 class="mdc-dialog__title" trans-tag="Design.PanelType.Title"></h2>
       <div class="mdc-dialog__content">
         <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
-            <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="gz_1" data-mdc-auto-init="MDCRipple">
+            <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="panasonic" data-mdc-auto-init="MDCRipple">
                 <span class="mdc-list-item__text" trans-tag="Design.PanelType.Panasonic"></span>
             </li>
             <li class="mdc-list-item" data-mdc-dialog-action="gz_2" data-mdc-auto-init="MDCRipple">
                 <span class="mdc-list-item__text" trans-tag="Design.PanelType.GZ2"></span>
+            </li>
+            <li class="mdc-list-item" data-mdc-dialog-action="gz_3" data-mdc-auto-init="MDCRipple">
+                <span class="mdc-list-item__text" trans-tag="Design.PanelType.GZ3"></span>
             </li>
         </ul>
       </div>
@@ -1955,50 +1963,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 </script>
 
 <script async src="built/lang.js"></script>
-
-<script type="module">
-    import { RMGLine, RMGLineGZ } from './built/Line.js';
-    import { updateParam, getParams } from './built/utils.js';
-    var template = 'blank';
-    window.RMGLine = RMGLine;
-    // localStorage.rmgParam = 'abc';
-    var lineClass;
-    if (localStorage.rmgParam != null) {
-        try {
-            updateParam();
-            var param = getParams();
-            lineClass = (style => {switch (style) {
-                case 'mtr':
-                    return RMGLine;
-                case 'gzmtr':
-                    return RMGLineGZ;
-            }})(window.urlParams.get('style'));
-            myLine = new lineClass(param);
-            lineClass.initSVG(myLine);
-
-        } catch (err) {
-            $('#init_err_diag #err_stack').html(err + '<br>' + err.stack.replace(/\n/g, '<br>'));
-            $('#init_err_diag')[0].MDCDialog.open();
-            console.error(err);
-        }
-        
-    } else {
-        $.getJSON(`templates/${template}.json`, data => {
-            localStorage.rmgParam = JSON.stringify(data);
-            updateParam();
-            var param = getParams();
-            lineClass = (style => {switch (style) {
-                case 'mtr':
-                    return RMGLine;
-                case 'gzmtr':
-                    return RMGLineGZ;
-            }})(window.urlParams.get('style'));
-            myLine = new lineClass(param);
-            lineClass.initSVG(myLine);
-        });
-    }
-
-</script>
+<script type="module" src="built/Line/init.js"></script>
 
 <script type="module">
     import { initLayoutPanel, initDesignPanel, initStationsPanel, initBranchesPanel, initInfoPanel } from './built/page_loader.js';

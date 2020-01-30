@@ -12,7 +12,7 @@ interface StationDictGZ {
 }
 
 class RMGLine {
-    private _svgHeight: number;
+    protected _svgHeight: number;
     protected _svgWidth: number;
     protected _svgDestWidth: number;
     private _showOuter: boolean;
@@ -599,6 +599,8 @@ class RMGLine {
             width: this._svgDestWidth, 
             height: this._svgHeight
         });
+        $('#dest_strip_gz').attr('width', this._svgDestWidth);
+        $('#strip_gz').attr('width', this._svgWidth);
     }
 
     showFrameOuter() {
@@ -1736,6 +1738,10 @@ class RMGLineGZ extends RMGLine {
         this._infoPanelType = val;
         setParams('info_panel_type', val);
         $('#station_info_gzmtr #indicator_light').attr('xlink:href', '#indicator_'+val);
+        // $('#dest_strip, #strip').removeAttr('class').addClass(`rmg-strip__gzmtr--${this._infoPanelType}`);
+        this.drawStrip();
+        this.fillThemeColour();
+        this.drawPSD();
     }
 
     _stnYShare(stnId) {
@@ -1772,8 +1778,23 @@ class RMGLineGZ extends RMGLine {
 
     drawStrip() {
         // $('#strip, #dest_strip').attr('d', `M 0,${this.stripY} H ${this._svgWidth}`)
-        super.drawStrip();
-        $('.Strip').removeClass('.Strip').addClass('rmg-strip__gzmtr--1');
+        // super.drawStrip();
+        // $('#dest_strip, #strip').removeAttr('class').addClass(`rmg-strip__gzmtr--${this._infoPanelType}`);
+        // $('#dest_strip_gz')
+        switch (this._infoPanelType) {
+            case 'panasonic':
+            case 'gz_2':
+                $('#dest_strip_gz, #strip_gz').attr({
+                    y: this._svgHeight - 60, 
+                    height: 60
+                });
+                break;
+            case 'gz_3':
+                $('#dest_strip_gz, #strip_gz').attr({
+                    y: this._svgHeight - 40, 
+                    height: 40
+                });
+        }
     }
 
     _rightWideFactor(stnId: ID) {
@@ -1855,6 +1876,19 @@ class RMGLineGZ extends RMGLine {
 
     fillThemeColour() {
         super.fillThemeColour();
+        $('#dest_strip_gz, #strip_gz').attr('fill', this._themeColour);
+        if (this._infoPanelType === 'gz_3') {
+            $('#big_psd use').attr('fill', this._themeColour);
+            if (this._fgColour === '#fff') {
+                $('#big_psd text').addClass('rmg-name__gzmtr--white-fg');
+            } else {
+                $('#big_psd text').removeClass('rmg-name__gzmtr--white-fg');
+            }
+        } else {
+            $('#big_psd use').attr('fill', 'white');
+            $('#big_psd text').removeClass('rmg-name__gzmtr--white-fg');
+        }
+
         $('path#stn_gz').attr('stroke', this._themeColour);
         $('#station_info_gzmtr > #platform > circle').attr('fill', this._themeColour);
         $('#line_name use').attr('fill', this._themeColour);
@@ -2150,7 +2184,12 @@ class RMGLineGZ extends RMGLine {
             x:this._svgDestWidth/2, y:270, 
             'xlink:href': '#indicator_' + this._infoPanelType
         });
-        $('#station_info_gzmtr #big_psd').attr('transform', `translate(${this._svgDestWidth/2+80},242)`);
+        
+        this.drawPSD();
+    }
+
+    drawPSD() {
+        $('#station_info_gzmtr #big_psd').attr('transform', `translate(${this._svgDestWidth/2+80},${this._infoPanelType === 'gz_3' ? 218 : 242})`);
     }
 
     addStn(prep, stnId, loc, end) {

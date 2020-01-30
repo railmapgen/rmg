@@ -110,9 +110,9 @@
     {
         "id": "mol",
         "name": {
-            "en": "Ma On Shan Line", 
-            "zh-Hans": "马鞍山线",
-			"zh-Hant": "馬鞍山綫"
+            "en": "Tuen Ma Line Phase 1", 
+            "zh-Hans": "屯马线一期",
+			"zh-Hant": "屯馬綫一期"
 		},
         "colour": "#9A3820"
     },

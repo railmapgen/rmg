@@ -1,5 +1,5 @@
 import { getTransText, getParams, putParams, describeParams, countryCode2Emoji, test } from './utils.js';
-import { RMGLine } from './Line.js';
+import { RMGLine } from './Line/Line.js';
 export function initLayoutPanel() {
     Promise.resolve(getParams())
         .then(param => {
