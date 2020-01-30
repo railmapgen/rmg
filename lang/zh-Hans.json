@@ -63,6 +63,7 @@
     "Design.PanelType.Title": "选择信息面板样式", 
     "Design.PanelType.Panasonic": "松下", 
     "Design.PanelType.GZ2": "II型", 
+    "Design.PanelType.GZ3": "III型", 
 
     "Design.Char": "汉字字形",
     "Design.Char.Title": "选择字形",
