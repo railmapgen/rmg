@@ -267,7 +267,24 @@ export function updateParam() {
 
     // Version 2.2
     if (param.info_panel_type === 'gz_1') {
-        param.info_panel_type = 'panasonic';
+        param.info_panel_type = 'gz28';
+    }
+
+    // Version 2.3
+    if (param.info_panel_type === 'panasonic') {
+        param.info_panel_type = 'gz28';
+    }
+    if (param.info_panel_type === 'gz_2') {
+        param.info_panel_type = 'gzgf';
+    }
+    if (param.info_panel_type === 'gz_3') {
+        param.info_panel_type = 'gz3';
+    }
+    if (!('direction_gz_x' in param)) {
+        param.direction_gz_x = 50;
+    }
+    if (!('direction_gz_y' in param)) {
+        param.direction_gz_y = 70;
     }
     putParams(param);
 }

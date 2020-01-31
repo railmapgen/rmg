@@ -2,7 +2,6 @@ import { getTransText, getParams, putParams, describeParams, countryCode2Emoji, 
 import { RMGLine } from './Line/Line.js';
 
 import { ID } from './utils.js';
-// import { MDCTextField } from '@material/textfield';
 
 declare global {
     interface Window {
@@ -18,6 +17,9 @@ export function initLayoutPanel() {
             $('#y_pc')[0].MDCSlider.value = param.y_pc;
             $('#branch_spacing')[0].MDCSlider.value = param.branch_spacing;
             $('#padding')[0].MDCSlider.value = param.padding;
+
+            $('#direction_gz_x')[0].MDCSlider.value = param.direction_gz_x;
+            $('#direction_gz_y')[0].MDCSlider.value = param.direction_gz_y;
         })
 
     $('#svg_dest_width > input').on('input', event => {
@@ -39,6 +41,14 @@ export function initLayoutPanel() {
     $('#padding')[0].MDCSlider.listen('MDCSlider:input', event => {
         window.myLine.padding = event.target.MDCSlider.value;
     });
+
+    $('#direction_gz_x')[0].MDCSlider.listen('MDCSlider:input', event => {
+        window.myLine.directionGZX = Number(event.target.MDCSlider.value);
+    });
+
+    $('#direction_gz_y')[0].MDCSlider.listen('MDCSlider:input', event => {
+        window.myLine.directionGZY = Number(event.target.MDCSlider.value);
+    });
 }
 
 export function initDesignPanel() {
@@ -50,7 +60,7 @@ export function initDesignPanel() {
         (getParams().direction == 'r') ? 'Right' : 'Left'
     );
 
-    $('#panel_design #design_list_mtr li:nth-child(1) .mdc-list-item__secondary-text').html(
+    $('#panel_design #design_list_mtr li:nth-child(2) .mdc-list-item__secondary-text').html(
         $(`#design_char_diag ul [data-mdc-dialog-action="${getParams().char_form}"] span`).html()
     );
 
@@ -72,9 +82,6 @@ export function initDesignPanel() {
                 }
                 break;
             case 4:
-                window.myLine.txtFlip = !getParams().txt_flip;
-                break;
-            case 5:
                 window.myLine.reverseStns();
                 break;
         }
@@ -83,6 +90,9 @@ export function initDesignPanel() {
     $('#design_list_mtr')[0].MDCList.listen('MDCList:action', event => {
         switch (event.detail.index) {
             case 0:
+                window.myLine.txtFlip = !getParams().txt_flip;
+                break;
+            case 1:
                 $('#design_char_diag')[0].MDCDialog.open();
                 break;
         }
@@ -195,7 +205,7 @@ export function initDesignPanel() {
         if (event.detail.action == 'close') {return;}
 
         window.myLine.charForm = event.detail.action;
-        $('#panel_design #design_list_mtr li:nth-child(1) .mdc-list-item__secondary-text').html(
+        $('#panel_design #design_list_mtr li:nth-child(2) .mdc-list-item__secondary-text').html(
             $(`#design_char_diag ul [data-mdc-dialog-action="${event.detail.action}"] span`).html()
         );
     });

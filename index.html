@@ -30,6 +30,7 @@
         switch (urlParams.get('style')) {
             case 'mtr':
             case 'gzmtr':
+            case 'szm':
                 break;
             default: urlParams.set('style', 'mtr');
         }
@@ -97,18 +98,6 @@
         .Strip {
             fill: none;
             stroke-width: 20;
-        }
-        .rmg-strip__gzmtr--panasonic {
-            fill: none;
-            stroke-width: 60;
-        }
-        .rmg-strip__gzmtr--gz_2 {
-            fill: none;
-            stroke-width: 60;
-        } 
-        .rmg-strip__gzmtr--gz_3 {
-            fill: none;
-            stroke-width: 40;
         }
 
         .rmg-name__zh {alignment-baseline:central;}
@@ -204,15 +193,6 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
         .rmg-name__zh.rmg-name__gzmtr--next2-dest {font-size: 18.5px;}
         .rmg-name__en.rmg-name__gzmtr--next2-dest {font-size: 8.5px;}
 
-        .rmg-name__zh.rmg-name__gzmtr--platform {
-            font-size: 13px;
-            text-anchor: middle;
-        }
-        .rmg-name__en.rmg-name__gzmtr--platform {
-            font-size: 9px;
-            text-anchor: middle;
-        }
-
         .rmg-psd-num {
             text-anchor: middle;
             alignment-baseline:central;
@@ -220,14 +200,6 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
         }
         .rmg-psd-num.rmg-psd-num__gzmtr {
             font-size: 20px;
-        }
-        .rmg-name__zh.rmg-name__gzmtr--psd {
-            font-size: 12px;
-            text-anchor: middle;
-        }
-        .rmg-name__en.rmg-name__gzmtr--psd {
-            font-size: 6.5px;
-            text-anchor: middle;
         }
 
         .rmg-platform-num {
@@ -256,9 +228,10 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
     <defs>
         <path id="arrow" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
 
-        <ellipse id="indicator_panasonic" rx="24" ry="12" fill="orange"/>
-        <ellipse id="indicator_gz_2" rx="24" ry="12" fill="white"/>
-        <rect id="indicator_gz_3" x="0" y="-25" height="30" width="30" fill="red"/>
+        <ellipse id="indicator_gz28" rx="24" ry="12" fill="orange"/>
+        <ellipse id="indicator_gzgf" rx="24" ry="12" fill="white"/>
+        <rect id="indicator_gz3" x="0" y="-25" height="30" width="30" fill="red"/>
+        <ellipse id="indicator_gz1421" cy="-8" rx="24" ry="12" fill="orange"/>
 
         <rect id="psd" height="40" width="40" rx="4"/>
         <path id="stn_gz" fill="#fff" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
@@ -315,11 +288,11 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
             </g>
         </g>
         <use xlink:href="#arrow"/>
-        <g id="platform">
+        <g id="platform" text-anchor="middle">
             <circle cx="0" cy="0" r="30"/>
             <text class="rmg-name__zh rmg-name__platformnum rmg-name__gzmtr--platformnum" dy="-12"></text>
-            <text class="rmg-name__zh rmg-name__gzmtr--platform" dy="10">站台</text>
-            <text class="rmg-name__en rmg-name__gzmtr--platform" dy="21">Platform</text>
+            <text class="rmg-name__zh" font-size="13px" dy="10">站台</text>
+            <text class="rmg-name__en" font-size="9px" dy="21">Platform</text>
         </g>
         <g id="big_stn_num" transform="scale(1.4)">
             <use xlink:href="#stn_gz" class="rmg-stn"/>
@@ -328,11 +301,11 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
         </g>
         <g id="big_name" text-anchor="middle"></g>
         <use id="indicator_light" xlink:href="#"/>
-        <g id="big_psd">
+        <g id="big_psd" text-anchor="middle">
             <use xlink:href="#psd" x="-20"/>
             <text class="rmg-psd-num rmg-psd-num__gzmtr" dy="10"></text>
-            <text class="rmg-name__zh rmg-name__gzmtr--psd" dy="26">屏蔽门</text>
-            <text class="rmg-name__en rmg-name__gzmtr--psd" dy="36">Screen Door</text>
+            <text class="rmg-name__zh" font-size="12px" dy="26">屏蔽门</text>
+            <text class="rmg-name__en" font-size="6.5px" dy="36">Screen Door</text>
         </g>
     </g>
 </svg><!--
@@ -465,7 +438,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
     <g id="direction_gz" style="display: none;" gzmtr-specific>
         <use xlink:href="#arrow"/>
-        <g transform="translate(630,200)" text-anchor="start">
+        <g text-anchor="start">
             <text class="rmg-name__zh rmg-name__gzmtr--direc">方向</text>
             <text class="rmg-name__en rmg-name__gzmtr--direc" dy="22">Towards</text>
         </g>
@@ -774,10 +747,10 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
 <div id="panel_layout" class="panel">
 
-<div class="mdc-layout-grid" style="max-width: 500px;">
+<div class="mdc-layout-grid" style="max-width: 1000px;">
 <div class="mdc-layout-grid__inner">
 
-    <div class="mdc-layout-grid__cell--span-12 mdc-card">
+    <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card" style="max-width: 100%;">
     <ul class="mdc-list mdc-list--two-line mdc-list--avatar-list" data-mdc-auto-init="MDCList">
         <li class="mdc-list-item" tabindex="0" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">panorama_horizontal</span>
@@ -847,6 +820,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             &emsp;&emsp;&emsp;
             <span class="mdc-list-item__meta material-icons" aria-hidden="true">add</span>
         </li>
+        <li role="separator" class="mdc-list-divider"></li>
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">stay_current_landscape</span>
             <span class="mdc-list-item__text" trans-tag="Layout.Padding"></span>
@@ -866,6 +840,47 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             </div>
             &emsp;&emsp;&emsp;
             <span class="mdc-list-item__meta material-icons" aria-hidden="true">add</span>
+        </li>
+    </ul>
+    </div>
+
+    <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card" style="max-width: 100%; display: none;" gzmtr-specific>
+    <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
+        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">open_with</span>
+            <span class="mdc-list-item__text" trans-tag="Layout.Y"></span>
+        </li>
+        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">arrow_left</span>
+            <div id="direction_gz_x" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value" data-mdc-auto-init="MDCSlider">
+                <div class="mdc-slider__track-container">
+                    <div class="mdc-slider__track"></div>
+                </div>
+                <div class="mdc-slider__thumb-container">
+                    <svg class="mdc-slider__thumb" width="21" height="21">
+                        <circle cx="10.5" cy="10.5" r="7.875"></circle>
+                    </svg>
+                <div class="mdc-slider__focus-ring"></div>
+                </div>
+            </div>
+            &emsp;&emsp;&emsp;
+            <span class="mdc-list-item__meta material-icons" aria-hidden="true">arrow_right</span>
+        </li>
+        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">arrow_drop_up</span>
+            <div id="direction_gz_y" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value" data-mdc-auto-init="MDCSlider">
+                <div class="mdc-slider__track-container">
+                    <div class="mdc-slider__track"></div>
+                </div>
+                <div class="mdc-slider__thumb-container">
+                    <svg class="mdc-slider__thumb" width="21" height="21">
+                        <circle cx="10.5" cy="10.5" r="7.875"></circle>
+                    </svg>
+                <div class="mdc-slider__focus-ring"></div>
+                </div>
+            </div>
+            &emsp;&emsp;&emsp;
+            <span class="mdc-list-item__meta material-icons" aria-hidden="true">arrow_drop_down</span>
         </li>
     </ul>
     </div>
@@ -917,10 +932,6 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             </div>
         </li>
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
-            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">swap_vert</span>
-            <span class="mdc-list-item__text-label" trans-tag="Design.FlipName"></span>
-        </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">cached</span>
             <span class="mdc-list-item__text-label" trans-tag="Design.Reverse"></span>
         </li>
@@ -929,6 +940,10 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
     <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card" style="max-width: 100%; display: none;" mtr-specific>
     <ul id="design_list_mtr" class="mdc-list mdc-list--two-line mdc-list--avatar-list" data-mdc-auto-init="MDCList">
+        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">swap_vert</span>
+            <span class="mdc-list-item__text-label" trans-tag="Design.FlipName"></span>
+        </li>
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">font_download</span>
             <span class="mdc-list-item__text">
@@ -1160,14 +1175,17 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
       <h2 class="mdc-dialog__title" trans-tag="Design.PanelType.Title"></h2>
       <div class="mdc-dialog__content">
         <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
-            <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="panasonic" data-mdc-auto-init="MDCRipple">
-                <span class="mdc-list-item__text" trans-tag="Design.PanelType.Panasonic"></span>
+            <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="gz28" data-mdc-auto-init="MDCRipple">
+                <span class="mdc-list-item__text" trans-tag="Design.PanelType.GZ28"></span>
             </li>
-            <li class="mdc-list-item" data-mdc-dialog-action="gz_2" data-mdc-auto-init="MDCRipple">
-                <span class="mdc-list-item__text" trans-tag="Design.PanelType.GZ2"></span>
-            </li>
-            <li class="mdc-list-item" data-mdc-dialog-action="gz_3" data-mdc-auto-init="MDCRipple">
+            <li class="mdc-list-item" data-mdc-dialog-action="gz3" data-mdc-auto-init="MDCRipple">
                 <span class="mdc-list-item__text" trans-tag="Design.PanelType.GZ3"></span>
+            </li>
+            <li class="mdc-list-item" data-mdc-dialog-action="gz1421" data-mdc-auto-init="MDCRipple">
+                <span class="mdc-list-item__text" trans-tag="Design.PanelType.GZ1421"></span>
+            </li>
+            <li class="mdc-list-item" data-mdc-dialog-action="gzgf" data-mdc-auto-init="MDCRipple">
+                <span class="mdc-list-item__text" trans-tag="Design.PanelType.GZGF"></span>
             </li>
         </ul>
       </div>
@@ -1964,44 +1982,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
 <script async src="built/lang.js"></script>
 <script type="module" src="built/Line/init.js"></script>
-
-<script type="module">
-    import { initLayoutPanel, initDesignPanel, initStationsPanel, initBranchesPanel, initInfoPanel } from './built/page_loader.js';
-    var layoutPanelFirstInit = true;
-    var designPanelFirstInit = true;
-    var stationsPanelFirstInit = true;
-    var testPanelFirstInit = true;
-    // var branchesPanelFirstInit = true;
-    var infoPanelFirstInit = true;
-
-    $('#panels .mdc-tab-bar')[0].MDCTabBar.listen('MDCTabBar:activated', event => {
-        $('.panel--active').removeClass('panel--active');
-        $('.panel').eq(event.detail.index).addClass('panel--active');
-
-        if (event.detail.index == 1 && layoutPanelFirstInit) {
-            initLayoutPanel();
-            layoutPanelFirstInit = false;
-        }
-        if (event.detail.index === 1) {
-            $('#panel_layout .mdc-slider').each((_,el) => el.MDCSlider.layout());
-        }
-        if (event.detail.index == 2 && designPanelFirstInit) {
-            initDesignPanel();
-            designPanelFirstInit = false;
-        }
-        if (event.detail.index == 3 && testPanelFirstInit) {
-            initStationsPanel();
-            testPanelFirstInit = false;
-        }
-        if (event.detail.index == 4 && infoPanelFirstInit) {
-            initInfoPanel();
-            infoPanelFirstInit = false;
-        }
-    });
-
-    import { test } from './built/utils.js';
-    window.test = test;
-</script>
+<script type="module" src="built/PageInitialiser/init.js"></script>
 
 </body>
 </html>

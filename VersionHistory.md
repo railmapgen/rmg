@@ -1,11 +1,29 @@
 # Version History
 
+## 2.3 (31 Jan 2020)
+
+### New Features
+
+- Platform screen door indicator of Guangzhou Metro Line 14/21 is available now. Vertical height of the canvas is now sufficient for most of the cases while using this information panel type. 
+- New Templates available. 
+- Added customisation of position of 'Towards' information in Guangzhou Metro style. 
+
+### Known Issues
+
+- 'Next stop' information may be wrong when line includes branches. 
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Updated algorithm for calculating horizontal position of station from line with branches in Guangzhou Metro style. 
+- Updated algorithm for determining position of station name in Guangzhou Metro style. 
+
 ## 2.2 (30 Jan 2020)
 
 ### New Features
 
 - Ma On Shan Line in Hong Kong is changed to Tuen Ma Line Phase 1, which will be open on 14 Feb 2020. 
-- Platform screen door indicator of Guangzhou Metro Line 3 is avaiable now. 
+- Platform screen door indicator of Guangzhou Metro Line 3 is available now. 
 - Simple `README` for some modules are provided. 
 
 ### Known Issues

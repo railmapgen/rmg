@@ -5,9 +5,6 @@ import { RMGLine } from './Line.js';
 
 import { ID, Name, StationInfo, RMGParam } from '../utils.js';
 
-// interface StationDict {
-//     [index: string]: RMGStation;
-// }
 interface StationDictGZ {
     [index: string]: RMGStationGZ;
 }
@@ -16,6 +13,8 @@ class RMGLineGZ extends RMGLine {
     private _psdNum: string;
     private _lineNum: string;
     private _infoPanelType: string;
+    private _directionGZX: number;
+    private _directionGZY: number;
     stations: StationDictGZ;
 
     constructor (param: RMGParam) {
@@ -24,6 +23,8 @@ class RMGLineGZ extends RMGLine {
         this._psdNum = param.psd_num;
         this._lineNum = param.line_num;
         this._infoPanelType = param.info_panel_type;
+        this._directionGZX = param.direction_gz_x;
+        this._directionGZY = param.direction_gz_y;
     }
 
     _initStnInstance(stnId: ID, stnInfo: StationInfo): RMGStation {
@@ -80,12 +81,6 @@ class RMGLineGZ extends RMGLine {
         this.loadLineName();
         this.loadDirection();
     }
-
-    // set yPc(val: number) {
-    //     super.yPc = val;
-    //     // this.loadLineNum();
-    //     // this.loadLineName();
-    // }
 
     set padding(val) {
         super.padding = val;
@@ -162,6 +157,45 @@ class RMGLineGZ extends RMGLine {
         this.drawPSD();
     }
 
+    set directionGZX(val: number) {
+        this._directionGZX = val;
+        setParams('direction_gz_x', val);
+
+        let x = this._svgWidth * this._directionGZX / 100;
+        let y = this._svgHeight * this._directionGZY / 100;
+        $('#direction_gz').attr('transform', `translate(${x},${y})`);
+    }
+
+    set directionGZY(val: number) {
+        this._directionGZY = val;
+        setParams('direction_gz_y', val);
+
+        let x = this._svgWidth * this._directionGZX / 100;
+        let y = this._svgHeight * this._directionGZY / 100;
+        $('#direction_gz').attr('transform', `translate(${x},${y})`);
+    }
+
+    _stnXShare(stnId: ID) {
+        let { criticalPath, branches } = this;
+        let self = this;
+        if (criticalPath.nodes.includes(stnId)) {return super._stnXShare(stnId);}
+        if (this.criticalPath.nodes.join(',') !== branches[0].join(',')) {
+            return super._stnXShare(stnId);
+        } else {
+            let branchWithStn = branches.slice(1).filter(branch => branch.includes(stnId))[0];
+            let lenToLeft = this._cp(branchWithStn[0], stnId).len;
+            let lenToRight = this._cp(stnId, branchWithStn[branchWithStn.length-1]).len;
+
+            if (branches[0].includes(branchWithStn[0]) && branches[0].includes(branchWithStn[branchWithStn.length-1])) {
+                return ( self._stnXShare(branchWithStn[0]) * lenToRight + self._stnXShare(branchWithStn[branchWithStn.length-1]) * lenToLeft ) / (lenToLeft + lenToRight);
+            } else if (branches[0].includes(branchWithStn[0])) {
+                return self._stnXShare(branchWithStn[0]) + lenToLeft;
+            } else {
+                return self._stnXShare(branchWithStn[branchWithStn.length-1]) - lenToRight;
+            }
+        }
+    }
+
     _stnYShare(stnId) {
         if (['linestart', 'lineend'].includes(stnId)) {
             return 0;
@@ -195,24 +229,21 @@ class RMGLineGZ extends RMGLine {
     }
 
     drawStrip() {
-        // $('#strip, #dest_strip').attr('d', `M 0,${this.stripY} H ${this._svgWidth}`)
-        // super.drawStrip();
-        // $('#dest_strip, #strip').removeAttr('class').addClass(`rmg-strip__gzmtr--${this._infoPanelType}`);
-        // $('#dest_strip_gz')
-        switch (this._infoPanelType) {
-            case 'panasonic':
-            case 'gz_2':
-                $('#dest_strip_gz, #strip_gz').attr({
-                    y: this._svgHeight - 60, 
-                    height: 60
-                });
-                break;
-            case 'gz_3':
-                $('#dest_strip_gz, #strip_gz').attr({
-                    y: this._svgHeight - 40, 
-                    height: 40
-                });
-        }
+        let stripHeight = (type => {
+            switch (type) {
+                case 'gz28':
+                case 'gzgf':
+                    return 60;
+                case 'gz3':
+                    return 40;
+                case 'gz1421':
+                    return 20;
+            }
+        })(this._infoPanelType);
+        $('#dest_strip_gz, #strip_gz').attr({
+            y: this._svgHeight - stripHeight, 
+            height: stripHeight
+        });
     }
 
     _rightWideFactor(stnId: ID) {
@@ -253,17 +284,17 @@ class RMGLineGZ extends RMGLine {
             }
             if (y === this.y) {
                 if (y < prevY) {
-                    path.push(`H ${x-25}`, 'a 25,25 0 0,0 25,-25', `V ${y}`)
+                    path.push(`H ${x-30}`, 'a 30,30 0 0,0 30,-30', `V ${y}`)
                 }
                 if (y > prevY) {
-                    path.push(`H ${x-25}`, 'a 25,25 0 0,1 25,25', `V ${y}`)
+                    path.push(`H ${x-30}`, 'a 30,30 0 0,1 30,30', `V ${y}`)
                 }
             } else {
                 if (y < prevY) {
-                    path.push(`V ${y+25}`, 'a 25,25 0 0,1 25,-25', `H ${x}`)
+                    path.push(`V ${y+30}`, 'a 30,30 0 0,1 30,-30', `H ${x}`)
                 }
                 if (y > prevY) {
-                    path.push(`V ${y-25}`, 'a 25,25 0 0,0 25,25', `H ${x}`)
+                    path.push(`V ${y-30}`, 'a 30,30 0 0,0 30,30', `H ${x}`)
                 }
             }
             // if (y != prevY && y == this.y) {
@@ -295,7 +326,7 @@ class RMGLineGZ extends RMGLine {
     fillThemeColour() {
         super.fillThemeColour();
         $('#dest_strip_gz, #strip_gz').attr('fill', this._themeColour);
-        if (this._infoPanelType === 'gz_3') {
+        if (['gz3', 'gz1421'].includes(this._infoPanelType)) {
             $('#big_psd use').attr('fill', this._themeColour);
             if (this._fgColour === '#fff') {
                 $('#big_psd text').addClass('rmg-name__gzmtr--white-fg');
@@ -388,13 +419,22 @@ class RMGLineGZ extends RMGLine {
 
     loadDirection() {
         let validDest: ID[];
+        let x = this._svgWidth * this._directionGZX / 100;
+        let y = this._svgHeight * this._directionGZY / 100;
+        $('#direction_gz').attr('transform', `translate(${x},${y})`);
         if (this._direction == 'l') {
-            $('#direction_gz use').attr('transform', `translate(${this._svgWidth/2 - 65},205)scale(0.35)`);
-            $('#direction_gz g').attr('text-anchor', 'start');
+            $('#direction_gz use').attr('transform', `scale(0.35)`);
+            $('#direction_gz g').attr({
+                'text-anchor': 'start', 
+                transform: 'translate(65,-5)'
+            });
             validDest = this.lValidDests;
         } else {
-            $('#direction_gz use').attr('transform', `translate(${this._svgWidth/2 + 65},205)scale(0.35)rotate(180)`);
-            $('#direction_gz g').attr('text-anchor', 'end');
+            $('#direction_gz use').attr('transform', `scale(0.35)rotate(180)`);
+            $('#direction_gz g').attr({
+                'text-anchor': 'end', 
+                transform: 'translate(-65,-5)'
+            });
             validDest = this.rValidDests;
         }
         var [destNameZH, destNameEN] = [0,1].map(idx => {
@@ -403,7 +443,7 @@ class RMGLineGZ extends RMGLine {
         $('#direction_gz text').eq(0).text(destNameZH + '方向');
         $('#direction_gz text').eq(1).text('Towards ' + destNameEN);
 
-        $('#direction_gz g').attr('transform', `translate(${this._svgWidth/2},200)`);
+        // $('#direction_gz g').attr('transform', `translate(${this._svgWidth/2},200)`);
     }
 
     updateStnName(stnId, names: Name, stnNum) {
@@ -607,7 +647,15 @@ class RMGLineGZ extends RMGLine {
     }
 
     drawPSD() {
-        $('#station_info_gzmtr #big_psd').attr('transform', `translate(${this._svgDestWidth/2+80},${this._infoPanelType === 'gz_3' ? 218 : 242})`);
+        $('#station_info_gzmtr #big_psd').attr('transform', `translate(${this._svgDestWidth/2+80},${
+            (type => {
+                switch (type) {
+                    case 'gz3': return 218;
+                    case 'gz1421': return 238;
+                    default: return 242;
+                }
+            })(this._infoPanelType)
+        })`);
     }
 
     addStn(prep, stnId, loc, end) {

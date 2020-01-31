@@ -61,10 +61,10 @@
 
     "Design.PanelType": "資訊板樣式", 
     "Design.PanelType.Title": "選擇資訊板樣式", 
-    "Design.PanelType.Panasonic": "松下", 
-    "Design.PanelType.GZ2": "II型", 
-    "Design.PanelType.GZ3": "III型", 
-
+    "Design.PanelType.GZ28": "二/八號線", 
+    "Design.PanelType.GZ3": "三號線", 
+    "Design.PanelType.GZ1421": "十四/廿一號線", 
+    "Design.PanelType.GZGF": "廣佛線",
 
     "Design.Char": "漢字字形",
     "Design.Char.Title": "選擇字形",

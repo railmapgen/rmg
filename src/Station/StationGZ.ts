@@ -19,7 +19,7 @@ class RMGStationGZ extends RMGStation {
     }
 
     get _nameShift() {return false;}
-    get _tickRotation() {return 0;}
+    get _tickRotation() {return this.y > 0 ? 180 : 0;}
 
     get iconHTML() {
         var [iconType, numClass] = (this.state == -1) ? ['stn_gz_pass','Pass'] : ['stn_gz','Future'];
@@ -38,10 +38,10 @@ class RMGStationGZ extends RMGStation {
         if (this._nameShift) {
             dx = this._tickRotation === 0 ? -9 : 16 + (nameENLn-1)*12 * Math.cos(-45);
         } else {
-            dx = (24 + (nameENLn-1)*12) * Math.cos(-45);
+            dx = this._tickRotation === 0 ? (24 + (nameENLn-1)*12) * Math.cos(-45) : -6;
         }
         // let dx = this._nameShift ? -8 : (24 + (nameENLn-1)*12) * Math.cos(-45);
-        let dy = this._tickRotation === 0 ? (-4 - 21.921875 - (nameENLn-1)*12*Math.cos(-45)) : 17;
+        let dy = this._tickRotation === 0 ? (-4 - 21.921875 - (nameENLn-1)*12*Math.cos(-45)) : 17.5;
         // var dy = (-4 - 21.921875 - (nameENLn-1)*12*Math.cos(-45)) * (this._tickRotation === 0 ? 1 : -1);
         return $('<g>', {
             'transform': `translate(${this.x - dx},${this.y + dy})rotate(-45)`, 

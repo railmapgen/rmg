@@ -142,18 +142,6 @@ class RMGLine {
 
         let y = val * this._svgHeight / 100;
         $('g#main').attr('transform', `translate(0,${y})`);
-
-        // for (let [stnId, stnInstance] of Object.entries(this.stations)) {
-        //     if (['linestart', 'lineend'].includes(stnId)) {continue;}
-        //     stnInstance.y = this._stnRealY(stnId);
-        // }
-        // RMGLine.clearSVG();
-        // this.drawStns();
-        // this.drawLine();
-
-        // this.loadFonts();
-
-        // this.updateStnNameBg();
     }
 
     set padding(val) {
@@ -1424,6 +1412,7 @@ class RMGLine {
 
         for (let [stnId, stnInstance] of Object.entries(this.stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
+            stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
             stnInstance.state = this._stnState(stnId);
         }

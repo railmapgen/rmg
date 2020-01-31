@@ -62,9 +62,10 @@
 
     "Design.PanelType": "Info Panel Type", 
     "Design.PanelType.Title": "Choose a Type for Info Panel", 
-    "Design.PanelType.Panasonic": "Panasonic", 
-    "Design.PanelType.GZ2": "Type II", 
-    "Design.PanelType.GZ3": "Type III", 
+    "Design.PanelType.GZ28": "Line 2/8", 
+    "Design.PanelType.GZ3": "Line 3", 
+    "Design.PanelType.GZ1421": "Line 14/21", 
+    "Design.PanelType.GZGF": "Guangfo Line", 
 
     "Design.Char": "Chinese Character Form",
     "Design.Char.Title": "Select Character Form",
