@@ -1,5 +1,15 @@
 # Version History
 
+## 2.3.1 (31 Jan 2020)
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Fixed the issue of oversized text when exporting canvas as PNG. 
+
 ## 2.3 (31 Jan 2020)
 
 ### New Features
@@ -10,7 +20,6 @@
 
 ### Known Issues
 
-- 'Next stop' information may be wrong when line includes branches. 
 - PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 
 ### Resolved Issues
@@ -28,7 +37,6 @@
 
 ### Known Issues
 
-- 'Next stop' information may be wrong when line includes branches. 
 - PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 - Vertical height of the canvas may not sufficient for line with branches in Guangzhou Metro style. 
 
@@ -41,7 +49,6 @@
 
 ### Known Issues
 
-- 'Next stop' information may be wrong when line includes branches. 
 - PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 - Vertical height of the canvas may not sufficient for line with branches in Guangzhou Metro style. 
 

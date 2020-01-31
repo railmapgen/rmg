@@ -45,6 +45,7 @@
     "Layout.Y": "Vertical Position",
     "Layout.BranchSpacing": "Branch Spacing", 
     "Layout.Padding": "Line Padding", 
+    "Layout.DirectionGZ": "Direction Indicator Position",
 
     "Design.Theme": "Theme Colour", 
     "Design.Theme.Title": "Choose a Theme Colour",

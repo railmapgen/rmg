@@ -17,14 +17,26 @@ export function test(svgEl) {
     });
     var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // bypass Chrome min font size (to be improved)
+    svgEl.find('.rmg-name__en.rmg-name__gzmtr--station, .rmg-name__en.rmg-name__mtr--station').each((_, el) => {
+        $(el).attr('font-size', '10px');
+    });
+    svgEl.find('.rmg-name__en.rmg-name__gzmtr--int').each((_, el) => {
+        $(el).attr('font-size', '8px');
+    });
+    svgEl.find('.rmg-name__en.rmg-name__gzmtr--int-small').each((_, el) => {
+        $(el).attr('font-size', '8px');
+    });
+    svgEl.find('text:not([font-size]), tspan:not([font-size])').each((_, el) => {
+        $(el).attr('font-size', window.getComputedStyle(el).fontSize);
+    });
     svgEl.find('text, tspan').each((_, el) => {
         var elStyle = window.getComputedStyle(el);
         $(el).attr({
             'font-family': elStyle.getPropertyValue('font-family'),
             'fill': elStyle.getPropertyValue('fill'),
             'alignment-baseline': elStyle.getPropertyValue('alignment-baseline'),
-            'text-anchor': elStyle.getPropertyValue('text-anchor'),
-            'font-size': elStyle.getPropertyValue('font-size')
+            'text-anchor': elStyle.getPropertyValue('text-anchor')
         }).removeAttr('class');
     });
     svgEl.find('#strip, #dest_strip').each((_, el) => {

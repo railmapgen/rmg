@@ -20,7 +20,8 @@ class RMGLine {
     private _branchSpacing: number;
     private _txtFlip: boolean;
     public stations = {} as StationDict;
-    _currentStnId; _direction;
+    protected _currentStnId;
+    protected _direction;
     protected _platformNum: string;
     protected _charForm: string;
     protected _lineNames: Name;

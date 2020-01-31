@@ -848,7 +848,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
     <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">open_with</span>
-            <span class="mdc-list-item__text" trans-tag="Layout.Y"></span>
+            <span class="mdc-list-item__text" trans-tag="Layout.DirectionGZ"></span>
         </li>
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">arrow_left</span>
@@ -1941,7 +1941,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
     <div class="mdc-layout-grid__cell--span-12 mdc-card">
         <div class="mdc-card__primary-action" tabindex="0" style="display: flex; flex-direction: row;">
-            <div class="mdc-card__media mdc-card__media--square" style="background-image: url(GitHub-Mark-120px-plus.png); width: 120px; height:120px;">
+            <div class="mdc-card__media mdc-card__media--square" style="background-image: url(images/GitHub-Mark-120px-plus.png); width: 120px; height:120px;">
             </div>
             <div style="padding: 1rem;">
                 <h2 class="mdc-typography mdc-typography--headline6" trans-tag="Title"></h2>
@@ -1973,11 +1973,11 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 <canvas style="display: none;"></canvas>
 
 <script type="module">
-    import { initSavePanel } from './built/page_loader.js';
+    import * as initSave from './built/PageInitialiser/save.js';
     window.myLine = null;
     $(`[${window.urlParams.get('style')}-specific]`).show();
     window.mdc.autoInit();
-    initSavePanel();
+    initSave.common();
 </script>
 
 <script async src="built/lang.js"></script>

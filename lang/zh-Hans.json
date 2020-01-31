@@ -44,6 +44,7 @@
     "Layout.Y": "垂直位置",
     "Layout.BranchSpacing": "支线间距", 
     "Layout.Padding": "线路两端留白", 
+    "Layout.DirectionGZ": "方向指示位置",
 
     "Design.Theme": "主题颜色", 
     "Design.Theme.Title": "选择主题颜色",

@@ -2,6 +2,11 @@ import { updateParam, getParams } from '../utils.js';
 import { RMGLine } from './Line.js';
 // import any other styles
 import { RMGLineGZ } from './LineGZ.js';
+// declare global {
+//     interface Window {
+//         myLine?: RMGLine;
+//     }
+// }
 const loadLine = (param) => {
     let lineClass = (style => {
         switch (style) {
