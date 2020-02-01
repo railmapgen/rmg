@@ -1,0 +1,28 @@
+{
+  "name": "RailMapGeneratorV2",
+  "version": "1.0.0",
+  "description": "Demo page: https://wongchito.github.io/RailMapGenerator/",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jquery": "^3.3.31",
+    "typescript": "^3.7.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wongchito/RailMapGeneratorV2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wongchito/RailMapGeneratorV2/issues"
+  },
+  "homepage": "https://github.com/wongchito/RailMapGeneratorV2#readme"
+}

@@ -52,7 +52,10 @@
     "Design.Name": "路線名",
     "Design.Name.Title": "編輯路線名稱", 
 
-    "Design.Direction": "行駛方向", 
+    "Design.Direction": "行駛方向",
+    "Design.Direction.L": "向左駛", 
+    "Design.Direction.R": "向右駛", 
+    
     "Design.Platform": "月台編號",
     "Design.MTRLegacy": "港鐵舊款樣式",
     "Design.FlipName": "反轉車站名稱位置",

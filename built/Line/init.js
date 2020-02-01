@@ -26,8 +26,11 @@ if (localStorage.rmgParam != null) {
         loadLine(getParams());
     }
     catch (err) {
-        $('#init_err_diag #err_stack').html(err + '<br>' + err.stack.replace(/\n/g, '<br>'));
-        $('#init_err_diag')[0].MDCDialog.open();
+        let initErrDiag = $('#init_err_diag')[0].MDCDialog;
+        $(initErrDiag.root_)
+            .find('#err_stack')
+            .html(err + '<br>' + err.stack.replace(/\n/g, '<br>'));
+        initErrDiag.open();
         console.error(err);
     }
 }

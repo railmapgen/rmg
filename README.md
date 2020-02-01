@@ -9,6 +9,8 @@ Demo page: https://wongchito.github.io/RailMapGenerator/
 
 [Version History](VersionHistory.md)
 
+[Colour Standards](data/README.md)
+
 (Detailed description will be provided. )
 
 The core modules of this project consist of 2 parts - drawing SVG and providing control panels for manipulating the line and stations. 

@@ -1,7 +1,15 @@
+# Colour Database
+
 This directory contains
 
 - `city_list.json`, a list of cities sorted by their English name in alphabetical order; and
 - `[city].json`, a list of colours used in the city's public transportation system. 
+
+Please follow the rules below to 
+
+- Add colour standards for more cities;
+- Update colours; or
+- Add translations for cities or lines. 
 
 A typical example of an entry of `city_list.json`:
 
@@ -30,7 +38,7 @@ A typical example of an entry of `guangzhou.json`:
         "zh-Hant": "3號線", 
     }, 
     "colour": "#ECA154", 
-    "fg": "#000" // Mandatory if foreground colour is not white
+    "fg": "#000" // Optional if foreground colour is white
 }
 ```
 
@@ -38,6 +46,9 @@ A typical example of an entry of `guangzhou.json`:
 
 | City | Reference |
 | --- | --- |
+| Edinburgh | [Lothian City Buses - Lothian Buses](https://www.lothianbuses.com/our-services/lothian-city-buses/) |
+| Foshan | [Template:佛山地铁颜色 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/Template:佛山地铁颜色) |
 | Guangzhou | [不知道有没有火星。。-广 州 区-地铁族](http://www.ditiezu.com/forum.php?mod=viewthread&tid=523725) |
 | London | [Colour standards - Transport for London](http://content.tfl.gov.uk/tfl-colour-standards-issue04.pdf) |
+| Shenzhen | [Template:深圳地铁颜色 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/Template:深圳地铁颜色) |
 | Toronto | [Signage Manual and Standards - Toronto Transit Commission](https://joeclark.org/design/signage/TTC/2015/TTCWayfindingStandardsManual_201409.pdf)

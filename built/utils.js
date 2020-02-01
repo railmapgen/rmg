@@ -105,10 +105,20 @@ export function describeParams(param) {
 export function countryCode2Emoji(code) {
     var chars = code.toUpperCase().split('');
     if (code.length == 2) {
-        return chars.map(char => '&#' + (char.charCodeAt(0) + 127397).toString() + ';').join('');
+        return chars.map(char => String.fromCodePoint((char.codePointAt(0) + 127397))).join('');
     }
     else {
-        return '&#127988;' + chars.map(char => '&#' + (char.charCodeAt(0) + 917536).toString() + ';').join('') + '&#917631;';
+        return '\u{1f3f4}' + chars.map(char => String.fromCodePoint((char.codePointAt(0) + 917536))).join('') + '\u{e007f}';
+    }
+}
+export function rgb2Hex(rgb) {
+    let hex = rgb.match(/[\d]+/g)
+        .map(dec => Number(dec).toString(16).padStart(2, '0'))
+        .join('');
+    switch (hex) {
+        case '000000': return '#000';
+        case 'ffffff': return '#fff';
+        default: return '#' + hex;
     }
 }
 export function updateParam() {

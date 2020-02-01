@@ -1,29 +1,73 @@
-import { getParams, putParams, countryCode2Emoji, getTransText } from '../utils.js';
+import { getParams, putParams, countryCode2Emoji, getTransText, rgb2Hex } from '../utils.js';
+import { CityEntry, LineEntry } from '../utils.js';
+import { RMGLineGZ } from '../Line/LineGZ.js';
 
 export function common() {
-    $('#panel_design #design_list li:nth-child(2) .mdc-list-item__secondary-text').text(
-        getParams().line_name.join(' - ')
-    );
+    // mdc instances
+    const designList = $('#design_list')[0].MDCList;
+    const [themeDialog, lineNameDialog] = 
+        ['#design_theme_diag', '#line_name_diag'].map(selector => $(selector)[0].MDCDialog);
+    const [themeCitySelect, themeLineSelect] = 
+        ['#theme_city', '#theme_line'].map(selector => $(selector)[0].MDCSelect);
+    const [lineNameZHTextField, lineNameENTextField] = 
+        ['#name_zh', '#name_en'].map(selector => $(lineNameDialog.root_).find(selector)[0].MDCTextField);
+    const platformNumTextField = $('#platform_num')[0].MDCTextField;
 
-    $('#panel_design #design_list li:nth-child(3) .mdc-list-item__secondary-text').html(
-        (getParams().direction == 'r') ? 'Right' : 'Left'
-    );
+    // helper functions
+    const getDirectionText = (direc: 'l' | 'r') => {
+        return $(designList.root_)
+            .find(`li#direc p#${direc}`)
+            .text();
+    };
 
-    $('#design_list')[0].MDCList.listen('MDCList:action', event => {
+    // init values
+    Promise.resolve(getParams())
+        .then(param => {
+            $(designList.root_)
+                .find('li#name .mdc-list-item__secondary-text')
+                .text(param.line_name.join());
+            lineNameZHTextField.value = param.line_name[0];
+            lineNameENTextField.value = param.line_name[1];
+
+            $(designList.root_)
+                .find('li#direc .mdc-list-item__secondary-text')
+                .text(getDirectionText(param.direction));
+
+            platformNumTextField.value = param.platform_num;
+        });
+    
+    $.getJSON('data/city_list.json', (data: CityEntry[]) => {
+        let lang = window.urlParams.get('lang');
+        data.forEach(c => {
+            $('#theme_city__selection').append(
+                $('<li>', {
+                    class: 'mdc-list-item', 
+                    'data-value': c.id
+                }).text(countryCode2Emoji(c.country) + getTransText(c.name, lang))
+            );
+        });
+
+        var [themeCity] = getParams().theme
+        var cityIdx = $(`#theme_city__selection > [data-value="${themeCity}"]`).index();
+        themeCitySelect.selectedIndex = cityIdx;
+    });
+
+    // add event listeners
+    designList.listen('MDCList:action', event => {
         switch (event.detail.index) {
             case 0:
-                $('#design_theme_diag')[0].MDCDialog.open();
+                themeDialog.open();
                 break;
             case 1:
-                $('#line_name_diag')[0].MDCDialog.open();
+                lineNameDialog.open();
                 break;
             case 2:
                 if (getParams().direction == 'r') {
                     window.myLine.direction = 'l';
-                    $('#panel_design #design_list li:nth-child(3) .mdc-list-item__secondary-text').html('Left');
+                    $(designList.root_).find('li#direc .mdc-list-item__secondary-text').text(getDirectionText('l'));
                 } else {
                     window.myLine.direction = 'r';
-                    $('#panel_design #design_list li:nth-child(3) .mdc-list-item__secondary-text').html('Right');
+                    $(designList.root_).find('li#direc .mdc-list-item__secondary-text').text(getDirectionText('r'));
                 }
                 break;
             case 4:
@@ -32,150 +76,157 @@ export function common() {
         }
     });
 
-    
-
-    $('#design_theme_diag')[0].MDCDialog.listen('MDCDialog:opened', event => {
-        $(event.target)
-            .find('.mdc-select')
-            .each((_,el) => el.MDCSelect.layout());
+    themeDialog.listen('MDCDialog:opened', () => {
+        [themeCitySelect, themeLineSelect].map(select => select.layout());
     });
 
-    $.getJSON('data/city_list.json', function(data) {
-        var lang = window.urlParams.get('lang');
-        data.forEach(c => {
-            $('#theme_city__selection').append(
-                `<li class="mdc-list-item" data-value="${c.id}">
-                ${countryCode2Emoji(c.country)}${getTransText(c.name, lang)}
-                </li>`
-            );
-        });
-
-        var [themeCity] = getParams().theme
-        // var cityIdx = $(`#theme_city > select > [value="${themeCity}"]`).index();
-        var cityIdx = $(`#theme_city__selection > [data-value="${themeCity}"]`).index();
-        $('#theme_city')[0].MDCSelect.selectedIndex = cityIdx;
-    });
-
-    $('#theme_city')[0].MDCSelect.listen("MDCSelect:change", (event) => {
+    themeCitySelect.listen("MDCSelect:change", (event) => {
+        let city = event.detail.value;
         $('#theme_line__selection').empty();
-        $.getJSON(`data/${event.detail.value}.json`, data => {
+        $.getJSON(`data/${city}.json`, (data: LineEntry[]) => {
             var lang = window.urlParams.get('lang');
             data.forEach(l => {
                 $('#theme_line__selection').append(
-                    `<li class="mdc-list-item" data-value="${l.id}">
-                    <span style="background:${l.colour};color:${l.fg || '#fff'};">&nbsp;${getTransText(l.name, lang)}&nbsp;</span>
-                    </li>`
+                    $('<li>', {
+                        class: 'mdc-list-item',
+                        'data-value': l.id
+                    }).append(
+                        $('<span>').css({
+                            background: l.colour, 
+                            color: l.fg || '#fff'
+                        }).text('\u00a0' + getTransText(l.name, lang) + '\u00a0')
+                    )
                 );
             });
 
             var param = getParams();
-            param.theme[0] = event.detail.value;
+            param.theme[0] = city;
             putParams(param);
 
             var lineIdx = $(`#theme_line__selection > [data-value="${param.theme[1]}"]`).index();
-            $('#theme_line')[0].MDCSelect.selectedIndex = lineIdx==-1 ? 0 : lineIdx;
+            themeLineSelect.selectedIndex = lineIdx==-1 ? 0 : lineIdx;
         });
     });
 
-    $('#theme_line')[0].MDCSelect.listen("MDCSelect:change", event => {
+    themeLineSelect.listen("MDCSelect:change", event => {
+        let lineIdx = event.detail.index;
+
         var param = getParams();
-        param.theme[1] = event.detail.value;
+        param.theme[1] = lineIdx;
         putParams(param);
 
         window.myLine.themeLine = event.detail.value;
-        window.myLine.themeColour = $('#theme_line__selection li span')
-                .eq(event.detail.index).attr('style')
-                .match(/#[\w\d]+/g); 
+        window.myLine.themeColour = ['background-color', 'color']
+            .map(prop => $('#theme_line__selection span').eq(lineIdx).css(prop))
+            .map(rgb2Hex);
 
-        $('#panel_design #design_list li:first-child .mdc-list-item__secondary-text').html(
-            `${$('#theme_city__selection li')
-                .eq($('#theme_city')[0].MDCSelect.selectedIndex)
-                .html().trim()
-            } - ${$('#theme_line__selection li').eq(event.detail.index).html().trim()}`
-        );
+        $(designList.root_)
+            .find('li#theme .mdc-list-item__secondary-text')
+            .html(
+                $('#theme_city__selection li').eq(themeCitySelect.selectedIndex).text() +
+                ' ' +
+                $('#theme_line__selection li').eq(lineIdx).html().trim()
+            );
     });
 
-    Promise.resolve(getParams())
-        .then(param => {
-            $('#line_name_diag #name_zh')[0].MDCTextField.value = param.line_name[0];
-            $('#line_name_diag #name_en')[0].MDCTextField.value = param.line_name[1];
-            $('#platform_num')[0].MDCTextField.value = param.platform_num;
+    lineNameDialog.listen('MDCDialog:opened', event => {
+        [lineNameZHTextField, lineNameENTextField].map(textfield => textfield.layout());
+    });
+
+    $(lineNameDialog.root_)
+        .find('.mdc-text-field')
+        .on('input', () => {
+            let lineNames = [lineNameZHTextField, lineNameENTextField].map(textfield => textfield.value);
+            window.myLine.lineNames = lineNames;
+            $(designList.root_)
+                    .find('li#name .mdc-list-item__secondary-text')
+                    .text(lineNames.join());
         });
 
-    $('#line_name_diag')[0].MDCDialog.listen('MDCDialog:opened', event => {
-        $(event.target)
-            .find('.mdc-text-field')
-            .each((_,el) => el.MDCTextField.layout());
-    });
-    $('#line_name_diag .mdc-text-field').on('input', event => {
-        var lineNames = $('#line_name_diag .mdc-text-field').get().map(el => el.MDCTextField.value);
-        window.myLine.lineNames = lineNames;
-        $('#panel_design #design_list li:nth-child(2) .mdc-list-item__secondary-text').text(
-            lineNames.join(' - ')
-        );
-    });
-
-    $('#platform_num > input').on('input', event => {
-        window.myLine.platformNum = event.target.value;
-    });
+    ($(platformNumTextField.root_).find('input') as JQuery<HTMLInputElement>)
+        .on('input', event => window.myLine.platformNum = event.target.value);
 }
 
 export function mtr() {
-    $('#design_list_mtr')[0].MDCList.listen('MDCList:action', event => {
+    // mdc instances
+    const designListMTRList = $('#design_list_mtr')[0].MDCList;
+    const charDialog = $('#design_char_diag')[0].MDCDialog;
+    const legacySwitch = $('#legacy')[0].MDCSwitch;
+
+    // helper functions
+    const getCharText = (char: string) => {
+        return $(charDialog.root_)
+            .find('li')
+            .filter((_,el) => el.dataset.mdcDialogAction === char)
+            .find('span')
+            .text()
+    };
+
+    // init values
+    Promise.resolve(getParams())
+        .then(param => {
+            $(designListMTRList.root_)
+                .find('li#char .mdc-list-item__secondary-text')
+                .text(getCharText(param.char_form));
+            legacySwitch.checked = param.dest_legacy;
+        });
+
+    // add event listeners
+    designListMTRList.listen('MDCList:action', event => {
         switch (event.detail.index) {
             case 0:
                 window.myLine.txtFlip = !getParams().txt_flip;
                 break;
             case 1:
-                $('#design_char_diag')[0].MDCDialog.open();
+                charDialog.open();
                 break;
         }
     });
 
-    $('#panel_design #design_list_mtr li:nth-child(2) .mdc-list-item__secondary-text').html(
-        $(`#design_char_diag ul [data-mdc-dialog-action="${getParams().char_form}"] span`).html()
-    );
+    charDialog.listen('MDCDialog:closed', event => {
+        let char = event.detail.action;
+        if (char == 'close') {return;}
 
-    $('#design_char_diag')[0].MDCDialog.listen('MDCDialog:closed', event => {
-        if (event.detail.action == 'close') {return;}
-
-        window.myLine.charForm = event.detail.action;
-        $('#panel_design #design_list_mtr li:nth-child(2) .mdc-list-item__secondary-text').html(
-            $(`#design_char_diag ul [data-mdc-dialog-action="${event.detail.action}"] span`).html()
-        );
+        window.myLine.charForm = char;
+        $(designListMTRList.root_)
+            .find('li#char .mdc-list-item__secondary-text')
+            .text(getCharText(char));
     });
 
-    $('#legacy')[0].MDCSwitch.checked = getParams().dest_legacy;
-
-    $('#legacy input').on('change', event => {
-        window.myLine.destLegacy = event.target.checked;
-    });
+    ($(legacySwitch.root_).find('input') as JQuery<HTMLInputElement>)
+        .on('change', event => window.myLine.destLegacy = event.target.checked);
 }
 
 export function gzmtr() {
+    // mdc instances
+    const panelTypeDialog = $('#panel_type_diag')[0].MDCDialog;
+    const [psdNumTextField, lineNumTextField] = 
+        ['#psd_num', '#line_num'].map(selector => $(selector)[0].MDCTextField);
+
+    // init values
+    Promise.resolve(getParams())
+        .then(param => {
+            psdNumTextField.value = param.psd_num;
+            lineNumTextField.value = param.line_num;
+        });
+
+    // add event listeners
     $('#design_list_gzmtr')[0].MDCList.listen('MDCList:action', event => {
         switch (event.detail.index) {
             case 1:
-                $('#panel_type_diag')[0].MDCDialog.open();
+                panelTypeDialog.open();
                 break;
         }
     });
 
-    Promise.resolve(getParams())
-        .then(param => {
-            $('#psd_num')[0].MDCTextField.value = param.psd_num;
-            $('#line_num')[0].MDCTextField.value = param.line_num;
-        });
+    ($(lineNumTextField.root_).find('input') as JQuery<HTMLInputElement>)
+        .on('input', event => (<RMGLineGZ>window.myLine).lineNum = event.target.value);
 
-    $('#line_num > input').on('input', event => {
-        window.myLine.lineNum = event.target.value;
-    });
-    $('#psd_num > input').on('input', event => {
-        window.myLine.psdNum = event.target.value;
-    });
+    ($(psdNumTextField.root_).find('input') as JQuery<HTMLInputElement>)
+        .on('input', event => (<RMGLineGZ>window.myLine).psdNum = event.target.value);
 
-    $('#panel_type_diag')[0].MDCDialog.listen('MDCDialog:closed', event => {
+    panelTypeDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action === 'close') {return;}
-        window.myLine.infoPanelType = event.detail.action;
-    })
+        (<RMGLineGZ>window.myLine).infoPanelType = event.detail.action;
+    });
 }

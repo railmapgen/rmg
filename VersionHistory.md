@@ -1,5 +1,16 @@
 # Version History
 
+## 2.3.2 (1 Feb 2020)
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Improved robustness. 
+- Updated `README`. 
+
 ## 2.3.1 (31 Jan 2020)
 
 ### Known Issues

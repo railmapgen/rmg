@@ -54,6 +54,9 @@
     "Design.Name.Title": "Edit Line Name", 
 
     "Design.Direction": "Train Direction", 
+    "Design.Direction.L": "Left", 
+    "Design.Direction.R": "Right", 
+    
     "Design.Platform": "Platform Number",
     "Design.MTRLegacy": "MTR Legacy Style",
     "Design.FlipName": "Flip Station Names Position",

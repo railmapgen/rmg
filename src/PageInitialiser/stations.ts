@@ -1,34 +1,59 @@
 import { getParams, countryCode2Emoji, getTransText } from '../utils.js';
-import { ID, StationInfo } from '../utils.js';
+import { ID, StationInfo, Name } from '../utils.js';
+
+const getStationCard = (id: ID, names: Name, num: string) => {
+    return $('<div>', {
+        id: id, 
+        class: 'mdc-card mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone station-card'
+    })
+        .append(
+            $('<div>', { class: 'mdc-card__primary-action'})
+                .append($('<div>', { class: 'mdc-card__media mdc-card__media--16-9' }))
+                .append(
+                    $('<div>', { class: 'mdc-card__media-content station-card__content'})
+                        .html(names.join('<br>'))
+                        .prepend(
+                            $('<span>')
+                                .css('display', window.urlParams.get('style') === 'gzmtr' ? 'inline' : 'none')
+                                .text(num + '\u00a0')
+                        )
+                )
+        )
+        .append(
+            $('<div>', { class: 'mdc-card__actions' })
+                .append(
+                    $('<div>', { class: 'mdc-card__action-icons' })
+                        .append(
+                            $('<button>', {
+                                title: 'Set As Current', 
+                                class: 'material-icons mdc-icon-button mdc-card__action mdc-card__action--icon'
+                            })
+                                .text('my_location')
+                        )
+                        .append(
+                            $('<button>', {
+                                title: 'Interchange', 
+                                class: 'material-icons mdc-icon-button mdc-card__action mdc-card__action--icon'
+                            })
+                                .text('edit')
+                        )
+                        .append(
+                            $('<button>', {
+                                title: 'Remove', 
+                                class: 'material-icons mdc-icon-button mdc-card__action mdc-card__action--icon'
+                            })
+                                .text('delete_forever')
+                        )
+                )
+        );
+};
 
 export function common() {
-    function _stationCard(id, names, num) {
-        return $('<div>', {'id':id}).addClass('mdc-card mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone station-card').append(
-            $('<div>').addClass('mdc-card__primary-action').append(
-                $('<div>').addClass('mdc-card__media mdc-card__media--16-9')
-            ).append(
-                $('<div>').addClass('mdc-card__media-content station-card__content')
-                    .html(names.join('<br>'))
-                    .prepend($('<span>', { style:(window.urlParams.get('style')=='gzmtr' ? '' : 'display:none;')}).text(num+' '))
-            )
-        ).append(
-            $('<div>').addClass('mdc-card__actions').append(
-                $('<div>').addClass('mdc-card__action-icons').append(
-                    $('<button>', {title:'Set As Current'}).addClass('material-icons mdc-icon-button mdc-card__action mdc-card__action--icon').text('my_location')
-                ).append(
-                    $('<button>', {title:'Interchange'}).addClass('material-icons mdc-icon-button mdc-card__action mdc-card__action--icon').text('edit')
-                ).append(
-                    $('<button>', {title: 'Remove'}).addClass('material-icons mdc-icon-button mdc-card__action mdc-card__action--icon').text('delete_forever')
-                )
-            )
-        );
-    }
-
     var stnList = getParams().stn_list;
     window.myLine.tpo.forEach(stnId => {
-        $('#panel_stations .mdc-layout-grid__inner:first').append(_stationCard(stnId, stnList[stnId].name, stnList[stnId].num));
+        $('#panel_stations .mdc-layout-grid__inner:first').append(getStationCard(stnId, stnList[stnId].name, stnList[stnId].num));
         $('#pivot__selection').append(
-            $('<li>', {'data-value':stnId}).addClass('mdc-list-item').text(stnList[stnId].name.join(' - '))
+            $('<li>', {'data-value':stnId}).addClass('mdc-list-item').text(stnList[stnId].name.join())
         );
     });
 
@@ -46,8 +71,9 @@ export function common() {
         window.myLine.currentStnId = stnId;
     });
     $('#panel_stations .mdc-card__action-icons > [title="Interchange"]').on('click', event => {
-        var stnId = event.target.closest('.mdc-card').id;
-        $('#stn_transfer_diag').attr('for', stnId)[0].MDCDialog.open();
+        $('#stn_transfer_diag')
+            .attr('for', event.target.closest('.mdc-card').id)
+            .get(0).MDCDialog.open();
     });
     $('#panel_stations .mdc-card__action-icons > [title="Remove"]').on('click', event => {
         var stnId = event.target.closest('.mdc-card').id;
@@ -80,7 +106,7 @@ export function common() {
         console.log(prep, stnId, loc, end);
         // _genStnList();
         var prevId = window.myLine.tpo[window.myLine.tpo.indexOf(newId) - 1] || 'add_stn';
-        $(`#panel_stations .mdc-layout-grid__inner:first #${prevId}`).after(_stationCard(newId, newInfo.name, newInfo.num));
+        $(`#panel_stations .mdc-layout-grid__inner:first #${prevId}`).after(getStationCard(newId, newInfo.name, newInfo.num));
         // Add event listeners
         $(`#panel_stations #${newId} .mdc-card__primary-action`).on('click', event => {
             var stnId = event.target.closest('.mdc-card').id;

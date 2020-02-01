@@ -1,4 +1,4 @@
-import { getParams, getTransText, test, describeParams } from '../utils.js';
+import { getParams, getTransText, test, describeParams, RMGParam } from '../utils.js';
 import { RMGLine } from '../Line/Line.js';
 
 declare global {
@@ -8,6 +8,11 @@ declare global {
 }
 
 export function common() {    
+    // mdc intances 
+    const [templateDialog, importDialog, exportDialog, previewDialog, styleDialog, langDialog] = 
+        ['#template_diag', '#import_diag', '#export_diag', '#preview_diag', '#style_diag', '#lang_diag']
+            .map(selector => $(selector)[0].MDCDialog);
+
     $('#panel_save .mdc-list')[0].MDCList.listen('MDCList:action', event => {
         switch (event.detail.index) {
             case 0:
@@ -47,36 +52,31 @@ export function common() {
     $('#panel_save .mdc-list')[1].MDCList.listen('MDCList:action', event => {
         switch (event.detail.index) {
             case 0:
-                $('#style_diag')[0].MDCDialog.open();
+                styleDialog.open();
                 break;
             case 1:
-                $('#lang_diag')[0].MDCDialog.open();
+                langDialog.open();
                 break;
         }
     });
 
-    var templateDialog = new mdc.dialog.MDCDialog($('#template_diag')[0]);
-    var templateDialogList = new mdc.list.MDCList($('#template_diag .mdc-list')[0]);
     $.getJSON('templates/template_list.json', data => {
         var lang = window.urlParams.get('lang');
         data.forEach(d => {
             $('#template_diag ul').append(
                 $('<li>', {
                     class: "mdc-list-item", 
-                    'data-mdc-dialog-action': d.filename
+                    'data-mdc-dialog-action': d.filename, 
+                    'data-mdc-auto-init': 'MDCRipple'
                 }).append(
                     $('<span>', { class: "mdc-list-item__text" }).text(getTransText(d.desc, lang))
                 )
             );
         });
         $('#template_diag li:first-child').attr('tabindex', 0);
+        window.mdc.autoInit();
     });
-    templateDialog.listen('MDCDialog:opened', () => {
-        templateDialogList.layout();
-        var templateDialogListItemRipple = templateDialogList.listElements.map(
-            listItemEl => new mdc.ripple.MDCRipple(listItemEl)
-        );
-    });
+
     templateDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action == 'close') {return;}
         
@@ -86,19 +86,17 @@ export function common() {
         });
     });
 
-    var exportDialog = new mdc.dialog.MDCDialog($('#export_diag')[0]);
-
     exportDialog.listen('MDCDialog:closed', event => {
         switch (event.detail.action) {
             case 'close':
                 break;
             case 'svg1':
-                $('#preview_diag').attr('for', 'destination');
-                $('#preview_diag')[0].MDCDialog.open();
+                $(previewDialog.root_).attr('for', 'destination');
+                previewDialog.open();
                 break;
             case 'svg2':
-                $('#preview_diag').attr('for', 'railmap');
-                $('#preview_diag')[0].MDCDialog.open();
+                $(previewDialog.root_).attr('for', 'railmap');
+                previewDialog.open();
                 break;
         }
     });
@@ -118,14 +116,18 @@ export function common() {
         var MAX_HEIGHT = $(window).height() - 60 - 53 - 60;
         var scaleFactor = Math.min(MAX_WIDTH/thisSVGWidth, MAX_HEIGHT/thisSVGHeight);
 
-        $('#preview_diag svg').attr({
-            width: thisSVGWidth * scaleFactor, 
-            height: thisSVGHeight * scaleFactor
-        });
+        $(previewDialog.root_)
+            .find('svg')
+            .attr({
+                width: thisSVGWidth * scaleFactor, 
+                height: thisSVGHeight * scaleFactor
+            });
 
-        $('#preview_diag .mdc-dialog__surface').attr('style', `max-width:${MAX_WIDTH+50}px;`);
+        $(previewDialog.root_)
+            .find('.mdc-dialog__surface')
+            .attr('style', `max-width:${MAX_WIDTH+50}px;`);
     }
-    $('#preview_diag')[0].MDCDialog.listen('MDCDialog:opened', event => {
+    previewDialog.listen('MDCDialog:opened', event => {
         var svgId = $(event.target).attr('for');
         var [thisSVGWidth, thisSVGHeight] = [
             svgId=='destination' ? getParams().svg_dest_width : getParams().svg_width, 
@@ -150,7 +152,7 @@ export function common() {
         
         $(event.target).find('svg [style="display: none;"]').remove();
     });
-    $('#preview_diag')[0].MDCDialog.listen('MDCDialog:closed', event => {
+    previewDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action === 'close') {
             $(event.target).removeAttr('for').find('.mdc-dialog__content').empty();
             return;
@@ -173,29 +175,33 @@ export function common() {
         }
     });
 
-    var importDialog = new mdc.dialog.MDCDialog($('#import_diag')[0]);
-    var importedFile = undefined;
-    $('#upload_file').on('change', event => {
-        console.log(event.target.files[0]);
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            importedFile = JSON.parse(e.target.result);
-            $('#import_diag .mdc-dialog__content').html(
-                describeParams(importedFile)
-            );
-            importDialog.open();
-        };
-        reader.readAsText(event.target.files[0]);
-    });
+    let importedFile: RMGParam;
+    ($('#upload_file') as JQuery<HTMLInputElement>)
+        .on('change', event => {
+            console.log(event.target.files[0]);
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                console.log(e.target);
+                importedFile = JSON.parse(e.target.result as unknown as string);
+                $(importDialog.root_)
+                    .find('.mdc-dialog__content')
+                    .html(describeParams(importedFile));
+                importDialog.open();
+            };
+            reader.readAsText(event.target.files[0]);
+        });
     importDialog.listen('MDCDialog:closed', event => {
-        if (event.detail.action == 'close') {return;}
+        if (event.detail.action == 'close') {
+            ($('#upload_file')[0] as HTMLInputElement).value = '';
+            return;
+        }
 
         RMGLine.clearSVG();
         localStorage.rmgParam = JSON.stringify(importedFile);
         location.reload(true);
     });
 
-    $('#style_diag')[0].MDCDialog.listen('MDCDialog:closed', event => {
+    styleDialog.listen('MDCDialog:closed', event => {
         switch (event.detail.action) {
             case 'close': 
             case window.urlParams.get('style'):
@@ -206,7 +212,7 @@ export function common() {
         }
     });
 
-    $('#lang_diag')[0].MDCDialog.listen('MDCDialog:closed', event => {
+    langDialog.listen('MDCDialog:closed', event => {
         if (event.detail.action == 'close') {return;}
         var nextLang = event.detail.action;
         localStorage.rmgLang = nextLang;

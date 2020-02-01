@@ -572,12 +572,13 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
      role="alertdialog"
      aria-modal="true"
      aria-labelledby="my-dialog-title"
-     aria-describedby="my-dialog-content">
+     aria-describedby="my-dialog-content"
+     data-mdc-auto-init="MDCDialog">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="File.New.Title"></h2>
       <div class="mdc-dialog__content">
-        <ul class="mdc-list mdc-list--avatar-list">
+        <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
           
         </ul>
         <span trans-tag="File.New.Notice"></span>
@@ -596,7 +597,8 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
      role="alertdialog"
      aria-modal="true"
      aria-labelledby="my-dialog-title"
-     aria-describedby="my-dialog-content">
+     aria-describedby="my-dialog-content"
+     data-mdc-auto-init="MDCDialog">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="File.Export.Title"></h2>
@@ -619,7 +621,8 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
         role="alertdialog"
         aria-modal="true"
         aria-labelledby="my-dialog-title"
-        aria-describedby="my-dialog-content">
+        aria-describedby="my-dialog-content"
+        data-mdc-auto-init="MDCDialog">
     <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
         <h2 class="mdc-dialog__title" trans-tag="File.Open.Title"></h2>
@@ -897,25 +900,27 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
     <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card" style="max-width: 100%;">
     <ul id="design_list" class="mdc-list mdc-list--two-line mdc-list--avatar-list" data-mdc-auto-init="MDCList">
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item" id="theme" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">color_lens</span>
             <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text" trans-tag="Design.Theme"></span>
                 <span class="mdc-list-item__secondary-text"></span>
             </span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item" id="name" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">title</span>
             <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text" trans-tag="Design.Name"></span>
                 <span class="mdc-list-item__secondary-text"></span>
             </span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item" id="direc" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">directions</span>
             <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text" trans-tag="Design.Direction"></span>
                 <span class="mdc-list-item__secondary-text"></span>
+                <p id="l" trans-tag="Design.Direction.L" style="display: none;"></p>
+                <p id="r" trans-tag="Design.Direction.R" style="display: none;"></p>
             </span>
         </li>
         <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
@@ -944,7 +949,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">swap_vert</span>
             <span class="mdc-list-item__text-label" trans-tag="Design.FlipName"></span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item" id="char" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">font_download</span>
             <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text" trans-tag="Design.Char"></span>
@@ -1907,29 +1912,6 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 </div>
 
 </div>
-
-<!-- <div id="panel_branches" class="panel">
-
-<div class="mdc-layout-grid" style="/*max-width: 500px;*/">
-<div class="mdc-layout-grid__inner">
-
-    <div class="mdc-card mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone station-card" id="branch_main">
-    <div class="mdc-card__primary-action">
-        <div class="mdc-card__media mdc-card__media--16-9">
-        <div class="mdc-card__media-content station-card__content" trans-tag="Branches.Main"></div>
-        </div>
-    </div>
-    <div class="mdc-card__actions">
-        <div class="mdc-card__action-icons">
-        <button class="material-icons mdc-icon-button mdc-card__action mdc-card__action--icon" title="Show">add_box</button>
-        </div>
-    </div>
-    </div>
-
-</div>
-</div>
-    
-</div> -->
 
 <div id="panel_info" class="panel">
 
