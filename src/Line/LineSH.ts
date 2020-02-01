@@ -20,7 +20,14 @@ export class RMGLineSH extends RMGLine {
 
     fillThemeColour() {
         super.fillThemeColour();
-        $('path#' + station_id).attr('stroke', this._themeColour);  // why log is undefined but has right color in html
+
+        // why log this._themeColour is undefined but has the right color in html
+        // and remove this will remove the stroke of the circle
+        $('path#' + station_id).attr('stroke', this._themeColour);
+    }
+
+    updateStnNameBg() {
+        $('#current_bg').hide();  // fix the mysterious black rect
     }
 
 }
