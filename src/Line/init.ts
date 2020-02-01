@@ -2,6 +2,7 @@ import { updateParam, getParams } from '../utils.js';
 import { RMGLine } from './Line.js';
 // import any other styles
 import { RMGLineGZ } from './LineGZ.js';
+import { RMGLineSH } from './LineSH.js';
 
 declare global {
     interface Window {
@@ -15,6 +16,8 @@ const loadLine = (param) => {
             return RMGLine;
         case 'gzmtr':
             return RMGLineGZ;
+        case 'shmetro':
+            return RMGLineSH
         // any other styles
     }})(window.urlParams.get('style'));
     window.myLine = new lineClass(param);

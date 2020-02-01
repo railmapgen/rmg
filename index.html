@@ -6,11 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script>
-        if (navigator.userAgent.indexOf('Safari')===-1 && navigator.userAgent.indexOf('Chrome')===-1) {
-            alert('Your browser is not supported. We recommend Chrome and Safari.\n你的瀏覽器不被支援。我們推薦使用Chrome或Safari。\n你的浏览器不受支持。我们推荐使用Chrome或Safari。');
-        } else if (navigator.userAgent.indexOf('Edge')!==-1) {
-            alert('Your browser is not supported. We recommend Chrome and Safari.\n你的瀏覽器不被支援。我們推薦使用Chrome或Safari。\n你的浏览器不受支持。我们推荐使用Chrome或Safari。');
-        }
+        // disable for firefox users sake
+        // if (navigator.userAgent.indexOf('Safari')===-1 && navigator.userAgent.indexOf('Chrome')===-1) {
+        //     alert('Your browser is not supported. We recommend Chrome and Safari.\n你的瀏覽器不被支援。我們推薦使用Chrome或Safari。\n你的浏览器不受支持。我们推荐使用Chrome或Safari。');
+        // } else if (navigator.userAgent.indexOf('Edge')!==-1) {
+        //     alert('Your browser is not supported. We recommend Chrome and Safari.\n你的瀏覽器不被支援。我們推薦使用Chrome或Safari。\n你的浏览器不受支持。我们推荐使用Chrome或Safari。');
+        // }
 
         var urlParams = new URLSearchParams(window.location.search);
         var requestLang = urlParams.get('lang') || localStorage.rmgLang || navigator.language.split('-').slice(0,2).join('-');
@@ -31,6 +32,7 @@
             case 'mtr':
             case 'gzmtr':
             case 'szm':
+            case 'shmetro':
                 break;
             default: urlParams.set('style', 'mtr');
         }
@@ -163,7 +165,8 @@
         }
     </style>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
+    <!-- disable for development sake -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script> -->
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -404,7 +407,8 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
         </g>
 
         <path id="stn_gz" fill="#fff" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
-        <path id="stn_gz_pass" stroke="#aaa" fill="#fff" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
+        <path id="stn_gz_pass" stroke="#aaa" fill="#fff" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/> 
+        <path id="stn_sh" fill="#fff" stroke-width="2" d="M -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0"/>
 
         <path id="inttick_hk" d="M 0,0 v 17" stroke-linecap="round"/>
         <path id="inttick_gz" d="M 0,0 v 18" stroke-linecap="square"/>
@@ -653,7 +657,10 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
           </li>
           <li class="mdc-list-item" data-mdc-dialog-action="gzmtr" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__text" trans-tag="File.Style.GZMTR"></span>
-            </li>
+          </li>
+          <li class="mdc-list-item" data-mdc-dialog-action="shmetro" data-mdc-auto-init="MDCRipple">
+            <span class="mdc-list-item__text" trans-tag="File.Style.SHMETRO"></span>
+          </li>
         </ul>
       </div>
     </div>
