@@ -41,4 +41,4 @@ Add new language entry in ```/lang/*.json``` if you add selection at ```index.ht
 ### To fix the mysterious black rect
 
 ![mysterious black rect](mysterious_black_rect.png)
-Rewite the ```updateStnNameBg``` in ```RMGLine**``` at ```/src/Line/Line**.ts```
+Rewite the ```updateStnNameBg``` in ```RMGLine**``` at ```/src/Line/Line**.ts``` and add ```$('#current_bg').hide();```.
