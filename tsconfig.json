@@ -9,6 +9,7 @@
     }, 
     "include": [
         "./src/lang.ts", 
-        "./src/index.ts"
+        "./src/index.ts", 
+        "./src/querycheck.ts"
     ]
 }

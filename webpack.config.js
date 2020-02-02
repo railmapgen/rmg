@@ -3,7 +3,8 @@ const path = require('path');
 module.exports = {
   entry: {
       index: './src/index',
-      lang: './src/lang'
+      lang: './src/lang', 
+      querycheck: './src/querycheck'
   }, 
   // uncomment devtool for debugging
   // devtool: 'inline-source-map',
@@ -24,7 +25,7 @@ module.exports = {
     ], 
   },
   output: {
-    filename: '[name].bundle.js',
+    filename: '[name].min.js',
     path: path.resolve(__dirname, 'dist'),
   }, 
   optimization: {
@@ -35,9 +36,11 @@ module.exports = {
   externals: {
     jquery: 'jQuery', 
     '@material/dialog': 'mdc.dialog',
+    '@material/icon-button': 'mdc.iconButton',
     '@material/list': 'mdc.list',
     '@material/menu': 'mdc.menu',
     '@material/menu-surface': 'mdc.menuSurface',
+    '@material/ripple': 'mdc.ripple',
     '@material/select': 'mdc.select',
     '@material/slider': 'mdc.slider',
     '@material/switch': 'mdc.switchControl',
