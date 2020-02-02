@@ -7,7 +7,7 @@ interface StationDict {
     [index: string]: RMGStation;
 }
 
-class RMGLine {
+export class RMGLine {
     protected _svgHeight: number;
     protected _svgWidth: number;
     protected _svgDestWidth: number;
@@ -1579,5 +1579,3 @@ class RMGLine {
         return branches;
     }
 }
-
-export { RMGLine };

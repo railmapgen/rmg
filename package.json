@@ -2,7 +2,7 @@
   "name": "RailMapGenerator",
   "version": "1.0.0",
   "description": "Demo page: https://wongchito.github.io/RailMapGenerator/",
-  "main": "index.js",
+  "main": "dist/index.min.js",
   "directories": {
     "lib": "lib"
   },
