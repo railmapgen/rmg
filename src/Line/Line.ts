@@ -1,7 +1,7 @@
-import { getTxtBoxDim, setParams, getParams, putParams, getRandomId } from '../utils.js';
-import { RMGStation, Int2Station, Int3LStation, Int3RStation, OSI11LStation, OSI11RStation, OSI12LStation, OSI12RStation, OSI22LStation, OSI22RStation, OSI22EndStation } from '../Station/Station.js';
+import { getTxtBoxDim, setParams, getParams, putParams, getRandomId } from '../utils';
+import { RMGStation, Int2Station, Int3LStation, Int3RStation, OSI11LStation, OSI11RStation, OSI12LStation, OSI12RStation, OSI22LStation, OSI22RStation, OSI22EndStation } from '../Station/Station';
 
-import { ID, Name, StationInfo, RMGParam } from '../utils.js';
+import { ID, Name, StationInfo, RMGParam } from '../utils';
 
 interface StationDict {
     [index: string]: RMGStation;

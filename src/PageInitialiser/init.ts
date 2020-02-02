@@ -1,11 +1,15 @@
-import * as initLayout from './layout.js';
-import * as initDesign from './design.js';
-import * as initStations from './stations.js';
-import * as initInfo from './info.js';
+import * as initLayout from './layout';
+import * as initDesign from './design';
+import * as initStations from './stations';
+import * as initInfo from './info';
+import { MDCTabBar } from '@material/tab-bar';
+import { MDCSlider } from '@material/slider';
 
+export default function () {
+    
 let firstInit = [false, true, true, true, true];
 
-$('#panels .mdc-tab-bar')[0].MDCTabBar.listen('MDCTabBar:activated', event => {
+MDCTabBar.attachTo($('#panels .mdc-tab-bar')[0]).listen('MDCTabBar:activated', (event: any) => {
     $('.panel--active').removeClass('panel--active');
     $('.panel').eq(event.detail.index).addClass('panel--active');
 
@@ -17,7 +21,7 @@ $('#panels .mdc-tab-bar')[0].MDCTabBar.listen('MDCTabBar:activated', event => {
         firstInit[1] = false;
     }
     if (event.detail.index === 1) {
-        $('#panel_layout .mdc-slider').each((_,el) => el.MDCSlider.layout());
+        $('#panel_layout .mdc-slider').each((_,el) => MDCSlider.attachTo(el).layout());
     }
     if (event.detail.index == 2 && firstInit[2]) {
         initDesign.common();
@@ -32,6 +36,7 @@ $('#panels .mdc-tab-bar')[0].MDCTabBar.listen('MDCTabBar:activated', event => {
         firstInit[2] = false;
     }
     if (event.detail.index == 3 && firstInit[3]) {
+        console.log('init again');
         initStations.common();
         firstInit[3] = false;
     }
@@ -40,3 +45,6 @@ $('#panels .mdc-tab-bar')[0].MDCTabBar.listen('MDCTabBar:activated', event => {
         firstInit[4] = false;
     }
 });
+
+}
+

@@ -1,9 +1,9 @@
-import { getTxtBoxDim, setParams, getParams, putParams, getRandomId } from '../utils.js';
-import { RMGStationGZ, IntStationGZ, BranchStationGZ, OSIStationGZ } from '../Station/StationGZ.js';
-import { RMGStation } from '../Station.js';
-import { RMGLine } from './Line.js';
+import { getTxtBoxDim, setParams, getParams, putParams, getRandomId } from '../utils';
+import { RMGStationGZ, IntStationGZ, BranchStationGZ, OSIStationGZ } from '../Station/StationGZ';
+import { RMGStation } from '../Station';
+import { RMGLine } from './Line';
 
-import { ID, Name, StationInfo, RMGParam } from '../utils.js';
+import { ID, Name, StationInfo, RMGParam } from '../utils';
 
 interface StationDictGZ {
     [index: string]: RMGStationGZ;

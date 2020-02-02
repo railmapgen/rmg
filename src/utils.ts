@@ -52,7 +52,7 @@ export function setParams(key: string, data: any) {
 }
 
 export function test(svgEl) {
-    var [_, _, svgW, svgH] = svgEl.attr('viewBox').split(' ');
+    var [svgW, svgH] = svgEl.attr('viewBox').split(' ').slice(2);
 
     var canvas = <HTMLCanvasElement> $('canvas')[0];
     $('canvas').attr({

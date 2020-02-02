@@ -1,5 +1,9 @@
-declare interface Window {
-    urlParams?: URLSearchParams;
+import * as $ from 'jquery';
+
+declare global {
+    interface Window {
+        urlParams?: URLSearchParams;
+    }
 }
 
 const getTransJSON = async(lang: string) => {
@@ -19,7 +23,7 @@ const pageLangFallback = (lang: string) => {
 
 const translate1 = async(lang: string) => {
     var datas = pageLangFallback(lang).map(l => getTransJSON(l));
-    for (let el of $('[trans-tag')) {
+    for (let el of Array.from($('[trans-tag'))) {
         let transStr: string;
         for await (let data of datas) {
             transStr = data[$(el).attr('trans-tag')];

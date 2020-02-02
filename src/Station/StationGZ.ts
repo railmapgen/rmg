@@ -1,5 +1,5 @@
-import { RMGStation, IntInfoTag, InterchangeInfo } from './Station.js';
-import { ID, Name, BranchInfo, StationInfo } from '../utils.js';
+import { RMGStation, IntInfoTag, InterchangeInfo } from './Station';
+import { ID, Name, BranchInfo, StationInfo } from '../utils';
 
 class RMGStationGZ extends RMGStation {
     constructor(id: ID, data: StationInfo) {

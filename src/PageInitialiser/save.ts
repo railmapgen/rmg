@@ -1,5 +1,9 @@
-import { getParams, getTransText, test, describeParams, RMGParam } from '../utils.js';
-import { RMGLine } from '../Line/Line.js';
+import { getParams, getTransText, test, describeParams, RMGParam } from '../utils';
+import { RMGLine } from '../Line/Line';
+import mdcAutoInit from '@material/auto-init';
+import { MDCDialog } from '@material/dialog';
+import { MDCList } from '@material/list';
+import { MDCRipple } from '@material/ripple';
 
 declare global {
     interface Window {
@@ -11,9 +15,10 @@ export function common() {
     // mdc intances 
     const [templateDialog, importDialog, exportDialog, previewDialog, styleDialog, langDialog] = 
         ['#template_diag', '#import_diag', '#export_diag', '#preview_diag', '#style_diag', '#lang_diag']
-            .map(selector => $(selector)[0].MDCDialog);
+            .map(selector => MDCDialog.attachTo($(selector)[0]));
+    const [saveList0, saveList1] = $('#panel_save .mdc-list').map((_,el) => MDCList.attachTo(el)).get();
 
-    $('#panel_save .mdc-list')[0].MDCList.listen('MDCList:action', event => {
+    saveList0.listen('MDCList:action', (event: any) => {
         switch (event.detail.index) {
             case 0:
                 templateDialog.open();
@@ -49,7 +54,7 @@ export function common() {
     $('#panel_save .mdc-list:nth-child(2) li:nth-child(2) span:nth-child(2) span:last-child')
         .text($(`#lang_diag [data-mdc-dialog-action="${window.urlParams.get('lang')}"] span`).text());
         
-    $('#panel_save .mdc-list')[1].MDCList.listen('MDCList:action', event => {
+    saveList1.listen('MDCList:action', (event: any) => {
         switch (event.detail.index) {
             case 0:
                 styleDialog.open();
@@ -74,10 +79,11 @@ export function common() {
             );
         });
         $('#template_diag li:first-child').attr('tabindex', 0);
-        window.mdc.autoInit();
+        // autoInit();
+        mdcAutoInit.register('MDCRipple', MDCRipple as any);
     });
 
-    templateDialog.listen('MDCDialog:closed', event => {
+    templateDialog.listen('MDCDialog:closed', (event: any) => {
         if (event.detail.action == 'close') {return;}
         
         $.getJSON(`templates/${event.detail.action}.json`, data => {
@@ -86,16 +92,16 @@ export function common() {
         });
     });
 
-    exportDialog.listen('MDCDialog:closed', event => {
+    exportDialog.listen('MDCDialog:closed', (event: any) => {
         switch (event.detail.action) {
             case 'close':
                 break;
             case 'svg1':
-                $(previewDialog.root_).attr('for', 'destination');
+                $('#preview_diag').attr('for', 'destination');
                 previewDialog.open();
                 break;
             case 'svg2':
-                $(previewDialog.root_).attr('for', 'railmap');
+                $('#preview_diag').attr('for', 'railmap');
                 previewDialog.open();
                 break;
         }
@@ -116,14 +122,14 @@ export function common() {
         var MAX_HEIGHT = $(window).height() - 60 - 53 - 60;
         var scaleFactor = Math.min(MAX_WIDTH/thisSVGWidth, MAX_HEIGHT/thisSVGHeight);
 
-        $(previewDialog.root_)
+        $('#preview_diag')
             .find('svg')
             .attr({
                 width: thisSVGWidth * scaleFactor, 
                 height: thisSVGHeight * scaleFactor
             });
 
-        $(previewDialog.root_)
+        $('#preview_diag')
             .find('.mdc-dialog__surface')
             .attr('style', `max-width:${MAX_WIDTH+50}px;`);
     }
@@ -152,7 +158,7 @@ export function common() {
         
         $(event.target).find('svg [style="display: none;"]').remove();
     });
-    previewDialog.listen('MDCDialog:closed', event => {
+    previewDialog.listen('MDCDialog:closed', (event: any) => {
         if (event.detail.action === 'close') {
             $(event.target).removeAttr('for').find('.mdc-dialog__content').empty();
             return;
@@ -183,14 +189,14 @@ export function common() {
             reader.onload = function(e) {
                 console.log(e.target);
                 importedFile = JSON.parse(e.target.result as unknown as string);
-                $(importDialog.root_)
+                $('#import_diag')
                     .find('.mdc-dialog__content')
                     .html(describeParams(importedFile));
                 importDialog.open();
             };
             reader.readAsText(event.target.files[0]);
         });
-    importDialog.listen('MDCDialog:closed', event => {
+    importDialog.listen('MDCDialog:closed', (event: any) => {
         if (event.detail.action == 'close') {
             ($('#upload_file')[0] as HTMLInputElement).value = '';
             return;
@@ -201,7 +207,7 @@ export function common() {
         location.reload(true);
     });
 
-    styleDialog.listen('MDCDialog:closed', event => {
+    styleDialog.listen('MDCDialog:closed', (event: any) => {
         switch (event.detail.action) {
             case 'close': 
             case window.urlParams.get('style'):
@@ -212,7 +218,7 @@ export function common() {
         }
     });
 
-    langDialog.listen('MDCDialog:closed', event => {
+    langDialog.listen('MDCDialog:closed', (event: any) => {
         if (event.detail.action == 'close') {return;}
         var nextLang = event.detail.action;
         localStorage.rmgLang = nextLang;

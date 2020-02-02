@@ -1,7 +1,8 @@
-import { updateParam, getParams } from '../utils.js';
-import { RMGLine } from './Line.js';
+import { updateParam, getParams } from '../utils';
+import { MDCDialog } from '@material/dialog';
+import { RMGLine } from './Line';
 // import any other styles
-import { RMGLineGZ } from './LineGZ.js';
+import { RMGLineGZ } from './LineGZ';
 
 // declare global {
 //     interface Window {
@@ -9,6 +10,8 @@ import { RMGLineGZ } from './LineGZ.js';
 //     }
 // }
 
+export default function () {
+    
 const loadLine = (param) => {
     let lineClass = (style => {switch (style) {
         case 'mtr':
@@ -26,8 +29,8 @@ if (localStorage.rmgParam != null) {
         updateParam();
         loadLine(getParams());
     } catch (err) {
-        let initErrDiag = $('#init_err_diag')[0].MDCDialog;
-        $(initErrDiag.root_)
+        let initErrDiag = MDCDialog.attachTo($('#init_err_diag')[0]);
+        $('#init_err_diag')
             .find('#err_stack')
             .html(err + '<br>' + err.stack.replace(/\n/g, '<br>'));
         initErrDiag.open();
@@ -39,5 +42,7 @@ if (localStorage.rmgParam != null) {
         updateParam();
         loadLine(getParams());
     });
+}
+    
 }
 

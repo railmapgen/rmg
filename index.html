@@ -30,7 +30,6 @@
         switch (urlParams.get('style')) {
             case 'mtr':
             case 'gzmtr':
-            case 'szm':
                 break;
             default: urlParams.set('style', 'mtr');
         }
@@ -43,7 +42,6 @@
     <link rel="manifest" href="site.webmanifest">
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
-    <!-- <script async src="https://unpkg.com/html2canvas@latest/dist/html2canvas.min.js"></script> -->
 
     <link href="https://cdn.jsdelivr.net/npm/material-components-web@4.0.0/dist/material-components-web.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/material-components-web@3.2.0/dist/material-components-web.min.js"></script>
@@ -1026,7 +1024,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
-                <div id="theme_city" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="theme_city" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1051,7 +1049,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
-                <div id="theme_line" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="theme_line" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1476,7 +1474,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             <div class="mdc-layout-grid__inner">
 
                 <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone">
-                <div id="change_type" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="change_type" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1516,7 +1514,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div id="int_city" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1536,7 +1534,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div id="int_line" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1608,7 +1606,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div id="int_city" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1628,7 +1626,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div id="int_line" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1648,7 +1646,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div id="int_city" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1668,7 +1666,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div id="int_line" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1698,7 +1696,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone">
-                <div id="left_through" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="left_through" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1725,7 +1723,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone" left-first-group>
-                <div id="left_first" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="left_first" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1749,7 +1747,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone" left-pos-group>
-                <div id="left_pos" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="left_pos" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1775,7 +1773,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone">
-                <div id="right_through" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="right_through" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1802,7 +1800,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone" right-first-group>
-                <div id="right_first" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="right_first" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1826,7 +1824,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone" right-pos-group>
-                <div id="right_pos" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="right_pos" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1954,17 +1952,9 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
 <canvas style="display: none;"></canvas>
 
-<script type="module">
-    import * as initSave from './built/PageInitialiser/save.js';
-    window.myLine = null;
-    $(`[${window.urlParams.get('style')}-specific]`).show();
-    window.mdc.autoInit();
-    initSave.common();
-</script>
-
-<script async src="built/lang.js"></script>
-<script type="module" src="built/Line/init.js"></script>
-<script type="module" src="built/PageInitialiser/init.js"></script>
+<script src="dist/vendors~index.bundle.js"></script>
+<script src="dist/index.bundle.js"></script>
+<script async src="dist/lang.bundle.js"></script>
 
 </body>
 </html>

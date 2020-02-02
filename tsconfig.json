@@ -2,9 +2,13 @@
     "compilerOptions": {
         "target": "ES6",
         "outDir": "./built",
-        "lib": ["DOM", "ESNext"]
+        "lib": ["DOM", "ESNext"],
+        "allowJs": true,
+        "sourceMap": true, 
+        "moduleResolution": "node"
     }, 
     "include": [
-        "./src/**/*"
+        "./src/lang.ts", 
+        "./src/index.ts"
     ]
 }

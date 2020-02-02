@@ -1,13 +1,22 @@
-import { getParams } from '../utils.js';
-import { RMGLineGZ } from '../Line/LineGZ.js';
+import { getParams } from '../utils';
+import { RMGLineGZ } from '../Line/LineGZ';
+import { MDCTextField } from '@material/textfield';
+import { MDCSlider } from '@material/slider';
+import { RMGLine } from '../Line/Line';
+
+declare global {
+    interface Window {
+        myLine?: RMGLine;
+    }
+}
 
 export function common() {
     // mdc instances
     const [svgDestWidthTextField, svgWidthTextField] = 
-        ['#svg_dest_width', '#svg_width'].map(selector => $(selector)[0].MDCTextField);
+        ['#svg_dest_width', '#svg_width'].map(selector => MDCTextField.attachTo($(selector)[0]));
 
     const [branchSpacingSlider, yPcSlider, paddingSlider] = 
-        ['#branch_spacing', '#y_pc', '#padding'].map(selector => $(selector)[0].MDCSlider);
+        ['#branch_spacing', '#y_pc', '#padding'].map(selector => MDCSlider.attachTo($(selector)[0]));
 
     // init values
     Promise.resolve(getParams())
@@ -27,15 +36,15 @@ export function common() {
         .on('input', event => window.myLine.svgWidth = Number(event.target.value));
 
     branchSpacingSlider.listen('MDCSlider:input', event => {
-        window.myLine.branchSpacing = event.target.MDCSlider.value;
+        window.myLine.branchSpacing = branchSpacingSlider.value;
     });
 
     yPcSlider.listen('MDCSlider:input', event => {
-        window.myLine.yPc = Number(event.target.MDCSlider.value);
+        window.myLine.yPc = Number(yPcSlider.value);
     });
 
     paddingSlider.listen('MDCSlider:input', event => {
-        window.myLine.padding = event.target.MDCSlider.value;
+        window.myLine.padding = paddingSlider.value;
     });    
 }
 
@@ -43,7 +52,7 @@ export function gzmtr() {
     // mdc instances
     const [directionGZXSlider, directionGZYSlider] =
         ['#direction_gz_x', '#direction_gz_y']
-            .map(selector => $(selector)[0].MDCSlider);
+            .map(selector => MDCSlider.attachTo($(selector)[0]));
 
     // init values
     Promise.resolve(getParams())
@@ -54,10 +63,10 @@ export function gzmtr() {
     
     // add event listeners
     directionGZXSlider.listen('MDCSlider:input', event => {
-        (<RMGLineGZ>window.myLine).directionGZX = Number(event.target.MDCSlider.value);
+        (<RMGLineGZ>window.myLine).directionGZX = Number(directionGZXSlider.value);
     });
 
     directionGZYSlider.listen('MDCSlider:input', event => {
-        (<RMGLineGZ>window.myLine).directionGZY = Number(event.target.MDCSlider.value);
+        (<RMGLineGZ>window.myLine).directionGZY = Number(directionGZYSlider.value);
     });
 }

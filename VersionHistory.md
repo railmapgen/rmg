@@ -1,5 +1,17 @@
 # Version History
 
+## 2.4 (2 Feb 2020)
+
+### New Features
+
+- Updated environment for passing code check of code involving `material-components-web`.
+- Bundled codes with Webpack to minimise file size. 
+- (Documentations for the new environment will be provided later.)
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
 ## 2.3.2 (1 Feb 2020)
 
 ### Known Issues
