@@ -8,6 +8,7 @@ import { MDCSlider } from '@material/slider';
 export default function () {
     
 let firstInit = [false, true, true, true, true];
+window.sliders = [] as MDCSlider[];
 
 MDCTabBar.attachTo($('#panels .mdc-tab-bar')[0]).listen('MDCTabBar:activated', (event: any) => {
     $('.panel--active').removeClass('panel--active');
@@ -21,7 +22,7 @@ MDCTabBar.attachTo($('#panels .mdc-tab-bar')[0]).listen('MDCTabBar:activated', (
         firstInit[1] = false;
     }
     if (event.detail.index === 1) {
-        $('#panel_layout .mdc-slider').each((_,el) => MDCSlider.attachTo(el).layout());
+        window.sliders.forEach(slider => slider.layout());
     }
     if (event.detail.index == 2 && firstInit[2]) {
         initDesign.common();

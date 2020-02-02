@@ -7,6 +7,7 @@ import { RMGLine } from '../Line/Line';
 declare global {
     interface Window {
         myLine?: RMGLine;
+        sliders?: MDCSlider[];
     }
 }
 
@@ -17,6 +18,7 @@ export function common() {
 
     const [branchSpacingSlider, yPcSlider, paddingSlider] = 
         ['#branch_spacing', '#y_pc', '#padding'].map(selector => MDCSlider.attachTo($(selector)[0]));
+    window.sliders.push(branchSpacingSlider, yPcSlider, paddingSlider);
 
     // init values
     Promise.resolve(getParams())

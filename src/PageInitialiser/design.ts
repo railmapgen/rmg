@@ -121,7 +121,7 @@ export function common() {
         let lineIdx = event.detail.index;
 
         var param = getParams();
-        param.theme[1] = lineIdx;
+        param.theme[1] = event.detail.value;
         putParams(param);
 
         window.myLine.themeLine = event.detail.value;
