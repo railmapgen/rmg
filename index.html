@@ -418,6 +418,9 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             <text class="rmg-name__zh rmg-name__gzmtr--direc">方向</text>
             <text class="rmg-name__en rmg-name__gzmtr--direc" dy="22">Towards</text>
         </g>
+        <g text-anchor="start">
+
+        </g>
     </g>
 
     <g id="terminus_gz" style="display: none;" text-anchor="middle">
@@ -1929,8 +1932,10 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 </div>
 
 <canvas style="display: none;"></canvas>
-
-<!-- <script src="dist/vendors~index.bundle.js"></script> -->
+<script>
+    window.urlParams = new URLSearchParams(window.location.search);
+</script>
+<script src="dist/vendors~index.min.js"></script>
 <script src="dist/index.min.js"></script>
 <script async src="dist/lang.min.js"></script>
 

@@ -7,10 +7,10 @@ import initPanels from './PageInitialiser/init';
 declare global {
     interface Window {
         myLine?: RMGLine;
+        urlParams?: URLSearchParams;
     }
 }
 
-window.urlParams = new URLSearchParams(window.location.search);
 var requestLang = window.urlParams.get('lang') || localStorage.rmgLang || navigator.language.split('-').slice(0,2).join('-');
 switch (requestLang.toLowerCase()) {
     case 'zh-cn':

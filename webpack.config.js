@@ -28,11 +28,6 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     publicPath: './dist/'
   }, 
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-    },
-  },
   externals: {
     jquery: 'jQuery', 
     '@material/dialog': 'mdc.dialog',
