@@ -3,8 +3,7 @@ const path = require('path');
 module.exports = {
   entry: {
       index: './src/index',
-      lang: './src/lang', 
-      querycheck: './src/querycheck'
+      lang: './src/lang'
   }, 
   // uncomment devtool for debugging
   // devtool: 'inline-source-map',

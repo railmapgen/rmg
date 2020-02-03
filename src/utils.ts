@@ -4,6 +4,8 @@ export interface BranchInfo {
     right: [string, ID] | []
 }
 export type Name = [string, string];
+export enum DirectionLong {left, right};
+export enum NeighbourPl {parents, children};
 export interface StationInfo {
     branch: BranchInfo;
     parents: ID[];
@@ -63,7 +65,7 @@ export function test(svgEl) {
 
     // bypass Chrome min font size (to be improved)
 
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--station, .rmg-name__en.rmg-name__mtr--station').each((_,el) => {
+    svgEl.find('.rmg-name__en.rmg-name__gzmtr--station, .rmg-name__en.rmg-name__mtr--station, .rmg-name__zh.IntName').each((_,el) => {
         $(el).attr('font-size', '10px');
     });
 
@@ -71,9 +73,9 @@ export function test(svgEl) {
         $(el).attr('font-size', '8px');
     });
 
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--int-small').each((_,el) => {
-        $(el).attr('font-size', '8px');
-    })
+    svgEl.find('.rmg-name__en.rmg-name__gzmtr--int-small, .rmg-name__en.IntName').each((_,el) => {
+        $(el).attr('font-size', '7px');
+    });
 
     svgEl.find('text:not([font-size]), tspan:not([font-size])').each((_,el) => {
         $(el).attr('font-size', window.getComputedStyle(el).fontSize);

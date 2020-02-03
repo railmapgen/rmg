@@ -1,11 +1,24 @@
 # Version History
 
+## 2.4.1 (3 Feb 2020)
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Fixed the error that font sizes in exported PNG mutated by Chrome minimum font size feature. 
+- Fixed the issue that the black rectangle indicating the current station for MTR style shown unexpectedly in other style. 
+- Removed duplicated code and reduced repo size. 
+
 ## 2.4 (2 Feb 2020)
 
 ### New Features
 
-- Updated environment for passing code check of code involving `material-components-web`.
+- Updated environment for passing code check of code involving `material-components-web`. 
 - Bundled codes with Webpack to minimise file size. 
+- Loaded modules on demand. 
 - (Documentations for the new environment will be provided later.)
 
 ### Known Issues

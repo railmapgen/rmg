@@ -12,7 +12,7 @@
             alert('Your browser is not supported. We recommend Chrome and Safari.\n你的瀏覽器不被支援。我們推薦使用Chrome或Safari。\n你的浏览器不受支持。我们推荐使用Chrome或Safari。');
         }
     </script>
-    <script src="dist/querycheck.min.js"></script>
+    <!-- <script src="dist/querycheck.min.js"></script> -->
 
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -139,14 +139,14 @@
         }
     </style>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
     gtag('config', 'UA-152882192-1');
-    </script>
+    </script> -->
 </head>
 <body>
 <div id="svgs">
@@ -397,7 +397,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
         <g class="rmg-line rmg-line__mtr rmg-line__pass" id="line_pass"></g>
         <g class="rmg-line rmg-line__mtr" id="line_main"></g>
 
-        <rect id="current_bg" x="0" y="0" width="100" height="20" fill="#000"/>
+        <rect id="current_bg" x="0" y="0" width="100" height="20" fill="#000" style="display: none;" mtr-specific/>
 
         <g id="line_name" text-anchor="middle" style="display: none;" gzmtr-specific>
             <use xlink:href="#intbox_gz"/>

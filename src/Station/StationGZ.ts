@@ -54,7 +54,7 @@ class RMGStationGZ extends RMGStation {
                 dy: 15, class: 'rmg-name__en rmg-name__gzmtr--station'
             }).text(this.name[1].split('\\')[0]).append(
                 $('<tspan>', {
-                    'x': 0, 'dy': 12
+                    'x': 0, 'dy': 10, class: 'rmg-name__en rmg-name__gzmtr--station'
                 }).text(this.name[1].split('\\')[1])
             )
         );
