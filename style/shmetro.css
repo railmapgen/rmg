@@ -1,0 +1,11 @@
+.rmg-line__shmetro {
+    stroke-width: 12;
+}
+
+.rmg-line__shmetro.rmg-line__pass {
+    stroke: #aaa;
+}
+
+.rmg-stn__mtr--pass {
+    stroke: #aaa;
+}
