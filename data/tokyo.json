@@ -32,7 +32,7 @@
     {
         "id": "t", 
         "name": {
-			"en": "Tōsai Line (T)", 
+			"en": "Tōzai Line (T)", 
             "ja": "東西線", 
             "zh-Hans": "东西线",
             "zh-Hant": "東西線"
@@ -52,7 +52,7 @@
     {
         "id": "y", 
         "name": {
-			"en": "Yūrakuchō Line (C)", 
+			"en": "Yūrakuchō Line (Y)", 
             "ja": "有楽町線", 
             "zh-Hans": "有乐町线",
             "zh-Hant": "有樂町線"
@@ -198,7 +198,9 @@
         "id": "js", 
         "name": {
 			"en": "Shōnan-Shinjuku Line (JS)", 
-			"ja": "湘南新宿ライン"
+            "ja": "湘南新宿ライン", 
+            "zh-Hans": "湘南新宿线", 
+            "zh-Hant": "湘南新宿線"
 		}, 
         "colour": "#DB2027"
     }, 
@@ -248,7 +250,9 @@
         "id": "jn", 
         "name": {
 			"en": "Nambu Line (JN)", 
-			"ja": "南武線"
+            "ja": "南武線", 
+            "zh-Hans": "南武线", 
+            "zh-Hant": "南武線"
 		}, 
         "colour": "#F2D01F"
     }, 
@@ -256,7 +260,9 @@
         "id": "ji", 
         "name": {
 			"en": "Tsurumi Line (JI)", 
-			"ja": "鶴見線"
+            "ja": "鶴見線", 
+            "zh-Hans": "鹤见线", 
+            "zh-Hant": "鶴見線"
 		}, 
         "colour": "#F2D01F"
     }, 
@@ -264,7 +270,9 @@
         "id": "mo", 
         "name": {
 			"en": "Tokyo Monorail Haneda Airport Line (MO)", 
-			"ja": "東京モノレール羽田空港線"
+            "ja": "東京モノレール羽田空港線", 
+            "zh-Hans": "东京单轨电车羽田机场线", 
+            "zh-Hant": "東京單軌電車羽田機場線"
 		}, 
         "colour": "#26326A"
     }, 
@@ -296,7 +304,9 @@
         "id": "mg", 
         "name": {
 			"en": "Tōkyū Meguro Line (MG)", 
-			"ja": "東急目黒線"
+            "ja": "東急目黒線", 
+            "zh-Hans": "东急目黑线", 
+            "zh-Hant": "東急目黑線"
 		}, 
         "colour": "#009CD3"
     }, 
@@ -304,7 +314,9 @@
         "id": "dt", 
         "name": {
 			"en": "Tōkyū Den-en-toshi Line (DT)", 
-			"ja": "東急田園都市線"
+            "ja": "東急田園都市線", 
+            "zh-Hans": "东急田园都市线", 
+            "zh-Hant": "東急田園都市線"
 		}, 
         "colour": "#00AA8D"
     }, 
@@ -312,7 +324,9 @@
         "id": "om", 
         "name": {
 			"en": "Tōkyū Ōimachi Line (OM)", 
-			"ja": "東急大井町線"
+            "ja": "東急大井町線", 
+            "zh-Hans": "东急大井町线", 
+            "zh-Hant": "東急大井町線"
 		}, 
         "colour": "#F18C43"
     }, 
@@ -320,7 +334,9 @@
         "id": "ik", 
         "name": {
 			"en": "Tōkyū Ikegami Line (IK)", 
-			"ja": "東急池上線"
+            "ja": "東急池上線", 
+            "zh-Hans": "东急池上线", 
+            "zh-Hant": "東急池上線"
 		}, 
         "colour": "#EE86A8"
     }, 
@@ -328,7 +344,9 @@
         "id": "tm", 
         "name": {
 			"en": "Tōkyū Tamagawa Line (TM)", 
-			"ja": "東急多摩川線"
+            "ja": "東急多摩川線", 
+            "zh-Hans": "东急多摩川线", 
+            "zh-Hant": "東急多摩川線"
 		}, 
         "colour": "#AE0079"
     }, 
@@ -344,7 +362,9 @@
         "id": "sg", 
         "name": {
 			"en": "Tōkyū Setagaya Line (SG)", 
-			"ja": "東急世田谷線"
+            "ja": "東急世田谷線", 
+            "zh-Hans": "东急世田谷线", 
+            "zh-Hant": "東急世田谷線"
 		}, 
         "colour": "#FCC800"
     }, 
@@ -372,7 +392,9 @@
         "id": "sk", 
         "name": {
 			"en": "Seibu Kokubunji Line (SK)", 
-			"ja": "西武国分寺線"
+            "ja": "西武国分寺線", 
+            "zh-Hans": "西武国分寺线", 
+            "zh-Hant": "西武國分寺線"
 		}, 
         "colour": "#38b35c"
     }, 
@@ -380,7 +402,9 @@
         "id": "sw", 
         "name": {
 			"en": "Seibu Tamagawa Line (SW)", 
-			"ja": "西武多摩川線"
+            "ja": "西武多摩川線", 
+            "zh-Hans": "西武多摩川线", 
+            "zh-Hant": "西武多摩川線"
 		}, 
         "colour": "#f17c24"
     }, 
@@ -448,7 +472,9 @@
         "id": "ks", 
         "name": {
 			"en": "Keisei Main Line (KS)", 
-			"ja": "京成本線"
+            "ja": "京成本線", 
+            "zh-Hans": "京成本线", 
+            "zh-Hant": "京成本線"
 		}, 
         "colour": "#005AAA"
     }, 
@@ -472,7 +498,9 @@
         "id": "hs", 
         "name": {
 			"en": "Hokusō Line (HS)", 
-			"ja": "北総線"
+            "ja": "北総線", 
+            "zh-Hans": "北总线", 
+            "zh-Hant": "北總線"
 		}, 
         "colour": "#00bdf2"
     }, 
@@ -490,7 +518,9 @@
         "id": "oh", 
         "name": {
 			"en": "Odakyū Lines (OH/OE/OT)", 
-			"ja": "小田急線"
+            "ja": "小田急線", 
+            "zh-Hans": "小田急线", 
+            "zh-Hant": "小田急線"
 		}, 
         "colour": "#0085CE"
     },
