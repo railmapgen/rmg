@@ -21,7 +21,7 @@ export default function () {
     
 const loadLine = async (param) => {
     let lineClass = await getLineClass(window.urlParams.get('style'));
-    window.myLine = new lineClass(param);
+    window.myLine = await new lineClass(param);
     lineClass.initSVG(window.myLine);
 }
 

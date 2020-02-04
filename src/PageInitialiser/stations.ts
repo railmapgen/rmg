@@ -1,5 +1,5 @@
 import { getParams, countryCode2Emoji, getTransText } from '../utils';
-import { ID, StationInfo, Name } from '../utils';
+import { ID, StationInfo, Name, DirectionLong, NeighbourPl } from '../utils';
 import { MDCDialog } from '@material/dialog';
 import { MDCSelect } from '@material/select';
 import { MDCTextField } from '@material/textfield';
@@ -67,23 +67,24 @@ export function common() {
     const [stnAddPrepSelect, stnAddPivotSelect, stnAddLocSelect, stnAddEndSelect] = 
         ['#prep', '#pivot', '#loc', '#end'].map(selector => new MDCSelect($('#stn_add_diag').find(selector)[0]));
 
-    const [stnModifyNameZHField, stnModifyNameENField, stnModifyNumField] =
-        ['#name_zh', '#name_en', '#stn_num'].map(selector => new MDCTextField($('#stn_modify_diag').find(selector)[0]));
+    const stnModifyNameFields = 
+        ['#name_zh', '#name_en'].map(selector => new MDCTextField($('#stn_modify_diag').find(selector)[0]));
+    const stnModifyNumField = new MDCTextField($('#stn_modify_diag #stn_num')[0]);
 
     const stnTransferTabBar = new MDCTabBar($('#stn_transfer_diag .mdc-tab-bar')[0]);
-
     const changeTypeSelect = new MDCSelect($('#change_type')[0]);
     const intCitySelects = $('#int_city .mdc-select').map((_,el) => new MDCSelect(el)).get();
     const intLineSelects = $('#int_line .mdc-select').map((_,el) => new MDCSelect(el)).get();
-    const intNameZHFields = $('#int_name_zh .mdc-text-field').map((_,el) => new MDCTextField(el)).get();
-    const intNameENFields = $('#int_name_en .mdc-text-field').map((_,el) => new MDCTextField(el)).get();
-    const stnOSINameZHField = new MDCTextField($('#stn_transfer_diag #osi_name_zh')[0]);
-    const stnOSINameENField = new MDCTextField($('#stn_transfer_diag #osi_name_en')[0]);
+    const intNameFields = ['zh', 'en']
+        .map(lang => $(`div#int_name_${lang}`).find('.mdc-text-field').map((_,el) => new MDCTextField(el)).get());
+    const stnOSINameFields = 
+        ['zh', 'en'].map(lang => new MDCTextField($('#stn_transfer_diag').find(`#osi_name_${lang}`)[0]));
     const [tickDirecToggle, paidAreaToggle] = 
         ['#tick_direc', '#paid_area'].map(selector => new MDCIconButtonToggle($('#stn_transfer_diag').find(selector)[0]));
 
-    const [leftThroughSelect, rightThroughSelect, leftFirstSelect, rightFirstSelect, leftPosSelect, rightPosSelect] = 
-        ['#left_through', '#right_through', '#left_first', '#right_first', '#left_pos', '#right_pos'].map(selector => new MDCSelect($(selector)[0]));
+    const [throughSelects, firstSelects, posSelects] = 
+        ['through', 'first', 'pos']
+            .map(selector => ['left', 'right'].map(direc => new MDCSelect($(`#${direc}_${selector}`)[0])));
 
     var stnList = getParams().stn_list;
     window.myLine.tpo.forEach(stnId => {
@@ -118,11 +119,10 @@ export function common() {
 
 
     // Addition
-
-    stnAddDialog.listen('MDCDialog:opening', event => {
+    stnAddDialog.listen('MDCDialog:opening', () => {
         stnAddPivotSelect.selectedIndex = 0;
     });
-    stnAddDialog.listen('MDCDialog:opened', event => {
+    stnAddDialog.listen('MDCDialog:opened', () => {
         [stnAddPrepSelect, stnAddPivotSelect, stnAddLocSelect].forEach(select => select.layout());
     });
     stnAddDialog.listen('MDCDialog:closed', (event: any) => {
@@ -218,25 +218,28 @@ export function common() {
     // Modification (Name)
     stnModifyDialog.listen('MDCDialog:opening', event => {
         var stnId = $(event.target).attr('for');
-        [stnModifyNameZHField.value, stnModifyNameENField.value] = getParams().stn_list[stnId].name;
-        stnModifyNumField.value = getParams().stn_list[stnId].num;
-    })
+        Promise.resolve(getParams().stn_list)
+            .then(stnList => {
+                stnModifyNameFields.forEach((textfield, i) => textfield.value = stnList[stnId].name[i]);
+                stnModifyNumField.value = stnList[stnId].num;
+            });
+    });
+
     stnModifyDialog.listen('MDCDialog:opened', () => {
-        stnModifyNameZHField.layout();
-        stnModifyNameENField.layout();
+        stnModifyNameFields.map(textfield => textfield.layout());
         stnModifyNumField.layout();
-    })
-    $('#stn_modify_diag #name_zh, #stn_modify_diag #name_en, #stn_num').on('input', () => {
-        var nameZH = stnModifyNameZHField.value;
-        var nameEN = stnModifyNameENField.value;
+    });
+
+    $('#stn_modify_diag').find('#name_zh, #name_en, #stn_num').on('input', () => {
+        let names = stnModifyNameFields.map(textfield => textfield.value) as Name;
         var stnNum = stnModifyNumField.value;
 
         var stnId = $('#stn_modify_diag').attr('for');
-        window.myLine.updateStnName(stnId, [nameZH, nameEN], stnNum);
+        window.myLine.updateStnName(stnId, names, stnNum);
         $(`#panel_stations .mdc-layout-grid__inner:first #${stnId} .mdc-card__media-content`)
-            .html([nameZH, nameEN].join('<br>'))
+            .html(names.join('<br>'))
             .prepend($('<span>', { style:(window.urlParams.get('style')=='gzmtr' ? '' : 'display:none;')}).text(stnNum+' '));
-        $(`#pivot__selection [data-value="${stnId}`).html(`${nameZH} - ${nameEN}`);
+        $(`li[data-value="${stnId}`).text(names.join());
     });
 
 
@@ -245,18 +248,12 @@ export function common() {
         changeTypeSelect.layout();
         intCitySelects.forEach(select => select.layout());
         intLineSelects.forEach(select => select.layout());
-        intNameZHFields.forEach(textfield => textfield.layout());
-        intNameENFields.forEach(textfield => textfield.layout());
-        stnOSINameENField.layout();
-        stnOSINameZHField.layout();
+        intNameFields.flat().forEach(textfield => textfield.layout());
+        stnOSINameFields.forEach(textfield => textfield.layout());
     };
     const focusBranch = () => {
-        leftThroughSelect.layout();
-        rightThroughSelect.layout();
-        leftFirstSelect.layout();
-        rightFirstSelect.layout();
-        leftPosSelect.layout();
-        rightPosSelect.layout();
+        [...throughSelects, ...firstSelects, ...posSelects]
+            .map(select => select.layout());
     };
 
     const initBranch = (stnInfo: StationInfo) => {
@@ -264,22 +261,14 @@ export function common() {
         ['left', 'right'].forEach(direc => {
             let throughType = stnInfo.branch[direc][0];
             if (throughType) {
-                if (direc === 'left') {
-                    leftThroughSelect.value = throughType;
-                } else {
-                    rightThroughSelect.value = throughType;
-                }
+                throughSelects[DirectionLong[direc]].value = throughType;
                 $(`#${direc}_through__selection [data-value="na"]`).hide();
                 $(`#${direc}_through__selection [data-value="through"]`).show();
                 $(`#${direc}_through__selection [data-value="nonthrough"]`).show();
 
                 $(`[${direc}-first-group], [${direc}-pos-group]`).show();
             } else {
-                if (direc === 'left') {
-                    leftThroughSelect.value = 'na';
-                } else {
-                    rightThroughSelect.value = 'na';
-                }
+                throughSelects[DirectionLong[direc]].value = 'na';
                 $(`#${direc}_through__selection [data-value="na"]`).show();
                 $(`#${direc}_through__selection [data-value="through"]`).hide();
                 $(`#${direc}_through__selection [data-value="nonthrough"]`).hide();
@@ -292,44 +281,30 @@ export function common() {
         $('#left_first__selection, #right_first__selection').empty();
         Promise.resolve(getParams().stn_list)
             .then(stnList => {
-                stnInfo.parents.forEach(par => {
-                    $('#left_first__selection').append(
-                        $('<li>', {
-                            class: 'mdc-list-item', 
-                            'data-value': par
-                        }).text(stnList[par].name.join(' - '))
-                    );
-                });
-                stnInfo.children.forEach(child => {
-                    $('#right_first__selection').append(
-                        $('<li>', {
-                            class: 'mdc-list-item', 
-                            'data-value': child
-                        }).text(stnList[child].name.join(' - '))
-                    );
+                [0, 1].forEach(i => {
+                    stnInfo[NeighbourPl[i] as 'parents' | 'children']
+                        .forEach(ne => {
+                            $(`#${DirectionLong[i]}_first__selection`)
+                                .append(
+                                    $('<li>', { class: 'mdc-list-item', 'data-value': ne})
+                                        .text(stnList[ne].name.join())
+                                );
+                        });
                 });
             })
             .then(() => {
-                ['left', 'right'].forEach(direc => {
-                    if (direc === 'left') {
-                        if (leftThroughSelect.value !== 'na') {
-                            leftFirstSelect.selectedIndex = stnInfo.parents.indexOf(stnInfo.branch[direc][1]);
-                        } else {
-                            leftFirstSelect.selectedIndex = 0;
-                        }
-                    } else {
-                        if (rightThroughSelect.value !== 'na') {
-                            rightFirstSelect.selectedIndex = stnInfo.children.indexOf(stnInfo.branch[direc][1]);
-                        } else {
-                            rightFirstSelect.selectedIndex = 0;
-                        }
-                    }
-                })
+                throughSelects.forEach((select, idx) => {
+                    firstSelects[idx].selectedIndex = 
+                        select.value !== 'na' ?
+                        stnInfo[NeighbourPl[idx]].indexOf(stnInfo.branch[DirectionLong[idx]][1]) :
+                        0;
+                });
             });
         
         // swap position
-        leftPosSelect.selectedIndex = stnInfo.parents.indexOf(stnInfo.branch.left[1]);
-        rightPosSelect.selectedIndex = stnInfo.children.indexOf(stnInfo.branch.right[1]);
+        posSelects.forEach((select, i) => {
+            select.selectedIndex = stnInfo[NeighbourPl[i]].indexOf(stnInfo.branch[DirectionLong[i]][1])
+        });
     };
 
     stnTransferTabBar.listen('MDCTabBar:activated', (event: any) => {
@@ -355,7 +330,7 @@ export function common() {
             $('#int_city__selection.mdc-list').each((_,el) => {
                 $(el).append(
                     $('<li>', { class: 'mdc-list-item', 'data-value': c.id})
-                        .html(countryCode2Emoji(c.country) + getTransText(c.name, lang))
+                        .text(countryCode2Emoji(c.country) + getTransText(c.name, lang))
                 );
             });
         });
@@ -368,8 +343,7 @@ export function common() {
             $('#int_city, #int_line, #int_name_zh, #int_name_en').slice(n*4, (n+1)*4).show();
             intCitySelects[n].layout();
             intLineSelects[n].layout();
-            intNameZHFields[n].layout();
-            intNameENFields[n].layout();
+            intNameFields.map(fields => fields[n].layout());
         } else {
             $('#int_city, #int_line, #int_name_zh, #int_name_en').slice(n*4, (n+1)*4).hide();
         }
@@ -379,12 +353,6 @@ export function common() {
         var stnId = $(event.target).attr('for');
         var stnInfo = getParams().stn_list[stnId];
         let lineThemeCity = getParams().theme[0];
-
-        // if ((stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') && window.urlParams.get('style') === 'mtr') {
-        //     $('#change_type__selection li:last-child').show();
-        // } else {
-        //     $('#change_type__selection li:last-child').hide();
-        // }
 
         changeTypeSelect.value = stnInfo.change_type.split('_')[0];
 
@@ -402,14 +370,12 @@ export function common() {
             allInterchanges.forEach((intInfo, idx) => {
                 let cIdx = $('#int_city__selection.mdc-list').eq(0).find(`[data-value="${intInfo[0] || lineThemeCity}"]`).index();
                 intCitySelects[idx].selectedIndex = cIdx;
-                intNameZHFields[idx].value = intInfo[4] || '';
-                intNameENFields[idx].value = intInfo[5] || '';
-            })
+                intNameFields.forEach((fields, i) => fields[idx].value = intInfo[4+i] || '');
+            });
         } else {
             let cIdx = $('#int_city__selection.mdc-list').eq(0).find(`[data-value="${lineThemeCity}"]`).index();
             intCitySelects.forEach(select => select.selectedIndex = cIdx);
-            intNameZHFields.forEach(textfield => textfield.value = '');
-            intNameENFields.forEach(textfield => textfield.value = '');
+            intNameFields.flat().forEach(textfield => textfield.value = '');
         }
 
         if (['none', 'int2'].includes(stnInfo.change_type.split('_')[0])) {
@@ -419,11 +385,10 @@ export function common() {
         }
 
         if (stnInfo.change_type.substring(0,3) == 'osi') {
-            [stnOSINameZHField.value, stnOSINameENField.value] = stnInfo.interchange[1][0];
+            stnOSINameFields.forEach((textfield,i) => textfield.value = stnInfo.interchange[1][0][i]);
             paidAreaToggle.on = (stnInfo.change_type.split('_').reverse()[0][0] == 'p');
         } else {
-            stnOSINameZHField.value = '';
-            stnOSINameENField.value = '';
+            stnOSINameFields.forEach(textfield => textfield.value = '');
             paidAreaToggle.on = true;
         }
 
@@ -443,7 +408,7 @@ export function common() {
         var stnId = event.target.getAttribute('for');
         var type = changeTypeSelect.value;
         var tickDirec = tickDirecToggle.on ? 'r' : 'l';
-        var osi = [stnOSINameZHField.value, stnOSINameENField.value];
+        let osi = stnOSINameFields.map(textfield => textfield.value);
         var osiPaidArea = paidAreaToggle.on ? 'p' : 'u';
 
         var [intInfo0, intInfo1, intInfo2] = [0,1,2].map(idx => {
@@ -452,7 +417,7 @@ export function common() {
                     $('ul#int_line__selection').eq(idx).find('li span')
                         .eq(intLineSelects[idx].selectedIndex)
                         .attr('style').match(/#[\w\d]+/g), 
-                    intNameZHFields[idx].value, intNameENFields[idx].value
+                    ...intNameFields.map(fields => fields[idx].value)
                 );
         });
         if (type == 'none') {
@@ -560,40 +525,31 @@ export function common() {
     }); 
 
     // Modification (Branch)
-    const zip = (...rows) => [...rows[0]].map((_,c) => rows.map(row => row[c]));
-
-    zip([leftThroughSelect, rightThroughSelect], ['left', 'right'])
-        .forEach((select: [MDCSelect, 'left' | 'right']) => {
-            select[0].listen('MDCSelect:change', (event: any) => {
-                if (event.detail.value === 'na') {return;}
-                let stnId = $('#stn_transfer_diag').attr('for');
-                window.myLine.updateBranchType(stnId, select[1], event.detail.value);
-            });
+    throughSelects.forEach((select, idx) => {
+        select.listen('MDCSelect:change', (event: any) => {
+            if (event.detail.value === 'na') {return;}
+            let stnId = $('#stn_transfer_diag').attr('for');
+            window.myLine.updateBranchType(stnId, idx, event.detail.value);
         });
+    });
 
-    zip([leftFirstSelect, rightFirstSelect], ['left', 'right'], [leftPosSelect, rightPosSelect])
-        .forEach((select: [MDCSelect, 'left' | 'right', MDCSelect]) => {
-            select[0].listen('MDCSelect:change', (event: any) => {
-                if ($(`#${select[1]}_first__selection`).children().length === 1) {return;}
-                let stnId = $('#stn_transfer_diag').attr('for');
-                if (window.myLine.updateBranchFirst(stnId, select[1], event.detail.value)) {
-                    if (select[2].selectedIndex === 0) {
-                        select[2].selectedIndex = 1;
-                    } else {
-                        select[2].selectedIndex = 0;
-                    }
-                }
-            });
+    firstSelects.forEach((select, idx) => {
+        select.listen('MDCSelect:change', (event: any) => {
+            if ($(`#${DirectionLong[idx]}_first__selection`).children().length === 1) {return;}
+            let stnId = $('#stn_transfer_diag').attr('for');
+            if (window.myLine.updateBranchFirst(stnId, idx, event.detail.value)) {
+                posSelects[idx].selectedIndex = posSelects[idx].selectedIndex === 0 ? 1 : 0;
+            }
         });
+    });
 
-    zip([leftPosSelect, rightPosSelect], ['left', 'right'], [leftThroughSelect, rightThroughSelect])
-        .forEach((select: [MDCSelect, 'left' | 'right', MDCSelect]) => {
-            select[0].listen('MDCSelect:change', (event: any) => {
-                if (select[2].value === 'na') {return;}
-                let stnId = $('#stn_transfer_diag').attr('for');
-                window.myLine.updateBranchPos(stnId, select[1], event.detail.index);
-            })
+    posSelects.forEach((select, idx) => {
+        select.listen('MDCSelect:change', (event: any) => {
+            if (throughSelects[idx].value === 'na') {return;}
+            let stnId = $('#stn_transfer_diag').attr('for');
+            window.myLine.updateBranchPos(stnId, idx, event.detail.index);
         })
+    })
 
     // Deletion
     stnDeleteDialog.listen('MDCDialog:opening', event => {

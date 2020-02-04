@@ -1,7 +1,7 @@
 import { getTxtBoxDim, setParams, getParams, putParams, getRandomId } from '../utils';
 import { RMGStation, Int2Station, Int3LStation, Int3RStation, OSI11LStation, OSI11RStation, OSI12LStation, OSI12RStation, OSI22LStation, OSI22RStation, OSI22EndStation } from '../Station/Station';
 
-import { ID, Name, StationInfo, RMGParam } from '../utils';
+import { ID, Name, StationInfo, RMGParam, DirectionLong } from '../utils';
 
 interface StationDict {
     [index: string]: RMGStation;
@@ -615,7 +615,7 @@ export class RMGLine {
         $('#current_bg').attr({
             x: stnNameDim.x-3, 
             width: stnNameDim.width+6, 
-        }).show();
+        });
     }
 
     get stnDX() {return this.turningRadius - this._branchSpacing/2};
@@ -1366,7 +1366,8 @@ export class RMGLine {
         location.reload(true);
     }
 
-    updateBranchType(stnId: ID, direc: 'left' | 'right', type: 'through' | 'nonthrough') {
+    updateBranchType(stnId: ID, direction: DirectionLong, type: 'through' | 'nonthrough') {
+        let direc = DirectionLong[direction];
         // no change
         if (this.stations[stnId].branch[direc][0] === type) {return;}
 
@@ -1386,7 +1387,8 @@ export class RMGLine {
         this.loadFonts();
     }
 
-    updateBranchFirst(stnId: ID, direc: 'left' | 'right', first: ID) {
+    updateBranchFirst(stnId: ID, direction: DirectionLong, first: ID) {
+        let direc = DirectionLong[direction];
         // no change
         if (this.stations[stnId].branch[direc][1] === first) {return false;}
 
@@ -1426,7 +1428,8 @@ export class RMGLine {
         return true;
     }
 
-    updateBranchPos(stnId: ID, direc: 'left' | 'right', pos: 0 | 1) {
+    updateBranchPos(stnId: ID, direction: DirectionLong, pos: 0 | 1) {
+        let direc = DirectionLong[direction];
         // no change
         if (direc === 'right') {
             if (this.stations[stnId].children.indexOf(this.stations[stnId].branch.right[1]) === pos) {return;}

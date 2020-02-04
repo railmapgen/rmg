@@ -1,6 +1,5 @@
-import { getTxtBoxDim, setParams, getParams, putParams, getRandomId } from '../utils';
+import { getTxtBoxDim, setParams, getParams, putParams, getRandomId, DirectionLong } from '../utils';
 import { RMGStationGZ, IntStationGZ, BranchStationGZ, OSIStationGZ } from '../Station/StationGZ';
-import { RMGStation } from '../Station/Station';
 import { RMGLine } from './Line';
 
 import { ID, Name, StationInfo, RMGParam } from '../utils';
@@ -27,7 +26,7 @@ class RMGLineGZ extends RMGLine {
         this._directionGZY = param.direction_gz_y;
     }
 
-    _initStnInstance(stnId: ID, stnInfo: StationInfo): RMGStation {
+    _initStnInstance(stnId: ID, stnInfo: StationInfo) {
         if (stnInfo.children.length === 2 || stnInfo.parents.length === 2) {
             return new BranchStationGZ(stnId, stnInfo, [this.themeCity, this.themeLine, this._themeColour, this._fgColour, ...this._lineNames]);
         }
@@ -351,9 +350,9 @@ class RMGLineGZ extends RMGLine {
         
     }
 
-    updateStnNameBg() {
-        $('#current_bg').hide();
-    }
+    // updateStnNameBg() {
+    //     $('#current_bg').hide();
+    // }
 
     loadLineNum() {
         const LINE_NUM_MAX_WIDTH = 15.59375;
@@ -680,14 +679,14 @@ class RMGLineGZ extends RMGLine {
         this.loadLineNum();
     }
 
-    updateBranchType(stnId: ID, direc: 'left' | 'right', type: 'through' | 'nonthrough') {
-        super.updateBranchType(stnId, direc, type);
+    updateBranchType(stnId: ID, direction: DirectionLong, type: 'through' | 'nonthrough') {
+        super.updateBranchType(stnId, direction, type);
         this.loadLineNum();
         this.loadDirection();
     }
 
-    updateBranchFirst(stnId: ID, direc: 'left' | 'right', first: ID) {
-        if (!super.updateBranchFirst(stnId, direc, first)) {
+    updateBranchFirst(stnId: ID, direction: DirectionLong, first: ID) {
+        if (!super.updateBranchFirst(stnId, direction, first)) {
             return false;
         }
         this.loadLineNum();
@@ -695,8 +694,8 @@ class RMGLineGZ extends RMGLine {
         return true;
     }
 
-    updateBranchPos(stnId: ID, direc: 'left' | 'right', pos: 0 | 1) {
-        super.updateBranchPos(stnId, direc, pos);
+    updateBranchPos(stnId: ID, direction: DirectionLong, pos: 0 | 1) {
+        super.updateBranchPos(stnId, direction, pos);
         this.loadLineNum();
         this.loadDirection();
     }

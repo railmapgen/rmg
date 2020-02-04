@@ -55,6 +55,7 @@ export function gzmtr() {
     const [directionGZXSlider, directionGZYSlider] =
         ['#direction_gz_x', '#direction_gz_y']
             .map(selector => MDCSlider.attachTo($(selector)[0]));
+    window.sliders.push(directionGZXSlider, directionGZYSlider);
 
     // init values
     Promise.resolve(getParams())
