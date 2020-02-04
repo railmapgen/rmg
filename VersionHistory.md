@@ -1,5 +1,19 @@
 # Version History
 
+## 2.4.2 (4 Feb 2020)
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Fixed the errors in Tokyo's colour list. 
+- Fixed the displaying issue of out-of-station interchange name field. 
+- Fixed the incorrect list of possible locations of a new station. 
+- Fixed the error that branch configuration of newly added station may be incorrect. 
+- Fixed the incorrect station intervals caused by webpack minimal output. 
+
 ## 2.4.1 (3 Feb 2020)
 
 ### Known Issues
