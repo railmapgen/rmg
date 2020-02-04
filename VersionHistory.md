@@ -1,5 +1,15 @@
 # Version History
 
+## 2.5.1 (5 Feb 2020)
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Separated CSS stylesheets from `index.html`. ([#7](issue/7))
+
 ## 2.5 (4 Feb 2020)
 
 ### Known Issues

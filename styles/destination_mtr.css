@@ -1,0 +1,16 @@
+.rmg-platform-num {
+    alignment-baseline:central;
+    text-anchor: middle;
+}
+.rmg-platform-num.rmg-platform-num__mtr {
+    font-size:135px;
+    font-family: Vegur;
+    fill: #fff;
+}
+.rmg-name__platformnum {
+    text-anchor: middle;
+}
+.rmg-name__mtr--platformnum {
+    font-size:135px;
+    fill: #fff;
+}

@@ -3,6 +3,7 @@ import * as $ from 'jquery';
 import { RMGLine } from './Line/Line';
 import initLine from './Line/init';
 import initPanels from './PageInitialiser/init';
+import { getParams } from './utils';
 
 declare global {
     interface Window {
@@ -32,6 +33,18 @@ switch (window.urlParams.get('style')) {
     default: window.urlParams.set('style', 'mtr');
 }
 history.pushState({url:window.location.href}, null, '?' + window.urlParams.toString());
+
+// load stylesheets on demand
+$('head').append(
+    ...['share', 'destination', 'railmap']
+        .map(tag => {
+            return $('<link>', {
+                rel: 'stylesheet', 
+                href: `styles/${tag}_${window.urlParams.get('style')}.css`, 
+                id: `css_${tag}`
+            })
+        })
+);
 
 window.myLine = null;
 $(`[${window.urlParams.get('style')}-specific]`).show();

@@ -1,6 +1,3 @@
-.rmg-name__zh.rmg-name__mtr--dest {font-size: 90px;}
-.rmg-name__en.rmg-name__mtr--dest {font-size: 45px;}
-
 .rmg-name__zh.rmg-name__gzmtr--dest {font-size: 90px;}
 .rmg-name__en.rmg-name__gzmtr--dest {font-size: 36px;}
 
@@ -24,18 +21,10 @@
     alignment-baseline:central;
     text-anchor: middle;
 }
-.rmg-platform-num.rmg-platform-num__mtr {
-    font-size:135px;
-    font-family: Vegur;
-    fill: #fff;
-}
+
 .rmg-name__platformnum {
     text-anchor: middle;
 }
 .rmg-name__gzmtr--platformnum {
     font-size:38px;
-}
-.rmg-name__mtr--platformnum {
-    font-size:135px;
-    fill: #fff;
 }
