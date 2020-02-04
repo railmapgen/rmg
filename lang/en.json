@@ -46,6 +46,7 @@
     "Layout.Y": "Vertical Position",
     "Layout.BranchSpacing": "Branch Spacing", 
     "Layout.Padding": "Line Padding", 
+    "Layout.DirectionGZ": "Direction Indicator Position",
 
     "Design.Theme": "Theme Colour", 
     "Design.Theme.Title": "Choose a Theme Colour",
@@ -54,6 +55,9 @@
     "Design.Name.Title": "Edit Line Name", 
 
     "Design.Direction": "Train Direction", 
+    "Design.Direction.L": "Left", 
+    "Design.Direction.R": "Right", 
+    
     "Design.Platform": "Platform Number",
     "Design.MTRLegacy": "MTR Legacy Style",
     "Design.FlipName": "Flip Station Names Position",

@@ -1,5 +1,38 @@
 # Version History
 
+## 2.4 (2 Feb 2020)
+
+### New Features
+
+- Updated environment for passing code check of code involving `material-components-web`.
+- Bundled codes with Webpack to minimise file size. 
+- (Documentations for the new environment will be provided later.)
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+## 2.3.2 (1 Feb 2020)
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Improved robustness. 
+- Updated `README`. 
+
+## 2.3.1 (31 Jan 2020)
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Fixed the issue of oversized text when exporting canvas as PNG. 
+
 ## 2.3 (31 Jan 2020)
 
 ### New Features
@@ -10,7 +43,6 @@
 
 ### Known Issues
 
-- 'Next stop' information may be wrong when line includes branches. 
 - PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 
 ### Resolved Issues
@@ -28,7 +60,6 @@
 
 ### Known Issues
 
-- 'Next stop' information may be wrong when line includes branches. 
 - PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 - Vertical height of the canvas may not sufficient for line with branches in Guangzhou Metro style. 
 
@@ -41,7 +72,6 @@
 
 ### Known Issues
 
-- 'Next stop' information may be wrong when line includes branches. 
 - PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 - Vertical height of the canvas may not sufficient for line with branches in Guangzhou Metro style. 
 

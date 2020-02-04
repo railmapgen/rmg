@@ -1,40 +1,51 @@
-import { initLayoutPanel, initDesignPanel, initStationsPanel, initInfoPanel } from '../page_loader.js';
-// var layoutPanelFirstInit = true;
-// var designPanelFirstInit = true;
-// var stationsPanelFirstInit = true;
-// var testPanelFirstInit = true;
-// // var branchesPanelFirstInit = true;
-// var infoPanelFirstInit = true;
+import * as initLayout from './layout';
+import * as initDesign from './design';
+import * as initStations from './stations';
+import * as initInfo from './info';
+import { MDCTabBar } from '@material/tab-bar';
+import { MDCSlider } from '@material/slider';
 
-// declare global {
-//     interface Window {
-//         firstInit?: boolean[];
-//     }
-// }
-
+export default function () {
+    
 let firstInit = [false, true, true, true, true];
+window.sliders = [] as MDCSlider[];
 
-$('#panels .mdc-tab-bar')[0].MDCTabBar.listen('MDCTabBar:activated', event => {
+MDCTabBar.attachTo($('#panels .mdc-tab-bar')[0]).listen('MDCTabBar:activated', (event: any) => {
     $('.panel--active').removeClass('panel--active');
     $('.panel').eq(event.detail.index).addClass('panel--active');
 
     if (event.detail.index == 1 && firstInit[1]) {
-        initLayoutPanel();
+        initLayout.common();
+        if (window.urlParams.get('style') === 'gzmtr') {
+            initLayout.gzmtr();
+        }
         firstInit[1] = false;
     }
     if (event.detail.index === 1) {
-        $('#panel_layout .mdc-slider').each((_,el) => el.MDCSlider.layout());
+        window.sliders.forEach(slider => slider.layout());
     }
     if (event.detail.index == 2 && firstInit[2]) {
-        initDesignPanel();
+        initDesign.common();
+        switch (window.urlParams.get('style')) {
+            case 'mtr':
+                initDesign.mtr();
+                break;
+            case 'gzmtr':
+                initDesign.gzmtr();
+                break;
+        }
         firstInit[2] = false;
     }
     if (event.detail.index == 3 && firstInit[3]) {
-        initStationsPanel();
+        console.log('init again');
+        initStations.common();
         firstInit[3] = false;
     }
     if (event.detail.index == 4 && firstInit[4]) {
-        initInfoPanel();
+        initInfo.common();
         firstInit[4] = false;
     }
 });
+
+}
+

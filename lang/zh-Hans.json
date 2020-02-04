@@ -45,6 +45,7 @@
     "Layout.Y": "垂直位置",
     "Layout.BranchSpacing": "支线间距", 
     "Layout.Padding": "线路两端留白", 
+    "Layout.DirectionGZ": "方向指示位置",
 
     "Design.Theme": "主题颜色", 
     "Design.Theme.Title": "选择主题颜色",
@@ -53,6 +54,9 @@
     "Design.Name.Title": "编辑线路名称", 
 
     "Design.Direction": "行驶方向", 
+    "Design.Direction.L": "左行", 
+    "Design.Direction.R": "右行", 
+    
     "Design.Platform": "站台编号",
     "Design.MTRLegacy": "港铁旧款样式",
     "Design.FlipName": "翻转车站名称位置",

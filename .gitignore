@@ -1,2 +1,4 @@
 .DS_Store
 built/
+.vscode/
+node_modules/

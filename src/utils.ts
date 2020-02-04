@@ -18,6 +18,25 @@ export interface RMGParam {
     [propName: string]: any;
 }
 
+export interface LineEntry {
+    id: string;
+    name: {
+        en: string;
+        [x: string]: string;
+    };
+    colour: string;
+    fg?: string;
+}
+
+export interface CityEntry {
+    id: string;
+    country: string;
+    name: {
+        en: string;
+        [x: string]: string;
+    }
+}
+
 export function putParams(instance: RMGParam) {
     localStorage.setItem('rmgParam', JSON.stringify(instance));
 }
@@ -33,7 +52,7 @@ export function setParams(key: string, data: any) {
 }
 
 export function test(svgEl) {
-    var [_, _, svgW, svgH] = svgEl.attr('viewBox').split(' ');
+    var [svgW, svgH] = svgEl.attr('viewBox').split(' ').slice(2);
 
     var canvas = <HTMLCanvasElement> $('canvas')[0];
     $('canvas').attr({
@@ -42,14 +61,31 @@ export function test(svgEl) {
     var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // bypass Chrome min font size (to be improved)
+
+    svgEl.find('.rmg-name__en.rmg-name__gzmtr--station, .rmg-name__en.rmg-name__mtr--station').each((_,el) => {
+        $(el).attr('font-size', '10px');
+    });
+
+    svgEl.find('.rmg-name__en.rmg-name__gzmtr--int').each((_,el) => {
+        $(el).attr('font-size', '8px');
+    });
+
+    svgEl.find('.rmg-name__en.rmg-name__gzmtr--int-small').each((_,el) => {
+        $(el).attr('font-size', '8px');
+    })
+
+    svgEl.find('text:not([font-size]), tspan:not([font-size])').each((_,el) => {
+        $(el).attr('font-size', window.getComputedStyle(el).fontSize);
+    });
+
     svgEl.find('text, tspan').each((_,el) => {
         var elStyle = window.getComputedStyle(el);
         $(el).attr({
             'font-family': elStyle.getPropertyValue('font-family'), 
             'fill': elStyle.getPropertyValue('fill'), 
             'alignment-baseline': elStyle.getPropertyValue('alignment-baseline'), 
-            'text-anchor': elStyle.getPropertyValue('text-anchor'),
-            'font-size': elStyle.getPropertyValue('font-size')
+            'text-anchor': elStyle.getPropertyValue('text-anchor')
         }).removeAttr('class');
     });
 
@@ -137,9 +173,20 @@ export function describeParams(param: RMGParam) {
 export function countryCode2Emoji(code: string): string {
     var chars = code.toUpperCase().split('');
     if (code.length == 2) {
-        return chars.map(char => '&#' + (char.charCodeAt(0)+127397).toString() + ';').join('');
+        return chars.map(char => String.fromCodePoint((char.codePointAt(0)+127397))).join('');
     } else {
-        return '&#127988;' + chars.map(char => '&#' + (char.charCodeAt(0)+917536).toString() + ';').join('') + '&#917631;';
+        return '\u{1f3f4}' + chars.map(char => String.fromCodePoint((char.codePointAt(0)+917536))).join('') + '\u{e007f}';
+    }
+}
+
+export function rgb2Hex(rgb: string) {
+    let hex = rgb.match(/[\d]+/g)
+        .map(dec => Number(dec).toString(16).padStart(2,'0'))
+        .join('');
+    switch (hex) {
+        case '000000': return '#000';
+        case 'ffffff': return '#fff';
+        default: return '#' + hex;
     }
 }
 

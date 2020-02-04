@@ -1,25 +1,26 @@
-import { updateParam, getParams } from '../utils.js';
-import { RMGLine } from './Line.js';
-// import any other styles
-import { RMGLineGZ } from './LineGZ.js';
-import { RMGLineSH } from './LineSH.js';
+import { updateParam, getParams } from '../utils';
+import { MDCDialog } from '@material/dialog';
+import { RMGLine } from './Line';
 
-declare global {
-    interface Window {
-        myLine?: RMGLine;
+const getLineClass = async (style: string) => {
+    switch (style) {
+        case 'mtr':
+            return Promise.resolve(RMGLine);
+        // lazy loading
+        case 'gzmtr':
+            return import(/* webpackChunkName: "LineGZ" */ './LineGZ')
+                .then(({ RMGLineGZ }) => RMGLineGZ);
+        case 'shmetro':
+            return import(/* webpackChunkName: "LineSH" */ './LineSH')
+                .then(({ RMGLineSH }) => RMGLineSH);
+        // any other styles
     }
 }
 
-const loadLine = (param) => {
-    let lineClass = (style => {switch (style) {
-        case 'mtr':
-            return RMGLine;
-        case 'gzmtr':
-            return RMGLineGZ;
-        case 'shmetro':
-            return RMGLineSH
-        // any other styles
-    }})(window.urlParams.get('style'));
+export default function () {
+    
+const loadLine = async (param) => {
+    let lineClass = await getLineClass(window.urlParams.get('style'));
     window.myLine = new lineClass(param);
     lineClass.initSVG(window.myLine);
 }
@@ -29,8 +30,11 @@ if (localStorage.rmgParam != null) {
         updateParam();
         loadLine(getParams());
     } catch (err) {
-        $('#init_err_diag #err_stack').html(err + '<br>' + err.stack.replace(/\n/g, '<br>'));
-        $('#init_err_diag')[0].MDCDialog.open();
+        let initErrDiag = MDCDialog.attachTo($('#init_err_diag')[0]);
+        $('#init_err_diag')
+            .find('#err_stack')
+            .html(err + '<br>' + err.stack.replace(/\n/g, '<br>'));
+        initErrDiag.open();
         console.error(err);
     }
 } else {
@@ -39,5 +43,7 @@ if (localStorage.rmgParam != null) {
         updateParam();
         loadLine(getParams());
     });
+}
+    
 }
 

@@ -1,13 +1,13 @@
-import { getTxtBoxDim, setParams, getParams, putParams, getRandomId } from '../utils.js';
-import { RMGStation, Int2Station, Int3LStation, Int3RStation, OSI11LStation, OSI11RStation, OSI12LStation, OSI12RStation, OSI22LStation, OSI22RStation, OSI22EndStation } from '../Station/Station.js';
+import { getTxtBoxDim, setParams, getParams, putParams, getRandomId } from '../utils';
+import { RMGStation, Int2Station, Int3LStation, Int3RStation, OSI11LStation, OSI11RStation, OSI12LStation, OSI12RStation, OSI22LStation, OSI22RStation, OSI22EndStation } from '../Station/Station';
 
-import { ID, Name, StationInfo, RMGParam } from '../utils.js';
+import { ID, Name, StationInfo, RMGParam } from '../utils';
 
 interface StationDict {
     [index: string]: RMGStation;
 }
 
-class RMGLine {
+export class RMGLine {
     protected _svgHeight: number;
     protected _svgWidth: number;
     protected _svgDestWidth: number;
@@ -20,7 +20,8 @@ class RMGLine {
     private _branchSpacing: number;
     private _txtFlip: boolean;
     public stations = {} as StationDict;
-    _currentStnId; _direction;
+    protected _currentStnId;
+    protected _direction;
     protected _platformNum: string;
     protected _charForm: string;
     protected _lineNames: Name;
@@ -1578,5 +1579,3 @@ class RMGLine {
         return branches;
     }
 }
-
-export { RMGLine };

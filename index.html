@@ -6,38 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script>
-        // disable for firefox users sake
         // if (navigator.userAgent.indexOf('Safari')===-1 && navigator.userAgent.indexOf('Chrome')===-1) {
         //     alert('Your browser is not supported. We recommend Chrome and Safari.\n你的瀏覽器不被支援。我們推薦使用Chrome或Safari。\n你的浏览器不受支持。我们推荐使用Chrome或Safari。');
         // } else if (navigator.userAgent.indexOf('Edge')!==-1) {
         //     alert('Your browser is not supported. We recommend Chrome and Safari.\n你的瀏覽器不被支援。我們推薦使用Chrome或Safari。\n你的浏览器不受支持。我们推荐使用Chrome或Safari。');
         // }
-
-        var urlParams = new URLSearchParams(window.location.search);
-        var requestLang = urlParams.get('lang') || localStorage.rmgLang || navigator.language.split('-').slice(0,2).join('-');
-        switch (requestLang.toLowerCase()) {
-            case 'zh-cn':
-            case 'zh-hans':
-                urlParams.set('lang', 'zh-Hans');
-                break;
-            case 'zh':
-            case 'zh-hk':
-            case 'zh-tw':
-                urlParams.set('lang', 'zh-HK');
-                break;
-            default: urlParams.set('lang', 'en');
-        }
-
-        switch (urlParams.get('style')) {
-            case 'mtr':
-            case 'gzmtr':
-            case 'szm':
-            case 'shmetro':
-                break;
-            default: urlParams.set('style', 'mtr');
-        }
-        history.pushState({url:window.location.href}, null, '?' + urlParams.toString());
     </script>
+    <script src="dist/querycheck.min.js"></script>
 
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -45,7 +20,6 @@
     <link rel="manifest" href="site.webmanifest">
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
-    <!-- <script async src="https://unpkg.com/html2canvas@latest/dist/html2canvas.min.js"></script> -->
 
     <link href="https://cdn.jsdelivr.net/npm/material-components-web@4.0.0/dist/material-components-web.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/material-components-web@3.2.0/dist/material-components-web.min.js"></script>
@@ -176,7 +150,7 @@
     </script>
 </head>
 <body>
-<div id="svgs" align="center">
+<div id="svgs">
 <svg 
 xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink" 
@@ -463,7 +437,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
 <div id="panels">
 
-<div class="mdc-tab-bar" role="tablist" data-mdc-auto-init="MDCTabBar">
+<div class="mdc-tab-bar" role="tablist">
     <div class="mdc-tab-scroller">
         <div class="mdc-tab-scroller__scroll-area">
         <div class="mdc-tab-scroller__scroll-content">
@@ -532,34 +506,34 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 <div class="mdc-layout-grid__inner">
 
     <div class="mdc-layout-grid__cell--span-12 mdc-card">
-    <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
-        <li class="mdc-list-item" tabindex="0" data-mdc-auto-init="MDCRipple">
+    <ul class="mdc-list mdc-list--avatar-list">
+        <li class="mdc-list-item" tabindex="0">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">note_add</span>
             <span class="mdc-list-item__text" trans-tag="File.New"></span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">folder_open</span>
             <span class="mdc-list-item__text" trans-tag="File.Open"></span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">save</span>
             <span class="mdc-list-item__text" trans-tag="File.Save"></span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">cloud_download</span>
             <span class="mdc-list-item__text" trans-tag="File.Export"></span>
         </li>
         <li role="separator" class="mdc-list-divider"></li>
     </ul>
-    <ul class="mdc-list mdc-list--two-line mdc-list--avatar-list" data-mdc-auto-init="MDCList">
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+    <ul class="mdc-list mdc-list--two-line mdc-list--avatar-list">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">style</span>
             <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text" trans-tag="File.Style"></span>
                 <span class="mdc-list-item__secondary-text"></span>
             </span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">language</span>
             <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text" trans-tag="File.Lang"></span>
@@ -578,7 +552,8 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
      role="alertdialog"
      aria-modal="true"
      aria-labelledby="my-dialog-title"
-     aria-describedby="my-dialog-content">
+     aria-describedby="my-dialog-content"
+    >
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="File.New.Title"></h2>
@@ -602,16 +577,17 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
      role="alertdialog"
      aria-modal="true"
      aria-labelledby="my-dialog-title"
-     aria-describedby="my-dialog-content">
+     aria-describedby="my-dialog-content"
+    >
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="File.Export.Title"></h2>
       <div class="mdc-dialog__content">
-        <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
-          <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="svg1" data-mdc-auto-init="MDCRipple">
+        <ul class="mdc-list mdc-list--avatar-list">
+          <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="svg1">
             <span class="mdc-list-item__text" trans-tag="File.Export.SVGDest"></span>
           </li>
-          <li class="mdc-list-item" data-mdc-dialog-action="svg2" data-mdc-auto-init="MDCRipple">
+          <li class="mdc-list-item" data-mdc-dialog-action="svg2">
             <span class="mdc-list-item__text" trans-tag="File.Export.SVGMap"></span>
           </li>
         </ul>
@@ -625,7 +601,8 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
         role="alertdialog"
         aria-modal="true"
         aria-labelledby="my-dialog-title"
-        aria-describedby="my-dialog-content">
+        aria-describedby="my-dialog-content"
+       >
     <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
         <h2 class="mdc-dialog__title" trans-tag="File.Open.Title"></h2>
@@ -648,16 +625,16 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
      aria-modal="true"
      aria-labelledby="my-dialog-title"
      aria-describedby="my-dialog-content"
-     data-mdc-auto-init="MDCDialog">
+    >
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="File.Style.Title"></h2>
       <div class="mdc-dialog__content">
-        <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
-          <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="mtr" data-mdc-auto-init="MDCRipple">
+        <ul class="mdc-list mdc-list--avatar-list">
+          <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="mtr">
             <span class="mdc-list-item__text" trans-tag="File.Style.MTR"></span>
           </li>
-          <li class="mdc-list-item" data-mdc-dialog-action="gzmtr" data-mdc-auto-init="MDCRipple">
+          <li class="mdc-list-item" data-mdc-dialog-action="gzmtr">
             <span class="mdc-list-item__text" trans-tag="File.Style.GZMTR"></span>
           </li>
           <li class="mdc-list-item" data-mdc-dialog-action="shmetro" data-mdc-auto-init="MDCRipple">
@@ -675,19 +652,19 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
      aria-modal="true"
      aria-labelledby="my-dialog-title"
      aria-describedby="my-dialog-content"
-     data-mdc-auto-init="MDCDialog">
+    >
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="File.Lang.Title">Choos a Language</h2>
       <div class="mdc-dialog__content">
-        <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
-          <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="en" data-mdc-auto-init="MDCRipple">
+        <ul class="mdc-list mdc-list--avatar-list">
+          <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="en">
             <span class="mdc-list-item__text">English</span>
           </li>
-          <li class="mdc-list-item" data-mdc-dialog-action="zh-Hans" data-mdc-auto-init="MDCRipple">
+          <li class="mdc-list-item" data-mdc-dialog-action="zh-Hans">
             <span class="mdc-list-item__text">中文（简体）</span>
             </li>
-          <li class="mdc-list-item" data-mdc-dialog-action="zh-HK" data-mdc-auto-init="MDCRipple">
+          <li class="mdc-list-item" data-mdc-dialog-action="zh-HK">
             <span class="mdc-list-item__text">中文（香港）</span>
           </li>
         </ul>
@@ -702,7 +679,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
      aria-modal="true"
      aria-labelledby="my-dialog-title"
      aria-describedby="my-dialog-content"
-     data-mdc-auto-init="MDCDialog">
+    >
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="File.Preview.Title"></h2>
@@ -730,7 +707,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
      aria-modal="true"
      aria-labelledby="my-dialog-title"
      aria-describedby="my-dialog-content"
-     data-mdc-auto-init="MDCDialog">
+    >
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="File.Error.Title"></h2>
@@ -760,10 +737,10 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 <div class="mdc-layout-grid__inner">
 
     <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card" style="max-width: 100%;">
-    <ul class="mdc-list mdc-list--two-line mdc-list--avatar-list" data-mdc-auto-init="MDCList">
-        <li class="mdc-list-item" tabindex="0" data-mdc-auto-init="MDCRipple">
+    <ul class="mdc-list mdc-list--two-line mdc-list--avatar-list">
+        <li class="mdc-list-item" tabindex="0">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">panorama_horizontal</span>
-            <div id="svg_dest_width" class="mdc-text-field mdc-text-field--outlined" style="width: 40%;" data-mdc-auto-init="MDCTextField">
+            <div id="svg_dest_width" class="mdc-text-field mdc-text-field--outlined" style="width: 40%;">
                 <input type="text" class="mdc-text-field__input">
                 <div class="mdc-notched-outline">
                     <div class="mdc-notched-outline__leading"></div>
@@ -774,7 +751,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
             </div>
             &emsp;
-            <div id="svg_width" class="mdc-text-field mdc-text-field--outlined" style="width: 40%;" data-mdc-auto-init="MDCTextField">
+            <div id="svg_width" class="mdc-text-field mdc-text-field--outlined" style="width: 40%;">
                 <input type="text" class="mdc-text-field__input">
                 <div class="mdc-notched-outline">
                     <div class="mdc-notched-outline__leading"></div>
@@ -786,15 +763,15 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             </div>
         </li>
     </ul>
-    <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
+    <ul class="mdc-list mdc-list--avatar-list">
         <li role="separator" class="mdc-list-divider"></li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">vertical_align_center</span>
             <span class="mdc-list-item__text" trans-tag="Layout.Y"></span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">arrow_drop_up</span>
-            <div id="y_pc" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value" data-mdc-auto-init="MDCSlider">
+            <div id="y_pc" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value">
                 <div class="mdc-slider__track-container">
                     <div class="mdc-slider__track"></div>
                 </div>
@@ -809,13 +786,13 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             <span class="mdc-list-item__meta material-icons" aria-hidden="true">arrow_drop_down</span>
         </li>
         <li role="separator" class="mdc-list-divider"></li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">format_line_spacing</span>
             <span class="mdc-list-item__text" trans-tag="Layout.BranchSpacing"></span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">remove</span>
-            <div id="branch_spacing" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value" data-mdc-auto-init="MDCSlider">
+            <div id="branch_spacing" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value">
                 <div class="mdc-slider__track-container">
                     <div class="mdc-slider__track"></div>
                 </div>
@@ -830,13 +807,13 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             <span class="mdc-list-item__meta material-icons" aria-hidden="true">add</span>
         </li>
         <li role="separator" class="mdc-list-divider"></li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">stay_current_landscape</span>
             <span class="mdc-list-item__text" trans-tag="Layout.Padding"></span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">remove</span>
-            <div id="padding" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="25" aria-valuenow="0" aria-label="Select Value" data-mdc-auto-init="MDCSlider">
+            <div id="padding" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="25" aria-valuenow="0" aria-label="Select Value">
                 <div class="mdc-slider__track-container">
                     <div class="mdc-slider__track"></div>
                 </div>
@@ -854,14 +831,14 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
     </div>
 
     <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card" style="max-width: 100%; display: none;" gzmtr-specific>
-    <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+    <ul class="mdc-list mdc-list--avatar-list">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">open_with</span>
-            <span class="mdc-list-item__text" trans-tag="Layout.Y"></span>
+            <span class="mdc-list-item__text" trans-tag="Layout.DirectionGZ"></span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">arrow_left</span>
-            <div id="direction_gz_x" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value" data-mdc-auto-init="MDCSlider">
+            <div id="direction_gz_x" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value">
                 <div class="mdc-slider__track-container">
                     <div class="mdc-slider__track"></div>
                 </div>
@@ -875,9 +852,9 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             &emsp;&emsp;&emsp;
             <span class="mdc-list-item__meta material-icons" aria-hidden="true">arrow_right</span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">arrow_drop_up</span>
-            <div id="direction_gz_y" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value" data-mdc-auto-init="MDCSlider">
+            <div id="direction_gz_y" class="mdc-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Select Value">
                 <div class="mdc-slider__track-container">
                     <div class="mdc-slider__track"></div>
                 </div>
@@ -905,31 +882,33 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 <div class="mdc-layout-grid__inner">
 
     <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card" style="max-width: 100%;">
-    <ul id="design_list" class="mdc-list mdc-list--two-line mdc-list--avatar-list" data-mdc-auto-init="MDCList">
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+    <ul id="design_list" class="mdc-list mdc-list--two-line mdc-list--avatar-list">
+        <li class="mdc-list-item" id="theme">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">color_lens</span>
             <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text" trans-tag="Design.Theme"></span>
                 <span class="mdc-list-item__secondary-text"></span>
             </span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item" id="name">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">title</span>
             <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text" trans-tag="Design.Name"></span>
                 <span class="mdc-list-item__secondary-text"></span>
             </span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item" id="direc">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">directions</span>
             <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text" trans-tag="Design.Direction"></span>
                 <span class="mdc-list-item__secondary-text"></span>
+                <p id="l" trans-tag="Design.Direction.L" style="display: none;"></p>
+                <p id="r" trans-tag="Design.Direction.R" style="display: none;"></p>
             </span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">looks_one</span>
-            <div id="platform_num" class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
+            <div id="platform_num" class="mdc-text-field mdc-text-field--outlined">
                 <input type="text" class="mdc-text-field__input">
                 <div class="mdc-notched-outline">
                     <div class="mdc-notched-outline__leading"></div>
@@ -940,7 +919,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
             </div>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">cached</span>
             <span class="mdc-list-item__text-label" trans-tag="Design.Reverse"></span>
         </li>
@@ -948,23 +927,23 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
     </div>
 
     <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card" style="max-width: 100%; display: none;" mtr-specific>
-    <ul id="design_list_mtr" class="mdc-list mdc-list--two-line mdc-list--avatar-list" data-mdc-auto-init="MDCList">
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+    <ul id="design_list_mtr" class="mdc-list mdc-list--two-line mdc-list--avatar-list">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">swap_vert</span>
             <span class="mdc-list-item__text-label" trans-tag="Design.FlipName"></span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item" id="char">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">font_download</span>
             <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text" trans-tag="Design.Char"></span>
                 <span class="mdc-list-item__secondary-text"></span>
             </span>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">rotate_left</span>
             <span class="mdc-list-item__text-label" trans-tag="Design.MTRLegacy"></span>
             <span class="mdc-list-item__meta">
-                <div class="mdc-switch" id="legacy" data-mdc-auto-init="MDCSwitch">
+                <div class="mdc-switch" id="legacy">
                     <div class="mdc-switch__track"></div>
                     <div class="mdc-switch__thumb-underlay">
                         <div class="mdc-switch__thumb">
@@ -978,10 +957,10 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
     </div>
 
     <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card" style="max-width: 100%; display: none;" gzmtr-specific>
-    <ul id="design_list_gzmtr" class="mdc-list mdc-list--two-line mdc-list--avatar-list" data-mdc-auto-init="MDCList">
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+    <ul id="design_list_gzmtr" class="mdc-list mdc-list--two-line mdc-list--avatar-list">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">looks_one</span>
-            <div id="line_num" class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField" style="width: 40%;">
+            <div id="line_num" class="mdc-text-field mdc-text-field--outlined" style="width: 40%;">
                 <input type="text" class="mdc-text-field__input">
                 <div class="mdc-notched-outline">
                     <div class="mdc-notched-outline__leading"></div>
@@ -992,7 +971,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
             </div>
             &emsp;
-            <div id="psd_num" class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField" style="width: 40%;">
+            <div id="psd_num" class="mdc-text-field mdc-text-field--outlined" style="width: 40%;">
                 <input type="text" class="mdc-text-field__input">
                 <div class="mdc-notched-outline">
                     <div class="mdc-notched-outline__leading"></div>
@@ -1003,7 +982,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
             </div>
         </li>
-        <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true" style="transform: rotate(180deg)">credit_card</span>
             <span class="mdc-list-item__text-label" trans-tag="Design.PanelType"></span>
         </li>
@@ -1018,7 +997,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
      aria-modal="true"
      aria-labelledby="my-dialog-title"
      aria-describedby="my-dialog-content"
-     data-mdc-auto-init="MDCDialog">
+    >
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="Design.Theme.Title"></h2>
@@ -1030,7 +1009,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
-                <div id="theme_city" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="theme_city" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1055,7 +1034,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
-                <div id="theme_line" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="theme_line" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1092,7 +1071,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
      aria-modal="true"
      aria-labelledby="my-dialog-title"
      aria-describedby="my-dialog-content"
-     data-mdc-auto-init="MDCDialog">
+    >
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="Design.Name.Title"></h2>
@@ -1103,7 +1082,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                     <i class="material-icons">漢</i>
                 </div>
                 <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
-                <div id="name_zh" class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField" style="width: 100%;">
+                <div id="name_zh" class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
                     <input type="text" class="mdc-text-field__input">
                     <div class="mdc-notched-outline">
                         <div class="mdc-notched-outline__leading"></div>
@@ -1119,7 +1098,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                     <i class="material-icons">A</i>
                 </div>
                 <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
-                <div id="name_en" class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField" style="width: 100%;">
+                <div id="name_en" class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
                     <input type="text" class="mdc-text-field__input">
                     <div class="mdc-notched-outline">
                         <div class="mdc-notched-outline__leading"></div>
@@ -1148,22 +1127,22 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
      aria-modal="true"
      aria-labelledby="my-dialog-title"
      aria-describedby="my-dialog-content"
-     data-mdc-auto-init="MDCDialog">
+    >
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="Design.Char.Title"></h2>
       <div class="mdc-dialog__content">
-        <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
-            <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="trad" data-mdc-auto-init="MDCRipple">
+        <ul class="mdc-list mdc-list--avatar-list">
+            <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="trad">
                 <span class="mdc-list-item__text" trans-tag="Design.Char.Trad"></span>
             </li>
-            <li class="mdc-list-item" data-mdc-dialog-action="cn" data-mdc-auto-init="MDCRipple">
+            <li class="mdc-list-item" data-mdc-dialog-action="cn">
                 <span class="mdc-list-item__text" trans-tag="Design.Char.CN"></span>
             </li>
-            <li class="mdc-list-item" data-mdc-dialog-action="tw" data-mdc-auto-init="MDCRipple">
+            <li class="mdc-list-item" data-mdc-dialog-action="tw">
                 <span class="mdc-list-item__text" trans-tag="Design.Char.TW"></span>
             </li>
-            <li class="mdc-list-item" data-mdc-dialog-action="jp" data-mdc-auto-init="MDCRipple">
+            <li class="mdc-list-item" data-mdc-dialog-action="jp">
                 <span class="mdc-list-item__text" trans-tag="Design.Char.JP"></span>
             </li>
         </ul>
@@ -1178,22 +1157,22 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
      aria-modal="true"
      aria-labelledby="my-dialog-title"
      aria-describedby="my-dialog-content"
-     data-mdc-auto-init="MDCDialog">
+    >
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="Design.PanelType.Title"></h2>
       <div class="mdc-dialog__content">
-        <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
-            <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="gz28" data-mdc-auto-init="MDCRipple">
+        <ul class="mdc-list mdc-list--avatar-list">
+            <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="gz28">
                 <span class="mdc-list-item__text" trans-tag="Design.PanelType.GZ28"></span>
             </li>
-            <li class="mdc-list-item" data-mdc-dialog-action="gz3" data-mdc-auto-init="MDCRipple">
+            <li class="mdc-list-item" data-mdc-dialog-action="gz3">
                 <span class="mdc-list-item__text" trans-tag="Design.PanelType.GZ3"></span>
             </li>
-            <li class="mdc-list-item" data-mdc-dialog-action="gz1421" data-mdc-auto-init="MDCRipple">
+            <li class="mdc-list-item" data-mdc-dialog-action="gz1421">
                 <span class="mdc-list-item__text" trans-tag="Design.PanelType.GZ1421"></span>
             </li>
-            <li class="mdc-list-item" data-mdc-dialog-action="gzgf" data-mdc-auto-init="MDCRipple">
+            <li class="mdc-list-item" data-mdc-dialog-action="gzgf">
                 <span class="mdc-list-item__text" trans-tag="Design.PanelType.GZGF"></span>
             </li>
         </ul>
@@ -1411,7 +1390,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                     <i class="material-icons">looks_one</i>
                 </div>
                 <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone" style="display: none;" gzmtr-specific>
-                <div id="stn_num" class="mdc-text-field mdc-text-field--outlined" style="width: 100%;" data-mdc-auto-init="MDCTextField">
+                <div id="stn_num" class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
                     <input type="text" class="mdc-text-field__input">
                     <div class="mdc-notched-outline">
                         <div class="mdc-notched-outline__leading"></div>
@@ -1440,12 +1419,12 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
      aria-modal="true"
      aria-labelledby="my-dialog-title"
      aria-describedby="my-dialog-content"
-     data-mdc-auto-init="MDCDialog">
+    >
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="Stations.Edit.Title"></h2>
       <div class="mdc-dialog__content">
-            <div class="mdc-tab-bar" role="tablist" data-mdc-auto-init="MDCTabBar">
+            <div class="mdc-tab-bar" role="tablist">
                 <div class="mdc-tab-scroller">
                     <div class="mdc-tab-scroller__scroll-area">
                     <div class="mdc-tab-scroller__scroll-content">
@@ -1480,7 +1459,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             <div class="mdc-layout-grid__inner">
 
                 <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone">
-                <div id="change_type" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="change_type" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1506,21 +1485,21 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
-                    <button id="tick_direc" class="mdc-icon-button" aria-label="Interchange Direction" aria-hidden="false" aria-pressed="false" data-mdc-auto-init="MDCIconButtonToggle">
+                    <button id="tick_direc" class="mdc-icon-button" aria-label="Interchange Direction" aria-hidden="false" aria-pressed="false">
                         <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">toggle_on</i>
                         <i class="material-icons mdc-icon-button__icon">toggle_off</i>
                     </button>
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
-                    <button id="paid_area" class="mdc-icon-button" aria-label="Paid Area" aria-hidden="false" aria-pressed="false" data-mdc-auto-init="MDCIconButtonToggle">
+                    <button id="paid_area" class="mdc-icon-button" aria-label="Paid Area" aria-hidden="false" aria-pressed="false">
                         <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">attach_money</i>
                         <i class="material-icons mdc-icon-button__icon">money_off</i>
                     </button>
                 </div>
 
                 <div id="int_city" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1540,7 +1519,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div id="int_line" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1560,7 +1539,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div id="int_name_zh" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
-                    <div class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField" style="width: 100%;">
+                    <div class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
                         <input type="text" class="mdc-text-field__input">
                         <div class="mdc-notched-outline">
                             <div class="mdc-notched-outline__leading"></div>
@@ -1573,7 +1552,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div id="int_name_en" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
-                    <div class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField" style="width: 100%;">
+                    <div class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
                         <input type="text" class="mdc-text-field__input">
                         <div class="mdc-notched-outline">
                             <div class="mdc-notched-outline__leading"></div>
@@ -1612,7 +1591,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div id="int_city" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1632,7 +1611,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div id="int_line" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1652,7 +1631,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div id="int_city" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1672,7 +1651,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div id="int_line" class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-                <div class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1702,7 +1681,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone">
-                <div id="left_through" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="left_through" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1729,7 +1708,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone" left-first-group>
-                <div id="left_first" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="left_first" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1753,7 +1732,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone" left-pos-group>
-                <div id="left_pos" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="left_pos" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1779,7 +1758,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone">
-                <div id="right_through" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="right_through" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1806,7 +1785,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone" right-first-group>
-                <div id="right_first" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="right_first" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1830,7 +1809,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone" right-pos-group>
-                <div id="right_pos" class="mdc-select mdc-select--outlined" data-mdc-auto-init="MDCSelect" style="width: 100%;">
+                <div id="right_pos" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -1872,7 +1851,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
      aria-modal="true"
      aria-labelledby="my-dialog-title"
      aria-describedby="my-dialog-content"
-     data-mdc-auto-init="MDCDialog">
+    >
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="Stations.Delete.Title"></h2>
@@ -1899,7 +1878,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
      aria-modal="true"
      aria-labelledby="my-dialog-title"
      aria-describedby="my-dialog-content"
-     data-mdc-auto-init="MDCDialog">
+    >
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="Stations.DeleteErr.Title"></h2>
@@ -1917,29 +1896,6 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
 </div>
 
-<!-- <div id="panel_branches" class="panel">
-
-<div class="mdc-layout-grid" style="/*max-width: 500px;*/">
-<div class="mdc-layout-grid__inner">
-
-    <div class="mdc-card mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone station-card" id="branch_main">
-    <div class="mdc-card__primary-action">
-        <div class="mdc-card__media mdc-card__media--16-9">
-        <div class="mdc-card__media-content station-card__content" trans-tag="Branches.Main"></div>
-        </div>
-    </div>
-    <div class="mdc-card__actions">
-        <div class="mdc-card__action-icons">
-        <button class="material-icons mdc-icon-button mdc-card__action mdc-card__action--icon" title="Show">add_box</button>
-        </div>
-    </div>
-    </div>
-
-</div>
-</div>
-    
-</div> -->
-
 <div id="panel_info" class="panel">
 
 <div class="mdc-layout-grid" style="max-width: 500px;">
@@ -1950,7 +1906,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
     <div class="mdc-layout-grid__cell--span-12 mdc-card">
         <div class="mdc-card__primary-action" tabindex="0" style="display: flex; flex-direction: row;">
-            <div class="mdc-card__media mdc-card__media--square" style="background-image: url(GitHub-Mark-120px-plus.png); width: 120px; height:120px;">
+            <div class="mdc-card__media mdc-card__media--square" style="background-image: url(images/GitHub-Mark-120px-plus.png); width: 120px; height:120px;">
             </div>
             <div style="padding: 1rem;">
                 <h2 class="mdc-typography mdc-typography--headline6" trans-tag="Title"></h2>
@@ -1981,17 +1937,9 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
 <canvas style="display: none;"></canvas>
 
-<script type="module">
-    import { initSavePanel } from './built/page_loader.js';
-    window.myLine = null;
-    $(`[${window.urlParams.get('style')}-specific]`).show();
-    window.mdc.autoInit();
-    initSavePanel();
-</script>
-
-<script async src="built/lang.js"></script>
-<script type="module" src="built/Line/init.js"></script>
-<script type="module" src="built/PageInitialiser/init.js"></script>
+<!-- <script src="dist/vendors~index.bundle.js"></script> -->
+<script src="dist/index.min.js"></script>
+<script async src="dist/lang.min.js"></script>
 
 </body>
 </html>

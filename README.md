@@ -9,6 +9,17 @@ Demo page: https://wongchito.github.io/RailMapGenerator/
 
 [Version History](VersionHistory.md)
 
+[Colour Standards](data/README.md)
+
+## Local Environment
+
+- Environment setup: `$ npm install`
+- Build for development/production:
+  - Change parameters in `webpack.config.js`
+  - `$ npx webpack`
+
+## Introduction
+
 (Detailed description will be provided. )
 
 The core modules of this project consist of 2 parts - drawing SVG and providing control panels for manipulating the line and stations. 
@@ -24,10 +35,6 @@ The core modules of this project consist of 2 parts - drawing SVG and providing 
 **Control panels**
 
 `/src/page_loader.ts` - Functions for initialising the panels (one for each tab). The current 2 styles share almost the same fields of parameters (some parameters are different in 'Design' tab). 
-
-**Environments**
-
-Only one thing is needed to be install - TypeScript. I use the other modules directly from CDN. (I didn't find a way to import Material Components (MDC) into TypeScript so `/src/page_loader.ts` is full of error messages. )
 
 **How to start a new style (example)**
 

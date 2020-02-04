@@ -1,5 +1,5 @@
-import { joinIntName } from '../utils.js';
-import { ID, Name, BranchInfo, StationInfo } from '../utils.js';
+import { joinIntName } from '../utils';
+import { ID, Name, BranchInfo, StationInfo } from '../utils';
 
 export enum IntInfoTag {
     city, line, colour, fg, nameZH, nameEN

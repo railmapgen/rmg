@@ -45,6 +45,7 @@
     "Layout.Y": "垂直位置",
     "Layout.BranchSpacing": "支線間距", 
     "Layout.Padding": "路線兩端留白", 
+    "Layout.DirectionGZ": "方向指示位置",
 
     "Design.Theme": "主題顏色", 
     "Design.Theme.Title": "選擇主題顏色",
@@ -52,7 +53,10 @@
     "Design.Name": "路線名",
     "Design.Name.Title": "編輯路線名稱", 
 
-    "Design.Direction": "行駛方向", 
+    "Design.Direction": "行駛方向",
+    "Design.Direction.L": "向左駛", 
+    "Design.Direction.R": "向右駛", 
+    
     "Design.Platform": "月台編號",
     "Design.MTRLegacy": "港鐵舊款樣式",
     "Design.FlipName": "反轉車站名稱位置",

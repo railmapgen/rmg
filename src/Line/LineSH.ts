@@ -1,8 +1,8 @@
-import { RMGLine } from './Line.js';
-import { RMGStationSH, IntStationSH, station_id } from '../Station/StationSH.js';
-import { RMGStation } from '../Station.js';
+import { RMGLine } from './Line';
+import { RMGStationSH, IntStationSH, station_id } from '../Station/StationSH';
+import { RMGStation } from '../Station/Station';
 
-import { ID, Name, StationInfo, RMGParam } from '../utils.js';
+import { ID, Name, StationInfo, RMGParam } from '../utils';
 
 export class RMGLineSH extends RMGLine {
     constructor(param) {
