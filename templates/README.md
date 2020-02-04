@@ -18,3 +18,7 @@
     "Line 1" // Name in Latin characters
 ]
 ```
+
+## Disclaimer
+
+The templates are for designing new your own railway and for debugging. It does not necessarily reflect the actual situation. 
