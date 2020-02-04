@@ -141,5 +141,7 @@
     "Editor.City": "City", 
     "Editor.Line": "Line",
     "Editor.Name.ZH": "Name (in Chinese Character)",
-    "Editor.Name.EN": "Name (in Latin Character)"
+    "Editor.Name.EN": "Name (in Latin Character)", 
+    "Editor.OSIName.ZH": "Station Name (in Chinese Character)", 
+    "Editor.OSIName.EN": "Station Name (in Latin Character)"
 }
