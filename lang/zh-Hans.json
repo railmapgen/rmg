@@ -138,5 +138,7 @@
     "Editor.City": "城市", 
     "Editor.Line": "线路",
     "Editor.Name.ZH": "名称（汉字）",
-    "Editor.Name.EN": "名称（拉丁字母）"
+    "Editor.Name.EN": "名称（拉丁字母）",
+    "Editor.OSIName.ZH": "车站名称（汉字）", 
+    "Editor.OSIName.EN": "车站名称（拉丁字母）"
 }

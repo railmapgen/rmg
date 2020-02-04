@@ -1,5 +1,5 @@
 import { getTxtBoxDim, setParams, getParams, putParams, getRandomId } from '../utils';
-import { RMGStation, Int2Station, Int3LStation, Int3RStation, OSI11LStation, OSI11RStation, OSI12LStation, OSI12RStation, OSI22LStation, OSI22RStation, OSI22EndStation } from '../Station/Station';
+import { RMGStation, Int2Station, Int3LStation, Int3RStation, OSI11LStation, OSI11RStation, OSI12LStation, OSI12RStation, OSI22Station, OSI22LStation, OSI22RStation, OSI22EndStation } from '../Station/Station';
 
 import { ID, Name, StationInfo, RMGParam, DirectionLong } from '../utils';
 
@@ -281,6 +281,11 @@ export class RMGLine {
 
     _rightWideFactor(stnId: ID) {
         var res = 0;
+        let stnInstance = this.stations[stnId];
+        if (stnInstance instanceof Int3RStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI11RStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI12RStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI22Station) {res += this._longInterval;}
         var stnClasses = ['Int3RStation', 'OSI11RStation', 'OSI12RStation', 'OSI22LStation', 'OSI22RStation'];
         if (stnClasses.includes(this.stations[stnId].constructor.name)) {res += this._longInterval;}
         if (this._stnOutdegree(stnId) == 2) {res += this._longInterval/2;}
@@ -290,8 +295,12 @@ export class RMGLine {
 
     _leftWideFactor(stnId: ID) {
         var res = 0;
-        var stnClasses = ['Int3LStation', 'OSI11LStation', 'OSI12LStation', 'OSI22LStation', 'OSI22RStation'];
-        if (stnClasses.includes(this.stations[stnId].constructor.name)) {res += this._longInterval;}
+        // compatible with webpack minimal output
+        let stnInstance = this.stations[stnId];
+        if (stnInstance instanceof Int3LStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI11LStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI12LStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI22Station) {res += this._longInterval;}
         if (this._stnIndegree(stnId) == 2) {res += this._longInterval/2;}
         if (this._stnOutdegree(this.stations[stnId].parents[0]) == 2) {res += this._longInterval/2;}
         return res;
@@ -487,6 +496,30 @@ export class RMGLine {
             return 0;
         }
         return 0;
+    }
+
+    _stnYShareMTR(stnId: ID) {
+        // _stnYShare changed in other style
+        // for feature consistency in newStnPossibleLoc
+        // backup MTR-style y
+        
+        if (['linestart', 'lineend'].includes(stnId) || this._stnIndegree(stnId) > 1 || this._stnOutdegree(stnId) > 1) {
+            return 0;
+        }
+        var stnPred = this.stations[stnId].parents[0];
+        if (stnPred) {
+            // parent exist
+            if (this._stnOutdegree(stnPred) == 1) {
+                // no sibling, then y same as parent
+                return this._stnYShare(stnPred);
+            } else {
+                // sibling exists, then y depends on its idx of being children
+                return (this.stations[stnPred].children.indexOf(stnId) == 0) ? 1 : -1;
+            }
+        } else {
+            // no parent, must be linestart
+            return 0;
+        }
     }
 
     _stnRealY(stnId) {
@@ -832,7 +865,7 @@ export class RMGLine {
         var isLastMainBranchStn = true;
         for (let id in this.stations) {
             if ([stnId, 'linestart', 'lineend'].includes(id)) {continue;}
-            if (this._stnYShare(id) == 0) {
+            if (this._stnYShareMTR(id) == 0) {
                 isLastMainBranchStn = false;
                 break;
             }
@@ -959,13 +992,13 @@ export class RMGLine {
                 // 1 -> 2
                 return [1,1,1,[],[]];
             case 1:
-                if (this._stnYShare(stnId) == 0) {
+                if (this._stnYShareMTR(stnId) == 0) {
                     // 1 -> 1
                     let state: ID[] | 0 = this.newBranchPossibleEnd(prep, stnId);
                     state = (state.length) ? state : [];
                     return [1,0,0,state,state];
                     // [1,0,0,1,1];
-                } else if (this.stations[stnId].y > this.y) {
+                } else if (this._stnYShareMTR(stnId) > 0) {
                     if (prep == 'before') {
                         return [this._stnOutdegree(this.stations[stnId].parents[0])-1, 
                             0,1,[],[]
@@ -1022,9 +1055,9 @@ export class RMGLine {
                 
 
                 newInfo.parents = this.stations[stnId].parents;
-                if (this._stnIndegree(stnId)==0 && this.stations[stnId].y != this.y) {
+                if (this._stnIndegree(stnId)==0 && this._stnYShareMTR(stnId) != 0) {
                     newInfo.children = this.leftDests;
-                } else if (this.stations[stnId].y != this.y) {
+                } else if (this._stnYShareMTR(stnId) != 0) {
                     // pivot on branch
                     newInfo.children = this.stations[this.stations[stnId].parents[0]].children;
 
@@ -1123,10 +1156,10 @@ export class RMGLine {
                 }
             } else if (loc == 'newupper') {
                 newInfo.branch = { left:[], right:[] };
-                this.stations[stnId].branch.left[1] = newId;
-                param.stn_list[stnId].branch.left[1] = newId;
-                this.stations[end].branch.right[1] = newId;
-                param.stn_list[end].branch.right[1] = newId;
+                this.stations[stnId].branch.left = ['through', newId];
+                param.stn_list[stnId].branch.left = ['through', newId];
+                this.stations[end].branch.right = ['through', newId];
+                param.stn_list[end].branch.right = ['through', newId];
 
                 newInfo.parents = [end];
                 newInfo.children = [stnId];
@@ -1138,10 +1171,10 @@ export class RMGLine {
                 param.stn_list[stnId].parents.unshift(newId);
             } else if (loc == 'newlower') {
                 newInfo.branch = { left:[], right:[] };
-                this.stations[stnId].branch.left[1] = newId;
-                param.stn_list[stnId].branch.left[1] = newId;
-                this.stations[end].branch.right[1] = newId;
-                param.stn_list[end].branch.right[1] = newId;
+                this.stations[stnId].branch.left = ['through', newId];
+                param.stn_list[stnId].branch.left = ['through', newId];
+                this.stations[end].branch.right = ['through', newId];
+                param.stn_list[end].branch.right = ['through', newId];
 
                 newInfo.parents = [end];
                 newInfo.children = [stnId];
@@ -1157,9 +1190,9 @@ export class RMGLine {
                 
 
                 newInfo.children = this.stations[stnId].children;
-                if (this._stnOutdegree(stnId)==0 && this.stations[stnId].y != this.y) {
+                if (this._stnOutdegree(stnId)==0 && this._stnYShareMTR(stnId) != 0) {
                     newInfo.parents = this.rightDests;
-                } else if (this.stations[stnId].y != this.y) {
+                } else if (this._stnYShareMTR(stnId) != 0) {
                     // pivot on branch
                     newInfo.parents = this.stations[this.stations[stnId].children[0]].parents;
 
@@ -1460,6 +1493,7 @@ export class RMGLine {
 
         for (let [stnId, stnInstance] of Object.entries(this.stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
+            stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
         }
         RMGLine.clearSVG();

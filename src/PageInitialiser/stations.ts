@@ -477,6 +477,7 @@ export function common() {
             _showAllFields(0, true);
             _showAllFields(1, true);
             _showAllFields(2, true);
+            $('#osi_name_zh, #osi_name_en, #paid_area').show();
             let stnInfo = getParams().stn_list[$('#stn_transfer_diag').attr('for')];
             if (stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') {
                 $('#tick_direc').hide();
