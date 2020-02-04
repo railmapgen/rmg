@@ -421,6 +421,7 @@ class RMGLineGZ extends RMGLine {
         let x = this._svgWidth * this._directionGZX / 100;
         let y = this._svgHeight * this._directionGZY / 100;
         $('#direction_gz').attr('transform', `translate(${x},${y})`);
+        // to be fixed: validDest ordering
         if (this._direction == 'l') {
             $('#direction_gz use').attr('transform', `scale(0.35)`);
             $('#direction_gz g').attr({
@@ -436,13 +437,40 @@ class RMGLineGZ extends RMGLine {
             });
             validDest = this.rValidDests;
         }
-        var [destNameZH, destNameEN] = [0,1].map(idx => {
-            return validDest.map(stnId => this.stations[stnId].name[idx].replace(/\\/g, ' ')).join('/');
-        });
-        $('#direction_gz text').eq(0).text(destNameZH + '方向');
-        $('#direction_gz text').eq(1).text('Towards ' + destNameEN);
+        if (validDest.length !== 2) {
+            var [destNameZH, destNameEN] = [0,1].map(idx => {
+                return validDest.map(stnId => this.stations[stnId].name[idx].replace(/\\/g, ' ')).join('/');
+            });
+            $('#direction_gz g').eq(0).find('text').eq(0).text(destNameZH + '方向');
+            $('#direction_gz g').eq(0).find('text').eq(1).text('Towards ' + destNameEN);
 
-        // $('#direction_gz g').attr('transform', `translate(${this._svgWidth/2},200)`);
+            $('#direction_gz g').eq(0).show();
+            $('#direction_gz g').eq(1).hide();
+        } else {
+            // to be simplified
+            $('#direction_gz g').eq(1).find('text').css('letter-spacing', 0);
+            $('#direction_gz g').eq(1).find('text').eq(0).text(this.stations[validDest[0]].name[0]);
+            $('#direction_gz g').eq(1).find('text').eq(1).text('Towards ' + this.stations[validDest[0]].name[1]);
+            $('#direction_gz g').eq(1).find('text').eq(2).text(this.stations[validDest[1]].name[0]);
+            $('#direction_gz g').eq(1).find('text').eq(3).text('Towards ' + this.stations[validDest[1]].name[1]);
+
+            let charCounts = validDest.map(stnId => this.stations[stnId].name[0].length);
+            let minCharCounts = Math.min(...charCounts);
+            if (minCharCounts > 1 && charCounts[0] !== charCounts[1]) {
+                let charSpacing = Math.abs(charCounts[0] - charCounts[1]) / (minCharCounts - 1);
+                if (charCounts[0] > charCounts[1]) {
+                    $('#direction_gz g').eq(1).find('text').eq(2).css('letter-spacing', `${charSpacing}em`);
+                } else {
+                    $('#direction_gz g').eq(1).find('text').eq(0).css('letter-spacing', `${charSpacing}em`);
+                }
+            }
+
+            let maxCharCount = Math.max(...charCounts);
+            $('#direction_gz g').eq(1).find('text').eq(4).attr('x', 25*(maxCharCount+1));
+
+            $('#direction_gz g').eq(0).hide();
+            $('#direction_gz g').eq(1).show();
+        }
     }
 
     updateStnName(stnId, names: Name, stnNum) {
