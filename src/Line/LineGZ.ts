@@ -255,7 +255,7 @@ class RMGLineGZ extends RMGLine {
 
     _leftWideFactor(stnId: ID) {
         if (this.stations[stnId].constructor.name === 'BranchStationGZ' && this.stations[stnId]._tickRotation !== 0) {
-            return 0.5;
+            return 0.25;
         } else {
             return 0;
         }
