@@ -1,0 +1,41 @@
+.rmg-name__zh.rmg-name__mtr--dest {font-size: 90px;}
+.rmg-name__en.rmg-name__mtr--dest {font-size: 45px;}
+
+.rmg-name__zh.rmg-name__gzmtr--dest {font-size: 90px;}
+.rmg-name__en.rmg-name__gzmtr--dest {font-size: 36px;}
+
+.rmg-name__zh.rmg-name__gzmtr--next {font-size: 35px;}
+.rmg-name__en.rmg-name__gzmtr--next {font-size: 17px;}
+.rmg-name__zh.rmg-name__gzmtr--next2 {font-size: 27px;}
+.rmg-name__en.rmg-name__gzmtr--next2 {font-size: 13px;}
+.rmg-name__zh.rmg-name__gzmtr--next2-dest {font-size: 18.5px;}
+.rmg-name__en.rmg-name__gzmtr--next2-dest {font-size: 8.5px;}
+
+.rmg-psd-num {
+    text-anchor: middle;
+    alignment-baseline:central;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.rmg-psd-num.rmg-psd-num__gzmtr {
+    font-size: 20px;
+}
+
+.rmg-platform-num {
+    alignment-baseline:central;
+    text-anchor: middle;
+}
+.rmg-platform-num.rmg-platform-num__mtr {
+    font-size:135px;
+    font-family: Vegur;
+    fill: #fff;
+}
+.rmg-name__platformnum {
+    text-anchor: middle;
+}
+.rmg-name__gzmtr--platformnum {
+    font-size:38px;
+}
+.rmg-name__mtr--platformnum {
+    font-size:135px;
+    fill: #fff;
+}

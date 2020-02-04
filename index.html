@@ -66,78 +66,9 @@
         }
     </style>
 
-    <style type="text/css" id="svg_share">
-        @font-face {
-            font-family: "Vegur";
-            src: url("https://wongchito.github.io/RailMapGenerator/fonts/Vegur-Regular.otf");
-        }
-        .Strip {
-            fill: none;
-            stroke-width: 20;
-        }
-
-        .rmg-name__zh {alignment-baseline:central;}
-        .rmg-name__en {alignment-baseline:middle;}
-
-        .rmg-name__char-trad {
-            font-family: 
-                Vegur, Helvetica,
-                Noto Serif KR,
-                Noto Serif JP,
-                Noto Serif TC,
-                Noto Serif SC,
-                HiraMinProN-W6,
-                serif;
-        }
-        .rmg-name__char-cn {
-            font-family: 
-                Vegur, Helvetica,
-                Noto Serif SC,
-                Noto Serif TC,
-                HiraMinProN-W6,
-                serif;
-        }
-        .rmg-name__char-jp {
-            font-family: 
-                Vegur, Helvetica,
-                Noto Serif JP,
-                Noto Serif KR,
-                Noto Serif TC,
-                Noto Serif SC,
-                HiraMinProN-W6,
-                serif;
-        }
-        .rmg-name__char-tw {
-            font-family: 
-                Vegur, Helvetica,
-                Noto Serif TC,
-                Noto Serif KR,
-                Noto Serif JP,
-                Noto Serif SC,
-                HiraMinProN-W6,
-                serif;
-        }
-
-        .rmg-name__gzmtr {
-            font-family: Arial, SimHei, STHeiti, PingFangSC-Regular, sans-serif;
-        }
-        .rmg-name__gzmtr--white-fg {fill: #fff;}
-
-        .rmg-name__gzmtr--station-num {
-            font-size: 14px;
-            text-anchor: middle;
-        }
-        .rmg-name__gzmtr--line-num {
-            font-size: 14px;
-            text-anchor: middle;
-        }
-        .rmg-stn {
-            fill: white;
-        }
-        .rmg-stn__highlight {
-            fill: yellow;
-        }
-    </style>
+    <link rel="stylesheet" href="styles/global.css" id="svg_share"/>
+    <link rel="stylesheet" href="styles/destination.css" id="css_destination"/>
+    <link rel="stylesheet" href="styles/railmap.css" id="css_railmap"/>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
     <script>
@@ -154,51 +85,6 @@
 xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink" 
 id="destination" width="0" height="0" style="border: 1px solid black;">
-
-    <style type="text/css">
-        .rmg-name__zh.rmg-name__mtr--dest {font-size: 90px;}
-        .rmg-name__en.rmg-name__mtr--dest {font-size: 45px;}
-
-        .rmg-name__zh.rmg-name__gzmtr--dest {font-size: 90px;}
-        .rmg-name__en.rmg-name__gzmtr--dest {font-size: 36px;}
-        
-        .rmg-name__zh.rmg-name__gzmtr--next {font-size: 35px;}
-        .rmg-name__en.rmg-name__gzmtr--next {font-size: 17px;}
-        .rmg-name__zh.rmg-name__gzmtr--next2 {font-size: 27px;}
-        .rmg-name__en.rmg-name__gzmtr--next2 {font-size: 13px;}
-        .rmg-name__zh.rmg-name__gzmtr--next2-dest {font-size: 18.5px;}
-        .rmg-name__en.rmg-name__gzmtr--next2-dest {font-size: 8.5px;}
-
-        .rmg-psd-num {
-            text-anchor: middle;
-            alignment-baseline:central;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        .rmg-psd-num.rmg-psd-num__gzmtr {
-            font-size: 20px;
-        }
-
-        .rmg-platform-num {
-            alignment-baseline:central;
-            text-anchor: middle;
-        }
-        .rmg-platform-num.rmg-platform-num__mtr {
-            font-size:135px;
-            font-family: Vegur;
-            fill: #fff;
-        }
-        .rmg-name__platformnum {
-            text-anchor: middle;
-        }
-        .rmg-name__gzmtr--platformnum {
-            font-size:38px;
-        }
-        .rmg-name__mtr--platformnum {
-            font-size:135px;
-            fill: #fff;
-        }
-    </style>
-
     <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Noto+Serif+KR:600|Noto+Serif+JP:600|Noto+Serif+TC:600|Noto+Serif+SC:600&display=swap);</style>
 
     <defs>
@@ -289,70 +175,6 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
 xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink" 
 id="railmap" width="0" height="0" style="border: 1px solid black;">
-    <style type="text/css">
-        .rmg-stn__mtr {
-            fill: #fff;
-            stroke-width: 2;
-            stroke-dasharray: 0;
-        }
-        .rmg-stn__mtr--future {stroke: #000;}
-        .rmg-stn__mtr--pass {stroke: #aaa;}
-        .rmg-stn__mtr--unpaid-osi {
-            stroke-width: 2.5;
-            stroke-dasharray: 2,2;
-        }
-        .rmg-stn__mtr--paid-osi {
-            stroke-width: 2.5;
-        }
-
-        .rmg-line {fill:none}
-
-        .rmg-line__mtr {stroke-width: 11;}
-        .rmg-line__mtr.rmg-line__change {stroke-width: 10;}
-        .rmg-line__mtr.rmg-line__pass {
-            stroke: #aaa;
-        }
-
-        .rmg-line__gzmtr {stroke-width: 4;}
-        .rmg-line__gzmtr.rmg-line__pass {
-            stroke: #aaa;
-            stroke-dasharray:4,4;
-        }
-
-        .Name.Pass {fill: #aaa;}
-        .Name.Current {fill: #fff;}
-        .Name.CurrentGZ {fill: #f00;}
-        .Name.Future {fill: #000;}
-
-        .rmg-name__en.rmg-name__mtr--station {font-size: 10px;}
-        .rmg-name__zh.rmg-name__mtr--station {font-size: 17px;}
-        .rmg-name__en.rmg-name__gzmtr--station {font-size: 10px;}
-        .rmg-name__zh.rmg-name__gzmtr--station {font-size: 18px;}
-
-        .rmg-name__en.rmg-name__mtr--osi {font-size: 9px;}
-        .rmg-name__zh.rmg-name__mtr--osi {font-size: 14px;}
-
-        .rmg-name__en.IntName {font-size: 7px;}
-        .rmg-name__zh.IntName {font-size: 10px;}
-
-        .rmg-name__zh.rmg-name__gzmtr--int {font-size: 12px;}
-        .rmg-name__en.rmg-name__gzmtr--int {font-size: 8px;}
-        .rmg-name__en.rmg-name__gzmtr--int-small {font-size: 7px;}
-
-        .StnNum{
-            font-family: Arial;
-            font-size: 14px;
-            text-anchor: middle;
-            alignment-baseline: central;
-        }
-
-        .rmg-name__zh.rmg-name__gzmtr--direc {font-size: 28px;}
-        .rmg-name__en.rmg-name__gzmtr--direc {font-size: 14px;}
-        .rmg-name__zh.rmg-name__gzmtr--direc2 {font-size: 25px;}
-        .rmg-name__en.rmg-name__gzmtr--direc2 {font-size: 11.5px;}
-
-    </style>
-
     <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Noto+Serif+KR:600|Noto+Serif+JP:600|Noto+Serif+TC:600|Noto+Serif+SC:600&display=swap);</style>
 
     <defs>

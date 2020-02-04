@@ -1,0 +1,60 @@
+.rmg-stn__mtr {
+    fill: #fff;
+    stroke-width: 2;
+    stroke-dasharray: 0;
+}
+.rmg-stn__mtr--future {stroke: #000;}
+.rmg-stn__mtr--pass {stroke: #aaa;}
+.rmg-stn__mtr--unpaid-osi {
+    stroke-width: 2.5;
+    stroke-dasharray: 2,2;
+}
+.rmg-stn__mtr--paid-osi {
+    stroke-width: 2.5;
+}
+
+.rmg-line {fill:none}
+
+.rmg-line__mtr {stroke-width: 11;}
+.rmg-line__mtr.rmg-line__change {stroke-width: 10;}
+.rmg-line__mtr.rmg-line__pass {
+    stroke: #aaa;
+}
+
+.rmg-line__gzmtr {stroke-width: 4;}
+.rmg-line__gzmtr.rmg-line__pass {
+    stroke: #aaa;
+    stroke-dasharray:4,4;
+}
+
+.Name.Pass {fill: #aaa;}
+.Name.Current {fill: #fff;}
+.Name.CurrentGZ {fill: #f00;}
+.Name.Future {fill: #000;}
+
+.rmg-name__en.rmg-name__mtr--station {font-size: 10px;}
+.rmg-name__zh.rmg-name__mtr--station {font-size: 17px;}
+.rmg-name__en.rmg-name__gzmtr--station {font-size: 10px;}
+.rmg-name__zh.rmg-name__gzmtr--station {font-size: 18px;}
+
+.rmg-name__en.rmg-name__mtr--osi {font-size: 9px;}
+.rmg-name__zh.rmg-name__mtr--osi {font-size: 14px;}
+
+.rmg-name__en.IntName {font-size: 7px;}
+.rmg-name__zh.IntName {font-size: 10px;}
+
+.rmg-name__zh.rmg-name__gzmtr--int {font-size: 12px;}
+.rmg-name__en.rmg-name__gzmtr--int {font-size: 8px;}
+.rmg-name__en.rmg-name__gzmtr--int-small {font-size: 7px;}
+
+.StnNum{
+    font-family: Arial;
+    font-size: 14px;
+    text-anchor: middle;
+    alignment-baseline: central;
+}
+
+.rmg-name__zh.rmg-name__gzmtr--direc {font-size: 28px;}
+.rmg-name__en.rmg-name__gzmtr--direc {font-size: 14px;}
+.rmg-name__zh.rmg-name__gzmtr--direc2 {font-size: 25px;}
+.rmg-name__en.rmg-name__gzmtr--direc2 {font-size: 11.5px;}

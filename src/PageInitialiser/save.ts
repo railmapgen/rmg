@@ -172,7 +172,10 @@ export function common() {
 
         if (event.detail.action === 'svg') {
             var link = document.createElement('a');
-            var svgContent = $(event.target).find('.mdc-dialog__content svg').prepend($('style#svg_share').clone());
+            var svgContent = $(event.target).find('.mdc-dialog__content svg').prepend(
+                $('<style>').text(Array.from((($('link#svg_share')[0] as HTMLLinkElement).sheet as CSSStyleSheet).cssRules).map(rule => rule.cssText).join(' '))
+            );
+            svgContent.prepend($('<style>').text(Array.from((($(`link#css_${svgContent[0].id}`)[0] as HTMLLinkElement).sheet as CSSStyleSheet).cssRules).map(rule => rule.cssText).join(' ')));
             link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgContent[0].outerHTML)));
             link.download = 'rmg_export.svg';
             link.click();
