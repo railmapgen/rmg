@@ -1,5 +1,5 @@
 import { getTxtBoxDim, setParams, getParams, putParams, getRandomId } from '../utils';
-import { RMGStation, Int2Station, Int3LStation, Int3RStation, OSI11LStation, OSI11RStation, OSI12LStation, OSI12RStation, OSI22LStation, OSI22RStation, OSI22EndStation } from '../Station/Station';
+import { RMGStation, Int2Station, Int3LStation, Int3RStation, OSI11LStation, OSI11RStation, OSI12LStation, OSI12RStation, OSI22Station, OSI22LStation, OSI22RStation, OSI22EndStation } from '../Station/Station';
 
 import { ID, Name, StationInfo, RMGParam, DirectionLong } from '../utils';
 
@@ -281,6 +281,11 @@ export class RMGLine {
 
     _rightWideFactor(stnId: ID) {
         var res = 0;
+        let stnInstance = this.stations[stnId];
+        if (stnInstance instanceof Int3RStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI11RStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI12RStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI22Station) {res += this._longInterval;}
         var stnClasses = ['Int3RStation', 'OSI11RStation', 'OSI12RStation', 'OSI22LStation', 'OSI22RStation'];
         if (stnClasses.includes(this.stations[stnId].constructor.name)) {res += this._longInterval;}
         if (this._stnOutdegree(stnId) == 2) {res += this._longInterval/2;}
@@ -290,8 +295,12 @@ export class RMGLine {
 
     _leftWideFactor(stnId: ID) {
         var res = 0;
-        var stnClasses = ['Int3LStation', 'OSI11LStation', 'OSI12LStation', 'OSI22LStation', 'OSI22RStation'];
-        if (stnClasses.includes(this.stations[stnId].constructor.name)) {res += this._longInterval;}
+        // compatible with webpack minimal output
+        let stnInstance = this.stations[stnId];
+        if (stnInstance instanceof Int3LStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI11LStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI12LStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI22Station) {res += this._longInterval;}
         if (this._stnIndegree(stnId) == 2) {res += this._longInterval/2;}
         if (this._stnOutdegree(this.stations[stnId].parents[0]) == 2) {res += this._longInterval/2;}
         return res;
@@ -1484,6 +1493,7 @@ export class RMGLine {
 
         for (let [stnId, stnInstance] of Object.entries(this.stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
+            stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
         }
         RMGLine.clearSVG();

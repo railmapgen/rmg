@@ -246,7 +246,7 @@ class RMGLineGZ extends RMGLine {
     }
 
     _rightWideFactor(stnId: ID) {
-        if (this.stations[stnId].constructor.name === 'BranchStationGZ' && this.stations[stnId]._tickRotation === 0) {
+        if (this.stations[stnId] instanceof BranchStationGZ && this.stations[stnId]._tickRotation === 0) {
             return 0.25;
         } else {
             return 0;
@@ -254,7 +254,7 @@ class RMGLineGZ extends RMGLine {
     }
 
     _leftWideFactor(stnId: ID) {
-        if (this.stations[stnId].constructor.name === 'BranchStationGZ' && this.stations[stnId]._tickRotation !== 0) {
+        if (this.stations[stnId] instanceof BranchStationGZ && this.stations[stnId]._tickRotation !== 0) {
             return 0.25;
         } else {
             return 0;
