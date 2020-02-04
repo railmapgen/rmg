@@ -447,27 +447,34 @@ class RMGLineGZ extends RMGLine {
             $('#direction_gz g').eq(0).show();
             $('#direction_gz g').eq(1).hide();
         } else {
-            // to be simplified
+            validDest
+                .flatMap(stnId => this.stations[stnId].name)
+                .forEach((txt, i) => {
+                    if (i%2) {
+                        txt = 'Towards ' + txt;
+                    }
+                    $('#direction_gz g').eq(1).find('text').eq(i).text(txt);
+                });
             $('#direction_gz g').eq(1).find('text').css('letter-spacing', 0);
-            $('#direction_gz g').eq(1).find('text').eq(0).text(this.stations[validDest[0]].name[0]);
-            $('#direction_gz g').eq(1).find('text').eq(1).text('Towards ' + this.stations[validDest[0]].name[1]);
-            $('#direction_gz g').eq(1).find('text').eq(2).text(this.stations[validDest[1]].name[0]);
-            $('#direction_gz g').eq(1).find('text').eq(3).text('Towards ' + this.stations[validDest[1]].name[1]);
 
             let charCounts = validDest.map(stnId => this.stations[stnId].name[0].length);
             let minCharCounts = Math.min(...charCounts);
             if (minCharCounts > 1 && charCounts[0] !== charCounts[1]) {
                 let charSpacing = Math.abs(charCounts[0] - charCounts[1]) / (minCharCounts - 1);
-                if (charCounts[0] > charCounts[1]) {
-                    $('#direction_gz g').eq(1).find('text').eq(2).css('letter-spacing', `${charSpacing}em`);
-                } else {
-                    $('#direction_gz g').eq(1).find('text').eq(0).css('letter-spacing', `${charSpacing}em`);
-                }
+                $('#direction_gz g').eq(1).find('text')
+                    .eq(charCounts[0] > charCounts[1] ? 2 : 0)
+                    .css('letter-spacing', `${charSpacing}em`);
             }
 
-            let maxCharCount = Math.max(...charCounts);
-            $('#direction_gz g').eq(1).find('text').eq(4).attr('x', 25*(maxCharCount+1));
-
+            if (this._direction === 'l') {
+                let maxCharCount = Math.max(...charCounts);
+                $('#direction_gz g').eq(1).find('text').eq(4).attr('x', 25*(maxCharCount+1));
+                $('#direction_gz g').eq(1).find('text').slice(0,4).removeAttr('x');
+            } else {
+                $('#direction_gz g').eq(1).find('text').eq(4).removeAttr('x');
+                $('#direction_gz g').eq(1).find('text').slice(0,4).attr('x', '-75');
+            }
+            
             $('#direction_gz g').eq(0).hide();
             $('#direction_gz g').eq(1).show();
         }

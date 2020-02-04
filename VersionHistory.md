@@ -1,5 +1,15 @@
 # Version History
 
+## 2.5 (4 Feb 2020)
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Fixed the incorrect style of 'Towards' information when there are two destinations in Guangzhou Metro style. 
+
 ## 2.4.2 (4 Feb 2020)
 
 ### Known Issues
