@@ -20,8 +20,7 @@ class RMGStation {
     public state: -1 | 0 | 1;
     public parents: ID[];
     public children: ID[];
-    public namePos: 0 | 1;
-    _namePosBool: boolean;
+    public namePos: boolean;
     public name: Name;
     public branch: BranchInfo;
     public stnNum: string;
@@ -32,7 +31,6 @@ class RMGStation {
         this.children = data.children;
         this.name = data.name;
         this.branch = data.branch;
-        this._namePosBool = this.namePos === 0 ? false : true;
     }
 
     get inDegree() {return this.parents.length;}
@@ -56,7 +54,7 @@ class RMGStation {
     get nameHTML() {
         var nameENs = this.name[1].split('\\');
 
-        if (this.namePos == 1) {
+        if (this.namePos) {
             var dy = this.STN_NAME_LINE_GAP - this.STN_NAME_Y - this.STN_NAME_BG_ADJUST;
         } else {
             var dy = -this.STN_NAME_LINE_GAP - this.STN_NAME_Y - this.STN_NAME_BASE_HEIGHT - (nameENs.length-1)*10;
@@ -122,7 +120,7 @@ class Int2Station extends RMGStation {
     get _dy() {return 0;}
 
     get intTickHTML() {
-        var tickRotation = (this.namePos == 1) ? 180 : 0;
+        var tickRotation = (this.namePos) ? 180 : 0;
         var tickColour = this._intInfo[IntInfoTag.colour];
         var tick = $('<use>', {
             'xlink:href': '#inttick_hk', 
@@ -142,7 +140,7 @@ class Int2Station extends RMGStation {
 
     get intNameHTML() {
         var [nameHTML, nameZHLn, nameENLn] = joinIntName([this._intInfo[IntInfoTag.nameZH], this._intInfo[IntInfoTag.nameEN]], 15, 7);
-        var dy = (this.namePos == 0) ? 25 + 5.953125 : -25 + 5.953125 - 18.65625 - 13*(nameZHLn-1) - 7*(nameENLn-1);
+        var dy = (!this.namePos) ? 25 + 5.953125 : -25 + 5.953125 - 18.65625 - 13*(nameZHLn-1) - 7*(nameENLn-1);
         dy += this._dy;
         // var nameClass = (this.state == -1) ? 'Pass' : 'Future';
         return $('<g>', {
@@ -183,7 +181,7 @@ class Int3Station extends RMGStation {
     }
 
     get iconHTML() {
-        let iconRotation = (this.namePos != 1) ? 0 : 180;
+        let iconRotation = (!this.namePos) ? 0 : 180;
         return $('<use>', {
             'xlink:href': '#int3_hk', 
             transform: `translate(${this.x},${this.y})rotate(${iconRotation})`, 
@@ -203,7 +201,7 @@ class Int3Station extends RMGStation {
             .forEach((c, i) => {
                 if (i >= 2) {return;}
                 let tickColour = (this.state === -1) ? '#aaa' : c;
-                let dy = (this.namePos !== 1) ? 18*(i+1) : -18*(2-i);
+                let dy = (!this.namePos) ? 18*(i+1) : -18*(2-i);
                 dy += this._dy;
                 dy *= this._tickFlip;
                 elems.push(
@@ -232,7 +230,7 @@ class Int3Station extends RMGStation {
             .forEach((names, i) => {
                 if (i >=2) {return;}
                 let [nameHTML, nameZHLn, nameENLn] = joinIntName(names, 15, 7);
-                var dy = (this.namePos === 0) ? 18*(i+1) : -18*(2-i);
+                var dy = (!this.namePos) ? 18*(i+1) : -18*(2-i);
                 dy += this._dy;
                 dy *= this._tickFlip;
                 dy += 5.953125 - (19.65625 + 13*(nameZHLn-1) + 7*(nameENLn-1))/2;
@@ -279,7 +277,7 @@ class OSI11Station extends Int2Station {
     
     get osiClass() {return this._osiType == 'u' ? 'rmg-stn__mtr--unpaid-osi' : 'rmg-stn__mtr--paid-osi';}
     get iconHTML() {
-        var iconRotation = (this.namePos != 1) ? 0 : 180;
+        var iconRotation = (!this.namePos) ? 0 : 180;
         return $('<use>', {
             'xlink:href': '#osi11_hk', 
             'transform': `translate(${this.x},${this.y})rotate(${iconRotation})`, 
@@ -287,7 +285,7 @@ class OSI11Station extends Int2Station {
         });
     }
 
-    get _dy() {return (this.namePos == 0) ? 26 : -26;}
+    get _dy() {return (!this.namePos) ? 26 : -26;}
     get _txtAnchor() {return 'middle';}
     get _osiNameDX() {return 0;}
 
@@ -338,7 +336,7 @@ class OSI12Station extends Int3Station {
 
     get osiClass() {return this._osiType == 'u' ? 'rmg-stn__mtr--unpaid-osi' : 'rmg-stn__mtr--paid-osi';}
     get iconHTML() {
-        var iconRotation = (this.namePos != 1) ? 0 : 180;
+        var iconRotation = (!this.namePos) ? 0 : 180;
         return $('<use>', {
             'xlink:href': '#osi12_hk', 
             transform: `translate(${this.x},${this.y})rotate(${iconRotation})`,
@@ -346,8 +344,8 @@ class OSI12Station extends Int3Station {
         });
     }
 
-    get _dy() {return (this.namePos == 0) ? (26-18) : -8;}
-    get _osiDY() {return (this.namePos == 0) ? (26+18+10) + 8.34375  : -(26+18+10) + 8.34375 - 25.03125;}
+    get _dy() {return (!this.namePos) ? (26-18) : -8;}
+    get _osiDY() {return (!this.namePos) ? (26+18+10) + 8.34375  : -(26+18+10) + 8.34375 - 25.03125;}
     get _osiTxtAnchor() {return 'middle';}
     get _osiDX() {return 0;}
 
@@ -396,11 +394,11 @@ class OSI22Station extends OSI12Station {
 
     get _nameTxtAnchor() {return this._osiTxtAnchor;}
     get _nameDY() {
-        return (this.namePos === 1) ? 11.515625 : -11.515625;
+        return this.namePos ? 11.515625 : -11.515625;
     }
 
     get origIntTickHTML() {
-        var tickRotation = (this.namePos == 1) ? 0 : 180;
+        var tickRotation = this.namePos ? 0 : 180;
         var tickColour = this._origIntInfo[IntInfoTag.colour];
         var tick = $('<use>', {
             'xlink:href': '#inttick_hk', 
@@ -416,7 +414,7 @@ class OSI22Station extends OSI12Station {
 
     get origIntNameHTML() {
         var [nameHTML, nameZHLn, nameENLn] = joinIntName([this._origIntInfo[IntInfoTag.nameZH], this._origIntInfo[IntInfoTag.nameEN]], 15, 7);
-        var dy = (this.namePos == 1) ? 25 + 5.953125 : -25 + 5.953125 - 18.65625 - 13*(nameZHLn-1) - 7*(nameENLn-1);
+        var dy = this.namePos ? 25 + 5.953125 : -25 + 5.953125 - 18.65625 - 13*(nameZHLn-1) - 7*(nameENLn-1);
         // dy += this._dy;
         // var nameClass = (this.state == -1) ? 'Pass' : 'Future';
         return $('<g>', {
@@ -429,7 +427,7 @@ class OSI22Station extends OSI12Station {
     get _osiNameDX(): number {return 0;}
 
     get osiNameHTML() {
-        var dy = this._dy - (this.namePos===1 ? 18+9 : -27) + 8.34375 - 25.03125/2;
+        var dy = this._dy - (this.namePos ? 18+9 : -27) + 8.34375 - 25.03125/2;
         return $('<g>', {
             'text-anchor': this._osiTxtAnchor, 
             transform: `translate(${this.x+this._osiNameDX},${this.y+dy})`, 
@@ -485,7 +483,7 @@ class OSI22EndStation extends OSI12Station {
     }
 
     get origIntTickHTML() {
-        var tickRotation = (this.namePos == 1) ? 180 : 0;
+        var tickRotation = this.namePos ? 180 : 0;
         var tickColour = this._origIntColour;
         var tick = $('<use>', {
             'xlink:href': '#inttick_hk', 
@@ -501,7 +499,7 @@ class OSI22EndStation extends OSI12Station {
 
     get origIntNameHTML() {
         var [nameHTML, nameZHLn, nameENLn] = joinIntName([this._origIntNameZH, this._origIntNameEN], 15, 7);
-        var dy = (this.namePos == 0) ? 25 + 5.953125 : -25 + 5.953125 - 18.65625 - 13*(nameZHLn-1) - 7*(nameENLn-1);
+        var dy = !this.namePos ? 25 + 5.953125 : -25 + 5.953125 - 18.65625 - 13*(nameZHLn-1) - 7*(nameENLn-1);
         // dy += this._dy;
         // var nameClass = (this.state == -1) ? 'Pass' : 'Future';
         return $('<g>', {
@@ -512,7 +510,7 @@ class OSI22EndStation extends OSI12Station {
     }
 
     get iconHTML() {
-        var iconYFlip = (this.namePos == 1) ? 1 : -1;
+        var iconYFlip = this.namePos ? 1 : -1;
         var iconXFlip = (this.children[0] == 'lineend') ? 1 : -1;
         var iconRotation = (this.children[0] == 'lineend') ? 0 : 180;
         return $('<use>', {
@@ -525,10 +523,10 @@ class OSI22EndStation extends OSI12Station {
     get _tickRotation() {return (this.children[0] == 'lineend') ? -90 : 90;}
     get _tickFlip() {return -1;}
     get _dx() {return (this.children[0] == 'lineend') ? 41 : -41;}
-    get _dy() {return (this.namePos == 0) ? -18 : 18;}
+    get _dy() {return !this.namePos ? -18 : 18;}
     get _intNameDX() {return (this.children[0] == 'lineend') ? 24+41 : -(24+41);}
     get _txtAnchor() {return (this.children[0] == 'lineend') ? 'start' : 'end';}
-    get _osiDY() {return (this.namePos == 0) ? (10) + 8.34375  : -(10) + 8.34375 - 25.03125;}
+    get _osiDY() {return !this.namePos ? (10) + 8.34375  : -(10) + 8.34375 - 25.03125;}
     get _osiTxtAnchor() {return (this.children[0] == 'lineend') ? 'start' : 'end';}
     get _osiDX() {return (this.children[0] == 'lineend') ? -9 : 9;}
 

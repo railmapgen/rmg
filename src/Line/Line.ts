@@ -60,7 +60,7 @@ export class RMGLine {
             stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
             stnInstance.state = this._stnState(stnId);
-            stnInstance.namePos = Number(this._txtFlip ? !this._stnNamePosBool(stnId) : this._stnNamePosBool(stnId)) as 0 | 1;
+            stnInstance.namePos = this._txtFlip ? !this._stnNamePos(stnId) : this._stnNamePos(stnId);
         }
     }
 
@@ -186,7 +186,7 @@ export class RMGLine {
 
         for (let [stnId, stnInstance] of Object.entries(this.stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
-            stnInstance.namePos = Number(this._txtFlip ? !this._stnNamePosBool(stnId) : this._stnNamePosBool(stnId)) as 0 | 1;
+            stnInstance.namePos = this._txtFlip ? !this._stnNamePos(stnId) : this._stnNamePos(stnId);
         }
 
         $('#stn_icons').empty();
@@ -579,23 +579,7 @@ export class RMGLine {
     /**
      * Station name position (`false`: above line, `true`: below line, given `txtFlip` is `false`).
      */
-    private _stnNamePos(stnId: ID) {
-        var self = this;
-        var cp = this.criticalPath.nodes;
-        if (stnId == 'linestart') {return 1;}
-        var pos = cp.indexOf(stnId) % 2;
-        if (pos == -1) {
-            var parId = this.stations[stnId].parents[0];
-            if (this._stnOutdegree(parId) == 2) {
-                return self._stnNamePos(parId);
-            }
-            return self._stnNamePos(parId) === 0 ? 1 : 0;
-        } else {
-            return pos;
-        }
-    }
-
-    private _stnNamePosBool(stnId: ID): boolean {
+    private _stnNamePos(stnId: ID): boolean {
         if (stnId === 'linestart') {return true;}
         let self = this;
         let cp = this.criticalPath.nodes;
@@ -603,9 +587,9 @@ export class RMGLine {
         if (pos === -1) {
             let parId = this.stations[stnId].parents[0];
             if (this._stnOutdegree(parId) === 2) {
-                return self._stnNamePosBool(parId);
+                return self._stnNamePos(parId);
             }
-            return !self._stnNamePosBool(parId);
+            return !self._stnNamePos(parId);
         }
         return pos === 1;
     }
@@ -843,7 +827,7 @@ export class RMGLine {
                 if (['linestart', 'lineend'].includes(stnId)) {continue;}
                 stnInstance.x = this._stnRealX(stnId);
                 stnInstance.y = this._stnRealY(stnId);
-                stnInstance.namePos = Number(this._txtFlip ? !this._stnNamePosBool(stnId) : this._stnNamePosBool(stnId)) as 0 | 1;
+                stnInstance.namePos = this._txtFlip ? !this._stnNamePos(stnId) : this._stnNamePos(stnId);
                 stnInstance.state = this._stnState(stnId);
             }
             RMGLine.clearSVG();
@@ -853,7 +837,7 @@ export class RMGLine {
         } else {
             this.stations[stnId].x = this._stnRealX(stnId);
             this.stations[stnId].y = this._stnRealY(stnId);
-            this.stations[stnId].namePos = Number(this._txtFlip ? !this._stnNamePosBool(stnId) : this._stnNamePosBool(stnId)) as 0 | 1;
+            this.stations[stnId].namePos = this._txtFlip ? !this._stnNamePos(stnId) : this._stnNamePos(stnId);
             this.stations[stnId].state = this._stnState(stnId);
             $(`#stn_icons #${stnId}`).remove();
             $('#stn_icons').append(this.stations[stnId].html);
@@ -977,7 +961,7 @@ export class RMGLine {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
             stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
-            stnInstance.namePos = Number(this._txtFlip ? !this._stnNamePosBool(stnId) : this._stnNamePosBool(stnId)) as 0 | 1;
+            stnInstance.namePos = this._txtFlip ? !this._stnNamePos(stnId) : this._stnNamePos(stnId);
             stnInstance.state = this._stnState(stnId);
         }
         RMGLine.clearSVG();
@@ -1351,7 +1335,7 @@ export class RMGLine {
             stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
             stnInstance.state = this._stnState(stnId);
-            stnInstance.namePos = Number(this._txtFlip ? !this._stnNamePosBool(stnId) : this._stnNamePosBool(stnId)) as 0 | 1;
+            stnInstance.namePos = this._txtFlip ? !this._stnNamePos(stnId) : this._stnNamePos(stnId);
         }
 
         RMGLine.clearSVG();
