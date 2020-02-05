@@ -511,7 +511,7 @@ export class RMGLine {
             // parent exist
             if (this._stnOutdegree(stnPred) == 1) {
                 // no sibling, then y same as parent
-                return this._stnYShare(stnPred);
+                return this._stnYShareMTR(stnPred);
             } else {
                 // sibling exists, then y depends on its idx of being children
                 return (this.stations[stnPred].children.indexOf(stnId) == 0) ? 1 : -1;
@@ -998,7 +998,7 @@ export class RMGLine {
                     state = (state.length) ? state : [];
                     return [1,0,0,state,state];
                     // [1,0,0,1,1];
-                } else if (this._stnYShareMTR(stnId) > 0) {
+                } else if (this._stnYShareMTR(stnId) < 0) {
                     if (prep == 'before') {
                         return [this._stnOutdegree(this.stations[stnId].parents[0])-1, 
                             0,1,[],[]

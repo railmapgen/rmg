@@ -204,7 +204,8 @@ class RMGLineGZ extends RMGLine {
             return 0; 
         } else {
             let i = 1;
-            while (!branches[i].includes(stnId)) {
+            while (i < branches.length) {
+                if (branches[i].includes(stnId)) {break;}
                 i++;
             }
             if (branches[0].includes(branches[i][0])) {
