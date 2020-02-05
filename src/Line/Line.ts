@@ -60,7 +60,7 @@ export class RMGLine {
             stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
             stnInstance.state = this._stnState(stnId);
-            stnInstance.namePos = (this._txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
+            stnInstance.namePos = Number(this._txtFlip ? !this._stnNamePosBool(stnId) : this._stnNamePosBool(stnId)) as 0 | 1;
         }
     }
 
@@ -186,7 +186,7 @@ export class RMGLine {
 
         for (let [stnId, stnInstance] of Object.entries(this.stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
-            stnInstance.namePos = (this._txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
+            stnInstance.namePos = Number(this._txtFlip ? !this._stnNamePosBool(stnId) : this._stnNamePosBool(stnId)) as 0 | 1;
         }
 
         $('#stn_icons').empty();
@@ -268,7 +268,7 @@ export class RMGLine {
         this.loadFonts();
     }
 
-    set currentStnId(val) {
+    set currentStnId(val: string) {
         this._currentStnId = val;
         setParams('current_stn_idx', val);
 
@@ -438,6 +438,9 @@ export class RMGLine {
      */
     _stnOutdegree(stnId: ID) {return this.stations[stnId].outDegree;}
 
+    /**
+     * Horizontal position (in shares) of station icon. 
+     */
     _stnXShare(stnId: ID) {
         var self = this;
 
@@ -487,29 +490,35 @@ export class RMGLine {
         return self._stnXShare(partSource) + lengthToSource / (lengthToSource + lengthToSink) * actualPartLength;
     }
 
+    /**
+     * Horizontal position (in pixels) of station icon. 
+     */
     _stnRealX(stnId: ID) {
         let [lineStart, lineEnd] = this.lineXs;
         return lineStart + this._stnXShare(stnId) / this.criticalPath.len * (lineEnd - lineStart);
     }
 
-    _stnYShare(stnId) {
+    /**
+     * Mirror `_stnYShareMTR`. 
+     */
+    _stnYShare(stnId: ID) {
         return this._stnYShareMTR(stnId);
     }
 
+    /**
+     * Vertical position (in shares) of station icon if using MTR style (for consistency of method `RMGLine.newStnPossibleLoc()`). 
+     */
     _stnYShareMTR(stnId: ID) {
-        // _stnYShare changed in other style
-        // for feature consistency in newStnPossibleLoc
-        // backup MTR-style y
-        
         if (['linestart', 'lineend'].includes(stnId) || this._stnIndegree(stnId) > 1 || this._stnOutdegree(stnId) > 1) {
             return 0;
         }
         var stnPred = this.stations[stnId].parents[0];
+        let self = this;
         if (stnPred) {
             // parent exist
             if (this._stnOutdegree(stnPred) == 1) {
                 // no sibling, then y same as parent
-                return this._stnYShareMTR(stnPred);
+                return self._stnYShareMTR(stnPred);
             } else {
                 // sibling exists, then y depends on its idx of being children
                 return (this.stations[stnPred].children.indexOf(stnId) == 0) ? 1 : -1;
@@ -520,14 +529,17 @@ export class RMGLine {
         }
     }
 
-    _stnRealY(stnId) {
+    /**
+     * Vertical position (in pixels) of station icon related to vertical position of line. 
+     */
+    _stnRealY(stnId: ID) {
         return this.y - this._stnYShare(stnId) * this._branchSpacing;
     }
 
     /**
      * Return true if station 2 is a successor of station 1, false otherwise. 
      */
-    _isSuccessor(stnId1: ID, stnId2: ID) {
+    private _isSuccessor(stnId1: ID, stnId2: ID) {
         for (let route of this.routes) {
             let idx1 = route.indexOf(stnId1);
             let idx2 = route.indexOf(stnId2);
@@ -541,7 +553,7 @@ export class RMGLine {
     /**
      * Return true if station 2 is a predecessor of station 1, false otherwise. 
      */
-    _isPredecessor(stnId1: ID, stnId2: ID) {
+    private _isPredecessor(stnId1: ID, stnId2: ID) {
         for (let route of this.routes) {
             let idx1 = route.indexOf(stnId1);
             let idx2 = route.indexOf(stnId2);
@@ -555,7 +567,7 @@ export class RMGLine {
     /**
      * Return state of a station (-1: passed, 0: current, 1: future).
      */
-    _stnState(stnId: ID) {
+    protected _stnState(stnId: ID) {
         if (stnId == this._currentStnId) {return 0;}
         if (this._direction == 'r') {
             return this._isSuccessor(this._currentStnId, stnId) ? 1 : -1;
@@ -564,7 +576,10 @@ export class RMGLine {
         }
     }
 
-    _stnNamePos(stnId) {
+    /**
+     * Station name position (`false`: above line, `true`: below line, given `txtFlip` is `false`).
+     */
+    private _stnNamePos(stnId: ID) {
         var self = this;
         var cp = this.criticalPath.nodes;
         if (stnId == 'linestart') {return 1;}
@@ -574,11 +589,30 @@ export class RMGLine {
             if (this._stnOutdegree(parId) == 2) {
                 return self._stnNamePos(parId);
             }
-            return Number(!self._stnNamePos(parId));
+            return self._stnNamePos(parId) === 0 ? 1 : 0;
+        } else {
+            return pos;
         }
-        return pos;
     }
 
+    private _stnNamePosBool(stnId: ID): boolean {
+        if (stnId === 'linestart') {return true;}
+        let self = this;
+        let cp = this.criticalPath.nodes;
+        let pos = cp.indexOf(stnId) % 2; // -1, 0 or 1;
+        if (pos === -1) {
+            let parId = this.stations[stnId].parents[0];
+            if (this._stnOutdegree(parId) === 2) {
+                return self._stnNamePosBool(parId);
+            }
+            return !self._stnNamePosBool(parId);
+        }
+        return pos === 1;
+    }
+
+    /**
+     * Set height and width for both `svg`s. 
+     */
     drawSVGFrame() {
         $('#railmap, #outer').attr({
             width: this._svgWidth, 
@@ -588,8 +622,6 @@ export class RMGLine {
             width: this._svgDestWidth, 
             height: this._svgHeight
         });
-        $('#dest_strip_gz').attr('width', this._svgDestWidth);
-        $('#strip_gz').attr('width', this._svgWidth);
     }
 
     showFrameOuter() {
@@ -602,6 +634,9 @@ export class RMGLine {
         }
     }
 
+    /**
+     * Draw all stations. (Previously drawn station icons are not removed. )
+     */
     drawStns() {
         for (let [stnId, stnInstance] of Object.entries(this.stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
@@ -610,12 +645,14 @@ export class RMGLine {
         $('#stn_icons').html($('#stn_icons').html()); // Refresh DOM
     }
 
+    /**
+     * Update background of current station name. `y` and `height` are changed while station icon is re-drawn and `RMGStation.nameHTML` is loaded. 
+     */
     updateStnNameBg() {
         var stnNameDim = getTxtBoxDim(
             $(`#stn_icons > #${this._currentStnId} > .Name`)[0] as Element as SVGGraphicsElement,
             'railmap'
         );
-        console.log(stnNameDim);
         $('#current_bg').attr({
             x: stnNameDim.x-3, 
             width: stnNameDim.width+6, 
@@ -806,7 +843,7 @@ export class RMGLine {
                 if (['linestart', 'lineend'].includes(stnId)) {continue;}
                 stnInstance.x = this._stnRealX(stnId);
                 stnInstance.y = this._stnRealY(stnId);
-                stnInstance.namePos = (this._txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
+                stnInstance.namePos = Number(this._txtFlip ? !this._stnNamePosBool(stnId) : this._stnNamePosBool(stnId)) as 0 | 1;
                 stnInstance.state = this._stnState(stnId);
             }
             RMGLine.clearSVG();
@@ -816,7 +853,7 @@ export class RMGLine {
         } else {
             this.stations[stnId].x = this._stnRealX(stnId);
             this.stations[stnId].y = this._stnRealY(stnId);
-            this.stations[stnId].namePos = (this._txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
+            this.stations[stnId].namePos = Number(this._txtFlip ? !this._stnNamePosBool(stnId) : this._stnNamePosBool(stnId)) as 0 | 1;
             this.stations[stnId].state = this._stnState(stnId);
             $(`#stn_icons #${stnId}`).remove();
             $('#stn_icons').append(this.stations[stnId].html);
@@ -940,7 +977,7 @@ export class RMGLine {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
             stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
-            stnInstance.namePos = (this._txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
+            stnInstance.namePos = Number(this._txtFlip ? !this._stnNamePosBool(stnId) : this._stnNamePosBool(stnId)) as 0 | 1;
             stnInstance.state = this._stnState(stnId);
         }
         RMGLine.clearSVG();
@@ -1314,7 +1351,7 @@ export class RMGLine {
             stnInstance.x = this._stnRealX(stnId);
             stnInstance.y = this._stnRealY(stnId);
             stnInstance.state = this._stnState(stnId);
-            stnInstance.namePos = (this._txtFlip) ? Number(!this._stnNamePos(stnId)) : this._stnNamePos(stnId);
+            stnInstance.namePos = Number(this._txtFlip ? !this._stnNamePosBool(stnId) : this._stnNamePosBool(stnId)) as 0 | 1;
         }
 
         RMGLine.clearSVG();

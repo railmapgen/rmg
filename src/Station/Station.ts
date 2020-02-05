@@ -21,6 +21,7 @@ class RMGStation {
     public parents: ID[];
     public children: ID[];
     public namePos: 0 | 1;
+    _namePosBool: boolean;
     public name: Name;
     public branch: BranchInfo;
     public stnNum: string;
@@ -31,6 +32,7 @@ class RMGStation {
         this.children = data.children;
         this.name = data.name;
         this.branch = data.branch;
+        this._namePosBool = this.namePos === 0 ? false : true;
     }
 
     get inDegree() {return this.parents.length;}

@@ -195,6 +195,9 @@ class RMGLineGZ extends RMGLine {
         }
     }
 
+    /**
+     * Vertical position (in shares) of station icon. 
+     */
     _stnYShare(stnId) {
         if (['linestart', 'lineend'].includes(stnId)) {
             return 0;
@@ -267,6 +270,15 @@ class RMGLineGZ extends RMGLine {
 
         return 1 + this._rightWideFactor(stnId1) + this._leftWideFactor(stnId2);
         // return 1;
+    }
+
+    /**
+     * Set width for colour strips. (Height of strips are controlled by `RMGLineGZ.drawStrip`. )
+     */
+    drawSVGFrame() {
+        super.drawSVGFrame();
+        $('#dest_strip_gz').attr('width', this._svgDestWidth);
+        $('#strip_gz').attr('width', this._svgWidth);
     }
 
     _linePath(stnIds) {
