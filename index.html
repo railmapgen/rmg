@@ -205,6 +205,13 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
     <defs>
         <path id="arrow" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
 
+        <!-- style/shmetro -->
+        <!-- Todo: fix this absolute position -->
+        <path id="arrow_left" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
+        <!-- <path id="line_shmetro_left" d="M0,0 l 100 h20 l-100 h-20z"/> -->
+        <path id="line_shmetro_left" d="M30,10 H 980 V 20 H 20 Z"/>
+        <!-- style/shmetro -->
+
         <ellipse id="indicator_gz28" rx="24" ry="12" fill="orange"/>
         <ellipse id="indicator_gzgf" rx="24" ry="12" fill="white"/>
         <rect id="indicator_gz3" x="0" y="-25" height="30" width="30" fill="red"/>
@@ -285,6 +292,21 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
             <text class="rmg-name__en" font-size="6.5px" dy="36">Screen Door</text>
         </g>
     </g>
+
+    <g id="station_info_shmetro" style="display: none;" shmetro-specific>
+        <use id="line_shmetro_left_use" xlink:href="#line_shmetro_left"/>
+        <use id="arrow_left_use" xlink:href="#arrow_left"/>
+        <!-- <g id="platform">
+            <circle cx="0" cy="0" r="75"/>
+            <text class="rmg-name__zh rmg-name__platformnum rmg-name__shmetro--platformnum" dy="0"></text>
+        </g> -->
+        <!-- Todo: fix this absolute position -->
+        <g id="dest_text">
+            <text class="rmg-name__zh rmg-name__shmetro--dest" font-size="500%">往</text>
+            <text class="rmg-name__en rmg-name__shmetro--dest" font-size="200%" dy="60">to</text>
+        </g>
+    </g>
+
 </svg><!--
 --><svg 
 xmlns="http://www.w3.org/2000/svg"
