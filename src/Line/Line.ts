@@ -136,8 +136,7 @@ export class RMGLine {
         this.updateStnNameBg();
     }
 
-    set yPc(val) {
-        val = Number(val);
+    set yPc(val: number) {
         this._yPc = val;
         setParams('y_pc', val);
 
@@ -145,7 +144,7 @@ export class RMGLine {
         $('g#main').attr('transform', `translate(0,${y})`);
     }
 
-    set padding(val) {
+    set padding(val: number) {
         val = Number(val);
         this._padding = val;
         setParams('padding', val);
@@ -163,8 +162,7 @@ export class RMGLine {
         this.updateStnNameBg();
     }
 
-    set branchSpacing(val) {
-        val = Number(val);
+    set branchSpacing(val: number) {
         this._branchSpacing = val;
         setParams('branch_spacing', val);
 
@@ -199,13 +197,13 @@ export class RMGLine {
         this.updateStnNameBg();
     }
 
-    set themeColour(rgbs) {
-        this._themeColour = rgbs[0];
-        this._fgColour = rgbs[1];
+    set themeColour(hexs: string[]) {
+        this._themeColour = hexs[0];
+        this._fgColour = hexs[1];
 
         var param = getParams();
-        param.theme[2] = rgbs[0];
-        param.theme[3] = rgbs[1];
+        param.theme[2] = hexs[0];
+        param.theme[3] = hexs[1];
         putParams(param);
 
         this.fillThemeColour();
@@ -229,13 +227,20 @@ export class RMGLine {
         this.loadFonts();
     }
 
-    set platformNum(val) {
+    /**
+     * Setter of platform number (can be string). 
+     */
+    set platformNum(val: string) {
         this._platformNum = val;
         setParams('platform_num', val);
         $('.rmg-name__platformnum').text(val);
     }
 
-    set charForm(val) {
+    /**
+     * Setter of character form. 
+     * @param val 'trad', 'cn', 'tw' or 'jp'
+     */
+    set charForm(val: string) {
         this._charForm = val;
         setParams('char_form', val);
 
@@ -244,7 +249,10 @@ export class RMGLine {
         $('.rmg-name__zh').addClass(`rmg-name__char-${val}`);
     }
     
-    set lineNames(val) {
+    /**
+     * Setter of names of line. 
+     */
+    set lineNames(val: Name) {
         this._lineNames = val;
         setParams('line_name', val);
 
@@ -252,7 +260,7 @@ export class RMGLine {
         this.loadFonts();
     }
 
-    set destLegacy(val) {
+    set destLegacy(val: boolean) {
         this._destLegacy = val;
         setParams('dest_legacy', val);
 
@@ -279,7 +287,10 @@ export class RMGLine {
         this.updateStnNameBg();
     }
 
-    _rightWideFactor(stnId: ID) {
+    /**
+     * Increment of the weight of out-bound edge of a station, which increases the horizontal interval from its children. 
+     */
+    protected _rightWideFactor(stnId: ID) {
         var res = 0;
         let stnInstance = this.stations[stnId];
         if (stnInstance instanceof Int3RStation) {res += this._longInterval;}
@@ -293,9 +304,11 @@ export class RMGLine {
         return res;
     }
 
-    _leftWideFactor(stnId: ID) {
+    /**
+     * Increment of the weight of in-bound edge of a station, which increases the horizontal interval from its parents. 
+     */
+    protected _leftWideFactor(stnId: ID) {
         var res = 0;
-        // compatible with webpack minimal output
         let stnInstance = this.stations[stnId];
         if (stnInstance instanceof Int3LStation) {res += this._longInterval;}
         if (stnInstance instanceof OSI11LStation) {res += this._longInterval;}
@@ -306,29 +319,21 @@ export class RMGLine {
         return res;
     }
 
-    _pathWeight(stnId1: ID, stnId2: ID) {
-        // Path weight from stnId1 to stnId2
-
-        // if (stnId1 == stnId2) {return 0;}
+    /**
+     * Path weight from station 1 to station 2 (station 2 must be a child of station 1, otherwise return `-Infinity`).
+     */
+    protected _pathWeight(stnId1: ID, stnId2: ID) {
         if (!this.stations[stnId1].children.includes(stnId2)) {return -Infinity;}
-
         return 1 + this._rightWideFactor(stnId1) + this._leftWideFactor(stnId2);
     }
 
-    _cpm(from: ID, to: ID) {
-        var self = this;
-        // Critical Path Method (FuOR)
-        if (from==to) {return 0};
-        // var allLengths = [];
-        var allLengths = this.stations[from].children.map(child => allLengths.push(1 + self._cpm(child, to)));
-        // for (let child of this.stations[from].children) {
-        //     allLengths.push(1 + self._cpm(child, to));
-        // }
-        return Math.max(...allLengths)
-    }
-
-    _cp(from: ID, to: ID) {
-        var self = this;
+    /**
+     * Critical path and corresponding length from a station to another. 
+     * @param from ID of station on the left
+     * @param to ID of station on the left
+     */
+    protected _cp(from: ID, to: ID) {
+        let self = this;
         if (from == to) {
             return { len: 0, nodes: [from] };
         }
@@ -348,6 +353,9 @@ export class RMGLine {
         };
     }
 
+    /**
+     * Getter of critical path (from left to right) and corresponding length of the entire line. 
+     */
     get criticalPath() {
         let allLengths: number[] = [];
         let criticalPaths: ID[][] = [];
@@ -420,8 +428,15 @@ export class RMGLine {
         );
     }
 
+    /**
+     * Indegree of a station node.
+     */
     _stnIndegree(stnId: ID) {return this.stations[stnId].inDegree;}
-    _stnOutdegree(stnId: ID) {return this.stations[stnId].outDegree}
+
+    /**
+     * Outdegree of a station node. 
+     */
+    _stnOutdegree(stnId: ID) {return this.stations[stnId].outDegree;}
 
     _stnXShare(stnId: ID) {
         var self = this;
@@ -478,24 +493,7 @@ export class RMGLine {
     }
 
     _stnYShare(stnId) {
-        if (['linestart', 'lineend'].includes(stnId) || this._stnIndegree(stnId) > 1 || this._stnOutdegree(stnId) > 1) {
-            return 0;
-        }
-        var stnPred = this.stations[stnId].parents[0];
-        if (stnPred) {
-            // parent exist
-            if (this._stnOutdegree(stnPred) == 1) {
-                // no sibling, then y same as parent
-                return this._stnYShare(stnPred);
-            } else {
-                // sibling exists, then y depends on its idx of being children
-                return (this.stations[stnPred].children.indexOf(stnId) == 0) ? 1 : -1;
-            }
-        } else {
-            // no parent, must be linestart
-            return 0;
-        }
-        return 0;
+        return this._stnYShareMTR(stnId);
     }
 
     _stnYShareMTR(stnId: ID) {
@@ -526,25 +524,10 @@ export class RMGLine {
         return this.y - this._stnYShare(stnId) * this._branchSpacing;
     }
 
-    _isSuccessor_old(stnId1, stnId2) {
-        // Is stnId2 a successor of stnId1?
-        var self = this;
-
-        var descOfStn1 = this.stations[stnId1].children;
-        if (!descOfStn1.length) {
-            return false;
-        } else if (descOfStn1.includes(stnId2)) {
-            return true;
-        } else {
-            for (let desc of descOfStn1) {
-                if (self._isSuccessor_old(desc, stnId2)) {return true;}
-            }
-        }
-        return false;
-    }
-
+    /**
+     * Return true if station 2 is a successor of station 1, false otherwise. 
+     */
     _isSuccessor(stnId1: ID, stnId2: ID) {
-        // Is stnId2 a successor of stnId1?
         for (let route of this.routes) {
             let idx1 = route.indexOf(stnId1);
             let idx2 = route.indexOf(stnId2);
@@ -555,25 +538,10 @@ export class RMGLine {
         return false;
     }
 
-    _isPredecessor_old(stnId1, stnId2) {
-        // Is stnId2 a predecessor of stnId1?
-        var self = this;
-
-        var ancOfStn1 = this.stations[stnId1].parents;
-        if (!ancOfStn1.length) {
-            return false;
-        } else if (ancOfStn1.includes(stnId2)) {
-            return true;
-        } else {
-            for (let anc of ancOfStn1) {
-                if (self._isPredecessor_old(anc, stnId2)) {return true;}
-            }
-        }
-        return false;
-    }
-
+    /**
+     * Return true if station 2 is a predecessor of station 1, false otherwise. 
+     */
     _isPredecessor(stnId1: ID, stnId2: ID) {
-        // Is stnId2 a predecessor of stnId1?
         for (let route of this.routes) {
             let idx1 = route.indexOf(stnId1);
             let idx2 = route.indexOf(stnId2);
@@ -584,6 +552,9 @@ export class RMGLine {
         return false;
     }
 
+    /**
+     * Return state of a station (-1: passed, 0: current, 1: future).
+     */
     _stnState(stnId: ID) {
         if (stnId == this._currentStnId) {return 0;}
         if (this._direction == 'r') {
@@ -1565,6 +1536,9 @@ export class RMGLine {
         });
     }
 
+    /**
+     * Getter of routes (行車交路) of the line. The first route must be the main line. 
+     */
     get routes() {
         var stack = ['linestart'];
         var branches = [['linestart']];

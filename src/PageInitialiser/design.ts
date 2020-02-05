@@ -1,4 +1,4 @@
-import { getParams, putParams, countryCode2Emoji, getTransText, rgb2Hex } from '../utils';
+import { getParams, putParams, countryCode2Emoji, getTransText, rgb2Hex, Name } from '../utils';
 import { CityEntry, LineEntry } from '../utils';
 import { RMGLineGZ } from '../Line/LineGZ';
 import { MDCList } from '@material/list';
@@ -145,7 +145,7 @@ export function common() {
     $('#line_name_diag')
         .find('.mdc-text-field')
         .on('input', () => {
-            let lineNames = [lineNameZHTextField, lineNameENTextField].map(textfield => textfield.value);
+            let lineNames = [lineNameZHTextField, lineNameENTextField].map(textfield => textfield.value) as Name;
             window.myLine.lineNames = lineNames;
             $('#design_list')
                     .find('li#name .mdc-list-item__secondary-text')

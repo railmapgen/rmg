@@ -37,16 +37,16 @@ export function common() {
     ($(svgWidthTextField.root_).find('input') as JQuery<HTMLInputElement>)
         .on('input', event => window.myLine.svgWidth = Number(event.target.value));
 
-    branchSpacingSlider.listen('MDCSlider:input', event => {
-        window.myLine.branchSpacing = branchSpacingSlider.value;
+    branchSpacingSlider.listen('MDCSlider:input', () => {
+        window.myLine.branchSpacing = Number(branchSpacingSlider.value);
     });
 
-    yPcSlider.listen('MDCSlider:input', event => {
+    yPcSlider.listen('MDCSlider:input', () => {
         window.myLine.yPc = Number(yPcSlider.value);
     });
 
-    paddingSlider.listen('MDCSlider:input', event => {
-        window.myLine.padding = paddingSlider.value;
+    paddingSlider.listen('MDCSlider:input', () => {
+        window.myLine.padding = Number(paddingSlider.value);
     });    
 }
 
