@@ -1,5 +1,18 @@
 # Version History
 
+## 2.5.2 (5 Feb 2020)
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Fixed the incorrect list of possible locations of a new station. 
+- Separated CSS stylesheets for control panels from `index.html`.
+- Improved logic of determining the positions of station names in MTR style. 
+- Updated documents and added typings for some methods. 
+
 ## 2.5.1 (5 Feb 2020)
 
 ### Known Issues
@@ -8,7 +21,7 @@
 
 ### Resolved Issues
 
-- Separated CSS stylesheets from `index.html`. ([#7](issue/7))
+- Separated CSS stylesheets from `index.html`. ([#7](/issue/7))
 
 ## 2.5 (4 Feb 2020)
 

@@ -1,0 +1,38 @@
+/* :root {
+    --mdc-theme-primary: #fcb8ab;
+    --mdc-theme-secondary: #feeae6;
+    --mdc-theme-on-primary: #fff;
+    --mdc-theme-on-secondary: #fff;
+} */
+body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: column; overflow: auto;}
+#svgs {
+    height: 100%;
+    display: flex;
+    overflow-x: scroll;
+}
+#svgs::-webkit-scrollbar {
+    display: none;
+}
+#svgs>svg {
+    flex: 0 0 auto;
+}
+#panels {flex-grow: 1; overflow: hidden;}
+.panel {display: none;}
+.panel--active {display: block;}
+
+.station-card {
+    height: 100px;
+}
+.station-card__content {
+    font-family: sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 400;
+    letter-spacing: .03125em;
+    text-align: center;
+}
+.int-selection {
+    max-width: 100%;
+}
