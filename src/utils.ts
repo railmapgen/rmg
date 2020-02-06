@@ -167,6 +167,27 @@ export function getRandomId() {
     return Math.floor(Math.random() * Math.pow(36, 4)).toString(36).padStart(4, '0');
 }
 
+export function getNameFromId(stnId: ID) {
+    let numsZH = [
+        '癸', '甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', 
+        '日', '月', '金', '木', '水', '火', '土', 
+        '竹', '戈', '十', '大', '中', '一', '弓', 
+        '人', '心', '手', '口', 
+        '尸', '廿', '山', '女', '田', '難', '卜', '重'
+    ];
+    let numsEN = [
+        'Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 
+        'Alfa', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf',
+        'Hotel', 'India', 'Juliett', 'Kilo', 'Lima', 'Mike', 'November', 
+        'Oscar', 'Papa', 'Quebec', 'Romeo', 
+        'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu'
+    ];
+    return [
+        stnId.split('').map(char => numsZH[parseInt(char, 36)]).join(''), 
+        stnId.split('').map(char => numsEN[parseInt(char, 36)]).join(' ')
+    ];
+}
+
 export function describeParams(param: RMGParam) {
     return `Number of stations: ${Object.keys(param.stn_list).length-2}
             ${Object.entries(param.stn_list).map(x => ['linestart','lineend'].includes(x[0]) ? '' : x[1].name.join(' - ')).join('<br>').trim().replace(/\\/,' ')}`;

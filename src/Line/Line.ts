@@ -1,4 +1,4 @@
-import { getTxtBoxDim, setParams, getParams, putParams, getRandomId } from '../utils';
+import { getTxtBoxDim, setParams, getParams, putParams, getRandomId, getNameFromId } from '../utils';
 import { RMGStation, Int2Station, Int3LStation, Int3RStation, OSI11LStation, OSI11RStation, OSI12LStation, OSI12RStation, OSI22Station, OSI22LStation, OSI22RStation, OSI22EndStation } from '../Station/Station';
 
 import { ID, Name, StationInfo, RMGParam, DirectionLong } from '../utils';
@@ -1319,7 +1319,7 @@ export class RMGLine {
             }
         }
 
-        newInfo.name = [`車站${newId.toUpperCase()}`, `Station ${newId.toUpperCase()}`];
+        newInfo.name = getNameFromId(newId);
         newInfo.change_type = 'none';
         newInfo.num = '00';
         newInfo.interchange = [[]];
