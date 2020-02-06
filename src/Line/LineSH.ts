@@ -79,6 +79,14 @@ export class RMGLineSH extends RMGLine {
 
         // the last decoration line
         $('#line_shmetro_left_use').attr('fill', this._themeColour)
+
+        if (this._lineNames[0].match(/(\d*)\w+/)) {
+            // the line starts with number
+            $('#station_info_shmetro > #line_number > text').attr('fill', '#fff')
+        } else {
+            // the line starts with letter
+            $('#station_info_shmetro > #line_name_text').attr('fill', '#fff')
+        }
     }
 
     drawDestInfo() {
@@ -90,15 +98,15 @@ export class RMGLineSH extends RMGLine {
             return validDest.map(stnId => this.stations[stnId].name[idx].replace(/\\/g, ' ')).join('/');
         })
 
-        var bcr = $('#station_info_shmetro > g:last-child')[0].getBoundingClientRect();
+        var bcr = $('#station_info_shmetro > #dest_text')[0].getBoundingClientRect();
         var flagLength = 160 + 150 + bcr.width + 45 + 50;
-        console.log("flagLength: " + flagLength)
 
 
 
         // arrow
         var isLeft = (this._direction == 'r') ? 1 : -1;
         var arrowX = (this._svgDestWidth - isLeft * flagLength) / 20;
+        arrowX = (this._direction == 'r') ? arrowX : this._svgDestWidth - 20;
         var arrowRotate = 90 * (1 - isLeft);
         $('#station_info_shmetro > #arrow_left_use').attr('transform', `translate(${arrowX},135)rotate(${arrowRotate})`);
 
@@ -115,19 +123,61 @@ export class RMGLineSH extends RMGLine {
             var txtAnchor = 'start';
             var destNameX = this._svgDestWidth * 0.2;
         }
-        $('#station_info_shmetro > g:last-child').attr({
+        $('#station_info_shmetro > #dest_text').attr({
             transform: `translate(${destNameX},135)`,
             'text-anchor': txtAnchor
         });
 
         // for each left valid destinations, get the name from id
-        var destinations_zh = "", destinations_en = ""
+        var [destinations_zh, destinations_en] = ["", ""]
         this.lValidDests.forEach(stn => {
             destinations_zh += this.stations[stn].name[0]
             destinations_en += this.stations[stn].name[1]
         });
         $('#station_info_shmetro > #dest_text > text:first-child').text(`往${destinations_zh}`)
         $('#station_info_shmetro > #dest_text > text:last-child').text(`To ${destinations_en}`)
+
+        // set the line name
+        if (this._direction === 'l') {
+            var txtAnchor = 'end';
+            var lineNameX = 180;
+        } else {
+            var txtAnchor = 'start';
+            var lineNameX = this._svgDestWidth;
+        }
+        var [lineNameZH, lineNameEN] = this._lineNames;
+
+        var lineNumber = lineNameZH.match(/(\d*)\w+/)
+        if (lineNumber) {
+            lineNameX -= 180;
+            lineNameZH = "号线"
+            $('#station_info_shmetro > #line_number > rect').attr({
+                'style': `fill:${this._themeColour}`,
+                'transform': `translate(${lineNameX - 120},70)`
+            })
+            $('#station_info_shmetro > #line_number > text')
+                .text(lineNumber[0])
+                .attr('transform', `translate(${lineNameX - 100},170)`)
+        } else {
+            lineNameX -= 280;
+            $('#station_info_shmetro > #line_number > rect').attr({
+                'style': `fill:${this._themeColour}`,
+                'transform': `translate(${lineNameX - 10},60)`,
+                'width': 260,
+                'height': 150
+            })
+            $('#station_info_shmetro > #line_number > text').hide()
+
+            // Todo: set the eng in the middle
+            $('#station_info_shmetro > #line_name_text > text:last-child').attr('dx', 10)
+        }
+
+        $('#station_info_shmetro > #line_name_text > text:first-child').text(`${lineNameZH}`)
+        $('#station_info_shmetro > #line_name_text > text:last-child').text(`${lineNameEN}`)
+        $('#station_info_shmetro > #line_name_text').attr({
+            transform: `translate(${lineNameX},135)`,
+            'text-anchor': txtAnchor
+        });
 
         // the last decoration line
         $('#line_shmetro_left_use').attr({
