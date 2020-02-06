@@ -460,10 +460,11 @@ class RMGLineGZ extends RMGLine {
             $('#direction_gz g').eq(0).show();
             $('#direction_gz g').eq(1).hide();
         } else {
-            // flatMap not supported by some browsers
+            // flatMap and flat are not supported by some browsers!
+            // however targeting ES5 caused other issues?
             validDest
                 .map(stnId => this.stations[stnId].name)
-                .flat()
+                .reduce((acc, val) => acc.concat(val), [])
                 .forEach((txt, i) => {
                     if (i%2) {
                         txt = 'Towards ' + txt;

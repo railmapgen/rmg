@@ -8,7 +8,7 @@
 
 ### Resolved Issues
 
-- Improved backward incompatibility.
+- Improved backward compatibility.
 - Fixed the error of un-styled exported PNG. 
 
 ## 2.5.2 (5 Feb 2020)
