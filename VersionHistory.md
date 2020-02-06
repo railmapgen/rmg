@@ -2,6 +2,10 @@
 
 ## 2.5.3 (6 Feb 2020)
 
+### New Features
+
+- New format of default names of new station. 
+
 ### Known Issues
 
 - PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
@@ -10,6 +14,7 @@
 
 - Improved backward compatibility.
 - Fixed the error of un-styled exported PNG. 
+- Fixed the errors occurred when current station is removed. 
 
 ## 2.5.2 (5 Feb 2020)
 

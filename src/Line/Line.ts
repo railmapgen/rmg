@@ -944,7 +944,7 @@ export class RMGLine {
 
         var isCurrentStnChanged = false;
         if (this._currentStnId == stnId) {
-            var newCurrentStnId = Object.keys(this.stations)[1];
+            var newCurrentStnId = Object.keys(this.stations)[2];
             this._currentStnId = newCurrentStnId;
             param.current_stn_idx = newCurrentStnId;
             isCurrentStnChanged = true;
