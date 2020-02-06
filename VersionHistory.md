@@ -5,6 +5,7 @@
 ### New Features
 
 - New format of default names of new station. 
+- New colour schemes for Guangzhou. 
 
 ### Known Issues
 
