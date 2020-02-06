@@ -155,6 +155,14 @@ export function common() {
                     height: thisSVGHeight * scaleFactor
                 })
             );
+
+        let cssTxt = ['share', $(event.target as HTMLElement).find('svg')[0].id]
+            .map(tag => {
+                return Array.from(
+                    ((<HTMLLinkElement>$(`link#css_${tag}`)[0]).sheet as CSSStyleSheet).cssRules
+                ).map(rule => rule.cssText).join(' ');
+            });
+        $(event.target).find('svg').prepend(...cssTxt.map(txt => $('<style>').text(txt)));
         
         $(event.target).find('svg [style="display: none;"]').remove();
     });
@@ -173,15 +181,15 @@ export function common() {
         if (event.detail.action === 'svg') {
             // Prepend css stylesheet to svg
             let svgContent = $(event.target).find('.mdc-dialog__content svg');
-            let cssTxt = ['share', svgContent[0].id]
-                .map(tag => {
-                    return Array.from(
-                        ((<HTMLLinkElement>$(`link#css_${tag}`)[0]).sheet as CSSStyleSheet).cssRules
-                    ).map(rule => rule.cssText).join(' ');
-                });
-            svgContent.prepend(
-                ...cssTxt.map(txt => $('<style>').text(txt))
-            );
+            // let cssTxt = ['share', svgContent[0].id]
+            //     .map(tag => {
+            //         return Array.from(
+            //             ((<HTMLLinkElement>$(`link#css_${tag}`)[0]).sheet as CSSStyleSheet).cssRules
+            //         ).map(rule => rule.cssText).join(' ');
+            //     });
+            // svgContent.prepend(
+            //     ...cssTxt.map(txt => $('<style>').text(txt))
+            // );
 
             var link = document.createElement('a');
             link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgContent[0].outerHTML)));

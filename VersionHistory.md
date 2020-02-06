@@ -1,5 +1,16 @@
 # Version History
 
+## 2.5.3 (6 Feb 2020)
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Improved backward incompatibility.
+- Fixed the error of un-styled exported PNG. 
+
 ## 2.5.2 (5 Feb 2020)
 
 ### Known Issues
@@ -21,7 +32,7 @@
 
 ### Resolved Issues
 
-- Separated CSS stylesheets from `index.html`. ([#7](/issue/7))
+- Separated CSS stylesheets from `index.html`. ([#7](https://github.com/wongchito/RailMapGenerator/issues/7))
 
 ## 2.5 (4 Feb 2020)
 
