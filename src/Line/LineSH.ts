@@ -2,7 +2,7 @@ import { RMGLine } from './Line';
 import { RMGStationSH, IntStationSH, station_id } from '../Station/StationSH';
 import { RMGStation } from '../Station/Station';
 
-import { ID, Name, StationInfo, RMGParam } from '../utils';
+import { ID, Name, StationInfo, RMGParam, setParams } from '../utils';
 
 export class RMGLineSH extends RMGLine {
     constructor(param) {
@@ -46,19 +46,27 @@ export class RMGLineSH extends RMGLine {
 
             // stretch the main line
             var path = this._linePath(lineMainStns)
-            var paths = path.match(/[\d.]+/g)
-            path = `M ${paths[0]},${paths[1]} H ${Number(paths[2]) + 30}`
+            var [x, y, h] = path.match(/[\d.]+/g).map(pos => Number(pos))
+            if (this._direction === 'r') {
+                path = `M ${x},${y - 6} H ${h + 30} l 12,12 L ${x},${y + 6} Z`
+            } else {
+                path = `M ${x - 30},${y - 6} H ${h} l 0,12 L ${x - 42},${y + 6} Z`
+            }
 
             // draw the main line
-            $('#line_main').append($('<path>', { d: path }));
+            $('#line_main').append($('<path>', { id: 'line_main_path', d: path }));
 
             // stretch the pass line
             var path = this._linePath(linePassStns)
-            var paths = path.match(/[\d.]+/g)
-            path = `M ${Number(paths[0]) - 30},${paths[1]} H ${paths[2]}`
+            var [x, y, h] = path.match(/[\d.]+/g).map(pos => Number(pos))
+            if (this._direction === 'r') {
+                path = `M ${x - 30},${y - 6} H ${h} l 0,12 L ${x - 30},${y + 6} Z`
+            } else {
+                path = `M ${x},${y - 6} H ${h + 30} l 0,12 L ${x},${y + 6} Z`
+            }
 
             // draw the pass line
-            $('#line_pass').append($('<path>', { d: path }));
+            $('#line_pass').append($('<path>', { id: 'line_pass_path', d: path }));
         });
 
         $('#line_main').html($('#line_main').html());
@@ -68,7 +76,7 @@ export class RMGLineSH extends RMGLine {
     fillThemeColour() {
         super.fillThemeColour();
 
-        // this will add the stroke of the circle
+        // this will add the stroke of the station circle
         // however the stroke path is defined in index.html
         // which made changing station style strange
         $('path#' + station_id).attr('stroke', this._themeColour);
@@ -78,6 +86,10 @@ export class RMGLineSH extends RMGLine {
         // but I can't figure it out
         $('path#stn_sh_pass').attr('stroke', '#aaa');
         $('path#int2_sh_pass').attr('stroke', '#aaa');
+
+        // the railmap main line
+        $('path#line_main_path').attr('fill', this._themeColour)
+        $('path#line_pass_path').attr('fill', '#aaa')
 
         // the last decoration line
         $('#line_shmetro_left_use').attr('fill', this._themeColour)
@@ -100,9 +112,9 @@ export class RMGLineSH extends RMGLine {
 
 
         // arrow
-        var isLeft = (this._direction == 'r') ? 1 : -1;
+        var isLeft = (this._direction == 'l') ? 1 : -1;
         var arrowX = (this._svgDestWidth - isLeft * flagLength) / 20;
-        arrowX = (this._direction == 'r') ? arrowX : this._svgDestWidth - 20;
+        arrowX = (this._direction == 'l') ? arrowX : this._svgDestWidth - 20;
         var arrowRotate = 90 * (1 - isLeft);
         $('#station_info_shmetro > #arrow_left_use').attr('transform', `translate(${arrowX},135)rotate(${arrowRotate})`);
 
@@ -112,7 +124,7 @@ export class RMGLineSH extends RMGLine {
 
         // list the destination text
         // Todo: fix svg_dest_width*0.8, this has only been tested on 1000 width
-        if (this._direction === 'l') {
+        if (this._direction === 'r') {
             var txtAnchor = 'end';
             var destNameX = this._svgDestWidth * 0.8;
         } else {
@@ -134,7 +146,7 @@ export class RMGLineSH extends RMGLine {
         $('#station_info_shmetro > #dest_text > text:last-child').text(`To ${destinations_en}`)
 
         // prepare for the line name
-        if (this._direction === 'l') {
+        if (this._direction === 'r') {
             var txtAnchor = 'end';
             var lineNameX = 180;
         } else {
@@ -187,4 +199,42 @@ export class RMGLineSH extends RMGLine {
         $('#current_bg').hide();  // fix the mysterious black rect
     }
 
+    // rewrite this to make sure the line is draw before color
+    static initSVG(line) {
+        line.drawSVGFrame();
+        line.showFrameOuter();
+        line.drawStns();
+
+        // change the func call here
+        line.drawLine();
+        line.fillThemeColour();
+        // change the func call here
+
+        line.drawStrip();
+        line.drawDestInfo();
+        line.loadFonts();
+        line.updateStnNameBg();
+    }
+
+    // rewrite this to call fillThemeColour when flip direction
+    set direction(val) {
+        this._direction = val;
+        setParams('direction', val);
+
+        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) { continue; }
+            stnInstance.state = this._stnState(stnId);
+        }
+
+        RMGLine.clearSVG();
+        this.drawStns();
+        this.drawLine();
+
+        // add the func call here
+        this.fillThemeColour();
+
+        this.drawDestInfo();
+
+        this.loadFonts();
+    }
 }
