@@ -248,9 +248,9 @@ export class RMGLine {
         this._charForm = val;
         setParams('char_form', val);
 
-        var prevCharForm = $('.rmg-name__zh').eq(0).attr('class').match(/rmg-name__char-\w{2,4}/g)[0];
-        $('.rmg-name__zh').removeClass(prevCharForm);
-        $('.rmg-name__zh').addClass(`rmg-name__char-${val}`);
+        $('.rmg-name__char-trad, .rmg-name__char-cn, .rmg-name__char-tw, .rmg-name__char-jp')
+            .removeClass('rmg-name__char-trad rmg-name__char-cn rmg-name__char-tw rmg-name__char-jp')
+            .addClass(`rmg-name__char-${val}`);
     }
     
     /**
@@ -783,7 +783,7 @@ export class RMGLine {
     }
 
     loadFonts() {
-        $('.rmg-name__zh, .rmg-name__en').addClass(`rmg-name__char-${this._charForm}`);
+        $('.rmg-name__zh').addClass(`rmg-name__char-${this._charForm}`);
     }
 
     updateStnName(stnId: ID, names: Name, stnNum: string) {

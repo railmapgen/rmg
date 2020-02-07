@@ -3,6 +3,7 @@ import { RMGLineGZ } from '../Line/LineGZ';
 import { MDCTextField } from '@material/textfield';
 import { MDCSlider } from '@material/slider';
 import { RMGLine } from '../Line/Line';
+import { MDCRipple } from '@material/ripple';
 
 declare global {
     interface Window {
@@ -19,6 +20,7 @@ export function common() {
     const [branchSpacingSlider, yPcSlider, paddingSlider] = 
         ['#branch_spacing', '#y_pc', '#padding'].map(selector => MDCSlider.attachTo($(selector)[0]));
     window.sliders.push(branchSpacingSlider, yPcSlider, paddingSlider);
+    $('#panel_layout .mdc-list li').map((_,el) => new MDCRipple(el));
 
     // init values
     Promise.resolve(getParams())
@@ -65,11 +67,11 @@ export function gzmtr() {
         });
     
     // add event listeners
-    directionGZXSlider.listen('MDCSlider:input', event => {
+    directionGZXSlider.listen('MDCSlider:input', () => {
         (<RMGLineGZ>window.myLine).directionGZX = Number(directionGZXSlider.value);
     });
 
-    directionGZYSlider.listen('MDCSlider:input', event => {
+    directionGZYSlider.listen('MDCSlider:input', () => {
         (<RMGLineGZ>window.myLine).directionGZY = Number(directionGZYSlider.value);
     });
 }

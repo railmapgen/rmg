@@ -97,7 +97,7 @@
 
     "Stations.Name.Title": "Edit Station Name",
     "Stations.Name.Hint": "Hint: You may add a backslash (\\) at where you want to wrap name. (For station name in Latin characters only. )",
-    "Stations.Name.StnNum": "Station Number", 
+    "Stations.Name.StnNum": "Station Code", 
     
     "Stations.Edit.Title": "Edit Station Detail",
     "Stations.Edit.Interchange": "Interchange", 

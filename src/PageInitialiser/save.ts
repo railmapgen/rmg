@@ -1,6 +1,5 @@
 import { getParams, getTransText, test, describeParams, RMGParam } from '../utils';
 import { RMGLine } from '../Line/Line';
-import mdcAutoInit from '@material/auto-init';
 import { MDCDialog } from '@material/dialog';
 import { MDCList } from '@material/list';
 import { MDCRipple } from '@material/ripple';
@@ -17,8 +16,9 @@ export function common() {
         ['#template_diag', '#import_diag', '#export_diag', '#preview_diag', '#style_diag', '#lang_diag']
             .map(selector => MDCDialog.attachTo($(selector)[0]));
     const [saveList0, saveList1] = $('#panel_save .mdc-list').map((_,el) => MDCList.attachTo(el)).get();
+    $('#panel_save .mdc-list li').map((_,el) => new MDCRipple(el));
 
-    saveList0.listen('MDCList:action', (event: any) => {
+    saveList0.listen('MDCList:action', (event: CustomEvent) => {
         switch (event.detail.index) {
             case 0:
                 templateDialog.open();
@@ -71,19 +71,18 @@ export function common() {
             $('#template_diag ul').append(
                 $('<li>', {
                     class: "mdc-list-item", 
-                    'data-mdc-dialog-action': d.filename, 
-                    'data-mdc-auto-init': 'MDCRipple'
+                    'data-mdc-dialog-action': d.filename
                 }).append(
                     $('<span>', { class: "mdc-list-item__text" }).text(getTransText(d.desc, lang))
                 )
             );
         });
+
         $('#template_diag li:first-child').attr('tabindex', 0);
-        // autoInit();
-        mdcAutoInit.register('MDCRipple', MDCRipple as any);
+        $('#theme_line__selection li').map((_,el) => new MDCRipple(el));
     });
 
-    templateDialog.listen('MDCDialog:closed', (event: any) => {
+    templateDialog.listen('MDCDialog:closed', (event: CustomEvent) => {
         if (event.detail.action == 'close') {return;}
         
         $.getJSON(`templates/${event.detail.action}.json`, data => {
@@ -92,7 +91,7 @@ export function common() {
         });
     });
 
-    exportDialog.listen('MDCDialog:closed', (event: any) => {
+    exportDialog.listen('MDCDialog:closed', (event: CustomEvent) => {
         switch (event.detail.action) {
             case 'close':
                 break;
@@ -166,7 +165,7 @@ export function common() {
         
         $(event.target).find('svg [style="display: none;"]').remove();
     });
-    previewDialog.listen('MDCDialog:closed', (event: any) => {
+    previewDialog.listen('MDCDialog:closed', (event: CustomEvent) => {
         if (event.detail.action === 'close') {
             $(event.target).removeAttr('for').find('.mdc-dialog__content').empty();
             return;
@@ -180,7 +179,7 @@ export function common() {
 
         if (event.detail.action === 'svg') {
             // Prepend css stylesheet to svg
-            let svgContent = $(event.target).find('.mdc-dialog__content svg');
+            let svgContent = $(event.target as HTMLElement).find('.mdc-dialog__content svg');
             // let cssTxt = ['share', svgContent[0].id]
             //     .map(tag => {
             //         return Array.from(
@@ -215,7 +214,7 @@ export function common() {
             };
             reader.readAsText(event.target.files[0]);
         });
-    importDialog.listen('MDCDialog:closed', (event: any) => {
+    importDialog.listen('MDCDialog:closed', (event: CustomEvent) => {
         if (event.detail.action == 'close') {
             ($('#upload_file')[0] as HTMLInputElement).value = '';
             return;
@@ -226,7 +225,7 @@ export function common() {
         location.reload(true);
     });
 
-    styleDialog.listen('MDCDialog:closed', (event: any) => {
+    styleDialog.listen('MDCDialog:closed', (event: CustomEvent) => {
         switch (event.detail.action) {
             case 'close': 
             case window.urlParams.get('style'):
@@ -237,7 +236,7 @@ export function common() {
         }
     });
 
-    langDialog.listen('MDCDialog:closed', (event: any) => {
+    langDialog.listen('MDCDialog:closed', (event: CustomEvent) => {
         if (event.detail.action == 'close') {return;}
         var nextLang = event.detail.action;
         localStorage.rmgLang = nextLang;
