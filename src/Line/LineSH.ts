@@ -72,10 +72,12 @@ export class RMGLineSH extends RMGLine {
         // however the stroke path is defined in index.html
         // which made changing station style strange
         $('path#' + station_id).attr('stroke', this._themeColour);
+        $('path#int2_sh').attr('stroke', this._themeColour);
 
         // pass stroke should be added somewhere else
         // but I can't figure it out
         $('path#stn_sh_pass').attr('stroke', '#aaa');
+        $('path#int2_sh_pass').attr('stroke', '#aaa');
 
         // the last decoration line
         $('#line_shmetro_left_use').attr('fill', this._themeColour)
