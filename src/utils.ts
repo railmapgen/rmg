@@ -189,12 +189,12 @@ export function getIntBoxGZ(intInfo: InterchangeInfo, state) {
         )
         .append(
             $('<text>', { y: 8.5, class: 'rmg-name__zh rmg-name__gzmtr--int' })
-                .append($('<tspan>', { 'font-size':'16px' }).text(intNameSplitOk ? nameZHs[0] : ''))
-                .append($('<tspan>', { dy:-1 }).text(intNameSplitOk ? nameZHs[1] : nameZHs.join('')))
+                .append($('<tspan>', { 'font-size':'16px', 'dominant-baseline': 'central' }).text(intNameSplitOk ? nameZHs[0] : ''))
+                .append($('<tspan>', { dy:-1, 'dominant-baseline': 'central' }).text(intNameSplitOk ? nameZHs[1] : nameZHs.join('')))
         )
         .append(
             $('<text>', { 
-                y: 20, 
+                y: 19.5, 
                 class: 'rmg-name__en'
             })
                 .addClass(names[1].length > 10 ? 'rmg-name__gzmtr--int-small' : 'rmg-name__gzmtr--int')
