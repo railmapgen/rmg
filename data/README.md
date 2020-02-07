@@ -50,5 +50,6 @@ A typical example of an entry of `guangzhou.json`:
 | Foshan | [Template:佛山地铁颜色 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/Template:佛山地铁颜色) |
 | Guangzhou | [不知道有没有火星。。-广 州 区-地铁族](http://www.ditiezu.com/forum.php?mod=viewthread&tid=523725) |
 | London | [Colour standards - Transport for London](http://content.tfl.gov.uk/tfl-colour-standards-issue04.pdf) |
+| Shanghai | [《上海轨道交通网络近期规划建设线路标志色方案》征求市民意见公告 - 上海地铁](http://www.shmetro.com/node49/201109/con109210.htm) <br> [模块:RailSystems/SHMetro - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/模块:RailSystems/SHMetro) |
 | Shenzhen | [Template:深圳地铁颜色 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/Template:深圳地铁颜色) |
 | Toronto | [Signage Manual and Standards - Toronto Transit Commission](https://joeclark.org/design/signage/TTC/2015/TTCWayfindingStandardsManual_201409.pdf)
