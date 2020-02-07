@@ -136,6 +136,10 @@ export class RMGLine {
         this.updateStnNameBg();
     }
 
+    /**
+     * Setter of vertical position of line (y).
+     * @param val Percentage of vertical position, given fixed `svgHeight`
+     */
     set yPc(val: number) {
         this._yPc = val;
         setParams('y_pc', val);
@@ -391,10 +395,10 @@ export class RMGLine {
         return res.slice(1, res.length-1);
     }
 
-    get y() {
-        // return this._yPc * this._svgHeight / 100; 
-        return 0;
-    }
+    // get y() {
+    //     // return this._yPc * this._svgHeight / 100; 
+    //     return 0;
+    // }
     get stripY() {return this._stripPc * this._svgHeight / 100;}
     get turningRadius() {return this._branchSpacing/2 * (Math.sqrt(2) / (Math.sqrt(2)-1));}
 
@@ -533,7 +537,7 @@ export class RMGLine {
      * Vertical position (in pixels) of station icon related to vertical position of line. 
      */
     _stnRealY(stnId: ID) {
-        return this.y - this._stnYShare(stnId) * this._branchSpacing;
+        return -this._stnYShare(stnId) * this._branchSpacing;
     }
 
     /**
@@ -662,6 +666,9 @@ export class RMGLine {
     get pathTurnESE() {return `a ${this.turningRadius},${this.turningRadius} 0 0,1 ${this.stnDX},${this.stnDY}`};
     get pathTurnSEE() {return `a ${this.turningRadius},${this.turningRadius} 0 0,0 ${this.stnDX},${this.stnDY}`};
 
+    /**
+     * Generate `d` attribute of `<path>` element through all stations input. 
+     */
     _linePath(stnIds: ID[]) {
         var [prevId, prevY, prevX]: [string?, number?, number?] = [];
         var path = [];
@@ -677,12 +684,12 @@ export class RMGLine {
             }
             if (y > prevY) {
                 path.push(
-                    y==this.y ? `h ${x - prevX - stnExtraH*this._leftWideFactor(stnId) - stnSpareH - stnDX*2}` : `h ${stnExtraH * this._rightWideFactor(prevId) + stnSpareH}`
+                    y===0 ? `h ${x - prevX - stnExtraH*this._leftWideFactor(stnId) - stnSpareH - stnDX*2}` : `h ${stnExtraH * this._rightWideFactor(prevId) + stnSpareH}`
                 );
                 path.push(pathTurnESE, pathTurnSEE);
             } else if (y < prevY) {
                 path.push(
-                    y==this.y ? `h ${x - prevX - stnExtraH*this._leftWideFactor(stnId) - stnSpareH - stnDX*2}` : `h ${stnExtraH * this._rightWideFactor(prevId) + stnSpareH}`
+                    y===0 ? `h ${x - prevX - stnExtraH*this._leftWideFactor(stnId) - stnSpareH - stnDX*2}` : `h ${stnExtraH * this._rightWideFactor(prevId) + stnSpareH}`
                 );
                 path.push(pathTurnENE, pathTurnNEE);
             }

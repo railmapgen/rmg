@@ -131,7 +131,7 @@ class RMGLineGZ extends RMGLine {
         this.loadFonts();
     }
 
-    set lineNames(val) {
+    set lineNames(val: Name) {
         this._lineNames = val;
         setParams('line_name', val);
 
@@ -281,20 +281,18 @@ class RMGLineGZ extends RMGLine {
         $('#strip_gz').attr('width', this._svgWidth);
     }
 
-    _linePath(stnIds) {
-        var [prevId, prevY, prevX] = [] as [string?, number?, number?];
+    _linePath(stnIds: ID[]) {
+        let prevY: number;
         var path = [];
-
-        var { stnExtraH, stnSpareH, pathTurnESE, pathTurnSEE, pathTurnENE, pathTurnNEE, stnDX } = this;
 
         stnIds.forEach(stnId => {
             var [x,y] = ['_stnRealX', '_stnRealY'].map(fun => this[fun](stnId));
             if (!prevY && prevY !== 0) {
-                [prevId, prevX, prevY] = [stnId, x, y];
+                prevY = y;
                 path.push(`M ${x},${y}`);
                 return;
             }
-            if (y === this.y) {
+            if (y === 0) {
                 if (y < prevY) {
                     path.push(`H ${x-30}`, 'a 30,30 0 0,0 30,-30', `V ${y}`)
                 }
@@ -309,17 +307,8 @@ class RMGLineGZ extends RMGLine {
                     path.push(`V ${y-30}`, 'a 30,30 0 0,0 30,30', `H ${x}`)
                 }
             }
-            // if (y != prevY && y == this.y) {
-            //     path.push(
-            //         `H ${x}`, `V ${y}`
-            //     )
-            // } else if (y != prevY && y != this.y) {
-            //     path.push(
-            //         `V ${y}`, `H ${x}`
-            //     )
-            // }
             path.push(`H ${x}`);
-            [prevId, prevX, prevY] = [stnId, x, y];
+            prevY = y;
         });
 
         // simplify path
@@ -333,6 +322,21 @@ class RMGLineGZ extends RMGLine {
 
     loadFonts() {
         $('.rmg-name__zh, .rmg-name__en').addClass('rmg-name__gzmtr');
+    }
+
+    initFonts() {
+        let styleSheet = (<HTMLLinkElement>$('link#css_share')[0]).sheet as CSSStyleSheet;
+        let idx: number[] = [];
+        Array.from(styleSheet.cssRules).forEach((rule, i) => {
+            if (rule.cssText.indexOf('.rmg-name__zh') !== -1) {
+                idx.push(i);
+            } else if (rule.cssText.indexOf('.rmg-name__en') !== -1) {
+                idx.push(i);
+            }
+        });
+        idx.forEach(i => styleSheet.deleteRule(i));
+        styleSheet.insertRule('.rmg-name__zh {alignment-baseline: central; font-family: Arial, SimHei, STHeiti, PingFangSC-Regular, sans-serif;}');
+        styleSheet.insertRule('.rmg-name__en {alignment-baseline: middle; font-family: Arial, sans-serif;}');
     }
 
     fillThemeColour() {
@@ -425,7 +429,7 @@ class RMGLineGZ extends RMGLine {
 
         $('#line_name')
             .attr({
-                transform: `translate(${lineNameX},${this.y-18})scale(1.5)`
+                transform: `translate(${lineNameX},-18)scale(1.5)`
             })
     }
 
