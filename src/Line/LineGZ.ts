@@ -1,8 +1,9 @@
-import { getTxtBoxDim, setParams, getParams, putParams, getRandomId, DirectionLong } from '../utils';
+import { getTxtBoxDim, setParams, getParams, putParams, getRandomId, DirectionLong, getIntBoxGZ } from '../utils';
 import { RMGStationGZ, IntStationGZ, BranchStationGZ, OSIStationGZ } from '../Station/StationGZ';
 import { RMGLine } from './Line';
 
 import { ID, Name, StationInfo, RMGParam } from '../utils';
+import { InterchangeInfo } from '../Station/Station';
 
 interface StationDictGZ {
     [index: string]: RMGStationGZ;
@@ -321,7 +322,7 @@ class RMGLineGZ extends RMGLine {
     }
 
     loadFonts() {
-        $('.rmg-name__zh, .rmg-name__en').addClass('rmg-name__gzmtr');
+        // $('.rmg-name__zh, .rmg-name__en').addClass('rmg-name__gzmtr');
     }
 
     initFonts() {
@@ -388,49 +389,21 @@ class RMGLineGZ extends RMGLine {
     }
 
     loadLineName() {
-        var lineNameZHs = this._lineNames[0].match(/[\d]+|[\D]+/g) || '';
+        // simulate interchange info
+        let info = [this.themeCity, this.themeLine, this._themeColour, this._fgColour, this._lineNames[0], this._lineNames[1]] as InterchangeInfo;
 
-        var lineNameSplitOk = false;
-        if (lineNameZHs.length == 2) {
-            if (!isNaN(Number(lineNameZHs[0])) && isNaN(Number(lineNameZHs[1]))) {
-                lineNameSplitOk = true;
-            }
-        }
-
-        if (lineNameSplitOk) {
-            $('#line_name tspan').eq(0).text(lineNameZHs[0]);
-            $('#line_name tspan').eq(1).text(lineNameZHs[1]);
-            $('#line_name tspan').eq(1).attr('dy', '-0.5');
-        } else {
-            $('#line_name tspan').eq(0).text('');
-            $('#line_name tspan').eq(1).text(this._lineNames[0]);
-            $('#line_name tspan').eq(1).attr('dy', '-0.5');
-        }
-        // $('#line_name tspan').eq(1).text(lineNameZHs[lineNameZHs.length-1])
-
-        $('#line_name text:last-child').text(this._lineNames[1]);
-        if (this._lineNames[1].length > 10) {
-            $('#line_name text:last-child')
-                .text(this._lineNames[1])
-                .addClass('rmg-name__gzmtr--int-small')
-                .removeClass('rmg-name__gzmtr--int');
-        } else {
-            $('#line_name text:last-child')
-                .text(this._lineNames[1])
-                .removeClass('rmg-name__gzmtr--int-small')
-                .addClass('rmg-name__gzmtr--int');
-        }
-
-        if (this._fgColour == '#fff') {
-            $('#line_name text').addClass('rmg-name__gzmtr--white-fg');
-        }
+        $('#line_name')
+            .empty()
+            .append(getIntBoxGZ(info, 1));
+        $('#line_name').html($('#line_name').html());
 
         var lineNameX = this._direction=='r' ? this.lineXs[0]-65 : this.lineXs[1]+65;
 
         $('#line_name')
             .attr({
                 transform: `translate(${lineNameX},-18)scale(1.5)`
-            })
+            });
+        this.loadFonts();
     }
 
     loadDirection() {

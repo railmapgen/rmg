@@ -9,8 +9,8 @@
     stroke-width: 20;
 }
 
-.rmg-name__zh {alignment-baseline:central;}
-.rmg-name__en {alignment-baseline:middle;}
+.rmg-name__zh {dominant-baseline:central;}
+.rmg-name__en {dominant-baseline:middle;}
 
 .rmg-name__char-trad {
     font-family: 

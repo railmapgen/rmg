@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script>
-        if (navigator.userAgent.indexOf('Safari')===-1 && navigator.userAgent.indexOf('Chrome')===-1) {
-            alert('Your browser is not supported. We recommend Chrome and Safari.\n你的瀏覽器不被支援。我們推薦使用Chrome或Safari。\n你的浏览器不受支持。我们推荐使用Chrome或Safari。');
-        } else if (navigator.userAgent.indexOf('Edge')!==-1) {
-            alert('Your browser is not supported. We recommend Chrome and Safari.\n你的瀏覽器不被支援。我們推薦使用Chrome或Safari。\n你的浏览器不受支持。我们推荐使用Chrome或Safari。');
-        }
+        // if (navigator.userAgent.indexOf('Safari')===-1 && navigator.userAgent.indexOf('Chrome')===-1) {
+        //     alert('Your browser is not supported. We recommend Chrome and Safari.\n你的瀏覽器不被支援。我們推薦使用Chrome或Safari。\n你的浏览器不受支持。我们推荐使用Chrome或Safari。');
+        // } else if (navigator.userAgent.indexOf('Edge')!==-1) {
+        //     alert('Your browser is not supported. We recommend Chrome and Safari.\n你的瀏覽器不被支援。我們推薦使用Chrome或Safari。\n你的浏览器不受支持。我们推荐使用Chrome或Safari。');
+        // }
     </script>
     <!-- <script src="dist/querycheck.min.js"></script> -->
 
@@ -176,14 +176,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
         <rect id="current_bg" x="0" y="0" width="100" height="20" fill="#000" style="display: none;" mtr-specific/>
 
-        <g id="line_name" text-anchor="middle" style="display: none;" gzmtr-specific>
-            <use xlink:href="#intbox_gz"/>
-            <text y="8.5">
-                <tspan font-size="16px" class="rmg-name__zh"></tspan><!--
-             --><tspan dy="-0.5" class="rmg-name__zh rmg-name__gzmtr--int"></tspan>
-            </text>
-            <text y="19.5" class="rmg-name__en rmg-name__gzmtr--int"></text>
-        </g>
+        <g id="line_name" text-anchor="middle" style="display: none;" gzmtr-specific></g>
     
         <g id="stn_icons"></g>
     </g>

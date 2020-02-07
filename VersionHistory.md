@@ -1,5 +1,19 @@
 # Version History
 
+## 2.5.4 (7 Feb 2020)
+
+### New Features
+
+- RMG now supports Firefox!
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Improved interchanges in Guangzhou Metro style. 
+
 ## 2.5.3 (6 Feb 2020)
 
 ### New Features

@@ -1,5 +1,5 @@
 import { RMGStation, IntInfoTag, InterchangeInfo } from './Station';
-import { ID, Name, BranchInfo, StationInfo } from '../utils';
+import { ID, Name, BranchInfo, StationInfo, getIntBoxGZ } from '../utils';
 
 class RMGStationGZ extends RMGStation {
     constructor(id: ID, data: StationInfo) {
@@ -87,70 +87,15 @@ class IntStationGZ extends RMGStationGZ {
     }
 
     get intNameHTML() {
-        var intNameZHss = this._intInfos
-                            .map(info => info[IntInfoTag.nameZH])
-                            .map(name => name.match(/[\d]+|[\D]+/g) || ['']);
-
-        var intTextZHEls = intNameZHss.map(
-            (names, idx) => {
-                var intNameSplitOk = false;
-                if (names.length == 2) {
-                    if (!isNaN(Number(names[0])) && isNaN(Number(names[1]))) {
-                        intNameSplitOk = true;
-                    }
-                }
-
-                return $('<text>', {
-                            y: 8.5 + idx*28 * (this._tickRotation === 0 ? 1 : -1), 
-                            class: 'rmg-name__zh rmg-name__gzmtr--int'
-                        })
-                        .append(
-                            $('<tspan>', {
-                                'font-size':'16px', 
-                                'alignment-baseline':'central'
-                            })
-                                .text(intNameSplitOk ? names[0] : '')
-                        )
-                        .append(
-                            $('<tspan>', {dy:-0.5, 'alignment-baseline':'central'})
-                                .text(intNameSplitOk ? names[1] : names.join(''))
-                        )
-            } 
-        );
-
-        var intTextENEls = this._intInfos
-                            .map(info => info[IntInfoTag.nameEN])
-                            .map((name,idx) => {
-                                let el = $('<text>', {
-                                    y: 19.5 + idx*28 * (this._tickRotation === 0 ? 1 : -1), 
-                                    class: 'rmg-name__en'
-                                }).text(name);
-                                el.addClass(name.length>10 ? 'rmg-name__gzmtr--int-small' : 'rmg-name__gzmtr--int');
-                                return el;
-                            });
-
-        this._intInfos
-            .map(info => info[IntInfoTag.fg])
-            .map((fg,idx) => {
-                if (fg == '#fff' || this.state == -1) {
-                    [intTextZHEls[idx], intTextENEls[idx]] = [intTextZHEls[idx], intTextENEls[idx]].map(el => {
-                        return el.addClass('rmg-name__gzmtr--white-fg');
-                    });
-                }
-            });
-
-        var intBoxEls = this._intInfos.map(info => info[IntInfoTag.colour]).map((colour,idx) => {
-            return $('<use>', {
-                'xlink:href':'#intbox_gz', 
-                fill: this.state==-1 ? '#aaa' : colour, 
-                y: idx * 28 * (this._tickRotation === 0 ? 1 : -1)
-            });
+        let intBoxEls = this._intInfos.map(info => getIntBoxGZ(info, this.state));
+        intBoxEls.forEach((el, i) => {
+            $(el).attr('transform', `translate(0,${i*28 * (this._tickRotation===0 ? 1 : -1)})`);
         });
 
         return $('<g>', {
             'text-anchor': 'middle', 
             transform: `translate(${this.x},${this.y + (this._tickRotation === 0 ? 23 : -47)})`
-        }).append(...intBoxEls, ...intTextZHEls, ...intTextENEls);
+        }).append(...intBoxEls);
     }
 
     get ungrpHTML() {

@@ -1,3 +1,5 @@
+import { IntInfoTag, InterchangeInfo } from "./Station/Station";
+
 export type ID = string;
 export interface BranchInfo {
     left: [string, ID] | [], 
@@ -65,15 +67,15 @@ export function test(svgEl) {
 
     // bypass Chrome min font size (to be improved)
 
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--station, .rmg-name__en.rmg-name__mtr--station, .rmg-name__zh.IntName').each((_,el) => {
+    svgEl.find('.rmg-name__gzmtr--en.rmg-name__gzmtr--station, .rmg-name__en.rmg-name__mtr--station, .rmg-name__zh.IntName').each((_,el) => {
         $(el).attr('font-size', '10px');
     });
 
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--int').each((_,el) => {
+    svgEl.find('.rmg-name__gzmtr--en.rmg-name__gzmtr--int').each((_,el) => {
         $(el).attr('font-size', '8px');
     });
 
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--int-small, .rmg-name__en.IntName').each((_,el) => {
+    svgEl.find('.rmg-name__gzmtr--en.rmg-name__gzmtr--int-small, .rmg-name__en.IntName').each((_,el) => {
         $(el).attr('font-size', '7px');
     });
 
@@ -87,6 +89,7 @@ export function test(svgEl) {
             'font-family': elStyle.getPropertyValue('font-family'), 
             'fill': elStyle.getPropertyValue('fill'), 
             'alignment-baseline': elStyle.getPropertyValue('alignment-baseline'), 
+            'dominant-baseline': elStyle.getPropertyValue('dominant-baseline'),
             'text-anchor': elStyle.getPropertyValue('text-anchor')
         }).removeAttr('class');
     });
@@ -161,6 +164,47 @@ export function joinIntName(names: Name, dy1, dy2): [JQuery<HTMLElement>, number
         );
     }
     return [res, nameZH.length, nameEN.length];
+}
+
+export function getIntBoxGZ(intInfo: InterchangeInfo, state) {
+    let bg = intInfo[IntInfoTag.colour];
+    let fg = intInfo[IntInfoTag.fg];
+    let names = [
+        intInfo[IntInfoTag.nameZH], 
+        intInfo[IntInfoTag.nameEN]
+    ];
+    let nameZHs = names[0].match(/[\d]+|[\D]+/g) || [''];
+    let intNameSplitOk = false;
+    if (nameZHs.length == 2) {
+        if (!isNaN(Number(nameZHs[0])) && isNaN(Number(nameZHs[1]))) {
+            intNameSplitOk = true;
+        }
+    }
+    let boxEl = $('<g>')
+        .append(
+            $('<use>', { 
+                'xlink:href': '#intbox_gz', 
+                fill: state===-1 ? '#aaa' : bg
+            })
+        )
+        .append(
+            $('<text>', { y: 8.5, class: 'rmg-name__zh rmg-name__gzmtr--int' })
+                .append($('<tspan>', { 'font-size':'16px' }).text(intNameSplitOk ? nameZHs[0] : ''))
+                .append($('<tspan>', { dy:-1 }).text(intNameSplitOk ? nameZHs[1] : nameZHs.join('')))
+        )
+        .append(
+            $('<text>', { 
+                y: 20, 
+                class: 'rmg-name__en'
+            })
+                .addClass(names[1].length > 10 ? 'rmg-name__gzmtr--int-small' : 'rmg-name__gzmtr--int')
+                .text(names[1])
+        );
+    if (fg === '#fff' || state === -1) {
+        $(boxEl).find('text').addClass('rmg-name__gzmtr--white-fg');
+    }
+
+    return boxEl;
 }
 
 export function getRandomId() {

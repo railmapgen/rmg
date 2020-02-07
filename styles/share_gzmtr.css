@@ -1,6 +1,12 @@
 
-.rmg-name__zh {alignment-baseline:central;}
-.rmg-name__en {alignment-baseline:middle;}
+.rmg-name__zh {
+    dominant-baseline:central;
+    font-family: Arial, SimHei, STHeiti, PingFangSC-Regular, sans-serif;
+}
+.rmg-name__en {
+    dominant-baseline:middle;
+    font-family: Arial, sans-serif;
+}
 
 .rmg-name__gzmtr {
     font-family: Arial, SimHei, STHeiti, PingFangSC-Regular, sans-serif;
