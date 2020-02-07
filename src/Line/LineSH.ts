@@ -92,12 +92,6 @@ export class RMGLineSH extends RMGLine {
     drawDestInfo() {
         $('#station_info_shmetro > #platform > text').text(this._platformNum);
 
-        let validDest: ID[] = this[this._direction + 'ValidDests'];
-
-        var [destNameZH, destNameEN] = [0, 1].map(idx => {
-            return validDest.map(stnId => this.stations[stnId].name[idx].replace(/\\/g, ' ')).join('/');
-        })
-
         var bcr = $('#station_info_shmetro > #dest_text')[0].getBoundingClientRect();
         var flagLength = 160 + 150 + bcr.width + 45 + 50;
 
@@ -130,14 +124,14 @@ export class RMGLineSH extends RMGLine {
 
         // for each left valid destinations, get the name from id
         var [destinations_zh, destinations_en] = ["", ""]
-        this.lValidDests.forEach(stn => {
+        this[`${this._direction}ValidDests`].forEach(stn => {
             destinations_zh += this.stations[stn].name[0]
             destinations_en += this.stations[stn].name[1]
         });
         $('#station_info_shmetro > #dest_text > text:first-child').text(`往${destinations_zh}`)
         $('#station_info_shmetro > #dest_text > text:last-child').text(`To ${destinations_en}`)
 
-        // set the line name
+        // prepare for the line name
         if (this._direction === 'l') {
             var txtAnchor = 'end';
             var lineNameX = 180;
@@ -147,6 +141,7 @@ export class RMGLineSH extends RMGLine {
         }
         var [lineNameZH, lineNameEN] = this._lineNames;
 
+        // line starts with numbers or letters
         var lineNumber = lineNameZH.match(/(\d*)\w+/)
         if (lineNumber) {
             lineNameX -= 180;
@@ -172,8 +167,9 @@ export class RMGLineSH extends RMGLine {
             $('#station_info_shmetro > #line_name_text > text:last-child').attr('dx', 10)
         }
 
-        $('#station_info_shmetro > #line_name_text > text:first-child').text(`${lineNameZH}`)
-        $('#station_info_shmetro > #line_name_text > text:last-child').text(`${lineNameEN}`)
+        // set the line name
+        $('#station_info_shmetro > #line_name_text > text:first-child').text(lineNameZH)
+        $('#station_info_shmetro > #line_name_text > text:last-child').text(lineNameEN)
         $('#station_info_shmetro > #line_name_text').attr({
             transform: `translate(${lineNameX},135)`,
             'text-anchor': txtAnchor
