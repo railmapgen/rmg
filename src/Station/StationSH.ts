@@ -60,9 +60,19 @@ class IntStationSH extends RMGStationSH {
         this._intInfos = data.interchange[0][0];
     }
 
+    // rewrite this to append dom and then getBoundingClientRect
+    // to get the exact position where int icon can be fit
+    get html() {
+        return $('<g>', {id:this.id}).append(...this.ungrpHTML);
+    }
+
     // rewrite this to get all drawing function to be called
     get ungrpHTML() {
-        return [this.iconHTML, this.nameHTML, ...this.intTickHTML];
+        return [this.iconHTML, this.nameHTML];
+    }
+
+    get ungrpIconHTML(){
+        return [ ...this.intTickHTML]
     }
 
     // interchange station icon on main line
@@ -77,10 +87,11 @@ class IntStationSH extends RMGStationSH {
         let [dx, dy] = this._dxdy;
         // wrap the name, decro_line and int_line under g in order to rotate at once
         return $('<g>', {
-            'transform': `translate(${this.x - dx},${this.y + dy})`,  //rotate(-60)
+            transform: `translate(${this.x - dx},${this.y + dy})rotate(-60)`,
         }).append(
             // the original name text
             $('<g>', {
+                id: `rmg-name__shmetro--${this.id}`,
                 'text-anchor': this._tickRotation === 0 ? 'start' : 'end',
                 class: `Name Future`  // todo: fix this
             }).append(
@@ -97,10 +108,12 @@ class IntStationSH extends RMGStationSH {
         )
     }
 
-    // interchange station icon after station name
+    // interchange station icon after the station name
     get intTickHTML() {
-        // var nameText = $(`#stn_icons > #${this.id} > g:first-child`)
-        // console.log(`#stn_icons > #${this.id} > g:first-child`, nameText)
+        // get the exact station name width so that the
+        // interchange station icon can be after the station name
+        var bcr = $(`#rmg-name__shmetro--${this.id}`)[0].getBoundingClientRect()
+        let dx = bcr.right - bcr.left
 
         // interchange line icon after station name
         var tickRotation = (this.namePos == 1) ? 180 : 0;
@@ -108,8 +121,7 @@ class IntStationSH extends RMGStationSH {
         var tick = $('<use>', {
             'xlink:href': '#int_sh',
             fill: tickColour,
-            // Todo: fix this hard-coded position by getting the name text elem
-            transform: `translate(10,-10)rotate(${tickRotation})`,
+            transform: `translate(${dx},-12)rotate(${tickRotation})`,
             class: 'rmg-line__shmetro rmg-line__change',
         });
         if (this.state == -1) {
@@ -117,7 +129,7 @@ class IntStationSH extends RMGStationSH {
         }
 
         // line starts with numbers or letters
-        var lineNumber = String(this._intInfos[IntInfoTag.nameZH]).match(/(\d*)\w+/)
+        let lineNumber = String(this._intInfos[IntInfoTag.nameZH]).match(/(\d*)\w+/)
         if (lineNumber) {
             var lineName = lineNumber[0]
         } else {
@@ -125,8 +137,8 @@ class IntStationSH extends RMGStationSH {
         }
         // interchange line name
         var lineNameElem = $('<text>', {
-            // Todo: fix this hard-coded position by getting the name text elem
-            transform: `translate(15,10)rotate(${tickRotation})`,
+            // Todo: fix this hard-coded center(6) position
+            transform: `translate(${dx + 6},8)rotate(${tickRotation})`,
             class: 'rmg-name__zh rmg-name__shmetro--line_name',
         }).text(lineName)
 
