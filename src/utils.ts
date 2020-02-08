@@ -12,8 +12,16 @@ export interface StationInfo {
     branch: BranchInfo;
     parents: ID[];
     children: ID[];
-    interchange: any;
+    interchange?: any;
+    transfer?: StationTransfer;
     [propName: string]: any;
+}
+interface StationTransfer {
+    type: string;
+    tick_direc: 'r' | 'l';
+    paid_area: boolean;
+    osi_names: Name[];
+    info: InterchangeInfo[][];
 }
 export interface StationInfoDict {
     [index: string]: StationInfo;
@@ -148,10 +156,10 @@ export function joinIntName(names: Name, dy1, dy2): [JQuery<HTMLElement>, number
     var res = $('<text>').addClass('rmg-name__zh IntName').text(nameZH[0]);
     for (let i=1; i<nameZH.length; i++) {
         res = res.append(
-            $('<tspan>', {'x':0, 'dy':dy1}).text(nameZH[i])
+            $('<tspan>', {'x':0, 'dy':dy1, 'dominant-baseline': 'central'}).text(nameZH[i])
         );
     }
-    var btwGap = (nameZH.length == 1) ? 9 : dy2;
+    var btwGap = (nameZH.length == 1) ? 9 : 9;
     res = res.append(
         $('<tspan>', {
             'x':0, 'dy':btwGap, 'class': 'rmg-name__en IntName'
