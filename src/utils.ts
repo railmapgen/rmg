@@ -285,31 +285,31 @@ export function updateParam() {
     // Version 0.12
     for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
         // if (['linestart', 'lineend'].includes(stnId)) {continue;}
-        if ('transfer' in stnInfo) {
-            delete param.stn_list[stnId].interchange;
-            switch (stnInfo.change_type) {
-                case 'int2':
-                    param.stn_list[stnId].interchange = [[stnInfo.transfer[1]]];
-                    break;
-                case 'int3_l':
-                case 'int3_r':
-                    param.stn_list[stnId].interchange = [stnInfo.transfer.slice(1,3)];
-                    break;
-                case 'osi11_pl':
-                case 'osi11_pr':
-                case 'osi11_ul':
-                case 'osi11_ur':
-                    param.stn_list[stnId].interchange = [[], stnInfo.transfer.slice(0,2)];
-                    break;
-                case 'osi12_pl':
-                case 'osi12_pr':
-                case 'osi12_ul':
-                case 'osi12_ur':
-                    param.stn_list[stnId].interchange = [[], stnInfo.transfer];
-                    break;
-            }
-        }
-        delete param.stn_list[stnId].transfer;
+        // if ('transfer' in stnInfo) {
+        //     delete param.stn_list[stnId].interchange;
+        //     switch (stnInfo.change_type) {
+        //         case 'int2':
+        //             param.stn_list[stnId].interchange = [[stnInfo.transfer[1]]];
+        //             break;
+        //         case 'int3_l':
+        //         case 'int3_r':
+        //             param.stn_list[stnId].interchange = [stnInfo.transfer.slice(1,3)];
+        //             break;
+        //         case 'osi11_pl':
+        //         case 'osi11_pr':
+        //         case 'osi11_ul':
+        //         case 'osi11_ur':
+        //             param.stn_list[stnId].interchange = [[], stnInfo.transfer.slice(0,2)];
+        //             break;
+        //         case 'osi12_pl':
+        //         case 'osi12_pr':
+        //         case 'osi12_ul':
+        //         case 'osi12_ur':
+        //             param.stn_list[stnId].interchange = [[], stnInfo.transfer];
+        //             break;
+        //     }
+        // }
+        // delete param.stn_list[stnId].transfer;
         
         if (!('branch' in stnInfo)) {
             param.stn_list[stnId].branch = { left:[], right:[] };
@@ -399,6 +399,19 @@ export function updateParam() {
     }
     if (!('direction_gz_y' in param)) {
         param.direction_gz_y = 70;
+    }
+
+    // Version 2.6
+    for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
+        if (!('transfer' in param)) {
+            param.stn_list[stnId].transfer = {
+                type: stnInfo.change_type.split('_')[0], 
+                tick_direc: (stnInfo.change_type === 'none' || stnInfo.change_type === 'int2') ? 'r' : stnInfo.change_type.split('_')[1].split('').slice().reverse()[0], 
+                paid_area: (stnInfo.change_type.indexOf('osi')!==-1) ? stnInfo.change_type.split('_')[1][0]==='p' : true, 
+                osi_names: (stnInfo.change_type.indexOf('osi')!==-1) ? [stnInfo.interchange[1][0]] : [], 
+                info: (stnInfo.interchange.length === 2) ? [stnInfo.interchange[0], stnInfo.interchange[1].slice(1)] : stnInfo.interchange
+            }
+        }
     }
     putParams(param);
 }
