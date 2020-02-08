@@ -92,7 +92,8 @@ export class RMGLineSH extends RMGLine {
         $('path#line_pass_path').attr('fill', '#aaa')
 
         // the last decoration line
-        $('#line_shmetro_left_use').attr('fill', this._themeColour)
+        let direction = this._direction == 'l' ? 'left' : 'right'
+        $(`#line_shmetro_${direction}`).attr('fill', this._themeColour)
 
         if (this._lineNames[0].match(/(\d*)\w+/)) {
             // the line starts with number
@@ -146,13 +147,7 @@ export class RMGLineSH extends RMGLine {
         $('#station_info_shmetro > #dest_text > text:last-child').text(`To ${destinations_en}`)
 
         // prepare for the line name
-        if (this._direction === 'r') {
-            var txtAnchor = 'end';
-            var lineNameX = 180;
-        } else {
-            var txtAnchor = 'start';
-            var lineNameX = this._svgDestWidth;
-        }
+        let lineNameX = this._direction === 'l' ? this._svgDestWidth : 320
         var [lineNameZH, lineNameEN] = this._lineNames;
 
         // line starts with numbers or letters
@@ -186,11 +181,13 @@ export class RMGLineSH extends RMGLine {
         $('#station_info_shmetro > #line_name_text > text:last-child').text(lineNameEN)
         $('#station_info_shmetro > #line_name_text').attr({
             transform: `translate(${lineNameX},135)`,
-            'text-anchor': txtAnchor
+            'text-anchor': 'start'
         });
 
         // the last decoration line
-        $('#line_shmetro_left_use').attr({
+        let direction = this._direction == 'l' ? 'left' : 'right'
+        $('#line_shmetro_use').attr({
+            'xlink:href': `#line_shmetro_${direction}`,
             transform: `translate(0,220)`,
         })
     }
