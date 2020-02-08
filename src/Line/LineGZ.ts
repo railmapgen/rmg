@@ -432,7 +432,7 @@ class RMGLineGZ extends RMGLine {
                 return validDest.map(stnId => this.stations[stnId].name[idx].replace(/\\/g, ' ')).join('/');
             });
             $('#direction_gz g').eq(0).find('text').eq(0).text(destNameZH + '方向');
-            $('#direction_gz g').eq(0).find('text').eq(1).text('Towards ' + destNameEN);
+            $('#direction_gz g').eq(0).find('text').eq(1).text('Towards ' + destNameEN.replace('\\', ' '));
 
             $('#direction_gz g').eq(0).show();
             $('#direction_gz g').eq(1).hide();
@@ -444,7 +444,7 @@ class RMGLineGZ extends RMGLine {
                 .reduce((acc, val) => acc.concat(val), [])
                 .forEach((txt, i) => {
                     if (i%2) {
-                        txt = 'Towards ' + txt;
+                        txt = 'Towards ' + txt.replace('\\', ' ');
                     }
                     $('#direction_gz g').eq(1).find('text').eq(i).text(txt);
                 });

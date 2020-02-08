@@ -1,5 +1,20 @@
 # Version History
 
+## 2.5.5 (8 Feb 2020)
+
+### New Features
+
+- New data structure for incoming update. 
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Fixed the issue of mis-positioning interchange name with more than one line in MTR style. 
+- Fixed the error of including backslash in `<text>` elements. 
+
 ## 2.5.4 (7 Feb 2020)
 
 ### New Features

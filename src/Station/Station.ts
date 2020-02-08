@@ -139,7 +139,7 @@ class Int2Station extends RMGStation {
     }
 
     get intNameHTML() {
-        var [nameHTML, nameZHLn, nameENLn] = joinIntName([this._intInfo[IntInfoTag.nameZH], this._intInfo[IntInfoTag.nameEN]], 15, 7);
+        var [nameHTML, nameZHLn, nameENLn] = joinIntName([this._intInfo[IntInfoTag.nameZH], this._intInfo[IntInfoTag.nameEN]], 10, 7);
         var dy = (!this.namePos) ? 25 + 5.953125 : -25 + 5.953125 - 18.65625 - 13*(nameZHLn-1) - 7*(nameENLn-1);
         dy += this._dy;
         // var nameClass = (this.state == -1) ? 'Pass' : 'Future';
@@ -229,7 +229,7 @@ class Int3Station extends RMGStation {
             .map(info => [info[IntInfoTag.nameZH], info[IntInfoTag.nameEN]] as Name)
             .forEach((names, i) => {
                 if (i >=2) {return;}
-                let [nameHTML, nameZHLn, nameENLn] = joinIntName(names, 15, 7);
+                let [nameHTML, nameZHLn, nameENLn] = joinIntName(names, 10, 7);
                 var dy = (!this.namePos) ? 18*(i+1) : -18*(2-i);
                 dy += this._dy;
                 dy *= this._tickFlip;
@@ -413,7 +413,7 @@ class OSI22Station extends OSI12Station {
     }
 
     get origIntNameHTML() {
-        var [nameHTML, nameZHLn, nameENLn] = joinIntName([this._origIntInfo[IntInfoTag.nameZH], this._origIntInfo[IntInfoTag.nameEN]], 15, 7);
+        var [nameHTML, nameZHLn, nameENLn] = joinIntName([this._origIntInfo[IntInfoTag.nameZH], this._origIntInfo[IntInfoTag.nameEN]], 10, 7);
         var dy = this.namePos ? 25 + 5.953125 : -25 + 5.953125 - 18.65625 - 13*(nameZHLn-1) - 7*(nameENLn-1);
         // dy += this._dy;
         // var nameClass = (this.state == -1) ? 'Pass' : 'Future';
@@ -498,7 +498,7 @@ class OSI22EndStation extends OSI12Station {
     }
 
     get origIntNameHTML() {
-        var [nameHTML, nameZHLn, nameENLn] = joinIntName([this._origIntNameZH, this._origIntNameEN], 15, 7);
+        var [nameHTML, nameZHLn, nameENLn] = joinIntName([this._origIntNameZH, this._origIntNameEN], 10, 7);
         var dy = !this.namePos ? 25 + 5.953125 : -25 + 5.953125 - 18.65625 - 13*(nameZHLn-1) - 7*(nameENLn-1);
         // dy += this._dy;
         // var nameClass = (this.state == -1) ? 'Pass' : 'Future';
