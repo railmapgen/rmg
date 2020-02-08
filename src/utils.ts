@@ -12,6 +12,7 @@ export interface StationInfo {
     branch: BranchInfo;
     parents: ID[];
     children: ID[];
+    interchange: any;
     [propName: string]: any;
 }
 export interface StationInfoDict {

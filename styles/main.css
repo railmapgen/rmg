@@ -36,3 +36,19 @@ body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: colum
 .int-selection {
     max-width: 100%;
 }
+
+.mdc-chip-set {
+    display: flex;
+    overflow-x: scroll;
+    flex-wrap: nowrap;
+}
+.mdc-chip-set .mdc-chip {
+    flex: 0 0 auto;
+    border-radius: 4.5px;
+    height: 45px;
+    line-height: 1rem;
+}
+.mdc-chip-set .mdc-chip__ripple {
+    border-radius: 4.5px;
+    height: 45px;
+}
