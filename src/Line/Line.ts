@@ -814,15 +814,34 @@ export class RMGLine {
     updateStnTransfer(stnId: ID, type, info=null) {
         var prevClass = this.stations[stnId].constructor.name;
 
+        // V2.6 data structure
+        let changeType = type.split('_')[0];
+        let tick_direc = (type === 'none' || type === 'int2') ? 'r' : type.split('_')[1].split('').slice().reverse()[0];
+        let paid_area = (type.indexOf('osi')!==-1) ? type.split('_')[1][0]==='p' : true;
+        let osi_names = (type.indexOf('osi')!==-1) ? [info[1][0]] : [];
+        let transferInfo = info.length===2 ? [info[0], info[1].slice(1)] : info;
+
         var param = getParams();
         param.stn_list[stnId].change_type = type;
         if (type == 'none') {
-            delete param.stn_list[stnId].transfer;
-            // delete param.stn_list[stnId].interchange;
             param.stn_list[stnId].interchange = [[]];
+            param.stn_list[stnId].transfer = {
+                type: changeType, 
+                tick_direc: tick_direc, 
+                paid_area: paid_area,
+                osi_names: [], 
+                info: [[]]
+            };
         } else {
             // param.stn_list[stnId].transfer = info;
             param.stn_list[stnId].interchange = info;
+            param.stn_list[stnId].transfer = {
+                type: changeType, 
+                tick_direc: tick_direc, 
+                paid_area: paid_area,
+                osi_names: osi_names, 
+                info: transferInfo
+            };
         }
         putParams(param);
 
@@ -1330,6 +1349,13 @@ export class RMGLine {
         newInfo.change_type = 'none';
         newInfo.num = '00';
         newInfo.interchange = [[]];
+        newInfo.transfer = {
+            info: [[]], 
+            type: 'none', 
+            osi_names: [], 
+            paid_area: true, 
+            tick_direc: 'r'
+        };
         
         param.stn_list[newId] = newInfo;
         putParams(param);

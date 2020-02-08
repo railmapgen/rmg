@@ -66,7 +66,7 @@ class IntStationGZ extends RMGStationGZ {
 
     constructor(id: ID, data: StationInfo) {
         super(id, data);
-        this._intInfos = data.interchange[0];
+        this._intInfos = data.transfer.info[0];
     }
 
     // get _tickRotation() {return 0;}
@@ -105,9 +105,9 @@ class IntStationGZ extends RMGStationGZ {
 
 class BranchStationGZ extends IntStationGZ {
     constructor (id: ID, data: StationInfo, lineInf) {
-        data.interchange[0].unshift(lineInf);
-        if (data.interchange[1]) {
-            data.interchange[0].push(...data.interchange[1].slice(1));
+        data.transfer.info[0].unshift(lineInf);
+        if (data.transfer.info[1]) {
+            data.transfer.info[0].push(...data.transfer.info[1]);
         }
         super(id, data);
     }
@@ -120,7 +120,7 @@ class BranchStationGZ extends IntStationGZ {
 
 class OSIStationGZ extends IntStationGZ {
     constructor (id: ID, data: StationInfo) {
-        data.interchange[0].push(...data.interchange[1].slice(1));
+        data.transfer.info[0].push(...data.transfer.info[1]);
         super(id, data);
     }
 }

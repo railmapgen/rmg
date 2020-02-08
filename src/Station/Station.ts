@@ -114,7 +114,8 @@ class Int2Station extends RMGStation {
 
     constructor (id: ID, data: StationInfo) {
         super(id, data);
-        this._intInfo = data.interchange[0][0];
+        this._intInfo = data.transfer.info[0][0];
+        // this._intInfo = data.interchange[0][0];
     }
 
     get _dy() {return 0;}
@@ -164,18 +165,18 @@ class Int3Station extends RMGStation {
     private _intNameEN = [];
     // _int3Type;
 
-    constructor (id: ID, data) {
+    constructor (id: ID, data: StationInfo) {
         super(id, data);
-        this._intInfos = data.interchange[0];
+        this._intInfos = data.transfer.info[0];
 
-        data.interchange[0].forEach(intInfo => {
-            this._intCity.push(intInfo[0]);
-            this._intLine.push(intInfo[1]);
-            this._intColour.push(intInfo[2]);
+        // data.transfer.info[0].forEach(intInfo => {
+        //     this._intCity.push(intInfo[0]);
+        //     this._intLine.push(intInfo[1]);
+        //     this._intColour.push(intInfo[2]);
 
-            this._intNameZH.push(intInfo[4]);
-            this._intNameEN.push(intInfo[5]);
-        });
+        //     this._intNameZH.push(intInfo[4]);
+        //     this._intNameEN.push(intInfo[5]);
+        // });
 
         // this._int3Type = data.change_type.substring(5);
     }
@@ -268,11 +269,12 @@ class OSI11Station extends Int2Station {
 
     constructor (id: ID, data: StationInfo) {
         // data.int2 = data.osi11;
-        data.interchange[0].push(data.interchange[1][1]);
+        data.transfer.info[0].push(data.transfer.info[1][0]);
+        // data.interchange[0].push(data.interchange[1][1]);
         super(id, data);
 
-        this._osiNames = data.interchange[1][0];
-        this._osiType = data.change_type.substring(6,7); // u(npaid) or p(aid);
+        this._osiNames = data.transfer.osi_names[0];
+        this._osiType = data.transfer.paid_area ? 'p' : 'u'; // u(npaid) or p(aid);
     }
     
     get osiClass() {return this._osiType == 'u' ? 'rmg-stn__mtr--unpaid-osi' : 'rmg-stn__mtr--paid-osi';}
@@ -327,11 +329,12 @@ class OSI12Station extends Int3Station {
     
     constructor (id: ID, data: StationInfo) {
         // data.int3 = data.osi12;
-        data.interchange[0].unshift(...data.interchange[1].slice(1,3));
+        data.transfer.info[0].unshift(...data.transfer.info[1]);
+        // data.interchange[0].unshift(...data.interchange[1].slice(1,3));
         super(id, data);
 
-        this._osiNames = data.interchange[1][0];
-        this._osiType = data.change_type.split('_').reverse()[0][0];
+        this._osiNames = data.transfer.osi_names[0];
+        this._osiType = data.transfer.paid_area ? 'p' : 'u';
     }
 
     get osiClass() {return this._osiType == 'u' ? 'rmg-stn__mtr--unpaid-osi' : 'rmg-stn__mtr--paid-osi';}
@@ -389,7 +392,7 @@ class OSI22Station extends OSI12Station {
     constructor (id: ID, data: StationInfo) {
         super(id, data);
         // data mutated by OSI12Station!!!
-        this._origIntInfo = data.interchange[0][2];
+        this._origIntInfo = data.transfer.info[0][2];
     }
 
     get _nameTxtAnchor() {return this._osiTxtAnchor;}
@@ -479,7 +482,7 @@ class OSI22EndStation extends OSI12Station {
     constructor (id, data) {
         super(id, data);
         // data mutated by OSI12Station!!!
-        [this._origIntCity, this._origIntLine, this._origIntColour, this._origIntFg, this._origIntNameZH, this._origIntNameEN] = data.interchange[0][2];
+        [this._origIntCity, this._origIntLine, this._origIntColour, this._origIntFg, this._origIntNameZH, this._origIntNameEN] = data.transfer.info[0][2];
     }
 
     get origIntTickHTML() {
