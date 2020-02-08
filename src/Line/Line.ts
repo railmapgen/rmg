@@ -1349,6 +1349,13 @@ export class RMGLine {
         newInfo.change_type = 'none';
         newInfo.num = '00';
         newInfo.interchange = [[]];
+        newInfo.transfer = {
+            info: [[]], 
+            type: 'none', 
+            osi_names: [], 
+            paid_area: true, 
+            tick_direc: 'r'
+        };
         
         param.stn_list[newId] = newInfo;
         putParams(param);
