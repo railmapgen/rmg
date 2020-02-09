@@ -102,6 +102,9 @@
     "Stations.Edit.Interchange": "轉乘", 
     "Stations.Edit.Branch": "支線", 
 
+    "Stations.Interchange.Within": "同站轉綫",
+    "Stations.Interchange.OSI": "出站轉綫",
+    "Stations.Interchange.Settings": "更多設定",
 
     "Stations.Interchange.Type.Title": "轉車站類型",
     "Stations.Interchange.Type.None": "無", 

@@ -103,6 +103,9 @@
     "Stations.Edit.Interchange": "Interchange", 
     "Stations.Edit.Branch": "Branch", 
 
+    "Stations.Interchange.Within": "Within-station Interchange",
+    "Stations.Interchange.OSI": "Out-of-station Interchange",
+    "Stations.Interchange.Settings": "More Settings",
 
     "Stations.Interchange.Type.Title": "Interchange",
     "Stations.Interchange.Type.None": "None", 

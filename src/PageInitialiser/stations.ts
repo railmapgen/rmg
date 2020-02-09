@@ -130,12 +130,12 @@ const getStnIntFromChipSets = (sets: HTMLDivElement[]) => {
     return { info, changeType };
 };
 
-const updateStnTransfer = (sets: HTMLDivElement[], osinames: MDCTextField[]) => {
+const updateStnTransfer = (sets: HTMLDivElement[]) => {
     let { changeType, info } = getStnIntFromChipSets(sets);
     let intInfo = info as any;
     let stnId = $('#stn_edit_diag').attr('for');
     if (changeType.indexOf('osi') !== -1) {
-        let osiNames = osinames.map(textfield => textfield.value);
+        let osiNames = $('button#osi_name .mdc-button__label').html().split('<br>');
         intInfo[1].unshift(osiNames);
     }
     window.myLine.updateStnTransfer(stnId, changeType, intInfo);
@@ -366,7 +366,7 @@ export function common() {
         if (stnInfo.transfer.osi_names.length) {
             $('button#osi_name .mdc-button__label').html(stnInfo.transfer.osi_names[0].join('<br>'));
         } else {
-            $('button#osi_name .mdc-button__label').html('改名<br>Edit Name');
+            $('button#osi_name .mdc-button__label').html('車站名<br>Stn Name');
         }
     };
 
@@ -468,7 +468,7 @@ export function common() {
             intChipSetEls[i].appendChild(chipEl);
             intChipSets[i].addChip(chipEl);
             
-            updateStnTransfer(intChipSetEls, stnOSINameFields);
+            updateStnTransfer(intChipSetEls);
         })
     })
 
@@ -482,7 +482,7 @@ export function common() {
 
     intChipSets.forEach((chipset, i) => {
         chipset.listen('MDCChip:removal', () => {
-            updateStnTransfer(intChipSetEls, stnOSINameFields);
+            updateStnTransfer(intChipSetEls);
 
             // // hide trailing icon if 1 chip left
             // if ($(intChipSetEls[i]).find('.mdc-chip').length === 1) {
@@ -563,12 +563,32 @@ export function common() {
     });
 
     stnIntBoxDialog.listen('MDCDialog:closed', () => {
-        updateStnTransfer(intChipSetEls, stnOSINameFields);
+        updateStnTransfer(intChipSetEls);
     });
 
-    stnOSINameDialog.listen('MDCDialog:opening', event => {
-        //
-    })
+    stnOSINameDialog.listen('MDCDialog:opening', () => {
+        $('button#osi_name .mdc-button__label')
+            .html()
+            .split('<br>')
+            .forEach((txt, i) => stnOSINameFields[i].value = txt);
+    });
+
+    stnOSINameDialog.listen('MDCDialog:opened', () => {
+        stnOSINameFields.map(textfield => textfield.layout());
+    });
+
+    $('#osi_name_zh, #osi_name_en')
+        .find('input')
+        .each((_, el) => {
+            $(el).on('input', () => {
+                $('button#osi_name .mdc-button__label')
+                    .html(stnOSINameFields.map(textfield => textfield.value).join('<br>'))
+            });
+        });
+
+    stnOSINameDialog.listen('MDCDialog:closed', () => {
+        updateStnTransfer(intChipSetEls);
+    });
 
     // Modification (Branch)
     throughSelects.forEach((select, idx) => {
