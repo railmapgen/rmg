@@ -150,8 +150,8 @@ export function common() {
     $('div#int_line').slice(1,3).after(intNameEl);
 
     // mdc instances
-    const [stnAddDialog, stnModifyDialog, stnEditDialog, stnIntBoxDialog, stnDeleteDialog, stnDeleteErrDialog] = 
-        ['#stn_add_diag', '#stn_modify_diag', '#stn_edit_diag', '#stn_intbox_diag', '#stn_delete_diag', '#stn_delete_err']
+    const [stnAddDialog, stnModifyDialog, stnEditDialog, stnIntBoxDialog, stnOSINameDialog, stnDeleteDialog, stnDeleteErrDialog] = 
+        ['#stn_add_diag', '#stn_modify_diag', '#stn_edit_diag', '#stn_intbox_diag', '#stn_osiname_diag', '#stn_delete_diag', '#stn_delete_err']
             .map(selector => new MDCDialog($(selector)[0]));
     
     const [stnAddPrepSelect, stnAddPivotSelect, stnAddLocSelect, stnAddEndSelect] = 
@@ -164,13 +164,14 @@ export function common() {
     const intChipAddButtonEls = $('#stn_edit_diag .mdc-icon-button').get() as HTMLButtonElement[];
     const intChipSetEls = $('#stn_edit_diag .mdc-chip-set').get() as HTMLDivElement[];
     const intChipSets = intChipSetEls.map(el => new MDCChipSet(el));
+    const osiNameButtonRipple = new MDCRipple($('#stn_edit_diag #osi_name')[0]);
     const intCitySelect = new MDCSelect($('#int_city')[0]);
     const intLineSelect = new MDCSelect($('#int_line')[0]);
     const intBoxNameFields = ['zh', 'en'].map(lang => new MDCTextField($('#stn_intbox_diag').find('#name_'+lang)[0]));
 
     const stnTransferTabBar = new MDCTabBar($('#stn_edit_diag .mdc-tab-bar')[0]);
     const stnOSINameFields = 
-        ['zh', 'en'].map(lang => new MDCTextField($('#stn_edit_diag').find(`#osi_name_${lang}`)[0]));
+        ['zh', 'en'].map(lang => new MDCTextField($('#stn_osiname_diag').find(`#osi_name_${lang}`)[0]));
     // const [tickDirecToggle, paidAreaToggle] = 
     //     ['#tick_direc', '#paid_area'].map(selector => new MDCIconButtonToggle($('#stn_edit_diag').find(selector)[0]));
 
@@ -363,8 +364,9 @@ export function common() {
         // });
 
         if (stnInfo.transfer.osi_names.length) {
-            stnOSINameFields[0].value = stnInfo.transfer.osi_names[0][0];
-            stnOSINameFields[1].value = stnInfo.transfer.osi_names[0][1];
+            $('button#osi_name .mdc-button__label').html(stnInfo.transfer.osi_names[0].join('<br>'));
+        } else {
+            $('button#osi_name .mdc-button__label').html('改名<br>Edit Name');
         }
     };
 
@@ -489,6 +491,10 @@ export function common() {
         });
     });
 
+    $('button#osi_name').on('click', event => {
+        stnOSINameDialog.open();
+    });
+
     stnIntBoxDialog.listen('MDCDialog:opening', (event) => {
         let { setIdx, chipId } = $(event.target).data('intId');
         let { city, line } = $(intChipSetEls[setIdx]).find('#'+chipId).data('theme');
@@ -559,6 +565,10 @@ export function common() {
     stnIntBoxDialog.listen('MDCDialog:closed', () => {
         updateStnTransfer(intChipSetEls, stnOSINameFields);
     });
+
+    stnOSINameDialog.listen('MDCDialog:opening', event => {
+        //
+    })
 
     // Modification (Branch)
     throughSelects.forEach((select, idx) => {

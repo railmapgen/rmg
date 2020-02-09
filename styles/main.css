@@ -52,3 +52,15 @@ body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: colum
     border-radius: 4.5px;
     height: 45px;
 }
+
+button#osi_name {
+    width: 100%; 
+    padding: 0 8px 0 8px; 
+    height: 40px;
+}
+
+button#osi_name .mdc-button__label {
+    line-height: 1rem; 
+    white-space: nowrap; 
+    overflow: hidden;
+}
