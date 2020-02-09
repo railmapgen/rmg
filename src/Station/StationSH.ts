@@ -53,17 +53,17 @@ class RMGStationSH extends RMGStation {
 }
 
 class IntStationSH extends RMGStationSH {
-    private _intInfos: InterchangeInfo[];
+    protected _intInfos: InterchangeInfo[];
 
     constructor(id: ID, data: StationInfo) {
         super(id, data);
-        this._intInfos = data.interchange[0][0];
+        this._intInfos = data.interchange[0];
     }
 
     // rewrite this to append dom and then getBoundingClientRect
     // to get the exact position where int icon can be fit
     get html() {
-        return $('<g>', {id:this.id}).append(...this.ungrpHTML);
+        return $('<g>', { id: this.id }).append(...this.ungrpHTML);
     }
 
     // rewrite this to get all drawing function to be called
@@ -71,8 +71,8 @@ class IntStationSH extends RMGStationSH {
         return [this.iconHTML, this.nameHTML];
     }
 
-    get ungrpIconHTML(){
-        return [ ...this.intTickHTML]
+    get ungrpIconHTML() {
+        return [...this.intTickHTML]
     }
 
     // interchange station icon on main line
@@ -87,7 +87,7 @@ class IntStationSH extends RMGStationSH {
         let [dx, dy] = this._dxdy;
         // wrap the name, decro_line and int_line under g in order to rotate at once
         return $('<g>', {
-            transform: `translate(${this.x - dx},${this.y + dy})rotate(-60)`,
+            transform: `translate(${this.x - dx},${this.y + dy})`,  //rotate(-60)
         }).append(
             // the original name text
             $('<g>', {
@@ -110,39 +110,50 @@ class IntStationSH extends RMGStationSH {
 
     // interchange station icon after the station name
     get intTickHTML() {
+        let lineElems: JQuery<HTMLElement>[] = []
+
         // get the exact station name width so that the
-        // interchange station icon can be after the station name
-        var bcr = $(`#rmg-name__shmetro--${this.id}`)[0].getBoundingClientRect()
-        let dx = bcr.right - bcr.left
+        // interchange station icon can be right after the station name
+        let stnNameElem = $(`#rmg-name__shmetro--${this.id}`)
+        let bcr = stnNameElem.get(0).getBoundingClientRect()
+        let dx = bcr.right - bcr.left + 5
 
-        // interchange line icon after station name
-        var tickRotation = (this.namePos == 1) ? 180 : 0;
-        var tickColour = this._intInfos[IntInfoTag.colour];
-        var tick = $('<use>', {
-            'xlink:href': '#int_sh',
-            fill: tickColour,
-            transform: `translate(${dx},-12)rotate(${tickRotation})`,
-            class: 'rmg-line__shmetro rmg-line__change',
-        });
-        if (this.state == -1) {
-            tick.addClass('rmg-line__pass');
-        }
+        this._intInfos.map((stn, index) => {
+            // interchange line icon after station name
+            var lineIconColour = stn[IntInfoTag.colour];
+            var lineIconElem = $('<use>', {
+                'xlink:href': '#int_sh',
+                fill: lineIconColour,
+                transform: `translate(${dx + index * 25},-12)`,
+                class: 'rmg-line__shmetro rmg-line__change',
+            });
+            if (this.state == -1) {
+                lineIconElem.addClass('rmg-line__pass');
+            }
 
-        // line starts with numbers or letters
-        let lineNumber = String(this._intInfos[IntInfoTag.nameZH]).match(/(\d*)\w+/)
-        if (lineNumber) {
-            var lineName = lineNumber[0]
-        } else {
-            var lineName = String(this._intInfos[IntInfoTag.nameZH])
-        }
-        // interchange line name
-        var lineNameElem = $('<text>', {
-            // Todo: fix this hard-coded center(6) position
-            transform: `translate(${dx + 6},8)rotate(${tickRotation})`,
-            class: 'rmg-name__zh rmg-name__shmetro--line_name',
-        }).text(lineName)
+            // line starts with numbers or letters
+            let lineNumber = String(stn[IntInfoTag.nameZH]).match(/(\d*)\w+/)
+            if (lineNumber) {
+                var lineName = lineNumber[0]
+            } else {
+                var lineName = String(stn[IntInfoTag.nameZH])
+            }
+            // interchange line name
+            var lineNameElem = $('<text>', {
+                // Todo: fix this hard-coded center(6) position
+                transform: `translate(${dx + 6 + index * 25},8)`,
+                class: 'rmg-name__zh rmg-name__shmetro--line_name',
+            }).text(lineName)
 
-        return [tick, lineNameElem];
+            lineElems.push(lineIconElem, lineNameElem)
+        })
+
+        // rotate the station info now
+        // other wise the bcr will be inaccurate due to the rotation
+        let stnInfoElem = stnNameElem.parent();
+        stnInfoElem.attr('transform', `${stnInfoElem.attr('transform')}rotate(-60)`)
+
+        return lineElems;
     }
 
     get _nameClass() {

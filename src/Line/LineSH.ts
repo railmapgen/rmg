@@ -12,6 +12,8 @@ export class RMGLineSH extends RMGLine {
     _initStnInstance(stnId: ID, stnInfo: StationInfo): RMGStation {
         switch (stnInfo.change_type) {
             case 'int2':
+            case 'int3_l':
+            case 'int3_r':
                 return new IntStationSH(stnId, stnInfo);
             default:
                 return new RMGStationSH(stnId, stnInfo);
@@ -112,7 +114,7 @@ export class RMGLineSH extends RMGLine {
     // to get the exact position where int icon can be fit
     drawStns() {
         for (let [stnId, stnInstance] of Object.entries(this.stations)) {
-            if (['linestart', 'lineend'].includes(stnId)) {continue;}
+            if (['linestart', 'lineend'].includes(stnId)) { continue; }
             $('#stn_icons').append(stnInstance.html);
         }
         $('#stn_icons').html($('#stn_icons').html()); // Refresh DOM
@@ -254,7 +256,7 @@ export class RMGLineSH extends RMGLine {
     }
 
     // rewrite this to get drawStns recalled
-    updateStnTransfer(stnId: ID, type, info=null) {
+    updateStnTransfer(stnId: ID, type, info = null) {
         super.updateStnTransfer(stnId, type, info)
 
         // clear the original stations
