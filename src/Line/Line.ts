@@ -1159,8 +1159,9 @@ export class RMGLine {
                     newInfo.parents = this.stations[stnId].parents;
                     newInfo.children = [stnId];
                     newInfo.parents.forEach(par => {
-                        this.stations[par].children[1] = newId;
-                        param.stn_list[par].children[1] = newId;
+                        let parChildLen = this.stations[par].children.length;
+                        this.stations[par].children[parChildLen-1] = newId;
+                        param.stn_list[par].children[parChildLen-1] = newId;
 
                         if (this.stations[par].branch.right[1] === stnId) {
                             this.stations[par].branch.right[1] = newId;
