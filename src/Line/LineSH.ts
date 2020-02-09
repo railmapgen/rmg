@@ -71,13 +71,13 @@ export class RMGLineSH extends RMGLine {
         });
 
         // for each left valid destinations, get the name from id
-        var [destinations_zh, destinations_en] = ["", ""]
+        var [destinations_zh, destinations_en]: String[][] = [[], []]
         this[`${this._direction}ValidDests`].forEach(stn => {
-            destinations_zh += this.stations[stn].name[0]
-            destinations_en += this.stations[stn].name[1]
+            destinations_zh.push(this.stations[stn].name[0])
+            destinations_en.push(this.stations[stn].name[1])
         });
-        $('#station_info_shmetro > #dest_text > text:first-child').text(`往${destinations_zh}`)
-        $('#station_info_shmetro > #dest_text > text:last-child').text(`To ${destinations_en}`)
+        $('#station_info_shmetro > #dest_text > text:first-child').text(`往${destinations_zh.join("，")}`)
+        $('#station_info_shmetro > #dest_text > text:last-child').text(`To ${destinations_en.join(", ")}`)
 
         // prepare for the line name
         let lineNameX = this._direction === 'l' ? this._svgDestWidth : 320
@@ -276,7 +276,7 @@ export class RMGLineSH extends RMGLine {
     set yPc(val) {
         super.yPc = val
         
-        let y = val * this._svgHeight / 50;
+        let y = val * this._svgHeight / 70;
         $('g#main').attr('transform', `translate(0,${y})`);
     }
 
