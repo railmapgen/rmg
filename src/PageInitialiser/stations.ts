@@ -6,6 +6,7 @@ import { MDCTextField } from '@material/textfield';
 import { MDCTabBar } from '@material/tab-bar';
 import { MDCIconButtonToggle } from '@material/icon-button';
 import { MDCChipSet } from '@material/chips';
+import { MDCRipple } from '@material/ripple';
 import { InterchangeInfo, IntInfoTag } from '../Station/Station';
 
 const getStationCard = (id: ID, names: Name, num: string) => {
@@ -99,35 +100,46 @@ const getStnIntFromChipSets = (sets: HTMLDivElement[]) => {
         return $(set).find('.mdc-chip').get().map(el => getIntInfoFromChip(el));
     });
     let ns = info
-        .map(int => int.length)
-        .filter(x => x!==0);
+        .map(int => int.length);
+    if (ns[1] === 0) {info = [info[0]];}
     let changeType: string;
     if (ns[0] === 3 && ns[1] === 0) {
-        changeType = 'int3'; // was int4
+        changeType = 'int3_r'; // was int4
     } else if (ns[0] === 2 && ns[1] === 1) {
-        changeType = 'osi11'; // was osi31
+        changeType = 'osi11_pr'; // was osi31
     } else if (ns[0] === 2 && ns[1] === 0) {
-        changeType = 'int3'
+        changeType = 'int3_r'
     } else if (ns[0] === 1 && ns[1] === 2) {
-        changeType = 'osi22'; 
+        changeType = 'osi22_pr'; 
     } else if (ns[0] === 1 && ns[1] === 1) {
-        changeType = 'osi21';
+        changeType = 'osi11_pr'; // was osi21
     } else if (ns[0] === 1 && ns[1] === 0) {
         changeType = 'int2';
     } else if (ns[0] === 0 && ns[1] === 3) {
-        changeType = 'int3'; // was osi13;
+        changeType = 'int3_r'; // was osi13;
     } else if (ns[0] === 0 && ns[1] === 2) {
-        changeType = 'osi12';
+        changeType = 'osi12_pr';
     } else if (ns[0] === 0 && ns[1] === 1) {
-        changeType = 'osi11';
+        changeType = 'osi11_pr';
     } else if (ns[0] === 0 && ns[1] === 0) {
         changeType = 'none';
     } else {
         // sum(ns) > 3
-        changeType = 'int3';
+        changeType = 'int3_r';
     }
     return { info, changeType };
 };
+
+const updateStnTransfer = (sets: HTMLDivElement[], osinames: MDCTextField[]) => {
+    let { changeType, info } = getStnIntFromChipSets(sets);
+    let intInfo = info as any;
+    let stnId = $('#stn_edit_diag').attr('for');
+    if (changeType.indexOf('osi') !== -1) {
+        let osiNames = osinames.map(textfield => textfield.value);
+        intInfo[1].unshift(osiNames);
+    }
+    window.myLine.updateStnTransfer(stnId, changeType, intInfo);
+}
 
 export function common() {
 
@@ -149,6 +161,7 @@ export function common() {
         ['#name_zh', '#name_en'].map(selector => new MDCTextField($('#stn_modify_diag').find(selector)[0]));
     const stnModifyNumField = new MDCTextField($('#stn_modify_diag #stn_num')[0]);
 
+    const intChipAddButtonEls = $('#stn_edit_diag .mdc-icon-button').get() as HTMLButtonElement[];
     const intChipSetEls = $('#stn_edit_diag .mdc-chip-set').get() as HTMLDivElement[];
     const intChipSets = intChipSetEls.map(el => new MDCChipSet(el));
     const intCitySelect = new MDCSelect($('#int_city')[0]);
@@ -445,6 +458,18 @@ export function common() {
         focusBranch();
     });
 
+    intChipAddButtonEls.forEach((button, i) => {
+        $(button).on('click', event => {
+            let param = getParams();
+            let info = [param.theme[0], null, null, '#000', '線', 'Line'] as InterchangeInfo;
+            let chipEl = getIntBoxChip(info);
+            intChipSetEls[i].appendChild(chipEl);
+            intChipSets[i].addChip(chipEl);
+            
+            updateStnTransfer(intChipSetEls, stnOSINameFields);
+        })
+    })
+
     intChipSets.forEach((chipset, i) => {
         chipset.listen('MDCChip:interaction', (event: CustomEvent) => {
             // setIdx (0: int, 1: osi)
@@ -455,7 +480,7 @@ export function common() {
 
     intChipSets.forEach((chipset, i) => {
         chipset.listen('MDCChip:removal', () => {
-            console.log(getStnIntFromChipSets(intChipSetEls));
+            updateStnTransfer(intChipSetEls, stnOSINameFields);
 
             // // hide trailing icon if 1 chip left
             // if ($(intChipSetEls[i]).find('.mdc-chip').length === 1) {
@@ -498,7 +523,7 @@ export function common() {
 
             // select default intLine value
             let { line } = $(intChipSetEls[setIdx]).find('#'+chipId).data('theme');
-            let lineIdx = $('#int_line__selection.mdc-list').find(`[data-value=${line}]`).index();
+            let lineIdx = $('#int_line__selection.mdc-list').find(`[data-value="${line}"]`).index();
             intLineSelect.selectedIndex = lineIdx===-1 ? 0 : lineIdx;
         });
 
@@ -532,7 +557,7 @@ export function common() {
     });
 
     stnIntBoxDialog.listen('MDCDialog:closed', () => {
-        console.log(getStnIntFromChipSets(intChipSetEls));
+        updateStnTransfer(intChipSetEls, stnOSINameFields);
     });
 
     // Modification (Branch)
