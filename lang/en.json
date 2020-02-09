@@ -111,6 +111,7 @@
     "Stations.Interchange.Type.Int3": "Interchange (3 lines)", 
     "Stations.Interchange.Type.OSI11": "Out-of-station interchange (1-1)", 
     "Stations.Interchange.Type.OSI12": "Out-of-station interchange (1-2)",
+    "Stations.Interchange.Type.OSI21": "Out-of-station interchange (2-1)", 
     "Stations.Interchange.Type.OSI22": "Out-of-station interchange (2-2)", 
 
     "Stations.Branch.Type.Title": "Branch Type", 

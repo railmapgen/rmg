@@ -159,7 +159,6 @@ class IntStationSH extends RMGStationSH {
     get _nameClass() {
         return (this.state == -1) ? 'Pass' : 'Future';
     }
-
 }
 
 export { RMGStationSH, IntStationSH, station_id };

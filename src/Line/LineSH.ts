@@ -15,6 +15,22 @@ export class RMGLineSH extends RMGLine {
             case 'int3_l':
             case 'int3_r':
                 return new IntStationSH(stnId, stnInfo);
+            case 'osi11_ul':
+            case 'osi11_pl':
+            case 'osi11_ur':
+            case 'osi11_pr':
+            case 'osi12_ul':
+            case 'osi12_pl':
+            case 'osi12_ur':
+            case 'osi12_pr':
+            case 'osi21_ul':
+            case 'osi21_pl':
+            case 'osi21_ur':
+            case 'osi21_pr':
+            case 'osi22_ul':
+            case 'osi22_pl':
+            case 'osi22_ur':
+            case 'osi22_pr':
             default:
                 return new RMGStationSH(stnId, stnInfo);
         }

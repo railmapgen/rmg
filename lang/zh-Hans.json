@@ -110,6 +110,7 @@
     "Stations.Interchange.Type.Int3": "三线换乘站", 
     "Stations.Interchange.Type.OSI11": "出站换乘 (1-1)", 
     "Stations.Interchange.Type.OSI12": "出站换乘 (1-2)",
+    "Stations.Interchange.Type.OSI21": "出站换乘 (2-1)", 
     "Stations.Interchange.Type.OSI22": "出站换乘 (2-2)", 
 
     "Stations.Branch.Type.Title": "支线类型", 
