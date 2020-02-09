@@ -235,24 +235,16 @@ export class RMGLineSH extends RMGLine {
 
     // rewrite this to call fillThemeColour when flip direction
     set direction(val) {
-        this._direction = val;
-        setParams('direction', val);
+        super.direction = val
 
-        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
-            if (['linestart', 'lineend'].includes(stnId)) { continue; }
-            stnInstance.state = this._stnState(stnId);
-        }
+        this.fillThemeColour()
+    }
 
-        RMGLine.clearSVG();
-        this.drawStns();
-        this.drawLine();
+    // rewrite this to call fillThemeColour when set current station
+    set currentStnId(val) {
+        super.currentStnId = val
 
-        // add the func call here
-        this.fillThemeColour();
-
-        this.drawDestInfo();
-
-        this.loadFonts();
+        this.fillThemeColour()
     }
 
     // rewrite this to get drawStns recalled
@@ -263,4 +255,13 @@ export class RMGLineSH extends RMGLine {
         $('#stn_icons').empty()
         this.drawStns()
     }
+
+    // rewrite this to change the railmap position
+    set yPc(val) {
+        super.yPc = val
+        
+        let y = val * this._svgHeight / 50;
+        $('g#main').attr('transform', `translate(0,${y})`);
+    }
+
 }
