@@ -1,5 +1,15 @@
 # Version History
 
+## 2.5.6 (9 Feb 2020)
+
+### New Features
+
+- New theme colours for Chengdu and Xi'an. 
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
 ## 2.5.5 (8 Feb 2020)
 
 ### New Features
