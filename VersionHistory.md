@@ -10,6 +10,10 @@
 
 - PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 
+### Resolved Issues
+
+- Fixed an issue in station adding process. 
+
 ## 2.5.5 (8 Feb 2020)
 
 ### New Features
