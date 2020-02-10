@@ -125,7 +125,6 @@ export class RMGLineSH extends RMGLine {
         })
     }
 
-
     // rewrite this to append dom and then getBoundingClientRect
     // to get the exact position where int icon can be fit
     drawStns() {
@@ -140,6 +139,132 @@ export class RMGLineSH extends RMGLine {
             $(`#rmg-name__shmetro--${stnId}`).parent().append(stnInstance.ungrpIconHTML)
         }
         $('#stn_icons').html($('#stn_icons').html()); // Refresh DOM
+    }
+
+    // rewrite this to change the y of branch station
+    _stnYShare(stnId): number {
+        if (['linestart', 'lineend'].includes(stnId) || this._stnIndegree(stnId) > 1 || this._stnOutdegree(stnId) > 1) {
+            return 0;
+        }
+        var stnPred = this.stations[stnId].parents[0];
+        if (stnPred) {
+            // parent exist
+            if (this._stnOutdegree(stnPred) == 1) {
+                // no sibling, then y same as parent
+                return this._stnYShare(stnPred);
+            } else {
+                // sibling exists, then y depends on its idx of being children
+
+                // rewrite this to move the main line on the same height of the rest
+                // and branch a bit away from the main line
+                return (this.stations[stnPred].children.indexOf(stnId) == 0) ? 3 : 0;
+            }
+        } else {
+            // no parent, must be linestart
+            return 0;
+        }
+    }
+
+    _linePath(stnIds: ID[], type?: 'main' | 'pass'): string {
+        var [prevId, prevY, prevX]: [string?, number?, number?] = []
+        var path: { [key: string]: number[] } = {}
+
+        stnIds.forEach(stnId => {
+            var [x, y] = ['_stnRealX', '_stnRealY'].map(fun => this[fun](stnId))
+            if (!prevY && prevY !== 0) {
+                [prevId, prevX, prevY] = [stnId, x, y];
+                path['start'] = [x, y];
+                return
+            }
+            if (y === this.y) {
+                // merge back to main line
+                if (y != prevY) {
+                    path['bifurcate'] = [prevX, prevY]
+                }
+            } else {
+                // on the branch line
+                if (y != prevY) {
+                    path['bifurcate'] = [x, y]
+                }
+            }
+            path['end'] = [x, y];
+            [prevId, prevX, prevY] = [stnId, x, y];
+        });
+
+        console.log(stnIds, type)
+        console.log(path)
+        if (!path.hasOwnProperty('end')) {
+            // no complete line generated
+            return ''
+        }
+        else {
+            let [x, y] = path['start'], h = path['end'][0]
+            if (!path.hasOwnProperty('bifurcate')) {
+                // general main line
+                if (type === 'main') {
+                    if (this._direction === 'l') {
+                        return `M ${x - 30},${y - 6} H ${h} l 0,12 L ${x - 42},${y + 6} Z`
+                    } else {
+                        return `M ${x},${y - 6} H ${h + 30} l 12,12 L ${x},${y + 6} Z`
+                    }
+                } else {
+                    // type === 'pass'
+                    if (this._direction === 'l') {
+                        return `M ${x},${y - 6} H ${h + 30} l 0,12 L ${x},${y + 6} Z`
+                    } else {
+                        return `M ${x - 30},${y - 6} H ${h} l 0,12 L ${x - 30},${y + 6} Z`
+                    }
+                }
+            } else {
+                // main line bifurcate here to become the branch line
+                // and path return here are only branch line
+
+                // Todo: disable lower branch
+                let [xb, yb] = path['bifurcate'], [xm, ym] = path['end']
+                if (type === 'main') {
+                    if (this._direction === 'l') {
+                        if (ym > y) {
+                            // main line, left direction, upper to center
+                            return `M ${x - 30},${y - 6} H ${xb} L ${xm},${ym - 6} l 0,12 L ${xb},${yb + 6} L ${x - 42},${y + 6} Z`
+                        }else{
+                            // main line, left direction, center to upper
+                            // this same as the other, but replace x with xm and xm with x
+                            return `M ${xm},${ym - 6} H ${xb} L ${x},${y - 6} l 0,12 L ${xb},${yb + 6} L ${xm},${ym + 6} Z`
+                        }
+                    } else {
+                        if (ym > y) {
+                            // main line, right direction, upper to center
+                            return `M ${x},${y - 6} H ${xb} L ${xm},${ym - 6} l 0,12 L ${xb},${yb + 6} L ${x},${y + 6} Z`
+                        }else{
+                            // main line, right direction, center to upper
+                            // this same as the other, but replace x with xm and xm with x
+                            return `M ${xm},${ym - 6} H ${xb} L ${x},${y - 6} l 0,12 L ${xb},${yb + 6} L ${xm},${ym + 6} Z`
+                        }
+                    }
+                } else {
+                    // type === 'pass'
+                    if (this._direction === 'l') {
+                        if (ym > y) {
+                            // pass line, left direction, upper to center
+                            return `M ${x - 30},${y - 6} H ${xb} L ${xm},${ym - 6} l 0,12 L ${xb},${yb + 6} L ${x - 30},${y + 6} Z`
+                        }else{
+                            // pass line, left direction, center to upper
+                            // this same as the other, but replace x with xm and xm with x
+                            return `M ${x},${y - 6} L ${xb},${yb - 6} H ${xm} l 0,12 L ${xb},${yb + 6} L ${x},${y + 6} Z`
+                        }
+                    } else {
+                        if (ym > y) {
+                            // pass line, right direction, upper to center
+                            return `M ${x - 30},${y - 6} H ${xb} L ${xm},${ym - 6} l 0,12 L ${xb},${yb + 6} L ${x - 30},${y + 6} Z`
+                        }else{
+                            // pass line, right direction, center to upper
+                            // this same as the other, but replace x with xm and xm with x
+                            return `M ${x},${y - 6} L ${xb},${yb - 6} H ${xm} l 0,12 L ${xb},${yb + 6} L ${x},${y + 6} Z`
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // draw the line in railmap
@@ -168,29 +293,17 @@ export class RMGLineSH extends RMGLine {
                 }
             }
 
-            // stretch the main line
-            var path = this._linePath(lineMainStns)
-            var [x, y, h] = path.match(/[\d.]+/g).map(pos => Number(pos))
-            if (this._direction === 'r') {
-                path = `M ${x},${y - 6} H ${h + 30} l 12,12 L ${x},${y + 6} Z`
-            } else {
-                path = `M ${x - 30},${y - 6} H ${h} l 0,12 L ${x - 42},${y + 6} Z`
-            }
-
             // draw the main line
-            $('#line_main').append($('<path>', { id: 'line_main_path', d: path }));
-
-            // stretch the pass line
-            var path = this._linePath(linePassStns)
-            var [x, y, h] = path.match(/[\d.]+/g).map(pos => Number(pos))
-            if (this._direction === 'r') {
-                path = `M ${x - 30},${y - 6} H ${h} l 0,12 L ${x - 30},${y + 6} Z`
-            } else {
-                path = `M ${x},${y - 6} H ${h + 30} l 0,12 L ${x},${y + 6} Z`
+            let path = this._linePath(lineMainStns, 'main')
+            if (path || path != '') {
+                $('#line_main').append($('<path>', { id: 'line_main_path', d: path }));
             }
 
             // draw the pass line
-            $('#line_pass').append($('<path>', { id: 'line_pass_path', d: path }));
+            path = this._linePath(linePassStns, 'pass')
+            if (path || path != '') {
+                $('#line_pass').append($('<path>', { id: 'line_pass_path', d: path }));
+            }
         });
 
         $('#line_main').html($('#line_main').html());
@@ -263,20 +376,29 @@ export class RMGLineSH extends RMGLine {
         this.fillThemeColour()
     }
 
-    // rewrite this to get drawStns recalled
+    // rewrite this to get drawStns and recalled
     updateStnTransfer(stnId: ID, type, info = null) {
         super.updateStnTransfer(stnId, type, info)
+
+        this.fillThemeColour()
 
         // clear the original stations
         $('#stn_icons').empty()
         this.drawStns()
     }
 
+    // rewrite this to call fillThemeColour when add station
+    addStn(prep: 'before' | 'after', stnId: ID, loc, end: ID): [ID, StationInfo] {
+        let [newId, newInfo] = super.addStn(prep, stnId, loc, end)
+        this.fillThemeColour()
+        return [newId, newInfo]
+    }
+
     // rewrite this to change the railmap position
     set yPc(val) {
         super.yPc = val
-        
-        let y = val * this._svgHeight / 70;
+
+        let y = val * this._svgHeight / 50;
         $('g#main').attr('transform', `translate(0,${y})`);
     }
 

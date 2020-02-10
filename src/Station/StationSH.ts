@@ -151,7 +151,7 @@ class IntStationSH extends RMGStationSH {
         // rotate the station info now
         // other wise the bcr will be inaccurate due to the rotation
         let stnInfoElem = stnNameElem.parent();
-        stnInfoElem.attr('transform', `${stnInfoElem.attr('transform')}rotate(-60)`)
+        stnInfoElem.attr('transform', `${stnInfoElem.attr('transform')}rotate(-45)`)
 
         return lineElems;
     }
