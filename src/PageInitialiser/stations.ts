@@ -5,8 +5,9 @@ import { MDCSelect } from '@material/select';
 import { MDCTextField } from '@material/textfield';
 import { MDCTabBar } from '@material/tab-bar';
 import { MDCIconButtonToggle } from '@material/icon-button';
-import { MDCChipSet } from '@material/chips';
+import { MDCChip, MDCChipSet } from '@material/chips';
 import { MDCRipple } from '@material/ripple';
+import { MDCSwitch } from '@material/switch';
 import { InterchangeInfo, IntInfoTag } from '../Station/Station';
 
 const getStationCard = (id: ID, names: Name, num: string) => {
@@ -104,39 +105,52 @@ const getStnIntFromChipSets = (sets: HTMLDivElement[]) => {
     if (ns[1] === 0) {info = [info[0]];}
     let changeType: string;
     if (ns[0] === 3 && ns[1] === 0) {
-        changeType = 'int3_r'; // was int4
+        changeType = 'int3'; // was int4
     } else if (ns[0] === 2 && ns[1] === 1) {
-        changeType = 'osi11_pr'; // was osi31
+        changeType = 'osi11'; // was osi31
     } else if (ns[0] === 2 && ns[1] === 0) {
-        changeType = 'int3_r'
+        changeType = 'int3'
     } else if (ns[0] === 1 && ns[1] === 2) {
-        changeType = 'osi22_pr'; 
+        changeType = 'osi22'; 
     } else if (ns[0] === 1 && ns[1] === 1) {
-        changeType = 'osi11_pr'; // was osi21
+        changeType = 'osi11'; // was osi21
     } else if (ns[0] === 1 && ns[1] === 0) {
         changeType = 'int2';
     } else if (ns[0] === 0 && ns[1] === 3) {
-        changeType = 'int3_r'; // was osi13;
+        changeType = 'int3'; // was osi13;
     } else if (ns[0] === 0 && ns[1] === 2) {
-        changeType = 'osi12_pr';
+        changeType = 'osi12';
     } else if (ns[0] === 0 && ns[1] === 1) {
-        changeType = 'osi11_pr';
+        changeType = 'osi11';
     } else if (ns[0] === 0 && ns[1] === 0) {
         changeType = 'none';
     } else {
         // sum(ns) > 3
-        changeType = 'int3_r';
+        changeType = 'int3';
     }
     return { info, changeType };
 };
 
-const updateStnTransfer = (sets: HTMLDivElement[]) => {
+const updateStnTransfer = (sets: HTMLDivElement[], tick: MDCChipSet, paid: MDCSwitch) => {
     let { changeType, info } = getStnIntFromChipSets(sets);
     let intInfo = info as any;
     let stnId = $('#stn_edit_diag').attr('for');
     if (changeType.indexOf('osi') !== -1) {
         let osiNames = $('button#osi_name .mdc-button__label').html().split('<br>');
         intInfo[1].unshift(osiNames);
+    }
+    let tickDirec: string;
+    if (tick.selectedChipIds.length) {
+        tickDirec = tick.selectedChipIds[0];
+    } else {
+        tickDirec = 'r';
+    }
+    let paidArea = paid.checked;
+
+    if (changeType.indexOf('osi') !== -1) {
+        changeType += '_' + (paidArea ? 'p' : 'u') + tickDirec;
+    } else if (changeType.indexOf('int3') !== -1) {
+        changeType += '_' + tickDirec;
     }
     window.myLine.updateStnTransfer(stnId, changeType, intInfo);
 }
@@ -162,12 +176,15 @@ export function common() {
     const stnModifyNumField = new MDCTextField($('#stn_modify_diag #stn_num')[0]);
 
     const intChipAddButtonEls = $('#stn_edit_diag .mdc-icon-button').get() as HTMLButtonElement[];
-    const intChipSetEls = $('#stn_edit_diag .mdc-chip-set').get() as HTMLDivElement[];
+    const intChipSetEls = $('#stn_edit_diag .mdc-chip-set.int-chip-set').get() as HTMLDivElement[];
     const intChipSets = intChipSetEls.map(el => new MDCChipSet(el));
     const osiNameButtonRipple = new MDCRipple($('#stn_edit_diag #osi_name')[0]);
     const intCitySelect = new MDCSelect($('#int_city')[0]);
     const intLineSelect = new MDCSelect($('#int_line')[0]);
     const intBoxNameFields = ['zh', 'en'].map(lang => new MDCTextField($('#stn_intbox_diag').find('#name_'+lang)[0]));
+    const tickDirecChipSet = new MDCChipSet($('#tick_direc')[0]);
+    // const tickDirecChips = $('#tick_direc .mdc-chip').map((_,el) => new MDCChip(el)).get();
+    const paidAreaSwitch = new MDCSwitch($('#paid_area')[0]);
 
     const stnTransferTabBar = new MDCTabBar($('#stn_edit_diag .mdc-tab-bar')[0]);
     const stnOSINameFields = 
@@ -368,6 +385,9 @@ export function common() {
         } else {
             $('button#osi_name .mdc-button__label').html('車站名<br>Stn Name');
         }
+
+        paidAreaSwitch.checked = stnInfo.transfer.paid_area;
+        tickDirecChipSet.chips.filter(chip => chip.id === stnInfo.transfer.tick_direc)[0].selected = true;
     };
 
     const initBranch = (stnInfo: StationInfo) => {
@@ -468,7 +488,7 @@ export function common() {
             intChipSetEls[i].appendChild(chipEl);
             intChipSets[i].addChip(chipEl);
             
-            updateStnTransfer(intChipSetEls);
+            updateStnTransfer(intChipSetEls, tickDirecChipSet, paidAreaSwitch);
         })
     })
 
@@ -482,7 +502,7 @@ export function common() {
 
     intChipSets.forEach((chipset, i) => {
         chipset.listen('MDCChip:removal', () => {
-            updateStnTransfer(intChipSetEls);
+            updateStnTransfer(intChipSetEls, tickDirecChipSet, paidAreaSwitch);
 
             // // hide trailing icon if 1 chip left
             // if ($(intChipSetEls[i]).find('.mdc-chip').length === 1) {
@@ -563,7 +583,7 @@ export function common() {
     });
 
     stnIntBoxDialog.listen('MDCDialog:closed', () => {
-        updateStnTransfer(intChipSetEls);
+        updateStnTransfer(intChipSetEls, tickDirecChipSet, paidAreaSwitch);
     });
 
     stnOSINameDialog.listen('MDCDialog:opening', () => {
@@ -587,8 +607,18 @@ export function common() {
         });
 
     stnOSINameDialog.listen('MDCDialog:closed', () => {
-        updateStnTransfer(intChipSetEls);
+        updateStnTransfer(intChipSetEls, tickDirecChipSet, paidAreaSwitch);
     });
+
+    tickDirecChipSet.listen('MDCChip:selection', (event: CustomEvent) => {
+        if (tickDirecChipSet.selectedChipIds.length === 0) {return;}
+        updateStnTransfer(intChipSetEls, tickDirecChipSet, paidAreaSwitch);
+    });
+
+    ($(paidAreaSwitch.root_).find('input') as JQuery<HTMLInputElement>)
+        .on('change', () => {
+            updateStnTransfer(intChipSetEls, tickDirecChipSet, paidAreaSwitch);
+        })
 
     // Modification (Branch)
     throughSelects.forEach((select, idx) => {

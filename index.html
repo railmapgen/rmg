@@ -514,7 +514,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 <div class="mdc-layout-grid__inner">
 
     <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card" style="max-width: 100%;">
-    <ul class="mdc-list mdc-list--two-line mdc-list--avatar-list">
+    <ul class="mdc-list mdc-list--two-line  mdc-list--non-interactive">
         <li class="mdc-list-item" tabindex="0">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">panorama_horizontal</span>
             <div id="svg_dest_width" class="mdc-text-field mdc-text-field--outlined" style="width: 40%;">
@@ -540,7 +540,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             </div>
         </li>
     </ul>
-    <ul class="mdc-list mdc-list--avatar-list">
+    <ul class="mdc-list mdc-list--non-interactive">
         <li role="separator" class="mdc-list-divider"></li>
         <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">vertical_align_center</span>
@@ -608,7 +608,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
     </div>
 
     <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card" style="max-width: 100%; display: none;" gzmtr-specific>
-    <ul class="mdc-list mdc-list--avatar-list">
+    <ul class="mdc-list mdc-list--non-interactive">
         <li class="mdc-list-item">
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true">open_with</span>
             <span class="mdc-list-item__text" trans-tag="Layout.DirectionGZ"></span>
@@ -1249,16 +1249,16 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--align-middle">
-                    <div class="mdc-chip-set mdc-chip-set--input" role="grid">
+                    <div class="mdc-chip-set mdc-chip-set--input int-chip-set" role="grid">
                         
                     </div>
                 </div>
 
             </div></div>
 
-            <hr>
+            <hr style="display: none;" mtr-specific>
 
-            <div class="mdc-layout-grid" style="padding: 0;">
+            <div class="mdc-layout-grid" style="padding: 0; display: none;" mtr-specific>
             <div class="mdc-layout-grid__inner">
 
                 <div class="mdc-layout-grid__cell--span-7-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
@@ -1277,24 +1277,52 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
 
                 <div class="mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--align-middle">
-                    <div class="mdc-chip-set mdc-chip-set--input" role="grid">
-                        
+                    <div class="mdc-chip-set mdc-chip-set--input int-chip-set" role="grid">
+
                     </div>
                 </div>
                 
             </div>
             </div>
 
-            <hr>
+            <hr style="display: none;" mtr-specific>
 
-            <div class="mdc-layout-grid" style="padding: 0;">
-            <div class="mdc-layout-grid__inner">
+            <h3 trans-tag="Stations.Interchange.Settings" style="display: none;" mtr-specific></h3>
 
-                <div class="mdc-layout-grid__cell--span-7-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--align-middle">
-                    <h3 trans-tag="Stations.Interchange.Settings"></h3>
-                </div>
-
-            </div></div>
+            <ul class="mdc-list mdc-list--non-interactive" style="display: none;" mtr-specific>
+                <li class="mdc-list-item" tabindex="0">
+                    <span class="mdc-list-item__graphic material-icons" aria-hidden="true">format_textdirection_l_to_r</span>
+                    <span class="mdc-list-item__text" trans-tag="Stations.Interchange.TickDirection"></span>
+                    <div class="mdc-chip-set mdc-chip-set--choice" role="grid" id="tick_direc" style="margin-left: auto; margin-right: 0;">
+                        <div class="mdc-chip" role="row" id="l">
+                            <div class="mdc-chip__ripple"></div>
+                            <span role="gridcell">
+                              <span role="button" tabindex="0" class="mdc-chip__text" trans-tag="Stations.Interchange.TickDirection.L"></span>
+                            </span>
+                        </div>
+                        <div class="mdc-chip" role="row" id="r">
+                            <div class="mdc-chip__ripple"></div>
+                            <span role="gridcell">
+                              <span role="button" tabindex="0" class="mdc-chip__text" trans-tag="Stations.Interchange.TickDirection.R"></span>
+                            </span>
+                        </div>
+                    </div>
+                </li>
+                <li class="mdc-list-item">
+                    <span class="mdc-list-item__graphic material-icons" aria-hidden="true">attach_money</span>
+                    <span class="mdc-list-item__text" trans-tag="Stations.Interchange.PaidArea"></span>
+                    <span class="mdc-list-item__meta">
+                        <div class="mdc-switch" id="paid_area">
+                            <div class="mdc-switch__track"></div>
+                            <div class="mdc-switch__thumb-underlay">
+                                <div class="mdc-switch__thumb">
+                                    <input type="checkbox" class="mdc-switch__native-control" role="switch">
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                </li>
+            </ul>
 
             </div>
 
@@ -1477,7 +1505,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
     >
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
-      <h2 class="mdc-dialog__title" trans-tag="Stations.Delete.Title"></h2>
+      <h2 class="mdc-dialog__title" trans-tag="Stations.Interchange.OSIName.Title"></h2>
       <div class="mdc-dialog__content">
 
         <div class="mdc-layout-grid">
@@ -1537,7 +1565,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
     aria-describedby="my-dialog-content">
     <div class="mdc-dialog__container">
         <div class="mdc-dialog__surface">
-          <h2 class="mdc-dialog__title" trans-tag="Stations.Delete.Title"></h2>
+          <h2 class="mdc-dialog__title" trans-tag="Stations.Interchange.IntBox.Title"></h2>
           <div class="mdc-dialog__content">
             <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner">

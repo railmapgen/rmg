@@ -42,19 +42,19 @@ body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: colum
     overflow-x: scroll;
     flex-wrap: nowrap;
 }
-.mdc-chip-set .mdc-chip {
+.mdc-chip-set.int-chip-set .mdc-chip {
     flex: 0 0 auto;
     border-radius: 4.5px;
     height: 45px;
     line-height: 1rem;
 }
-.mdc-chip-set .mdc-chip__ripple {
+.mdc-chip-set.int-chip-set .mdc-chip__ripple {
     border-radius: 4.5px;
     height: 45px;
 }
 
 button#osi_name {
-    width: 100%; 
+    max-width: 100%; 
     padding: 0 8px 0 8px; 
     height: 40px;
 }
@@ -63,4 +63,8 @@ button#osi_name .mdc-button__label {
     line-height: 1rem; 
     white-space: nowrap; 
     overflow: hidden;
+}
+
+#panel_interchange .mdc-list-item__graphic {
+    margin-right: 8px;
 }

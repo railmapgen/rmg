@@ -1,5 +1,15 @@
 # Version History
 
+## 2.6 (10 Feb 2020)
+
+### New Features
+
+- New dialogue for modifying interchanges with higher flexibility!
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
 ## 2.5.6 (9 Feb 2020)
 
 ### New Features

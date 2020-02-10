@@ -120,7 +120,7 @@ class BranchStationGZ extends IntStationGZ {
 
 class OSIStationGZ extends IntStationGZ {
     constructor (id: ID, data: StationInfo) {
-        data.transfer.info[0].push(...data.transfer.info[1]);
+        // data.transfer.info[0].push(...data.transfer.info[1]);
         super(id, data);
     }
 }

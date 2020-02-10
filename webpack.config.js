@@ -30,6 +30,7 @@ module.exports = {
   }, 
   externals: {
     jquery: 'jQuery', 
+    // '@material/chips': 'mdc.chips',
     '@material/dialog': 'mdc.dialog',
     '@material/icon-button': 'mdc.iconButton',
     '@material/list': 'mdc.list',

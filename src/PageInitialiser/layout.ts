@@ -20,7 +20,7 @@ export function common() {
     const [branchSpacingSlider, yPcSlider, paddingSlider] = 
         ['#branch_spacing', '#y_pc', '#padding'].map(selector => MDCSlider.attachTo($(selector)[0]));
     window.sliders.push(branchSpacingSlider, yPcSlider, paddingSlider);
-    $('#panel_layout .mdc-list li').map((_,el) => new MDCRipple(el));
+    // $('#panel_layout .mdc-list li').map((_,el) => new MDCRipple(el));
 
     // init values
     Promise.resolve(getParams())

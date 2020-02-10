@@ -105,6 +105,13 @@
     "Stations.Interchange.Within": "站内换乘",
     "Stations.Interchange.OSI": "出站换乘",
     "Stations.Interchange.Settings": "更多设置",
+    "Stations.Interchange.TickDirection": "换乘文字方向",
+    "Stations.Interchange.TickDirection.L": "左", 
+    "Stations.Interchange.TickDirection.R": "右", 
+    "Stations.Interchange.PaidArea": "付费区内出站换乘",
+
+    "Stations.Interchange.IntBox.Title": "编辑换乘线路详情",
+    "Stations.Interchange.OSIName.Title": "编辑出站换乘车站名称", 
 
     "Stations.Interchange.Type.Title": "换乘站类型",
     "Stations.Interchange.Type.None": "无", 
