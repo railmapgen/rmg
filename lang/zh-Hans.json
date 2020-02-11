@@ -28,6 +28,7 @@
     "File.Style.Title": "选择风格", 
     "File.Style.MTR": "港铁", 
     "File.Style.GZMTR": "广州地铁",
+    "File.Style.SHMetro": "上海地铁 (Alpha)",
 
     "File.Lang": "语言/Language",
     "File.Lang.Title": "选择语言", 
@@ -120,6 +121,7 @@
     "Stations.Interchange.Type.Int3": "三线换乘站", 
     "Stations.Interchange.Type.OSI11": "出站换乘 (1-1)", 
     "Stations.Interchange.Type.OSI12": "出站换乘 (1-2)",
+    "Stations.Interchange.Type.OSI21": "出站换乘 (2-1)", 
     "Stations.Interchange.Type.OSI22": "出站换乘 (2-2)", 
 
     "Stations.Branch.Type.Title": "支线类型", 

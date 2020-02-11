@@ -10,6 +10,9 @@ const getLineClass = async (style: string) => {
         case 'gzmtr':
             return import(/* webpackChunkName: "LineGZ" */ './LineGZ')
                 .then(({ RMGLineGZ }) => RMGLineGZ);
+        case 'shmetro':
+            return import(/* webpackChunkName: "LineSH" */ './LineSH')
+                .then(({ RMGLineSH }) => RMGLineSH);
         // any other styles
     }
 }

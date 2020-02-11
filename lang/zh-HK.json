@@ -28,6 +28,7 @@
     "File.Style.Title": "選擇風格", 
     "File.Style.MTR": "港鐵", 
     "File.Style.GZMTR": "廣州地鐵",
+    "File.Style.SHMetro": "上海地鐵 (Alpha)",
 
     "File.Lang": "語言/Language",
     "File.Lang.Title": "選擇語言", 
@@ -120,6 +121,7 @@
     "Stations.Interchange.Type.Int3": "三線轉車站", 
     "Stations.Interchange.Type.OSI11": "出站轉車 (1-1)", 
     "Stations.Interchange.Type.OSI12": "出站轉車 (1-2)",
+    "Stations.Interchange.Type.OSI21": "出站轉車 (2-1)", 
     "Stations.Interchange.Type.OSI22": "出站轉車 (2-2)", 
 
     "Stations.Branch.Type.Title": "支線類型", 
