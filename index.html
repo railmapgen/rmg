@@ -25,122 +25,9 @@
     <script src="https://cdn.jsdelivr.net/npm/material-components-web@3.2.0/dist/material-components-web.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-    <style type="text/css">
-        /* :root {
-            --mdc-theme-primary: #fcb8ab;
-            --mdc-theme-secondary: #feeae6;
-            --mdc-theme-on-primary: #fff;
-            --mdc-theme-on-secondary: #fff;
-        } */
-        body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: column; overflow: auto;}
-        #svgs {
-            height: 100%;
-            display: flex;
-            overflow-x: scroll;
-        }
-        #svgs::-webkit-scrollbar {
-            display: none;
-        }
-        #svgs>svg {
-            flex: 0 0 auto;
-        }
-        #panels {flex-grow: 1; overflow: hidden;}
-        .panel {display: none;}
-        .panel--active {display: block;}
-
-        .station-card {
-            height: 100px;
-        }
-        .station-card__content {
-            font-family: sans-serif;
-            -moz-osx-font-smoothing: grayscale;
-            -webkit-font-smoothing: antialiased;
-            font-size: 1rem;
-            line-height: 1.5rem;
-            font-weight: 400;
-            letter-spacing: .03125em;
-            text-align: center;
-        }
-        .int-selection {
-            max-width: 100%;
-        }
-    </style>
-
-    <style type="text/css" id="svg_share">
-        @font-face {
-            font-family: "Vegur";
-            src: url("https://wongchito.github.io/RailMapGenerator/fonts/Vegur-Regular.otf");
-        }
-        .Strip {
-            fill: none;
-            stroke-width: 20;
-        }
-
-        .rmg-name__zh {alignment-baseline:central;}
-        .rmg-name__en {alignment-baseline:middle;}
-
-        .rmg-name__char-trad {
-            font-family: 
-                Vegur, Helvetica,
-                Noto Serif KR,
-                Noto Serif JP,
-                Noto Serif TC,
-                Noto Serif SC,
-                HiraMinProN-W6,
-                serif;
-        }
-        .rmg-name__char-cn {
-            font-family: 
-                Vegur, Helvetica,
-                Noto Serif SC,
-                Noto Serif TC,
-                HiraMinProN-W6,
-                serif;
-        }
-        .rmg-name__char-jp {
-            font-family: 
-                Vegur, Helvetica,
-                Noto Serif JP,
-                Noto Serif KR,
-                Noto Serif TC,
-                Noto Serif SC,
-                HiraMinProN-W6,
-                serif;
-        }
-        .rmg-name__char-tw {
-            font-family: 
-                Vegur, Helvetica,
-                Noto Serif TC,
-                Noto Serif KR,
-                Noto Serif JP,
-                Noto Serif SC,
-                HiraMinProN-W6,
-                serif;
-        }
-
-        .rmg-name__gzmtr {
-            font-family: Arial, SimHei, STHeiti, PingFangSC-Regular, sans-serif;
-        }
-        .rmg-name__gzmtr--white-fg {fill: #fff;}
-
-        .rmg-name__gzmtr--station-num {
-            font-size: 14px;
-            text-anchor: middle;
-        }
-        .rmg-name__gzmtr--line-num {
-            font-size: 14px;
-            text-anchor: middle;
-        }
-        .rmg-stn {
-            fill: white;
-        }
-        .rmg-stn__highlight {
-            fill: yellow;
-        }
-    </style>
-
-    <!-- disable for development sake -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script> -->
+    <link rel="stylesheet" href="styles/main.css">
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -155,53 +42,6 @@
 xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink" 
 id="destination" width="0" height="0" style="border: 1px solid black;">
-
-    <style type="text/css">
-        .rmg-name__zh.rmg-name__mtr--dest {font-size: 90px;}
-        .rmg-name__en.rmg-name__mtr--dest {font-size: 45px;}
-
-        .rmg-name__zh.rmg-name__gzmtr--dest {font-size: 90px;}
-        .rmg-name__en.rmg-name__gzmtr--dest {font-size: 36px;}
-        
-        .rmg-name__zh.rmg-name__gzmtr--next {font-size: 35px;}
-        .rmg-name__en.rmg-name__gzmtr--next {font-size: 17px;}
-        .rmg-name__zh.rmg-name__gzmtr--next2 {font-size: 27px;}
-        .rmg-name__en.rmg-name__gzmtr--next2 {font-size: 13px;}
-        .rmg-name__zh.rmg-name__gzmtr--next2-dest {font-size: 18.5px;}
-        .rmg-name__en.rmg-name__gzmtr--next2-dest {font-size: 8.5px;}
-
-        .rmg-psd-num {
-            text-anchor: middle;
-            alignment-baseline:central;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        .rmg-psd-num.rmg-psd-num__gzmtr {
-            font-size: 20px;
-        }
-
-        .rmg-platform-num {
-            alignment-baseline:central;
-            text-anchor: middle;
-        }
-        .rmg-platform-num.rmg-platform-num__mtr {
-            font-size:135px;
-            font-family: Vegur;
-            fill: #fff;
-        }
-        .rmg-name__platformnum {
-            text-anchor: middle;
-        }
-        .rmg-name__gzmtr--platformnum {
-            font-size:38px;
-        }
-        .rmg-name__mtr--platformnum {
-            font-size:135px;
-            fill: #fff;
-        }
-    </style>
-
-    <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Noto+Serif+KR:600|Noto+Serif+JP:600|Noto+Serif+TC:600|Noto+Serif+SC:600&display=swap);</style>
-
     <defs>
         <path id="arrow" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
 
@@ -233,8 +73,8 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
             <text class="rmg-name__zh rmg-name__platformnum rmg-name__mtr--platformnum" dy="0"></text>
         </g>
         <g>
-            <text class="rmg-name__zh rmg-name__mtr--dest">往</text>
-            <text class="rmg-name__en rmg-name__mtr--dest" dy="80">to</text>
+            <text class="rmg-name__zh" font-size="90px">往</text>
+            <text class="rmg-name__en" font-size="45px" dy="80">to</text>
         </g>
     </g>
 
@@ -320,71 +160,6 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
 xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink" 
 id="railmap" width="0" height="0" style="border: 1px solid black;">
-    <style type="text/css">
-        .rmg-stn__mtr {
-            fill: #fff;
-            stroke-width: 2;
-            stroke-dasharray: 0;
-        }
-        .rmg-stn__mtr--future {stroke: #000;}
-        .rmg-stn__mtr--pass {stroke: #aaa;}
-        .rmg-stn__mtr--unpaid-osi {
-            stroke-width: 2.5;
-            stroke-dasharray: 2,2;
-        }
-        .rmg-stn__mtr--paid-osi {
-            stroke-width: 2.5;
-        }
-
-        .rmg-line {fill:none}
-
-        .rmg-line__mtr {stroke-width: 11;}
-        .rmg-line__mtr.rmg-line__change {stroke-width: 10;}
-        .rmg-line__mtr.rmg-line__pass {
-            stroke: #aaa;
-        }
-
-        .rmg-line__gzmtr {stroke-width: 4;}
-        .rmg-line__gzmtr.rmg-line__pass {
-            stroke: #aaa;
-            stroke-dasharray:4,4;
-        }
-
-        .Name.Pass {fill: #aaa;}
-        .Name.Current {fill: #fff;}
-        .Name.CurrentGZ {fill: #f00;}
-        .Name.Future {fill: #000;}
-
-        .rmg-name__en.rmg-name__mtr--station {font-size: 10px;}
-        .rmg-name__zh.rmg-name__mtr--station {font-size: 17px;}
-        .rmg-name__en.rmg-name__gzmtr--station {font-size: 10px;}
-        .rmg-name__zh.rmg-name__gzmtr--station {font-size: 18px;}
-
-        .rmg-name__en.rmg-name__mtr--osi {font-size: 9px;}
-        .rmg-name__zh.rmg-name__mtr--osi {font-size: 14px;}
-
-        .rmg-name__en.IntName {font-size: 7px;}
-        .rmg-name__zh.IntName {font-size: 10px;}
-
-        .rmg-name__zh.rmg-name__gzmtr--int {font-size: 12px;}
-        .rmg-name__en.rmg-name__gzmtr--int {font-size: 8px;}
-        .rmg-name__en.rmg-name__gzmtr--int-small {font-size: 7px;}
-
-        .StnNum{
-            font-family: Arial;
-            font-size: 14px;
-            text-anchor: middle;
-            alignment-baseline: central;
-        }
-
-        .rmg-name__zh.rmg-name__gzmtr--direc {font-size: 28px;}
-        .rmg-name__en.rmg-name__gzmtr--direc {font-size: 14px;}
-
-    </style>
-    <style type="text/css">@import url("./style/shmetro.css");</style>
-
-    <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Noto+Serif+KR:600|Noto+Serif+JP:600|Noto+Serif+TC:600|Noto+Serif+SC:600&display=swap);</style>
-
     <defs>
         <path id="arrow" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
 
@@ -436,14 +211,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
         <rect id="current_bg" x="0" y="0" width="100" height="20" fill="#000" style="display: none;" mtr-specific/>
 
-        <g id="line_name" text-anchor="middle" style="display: none;" gzmtr-specific>
-            <use xlink:href="#intbox_gz"/>
-            <text y="8.5">
-                <tspan font-size="16px" class="rmg-name__zh"></tspan><!--
-             --><tspan dy="-0.5" class="rmg-name__zh rmg-name__gzmtr--int"></tspan>
-            </text>
-            <text y="19.5" class="rmg-name__en rmg-name__gzmtr--int"></text>
-        </g>
+        <g id="line_name" text-anchor="middle" style="display: none;" gzmtr-specific></g>
     
         <g id="stn_icons"></g>
     </g>
@@ -454,6 +222,13 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
         <g text-anchor="start">
             <text class="rmg-name__zh rmg-name__gzmtr--direc">方向</text>
             <text class="rmg-name__en rmg-name__gzmtr--direc" dy="22">Towards</text>
+        </g>
+        <g text-anchor="start">
+            <text class="rmg-name__zh rmg-name__gzmtr--direc2" y="-21"></text>
+            <text class="rmg-name__en rmg-name__gzmtr--direc2" y="-1"></text>
+            <text class="rmg-name__zh rmg-name__gzmtr--direc2" y="21"></text>
+            <text class="rmg-name__en rmg-name__gzmtr--direc2" y="41"></text>
+            <text class="rmg-name__zh rmg-name__gzmtr--direc" x="150" y="5">方向</text>
         </g>
     </g>
 
@@ -664,11 +439,11 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
       <h2 class="mdc-dialog__title" trans-tag="File.Style.Title"></h2>
       <div class="mdc-dialog__content">
         <ul class="mdc-list mdc-list--avatar-list">
-          <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="mtr">
-            <span class="mdc-list-item__text" trans-tag="File.Style.MTR"></span>
-          </li>
-          <li class="mdc-list-item" data-mdc-dialog-action="gzmtr">
+          <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="gzmtr">
             <span class="mdc-list-item__text" trans-tag="File.Style.GZMTR"></span>
+          </li>
+          <li class="mdc-list-item" data-mdc-dialog-action="mtr">
+            <span class="mdc-list-item__text" trans-tag="File.Style.MTR"></span>
           </li>
           <li class="mdc-list-item" data-mdc-dialog-action="shmetro" data-mdc-auto-init="MDCRipple">
             <span class="mdc-list-item__text" trans-tag="File.Style.SHMETRO"></span>
@@ -1604,7 +1379,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                         <div class="mdc-notched-outline">
                             <div class="mdc-notched-outline__leading"></div>
                             <div class="mdc-notched-outline__notch">
-                            <label for="tf-outlined" class="mdc-floating-label">OSI Name in Chinese Characters</label>
+                            <label for="tf-outlined" class="mdc-floating-label" trans-tag="Editor.OSIName.ZH"></label>
                             </div>
                             <div class="mdc-notched-outline__trailing"></div>
                         </div>
@@ -1617,7 +1392,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                         <div class="mdc-notched-outline">
                             <div class="mdc-notched-outline__leading"></div>
                             <div class="mdc-notched-outline__notch">
-                            <label for="tf-outlined" class="mdc-floating-label">OSI Name in Latin Characters</label>
+                            <label for="tf-outlined" class="mdc-floating-label" trans-tag="Editor.OSIName.ZH"></label>
                             </div>
                             <div class="mdc-notched-outline__trailing"></div>
                         </div>
@@ -1970,8 +1745,10 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 </div>
 
 <canvas style="display: none;"></canvas>
-
-<!-- <script src="dist/vendors~index.bundle.js"></script> -->
+<script>
+    window.urlParams = new URLSearchParams(window.location.search);
+</script>
+<!-- <script src="dist/vendors~index.min.js"></script> -->
 <script src="dist/index.min.js"></script>
 <script async src="dist/lang.min.js"></script>
 

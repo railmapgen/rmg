@@ -1,5 +1,112 @@
 # Version History
 
+## 2.5.6 (9 Feb 2020)
+
+### New Features
+
+- New theme colours for Chengdu and Xi'an. 
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Fixed an issue in station adding process. 
+
+## 2.5.5 (8 Feb 2020)
+
+### New Features
+
+- New data structure for incoming update. 
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Fixed the issue of mis-positioning interchange name with more than one line in MTR style. 
+- Fixed the error of including backslash in `<text>` elements. 
+
+## 2.5.4 (7 Feb 2020)
+
+### New Features
+
+- RMG now supports Firefox!
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Improved interchanges in Guangzhou Metro style. 
+
+## 2.5.3 (6 Feb 2020)
+
+### New Features
+
+- New format of default names of new station. 
+- New colour schemes for Guangzhou. 
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Improved backward compatibility.
+- Fixed the error of un-styled exported PNG. 
+- Fixed the errors occurred when current station is removed. 
+
+## 2.5.2 (5 Feb 2020)
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Fixed the incorrect list of possible locations of a new station. 
+- Separated CSS stylesheets for control panels from `index.html`.
+- Improved logic of determining the positions of station names in MTR style. 
+- Updated documents and added typings for some methods. 
+
+## 2.5.1 (5 Feb 2020)
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Separated CSS stylesheets from `index.html`. ([#7](https://github.com/wongchito/RailMapGenerator/issues/7))
+
+## 2.5 (4 Feb 2020)
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Fixed the incorrect style of 'Towards' information when there are two destinations in Guangzhou Metro style. 
+
+## 2.4.2 (4 Feb 2020)
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
+### Resolved Issues
+
+- Fixed the errors in Tokyo's colour list. 
+- Fixed the displaying issue of out-of-station interchange name field. 
+- Fixed the incorrect list of possible locations of a new station. 
+- Fixed the error that branch configuration of newly added station may be incorrect. 
+- Fixed the incorrect station intervals caused by webpack minimal output. 
+
 ## 2.4.1 (3 Feb 2020)
 
 ### Known Issues

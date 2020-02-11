@@ -1,4 +1,4 @@
-import { getParams, putParams, countryCode2Emoji, getTransText, rgb2Hex } from '../utils';
+import { getParams, putParams, countryCode2Emoji, getTransText, rgb2Hex, Name } from '../utils';
 import { CityEntry, LineEntry } from '../utils';
 import { RMGLineGZ } from '../Line/LineGZ';
 import { MDCList } from '@material/list';
@@ -6,6 +6,7 @@ import { MDCDialog } from '@material/dialog';
 import { MDCSelect } from '@material/select';
 import { MDCTextField } from '@material/textfield';
 import { MDCSwitch } from '@material/switch';
+import { MDCRipple } from '@material/ripple';
 
 export function common() {
     // mdc instances
@@ -19,6 +20,7 @@ export function common() {
     const [lineNameZHTextField, lineNameENTextField] = 
         ['#name_zh', '#name_en'].map(selector => MDCTextField.attachTo($('#line_name_diag').find(selector)[0]));
     const platformNumTextField = MDCTextField.attachTo($('#platform_num')[0]);
+    $('#panel_design .mdc-list li').map((_,el) => new MDCRipple(el));
 
     // helper functions
     const getDirectionText = (direc: 'l' | 'r') => {
@@ -54,13 +56,15 @@ export function common() {
             );
         });
 
+        $('#theme_city__selection li').map((_,el) => new MDCRipple(el));
+
         var [themeCity] = getParams().theme
         var cityIdx = $(`#theme_city__selection > [data-value="${themeCity}"]`).index();
         themeCitySelect.selectedIndex = cityIdx;
     });
 
     // add event listeners
-    designList.listen('MDCList:action', (event: any) => {
+    designList.listen('MDCList:action', (event: CustomEvent) => {
         switch (event.detail.index) {
             case 0:
                 themeDialog.open();
@@ -89,7 +93,7 @@ export function common() {
         [themeCitySelect, themeLineSelect].map(select => select.layout());
     });
 
-    themeCitySelect.listen("MDCSelect:change", (event: any) => {
+    themeCitySelect.listen("MDCSelect:change", (event: CustomEvent) => {
         let city = event.detail.value;
         $('#theme_line__selection').empty();
         $.getJSON(`data/${city}.json`, (data: LineEntry[]) => {
@@ -108,6 +112,8 @@ export function common() {
                 );
             });
 
+            $('#theme_line__selection li').map((_,el) => new MDCRipple(el));
+
             var param = getParams();
             param.theme[0] = city;
             putParams(param);
@@ -117,7 +123,7 @@ export function common() {
         });
     });
 
-    themeLineSelect.listen("MDCSelect:change", (event: any) => {
+    themeLineSelect.listen("MDCSelect:change", (event: CustomEvent) => {
         let lineIdx = event.detail.index;
 
         var param = getParams();
@@ -145,7 +151,7 @@ export function common() {
     $('#line_name_diag')
         .find('.mdc-text-field')
         .on('input', () => {
-            let lineNames = [lineNameZHTextField, lineNameENTextField].map(textfield => textfield.value);
+            let lineNames = [lineNameZHTextField, lineNameENTextField].map(textfield => textfield.value) as Name;
             window.myLine.lineNames = lineNames;
             $('#design_list')
                     .find('li#name .mdc-list-item__secondary-text')
@@ -174,14 +180,16 @@ export function mtr() {
     // init values
     Promise.resolve(getParams())
         .then(param => {
-            $('#design_list_mtr')
-                .find('li#char .mdc-list-item__secondary-text')
-                .text(getCharText(param.char_form));
+            // $('#design_list_mtr')
+            //     .find('li#char .mdc-list-item__secondary-text')
+            //     .text(getCharText(param.char_form));
+            $('#design_char_diag')[0].dispatchEvent(new CustomEvent('MDCDialog:closed', { detail: {action: param.char_form}}));
+            // charDialog.close(param.char_form);
             legacySwitch.checked = param.dest_legacy;
         });
-
+    
     // add event listeners
-    designListMTRList.listen('MDCList:action', (event: any) => {
+    designListMTRList.listen('MDCList:action', (event: CustomEvent) => {
         switch (event.detail.index) {
             case 0:
                 window.myLine.txtFlip = !getParams().txt_flip;
@@ -192,7 +200,7 @@ export function mtr() {
         }
     });
 
-    charDialog.listen('MDCDialog:closed', (event: any) => {
+    charDialog.listen('MDCDialog:closed', (event: CustomEvent) => {
         let char = event.detail.action;
         if (char == 'close') {return;}
 
@@ -221,7 +229,7 @@ export function gzmtr() {
         });
 
     // add event listeners
-    designListGZMTRList.listen('MDCList:action', (event: any) => {
+    designListGZMTRList.listen('MDCList:action', (event: CustomEvent) => {
         switch (event.detail.index) {
             case 1:
                 panelTypeDialog.open();
@@ -235,7 +243,7 @@ export function gzmtr() {
     ($(psdNumTextField.root_).find('input') as JQuery<HTMLInputElement>)
         .on('input', event => (<RMGLineGZ>window.myLine).psdNum = event.target.value);
 
-    panelTypeDialog.listen('MDCDialog:closed', (event: any) => {
+    panelTypeDialog.listen('MDCDialog:closed', (event: CustomEvent) => {
         if (event.detail.action === 'close') {return;}
         (<RMGLineGZ>window.myLine).infoPanelType = event.detail.action;
     });

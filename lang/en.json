@@ -28,7 +28,7 @@
     "File.Style": "Style",
     "File.Style.Title": "Choose a Style", 
     "File.Style.MTR": "MTR", 
-    "File.Style.GZMTR": "Guangzhou Metro (Beta)",
+    "File.Style.GZMTR": "Guangzhou Metro",
     "File.Style.SHMETRO": "Shanghai Metro (Alpha)",
 
     "File.Lang": "Language",
@@ -98,7 +98,7 @@
 
     "Stations.Name.Title": "Edit Station Name",
     "Stations.Name.Hint": "Hint: You may add a backslash (\\) at where you want to wrap name. (For station name in Latin characters only. )",
-    "Stations.Name.StnNum": "Station Number", 
+    "Stations.Name.StnNum": "Station Code", 
     
     "Stations.Edit.Title": "Edit Station Detail",
     "Stations.Edit.Interchange": "Interchange", 
@@ -143,5 +143,7 @@
     "Editor.City": "City", 
     "Editor.Line": "Line",
     "Editor.Name.ZH": "Name (in Chinese Character)",
-    "Editor.Name.EN": "Name (in Latin Character)"
+    "Editor.Name.EN": "Name (in Latin Character)", 
+    "Editor.OSIName.ZH": "Station Name (in Chinese Character)", 
+    "Editor.OSIName.EN": "Station Name (in Latin Character)"
 }

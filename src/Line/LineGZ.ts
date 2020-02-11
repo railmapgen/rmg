@@ -1,8 +1,9 @@
-import { getTxtBoxDim, setParams, getParams, putParams, getRandomId, DirectionLong } from '../utils';
+import { getTxtBoxDim, setParams, getParams, putParams, getRandomId, DirectionLong, getIntBoxGZ } from '../utils';
 import { RMGStationGZ, IntStationGZ, BranchStationGZ, OSIStationGZ } from '../Station/StationGZ';
 import { RMGLine } from './Line';
 
 import { ID, Name, StationInfo, RMGParam } from '../utils';
+import { InterchangeInfo } from '../Station/Station';
 
 interface StationDictGZ {
     [index: string]: RMGStationGZ;
@@ -131,7 +132,7 @@ class RMGLineGZ extends RMGLine {
         this.loadFonts();
     }
 
-    set lineNames(val) {
+    set lineNames(val: Name) {
         this._lineNames = val;
         setParams('line_name', val);
 
@@ -195,6 +196,9 @@ class RMGLineGZ extends RMGLine {
         }
     }
 
+    /**
+     * Vertical position (in shares) of station icon. 
+     */
     _stnYShare(stnId) {
         if (['linestart', 'lineend'].includes(stnId)) {
             return 0;
@@ -204,7 +208,8 @@ class RMGLineGZ extends RMGLine {
             return 0; 
         } else {
             let i = 1;
-            while (!branches[i].includes(stnId)) {
+            while (i < branches.length) {
+                if (branches[i].includes(stnId)) {break;}
                 i++;
             }
             if (branches[0].includes(branches[i][0])) {
@@ -246,7 +251,7 @@ class RMGLineGZ extends RMGLine {
     }
 
     _rightWideFactor(stnId: ID) {
-        if (this.stations[stnId].constructor.name === 'BranchStationGZ' && this.stations[stnId]._tickRotation === 0) {
+        if (this.stations[stnId] instanceof BranchStationGZ && this.stations[stnId]._tickRotation === 0) {
             return 0.25;
         } else {
             return 0;
@@ -254,8 +259,8 @@ class RMGLineGZ extends RMGLine {
     }
 
     _leftWideFactor(stnId: ID) {
-        if (this.stations[stnId].constructor.name === 'BranchStationGZ' && this.stations[stnId]._tickRotation !== 0) {
-            return 0.5;
+        if (this.stations[stnId] instanceof BranchStationGZ && this.stations[stnId]._tickRotation !== 0) {
+            return 0.25;
         } else {
             return 0;
         }
@@ -268,20 +273,27 @@ class RMGLineGZ extends RMGLine {
         // return 1;
     }
 
-    _linePath(stnIds) {
-        var [prevId, prevY, prevX] = [] as [string?, number?, number?];
-        var path = [];
+    /**
+     * Set width for colour strips. (Height of strips are controlled by `RMGLineGZ.drawStrip`. )
+     */
+    drawSVGFrame() {
+        super.drawSVGFrame();
+        $('#dest_strip_gz').attr('width', this._svgDestWidth);
+        $('#strip_gz').attr('width', this._svgWidth);
+    }
 
-        var { stnExtraH, stnSpareH, pathTurnESE, pathTurnSEE, pathTurnENE, pathTurnNEE, stnDX } = this;
+    _linePath(stnIds: ID[]) {
+        let prevY: number;
+        var path = [];
 
         stnIds.forEach(stnId => {
             var [x,y] = ['_stnRealX', '_stnRealY'].map(fun => this[fun](stnId));
             if (!prevY && prevY !== 0) {
-                [prevId, prevX, prevY] = [stnId, x, y];
+                prevY = y;
                 path.push(`M ${x},${y}`);
                 return;
             }
-            if (y === this.y) {
+            if (y === 0) {
                 if (y < prevY) {
                     path.push(`H ${x-30}`, 'a 30,30 0 0,0 30,-30', `V ${y}`)
                 }
@@ -296,17 +308,8 @@ class RMGLineGZ extends RMGLine {
                     path.push(`V ${y-30}`, 'a 30,30 0 0,0 30,30', `H ${x}`)
                 }
             }
-            // if (y != prevY && y == this.y) {
-            //     path.push(
-            //         `H ${x}`, `V ${y}`
-            //     )
-            // } else if (y != prevY && y != this.y) {
-            //     path.push(
-            //         `V ${y}`, `H ${x}`
-            //     )
-            // }
             path.push(`H ${x}`);
-            [prevId, prevX, prevY] = [stnId, x, y];
+            prevY = y;
         });
 
         // simplify path
@@ -319,7 +322,22 @@ class RMGLineGZ extends RMGLine {
     }
 
     loadFonts() {
-        $('.rmg-name__zh, .rmg-name__en').addClass('rmg-name__gzmtr');
+        // $('.rmg-name__zh, .rmg-name__en').addClass('rmg-name__gzmtr');
+    }
+
+    initFonts() {
+        let styleSheet = (<HTMLLinkElement>$('link#css_share')[0]).sheet as CSSStyleSheet;
+        let idx: number[] = [];
+        Array.from(styleSheet.cssRules).forEach((rule, i) => {
+            if (rule.cssText.indexOf('.rmg-name__zh') !== -1) {
+                idx.push(i);
+            } else if (rule.cssText.indexOf('.rmg-name__en') !== -1) {
+                idx.push(i);
+            }
+        });
+        idx.forEach(i => styleSheet.deleteRule(i));
+        styleSheet.insertRule('.rmg-name__zh {alignment-baseline: central; font-family: Arial, SimHei, STHeiti, PingFangSC-Regular, sans-serif;}');
+        styleSheet.insertRule('.rmg-name__en {alignment-baseline: middle; font-family: Arial, sans-serif;}');
     }
 
     fillThemeColour() {
@@ -371,49 +389,21 @@ class RMGLineGZ extends RMGLine {
     }
 
     loadLineName() {
-        var lineNameZHs = this._lineNames[0].match(/[\d]+|[\D]+/g) || '';
+        // simulate interchange info
+        let info = [this.themeCity, this.themeLine, this._themeColour, this._fgColour, this._lineNames[0], this._lineNames[1]] as InterchangeInfo;
 
-        var lineNameSplitOk = false;
-        if (lineNameZHs.length == 2) {
-            if (!isNaN(Number(lineNameZHs[0])) && isNaN(Number(lineNameZHs[1]))) {
-                lineNameSplitOk = true;
-            }
-        }
-
-        if (lineNameSplitOk) {
-            $('#line_name tspan').eq(0).text(lineNameZHs[0]);
-            $('#line_name tspan').eq(1).text(lineNameZHs[1]);
-            $('#line_name tspan').eq(1).attr('dy', '-0.5');
-        } else {
-            $('#line_name tspan').eq(0).text('');
-            $('#line_name tspan').eq(1).text(this._lineNames[0]);
-            $('#line_name tspan').eq(1).attr('dy', '-0.5');
-        }
-        // $('#line_name tspan').eq(1).text(lineNameZHs[lineNameZHs.length-1])
-
-        $('#line_name text:last-child').text(this._lineNames[1]);
-        if (this._lineNames[1].length > 10) {
-            $('#line_name text:last-child')
-                .text(this._lineNames[1])
-                .addClass('rmg-name__gzmtr--int-small')
-                .removeClass('rmg-name__gzmtr--int');
-        } else {
-            $('#line_name text:last-child')
-                .text(this._lineNames[1])
-                .removeClass('rmg-name__gzmtr--int-small')
-                .addClass('rmg-name__gzmtr--int');
-        }
-
-        if (this._fgColour == '#fff') {
-            $('#line_name text').addClass('rmg-name__gzmtr--white-fg');
-        }
+        $('#line_name')
+            .empty()
+            .append(getIntBoxGZ(info, 1));
+        $('#line_name').html($('#line_name').html());
 
         var lineNameX = this._direction=='r' ? this.lineXs[0]-65 : this.lineXs[1]+65;
 
         $('#line_name')
             .attr({
-                transform: `translate(${lineNameX},${this.y-18})scale(1.5)`
-            })
+                transform: `translate(${lineNameX},-18)scale(1.5)`
+            });
+        this.loadFonts();
     }
 
     loadDirection() {
@@ -421,6 +411,7 @@ class RMGLineGZ extends RMGLine {
         let x = this._svgWidth * this._directionGZX / 100;
         let y = this._svgHeight * this._directionGZY / 100;
         $('#direction_gz').attr('transform', `translate(${x},${y})`);
+        // to be fixed: validDest ordering
         if (this._direction == 'l') {
             $('#direction_gz use').attr('transform', `scale(0.35)`);
             $('#direction_gz g').attr({
@@ -436,13 +427,50 @@ class RMGLineGZ extends RMGLine {
             });
             validDest = this.rValidDests;
         }
-        var [destNameZH, destNameEN] = [0,1].map(idx => {
-            return validDest.map(stnId => this.stations[stnId].name[idx].replace(/\\/g, ' ')).join('/');
-        });
-        $('#direction_gz text').eq(0).text(destNameZH + '方向');
-        $('#direction_gz text').eq(1).text('Towards ' + destNameEN);
+        if (validDest.length !== 2) {
+            var [destNameZH, destNameEN] = [0,1].map(idx => {
+                return validDest.map(stnId => this.stations[stnId].name[idx].replace(/\\/g, ' ')).join('/');
+            });
+            $('#direction_gz g').eq(0).find('text').eq(0).text(destNameZH + '方向');
+            $('#direction_gz g').eq(0).find('text').eq(1).text('Towards ' + destNameEN.replace('\\', ' '));
 
-        // $('#direction_gz g').attr('transform', `translate(${this._svgWidth/2},200)`);
+            $('#direction_gz g').eq(0).show();
+            $('#direction_gz g').eq(1).hide();
+        } else {
+            // flatMap and flat are not supported by some browsers!
+            // however targeting ES5 caused other issues?
+            validDest
+                .map(stnId => this.stations[stnId].name)
+                .reduce((acc, val) => acc.concat(val), [])
+                .forEach((txt, i) => {
+                    if (i%2) {
+                        txt = 'Towards ' + txt.replace('\\', ' ');
+                    }
+                    $('#direction_gz g').eq(1).find('text').eq(i).text(txt);
+                });
+            $('#direction_gz g').eq(1).find('text').css('letter-spacing', 0);
+
+            let charCounts = validDest.map(stnId => this.stations[stnId].name[0].length);
+            let minCharCounts = Math.min(...charCounts);
+            if (minCharCounts > 1 && charCounts[0] !== charCounts[1]) {
+                let charSpacing = Math.abs(charCounts[0] - charCounts[1]) / (minCharCounts - 1);
+                $('#direction_gz g').eq(1).find('text')
+                    .eq(charCounts[0] > charCounts[1] ? 2 : 0)
+                    .css('letter-spacing', `${charSpacing}em`);
+            }
+
+            if (this._direction === 'l') {
+                let maxCharCount = Math.max(...charCounts);
+                $('#direction_gz g').eq(1).find('text').eq(4).attr('x', 25*(maxCharCount+1));
+                $('#direction_gz g').eq(1).find('text').slice(0,4).removeAttr('x');
+            } else {
+                $('#direction_gz g').eq(1).find('text').eq(4).removeAttr('x');
+                $('#direction_gz g').eq(1).find('text').slice(0,4).attr('x', '-75');
+            }
+            
+            $('#direction_gz g').eq(0).hide();
+            $('#direction_gz g').eq(1).show();
+        }
     }
 
     updateStnName(stnId, names: Name, stnNum) {

@@ -1,3 +1,5 @@
+import { IntInfoTag, InterchangeInfo } from "./Station/Station";
+
 export type ID = string;
 export interface BranchInfo {
     left: [string, ID] | [], 
@@ -10,7 +12,15 @@ export interface StationInfo {
     branch: BranchInfo;
     parents: ID[];
     children: ID[];
+    transfer?: StationTransfer;
     [propName: string]: any;
+}
+interface StationTransfer {
+    type: string;
+    tick_direc: 'r' | 'l';
+    paid_area: boolean;
+    osi_names: Name[];
+    info: InterchangeInfo[][];
 }
 export interface StationInfoDict {
     [index: string]: StationInfo;
@@ -87,6 +97,7 @@ export function test(svgEl) {
             'font-family': elStyle.getPropertyValue('font-family'), 
             'fill': elStyle.getPropertyValue('fill'), 
             'alignment-baseline': elStyle.getPropertyValue('alignment-baseline'), 
+            'dominant-baseline': elStyle.getPropertyValue('dominant-baseline'),
             'text-anchor': elStyle.getPropertyValue('text-anchor')
         }).removeAttr('class');
     });
@@ -144,10 +155,10 @@ export function joinIntName(names: Name, dy1, dy2): [JQuery<HTMLElement>, number
     var res = $('<text>').addClass('rmg-name__zh IntName').text(nameZH[0]);
     for (let i=1; i<nameZH.length; i++) {
         res = res.append(
-            $('<tspan>', {'x':0, 'dy':dy1}).text(nameZH[i])
+            $('<tspan>', {'x':0, 'dy':dy1, 'dominant-baseline': 'central'}).text(nameZH[i])
         );
     }
-    var btwGap = (nameZH.length == 1) ? 9 : dy2;
+    var btwGap = (nameZH.length == 1) ? 9 : 9;
     res = res.append(
         $('<tspan>', {
             'x':0, 'dy':btwGap, 'class': 'rmg-name__en IntName'
@@ -163,8 +174,70 @@ export function joinIntName(names: Name, dy1, dy2): [JQuery<HTMLElement>, number
     return [res, nameZH.length, nameEN.length];
 }
 
+export function getIntBoxGZ(intInfo: InterchangeInfo, state) {
+    let bg = intInfo[IntInfoTag.colour];
+    let fg = intInfo[IntInfoTag.fg];
+    let names = [
+        intInfo[IntInfoTag.nameZH], 
+        intInfo[IntInfoTag.nameEN]
+    ];
+    let nameZHs = names[0].match(/[\d]+|[\D]+/g) || [''];
+    let intNameSplitOk = false;
+    if (nameZHs.length == 2) {
+        if (!isNaN(Number(nameZHs[0])) && isNaN(Number(nameZHs[1]))) {
+            intNameSplitOk = true;
+        }
+    }
+    let boxEl = $('<g>')
+        .append(
+            $('<use>', { 
+                'xlink:href': '#intbox_gz', 
+                fill: state===-1 ? '#aaa' : bg
+            })
+        )
+        .append(
+            $('<text>', { y: 8.5, class: 'rmg-name__zh rmg-name__gzmtr--int' })
+                .append($('<tspan>', { 'font-size':'16px', 'dominant-baseline': 'central' }).text(intNameSplitOk ? nameZHs[0] : ''))
+                .append($('<tspan>', { dy:-1, 'dominant-baseline': 'central' }).text(intNameSplitOk ? nameZHs[1] : nameZHs.join('')))
+        )
+        .append(
+            $('<text>', { 
+                y: 19.5, 
+                class: 'rmg-name__en'
+            })
+                .addClass(names[1].length > 10 ? 'rmg-name__gzmtr--int-small' : 'rmg-name__gzmtr--int')
+                .text(names[1])
+        );
+    if (fg === '#fff' || state === -1) {
+        $(boxEl).find('text').addClass('rmg-name__gzmtr--white-fg');
+    }
+
+    return boxEl;
+}
+
 export function getRandomId() {
     return Math.floor(Math.random() * Math.pow(36, 4)).toString(36).padStart(4, '0');
+}
+
+export function getNameFromId(stnId: ID) {
+    let numsZH = [
+        '癸', '甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', 
+        '日', '月', '金', '木', '水', '火', '土', 
+        '竹', '戈', '十', '大', '中', '一', '弓', 
+        '人', '心', '手', '口', 
+        '尸', '廿', '山', '女', '田', '難', '卜', '重'
+    ];
+    let numsEN = [
+        'Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 
+        'Alfa', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf',
+        'Hotel', 'India', 'Juliett', 'Kilo', 'Lima', 'Mike', 'November', 
+        'Oscar', 'Papa', 'Quebec', 'Romeo', 
+        'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu'
+    ];
+    return [
+        stnId.split('').map(char => numsZH[parseInt(char, 36)]).join(''), 
+        stnId.split('').map(char => numsEN[parseInt(char, 36)]).join(' ')
+    ];
 }
 
 export function describeParams(param: RMGParam) {
@@ -220,31 +293,31 @@ export function updateParam() {
     // Version 0.12
     for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
         // if (['linestart', 'lineend'].includes(stnId)) {continue;}
-        if ('transfer' in stnInfo) {
-            delete param.stn_list[stnId].interchange;
-            switch (stnInfo.change_type) {
-                case 'int2':
-                    param.stn_list[stnId].interchange = [[stnInfo.transfer[1]]];
-                    break;
-                case 'int3_l':
-                case 'int3_r':
-                    param.stn_list[stnId].interchange = [stnInfo.transfer.slice(1,3)];
-                    break;
-                case 'osi11_pl':
-                case 'osi11_pr':
-                case 'osi11_ul':
-                case 'osi11_ur':
-                    param.stn_list[stnId].interchange = [[], stnInfo.transfer.slice(0,2)];
-                    break;
-                case 'osi12_pl':
-                case 'osi12_pr':
-                case 'osi12_ul':
-                case 'osi12_ur':
-                    param.stn_list[stnId].interchange = [[], stnInfo.transfer];
-                    break;
-            }
-        }
-        delete param.stn_list[stnId].transfer;
+        // if ('transfer' in stnInfo) {
+        //     delete param.stn_list[stnId].interchange;
+        //     switch (stnInfo.change_type) {
+        //         case 'int2':
+        //             param.stn_list[stnId].interchange = [[stnInfo.transfer[1]]];
+        //             break;
+        //         case 'int3_l':
+        //         case 'int3_r':
+        //             param.stn_list[stnId].interchange = [stnInfo.transfer.slice(1,3)];
+        //             break;
+        //         case 'osi11_pl':
+        //         case 'osi11_pr':
+        //         case 'osi11_ul':
+        //         case 'osi11_ur':
+        //             param.stn_list[stnId].interchange = [[], stnInfo.transfer.slice(0,2)];
+        //             break;
+        //         case 'osi12_pl':
+        //         case 'osi12_pr':
+        //         case 'osi12_ul':
+        //         case 'osi12_ur':
+        //             param.stn_list[stnId].interchange = [[], stnInfo.transfer];
+        //             break;
+        //     }
+        // }
+        // delete param.stn_list[stnId].transfer;
         
         if (!('branch' in stnInfo)) {
             param.stn_list[stnId].branch = { left:[], right:[] };
@@ -334,6 +407,19 @@ export function updateParam() {
     }
     if (!('direction_gz_y' in param)) {
         param.direction_gz_y = 70;
+    }
+
+    // Version 2.6
+    for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
+        if (!('transfer' in param)) {
+            param.stn_list[stnId].transfer = {
+                type: stnInfo.change_type.split('_')[0], 
+                tick_direc: (stnInfo.change_type === 'none' || stnInfo.change_type === 'int2') ? 'r' : stnInfo.change_type.split('_')[1].split('').slice().reverse()[0], 
+                paid_area: (stnInfo.change_type.indexOf('osi')!==-1) ? stnInfo.change_type.split('_')[1][0]==='p' : true, 
+                osi_names: (stnInfo.change_type.indexOf('osi')!==-1) ? [stnInfo.interchange[1][0]] : [], 
+                info: (stnInfo.interchange.length === 2) ? [stnInfo.interchange[0], stnInfo.interchange[1].slice(1)] : stnInfo.interchange
+            }
+        }
     }
     putParams(param);
 }

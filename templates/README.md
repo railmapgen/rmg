@@ -18,3 +18,9 @@
     "Line 1" // Name in Latin characters
 ]
 ```
+
+`stn_list` defines a directed acyclic graph (DAG) from a pseudo-station `linestart` to another pseudo-station `lineend`. 
+
+## Disclaimer
+
+The templates are for designing new your own railway and for debugging. It does not necessarily reflect the actual situation. 

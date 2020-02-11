@@ -8,6 +8,14 @@
         }
     },
     {
+        "id": "chengdu", 
+        "country": "CN", 
+        "name": {
+            "en": "Chengdu", 
+            "zh": "成都"
+		}
+    },
+    {
         "id": "chongqing", 
         "country": "CN", 
         "name": {
@@ -166,6 +174,14 @@
             "en": "Toronto", 
             "zh-Hans": "多伦多",
             "zh-Hant": "多倫多"
+		}
+    },
+    {
+        "id": "xian", 
+        "country": "CN", 
+        "name": {
+            "en": "Xi'an", 
+            "zh": "西安"
 		}
     }
 ]

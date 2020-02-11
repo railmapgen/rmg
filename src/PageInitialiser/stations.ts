@@ -248,7 +248,7 @@ export function common() {
         changeTypeSelect.layout();
         intCitySelects.forEach(select => select.layout());
         intLineSelects.forEach(select => select.layout());
-        intNameFields.flat().forEach(textfield => textfield.layout());
+        [].concat(...intNameFields).forEach(textfield => textfield.layout());
         stnOSINameFields.forEach(textfield => textfield.layout());
     };
     const focusBranch = () => {
@@ -375,7 +375,7 @@ export function common() {
         } else {
             let cIdx = $('#int_city__selection.mdc-list').eq(0).find(`[data-value="${lineThemeCity}"]`).index();
             intCitySelects.forEach(select => select.selectedIndex = cIdx);
-            intNameFields.flat().forEach(textfield => textfield.value = '');
+            [].concat(...intNameFields).forEach(textfield => textfield.value = '');
         }
 
         if (['none', 'int2'].includes(stnInfo.change_type.split('_')[0])) {
@@ -477,6 +477,7 @@ export function common() {
             _showAllFields(0, true);
             _showAllFields(1, true);
             _showAllFields(2, true);
+            $('#osi_name_zh, #osi_name_en, #paid_area').show();
             let stnInfo = getParams().stn_list[$('#stn_transfer_diag').attr('for')];
             if (stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') {
                 $('#tick_direc').hide();

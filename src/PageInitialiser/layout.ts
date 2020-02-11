@@ -3,6 +3,7 @@ import { RMGLineGZ } from '../Line/LineGZ';
 import { MDCTextField } from '@material/textfield';
 import { MDCSlider } from '@material/slider';
 import { RMGLine } from '../Line/Line';
+import { MDCRipple } from '@material/ripple';
 
 declare global {
     interface Window {
@@ -19,6 +20,7 @@ export function common() {
     const [branchSpacingSlider, yPcSlider, paddingSlider] = 
         ['#branch_spacing', '#y_pc', '#padding'].map(selector => MDCSlider.attachTo($(selector)[0]));
     window.sliders.push(branchSpacingSlider, yPcSlider, paddingSlider);
+    $('#panel_layout .mdc-list li').map((_,el) => new MDCRipple(el));
 
     // init values
     Promise.resolve(getParams())
@@ -37,16 +39,16 @@ export function common() {
     ($(svgWidthTextField.root_).find('input') as JQuery<HTMLInputElement>)
         .on('input', event => window.myLine.svgWidth = Number(event.target.value));
 
-    branchSpacingSlider.listen('MDCSlider:input', event => {
-        window.myLine.branchSpacing = branchSpacingSlider.value;
+    branchSpacingSlider.listen('MDCSlider:input', () => {
+        window.myLine.branchSpacing = Number(branchSpacingSlider.value);
     });
 
-    yPcSlider.listen('MDCSlider:input', event => {
+    yPcSlider.listen('MDCSlider:input', () => {
         window.myLine.yPc = Number(yPcSlider.value);
     });
 
-    paddingSlider.listen('MDCSlider:input', event => {
-        window.myLine.padding = paddingSlider.value;
+    paddingSlider.listen('MDCSlider:input', () => {
+        window.myLine.padding = Number(paddingSlider.value);
     });    
 }
 
@@ -65,11 +67,11 @@ export function gzmtr() {
         });
     
     // add event listeners
-    directionGZXSlider.listen('MDCSlider:input', event => {
+    directionGZXSlider.listen('MDCSlider:input', () => {
         (<RMGLineGZ>window.myLine).directionGZX = Number(directionGZXSlider.value);
     });
 
-    directionGZYSlider.listen('MDCSlider:input', event => {
+    directionGZYSlider.listen('MDCSlider:input', () => {
         (<RMGLineGZ>window.myLine).directionGZY = Number(directionGZYSlider.value);
     });
 }

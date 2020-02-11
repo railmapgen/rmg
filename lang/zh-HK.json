@@ -27,7 +27,7 @@
     "File.Style": "風格",
     "File.Style.Title": "選擇風格", 
     "File.Style.MTR": "港鐵", 
-    "File.Style.GZMTR": "廣州地鐵 (Beta)", 
+    "File.Style.GZMTR": "廣州地鐵",
     "File.Style.SHMETRO": "上海地铁 (Beta)",
 
     "File.Lang": "語言/Language",
@@ -140,5 +140,7 @@
     "Editor.City": "城市", 
     "Editor.Line": "路線",
     "Editor.Name.ZH": "名稱（漢字）",
-    "Editor.Name.EN": "名稱（拉丁字母）"
+    "Editor.Name.EN": "名稱（拉丁字母）",
+    "Editor.OSIName.ZH": "車站名稱（漢字）", 
+    "Editor.OSIName.EN": "車站名稱（拉丁字母）"
 }
