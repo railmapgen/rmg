@@ -29,6 +29,7 @@ switch (requestLang.toLowerCase()) {
 switch (window.urlParams.get('style')) {
     case 'mtr':
     case 'gzmtr':
+    case 'shmetro':
         break;
     default: window.urlParams.set('style', 'mtr');
 }
