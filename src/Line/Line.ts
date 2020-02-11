@@ -10,7 +10,7 @@ interface StationDict {
 export class RMGLine {
     protected _svgHeight: number;
     protected _svgWidth: number;
-    protected _svgDestWidth: number;
+    // protected _svgDestWidth: number; // new try: avoid storing duplicated parameters
     private _showOuter: boolean;
     themeCity; themeLine; _themeColour; _fgColour;
     private _yPc: number;
@@ -20,17 +20,17 @@ export class RMGLine {
     private _branchSpacing: number;
     private _txtFlip: boolean;
     public stations = {} as StationDict;
-    protected _currentStnId;
-    protected _direction;
+    protected _currentStnId: ID;
+    protected _direction: 'l' | 'r';
     protected _platformNum: string;
     protected _charForm: string;
     protected _lineNames: Name;
     private _destLegacy: boolean; 
 
     constructor (param: RMGParam) {
-        this._svgHeight = param['svg_height'];
-        this._svgWidth = param['svg_width'];
-        this._svgDestWidth = param['svg_dest_width'];
+        this._svgHeight = param.svg_height;
+        this._svgWidth = param.svg_width;
+        // this._svgDestWidth = param.svg_dest_width;
         this._showOuter = param['show_outer'];
 
         [this.themeCity, this.themeLine, this._themeColour, this._fgColour] = param.theme;
@@ -103,9 +103,13 @@ export class RMGLine {
         }
     }
 
+    /**
+     * Width (in pixels) of `svg#destination`. 
+     */
+    get svgDestWidth() {return getParams().svg_dest_width;}
     set svgDestWidth(val: number) {
         if (isNaN(val) || val <= 0) {return;}
-        this._svgDestWidth = val;
+        // this._svgDestWidth = val;
         setParams('svg_dest_width', val);
 
         this.drawSVGFrame();
@@ -114,6 +118,9 @@ export class RMGLine {
         this.loadFonts();
     }
 
+    /**
+     * Setter of width of `svg#railmap`. 
+     */
     set svgWidth(val: number) {
         if (isNaN(val) || val <= 0) {return;}
         this._svgWidth = val;
@@ -184,7 +191,7 @@ export class RMGLine {
         this.updateStnNameBg();
     }
 
-    set txtFlip(val) {
+    set txtFlip(val: boolean) {
         this._txtFlip = val;
         setParams('txt_flip', val);
 
@@ -207,13 +214,16 @@ export class RMGLine {
 
         var param = getParams();
         param.theme[2] = hexs[0];
-        param.theme[3] = hexs[1];
+        param.theme[3] = hexs[1] as '#fff' | '#000';
         putParams(param);
 
         this.fillThemeColour();
     }
 
-    set direction(val) {
+    /**
+     * Setter of train direction. 
+     */
+    set direction(val: 'l' | 'r') {
         this._direction = val;
         setParams('direction', val);
 
@@ -264,6 +274,9 @@ export class RMGLine {
         this.loadFonts();
     }
 
+    /**
+     * Setter of legacy style of destination information panel. 
+     */
     set destLegacy(val: boolean) {
         this._destLegacy = val;
         setParams('dest_legacy', val);
@@ -272,7 +285,10 @@ export class RMGLine {
         this.loadFonts();
     }
 
-    set currentStnId(val: string) {
+    /**
+     * Setter of current station. 
+     */
+    set currentStnId(val: ID) {
         this._currentStnId = val;
         setParams('current_stn_idx', val);
 
@@ -395,10 +411,6 @@ export class RMGLine {
         return res.slice(1, res.length-1);
     }
 
-    // get y() {
-    //     // return this._yPc * this._svgHeight / 100; 
-    //     return 0;
-    // }
     get stripY() {return this._stripPc * this._svgHeight / 100;}
     get turningRadius() {return this._branchSpacing/2 * (Math.sqrt(2) / (Math.sqrt(2)-1));}
 
@@ -607,11 +619,14 @@ export class RMGLine {
             height: this._svgHeight
         });
         $('#destination, #dest_outer').attr({
-            width: this._svgDestWidth, 
+            width: this.svgDestWidth, 
             height: this._svgHeight
         });
     }
 
+    /**
+     * Show border of both `svg`s, but the stroke colour of the borders are currently set as `none`. 
+     */
     showFrameOuter() {
         // var outerColour = this._showOuter ? 'black' : 'none';
         // $('#outer, #dest_outer').attr('stroke', outerColour);
@@ -739,7 +754,7 @@ export class RMGLine {
     drawStrip() {
         // $('#strip, #dest_strip').attr('d', `M 0,${this.stripY} H ${this._svgWidth}`)
         $('#strip').attr('d', `M 0,${this.stripY} H ${this._svgWidth}`);
-        $('#dest_strip').attr('d', `M 0,${this.stripY} H ${this._svgDestWidth}`);
+        $('#dest_strip').attr('d', `M 0,${this.stripY} H ${this.svgDestWidth}`);
     }
 
     fillThemeColour() {
@@ -770,7 +785,7 @@ export class RMGLine {
         var bcr = $('#dest_name > g:last-child')[0].getBoundingClientRect();
         var flagLength = 160 + 150 + bcr.width + 45 + 50;
         var isLeft = (this._direction == 'l') ? 1 : -1;
-        var arrowX = (this._svgDestWidth - isLeft * flagLength) / 2;
+        var arrowX = (this.svgDestWidth - isLeft * flagLength) / 2;
         var arrowRotate = 90 * (1 - isLeft);
         var platformNumX = arrowX + isLeft * (160 + 50 + 75);
         var destNameX = platformNumX + isLeft * (75 + 45);
@@ -1507,7 +1522,7 @@ export class RMGLine {
         $('#stn_icons, #line_main, #line_pass').empty();
     }
 
-    static initSVG(line) {
+    static initSVG(line: RMGLine) {
         line.drawSVGFrame();
         line.showFrameOuter();
         line.drawStns();
@@ -1519,9 +1534,12 @@ export class RMGLine {
         line.updateStnNameBg();
     }
 
+    /**
+     * Getter of all branches (支線段) of the line. The first branch must be the main line. 
+     */
     get branches() {
         var stack = ['linestart'];
-        var branches = [[]];
+        var branches: ID[][] = [[]];
         var branchCount = 0;
         
         while (stack.length) {

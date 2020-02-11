@@ -1,12 +1,7 @@
 import { joinIntName } from '../utils';
-import { ID, Name, BranchInfo, StationInfo } from '../utils';
+import { ID, Name, BranchInfo, StationInfo, IntInfoTag, InterchangeInfo } from '../utils';
 
-export enum IntInfoTag {
-    city, line, colour, fg, nameZH, nameEN
-};
-export type InterchangeInfo = {
-    [T in IntInfoTag]: string;
-};
+
 
 class RMGStation {
     STN_NAME_Y = -10.5;

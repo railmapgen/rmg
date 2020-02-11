@@ -258,7 +258,7 @@ export function common() {
 
     const initBranch = (stnInfo: StationInfo) => {
         // through type
-        ['left', 'right'].forEach(direc => {
+        ['left', 'right'].forEach((direc: 'left' | 'right') => {
             let throughType = stnInfo.branch[direc][0];
             if (throughType) {
                 throughSelects[DirectionLong[direc]].value = throughType;

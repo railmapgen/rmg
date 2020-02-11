@@ -25,8 +25,8 @@ export function common() {
     // init values
     Promise.resolve(getParams())
         .then(param => {
-            svgDestWidthTextField.value = param.svg_dest_width;
-            svgWidthTextField.value = param.svg_width;
+            svgDestWidthTextField.value = param.svg_dest_width.toString();
+            svgWidthTextField.value = param.svg_width.toString();
             yPcSlider.value = param.y_pc;
             branchSpacingSlider.value = param.branch_spacing;
             paddingSlider.value = param.padding;
