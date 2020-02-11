@@ -277,47 +277,9 @@ export class RMGLineSH extends RMGLine {
     }
 
     // draw the line in railmap
-    // rewrite this to add id to element
     drawLine() {
         $('.rmg-line').removeClass('rmg-line__mtr').addClass('rmg-line__shmetro');
-
-        this.branches.map(branch => {
-            var lineMainStns = branch.filter(stnId => this.stations[stnId].state >= 0);
-            var linePassStns = branch.filter(stnId => this.stations[stnId].state <= 0);
-
-            if (lineMainStns.length === 1) {
-                linePassStns = branch;
-            }
-
-            if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length == 0 && lineMainStns.length) {
-                // if two set disjoint
-                if (linePassStns[0] === branch[0]) {
-                    // -1 -1 1 1
-                    linePassStns.push(lineMainStns[0]);
-                } else if (lineMainStns[0] === branch[0] && lineMainStns[lineMainStns.length - 1] === branch[branch.length - 1] && linePassStns.length) {
-                    linePassStns = branch;
-                    lineMainStns = [];
-                } else {
-                    // 1 1 -1 -1
-                    linePassStns.unshift(lineMainStns[lineMainStns.length - 1]);
-                }
-            }
-
-            // draw the main line
-            let path = this._linePath(lineMainStns, 'main')
-            if (path || path != '') {
-                $('#line_main').append($('<path>', { id: 'line_main_path', d: path }));
-            }
-
-            // draw the pass line
-            path = this._linePath(linePassStns, 'pass')
-            if (path || path != '') {
-                $('#line_pass').append($('<path>', { id: 'line_pass_path', d: path }));
-            }
-        });
-
-        $('#line_main').html($('#line_main').html());
-        $('#line_pass').html($('#line_pass').html());
+        super.drawLine()
     }
 
     fillThemeColour() {
@@ -335,8 +297,8 @@ export class RMGLineSH extends RMGLine {
         $('path#int2_sh_pass').attr('stroke', '#aaa');
 
         // the railmap line
-        $('path#line_main_path').attr('fill', this._themeColour)
-        $('path#line_pass_path').attr('fill', '#aaa')
+        $('#line_main').children().attr('fill', this._themeColour)
+        $('#line_pass').children().attr('fill', '#aaa')
 
         // the last decoration line
         $(`#line_shmetro_use`).attr('fill', this._themeColour)
