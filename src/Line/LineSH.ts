@@ -176,7 +176,7 @@ export class RMGLineSH extends RMGLine {
                 path['start'] = [x, y];
                 return
             }
-            if (y === this.y) {
+            if (y === 0) {
                 // merge back to main line
                 if (y != prevY) {
                     path['bifurcate'] = [prevX, prevY]
