@@ -121,10 +121,15 @@ export class RMGLineSH extends RMGLine {
         });
 
         // the last decoration line
-        let direction = this._direction == 'l' ? 'left' : 'right'
+        let path = ''
+        if (this._direction == 'l') {
+            path = `M30,10 H ${this._svgDestWidth - 20} V 20 H 20 Z`
+        } else {
+            path = `M20,10 H ${this._svgDestWidth - 30} l 10,10 H 20 Z`
+        }
         $('#line_shmetro_use').attr({
-            'xlink:href': `#line_shmetro_${direction}`,
             transform: `translate(0,220)`,
+            d: path,
         })
     }
 
@@ -354,8 +359,7 @@ export class RMGLineSH extends RMGLine {
         $('path#line_pass_path').attr('fill', '#aaa')
 
         // the last decoration line
-        let direction = this._direction == 'l' ? 'left' : 'right'
-        $(`#line_shmetro_${direction}`).attr('fill', this._themeColour)
+        $(`#line_shmetro_use`).attr('fill', this._themeColour)
 
         if (this._lineNames[0].match(/(\d*)\w+/)) {
             // the line starts with number
