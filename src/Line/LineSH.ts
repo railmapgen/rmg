@@ -94,7 +94,10 @@ export class RMGLineSH extends RMGLine {
             })
             $('#station_info_shmetro > #line_number > text')
                 .text(lineNumber[0])
-                .attr('transform', `translate(${lineNameX - 100},170)`)
+                .attr({
+                    'transform': `translate(${lineNameX - 70},170)`,
+                    'fill': this._fgColour,
+                })
         } else {
             lineNameX -= 280;
             $('#station_info_shmetro > #line_number > rect').attr({

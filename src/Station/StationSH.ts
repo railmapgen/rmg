@@ -34,7 +34,7 @@ class RMGStationSH extends RMGStation {
     get nameHTML() {
         let [dx, dy] = this._dxdy
         return $('<g>', {
-            'transform': `translate(${this.x - dx},${this.y + dy})rotate(-60)`,
+            'transform': `translate(${this.x - dx},${this.y + dy})rotate(-50)`,
             'text-anchor': this._tickRotation === 0 ? 'start' : 'end',
             // class: `Name ${this.nameClass}`
             class: `Name Future`  // todo: fix this
@@ -140,9 +140,11 @@ class IntStationSH extends RMGStationSH {
             }
             // interchange line name
             var lineNameElem = $('<text>', {
-                // Todo: fix this hard-coded center(6) position
-                transform: `translate(${dx + 6 + index * 25},8)`,
+                // Todo: fix this hard-coded center(10) position
+                transform: `translate(${dx + 10 + index * 25},8)`,
                 class: 'rmg-name__zh rmg-name__shmetro--line_name',
+                'text-anchor': 'middle',
+                fill: stn[IntInfoTag.fg],
             }).text(lineName)
 
             lineElems.push(lineIconElem, lineNameElem)
@@ -151,7 +153,7 @@ class IntStationSH extends RMGStationSH {
         // rotate the station info now
         // other wise the bcr will be inaccurate due to the rotation
         let stnInfoElem = stnNameElem.parent();
-        stnInfoElem.attr('transform', `${stnInfoElem.attr('transform')}rotate(-45)`)
+        stnInfoElem.attr('transform', `${stnInfoElem.attr('transform')}rotate(-50)`)
 
         return lineElems;
     }
