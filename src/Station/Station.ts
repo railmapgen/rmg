@@ -1,12 +1,7 @@
 import { joinIntName } from '../utils';
-import { ID, Name, BranchInfo, StationInfo } from '../utils';
+import { ID, Name, BranchInfo, StationInfo, IntInfoTag, InterchangeInfo } from '../utils';
 
-export enum IntInfoTag {
-    city, line, colour, fg, nameZH, nameEN
-};
-export type InterchangeInfo = {
-    [T in IntInfoTag]: string;
-};
+
 
 class RMGStation {
     STN_NAME_Y = -10.5;
@@ -272,7 +267,7 @@ class OSI11Station extends Int2Station {
         super(id, data);
 
         this._osiNames = data.interchange[1][0];
-        this._osiType = data.change_type.substring(6,7); // u(npaid) or p(aid);
+        this._osiType = data.change_type.substring(6,7) as 'p' | 'u'; // u(npaid) or p(aid);
     }
     
     get osiClass() {return this._osiType == 'u' ? 'rmg-stn__mtr--unpaid-osi' : 'rmg-stn__mtr--paid-osi';}
@@ -331,7 +326,7 @@ class OSI12Station extends Int3Station {
         super(id, data);
 
         this._osiNames = data.interchange[1][0];
-        this._osiType = data.change_type.split('_').reverse()[0][0];
+        this._osiType = data.change_type.split('_').reverse()[0][0] as 'p' | 'u';
     }
 
     get osiClass() {return this._osiType == 'u' ? 'rmg-stn__mtr--unpaid-osi' : 'rmg-stn__mtr--paid-osi';}

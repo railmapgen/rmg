@@ -70,6 +70,8 @@ By now, your are able to test your new style by querying `?style=mtrsz` in your 
 </li>
 ```
 
+## Style-specific parameters
+
 ## Old description
 
 The core modules of this project consist of 2 parts - drawing SVG and providing control panels for manipulating the line and stations. 
