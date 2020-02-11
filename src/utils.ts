@@ -18,7 +18,7 @@ export interface StationInfo {
      * Station number. (GZMTR specific)
      */
     num?: string;
-    branch: BranchInfo;
+    branch?: BranchInfo;
     /**
      * Array of parents' IDs. (Will be strongly typed.)
      */
@@ -27,8 +27,15 @@ export interface StationInfo {
      * Array of children's IDs. (Will be strongly typed.)
      */
     children: ID[];
+    /**
+     * Detail of interchanges. 
+     */
     transfer?: StationTransfer;
-    [propName: string]: any;
+    /**
+     * Detail of interchanges (legacy). 
+     */
+    interchange?: any;
+    change_type?: string;
 }
 export enum IntInfoTag {
     city, line, colour, fg, nameZH, nameEN
@@ -147,7 +154,7 @@ export function getParams() {
     return JSON.parse(localStorage.rmgParam) as RMGParam;
 }
 
-export function setParams(key: string, data: any) {
+export function setParams(key: Extract<keyof RMGParam, string>, data: any) {
     let param = getParams();
     param[key] = data;
     putParams(param);
@@ -503,8 +510,8 @@ export function updateParam() {
     for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
         if (!('transfer' in param)) {
             param.stn_list[stnId].transfer = {
-                type: stnInfo.change_type.split('_')[0], 
-                tick_direc: (stnInfo.change_type === 'none' || stnInfo.change_type === 'int2') ? 'r' : stnInfo.change_type.split('_')[1].split('').slice().reverse()[0], 
+                type: stnInfo.change_type.split('_')[0] as 'none' | 'int2' | 'int3' | 'osi11' | 'osi12' | 'osi22', 
+                tick_direc: (stnInfo.change_type === 'none' || stnInfo.change_type === 'int2') ? 'r' : stnInfo.change_type.split('_')[1].split('').slice().reverse()[0] as 'l' | 'r', 
                 paid_area: (stnInfo.change_type.indexOf('osi')!==-1) ? stnInfo.change_type.split('_')[1][0]==='p' : true, 
                 osi_names: (stnInfo.change_type.indexOf('osi')!==-1) ? [stnInfo.interchange[1][0]] : [], 
                 info: (stnInfo.interchange.length === 2) ? [stnInfo.interchange[0], stnInfo.interchange[1].slice(1)] : stnInfo.interchange

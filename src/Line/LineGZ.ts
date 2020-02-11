@@ -284,7 +284,7 @@ class RMGLineGZ extends RMGLine {
      */
     drawSVGFrame() {
         super.drawSVGFrame();
-        $('#dest_strip_gz').attr('width', this.svgDestWidth);
+        $('#dest_strip_gz').attr('width', this._svgDestWidth);
         $('#strip_gz').attr('width', this._svgWidth);
     }
 
@@ -502,7 +502,7 @@ class RMGLineGZ extends RMGLine {
         $('#station_info_gzmtr > #big_psd text').eq(0).text(this._psdNum);
 
         $('#station_info_gzmtr #big_name').empty()
-            .attr('transform', `translate(${this.svgDestWidth/2},${100 - (this.stations[this._currentStnId].name[1].split('\\').length - 1)*20})`)
+            .attr('transform', `translate(${this._svgDestWidth/2},${100 - (this.stations[this._currentStnId].name[1].split('\\').length - 1)*20})`)
             .append(
                 $('<text>', { class:'rmg-name__zh rmg-name__gzmtr--dest' })
                     .text(this.stations[this._currentStnId].name[0])
@@ -597,7 +597,7 @@ class RMGLineGZ extends RMGLine {
             'destination'
         );
         $('#station_info_gzmtr #big_stn_num')
-            .attr('transform', `translate(${(this.svgDestWidth+bigNameDim.width)/2+55},${120 - (this.stations[this._currentStnId].name[1].split('\\').length - 1)*20})scale(1.4)`);
+            .attr('transform', `translate(${(this._svgDestWidth+bigNameDim.width)/2+55},${120 - (this.stations[this._currentStnId].name[1].split('\\').length - 1)*20})scale(1.4)`);
 
         let bigNextDim = {x:0, y:0, width:0, height:0};
         if (nextStnId.length === 1) {
@@ -625,7 +625,7 @@ class RMGLineGZ extends RMGLine {
         // var nextNameZHCount = nextNameZH.length;
 
         if (this._direction == 'l') {
-            $('#station_info_gzmtr #platform').attr('transform', `translate(${this.svgDestWidth-100},120)`);
+            $('#station_info_gzmtr #platform').attr('transform', `translate(${this._svgDestWidth-100},120)`);
             if (nextStnId.length === 1) {
                 if (nextNameZHCount <= 2) {
                     $('#station_info_gzmtr #big_next g:nth-child(2)').attr('transform', `translate(${115+35},110)`);
@@ -647,28 +647,28 @@ class RMGLineGZ extends RMGLine {
             $('#station_info_gzmtr #platform').attr('transform', `translate(100,120)`);
 
             if (nextStnId.length === 1) {
-                $('#station_info_gzmtr #big_next g:nth-child(2)').attr('transform', `translate(${this.svgDestWidth-45-bigNextDim.width},110)`);
+                $('#station_info_gzmtr #big_next g:nth-child(2)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width},110)`);
 
                 if (nextNameZHCount <= 2) {
-                    $('#station_info_gzmtr #big_next g:first-child').attr('transform', `translate(${this.svgDestWidth-45-bigNextDim.width-70},110)`);
-                    $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this.svgDestWidth-45-bigNextDim.width-70-35+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
+                    $('#station_info_gzmtr #big_next g:first-child').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-70},110)`);
+                    $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this._svgDestWidth-45-bigNextDim.width-70-35+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
                 } else {
-                    $('#station_info_gzmtr #big_next g:first-child').attr('transform', `translate(${this.svgDestWidth-45-bigNextDim.width-35*1.5},110)`);
-                    $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this.svgDestWidth-45-bigNextDim.width-35*2.5+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
+                    $('#station_info_gzmtr #big_next g:first-child').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-35*1.5},110)`);
+                    $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this._svgDestWidth-45-bigNextDim.width-35*2.5+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
                 }
             } else {
-                $('#station_info_gzmtr #big_next_2 g:nth-child(2)').attr('transform', `translate(${this.svgDestWidth-45-bigNextDim.width},80)`);
-                $('#station_info_gzmtr #big_next_2 g:nth-child(4)').attr('transform', `translate(${this.svgDestWidth-45-bigNextDim.width},190)`);
+                $('#station_info_gzmtr #big_next_2 g:nth-child(2)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width},80)`);
+                $('#station_info_gzmtr #big_next_2 g:nth-child(4)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width},190)`);
 
-                $('#station_info_gzmtr #big_next_2 g:first-child').attr('transform', `translate(${this.svgDestWidth-45-bigNextDim.width-41},80)`);
-                $('#station_info_gzmtr #big_next_2 g:nth-child(3)').attr('transform', `translate(${this.svgDestWidth-45-bigNextDim.width-41},190)`);
+                $('#station_info_gzmtr #big_next_2 g:first-child').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-41},80)`);
+                $('#station_info_gzmtr #big_next_2 g:nth-child(3)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-41},190)`);
 
-                $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this.svgDestWidth-45-bigNextDim.width-41-27+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
+                $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this._svgDestWidth-45-bigNextDim.width-41-27+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
             }
         }
 
         $('#station_info_gzmtr #indicator_light').attr({
-            x:this.svgDestWidth/2, y:270, 
+            x:this._svgDestWidth/2, y:270, 
             'xlink:href': '#indicator_' + this._infoPanelType
         });
         
@@ -676,7 +676,7 @@ class RMGLineGZ extends RMGLine {
     }
 
     drawPSD() {
-        $('#station_info_gzmtr #big_psd').attr('transform', `translate(${this.svgDestWidth/2+80},${
+        $('#station_info_gzmtr #big_psd').attr('transform', `translate(${this._svgDestWidth/2+80},${
             (type => {
                 switch (type) {
                     case 'gz3': return 218;

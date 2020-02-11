@@ -10,7 +10,7 @@ interface StationDict {
 export class RMGLine {
     protected _svgHeight: number;
     protected _svgWidth: number;
-    // protected _svgDestWidth: number; // new try: avoid storing duplicated parameters
+    protected _svgDestWidth: number;
     private _showOuter: boolean;
     themeCity; themeLine; _themeColour; _fgColour;
     private _yPc: number;
@@ -30,7 +30,7 @@ export class RMGLine {
     constructor (param: RMGParam) {
         this._svgHeight = param.svg_height;
         this._svgWidth = param.svg_width;
-        // this._svgDestWidth = param.svg_dest_width;
+        this._svgDestWidth = param.svg_dest_width;
         this._showOuter = param['show_outer'];
 
         [this.themeCity, this.themeLine, this._themeColour, this._fgColour] = param.theme;
@@ -106,10 +106,10 @@ export class RMGLine {
     /**
      * Width (in pixels) of `svg#destination`. 
      */
-    get svgDestWidth() {return getParams().svg_dest_width;}
+    // get svgDestWidth() {return getParams().svg_dest_width;}
     set svgDestWidth(val: number) {
         if (isNaN(val) || val <= 0) {return;}
-        // this._svgDestWidth = val;
+        this._svgDestWidth = val;
         setParams('svg_dest_width', val);
 
         this.drawSVGFrame();
@@ -619,7 +619,7 @@ export class RMGLine {
             height: this._svgHeight
         });
         $('#destination, #dest_outer').attr({
-            width: this.svgDestWidth, 
+            width: this._svgDestWidth, 
             height: this._svgHeight
         });
     }
@@ -754,7 +754,7 @@ export class RMGLine {
     drawStrip() {
         // $('#strip, #dest_strip').attr('d', `M 0,${this.stripY} H ${this._svgWidth}`)
         $('#strip').attr('d', `M 0,${this.stripY} H ${this._svgWidth}`);
-        $('#dest_strip').attr('d', `M 0,${this.stripY} H ${this.svgDestWidth}`);
+        $('#dest_strip').attr('d', `M 0,${this.stripY} H ${this._svgDestWidth}`);
     }
 
     fillThemeColour() {
@@ -785,7 +785,7 @@ export class RMGLine {
         var bcr = $('#dest_name > g:last-child')[0].getBoundingClientRect();
         var flagLength = 160 + 150 + bcr.width + 45 + 50;
         var isLeft = (this._direction == 'l') ? 1 : -1;
-        var arrowX = (this.svgDestWidth - isLeft * flagLength) / 2;
+        var arrowX = (this._svgDestWidth - isLeft * flagLength) / 2;
         var arrowRotate = 90 * (1 - isLeft);
         var platformNumX = arrowX + isLeft * (160 + 50 + 75);
         var destNameX = platformNumX + isLeft * (75 + 45);
