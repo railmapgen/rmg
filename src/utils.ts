@@ -1,52 +1,142 @@
-import { IntInfoTag, InterchangeInfo } from "./Station/Station";
-
 export type ID = string;
 export interface BranchInfo {
-    left: [string, ID] | [], 
-    right: [string, ID] | []
+    left: ['through' | 'nonthrough', ID] | [], 
+    right: ['through' | 'nonthrough', ID] | []
 }
+/**
+ * Array of name `string`s. The first element is in Chinese characters and the second element is in Latin characters. 
+ */
 export type Name = [string, string];
 export enum DirectionLong {left, right};
 export enum NeighbourPl {parents, children};
 export interface StationInfo {
+    /**
+     * Station name in two languages. 
+     */
+    name: Name;
+    /**
+     * Station number. (GZMTR specific)
+     */
+    num?: string;
     branch: BranchInfo;
+    /**
+     * Array of parents' IDs. (Will be strongly typed.)
+     */
     parents: ID[];
+    /**
+     * Array of children's IDs. (Will be strongly typed.)
+     */
     children: ID[];
     interchange?: any;
     transfer?: StationTransfer;
     [propName: string]: any;
 }
+export enum IntInfoTag {
+    city, line, colour, fg, nameZH, nameEN
+};
+export type InterchangeInfo = {
+    [T in IntInfoTag]: string;
+};
 interface StationTransfer {
-    type: string;
+    /**
+     * Interchange type of station. 
+     */
+    type: 'none' | 'int2' | 'int3' | 'osi11' | 'osi12' | 'osi21' | 'osi22';
+    /**
+     * Direction of text/tick of interchanges. 
+     */
     tick_direc: 'r' | 'l';
+    /**
+     * Flag of paid area within out-of-station interchange. 
+     */
     paid_area: boolean;
+    /**
+     * Array of name (in two languages) of all out-of-station interchange stations. 
+     */
     osi_names: Name[];
+    /**
+     * Array of arrays of interchange info. 
+     * @index 0 - array of within-station interchange info
+     * @index remaining - arrays of out-of-station interchange info (from the nearest to the furthest station)
+     */
     info: InterchangeInfo[][];
 }
-export interface StationInfoDict {
-    [index: string]: StationInfo;
-}
 export interface RMGParam {
-    stn_list: StationInfoDict;
+    /**
+     * Width (in pixels) of `svg#railmap`.
+     */
+    svg_width: number;
+    /**
+     * Width (in pixels) of `svg#destination`.
+     */
+    svg_dest_width: number;
+    /**
+     * Height (in pixels) of `svg`s.
+     */
+    svg_height: number;
+    /**
+     * Train direction. 
+     */
+    direction: 'l' | 'r';
+    theme: [string, string, string, '#fff' | '#000'] | [string, string, string];
+    /**
+     * ID of current station. 
+     */
+    current_stn_idx: ID;
+    /**
+     * Key-value pairs of the information of each station. 
+     */
+    stn_list: {
+        [stnId: string]: StationInfo;
+    };
+    /**
+     * Flag of flipping station names. (MTR specific)
+     */
+    txt_flip?: boolean;
+    /**
+     * Legacy style of destination information panel. (MTR specific)
+     */
+    dest_legacy?: boolean;
     [propName: string]: any;
 }
 
 export interface LineEntry {
+    /**
+     * ID of line. 
+     */
     id: string;
+    /**
+     * Key-value pairs of multi-lingual names of the line. 
+     */
     name: {
         en: string;
-        [x: string]: string;
+        [lang: string]: string;
     };
+    /**
+     * Background colour (in #HEX). 
+     */
     colour: string;
-    fg?: string;
+    /**
+     * Foreground colour. Mandatory field if foreground colour is black. 
+     */
+    fg?: '#000' | '#fff';
 }
 
 export interface CityEntry {
+    /**
+     * ID of city. 
+     */
     id: string;
+    /**
+     * ISO 3166-1 alpha-2 country code. (For cities in Britain, append BS 6879 subdivision code. )
+     */
     country: string;
+    /**
+     * Key-value pairs of multi-lingual names of the city. 
+     */
     name: {
         en: string;
-        [x: string]: string;
+        [lang: string]: string;
     }
 }
 
@@ -216,11 +306,11 @@ export function getIntBoxGZ(intInfo: InterchangeInfo, state) {
     return boxEl;
 }
 
-export function getRandomId() {
+export function getRandomId(): ID {
     return Math.floor(Math.random() * Math.pow(36, 4)).toString(36).padStart(4, '0');
 }
 
-export function getNameFromId(stnId: ID) {
+export function getNameFromId(stnId: ID): Name {
     let numsZH = [
         '癸', '甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', 
         '日', '月', '金', '木', '水', '火', '土', 

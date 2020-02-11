@@ -2,8 +2,7 @@ import { getTxtBoxDim, setParams, getParams, putParams, getRandomId, DirectionLo
 import { RMGStationGZ, IntStationGZ, BranchStationGZ, OSIStationGZ } from '../Station/StationGZ';
 import { RMGLine } from './Line';
 
-import { ID, Name, StationInfo, RMGParam } from '../utils';
-import { InterchangeInfo } from '../Station/Station';
+import { ID, Name, StationInfo, RMGParam, InterchangeInfo } from '../utils';
 
 interface StationDictGZ {
     [index: string]: RMGStationGZ;
@@ -31,34 +30,46 @@ class RMGLineGZ extends RMGLine {
         if (stnInfo.children.length === 2 || stnInfo.parents.length === 2) {
             return new BranchStationGZ(stnId, stnInfo, [this.themeCity, this.themeLine, this._themeColour, this._fgColour, ...this._lineNames]);
         }
-        switch (stnInfo.change_type) {
+        switch (stnInfo.transfer.type) {
             case 'int2':
-                // return new Int2StationGZ(stnId, stnInfo);
-            case 'int3_l':
-            case 'int3_r':
+            case 'int3':
                 return new IntStationGZ(stnId, stnInfo);
-            case 'osi11_ul':
-            case 'osi11_pl':
-            case 'osi11_ur':
-            case 'osi11_pr':
-                // return new OSI11StationGZ(stnId, stnInfo);
-            case 'osi12_ul':
-            case 'osi12_pl':
-            case 'osi12_ur':
-            case 'osi12_pr':
-            case 'osi22_ul':
-            case 'osi22_pl':
-            case 'osi22_ur':
-            case 'osi22_pr':
+            case 'osi11':
+            case 'osi12':
+            case 'osi21':
+            case 'osi22':
                 return new OSIStationGZ(stnId, stnInfo);
-            case 'osi22_end_p':
-            case 'osi22_end_u':
-                if (stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') {
-                    return new OSIStationGZ(stnId, stnInfo);
-                }
             default:
                 return new RMGStationGZ(stnId, stnInfo);
         }
+        // switch (stnInfo.change_type) {
+        //     case 'int2':
+        //         // return new Int2StationGZ(stnId, stnInfo);
+        //     case 'int3_l':
+        //     case 'int3_r':
+        //         return new IntStationGZ(stnId, stnInfo);
+        //     case 'osi11_ul':
+        //     case 'osi11_pl':
+        //     case 'osi11_ur':
+        //     case 'osi11_pr':
+        //         // return new OSI11StationGZ(stnId, stnInfo);
+        //     case 'osi12_ul':
+        //     case 'osi12_pl':
+        //     case 'osi12_ur':
+        //     case 'osi12_pr':
+        //     case 'osi22_ul':
+        //     case 'osi22_pl':
+        //     case 'osi22_ur':
+        //     case 'osi22_pr':
+        //         return new OSIStationGZ(stnId, stnInfo);
+        //     case 'osi22_end_p':
+        //     case 'osi22_end_u':
+        //         if (stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') {
+        //             return new OSIStationGZ(stnId, stnInfo);
+        //         }
+        //     default:
+        //         return new RMGStationGZ(stnId, stnInfo);
+        // }
     }
 
     get lineXs() {
@@ -82,13 +93,13 @@ class RMGLineGZ extends RMGLine {
         this.loadDirection();
     }
 
-    set padding(val) {
+    set padding(val: number) {
         super.padding = val;
         this.loadLineNum();
         this.loadLineName();
     }
 
-    set branchSpacing(val) {
+    set branchSpacing(val: number) {
         super.branchSpacing = val;
         this.loadLineNum();
     }
@@ -114,18 +125,13 @@ class RMGLineGZ extends RMGLine {
         this.loadFonts();
     }
 
-    set txtFlip(val) {
-        super.txtFlip = val;
-        this.loadLineNum();
-    }
-
-    set currentStnId(val) {
+    set currentStnId(val: ID) {
         super.currentStnId = val;
         this.loadLineNum();
         this.loadDirection();
     }
 
-    set lineNum(val) {
+    set lineNum(val: string) {
         this._lineNum = val;
         setParams('line_num', val);
         this.loadLineNum();
@@ -141,13 +147,13 @@ class RMGLineGZ extends RMGLine {
         this.loadFonts();
     }
 
-    set psdNum(val) {
+    set psdNum(val: string) {
         this._psdNum = val;
         setParams('psd_num', val);
         $('.rmg-psd-num').text(val);
     }
 
-    set infoPanelType(val) {
+    set infoPanelType(val: string) {
         this._infoPanelType = val;
         setParams('info_panel_type', val);
         $('#station_info_gzmtr #indicator_light').attr('xlink:href', '#indicator_'+val);
@@ -199,7 +205,7 @@ class RMGLineGZ extends RMGLine {
     /**
      * Vertical position (in shares) of station icon. 
      */
-    _stnYShare(stnId) {
+    _stnYShare(stnId: ID) {
         if (['linestart', 'lineend'].includes(stnId)) {
             return 0;
         }
@@ -278,7 +284,7 @@ class RMGLineGZ extends RMGLine {
      */
     drawSVGFrame() {
         super.drawSVGFrame();
-        $('#dest_strip_gz').attr('width', this._svgDestWidth);
+        $('#dest_strip_gz').attr('width', this.svgDestWidth);
         $('#strip_gz').attr('width', this._svgWidth);
     }
 
@@ -367,10 +373,6 @@ class RMGLineGZ extends RMGLine {
         }
         
     }
-
-    // updateStnNameBg() {
-    //     $('#current_bg').hide();
-    // }
 
     loadLineNum() {
         const LINE_NUM_MAX_WIDTH = 15.59375;
@@ -473,7 +475,7 @@ class RMGLineGZ extends RMGLine {
         }
     }
 
-    updateStnName(stnId, names: Name, stnNum) {
+    updateStnName(stnId: ID, names: Name, stnNum: string) {
         super.updateStnName(stnId, names, stnNum);
 
         this.loadLineNum();
@@ -500,7 +502,7 @@ class RMGLineGZ extends RMGLine {
         $('#station_info_gzmtr > #big_psd text').eq(0).text(this._psdNum);
 
         $('#station_info_gzmtr #big_name').empty()
-            .attr('transform', `translate(${this._svgDestWidth/2},${100 - (this.stations[this._currentStnId].name[1].split('\\').length - 1)*20})`)
+            .attr('transform', `translate(${this.svgDestWidth/2},${100 - (this.stations[this._currentStnId].name[1].split('\\').length - 1)*20})`)
             .append(
                 $('<text>', { class:'rmg-name__zh rmg-name__gzmtr--dest' })
                     .text(this.stations[this._currentStnId].name[0])
@@ -595,7 +597,7 @@ class RMGLineGZ extends RMGLine {
             'destination'
         );
         $('#station_info_gzmtr #big_stn_num')
-            .attr('transform', `translate(${(this._svgDestWidth+bigNameDim.width)/2+55},${120 - (this.stations[this._currentStnId].name[1].split('\\').length - 1)*20})scale(1.4)`);
+            .attr('transform', `translate(${(this.svgDestWidth+bigNameDim.width)/2+55},${120 - (this.stations[this._currentStnId].name[1].split('\\').length - 1)*20})scale(1.4)`);
 
         let bigNextDim = {x:0, y:0, width:0, height:0};
         if (nextStnId.length === 1) {
@@ -623,7 +625,7 @@ class RMGLineGZ extends RMGLine {
         // var nextNameZHCount = nextNameZH.length;
 
         if (this._direction == 'l') {
-            $('#station_info_gzmtr #platform').attr('transform', `translate(${this._svgDestWidth-100},120)`);
+            $('#station_info_gzmtr #platform').attr('transform', `translate(${this.svgDestWidth-100},120)`);
             if (nextStnId.length === 1) {
                 if (nextNameZHCount <= 2) {
                     $('#station_info_gzmtr #big_next g:nth-child(2)').attr('transform', `translate(${115+35},110)`);
@@ -645,28 +647,28 @@ class RMGLineGZ extends RMGLine {
             $('#station_info_gzmtr #platform').attr('transform', `translate(100,120)`);
 
             if (nextStnId.length === 1) {
-                $('#station_info_gzmtr #big_next g:nth-child(2)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width},110)`);
+                $('#station_info_gzmtr #big_next g:nth-child(2)').attr('transform', `translate(${this.svgDestWidth-45-bigNextDim.width},110)`);
 
                 if (nextNameZHCount <= 2) {
-                    $('#station_info_gzmtr #big_next g:first-child').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-70},110)`);
-                    $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this._svgDestWidth-45-bigNextDim.width-70-35+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
+                    $('#station_info_gzmtr #big_next g:first-child').attr('transform', `translate(${this.svgDestWidth-45-bigNextDim.width-70},110)`);
+                    $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this.svgDestWidth-45-bigNextDim.width-70-35+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
                 } else {
-                    $('#station_info_gzmtr #big_next g:first-child').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-35*1.5},110)`);
-                    $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this._svgDestWidth-45-bigNextDim.width-35*2.5+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
+                    $('#station_info_gzmtr #big_next g:first-child').attr('transform', `translate(${this.svgDestWidth-45-bigNextDim.width-35*1.5},110)`);
+                    $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this.svgDestWidth-45-bigNextDim.width-35*2.5+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
                 }
             } else {
-                $('#station_info_gzmtr #big_next_2 g:nth-child(2)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width},80)`);
-                $('#station_info_gzmtr #big_next_2 g:nth-child(4)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width},190)`);
+                $('#station_info_gzmtr #big_next_2 g:nth-child(2)').attr('transform', `translate(${this.svgDestWidth-45-bigNextDim.width},80)`);
+                $('#station_info_gzmtr #big_next_2 g:nth-child(4)').attr('transform', `translate(${this.svgDestWidth-45-bigNextDim.width},190)`);
 
-                $('#station_info_gzmtr #big_next_2 g:first-child').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-41},80)`);
-                $('#station_info_gzmtr #big_next_2 g:nth-child(3)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-41},190)`);
+                $('#station_info_gzmtr #big_next_2 g:first-child').attr('transform', `translate(${this.svgDestWidth-45-bigNextDim.width-41},80)`);
+                $('#station_info_gzmtr #big_next_2 g:nth-child(3)').attr('transform', `translate(${this.svgDestWidth-45-bigNextDim.width-41},190)`);
 
-                $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this._svgDestWidth-45-bigNextDim.width-41-27+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
+                $('#station_info_gzmtr > use').eq(0).attr('transform', `translate(${(this.svgDestWidth-45-bigNextDim.width-41-27+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20},120)scale(0.25)rotate(180)`);
             }
         }
 
         $('#station_info_gzmtr #indicator_light').attr({
-            x:this._svgDestWidth/2, y:270, 
+            x:this.svgDestWidth/2, y:270, 
             'xlink:href': '#indicator_' + this._infoPanelType
         });
         
@@ -674,7 +676,7 @@ class RMGLineGZ extends RMGLine {
     }
 
     drawPSD() {
-        $('#station_info_gzmtr #big_psd').attr('transform', `translate(${this._svgDestWidth/2+80},${
+        $('#station_info_gzmtr #big_psd').attr('transform', `translate(${this.svgDestWidth/2+80},${
             (type => {
                 switch (type) {
                     case 'gz3': return 218;
@@ -685,14 +687,14 @@ class RMGLineGZ extends RMGLine {
         })`);
     }
 
-    addStn(prep, stnId, loc, end) {
+    addStn(prep, stnId: ID, loc, end) {
         var res = super.addStn(prep, stnId, loc, end);
         this.loadLineNum();
         this.loadDirection();
         return res;
     }
 
-    removeStn(stnId) {
+    removeStn(stnId: ID) {
         if (super.removeStn(stnId)) {
             this.loadLineNum();
             this.loadDirection();
@@ -702,7 +704,7 @@ class RMGLineGZ extends RMGLine {
         }
     }
 
-    updateStnTransfer(stnId, type, info=null) {
+    updateStnTransfer(stnId: ID, type, info=null) {
         super.updateStnTransfer(stnId, type, info);
         this.loadLineNum();
     }

@@ -1,5 +1,5 @@
 import { getParams, countryCode2Emoji, getTransText, rgb2Hex } from '../utils';
-import { ID, StationInfo, Name, DirectionLong, NeighbourPl } from '../utils';
+import { ID, StationInfo, Name, DirectionLong, NeighbourPl, InterchangeInfo, IntInfoTag } from '../utils';
 import { MDCDialog } from '@material/dialog';
 import { MDCSelect } from '@material/select';
 import { MDCTextField } from '@material/textfield';
@@ -8,7 +8,6 @@ import { MDCIconButtonToggle } from '@material/icon-button';
 import { MDCChip, MDCChipSet } from '@material/chips';
 import { MDCRipple } from '@material/ripple';
 import { MDCSwitch } from '@material/switch';
-import { InterchangeInfo, IntInfoTag } from '../Station/Station';
 
 const getStationCard = (id: ID, names: Name, num: string) => {
     return $('<div>', {
@@ -392,7 +391,7 @@ export function common() {
 
     const initBranch = (stnInfo: StationInfo) => {
         // through type
-        ['left', 'right'].forEach(direc => {
+        ['left', 'right'].forEach((direc: 'left' | 'right') => {
             let throughType = stnInfo.branch[direc][0];
             if (throughType) {
                 throughSelects[DirectionLong[direc]].value = throughType;
