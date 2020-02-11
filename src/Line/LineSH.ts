@@ -168,6 +168,7 @@ export class RMGLineSH extends RMGLine {
     _linePath(stnIds: ID[], type?: 'main' | 'pass'): string {
         var [prevId, prevY, prevX]: [string?, number?, number?] = []
         var path: { [key: string]: number[] } = {}
+        const e = 30
 
         stnIds.forEach(stnId => {
             var [x, y] = ['_stnRealX', '_stnRealY'].map(fun => this[fun](stnId))
@@ -191,76 +192,97 @@ export class RMGLineSH extends RMGLine {
             [prevId, prevX, prevY] = [stnId, x, y];
         });
 
-        console.log(stnIds, type)
-        console.log(path)
-        if (!path.hasOwnProperty('end')) {
-            // no complete line generated
+        // generate path
+        if (!path.hasOwnProperty('start')) {
+            // no line generated
+            // keys in path: none
             return ''
+        } else if (!path.hasOwnProperty('end')) {
+            // litte line (only beyond terminal station)
+            // keys in path: start
+            let [x, y] = path['start']
+            if (type === 'main') {
+                // current at terminal(end) station, draw the litte main line
+                if (this._direction === 'l') {
+                    return `M ${x},${y - 6} L ${x - e},${y - 6} l -12,12 L ${x},${y + 6} Z`
+                } else {
+                    return `M ${x},${y - 6} L ${x + e},${y - 6} l 12,12 L ${x},${y + 6} Z`
+                }
+            } else {
+                // type === 'pass'
+                // current at terminal(start) station, draw the litte pass line
+                if (this._direction === 'l') {
+                    return `M ${x},${y - 6} L ${x + e},${y - 6} l 0,12 L ${x - e},${y + 6} Z`
+                } else {
+                    return `M ${x - e},${y - 6} L ${x},${y - 6} l 0,12 L ${x - e},${y + 6} Z`
+                }
+            }
         }
-        else {
+        else if (!path.hasOwnProperty('bifurcate')) {
+            // general main line
+            // keys in path: start, end
             let [x, y] = path['start'], h = path['end'][0]
-            if (!path.hasOwnProperty('bifurcate')) {
-                // general main line
-                if (type === 'main') {
-                    if (this._direction === 'l') {
-                        return `M ${x - 30},${y - 6} H ${h} l 0,12 L ${x - 42},${y + 6} Z`
+            if (type === 'main') {
+                if (this._direction === 'l') {
+                    return `M ${x - e},${y - 6} H ${h} l 0,12 L ${x - 42},${y + 6} Z`
+                } else {
+                    return `M ${x},${y - 6} H ${h + e} l 12,12 L ${x},${y + 6} Z`
+                }
+            } else {
+                // type === 'pass'
+                if (this._direction === 'l') {
+                    return `M ${x - e},${y - 6} H ${h + e} l 0,12 L ${x - e},${y + 6} Z`
+                } else {
+                    return `M ${x - e},${y - 6} H ${h + e} l 0,12 L ${x - e},${y + 6} Z`
+                }
+            }
+        } else {
+            // main line bifurcate here to become the branch line
+            // and path return here are only branch line
+            // keys in path: start, bifurcate, end
+
+            // Todo: disable lower branch
+            let [x, y] = path['start'], h = path['end'][0]
+            let [xb, yb] = path['bifurcate'], [xm, ym] = path['end']
+            if (type === 'main') {
+                if (this._direction === 'l') {
+                    if (ym > y) {
+                        // main line, left direction, center to upper
+                        return `M ${x - e},${y - 6} H ${xb + e} L ${xm},${ym - 6} l 0,12 L ${xb + e},${yb + 6} L ${x - e - 12},${y + 6} Z`
                     } else {
-                        return `M ${x},${y - 6} H ${h + 30} l 12,12 L ${x},${y + 6} Z`
+                        // main line, left direction, upper to center
+                        // this same as the other, but replace x with xm and xm with x
+                        return `M ${xm},${ym - 6} H ${xb - e} L ${x},${y - 6} l 0,12 L ${xb - e},${yb + 6} L ${xm},${ym + 6} Z`
                     }
                 } else {
-                    // type === 'pass'
-                    if (this._direction === 'l') {
-                        return `M ${x},${y - 6} H ${h + 30} l 0,12 L ${x},${y + 6} Z`
+                    if (ym > y) {
+                        // main line, right direction, upper to center
+                        return `M ${x},${y - 6} H ${xb + e} L ${xm},${ym - 6} l 0,12 L ${xb + e},${yb + 6} L ${x},${y + 6} Z`
                     } else {
-                        return `M ${x - 30},${y - 6} H ${h} l 0,12 L ${x - 30},${y + 6} Z`
+                        // main line, right direction, center to upper
+                        // this same as the other, but replace x with xm and xm with x
+                        return `M ${xm + e},${ym - 6} H ${xb - e} L ${x},${y - 6} l 0,12 L ${xb - e},${yb + 6} L ${xm + e + 12},${ym + 6} Z`
                     }
                 }
             } else {
-                // main line bifurcate here to become the branch line
-                // and path return here are only branch line
-
-                // Todo: disable lower branch
-                let [xb, yb] = path['bifurcate'], [xm, ym] = path['end']
-                if (type === 'main') {
-                    if (this._direction === 'l') {
-                        if (ym > y) {
-                            // main line, left direction, upper to center
-                            return `M ${x - 30},${y - 6} H ${xb} L ${xm},${ym - 6} l 0,12 L ${xb},${yb + 6} L ${x - 42},${y + 6} Z`
-                        }else{
-                            // main line, left direction, center to upper
-                            // this same as the other, but replace x with xm and xm with x
-                            return `M ${xm},${ym - 6} H ${xb} L ${x},${y - 6} l 0,12 L ${xb},${yb + 6} L ${xm},${ym + 6} Z`
-                        }
+                // type === 'pass'
+                if (this._direction === 'l') {
+                    if (ym > y) {
+                        // pass line, left direction, center to upper
+                        return `M ${x - e},${y - 6} H ${xb + e} L ${xm},${ym - 6} l 0,12 L ${xb + e},${yb + 6} L ${x - e},${y + 6} Z`
                     } else {
-                        if (ym > y) {
-                            // main line, right direction, upper to center
-                            return `M ${x},${y - 6} H ${xb} L ${xm},${ym - 6} l 0,12 L ${xb},${yb + 6} L ${x},${y + 6} Z`
-                        }else{
-                            // main line, right direction, center to upper
-                            // this same as the other, but replace x with xm and xm with x
-                            return `M ${xm},${ym - 6} H ${xb} L ${x},${y - 6} l 0,12 L ${xb},${yb + 6} L ${xm},${ym + 6} Z`
-                        }
+                        // pass line, left direction, upper to center
+                        // this same as the other, but replace x with xm and xm with x
+                        return `M ${x},${y - 6} L ${xb - e},${yb - 6} H ${xm + e} l 0,12 L ${xb - e},${yb + 6} L ${x},${y + 6} Z`
                     }
                 } else {
-                    // type === 'pass'
-                    if (this._direction === 'l') {
-                        if (ym > y) {
-                            // pass line, left direction, upper to center
-                            return `M ${x - 30},${y - 6} H ${xb} L ${xm},${ym - 6} l 0,12 L ${xb},${yb + 6} L ${x - 30},${y + 6} Z`
-                        }else{
-                            // pass line, left direction, center to upper
-                            // this same as the other, but replace x with xm and xm with x
-                            return `M ${x},${y - 6} L ${xb},${yb - 6} H ${xm} l 0,12 L ${xb},${yb + 6} L ${x},${y + 6} Z`
-                        }
+                    if (ym > y) {
+                        // pass line, right direction, upper to center
+                        return `M ${x - e},${y - 6} H ${xb + e} L ${xm},${ym - 6} l 0,12 L ${xb + e},${yb + 6} L ${x - e},${y + 6} Z`
                     } else {
-                        if (ym > y) {
-                            // pass line, right direction, upper to center
-                            return `M ${x - 30},${y - 6} H ${xb} L ${xm},${ym - 6} l 0,12 L ${xb},${yb + 6} L ${x - 30},${y + 6} Z`
-                        }else{
-                            // pass line, right direction, center to upper
-                            // this same as the other, but replace x with xm and xm with x
-                            return `M ${x},${y - 6} L ${xb},${yb - 6} H ${xm} l 0,12 L ${xb},${yb + 6} L ${x},${y + 6} Z`
-                        }
+                        // pass line, right direction, center to upper
+                        // this same as the other, but replace x with xm and xm with x
+                        return `M ${x},${y - 6} L ${xb - e},${yb - 6} H ${xm + e} l 0,12 L ${xb - e},${yb + 6} L ${x},${y + 6} Z`
                     }
                 }
             }
@@ -324,7 +346,7 @@ export class RMGLineSH extends RMGLine {
         $('path#stn_sh_pass').attr('stroke', '#aaa');
         $('path#int2_sh_pass').attr('stroke', '#aaa');
 
-        // the railmap main line
+        // the railmap line
         $('path#line_main_path').attr('fill', this._themeColour)
         $('path#line_pass_path').attr('fill', '#aaa')
 
