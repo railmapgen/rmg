@@ -1,5 +1,5 @@
-import { RMGStation, IntInfoTag, InterchangeInfo } from './Station';
-import { ID, Name, BranchInfo, StationInfo } from '../utils';
+import { RMGStation } from './Station';
+import { ID, Name, BranchInfo, StationInfo, IntInfoTag, InterchangeInfo } from '../utils';
 
 const station_id = 'stn_sh'
 
