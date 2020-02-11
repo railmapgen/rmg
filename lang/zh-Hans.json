@@ -104,6 +104,7 @@
 
     "Stations.Interchange.Within": "站内换乘",
     "Stations.Interchange.OSI": "出站换乘",
+    "Stations.Interchange.Note": "请注意，部分换乘组合可能无法正常显示。", 
     "Stations.Interchange.Settings": "更多设置",
     "Stations.Interchange.TickDirection": "换乘文字方向",
     "Stations.Interchange.TickDirection.L": "左", 

@@ -10,7 +10,7 @@ interface StationDict {
 export class RMGLine {
     protected _svgHeight: number;
     protected _svgWidth: number;
-    // protected _svgDestWidth: number; // new try: avoid storing duplicated parameters
+    protected _svgDestWidth: number;
     private _showOuter: boolean;
     themeCity; themeLine; _themeColour; _fgColour;
     private _yPc: number;
@@ -30,7 +30,7 @@ export class RMGLine {
     constructor (param: RMGParam) {
         this._svgHeight = param.svg_height;
         this._svgWidth = param.svg_width;
-        // this._svgDestWidth = param.svg_dest_width;
+        this._svgDestWidth = param.svg_dest_width;
         this._showOuter = param['show_outer'];
 
         [this.themeCity, this.themeLine, this._themeColour, this._fgColour] = param.theme;
@@ -67,10 +67,18 @@ export class RMGLine {
     _initStnInstance(stnId: ID, stnInfo: StationInfo) {
         switch (stnInfo.change_type) {
             case 'int2':
+            case 'osi21_ul':
+            case 'osi21_pl':
+            case 'osi21_ur':
+            case 'osi21_pr':
                 return new Int2Station(stnId, stnInfo);
             case 'int3_l':
+            case 'osi31_ul':
+            case 'osi31_pl':
                 return new Int3LStation(stnId, stnInfo);
             case 'int3_r':
+            case 'osi31_ur':
+            case 'osi31_pr':
                 return new Int3RStation(stnId, stnInfo);
             case 'osi11_ul':
             case 'osi11_pl':
@@ -80,9 +88,13 @@ export class RMGLine {
                 return new OSI11RStation(stnId, stnInfo);
             case 'osi12_ul':
             case 'osi12_pl':
+            case 'osi13_ul':
+            case 'osi13_pl':
                 return new OSI12LStation(stnId, stnInfo);
             case 'osi12_ur':
             case 'osi12_pr':
+            case 'osi13_ur':
+            case 'osi13_pr':
                 return new OSI12RStation(stnId, stnInfo);
             case 'osi22_pl':
             case 'osi22_ul':
@@ -106,10 +118,10 @@ export class RMGLine {
     /**
      * Width (in pixels) of `svg#destination`. 
      */
-    get svgDestWidth() {return getParams().svg_dest_width;}
+    // get svgDestWidth() {return getParams().svg_dest_width;}
     set svgDestWidth(val: number) {
         if (isNaN(val) || val <= 0) {return;}
-        // this._svgDestWidth = val;
+        this._svgDestWidth = val;
         setParams('svg_dest_width', val);
 
         this.drawSVGFrame();
@@ -619,7 +631,7 @@ export class RMGLine {
             height: this._svgHeight
         });
         $('#destination, #dest_outer').attr({
-            width: this.svgDestWidth, 
+            width: this._svgDestWidth, 
             height: this._svgHeight
         });
     }
@@ -754,7 +766,7 @@ export class RMGLine {
     drawStrip() {
         // $('#strip, #dest_strip').attr('d', `M 0,${this.stripY} H ${this._svgWidth}`)
         $('#strip').attr('d', `M 0,${this.stripY} H ${this._svgWidth}`);
-        $('#dest_strip').attr('d', `M 0,${this.stripY} H ${this.svgDestWidth}`);
+        $('#dest_strip').attr('d', `M 0,${this.stripY} H ${this._svgDestWidth}`);
     }
 
     fillThemeColour() {
@@ -785,7 +797,7 @@ export class RMGLine {
         var bcr = $('#dest_name > g:last-child')[0].getBoundingClientRect();
         var flagLength = 160 + 150 + bcr.width + 45 + 50;
         var isLeft = (this._direction == 'l') ? 1 : -1;
-        var arrowX = (this.svgDestWidth - isLeft * flagLength) / 2;
+        var arrowX = (this._svgDestWidth - isLeft * flagLength) / 2;
         var arrowRotate = 90 * (1 - isLeft);
         var platformNumX = arrowX + isLeft * (160 + 50 + 75);
         var destNameX = platformNumX + isLeft * (75 + 45);

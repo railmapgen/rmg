@@ -324,7 +324,7 @@ class OSI12Station extends Int3Station {
     
     constructor (id: ID, data: StationInfo) {
         // data.int3 = data.osi12;
-        data.transfer.info[0].unshift(...data.transfer.info[1]);
+        data.transfer.info[0].unshift(...data.transfer.info[1].slice(0,2));
         // data.interchange[0].unshift(...data.interchange[1].slice(1,3));
         super(id, data);
 

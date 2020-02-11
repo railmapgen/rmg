@@ -106,17 +106,17 @@ const getStnIntFromChipSets = (sets: HTMLDivElement[]) => {
     if (ns[0] === 3 && ns[1] === 0) {
         changeType = 'int3'; // was int4
     } else if (ns[0] === 2 && ns[1] === 1) {
-        changeType = 'osi11'; // was osi31
+        changeType = 'osi31';
     } else if (ns[0] === 2 && ns[1] === 0) {
         changeType = 'int3'
     } else if (ns[0] === 1 && ns[1] === 2) {
         changeType = 'osi22'; 
     } else if (ns[0] === 1 && ns[1] === 1) {
-        changeType = 'osi11'; // was osi21
+        changeType = 'osi21';
     } else if (ns[0] === 1 && ns[1] === 0) {
         changeType = 'int2';
     } else if (ns[0] === 0 && ns[1] === 3) {
-        changeType = 'int3'; // was osi13;
+        changeType = 'osi13';
     } else if (ns[0] === 0 && ns[1] === 2) {
         changeType = 'osi12';
     } else if (ns[0] === 0 && ns[1] === 1) {
@@ -127,6 +127,7 @@ const getStnIntFromChipSets = (sets: HTMLDivElement[]) => {
         // sum(ns) > 3
         changeType = 'int3';
     }
+    console.log(changeType);
     return { info, changeType };
 };
 

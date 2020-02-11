@@ -104,6 +104,7 @@
 
     "Stations.Interchange.Within": "同站轉線",
     "Stations.Interchange.OSI": "出站轉線",
+    "Stations.Interchange.Note": "請注意，部份轉線組合可能無法正常顯示。", 
     "Stations.Interchange.Settings": "更多設定",
     "Stations.Interchange.TickDirection": "轉線文字方向",
     "Stations.Interchange.TickDirection.L": "左", 
