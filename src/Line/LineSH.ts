@@ -148,26 +148,8 @@ export class RMGLineSH extends RMGLine {
 
     // rewrite this to change the y of branch station
     _stnYShare(stnId): number {
-        if (['linestart', 'lineend'].includes(stnId) || this._stnIndegree(stnId) > 1 || this._stnOutdegree(stnId) > 1) {
-            return 0;
-        }
-        var stnPred = this.stations[stnId].parents[0];
-        if (stnPred) {
-            // parent exist
-            if (this._stnOutdegree(stnPred) == 1) {
-                // no sibling, then y same as parent
-                return this._stnYShare(stnPred);
-            } else {
-                // sibling exists, then y depends on its idx of being children
-
-                // rewrite this to move the main line on the same height of the rest
-                // and branch a bit away from the main line
-                return (this.stations[stnPred].children.indexOf(stnId) == 0) ? 3 : 0;
-            }
-        } else {
-            // no parent, must be linestart
-            return 0;
-        }
+        if (this.branches[0].includes(stnId)) return 0;
+        else return 3
     }
 
     _linePath(stnIds: ID[], type?: 'main' | 'pass'): string {
