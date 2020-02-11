@@ -94,10 +94,7 @@ export class RMGLineSH extends RMGLine {
             })
             $('#station_info_shmetro > #line_number > text')
                 .text(lineNumber[0])
-                .attr({
-                    'transform': `translate(${lineNameX - 70},170)`,
-                    'fill': this._fgColour,
-                })
+                .attr('transform', `translate(${lineNameX - 70},170)`)
         } else {
             lineNameX -= 280;
             $('#station_info_shmetro > #line_number > rect').attr({
@@ -298,6 +295,7 @@ export class RMGLineSH extends RMGLine {
     }
 
     // draw the line in railmap
+    // rewrite this to add id to element
     drawLine() {
         $('.rmg-line').removeClass('rmg-line__mtr').addClass('rmg-line__shmetro');
 
@@ -368,6 +366,9 @@ export class RMGLineSH extends RMGLine {
             // the line starts with letter
             $('#station_info_shmetro > #line_name_text').attr('fill', '#fff')
         }
+
+        // dest info line color
+        $('#station_info_shmetro > #line_number > text').attr('fill', this._fgColour)
     }
 
     updateStnNameBg() {
