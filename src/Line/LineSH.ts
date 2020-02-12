@@ -2,7 +2,7 @@ import { RMGLine } from './Line';
 import { RMGStationSH, IntStationSH, station_id } from '../Station/StationSH';
 import { RMGStation } from '../Station/Station';
 
-import { ID, Name, StationInfo, RMGParam, setParams } from '../utils';
+import { ID, Name, StationInfo, RMGParam, setParams, DirectionLong } from '../utils';
 
 export class RMGLineSH extends RMGLine {
     constructor(param) {
@@ -89,21 +89,29 @@ export class RMGLineSH extends RMGLine {
             lineNameX -= 180;
             lineNameZH = "号线"
             $('#station_info_shmetro > #line_number > rect').attr({
-                'style': `fill:${this._themeColour}`,
-                'transform': `translate(${lineNameX - 120},70)`
+                fill: this._themeColour,
+                'transform': `translate(${lineNameX - 120},70)`, 
+                width: 100, height: 125
             })
             $('#station_info_shmetro > #line_number > text')
-                .text(lineNumber[0])
-                .attr('transform', `translate(${lineNameX - 70},170)`)
+                .show().text(lineNumber[0])
+                .attr('transform', `translate(${lineNameX - 70},170)`);
+            
+            // Chito: If match format X号线, "号线" always black
+            // ignore inherit style from g#line_name_text
+            $('#station_info_shmetro > #line_name_text text').attr('fill', 'black');
         } else {
             lineNameX -= 280;
             $('#station_info_shmetro > #line_number > rect').attr({
-                'style': `fill:${this._themeColour}`,
+                fill: this._themeColour, 
                 'transform': `translate(${lineNameX - 10},60)`,
                 'width': 260,
                 'height': 150
             })
             $('#station_info_shmetro > #line_number > text').hide()
+
+            // Chito: If not match format X号线, use inherit style
+            $('#station_info_shmetro > #line_name_text text').removeAttr('fill');
 
             // Todo: set the eng in the middle
             $('#station_info_shmetro > #line_name_text > text:last-child').attr('dx', 10)
@@ -288,13 +296,12 @@ export class RMGLineSH extends RMGLine {
         // this will add the stroke of the station circle
         // however the stroke path is defined in index.html
         // which made changing station style strange
-        $('path#' + station_id).attr('stroke', this._themeColour);
+        $('circle#' + station_id).attr('stroke', this._themeColour);
         $('path#int2_sh').attr('stroke', this._themeColour);
 
         // pass stroke should be added somewhere else
         // but I can't figure it out
-        $('path#stn_sh_pass').attr('stroke', '#aaa');
-        $('path#int2_sh_pass').attr('stroke', '#aaa');
+        // Chito: path#stn_sh now have stroke attribute #aaa, no need to change. 
 
         // the railmap line
         $('#line_main').children().attr('fill', this._themeColour)
@@ -303,16 +310,21 @@ export class RMGLineSH extends RMGLine {
         // the last decoration line
         $(`#line_shmetro_use`).attr('fill', this._themeColour)
 
-        if (this._lineNames[0].match(/(\d*)\w+/)) {
-            // the line starts with number
-            $('#station_info_shmetro > #line_number > text').attr('fill', '#fff')
-        } else {
-            // the line starts with letter
-            $('#station_info_shmetro > #line_name_text').attr('fill', '#fff')
-        }
+        // if (this._lineNames[0].match(/(\d*)\w+/)) {
+        //     // the line starts with number
+        //     $('#station_info_shmetro > #line_number > text').attr('fill', '#fff')
+        // } else {
+        //     // the line starts with letter
+        //     $('#station_info_shmetro > #line_name_text').attr('fill', '#fff')
+        // }
+        // Chito: g#line_name_text's fill always equal to the foreground colour, 
+        // while inner text elements may have different fill, see drawDestInfo()
 
-        // dest info line color
-        $('#station_info_shmetro > #line_number > text').attr('fill', this._fgColour)
+        $('#station_info_shmetro > #line_name_text').attr('fill', this._fgColour);
+
+        // dest info line color (both background and foreground)
+        $('#station_info_shmetro > #line_number > rect').attr('fill', this._themeColour);
+        $('#station_info_shmetro > #line_number > text').attr('fill', this._fgColour);
     }
 
     updateStnNameBg() {
@@ -378,6 +390,15 @@ export class RMGLineSH extends RMGLine {
 
         let y = val * this._svgHeight / 50;
         $('g#main').attr('transform', `translate(0,${y})`);
+    }
+
+    updateBranchFirst(stnId: ID, direction: DirectionLong, first: ID) {
+        if (super.updateBranchFirst(stnId, direction, first)) {
+            this.fillThemeColour();
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
