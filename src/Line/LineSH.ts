@@ -287,7 +287,40 @@ export class RMGLineSH extends RMGLine {
     // draw the line in railmap
     drawLine() {
         $('.rmg-line').removeClass('rmg-line__mtr').addClass('rmg-line__shmetro');
-        super.drawLine()
+
+        this.branches.map(branch => {
+            var lineMainStns = branch.filter(stnId => this.stations[stnId].state >= 0);
+            var linePassStns = branch.filter(stnId => this.stations[stnId].state <= 0);
+
+            if (lineMainStns.length === 1) {
+                linePassStns = branch;
+            }
+
+            if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length == 0 && lineMainStns.length) {
+                // if two set disjoint
+                if (linePassStns[0] === branch[0]) {
+                    // -1 -1 1 1
+                    linePassStns.push(lineMainStns[0]);
+                } else if (lineMainStns[0] === branch[0] && lineMainStns[lineMainStns.length-1] === branch[branch.length-1] && linePassStns.length) {
+                    linePassStns = branch;
+                    lineMainStns = [];
+                } else {
+                    // 1 1 -1 -1
+                    linePassStns.unshift(lineMainStns[lineMainStns.length-1]);
+                }
+            }
+            
+            // rewrite the second parameter to get the path correctly
+            $('#line_main').append(
+                $('<path>', {d:this._linePath(lineMainStns, 'main')})
+            );
+            $('#line_pass').append(
+                $('<path>', {d:this._linePath(linePassStns, 'pass')})
+            );
+        });
+
+        $('#line_main').html($('#line_main').html());
+        $('#line_pass').html($('#line_pass').html());
     }
 
     fillThemeColour() {
