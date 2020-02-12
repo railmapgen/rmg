@@ -187,8 +187,6 @@ export class RMGLineSH extends RMGLine {
             [prevId, prevX, prevY] = [stnId, x, y];
         });
 
-        console.log(stnIds, type)
-        console.log(path)
         // generate path
         if (!path.hasOwnProperty('start')) {
             // no line generated
