@@ -19,6 +19,7 @@ class RMGStation {
     public name: Name;
     public branch: BranchInfo;
     public stnNum: string;
+    public services: Set<'local' | 'express'>;
 
     constructor (id: ID, data: StationInfo) {
         this.id = id;
@@ -26,6 +27,7 @@ class RMGStation {
         this.children = data.children;
         this.name = data.name;
         this.branch = data.branch;
+        this.services = new Set(data.services);
     }
 
     get inDegree() {return this.parents.length;}

@@ -32,6 +32,10 @@ export interface StationInfo {
      */
     transfer?: StationTransfer;
     /**
+     * Array of services run in this station. 
+     */
+    services: ('local' | 'express')[];
+    /**
      * Detail of interchanges (legacy). 
      */
     interchange?: any;
@@ -508,7 +512,7 @@ export function updateParam() {
 
     // Version 2.6
     for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
-        if (!('transfer' in param)) {
+        if (!('transfer' in stnInfo)) {
             param.stn_list[stnId].transfer = {
                 type: stnInfo.change_type.split('_')[0] as 'none' | 'int2' | 'int3' | 'osi11' | 'osi12' | 'osi22', 
                 tick_direc: (stnInfo.change_type === 'none' || stnInfo.change_type === 'int2') ? 'r' : stnInfo.change_type.split('_')[1].split('').slice().reverse()[0] as 'l' | 'r', 
@@ -516,6 +520,13 @@ export function updateParam() {
                 osi_names: (stnInfo.change_type.indexOf('osi')!==-1) ? [stnInfo.interchange[1][0]] : [], 
                 info: (stnInfo.interchange.length === 2) ? [stnInfo.interchange[0], stnInfo.interchange[1].slice(1)] : stnInfo.interchange
             }
+        }
+    }
+
+    // Version 2.8
+    for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
+        if (!('services' in stnInfo)) {
+            param.stn_list[stnId].services = ['local'];
         }
     }
     putParams(param);
