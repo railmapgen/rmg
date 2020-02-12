@@ -57,7 +57,7 @@ class IntStationSH extends RMGStationSH {
 
     constructor(id: ID, data: StationInfo) {
         super(id, data);
-        this._intInfos = data.interchange[0];
+        this._intInfos = data.transfer.info[0];
     }
 
     // rewrite this to append dom and then getBoundingClientRect
