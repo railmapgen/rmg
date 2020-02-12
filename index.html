@@ -1154,7 +1154,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
   <div class="mdc-dialog__scrim"></div>
 </div>
 
-<div id="stn_modify_diag" class="mdc-dialog"
+<!-- <div id="stn_modify_diag" class="mdc-dialog"
      role="alertdialog"
      aria-modal="true"
      aria-labelledby="my-dialog-title"
@@ -1163,6 +1163,71 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="Stations.Name.Title"></h2>
       <div class="mdc-dialog__content" style="max-width: 400px;">
+            
+      </div>
+      <footer class="mdc-dialog__actions">
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes" data-mdc-dialog-button-default>
+            <div class="mdc-button__ripple"></div>
+          <span class="mdc-button__label" trans-tag="Dialog.Done"></span>
+        </button>
+      </footer>
+    </div>
+  </div>
+  <div class="mdc-dialog__scrim"></div>
+</div> -->
+
+<div id="stn_edit_diag" class="mdc-dialog"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="my-dialog-title"
+     aria-describedby="my-dialog-content"
+    >
+  <div class="mdc-dialog__container">
+    <div class="mdc-dialog__surface">
+      <h2 class="mdc-dialog__title" trans-tag="Stations.Edit.Title"></h2>
+      <div class="mdc-dialog__content">
+            <div class="mdc-tab-bar" role="tablist">
+                <div class="mdc-tab-scroller">
+                    <div class="mdc-tab-scroller__scroll-area">
+                    <div class="mdc-tab-scroller__scroll-content">
+                        <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
+                            <span class="mdc-tab__content">
+                                <span class="mdc-tab__icon material-icons" aria-hidden="true">title</span>
+                                <span class="mdc-tab__text-label" trans-tag="Stations.Edit.Name"></span>
+                            </span>
+                            <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                                <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                            </span>
+                            <span class="mdc-tab__ripple"></span>
+                        </button>
+
+                        <button class="mdc-tab" role="tab" aria-selected="true" tabindex="0">
+                            <span class="mdc-tab__content">
+                                <span class="mdc-tab__icon material-icons" aria-hidden="true">transfer_within_a_station</span>
+                                <span class="mdc-tab__text-label" trans-tag="Stations.Edit.Interchange"></span>
+                            </span>
+                            <span class="mdc-tab-indicator">
+                                <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                            </span>
+                            <span class="mdc-tab__ripple"></span>
+                        </button>
+
+                        <button class="mdc-tab" role="tab" aria-selected="true">
+                            <span class="mdc-tab__content">
+                                <span class="mdc-tab__icon material-icons" aria-hidden="true">share</span>
+                                <span class="mdc-tab__text-label" trans-tag="Stations.Edit.Branch"></span>
+                            </span>
+                            <span class="mdc-tab-indicator">
+                                <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                            </span>
+                            <span class="mdc-tab__ripple"></span>
+                        </button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="panel_name">
             <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner">
                 <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
@@ -1216,61 +1281,44 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                     </div>
                 </div>
                 </div>
-            </div>
-            </div>
-      </div>
-      <footer class="mdc-dialog__actions">
-        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes" data-mdc-dialog-button-default>
-            <div class="mdc-button__ripple"></div>
-          <span class="mdc-button__label" trans-tag="Dialog.Done"></span>
-        </button>
-      </footer>
-    </div>
-  </div>
-  <div class="mdc-dialog__scrim"></div>
-</div>
 
-<div id="stn_edit_diag" class="mdc-dialog"
-     role="alertdialog"
-     aria-modal="true"
-     aria-labelledby="my-dialog-title"
-     aria-describedby="my-dialog-content"
-    >
-  <div class="mdc-dialog__container">
-    <div class="mdc-dialog__surface">
-      <h2 class="mdc-dialog__title" trans-tag="Stations.Edit.Title"></h2>
-      <div class="mdc-dialog__content">
-            <div class="mdc-tab-bar" role="tablist">
-                <div class="mdc-tab-scroller">
-                    <div class="mdc-tab-scroller__scroll-area">
-                    <div class="mdc-tab-scroller__scroll-content">
-                        <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
-                            <span class="mdc-tab__content">
-                                <span class="mdc-tab__icon material-icons" aria-hidden="true">transfer_within_a_station</span>
-                                <span class="mdc-tab__text-label" trans-tag="Stations.Edit.Interchange"></span>
+                <div class="mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--align-middle">
+                    <div class="mdc-chip-set mdc-chip-set--filter" role="grid">
+                        <div class="mdc-chip" role="row" id="local">
+                            <div class="mdc-chip__ripple"></div>
+                            <span class="mdc-chip__checkmark" >
+                                <svg class="mdc-chip__checkmark-svg" viewBox="-2 -3 30 30">
+                                <path class="mdc-chip__checkmark-path" fill="none" stroke="black"
+                                        d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                                </svg>
                             </span>
-                            <span class="mdc-tab-indicator mdc-tab-indicator--active">
-                                <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                            <span role="gridcell">
+                                <span role="checkbox" tabindex="0" aria-checked="false" class="mdc-chip__primary-action">
+                                <span class="mdc-chip__text" trans-tag="Stations.Name.Services.Local"></span>
+                                </span>
                             </span>
-                            <span class="mdc-tab__ripple"></span>
-                        </button>
-
-                        <button class="mdc-tab" role="tab" aria-selected="true">
-                            <span class="mdc-tab__content">
-                                <span class="mdc-tab__icon material-icons" aria-hidden="true">share</span>
-                                <span class="mdc-tab__text-label" trans-tag="Stations.Edit.Branch"></span>
+                        </div>
+                        <div class="mdc-chip" role="row" id="express">
+                            <div class="mdc-chip__ripple"></div>
+                            <span class="mdc-chip__checkmark" >
+                              <svg class="mdc-chip__checkmark-svg" viewBox="-2 -3 30 30">
+                                <path class="mdc-chip__checkmark-path" fill="none" stroke="black"
+                                      d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                              </svg>
                             </span>
-                            <span class="mdc-tab-indicator">
-                                <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                            <span role="gridcell">
+                              <span role="checkbox" aria-checked="false" class="mdc-chip__primary-action">
+                                <span class="mdc-chip__text" trans-tag="Stations.Name.Services.Express"></span>
+                              </span>
                             </span>
-                            <span class="mdc-tab__ripple"></span>
-                        </button>
-                    </div>
+                        </div>
                     </div>
                 </div>
             </div>
+            </div>
+            </div>
 
-            <div id="panel_interchange">
+            <div id="panel_interchange" style="display: none;">
             <div class="mdc-layout-grid" style="padding: 0;">
             <div class="mdc-layout-grid__inner">
 

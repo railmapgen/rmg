@@ -838,6 +838,28 @@ export class RMGLine {
         if (stnId == this._currentStnId) {this.updateStnNameBg();}
     }
 
+    updateStnServices(stnId: ID, detail: {chipId: 'local'|'express', selected: boolean}) {
+        if (detail.selected) {
+            if (this.stations[stnId].services.has(detail.chipId)) {
+                return;
+            } else {
+                this.stations[stnId].services.add(detail.chipId);
+                
+            }
+        } else {
+            if (!this.stations[stnId].services.delete(detail.chipId)) {
+                return;
+            }
+        }
+
+        let param = getParams();
+        param.stn_list[stnId].services = Array.from(this.stations[stnId].services);
+        putParams(param);
+        
+        // redraw station
+        console.log(this.stations[stnId].services);
+    }
+
     updateStnTransfer(stnId: ID, type, info=null) {
         var prevClass = this.stations[stnId].constructor.name;
 

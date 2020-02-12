@@ -100,8 +100,12 @@
     "Stations.Name.StnNum": "车站编码", 
 
     "Stations.Edit.Title": "编辑车站详情",
+    "Stations.Edit.Name": "名称", 
     "Stations.Edit.Interchange": "换乘", 
     "Stations.Edit.Branch": "支线", 
+
+    "Stations.Name.Services.Local": "普通车", 
+    "Stations.Name.Services.Express": "快车", 
 
     "Stations.Interchange.Within": "站内换乘",
     "Stations.Interchange.OSI": "出站换乘",

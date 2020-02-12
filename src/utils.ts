@@ -32,7 +32,7 @@ export interface StationInfo {
      */
     transfer?: StationTransfer;
     /**
-     * Array of services run in this station. 
+     * Array of services at this station. 
      */
     services: ('local' | 'express')[];
     /**

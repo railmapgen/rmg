@@ -101,8 +101,12 @@
     "Stations.Name.StnNum": "Station Code", 
     
     "Stations.Edit.Title": "Edit Station Detail",
+    "Stations.Edit.Name": "Name", 
     "Stations.Edit.Interchange": "Interchange", 
     "Stations.Edit.Branch": "Branch", 
+
+    "Stations.Name.Services.Local": "Stopping", 
+    "Stations.Name.Services.Express": "Express", 
 
     "Stations.Interchange.Within": "Within-station Interchange",
     "Stations.Interchange.OSI": "Out-of-station Interchange",

@@ -42,6 +42,10 @@ body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: colum
     overflow-x: scroll;
     flex-wrap: nowrap;
 }
+.mdc-chip span[role="checkbox"]:focus {
+    outline: none;
+}
+
 .mdc-chip-set.int-chip-set .mdc-chip {
     flex: 0 0 auto;
     border-radius: 4.5px;
