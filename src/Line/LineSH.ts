@@ -392,6 +392,31 @@ export class RMGLineSH extends RMGLine {
         $('g#main').attr('transform', `translate(0,${y})`);
     }
 
+    set padding(val: number) {
+        super.padding = val;
+        this.fillThemeColour();
+    }
+
+    set branchSpacing(val: number) {
+        super.branchSpacing = val;
+        this.fillThemeColour();
+    }
+
+    removeStn(stnId: ID) {
+        if (super.removeStn(stnId)) {
+            this.fillThemeColour();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    updateBranchType(stnId: ID, direction: DirectionLong, type: 'through' | 'nonthrough') {
+        // Chito: This method should be remove when this._stnState() is updated. 
+        super.updateBranchType(stnId, direction, type);
+        this.fillThemeColour();
+    }
+
     updateBranchFirst(stnId: ID, direction: DirectionLong, first: ID) {
         if (super.updateBranchFirst(stnId, direction, first)) {
             this.fillThemeColour();
@@ -401,4 +426,9 @@ export class RMGLineSH extends RMGLine {
         }
     }
 
+    updateBranchPos(stnId: ID, direction: DirectionLong, pos: 0 | 1) {
+        // Chito: This method should be remove when this._stnState() is updated. 
+        super.updateBranchPos(stnId, direction, pos);
+        this.fillThemeColour();
+    }
 }

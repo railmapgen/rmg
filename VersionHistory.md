@@ -1,5 +1,15 @@
 # Version History
 
+## 2.7 (12 Feb 2020)
+
+### New Features
+
+- Shanghai Metro style is now available for trail (thanks [@thekingofcity](https://github.com/thekingofcity)). Please report any issue or feature request. 
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
 ## 2.6 (10 Feb 2020)
 
 ### New Features
