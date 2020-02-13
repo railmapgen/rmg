@@ -1,5 +1,6 @@
 import { RMGLine } from './Line';
-import { RMGParam, getTxtBoxDim, setParams, Name, ID, DirectionLong } from '../utils';
+import { RMGParam, getTxtBoxDim, setParams, Name, ID, DirectionLong, StationInfo } from '../utils';
+import { Int2Station, Int3LStation, Int3RStation, OSI11LStation, OSI11RStation, OSI12LStation, OSI12RStation, OSI22EndStation, OSI22LStation, OSI22RStation, RMGStation, OSI22Station } from '../Station/Station';
 
 export class RMGLineHK extends RMGLine {
     private _charForm: 'trad' | 'cn' | 'tw' | 'jp';
@@ -10,6 +11,38 @@ export class RMGLineHK extends RMGLine {
 
         this._charForm = param.char_form;
         this._destLegacy = param.dest_legacy;
+    }
+
+    _initStnInstance(stnId: ID, stnInfo: StationInfo) {
+        switch (stnInfo.transfer.type) {
+            case 'int2':
+            case 'osi21':
+                return new Int2Station(stnId, stnInfo);
+            case 'int3':
+            case 'osi31':
+                return stnInfo.transfer.tick_direc==='l' ?
+                    new Int3LStation(stnId, stnInfo) : 
+                    new Int3RStation(stnId, stnInfo);
+            case 'osi11':
+                return stnInfo.transfer.tick_direc==='l' ?
+                    new OSI11LStation(stnId, stnInfo) : 
+                    new OSI11RStation(stnId, stnInfo);
+            case 'osi12':
+            case 'osi13':
+                return stnInfo.transfer.tick_direc==='l' ?
+                    new OSI12LStation(stnId, stnInfo) : 
+                    new OSI12RStation(stnId, stnInfo);
+            case 'osi22':
+                if (stnInfo.parents[0]==='linestart' || stnInfo.children[0]==='lineend') {
+                    return new OSI22EndStation(stnId, stnInfo);
+                } else {
+                    return stnInfo.transfer.tick_direc==='l' ?
+                        new OSI22LStation(stnId, stnInfo) :
+                        new OSI22RStation(stnId, stnInfo);
+                }
+            default:
+                return new RMGStation(stnId, stnInfo);
+        }
     }
 
     set svgDestWidth(val: number) {
@@ -135,6 +168,30 @@ export class RMGLineHK extends RMGLine {
             transform: `translate(${destNameX},105)`, 
             'text-anchor': txtAnchor
         });
+    }
+
+    protected _leftWideFactor(stnId: ID) {
+        var res = 0;
+        let stnInstance = this.stations[stnId];
+        if (stnInstance instanceof Int3LStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI11LStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI12LStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI22Station) {res += this._longInterval;}
+        if (this._stnIndegree(stnId) == 2) {res += this._longInterval/2;}
+        if (this._stnOutdegree(this.stations[stnId].parents[0]) == 2) {res += this._longInterval/2;}
+        return res;
+    }
+
+    protected _rightWideFactor(stnId: ID) {
+        var res = 0;
+        let stnInstance = this.stations[stnId];
+        if (stnInstance instanceof Int3RStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI11RStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI12RStation) {res += this._longInterval;}
+        if (stnInstance instanceof OSI22Station) {res += this._longInterval;}
+        if (this._stnOutdegree(stnId) == 2) {res += this._longInterval/2;}
+        if (this._stnIndegree(this.stations[stnId].children[0]) == 2) {res += this._longInterval/2;}
+        return res;
     }
 
     updateStnName(stnId: ID, names: Name, stnNum: string) {

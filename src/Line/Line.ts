@@ -1,5 +1,5 @@
 import { getTxtBoxDim, setParams, getParams, putParams, getRandomId, getNameFromId } from '../utils';
-import { RMGStation, Int2Station, Int3LStation, Int3RStation, OSI11LStation, OSI11RStation, OSI12LStation, OSI12RStation, OSI22Station, OSI22LStation, OSI22RStation, OSI22EndStation } from '../Station/Station';
+import { RMGStation } from '../Station/Station';
 
 import { ID, Name, StationInfo, RMGParam, DirectionLong } from '../utils';
 
@@ -17,7 +17,7 @@ export class RMGLine {
     private _yPc: number;
     private _stripPc: number;
     protected _padding: number;
-    private _longInterval = 1;
+    protected _longInterval = 1;
     private _branchSpacing: number;
     private _txtFlip: boolean;
     public stations = {} as StationDict;
@@ -60,35 +60,7 @@ export class RMGLine {
     }
 
     _initStnInstance(stnId: ID, stnInfo: StationInfo) {
-        switch (stnInfo.transfer.type) {
-            case 'int2':
-            case 'osi21':
-                return new Int2Station(stnId, stnInfo);
-            case 'int3':
-            case 'osi31':
-                return stnInfo.transfer.tick_direc==='l' ?
-                    new Int3LStation(stnId, stnInfo) : 
-                    new Int3RStation(stnId, stnInfo);
-            case 'osi11':
-                return stnInfo.transfer.tick_direc==='l' ?
-                    new OSI11LStation(stnId, stnInfo) : 
-                    new OSI11RStation(stnId, stnInfo);
-            case 'osi12':
-            case 'osi13':
-                return stnInfo.transfer.tick_direc==='l' ?
-                    new OSI12LStation(stnId, stnInfo) : 
-                    new OSI12RStation(stnId, stnInfo);
-            case 'osi22':
-                if (stnInfo.parents[0]==='linestart' || stnInfo.children[0]==='lineend') {
-                    return new OSI22EndStation(stnId, stnInfo);
-                } else {
-                    return stnInfo.transfer.tick_direc==='l' ?
-                        new OSI22LStation(stnId, stnInfo) :
-                        new OSI22RStation(stnId, stnInfo);
-                }
-            default:
-                return new RMGStation(stnId, stnInfo);
-        }
+        return new RMGStation(stnId, stnInfo);
     }
 
     /**
@@ -249,32 +221,14 @@ export class RMGLine {
      * Increment of the weight of out-bound edge of a station, which increases the horizontal interval from its children. 
      */
     protected _rightWideFactor(stnId: ID) {
-        var res = 0;
-        let stnInstance = this.stations[stnId];
-        if (stnInstance instanceof Int3RStation) {res += this._longInterval;}
-        if (stnInstance instanceof OSI11RStation) {res += this._longInterval;}
-        if (stnInstance instanceof OSI12RStation) {res += this._longInterval;}
-        if (stnInstance instanceof OSI22Station) {res += this._longInterval;}
-        var stnClasses = ['Int3RStation', 'OSI11RStation', 'OSI12RStation', 'OSI22LStation', 'OSI22RStation'];
-        if (stnClasses.includes(this.stations[stnId].constructor.name)) {res += this._longInterval;}
-        if (this._stnOutdegree(stnId) == 2) {res += this._longInterval/2;}
-        if (this._stnIndegree(this.stations[stnId].children[0]) == 2) {res += this._longInterval/2;}
-        return res;
+        return 0;
     }
 
     /**
      * Increment of the weight of in-bound edge of a station, which increases the horizontal interval from its parents. 
      */
     protected _leftWideFactor(stnId: ID) {
-        var res = 0;
-        let stnInstance = this.stations[stnId];
-        if (stnInstance instanceof Int3LStation) {res += this._longInterval;}
-        if (stnInstance instanceof OSI11LStation) {res += this._longInterval;}
-        if (stnInstance instanceof OSI12LStation) {res += this._longInterval;}
-        if (stnInstance instanceof OSI22Station) {res += this._longInterval;}
-        if (this._stnIndegree(stnId) == 2) {res += this._longInterval/2;}
-        if (this._stnOutdegree(this.stations[stnId].parents[0]) == 2) {res += this._longInterval/2;}
-        return res;
+        return 0;
     }
 
     /**
@@ -1267,6 +1221,7 @@ export class RMGLine {
         newInfo.change_type = 'none';
         newInfo.num = '00';
         newInfo.interchange = [[]];
+        newInfo.services = ['local'];
         newInfo.transfer = {
             info: [[]], 
             type: 'none', 
