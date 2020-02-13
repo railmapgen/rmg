@@ -12,7 +12,8 @@ export class RMGLine {
     protected _svgWidth: number;
     protected _svgDestWidth: number;
     private _showOuter: boolean;
-    themeCity; themeLine; _themeColour; _fgColour;
+    themeCity; themeLine; _themeColour;
+    _fgColour: '#fff' | '#000';
     private _yPc: number;
     private _stripPc: number;
     protected _padding: number;
@@ -23,9 +24,7 @@ export class RMGLine {
     protected _currentStnId: ID;
     protected _direction: 'l' | 'r';
     protected _platformNum: string;
-    protected _charForm: string;
     protected _lineNames: Name;
-    private _destLegacy: boolean; 
 
     constructor (param: RMGParam) {
         this._svgHeight = param.svg_height;
@@ -49,10 +48,6 @@ export class RMGLine {
         this._currentStnId = param['current_stn_idx'];
         this._direction = param['direction'];
         this._platformNum = param['platform_num'];
-        
-        this._destLegacy = param['dest_legacy'];
-
-        this._charForm = param.char_form;
 
         // Calculate other properties of stations
         for (let [stnId, stnInstance] of Object.entries(this.stations)) {
@@ -65,50 +60,31 @@ export class RMGLine {
     }
 
     _initStnInstance(stnId: ID, stnInfo: StationInfo) {
-        switch (stnInfo.change_type) {
+        switch (stnInfo.transfer.type) {
             case 'int2':
-            case 'osi21_ul':
-            case 'osi21_pl':
-            case 'osi21_ur':
-            case 'osi21_pr':
+            case 'osi21':
                 return new Int2Station(stnId, stnInfo);
-            case 'int3_l':
-            case 'osi31_ul':
-            case 'osi31_pl':
-                return new Int3LStation(stnId, stnInfo);
-            case 'int3_r':
-            case 'osi31_ur':
-            case 'osi31_pr':
-                return new Int3RStation(stnId, stnInfo);
-            case 'osi11_ul':
-            case 'osi11_pl':
-                return new OSI11LStation(stnId, stnInfo);
-            case 'osi11_ur':
-            case 'osi11_pr':
-                return new OSI11RStation(stnId, stnInfo);
-            case 'osi12_ul':
-            case 'osi12_pl':
-            case 'osi13_ul':
-            case 'osi13_pl':
-                return new OSI12LStation(stnId, stnInfo);
-            case 'osi12_ur':
-            case 'osi12_pr':
-            case 'osi13_ur':
-            case 'osi13_pr':
-                return new OSI12RStation(stnId, stnInfo);
-            case 'osi22_pl':
-            case 'osi22_ul':
-                if (stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') {
+            case 'int3':
+            case 'osi31':
+                return stnInfo.transfer.tick_direc==='l' ?
+                    new Int3LStation(stnId, stnInfo) : 
+                    new Int3RStation(stnId, stnInfo);
+            case 'osi11':
+                return stnInfo.transfer.tick_direc==='l' ?
+                    new OSI11LStation(stnId, stnInfo) : 
+                    new OSI11RStation(stnId, stnInfo);
+            case 'osi12':
+            case 'osi13':
+                return stnInfo.transfer.tick_direc==='l' ?
+                    new OSI12LStation(stnId, stnInfo) : 
+                    new OSI12RStation(stnId, stnInfo);
+            case 'osi22':
+                if (stnInfo.parents[0]==='linestart' || stnInfo.children[0]==='lineend') {
                     return new OSI22EndStation(stnId, stnInfo);
                 } else {
-                    return new OSI22LStation(stnId, stnInfo);
-                }
-            case 'osi22_pr':
-            case 'osi22_ur':
-                if (stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') {
-                    return new OSI22EndStation(stnId, stnInfo);
-                } else {
-                    return new OSI22RStation(stnId, stnInfo);
+                    return stnInfo.transfer.tick_direc==='l' ?
+                        new OSI22LStation(stnId, stnInfo) :
+                        new OSI22RStation(stnId, stnInfo);
                 }
             default:
                 return new RMGStation(stnId, stnInfo);
@@ -127,7 +103,6 @@ export class RMGLine {
         this.drawSVGFrame();
         this.drawStrip();
         this.drawDestInfo();
-        this.loadFonts();
     }
 
     /**
@@ -149,10 +124,6 @@ export class RMGLine {
         this.drawStns();
         this.drawLine();
         this.drawStrip();
-
-        this.loadFonts();
-
-        this.updateStnNameBg();
     }
 
     /**
@@ -179,10 +150,6 @@ export class RMGLine {
         RMGLine.clearSVG();
         this.drawStns();
         this.drawLine();
-
-        this.loadFonts();
-
-        this.updateStnNameBg();
     }
 
     set branchSpacing(val: number) {
@@ -197,15 +164,11 @@ export class RMGLine {
         RMGLine.clearSVG();
         this.drawStns();
         this.drawLine();
-
-        this.loadFonts();
-
-        this.updateStnNameBg();
     }
 
-    set txtFlip(val: boolean) {
-        this._txtFlip = val;
-        setParams('txt_flip', val);
+    set txtFlip(flag: boolean) {
+        this._txtFlip = flag;
+        setParams('txt_flip', flag);
 
         for (let [stnId, stnInstance] of Object.entries(this.stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
@@ -214,15 +177,11 @@ export class RMGLine {
 
         $('#stn_icons').empty();
         this.drawStns();
-
-        this.loadFonts();
-
-        this.updateStnNameBg();
     }
 
     set themeColour(hexs: string[]) {
         this._themeColour = hexs[0];
-        this._fgColour = hexs[1];
+        this._fgColour = hexs[1] as '#fff' | '#000';
 
         var param = getParams();
         param.theme[2] = hexs[0];
@@ -249,8 +208,6 @@ export class RMGLine {
         this.drawLine();
 
         this.drawDestInfo();
-
-        this.loadFonts();
     }
 
     /**
@@ -261,19 +218,6 @@ export class RMGLine {
         setParams('platform_num', val);
         $('.rmg-name__platformnum').text(val);
     }
-
-    /**
-     * Setter of character form. 
-     * @param val 'trad', 'cn', 'tw' or 'jp'
-     */
-    set charForm(val: string) {
-        this._charForm = val;
-        setParams('char_form', val);
-
-        $('.rmg-name__char-trad, .rmg-name__char-cn, .rmg-name__char-tw, .rmg-name__char-jp')
-            .removeClass('rmg-name__char-trad rmg-name__char-cn rmg-name__char-tw rmg-name__char-jp')
-            .addClass(`rmg-name__char-${val}`);
-    }
     
     /**
      * Setter of names of line. 
@@ -281,20 +225,6 @@ export class RMGLine {
     set lineNames(val: Name) {
         this._lineNames = val;
         setParams('line_name', val);
-
-        this.drawDestInfo();
-        this.loadFonts();
-    }
-
-    /**
-     * Setter of legacy style of destination information panel. 
-     */
-    set destLegacy(val: boolean) {
-        this._destLegacy = val;
-        setParams('dest_legacy', val);
-
-        this.drawDestInfo();
-        this.loadFonts();
     }
 
     /**
@@ -313,10 +243,6 @@ export class RMGLine {
         this.drawLine();
 
         this.drawDestInfo();
-
-        this.loadFonts();
-
-        this.updateStnNameBg();
     }
 
     /**
@@ -660,19 +586,7 @@ export class RMGLine {
         $('#stn_icons').html($('#stn_icons').html()); // Refresh DOM
     }
 
-    /**
-     * Update background of current station name. `y` and `height` are changed while station icon is re-drawn and `RMGStation.nameHTML` is loaded. 
-     */
-    updateStnNameBg() {
-        var stnNameDim = getTxtBoxDim(
-            $(`#stn_icons > #${this._currentStnId} g.Name`)[0] as Element as SVGGraphicsElement,
-            'railmap'
-        );
-        $('#current_bg').attr({
-            x: stnNameDim.x-3, 
-            width: stnNameDim.width+6, 
-        });
-    }
+
 
     get stnDX() {return this.turningRadius - this._branchSpacing/2};
     get stnDY() {return this._branchSpacing/2};
@@ -775,42 +689,7 @@ export class RMGLine {
     }
 
     drawDestInfo() {
-        $('#dest_name > #platform > text').text(this._platformNum);
-
-        let validDest: ID[] = this[this._direction + 'ValidDests'];
-        let txtAnchor = this._direction==='l' ? 'start' : 'end';
-
-        var [destNameZH, destNameEN] = [0,1].map(idx => {
-            return validDest.map(stnId => this.stations[stnId].name[idx].replace(/\\/g, ' ')).join('/');
-        })
-
-        if (this._destLegacy) {
-            var [lineNameZH, lineNameEN] = this._lineNames;
-            lineNameEN += ' ';
-        } else {
-            var lineNameZH = lineNameEN = '';
-        }
-
-        $('#dest_name > g:last-child text').eq(0).text(`${lineNameZH}往${destNameZH}`);
-        $('#dest_name > g:last-child text').eq(1).text(`${lineNameEN}to ${destNameEN}`);
-
-        var bcr = $('#dest_name > g:last-child')[0].getBoundingClientRect();
-        var flagLength = 160 + 150 + bcr.width + 45 + 50;
-        var isLeft = (this._direction == 'l') ? 1 : -1;
-        var arrowX = (this._svgDestWidth - isLeft * flagLength) / 2;
-        var arrowRotate = 90 * (1 - isLeft);
-        var platformNumX = arrowX + isLeft * (160 + 50 + 75);
-        var destNameX = platformNumX + isLeft * (75 + 45);
-        $('#dest_name > use').attr('transform', `translate(${arrowX},130)rotate(${arrowRotate})`);
-        $('#dest_name > #platform').attr('transform', `translate(${platformNumX},130)`);
-        $('#dest_name > g:last-child').attr({
-            transform: `translate(${destNameX},105)`, 
-            'text-anchor': txtAnchor
-        });
-    }
-
-    loadFonts() {
-        $('.rmg-name__zh').addClass(`rmg-name__char-${this._charForm}`);
+        //
     }
 
     updateStnName(stnId: ID, names: Name, stnNum: string) {
@@ -833,9 +712,6 @@ export class RMGLine {
         } else if (this.rightDests.includes(stnId) && this._direction == 'r') {
             this.drawDestInfo();
         }
-
-        this.loadFonts();
-        if (stnId == this._currentStnId) {this.updateStnNameBg();}
     }
 
     updateStnServices(stnId: ID, detail: {chipId: 'local'|'express', selected: boolean}) {
@@ -917,9 +793,6 @@ export class RMGLine {
         //     $('#stn_icons').append(this.stations[stnId].html);
         //     $('#stn_icons').html($('#stn_icons').html());
         // }
-        this.loadFonts();
-
-        this.updateStnNameBg();
     }
 
     removeStn(stnId: ID) {
@@ -1044,10 +917,6 @@ export class RMGLine {
         this.drawStrip();
 
         this.drawDestInfo();
-
-        this.loadFonts();
-
-        this.updateStnNameBg();
         return true;
     }
 
@@ -1426,11 +1295,6 @@ export class RMGLine {
         this.drawStrip();
 
         this.drawDestInfo();
-
-        this.loadFonts();
-
-        this.updateStnNameBg();
-
         return [newId, newInfo];
     }
 
@@ -1476,7 +1340,7 @@ export class RMGLine {
     updateBranchType(stnId: ID, direction: DirectionLong, type: 'through' | 'nonthrough') {
         let direc = DirectionLong[direction];
         // no change
-        if (this.stations[stnId].branch[direc][0] === type) {return;}
+        if (this.stations[stnId].branch[direc][0] === type) {return false;}
 
         this.stations[stnId].branch[direc][0] = type;
         let param = getParams();
@@ -1491,7 +1355,7 @@ export class RMGLine {
         this.drawStns();
         this.drawLine();
         this.drawDestInfo();
-        this.loadFonts();
+        return true;
     }
 
     updateBranchFirst(stnId: ID, direction: DirectionLong, first: ID) {
@@ -1530,7 +1394,6 @@ export class RMGLine {
         this.drawStns();
         this.drawLine();
         this.drawDestInfo();
-        this.loadFonts();
 
         return true;
     }
@@ -1539,9 +1402,9 @@ export class RMGLine {
         let direc = DirectionLong[direction];
         // no change
         if (direc === 'right') {
-            if (this.stations[stnId].children.indexOf(this.stations[stnId].branch.right[1]) === pos) {return;}
+            if (this.stations[stnId].children.indexOf(this.stations[stnId].branch.right[1]) === pos) {return false;}
         } else {
-            if (this.stations[stnId].parents.indexOf(this.stations[stnId].branch.left[1]) === pos) {return;}
+            if (this.stations[stnId].parents.indexOf(this.stations[stnId].branch.left[1]) === pos) {return false;}
         }
 
         let branchEndId = this.stations[stnId].branch[direc][1];
@@ -1574,7 +1437,7 @@ export class RMGLine {
         this.drawStns();
         this.drawLine();
         this.drawDestInfo();
-        this.loadFonts();
+        return true;
     }
 
     static clearSVG() {
@@ -1589,8 +1452,6 @@ export class RMGLine {
         line.drawLine();
         line.drawStrip();
         line.drawDestInfo();
-        line.loadFonts();
-        line.updateStnNameBg();
     }
 
     /**

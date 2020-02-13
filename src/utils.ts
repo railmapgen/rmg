@@ -107,6 +107,10 @@ export interface RMGParam {
      * Legacy style of destination information panel. (MTR specific)
      */
     dest_legacy?: boolean;
+    /**
+     * Country-variant character form. (MTR specific)
+     */
+    char_form?: 'trad' | 'cn' | 'tw' | 'jp';
     [propName: string]: any;
 }
 
@@ -277,47 +281,6 @@ export function joinIntName(names: Name, dy1, dy2): [JQuery<HTMLElement>, number
         );
     }
     return [res, nameZH.length, nameEN.length];
-}
-
-export function getIntBoxGZ(intInfo: InterchangeInfo, state) {
-    let bg = intInfo[IntInfoTag.colour];
-    let fg = intInfo[IntInfoTag.fg];
-    let names = [
-        intInfo[IntInfoTag.nameZH], 
-        intInfo[IntInfoTag.nameEN]
-    ];
-    let nameZHs = names[0].match(/[\d]+|[\D]+/g) || [''];
-    let intNameSplitOk = false;
-    if (nameZHs.length == 2) {
-        if (!isNaN(Number(nameZHs[0])) && isNaN(Number(nameZHs[1]))) {
-            intNameSplitOk = true;
-        }
-    }
-    let boxEl = $('<g>')
-        .append(
-            $('<use>', { 
-                'xlink:href': '#intbox_gz', 
-                fill: state===-1 ? '#aaa' : bg
-            })
-        )
-        .append(
-            $('<text>', { y: 8.5, class: 'rmg-name__zh rmg-name__gzmtr--int' })
-                .append($('<tspan>', { 'font-size':'16px', 'dominant-baseline': 'central' }).text(intNameSplitOk ? nameZHs[0] : ''))
-                .append($('<tspan>', { dy:-1, 'dominant-baseline': 'central' }).text(intNameSplitOk ? nameZHs[1] : nameZHs.join('')))
-        )
-        .append(
-            $('<text>', { 
-                y: 19.5, 
-                class: 'rmg-name__en'
-            })
-                .addClass(names[1].length > 10 ? 'rmg-name__gzmtr--int-small' : 'rmg-name__gzmtr--int')
-                .text(names[1])
-        );
-    if (fg === '#fff' || state === -1) {
-        $(boxEl).find('text').addClass('rmg-name__gzmtr--white-fg');
-    }
-
-    return boxEl;
 }
 
 export function getRandomId(): ID {

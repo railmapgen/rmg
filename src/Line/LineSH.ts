@@ -364,10 +364,6 @@ export class RMGLineSH extends RMGLine {
         $('#current_bg').hide();  // fix the mysterious black rect
     }
 
-    loadFonts() {
-        //Chito: empty this method, avoid adding MTR specific class, which is for displaying country-variant character form. 
-    }
-
     // rewrite this to make sure the line is draw before color
     static initSVG(line) {
         line.drawSVGFrame();
@@ -381,7 +377,6 @@ export class RMGLineSH extends RMGLine {
 
         line.drawStrip();
         line.drawDestInfo();
-        line.loadFonts();
         line.updateStnNameBg();
     }
 
@@ -397,6 +392,11 @@ export class RMGLineSH extends RMGLine {
         super.currentStnId = val
 
         this.fillThemeColour()
+    }
+
+    set lineNames(val: Name) {
+        super.lineNames = val;
+        this.drawDestInfo();
     }
 
     // rewrite this to get drawStns and recalled
@@ -446,8 +446,9 @@ export class RMGLineSH extends RMGLine {
 
     updateBranchType(stnId: ID, direction: DirectionLong, type: 'through' | 'nonthrough') {
         // Chito: This method should be remove when this._stnState() is updated. 
-        super.updateBranchType(stnId, direction, type);
+        if (!super.updateBranchType(stnId, direction, type)) {return false;}
         this.fillThemeColour();
+        return true;
     }
 
     updateBranchFirst(stnId: ID, direction: DirectionLong, first: ID) {
@@ -461,7 +462,8 @@ export class RMGLineSH extends RMGLine {
 
     updateBranchPos(stnId: ID, direction: DirectionLong, pos: 0 | 1) {
         // Chito: This method should be remove when this._stnState() is updated. 
-        super.updateBranchPos(stnId, direction, pos);
+        if (!super.updateBranchPos(stnId, direction, pos)) {return false;}
         this.fillThemeColour();
+        return true;
     }
 }

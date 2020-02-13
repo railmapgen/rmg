@@ -4,6 +4,7 @@ A tool for generating railway maps and information panels in the styles of follo
 
 - Guangzhou Metro (Guangzhou, China)
 - MTR (Hong Kong)
+- Shanghai Metro (Alpha) (Shanghai, China)
 - More styles are coming. 
 
 [Version History](VersionHistory.md) | [Documentations](./docs/)

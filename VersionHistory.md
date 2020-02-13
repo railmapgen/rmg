@@ -1,5 +1,16 @@
 # Version History
 
+## 2.8.1 (13 Feb 2020)
+
+### New Features
+
+- Separated class `RMGLineHK` from class `RMGLine`. 
+- Control panels initialisation are now loaded on demand to reduce loading time. 
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
 ## 2.8 (13 Feb 2020)
 
 ### New Features

@@ -1,12 +1,11 @@
 import { updateParam, getParams } from '../utils';
 import { MDCDialog } from '@material/dialog';
-import { RMGLine } from './Line';
 
 const getLineClass = async (style: string) => {
     switch (style) {
         case 'mtr':
-            return Promise.resolve(RMGLine);
-        // lazy loading
+            return import(/* webpackChunkName: "LineHK" */ './LineHK')
+            .then(({ RMGLineHK }) => RMGLineHK);
         case 'gzmtr':
             return import(/* webpackChunkName: "LineGZ" */ './LineGZ')
                 .then(({ RMGLineGZ }) => RMGLineGZ);

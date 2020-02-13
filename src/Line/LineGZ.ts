@@ -1,5 +1,5 @@
-import { getTxtBoxDim, setParams, getParams, putParams, getRandomId, DirectionLong, getIntBoxGZ } from '../utils';
-import { RMGStationGZ, IntStationGZ, BranchStationGZ, OSIStationGZ } from '../Station/StationGZ';
+import { getTxtBoxDim, setParams, getParams, putParams, getRandomId, DirectionLong } from '../utils';
+import { RMGStationGZ, IntStationGZ, BranchStationGZ, OSIStationGZ, getIntBoxGZ } from '../Station/StationGZ';
 import { RMGLine } from './Line';
 
 import { ID, Name, StationInfo, RMGParam, InterchangeInfo } from '../utils';
@@ -8,7 +8,7 @@ interface StationDictGZ {
     [index: string]: RMGStationGZ;
 }
 
-class RMGLineGZ extends RMGLine {
+export class RMGLineGZ extends RMGLine {
     private _psdNum: string;
     private _lineNum: string;
     private _infoPanelType: string;
@@ -44,34 +44,6 @@ class RMGLineGZ extends RMGLine {
             default:
                 return new RMGStationGZ(stnId, stnInfo);
         }
-        // switch (stnInfo.change_type) {
-        //     case 'int2':
-        //         // return new Int2StationGZ(stnId, stnInfo);
-        //     case 'int3_l':
-        //     case 'int3_r':
-        //         return new IntStationGZ(stnId, stnInfo);
-        //     case 'osi11_ul':
-        //     case 'osi11_pl':
-        //     case 'osi11_ur':
-        //     case 'osi11_pr':
-        //         // return new OSI11StationGZ(stnId, stnInfo);
-        //     case 'osi12_ul':
-        //     case 'osi12_pl':
-        //     case 'osi12_ur':
-        //     case 'osi12_pr':
-        //     case 'osi22_ul':
-        //     case 'osi22_pl':
-        //     case 'osi22_ur':
-        //     case 'osi22_pr':
-        //         return new OSIStationGZ(stnId, stnInfo);
-        //     case 'osi22_end_p':
-        //     case 'osi22_end_u':
-        //         if (stnInfo.parents[0] == 'linestart' || stnInfo.children[0] == 'lineend') {
-        //             return new OSIStationGZ(stnId, stnInfo);
-        //         }
-        //     default:
-        //         return new RMGStationGZ(stnId, stnInfo);
-        // }
     }
 
     get lineXs() {
@@ -124,7 +96,6 @@ class RMGLineGZ extends RMGLine {
         this.loadLineNum();
         this.loadLineName();
         this.loadDirection();
-        this.loadFonts();
     }
 
     set currentStnId(val: ID) {
@@ -137,7 +108,6 @@ class RMGLineGZ extends RMGLine {
         this._lineNum = val;
         setParams('line_num', val);
         this.loadLineNum();
-        this.loadFonts();
     }
 
     set lineNames(val: Name) {
@@ -146,7 +116,6 @@ class RMGLineGZ extends RMGLine {
 
         this.loadLineName();
         // (to be fixed) redraw branching station
-        this.loadFonts();
     }
 
     set psdNum(val: string) {
@@ -343,10 +312,6 @@ class RMGLineGZ extends RMGLine {
         super.drawLine();
     }
 
-    loadFonts() {
-        // $('.rmg-name__zh, .rmg-name__en').addClass('rmg-name__gzmtr');
-    }
-
     initFonts() {
         let styleSheet = (<HTMLLinkElement>$('link#css_share')[0]).sheet as CSSStyleSheet;
         let idx: number[] = [];
@@ -421,7 +386,6 @@ class RMGLineGZ extends RMGLine {
             .attr({
                 transform: `translate(${lineNameX},-18)scale(1.5)`
             });
-        this.loadFonts();
     }
 
     loadDirection() {
@@ -501,12 +465,10 @@ class RMGLineGZ extends RMGLine {
 
         if (this.stations[this._currentStnId].parents.includes(stnId) || this.stations[this._currentStnId].children.includes(stnId)) {
             this.drawDestInfo();
-            this.loadFonts();
         }
 
         if (this._currentStnId === stnId) {
             this.drawDestInfo(); 
-            this.loadFonts();
         }
 
         if (this.leftDests.includes(stnId) || this.rightDests.includes(stnId)) {
@@ -740,9 +702,10 @@ class RMGLineGZ extends RMGLine {
     }
 
     updateBranchType(stnId: ID, direction: DirectionLong, type: 'through' | 'nonthrough') {
-        super.updateBranchType(stnId, direction, type);
+        if (!super.updateBranchType(stnId, direction, type)) {return false;}
         this.loadLineNum();
         this.loadDirection();
+        return true;
     }
 
     updateBranchFirst(stnId: ID, direction: DirectionLong, first: ID) {
@@ -755,9 +718,10 @@ class RMGLineGZ extends RMGLine {
     }
 
     updateBranchPos(stnId: ID, direction: DirectionLong, pos: 0 | 1) {
-        super.updateBranchPos(stnId, direction, pos);
+        if (!super.updateBranchPos(stnId, direction, pos)) {return false;}
         this.loadLineNum();
         this.loadDirection();
+        return  true;
     }
 
     static initSVG(line) {
@@ -767,5 +731,3 @@ class RMGLineGZ extends RMGLine {
         line.loadDirection();
     }
 }
-
-export { RMGLineGZ };

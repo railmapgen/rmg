@@ -7,6 +7,7 @@ import { MDCSelect } from '@material/select';
 import { MDCTextField } from '@material/textfield';
 import { MDCSwitch } from '@material/switch';
 import { MDCRipple } from '@material/ripple';
+import { RMGLineHK } from '../Line/LineHK';
 
 export function common() {
     // mdc instances
@@ -204,14 +205,14 @@ export function mtr() {
         let char = event.detail.action;
         if (char == 'close') {return;}
 
-        window.myLine.charForm = char;
+        (<RMGLineHK>window.myLine).charForm = char;
         $('#design_list_mtr')
             .find('li#char .mdc-list-item__secondary-text')
             .text(getCharText(char));
     });
 
     ($(legacySwitch.root_).find('input') as JQuery<HTMLInputElement>)
-        .on('change', event => window.myLine.destLegacy = event.target.checked);
+        .on('change', event => (<RMGLineHK>window.myLine).destLegacy = event.target.checked);
 }
 
 export function gzmtr() {
