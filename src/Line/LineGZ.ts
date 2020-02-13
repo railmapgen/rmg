@@ -84,9 +84,7 @@ export class RMGLineGZ extends RMGLine {
 
         for (let [stnId, stnInstance] of Object.entries(this.stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
-            stnInstance.x = this._stnRealX(stnId);
-            stnInstance.y = this._stnRealY(stnId);
-            stnInstance.state = this._stnState(stnId);
+            this._updateStnInstance(stnId);
         }
 
         RMGLineGZ.clearSVG();

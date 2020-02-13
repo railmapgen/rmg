@@ -1,14 +1,16 @@
 import { RMGLine } from './Line';
 import { RMGParam, getTxtBoxDim, setParams, Name, ID, DirectionLong, StationInfo } from '../utils';
-import { Int2Station, Int3LStation, Int3RStation, OSI11LStation, OSI11RStation, OSI12LStation, OSI12RStation, OSI22EndStation, OSI22LStation, OSI22RStation, RMGStation, OSI22Station } from '../Station/Station';
+import { RMGStationHK, Int2StationHK, Int3LStationHK, Int3RStationHK, OSI11LStationHK, OSI12LStationHK, OSI12RStationHK, OSI22EndStationHK, OSI22LStationHK, OSI22RStationHK, OSI11RStationHK, OSI22StationHK } from '../Station/StationHK';
 
 export class RMGLineHK extends RMGLine {
+    private _txtFlip: boolean;
     private _charForm: 'trad' | 'cn' | 'tw' | 'jp';
     private _destLegacy: boolean; 
 
     constructor (param: RMGParam) {
         super(param);
 
+        this._txtFlip = param.txt_flip;
         this._charForm = param.char_form;
         this._destLegacy = param.dest_legacy;
     }
@@ -17,32 +19,37 @@ export class RMGLineHK extends RMGLine {
         switch (stnInfo.transfer.type) {
             case 'int2':
             case 'osi21':
-                return new Int2Station(stnId, stnInfo);
+                return new Int2StationHK(stnId, stnInfo);
             case 'int3':
             case 'osi31':
                 return stnInfo.transfer.tick_direc==='l' ?
-                    new Int3LStation(stnId, stnInfo) : 
-                    new Int3RStation(stnId, stnInfo);
+                    new Int3LStationHK(stnId, stnInfo) : 
+                    new Int3RStationHK(stnId, stnInfo);
             case 'osi11':
                 return stnInfo.transfer.tick_direc==='l' ?
-                    new OSI11LStation(stnId, stnInfo) : 
-                    new OSI11RStation(stnId, stnInfo);
+                    new OSI11LStationHK(stnId, stnInfo) : 
+                    new OSI11RStationHK(stnId, stnInfo);
             case 'osi12':
             case 'osi13':
                 return stnInfo.transfer.tick_direc==='l' ?
-                    new OSI12LStation(stnId, stnInfo) : 
-                    new OSI12RStation(stnId, stnInfo);
+                    new OSI12LStationHK(stnId, stnInfo) : 
+                    new OSI12RStationHK(stnId, stnInfo);
             case 'osi22':
                 if (stnInfo.parents[0]==='linestart' || stnInfo.children[0]==='lineend') {
-                    return new OSI22EndStation(stnId, stnInfo);
+                    return new OSI22EndStationHK(stnId, stnInfo);
                 } else {
                     return stnInfo.transfer.tick_direc==='l' ?
-                        new OSI22LStation(stnId, stnInfo) :
-                        new OSI22RStation(stnId, stnInfo);
+                        new OSI22LStationHK(stnId, stnInfo) :
+                        new OSI22RStationHK(stnId, stnInfo);
                 }
             default:
-                return new RMGStation(stnId, stnInfo);
+                return new RMGStationHK(stnId, stnInfo);
         }
+    }
+
+    _updateStnInstance(stnId: ID) {
+        super._updateStnInstance(stnId);
+        this.stations[stnId].namePos = this._txtFlip ? !this._stnNamePos(stnId) : this._stnNamePos(stnId);
     }
 
     set svgDestWidth(val: number) {
@@ -69,7 +76,16 @@ export class RMGLineHK extends RMGLine {
     }
 
     set txtFlip(flag: boolean) {
-        super.txtFlip = flag;
+        this._txtFlip = flag;
+        setParams('txt_flip', flag);
+
+        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
+            stnInstance.namePos = this._txtFlip ? !this._stnNamePos(stnId) : this._stnNamePos(stnId);
+        }
+
+        $('#stn_icons').empty();
+        this.drawStns();
         this.loadFonts();
         this.updateStnNameBg();
     }
@@ -115,6 +131,24 @@ export class RMGLineHK extends RMGLine {
         super.currentStnId = val;
         this.loadFonts();
         this.updateStnNameBg();
+    }
+
+    /**
+     * Station name position (`false`: above line, `true`: below line, given `txtFlip` is `false`).
+     */
+    private _stnNamePos(stnId: ID): boolean {
+        if (stnId === 'linestart') {return true;}
+        let self = this;
+        let cp = this.criticalPath.nodes;
+        let pos = cp.indexOf(stnId) % 2; // -1, 0 or 1;
+        if (pos === -1) {
+            let parId = this.stations[stnId].parents[0];
+            if (this._stnOutdegree(parId) === 2) {
+                return self._stnNamePos(parId);
+            }
+            return !self._stnNamePos(parId);
+        }
+        return pos === 1;
     }
 
     loadFonts() {
@@ -173,10 +207,10 @@ export class RMGLineHK extends RMGLine {
     protected _leftWideFactor(stnId: ID) {
         var res = 0;
         let stnInstance = this.stations[stnId];
-        if (stnInstance instanceof Int3LStation) {res += this._longInterval;}
-        if (stnInstance instanceof OSI11LStation) {res += this._longInterval;}
-        if (stnInstance instanceof OSI12LStation) {res += this._longInterval;}
-        if (stnInstance instanceof OSI22Station) {res += this._longInterval;}
+        if (stnInstance instanceof Int3LStationHK) {res += this._longInterval;}
+        if (stnInstance instanceof OSI11LStationHK) {res += this._longInterval;}
+        if (stnInstance instanceof OSI12LStationHK) {res += this._longInterval;}
+        if (stnInstance instanceof OSI22StationHK) {res += this._longInterval;}
         if (this._stnIndegree(stnId) == 2) {res += this._longInterval/2;}
         if (this._stnOutdegree(this.stations[stnId].parents[0]) == 2) {res += this._longInterval/2;}
         return res;
@@ -185,10 +219,10 @@ export class RMGLineHK extends RMGLine {
     protected _rightWideFactor(stnId: ID) {
         var res = 0;
         let stnInstance = this.stations[stnId];
-        if (stnInstance instanceof Int3RStation) {res += this._longInterval;}
-        if (stnInstance instanceof OSI11RStation) {res += this._longInterval;}
-        if (stnInstance instanceof OSI12RStation) {res += this._longInterval;}
-        if (stnInstance instanceof OSI22Station) {res += this._longInterval;}
+        if (stnInstance instanceof Int3RStationHK) {res += this._longInterval;}
+        if (stnInstance instanceof OSI11RStationHK) {res += this._longInterval;}
+        if (stnInstance instanceof OSI12RStationHK) {res += this._longInterval;}
+        if (stnInstance instanceof OSI22StationHK) {res += this._longInterval;}
         if (this._stnOutdegree(stnId) == 2) {res += this._longInterval/2;}
         if (this._stnIndegree(this.stations[stnId].children[0]) == 2) {res += this._longInterval/2;}
         return res;

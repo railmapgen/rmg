@@ -4,7 +4,7 @@
 
 ### New Features
 
-- Separated class `RMGLineHK` from class `RMGLine`. 
+- Separated classes `RMGLineHK` and `RMGStationHK` from classes `RMGLine` and `RMGStation` respectively. 
 - Control panels initialisation are now loaded on demand to reduce loading time. 
 
 ### Known Issues

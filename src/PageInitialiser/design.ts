@@ -193,7 +193,7 @@ export function mtr() {
     designListMTRList.listen('MDCList:action', (event: CustomEvent) => {
         switch (event.detail.index) {
             case 0:
-                window.myLine.txtFlip = !getParams().txt_flip;
+                (<RMGLineHK>window.myLine).txtFlip = !getParams().txt_flip;
                 break;
             case 1:
                 charDialog.open();

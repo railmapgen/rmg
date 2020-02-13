@@ -1,4 +1,4 @@
-import { getTxtBoxDim, setParams, getParams, putParams, getRandomId, getNameFromId } from '../utils';
+import { setParams, getParams, putParams, getRandomId, getNameFromId } from '../utils';
 import { RMGStation } from '../Station/Station';
 
 import { ID, Name, StationInfo, RMGParam, DirectionLong } from '../utils';
@@ -19,7 +19,6 @@ export class RMGLine {
     protected _padding: number;
     protected _longInterval = 1;
     private _branchSpacing: number;
-    private _txtFlip: boolean;
     public stations = {} as StationDict;
     protected _currentStnId: ID;
     protected _direction: 'l' | 'r';
@@ -38,10 +37,9 @@ export class RMGLine {
         this._padding = param['padding'];
         this._stripPc = param['strip_pc'];
         this._branchSpacing = param.branch_spacing;
-        this._txtFlip = param['txt_flip'];
 
         this._lineNames = param['line_name'];
-        
+
         for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
             this.stations[stnId] = this._initStnInstance(stnId, stnInfo);
         }
@@ -50,17 +48,28 @@ export class RMGLine {
         this._platformNum = param['platform_num'];
 
         // Calculate other properties of stations
-        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
-            if (['linestart', 'lineend'].includes(stnId)) {continue;}
-            stnInstance.x = this._stnRealX(stnId);
-            stnInstance.y = this._stnRealY(stnId);
-            stnInstance.state = this._stnState(stnId);
-            stnInstance.namePos = this._txtFlip ? !this._stnNamePos(stnId) : this._stnNamePos(stnId);
+        for (let stnId of Object.keys(this.stations)) {
+            this._updateStnInstance(stnId);
         }
     }
 
     _initStnInstance(stnId: ID, stnInfo: StationInfo) {
         return new RMGStation(stnId, stnInfo);
+    }
+
+    /**
+     * Update the following properties of `RMGStation` instance. 
+     * * `x`
+     * * `y`
+     * * `state`
+     * * plus style specific properties
+     */
+    protected _updateStnInstance(stnId: ID) {
+        if (['linestart', 'lineend'].includes(stnId)) {return;}
+        let instance = this.stations[stnId];
+        instance.x = this._stnRealX(stnId);
+        instance.y = this._stnRealY(stnId);
+        instance.state = this._stnState(stnId);
     }
 
     /**
@@ -136,19 +145,6 @@ export class RMGLine {
         RMGLine.clearSVG();
         this.drawStns();
         this.drawLine();
-    }
-
-    set txtFlip(flag: boolean) {
-        this._txtFlip = flag;
-        setParams('txt_flip', flag);
-
-        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
-            if (['linestart', 'lineend'].includes(stnId)) {continue;}
-            stnInstance.namePos = this._txtFlip ? !this._stnNamePos(stnId) : this._stnNamePos(stnId);
-        }
-
-        $('#stn_icons').empty();
-        this.drawStns();
     }
 
     set themeColour(hexs: string[]) {
@@ -484,23 +480,7 @@ export class RMGLine {
         }
     }
 
-    /**
-     * Station name position (`false`: above line, `true`: below line, given `txtFlip` is `false`).
-     */
-    private _stnNamePos(stnId: ID): boolean {
-        if (stnId === 'linestart') {return true;}
-        let self = this;
-        let cp = this.criticalPath.nodes;
-        let pos = cp.indexOf(stnId) % 2; // -1, 0 or 1;
-        if (pos === -1) {
-            let parId = this.stations[stnId].parents[0];
-            if (this._stnOutdegree(parId) === 2) {
-                return self._stnNamePos(parId);
-            }
-            return !self._stnNamePos(parId);
-        }
-        return pos === 1;
-    }
+
 
     /**
      * Set height and width for both `svg`s. 
@@ -729,10 +709,7 @@ export class RMGLine {
             // Not sure position, redraw all
             for (let [stnId, stnInstance] of Object.entries(this.stations)) {
                 if (['linestart', 'lineend'].includes(stnId)) {continue;}
-                stnInstance.x = this._stnRealX(stnId);
-                stnInstance.y = this._stnRealY(stnId);
-                stnInstance.namePos = this._txtFlip ? !this._stnNamePos(stnId) : this._stnNamePos(stnId);
-                stnInstance.state = this._stnState(stnId);
+                this._updateStnInstance(stnId);
             }
             RMGLine.clearSVG();
             this.drawStns();
@@ -860,10 +837,7 @@ export class RMGLine {
 
         for (let [stnId, stnInstance] of Object.entries(this.stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
-            stnInstance.x = this._stnRealX(stnId);
-            stnInstance.y = this._stnRealY(stnId);
-            stnInstance.namePos = this._txtFlip ? !this._stnNamePos(stnId) : this._stnNamePos(stnId);
-            stnInstance.state = this._stnState(stnId);
+            this._updateStnInstance(stnId);
         }
         RMGLine.clearSVG();
         this.drawStns();
@@ -1238,10 +1212,7 @@ export class RMGLine {
 
         for (let [stnId, stnInstance] of Object.entries(this.stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
-            stnInstance.x = this._stnRealX(stnId);
-            stnInstance.y = this._stnRealY(stnId);
-            stnInstance.state = this._stnState(stnId);
-            stnInstance.namePos = this._txtFlip ? !this._stnNamePos(stnId) : this._stnNamePos(stnId);
+            this._updateStnInstance(stnId);
         }
 
         RMGLine.clearSVG();
