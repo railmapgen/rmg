@@ -70,7 +70,69 @@ By now, your are able to test your new style by querying `?style=mtrsz` in your 
 </li>
 ```
 
+### To add new text ui
+
+Add new language entry at ```/lang/*.json``` if you add selection at ```index.html:444```
+
+### To change destination info
+
+Rewrite the ```drawDestInfo``` in your ```Line**.ts```. Remember to check the following elements according to your style.
+
+* the destination text
+* the arrow (optional)
+* the platform number (optional)
+* the line number (optional)
+* the decoration line (optional)
+
+#### The destination text
+
+You may refer to ```lValidDests``` or  ```rValidDests``` to get the destination station name.
+
+#### The decoration line (optional)
+
+* Try to get the svg width by using ```_svgDestWidth```.
+* Use ```_direction``` to get direction.
+
+### To change station style in railmap
+
+Rewrite the ```iconHTML``` and ```nameHTML``` in your ```Station**.ts```. Typically, only class need to be changed and refer the rest from the base ```Station.ts```.
+
+#### In case you need a new path
+
+Add specific svg path at ```index.html:svg#railmap.defs```. This is where the ```xlink:herf``` links from.
+
+#### The use of ```html``` and ```ungrpHTML```
+
+This two will call the ```iconHTML``` and ```nameHTML``` you rewrite and warp them under a ```<g>``` tag. So when you want to add new function to add additional elements, rewrite them.
+
+### To change line style in railmap
+
+The main functions are ```drawLine``` and ```fillThemeColour```. In addition, ```_linePath``` could be rewrited.
+
+### To fix the mysterious black rect
+
+![mysterious black rect](mysterious_black_rect.png)
+Rewite the ```updateStnNameBg``` in ```RMGLine**``` at ```/src/Line/Line**.ts``` and add ```$('#current_bg').hide();```.
+
 ## Style-specific parameters
+
+### Line
+
+|func/parm|description|
+|-|-|
+|drawDestInfo|Control the left side of the preview, the destination info|
+|lValidDests|The left side destinations (includes all branches)|
+|rValidDests|The right side destinations (includes all branches)|
+|drawLine|Draw the line in the right side of the preview|
+|fillThemeColour|Fill Theme Colour|
+|initSVG|All magic starts here|
+
+### Station
+
+|func/parm|description|
+|-|-|
+|iconHTML|Draw the icon|
+|nameHTML|Draw the name|
 
 ## Old description
 
