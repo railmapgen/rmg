@@ -290,6 +290,20 @@ class RMGLineGZ extends RMGLine {
         $('#strip_gz').attr('width', this._svgWidth);
     }
 
+    drawStns() {
+        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
+            $('#stn_icons').append(stnInstance.html);
+        }
+        $('#stn_icons').html($('#stn_icons').html()); // Refresh DOM
+
+        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
+            $(`#stn_icons #${stnId} g#stn_name`).append(stnInstance.expressTagHTML(this._themeColour));
+        }
+        $('#stn_icons').html($('#stn_icons').html()); // Refresh DOM
+    }
+
     _linePath(stnIds: ID[]) {
         let prevY: number;
         var path = [];
@@ -480,6 +494,9 @@ class RMGLineGZ extends RMGLine {
     updateStnName(stnId: ID, names: Name, stnNum: string) {
         super.updateStnName(stnId, names, stnNum);
 
+        $(`#stn_icons #${stnId} g#stn_name`).append(this.stations[stnId].expressTagHTML(this._themeColour));
+        $('#stn_icons').html($('#stn_icons').html());
+
         this.loadLineNum();
 
         if (this.stations[this._currentStnId].parents.includes(stnId) || this.stations[this._currentStnId].children.includes(stnId)) {
@@ -495,6 +512,17 @@ class RMGLineGZ extends RMGLine {
         if (this.leftDests.includes(stnId) || this.rightDests.includes(stnId)) {
             this.loadDirection();
         }
+    }
+
+    updateStnServices(stnId: ID, detail: {chipId: 'local'|'express', selected: boolean}) {
+        super.updateStnServices(stnId, detail);
+
+        $(`#stn_icons #${stnId}`).remove();
+        $('#stn_icons').append(this.stations[stnId].html);
+        $('#stn_icons').html($('#stn_icons').html());
+        $(`#stn_icons #${stnId} g#stn_name`).append(this.stations[stnId].expressTagHTML(this._themeColour));
+        $('#stn_icons').html($('#stn_icons').html());
+        this.loadLineNum();
     }
     
     drawDestInfo() {

@@ -64,7 +64,7 @@
     "Design.Line": "线路编号",
     "Design.PSD": "屏蔽门编号",
 
-    "Design.PanelType": "信息面板样式",     
+    "Design.PanelType": "盖板样式",     
     "Design.PanelType.Title": "选择信息面板样式", 
     "Design.PanelType.GZ28": "二/八号线", 
     "Design.PanelType.GZ3": "三号线", 

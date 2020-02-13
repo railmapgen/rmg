@@ -1,5 +1,16 @@
 # Version History
 
+## 2.8 (13 Feb 2020)
+
+### New Features
+
+- Stations with express services are shown with a side note in Guangzhou Metro style now! Templates of Guangzhou Metro Line 14 and Line 21 are updated accordingly. 
+- Station name editing dialogue is now merged with station detail editing dialogue for consistency. 
+
+### Known Issues
+
+- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
+
 ## 2.7 (12 Feb 2020)
 
 ### New Features

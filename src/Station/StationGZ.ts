@@ -1,5 +1,5 @@
 import { RMGStation } from './Station';
-import { ID, Name, IntInfoTag, InterchangeInfo, BranchInfo, StationInfo, getIntBoxGZ } from '../utils';
+import { ID, Name, IntInfoTag, InterchangeInfo, BranchInfo, StationInfo, getIntBoxGZ, getTxtBoxDim } from '../utils';
 
 class RMGStationGZ extends RMGStation {
     constructor(id: ID, data: StationInfo) {
@@ -43,11 +43,7 @@ class RMGStationGZ extends RMGStation {
         // let dx = this._nameShift ? -8 : (24 + (nameENLn-1)*12) * Math.cos(-45);
         let dy = this._tickRotation === 0 ? (-4 - 21.921875 - (nameENLn-1)*12*Math.cos(-45)) : 17.5;
         // var dy = (-4 - 21.921875 - (nameENLn-1)*12*Math.cos(-45)) * (this._tickRotation === 0 ? 1 : -1);
-        return $('<g>', {
-            'transform': `translate(${this.x - dx},${this.y + dy})rotate(-45)`, 
-            'text-anchor': this._tickRotation === 0 ? 'start' : 'end', 
-            class: `Name ${this.nameClass}`
-        }).append(
+        let nameGEl = $('<g>', { class: 'Name ' + this.nameClass }).append(
             $('<text>').addClass('rmg-name__zh rmg-name__gzmtr--station').text(this.name[0])
         ).append(
             $('<text>', {
@@ -58,6 +54,29 @@ class RMGStationGZ extends RMGStation {
                 }).text(this.name[1].split('\\')[1])
             )
         );
+        return $('<g>', {
+            'id': 'stn_name', 
+            'transform': `translate(${this.x - dx},${this.y + dy})rotate(-45)`, 
+            'text-anchor': this._tickRotation === 0 ? 'start' : 'end'
+        }).append(nameGEl);
+    }
+
+    expressTagHTML(colour: string) {
+        if (!this.services.has('express')) {
+            return $('<g>');
+        }
+        let stnNameDim = ($(`#stn_icons #${this.id} g#stn_name g`)[0] as Element as SVGGElement).getBBox();
+        return $('<g>', { 
+            transform: `translate(${(stnNameDim.width+35)*(this._tickRotation===0?1:-1)},${2.5+5*(this.name[1].split('\\').length-1)})`, 
+            fill: this.state===-1 ? '#aaa' : colour, 
+            'text-anchor': 'middle'
+        })
+            .append(
+                $('<text>', { class: 'rmg-name__zh rmg-name__gzmtr--express' }).text('快车停靠站')
+            )
+            .append(
+                $('<text>', {y:10, class: 'rmg-name__en rmg-name__gzmtr--express' }).text('Express Station')
+            );
     }
 }
 

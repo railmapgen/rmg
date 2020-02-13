@@ -665,7 +665,7 @@ export class RMGLine {
      */
     updateStnNameBg() {
         var stnNameDim = getTxtBoxDim(
-            $(`#stn_icons > #${this._currentStnId} > .Name`)[0] as Element as SVGGraphicsElement,
+            $(`#stn_icons > #${this._currentStnId} g.Name`)[0] as Element as SVGGraphicsElement,
             'railmap'
         );
         $('#current_bg').attr({
@@ -855,9 +855,8 @@ export class RMGLine {
         let param = getParams();
         param.stn_list[stnId].services = Array.from(this.stations[stnId].services);
         putParams(param);
-        
-        // redraw station
-        console.log(this.stations[stnId].services);
+
+        // redraw station on demand
     }
 
     updateStnTransfer(stnId: ID, type, info=null) {
@@ -896,7 +895,7 @@ export class RMGLine {
 
         this.stations[stnId] = this._initStnInstance(stnId, param.stn_list[stnId]);
 
-        if (prevClass != this.stations[stnId].constructor.name) {
+        // if (prevClass != this.stations[stnId].constructor.name) {
             // Not sure position, redraw all
             for (let [stnId, stnInstance] of Object.entries(this.stations)) {
                 if (['linestart', 'lineend'].includes(stnId)) {continue;}
@@ -909,15 +908,15 @@ export class RMGLine {
             this.drawStns();
             this.drawLine();
             this.drawStrip();
-        } else {
-            this.stations[stnId].x = this._stnRealX(stnId);
-            this.stations[stnId].y = this._stnRealY(stnId);
-            this.stations[stnId].namePos = this._txtFlip ? !this._stnNamePos(stnId) : this._stnNamePos(stnId);
-            this.stations[stnId].state = this._stnState(stnId);
-            $(`#stn_icons #${stnId}`).remove();
-            $('#stn_icons').append(this.stations[stnId].html);
-            $('#stn_icons').html($('#stn_icons').html());
-        }
+        // } else {
+        //     this.stations[stnId].x = this._stnRealX(stnId);
+        //     this.stations[stnId].y = this._stnRealY(stnId);
+        //     this.stations[stnId].namePos = this._txtFlip ? !this._stnNamePos(stnId) : this._stnNamePos(stnId);
+        //     this.stations[stnId].state = this._stnState(stnId);
+        //     $(`#stn_icons #${stnId}`).remove();
+        //     $('#stn_icons').append(this.stations[stnId].html);
+        //     $('#stn_icons').html($('#stn_icons').html());
+        // }
         this.loadFonts();
 
         this.updateStnNameBg();

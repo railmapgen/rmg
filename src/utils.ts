@@ -188,6 +188,10 @@ export function test(svgEl) {
         $(el).attr('font-size', '7px');
     });
 
+    svgEl.find('.rmg-name__en.rmg-name__gzmtr--express').each((_,el) => {
+        $(el).attr('font-size', '6.5px');
+    });
+
     svgEl.find('text:not([font-size]), tspan:not([font-size])').each((_,el) => {
         $(el).attr('font-size', window.getComputedStyle(el).fontSize);
     });
