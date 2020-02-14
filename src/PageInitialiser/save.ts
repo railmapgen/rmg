@@ -1,4 +1,5 @@
-import { getParams, getTransText, test, describeParams, RMGParam } from '../utils';
+import { getParams, getTransText, test, describeParams } from '../utils';
+import { RMGParam } from '../types';
 import { RMGLine } from '../Line/Line';
 import { MDCDialog } from '@material/dialog';
 import { MDCList } from '@material/list';

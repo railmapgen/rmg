@@ -1,5 +1,5 @@
 import { RMGStation } from './Station';
-import { ID, Name, IntInfoTag, InterchangeInfo, BranchInfo, StationInfo } from '../utils';
+import { IntInfoTag, InterchangeInfo, StationInfo } from '../types';
 
 export function getIntBoxGZ(intInfo: InterchangeInfo, state: 0 | 1 | -1) {
     let bg = intInfo[IntInfoTag.colour];
@@ -43,7 +43,7 @@ export function getIntBoxGZ(intInfo: InterchangeInfo, state: 0 | 1 | -1) {
 }
 
 class RMGStationGZ extends RMGStation {
-    constructor(id: ID, data: StationInfo) {
+    constructor(id: string, data: StationInfo) {
         super(id, data);
         this.stnNum = data.num;
     }
@@ -124,7 +124,7 @@ class RMGStationGZ extends RMGStation {
 class IntStationGZ extends RMGStationGZ {
     private _intInfos: InterchangeInfo[];
 
-    constructor(id: ID, data: StationInfo) {
+    constructor(id: string, data: StationInfo) {
         super(id, data);
         this._intInfos = data.transfer.info[0];
     }
@@ -164,7 +164,7 @@ class IntStationGZ extends RMGStationGZ {
 }
 
 class BranchStationGZ extends IntStationGZ {
-    constructor (id: ID, data: StationInfo, lineInf) {
+    constructor (id: string, data: StationInfo, lineInf) {
         data.transfer.info[0].unshift(lineInf);
         if (data.transfer.info[1]) {
             data.transfer.info[0].push(...data.transfer.info[1]);
@@ -179,7 +179,7 @@ class BranchStationGZ extends IntStationGZ {
 }
 
 class OSIStationGZ extends IntStationGZ {
-    constructor (id: ID, data: StationInfo) {
+    constructor (id: string, data: StationInfo) {
         // data.transfer.info[0].push(...data.transfer.info[1]);
         super(id, data);
     }

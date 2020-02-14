@@ -1,8 +1,12 @@
 import { RMGLine } from './Line';
-import { RMGParam, getTxtBoxDim, setParams, Name, ID, DirectionLong, StationInfo } from '../utils';
+import { RMGParam, Name, DirectionLong, StationInfo } from '../types';
+import { getTxtBoxDim, setParams } from '../utils';
 import { RMGStationHK, Int2StationHK, Int3LStationHK, Int3RStationHK, OSI11LStationHK, OSI12LStationHK, OSI12RStationHK, OSI22EndStationHK, OSI22LStationHK, OSI22RStationHK, OSI11RStationHK, OSI22StationHK } from '../Station/StationHK';
 
 export class RMGLineHK extends RMGLine {
+    public stations: {
+        [index: string]: RMGStationHK;
+    }
     private _txtFlip: boolean;
     private _charForm: 'trad' | 'cn' | 'tw' | 'jp';
     private _destLegacy: boolean; 
@@ -15,7 +19,7 @@ export class RMGLineHK extends RMGLine {
         this._destLegacy = param.dest_legacy;
     }
 
-    _initStnInstance(stnId: ID, stnInfo: StationInfo) {
+    _initStnInstance(stnId: string, stnInfo: StationInfo) {
         switch (stnInfo.transfer.type) {
             case 'int2':
             case 'osi21':
@@ -47,7 +51,7 @@ export class RMGLineHK extends RMGLine {
         }
     }
 
-    _updateStnInstance(stnId: ID) {
+    _updateStnInstance(stnId: string) {
         super._updateStnInstance(stnId);
         this.stations[stnId].namePos = this._txtFlip ? !this._stnNamePos(stnId) : this._stnNamePos(stnId);
     }
@@ -127,7 +131,7 @@ export class RMGLineHK extends RMGLine {
         this.loadFonts();
     }
 
-    set currentStnId(val: ID) {
+    set currentStnId(val: string) {
         super.currentStnId = val;
         this.loadFonts();
         this.updateStnNameBg();
@@ -136,7 +140,7 @@ export class RMGLineHK extends RMGLine {
     /**
      * Station name position (`false`: above line, `true`: below line, given `txtFlip` is `false`).
      */
-    private _stnNamePos(stnId: ID): boolean {
+    private _stnNamePos(stnId: string): boolean {
         if (stnId === 'linestart') {return true;}
         let self = this;
         let cp = this.criticalPath.nodes;
@@ -172,7 +176,7 @@ export class RMGLineHK extends RMGLine {
     drawDestInfo() {
         $('#dest_name > #platform > text').text(this._platformNum);
 
-        let validDest: ID[] = this[this._direction + 'ValidDests'];
+        let validDest: string[] = this[this._direction + 'ValidDests'];
         let txtAnchor = this._direction==='l' ? 'start' : 'end';
 
         var [destNameZH, destNameEN] = [0,1].map(idx => {
@@ -204,7 +208,7 @@ export class RMGLineHK extends RMGLine {
         });
     }
 
-    protected _leftWideFactor(stnId: ID) {
+    protected _leftWideFactor(stnId: string) {
         var res = 0;
         let stnInstance = this.stations[stnId];
         if (stnInstance instanceof Int3LStationHK) {res += this._longInterval;}
@@ -216,7 +220,7 @@ export class RMGLineHK extends RMGLine {
         return res;
     }
 
-    protected _rightWideFactor(stnId: ID) {
+    protected _rightWideFactor(stnId: string) {
         var res = 0;
         let stnInstance = this.stations[stnId];
         if (stnInstance instanceof Int3RStationHK) {res += this._longInterval;}
@@ -228,20 +232,20 @@ export class RMGLineHK extends RMGLine {
         return res;
     }
 
-    updateStnName(stnId: ID, names: Name, stnNum: string) {
+    updateStnName(stnId: string, names: Name, stnNum: string) {
         super.updateStnName(stnId, names, stnNum);
 
         this.loadFonts();
         if (stnId == this._currentStnId) {this.updateStnNameBg();}
     }
 
-    updateStnTransfer(stnId: ID, type, info=null) {
+    updateStnTransfer(stnId: string, type, info=null) {
         super.updateStnTransfer(stnId, type, info);
         this.loadFonts();
         this.updateStnNameBg();
     }
 
-    addStn(prep: 'before' | 'after', stnId: ID, loc, end: ID) {
+    addStn(prep: 'before' | 'after', stnId: string, loc, end: string) {
         let res = super.addStn(prep, stnId, loc, end);
 
         this.loadFonts();
@@ -250,26 +254,26 @@ export class RMGLineHK extends RMGLine {
         return res;
     }
 
-    removeStn(stnId: ID) {
+    removeStn(stnId: string) {
         if (!super.removeStn(stnId)) {return false;}
         this.loadFonts();
         this.updateStnNameBg();
         return true;
     }
 
-    updateBranchType(stnId: ID, direction: DirectionLong, type: 'through' | 'nonthrough') {
+    updateBranchType(stnId: string, direction: DirectionLong, type: 'through' | 'nonthrough') {
         if (!super.updateBranchType(stnId, direction, type)) {return false;}
         this.loadFonts();
         return true;
     }
 
-    updateBranchFirst(stnId: ID, direction: DirectionLong, first: ID) {
+    updateBranchFirst(stnId: string, direction: DirectionLong, first: string) {
         if (!super.updateBranchFirst(stnId, direction, first)) {return false;}
         this.loadFonts();
         return true;
     }
 
-    updateBranchPos(stnId: ID, direction: DirectionLong, pos: 0 | 1) {
+    updateBranchPos(stnId: string, direction: DirectionLong, pos: 0 | 1) {
         if (!super.updateBranchPos(stnId, direction, pos)) {return false;}
         this.loadFonts();
         return true;

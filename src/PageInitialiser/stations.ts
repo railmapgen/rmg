@@ -1,5 +1,5 @@
-import { getParams, countryCode2Emoji, getTransText, rgb2Hex, CityEntry } from '../utils';
-import { ID, StationInfo, Name, DirectionLong, NeighbourPl, InterchangeInfo, IntInfoTag } from '../utils';
+import { getParams, countryCode2Emoji, getTransText, rgb2Hex } from '../utils';
+import { StationInfo, Name, DirectionLong, NeighbourPl, InterchangeInfo, IntInfoTag, CityEntry, LineEntry } from '../types';
 import { MDCDialog } from '@material/dialog';
 import { MDCSelect } from '@material/select';
 import { MDCTextField } from '@material/textfield';
@@ -8,7 +8,7 @@ import { MDCChip, MDCChipSet } from '@material/chips';
 import { MDCRipple } from '@material/ripple';
 import { MDCSwitch } from '@material/switch';
 
-const getStationCard = (id: ID, names: Name, num: string) => {
+const getStationCard = (id: string, names: Name, num: string) => {
     return $('<div>', {
         id: id, 
         class: 'mdc-card mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone station-card'
@@ -155,13 +155,6 @@ const updateStnTransfer = (sets: HTMLDivElement[], tick: MDCChipSet, paid: MDCSw
 }
 
 export function common() {
-
-
-    // Duplicate element
-    var intNameEl = $('#stn_edit_diag .mdc-layout-grid__inner #int_name_zh,#int_name_en').slice(0,2).clone();
-    intNameEl.find('.mdc-text-field').removeAttr('data-mdc-auto-init-state'); // to be removed
-    $('div#int_line').slice(1,3).after(intNameEl);
-
     // mdc instances
     const [stnAddDialog, stnEditDialog, stnIntBoxDialog, stnOSINameDialog, stnDeleteDialog, stnDeleteErrDialog] = 
         ['#stn_add_diag', '#stn_edit_diag', '#stn_intbox_diag', '#stn_osiname_diag', '#stn_delete_diag', '#stn_delete_err']
@@ -294,12 +287,12 @@ export function common() {
         var stnId = stnAddPivotSelect.value;
         var stnList = getParams().stn_list;
         for (let [idx, state] of window.myLine.newStnPossibleLoc(prep, stnId).entries()) {
-            if (state === 1 || (<ID[]>state).length) {
+            if (state === 1 || (<string[]>state).length) {
                 $('#loc__selection li').eq(idx).show();
                 if (idx >= 3) {
                     // newupper or newlower
                     $('#end__selection').empty();
-                    (<ID[]>state).forEach(stnId => {
+                    (<string[]>state).forEach(stnId => {
                         $('#end__selection').append(
                             $('<li>', { class:'mdc-list-item', 'data-value':stnId }).text(stnList[stnId].name.join(' - '))
                         );
@@ -455,13 +448,13 @@ export function common() {
         }
     });
 
-    $.getJSON('data/city_list.json', data => {
+    $.getJSON('data/city_list.json', (data: CityEntry[]) => {
         var lang = window.urlParams.get('lang');
-        data.forEach((c: CityEntry) => {
+        data.forEach(c => {
             $('#int_city__selection.mdc-list').each((_,el) => {
                 $(el).append(
                     $('<li>', { class: 'mdc-list-item', 'data-value': c.id})
-                        .text(countryCode2Emoji(c.country) + getTransText(c.name, lang))
+                        .html(countryCode2Emoji(c.country) + getTransText(c.name, lang))
                 );
             });
         });
@@ -549,14 +542,20 @@ export function common() {
 
         let { setIdx, chipId } = $('#stn_intbox_diag').data('intId');
 
-        $.getJSON(`data/${event.detail.value}.json`, data => {
+        $.getJSON(`data/${event.detail.value}.json`, (data: LineEntry[]) => {
             var lang = window.urlParams.get('lang');
             $('#int_line__selection.mdc-list').empty();
             data.forEach(l => {
                 $('#int_line__selection.mdc-list').append(
-                    `<li class="mdc-list-item" data-value="${l.id}">
-                    <span style="background:${l.colour};color:${l.fg || '#fff'};">&nbsp;${getTransText(l.name, lang)}&nbsp;</span>
-                    </li>`
+                    $('<li>', {
+                        class: 'mdc-list-item',
+                        'data-value': l.id
+                    }).append(
+                        $('<span>').css({
+                            background: l.colour, 
+                            color: l.fg || '#fff'
+                        }).text('\u00a0' + getTransText(l.name, lang) + '\u00a0')
+                    )
                 );
             });
 

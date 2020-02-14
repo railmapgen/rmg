@@ -1,16 +1,62 @@
 import { RMGStation } from './Station';
-import { StationInfo, ID, InterchangeInfo, IntInfoTag, joinIntName, Name } from '../utils';
+import { StationInfo, InterchangeInfo, IntInfoTag, Name } from '../types';
+import { joinIntName } from '../utils'
 
 export class RMGStationHK extends RMGStation {
-    constructor (id: ID, data: StationInfo) {
+    STN_NAME_Y = -10.5;
+    STN_NAME_BASE_HEIGHT = 30.390625;
+    STN_NAME_LINE_GAP = 14;
+    STN_NAME_BG_ADJUST = 0.5;
+    public namePos: boolean;
+
+    constructor (id: string, data: StationInfo) {
         super(id, data);
+    }
+
+    get nameHTML() {
+        var nameENs = this.name[1].split('\\');
+
+        if (this.namePos) {
+            var dy = this.STN_NAME_LINE_GAP - this.STN_NAME_Y - this.STN_NAME_BG_ADJUST;
+        } else {
+            var dy = -this.STN_NAME_LINE_GAP - this.STN_NAME_Y - this.STN_NAME_BASE_HEIGHT - (nameENs.length-1)*10;
+        }
+        // dy -= this.STN_NAME_BG_ADJUST;
+
+        if (this.state === 0) {
+            $('#current_bg').attr({
+                y: this.y + dy + this.STN_NAME_Y - 1.5 + this._nameDY, 
+                height: this.STN_NAME_BASE_HEIGHT + (nameENs.length-1)*10 +2 +1.5
+            });
+        }
+
+        var nameENp = nameENs.shift();
+
+        var nameENElem = $('<text>', {
+            dy: 15, class: 'rmg-name__en rmg-name__mtr--station'
+        }).text(nameENp);
+        while (nameENp = nameENs.shift()) {
+            nameENElem.append(
+                $('<tspan>', { x: 0, dy: 10, 'alignment-baseline':'middle' }).text(nameENp)
+            );
+        }
+
+        return $('<g>', {
+            transform: `translate(${this.x + this._nameDX},${this.y + dy + this._nameDY})`, 
+            'text-anchor': this._nameTxtAnchor, 
+            'class': `Name ${this.nameClass}`
+        }).append(
+            $('<text>').addClass('rmg-name__zh rmg-name__mtr--station').text(this.name[0])
+        ).append(
+            nameENElem
+        );
     }
 }
 
 export class Int2StationHK extends RMGStationHK {
     private _intInfo: InterchangeInfo;
 
-    constructor (id: ID, data: StationInfo) {
+    constructor (id: string, data: StationInfo) {
         super(id, data);
         this._intInfo = data.transfer.info[0][0];
         // this._intInfo = data.interchange[0][0];
@@ -57,7 +103,7 @@ export class Int2StationHK extends RMGStationHK {
 class Int3StationHK extends RMGStationHK {
     private _intInfos: InterchangeInfo[];
 
-    constructor (id: ID, data: StationInfo) {
+    constructor (id: string, data: StationInfo) {
         super(id, data);
         this._intInfos = data.transfer.info[0];
     }
@@ -148,7 +194,7 @@ class OSI11StationHK extends Int2StationHK {
     private _osiNames: Name;
     private _osiType: 'u' | 'p';
 
-    constructor (id: ID, data: StationInfo) {
+    constructor (id: string, data: StationInfo) {
         // data.int2 = data.osi11;
         data.transfer.info[0].push(data.transfer.info[1][0]);
         // data.interchange[0].push(data.interchange[1][1]);
@@ -208,7 +254,7 @@ class OSI12StationHK extends Int3StationHK {
     protected _osiNames: Name;
     private _osiType: 'u' | 'p';
     
-    constructor (id: ID, data: StationInfo) {
+    constructor (id: string, data: StationInfo) {
         // data.int3 = data.osi12;
         data.transfer.info[0].unshift(...data.transfer.info[1].slice(0,2));
         // data.interchange[0].unshift(...data.interchange[1].slice(1,3));
@@ -270,7 +316,7 @@ export class OSI12RStationHK extends OSI12StationHK {
 export class OSI22StationHK extends OSI12StationHK {
     private _origIntInfo: InterchangeInfo;
 
-    constructor (id: ID, data: StationInfo) {
+    constructor (id: string, data: StationInfo) {
         super(id, data);
         // data mutated by OSI12Station!!!
         this._origIntInfo = data.transfer.info[0][2];

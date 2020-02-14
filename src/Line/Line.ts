@@ -1,17 +1,14 @@
 import { setParams, getParams, putParams, getRandomId, getNameFromId } from '../utils';
 import { RMGStation } from '../Station/Station';
 
-import { ID, Name, StationInfo, RMGParam, DirectionLong } from '../utils';
-
-interface StationDict {
-    [index: string]: RMGStation;
-}
+import { Name, StationInfo, RMGParam, DirectionLong } from '../types';
 
 export class RMGLine {
     protected _svgHeight: number;
     protected _svgWidth: number;
     protected _svgDestWidth: number;
     private _showOuter: boolean;
+    protected _theme: [string, string, string, '#fff' | '#000'];
     themeCity; themeLine; _themeColour;
     _fgColour: '#fff' | '#000';
     private _yPc: number;
@@ -19,8 +16,10 @@ export class RMGLine {
     protected _padding: number;
     protected _longInterval = 1;
     private _branchSpacing: number;
-    public stations = {} as StationDict;
-    protected _currentStnId: ID;
+    public stations: {
+        [index: string]: RMGStation;
+    } = {};
+    protected _currentStnId: string;
     protected _direction: 'l' | 'r';
     protected _platformNum: string;
     protected _lineNames: Name;
@@ -31,7 +30,8 @@ export class RMGLine {
         this._svgDestWidth = param.svg_dest_width;
         this._showOuter = param['show_outer'];
 
-        [this.themeCity, this.themeLine, this._themeColour, this._fgColour] = param.theme;
+        this._theme = param.theme;
+        [this.themeCity, this.themeLine, this._themeColour, this._fgColour] = this._theme;
 
         this.yPc = param['y_pc'];
         this._padding = param['padding'];
@@ -53,7 +53,7 @@ export class RMGLine {
         }
     }
 
-    _initStnInstance(stnId: ID, stnInfo: StationInfo) {
+    _initStnInstance(stnId: string, stnInfo: StationInfo) {
         return new RMGStation(stnId, stnInfo);
     }
 
@@ -64,7 +64,7 @@ export class RMGLine {
      * * `state`
      * * plus style specific properties
      */
-    protected _updateStnInstance(stnId: ID) {
+    protected _updateStnInstance(stnId: string) {
         if (['linestart', 'lineend'].includes(stnId)) {return;}
         let instance = this.stations[stnId];
         instance.x = this._stnRealX(stnId);
@@ -147,15 +147,10 @@ export class RMGLine {
         this.drawLine();
     }
 
-    set themeColour(hexs: string[]) {
-        this._themeColour = hexs[0];
-        this._fgColour = hexs[1] as '#fff' | '#000';
-
-        var param = getParams();
-        param.theme[2] = hexs[0];
-        param.theme[3] = hexs[1] as '#fff' | '#000';
-        putParams(param);
-
+    set theme(t: [string, string, string, '#fff' | '#000']) {
+        this._theme = t;
+        [this.themeCity, this.themeLine, this._themeColour, this._fgColour] = this._theme;
+        setParams('theme', t);
         this.fillThemeColour();
     }
 
@@ -198,7 +193,7 @@ export class RMGLine {
     /**
      * Setter of current station. 
      */
-    set currentStnId(val: ID) {
+    set currentStnId(val: string) {
         this._currentStnId = val;
         setParams('current_stn_idx', val);
 
@@ -216,21 +211,21 @@ export class RMGLine {
     /**
      * Increment of the weight of out-bound edge of a station, which increases the horizontal interval from its children. 
      */
-    protected _rightWideFactor(stnId: ID) {
+    protected _rightWideFactor(stnId: string) {
         return 0;
     }
 
     /**
      * Increment of the weight of in-bound edge of a station, which increases the horizontal interval from its parents. 
      */
-    protected _leftWideFactor(stnId: ID) {
+    protected _leftWideFactor(stnId: string) {
         return 0;
     }
 
     /**
      * Path weight from station 1 to station 2 (station 2 must be a child of station 1, otherwise return `-Infinity`).
      */
-    protected _pathWeight(stnId1: ID, stnId2: ID) {
+    protected _pathWeight(stnId1: string, stnId2: string) {
         if (!this.stations[stnId1].children.includes(stnId2)) {return -Infinity;}
         return 1 + this._rightWideFactor(stnId1) + this._leftWideFactor(stnId2);
     }
@@ -240,13 +235,13 @@ export class RMGLine {
      * @param from ID of station on the left
      * @param to ID of station on the left
      */
-    protected _cp(from: ID, to: ID) {
+    protected _cp(from: string, to: string) {
         let self = this;
         if (from == to) {
             return { len: 0, nodes: [from] };
         }
         let allLengths: number[] = [];
-        let criticalPaths: ID[][] = [];
+        let criticalPaths: string[][] = [];
         this.stations[from].children.forEach(child => {
             let cp = self._cp(child, to);
             if (cp.len < 0) {return;}
@@ -266,7 +261,7 @@ export class RMGLine {
      */
     get criticalPath() {
         let allLengths: number[] = [];
-        let criticalPaths: ID[][] = [];
+        let criticalPaths: string[][] = [];
         this.leftDests.forEach(ld => {
             this.rightDests.forEach(rd => {
                 let cp = this._cp(ld, rd);
@@ -281,7 +276,7 @@ export class RMGLine {
         };
     }
 
-    _topoOrder(from: ID, tpo: ID[] = []) {
+    _topoOrder(from: string, tpo: string[] = []) {
         var self = this;
         tpo.push(from);
         this.stations[from].children.forEach(child => {
@@ -335,17 +330,17 @@ export class RMGLine {
     /**
      * Indegree of a station node.
      */
-    _stnIndegree(stnId: ID) {return this.stations[stnId].inDegree;}
+    _stnIndegree(stnId: string) {return this.stations[stnId].inDegree;}
 
     /**
      * Outdegree of a station node. 
      */
-    _stnOutdegree(stnId: ID) {return this.stations[stnId].outDegree;}
+    _stnOutdegree(stnId: string) {return this.stations[stnId].outDegree;}
 
     /**
      * Horizontal position (in shares) of station icon. 
      */
-    _stnXShare(stnId: ID) {
+    _stnXShare(stnId: string) {
         var self = this;
 
         var cp = this.criticalPath;
@@ -397,7 +392,7 @@ export class RMGLine {
     /**
      * Horizontal position (in pixels) of station icon. 
      */
-    _stnRealX(stnId: ID) {
+    _stnRealX(stnId: string) {
         let [lineStart, lineEnd] = this.lineXs;
         return lineStart + this._stnXShare(stnId) / this.criticalPath.len * (lineEnd - lineStart);
     }
@@ -405,14 +400,14 @@ export class RMGLine {
     /**
      * Mirror `_stnYShareMTR`. 
      */
-    _stnYShare(stnId: ID) {
+    _stnYShare(stnId: string) {
         return this._stnYShareMTR(stnId);
     }
 
     /**
      * Vertical position (in shares) of station icon if using MTR style (for consistency of method `RMGLine.newStnPossibleLoc()`). 
      */
-    _stnYShareMTR(stnId: ID) {
+    _stnYShareMTR(stnId: string) {
         if (['linestart', 'lineend'].includes(stnId) || this._stnIndegree(stnId) > 1 || this._stnOutdegree(stnId) > 1) {
             return 0;
         }
@@ -436,14 +431,14 @@ export class RMGLine {
     /**
      * Vertical position (in pixels) of station icon related to vertical position of line. 
      */
-    _stnRealY(stnId: ID) {
+    _stnRealY(stnId: string) {
         return -this._stnYShare(stnId) * this._branchSpacing;
     }
 
     /**
      * Return true if station 2 is a successor of station 1, false otherwise. 
      */
-    private _isSuccessor(stnId1: ID, stnId2: ID) {
+    private _isSuccessor(stnId1: string, stnId2: string) {
         for (let route of this.routes) {
             let idx1 = route.indexOf(stnId1);
             let idx2 = route.indexOf(stnId2);
@@ -457,7 +452,7 @@ export class RMGLine {
     /**
      * Return true if station 2 is a predecessor of station 1, false otherwise. 
      */
-    private _isPredecessor(stnId1: ID, stnId2: ID) {
+    private _isPredecessor(stnId1: string, stnId2: string) {
         for (let route of this.routes) {
             let idx1 = route.indexOf(stnId1);
             let idx2 = route.indexOf(stnId2);
@@ -471,7 +466,7 @@ export class RMGLine {
     /**
      * Return state of a station (-1: passed, 0: current, 1: future).
      */
-    protected _stnState(stnId: ID) {
+    protected _stnState(stnId: string) {
         if (stnId == this._currentStnId) {return 0;}
         if (this._direction == 'r') {
             return this._isSuccessor(this._currentStnId, stnId) ? 1 : -1;
@@ -544,7 +539,7 @@ export class RMGLine {
     /**
      * Generate `d` attribute of `<path>` element through all stations input. 
      */
-    _linePath(stnIds: ID[]) {
+    _linePath(stnIds: string[]) {
         var [prevId, prevY, prevX]: [string?, number?, number?] = [];
         var path = [];
 
@@ -626,7 +621,7 @@ export class RMGLine {
         //
     }
 
-    updateStnName(stnId: ID, names: Name, stnNum: string) {
+    updateStnName(stnId: string, names: Name, stnNum: string) {
         let param = getParams();
         param.stn_list[stnId].name = names;
         param.stn_list[stnId].num = stnNum;
@@ -648,7 +643,7 @@ export class RMGLine {
         }
     }
 
-    updateStnServices(stnId: ID, detail: {chipId: 'local'|'express', selected: boolean}) {
+    updateStnServices(stnId: string, detail: {chipId: 'local'|'express', selected: boolean}) {
         if (detail.selected) {
             if (this.stations[stnId].services.has(detail.chipId)) {
                 return;
@@ -669,7 +664,7 @@ export class RMGLine {
         // redraw station on demand
     }
 
-    updateStnTransfer(stnId: ID, type, info=null) {
+    updateStnTransfer(stnId: string, type, info=null) {
         var prevClass = this.stations[stnId].constructor.name;
 
         // V2.6 data structure
@@ -726,7 +721,7 @@ export class RMGLine {
         // }
     }
 
-    removeStn(stnId: ID) {
+    removeStn(stnId: string) {
         var param = getParams();
 
         var parents = this.stations[stnId].parents;
@@ -848,7 +843,7 @@ export class RMGLine {
         return true;
     }
 
-    newStnPossibleLoc(prep: 'before' | 'after', stnId: ID): [number, number, number, ID[], ID[]] {
+    newStnPossibleLoc(prep: 'before' | 'after', stnId: string): [number, number, number, string[], string[]] {
         var deg = (prep == 'before') ? this._stnIndegree(stnId) : this._stnOutdegree(stnId);
         switch (deg) {
             case 2:
@@ -857,7 +852,7 @@ export class RMGLine {
             case 1:
                 if (this._stnYShareMTR(stnId) == 0) {
                     // 1 -> 1
-                    let state: ID[] | 0 = this.newBranchPossibleEnd(prep, stnId);
+                    let state: string[] | 0 = this.newBranchPossibleEnd(prep, stnId);
                     state = (state.length) ? state : [];
                     return [1,0,0,state,state];
                     // [1,0,0,1,1];
@@ -886,8 +881,8 @@ export class RMGLine {
         return [0,0,0,[],[]];
     }
 
-    newBranchPossibleEnd(prep: 'before' | 'after', stnId: ID) {
-        let res: ID[] = [];
+    newBranchPossibleEnd(prep: 'before' | 'after', stnId: string) {
+        let res: string[] = [];
         if (prep == 'before') {
             while (this._stnIndegree(stnId) == 1) {
                 stnId = this.stations[stnId].parents[0];
@@ -904,7 +899,7 @@ export class RMGLine {
         return res;
     }
 
-    addStn(prep: 'before' | 'after', stnId: ID, loc, end: ID): [ID, StationInfo] {
+    addStn(prep: 'before' | 'after', stnId: string, loc, end: string): [string, StationInfo] {
         let newId = getRandomId();
         while (Object.keys(this.stations).includes(newId)) {
             newId = getRandomId();
@@ -1263,7 +1258,7 @@ export class RMGLine {
         location.reload(true);
     }
 
-    updateBranchType(stnId: ID, direction: DirectionLong, type: 'through' | 'nonthrough') {
+    updateBranchType(stnId: string, direction: DirectionLong, type: 'through' | 'nonthrough') {
         let direc = DirectionLong[direction];
         // no change
         if (this.stations[stnId].branch[direc][0] === type) {return false;}
@@ -1284,7 +1279,7 @@ export class RMGLine {
         return true;
     }
 
-    updateBranchFirst(stnId: ID, direction: DirectionLong, first: ID) {
+    updateBranchFirst(stnId: string, direction: DirectionLong, first: string) {
         let direc = DirectionLong[direction];
         // no change
         if (this.stations[stnId].branch[direc][1] === first) {return false;}
@@ -1324,7 +1319,7 @@ export class RMGLine {
         return true;
     }
 
-    updateBranchPos(stnId: ID, direction: DirectionLong, pos: 0 | 1) {
+    updateBranchPos(stnId: string, direction: DirectionLong, pos: 0 | 1) {
         let direc = DirectionLong[direction];
         // no change
         if (direc === 'right') {
@@ -1385,7 +1380,7 @@ export class RMGLine {
      */
     get branches() {
         var stack = ['linestart'];
-        var branches: ID[][] = [[]];
+        var branches: string[][] = [[]];
         var branchCount = 0;
         
         while (stack.length) {

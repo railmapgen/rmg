@@ -1,8 +1,43 @@
+/* 
+Dark Mode
+*/
 /* :root {
-    --mdc-theme-primary: #fcb8ab;
-    --mdc-theme-secondary: #feeae6;
-    --mdc-theme-on-primary: #fff;
-    --mdc-theme-on-secondary: #fff;
+    color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        background-color: #1e1e1e;
+        --mdc-theme-primary: #bb86fc;
+        --mdc-theme-background: #121212;
+        --mdc-theme-surface: #121212;
+        --mdc-theme-error: #cf6679;
+        --mdc-theme-on-primary: #000;
+        --mdc-theme-on-surface: #fff;
+        --mdc-theme-on-error: #000;
+        --mdc-theme-text-primary-on-background: white;
+        --mdc-theme-text-secondary-on-background: rgba(255, 255, 255, 0.7);
+        --mdc-theme-text-hint-on-background: rgba(255, 255, 255, 0.5);
+        --mdc-theme-text-disabled-on-background: rgba(255, 255, 255, 0.5);
+        --mdc-theme-text-icon-on-background: rgba(255, 255, 255, 0.5);
+        --mdc-theme-text-primary-on-light: white;
+        --mdc-theme-text-secondary-on-light: rgba(255, 255, 255, 0.7);
+        --mdc-theme-text-hint-on-light: rgba(255, 255, 255, 0.5);
+        --mdc-theme-text-disabled-on-light: rgba(255, 255, 255, 0.5);
+        --mdc-theme-text-icon-on-light: rgba(255, 255, 255, 0.5);
+        --mdc-theme-text-primary-on-dark: rgba(0, 0, 0, 0.87);
+        --mdc-theme-text-secondary-on-dark: rgba(0, 0, 0, 0.54);
+        --mdc-theme-text-hint-on-dark: rgba(0, 0, 0, 0.38);
+        --mdc-theme-text-disabled-on-dark: rgba(0, 0, 0, 0.38);
+        --mdc-theme-text-icon-on-dark: rgba(0, 0, 0, 0.38);
+    }
+    .mdc-dialog .mdc-dialog__title {
+        color: white;
+    }
+    .mdc-text-field:not(.mdc-text-field--disabled) .mdc-floating-label {color: rgba(255, 255, 255, 0.7);}
+    .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+        color: #bb86fc;
+    }
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading, .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch, .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {border-color: rgba(255, 255, 255, 0.5);}
 } */
 body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: column; overflow: auto;}
 #svgs {
@@ -19,6 +54,11 @@ body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: colum
 #panels {flex-grow: 1; overflow: hidden;}
 .panel {display: none;}
 .panel--active {display: block;}
+
+.flag-emoji {
+    height: 1em;
+    margin-right: 0.3em;
+}
 
 .station-card {
     height: 100px;

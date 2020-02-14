@@ -1,5 +1,5 @@
-import { getParams, putParams, countryCode2Emoji, getTransText, rgb2Hex, Name } from '../utils';
-import { CityEntry, LineEntry } from '../utils';
+import { getParams, putParams, countryCode2Emoji, getTransText, rgb2Hex } from '../utils';
+import { Name, CityEntry, LineEntry } from '../types';
 import { RMGLineGZ } from '../Line/LineGZ';
 import { MDCList } from '@material/list';
 import { MDCDialog } from '@material/dialog';
@@ -53,7 +53,7 @@ export function common() {
                 $('<li>', {
                     class: 'mdc-list-item', 
                     'data-value': c.id
-                }).text(countryCode2Emoji(c.country) + getTransText(c.name, lang))
+                }).html(countryCode2Emoji(c.country) + getTransText(c.name, lang))
             );
         });
 
@@ -116,8 +116,8 @@ export function common() {
             $('#theme_line__selection li').map((_,el) => new MDCRipple(el));
 
             var param = getParams();
-            param.theme[0] = city;
-            putParams(param);
+            // param.theme[0] = city;
+            // putParams(param);
 
             var lineIdx = $(`#theme_line__selection > [data-value="${param.theme[1]}"]`).index();
             themeLineSelect.selectedIndex = lineIdx==-1 ? 0 : lineIdx;
@@ -127,19 +127,27 @@ export function common() {
     themeLineSelect.listen("MDCSelect:change", (event: CustomEvent) => {
         let lineIdx = event.detail.index;
 
-        var param = getParams();
-        param.theme[1] = event.detail.value;
-        putParams(param);
+        // var param = getParams();
+        // param.theme[1] = event.detail.value;
+        // putParams(param);
 
-        window.myLine.themeLine = event.detail.value;
-        window.myLine.themeColour = ['background-color', 'color']
+        // window.myLine.themeLine = event.detail.value;
+        // window.myLine.themeColour = ['background-color', 'color']
+        //     .map(prop => $('#theme_line__selection span').eq(lineIdx).css(prop))
+        //     .map(rgb2Hex);
+        let colours = ['background-color', 'color']
             .map(prop => $('#theme_line__selection span').eq(lineIdx).css(prop))
-            .map(rgb2Hex);
+            .map(rgb2Hex) as [string, '#fff' | '#000'];
+        window.myLine.theme = [
+            themeCitySelect.value, 
+            themeLineSelect.value, 
+            colours[0], colours[1]
+        ];
 
         $('#design_list')
             .find('li#theme .mdc-list-item__secondary-text')
             .html(
-                $('#theme_city__selection li').eq(themeCitySelect.selectedIndex).text() +
+                $('#theme_city__selection li').eq(themeCitySelect.selectedIndex).html() +
                 ' ' +
                 $('#theme_line__selection li').eq(lineIdx).html().trim()
             );

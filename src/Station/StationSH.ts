@@ -1,10 +1,10 @@
 import { RMGStation } from './Station';
-import { ID, Name, BranchInfo, StationInfo, IntInfoTag, InterchangeInfo } from '../utils';
+import { Name, BranchInfo, StationInfo, IntInfoTag, InterchangeInfo } from '../types';
 
 const station_id = 'stn_sh'
 
 class RMGStationSH extends RMGStation {
-    constructor(id: ID, data: StationInfo) {
+    constructor(id: string, data: StationInfo) {
         super(id, data);
         this.stnNum = data.num;
     }
@@ -55,7 +55,7 @@ class RMGStationSH extends RMGStation {
 class IntStationSH extends RMGStationSH {
     protected _intInfos: InterchangeInfo[];
 
-    constructor(id: ID, data: StationInfo) {
+    constructor(id: string, data: StationInfo) {
         super(id, data);
         this._intInfos = data.transfer.info[0];
     }

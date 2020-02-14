@@ -2,14 +2,15 @@ import { RMGLine } from './Line';
 import { RMGStationSH, IntStationSH, station_id } from '../Station/StationSH';
 import { RMGStation } from '../Station/Station';
 
-import { ID, Name, StationInfo, RMGParam, setParams, DirectionLong } from '../utils';
+import { Name, StationInfo, RMGParam, DirectionLong } from '../types';
+import { setParams } from '../utils';
 
 export class RMGLineSH extends RMGLine {
     constructor(param) {
         super(param);
     }
 
-    _initStnInstance(stnId: ID, stnInfo: StationInfo): RMGStation {
+    _initStnInstance(stnId: string, stnInfo: StationInfo): RMGStation {
         switch (stnInfo.change_type) {
             case 'int2':
             case 'int3_l':
@@ -148,7 +149,7 @@ export class RMGLineSH extends RMGLine {
         $('#stn_icons').html($('#stn_icons').html()); // Refresh DOM
 
         for (let [stnId, stnInstance] of Object.entries(this.stations)
-            .filter(stn => stn[1] instanceof IntStationSH) as [ID, IntStationSH][]) {
+            .filter(stn => stn[1] instanceof IntStationSH) as [string, IntStationSH][]) {
             $(`#rmg-name__shmetro--${stnId}`).parent().append(stnInstance.ungrpIconHTML)
         }
         $('#stn_icons').html($('#stn_icons').html()); // Refresh DOM
@@ -160,7 +161,7 @@ export class RMGLineSH extends RMGLine {
         else return 3
     }
 
-    _linePath(stnIds: ID[], type?: 'main' | 'pass'): string {
+    _linePath(stnIds: string[], type?: 'main' | 'pass'): string {
         var [prevId, prevY, prevX]: [string?, number?, number?] = []
         var path: { [key: string]: number[] } = {}
         const e = 30
@@ -400,7 +401,7 @@ export class RMGLineSH extends RMGLine {
     }
 
     // rewrite this to get drawStns and recalled
-    updateStnTransfer(stnId: ID, type, info = null) {
+    updateStnTransfer(stnId: string, type, info = null) {
         super.updateStnTransfer(stnId, type, info)
 
         this.fillThemeColour()
@@ -411,7 +412,7 @@ export class RMGLineSH extends RMGLine {
     }
 
     // rewrite this to call fillThemeColour when add station
-    addStn(prep: 'before' | 'after', stnId: ID, loc, end: ID): [ID, StationInfo] {
+    addStn(prep: 'before' | 'after', stnId: string, loc, end: string): [string, StationInfo] {
         let [newId, newInfo] = super.addStn(prep, stnId, loc, end)
         this.fillThemeColour()
         return [newId, newInfo]
@@ -435,7 +436,7 @@ export class RMGLineSH extends RMGLine {
         this.fillThemeColour();
     }
 
-    removeStn(stnId: ID) {
+    removeStn(stnId: string) {
         if (super.removeStn(stnId)) {
             this.fillThemeColour();
             return true;
@@ -444,14 +445,14 @@ export class RMGLineSH extends RMGLine {
         }
     }
 
-    updateBranchType(stnId: ID, direction: DirectionLong, type: 'through' | 'nonthrough') {
+    updateBranchType(stnId: string, direction: DirectionLong, type: 'through' | 'nonthrough') {
         // Chito: This method should be remove when this._stnState() is updated. 
         if (!super.updateBranchType(stnId, direction, type)) {return false;}
         this.fillThemeColour();
         return true;
     }
 
-    updateBranchFirst(stnId: ID, direction: DirectionLong, first: ID) {
+    updateBranchFirst(stnId: string, direction: DirectionLong, first: string) {
         if (super.updateBranchFirst(stnId, direction, first)) {
             this.fillThemeColour();
             return true;
@@ -460,7 +461,7 @@ export class RMGLineSH extends RMGLine {
         }
     }
 
-    updateBranchPos(stnId: ID, direction: DirectionLong, pos: 0 | 1) {
+    updateBranchPos(stnId: string, direction: DirectionLong, pos: 0 | 1) {
         // Chito: This method should be remove when this._stnState() is updated. 
         if (!super.updateBranchPos(stnId, direction, pos)) {return false;}
         this.fillThemeColour();

@@ -1,15 +1,18 @@
 # Version History
 
+## 2.8.2 (14 Feb 2020)
+
+### New Features
+
+- Flag Emojis can be shown on Windows platforms now! (All flag emojis shown on Windows platforms are designed by [OpenMoji](https://openmoji.org/) - the open-source emoji and icon project. License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/#))
+- Separated type definitions from `/src/utils.ts`. 
+
 ## 2.8.1 (13 Feb 2020)
 
 ### New Features
 
 - Separated classes `RMGLineHK` and `RMGStationHK` from classes `RMGLine` and `RMGStation` respectively. 
 - Control panels initialisation are now loaded on demand to reduce loading time. 
-
-### Known Issues
-
-- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 
 ### Resolved Issues
 
@@ -22,19 +25,11 @@
 - Stations with express services are shown with a side note in Guangzhou Metro style now! Templates of Guangzhou Metro Line 14 and Line 21 are updated accordingly. 
 - Station name editing dialogue is now merged with station detail editing dialogue for consistency. 
 
-### Known Issues
-
-- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
-
 ## 2.7 (12 Feb 2020)
 
 ### New Features
 
 - Shanghai Metro style is now available for trail (thanks [@thekingofcity](https://github.com/thekingofcity)). Please report any issue or feature request. 
-
-### Known Issues
-
-- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 
 ## 2.6 (10 Feb 2020)
 
@@ -42,19 +37,11 @@
 
 - New dialogue for modifying interchanges with higher flexibility!
 
-### Known Issues
-
-- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
-
 ## 2.5.6 (9 Feb 2020)
 
 ### New Features
 
 - New theme colours for Chengdu and Xi'an. 
-
-### Known Issues
-
-- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 
 ### Resolved Issues
 
@@ -65,10 +52,6 @@
 ### New Features
 
 - New data structure for incoming update. 
-
-### Known Issues
-
-- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 
 ### Resolved Issues
 
@@ -81,10 +64,6 @@
 
 - RMG now supports Firefox!
 
-### Known Issues
-
-- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
-
 ### Resolved Issues
 
 - Improved interchanges in Guangzhou Metro style. 
@@ -96,10 +75,6 @@
 - New format of default names of new station. 
 - New colour schemes for Guangzhou. 
 
-### Known Issues
-
-- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
-
 ### Resolved Issues
 
 - Improved backward compatibility.
@@ -107,10 +82,6 @@
 - Fixed the errors occurred when current station is removed. 
 
 ## 2.5.2 (5 Feb 2020)
-
-### Known Issues
-
-- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 
 ### Resolved Issues
 
@@ -121,29 +92,17 @@
 
 ## 2.5.1 (5 Feb 2020)
 
-### Known Issues
-
-- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
-
 ### Resolved Issues
 
 - Separated CSS stylesheets from `index.html`. ([#7](https://github.com/wongchito/RailMapGenerator/issues/7))
 
 ## 2.5 (4 Feb 2020)
 
-### Known Issues
-
-- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
-
 ### Resolved Issues
 
 - Fixed the incorrect style of 'Towards' information when there are two destinations in Guangzhou Metro style. 
 
 ## 2.4.2 (4 Feb 2020)
-
-### Known Issues
-
-- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 
 ### Resolved Issues
 
@@ -154,10 +113,6 @@
 - Fixed the incorrect station intervals caused by webpack minimal output. 
 
 ## 2.4.1 (3 Feb 2020)
-
-### Known Issues
-
-- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 
 ### Resolved Issues
 
@@ -173,10 +128,6 @@
 - Bundled codes with Webpack to minimise file size. 
 - Loaded modules on demand. 
 - (Documentations for the new environment will be provided later.)
-
-### Known Issues
-
-- PNG exported from MTR-style railway map and destination info panel may have incorrect font. 
 
 ## 2.3.2 (1 Feb 2020)
 

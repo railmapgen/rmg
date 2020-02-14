@@ -1,158 +1,4 @@
-export type ID = string;
-export interface BranchInfo {
-    left: ['through' | 'nonthrough', ID] | [], 
-    right: ['through' | 'nonthrough', ID] | []
-}
-/**
- * Array of name `string`s. The first element is in Chinese characters and the second element is in Latin characters. 
- */
-export type Name = [string, string];
-export enum DirectionLong {left, right};
-export enum NeighbourPl {parents, children};
-export interface StationInfo {
-    /**
-     * Station name in two languages. 
-     */
-    name: Name;
-    /**
-     * Station number. (GZMTR specific)
-     */
-    num?: string;
-    branch?: BranchInfo;
-    /**
-     * Array of parents' IDs. (Will be strongly typed.)
-     */
-    parents: ID[];
-    /**
-     * Array of children's IDs. (Will be strongly typed.)
-     */
-    children: ID[];
-    /**
-     * Detail of interchanges. 
-     */
-    transfer?: StationTransfer;
-    /**
-     * Array of services at this station. 
-     */
-    services: ('local' | 'express')[];
-    /**
-     * Detail of interchanges (legacy). 
-     */
-    interchange?: any;
-    change_type?: string;
-}
-export enum IntInfoTag {
-    city, line, colour, fg, nameZH, nameEN
-};
-export type InterchangeInfo = {
-    [T in IntInfoTag]: string;
-};
-interface StationTransfer {
-    /**
-     * Interchange type of station. 
-     */
-    type: 'none' | 'int2' | 'int3' | 'osi11' | 'osi12' | 'osi13' | 'osi21' | 'osi22' | 'osi31';
-    /**
-     * Direction of text/tick of interchanges. 
-     */
-    tick_direc: 'r' | 'l';
-    /**
-     * Flag of paid area within out-of-station interchange. 
-     */
-    paid_area: boolean;
-    /**
-     * Array of name (in two languages) of all out-of-station interchange stations. 
-     */
-    osi_names: Name[];
-    /**
-     * Array of arrays of interchange info. 
-     * @index 0 - array of within-station interchange info
-     * @index remaining - arrays of out-of-station interchange info (from the nearest to the furthest station)
-     */
-    info: InterchangeInfo[][];
-}
-export interface RMGParam {
-    /**
-     * Width (in pixels) of `svg#railmap`.
-     */
-    svg_width: number;
-    /**
-     * Width (in pixels) of `svg#destination`.
-     */
-    svg_dest_width: number;
-    /**
-     * Height (in pixels) of `svg`s.
-     */
-    svg_height: number;
-    /**
-     * Train direction. 
-     */
-    direction: 'l' | 'r';
-    theme: [string, string, string, '#fff' | '#000'] | [string, string, string];
-    /**
-     * ID of current station. 
-     */
-    current_stn_idx: ID;
-    /**
-     * Key-value pairs of the information of each station. 
-     */
-    stn_list: {
-        [stnId: string]: StationInfo;
-    };
-    /**
-     * Flag of flipping station names. (MTR specific)
-     */
-    txt_flip?: boolean;
-    /**
-     * Legacy style of destination information panel. (MTR specific)
-     */
-    dest_legacy?: boolean;
-    /**
-     * Country-variant character form. (MTR specific)
-     */
-    char_form?: 'trad' | 'cn' | 'tw' | 'jp';
-    [propName: string]: any;
-}
-
-export interface LineEntry {
-    /**
-     * ID of line. 
-     */
-    id: string;
-    /**
-     * Key-value pairs of multi-lingual names of the line. 
-     */
-    name: {
-        en: string;
-        [lang: string]: string;
-    };
-    /**
-     * Background colour (in #HEX). 
-     */
-    colour: string;
-    /**
-     * Foreground colour. Mandatory field if foreground colour is black. 
-     */
-    fg?: '#000' | '#fff';
-}
-
-export interface CityEntry {
-    /**
-     * ID of city. 
-     */
-    id: string;
-    /**
-     * ISO 3166-1 alpha-2 country code. (For cities in Britain, append BS 6879 subdivision code. )
-     */
-    country: string;
-    /**
-     * Key-value pairs of multi-lingual names of the city. 
-     */
-    name: {
-        en: string;
-        [lang: string]: string;
-    }
-}
+import { RMGParam, Name } from './types';
 
 export function putParams(instance: RMGParam) {
     localStorage.setItem('rmgParam', JSON.stringify(instance));
@@ -283,11 +129,11 @@ export function joinIntName(names: Name, dy1, dy2): [JQuery<HTMLElement>, number
     return [res, nameZH.length, nameEN.length];
 }
 
-export function getRandomId(): ID {
+export function getRandomId() {
     return Math.floor(Math.random() * Math.pow(36, 4)).toString(36).padStart(4, '0');
 }
 
-export function getNameFromId(stnId: ID): Name {
+export function getNameFromId(stnId: string): Name {
     let numsZH = [
         '癸', '甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', 
         '日', '月', '金', '木', '水', '火', '土', 
@@ -313,12 +159,24 @@ export function describeParams(param: RMGParam) {
             ${Object.entries(param.stn_list).map(x => ['linestart','lineend'].includes(x[0]) ? '' : x[1].name.join(' - ')).join('<br>').trim().replace(/\\/,' ')}`;
 }
 
+/**
+ * Convert ISO 3166 alpha-2 country code (followed by BS 6879 UK subdivision code, if applicable) to flag Emoji. For Windows platform, an `img` element with image source from OpenMoji is returned. 
+ */
 export function countryCode2Emoji(code: string): string {
     var chars = code.toUpperCase().split('');
+    let codePoints: string[];
     if (code.length == 2) {
-        return chars.map(char => String.fromCodePoint((char.codePointAt(0)+127397))).join('');
+        codePoints = chars.map(char => (char.codePointAt(0)+127397).toString(16).toUpperCase());
     } else {
-        return '\u{1f3f4}' + chars.map(char => String.fromCodePoint((char.codePointAt(0)+917536))).join('') + '\u{e007f}';
+        codePoints = ['1F3F4', 'E007F'];
+        codePoints.splice(1, 0, 
+                ...chars.map(char => (char.codePointAt(0)+917536).toString(16).toUpperCase())
+            );
+    }
+    if (navigator.platform.indexOf('Win32')!==-1 || navigator.platform.indexOf('Win64')!==-1) {
+        return `<img src="images/flags/${codePoints.join('-')}.svg" class="flag-emoji"/>`;
+    } else {
+        return String.fromCodePoint(...codePoints.map(cp => parseInt(cp, 16)));
     }
 }
 
@@ -410,8 +268,8 @@ export function updateParam() {
         param.line_num = 1;
     }
     delete param.style;
-    if (param.theme.length == 3) {
-        param.theme.push('#fff');
+    if ((<any>param.theme).length == 3) {
+        (<any>param.theme).push('#fff');
     }
     for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
         if (['linestart', 'lineend'].includes(stnId)) {continue;}

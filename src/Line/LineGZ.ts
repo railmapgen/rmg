@@ -1,12 +1,8 @@
-import { getTxtBoxDim, setParams, getParams, putParams, getRandomId, DirectionLong } from '../utils';
+import { getTxtBoxDim, setParams, getParams, putParams, getRandomId } from '../utils';
 import { RMGStationGZ, IntStationGZ, BranchStationGZ, OSIStationGZ, getIntBoxGZ } from '../Station/StationGZ';
 import { RMGLine } from './Line';
 
-import { ID, Name, StationInfo, RMGParam, InterchangeInfo } from '../utils';
-
-interface StationDictGZ {
-    [index: string]: RMGStationGZ;
-}
+import { Name, StationInfo, RMGParam, InterchangeInfo, DirectionLong } from '../types';
 
 export class RMGLineGZ extends RMGLine {
     private _psdNum: string;
@@ -14,7 +10,9 @@ export class RMGLineGZ extends RMGLine {
     private _infoPanelType: string;
     private _directionGZX: number;
     private _directionGZY: number;
-    stations: StationDictGZ;
+    stations: {
+        [index: string]: RMGStationGZ;
+    };
 
     constructor (param: RMGParam) {
         super(param);
@@ -26,7 +24,7 @@ export class RMGLineGZ extends RMGLine {
         this._directionGZY = param.direction_gz_y;
     }
 
-    _initStnInstance(stnId: ID, stnInfo: StationInfo) {
+    _initStnInstance(stnId: string, stnInfo: StationInfo) {
         if (stnInfo.children.length === 2 || stnInfo.parents.length === 2) {
             return new BranchStationGZ(stnId, stnInfo, [this.themeCity, this.themeLine, this._themeColour, this._fgColour, ...this._lineNames]);
         }
@@ -96,7 +94,7 @@ export class RMGLineGZ extends RMGLine {
         this.loadDirection();
     }
 
-    set currentStnId(val: ID) {
+    set currentStnId(val: string) {
         super.currentStnId = val;
         this.loadLineNum();
         this.loadDirection();
@@ -150,7 +148,7 @@ export class RMGLineGZ extends RMGLine {
         $('#direction_gz').attr('transform', `translate(${x},${y})`);
     }
 
-    _stnXShare(stnId: ID) {
+    _stnXShare(stnId: string) {
         let { criticalPath, branches } = this;
         let self = this;
         if (criticalPath.nodes.includes(stnId)) {return super._stnXShare(stnId);}
@@ -174,7 +172,7 @@ export class RMGLineGZ extends RMGLine {
     /**
      * Vertical position (in shares) of station icon. 
      */
-    _stnYShare(stnId: ID) {
+    _stnYShare(stnId: string) {
         if (['linestart', 'lineend'].includes(stnId)) {
             return 0;
         }
@@ -225,7 +223,7 @@ export class RMGLineGZ extends RMGLine {
         });
     }
 
-    _rightWideFactor(stnId: ID) {
+    _rightWideFactor(stnId: string) {
         if (this.stations[stnId] instanceof BranchStationGZ && this.stations[stnId]._tickRotation === 0) {
             return 0.25;
         } else {
@@ -233,7 +231,7 @@ export class RMGLineGZ extends RMGLine {
         }
     }
 
-    _leftWideFactor(stnId: ID) {
+    _leftWideFactor(stnId: string) {
         if (this.stations[stnId] instanceof BranchStationGZ && this.stations[stnId]._tickRotation !== 0) {
             return 0.25;
         } else {
@@ -241,7 +239,7 @@ export class RMGLineGZ extends RMGLine {
         }
     }
 
-    _pathWeight(stnId1: ID, stnId2: ID) {
+    _pathWeight(stnId1: string, stnId2: string) {
         if (!this.stations[stnId1].children.includes(stnId2)) {return -Infinity;}
 
         return 1 + this._rightWideFactor(stnId1) + this._leftWideFactor(stnId2);
@@ -271,7 +269,7 @@ export class RMGLineGZ extends RMGLine {
         $('#stn_icons').html($('#stn_icons').html()); // Refresh DOM
     }
 
-    _linePath(stnIds: ID[]) {
+    _linePath(stnIds: string[]) {
         let prevY: number;
         var path = [];
 
@@ -387,7 +385,7 @@ export class RMGLineGZ extends RMGLine {
     }
 
     loadDirection() {
-        let validDest: ID[];
+        let validDest: string[];
         let x = this._svgWidth * this._directionGZX / 100;
         let y = this._svgHeight * this._directionGZY / 100;
         $('#direction_gz').attr('transform', `translate(${x},${y})`);
@@ -453,7 +451,7 @@ export class RMGLineGZ extends RMGLine {
         }
     }
 
-    updateStnName(stnId: ID, names: Name, stnNum: string) {
+    updateStnName(stnId: string, names: Name, stnNum: string) {
         super.updateStnName(stnId, names, stnNum);
 
         $(`#stn_icons #${stnId} g#stn_name`).append(this.stations[stnId].expressTagHTML(this._themeColour));
@@ -474,7 +472,7 @@ export class RMGLineGZ extends RMGLine {
         }
     }
 
-    updateStnServices(stnId: ID, detail: {chipId: 'local'|'express', selected: boolean}) {
+    updateStnServices(stnId: string, detail: {chipId: 'local'|'express', selected: boolean}) {
         super.updateStnServices(stnId, detail);
 
         $(`#stn_icons #${stnId}`).remove();
@@ -562,7 +560,7 @@ export class RMGLineGZ extends RMGLine {
                 let validRoutes = this.routes
                     .filter(route => route.indexOf(stnId) !== -1)
                     .map(route => route.filter(s => s !== 'linestart' && s !== 'lineend'));
-                let validEnds: ID[];
+                let validEnds: string[];
                 if (this._direction === 'l') {
                     validEnds = Array.from(
                         new Set(validRoutes.map(route => route[0]))
@@ -677,14 +675,14 @@ export class RMGLineGZ extends RMGLine {
         })`);
     }
 
-    addStn(prep, stnId: ID, loc, end) {
+    addStn(prep, stnId: string, loc, end) {
         var res = super.addStn(prep, stnId, loc, end);
         this.loadLineNum();
         this.loadDirection();
         return res;
     }
 
-    removeStn(stnId: ID) {
+    removeStn(stnId: string) {
         if (super.removeStn(stnId)) {
             this.loadLineNum();
             this.loadDirection();
@@ -694,19 +692,19 @@ export class RMGLineGZ extends RMGLine {
         }
     }
 
-    updateStnTransfer(stnId: ID, type, info=null) {
+    updateStnTransfer(stnId: string, type, info=null) {
         super.updateStnTransfer(stnId, type, info);
         this.loadLineNum();
     }
 
-    updateBranchType(stnId: ID, direction: DirectionLong, type: 'through' | 'nonthrough') {
+    updateBranchType(stnId: string, direction: DirectionLong, type: 'through' | 'nonthrough') {
         if (!super.updateBranchType(stnId, direction, type)) {return false;}
         this.loadLineNum();
         this.loadDirection();
         return true;
     }
 
-    updateBranchFirst(stnId: ID, direction: DirectionLong, first: ID) {
+    updateBranchFirst(stnId: string, direction: DirectionLong, first: string) {
         if (!super.updateBranchFirst(stnId, direction, first)) {
             return false;
         }
@@ -715,7 +713,7 @@ export class RMGLineGZ extends RMGLine {
         return true;
     }
 
-    updateBranchPos(stnId: ID, direction: DirectionLong, pos: 0 | 1) {
+    updateBranchPos(stnId: string, direction: DirectionLong, pos: 0 | 1) {
         if (!super.updateBranchPos(stnId, direction, pos)) {return false;}
         this.loadLineNum();
         this.loadDirection();
