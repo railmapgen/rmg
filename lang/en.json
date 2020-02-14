@@ -43,6 +43,7 @@
 
     "Layout.Width": "Line Diagrams Panel Width",
     "Layout.DestWidth": "Destination Panel Width",
+    "Layout.Height": "Canvas Height",
     "Layout.Y": "Vertical Position",
     "Layout.BranchSpacing": "Branch Spacing", 
     "Layout.Padding": "Line Padding", 

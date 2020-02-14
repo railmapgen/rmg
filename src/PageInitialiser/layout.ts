@@ -14,8 +14,8 @@ declare global {
 
 export function common() {
     // mdc instances
-    const [svgDestWidthTextField, svgWidthTextField] = 
-        ['#svg_dest_width', '#svg_width'].map(selector => MDCTextField.attachTo($(selector)[0]));
+    const [svgDestWidthTextField, svgWidthTextField, svgHeightTextField] = 
+        ['#svg_dest_width', '#svg_width', '#svg_height'].map(selector => MDCTextField.attachTo($(selector)[0]));
 
     const [branchSpacingSlider, yPcSlider, paddingSlider] = 
         ['#branch_spacing', '#y_pc', '#padding'].map(selector => MDCSlider.attachTo($(selector)[0]));
@@ -27,6 +27,7 @@ export function common() {
         .then(param => {
             svgDestWidthTextField.value = param.svg_dest_width.toString();
             svgWidthTextField.value = param.svg_width.toString();
+            svgHeightTextField.value = param.svg_height.toString();
             yPcSlider.value = param.y_pc;
             branchSpacingSlider.value = param.branch_spacing;
             paddingSlider.value = param.padding;
@@ -38,6 +39,9 @@ export function common() {
 
     ($(svgWidthTextField.root_).find('input') as JQuery<HTMLInputElement>)
         .on('input', event => window.myLine.svgWidth = Number(event.target.value));
+
+    ($(svgHeightTextField.root_).find('input') as JQuery<HTMLInputElement>)
+        .on('input', event => window.myLine.svgHeight = Number(event.target.value));
 
     branchSpacingSlider.listen('MDCSlider:input', () => {
         window.myLine.branchSpacing = Number(branchSpacingSlider.value);

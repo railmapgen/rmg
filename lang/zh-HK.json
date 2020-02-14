@@ -42,6 +42,7 @@
 
     "Layout.Width": "路線圖闊度",
     "Layout.DestWidth": "站名牌闊度",
+    "Layout.Height": "畫布高度",
     "Layout.Y": "垂直位置",
     "Layout.BranchSpacing": "支線間距", 
     "Layout.Padding": "路線兩端留白", 

@@ -1,5 +1,11 @@
 # Version History
 
+## 2.9 (14 Feb 2020)
+
+### New Features
+
+- The height of canvases are now able to be customised. Some templates are updated accordingly. 
+
 ## 2.8.2 (14 Feb 2020)
 
 ### New Features

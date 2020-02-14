@@ -107,6 +107,18 @@ export class RMGLine {
         this.drawStrip();
     }
 
+    set svgHeight(val: number) {
+        if (isNaN(val) || val <= 0) {return;}
+        this._svgHeight = val;
+        setParams('svg_height', val);
+
+        this.drawSVGFrame();
+        this.drawStrip();
+        let y = this._yPc * this._svgHeight / 100;
+        $('g#main').attr('transform', `translate(0,${y})`);
+        this.drawDestInfo();
+    }
+
     /**
      * Setter of vertical position of line (y).
      * @param val Percentage of vertical position, given fixed `svgHeight`
