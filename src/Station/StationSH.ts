@@ -120,32 +120,47 @@ class IntStationSH extends RMGStationSH {
 
         this._intInfos.map((stn, index) => {
             // interchange line icon after station name
-            var lineIconColour = stn[IntInfoTag.colour];
-            var lineIconElem = $('<use>', {
-                'xlink:href': '#int_sh',
+            let lineIconColour = stn[IntInfoTag.colour];
+            let lineIconElem = $('<use>', {
                 fill: lineIconColour,
-                transform: `translate(${dx + index * 25},-12)`,
                 class: 'rmg-line__shmetro rmg-line__change',
             });
             if (this.state == -1) {
                 lineIconElem.addClass('rmg-line__pass');
             }
 
-            // line starts with numbers or letters
-            let lineNumber = String(stn[IntInfoTag.nameZH]).match(/(\d*)\w+/)
-            if (lineNumber) {
-                var lineName = lineNumber[0]
-            } else {
-                var lineName = String(stn[IntInfoTag.nameZH])
-            }
             // interchange line name
-            var lineNameElem = $('<text>', {
-                // Todo: fix this hard-coded center(10) position
-                transform: `translate(${dx + 10 + index * 25},8)`,
+            let lineNameElem = $('<text>', {
                 class: 'rmg-name__zh rmg-name__shmetro--line_name',
                 'text-anchor': 'middle',
                 fill: stn[IntInfoTag.fg],
-            }).text(lineName)
+            })
+
+            // line starts with numbers or letters
+            let lineNumber = String(stn[IntInfoTag.nameZH]).match(/(\d*)\w+/)
+            if (lineNumber) {
+                // number line
+                var lineName = lineNumber[0]
+                lineIconElem.attr({
+                    'xlink:href': '#int_sh_number',
+                    transform: `translate(${dx + index * 25},-12)`,
+                })
+                lineNameElem.attr({
+                    // Todo: fix this hard-coded center(10) position
+                    transform: `translate(${dx + 10 + index * 25},8)`,
+                }).text(lineName)
+            } else {
+                // letter line
+                var lineName = String(stn[IntInfoTag.nameZH])
+                lineIconElem.attr({
+                    'xlink:href': '#int_sh_letter',
+                    transform: `translate(${dx + index * 70},-12)`,
+                })
+                lineNameElem.attr({
+                    // Todo: fix this hard-coded center(30) position
+                    transform: `translate(${dx + 30 + index * 70},8)`,
+                }).text(lineName)
+            }
 
             lineElems.push(lineIconElem, lineNameElem)
         })
