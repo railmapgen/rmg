@@ -9,6 +9,7 @@ declare global {
     interface Window {
         myLine?: RMGLine;
         urlParams?: URLSearchParams;
+        gtag: any;
     }
 }
 
@@ -25,6 +26,11 @@ switch (requestLang.toLowerCase()) {
         break;
     default: window.urlParams.set('lang', 'en');
 }
+window.gtag('event', 'load', {
+    event_category: 'language', 
+    event_label: window.urlParams.get('lang'), 
+    non_interaction: true
+});
 
 switch (window.urlParams.get('style')) {
     case 'mtr':
@@ -34,6 +40,11 @@ switch (window.urlParams.get('style')) {
     default: window.urlParams.set('style', 'mtr');
 }
 history.pushState({url:window.location.href}, null, '?' + window.urlParams.toString());
+window.gtag('event', 'load', {
+    event_category: 'style', 
+    event_label: window.urlParams.get('style'), 
+    non_interaction: true
+});
 
 // load stylesheets on demand
 $('head').append(

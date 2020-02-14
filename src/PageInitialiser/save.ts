@@ -181,15 +181,6 @@ export function common() {
         if (event.detail.action === 'svg') {
             // Prepend css stylesheet to svg
             let svgContent = $(event.target as HTMLElement).find('.mdc-dialog__content svg');
-            // let cssTxt = ['share', svgContent[0].id]
-            //     .map(tag => {
-            //         return Array.from(
-            //             ((<HTMLLinkElement>$(`link#css_${tag}`)[0]).sheet as CSSStyleSheet).cssRules
-            //         ).map(rule => rule.cssText).join(' ');
-            //     });
-            // svgContent.prepend(
-            //     ...cssTxt.map(txt => $('<style>').text(txt))
-            // );
 
             var link = document.createElement('a');
             link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgContent[0].outerHTML)));
@@ -233,6 +224,10 @@ export function common() {
                 return;
             default:
                 window.urlParams.set('style', event.detail.action);
+                window.gtag('event', 'set', {
+                    event_category: 'style', 
+                    event_label: window.urlParams.get('style')
+                });
                 window.location.href = '?' + window.urlParams.toString();
         }
     });
@@ -245,6 +240,10 @@ export function common() {
             return;
         } else {
             window.urlParams.set('lang', nextLang);
+            window.gtag('event', 'set', {
+                event_category: 'language', 
+                event_label: window.urlParams.get('lang')
+            });
             window.location.href = '?' + window.urlParams.toString();
         }
     })
