@@ -3,7 +3,7 @@ export enum NeighbourPl {parents, children};
 /**
  * Information of branch on both side. 
  * @index 0 - branch type (through, nonthrough or empty)
- * @index 1 - ID of the first station of the branch (should also be one of the station's parents/children)
+ * @index 1 - ID of the first station of the branch (should also be one of the station's parents/children) or empty
  */
 export interface BranchInfo {
     left: ['through' | 'nonthrough', string] | [], 

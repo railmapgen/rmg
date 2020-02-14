@@ -130,7 +130,9 @@
     "Stations.Interchange.Type.OSI22": "Out-of-station interchange (2-2)", 
 
     "Stations.Branch.Type.Title": "Branch Type", 
-    "Stations.Branch.Type.NA": "(N/A)", 
+    "Stations.Branch.Left": "Branch on the Left", 
+    "Stations.Branch.Right": "Branch on the Right", 
+    "Stations.Branch.Type.NA": "(No Branches Found)", 
     "Stations.Branch.Type.Through": "Through", 
     "Stations.Branch.Type.NonThrough": "Non-through", 
     "Stations.Branch.First.Title": "First Station on Branch", 

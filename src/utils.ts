@@ -176,6 +176,7 @@ export function countryCode2Emoji(code: string): string {
     if (navigator.platform.indexOf('Win32')!==-1 || navigator.platform.indexOf('Win64')!==-1) {
         return `<img src="images/flags/${codePoints.join('-')}.svg" class="flag-emoji"/>`;
     } else {
+        // return `<img src="images/flags/${codePoints.join('-')}.svg" class="flag-emoji"/>`;
         return String.fromCodePoint(...codePoints.map(cp => parseInt(cp, 16)));
     }
 }

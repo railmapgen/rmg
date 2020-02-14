@@ -6,6 +6,7 @@
 
 - Flag Emojis can be shown on Windows platforms now! (All flag emojis shown on Windows platforms are designed by [OpenMoji](https://openmoji.org/) - the open-source emoji and icon project. License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/#))
 - Separated type definitions from `/src/utils.ts`. 
+- Updated dialogue of branch editing. 
 
 ## 2.8.1 (13 Feb 2020)
 

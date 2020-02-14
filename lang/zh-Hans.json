@@ -129,7 +129,9 @@
     "Stations.Interchange.Type.OSI22": "出站换乘 (2-2)", 
 
     "Stations.Branch.Type.Title": "支线类型", 
-    "Stations.Branch.Type.NA": "（不适用）", 
+    "Stations.Branch.Left": "左方支线", 
+    "Stations.Branch.Right": "右方支线", 
+    "Stations.Branch.Type.NA": "（未找到支线）", 
     "Stations.Branch.Type.Through": "贯通（无需换乘）", 
     "Stations.Branch.Type.NonThrough": "非贯通（需换乘）", 
     "Stations.Branch.First.Title": "支线首站", 
