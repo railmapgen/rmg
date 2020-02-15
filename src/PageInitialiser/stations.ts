@@ -205,7 +205,11 @@ export function common() {
         let stnInfo = getParams().stn_list[stnChipSet.selectedChipIds[0]];
         // $('#panel_stations .mdc-snackbar .mdc-snackbar__label')
         //     .text(`${stnInfo.num} - ${stnInfo.name.join()}`)
-        stnEditSnackbar.labelText = `${stnInfo.num}: ${stnInfo.name.join()}`;
+        if (window.urlParams.get('style') === 'gzmtr') {
+            stnEditSnackbar.labelText = `${stnInfo.num}: ${stnInfo.name.join()}`;
+        } else {
+            stnEditSnackbar.labelText = `${stnInfo.name.join()}`;
+        }
     });
     stnEditSnackbar.listen('MDCSnackbar:closed', (event: CustomEvent) => {
         if (!event.detail.reason) {return;}
