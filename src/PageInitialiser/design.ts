@@ -16,8 +16,10 @@ export function common() {
         ['#design_theme_diag', '#line_name_diag'].map(selector => MDCDialog.attachTo($(selector)[0]));
     const [themeCitySelect, themeLineSelect] = 
         ['#theme_city', '#theme_line'].map(selector => new MDCSelect($(selector)[0]));
-    // const themeCitySelect = new MDCSelect($('#theme_city')[0]);
-    // const themeLineSelect = new MDCSelect($('#theme_line')[0]);
+    const themeColourField = new MDCTextField($('#theme_colour')[0]);
+    const themeHexField = new MDCTextField($('#theme_colour_hex')[0]);
+    const themeFgSelect = new MDCSelect($('#theme_fg')[0]);
+
     const [lineNameZHTextField, lineNameENTextField] = 
         ['#name_zh', '#name_en'].map(selector => MDCTextField.attachTo($('#line_name_diag').find(selector)[0]));
     const platformNumTextField = MDCTextField.attachTo($('#platform_num')[0]);
@@ -92,11 +94,22 @@ export function common() {
 
     themeDialog.listen('MDCDialog:opened', () => {
         [themeCitySelect, themeLineSelect].map(select => select.layout());
+        themeColourField.layout();
+        themeHexField.layout();
+        themeFgSelect.layout();
     });
 
     themeCitySelect.listen("MDCSelect:change", (event: CustomEvent) => {
         let city = event.detail.value;
+        if (city === 'other') {
+            $('[theme-line]').hide();
+            $('[theme-diy]').show();
+        } else {
+            $('[theme-line]').show();
+            $('[theme-diy]').hide();
+        }
         $('#theme_line__selection').empty();
+        let param = getParams();
         $.getJSON(`data/${city}.json`, (data: LineEntry[]) => {
             var lang = window.urlParams.get('lang');
             data.forEach(l => {
@@ -106,18 +119,14 @@ export function common() {
                         'data-value': l.id
                     }).append(
                         $('<span>').css({
-                            background: l.colour, 
-                            color: l.fg || '#fff'
+                            background: (city==='other' ? param.theme[2] : l.colour), 
+                            color: (city==='other' ? param.theme[3] : (l.fg || '#fff'))
                         }).text('\u00a0' + getTransText(l.name, lang) + '\u00a0')
                     )
                 );
             });
 
             $('#theme_line__selection li').map((_,el) => new MDCRipple(el));
-
-            var param = getParams();
-            // param.theme[0] = city;
-            // putParams(param);
 
             var lineIdx = $(`#theme_line__selection > [data-value="${param.theme[1]}"]`).index();
             themeLineSelect.selectedIndex = lineIdx==-1 ? 0 : lineIdx;
@@ -127,14 +136,6 @@ export function common() {
     themeLineSelect.listen("MDCSelect:change", (event: CustomEvent) => {
         let lineIdx = event.detail.index;
 
-        // var param = getParams();
-        // param.theme[1] = event.detail.value;
-        // putParams(param);
-
-        // window.myLine.themeLine = event.detail.value;
-        // window.myLine.themeColour = ['background-color', 'color']
-        //     .map(prop => $('#theme_line__selection span').eq(lineIdx).css(prop))
-        //     .map(rgb2Hex);
         let colours = ['background-color', 'color']
             .map(prop => $('#theme_line__selection span').eq(lineIdx).css(prop))
             .map(rgb2Hex) as [string, '#fff' | '#000'];
@@ -144,6 +145,10 @@ export function common() {
             colours[0], colours[1]
         ];
 
+        themeColourField.value = colours[0];
+        themeHexField.value = colours[0].slice(1).toUpperCase();
+        themeFgSelect.value = colours[1];
+
         $('#design_list')
             .find('li#theme .mdc-list-item__secondary-text')
             .html(
@@ -151,6 +156,54 @@ export function common() {
                 ' ' +
                 $('#theme_line__selection li').eq(lineIdx).html().trim()
             );
+    });
+
+    ($(themeColourField.root_).find('input') as JQuery<HTMLInputElement>)
+        .on('input', event => {
+            let hex = event.target.value;
+            themeHexField.value = hex.slice(1).toUpperCase();
+
+            window.myLine.theme = [
+                'other', 'other',
+                hex, themeFgSelect.value as '#fff' | '#000'
+            ];
+
+            // themeCitySelect.value = 'other';
+            $('#theme_line__selection li span').css('background', hex);
+            $('#design_list li#theme .mdc-list-item__secondary-text span').css('background', hex);
+        });
+
+    ($(themeHexField.root_).find('input') as JQuery<HTMLInputElement>)
+        .on('input', event => {
+            let rrggbb = event.target.value;
+            if (rrggbb.match(/[0-9a-fA-F]{6}/g) === null) {
+                return;
+            } else if (rrggbb !== rrggbb.match(/[0-9a-fA-F]{6}/g)[0]) {
+                return;
+            }
+            themeColourField.value = '#' + rrggbb;
+
+            window.myLine.theme = [
+                'other', 'other',
+                '#'+rrggbb, themeFgSelect.value as '#fff' | '#000'
+            ];
+
+            // themeCitySelect.value = 'other';
+            $('#theme_line__selection li span').css('background', '#'+rrggbb);
+            $('#design_list li#theme .mdc-list-item__secondary-text span').css('background', '#'+rrggbb);
+        });
+    
+    themeFgSelect.listen('MDCSelect:change', (event: CustomEvent) => {
+        if (themeCitySelect.value !== 'other') {return;}
+        // respond to changes only when city = other
+        window.myLine.theme = [
+            themeCitySelect.value, 
+            themeLineSelect.value, 
+            themeColourField.value, event.detail.value as '#fff' | '#000'
+        ];
+
+        $('#theme_line__selection li span').css('color', event.detail.value);
+        $('#design_list li#theme .mdc-list-item__secondary-text span').css('color', event.detail.value);
     });
 
     lineNameDialog.listen('MDCDialog:opened', event => {

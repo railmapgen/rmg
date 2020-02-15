@@ -829,7 +829,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="Design.Theme.Title"></h2>
-      <div class="mdc-dialog__content" style="max-width: 350px;">
+      <div class="mdc-dialog__content">
             <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner">
                 <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
@@ -857,12 +857,12 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
                 </div>
 
-                <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
+                <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle" theme-line>
                     <i class="material-icons">subway</i>
                 </div>
 
-                <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
-                <div id="theme_line" class="mdc-select mdc-select--outlined" style="width: 100%;">
+                <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone" theme-line>
+                <div id="theme_line" class="mdc-select mdc-select--outlined">
                     <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -877,6 +877,55 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                     
                     <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
                         <ul id="theme_line__selection" class="mdc-list">
+                        </ul>
+                    </div>
+                </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-1-phone" theme-diy>
+                    <div id="theme_colour" class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
+                        <input type="color" class="mdc-text-field__input" style="padding: 5px; padding-bottom: 3.5px;">
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label for="tf-outlined" class="mdc-floating-label" trans-tag="Editor.BG"></label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-5-desktop mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-2-phone" theme-diy>
+                    <div id="theme_colour_hex" class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
+                        <input type="input" class="mdc-text-field__input">
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label for="tf-outlined" class="mdc-floating-label" trans-tag="Editor.HEX"></label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-1-phone" theme-diy>
+                <div id="theme_fg" class="mdc-select mdc-select--outlined">
+                    <div class="mdc-select__anchor">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label id="outlined-select-label" class="mdc-floating-label" trans-tag="Editor.FG"></label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
+                        <ul class="mdc-list">
+                            <li class="mdc-list-item" data-value="#fff">White</li>
+                            <li class="mdc-list-item" data-value="#000">Black</li>
                         </ul>
                     </div>
                 </div>
@@ -1698,11 +1747,11 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
                 </div>
 
-                <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
+                <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle" int-line>
                     <i class="material-icons">subway</i>
                 </div>
 
-                <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
+                <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone" int-line>
                 <div id="int_line" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
@@ -1718,6 +1767,55 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                     
                     <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
                         <ul id="int_line__selection" class="mdc-list">
+                        </ul>
+                    </div>
+                </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-1-phone" int-diy>
+                    <div id="int_colour" class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
+                        <input type="color" class="mdc-text-field__input" style="padding: 5px; padding-bottom: 3.5px;">
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label for="tf-outlined" class="mdc-floating-label">Colour</label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-5-desktop mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-2-phone" int-diy>
+                    <div id="int_colour_hex" class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
+                        <input type="input" class="mdc-text-field__input">
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label for="tf-outlined" class="mdc-floating-label">Colour</label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-1-phone" int-diy>
+                <div id="int_fg" class="mdc-select mdc-select--outlined">
+                    <div class="mdc-select__anchor">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label id="outlined-select-label" class="mdc-floating-label" trans-tag="Editor.Line"></label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
+                        <ul class="mdc-list">
+                            <li class="mdc-list-item" data-value="#fff">White</li>
+                            <li class="mdc-list-item" data-value="#000">Black</li>
                         </ul>
                     </div>
                 </div>

@@ -1,5 +1,11 @@
 # Version History
 
+## 2.11 (15 Feb 2020)
+
+### New Features
+
+- Customising colour is now available in colour selectors. 
+
 ## 2.10 (15 Feb 2020)
 
 ### New Features
