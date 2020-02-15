@@ -8,13 +8,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Run a one-line script
-      run: echo Hello, world!
-    - name: Run a multi-line script
-      run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+    - name: Checkout
+      uses: actions/checkout@v2
 
     - name: Setup Node.js for use with actions
       uses: actions/setup-node@v1.1.0
@@ -22,8 +17,15 @@ jobs:
         # Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0, lts
         version: 12.14.1
     
-    - name: install requirements
+    - name: Install requirements
       run: npm ci
 
-    - name: build
+    - name: Build
       run: npx webpack
+
+    - name: Publish
+      uses: JamesIves/github-pages-deploy-action@releases/v3
+      with:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BRANCH: gh-pages # The branch the action should deploy to.
+        FOLDER: . # The folder the action should deploy.
