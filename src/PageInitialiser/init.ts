@@ -12,11 +12,11 @@ let firstInit = [false, true, true, true, true];
 window.sliders = [] as MDCSlider[];
 
 MDCTabBar.attachTo($('#panels .mdc-tab-bar')[0]).listen('MDCTabBar:activated', (event: CustomEvent) => {
+    linearProgress.open();
     $('.panel--active').removeClass('panel--active');
     $('.panel').eq(event.detail.index).addClass('panel--active');
 
     if (event.detail.index == 1 && firstInit[1]) {
-        linearProgress.open();
         import(/* webpackChunkName: "initLayout" */ './layout')
             .then(module => {
                 module.common();
@@ -26,12 +26,10 @@ MDCTabBar.attachTo($('#panels .mdc-tab-bar')[0]).listen('MDCTabBar:activated', (
                 firstInit[1] = false;
                 linearProgress.close();
             })
-    }
-    if (event.detail.index === 1) {
+    } else if (event.detail.index === 1) {
         window.sliders.forEach(slider => slider.layout());
-    }
-    if (event.detail.index == 2 && firstInit[2]) {
-        linearProgress.open();
+        linearProgress.close();
+    } else if (event.detail.index == 2 && firstInit[2]) {
         import(/* webpackChunkName: "initDesign" */ './design')
             .then(module => {
                 module.common();
@@ -46,24 +44,22 @@ MDCTabBar.attachTo($('#panels .mdc-tab-bar')[0]).listen('MDCTabBar:activated', (
                 firstInit[2] = false;
                 linearProgress.close();
             });
-    }
-    if (event.detail.index == 3 && firstInit[3]) {
-        linearProgress.open();
+    } else if (event.detail.index == 3 && firstInit[3]) {
         import(/* webpackChunkName: "initStations" */ './stations')
             .then(module => {
                 module.common();
                 firstInit[3] = false;
                 linearProgress.close();
             });
-    }
-    if (event.detail.index == 4 && firstInit[4]) {
-        linearProgress.open();
+    } else if (event.detail.index == 4 && firstInit[4]) {
         import(/* webpackChunkName: "initInfo" */ './info')
             .then(module => {
                 module.common();
                 firstInit[4] = false;
                 linearProgress.close();
             });
+    } else {
+        linearProgress.close();
     }
 });
 
