@@ -296,6 +296,17 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
     </div>
 </div>
 
+<div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed" aria-label="Example Progress Bar" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0">
+    <div class="mdc-linear-progress__buffering-dots"></div>
+    <div class="mdc-linear-progress__buffer"></div>
+    <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+      <span class="mdc-linear-progress__bar-inner"></span>
+    </div>
+    <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+      <span class="mdc-linear-progress__bar-inner"></span>
+    </div>
+  </div>
+
 <div id="panel_save" class="panel panel--active">
 
 <div class="mdc-layout-grid" style="max-width: 500px;">
@@ -1005,25 +1016,37 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
 
 <div id="panel_stations" class="panel">
 
-<div class="mdc-layout-grid">
-<div class="mdc-layout-grid__inner">
-
-    <div class="mdc-card mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone station-card" id="add_stn">
-    <div class="mdc-card__primary-action">
-        <div class="mdc-card__media mdc-card__media--16-9">
-        <div class="mdc-card__media-content station-card__content" trans-tag="Stations.New"></div>
+<div class="mdc-snackbar">
+    <div class="mdc-snackbar__surface">
+        <div class="mdc-snackbar__label"
+            role="status"
+            aria-live="polite">
+        </div>
+        <div class="mdc-snackbar__actions">
+        <button type="button" class="mdc-button mdc-snackbar__action" id="current">
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label" trans-tag="Stations.SetAsCurrent">Set As Current</span>
+        </button>
+        <button type="button" class="mdc-button mdc-snackbar__action" id="edit">
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label" trans-tag="Stations.Edit">Edit</span>
+        </button>
+        <button type="button" class="mdc-button mdc-snackbar__action" id="remove">
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label" trans-tag="Stations.Remove">Remove</span>
+        </button>
         </div>
     </div>
-    <div class="mdc-card__actions">
-        <div class="mdc-card__action-icons">
-        <button class="material-icons mdc-icon-button mdc-card__action mdc-card__action--icon" title="Add">add_box</button>
-        </div>
-    </div>
-    </div>
-
-<!-- MDC Card -->
-
 </div>
+
+<div class="mdc-chip-set mdc-chip-set--choice stn-chip-set" role="grid" id="stn_list">
+    <div class="mdc-chip" role="row" id="add_stn">
+        <div class="mdc-chip__ripple"></div>
+        <span class="material-icons mdc-chip__icon mdc-chip__icon--leading" style="font-size: 24px; height: auto;">add_box</span>
+        <span role="gridcell">
+          <span role="button" tabindex="0" class="mdc-chip__text stn-chip__text stn-chip__text--zh" trans-tag="Stations.New"/>
+        </span>
+    </div>
 </div>
 
 <div id="stn_add_diag" class="mdc-dialog"

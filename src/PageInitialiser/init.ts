@@ -1,7 +1,12 @@
 import { MDCTabBar } from '@material/tab-bar';
 import { MDCSlider } from '@material/slider';
+import { MDCLinearProgress } from '@material/linear-progress';
 
 export default function () {
+
+const linearProgress = new MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
+linearProgress.close();
+
     
 let firstInit = [false, true, true, true, true];
 window.sliders = [] as MDCSlider[];
@@ -11,6 +16,7 @@ MDCTabBar.attachTo($('#panels .mdc-tab-bar')[0]).listen('MDCTabBar:activated', (
     $('.panel').eq(event.detail.index).addClass('panel--active');
 
     if (event.detail.index == 1 && firstInit[1]) {
+        linearProgress.open();
         import(/* webpackChunkName: "initLayout" */ './layout')
             .then(module => {
                 module.common();
@@ -18,12 +24,14 @@ MDCTabBar.attachTo($('#panels .mdc-tab-bar')[0]).listen('MDCTabBar:activated', (
                     module.gzmtr();
                 }
                 firstInit[1] = false;
-            });
+                linearProgress.close();
+            })
     }
     if (event.detail.index === 1) {
         window.sliders.forEach(slider => slider.layout());
     }
     if (event.detail.index == 2 && firstInit[2]) {
+        linearProgress.open();
         import(/* webpackChunkName: "initDesign" */ './design')
             .then(module => {
                 module.common();
@@ -36,20 +44,25 @@ MDCTabBar.attachTo($('#panels .mdc-tab-bar')[0]).listen('MDCTabBar:activated', (
                         break;
                 }
                 firstInit[2] = false;
+                linearProgress.close();
             });
     }
     if (event.detail.index == 3 && firstInit[3]) {
+        linearProgress.open();
         import(/* webpackChunkName: "initStations" */ './stations')
             .then(module => {
                 module.common();
                 firstInit[3] = false;
+                linearProgress.close();
             });
     }
     if (event.detail.index == 4 && firstInit[4]) {
+        linearProgress.open();
         import(/* webpackChunkName: "initInfo" */ './info')
             .then(module => {
                 module.common();
                 firstInit[4] = false;
+                linearProgress.close();
             });
     }
 });

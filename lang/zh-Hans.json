@@ -79,6 +79,10 @@
     "Design.Char.TW": "中华民国（国字标准字体）",
     "Design.Char.JP": "日本（常用汉字表）",
 
+    "Stations.SetAsCurrent": "设为当前车站", 
+    "Stations.Edit": "编辑", 
+    "Stations.Remove": "删除", 
+
     "Stations.New": "添加车站",
     "Stations.New.Title": "选择车站位置",
     "Stations.New.Prep": "相对位置",

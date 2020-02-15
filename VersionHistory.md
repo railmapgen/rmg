@@ -1,5 +1,12 @@
 # Version History
 
+## 2.10 (15 Feb 2020)
+
+### New Features
+
+- New design of station editing panel. 
+- Progress bar is now added for indicating panel initialising process. 
+
 ## 2.9 (14 Feb 2020)
 
 ### New Features

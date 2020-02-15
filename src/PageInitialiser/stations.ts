@@ -7,52 +7,30 @@ import { MDCTabBar } from '@material/tab-bar';
 import { MDCChip, MDCChipSet } from '@material/chips';
 import { MDCRipple } from '@material/ripple';
 import { MDCSwitch } from '@material/switch';
+import { MDCSnackbar } from '@material/snackbar';
 
-const getStationCard = (id: string, names: Name, num: string) => {
-    return $('<div>', {
-        id: id, 
-        class: 'mdc-card mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone station-card'
-    })
+const getStnChip = (id: string, names: Name, num: string) => {
+    let chipEl = $('<div>', { id, class: 'mdc-chip', role: 'row' })
         .append(
-            $('<div>', { class: 'mdc-card__primary-action'})
-                .append($('<div>', { class: 'mdc-card__media mdc-card__media--16-9' }))
-                .append(
-                    $('<div>', { class: 'mdc-card__media-content station-card__content'})
-                        .html(names.join('<br>'))
-                        .prepend(
-                            $('<span>')
-                                .css('display', window.urlParams.get('style') === 'gzmtr' ? 'inline' : 'none')
-                                .text(num + '\u00a0')
-                        )
-                )
+            $('<div>', { class: 'mdc-chip__ripple' })
         )
         .append(
-            $('<div>', { class: 'mdc-card__actions' })
+            $('<span>', { class: 'mdc-chip__icon mdc-chip__icon--leading' }).text(num)
+                .css('display', window.urlParams.get('style')==='gzmtr' ? 'block' : 'none')
+        )
+        .append(
+            $('<span>', { role: 'gridcell' })
                 .append(
-                    $('<div>', { class: 'mdc-card__action-icons' })
+                    $('<span>', { role: 'button', tabindex: 0, class: 'mdc-chip__text' })
                         .append(
-                            $('<button>', {
-                                title: 'Set As Current', 
-                                class: 'material-icons mdc-icon-button mdc-card__action mdc-card__action--icon'
-                            })
-                                .text('my_location')
+                            $('<span>', { class: 'stn-chip__text stn-chip__text--zh' }).text(names[0])
                         )
                         .append(
-                            $('<button>', {
-                                title: 'Interchange', 
-                                class: 'material-icons mdc-icon-button mdc-card__action mdc-card__action--icon'
-                            })
-                                .text('edit')
-                        )
-                        .append(
-                            $('<button>', {
-                                title: 'Remove', 
-                                class: 'material-icons mdc-icon-button mdc-card__action mdc-card__action--icon'
-                            })
-                                .text('delete_forever')
+                            $('<span>', { class: 'stn-chip__text stn-chip__text--en' }).html(names[1].split('\\').join('<br>'))
                         )
                 )
         );
+    return chipEl[0] as HTMLDivElement;
 };
 
 const getIntBoxChip = (intInfo: InterchangeInfo) => {
@@ -156,6 +134,11 @@ const updateStnTransfer = (sets: HTMLDivElement[], tick: MDCChipSet, paid: MDCSw
 
 export function common() {
     // mdc instances
+    const stnChipSetEl = $('#stn_list')[0];
+    const stnChipSet = new MDCChipSet(stnChipSetEl);
+    const stnEditSnackbar = new MDCSnackbar($('#panel_stations .mdc-snackbar')[0]);
+    // stnEditSnackbar.timeoutMs = -1;
+
     const [stnAddDialog, stnEditDialog, stnIntBoxDialog, stnOSINameDialog, stnDeleteDialog, stnDeleteErrDialog] = 
         ['#stn_add_diag', '#stn_edit_diag', '#stn_intbox_diag', '#stn_osiname_diag', '#stn_delete_diag', '#stn_delete_err']
             .map(selector => new MDCDialog($(selector)[0]));
@@ -191,37 +174,54 @@ export function common() {
         ['through', 'first', 'pos']
             .map(selector => ['left', 'right'].map(direc => new MDCSelect($(`#${direc}_${selector}`)[0])));
 
-    var stnList = getParams().stn_list;
+    let stnList = getParams().stn_list;
     window.myLine.tpo.forEach(stnId => {
-        $('#panel_stations .mdc-layout-grid__inner:first').append(getStationCard(stnId, stnList[stnId].name, stnList[stnId].num));
+        let chipEl = getStnChip(stnId, stnList[stnId].name, stnList[stnId].num);
+        stnChipSetEl.appendChild(chipEl);
+        stnChipSet.addChip(chipEl);
+
         $('#pivot__selection').append(
-            $('<li>', {'data-value':stnId}).addClass('mdc-list-item').text(stnList[stnId].name.join())
+            $('<li>', {'data-value':stnId})
+                .addClass('mdc-list-item')
+                .text(window.urlParams.get('style')==='gzmtr' ? 
+                    `${stnList[stnId].num}: ${stnList[stnId].name.join()}` :
+                    stnList[stnId].name.join())
         );
     });
-
-    $('#panel_stations .mdc-card__primary-action').on('click', event => {
-        // var stnId = event.target.closest('.mdc-card').id;
-        // if (stnId == 'add_stn') {return;}
-        // $('#stn_modify_diag').attr('for', stnId);
-        // stnModifyDialog.open();
+    stnChipSet.listen('MDCChip:selection', (event: CustomEvent) => {
+        if (!event.detail.selected) {
+            // unselect chip, close snackbar, do nothing
+            stnEditSnackbar.close();
+            return;
+        }
+        if (event.detail.chipId === 'add_stn') {
+            stnAddDialog.open();
+            return;
+        }
+        // $('.mdc-snackbar__label').text('You have selected ' + event.detail.chipId);
+        stnEditSnackbar.open();
     });
-    $('#panel_stations .mdc-card__action-icons > [title="Add"]').on('click', event => {
-        stnAddDialog.open();
+    stnEditSnackbar.listen('MDCSnackbar:opening', () => {
+        let stnInfo = getParams().stn_list[stnChipSet.selectedChipIds[0]];
+        // $('#panel_stations .mdc-snackbar .mdc-snackbar__label')
+        //     .text(`${stnInfo.num} - ${stnInfo.name.join()}`)
+        stnEditSnackbar.labelText = `${stnInfo.num}: ${stnInfo.name.join()}`;
     });
-    $('#panel_stations .mdc-card__action-icons > [title="Set As Current"]').on('click', event => {
-        var stnId = event.target.closest('.mdc-card').id;
-        window.myLine.currentStnId = stnId;
+    stnEditSnackbar.listen('MDCSnackbar:closed', (event: CustomEvent) => {
+        if (!event.detail.reason) {return;}
+        stnChipSet.chips.filter(chip => stnChipSet.selectedChipIds.includes(chip.id))[0].selected = false;
     });
-    $('#panel_stations .mdc-card__action-icons > [title="Interchange"]').on('click', event => {
-        $('#stn_edit_diag').attr('for', event.target.closest('.mdc-card').id)
+    $('#panel_stations .mdc-snackbar button#current').on('click', () => {
+        window.myLine.currentStnId = stnChipSet.selectedChipIds[0];
+    });
+    $('#panel_stations .mdc-snackbar button#edit').on('click', () => {
+        $('#stn_edit_diag').attr('for', stnChipSet.selectedChipIds[0]);
         stnEditDialog.open();
     });
-    $('#panel_stations .mdc-card__action-icons > [title="Remove"]').on('click', event => {
-        var stnId = event.target.closest('.mdc-card').id;
-        $('#stn_delete_diag').attr('for', stnId);
+    $('#panel_stations .mdc-snackbar button#remove').on('click', () => {
+        $('#stn_delete_diag').attr('for', stnChipSet.selectedChipIds[0]);
         stnDeleteDialog.open();
     });
-
 
     // Addition
     stnAddDialog.listen('MDCDialog:opening', () => {
@@ -230,41 +230,25 @@ export function common() {
     stnAddDialog.listen('MDCDialog:opened', () => {
         [stnAddPrepSelect, stnAddPivotSelect, stnAddLocSelect].forEach(select => select.layout());
     });
-    stnAddDialog.listen('MDCDialog:closed', (event: any) => {
-        if (event.detail.action == 'close') {return;}
+    stnAddDialog.listen('MDCDialog:closed', (event: CustomEvent) => {
+        // unselect chip
+        stnChipSet.chips.filter(chip => stnChipSet.selectedChipIds.includes(chip.id))[0].selected = false;
 
-        var prep = stnAddPrepSelect.value as 'before' | 'after';
-        var stnId = stnAddPivotSelect.value;
-        var loc = stnAddLocSelect.value;
-        var end = stnAddEndSelect.value;
-        
-        var [newId, newInfo] = window.myLine.addStn(prep, stnId, loc, end);
+        if (event.detail.action === 'close') {return;}
+
+        let prep = stnAddPrepSelect.value as 'before' | 'after';
+        let stnId = stnAddPivotSelect.value;
+        let loc = stnAddLocSelect.value;
+        let end = stnAddEndSelect.value;
 
         console.log(prep, stnId, loc, end);
-        // _genStnList();
-        var prevId = window.myLine.tpo[window.myLine.tpo.indexOf(newId) - 1] || 'add_stn';
-        $(`#panel_stations .mdc-layout-grid__inner:first #${prevId}`).after(getStationCard(newId, newInfo.name, newInfo.num));
-        // Add event listeners
-        $(`#panel_stations #${newId} .mdc-card__primary-action`).on('click', event => {
-            // var stnId = event.target.closest('.mdc-card').id;
-            // if (stnId == 'add_stn') {return;}
-            // $('#stn_modify_diag').attr('for', stnId);
-            // stnModifyDialog.open();
-        });
-        $(`#panel_stations #${newId} .mdc-card__action-icons > [title="Set As Current"]`).on('click', event => {
-            var stnId = event.target.closest('.mdc-card').id;
-            window.myLine.currentStnId = stnId;
-        });
-        $(`#panel_stations #${newId} .mdc-card__action-icons > [title="Interchange"]`).on('click', event => {
-            var stnId = event.target.closest('.mdc-card').id;
-            $('#stn_edit_diag').attr('for', stnId);
-            stnEditDialog.open();
-        });
-        $(`#panel_stations #${newId} .mdc-card__action-icons > [title="Remove"]`).on('click', event => {
-            var stnId = event.target.closest('.mdc-card').id;
-            $('#stn_delete_diag').attr('for', stnId);
-            stnDeleteDialog.open();
-        });
+        let [newId, newInfo] = window.myLine.addStn(prep, stnId, loc, end);
+
+        let tpo = window.myLine.tpo;
+        let prevId = tpo[tpo.indexOf(newId)-1] || 'add_stn';
+        let chipEl = getStnChip(newId, newInfo.name, newInfo.num);
+        $(stnChipSetEl).find('#'+prevId).after(chipEl);
+        stnChipSet.addChip(chipEl);
 
         var listElem = $('<li>', {
             'data-value': newId, 'class': 'mdc-list-item'
@@ -511,9 +495,6 @@ export function common() {
             updateStnTransfer(intChipSetEls, tickDirecChipSet, paidAreaSwitch);
 
             // // hide trailing icon if 1 chip left
-            // if ($(intChipSetEls[i]).find('.mdc-chip').length === 1) {
-            //     $(intChipSetEls[i]).find('.mdc-chip__icon--trailing').parent().hide();
-            // }
         });
     });
 
@@ -670,7 +651,9 @@ export function common() {
         // Remove from data and svg
         if (window.myLine.removeStn(stnId)) {
             // Remove station from selection
-            $(`#panel_stations .mdc-layout-grid__inner #${stnId}`).remove();
+            // $(stnChipSetEl).find('#'+stnId).remove();
+            stnChipSet.chips.filter(chip => chip.id === stnId)[0].beginExit();
+            // $(`#panel_stations .mdc-layout-grid__inner #${stnId}`).remove();
             $(`#pivot__selection [data-value="${stnId}"]`).remove();
         } else {
             stnDeleteErrDialog.open();

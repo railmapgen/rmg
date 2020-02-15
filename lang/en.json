@@ -80,6 +80,10 @@
     "Design.Char.TW": "ROC (Standard Typefaces for Chinese Character)",
     "Design.Char.JP": "Japan (Jōyō Kanji)",
 
+    "Stations.SetAsCurrent": "Set As Current", 
+    "Stations.Edit": "Edit", 
+    "Stations.Remove": "Remove", 
+
     "Stations.New": "New Station",
     "Stations.New.Title": "Choose a location",
     "Stations.New.Prep": "Relative Position",
