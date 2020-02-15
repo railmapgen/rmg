@@ -91,12 +91,15 @@ export class RMGLineSH extends RMGLine {
             lineNameZH = "号线"
             $('#station_info_shmetro > #line_number > rect').attr({
                 fill: this._themeColour,
-                'transform': `translate(${lineNameX - 120},70)`, 
-                width: 100, height: 125
+                'transform': `translate(${lineNameX - 150},70)`,
             })
             $('#station_info_shmetro > #line_number > text')
                 .show().text(lineNumber[0])
-                .attr('transform', `translate(${lineNameX - 70},170)`);
+                .attr({
+                    transform: `translate(${lineNameX - 95},170)`,
+                    style: 'letter-spacing:-10px',
+                    'text-anchor': 'middle'
+                })
             
             // Chito: If match format X号线, "号线" always black
             // ignore inherit style from g#line_name_text
