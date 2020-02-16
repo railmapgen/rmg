@@ -4,9 +4,18 @@
     font-family: "Vegur";
     src: url("https://wongchito.github.io/RailMapGenerator/fonts/Vegur-Regular.otf");
 }
-.Strip {
-    fill: none;
-    stroke-width: 20;
+rect#strip {
+    fill: var(--rmg-theme-colour);
+    width: var(--rmg-svg-width);
+    height: 20px;
+    transform: translateY(calc(var(--strip-percentage,95) * var(--rmg-svg-height) / 100 - 10px));
+}
+
+rect#outer {
+    width: var(--rmg-svg-width);
+    height: var(--rmg-svg-height);
+    fill: white;
+    stroke: none;
 }
 
 .rmg-name__zh {dominant-baseline:central;}

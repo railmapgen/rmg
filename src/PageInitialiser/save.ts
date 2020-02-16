@@ -149,10 +149,12 @@ export function common() {
         $(event.target).find('.mdc-dialog__content')
             .append(
                 $('#'+$(event.target).attr('for')).clone().attr({
-                    style: 'all:initial;', 
+                    
                     viewBox: `0 0 ${thisSVGWidth} ${thisSVGHeight}`, 
                     width: thisSVGWidth * scaleFactor, 
                     height: thisSVGHeight * scaleFactor
+                }).css({
+                    all: 'initial'
                 })
             );
 

@@ -1,5 +1,11 @@
 # Version History
 
+## 2.11.2 (16 Feb 2020)
+
+### New Features
+
+- Utilised CSS variables. 
+
 ## 2.11.1 (16 Feb 2020)
 
 ### Resolved Issues

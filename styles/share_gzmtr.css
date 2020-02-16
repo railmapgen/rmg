@@ -8,8 +8,18 @@
     font-family: Arial, sans-serif;
 }
 
-.Strip {
+rect#strip_gz {
     fill: var(--rmg-theme-colour);
+    width: var(--rmg-svg-width);
+    transform: translateY(calc(var(--rmg-svg-height) - var(--height,60px)));
+    height: var(--height,60px);
+}
+
+rect#outer {
+    width: var(--rmg-svg-width);
+    height: var(--rmg-svg-height);
+    fill: white;
+    stroke: none;
 }
 
 .rmg-name__gzmtr {

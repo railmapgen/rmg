@@ -191,7 +191,7 @@ export class RMGLine {
     set platformNum(val: string) {
         this._platformNum = val;
         setParams('platform_num', val);
-        $('.rmg-name__platformnum').text(val);
+        $('g#platform text:nth-child(2)').text(val);
     }
     
     /**
@@ -493,13 +493,14 @@ export class RMGLine {
      * Set height and width for both `svg`s. 
      */
     drawSVGFrame() {
-        $('#railmap, #outer').attr({
-            width: this._svgWidth, 
-            height: this._svgHeight
+        $('#railmap').css({
+            '--rmg-svg-width': this._svgWidth,
+            '--rmg-svg-height': this._svgHeight
         });
-        $('#destination, #dest_outer').attr({
-            width: this._svgDestWidth, 
-            height: this._svgHeight
+
+        $('#destination').css({
+            '--rmg-svg-width': this._svgDestWidth, 
+            '--rmg-svg-height': this._svgHeight
         });
     }
 
@@ -619,9 +620,7 @@ export class RMGLine {
     }
 
     drawStrip() {
-        // $('#strip, #dest_strip').attr('d', `M 0,${this.stripY} H ${this._svgWidth}`)
-        $('#strip').attr('d', `M 0,${this.stripY} H ${this._svgWidth}`);
-        $('#dest_strip').attr('d', `M 0,${this.stripY} H ${this._svgDestWidth}`);
+        $('rect#strip').css('--strip-percentage', this._stripPc.toString());
     }
 
     fillThemeColour() {

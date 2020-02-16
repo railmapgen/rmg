@@ -35,7 +35,11 @@
 <svg 
 xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink" 
-id="destination" width="0" height="0" style="border: 1px solid black;">
+id="destination" style="
+    --rmg-svg-width: 0px;
+    --rmg-svg-height: 0px;
+    width: var(--rmg-svg-width);
+    height: var(--rmg-svg-height);">
     <defs>
         <path id="arrow" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
 
@@ -46,23 +50,23 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
 
         <ellipse id="indicator_gz28" rx="24" ry="12" fill="orange"/>
         <ellipse id="indicator_gzgf" rx="24" ry="12" fill="white"/>
-        <rect id="indicator_gz3" x="0" y="-25" height="30" width="30" fill="red"/>
+        <rect id="indicator_gz3" x="-15" y="-25" height="30" width="30" fill="red"/>
         <ellipse id="indicator_gz1421" cy="-8" rx="24" ry="12" fill="orange"/>
 
         <rect id="psd" height="40" width="40" rx="4"/>
         <path id="stn_gz" class="rmg-stn" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
     </defs>
 
-    <rect id="dest_outer" x="0" y="0" fill="white" stroke="none"/>
+    <rect id="outer" x="0" y="0"/>
 
-    <path id="dest_strip" class="Strip" style="display: none;" stroke="var(--rmg-theme-colour)" mtr-specific/>
-    <rect id="dest_strip_gz" class="Strip" style="display: none;" gzmtr-specific/>
+    <rect id="strip" style="display: none;" mtr-specific/>
+    <rect id="strip_gz" style="display: none;" gzmtr-specific/>
 
     <g id="dest_name" style="display: none;" mtr-specific>
         <use xlink:href="#arrow"/>
         <g id="platform">
-            <circle cx="0" cy="0" r="75" fill="var(--rmg-theme-colour)"/>
-            <text class="rmg-name__zh rmg-name__platformnum rmg-name__mtr--platformnum" dy="0"></text>
+            <circle cx="0" cy="0" r="75"/>
+            <text class="rmg-name__zh" dy="0"></text>
         </g>
         <g>
             <text class="rmg-name__zh" font-size="90px">往</text>
@@ -72,16 +76,16 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
 
     <g id="station_info_gzmtr" style="display: none;" gzmtr-specific>
         <g id="big_next">
-            <g transform="translate(80,110)" text-anchor="middle">
-                <text class="rmg-name__zh rmg-name__gzmtr--next">下站</text>
-                <text class="rmg-name__en rmg-name__gzmtr--next" dy="30">Next</text>
+            <g text-anchor="middle">
+                <text class="rmg-name__zh">下站</text>
+                <text class="rmg-name__en" dy="30">Next</text>
             </g>
             <g text-anchor="start">
-                <text class="rmg-name__zh rmg-name__gzmtr--next"></text>
-                <text class="rmg-name__en rmg-name__gzmtr--next" dy="30"></text>
+                <text class="rmg-name__zh"></text>
+                <text class="rmg-name__en" dy="30"></text>
             </g>
         </g>
-        <g id="big_next_2" gzmtr-specific>
+        <g id="big_next_2">
             <g text-anchor="middle">
                 <text class="rmg-name__zh rmg-name__gzmtr--next2">下站</text>
                 <text class="rmg-name__en rmg-name__gzmtr--next2" y="22">Next</text>
@@ -103,23 +107,23 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
                 <text class="rmg-name__en rmg-name__gzmtr--next2" y="22"></text>
             </g>
         </g>
-        <use xlink:href="#arrow"/>
-        <g id="platform" text-anchor="middle" fill="var(--rmg-theme-fg)">
+        <use xlink:href="#arrow" id="arrow"/>
+        <g id="platform">
             <circle cx="0" cy="0" r="30" fill="var(--rmg-theme-colour)"/>
-            <text class="rmg-name__zh rmg-name__platformnum rmg-name__gzmtr--platformnum" dy="-12"></text>
+            <text class="rmg-name__en" font-size="38px" dy="-9.5"></text>
             <text class="rmg-name__zh" font-size="13px" dy="10">站台</text>
             <text class="rmg-name__en" font-size="9px" dy="21">Platform</text>
         </g>
-        <g id="big_stn_num" transform="scale(1.4)">
+        <g id="big_stn_num">
             <use xlink:href="#stn_gz" class="rmg-stn--future"/>
             <text class="rmg-name__zh rmg-name__gzmtr--line-num"></text>
             <text class="rmg-name__zh rmg-name__gzmtr--station-num">06</text>
         </g>
-        <g id="big_name" text-anchor="middle"></g>
+        <g id="big_name"></g>
         <use id="indicator_light" xlink:href="#"/>
-        <g id="big_psd" text-anchor="middle">
+        <g id="big_psd">
             <use xlink:href="#psd" x="-20"/>
-            <text class="rmg-psd-num rmg-psd-num__gzmtr" dy="10"></text>
+            <text class="rmg-name__en" font-size="20px" dy="12"></text>
             <text class="rmg-name__zh" font-size="12px" dy="26">屏蔽门</text>
             <text class="rmg-name__en" font-size="6.5px" dy="36">Screen Door</text>
         </g>
@@ -147,7 +151,11 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
 --><svg 
 xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink" 
-id="railmap" width="0" height="0" style="border: 1px solid black;">
+id="railmap" style="
+    --rmg-svg-width: 0px;
+    --rmg-svg-height: 0px;
+    width: var(--rmg-svg-width);
+    height: var(--rmg-svg-height);">
     <defs>
         <path id="arrow" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
 
@@ -191,11 +199,11 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
         <rect id="intbox_gz" x="-22.5" height="24" width="45" rx="4.5"/>
     </defs>
 
-    <rect id="outer" x="0" y="0" fill="white" stroke="none"/>
+    <rect id="outer" x="0" y="0"/>
     <rect id="box" x="0" y="0" fill="none" stroke="black"/>
     
-    <path id="strip" class="Strip" style="display: none;" stroke="var(--rmg-theme-colour)" mtr-specific/>
-    <rect id="strip_gz" class="Strip" style="display: none;" gzmtr-specific/>
+    <rect id="strip" style="display: none;" mtr-specific/>
+    <rect id="strip_gz" style="display: none;" gzmtr-specific/>
 
     <g id="main">
         <g class="rmg-line rmg-line__mtr rmg-line__pass" id="line_pass"></g>
@@ -224,9 +232,9 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
         </g>
     </g>
 
-    <g id="terminus_gz" style="display: none;" text-anchor="middle">
-        <text class="rmg-name__zh rmg-name__gzmtr--dest">终 点 站</text>
-        <text dy="70" class="rmg-name__en rmg-name__gzmtr--dest">Terminal</text>
+    <g id="terminus_gz" style="display: none;">
+        <text class="rmg-name__zh">终 点 站</text>
+        <text dy="70" class="rmg-name__en">Terminal</text>
         <g stroke-width="8" stroke="#000">
             <path d="M -160,68 h -160"/>
             <path d="M 160,68 h 160"/>

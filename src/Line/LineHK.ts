@@ -200,10 +200,10 @@ export class RMGLineHK extends RMGLine {
         var arrowRotate = 90 * (1 - isLeft);
         var platformNumX = arrowX + isLeft * (160 + 50 + 75);
         var destNameX = platformNumX + isLeft * (75 + 45);
-        $('#dest_name > use').attr('transform', `translate(${arrowX},${0.5*this._svgHeight-20})rotate(${arrowRotate})`);
-        $('#dest_name > #platform').attr('transform', `translate(${platformNumX},${0.5*this._svgHeight-20})`);
+        $('#dest_name > use').attr('transform', `translate(${arrowX},0)rotate(${arrowRotate})`);
+        $('#dest_name > #platform').attr('transform', `translate(${platformNumX},0)`);
         $('#dest_name > g:last-child').attr({
-            transform: `translate(${destNameX},${0.5*this._svgHeight-45})`, 
+            transform: `translate(${destNameX},-25)`, 
             'text-anchor': txtAnchor
         });
     }
