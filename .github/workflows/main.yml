@@ -30,12 +30,12 @@ jobs:
       run: |
         git checkout -b gh-pages
         git add ./dist/*.* -f
-        git config user.email "wzl7777777@gmail.com"
-        git config user.name "thekingofcity"
+        git config user.email "${{secrets.GIT_EMAIL}}"
+        git config user.name "$GITHUB_ACTOR"
         git commit -m "Deploy to gh-pages from $GITHUB_SHA"
 
     - name: Publish
       run: |
         git remote rm origin
-        git remote add origin https://thekingofcity:${{secrets.ACCESS_TOKEN}}@github.com/thekingofcity/RailMapGenerator.git
+        git remote add origin https://$GITHUB_ACTOR:${{secrets.ACCESS_TOKEN}}@github.com/$GITHUB_ACTOR/RailMapGenerator.git
         git push -fq origin gh-pages
