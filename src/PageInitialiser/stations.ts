@@ -317,9 +317,9 @@ export function common() {
 
         var stnId = $('#stn_edit_diag').attr('for');
         window.myLine.updateStnName(stnId, names, stnNum);
-        $(`#panel_stations .mdc-layout-grid__inner:first #${stnId} .mdc-card__media-content`)
-            .html(names.join('<br>'))
-            .prepend($('<span>', { style:(window.urlParams.get('style')=='gzmtr' ? '' : 'display:none;')}).text(stnNum+' '));
+        $(stnChipSetEl).find('#'+stnId).find('.mdc-chip__icon--leading').text(stnNum);
+        $(stnChipSetEl).find('#'+stnId).find('.stn-chip__text--zh').text(names[0]);
+        $(stnChipSetEl).find('#'+stnId).find('.stn-chip__text--en').html(names[1].split('\\').join('<br>'));
         $(`li[data-value="${stnId}`).text(names.join());
     });
 
