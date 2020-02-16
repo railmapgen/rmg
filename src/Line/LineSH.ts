@@ -44,18 +44,23 @@ export class RMGLineSH extends RMGLine {
         var bcr = $('#station_info_shmetro > #dest_text')[0].getBoundingClientRect();
         var flagLength = 160 + 150 + bcr.width + 45 + 50;
 
-
+        // get the height
+        let dh = this._svgHeight - 300
 
         // arrow
         var isLeft = (this._direction == 'l') ? 1 : -1;
         var arrowX = (this._svgDestWidth - isLeft * flagLength) / 20;
         arrowX = (this._direction == 'l') ? arrowX : this._svgDestWidth - 20;
         var arrowRotate = 90 * (1 - isLeft);
-        $('#station_info_shmetro > #arrow_left_use').attr('transform', `translate(${arrowX},135)rotate(${arrowRotate})`);
+        $('#station_info_shmetro > #arrow_left_use').attr(
+            'transform', `translate(${arrowX},${135 + dh})rotate(${arrowRotate})`
+        )
 
         // not in use now
         var platformNumX = arrowX + isLeft * (160 + 50 + 75);
-        $('#station_info_shmetro > #platform').attr('transform', `translate(${platformNumX},130)`);
+        $('#station_info_shmetro > #platform').attr(
+            'transform', `translate(${platformNumX},${130 + dh})`
+        )
 
         // list the destination text
         // Todo: fix svg_dest_width*0.8, this has only been tested on 1000 width
@@ -67,7 +72,7 @@ export class RMGLineSH extends RMGLine {
             var destNameX = this._svgDestWidth * 0.2;
         }
         $('#station_info_shmetro > #dest_text').attr({
-            transform: `translate(${destNameX},135)`,
+            transform: `translate(${destNameX},${135 + dh})`,
             'text-anchor': txtAnchor
         });
 
@@ -81,7 +86,7 @@ export class RMGLineSH extends RMGLine {
         $('#station_info_shmetro > #dest_text > text:last-child').text(`To ${destinations_en.join(", ")}`)
 
         // prepare for the line name
-        let lineNameX = this._direction === 'l' ? this._svgDestWidth : 320
+        let lineNameX = this._direction === 'l' ? this._svgDestWidth : 360
         var [lineNameZH, lineNameEN] = this._lineNames;
 
         // line starts with numbers or letters
@@ -91,12 +96,12 @@ export class RMGLineSH extends RMGLine {
             lineNameZH = "号线"
             $('#station_info_shmetro > #line_number > rect').attr({
                 fill: this._themeColour,
-                'transform': `translate(${lineNameX - 150},70)`,
+                'transform': `translate(${lineNameX - 150},${70 + dh})`,
             })
             $('#station_info_shmetro > #line_number > text')
                 .show().text(lineNumber[0])
                 .attr({
-                    transform: `translate(${lineNameX - 95},170)`,
+                    transform: `translate(${lineNameX - 95},${170 + dh})`,
                     style: 'letter-spacing:-10px',
                     'text-anchor': 'middle'
                 })
@@ -108,7 +113,7 @@ export class RMGLineSH extends RMGLine {
             lineNameX -= 280;
             $('#station_info_shmetro > #line_number > rect').attr({
                 fill: this._themeColour, 
-                'transform': `translate(${lineNameX - 10},60)`,
+                'transform': `translate(${lineNameX - 10},${60 + dh})`,
                 'width': 260,
                 'height': 150
             })
@@ -125,19 +130,19 @@ export class RMGLineSH extends RMGLine {
         $('#station_info_shmetro > #line_name_text > text:first-child').text(lineNameZH)
         $('#station_info_shmetro > #line_name_text > text:last-child').text(lineNameEN)
         $('#station_info_shmetro > #line_name_text').attr({
-            transform: `translate(${lineNameX},135)`,
+            transform: `translate(${lineNameX},${135 + dh})`,
             'text-anchor': 'start'
         });
 
         // the last decoration line
         let path = ''
         if (this._direction == 'l') {
-            path = `M30,10 H ${this._svgDestWidth - 20} V 20 H 20 Z`
+            path = `M38,10 H ${this._svgDestWidth - 20} V 24 H 24 Z`
         } else {
-            path = `M20,10 H ${this._svgDestWidth - 30} l 10,10 H 20 Z`
+            path = `M24,10 H ${this._svgDestWidth - 30} l 12,12 H 24 Z`
         }
         $('#line_shmetro_use').attr({
-            transform: `translate(0,220)`,
+            transform: `translate(0,${220 + dh})`,
             d: path,
         })
     }
@@ -325,6 +330,8 @@ export class RMGLineSH extends RMGLine {
 
         $('#line_main').html($('#line_main').html());
         $('#line_pass').html($('#line_pass').html());
+
+        $('#railmap > #main').attr('transform', `translate(0,${this._svgHeight - 63})`)
     }
 
     fillThemeColour() {
@@ -421,12 +428,9 @@ export class RMGLineSH extends RMGLine {
         return [newId, newInfo]
     }
 
-    // rewrite this to change the railmap position
-    set yPc(val) {
-        super.yPc = val
-
-        let y = val * this._svgHeight / 50;
-        $('g#main').attr('transform', `translate(0,${y})`);
+    set svgHeight(val: number) {
+        super.svgHeight = val
+        this.drawLine()
     }
 
     set padding(val: number) {

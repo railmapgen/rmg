@@ -87,7 +87,7 @@ class IntStationSH extends RMGStationSH {
         let [dx, dy] = this._dxdy;
         // wrap the name, decro_line and int_line under g in order to rotate at once
         return $('<g>', {
-            transform: `translate(${this.x - dx},${this.y + dy})`,  //rotate(-60)
+            transform: `translate(${this.x - dx},${this.y + dy})`,
         }).append(
             // the original name text
             $('<g>', {
