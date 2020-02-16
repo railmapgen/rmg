@@ -334,6 +334,7 @@ export class RMGLineSH extends RMGLine {
         $('#railmap > #main').attr('transform', `translate(0,${this._svgHeight - 63})`)
     }
 
+    // Todo: use css var
     fillThemeColour() {
         super.fillThemeColour();
 
