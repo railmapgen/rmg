@@ -1,9 +1,16 @@
 .rmg-line {fill:none}
 
-.rmg-line__gzmtr {stroke-width: 4;}
+.rmg-line__gzmtr {
+    stroke-width: 4;
+    stroke: var(--rmg-theme-colour);
+}
 .rmg-line__gzmtr.rmg-line__pass {
     stroke: #aaa;
     stroke-dasharray:4,4;
+}
+
+.rmg-stn--pass {
+    stroke: #aaa;
 }
 
 .Name.Pass {fill: #aaa;}

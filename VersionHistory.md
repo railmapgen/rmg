@@ -6,6 +6,8 @@
 
 - Fixed the issue of text content of station chip not updated when the name of the station is changed. 
 - Fixed the issue of interchange box of branching station in Guangzhou Metro style not updated when the theme colour or the name of the line is changed. 
+- Improved the horizontal position of the line in Guangzhou Metro style such that the margins of both left and right sides are similar. 
+- Improved CSS rules to avoid frequently modifying elements' attributes. 
 
 ## 2.11 (15 Feb 2020)
 

@@ -8,6 +8,10 @@
     font-family: Arial, sans-serif;
 }
 
+.Strip {
+    fill: var(--rmg-theme-colour);
+}
+
 .rmg-name__gzmtr {
     font-family: Arial, SimHei, STHeiti, PingFangSC-Regular, sans-serif;
 }
@@ -22,7 +26,11 @@
     text-anchor: middle;
 }
 .rmg-stn {
-    fill: white;
+    fill: #fff;
+    stroke-width: 2;
+}
+.rmg-stn--future {
+    stroke: var(--rmg-theme-colour);
 }
 .rmg-stn__highlight {
     fill: yellow;

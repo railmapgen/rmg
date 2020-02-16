@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <link rel="stylesheet" href="styles/main.css">
+    <style type="text/css" id="global">
+        :root {--rmg-theme-colour: #000;}
+    </style>
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
     <script>
@@ -47,18 +50,18 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
         <ellipse id="indicator_gz1421" cy="-8" rx="24" ry="12" fill="orange"/>
 
         <rect id="psd" height="40" width="40" rx="4"/>
-        <path id="stn_gz" fill="#fff" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
+        <path id="stn_gz" class="rmg-stn" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
     </defs>
 
     <rect id="dest_outer" x="0" y="0" fill="white" stroke="none"/>
 
-    <path id="dest_strip" class="Strip" style="display: none;" mtr-specific/>
-    <rect id="dest_strip_gz" style="display: none;" gzmtr-specific/>
+    <path id="dest_strip" class="Strip" style="display: none;" stroke="var(--rmg-theme-colour)" mtr-specific/>
+    <rect id="dest_strip_gz" class="Strip" style="display: none;" gzmtr-specific/>
 
     <g id="dest_name" style="display: none;" mtr-specific>
         <use xlink:href="#arrow"/>
         <g id="platform">
-            <circle cx="0" cy="0" r="75"/>
+            <circle cx="0" cy="0" r="75" fill="var(--rmg-theme-colour)"/>
             <text class="rmg-name__zh rmg-name__platformnum rmg-name__mtr--platformnum" dy="0"></text>
         </g>
         <g>
@@ -101,14 +104,14 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
             </g>
         </g>
         <use xlink:href="#arrow"/>
-        <g id="platform" text-anchor="middle">
-            <circle cx="0" cy="0" r="30"/>
+        <g id="platform" text-anchor="middle" fill="var(--rmg-theme-fg)">
+            <circle cx="0" cy="0" r="30" fill="var(--rmg-theme-colour)"/>
             <text class="rmg-name__zh rmg-name__platformnum rmg-name__gzmtr--platformnum" dy="-12"></text>
             <text class="rmg-name__zh" font-size="13px" dy="10">站台</text>
             <text class="rmg-name__en" font-size="9px" dy="21">Platform</text>
         </g>
         <g id="big_stn_num" transform="scale(1.4)">
-            <use xlink:href="#stn_gz" class="rmg-stn"/>
+            <use xlink:href="#stn_gz" class="rmg-stn--future"/>
             <text class="rmg-name__zh rmg-name__gzmtr--line-num"></text>
             <text class="rmg-name__zh rmg-name__gzmtr--station-num">06</text>
         </g>
@@ -171,7 +174,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             <use xlink:href="#int2_hk" x="41"/>
         </g>
 
-        <path id="stn_gz" fill="#fff" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
+        <path id="stn_gz" class="rmg-stn" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
         <path id="stn_gz_pass" stroke="#aaa" fill="#fff" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/> 
         <!-- <path id="stn_sh" fill="#fff" stroke-width="2" d="M -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0"/> -->
         <circle id="stn_sh" fill="#fff" stroke-width="2" r="5"/>
@@ -191,8 +194,8 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
     <rect id="outer" x="0" y="0" fill="white" stroke="none"/>
     <rect id="box" x="0" y="0" fill="none" stroke="black"/>
     
-    <path id="strip" class="Strip" style="display: none;" mtr-specific/>
-    <rect id="strip_gz" style="display: none;" gzmtr-specific/>
+    <path id="strip" class="Strip" style="display: none;" stroke="var(--rmg-theme-colour)" mtr-specific/>
+    <rect id="strip_gz" class="Strip" style="display: none;" gzmtr-specific/>
 
     <g id="main">
         <g class="rmg-line rmg-line__mtr rmg-line__pass" id="line_pass"></g>

@@ -14,7 +14,12 @@
 }
 
 .rmg-line {fill:none}
-.rmg-line__mtr {stroke-width: 11;}
+.rmg-line__mtr {
+    stroke-width: 11;
+}
+.rmg-line__mtr:not(.rmg-line__change) {
+    stroke: var(--rmg-theme-colour);
+}
 .rmg-line__mtr.rmg-line__change {stroke-width: 10;}
 .rmg-line__mtr.rmg-line__pass {
     stroke: #aaa;
