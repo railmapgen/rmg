@@ -1,5 +1,12 @@
 # Version History
 
+## 2.11.1 (16 Feb 2020)
+
+### Resolved Issues
+
+- Fixed the issue of text content of station chip not updated when the name of the station is changed. 
+- Fixed the issue of interchange box of branching station in Guangzhou Metro style not updated when the theme colour or the name of the line is changed. 
+
 ## 2.11 (15 Feb 2020)
 
 ### New Features

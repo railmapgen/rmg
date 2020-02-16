@@ -122,7 +122,7 @@ class RMGStationGZ extends RMGStation {
 }
 
 class IntStationGZ extends RMGStationGZ {
-    private _intInfos: InterchangeInfo[];
+    protected _intInfos: InterchangeInfo[];
 
     constructor(id: string, data: StationInfo) {
         super(id, data);
@@ -170,6 +170,10 @@ class BranchStationGZ extends IntStationGZ {
             data.transfer.info[0].push(...data.transfer.info[1]);
         }
         super(id, data);
+    }
+
+    set lineInfo(info: InterchangeInfo) {
+        this._intInfos[0] = info;
     }
 
     get _nameShift() {return true;}

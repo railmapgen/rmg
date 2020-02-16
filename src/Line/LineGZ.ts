@@ -83,6 +83,20 @@ export class RMGLineGZ extends RMGLine {
         this.loadLineNum();
     }
 
+    set theme(t) {
+        super.theme = t;
+        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
+            if (stnInstance instanceof BranchStationGZ) {
+                stnInstance.lineInfo = [this.themeCity, this.themeLine, this._themeColour, this._fgColour, this._lineNames[0], this._lineNames[1]];
+                this.redrawStn(stnId);
+                this.loadLineNum();
+            } else {
+                continue;
+            }
+        }
+    }
+
     set direction(val) {
         this._direction = val;
         setParams('direction', val);
@@ -118,7 +132,17 @@ export class RMGLineGZ extends RMGLine {
         setParams('line_name', val);
 
         this.loadLineName();
-        // (to be fixed) redraw branching station
+
+        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
+            if (stnInstance instanceof BranchStationGZ) {
+                stnInstance.lineInfo = [this.themeCity, this.themeLine, this._themeColour, this._fgColour, this._lineNames[0], this._lineNames[1]];
+                this.redrawStn(stnId);
+                this.loadLineNum();
+            } else {
+                continue;
+            }
+        }
     }
 
     set psdNum(val: string) {
@@ -274,6 +298,14 @@ export class RMGLineGZ extends RMGLine {
             $(`#stn_icons #${stnId} g#stn_name`).append(stnInstance.expressTagHTML(this._themeColour));
         }
         $('#stn_icons').html($('#stn_icons').html()); // Refresh DOM
+    }
+
+    redrawStn(stnId: string) {
+        $('#stn_icons').find('#'+stnId).remove();
+        $('#stn_icons').append(this.stations[stnId].html);
+        $('#stn_icons').html($('#stn_icons').html());
+        $(`#stn_icons #${stnId} g#stn_name`).append(this.stations[stnId].expressTagHTML(this._themeColour));
+        $(`#stn_icons #${stnId} g#stn_name`).html($(`#stn_icons #${stnId} g#stn_name`).html());
     }
 
     _linePath(stnIds: string[]) {
