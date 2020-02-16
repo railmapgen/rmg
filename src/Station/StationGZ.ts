@@ -36,7 +36,9 @@ export function getIntBoxGZ(intInfo: InterchangeInfo, state: 0 | 1 | -1) {
                 .text(names[1])
         );
     if (fg === '#fff' || state === -1) {
-        $(boxEl).find('text').addClass('rmg-name__gzmtr--white-fg');
+        $(boxEl).find('text').attr('fill', '#fff');
+    } else {
+        $(boxEl).find('text').attr('fill', fg);
     }
 
     return boxEl;
@@ -63,9 +65,9 @@ class RMGStationGZ extends RMGStation {
     get _tickRotation() {return this.y > 0 ? 180 : 0;}
 
     get iconHTML() {
-        var [iconType, numClass] = (this.state == -1) ? ['stn_gz_pass','Pass'] : ['stn_gz','Future'];
+        var [iconClass, numClass] = (this.state == -1) ? ['rmg-stn--pass','Pass'] : ['rmg-stn--future','Future'];
         return $('<g>', { transform:`translate(${this.x},${this.y})` })
-            .append($('<use>', { 'xlink:href': '#' + iconType, class: 'rmg-stn' }))
+            .append($('<use>', { 'xlink:href': '#stn_gz', class: iconClass }))
             .append(
                 $('<g>', { class: 'Name ' + numClass })
                     .append($('<text>', { class:'rmg-name__zh rmg-name__gzmtr--line-num' }))
@@ -122,7 +124,7 @@ class RMGStationGZ extends RMGStation {
 }
 
 class IntStationGZ extends RMGStationGZ {
-    private _intInfos: InterchangeInfo[];
+    protected _intInfos: InterchangeInfo[];
 
     constructor(id: string, data: StationInfo) {
         super(id, data);
@@ -170,6 +172,10 @@ class BranchStationGZ extends IntStationGZ {
             data.transfer.info[0].push(...data.transfer.info[1]);
         }
         super(id, data);
+    }
+
+    set lineInfo(info: InterchangeInfo) {
+        this._intInfos[0] = info;
     }
 
     get _nameShift() {return true;}

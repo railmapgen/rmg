@@ -162,7 +162,9 @@ export function common() {
                     ((<HTMLLinkElement>$(`link#css_${tag}`)[0]).sheet as CSSStyleSheet).cssRules
                 ).map(rule => rule.cssText).join(' ');
             });
-        $(event.target).find('svg').prepend(...cssTxt.map(txt => $('<style>').text(txt)));
+        $(event.target).find('svg')
+            .prepend(...cssTxt.map(txt => $('<style>').text(txt)))
+            .prepend(document.querySelector('style#global').outerHTML);
         
         $(event.target).find('svg [style="display: none;"]').remove();
     });

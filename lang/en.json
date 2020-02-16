@@ -164,6 +164,11 @@
 
     "Editor.City": "City", 
     "Editor.Line": "Line",
+    "Editor.BG": "Background Colour", 
+    "Editor.HEX": "Background HEX #", 
+    "Editor.FG": "Foreground Colour", 
+    "Editor.FG.White": "White", 
+    "Editor.FG.Black": "Black", 
     "Editor.Name.ZH": "Name (in Chinese Character)",
     "Editor.Name.EN": "Name (in Latin Character)", 
     "Editor.OSIName.ZH": "Station Name (in Chinese Character)", 

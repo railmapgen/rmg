@@ -183,5 +183,14 @@
             "en": "Xi'an", 
             "zh": "西安"
 		}
+    }, 
+    {
+        "id": "other", 
+        "country": "UN", 
+        "name": {
+            "en": "Customise (Beta)", 
+            "zh-Hans": "自定义 (Beta)", 
+            "zh-Hant": "自訂 (Beta)"
+        }
     }
 ]

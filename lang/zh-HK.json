@@ -161,6 +161,11 @@
 
     "Editor.City": "城市", 
     "Editor.Line": "路線",
+    "Editor.BG": "背景色", 
+    "Editor.HEX": "背景色（十六進制）#", 
+    "Editor.FG": "前景色", 
+    "Editor.FG.White": "白", 
+    "Editor.FG.Black": "黑", 
     "Editor.Name.ZH": "名稱（漢字）",
     "Editor.Name.EN": "名稱（拉丁字母）",
     "Editor.OSIName.ZH": "車站名稱（漢字）", 

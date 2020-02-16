@@ -19,7 +19,7 @@ export class RMGLineGZ extends RMGLine {
 
         this._psdNum = param.psd_num;
         this._lineNum = param.line_num;
-        this._infoPanelType = param.info_panel_type;
+        this.infoPanelType = param.info_panel_type;
         this._directionGZX = param.direction_gz_x;
         this._directionGZY = param.direction_gz_y;
     }
@@ -48,7 +48,7 @@ export class RMGLineGZ extends RMGLine {
         if (this._direction == 'r') {
             return [
                 this._svgWidth * this._padding / 100 + 65, 
-                this._svgWidth * (1 - this._padding/100)
+                this._svgWidth * (1 - this._padding/100) - 20
             ];
         } else {
             return [
@@ -81,6 +81,20 @@ export class RMGLineGZ extends RMGLine {
     set branchSpacing(val: number) {
         super.branchSpacing = val;
         this.loadLineNum();
+    }
+
+    set theme(t) {
+        super.theme = t;
+        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
+            if (stnInstance instanceof BranchStationGZ) {
+                stnInstance.lineInfo = [this.themeCity, this.themeLine, this._themeColour, this._fgColour, this._lineNames[0], this._lineNames[1]];
+                this.redrawStn(stnId);
+                this.loadLineNum();
+            } else {
+                continue;
+            }
+        }
     }
 
     set direction(val) {
@@ -118,7 +132,17 @@ export class RMGLineGZ extends RMGLine {
         setParams('line_name', val);
 
         this.loadLineName();
-        // (to be fixed) redraw branching station
+
+        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
+            if (stnInstance instanceof BranchStationGZ) {
+                stnInstance.lineInfo = [this.themeCity, this.themeLine, this._themeColour, this._fgColour, this._lineNames[0], this._lineNames[1]];
+                this.redrawStn(stnId);
+                this.loadLineNum();
+            } else {
+                continue;
+            }
+        }
     }
 
     set psdNum(val: string) {
@@ -131,9 +155,15 @@ export class RMGLineGZ extends RMGLine {
         this._infoPanelType = val;
         setParams('info_panel_type', val);
         $('#station_info_gzmtr #indicator_light').attr('xlink:href', '#indicator_'+val);
-        // $('#dest_strip, #strip').removeAttr('class').addClass(`rmg-strip__gzmtr--${this._infoPanelType}`);
         this.drawStrip();
-        this.fillThemeColour();
+
+        if (['gz3', 'gz1421'].includes(this._infoPanelType)) {
+            $('#big_psd use').attr('fill', 'var(--rmg-theme-colour)');
+            $('#big_psd text').attr('fill', 'var(--rmg-theme-fg)');
+        } else {
+            $('#big_psd use').attr('fill', 'white');
+            $('#big_psd text').attr('fill', '#000');
+        }
         this.drawPSD();
     }
 
@@ -276,6 +306,14 @@ export class RMGLineGZ extends RMGLine {
         $('#stn_icons').html($('#stn_icons').html()); // Refresh DOM
     }
 
+    redrawStn(stnId: string) {
+        $('#stn_icons').find('#'+stnId).remove();
+        $('#stn_icons').append(this.stations[stnId].html);
+        $('#stn_icons').html($('#stn_icons').html());
+        $(`#stn_icons #${stnId} g#stn_name`).append(this.stations[stnId].expressTagHTML(this._themeColour));
+        $(`#stn_icons #${stnId} g#stn_name`).html($(`#stn_icons #${stnId} g#stn_name`).html());
+    }
+
     _linePath(stnIds: string[]) {
         let prevY: number;
         var path = [];
@@ -330,34 +368,6 @@ export class RMGLineGZ extends RMGLine {
         styleSheet.insertRule('.rmg-name__en {alignment-baseline: middle; font-family: Arial, sans-serif;}');
     }
 
-    fillThemeColour() {
-        super.fillThemeColour();
-        $('#dest_strip_gz, #strip_gz').attr('fill', this._themeColour);
-        if (['gz3', 'gz1421'].includes(this._infoPanelType)) {
-            $('#big_psd use').attr('fill', this._themeColour);
-            if (this._fgColour === '#fff') {
-                $('#big_psd text').addClass('rmg-name__gzmtr--white-fg');
-            } else {
-                $('#big_psd text').removeClass('rmg-name__gzmtr--white-fg');
-            }
-        } else {
-            $('#big_psd use').attr('fill', 'white');
-            $('#big_psd text').removeClass('rmg-name__gzmtr--white-fg');
-        }
-
-        $('path#stn_gz').attr('stroke', this._themeColour);
-        $('#station_info_gzmtr > #platform > circle').attr('fill', this._themeColour);
-        $('#line_name use').attr('fill', this._themeColour);
-        if (this._fgColour === '#fff') {
-            $('#station_info_gzmtr > #platform text').addClass('rmg-name__gzmtr--white-fg');
-            $('#line_name text').addClass('rmg-name__gzmtr--white-fg');
-        } else {
-            $('#station_info_gzmtr > #platform text').removeClass('rmg-name__gzmtr--white-fg');
-            $('#line_name text').removeClass('rmg-name__gzmtr--white-fg');
-        }
-        
-    }
-
     loadLineNum() {
         const LINE_NUM_MAX_WIDTH = 15.59375;
         $('.rmg-name__gzmtr--line-num').text(this._lineNum).attr('transform', `translate(-9.25,0)`);
@@ -376,7 +386,7 @@ export class RMGLineGZ extends RMGLine {
 
     loadLineName() {
         // simulate interchange info
-        let info = [this.themeCity, this.themeLine, this._themeColour, this._fgColour, this._lineNames[0], this._lineNames[1]] as InterchangeInfo;
+        let info = [this.themeCity, this.themeLine, 'var(--rmg-theme-colour)', 'var(--rmg-theme-fg)', this._lineNames[0], this._lineNames[1]] as InterchangeInfo;
 
         $('#line_name')
             .empty()

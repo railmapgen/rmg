@@ -625,8 +625,7 @@ export class RMGLine {
     }
 
     fillThemeColour() {
-        $('#line_main, #strip, #dest_strip').attr('stroke', this._themeColour);
-        $('#dest_name > #platform > circle').attr('fill', this._themeColour);
+        $('style#global').text(`:root{--rmg-theme-colour:${this._themeColour};--rmg-theme-fg:${this._fgColour}}`);
     }
 
     drawDestInfo() {

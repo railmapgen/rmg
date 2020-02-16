@@ -157,8 +157,10 @@ export function common() {
     const intChipSetEls = $('#stn_edit_diag #panel_interchange .mdc-chip-set.int-chip-set').get() as HTMLDivElement[];
     const intChipSets = intChipSetEls.map(el => new MDCChipSet(el));
     const osiNameButtonRipple = new MDCRipple($('#stn_edit_diag #osi_name')[0]);
-    const intCitySelect = new MDCSelect($('#int_city')[0]);
-    const intLineSelect = new MDCSelect($('#int_line')[0]);
+    const [intCitySelect, intLineSelect, intFgSelect] = 
+        ['#int_city', '#int_line', '#int_fg'].map(selector => new MDCSelect($(selector)[0]));
+    const [intColourField, intHexField] = 
+        ['#int_colour', '#int_colour_hex'].map(selector => new MDCTextField($(selector)[0]));
     const intBoxNameFields = ['zh', 'en'].map(lang => new MDCTextField($('#stn_intbox_diag').find('#name_'+lang)[0]));
     const tickDirecChipSet = new MDCChipSet($('#tick_direc')[0]);
     // const tickDirecChips = $('#tick_direc .mdc-chip').map((_,el) => new MDCChip(el)).get();
@@ -315,10 +317,12 @@ export function common() {
 
         var stnId = $('#stn_edit_diag').attr('for');
         window.myLine.updateStnName(stnId, names, stnNum);
-        $(`#panel_stations .mdc-layout-grid__inner:first #${stnId} .mdc-card__media-content`)
-            .html(names.join('<br>'))
-            .prepend($('<span>', { style:(window.urlParams.get('style')=='gzmtr' ? '' : 'display:none;')}).text(stnNum+' '));
-        $(`li[data-value="${stnId}`).text(names.join());
+        $(stnChipSetEl).find('#'+stnId).find('.mdc-chip__icon--leading').text(stnNum);
+        $(stnChipSetEl).find('#'+stnId).find('.stn-chip__text--zh').text(names[0]);
+        $(stnChipSetEl).find('#'+stnId).find('.stn-chip__text--en').html(names[1].split('\\').join('<br>'));
+        $(`li[data-value="${stnId}`).text(window.urlParams.get('style')==='gzmtr' ? 
+            `${stnList[stnId].num}: ${stnList[stnId].name.join()}` :
+            stnList[stnId].name.join());
     });
 
 
@@ -520,10 +524,21 @@ export function common() {
 
     stnIntBoxDialog.listen('MDCDialog:opened', (event) => {
         intBoxNameFields.map(textfield => textfield.layout());
+        intColourField.layout();
+        intHexField.layout();
+        intFgSelect.layout();
     });
 
     intCitySelect.listen('MDCSelect:change', (event: CustomEvent) => {
         if (event.detail.index === -1) {return;}
+        let city = event.detail.value;
+        if (city === 'other') {
+            $('[int-line]').hide();
+            $('[int-diy]').show();
+        } else {
+            $('[int-line]').show();
+            $('[int-diy]').hide();
+        }
 
         let { setIdx, chipId } = $('#stn_intbox_diag').data('intId');
 
@@ -537,8 +552,8 @@ export function common() {
                         'data-value': l.id
                     }).append(
                         $('<span>').css({
-                            background: l.colour, 
-                            color: l.fg || '#fff'
+                            background: city==='other' ? $(intChipSetEls[setIdx]).find('#'+chipId).css('background-color') : l.colour, 
+                            color: city==='other' ? $(intChipSetEls[setIdx]).find('#'+chipId).css('color') : (l.fg || '#fff')
                         }).text('\u00a0' + getTransText(l.name, lang) + '\u00a0')
                     )
                 );
@@ -558,14 +573,71 @@ export function common() {
         let { value, index } = event.detail;
         let { setIdx, chipId } = $('#stn_intbox_diag').data('intId');
 
+        let colours = ['background-color', 'color']
+            .map(prop => $('#int_line__selection span').eq(index).css(prop))
+            .map(rgb2Hex) as [string, '#fff' | '#000'];
+        intColourField.value = colours[0];
+        intHexField.value = colours[0].slice(1).toUpperCase();
+        intFgSelect.value = colours[1];
+
         // update data value of chip element
         $(intChipSetEls[setIdx]).find('#'+chipId).data('theme').line = value;
 
         // update colour of chip
         $(intChipSetEls[setIdx]).find('#'+chipId).css({
-            'background-color': $('#int_line__selection span').eq(index).css('background-color'), 
-            color: $('#int_line__selection span').eq(index).css('color')
+            'background-color': colours[0],
+            color: colours[1]
         });
+    });
+
+    ($(intColourField.root_).find('input') as JQuery<HTMLInputElement>)
+        .on('input', event => {
+            let hex = event.target.value;
+            intHexField.value = hex.slice(1).toUpperCase();
+
+            let { setIdx, chipId } = $('#stn_intbox_diag').data('intId');
+            
+            // update colour of chip
+            $(intChipSetEls[setIdx]).find('#'+chipId).css({
+                'background-color': hex
+            });
+
+            // update colour of li selection
+            $('#int_line__selection li span').css('background', hex);
+        });
+    
+    ($(intHexField.root_).find('input') as JQuery<HTMLInputElement>)
+        .on('input', event => {
+            let rrggbb = event.target.value;
+            if (rrggbb.match(/[0-9a-fA-F]{6}/g) === null) {
+                return;
+            } else if (rrggbb !== rrggbb.match(/[0-9a-fA-F]{6}/g)[0]) {
+                return;
+            }
+            intColourField.value = '#' + rrggbb;
+
+            let { setIdx, chipId } = $('#stn_intbox_diag').data('intId');
+
+            // update colour of chip
+            $(intChipSetEls[setIdx]).find('#'+chipId).css({
+                'background-color': '#'+rrggbb
+            });
+
+            // update colour of li selection
+            $('#int_line__selection li span').css('background', '#'+rrggbb);
+        });
+
+    intFgSelect.listen('MDCSelect:change', (event: CustomEvent) => {
+        if (intCitySelect.value !== 'other') {return;}
+        let { setIdx, chipId } = $('#stn_intbox_diag').data('intId');
+
+        // update colour of chip
+        $(intChipSetEls[setIdx]).find('#'+chipId).css({
+            color: event.detail.value
+        });
+
+        // update colour of li selection
+        $('#int_line__selection li span').css('color', event.detail.value);
     });
 
     intBoxNameFields.forEach(textfield => {

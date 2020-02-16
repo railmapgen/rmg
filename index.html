@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <link rel="stylesheet" href="styles/main.css">
+    <style type="text/css" id="global">
+        :root {--rmg-theme-colour: #000;}
+    </style>
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
     <script>
@@ -47,18 +50,18 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
         <ellipse id="indicator_gz1421" cy="-8" rx="24" ry="12" fill="orange"/>
 
         <rect id="psd" height="40" width="40" rx="4"/>
-        <path id="stn_gz" fill="#fff" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
+        <path id="stn_gz" class="rmg-stn" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
     </defs>
 
     <rect id="dest_outer" x="0" y="0" fill="white" stroke="none"/>
 
-    <path id="dest_strip" class="Strip" style="display: none;" mtr-specific/>
-    <rect id="dest_strip_gz" style="display: none;" gzmtr-specific/>
+    <path id="dest_strip" class="Strip" style="display: none;" stroke="var(--rmg-theme-colour)" mtr-specific/>
+    <rect id="dest_strip_gz" class="Strip" style="display: none;" gzmtr-specific/>
 
     <g id="dest_name" style="display: none;" mtr-specific>
         <use xlink:href="#arrow"/>
         <g id="platform">
-            <circle cx="0" cy="0" r="75"/>
+            <circle cx="0" cy="0" r="75" fill="var(--rmg-theme-colour)"/>
             <text class="rmg-name__zh rmg-name__platformnum rmg-name__mtr--platformnum" dy="0"></text>
         </g>
         <g>
@@ -101,14 +104,14 @@ id="destination" width="0" height="0" style="border: 1px solid black;">
             </g>
         </g>
         <use xlink:href="#arrow"/>
-        <g id="platform" text-anchor="middle">
-            <circle cx="0" cy="0" r="30"/>
+        <g id="platform" text-anchor="middle" fill="var(--rmg-theme-fg)">
+            <circle cx="0" cy="0" r="30" fill="var(--rmg-theme-colour)"/>
             <text class="rmg-name__zh rmg-name__platformnum rmg-name__gzmtr--platformnum" dy="-12"></text>
             <text class="rmg-name__zh" font-size="13px" dy="10">站台</text>
             <text class="rmg-name__en" font-size="9px" dy="21">Platform</text>
         </g>
         <g id="big_stn_num" transform="scale(1.4)">
-            <use xlink:href="#stn_gz" class="rmg-stn"/>
+            <use xlink:href="#stn_gz" class="rmg-stn--future"/>
             <text class="rmg-name__zh rmg-name__gzmtr--line-num"></text>
             <text class="rmg-name__zh rmg-name__gzmtr--station-num">06</text>
         </g>
@@ -171,7 +174,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
             <use xlink:href="#int2_hk" x="41"/>
         </g>
 
-        <path id="stn_gz" fill="#fff" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
+        <path id="stn_gz" class="rmg-stn" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
         <path id="stn_gz_pass" stroke="#aaa" fill="#fff" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/> 
         <!-- <path id="stn_sh" fill="#fff" stroke-width="2" d="M -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0"/> -->
         <circle id="stn_sh" fill="#fff" stroke-width="2" r="5"/>
@@ -191,8 +194,8 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
     <rect id="outer" x="0" y="0" fill="white" stroke="none"/>
     <rect id="box" x="0" y="0" fill="none" stroke="black"/>
     
-    <path id="strip" class="Strip" style="display: none;" mtr-specific/>
-    <rect id="strip_gz" style="display: none;" gzmtr-specific/>
+    <path id="strip" class="Strip" style="display: none;" stroke="var(--rmg-theme-colour)" mtr-specific/>
+    <rect id="strip_gz" class="Strip" style="display: none;" gzmtr-specific/>
 
     <g id="main">
         <g class="rmg-line rmg-line__mtr rmg-line__pass" id="line_pass"></g>
@@ -829,7 +832,7 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title" trans-tag="Design.Theme.Title"></h2>
-      <div class="mdc-dialog__content" style="max-width: 350px;">
+      <div class="mdc-dialog__content">
             <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner">
                 <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
@@ -857,12 +860,12 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
                 </div>
 
-                <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
+                <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle" theme-line>
                     <i class="material-icons">subway</i>
                 </div>
 
-                <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
-                <div id="theme_line" class="mdc-select mdc-select--outlined" style="width: 100%;">
+                <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone" theme-line>
+                <div id="theme_line" class="mdc-select mdc-select--outlined">
                     <div class="mdc-select__anchor">
                         <i class="mdc-select__dropdown-icon"></i>
                         <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
@@ -877,6 +880,55 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                     
                     <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
                         <ul id="theme_line__selection" class="mdc-list">
+                        </ul>
+                    </div>
+                </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-1-phone" theme-diy>
+                    <div id="theme_colour" class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
+                        <input type="color" class="mdc-text-field__input" style="padding: 5px; padding-bottom: 3.5px;">
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label for="tf-outlined" class="mdc-floating-label" trans-tag="Editor.BG"></label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-5-desktop mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-2-phone" theme-diy>
+                    <div id="theme_colour_hex" class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
+                        <input type="input" class="mdc-text-field__input">
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label for="tf-outlined" class="mdc-floating-label" trans-tag="Editor.HEX"></label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-1-phone" theme-diy>
+                <div id="theme_fg" class="mdc-select mdc-select--outlined">
+                    <div class="mdc-select__anchor">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label id="outlined-select-label" class="mdc-floating-label" trans-tag="Editor.FG"></label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
+                        <ul class="mdc-list">
+                            <li class="mdc-list-item" data-value="#fff" trans-tag="Editor.FG.White">White</li>
+                            <li class="mdc-list-item" data-value="#000" trans-tag="Editor.FG.Black">Black</li>
                         </ul>
                     </div>
                 </div>
@@ -1698,11 +1750,11 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                 </div>
                 </div>
 
-                <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
+                <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle" int-line>
                     <i class="material-icons">subway</i>
                 </div>
 
-                <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
+                <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone" int-line>
                 <div id="int_line" class="mdc-select mdc-select--outlined" style="width: 100%;">
                     <div class="mdc-select__anchor" style="width: 100%;">
                         <i class="mdc-select__dropdown-icon"></i>
@@ -1718,6 +1770,55 @@ id="railmap" width="0" height="0" style="border: 1px solid black;">
                     
                     <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
                         <ul id="int_line__selection" class="mdc-list">
+                        </ul>
+                    </div>
+                </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-1-phone" int-diy>
+                    <div id="int_colour" class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
+                        <input type="color" class="mdc-text-field__input" style="padding: 5px; padding-bottom: 3.5px;">
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label for="tf-outlined" class="mdc-floating-label" trans-tag="Editor.BG"></label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-5-desktop mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-2-phone" int-diy>
+                    <div id="int_colour_hex" class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
+                        <input type="input" class="mdc-text-field__input">
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label for="tf-outlined" class="mdc-floating-label" trans-tag="Editor.HEX"></label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-1-phone" int-diy>
+                <div id="int_fg" class="mdc-select mdc-select--outlined">
+                    <div class="mdc-select__anchor">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                            <label id="outlined-select-label" class="mdc-floating-label" trans-tag="Editor.FG"></label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
+                        <ul class="mdc-list">
+                            <li class="mdc-list-item" data-value="#fff" trans-tag="Editor.FG.White"></li>
+                            <li class="mdc-list-item" data-value="#000" trans-tag="Editor.FG.Black"></li>
                         </ul>
                     </div>
                 </div>
