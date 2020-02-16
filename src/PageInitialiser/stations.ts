@@ -320,7 +320,9 @@ export function common() {
         $(stnChipSetEl).find('#'+stnId).find('.mdc-chip__icon--leading').text(stnNum);
         $(stnChipSetEl).find('#'+stnId).find('.stn-chip__text--zh').text(names[0]);
         $(stnChipSetEl).find('#'+stnId).find('.stn-chip__text--en').html(names[1].split('\\').join('<br>'));
-        $(`li[data-value="${stnId}`).text(names.join());
+        $(`li[data-value="${stnId}`).text(window.urlParams.get('style')==='gzmtr' ? 
+            `${stnList[stnId].num}: ${stnList[stnId].name.join()}` :
+            stnList[stnId].name.join());
     });
 
 
