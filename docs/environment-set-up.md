@@ -18,7 +18,7 @@ Change relevant properties of `webpack.config.js` for development and debugging.
 module.export = {
     // ...
     devtool: 'inline-source-map',
-    mode = 'development',
+    mode: 'development',
     // ...
 }
 ```
