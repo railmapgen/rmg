@@ -825,6 +825,10 @@ id="railmap" style="
             <span class="mdc-list-item__graphic material-icons" aria-hidden="true" style="transform: rotate(180deg)">credit_card</span>
             <span class="mdc-list-item__text-label" trans-tag="Design.PanelType"></span>
         </li>
+        <li class="mdc-list-item">
+            <span class="mdc-list-item__graphic material-icons" aria-hidden="true">filter_1</span>
+            <span class="mdc-list-item__text-label" trans-tag="Design.AutoNumbering"></span>
+        </li>
     </ul>
     </div>
 
@@ -1067,6 +1071,36 @@ id="railmap" style="
             </li>
         </ul>
       </div>
+    </div>
+  </div>
+  <div class="mdc-dialog__scrim"></div>
+</div>
+
+<div id="auto_num_diag" class="mdc-dialog"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="my-dialog-title"
+     aria-describedby="my-dialog-content"
+    >
+  <div class="mdc-dialog__container">
+    <div class="mdc-dialog__surface">
+      <h2 class="mdc-dialog__title" trans-tag="Design.AutoNumbering.Title"></h2>
+      <div class="mdc-dialog__content" trans-tag="Design.AutoNumbering.Msg">
+      </div>
+      <footer class="mdc-dialog__actions">
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close" data-mdc-dialog-button-default>
+            <div class="mdc-button__ripple"></div>
+          <span class="mdc-button__label" trans-tag="Dialog.Cancel"></span>
+        </button>
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="ascend">
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label" trans-tag="Design.AutoNumbering.Ascend"></span>
+        </button>
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="descend">
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label" trans-tag="Design.AutoNumbering.Descend"></span>
+        </button>
+      </footer>
     </div>
   </div>
   <div class="mdc-dialog__scrim"></div>

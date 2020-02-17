@@ -8,6 +8,7 @@ import { MDCChip, MDCChipSet } from '@material/chips';
 import { MDCRipple } from '@material/ripple';
 import { MDCSwitch } from '@material/switch';
 import { MDCSnackbar } from '@material/snackbar';
+import { RMGLineGZ } from '../Line/LineGZ';
 
 const getStnChip = (id: string, names: Name, num: string) => {
     let chipEl = $('<div>', { id, class: 'mdc-chip', role: 'row' })
@@ -311,16 +312,26 @@ export function common() {
 
 
     // Modification (Name)
-    $('#stn_edit_diag').find('#name_zh, #name_en, #stn_num').on('input', () => {
+    $('#stn_edit_diag').find('#name_zh, #name_en').on('input', () => {
         let names = stnModifyNameFields.map(textfield => textfield.value) as Name;
         var stnNum = stnModifyNumField.value;
 
         var stnId = $('#stn_edit_diag').attr('for');
-        window.myLine.updateStnName(stnId, names, stnNum);
-        $(stnChipSetEl).find('#'+stnId).find('.mdc-chip__icon--leading').text(stnNum);
+        window.myLine.updateStnName(stnId, names);
         $(stnChipSetEl).find('#'+stnId).find('.stn-chip__text--zh').text(names[0]);
         $(stnChipSetEl).find('#'+stnId).find('.stn-chip__text--en').html(names[1].split('\\').join('<br>'));
-        $(`li[data-value="${stnId}`).text(window.urlParams.get('style')==='gzmtr' ? 
+        $(`li[data-value="${stnId}"]`).text(window.urlParams.get('style')==='gzmtr' ? 
+            `${stnList[stnId].num}: ${stnList[stnId].name.join()}` :
+            stnList[stnId].name.join());
+    });
+    $('#stn_edit_diag').find('#stn_num').on('input', () => {
+        let names = stnModifyNameFields.map(textfield => textfield.value) as Name;
+        var stnNum = stnModifyNumField.value;
+
+        var stnId = $('#stn_edit_diag').attr('for');
+        (<RMGLineGZ>window.myLine).updateStnNum(stnId, stnNum);
+        $(stnChipSetEl).find('#'+stnId).find('.mdc-chip__icon--leading').text(stnNum);
+        $(`li[data-value="${stnId}"]`).text(window.urlParams.get('style')==='gzmtr' ? 
             `${stnList[stnId].num}: ${stnList[stnId].name.join()}` :
             stnList[stnId].name.join());
     });

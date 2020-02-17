@@ -631,16 +631,12 @@ export class RMGLine {
         //
     }
 
-    updateStnName(stnId: string, names: Name, stnNum: string) {
+    updateStnName(stnId: string, names: Name) {
         let param = getParams();
         param.stn_list[stnId].name = names;
-        param.stn_list[stnId].num = stnNum;
         putParams(param);
 
         this.stations[stnId].name = names;
-        // this.stations[stnId]._nameZH = nameZH;
-        // this.stations[stnId]._nameEN = nameEN;
-        this.stations[stnId].stnNum = stnNum;
 
         $(`#stn_icons #${stnId}`).remove();
         $('#stn_icons').append(this.stations[stnId].html);

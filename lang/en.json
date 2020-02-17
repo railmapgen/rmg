@@ -73,6 +73,12 @@
     "Design.PanelType.GZ1421": "Line 14/21", 
     "Design.PanelType.GZGF": "Guangfo Line", 
 
+    "Design.AutoNumbering": "Station Auto-numbering", 
+    "Design.AutoNumbering.Title": "Warning", 
+    "Design.AutoNumbering.Msg": "You are about to re-number all stations on the main line. This action can not be undo.",
+    "Design.AutoNumbering.Ascend": "Ascending Order", 
+    "Design.AutoNumbering.Descend": "Descending Order", 
+
     "Design.Char": "Chinese Character Form",
     "Design.Char.Title": "Select Character Form",
     "Design.Char.Trad": "Traditional (Kangxi Dictionary)",

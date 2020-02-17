@@ -232,8 +232,8 @@ export class RMGLineHK extends RMGLine {
         return res;
     }
 
-    updateStnName(stnId: string, names: Name, stnNum: string) {
-        super.updateStnName(stnId, names, stnNum);
+    updateStnName(stnId: string, names: Name) {
+        super.updateStnName(stnId, names);
 
         this.loadFonts();
         if (stnId == this._currentStnId) {this.updateStnNameBg();}

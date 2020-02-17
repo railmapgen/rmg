@@ -282,6 +282,7 @@ export function gzmtr() {
     const panelTypeDialog = MDCDialog.attachTo($('#panel_type_diag')[0]);
     const [psdNumTextField, lineNumTextField] = 
         ['#psd_num', '#line_num'].map(selector => MDCTextField.attachTo($(selector)[0]));
+    const autoNumDialog = new MDCDialog($('#auto_num_diag')[0]);
 
     // init values
     Promise.resolve(getParams())
@@ -296,6 +297,9 @@ export function gzmtr() {
             case 1:
                 panelTypeDialog.open();
                 break;
+            case 2:
+                autoNumDialog.open();
+                break;
         }
     });
 
@@ -308,5 +312,25 @@ export function gzmtr() {
     panelTypeDialog.listen('MDCDialog:closed', (event: CustomEvent) => {
         if (event.detail.action === 'close') {return;}
         (<RMGLineGZ>window.myLine).infoPanelType = event.detail.action;
+    });
+
+    autoNumDialog.listen('MDCDialog:closed', (event: CustomEvent) => {
+        if (event.detail.action === 'close') {return;}
+        let stnList = getParams().stn_list;
+        let branch0 = window.myLine.branches[0];
+        branch0.forEach((stnId, i) => {
+            let num: string;
+            if (event.detail.action === 'ascend') {
+                num = (i+1).toString().padStart(2, '0');
+            } else {
+                num = (branch0.length-i).toString().padStart(2, '0');
+            }
+            (<RMGLineGZ>window.myLine).updateStnNum(stnId, num);
+
+            // update station chip number (if applicable)
+            $('#stn_list').find('#'+stnId).find('.mdc-chip__icon--leading').text(num);
+            // update station name in add station dialogue (if applicable)
+            $(`#pivot__selection li[data-value="${stnId}"]`).text(`${num}: ${stnList[stnId].name.join()}`);
+        });
     });
 }
