@@ -498,7 +498,7 @@ export class RMGLine {
             '--rmg-svg-height': this._svgHeight
         });
 
-        $('#destination').css({
+        $('#destination, #runin').css({
             '--rmg-svg-width': this._svgDestWidth, 
             '--rmg-svg-height': this._svgHeight
         });

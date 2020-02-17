@@ -43,7 +43,7 @@ history.pushState({url:window.location.href}, null, '?' + window.urlParams.toStr
 
 // load stylesheets on demand
 $('head').append(
-    ...['share', 'destination', 'railmap']
+    ...['share', 'destination', 'runin', 'railmap']
         .map(tag => {
             return $('<link>', {
                 rel: 'stylesheet', 

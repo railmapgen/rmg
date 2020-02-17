@@ -36,7 +36,7 @@
 </head>
 <body>
 <div id="svgs">
-    <div class="svg show">
+    <div class="svg" style="display: none;" mtr-specific shmetro-specific>
         <svg 
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink" 
@@ -52,20 +52,11 @@
                 <!-- Todo: fix this absolute position -->
                 <path id="arrow_left" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
                 <!-- style/shmetro -->
-
-                <ellipse id="indicator_gz28" rx="24" ry="12" fill="orange"/>
-                <ellipse id="indicator_gzgf" rx="24" ry="12" fill="white"/>
-                <rect id="indicator_gz3" x="-15" y="-25" height="30" width="30" fill="red"/>
-                <ellipse id="indicator_gz1421" cy="-8" rx="24" ry="12" fill="orange"/>
-
-                <rect id="psd" height="40" width="40" rx="4"/>
-                <path id="stn_gz" class="rmg-stn" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
             </defs>
 
             <rect id="outer" x="0" y="0"/>
 
             <rect id="strip" style="display: none;" mtr-specific/>
-            <rect id="strip_gz" style="display: none;" gzmtr-specific/>
 
             <g id="dest_name" style="display: none;" mtr-specific>
                 <use xlink:href="#arrow"/>
@@ -78,6 +69,51 @@
                     <text class="rmg-name__en" font-size="45px" dy="80">to</text>
                 </g>
             </g>
+
+            <g id="station_info_shmetro" style="display: none;" shmetro-specific>
+                <path id="line_shmetro_use"/>
+                <use id="arrow_left_use" xlink:href="#arrow_left"/>
+                <!-- Todo: fix this absolute position -->
+                <g id="dest_text">
+                    <text class="rmg-name__zh rmg-name__shmetro--dest" font-size="500%">往</text>
+                    <text class="rmg-name__en rmg-name__shmetro--dest" font-size="200%" dy="60">to</text>
+                </g>
+                <g id="line_number">
+                    <rect width="125" height="125"></rect>
+                    <text class="rmg-name__zh rmg-name__shmetro--line_number" font-size="700%" text-anchor="middle"></text>
+                </g>
+                <g id="line_name_text">
+                    <text class="rmg-name__zh rmg-name__shmetro--line_name" font-size="500%">号线</text>
+                    <text class="rmg-name__en rmg-name__shmetro--line_name" font-size="200%" dy="60">Line</text>
+                </g>
+            </g>
+
+        </svg>
+    </div>
+    <div class="svg" style="display: none;" gzmtr-specific>
+        <svg 
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        id="runin" style="
+            --rmg-svg-width: 0px;
+            --rmg-svg-height: 0px;
+            width: var(--rmg-svg-width);
+            height: var(--rmg-svg-height);">
+            <defs>
+                <path id="arrow" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
+
+                <ellipse id="indicator_gz28" rx="24" ry="12" fill="orange"/>
+                <ellipse id="indicator_gzgf" rx="24" ry="12" fill="white"/>
+                <rect id="indicator_gz3" x="-15" y="-25" height="30" width="30" fill="red"/>
+                <ellipse id="indicator_gz1421" cy="-8" rx="24" ry="12" fill="orange"/>
+
+                <rect id="psd" height="40" width="40" rx="4"/>
+                <path id="stn_gz" class="rmg-stn" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
+
+            </defs>
+
+            <rect id="outer" x="0" y="0"/>
+            <rect id="strip_gz" style="display: none;" gzmtr-specific/>
 
             <g id="station_info_gzmtr" style="display: none;" gzmtr-specific>
                 <g id="big_next">
@@ -134,27 +170,9 @@
                 </g>
             </g>
 
-            <g id="station_info_shmetro" style="display: none;" shmetro-specific>
-                <path id="line_shmetro_use"/>
-                <use id="arrow_left_use" xlink:href="#arrow_left"/>
-                <!-- Todo: fix this absolute position -->
-                <g id="dest_text">
-                    <text class="rmg-name__zh rmg-name__shmetro--dest" font-size="500%">往</text>
-                    <text class="rmg-name__en rmg-name__shmetro--dest" font-size="200%" dy="60">to</text>
-                </g>
-                <g id="line_number">
-                    <rect width="125" height="125"></rect>
-                    <text class="rmg-name__zh rmg-name__shmetro--line_number" font-size="700%" text-anchor="middle"></text>
-                </g>
-                <g id="line_name_text">
-                    <text class="rmg-name__zh rmg-name__shmetro--line_name" font-size="500%">号线</text>
-                    <text class="rmg-name__en rmg-name__shmetro--line_name" font-size="200%" dy="60">Line</text>
-                </g>
-            </g>
-
         </svg>
     </div>
-    <div class="svg">
+    <div class="svg show">
         <svg 
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink" 
@@ -249,18 +267,15 @@
             </g>
         </svg>
     </div>
-    <div class="svg">
-        <!-- C -->
-    </div>
 </div>
 
 <div id="toggle">
     <!-- <span class="mdc-tab__ripple"></span> -->
     <span class="material-icons">menu</span>
     <ul>
-        <li><span>1</span></li>
+        <li style="display: none;" mtr-specific shmetro-specific><span>1</span></li>
+        <li style="display: none;" gzmtr-specific><span>1</span></li>
         <li><span>2</span></li>
-        <li><span>3</span></li>
     </ul>
 </div>
 
@@ -423,10 +438,13 @@
                     <h2 class="mdc-dialog__title" trans-tag="File.Export.Title"></h2>
                     <div class="mdc-dialog__content">
                         <ul class="mdc-list mdc-list--avatar-list">
-                            <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="svg1">
+                            <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="destination" style="display: none;" mtr-specific shmetro-specific>
                                 <span class="mdc-list-item__text" trans-tag="File.Export.SVGDest"></span>
                             </li>
-                            <li class="mdc-list-item" data-mdc-dialog-action="svg2">
+                            <li class="mdc-list-item" tabindex="0" data-mdc-dialog-action="runin" style="display: none;" gzmtr-specific>
+                                <span class="mdc-list-item__text" trans-tag="File.Export.SVGRunIn"></span>
+                            </li>
+                            <li class="mdc-list-item" data-mdc-dialog-action="railmap">
                                 <span class="mdc-list-item__text" trans-tag="File.Export.SVGMap"></span>
                             </li>
                         </ul>
@@ -2025,12 +2043,18 @@
 <canvas style="display: none;"></canvas>
 <script>
     window.urlParams = new URLSearchParams(window.location.search);
-    triggle = $("#toggle")[0];
+    trigger = document.getElementById('toggle');
     let drawableToggler = () => {
-        triggle.classList.contains("show") ? triggle.classList.remove("show") : triggle.classList.add("show");
+        trigger.classList.contains("show") ? trigger.classList.remove("show") : trigger.classList.add("show");
     };
-    triggle.addEventListener("click", () => {
+    trigger.querySelector('span.material-icons').addEventListener('touchend', () => {
         drawableToggler();
+    });
+    trigger.addEventListener('mouseover', () => {
+        trigger.classList.add('show');
+    });
+    trigger.addEventListener('mouseout', () => {
+        trigger.classList.remove('show');
     });
     let triList = document.querySelectorAll("#toggle li");
     for (let i = 0; i < triList.length; i++) {
@@ -2039,6 +2063,7 @@
                 e.classList.remove("show")
             });
             document.querySelectorAll("#svgs .svg")[i].classList.add("show");
+            trigger.classList.remove('show');
         }
     }
 </script>
