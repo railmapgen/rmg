@@ -230,6 +230,7 @@ button#osi_name .mdc-button__label {
 }
 
 #toggle {
+    --mdc-theme-primary: #9a62ea;
     right: 0;
     position: fixed;
     top: 0;
@@ -247,6 +248,10 @@ button#osi_name .mdc-button__label {
     transition: 500ms
 }
 
+#toggle .mdc-tab__ripple:hover::before {
+    opacity: 0.05;
+}
+
 #toggle span.material-icons {
     width: 100%;
     height: 100%;
@@ -257,6 +262,7 @@ button#osi_name .mdc-button__label {
 }
 
 #toggle.show {
+    --mdc-theme-primary: #6200ee;
     height: fit-content
 }
 
