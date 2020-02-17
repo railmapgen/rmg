@@ -1,4 +1,4 @@
-/* 
+/*
 Dark Mode
 */
 /* :root {
@@ -39,23 +39,43 @@ Dark Mode
     }
     .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading, .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch, .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {border-color: rgba(255, 255, 255, 0.5);}
 } */
-body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: column; overflow: auto;}
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
 #svgs {
     height: 100%;
     display: flex;
     overflow-x: scroll;
     scrollbar-width: none;
 }
+
 #svgs::-webkit-scrollbar {
     display: none;
 }
-#svgs>svg {
+
+#svgs > svg {
     flex: 0 0 auto;
     border: 1px solid black;
 }
-#panels {flex-grow: 1; overflow: hidden;}
-.panel {display: none;}
-.panel--active {display: block;}
+
+#panels {
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.panel {
+    display: none;
+}
+
+.panel--active {
+    display: block;
+}
 
 .flag-emoji {
     height: 1em;
@@ -65,9 +85,11 @@ body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: colum
 .mdc-select {
     width: 100%;
 }
+
 .mdc-select__anchor {
     width: 100%;
 }
+
 .mdc-select__selected-text {
     min-width: auto;
     overflow: hidden;
@@ -76,6 +98,7 @@ body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: colum
 .station-card {
     height: 100px;
 }
+
 .station-card__content {
     font-family: sans-serif;
     -moz-osx-font-smoothing: grayscale;
@@ -86,6 +109,7 @@ body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: colum
     letter-spacing: .03125em;
     text-align: center;
 }
+
 .int-selection {
     max-width: 100%;
 }
@@ -95,6 +119,7 @@ body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: colum
         flex-direction: column;
         align-items: flex-start;
     }
+
     .mdc-snackbar .mdc-snackbar__actions {
         align-self: flex-end;
         margin-bottom: 8px;
@@ -108,10 +133,10 @@ body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: colum
 .mdc-chip-set.stn-chip-set .mdc-chip {
     height: 55px;
     border-radius: 8px;
-    width: calc((100% - 96px)/6);
+    width: calc((100% - 96px) / 6);
     margin: 8px;
     background-color: var(--mdc-theme-surface, #fff);
-    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0,0,0,.12);
+    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, .12);
 }
 
 @media (max-width: 839px) and (min-width: 480px) {
@@ -120,7 +145,7 @@ body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: colum
     }
 
     .mdc-chip-set.stn-chip-set .mdc-chip {
-        width: calc((100% - 48px)/4);
+        width: calc((100% - 48px) / 4);
         margin: 6px
     }
 }
@@ -131,7 +156,7 @@ body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: colum
     }
 
     .mdc-chip-set.stn-chip-set .mdc-chip {
-        width: calc((100% - 24px)/2);
+        width: calc((100% - 24px) / 2);
         margin: 6px
     }
 }
@@ -171,6 +196,7 @@ body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: colum
     overflow-x: scroll;
     flex-wrap: nowrap;
 }
+
 .mdc-chip span[role="checkbox"]:focus {
     outline: none;
 }
@@ -181,23 +207,93 @@ body {width: 100%; height: 100%; margin: 0; display: flex; flex-direction: colum
     height: 45px;
     line-height: 1rem;
 }
+
 .mdc-chip-set.int-chip-set .mdc-chip__ripple {
     border-radius: 4.5px;
     /* height: 45px; */
 }
 
 button#osi_name {
-    max-width: 100%; 
-    padding: 0 8px 0 8px; 
+    max-width: 100%;
+    padding: 0 8px 0 8px;
     height: 40px;
 }
 
 button#osi_name .mdc-button__label {
-    line-height: 1rem; 
-    white-space: nowrap; 
+    line-height: 1rem;
+    white-space: nowrap;
     overflow: hidden;
 }
 
 #panel_interchange .mdc-list-item__graphic {
     margin-right: 8px;
+}
+
+#toggle {
+    right: 0;
+    position: fixed;
+    top: 0;
+    width: 48px;
+    height: 48px;
+    overflow: hidden;
+    outline: none;
+    background: var(--mdc-theme-background);
+    box-shadow: none;
+    border: 2px solid var(--mdc-theme-primary);
+    border-width: 0 0 2px 2px;
+    color: var(--mdc-theme-primary);
+    border-radius: 0 0 0 10px;
+    z-index: 999;
+    transition: 500ms
+}
+
+#toggle span.material-icons {
+    width: 100%;
+    height: 100%;
+    display: block;
+    text-align: center;
+    line-height: 48px;
+    font-size: 28px;
+}
+
+#toggle.show {
+    height: fit-content
+}
+
+#toggle ul {
+    padding: 0;
+    text-align: center;
+    margin: 0;
+}
+
+#toggle li {
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+    font-size: 20px;
+    display: block;
+    margin: 0 auto;
+    border: 1px solid var(--mdc-theme-primary);
+    border-width: 2px 0 0 0;
+}
+
+#svgs .svg {
+    position: fixed;
+    left: 1200px;
+    top: 0;
+    overflow: scroll;
+    width: 100%;
+    transition: 500ms ease-in-out;
+}
+
+#svgs .svg.show {
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+#panels {
+    position: fixed;
+    top: 302px;
+    left: 0;
 }
