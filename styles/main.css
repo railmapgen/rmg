@@ -43,29 +43,45 @@ body {
     width: 100%;
     height: 100%;
     margin: 0;
-    display: flex;
-    flex-direction: column;
+    /* display: flex; */
+    /* flex-direction: column; */
     overflow: auto;
 }
 
 #svgs {
     height: 100%;
     display: flex;
+    flex-direction: row;
     overflow-x: scroll;
     scrollbar-width: none;
 }
 
-#svgs::-webkit-scrollbar {
+#svgs::-webkit-scrollbar, #svgs>div::-webkit-scrollbar {
     display: none;
 }
 
-#svgs > svg {
-    flex: 0 0 auto;
+#svgs > div {
+    display: flex;
+    flex-direction: column;
+    left: 100%;
+    overflow: scroll;
+    width: 0;
+    transition: 500ms ease-in-out;
+}
+
+#svgs > div.show {
+    left: 0;
+    width: 100%;
+    transition: 500ms ease-in-out;
+}
+
+
+#svgs > div > svg {
     border: 1px solid black;
 }
 
 #panels {
-    flex-grow: 1;
+    /* flex-grow: 1; */
     overflow: hidden;
 }
 
@@ -245,7 +261,6 @@ button#osi_name .mdc-button__label {
     color: var(--mdc-theme-primary);
     border-radius: 0 0 0 10px;
     z-index: 999;
-    transition: 500ms
 }
 
 #toggle .mdc-tab__ripple:hover::before {
@@ -254,7 +269,7 @@ button#osi_name .mdc-button__label {
 
 #toggle span.material-icons {
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     display: block;
     text-align: center;
     line-height: 48px;
@@ -263,7 +278,7 @@ button#osi_name .mdc-button__label {
 
 #toggle.show {
     --mdc-theme-primary: #6200ee;
-    height: fit-content
+    height: auto;
 }
 
 #toggle ul {

@@ -473,6 +473,9 @@ export class RMGLineGZ extends RMGLine {
 
         this.redrawStn(stnId);
         this.loadLineNum();
+        if (this._currentStnId === stnId) {
+            this.drawDestInfo(); 
+        }
     }
 
     updateStnServices(stnId: string, detail: {chipId: 'local'|'express', selected: boolean}) {

@@ -19,7 +19,8 @@
 
     "File.Export": "Preview And Export",
     "File.Export.Title": "Choose a Canvas", 
-    "File.Export.SVGDest": "Destination Panel/Running In Board", 
+    "File.Export.SVGDest": "Destination Panel", 
+    "File.Export.SVGRunIn": "Running In Board", 
     "File.Export.SVGMap": "Line Diagrams",
     "File.Preview.Title": "Preview And Export", 
     "File.Preview.PNG": "Download As PNG (Beta)", 

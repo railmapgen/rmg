@@ -18,7 +18,8 @@
 
     "File.Export": "預覽及輸出",
     "File.Export.Title": "選擇畫布", 
-    "File.Export.SVGDest": "目的地/站名牌", 
+    "File.Export.SVGDest": "目的地", 
+    "File.Export.SVGRunIn": "站名牌", 
     "File.Export.SVGMap": "路線圖",
     "File.Preview.Title": "預覽及輸出", 
     "File.Preview.PNG": "下载PNG（測試）", 
