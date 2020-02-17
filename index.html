@@ -36,7 +36,7 @@
 </head>
 <body>
 <div id="svgs">
-    <div class="svg" style="display: none;" mtr-specific shmetro-specific>
+    <div class="" style="display: none;" mtr-specific shmetro-specific>
         <svg 
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink" 
@@ -90,7 +90,7 @@
 
         </svg>
     </div>
-    <div class="svg" style="display: none;" gzmtr-specific>
+    <div class="" style="display: none;" gzmtr-specific>
         <svg 
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink" 
@@ -172,7 +172,7 @@
 
         </svg>
     </div>
-    <div class="svg show">
+    <div class="show">
         <svg 
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink" 
@@ -273,9 +273,9 @@
     <!-- <span class="mdc-tab__ripple"></span> -->
     <span class="material-icons">menu</span>
     <ul>
-        <li style="display: none;" mtr-specific shmetro-specific><span>1</span></li>
-        <li style="display: none;" gzmtr-specific><span>1</span></li>
-        <li><span>2</span></li>
+        <li style="display: none;" mtr-specific shmetro-specific><span>P1</span></li>
+        <li style="display: none;" gzmtr-specific><span>P1</span></li>
+        <li><span>P2</span></li>
     </ul>
 </div>
 
@@ -2043,31 +2043,7 @@
 <canvas style="display: none;"></canvas>
 <script>
     window.urlParams = new URLSearchParams(window.location.search);
-    trigger = document.getElementById('toggle');
-    let drawableToggler = () => {
-        trigger.classList.contains("show") ? trigger.classList.remove("show") : trigger.classList.add("show");
-    };
-    trigger.querySelector('span.material-icons').addEventListener('touchend', () => {
-        drawableToggler();
-    });
-    trigger.addEventListener('mouseover', () => {
-        trigger.classList.add('show');
-    });
-    trigger.addEventListener('mouseout', () => {
-        trigger.classList.remove('show');
-    });
-    let triList = document.querySelectorAll("#toggle li");
-    for (let i = 0; i < triList.length; i++) {
-        triList[i].onclick = function () {
-            document.querySelectorAll("#svgs .svg.show").forEach(e => {
-                e.classList.remove("show")
-            });
-            document.querySelectorAll("#svgs .svg")[i].classList.add("show");
-            trigger.classList.remove('show');
-        }
-    }
 </script>
-<!-- <script src="dist/vendors~index.min.js"></script> -->
 <script src="dist/index.min.js"></script>
 <script async src="dist/lang.min.js"></script>
 

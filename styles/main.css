@@ -43,14 +43,15 @@ body {
     width: 100%;
     height: 100%;
     margin: 0;
-    display: flex;
-    flex-direction: column;
+    /* display: flex; */
+    /* flex-direction: column; */
     overflow: auto;
 }
 
 #svgs {
     height: 100%;
     display: flex;
+    flex-direction: row;
     overflow-x: scroll;
     scrollbar-width: none;
 }
@@ -60,15 +61,27 @@ body {
 }
 
 #svgs > div {
-    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    left: 100%;
+    overflow: scroll;
+    width: 0;
+    transition: 500ms ease-in-out;
 }
+
+#svgs > div.show {
+    left: 0;
+    width: 100%;
+    transition: 500ms ease-in-out;
+}
+
 
 #svgs > div > svg {
     border: 1px solid black;
 }
 
 #panels {
-    flex-grow: 1;
+    /* flex-grow: 1; */
     overflow: hidden;
 }
 
@@ -265,7 +278,7 @@ button#osi_name .mdc-button__label {
 
 #toggle.show {
     --mdc-theme-primary: #6200ee;
-    height: fit-content;
+    height: auto;
 }
 
 #toggle ul {
@@ -285,18 +298,3 @@ button#osi_name .mdc-button__label {
     border-width: 2px 0 0 0;
 }
 
-#svgs .svg {
-    /* position: fixed; */
-    left: 100%;
-    /* top: 0; */
-    overflow: scroll;
-    width: 0;
-    transition: 500ms ease-in-out;
-}
-
-#svgs .svg.show {
-    /* position: fixed; */
-    left: 0;
-    /* top: 0; */
-    width: 100%;
-}

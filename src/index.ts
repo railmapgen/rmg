@@ -53,6 +53,18 @@ $('head').append(
         })
 );
 
+// load canvas switcher
+$('#toggle').on('mouseover', () => $('#toggle').addClass('show'));
+$('#toggle').on('mouseout', () => $('#toggle').removeClass('show'));
+$('#toggle span.material-icons').on('touchend', ()=> $('#toggle').toggleClass('show'));
+$('#toggle li').each((i,el) => {
+    $(el).on('click', () => {
+        $('#svgs > div.show').removeClass('show');
+        $('#svgs > div').eq(i).addClass('show');
+        $('#toggle').removeClass('show');
+    });
+});
+
 window.myLine = null;
 $(`[${window.urlParams.get('style')}-specific]`).show();
 // autoInit();
