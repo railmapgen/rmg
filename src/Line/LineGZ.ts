@@ -147,7 +147,7 @@ export class RMGLineGZ extends RMGLine {
     set infoPanelType(val: string) {
         this._infoPanelType = val;
         setParams('info_panel_type', val);
-        $('#station_info_gzmtr #indicator_light').attr('xlink:href', '#indicator_'+val);
+        $('#run_in_gzmtr #indicator_light').attr('xlink:href', '#indicator_'+val);
         this.drawStrip();
 
         let psdDy: string;
@@ -160,7 +160,7 @@ export class RMGLineGZ extends RMGLine {
             $('#big_psd').css('fill', '#000');
             psdDy = '58px';
         }
-        $('#station_info_gzmtr #big_psd').css('--psd-dy', psdDy);
+        $('#run_in_gzmtr #big_psd').css('--psd-dy', psdDy);
     }
 
     set directionGZX(val: number) {
@@ -490,12 +490,12 @@ export class RMGLineGZ extends RMGLine {
     }
     
     drawDestInfo() {
-        $('#station_info_gzmtr #big_stn_num text').eq(1).text(this.stations[this._currentStnId].stnNum);
+        $('#run_in_gzmtr #big_stn_num text').eq(1).text(this.stations[this._currentStnId].stnNum);
 
-        $('#station_info_gzmtr > #platform > text').eq(0).text(this._platformNum);
-        $('#station_info_gzmtr > #big_psd text').eq(0).text(this._psdNum);
+        $('#run_in_gzmtr > #platform > text').eq(0).text(this._platformNum);
+        $('#run_in_gzmtr > #big_psd text').eq(0).text(this._psdNum);
 
-        $('#station_info_gzmtr #big_name').empty()
+        $('#run_in_gzmtr #big_name').empty()
             .css('--translate-y', 0.5*this._svgHeight-50 - (this.stations[this._currentStnId].name[1].split('\\').length - 1)*18)
             .append(
                 $('<text>', { class:'rmg-name__zh' })
@@ -522,19 +522,19 @@ export class RMGLineGZ extends RMGLine {
             });
 
         if (['linestart', 'lineend'].includes(nextStnId[0])) {
-            $('#station_info_gzmtr').find('#big_next, #big_next_2').hide();
-            $('#station_info_gzmtr > use').eq(0).hide();
+            $('#run_in_gzmtr').find('#big_next, #big_next_2').hide();
+            $('#run_in_gzmtr > use').eq(0).hide();
             $('#line_main, #line_pass, #line_name, #stn_icons, #direction_gz').hide();
             $('#terminus_gz').show();
         } else {
             if (nextStnId.length === 1) {
-                $('#station_info_gzmtr #big_next').show();
-                $('#station_info_gzmtr #big_next_2').hide();
+                $('#run_in_gzmtr #big_next').show();
+                $('#run_in_gzmtr #big_next_2').hide();
             } else {
-                $('#station_info_gzmtr #big_next').hide();
-                $('#station_info_gzmtr #big_next_2').show();
+                $('#run_in_gzmtr #big_next').hide();
+                $('#run_in_gzmtr #big_next_2').show();
             }
-            $('#station_info_gzmtr > use').eq(0).show();
+            $('#run_in_gzmtr > use').eq(0).show();
             $('#line_main, #line_pass, #line_name, #stn_icons, #direction_gz').show();
             $('#terminus_gz').hide();
         }
@@ -546,8 +546,8 @@ export class RMGLineGZ extends RMGLine {
             [nextNameZH, nextNameEN] = nextStnInfo.name;
             nextNameZHCount = nextNameZH.length;
 
-            $('#station_info_gzmtr #big_next g:nth-child(2) text').eq(0).text(nextNameZH);
-            $('#station_info_gzmtr #big_next g:nth-child(2) text').eq(1).text(nextNameEN.split('\\')[0])
+            $('#run_in_gzmtr #big_next g:nth-child(2) text').eq(0).text(nextNameZH);
+            $('#run_in_gzmtr #big_next g:nth-child(2) text').eq(1).text(nextNameEN.split('\\')[0])
                 .append($('<tspan>', { x:0, dy:17, 'alignment-baseline':'middle' }).text(nextNameEN.split('\\')[1] || ''));
         } else {
             nextStnId.forEach((stnId, idx) => {
@@ -557,8 +557,8 @@ export class RMGLineGZ extends RMGLine {
                     nextNameZHCount = nextNameZH.length;
                 }
 
-                $(`#station_info_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(2).text(nextNameZH);
-                $(`#station_info_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(3).text(nextNameEN.split('\\')[0])
+                $(`#run_in_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(2).text(nextNameZH);
+                $(`#run_in_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(3).text(nextNameEN.split('\\')[0])
                     .append($('<tspan>', { x:0, dy:13, 'alignment-baseline':'middle' }).text(nextNameEN.split('\\')[1] || ''));
 
                 let validRoutes = this.routes
@@ -574,21 +574,21 @@ export class RMGLineGZ extends RMGLine {
                         new Set(validRoutes.map(route => route.reverse()[0]))
                     );
                 }
-                $(`#station_info_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(0)
+                $(`#run_in_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(0)
                     .text(validEnds.map(s => this.stations[s].name[0]).join('/') + '方向');
-                $(`#station_info_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(1)
+                $(`#run_in_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(1)
                     .text('Towards ' + validEnds.map(s => this.stations[s].name[1]).join('/'));
             });
         }
         
-        $('#station_info_gzmtr').html($('#station_info_gzmtr').html());
+        $('#run_in_gzmtr').html($('#run_in_gzmtr').html());
 
         // Position big name
         var bigNameDim = getTxtBoxDim(
-            $('#station_info_gzmtr #big_name text')[0] as Element as SVGGraphicsElement, 
+            $('#run_in_gzmtr #big_name text')[0] as Element as SVGGraphicsElement, 
             'destination'
         );
-        $('#station_info_gzmtr #big_stn_num').css({
+        $('#run_in_gzmtr #big_stn_num').css({
             '--translate-x': (this._svgDestWidth+bigNameDim.width)/2+55, 
             '--translate-y': 0.5*this._svgHeight-30 - (this.stations[this._currentStnId].name[1].split('\\').length - 1)*18
         });
@@ -596,17 +596,17 @@ export class RMGLineGZ extends RMGLine {
         let bigNextDim = {x:0, y:0, width:0, height:0};
         if (nextStnId.length === 1) {
             bigNextDim = getTxtBoxDim(
-                $('#station_info_gzmtr #big_next g:nth-child(2)')[0] as Element as SVGGraphicsElement,
+                $('#run_in_gzmtr #big_next g:nth-child(2)')[0] as Element as SVGGraphicsElement,
                 'destination'
             );
         } else {
             let bigNextDims = [
                 getTxtBoxDim(
-                    $('#station_info_gzmtr #big_next_2 g:nth-child(2)')[0] as Element as SVGGraphicsElement,
+                    $('#run_in_gzmtr #big_next_2 g:nth-child(2)')[0] as Element as SVGGraphicsElement,
                     'destination'
                 ), 
                 getTxtBoxDim(
-                    $('#station_info_gzmtr #big_next_2 g:nth-child(4)')[0] as Element as SVGGraphicsElement,
+                    $('#run_in_gzmtr #big_next_2 g:nth-child(4)')[0] as Element as SVGGraphicsElement,
                     'destination'
                 )
             ];
@@ -619,60 +619,60 @@ export class RMGLineGZ extends RMGLine {
         // var nextNameZHCount = nextNameZH.length;
 
         if (this._direction == 'l') {
-            $('#station_info_gzmtr #platform').css('--translate-x', this._svgDestWidth-100);
+            $('#run_in_gzmtr #platform').css('--translate-x', this._svgDestWidth-100);
             if (nextStnId.length === 1) {
                 if (nextNameZHCount <= 2) {
-                    $('#station_info_gzmtr #big_next g:nth-child(2)').css('--translate-x', 115+35);
-                    $('#station_info_gzmtr use#arrow').css({
+                    $('#run_in_gzmtr #big_next g:nth-child(2)').css('--translate-x', 115+35);
+                    $('#run_in_gzmtr use#arrow').css({
                         '--translate-x': (115+35*(1+nextNameZHCount)+bigNameDim.x)/2-20, 
                         '--rotate': '0deg'
                     });
                 } else {
-                    $('#station_info_gzmtr #big_next g:nth-child(2)').css('--translate-x', 115+35/2);
-                    $('#station_info_gzmtr use#arrow').css({
+                    $('#run_in_gzmtr #big_next g:nth-child(2)').css('--translate-x', 115+35/2);
+                    $('#run_in_gzmtr use#arrow').css({
                         '--translate-x': (115+35*(0.5+nextNameZHCount)+bigNameDim.x)/2-20, 
                         '--rotate': '0deg'
                     });
                 }
             } else {
-                $('#station_info_gzmtr #big_next_2 g:nth-child(2)').attr('transform', `translate(113,${0.5*this._svgHeight-70})`);
-                $('#station_info_gzmtr #big_next_2 g:nth-child(4)').attr('transform', `translate(113,${0.5*this._svgHeight+40})`);
-                $('#station_info_gzmtr use#arrow').css({
+                $('#run_in_gzmtr #big_next_2 g:nth-child(2)').attr('transform', `translate(113,${0.5*this._svgHeight-70})`);
+                $('#run_in_gzmtr #big_next_2 g:nth-child(4)').attr('transform', `translate(113,${0.5*this._svgHeight+40})`);
+                $('#run_in_gzmtr use#arrow').css({
                     '--translate-x': (99+27*(1+nextNameZHCount)+bigNameDim.x)/2-20, 
                     '--rotate': '0deg'
                 });
             }
 
-            $('#station_info_gzmtr #big_next g:first-child').css('--translate-x', 80);
-            $('#station_info_gzmtr #big_next_2 g:first-child').attr('transform', `translate(72,${0.5*this._svgHeight-70})`);
-            $('#station_info_gzmtr #big_next_2 g:nth-child(3)').attr('transform', `translate(72,${0.5*this._svgHeight+40})`);
+            $('#run_in_gzmtr #big_next g:first-child').css('--translate-x', 80);
+            $('#run_in_gzmtr #big_next_2 g:first-child').attr('transform', `translate(72,${0.5*this._svgHeight-70})`);
+            $('#run_in_gzmtr #big_next_2 g:nth-child(3)').attr('transform', `translate(72,${0.5*this._svgHeight+40})`);
         } else {
-            $('#station_info_gzmtr #platform').css('--translate-x', 100);
+            $('#run_in_gzmtr #platform').css('--translate-x', 100);
 
             if (nextStnId.length === 1) {
-                $('#station_info_gzmtr #big_next g:nth-child(2)').css('--translate-x', this._svgDestWidth-45-bigNextDim.width);
+                $('#run_in_gzmtr #big_next g:nth-child(2)').css('--translate-x', this._svgDestWidth-45-bigNextDim.width);
 
                 if (nextNameZHCount <= 2) {
-                    $('#station_info_gzmtr #big_next g:first-child').css('--translate-x', this._svgDestWidth-45-bigNextDim.width-70);
-                    $('#station_info_gzmtr use#arrow').css({
+                    $('#run_in_gzmtr #big_next g:first-child').css('--translate-x', this._svgDestWidth-45-bigNextDim.width-70);
+                    $('#run_in_gzmtr use#arrow').css({
                         '--translate-x': (this._svgDestWidth-45-bigNextDim.width-70-35+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20, 
                         '--rotate': '180deg'
                     });
                 } else {
-                    $('#station_info_gzmtr #big_next g:first-child').css('--translate-x', this._svgDestWidth-45-bigNextDim.width-35*1.5);
-                    $('#station_info_gzmtr use#arrow').css({
+                    $('#run_in_gzmtr #big_next g:first-child').css('--translate-x', this._svgDestWidth-45-bigNextDim.width-35*1.5);
+                    $('#run_in_gzmtr use#arrow').css({
                         '--translate-x': (this._svgDestWidth-45-bigNextDim.width-35*2.5+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20, 
                         '--rotate': '180deg'
                     });
                 }
             } else {
-                $('#station_info_gzmtr #big_next_2 g:nth-child(2)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width},${0.5*this._svgHeight-70})`);
-                $('#station_info_gzmtr #big_next_2 g:nth-child(4)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width},${0.5*this._svgHeight+40})`);
+                $('#run_in_gzmtr #big_next_2 g:nth-child(2)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width},${0.5*this._svgHeight-70})`);
+                $('#run_in_gzmtr #big_next_2 g:nth-child(4)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width},${0.5*this._svgHeight+40})`);
 
-                $('#station_info_gzmtr #big_next_2 g:first-child').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-41},${0.5*this._svgHeight-70})`);
-                $('#station_info_gzmtr #big_next_2 g:nth-child(3)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-41},${0.5*this._svgHeight+40})`);
+                $('#run_in_gzmtr #big_next_2 g:first-child').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-41},${0.5*this._svgHeight-70})`);
+                $('#run_in_gzmtr #big_next_2 g:nth-child(3)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-41},${0.5*this._svgHeight+40})`);
 
-                $('#station_info_gzmtr use#arrow').css({
+                $('#run_in_gzmtr use#arrow').css({
                     '--translate-x': (this._svgDestWidth-45-bigNextDim.width-41-27+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20, 
                     '--rotate': '180deg'
                 })
