@@ -288,7 +288,9 @@ button#osi_name .mdc-button__label {
     left: 1200px;
     top: 0;
     overflow: scroll;
-    width: 100%;
+    max-width: 100%;
+    width: fit-content;
+    margin: 0 auto;
     transition: 500ms ease-in-out;
 }
 
