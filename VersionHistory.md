@@ -1,5 +1,15 @@
 # Version History
 
+## 2.12 (17 Feb 2020)
+
+### New Features
+
+- You can now re-number all the stations on the main line at ease in Guangzhou Metro style. 
+
+### Resolved Issues
+
+- Fixed the issue that express station tags in Guangzhou Metro style do not follow the theme colour. 
+
 ## 2.11.2 (16 Feb 2020)
 
 ### New Features

@@ -72,6 +72,12 @@
     "Design.PanelType.GZ1421": "十四/二十一号线", 
     "Design.PanelType.GZGF": "广佛线",
 
+    "Design.AutoNumbering": "车站自动编码", 
+    "Design.AutoNumbering.Title": "警告", 
+    "Design.AutoNumbering.Msg": "主线上的车站即将被重新编码。此动作将不能被撤销。",
+    "Design.AutoNumbering.Ascend": "升序编码", 
+    "Design.AutoNumbering.Descend": "降序编码", 
+
     "Design.Char": "汉字字形",
     "Design.Char.Title": "选择字形",
     "Design.Char.Trad": "传承字形（康熙字典）",

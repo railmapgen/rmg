@@ -104,14 +104,14 @@ class RMGStationGZ extends RMGStation {
         }).append(nameGEl);
     }
 
-    expressTagHTML(colour: string) {
+    get expressTagHTML() {
         if (!this.services.has('express')) {
             return $('<g>');
         }
         let stnNameDim = ($(`#stn_icons #${this.id} g#stn_name g`)[0] as Element as SVGGElement).getBBox();
         return $('<g>', { 
             transform: `translate(${(stnNameDim.width+35)*(this._tickRotation===0?1:-1)},${2+5*(this.name[1].split('\\').length-1)})`, 
-            fill: this.state===-1 ? '#aaa' : colour, 
+            fill: this.state===-1 ? '#aaa' : 'var(--rmg-theme-colour)', 
             'text-anchor': 'middle'
         })
             .append(

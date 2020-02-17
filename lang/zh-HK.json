@@ -72,6 +72,12 @@
     "Design.PanelType.GZ1421": "十四/廿一號線", 
     "Design.PanelType.GZGF": "廣佛線",
 
+    "Design.AutoNumbering": "車站自動編碼", 
+    "Design.AutoNumbering.Title": "警告", 
+    "Design.AutoNumbering.Msg": "主線上之車站即將被重新編碼。此動作將無法被還原。",
+    "Design.AutoNumbering.Ascend": "升序編碼", 
+    "Design.AutoNumbering.Descend": "降序編碼", 
+
     "Design.Char": "漢字字形",
     "Design.Char.Title": "選擇字形",
     "Design.Char.Trad": "傳承字形（康熙字典）",

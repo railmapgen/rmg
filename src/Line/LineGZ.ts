@@ -279,7 +279,7 @@ export class RMGLineGZ extends RMGLine {
 
         for (let [stnId, stnInstance] of Object.entries(this.stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
-            $(`#stn_icons #${stnId} g#stn_name`).append(stnInstance.expressTagHTML(this._themeColour));
+            $(`#stn_icons #${stnId} g#stn_name`).append(stnInstance.expressTagHTML);
         }
         $('#stn_icons').html($('#stn_icons').html()); // Refresh DOM
     }
@@ -288,7 +288,7 @@ export class RMGLineGZ extends RMGLine {
         $('#stn_icons').find('#'+stnId).remove();
         $('#stn_icons').append(this.stations[stnId].html);
         $('#stn_icons').html($('#stn_icons').html());
-        $(`#stn_icons #${stnId} g#stn_name`).append(this.stations[stnId].expressTagHTML(this._themeColour));
+        $(`#stn_icons #${stnId} g#stn_name`).append(this.stations[stnId].expressTagHTML);
         $(`#stn_icons #${stnId} g#stn_name`).html($(`#stn_icons #${stnId} g#stn_name`).html());
     }
 
@@ -444,10 +444,10 @@ export class RMGLineGZ extends RMGLine {
         }
     }
 
-    updateStnName(stnId: string, names: Name, stnNum: string) {
-        super.updateStnName(stnId, names, stnNum);
+    updateStnName(stnId: string, names: Name) {
+        super.updateStnName(stnId, names);
 
-        $(`#stn_icons #${stnId} g#stn_name`).append(this.stations[stnId].expressTagHTML(this._themeColour));
+        $(`#stn_icons #${stnId} g#stn_name`).append(this.stations[stnId].expressTagHTML);
         $('#stn_icons').html($('#stn_icons').html());
 
         this.loadLineNum();
@@ -465,13 +465,23 @@ export class RMGLineGZ extends RMGLine {
         }
     }
 
+    updateStnNum(stnId: string, num: string) {
+        this.stations[stnId].stnNum = num;
+        let param = getParams();
+        param.stn_list[stnId].num = num;
+        putParams(param);
+
+        this.redrawStn(stnId);
+        this.loadLineNum();
+    }
+
     updateStnServices(stnId: string, detail: {chipId: 'local'|'express', selected: boolean}) {
         super.updateStnServices(stnId, detail);
 
         $(`#stn_icons #${stnId}`).remove();
         $('#stn_icons').append(this.stations[stnId].html);
         $('#stn_icons').html($('#stn_icons').html());
-        $(`#stn_icons #${stnId} g#stn_name`).append(this.stations[stnId].expressTagHTML(this._themeColour));
+        $(`#stn_icons #${stnId} g#stn_name`).append(this.stations[stnId].expressTagHTML);
         $('#stn_icons').html($('#stn_icons').html());
         this.loadLineNum();
     }
