@@ -8,7 +8,7 @@ module.exports = {
   // uncomment devtool for debugging
   // devtool: 'inline-source-map',
   // change to development when debugging
-  mode: 'development',
+  mode: 'production',
   module: {
     rules: [
       {
