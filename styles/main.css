@@ -55,12 +55,15 @@ body {
     scrollbar-width: none;
 }
 
-#svgs::-webkit-scrollbar {
+#svgs>div::-webkit-scrollbar {
     display: none;
 }
 
-#svgs > svg {
+#svgs > div {
     flex: 0 0 auto;
+}
+
+#svgs > div > svg {
     border: 1px solid black;
 }
 
@@ -254,7 +257,7 @@ button#osi_name .mdc-button__label {
 
 #toggle span.material-icons {
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     display: block;
     text-align: center;
     line-height: 48px;
@@ -284,22 +287,17 @@ button#osi_name .mdc-button__label {
 }
 
 #svgs .svg {
-    position: fixed;
-    left: 1200px;
-    top: 0;
+    /* position: fixed; */
+    left: 100%;
+    /* top: 0; */
     overflow: scroll;
-    width: 100%;
+    width: 0;
     transition: 500ms ease-in-out;
 }
 
 #svgs .svg.show {
-    position: fixed;
+    /* position: fixed; */
     left: 0;
-    top: 0;
-}
-
-#panels {
-    position: fixed;
-    top: 302px;
-    left: 0;
+    /* top: 0; */
+    width: 100%;
 }
