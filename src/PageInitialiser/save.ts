@@ -93,18 +93,9 @@ export function common() {
     });
 
     exportDialog.listen('MDCDialog:closed', (event: CustomEvent) => {
-        switch (event.detail.action) {
-            case 'close':
-                break;
-            case 'svg1':
-                $('#preview_diag').attr('for', 'destination');
-                previewDialog.open();
-                break;
-            case 'svg2':
-                $('#preview_diag').attr('for', 'railmap');
-                previewDialog.open();
-                break;
-        }
+        if (event.detail.action === 'close') {return;}
+        $('#preview_diag').attr('for', event.detail.action);
+        previewDialog.open();
     });
 
     $(window).on('resize', _ => {
@@ -114,7 +105,7 @@ export function common() {
     const resizeSVGPreview = () => {
         var svgId = $('preview_diag').attr('for');
         var [thisSVGWidth, thisSVGHeight] = [
-            svgId=='destination' ? getParams().svg_dest_width : getParams().svg_width, 
+            svgId=='railmap' ? getParams().svg_width : getParams().svg_dest_width, 
             getParams().svg_height
         ]
 
@@ -136,7 +127,7 @@ export function common() {
     previewDialog.listen('MDCDialog:opened', event => {
         var svgId = $(event.target).attr('for');
         var [thisSVGWidth, thisSVGHeight] = [
-            svgId=='destination' ? getParams().svg_dest_width : getParams().svg_width, 
+            svgId=='railmap' ? getParams().svg_width : getParams().svg_dest_width, 
             getParams().svg_height
         ]
 
