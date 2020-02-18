@@ -80,7 +80,7 @@ export class RMGLineSH extends RMGLine {
         var [destinations_zh, destinations_en]: String[][] = [[], []]
         this[`${this._direction}ValidDests`].forEach(stn => {
             destinations_zh.push(this.stations[stn].name[0])
-            destinations_en.push(this.stations[stn].name[1])
+            destinations_en.push(this.stations[stn].name[1].replace('\\',' ')) // Chito: replace \ by space
         });
         $('#station_info_shmetro > #dest_text > text:first-child').text(`往${destinations_zh.join("，")}`)
         $('#station_info_shmetro > #dest_text > text:last-child').text(`To ${destinations_en.join(", ")}`)
@@ -97,13 +97,16 @@ export class RMGLineSH extends RMGLine {
             $('#station_info_shmetro > #line_number > rect').attr({
                 fill: this._themeColour,
                 'transform': `translate(${lineNameX - 150},${70 + dh})`,
+                width: 125, height: 125 // Chito: reset width and height (from pure-chinese name)
             })
             $('#station_info_shmetro > #line_number > text')
                 .show().text(lineNumber[0])
                 .attr({
-                    transform: `translate(${lineNameX - 95},${170 + dh})`,
-                    style: 'letter-spacing:-10px',
-                    'text-anchor': 'middle'
+                    // Chito: shift text by half of rect's width and height
+                    transform: `translate(${lineNameX - 150 + 62.5},${70 + 62.5 + dh})`,
+                    style: 'letter-spacing:-2px', // Chito: 00 and 88 can fit in the box now (webkit)
+                    'text-anchor': 'middle', 
+                    'dominant-baseline': 'central' // Chito: move baseline of text to the central
                 })
             
             // Chito: If match format X号线, "号线" always black
