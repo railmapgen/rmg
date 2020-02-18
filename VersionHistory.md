@@ -1,5 +1,15 @@
 # Version History
 
+## 2.13.1 (18 Feb 2020)
+
+### New Features
+
+- New button showing all canvases. 
+
+### Resolved Issues
+
+- Utilised CSS variables. 
+
 ## 2.13 (18 Feb 2020)
 
 ### New Features

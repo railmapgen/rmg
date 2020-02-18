@@ -1,6 +1,3 @@
-.rmg-name__zh.rmg-name__gzmtr--next2 {font-size: 27px;}
-.rmg-name__en.rmg-name__gzmtr--next2 {font-size: 13px;}
-.rmg-name__zh.rmg-name__gzmtr--next2-dest {font-size: 18.5px;}
 .rmg-name__en.rmg-name__gzmtr--next2-dest {font-size: 8.5px;}
 
 g#run_in_gzmtr g#big_name {
@@ -20,6 +17,18 @@ g#run_in_gzmtr g#big_next g {
 g#run_in_gzmtr g#big_next .rmg-name__zh {font-size: 35px;}
 g#run_in_gzmtr g#big_next .rmg-name__en {font-size: 17px;}
 
+g#run_in_gzmtr g#big_next_2 g:nth-child(1), g#run_in_gzmtr g#big_next_2 g:nth-child(2) {
+    transform: translate(var(--translate-x,70px),var(--translate-y));
+    --translate-y: calc(var(--rmg-svg-height) / 2 - 70px);
+}
+g#run_in_gzmtr g#big_next_2 g:nth-child(3), g#run_in_gzmtr g#big_next_2 g:nth-child(4) {
+    transform: translate(var(--translate-x,70px),var(--translate-y));
+    --translate-y: calc(var(--rmg-svg-height) / 2 + 40px);
+}
+g#run_in_gzmtr g#big_next_2 text:nth-child(1) {font-size: 27px;}
+g#run_in_gzmtr g#big_next_2 text:nth-child(2) {font-size: 13px;}
+g#run_in_gzmtr g#big_next_2 text:nth-child(3) {font-size: 18.5px;}
+
 g#run_in_gzmtr use#arrow {
     transform: translate(var(--translate-x,300px),var(--translate-y)) scale(0.25) rotate(var(--rotate,0deg));
     --translate-y: calc(var(--rmg-svg-height) / 2 - 30px);
@@ -30,6 +39,10 @@ g#run_in_gzmtr g#platform {
     fill: var(--rmg-theme-fg);
     transform: translate(var(--translate-x,100px),var(--translate-y));
     --translate-y: calc(var(--rmg-svg-height) / 2 - 30px);
+}
+
+g#run_in_gzmtr g#platform circle {
+    fill: var(--rmg-theme-colour);
 }
 
 g#run_in_gzmtr g#big_stn_num {

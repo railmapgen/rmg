@@ -30,6 +30,8 @@ export function test(svgEl) {
         $(el).attr('font-size', '10px');
     });
 
+    svgEl.find('.rmg-name__en.rmg-name__gzmtr--next2-dest').each((_,el) => $(el).attr('font-size', '8.5px'));
+
     svgEl.find('.rmg-name__en.rmg-name__gzmtr--int').each((_,el) => {
         $(el).attr('font-size', '8px');
     });

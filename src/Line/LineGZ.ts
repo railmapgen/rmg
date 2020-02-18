@@ -26,7 +26,7 @@ export class RMGLineGZ extends RMGLine {
 
     _initStnInstance(stnId: string, stnInfo: StationInfo) {
         if (stnInfo.children.length === 2 || stnInfo.parents.length === 2) {
-            return new BranchStationGZ(stnId, stnInfo, [this.themeCity, this.themeLine, this._themeColour, this._fgColour, ...this._lineNames]);
+            return new BranchStationGZ(stnId, stnInfo, [this.themeCity, this.themeLine, 'var(--rmg-theme-colour)', 'var(--rmg-theme-fg)', ...this._lineNames]);
         }
         switch (stnInfo.transfer.type) {
             case 'int2':
@@ -74,20 +74,6 @@ export class RMGLineGZ extends RMGLine {
     set branchSpacing(val: number) {
         super.branchSpacing = val;
         this.loadLineNum();
-    }
-
-    set theme(t) {
-        super.theme = t;
-        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
-            if (['linestart', 'lineend'].includes(stnId)) {continue;}
-            if (stnInstance instanceof BranchStationGZ) {
-                stnInstance.lineInfo = [this.themeCity, this.themeLine, this._themeColour, this._fgColour, this._lineNames[0], this._lineNames[1]];
-                this.redrawStn(stnId);
-                this.loadLineNum();
-            } else {
-                continue;
-            }
-        }
     }
 
     set direction(val) {
@@ -152,11 +138,11 @@ export class RMGLineGZ extends RMGLine {
 
         let psdDy: string;
         if (['gz3', 'gz1421'].includes(this._infoPanelType)) {
-            $('#big_psd use').attr('fill', 'var(--rmg-theme-colour)');
+            $('#big_psd use').css('fill', 'var(--rmg-theme-colour)');
             $('#big_psd').css('fill', 'var(--rmg-theme-fg)');
             psdDy = val==='gz3' ? '82px' : '62px';
         } else {
-            $('#big_psd use').attr('fill', 'white');
+            $('#big_psd use').css('fill', 'white');
             $('#big_psd').css('fill', '#000');
             psdDy = '58px';
         }
@@ -364,19 +350,21 @@ export class RMGLineGZ extends RMGLine {
 
     loadLineName() {
         // simulate interchange info
-        let info = [this.themeCity, this.themeLine, 'var(--rmg-theme-colour)', 'var(--rmg-theme-fg)', this._lineNames[0], this._lineNames[1]] as InterchangeInfo;
+        let info = [
+            this.themeCity, 
+            this.themeLine, 
+            'var(--rmg-theme-colour)', 
+            'var(--rmg-theme-fg)', 
+            this._lineNames[0], 
+            this._lineNames[1]
+        ] as InterchangeInfo;
 
         $('#line_name')
             .empty()
             .append(getIntBoxGZ(info, 1));
-        $('#line_name').html($('#line_name').html());
-
-        var lineNameX = this._direction=='r' ? this.lineXs[0]-65 : this.lineXs[1]+65;
-
         $('#line_name')
-            .attr({
-                transform: `translate(${lineNameX},-18)scale(1.5)`
-            });
+            .html($('#line_name').html())
+            .css('--translate-x', this._direction=='r' ? this.lineXs[0]-65 : this.lineXs[1]+65);
     }
 
     loadDirection() {
@@ -384,14 +372,14 @@ export class RMGLineGZ extends RMGLine {
 
         // to be fixed: validDest ordering
         if (this._direction == 'l') {
-            $('#direction_gz use').attr('transform', `scale(0.35)`);
+            $('#direction_gz use').css('--rotate', '0deg');
             $('#direction_gz g').attr({
                 'text-anchor': 'start', 
                 transform: 'translate(65,-5)'
             });
             validDest = this.lValidDests;
         } else {
-            $('#direction_gz use').attr('transform', `scale(0.35)rotate(180)`);
+            $('#direction_gz use').css('--rotate', '180deg');
             $('#direction_gz g').attr({
                 'text-anchor': 'end', 
                 transform: 'translate(-65,-5)'
@@ -557,8 +545,8 @@ export class RMGLineGZ extends RMGLine {
                     nextNameZHCount = nextNameZH.length;
                 }
 
-                $(`#run_in_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(2).text(nextNameZH);
-                $(`#run_in_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(3).text(nextNameEN.split('\\')[0])
+                $(`#run_in_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(0).text(nextNameZH);
+                $(`#run_in_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(1).text(nextNameEN.split('\\')[0])
                     .append($('<tspan>', { x:0, dy:13, 'alignment-baseline':'middle' }).text(nextNameEN.split('\\')[1] || ''));
 
                 let validRoutes = this.routes
@@ -574,9 +562,9 @@ export class RMGLineGZ extends RMGLine {
                         new Set(validRoutes.map(route => route.reverse()[0]))
                     );
                 }
-                $(`#run_in_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(0)
+                $(`#run_in_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(2)
                     .text(validEnds.map(s => this.stations[s].name[0]).join('/') + '方向');
-                $(`#run_in_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(1)
+                $(`#run_in_gzmtr #big_next_2 g:nth-child(${2*(idx+1)}) text`).eq(3)
                     .text('Towards ' + validEnds.map(s => this.stations[s].name[1]).join('/'));
             });
         }
@@ -635,8 +623,7 @@ export class RMGLineGZ extends RMGLine {
                     });
                 }
             } else {
-                $('#run_in_gzmtr #big_next_2 g:nth-child(2)').attr('transform', `translate(113,${0.5*this._svgHeight-70})`);
-                $('#run_in_gzmtr #big_next_2 g:nth-child(4)').attr('transform', `translate(113,${0.5*this._svgHeight+40})`);
+                $('#run_in_gzmtr #big_next_2').find('g:eq(1), g:eq(3)').css('--translate-x', 113);
                 $('#run_in_gzmtr use#arrow').css({
                     '--translate-x': (99+27*(1+nextNameZHCount)+bigNameDim.x)/2-20, 
                     '--rotate': '0deg'
@@ -644,8 +631,7 @@ export class RMGLineGZ extends RMGLine {
             }
 
             $('#run_in_gzmtr #big_next g:first-child').css('--translate-x', 80);
-            $('#run_in_gzmtr #big_next_2 g:first-child').attr('transform', `translate(72,${0.5*this._svgHeight-70})`);
-            $('#run_in_gzmtr #big_next_2 g:nth-child(3)').attr('transform', `translate(72,${0.5*this._svgHeight+40})`);
+            $('#run_in_gzmtr #big_next_2').find('g:eq(0), g:eq(2)').css('--translate-x', 72);
         } else {
             $('#run_in_gzmtr #platform').css('--translate-x', 100);
 
@@ -666,11 +652,8 @@ export class RMGLineGZ extends RMGLine {
                     });
                 }
             } else {
-                $('#run_in_gzmtr #big_next_2 g:nth-child(2)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width},${0.5*this._svgHeight-70})`);
-                $('#run_in_gzmtr #big_next_2 g:nth-child(4)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width},${0.5*this._svgHeight+40})`);
-
-                $('#run_in_gzmtr #big_next_2 g:first-child').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-41},${0.5*this._svgHeight-70})`);
-                $('#run_in_gzmtr #big_next_2 g:nth-child(3)').attr('transform', `translate(${this._svgDestWidth-45-bigNextDim.width-41},${0.5*this._svgHeight+40})`);
+                $('#run_in_gzmtr #big_next_2').find('g:eq(1), g:eq(3)').css('--translate-x', this._svgDestWidth-45-bigNextDim.width);
+                $('#run_in_gzmtr #big_next_2').find('g:eq(0), g:eq(2)').css('--translate-x', this._svgDestWidth-45-bigNextDim.width-41);
 
                 $('#run_in_gzmtr use#arrow').css({
                     '--translate-x': (this._svgDestWidth-45-bigNextDim.width-41-27+bigNameDim.x+bigNameDim.width+55+18.5*1.4)/2+20, 

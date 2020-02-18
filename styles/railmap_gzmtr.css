@@ -39,10 +39,17 @@
 .rmg-name__zh.rmg-name__gzmtr--direc2 {font-size: 25px;}
 .rmg-name__en.rmg-name__gzmtr--direc2 {font-size: 11.5px;}
 
+g#line_name {
+    transform: translate(var(--translate-x,0px),-18px)scale(1.5);
+}
+
 g#direction_gz {
     transform: translate(var(--translate-x),var(--translate-y));
     --translate-x: calc(var(--rmg-svg-width) * var(--x-percentage,50) / 100);
     --translate-y: calc(var(--rmg-svg-height) * var(--y-percentage,70) / 100);
+}
+g#direction_gz use {
+    transform: scale(0.35)rotate(var(--rotate,0deg));
 }
 
 g#terminus_gz {

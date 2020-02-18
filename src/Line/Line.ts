@@ -80,9 +80,8 @@ export class RMGLine {
         if (isNaN(val) || val <= 0) {return;}
         this._svgDestWidth = val;
         setParams('svg_dest_width', val);
+        $('#destination, #runin').css('--rmg-svg-width', val);
 
-        this.drawSVGFrame();
-        this.drawStrip();
         this.drawDestInfo();
     }
 
@@ -93,8 +92,7 @@ export class RMGLine {
         if (isNaN(val) || val <= 0) {return;}
         this._svgWidth = val;
         setParams('svg_width', val);
-
-        this.drawSVGFrame();
+        $('#railmap').css('--rmg-svg-width', val);
 
         for (let [stnId, stnInstance] of Object.entries(this.stations)) {
             if (['linestart', 'lineend'].includes(stnId)) {continue;}
@@ -104,16 +102,14 @@ export class RMGLine {
         RMGLine.clearSVG();
         this.drawStns();
         this.drawLine();
-        this.drawStrip();
     }
 
     set svgHeight(val: number) {
         if (isNaN(val) || val <= 0) {return;}
         this._svgHeight = val;
         setParams('svg_height', val);
+        $('#svgs > div > svg').css('--rmg-svg-height', val);
 
-        this.drawSVGFrame();
-        this.drawStrip();
         let y = this._yPc * this._svgHeight / 100;
         $('g#main').attr('transform', `translate(0,${y})`);
         this.drawDestInfo();

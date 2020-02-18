@@ -30,10 +30,12 @@ rect#outer {
 .rmg-name__gzmtr--station-num {
     font-size: 14px;
     text-anchor: middle;
+    /* transform: translate(9.25px,0px)scale(var(--scale,1)); */
 }
 .rmg-name__gzmtr--line-num {
     font-size: 14px;
     text-anchor: middle;
+    /* transform: translate(-9.25px,0px)scale(var(--scale,1)); */
 }
 .rmg-stn {
     fill: #fff;
