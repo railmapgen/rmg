@@ -1,4 +1,5 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -16,6 +17,16 @@ module.exports = {
         use: 'ts-loader',
         exclude: /node_modules/, 
       },
+      {
+        test: /\.html$/,
+        use: {
+          loader: 'html-loader', 
+          options: {
+            interpolate: true, 
+            minimize: true
+          }
+        }
+      }, 
     ]
   },
   resolve: {
@@ -44,5 +55,12 @@ module.exports = {
     '@material/switch': 'mdc.switchControl',
     '@material/tab-bar': 'mdc.tabBar',
     '@material/textfield': 'mdc.textField',
-  }
+  }, 
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: '../main.html',
+      hash: true
+    })
+  ]
 };
