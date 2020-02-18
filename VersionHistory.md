@@ -1,5 +1,17 @@
 # Version History
 
+## 2.13 (18 Feb 2020)
+
+### New Features
+
+- Split `index.html` to multiple `html` files and is built to a minimised version when distributing. Users may save up to 60KB when loading the web page. 
+
+## 2.12.1 (18 Feb 2020)
+
+### Resolved Issues
+
+- Fixed the error that station names in station adding dialogue are not updated. 
+
 ## 2.12 (17 Feb 2020)
 
 ### New Features
