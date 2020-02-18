@@ -59,9 +59,14 @@ $('#toggle').on('mouseout', () => $('#toggle').removeClass('show'));
 $('#toggle span.material-icons').on('touchend', ()=> $('#toggle').toggleClass('show'));
 $('#toggle li').each((i,el) => {
     $(el).on('click', () => {
-        $('#svgs > div.show').removeClass('show');
-        $('#svgs > div').eq(i).addClass('show');
-        $('#toggle').removeClass('show');
+        $('#svgs').scrollLeft(0);
+        if (i < 3) {
+            $('#svgs > div.show').removeClass('show');
+            $('#svgs > div').eq(i).addClass('show');
+            $('#toggle').removeClass('show');
+        } else {
+            $('#svgs > div').addClass('show');
+        }
     });
 });
 

@@ -71,8 +71,9 @@ body {
 
 #svgs > div.show {
     left: 0;
-    width: 100%;
+    width: auto;
     transition: 500ms ease-in-out;
+    flex: 0 0 auto;
 }
 
 
