@@ -586,7 +586,7 @@ export class RMGLineGZ extends RMGLine {
         // Position big name
         var bigNameDim = getTxtBoxDim(
             $('#run_in_gzmtr #big_name text')[0] as Element as SVGGraphicsElement, 
-            'destination'
+            'runin'
         );
         $('#run_in_gzmtr #big_stn_num').css({
             '--translate-x': (this._svgDestWidth+bigNameDim.width)/2+55, 
@@ -597,17 +597,17 @@ export class RMGLineGZ extends RMGLine {
         if (nextStnId.length === 1) {
             bigNextDim = getTxtBoxDim(
                 $('#run_in_gzmtr #big_next g:nth-child(2)')[0] as Element as SVGGraphicsElement,
-                'destination'
+                'runin'
             );
         } else {
             let bigNextDims = [
                 getTxtBoxDim(
                     $('#run_in_gzmtr #big_next_2 g:nth-child(2)')[0] as Element as SVGGraphicsElement,
-                    'destination'
+                    'runin'
                 ), 
                 getTxtBoxDim(
                     $('#run_in_gzmtr #big_next_2 g:nth-child(4)')[0] as Element as SVGGraphicsElement,
-                    'destination'
+                    'runin'
                 )
             ];
             if (bigNextDims[0].width > bigNextDims[1].width) {
