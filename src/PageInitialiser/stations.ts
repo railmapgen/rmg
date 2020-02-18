@@ -263,7 +263,7 @@ export function common() {
         if (prevId == 'add_stn') {
             $('#pivot__selection').prepend(listElem);
         } else {
-            $(`#pivot__selection [data-value="${prevId}"`).after(listElem);
+            $(`#pivot__selection [data-value="${prevId}"]`).after(listElem);
         }
 
         // Trigger station name modification
@@ -321,8 +321,8 @@ export function common() {
         $(stnChipSetEl).find('#'+stnId).find('.stn-chip__text--zh').text(names[0]);
         $(stnChipSetEl).find('#'+stnId).find('.stn-chip__text--en').html(names[1].split('\\').join('<br>'));
         $(`li[data-value="${stnId}"]`).text(window.urlParams.get('style')==='gzmtr' ? 
-            `${stnList[stnId].num}: ${stnList[stnId].name.join()}` :
-            stnList[stnId].name.join());
+            `${stnNum}: ${names.join()}` :
+            names.join());
     });
     $('#stn_edit_diag').find('#stn_num').on('input', () => {
         let names = stnModifyNameFields.map(textfield => textfield.value) as Name;
@@ -332,8 +332,8 @@ export function common() {
         (<RMGLineGZ>window.myLine).updateStnNum(stnId, stnNum);
         $(stnChipSetEl).find('#'+stnId).find('.mdc-chip__icon--leading').text(stnNum);
         $(`li[data-value="${stnId}"]`).text(window.urlParams.get('style')==='gzmtr' ? 
-            `${stnList[stnId].num}: ${stnList[stnId].name.join()}` :
-            stnList[stnId].name.join());
+            `${stnNum}: ${names.join()}` :
+            names.join());
     });
 
 
