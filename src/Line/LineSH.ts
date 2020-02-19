@@ -104,7 +104,7 @@ export class RMGLineSH extends RMGLine {
                 .show().text(lineNumber[0])
                 .attr({
                     fill: 'var(--rmg-theme-fg)',
-                    transform: `translate(${lineNameX - 95},${170 + dh})`,
+                    transform: `translate(${lineNameX - 88},${135 + dh})`,
                     style: 'letter-spacing:-2px', // Chito: 00 and 88 can fit in the box now (webkit)
                     'text-anchor': 'middle',
                     'dominant-baseline': 'central', // Chito: move baseline of text to the central
