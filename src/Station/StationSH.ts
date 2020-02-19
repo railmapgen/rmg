@@ -96,7 +96,9 @@ class IntStationSH extends RMGStationSH {
                 $('<text>').addClass('rmg-name__zh rmg-name__shmetro--station').text(this.name[0])
             ).append(
                 $('<text>', {
-                    dy: 15, class: 'rmg-name__en rmg-name__shmetro--station'
+                    class: 'rmg-name__en rmg-name__shmetro--station',
+                    'font-size': '60%',
+                    dy: 15,
                 }).text(this.name[1].split('\\')[0]).append(
                     $('<tspan>', {
                         'x': 0, 'dy': 12
@@ -206,7 +208,7 @@ class OSIStationSH extends IntStationSH {
 
         return $('<g>', {
             class: `Name Future`,  // todo: fix this
-            transform: `translate(${dx + this._intInfos.length * 15 + 30},-30)`,
+            transform: `translate(${dx + this._intInfos.length * 15 + 10},-30)`,
             id: `rmg-name__shmetro--${this.id}`,
             'text-anchor': 'middle',
             'font-size': '50%',
