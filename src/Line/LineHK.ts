@@ -137,6 +137,18 @@ export class RMGLineHK extends RMGLine {
         this.updateStnNameBg();
     }
 
+    _stnRealY(stnId: string) {
+        let y = super._stnRealY(stnId);
+        if (this.branches[0].includes(stnId)) {
+            // on main line
+            return y;
+        } else {
+            // shift 11px
+            y += y>0 ? 11 : -11;
+            return y;
+        }
+    }
+
     /**
      * Station name position (`false`: above line, `true`: below line, given `txtFlip` is `false`).
      */
@@ -171,6 +183,73 @@ export class RMGLineHK extends RMGLine {
             x: stnNameDim.x-3, 
             width: stnNameDim.width+6, 
         });
+    }
+
+    get stnDX() {return this.turningRadius - this._branchSpacing/2};
+    get stnDY() {return this._branchSpacing/2};
+    get stnExtraH() {
+        var [lineStart, lineEnd] = this.lineXs;
+        return (lineEnd - lineStart) / this.criticalPath.len * this._longInterval;
+    }
+    get stnSpareH() {
+        var [lineStart, lineEnd] = this.lineXs;
+        var dh = ( (lineEnd-lineStart)/this.criticalPath.len - 2*this.stnDX ) / 2;
+        if (dh < 0) {
+            console.warn(`SVG width too small! ${dh}`);
+        }
+        return dh;
+    }
+    get pathTurnENE() {return `a ${this.turningRadius},${this.turningRadius} 0 0,0 ${this.stnDX},${-this.stnDY}`};
+    get pathTurnNEE() {return `a ${this.turningRadius},${this.turningRadius} 0 0,1 ${this.stnDX},${-this.stnDY}`};
+    get pathTurnESE() {return `a ${this.turningRadius},${this.turningRadius} 0 0,1 ${this.stnDX},${this.stnDY}`};
+    get pathTurnSEE() {return `a ${this.turningRadius},${this.turningRadius} 0 0,0 ${this.stnDX},${this.stnDY}`};
+
+    _linePath(stnIds: string[]) {
+        var [prevId, prevY, prevX]: [string?, number?, number?] = [];
+        var path = [];
+
+        var { stnExtraH, stnSpareH, pathTurnESE, pathTurnSEE, pathTurnENE, pathTurnNEE, stnDX } = this;
+
+        stnIds.forEach(stnId => {
+            var [x,y] = ['_stnRealX', '_stnRealY'].map(fun => this[fun](stnId));
+            if (!prevY && prevY !== 0) {
+                [prevId, prevX, prevY] = [stnId, x, y];
+                if (stnIds.length === 1) {
+                    path.push(`M ${x},${y}`);
+                } else if (!this.branches[0].includes(stnId)) {
+                    // started from branch
+                    path.push(`M ${x},${y}`)
+                } else if (this.branches[0].includes(stnIds[1])) {
+                    // started from branching station, this is main line
+                    path.push(`M ${x},${y}`);
+                } else {
+                    // started form branching station, this is branch line
+                    if (this._stnRealY(stnIds[1]) > 0) {
+                        path.push(`M ${x},${y+11}`);
+                    }
+                    if (this._stnRealY(stnIds[1]) < 0) {
+                        path.push(`M ${x},${y-11}`);
+                    }
+                }
+                return;
+            }
+            if (y > prevY) {
+                path.push(
+                    y===0 ? `h ${x - prevX - stnExtraH*this._leftWideFactor(stnId) - stnSpareH - stnDX*2}` : `h ${stnExtraH * this._rightWideFactor(prevId) + stnSpareH}`
+                );
+                path.push(pathTurnESE, pathTurnSEE);
+            } else if (y < prevY) {
+                path.push(
+                    y===0 ? `h ${x - prevX - stnExtraH*this._leftWideFactor(stnId) - stnSpareH - stnDX*2}` : `h ${stnExtraH * this._rightWideFactor(prevId) + stnSpareH}`
+                );
+                path.push(pathTurnENE, pathTurnNEE);
+            }
+            path.push(`H ${x}`);
+            [prevId, prevX, prevY] = [stnId, x, y];
+        });
+
+        // simplify path
+        return path.join(' ').replace(/( H ([\d.]+))+/g, ' H $2');
     }
 
     drawDestInfo() {

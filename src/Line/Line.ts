@@ -15,7 +15,7 @@ export class RMGLine {
     private _stripPc: number;
     protected _padding: number;
     protected _longInterval = 1;
-    private _branchSpacing: number;
+    protected _branchSpacing: number;
     public stations: {
         [index: string]: RMGStation;
     } = {};
@@ -483,8 +483,6 @@ export class RMGLine {
         }
     }
 
-
-
     /**
      * Set height and width for both `svg`s. 
      */
@@ -524,64 +522,25 @@ export class RMGLine {
         $('#stn_icons').html($('#stn_icons').html()); // Refresh DOM
     }
 
-
-
-    get stnDX() {return this.turningRadius - this._branchSpacing/2};
-    get stnDY() {return this._branchSpacing/2};
-    get stnExtraH() {
-        var [lineStart, lineEnd] = this.lineXs;
-        return (lineEnd - lineStart) / this.criticalPath.len * this._longInterval;
-    }
-    get stnSpareH() {
-        var [lineStart, lineEnd] = this.lineXs;
-        var dh = ( (lineEnd-lineStart)/this.criticalPath.len - 2*this.stnDX ) / 2;
-        if (dh < 0) {
-            console.warn(`SVG width too small! ${dh}`);
-        }
-        return dh;
-    }
-    get pathTurnENE() {return `a ${this.turningRadius},${this.turningRadius} 0 0,0 ${this.stnDX},${-this.stnDY}`};
-    get pathTurnNEE() {return `a ${this.turningRadius},${this.turningRadius} 0 0,1 ${this.stnDX},${-this.stnDY}`};
-    get pathTurnESE() {return `a ${this.turningRadius},${this.turningRadius} 0 0,1 ${this.stnDX},${this.stnDY}`};
-    get pathTurnSEE() {return `a ${this.turningRadius},${this.turningRadius} 0 0,0 ${this.stnDX},${this.stnDY}`};
-
     /**
      * Generate `d` attribute of `<path>` element through all stations input. 
      */
     _linePath(stnIds: string[]) {
-        var [prevId, prevY, prevX]: [string?, number?, number?] = [];
-        var path = [];
-
-        var { stnExtraH, stnSpareH, pathTurnESE, pathTurnSEE, pathTurnENE, pathTurnNEE, stnDX } = this;
-
-        stnIds.forEach(stnId => {
-            var [x,y] = ['_stnRealX', '_stnRealY'].map(fun => this[fun](stnId));
-            if (!prevY && prevY !== 0) {
-                [prevId, prevX, prevY] = [stnId, x, y];
+        let path = [];
+        stnIds.forEach((stnId, i) => {
+            let x = this._stnRealX(stnId);
+            let y = this._stnRealY(stnId);
+            if (i === 0) {
                 path.push(`M ${x},${y}`);
-                return;
+            } else {
+                path.push(`L ${x},${y}`);
             }
-            if (y > prevY) {
-                path.push(
-                    y===0 ? `h ${x - prevX - stnExtraH*this._leftWideFactor(stnId) - stnSpareH - stnDX*2}` : `h ${stnExtraH * this._rightWideFactor(prevId) + stnSpareH}`
-                );
-                path.push(pathTurnESE, pathTurnSEE);
-            } else if (y < prevY) {
-                path.push(
-                    y===0 ? `h ${x - prevX - stnExtraH*this._leftWideFactor(stnId) - stnSpareH - stnDX*2}` : `h ${stnExtraH * this._rightWideFactor(prevId) + stnSpareH}`
-                );
-                path.push(pathTurnENE, pathTurnNEE);
-            }
-            path.push(`H ${x}`);
-            [prevId, prevX, prevY] = [stnId, x, y];
         });
-
-        // simplify path
-        return path.join(' ').replace(/( H ([\d.]+))+/g, ' H $2');
+        return path.join(' ');
     }
 
     drawLine() {
-        this.branches.map(branch => {
+        this.branches.map((branch,i) => {
             var lineMainStns = branch.filter(stnId => this.stations[stnId].state >= 0);
             var linePassStns = branch.filter(stnId => this.stations[stnId].state <= 0);
 

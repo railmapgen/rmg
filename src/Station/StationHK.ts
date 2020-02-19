@@ -13,6 +13,79 @@ export class RMGStationHK extends RMGStation {
         super(id, data);
     }
 
+    /**
+     * Arrays of directions of the branches a station has. 
+     */
+    get _branchPos() {
+        let pos: ('SE' | 'NE' | 'SW' | 'NW')[] = [];
+        if (this.outDegree === 2) {
+            pos.push(this.children.indexOf(this.branch.right[1]) === 1 ? 'SE' : 'NE');
+        }
+        if (this.inDegree === 2) {
+            pos.push(this.parents.indexOf(this.branch.left[1]) === 1 ? 'SW' : 'NW');
+        }
+        return pos;
+    }
+
+    /**
+     * Affix added to station icon's `href`. 
+     */
+    get _branchAffix() {
+        let pos = this._branchPos;
+        if (pos.length === 0) {return '';}
+        if (pos.includes('NW') && pos.includes('SE')) {return '_bb';}
+        if (pos.includes('NE') && pos.includes('SW')) {return '_bb';}
+        return '_b';
+    }
+
+    /**
+     * Changes of vertical position of station icon due to branching shift (11px/line width). Icon rotation should also be applied when using this property. 
+     */
+    get _branchDy() {
+        let affix = this._branchAffix;
+        if (affix === '') {
+            return 0;
+        } else if (affix === '_bb') {
+            return this.namePos ? 11 : -11;
+        } else {
+            let pos = this._branchPos;
+            if (pos.includes('SE') || pos.includes('SW')) {return this.namePos ? 11 : 0;}
+            if (pos.includes('NE') || pos.includes('NW')) {return this.namePos ? 0 : -11;}
+        }
+    }
+
+    /**
+     * Changes of vertical position of other elements such as intTick or intName. The result of the ternary operator is the opposite of `this._branchDy`
+     */
+    get _branchElDy() {
+        let affix = this._branchAffix;
+        if (affix === '') {
+            return 0;
+        } else if (affix === '_bb') {
+            return this.namePos ? -11 : 11;
+        } else {
+            let pos = this._branchPos;
+            if (pos.includes('SE') || pos.includes('SW')) {return this.namePos ? 0 : 11;}
+            if (pos.includes('NE') || pos.includes('NW')) {return this.namePos ? -11 : 0;}
+        }
+    }
+
+    /**
+     * Rotation of a station icon. 
+     */
+    get _iconRotation() {
+        // do not rotate if station name is above the line
+        return !this.namePos ? 0 :180;
+    }
+
+    get iconHTML() {
+        return $('<use>', {
+            'xlink:href': '#stn_hk' + this._branchAffix, 
+            transform: `translate(${this.x},${this.y + this._branchDy})rotate(${this._iconRotation})`, 
+            class: this.iconClass
+        });
+    }
+
     get nameHTML() {
         var nameENs = this.name[1].split('\\');
 
@@ -25,7 +98,7 @@ export class RMGStationHK extends RMGStation {
 
         if (this.state === 0) {
             $('#current_bg').attr({
-                y: this.y + dy + this.STN_NAME_Y - 1.5 + this._nameDY, 
+                y: this.y + dy + this.STN_NAME_Y - 1.5 + this._nameDY + this._branchDy, 
                 height: this.STN_NAME_BASE_HEIGHT + (nameENs.length-1)*10 +2 +1.5
             });
         }
@@ -42,7 +115,7 @@ export class RMGStationHK extends RMGStation {
         }
 
         return $('<g>', {
-            transform: `translate(${this.x + this._nameDX},${this.y + dy + this._nameDY})`, 
+            transform: `translate(${this.x + this._nameDX},${this.y + dy + this._nameDY + this._branchDy})`, 
             'text-anchor': this._nameTxtAnchor, 
             'class': `Name ${this.nameClass}`
         }).append(
@@ -65,12 +138,11 @@ export class Int2StationHK extends RMGStationHK {
     get _dy() {return 0;}
 
     get intTickHTML() {
-        var tickRotation = (this.namePos) ? 180 : 0;
         var tickColour = this._intInfo[IntInfoTag.colour];
         var tick = $('<use>', {
             'xlink:href': '#inttick_hk', 
             stroke: tickColour, 
-            transform: `translate(${this.x},${this.y+this._dy})rotate(${tickRotation})`, 
+            transform: `translate(${this.x},${this.y+this._dy+this._branchElDy})rotate(${this._iconRotation})`, 
             class: 'rmg-line rmg-line__mtr rmg-line__change'
         });
         if (this.state == -1) {
@@ -90,7 +162,7 @@ export class Int2StationHK extends RMGStationHK {
         // var nameClass = (this.state == -1) ? 'Pass' : 'Future';
         return $('<g>', {
             'text-anchor': 'middle', 
-            'transform': `translate(${this.x},${this.y + dy})`, 
+            'transform': `translate(${this.x},${this.y + dy + this._branchElDy})`, 
             'class': `Name ${this._nameClass}`
         }).html(nameHTML[0]);
     }
@@ -109,10 +181,9 @@ class Int3StationHK extends RMGStationHK {
     }
 
     get iconHTML() {
-        let iconRotation = (!this.namePos) ? 0 : 180;
         return $('<use>', {
-            'xlink:href': '#int3_hk', 
-            transform: `translate(${this.x},${this.y})rotate(${iconRotation})`, 
+            'xlink:href': '#int3_hk' + this._branchAffix, 
+            transform: `translate(${this.x},${this.y+this._branchDy})rotate(${this._iconRotation})`, 
             class: this.iconClass
         });
     }
@@ -136,7 +207,7 @@ class Int3StationHK extends RMGStationHK {
                     $('<use>', {
                         'xlink:href': '#inttick_hk', 
                         stroke: tickColour, 
-                        transform: `translate(${this.x + this._dx},${this.y + dy})rotate(${this._tickRotation})`, 
+                        transform: `translate(${this.x + this._dx},${this.y + dy + this._branchElDy})rotate(${this._tickRotation})`, 
                         class: 'rmg-line rmg-line__mtr rmg-line__change'
                     })
                 );
@@ -165,7 +236,7 @@ class Int3StationHK extends RMGStationHK {
                 elems.push(
                     $('<g>', {
                         'text-anchor': this._txtAnchor, 
-                        transform: `translate(${this.x + this._intNameDX},${this.y + dy})`, 
+                        transform: `translate(${this.x + this._intNameDX},${this.y + dy + this._branchElDy})`, 
                         class: 'Name ' + nameClass
                     }).html(nameHTML[0])
                 );
@@ -206,10 +277,9 @@ class OSI11StationHK extends Int2StationHK {
     
     get osiClass() {return this._osiType == 'u' ? 'rmg-stn__mtr--unpaid-osi' : 'rmg-stn__mtr--paid-osi';}
     get iconHTML() {
-        var iconRotation = (!this.namePos) ? 0 : 180;
         return $('<use>', {
-            'xlink:href': '#osi11_hk', 
-            'transform': `translate(${this.x},${this.y})rotate(${iconRotation})`, 
+            'xlink:href': '#osi11_hk' + this._branchAffix, 
+            'transform': `translate(${this.x},${this.y+this._branchDy})rotate(${this._iconRotation})`, 
             class: [this.iconClass, this.osiClass].join(' ')
         });
     }
@@ -222,7 +292,7 @@ class OSI11StationHK extends Int2StationHK {
         var dy = this._dy + 8.34375 - 25.03125/2;
         return $('<g>', {
             'text-anchor': this._txtAnchor, 
-            'transform': `translate(${this.x+this._osiNameDX},${this.y+dy})`, 
+            'transform': `translate(${this.x+this._osiNameDX},${this.y+dy+this._branchElDy})`, 
             'class': 'Name ' + this._nameClass
         }).append(
             $('<text>').addClass('rmg-name__zh rmg-name__mtr--osi').text(this._osiNames[0])
@@ -266,10 +336,9 @@ class OSI12StationHK extends Int3StationHK {
 
     get osiClass() {return this._osiType == 'u' ? 'rmg-stn__mtr--unpaid-osi' : 'rmg-stn__mtr--paid-osi';}
     get iconHTML() {
-        var iconRotation = (!this.namePos) ? 0 : 180;
         return $('<use>', {
-            'xlink:href': '#osi12_hk', 
-            transform: `translate(${this.x},${this.y})rotate(${iconRotation})`,
+            'xlink:href': '#osi12_hk' + this._branchAffix, 
+            transform: `translate(${this.x},${this.y+this._branchDy})rotate(${this._iconRotation})`,
             class: [this.iconClass, this.osiClass].join(' ')
         });
     }
@@ -283,7 +352,7 @@ class OSI12StationHK extends Int3StationHK {
         var nameClass = (this.state == -1) ? 'Pass' : 'Future';
         return $('<g>', {
             'text-anchor': this._osiTxtAnchor, 
-            'transform': `translate(${this.x+this._dx+this._osiDX},${this.y+this._osiDY})`, 
+            'transform': `translate(${this.x+this._dx+this._osiDX},${this.y+this._osiDY+this._branchElDy})`, 
             'class': `Name ${nameClass}`
         }).append(
             $('<text>').addClass('rmg-name__zh rmg-name__mtr--osi').text(this._osiNames[0])
@@ -333,7 +402,7 @@ export class OSI22StationHK extends OSI12StationHK {
         var tick = $('<use>', {
             'xlink:href': '#inttick_hk', 
             stroke: tickColour, 
-            transform: `translate(${this.x},${this.y})rotate(${tickRotation})`,
+            transform: `translate(${this.x},${this.y+this._branchDy})rotate(${tickRotation})`,
             'class': 'rmg-line rmg-line__mtr rmg-line__change'
         });
         if (this.state == -1) {
@@ -349,7 +418,7 @@ export class OSI22StationHK extends OSI12StationHK {
         // var nameClass = (this.state == -1) ? 'Pass' : 'Future';
         return $('<g>', {
             'text-anchor': this._txtAnchor, 
-            transform: `translate(${this.x - this._nameDX},${this.y + dy})`, 
+            transform: `translate(${this.x - this._nameDX},${this.y + dy + this._branchDy})`, 
             class: `Name ${this._nameClass}`
         }).html(nameHTML[0]);
     }
@@ -418,7 +487,7 @@ export class OSI22EndStationHK extends OSI12StationHK {
         var tick = $('<use>', {
             'xlink:href': '#inttick_hk', 
             stroke: tickColour, 
-            transform: `translate(${this.x},${this.y})rotate(${tickRotation})`,
+            transform: `translate(${this.x},${this.y+this._branchElDy})rotate(${tickRotation})`,
             'class': 'rmg-line rmg-line__mtr rmg-line__change'
         });
         if (this.state == -1) {
@@ -434,7 +503,7 @@ export class OSI22EndStationHK extends OSI12StationHK {
         // var nameClass = (this.state == -1) ? 'Pass' : 'Future';
         return $('<g>', {
             'text-anchor': 'middle', 
-            'transform': `translate(${this.x},${this.y + dy})`, 
+            'transform': `translate(${this.x},${this.y + dy + this._branchElDy})`, 
             'class': `Name ${this._nameClass}`
         }).html(nameHTML[0]);
     }
@@ -444,8 +513,8 @@ export class OSI22EndStationHK extends OSI12StationHK {
         var iconXFlip = (this.children[0] == 'lineend') ? 1 : -1;
         var iconRotation = (this.children[0] == 'lineend') ? 0 : 180;
         return $('<use>', {
-            'xlink:href': '#osi22end_hk', 
-            'transform': `translate(${this.x},${this.y})scale(${iconXFlip},${iconYFlip})`, 
+            'xlink:href': '#osi22end_hk' + this._branchAffix,
+            'transform': `translate(${this.x},${this.y+this._branchElDy})scale(${iconXFlip},${iconYFlip})`, 
             class: [this.iconClass, this.osiClass].join(' ')
         });
     }
@@ -453,10 +522,24 @@ export class OSI22EndStationHK extends OSI12StationHK {
     get _tickRotation() {return (this.children[0] == 'lineend') ? -90 : 90;}
     get _tickFlip() {return -1;}
     get _dx() {return (this.children[0] == 'lineend') ? 41 : -41;}
-    get _dy() {return !this.namePos ? -18 : 18;}
+    get _dy() {
+        let affix = this._branchAffix;
+        if (affix === '') {
+            return !this.namePos ? -18 : 18;
+        } else {
+            return !this.namePos ? -18 + 11 : 18 - 11;
+        }
+    }
     get _intNameDX() {return (this.children[0] == 'lineend') ? 24+41 : -(24+41);}
     get _txtAnchor() {return (this.children[0] == 'lineend') ? 'start' : 'end';}
-    get _osiDY() {return !this.namePos ? (10) + 8.34375  : -(10) + 8.34375 - 25.03125;}
+    get _osiDY() {
+        let affix = this._branchAffix;
+        if (affix === '') {
+            return !this.namePos ? (10) + 8.34375  : -(10) + 8.34375 - 25.03125;
+        } else {
+            return !this.namePos ? (10) + 8.34375 - 11  : -(10) + 8.34375 - 25.03125 + 11;
+        }
+    }
     get _osiTxtAnchor() {return (this.children[0] == 'lineend') ? 'start' : 'end';}
     get _osiDX() {return (this.children[0] == 'lineend') ? -9 : 9;}
 

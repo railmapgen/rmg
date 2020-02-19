@@ -10,14 +10,27 @@ id="railmap" style="
         <path id="arrow" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black"/>
 
         <circle id="stn_hk" r="8" class="rmg-stn__mtr"/>
-        <path id="stn2_hk" d="M -5.809475019,5.5 a 8,8 0 1,1 11.61895004,0 a 8,8 0 1,1 -11.61895004,0 Z" class="rmg-stn__mtr"/>
+        <path id="stn_hk_b" d="M -5.809475019,5.5 a 8,8 0 1,1 11.61895004,0 a 8,8 0 1,1 -11.61895004,0 Z" class="rmg-stn__mtr"/>
+        <path id="stn_hk_bb" d="M -5.809475019,5.5 a 8,8 0 1,1 11.61895004,0 a 8,8 0 0,1 0,11 a 8,8 0 1,1 -11.61895004,0 a 8,8 0 0,1 0,-11 Z" class="rmg-stn__mtr"/>
         <path id="int2_hk" d="M -8,0 v 18 a 8,8 0 0,0 16,0 v -18 a 8,8 0 0,0 -16,0 Z" class="rmg-stn__mtr"/>
         <path id="int3_hk" d="M -8,0 v 36 a 8,8 0 0,0 16,0 v -36 a 8,8 0 0,0 -16,0 Z" class="rmg-stn__mtr"/>
+        <path id="int3_hk_b" class="rmg-stn__mtr" d="M -8,11 v 36 a 8,8 0 0,0 16,0 v -36 a 8,8 0 0,0 -2.190524981,-5.5 a 8,8 0 1,0 -11.61895004,0 a 8,8 0 0,0 -2.190524981,5.5 Z"/>
+        <path id="int3_hk_bb" class="rmg-stn__mtr" d="M -8,22 v 36 a 8,8 0 0,0 16,0 v -36 a 8,8 0 0,0 -2.190524981,-5.5 a 8,8 0 0,0 0,-11 a 8,8 0 1,0 -11.61895004,0 a 8,8 0 0,0 0,11 a 8,8 0 0,0 -2.190524981,5.5 Z"/>
 
         <g id="osi11_hk">
             <path d="M 0,0 V 26"/>
             <use xlink:href="#stn_hk"/>
             <use xlink:href="#stn_hk" y="26"/>
+        </g>
+        <g id="osi11_hk_b">
+            <path d="M 0,0 V 37"/>
+            <use xlink:href="#stn_hk_b"/>
+            <use xlink:href="#stn_hk" y="37"/>
+        </g>
+        <g id="osi11_hk_bb">
+            <path d="M 0,0 V 48"/>
+            <use xlink:href="#stn_hk_bb"/>
+            <use xlink:href="#stn_hk" y="48"/>
         </g>
 
         <g id="osi12_hk">
@@ -25,11 +38,26 @@ id="railmap" style="
             <use xlink:href="#stn_hk"/>
             <use xlink:href="#int2_hk" y="26"/>
         </g>
+        <g id="osi12_hk_b">
+            <path d="M 0,11 V 37"/>
+            <use xlink:href="#stn_hk_b"/>
+            <use xlink:href="#int2_hk" y="37"/>
+        </g>
+        <g id="osi12_hk_bb">
+            <path d="M 0,11 V 48"/>
+            <use xlink:href="#stn_hk_bb"/>
+            <use xlink:href="#int2_hk" y="48"/>
+        </g>
 
         <g id="osi22end_hk">
             <path d="M 0,0 H 41"/>
             <use xlink:href="#stn_hk"/>
             <use xlink:href="#int2_hk" x="41"/>
+        </g>
+        <g id="osi22end_hk_b">
+            <path d="M 0,11 H 41"/>
+            <use xlink:href="#stn_hk_b"/>
+            <use xlink:href="#int2_hk" x="41" y="11"/>
         </g>
 
         <path id="stn_gz" class="rmg-stn" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
