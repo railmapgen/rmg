@@ -14,7 +14,7 @@ export class RMGLineHK extends RMGLine {
     constructor (param: RMGParam) {
         super(param);
 
-        this._txtFlip = param.txt_flip;
+        this.txtFlip = param.txt_flip;
         this._charForm = param.char_form;
         this._destLegacy = param.dest_legacy;
     }
@@ -185,8 +185,11 @@ export class RMGLineHK extends RMGLine {
         });
     }
 
-    get stnDX() {return this.turningRadius - this._branchSpacing/2};
-    get stnDY() {return this._branchSpacing/2};
+    get stnDX() {
+        // return this.turningRadius - this._branchSpacing/2;
+        let {dx_a, dx_l} = this.pathTurnParams;
+        return (2 * dx_a + dx_l)/2;
+    }
     get stnExtraH() {
         var [lineStart, lineEnd] = this.lineXs;
         return (lineEnd - lineStart) / this.criticalPath.len * this._longInterval;
@@ -199,16 +202,36 @@ export class RMGLineHK extends RMGLine {
         }
         return dh;
     }
-    get pathTurnENE() {return `a ${this.turningRadius},${this.turningRadius} 0 0,0 ${this.stnDX},${-this.stnDY}`};
-    get pathTurnNEE() {return `a ${this.turningRadius},${this.turningRadius} 0 0,1 ${this.stnDX},${-this.stnDY}`};
-    get pathTurnESE() {return `a ${this.turningRadius},${this.turningRadius} 0 0,1 ${this.stnDX},${this.stnDY}`};
-    get pathTurnSEE() {return `a ${this.turningRadius},${this.turningRadius} 0 0,0 ${this.stnDX},${this.stnDY}`};
+    get pathTurnParams() {
+        let tr = 40; // turning radius
+        let dx_a = tr / 2; // dx of a
+        let dy_a = tr - dx_a * Math.sqrt(3); // dy of a
+        let dy_l = this._branchSpacing - 2 * dy_a; // dy of l
+        let dx_l = dy_l * Math.sqrt(3) // dx of l
+        return {tr, dx_a, dy_a, dx_l, dy_l};
+    }
+    
+    /**
+     * Path segment from a station towards its southeast (lower-right). 
+     */
+    get pathTurnSE() {
+        let {tr, dx_a, dy_a, dx_l, dy_l} = this.pathTurnParams;
+        return `a ${tr},${tr} 0 0,1 ${dx_a},${dy_a} l ${dx_l},${dy_l} a ${tr},${tr} 0 0,0 ${dx_a},${dy_a}`;
+    }
+
+    /**
+     * Path segment from a station towards its northeast (upper-right). 
+     */
+    get pathTurnNE() {
+        let {tr, dx_a, dy_a, dx_l, dy_l} = this.pathTurnParams;
+        return `a ${tr},${tr} 0 0,0 ${dx_a},${-dy_a} l ${dx_l},${-dy_l} a ${tr},${tr} 0 0,1 ${dx_a},${-dy_a}`;
+    }
 
     _linePath(stnIds: string[]) {
         var [prevId, prevY, prevX]: [string?, number?, number?] = [];
         var path = [];
 
-        var { stnExtraH, stnSpareH, pathTurnESE, pathTurnSEE, pathTurnENE, pathTurnNEE, stnDX } = this;
+        var { stnExtraH, stnSpareH, stnDX } = this;
 
         stnIds.forEach(stnId => {
             var [x,y] = ['_stnRealX', '_stnRealY'].map(fun => this[fun](stnId));
@@ -237,12 +260,12 @@ export class RMGLineHK extends RMGLine {
                 path.push(
                     y===0 ? `h ${x - prevX - stnExtraH*this._leftWideFactor(stnId) - stnSpareH - stnDX*2}` : `h ${stnExtraH * this._rightWideFactor(prevId) + stnSpareH}`
                 );
-                path.push(pathTurnESE, pathTurnSEE);
+                path.push(this.pathTurnSE);
             } else if (y < prevY) {
                 path.push(
                     y===0 ? `h ${x - prevX - stnExtraH*this._leftWideFactor(stnId) - stnSpareH - stnDX*2}` : `h ${stnExtraH * this._rightWideFactor(prevId) + stnSpareH}`
                 );
-                path.push(pathTurnENE, pathTurnNEE);
+                path.push(this.pathTurnNE);
             }
             path.push(`H ${x}`);
             [prevId, prevX, prevY] = [stnId, x, y];

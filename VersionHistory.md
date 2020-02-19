@@ -1,5 +1,17 @@
 # Version History
 
+## 2.14 (19 Feb 2020)
+
+### New Features
+
+- Branching-out stations are now available in MTR style. 
+- Out-of-station interchange are now availabel in Shanghai Metro style. 
+
+### Resolved Issues
+
+- Re-drawn line segment involving arcs (curves) in MTR style.
+- Fixed the issue that a station are not re-drawn when it is upgraded to a branching-out station in Guangzhou Metro style. 
+
 ## 2.13.1 (18 Feb 2020)
 
 ### New Features

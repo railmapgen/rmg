@@ -14,7 +14,7 @@ export class RMGLine {
     private _yPc: number;
     private _stripPc: number;
     protected _padding: number;
-    protected _longInterval = 1;
+    protected _longInterval = 0.8;
     protected _branchSpacing: number;
     public stations: {
         [index: string]: RMGStation;
@@ -303,7 +303,6 @@ export class RMGLine {
     }
 
     get stripY() {return this._stripPc * this._svgHeight / 100;}
-    get turningRadius() {return this._branchSpacing/2 * (Math.sqrt(2) / (Math.sqrt(2)-1));}
 
     get lineXs() {
         return [
