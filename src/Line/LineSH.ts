@@ -1,5 +1,5 @@
 import { RMGLine } from './Line';
-import { RMGStationSH, IntStationSH, station_id } from '../Station/StationSH';
+import { RMGStationSH, IntStationSH, OSIStationSH } from '../Station/StationSH';
 import { RMGStation } from '../Station/Station';
 
 import { Name, StationInfo, RMGParam, DirectionLong } from '../types';
@@ -32,6 +32,7 @@ export class RMGLineSH extends RMGLine {
             case 'osi22_pl':
             case 'osi22_ur':
             case 'osi22_pr':
+                return new OSIStationSH(stnId, stnInfo);
             default:
                 return new RMGStationSH(stnId, stnInfo);
         }

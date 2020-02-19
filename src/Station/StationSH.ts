@@ -1,8 +1,6 @@
 import { RMGStation } from './Station';
 import { Name, BranchInfo, StationInfo, IntInfoTag, InterchangeInfo } from '../types';
 
-const station_id = 'stn_sh'
-
 class RMGStationSH extends RMGStation {
     constructor(id: string, data: StationInfo) {
         super(id, data);
@@ -26,7 +24,7 @@ class RMGStationSH extends RMGStation {
     }
 
     get iconHTML() {
-        var [iconType, numClass] = (this.state == -1) ? [station_id + '_pass', 'Pass'] : [station_id, 'Future'];
+        var [iconType, numClass] = (this.state == -1) ? ['stn_sh_pass', 'Pass'] : ['stn_sh', 'Future'];
         return $('<g>', { transform: `translate(${this.x},${this.y})` })
             .append($('<use>', { 'xlink:href': '#' + iconType, class: 'rmg-stn' }));
     }
@@ -178,4 +176,47 @@ class IntStationSH extends RMGStationSH {
     }
 }
 
-export { RMGStationSH, IntStationSH, station_id };
+class OSIStationSH extends IntStationSH {
+    protected _intInfos: InterchangeInfo[];
+    private _osiInfos: InterchangeInfo[];
+
+    constructor(id: string, data: StationInfo) {
+        super(id, data);
+        this._intInfos = data.transfer.info.flat();
+        this._osiInfos = data.transfer.info[1];
+    }
+
+    get ungrpIconHTML() {
+        return [...this.intTickHTML, this.OSIHTML]
+    }
+
+    get OSIHTML() {
+        // get the exact station name width so that the
+        // interchange station icon can be right after the station name
+        let stnNameElem = $(`#rmg-name__shmetro--${this.id}`)
+        let bcr = stnNameElem.get(0).getBoundingClientRect()
+        let dx = bcr.right - bcr.left + 5
+
+        // get the all names from the out of station changes
+        let lineNames = ''
+        this._osiInfos.map((stn)=>{
+            lineNames += stn[IntInfoTag.nameZH] + '，'
+        })
+        lineNames = lineNames.slice(0, -1)
+
+        return $('<g>', {
+            class: `Name Future`,  // todo: fix this
+            transform: `translate(${dx + this._intInfos.length * 15 + 30},-30)`,
+            id: `rmg-name__shmetro--${this.id}`,
+            'text-anchor': 'middle',
+            'font-size': '50%',
+        }).append(
+            $('<text>').addClass('rmg-name__zh rmg-name__shmetro--station').text(`换乘${lineNames}`)
+        ).append(
+            $('<text>', {
+                dy: 10, class: 'rmg-name__en rmg-name__shmetro--station'
+            }).text('仅限公共交通卡'))
+    }
+}
+
+export { RMGStationSH, IntStationSH, OSIStationSH };
