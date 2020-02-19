@@ -204,6 +204,9 @@ export function common() {
         // $('.mdc-snackbar__label').text('You have selected ' + event.detail.chipId);
         stnEditSnackbar.open();
     });
+    stnChipSet.listen('MDCChip:removal', (event: CustomEvent) => {
+        stnChipSetEl.removeChild(event.detail.root);
+    });
     stnEditSnackbar.listen('MDCSnackbar:opening', () => {
         let stnInfo = getParams().stn_list[stnChipSet.selectedChipIds[0]];
         // $('#panel_stations .mdc-snackbar .mdc-snackbar__label')
@@ -510,7 +513,8 @@ export function common() {
     });
 
     intChipSets.forEach((chipset, i) => {
-        chipset.listen('MDCChip:removal', () => {
+        chipset.listen('MDCChip:removal', (event: CustomEvent) => {
+            intChipSetEls[i].removeChild(event.detail.root);
             updateStnTransfer(intChipSetEls, tickDirecChipSet, paidAreaSwitch);
 
             // // hide trailing icon if 1 chip left
@@ -738,7 +742,6 @@ export function common() {
         // Remove from data and svg
         if (window.myLine.removeStn(stnId)) {
             // Remove station from selection
-            // $(stnChipSetEl).find('#'+stnId).remove();
             stnChipSet.chips.filter(chip => chip.id === stnId)[0].beginExit();
             // $(`#panel_stations .mdc-layout-grid__inner #${stnId}`).remove();
             $(`#pivot__selection [data-value="${stnId}"]`).remove();
