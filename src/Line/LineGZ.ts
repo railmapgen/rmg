@@ -665,6 +665,12 @@ export class RMGLineGZ extends RMGLine {
 
     addStn(prep, stnId: string, loc, end) {
         var res = super.addStn(prep, stnId, loc, end);
+        if (['newupper', 'newlower'].includes(loc)) {
+            let stnInfo = getParams().stn_list[end];
+            this.stations[end] = this._initStnInstance(end, stnInfo);
+            this._updateStnInstance(end);
+            this.redrawStn(end);
+        }
         this.loadLineNum();
         this.loadDirection();
         return res;
