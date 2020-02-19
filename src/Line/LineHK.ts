@@ -188,7 +188,7 @@ export class RMGLineHK extends RMGLine {
     get stnDX() {
         // return this.turningRadius - this._branchSpacing/2;
         let {dx_a, dx_l} = this.pathTurnParams;
-        return (2 * dx_a + dx_l)/2;
+        return dx_a + dx_l/2;
     }
     get stnExtraH() {
         var [lineStart, lineEnd] = this.lineXs;
