@@ -202,6 +202,10 @@ export class RMGLineHK extends RMGLine {
         }
         return dh;
     }
+
+    /**
+     * Parameters of the arcs involved in the `<path>` element. 
+     */
     get pathTurnParams() {
         let tr = 40; // turning radius
         let dx_a = tr / 2; // dx of a
