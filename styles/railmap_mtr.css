@@ -29,11 +29,15 @@
 .Name.Current {fill: #fff;}
 .Name.Future {fill: var(--rmg-black);}
 
-.rmg-name__en.rmg-name__mtr--station {font-size: 10px;}
-.rmg-name__zh.rmg-name__mtr--station {font-size: 17px;}
+.rmg-name__en.rmg-name__mtr--station {font-size: 11px;}
+.rmg-name__zh.rmg-name__mtr--station {font-size: 18px;}
 
 .rmg-name__en.rmg-name__mtr--osi {font-size: 9px;}
 .rmg-name__zh.rmg-name__mtr--osi {font-size: 14px;}
 
 .rmg-name__en.IntName {font-size: 7px;}
 .rmg-name__zh.IntName {font-size: 10px;}
+
+rect#current_bg {
+    fill: var(--rmg-black);
+}
