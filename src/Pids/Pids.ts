@@ -4,6 +4,7 @@ export class Pids {
     protected _t?: number
     protected _duration?: number
     protected _frameRate?: number
+    protected _start?: string
     protected _destination?: string
     protected _timeTable: {
         [stnId: string]: [number, number]
@@ -23,6 +24,12 @@ export class Pids {
         if (texts.length != 4) return undefined
         let textsInt = texts.map(text => Number(text))
         return (textsInt[0] * 3600 + textsInt[1] * 60 + textsInt[2]) * this._frameRate + textsInt[4]
+    }
+
+    set start(stnId: string) {
+        if (stnId in this._line.stations) {
+            this._start = stnId
+        }
     }
 
     set destination(stnId: string) {
