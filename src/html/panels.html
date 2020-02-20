@@ -48,6 +48,17 @@
 
                 <button class="mdc-tab" role="tab" aria-selected="true">
                     <span class="mdc-tab__content">
+                        <span class="mdc-tab__icon material-icons" aria-hidden="true">ondemand_video</span>
+                        <span class="mdc-tab__text-label" trans-tag="Tab.Pids"></span>
+                    </span>
+                    <span class="mdc-tab-indicator ">
+                        <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                    </span>
+                    <span class="mdc-tab__ripple"></span>
+                </button>
+
+                <button class="mdc-tab" role="tab" aria-selected="true">
+                    <span class="mdc-tab__content">
                         <span class="mdc-tab__icon material-icons" aria-hidden="true">info</span>
                         <span class="mdc-tab__text-label" trans-tag="Tab.Info"></span>
                     </span>
@@ -79,5 +90,7 @@ ${require('./panel-layout.html')}
 ${require('./panel-design.html')}
 
 ${require('./panel-stations.html')}
+
+${require('./panel-pids.html')}
 
 ${require('./panel-info.html')}

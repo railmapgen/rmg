@@ -7,6 +7,7 @@
     "Tab.Stations": "Stations",
     "Tab.Branches": "Branches", 
     "Tab.Info": "Info", 
+    "Tab.Pids": "Pids", 
 
     "File.New": "New Canvas", 
     "File.New.Title": "Choose a Template", 
@@ -160,6 +161,13 @@
     "Stations.DeleteErr.Msg": "You are not allowed to delete this station!", 
 
     "Branches.Main": "Main",
+
+    "Pids.Duration": "Total Duration(h:m:s:f)",
+    "Pids.Framerate": "Frame rate",
+    "Pids.Destination": "The terminal station",
+    "Pids.Timetable": "Timetable",
+    "Pids.Timetable.Arrival": "Time of arrival(h:m:s:f)",
+    "Pids.Timetable.Departure": "Time of departure(h:m:s:f)",
 
     "Info.Notice": "Notice: Due to copyright, licensing and other legal restrictions, Rail Map Generator uses Noto Serif CJK and Vegur instead of MTRSung and Myriad Pro respectively for MTR-style maps. If you have obtained the license of either font, please feel free to edit the relevant code chunk of the exported SVG file.", 
     "Info.Report": "Report An Issue", 
