@@ -1,5 +1,11 @@
 # Version History
 
+## 2.14.1 (20 Feb 2020)
+
+### Resolved Issues
+
+- Fixed the incorrect colour and style with the official ones used in MTR style.  
+
 ## 2.14 (19 Feb 2020)
 
 ### New Features

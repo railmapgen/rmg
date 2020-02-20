@@ -2,6 +2,9 @@ g#dest_name {
     transform: translateY(calc(var(--rmg-svg-height) / 2 - 20px));
 }
 
+g#dest_name {
+    fill: var(--rmg-black);
+}
 g#dest_name g#platform circle {
     fill: var(--rmg-theme-colour);
 }

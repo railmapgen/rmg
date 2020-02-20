@@ -3,10 +3,34 @@ import { StationInfo, InterchangeInfo, IntInfoTag, Name } from '../types';
 import { joinIntName } from '../utils'
 
 export class RMGStationHK extends RMGStation {
-    STN_NAME_Y = -10.5;
-    STN_NAME_BASE_HEIGHT = 30.390625;
+    /**
+     * Top (in pixels) of station's Chinese name. 
+     */
+    NAME_ZH_TOP = -10.8125;
+    /**
+     * Height (in pixels) of station's Chinese name.
+     */
+    NAME_ZH_HEIGHT = 21.625;
+    /**
+     * Top (in pixels) of station's English name (1 line).
+     */
+    NAME_EN_TOP = -8;
+    /**
+     * Height (in pixels) of station's English name (1 line).
+     */
+    NAME_EN_HEIGHT = 13.21875;
+    /**
+     * Difference of `y`s of station's Chinese name and English name (1 line). (This number should used as the `dy` of the English `text` element after Chinese `text` elements. )
+     */
+    NAME_ZH_EN_GAP = 17;
+    /**
+     * Height (in pixels) from the top of station's Chinese name to the bottom of English name (1 line).
+     */
+    NAME_FULL_HEIGHT = -this.NAME_ZH_TOP + this.NAME_ZH_EN_GAP + this.NAME_EN_HEIGHT + this.NAME_EN_TOP;
+    /**
+     * Height (in pixels) of the gap between the centre of the line and the top of station's Chinese name. 
+     */
     STN_NAME_LINE_GAP = 14;
-    STN_NAME_BG_ADJUST = 0.5;
     public namePos: boolean;
 
     constructor (id: string, data: StationInfo) {
@@ -46,11 +70,11 @@ export class RMGStationHK extends RMGStation {
         if (affix === '') {
             return 0;
         } else if (affix === '_bb') {
-            return this.namePos ? 11 : -11;
+            return this.namePos ? 9.68 : -9.68;
         } else {
             let pos = this._branchPos;
-            if (pos.includes('SE') || pos.includes('SW')) {return this.namePos ? 11 : 0;}
-            if (pos.includes('NE') || pos.includes('NW')) {return this.namePos ? 0 : -11;}
+            if (pos.includes('SE') || pos.includes('SW')) {return this.namePos ? 9.68 : 0;}
+            if (pos.includes('NE') || pos.includes('NW')) {return this.namePos ? 0 : -9.68;}
         }
     }
 
@@ -62,11 +86,11 @@ export class RMGStationHK extends RMGStation {
         if (affix === '') {
             return 0;
         } else if (affix === '_bb') {
-            return this.namePos ? -11 : 11;
+            return this.namePos ? -9.68 : 9.68;
         } else {
             let pos = this._branchPos;
-            if (pos.includes('SE') || pos.includes('SW')) {return this.namePos ? 0 : 11;}
-            if (pos.includes('NE') || pos.includes('NW')) {return this.namePos ? -11 : 0;}
+            if (pos.includes('SE') || pos.includes('SW')) {return this.namePos ? 0 : 9.68;}
+            if (pos.includes('NE') || pos.includes('NW')) {return this.namePos ? -9.68 : 0;}
         }
     }
 
@@ -90,27 +114,27 @@ export class RMGStationHK extends RMGStation {
         var nameENs = this.name[1].split('\\');
 
         if (this.namePos) {
-            var dy = this.STN_NAME_LINE_GAP - this.STN_NAME_Y - this.STN_NAME_BG_ADJUST;
+            var dy = this.STN_NAME_LINE_GAP - this.NAME_ZH_TOP;
         } else {
-            var dy = -this.STN_NAME_LINE_GAP - this.STN_NAME_Y - this.STN_NAME_BASE_HEIGHT - (nameENs.length-1)*10;
+            var dy = -this.STN_NAME_LINE_GAP - this.NAME_ZH_TOP - this.NAME_FULL_HEIGHT - (nameENs.length-1)*11;
         }
         // dy -= this.STN_NAME_BG_ADJUST;
 
         if (this.state === 0) {
             $('#current_bg').attr({
-                y: this.y + dy + this.STN_NAME_Y - 1.5 + this._nameDY + this._branchDy, 
-                height: this.STN_NAME_BASE_HEIGHT + (nameENs.length-1)*10 +2 +1.5
+                y: this.y + dy + this.NAME_ZH_TOP + this._nameDY + this._branchDy - 1, 
+                height: this.NAME_FULL_HEIGHT + (nameENs.length-1)*11 + 2
             });
         }
 
         var nameENp = nameENs.shift();
 
         var nameENElem = $('<text>', {
-            dy: 15, class: 'rmg-name__en rmg-name__mtr--station'
+            dy: this.NAME_ZH_EN_GAP, class: 'rmg-name__en rmg-name__mtr--station'
         }).text(nameENp);
         while (nameENp = nameENs.shift()) {
             nameENElem.append(
-                $('<tspan>', { x: 0, dy: 10, 'alignment-baseline':'middle' }).text(nameENp)
+                $('<tspan>', { x: 0, dy: 11, 'alignment-baseline':'middle' }).text(nameENp)
             );
         }
 
@@ -527,7 +551,7 @@ export class OSI22EndStationHK extends OSI12StationHK {
         if (affix === '') {
             return !this.namePos ? -18 : 18;
         } else {
-            return !this.namePos ? -18 + 11 : 18 - 11;
+            return !this.namePos ? -18 + 9.68 : 18 - 9.68;
         }
     }
     get _intNameDX() {return (this.children[0] == 'lineend') ? 24+41 : -(24+41);}
@@ -537,7 +561,7 @@ export class OSI22EndStationHK extends OSI12StationHK {
         if (affix === '') {
             return !this.namePos ? (10) + 8.34375  : -(10) + 8.34375 - 25.03125;
         } else {
-            return !this.namePos ? (10) + 8.34375 - 11  : -(10) + 8.34375 - 25.03125 + 11;
+            return !this.namePos ? (10) + 8.34375 - 9.68  : -(10) + 8.34375 - 25.03125 + 9.68;
         }
     }
     get _osiTxtAnchor() {return (this.children[0] == 'lineend') ? 'start' : 'end';}

@@ -26,7 +26,11 @@ export function test(svgEl) {
 
     // bypass Chrome min font size (to be improved)
 
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--station, .rmg-name__en.rmg-name__mtr--station, .rmg-name__zh.IntName').each((_,el) => {
+    svgEl.find('.rmg-name__en.rmg-name__mtr--station').each((_,el) => {
+        $(el).attr('font-size', '11px');
+    });
+
+    svgEl.find('.rmg-name__en.rmg-name__gzmtr--station, .rmg-name__zh.IntName').each((_,el) => {
         $(el).attr('font-size', '10px');
     });
 
