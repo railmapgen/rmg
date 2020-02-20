@@ -62,3 +62,8 @@ rect#outer {
         HiraMinProN-W6,
         serif;
 }
+
+:root {
+    --rmg-black: #132647;
+    --rmg-grey: #A2AAAD;
+}

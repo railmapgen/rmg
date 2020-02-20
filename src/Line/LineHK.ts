@@ -144,7 +144,7 @@ export class RMGLineHK extends RMGLine {
             return y;
         } else {
             // shift 11px
-            y += y>0 ? 11 : -11;
+            y += y>0 ? 9.68 : -9.68;
             return y;
         }
     }
@@ -197,8 +197,8 @@ export class RMGLineHK extends RMGLine {
     get stnSpareH() {
         var [lineStart, lineEnd] = this.lineXs;
         var dh = ( (lineEnd-lineStart)/this.criticalPath.len - 2*this.stnDX ) / 2;
-        if (dh < 0) {
-            console.warn(`SVG width too small! ${dh}`);
+        if ((dh + this.stnExtraH) < 0) {
+            console.warn(`SVG width too small! ${dh+this.stnExtraH}`);
         }
         return dh;
     }
@@ -207,7 +207,7 @@ export class RMGLineHK extends RMGLine {
      * Parameters of the arcs involved in the `<path>` element. 
      */
     get pathTurnParams() {
-        let tr = 40; // turning radius
+        let tr = 35; // turning radius
         let dx_a = tr / 2; // dx of a
         let dy_a = tr - dx_a * Math.sqrt(3); // dy of a
         let dy_l = this._branchSpacing - 2 * dy_a; // dy of l
@@ -252,10 +252,10 @@ export class RMGLineHK extends RMGLine {
                 } else {
                     // started form branching station, this is branch line
                     if (this._stnRealY(stnIds[1]) > 0) {
-                        path.push(`M ${x},${y+11}`);
+                        path.push(`M ${x},${y+9.68}`);
                     }
                     if (this._stnRealY(stnIds[1]) < 0) {
-                        path.push(`M ${x},${y-11}`);
+                        path.push(`M ${x},${y-9.68}`);
                     }
                 }
                 return;

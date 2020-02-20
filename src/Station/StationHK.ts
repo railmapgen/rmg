@@ -46,11 +46,11 @@ export class RMGStationHK extends RMGStation {
         if (affix === '') {
             return 0;
         } else if (affix === '_bb') {
-            return this.namePos ? 11 : -11;
+            return this.namePos ? 9.68 : -9.68;
         } else {
             let pos = this._branchPos;
-            if (pos.includes('SE') || pos.includes('SW')) {return this.namePos ? 11 : 0;}
-            if (pos.includes('NE') || pos.includes('NW')) {return this.namePos ? 0 : -11;}
+            if (pos.includes('SE') || pos.includes('SW')) {return this.namePos ? 9.68 : 0;}
+            if (pos.includes('NE') || pos.includes('NW')) {return this.namePos ? 0 : -9.68;}
         }
     }
 
@@ -62,11 +62,11 @@ export class RMGStationHK extends RMGStation {
         if (affix === '') {
             return 0;
         } else if (affix === '_bb') {
-            return this.namePos ? -11 : 11;
+            return this.namePos ? -9.68 : 9.68;
         } else {
             let pos = this._branchPos;
-            if (pos.includes('SE') || pos.includes('SW')) {return this.namePos ? 0 : 11;}
-            if (pos.includes('NE') || pos.includes('NW')) {return this.namePos ? -11 : 0;}
+            if (pos.includes('SE') || pos.includes('SW')) {return this.namePos ? 0 : 9.68;}
+            if (pos.includes('NE') || pos.includes('NW')) {return this.namePos ? -9.68 : 0;}
         }
     }
 
@@ -527,7 +527,7 @@ export class OSI22EndStationHK extends OSI12StationHK {
         if (affix === '') {
             return !this.namePos ? -18 : 18;
         } else {
-            return !this.namePos ? -18 + 11 : 18 - 11;
+            return !this.namePos ? -18 + 9.68 : 18 - 9.68;
         }
     }
     get _intNameDX() {return (this.children[0] == 'lineend') ? 24+41 : -(24+41);}
@@ -537,7 +537,7 @@ export class OSI22EndStationHK extends OSI12StationHK {
         if (affix === '') {
             return !this.namePos ? (10) + 8.34375  : -(10) + 8.34375 - 25.03125;
         } else {
-            return !this.namePos ? (10) + 8.34375 - 11  : -(10) + 8.34375 - 25.03125 + 11;
+            return !this.namePos ? (10) + 8.34375 - 9.68  : -(10) + 8.34375 - 25.03125 + 9.68;
         }
     }
     get _osiTxtAnchor() {return (this.children[0] == 'lineend') ? 'start' : 'end';}
