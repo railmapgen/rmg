@@ -1,5 +1,12 @@
 # Version History
 
+## 2.15 (20 Feb 2020)
+
+### New Features
+
+- You can now add a icon indicating airport or other facility to a station in MTR style. 
+- New templates are available. 
+
 ## 2.14.1 (20 Feb 2020)
 
 ### Resolved Issues

@@ -361,6 +361,13 @@ export function updateParam() {
             param.stn_list[stnId].services = ['local'];
         }
     }
+
+    // Version 2.15
+    for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
+        if (!('usage' in stnInfo)) {
+            param.stn_list[stnId].usage = '';
+        }
+    }
     putParams(param);
 }
 

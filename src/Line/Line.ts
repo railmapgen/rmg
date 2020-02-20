@@ -603,6 +603,10 @@ export class RMGLine {
         }
     }
 
+    updateStnUsage(stnId: string, chipId) {
+        //
+    }
+
     updateStnServices(stnId: string, detail: {chipId: 'local'|'express', selected: boolean}) {
         if (detail.selected) {
             if (this.stations[stnId].services.has(detail.chipId)) {

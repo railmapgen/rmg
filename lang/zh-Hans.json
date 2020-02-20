@@ -115,9 +115,7 @@
     "Stations.Edit.Name": "名称", 
     "Stations.Edit.Interchange": "换乘", 
     "Stations.Edit.Branch": "支线", 
-
-    "Stations.Name.Services.Local": "普通车", 
-    "Stations.Name.Services.Express": "快车", 
+    "Stations.Edit.More": "更多", 
 
     "Stations.Interchange.Within": "站内换乘",
     "Stations.Interchange.OSI": "出站换乘",
@@ -150,6 +148,12 @@
     "Stations.Branch.Pos.Title": "支线位置", 
     "Stations.Branch.Pos.Upper": "上方", 
     "Stations.Branch.Pos.Lower": "下方", 
+
+    "Stations.More.Services.Local": "普通车", 
+    "Stations.More.Services.Express": "快车", 
+    "Stations.More.Usage.Airport": "机场", 
+    "Stations.More.Usage.HSR": "高铁", 
+    "Stations.More.Usage.Disney": "迪士尼", 
     
     "Stations.Delete.Title": "警告", 
     "Stations.Delete.Msg1": "是否确认删除车站", 

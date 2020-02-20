@@ -32,9 +32,11 @@ export class RMGStationHK extends RMGStation {
      */
     STN_NAME_LINE_GAP = 14;
     public namePos: boolean;
+    public usage: 'airport' | 'disney' | 'hsr' | '';
 
     constructor (id: string, data: StationInfo) {
         super(id, data);
+        this.usage = data.usage || '';
     }
 
     /**
@@ -110,6 +112,8 @@ export class RMGStationHK extends RMGStation {
         });
     }
 
+    get _nameDX() {return 0;}
+
     get nameHTML() {
         var nameENs = this.name[1].split('\\');
 
@@ -119,6 +123,21 @@ export class RMGStationHK extends RMGStation {
             var dy = -this.STN_NAME_LINE_GAP - this.NAME_ZH_TOP - this.NAME_FULL_HEIGHT - (nameENs.length-1)*11;
         }
         // dy -= this.STN_NAME_BG_ADJUST;
+
+        let usageDX: number;
+        if (this.usage === '') {
+            usageDX = 0
+        } else {
+            if (this._nameDX === 0) {
+                usageDX = (this.NAME_FULL_HEIGHT + 2 + 3) / 2;
+                // 2: padding top and bottom
+                // 3: margin
+            } else if (this._nameDX < 0) {
+                usageDX = 0;
+            } else {
+                usageDX = this.NAME_FULL_HEIGHT + 2 + 3 + this._nameDX;
+            }
+        }
 
         if (this.state === 0) {
             $('#current_bg').attr({
@@ -130,23 +149,43 @@ export class RMGStationHK extends RMGStation {
         var nameENp = nameENs.shift();
 
         var nameENElem = $('<text>', {
-            dy: this.NAME_ZH_EN_GAP, class: 'rmg-name__en rmg-name__mtr--station'
+            x: usageDX, dy: this.NAME_ZH_EN_GAP, class: 'rmg-name__en rmg-name__mtr--station'
         }).text(nameENp);
         while (nameENp = nameENs.shift()) {
             nameENElem.append(
-                $('<tspan>', { x: 0, dy: 11, 'alignment-baseline':'middle' }).text(nameENp)
+                $('<tspan>', { x: usageDX, dy: 11, 'alignment-baseline':'middle' }).text(nameENp)
             );
         }
 
         return $('<g>', {
+            id: 'stn_name',
             transform: `translate(${this.x + this._nameDX},${this.y + dy + this._nameDY + this._branchDy})`, 
             'text-anchor': this._nameTxtAnchor, 
             'class': `Name ${this.nameClass}`
         }).append(
-            $('<text>').addClass('rmg-name__zh rmg-name__mtr--station').text(this.name[0])
+            $('<text>', {x:usageDX}).addClass('rmg-name__zh rmg-name__mtr--station').text(this.name[0])
         ).append(
             nameENElem
         );
+    }
+
+    get usageIconHTML() {
+        if (this.usage === '') {return false;}
+        let stnNameDim = ($(`#stn_icons #${this.id} g#stn_name`)[0] as Element as SVGGElement).getBBox();
+        let x: number;
+        if (this._nameDX === 0) {
+            x = - (stnNameDim.width + 3) / 2;
+        } else if (this._nameDX < 0) {
+            x = - (this.NAME_FULL_HEIGHT + 2)/2 - stnNameDim.width + this._nameDX;
+        } else {
+            x = this._nameDX + (this.NAME_FULL_HEIGHT + 2) /2;
+        }
+        return $('<use>', {
+            fill: this.state===-1 ? 'var(--rmg-grey)' : 'var(--rmg-black)',
+            'xlink:href': '#' + this.usage, 
+            y: this.NAME_ZH_TOP - 1 + (this.name[1].split('\\').length-1)*5.5,
+            x: x
+        });
     }
 }
 
