@@ -1,5 +1,15 @@
 # Version History
 
+## 2.15.1 (21 Feb 2020)
+
+### Known Issues
+
+- Fonts for Chinese characters may be missing in MTR style. (Workaround: Wait for serveral seconds before selecting 'Download'. )
+
+### Resolved Issues
+
+- Fixed the issues that fonts incorrectly rendered in exported PNG in MTR style. 
+
 ## 2.15 (20 Feb 2020)
 
 ### New Features

@@ -10,9 +10,10 @@ declare global {
         myLine?: RMGLine;
         urlParams?: URLSearchParams;
         gtag: any;
+        // test3: any;
     }
 }
-
+// window.test3 = test3;
 var requestLang = window.urlParams.get('lang') || localStorage.rmgLang || navigator.language.split('-').slice(0,2).join('-');
 switch (requestLang.toLowerCase()) {
     case 'zh-cn':

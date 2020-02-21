@@ -1,4 +1,4 @@
-import { getParams, getTransText, test, describeParams } from '../utils';
+import { getParams, getTransText, test, describeParams, test2 } from '../utils';
 import { RMGParam } from '../types';
 import { RMGLine } from '../Line/Line';
 import { MDCDialog } from '@material/dialog';
@@ -125,6 +125,7 @@ export function common() {
             .attr('style', `max-width:${MAX_WIDTH+50}px;`);
     }
     previewDialog.listen('MDCDialog:opened', event => {
+        (<HTMLButtonElement>$('#preview_diag button[data-mdc-dialog-action="png"]')[0]).disabled = true;
         var svgId = $(event.target).attr('for');
         var [thisSVGWidth, thisSVGHeight] = [
             svgId=='railmap' ? getParams().svg_width : getParams().svg_dest_width, 
@@ -160,8 +161,18 @@ export function common() {
             .prepend(document.querySelector('style#global').outerHTML);
         
         $(event.target).find('svg [style="display: none;"]').remove();
+        if (window.urlParams.get('style') === 'mtr') {
+            test2($(event.target).find('svg')[0])
+                .then(() => {
+                    console.log('ok');
+                    (<HTMLButtonElement>$('#preview_diag button[data-mdc-dialog-action="png"]')[0]).disabled = false;
+                });
+        } else {
+            (<HTMLButtonElement>$('#preview_diag button[data-mdc-dialog-action="png"]')[0]).disabled = false;
+        }
     });
     previewDialog.listen('MDCDialog:closed', (event: CustomEvent) => {
+        $('head > style#googlefonts').remove();
         if (event.detail.action === 'close') {
             $(event.target).removeAttr('for').find('.mdc-dialog__content').empty();
             return;
