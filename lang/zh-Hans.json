@@ -165,7 +165,8 @@
 
     "Pids.Duration": "视频时长(时:分:秒:帧)",
     "Pids.Framerate": "视频帧率",
-    "Pids.Destination": "本次列车终点站",
+    "Pids.Start": "本次列车始发站",
+    "Pids.End": "本次列车终点站",
     "Pids.Timetable": "时刻表",
     "Pids.Timetable.Arrival": "到达时刻(时:分:秒:帧)",
     "Pids.Timetable.Departure": "出发时刻(时:分:秒:帧)",

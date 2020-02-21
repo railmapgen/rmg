@@ -168,7 +168,8 @@
 
     "Pids.Duration": "Total Duration(h:m:s:f)",
     "Pids.Framerate": "Frame rate",
-    "Pids.Destination": "The terminal station",
+    "Pids.Start": "The start station",
+    "Pids.End": "The terminal station",
     "Pids.Timetable": "Timetable",
     "Pids.Timetable.Arrival": "Time of arrival(h:m:s:f)",
     "Pids.Timetable.Departure": "Time of departure(h:m:s:f)",
