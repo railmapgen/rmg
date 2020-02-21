@@ -40,7 +40,9 @@ class RMGStationSH extends RMGStation {
             $('<text>').addClass('rmg-name__zh rmg-name__shmetro--station').text(this.name[0])
         ).append(
             $('<text>', {
-                dy: 15, class: 'rmg-name__en rmg-name__shmetro--station'
+                class: 'rmg-name__en rmg-name__shmetro--station',
+                'font-size': '60%',
+                dy: 12,
             }).text(this.name[1].split('\\')[0]).append(
                 $('<tspan>', {
                     'x': 0, 'dy': 12
@@ -98,7 +100,7 @@ class IntStationSH extends RMGStationSH {
                 $('<text>', {
                     class: 'rmg-name__en rmg-name__shmetro--station',
                     'font-size': '60%',
-                    dy: 15,
+                    dy: 12,
                 }).text(this.name[1].split('\\')[0]).append(
                     $('<tspan>', {
                         'x': 0, 'dy': 12
@@ -200,11 +202,8 @@ class OSIStationSH extends IntStationSH {
         let dx = bcr.right - bcr.left + 5
 
         // get the all names from the out of station changes
-        let lineNames = ''
-        this._osiInfos.map((stn)=>{
-            lineNames += stn[IntInfoTag.nameZH] + '，'
-        })
-        lineNames = lineNames.slice(0, -1)
+        let lineNames: string[] = []
+        this._osiInfos.map((stn) => lineNames.push(stn[IntInfoTag.nameZH]))
 
         return $('<g>', {
             class: `Name Future`,  // todo: fix this
@@ -213,7 +212,7 @@ class OSIStationSH extends IntStationSH {
             'text-anchor': 'middle',
             'font-size': '50%',
         }).append(
-            $('<text>').addClass('rmg-name__zh rmg-name__shmetro--station').text(`换乘${lineNames}`)
+            $('<text>').addClass('rmg-name__zh rmg-name__shmetro--station').text(`换乘${lineNames.join('，')}`)
         ).append(
             $('<text>', {
                 dy: 10, class: 'rmg-name__en rmg-name__shmetro--station'
