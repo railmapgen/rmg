@@ -40,7 +40,9 @@ class RMGStationSH extends RMGStation {
             $('<text>').addClass('rmg-name__zh rmg-name__shmetro--station').text(this.name[0])
         ).append(
             $('<text>', {
-                dy: 15, class: 'rmg-name__en rmg-name__shmetro--station'
+                class: 'rmg-name__en rmg-name__shmetro--station',
+                'font-size': '60%',
+                dy: 12,
             }).text(this.name[1].split('\\')[0]).append(
                 $('<tspan>', {
                     'x': 0, 'dy': 12
@@ -98,7 +100,7 @@ class IntStationSH extends RMGStationSH {
                 $('<text>', {
                     class: 'rmg-name__en rmg-name__shmetro--station',
                     'font-size': '60%',
-                    dy: 15,
+                    dy: 12,
                 }).text(this.name[1].split('\\')[0]).append(
                     $('<tspan>', {
                         'x': 0, 'dy': 12
