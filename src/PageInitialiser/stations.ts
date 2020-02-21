@@ -9,6 +9,7 @@ import { MDCRipple } from '@material/ripple';
 import { MDCSwitch } from '@material/switch';
 import { MDCSnackbar } from '@material/snackbar';
 import { RMGLineGZ } from '../Line/LineGZ';
+import { RMGLineHK } from '../Line/LineHK';
 
 const getStnChip = (id: string, names: Name, num: string) => {
     let chipEl = $('<div>', { id, class: 'mdc-chip', role: 'row' })
@@ -147,9 +148,6 @@ export function common() {
     const [stnAddPrepSelect, stnAddPivotSelect, stnAddLocSelect, stnAddEndSelect] = 
         ['#prep', '#pivot', '#loc', '#end'].map(selector => new MDCSelect($('#stn_add_diag').find(selector)[0]));
 
-    const servicesChipSetEl = $('#stn_edit_diag #panel_name .mdc-chip-set')[0];
-    const servicesChipSet = new MDCChipSet(servicesChipSetEl);
-
     const stnModifyNameFields = 
         ['#name_zh', '#name_en'].map(selector => new MDCTextField($('#stn_edit_diag').find(selector)[0]));
     const stnModifyNumField = new MDCTextField($('#stn_edit_diag #stn_num')[0]);
@@ -176,6 +174,11 @@ export function common() {
     const [throughSelects, firstSelects, posSelects] = 
         ['through', 'first', 'pos']
             .map(selector => ['left', 'right'].map(direc => new MDCSelect($(`#${direc}_${selector}`)[0])));
+
+    const usageChipSetEl = $('#stn_edit_diag #panel_more #usage.mdc-chip-set')[0];
+    const usageChipSet = new MDCChipSet(usageChipSetEl);
+    const servicesChipSetEl = $('#stn_edit_diag #panel_more #services.mdc-chip-set')[0];
+    const servicesChipSet = new MDCChipSet(servicesChipSetEl);
 
     let stnList = getParams().stn_list;
     window.myLine.tpo.forEach(stnId => {
@@ -352,14 +355,13 @@ export function common() {
         [...throughSelects, ...firstSelects, ...posSelects]
             .map(select => select.layout());
     };
+    const focusMore = () => {
+        //
+    };
 
     const initName = (stnInfo: StationInfo) => {
         stnModifyNameFields.forEach((textfield, i) => textfield.value = stnInfo.name[i]);
-        stnModifyNumField.value = stnInfo.num; 
-
-        servicesChipSet.chips.forEach(chip => {
-            chip.selected = stnInfo.services.includes(chip.id as 'local' | 'express');
-        });
+        stnModifyNumField.value = stnInfo.num;
     };
     const initInterchange = (stnInfo: StationInfo) => {
         $(intChipSetEls).empty();
@@ -435,22 +437,36 @@ export function common() {
         });
     };
 
+    const initMore = (stnInfo: StationInfo) => {
+        usageChipSet.chips.forEach(chip => {
+            chip.selected = stnInfo.usage === chip.id;
+        });
+        servicesChipSet.chips.forEach(chip => {
+            chip.selected = stnInfo.services.includes(chip.id as 'local' | 'express');
+        });
+    };
+
     stnTransferTabBar.listen('MDCTabBar:activated', (event: any) => {
         switch (event.detail.index) {
             case 0:
                 $('#panel_name').show();
-                $('#panel_interchange, #panel_branch').hide();
+                $('#panel_interchange, #panel_branch, #panel_more').hide();
                 focusName();
                 break;
             case 1:
                 $('#panel_interchange').show();
-                $('#panel_name, #panel_branch').hide();
+                $('#panel_name, #panel_branch, #panel_more').hide();
                 focusInterchange();
                 break;
             case 2:
-                $('#panel_name, #panel_interchange').hide();
+                $('#panel_name, #panel_interchange, #panel_more').hide();
                 $('#panel_branch').show();
                 focusBranch();
+                break;
+            case 3:
+                $('#panel_name, #panel_interchange, #panel_branch').hide();
+                $('#panel_more').show();
+                focusMore();
         }
     });
 
@@ -473,12 +489,14 @@ export function common() {
         initName(stnInfo);
         initInterchange(stnInfo);
         initBranch(stnInfo);
+        initMore(stnInfo);
     });
 
     stnEditDialog.listen('MDCDialog:opened', event => {
         focusName();
         focusInterchange();
         focusBranch();
+        focusMore();
     });
 
     servicesChipSet.listen('MDCChip:selection', (event: CustomEvent) => {
@@ -491,6 +509,11 @@ export function common() {
         let stnId = $('#stn_edit_diag').attr('for');
         window.myLine.updateStnServices(stnId, event.detail);
     });
+
+    usageChipSet.listen('MDCChip:selection', (event: CustomEvent) => {
+        let stnId = $('#stn_edit_diag').attr('for');
+        window.myLine.updateStnUsage(stnId, usageChipSet.selectedChipIds[0] || '');
+    })
 
     intChipAddButtonEls.forEach((button, i) => {
         $(button).on('click', event => {

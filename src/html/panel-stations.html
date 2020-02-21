@@ -190,7 +190,7 @@
                                         <span class="mdc-tab__ripple"></span>
                                     </button>
 
-                                    <button class="mdc-tab" role="tab" aria-selected="true" tabindex="0">
+                                    <button class="mdc-tab" role="tab" aria-selected="false">
                                         <span class="mdc-tab__content">
                                             <span class="mdc-tab__icon material-icons" aria-hidden="true">transfer_within_a_station</span>
                                             <span class="mdc-tab__text-label" trans-tag="Stations.Edit.Interchange"></span>
@@ -201,10 +201,21 @@
                                         <span class="mdc-tab__ripple"></span>
                                     </button>
 
-                                    <button class="mdc-tab" role="tab" aria-selected="true">
+                                    <button class="mdc-tab" role="tab" aria-selected="false">
                                         <span class="mdc-tab__content">
                                             <span class="mdc-tab__icon material-icons" aria-hidden="true">share</span>
                                             <span class="mdc-tab__text-label" trans-tag="Stations.Edit.Branch"></span>
+                                        </span>
+                                        <span class="mdc-tab-indicator">
+                                            <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                        </span>
+                                        <span class="mdc-tab__ripple"></span>
+                                    </button>
+
+                                    <button class="mdc-tab" role="tab" aria-selected="false">
+                                        <span class="mdc-tab__content">
+                                            <span class="mdc-tab__icon material-icons" aria-hidden="true">more_horiz</span>
+                                            <span class="mdc-tab__text-label" trans-tag="Stations.Edit.More"></span>
                                         </span>
                                         <span class="mdc-tab-indicator">
                                             <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
@@ -271,36 +282,7 @@
                                     </div>
                                 </div>
 
-                                <div class="mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--align-middle" style="display: none;" gzmtr-specific>
-                                    <div class="mdc-chip-set mdc-chip-set--filter" role="grid">
-                                        <div class="mdc-chip" role="row" id="local">
-                                            <div class="mdc-chip__ripple"></div>
-                                            <span class="mdc-chip__checkmark" >
-                                                <svg class="mdc-chip__checkmark-svg" viewBox="-2 -3 30 30">
-                                                    <path class="mdc-chip__checkmark-path" fill="none" stroke="black" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
-                                                </svg>
-                                            </span>
-                                            <span role="gridcell">
-                                                <span role="checkbox" tabindex="0" aria-checked="false" class="mdc-chip__primary-action">
-                                                    <span class="mdc-chip__text" trans-tag="Stations.Name.Services.Local"></span>
-                                                </span>
-                                            </span>
-                                        </div>
-                                        <div class="mdc-chip" role="row" id="express">
-                                            <div class="mdc-chip__ripple"></div>
-                                            <span class="mdc-chip__checkmark" >
-                                                <svg class="mdc-chip__checkmark-svg" viewBox="-2 -3 30 30">
-                                                    <path class="mdc-chip__checkmark-path" fill="none" stroke="black" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
-                                                </svg>
-                                            </span>
-                                            <span role="gridcell">
-                                                <span role="checkbox" aria-checked="false" class="mdc-chip__primary-action">
-                                                    <span class="mdc-chip__text" trans-tag="Stations.Name.Services.Express"></span>
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -566,6 +548,58 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="panel_more" style="display: none;">
+                        <div id="usage" class="mdc-chip-set mdc-chip-set--choice" role="grid" style="display: none;" mtr-specific>
+                            <div class="mdc-chip" role="row" id="airport">
+                                <div class="mdc-chip__ripple"></div>
+                                <span role="gridcell">
+                                    <span role="button" tabindex="0" aria-checked="false" class="mdc-chip__text" trans-tag="Stations.More.Usage.Airport"></span>
+                                </span>
+                            </div>
+                            <div class="mdc-chip" role="row" id="hsr">
+                                <div class="mdc-chip__ripple"></div>
+                                <span role="gridcell">
+                                    <span role="button" tabindex="0" aria-checked="false" class="mdc-chip__text" trans-tag="Stations.More.Usage.HSR"></span>
+                                </span>
+                            </div>
+                            <div class="mdc-chip" role="row" id="disney">
+                                <div class="mdc-chip__ripple"></div>
+                                <span role="gridcell">
+                                    <span role="button" tabindex="0" aria-checked="false" class="mdc-chip__text" trans-tag="Stations.More.Usage.Disney"></span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div id="services" class="mdc-chip-set mdc-chip-set--filter" role="grid" style="display: none;" gzmtr-specific>
+                            <div class="mdc-chip" role="row" id="local">
+                                <div class="mdc-chip__ripple"></div>
+                                <span class="mdc-chip__checkmark" >
+                                    <svg class="mdc-chip__checkmark-svg" viewBox="-2 -3 30 30">
+                                        <path class="mdc-chip__checkmark-path" fill="none" stroke="black" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                                    </svg>
+                                </span>
+                                <span role="gridcell">
+                                    <span role="checkbox" tabindex="0" aria-checked="false" class="mdc-chip__primary-action">
+                                        <span class="mdc-chip__text" trans-tag="Stations.More.Services.Local"></span>
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="mdc-chip" role="row" id="express">
+                                <div class="mdc-chip__ripple"></div>
+                                <span class="mdc-chip__checkmark" >
+                                    <svg class="mdc-chip__checkmark-svg" viewBox="-2 -3 30 30">
+                                        <path class="mdc-chip__checkmark-path" fill="none" stroke="black" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                                    </svg>
+                                </span>
+                                <span role="gridcell">
+                                    <span role="checkbox" aria-checked="false" class="mdc-chip__primary-action">
+                                        <span class="mdc-chip__text" trans-tag="Stations.More.Services.Express"></span>
+                                    </span>
+                                </span>
                             </div>
                         </div>
                     </div>

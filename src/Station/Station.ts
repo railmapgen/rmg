@@ -36,7 +36,6 @@ export class RMGStation {
     }
 
     get _nameTxtAnchor() {return 'middle';}
-    get _nameDX() {return 0;}
     get _nameDY() {return 0;}
 
     get nameHTML() {

@@ -49,6 +49,7 @@ export interface StationInfo {
      */
     interchange?: any;
     change_type?: string;
+    usage?: 'airport' | 'disney' | 'hsr' | '';
 };
 
 export enum IntInfoTag {

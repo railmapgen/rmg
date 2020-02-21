@@ -1,6 +1,6 @@
 import { RMGLine } from './Line';
 import { RMGParam, Name, DirectionLong, StationInfo } from '../types';
-import { getTxtBoxDim, setParams } from '../utils';
+import { getTxtBoxDim, setParams, getParams, putParams } from '../utils';
 import { RMGStationHK, Int2StationHK, Int3LStationHK, Int3RStationHK, OSI11LStationHK, OSI12LStationHK, OSI12RStationHK, OSI22EndStationHK, OSI22LStationHK, OSI22RStationHK, OSI11RStationHK, OSI22StationHK } from '../Station/StationHK';
 
 export class RMGLineHK extends RMGLine {
@@ -14,7 +14,7 @@ export class RMGLineHK extends RMGLine {
     constructor (param: RMGParam) {
         super(param);
 
-        this.txtFlip = param.txt_flip;
+        this._txtFlip = param.txt_flip;
         this._charForm = param.char_form;
         this._destLegacy = param.dest_legacy;
     }
@@ -171,12 +171,26 @@ export class RMGLineHK extends RMGLine {
         $('.rmg-name__zh').addClass(`rmg-name__char-${this._charForm}`);
     }
 
+    drawStns() {
+        super.drawStns();
+        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
+            let el = stnInstance.usageIconHTML;
+            if (el === false) {
+                continue;
+            } else {
+                $(`#stn_icons #${stnId} g#stn_name`).append(el);
+                $(`#stn_icons #${stnId}`).html($(`#stn_icons #${stnId}`).html()); // Refresh DOM
+            }
+        }
+    }
+
     /**
      * Update background of current station name. `y` and `height` are changed while station icon is re-drawn and `RMGStation.nameHTML` is loaded. 
      */
     updateStnNameBg() {
         var stnNameDim = getTxtBoxDim(
-            $(`#stn_icons > #${this._currentStnId} g.Name`)[0] as Element as SVGGraphicsElement,
+            $(`#stn_icons > #${this._currentStnId} g#stn_name`)[0] as Element as SVGGraphicsElement,
             'railmap'
         );
         $('#current_bg').attr({
@@ -342,6 +356,16 @@ export class RMGLineHK extends RMGLine {
         super.updateStnName(stnId, names);
 
         this.loadFonts();
+
+        let stnInstance = this.stations[stnId];
+        let el = stnInstance.usageIconHTML;
+        if (el === false) {
+            return;
+        } else {
+            $(`#stn_icons #${stnId} g#stn_name`).append(el);
+            $(`#stn_icons #${stnId}`).html($(`#stn_icons #${stnId}`).html()); // Refresh DOM
+        }
+
         if (stnId == this._currentStnId) {this.updateStnNameBg();}
     }
 
@@ -349,6 +373,29 @@ export class RMGLineHK extends RMGLine {
         super.updateStnTransfer(stnId, type, info);
         this.loadFonts();
         this.updateStnNameBg();
+    }
+
+    updateStnUsage(stnId: string, chipId) {
+        if (this.stations[stnId].usage === chipId) {return;}
+
+        this.stations[stnId].usage = chipId;
+        let param = getParams();
+        param.stn_list[stnId].usage = chipId;
+        putParams(param);
+
+        $(`#stn_icons #${stnId}`).remove();
+        $('#stn_icons').append(this.stations[stnId].html);
+        $('#stn_icons').html($('#stn_icons').html());
+        this.loadFonts();
+        let el = this.stations[stnId].usageIconHTML;
+        if (el !== false) {
+            $(`#stn_icons #${stnId} g#stn_name`).append(el);
+            $(`#stn_icons #${stnId}`).html($(`#stn_icons #${stnId}`).html()); // Refresh DOM
+        }
+
+        if (this._currentStnId === stnId) {
+            this.updateStnNameBg();
+        }
     }
 
     addStn(prep: 'before' | 'after', stnId: string, loc, end: string) {
@@ -387,6 +434,7 @@ export class RMGLineHK extends RMGLine {
 
     static initSVG(line) {
         super.initSVG(line);
+        line.txtFlip = line._txtFlip;
         line.loadFonts();
         line.updateStnNameBg();
     }

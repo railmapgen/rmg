@@ -117,9 +117,7 @@
     "Stations.Edit.Name": "Name", 
     "Stations.Edit.Interchange": "Interchange", 
     "Stations.Edit.Branch": "Branch", 
-
-    "Stations.Name.Services.Local": "Stopping", 
-    "Stations.Name.Services.Express": "Express", 
+    "Stations.Edit.More": "More", 
 
     "Stations.Interchange.Within": "Within-station Interchange",
     "Stations.Interchange.OSI": "Out-of-station Interchange",
@@ -152,6 +150,12 @@
     "Stations.Branch.Pos.Title": "Branch Position", 
     "Stations.Branch.Pos.Upper": "Upper", 
     "Stations.Branch.Pos.Lower": "Lower", 
+
+    "Stations.More.Services.Local": "Stopping", 
+    "Stations.More.Services.Express": "Express", 
+    "Stations.More.Usage.Airport": "Airport", 
+    "Stations.More.Usage.HSR": "High Speed Rail", 
+    "Stations.More.Usage.Disney": "Disneyland Resort", 
 
     "Stations.Delete.Title": "Warning", 
     "Stations.Delete.Msg1": "Are you sure to delete station", 
