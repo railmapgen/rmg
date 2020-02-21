@@ -13,7 +13,14 @@ export interface BranchInfo {
  * Array of name `string`s. The first element is in Chinese characters and the second element is in Latin characters. 
  */
 export type Name = [string, string];
-
+/**
+ * Array of PidsTimeInfo `Number`s. The first element is the arrival time of the station and the second element is departure time of the station. 
+ */
+// Todo: waiting for review
+type PidsTimeInfo = [Number, Number]
+export type PidsTimeTable = {
+    [T in string]: PidsTimeInfo;
+};
 
 export interface StationInfo {
     /**

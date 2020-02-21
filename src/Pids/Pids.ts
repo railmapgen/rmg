@@ -1,4 +1,5 @@
 import { RMGLine } from '../Line/Line'
+import { PidsTimeTable } from '../types'
 
 export class Pids {
     protected _t?: number
@@ -7,14 +8,14 @@ export class Pids {
     protected _start: string
     protected _end: string
     protected _timeTable: {
-        [stnId: string]: [number, number]
+        [stnId: string]: [Number, Number]
     } = {}
     protected _line: RMGLine
 
     constructor(line: RMGLine) {
         this._line = line
         this._start = this._line.routes[0].filter(stnId => stnId !== 'lineend' && stnId !== 'linestart')[0]
-        this._end =  this._line.routes[0].filter(stnId => stnId !== 'lineend' && stnId !== 'linestart').reverse()[0]
+        this._end = this._line.routes[0].filter(stnId => stnId !== 'lineend' && stnId !== 'linestart').reverse()[0]
     }
 
     /**
@@ -46,6 +47,13 @@ export class Pids {
                 // update the time table
                 route.map(stnId => this._timeTable[stnId] = [0, 0])
             })
+    }
+
+    // Todo: how to declare a dict
+    protected updateTimeTable(timeTable: PidsTimeTable) {
+        for (let stnId in timeTable) {
+            this._timeTable[stnId]
+        }
     }
 
     set start(stnId: string) {
