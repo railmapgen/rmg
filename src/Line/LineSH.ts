@@ -356,6 +356,10 @@ export class RMGLineSH extends RMGLine {
         $('#current_bg').hide();  // fix the mysterious black rect
     }
 
+    drawAnimation() {
+        
+    }
+
     // rewrite this to make sure the line is draw before color
     static initSVG(line) {
         line.drawSVGFrame();

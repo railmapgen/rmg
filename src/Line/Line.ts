@@ -538,6 +538,11 @@ export class RMGLine {
         return path.join(' ');
     }
 
+    /**
+     * Stub for draw Animation. Rewrite this if you want to support pids.
+     */
+    drawAnimation() { }
+
     drawLine() {
         this.branches.map((branch,i) => {
             var lineMainStns = branch.filter(stnId => this.stations[stnId].state >= 0);

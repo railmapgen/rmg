@@ -125,5 +125,7 @@ export class Pids {
         }
 
         this._line.currentStnId = currentStnId
+
+        this._line.drawAnimation()
     }
 }
