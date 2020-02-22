@@ -543,6 +543,12 @@ export class RMGLine {
      */
     drawAnimation() { }
 
+    /**
+     * Stub for clear Animation. Rewrite this if you want to support pids.
+     * Todo: call this when the user leaves the PIDS tab.
+     */
+    clearAnimation() { }
+
     drawLine() {
         this.branches.map((branch,i) => {
             var lineMainStns = branch.filter(stnId => this.stations[stnId].state >= 0);

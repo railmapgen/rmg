@@ -52,7 +52,7 @@ export class Pids {
 
     // Todo: how to declare a dict
     protected updateTimeTable(timeTable: PidsTimeTableUI) {
-        for (let stnId in timeTable) {
+        for (let stnId in this._timeTable) {
             this._timeTable[stnId] = [
                 this._getFrame(timeTable[stnId][0]),
                 this._getFrame(timeTable[stnId][0])
