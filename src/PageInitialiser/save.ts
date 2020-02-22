@@ -125,7 +125,6 @@ export function common() {
             .attr('style', `max-width:${MAX_WIDTH+50}px;`);
     }
     previewDialog.listen('MDCDialog:opened', event => {
-        (<HTMLButtonElement>$('#preview_diag button[data-mdc-dialog-action="png"]')[0]).disabled = true;
         var svgId = $(event.target).attr('for');
         var [thisSVGWidth, thisSVGHeight] = [
             svgId=='railmap' ? getParams().svg_width : getParams().svg_dest_width, 
@@ -163,23 +162,33 @@ export function common() {
         $(event.target).find('svg [style="display: none;"]').remove();
         if (window.urlParams.get('style') === 'mtr') {
             test2($(event.target).find('svg')[0])
-                .then(() => {
-                    console.log('ok');
-                    (<HTMLButtonElement>$('#preview_diag button[data-mdc-dialog-action="png"]')[0]).disabled = false;
-                });
+                .then(response => {
+                    Promise.all(response)
+                        .then(uris => {
+                            $(event.target).find('svg').prepend($('<style>').text(uris.join(' ')));
+                        })
+                        .then(() => {
+                            // (<any>document).fonts.ready.then(() => {
+                            //     console.log('fonts loaded?');
+                                (<HTMLButtonElement>$('#preview_diag button[data-mdc-dialog-action="png"]')[0]).disabled = false;
+                            // })
+                            
+                        })
+                })
         } else {
             (<HTMLButtonElement>$('#preview_diag button[data-mdc-dialog-action="png"]')[0]).disabled = false;
         }
     });
     previewDialog.listen('MDCDialog:closed', (event: CustomEvent) => {
         $('head > style#googlefonts').remove();
+        (<HTMLButtonElement>$('#preview_diag button[data-mdc-dialog-action="png"]')[0]).disabled = true;
         if (event.detail.action === 'close') {
             $(event.target).removeAttr('for').find('.mdc-dialog__content').empty();
             return;
         }
 
         if (event.detail.action === 'png') {
-            test($(event.target).removeAttr('for').find('svg'));
+            test($(event.target).removeAttr('for').find('svg') as JQuery<Element>);
             $(event.target).find('.mdc-dialog__content').empty();
             return;
         }

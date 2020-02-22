@@ -1,5 +1,11 @@
 # Version History
 
+## 2.15.2 (22 Feb 2020)
+
+### Resolved Issues
+
+- Improved semantics of font rendering process in MTR style. 
+
 ## 2.15.1 (21 Feb 2020)
 
 ### Known Issues

@@ -18,7 +18,17 @@ rect#outer {
     stroke: none;
 }
 
-.rmg-name__zh {dominant-baseline:central;}
+.rmg-name__zh {
+    dominant-baseline:central;
+    font-family: 
+        Vegur, Helvetica,
+        Noto Serif KR,
+        Noto Serif JP,
+        Noto Serif SC,
+        Noto Serif TC,
+        HiraMinProN-W6,
+        serif;
+}
 .rmg-name__en {
     dominant-baseline: middle;
     font-family: Vegur, Helvetica, sans-serif;

@@ -14,12 +14,15 @@ export function setParams(key: Extract<keyof RMGParam, string>, data: any) {
     putParams(param);
 }
 
-export function test(svgEl) {
+export function test(svgEl: JQuery<Element>) {
     var [svgW, svgH] = svgEl.attr('viewBox').split(' ').slice(2);
+    svgEl.attr({
+        width: svgW, height: svgH
+    });
 
     var canvas = <HTMLCanvasElement> $('canvas')[0];
     $('canvas').attr({
-        width: svgW*2.5, height:svgH*2.5
+        width: Number(svgW)*2.5, height:Number(svgH)*2.5
     });
     var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -34,7 +37,9 @@ export function test(svgEl) {
         $(el).attr('font-size', '10px');
     });
 
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--next2-dest').each((_,el) => $(el).attr('font-size', '8.5px'));
+    svgEl.find('.rmg-name__en.rmg-name__gzmtr--next2-dest').each((_,el) => {
+        $(el).attr('font-size', '8.5px')
+    });
 
     svgEl.find('.rmg-name__en.rmg-name__gzmtr--int').each((_,el) => {
         $(el).attr('font-size', '8px');
@@ -72,12 +77,20 @@ export function test(svgEl) {
 
     var img = new Image();
     img.onload = function() {
-        ctx.drawImage(img, 0, 0, svgW*2.5, svgH*2.5);
-        saveAs(
-            (<HTMLCanvasElement>$('canvas')[0]).toDataURL('image/png'), 
-            'rmg_export'
-        );
-    }
+        setTimeout(() => {
+            ctx.drawImage(img, 0, 0, Number(svgW)*2.5, Number(svgH)*2.5)
+            saveAs(
+                (<HTMLCanvasElement>$('canvas')[0]).toDataURL('image/png'), 
+                'rmg_export'
+            );
+        }, 2000)
+    };
+    // img.onloadend = () => {
+    //     console.log('img loaded')
+    // }
+    img.addEventListener('loadend', () => {
+        console.log('img loaded')
+    })
     img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl[0].outerHTML)));
 }
 
@@ -385,75 +398,63 @@ export const getTransText = (obj: {[index: string]: string}, lang: string) => {
     return obj[langFallback(lang).find(l => obj[l])];
 }
 
-const getRFFHelperChrome = (char, charForm): Promise<string> => {
-    console.log(char, charForm)
+const getRFFHelper = (char, charForm): Promise<string> => {
+    // console.log(char, charForm)
     return (<any>document).fonts
-    .load('80px Noto Serif '+charForm, char)
-    .then(f => {
-        let ur = f[0].unicodeRange;
-        return Array.from(
-            ((<HTMLStyleElement>$('head > style#googlefonts')[0]).sheet as CSSStyleSheet)
-                .cssRules)
-            .filter(rule => rule.cssText.includes('Noto Serif '+charForm))
-            .filter(rule => rule.cssText.includes(ur))[0].cssText
-    })
-}
-
-const getRFFHelperSafari = (char, charForm): Promise<string> => {
-    console.log(char, charForm)
-    return (<any>document).fonts
-    .load('80px Noto Serif '+charForm, char)
-    .then(f => {
-        let ur = f[0].unicodeRange.match(/U\+[0-9a-f]+-[0-9a-f]+/g)[0];
-        return Array.from(
-            ((<HTMLStyleElement>$('head > style#googlefonts')[0]).sheet as CSSStyleSheet)
-                .cssRules)
-            .filter(rule => rule.cssText.includes('Noto Serif '+charForm))
-            .filter(rule => rule.cssText.includes('unicode-range: ' + ur.split('-')[0]))[0].cssText
-    })
+        .load('80px Noto Serif '+charForm, char)
+        .then(f => {
+            let ur = f[0].unicodeRange;
+            return Array.from(
+                ((<HTMLStyleElement>$('head > style#googlefonts')[0]).sheet as CSSStyleSheet)
+                    .cssRules)
+                .filter(rule => rule.cssText.includes('Noto Serif '+charForm))
+                .filter(rule => rule.cssText.includes(ur))[0].cssText
+        })
 }
 
 const getRenderedFontFace = async (char): Promise<string> => {
-    return getRFFHelperChrome(char, 'KR')
+    if (char === '门') {return getRFFHelper(char, 'SC');}
+    return getRFFHelper(char, 'KR')
         .catch(() => {
-            return getRFFHelperChrome(char, 'JP')
+            return getRFFHelper(char, 'JP')
                 .catch(() => {
-                    return getRFFHelperChrome(char, 'SC')
+                    return getRFFHelper(char, 'SC')
                         .catch(() => {
-                            return getRFFHelperChrome(char, 'TC')
+                            return getRFFHelper(char, 'TC')
                         })
                 })
         })
 }
 
-export const test2 = async (svgEl) => {
-    await $.get((((<HTMLStyleElement>$('link#css_share')[0]).sheet as CSSStyleSheet).cssRules[0] as CSSImportRule).href, async data => {
-        $('head').append($('<style>', {type:'text/css', id:'googlefonts'}).text(data));
+const readBlobAsDataURL = (blob: Blob) => {
+    return new Promise((resolve: (value: string) => void) => {
+        let reader = new FileReader();
+        reader.onloadend = () => {
+            resolve((reader.result as string));
+        };
+        reader.readAsDataURL(blob);
+    });
+};
 
-        let txt = Array.from(new Set($(svgEl).find('.rmg-name__zh').text().replace(/[\d\s]/g, '')));
-        Promise.all(txt.map(getRenderedFontFace))
-            .then(rules => {
-                $(svgEl).prepend($('<style>', {type:'text/css', id:'googlefonts'}));
-                let ruleSet = new Set(rules);
-                ruleSet.forEach(async rule => {
-                    let fontUrl = rule.match(/https:[\w:/.-]+.woff2/g)[0];
-                    $.ajax({
-                        url: fontUrl, 
-                        xhrFields: {
-                            responseType: 'blob'
-                        }
+export const test2 = async (svgEl) => {
+    return fetch('https://fonts.googleapis.com/css?family=Noto+Serif+KR:600|Noto+Serif+JP:600|Noto+Serif+TC:600|Noto+Serif+SC:600%26display=swap')
+        .then(response => response.text())
+        .then(async csstext => {
+            $('head').append($('<style>', {type:'text/css', id:'googlefonts'}).text(csstext));
+
+            let txt = Array.from(new Set($(svgEl).find('.rmg-name__zh').text().replace(/[\d\s]/g, '')));
+            return Promise
+                .all(txt.map(getRenderedFontFace))
+                .then(rules => Array.from(new Set(rules)))
+                .then(rules => {
+                    return rules.map(async rule => {
+                        return fetch(rule.match(/https:[\w:/.-]+.woff2/g)[0])
+                            .then(response => response.blob())
+                            .then(readBlobAsDataURL)
+                            .then(uri => rule.replace(/src:[ \w('",\-:/.)]+;/g, `src: url('${uri}'); `));
                     })
-                    .done(data => {
-                        var reader = new FileReader();
-                        reader.readAsDataURL(data); 
-                        reader.onloadend = function() {
-                            var base64data = reader.result;
-                            $(svgEl).find('style#googlefonts').append(
-                                rule.replace(/src:[ \w('",\-:/.)]+;/g, `src: url('${base64data}'); `)
-                            )
-                        }
-                    });
                 })
-            })
-    })
+        })
 }
+
+// rule.replace(/src:[ \w('",\-:/.)]+;/g, `src: url('${base64data}'); `)

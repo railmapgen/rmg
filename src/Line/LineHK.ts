@@ -168,7 +168,7 @@ export class RMGLineHK extends RMGLine {
     }
 
     loadFonts() {
-        $('.rmg-name__zh').addClass(`rmg-name__char-${this._charForm}`);
+        // $('.rmg-name__zh').addClass(`rmg-name__char-${this._charForm}`);
     }
 
     drawStns() {
