@@ -1,5 +1,5 @@
 import { RMGLine } from '../Line/Line'
-import { PidsTimeTable } from '../types'
+import { PidsTimeTableUI } from '../types'
 
 export class Pids {
     protected _t?: number
@@ -14,6 +14,8 @@ export class Pids {
 
     constructor(line: RMGLine) {
         this._line = line
+
+        // set the start and end to the start and the end of the main branch
         this._start = this._line.routes[0].filter(stnId => stnId !== 'lineend' && stnId !== 'linestart')[0]
         this._end = this._line.routes[0].filter(stnId => stnId !== 'lineend' && stnId !== 'linestart').reverse()[0]
     }
@@ -30,29 +32,31 @@ export class Pids {
     }
 
     protected _createTimeTable() {
-        this._line.routes
-            .map(route => {
-                let start = route.indexOf(this._start)
-                let end = route.indexOf(this._end)
+        this._line.routes.map(route => {
+            let start = route.indexOf(this._start)
+            let end = route.indexOf(this._end)
 
-                // not in this route
-                if (!start || !end) return
+            // not in this route
+            if (!start || !end) return
 
-                // swap if start is bigger than end to be used in slice
-                if (start > end) [start, end] = [end, start]
+            // swap if start is bigger than end to be used in slice
+            if (start > end) [start, end] = [end, start]
 
-                // get the part where the train travels
-                route = route.slice(start, end + 1)
+            // get the part where the train travels
+            route = route.slice(start, end + 1)
 
-                // update the time table
-                route.map(stnId => this._timeTable[stnId] = [0, 0])
-            })
+            // update the time table
+            route.map(stnId => this._timeTable[stnId] = [0, 0])
+        })
     }
 
     // Todo: how to declare a dict
-    protected updateTimeTable(timeTable: PidsTimeTable) {
+    protected updateTimeTable(timeTable: PidsTimeTableUI) {
         for (let stnId in timeTable) {
-            this._timeTable[stnId]
+            this._timeTable[stnId] = [
+                this._getFrame(timeTable[stnId][0]),
+                this._getFrame(timeTable[stnId][0])
+            ]
         }
     }
 
@@ -77,8 +81,49 @@ export class Pids {
     }
 
     set t(val: string) {
-        this._t = this._getFrame(val)
+        let t = this._getFrame(val)
+        if (this._duration && t > this._duration) return
 
-        // Todo: set current stn according to _timeTable
+        this._t = t
+
+        // set stations' state after the destination to -1
+        let route = this._line.routes.map(route => {
+            let start = route.indexOf(this._start)
+            let end = route.indexOf(this._end)
+
+            // not in this route
+            if (!start || !end) return
+
+            // swap if start is bigger than end to be used in slice
+            if (start > end) [start, end] = [end, start]
+
+            // get the part after the destination
+            let route_pass = route.slice(end + 1)
+
+            // set them all to -1
+            route_pass.map(stnId => this._line.stations[stnId].state = -1)
+
+            return route
+        }).flat()
+
+        if (!route) return
+
+        // set current stn according to _timeTable
+        let currentStnId = ''
+        for (let i = 0; i < route.length; i++) {
+            if (t < this._timeTable[route[i]][0]) {
+                // before this station
+                currentStnId = route[i - 1 < 0 ? i - 1 : 0]
+                break
+            } else if (t < this._timeTable[route[i]][1]) {
+                // at this station
+                currentStnId = route[i]
+                break
+            } else {
+                // at next station
+            }
+        }
+
+        this._line.currentStnId = currentStnId
     }
 }

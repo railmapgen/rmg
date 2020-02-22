@@ -14,12 +14,12 @@ export interface BranchInfo {
  */
 export type Name = [string, string];
 /**
- * Array of PidsTimeInfo `Number`s. The first element is the arrival time of the station and the second element is departure time of the station. 
+ * Array of PidsTimeTableUIEntry `string`s. The first element is the arrival time of the station and the second element is departure time of the station. 
  */
 // Todo: waiting for review
-type PidsTimeInfo = [Number, Number]
-export type PidsTimeTable = {
-    [T in string]: PidsTimeInfo;
+type PidsTimeTableUIEntry = [string, string]
+export type PidsTimeTableUI = {
+    [T in string]: PidsTimeTableUIEntry;
 };
 
 export interface StationInfo {
