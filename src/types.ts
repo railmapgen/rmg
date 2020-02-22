@@ -16,10 +16,8 @@ export type Name = [string, string];
 /**
  * Array of PidsTimeTableUIEntry `string`s. The first element is the arrival time of the station and the second element is departure time of the station. 
  */
-// Todo: waiting for review
-type PidsTimeTableUIEntry = [string, string]
 export type PidsTimeTableUI = {
-    [T in string]: PidsTimeTableUIEntry;
+    [stnId: string]: [string, string];
 };
 
 export interface StationInfo {

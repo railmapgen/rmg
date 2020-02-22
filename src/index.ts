@@ -3,7 +3,6 @@ import * as $ from 'jquery';
 import { RMGLine } from './Line/Line';
 import initLine from './Line/init';
 import initPanels from './PageInitialiser/init';
-import { getParams } from './utils';
 
 declare global {
     interface Window {

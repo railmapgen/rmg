@@ -1,5 +1,12 @@
 import { updateParam, getParams } from '../utils';
 import { MDCDialog } from '@material/dialog';
+import { Pids } from '../Pids/Pids';
+
+declare global {
+    interface Window {
+        myPids?: Pids;
+    }
+}
 
 const getLineClass = async (style: string) => {
     switch (style) {
@@ -22,6 +29,9 @@ const loadLine = async (param) => {
     let lineClass = await getLineClass(window.urlParams.get('style'));
     window.myLine = await new lineClass(param);
     lineClass.initSVG(window.myLine);
+
+    // init Pids
+    window.myPids = new Pids(window.myLine);
 }
 
 if (localStorage.rmgParam != null) {

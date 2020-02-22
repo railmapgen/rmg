@@ -36,10 +36,6 @@
                         <span class="mdc-list-item__text-label" trans-tag="Pids.Start"></span>
                     </li>
                     <li class="mdc-list-item">
-                        <span class="mdc-list-item__graphic material-icons" aria-hidden="true">departure_board</span>
-                        <span class="mdc-list-item__text-label" trans-tag="Pids.End"></span>
-                    </li>
-                    <li class="mdc-list-item">
                         <span class="mdc-list-item__graphic material-icons" aria-hidden="true">timeline</span>
                         <span class="mdc-list-item__text-label" trans-tag="Pids.Timetable"></span>
                     </li>
@@ -47,6 +43,80 @@
             </div>
 
         </div>
+    </div>
+
+    <div id="range_diag" class="mdc-dialog"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="my-dialog-title"
+        aria-describedby="my-dialog-content"
+        >
+        <div class="mdc-dialog__container">
+            <div class="mdc-dialog__surface">
+                <h2 class="mdc-dialog__title" trans-tag="File.Lang.Title">Choos a Language</h2>
+                <div class="mdc-dialog__content">
+                    <div class="mdc-layout-grid">
+                        <div class="mdc-layout-grid__inner">
+                            <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
+                                <i class="material-icons">departure_board</i>
+                            </div>
+
+                            <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
+                                <div id="pids_start" class="mdc-select mdc-select--outlined" style="width: 100%;">
+                                    <div class="mdc-select__anchor">
+                                        <i class="mdc-select__dropdown-icon"></i>
+                                        <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
+                                        <div class="mdc-notched-outline">
+                                            <div class="mdc-notched-outline__leading"></div>
+                                            <div class="mdc-notched-outline__notch">
+                                                <label id="outlined-select-label" class="mdc-floating-label" trans-tag="Editor.City"></label>
+                                            </div>
+                                            <div class="mdc-notched-outline__trailing"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
+                                        <ul id="pids_start__selection" class="mdc-list">
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--align-middle">
+                                <i class="material-icons">departure_board</i>
+                            </div>
+                            <div class="mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone">
+                                <div id="pids_end" class="mdc-select mdc-select--outlined" style="width: 100%;">
+                                    <div class="mdc-select__anchor">
+                                        <i class="mdc-select__dropdown-icon"></i>
+                                        <div class="mdc-select__selected-text" aria-labelledby="outlined-select-label"></div>
+                                        <div class="mdc-notched-outline">
+                                            <div class="mdc-notched-outline__leading"></div>
+                                            <div class="mdc-notched-outline__notch">
+                                                <label id="outlined-select-label" class="mdc-floating-label" trans-tag="Editor.City"></label>
+                                            </div>
+                                            <div class="mdc-notched-outline__trailing"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
+                                        <ul id="pids_end__selection" class="mdc-list">
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="mdc-dialog__actions">
+                    <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes" data-mdc-dialog-button-default>
+                        <div class="mdc-button__ripple"></div>
+                        <span class="mdc-button__label" trans-tag="Dialog.Done"></span>
+                    </button>
+                </footer>
+            </div>
+        </div>
+        <div class="mdc-dialog__scrim"></div>
     </div>
 
 </div>

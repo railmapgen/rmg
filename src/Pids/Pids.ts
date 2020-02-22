@@ -8,27 +8,30 @@ export class Pids {
     protected _start: string
     protected _end: string
     protected _timeTable: {
-        [stnId: string]: [Number, Number]
+        [stnId: string]: [number, number]
     } = {}
     protected _line: RMGLine
 
     constructor(line: RMGLine) {
         this._line = line
 
+        this._frameRate = 24; // TODO: default value or read from params/RMGLine?
+        this._duration = 240; // TODO: as above
+
         // set the start and end to the start and the end of the main branch
-        this._start = this._line.routes[0].filter(stnId => stnId !== 'lineend' && stnId !== 'linestart')[0]
-        this._end = this._line.routes[0].filter(stnId => stnId !== 'lineend' && stnId !== 'linestart').reverse()[0]
+        let routes = this._line.routes;
+        this._start = routes[0].filter(stnId => stnId !== 'lineend' && stnId !== 'linestart')[0]
+        this._end = routes[0].filter(stnId => stnId !== 'lineend' && stnId !== 'linestart').reverse()[0]
     }
 
     /**
      * Helper function that transforms the time string to number.
      */
-    protected _getFrame(text: string): number | undefined {
+    protected _getFrame(text: string): number {
         // text should be something like '00:00:00:00'
-        let texts = text.split(':')
-        if (texts.length != 4) return undefined
-        let textsInt = texts.map(text => Number(text))
-        return (textsInt[0] * 3600 + textsInt[1] * 60 + textsInt[2]) * this._frameRate + textsInt[4]
+        if (!text.match(/^\d\d:\d\d:\d\d:\d\d$/g)) {return NaN;}
+        let textsInt = text.split(':').map(Number);
+        return (textsInt[0] * 3600 + textsInt[1] * 60 + textsInt[2]) * this._frameRate + textsInt[3]
     }
 
     protected _createTimeTable() {
@@ -55,7 +58,7 @@ export class Pids {
         for (let stnId in this._timeTable) {
             this._timeTable[stnId] = [
                 this._getFrame(timeTable[stnId][0]),
-                this._getFrame(timeTable[stnId][0])
+                this._getFrame(timeTable[stnId][1])
             ]
         }
     }
@@ -77,7 +80,11 @@ export class Pids {
     }
 
     set duration(val: string) {
-        this._duration = this._getFrame(val)
+        let frames = this._getFrame(val);
+        if (!isNaN(frames)) {
+            console.log(frames)
+            this._duration = frames;
+        }
     }
 
     set t(val: string) {
