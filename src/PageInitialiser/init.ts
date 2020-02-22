@@ -8,7 +8,7 @@ export default function () {
     linearProgress.close();
 
 
-    let firstInit = [false, true, true, true, true];
+    let firstInit = [false, true, true, true, true, true];
     window.sliders = [] as MDCSlider[];
 
     MDCTabBar.attachTo($('#panels .mdc-tab-bar')[0]).listen('MDCTabBar:activated', (event: CustomEvent) => {
