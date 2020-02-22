@@ -86,6 +86,8 @@ export class Pids {
 
         this._t = t
 
+        // Todo: set the other branches where do not inculde _end also to -1
+        // Todo: distinguish out of service stations and pass stations. Maybe set them to -2? 
         // set stations' state after the destination to -1
         let route = this._line.routes.map(route => {
             let start = route.indexOf(this._start)
@@ -123,6 +125,8 @@ export class Pids {
                 // at next station
             }
         }
+
+        if (!currentStnId) return
 
         this._line.currentStnId = currentStnId
 

@@ -355,7 +355,25 @@ export class RMGLineSH extends RMGLine {
     }
 
     drawAnimation() {
-        
+        Object.keys(this.stations).map(stnId => {
+            let stnInstance = this.stations[stnId]
+            if (stnInstance.state > 0) {
+                // remaining stations
+                $(`#rmg-name__shmetro--${stnId} > use`).attr('xlink:herf', '#stn_sh_animation')
+            } else if (stnInstance.state < 0) {
+                // passing stations
+                $(`#rmg-name__shmetro--${stnId} > use`).attr('xlink:herf', '#stn_sh_pass_animation')
+            } else if (stnInstance.state == 0) {
+                // current station
+                $(`#rmg-name__shmetro--${stnId} > use`).attr('xlink:herf', '#stn_sh_current_animation')
+            }
+        })
+    }
+
+    clearAnimation() {
+        // clear the original stations
+        $('#stn_icons').empty()
+        this.drawStns()
     }
 
     // rewrite this to make sure the line is draw before color
