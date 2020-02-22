@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "ES6",
+        "target": "ES2019",
         "outDir": "./built",
         "lib": ["DOM", "ESNext"],
         "allowJs": true,
@@ -10,6 +10,7 @@
     }, 
     "include": [
         "./src/lang.ts", 
-        "./src/index.ts"
+        "./src/index.ts",
+        "./src/Pids/Pids.ts"
     ]
 }
