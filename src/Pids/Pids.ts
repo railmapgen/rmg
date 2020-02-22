@@ -86,9 +86,7 @@ export class Pids {
 
         this._t = t
 
-        // Todo: set the other branches where do not inculde _end also to -1
-        // Todo: distinguish out of service stations and pass stations. Maybe set them to -2? 
-        // set stations' state after the destination to -1
+        // get the servicing stations
         let route = this._line.routes.map(route => {
             let start = route.indexOf(this._start)
             let end = route.indexOf(this._end)
@@ -101,9 +99,6 @@ export class Pids {
 
             // get the part after the destination
             let route_pass = route.slice(end + 1)
-
-            // set them all to -1
-            route_pass.map(stnId => this._line.stations[stnId].state = -1)
 
             return route
         }).flat()
@@ -129,6 +124,13 @@ export class Pids {
         if (!currentStnId) return
 
         this._line.currentStnId = currentStnId
+
+        // set stations' state after the destination to -1
+        // and also other stations in branches where do not inculde _end
+        // Todo: distinguish out of service stations and pass stations. Maybe set them to -2? 
+        Object.keys(this._line.stations)
+            .filter(stnId => !route.includes(stnId))
+            .map(stnId => this._line.stations[stnId].state = -1)
 
         this._line.drawAnimation()
     }
