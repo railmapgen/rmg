@@ -1,4 +1,4 @@
-import { getParams, getTransText, test, describeParams, test2 } from '../utils';
+import { getParams, getTransText, test, describeParams, getBase64FontFace } from '../utils';
 import { RMGParam } from '../types';
 import { RMGLine } from '../Line/Line';
 import { MDCDialog } from '@material/dialog';
@@ -161,7 +161,7 @@ export function common() {
         
         $(event.target).find('svg [style="display: none;"]').remove();
         if (window.urlParams.get('style') === 'mtr') {
-            test2($(event.target).find('svg')[0])
+            getBase64FontFace($(event.target).find('svg')[0] as SVGSVGElement)
                 .then(response => {
                     Promise.all(response)
                         .then(uris => {
@@ -171,25 +171,24 @@ export function common() {
                             // (<any>document).fonts.ready.then(() => {
                             //     console.log('fonts loaded?');
                                 (<HTMLButtonElement>$('#preview_diag button[data-mdc-dialog-action="png"]')[0]).disabled = false;
-                            // })
-                            
-                        })
-                })
+                            // });
+                        });
+                });
         } else {
             (<HTMLButtonElement>$('#preview_diag button[data-mdc-dialog-action="png"]')[0]).disabled = false;
         }
     });
-    previewDialog.listen('MDCDialog:closed', (event: CustomEvent) => {
+    previewDialog.listen('MDCDialog:closing', (event: CustomEvent) => {
         $('head > style#googlefonts').remove();
         (<HTMLButtonElement>$('#preview_diag button[data-mdc-dialog-action="png"]')[0]).disabled = true;
         if (event.detail.action === 'close') {
-            $(event.target).removeAttr('for').find('.mdc-dialog__content').empty();
+            $(event.target).removeAttr('for').find('.mdc-dialog__content > svg').remove();
             return;
         }
 
         if (event.detail.action === 'png') {
             test($(event.target).removeAttr('for').find('svg') as JQuery<Element>);
-            $(event.target).find('.mdc-dialog__content').empty();
+            $(event.target).find('.mdc-dialog__content > svg').remove();
             return;
         }
 
@@ -202,7 +201,7 @@ export function common() {
             link.download = 'rmg_export.svg';
             link.click();
     
-            $(event.target).removeAttr('for').find('.mdc-dialog__content').empty();
+            $(event.target).removeAttr('for').find('.mdc-dialog__content > svg').empty();
         }
     });
 

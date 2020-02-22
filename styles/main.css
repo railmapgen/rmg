@@ -200,6 +200,12 @@ body {
     line-height: 1.2rem;
 }
 
+.stn-chip-set > div:not(#add_stn) .stn-chip__text--zh {
+    font-size: 18px;
+    font-family: Helvetica, Noto Serif KR, Noto Serif JP, Noto Serif TC, Noto Serif SC, serif;
+    font-weight: 600;
+}
+
 .stn-chip__text--en {
     font-family: Helvetica, Arial, sans-serif;
     font-size: .75rem;

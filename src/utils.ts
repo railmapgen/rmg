@@ -398,9 +398,14 @@ export const getTransText = (obj: {[index: string]: string}, lang: string) => {
     return obj[langFallback(lang).find(l => obj[l])];
 }
 
-const getRFFHelper = (char, charForm): Promise<string> => {
+/**
+ * Helper function for filtering out the `CSSFontFaceRule` which renders the input character by matching character form and unicode range. 
+ * @param char string with one Chinese character
+ * @param charForm code indicating country-variant Noto Serif font
+ */
+const getRFFHelper = async (char: string, charForm: 'SC' | 'TC' | 'JP' | 'KR'): Promise<string> => {
     // console.log(char, charForm)
-    return (<any>document).fonts
+    return document.fonts
         .load('80px Noto Serif '+charForm, char)
         .then(f => {
             let ur = f[0].unicodeRange;
@@ -412,20 +417,28 @@ const getRFFHelper = (char, charForm): Promise<string> => {
         })
 }
 
-const getRenderedFontFace = async (char): Promise<string> => {
-    if (char === '门') {return getRFFHelper(char, 'SC');}
-    return getRFFHelper(char, 'KR')
+/**
+ * Get `cssText` of `CSSFontFaceRule` which renders the input character. 
+ * @param char string with one Chinese character
+ */
+const getRenderedFontFace = async (char: string): Promise<string[]> => {
+    if (char === '门') {return Promise.all([getRFFHelper(char, 'SC')]);}
+    return Promise.all([getRFFHelper(char, 'KR')])
         .catch(() => {
-            return getRFFHelper(char, 'JP')
+            return Promise.all([getRFFHelper(char, 'JP')])
                 .catch(() => {
-                    return getRFFHelper(char, 'SC')
+                    return Promise.all([getRFFHelper(char, 'TC'), getRFFHelper(char, 'SC')])
                         .catch(() => {
-                            return getRFFHelper(char, 'TC')
+                            return Promise.all([getRFFHelper(char, 'SC')])
                         })
                 })
         })
 }
 
+/**
+ * Convert a `Blob` into Base64 data URL. 
+ * @param blob 
+ */
 const readBlobAsDataURL = (blob: Blob) => {
     return new Promise((resolve: (value: string) => void) => {
         let reader = new FileReader();
@@ -436,8 +449,13 @@ const readBlobAsDataURL = (blob: Blob) => {
     });
 };
 
-export const test2 = async (svgEl) => {
-    return fetch('https://fonts.googleapis.com/css?family=Noto+Serif+KR:600|Noto+Serif+JP:600|Noto+Serif+TC:600|Noto+Serif+SC:600%26display=swap')
+/**
+ * Get `CSSFontFaceRule` whose source is Base64 URL for all Chinese characters in a `SVGSVGElement`. 
+ * @param svgEl `SVGSVGElement` to be exported
+ */
+export const getBase64FontFace = async (svgEl: SVGSVGElement) => {
+    let src = 'https://fonts.googleapis.com/css?family=Noto+Serif+KR:600|Noto+Serif+JP:600|Noto+Serif+TC:600|Noto+Serif+SC:600%26display=swap';
+    return fetch(src)
         .then(response => response.text())
         .then(async csstext => {
             $('head').append($('<style>', {type:'text/css', id:'googlefonts'}).text(csstext));
@@ -445,6 +463,7 @@ export const test2 = async (svgEl) => {
             let txt = Array.from(new Set($(svgEl).find('.rmg-name__zh').text().replace(/[\d\s]/g, '')));
             return Promise
                 .all(txt.map(getRenderedFontFace))
+                .then(rules => rules.reduce((acc, val) => acc.concat(val), []))
                 .then(rules => Array.from(new Set(rules)))
                 .then(rules => {
                     return rules.map(async rule => {
@@ -456,5 +475,3 @@ export const test2 = async (svgEl) => {
                 })
         })
 }
-
-// rule.replace(/src:[ \w('",\-:/.)]+;/g, `src: url('${base64data}'); `)
