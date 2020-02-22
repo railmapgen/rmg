@@ -2,8 +2,7 @@ import { RMGLine } from './Line';
 import { RMGStationSH, IntStationSH, OSIStationSH } from '../Station/StationSH';
 import { RMGStation } from '../Station/Station';
 
-import { Name, StationInfo, RMGParam, DirectionLong } from '../types';
-import { setParams } from '../utils';
+import { Name, StationInfo } from '../types';
 
 export class RMGLineSH extends RMGLine {
     constructor(param) {
@@ -345,7 +344,6 @@ export class RMGLineSH extends RMGLine {
         $('#railmap > #main').attr('transform', `translate(0,${this._svgHeight - 63})`)
     }
 
-    // Todo: use css var
     fillThemeColour() {
         super.fillThemeColour();
 
@@ -372,87 +370,13 @@ export class RMGLineSH extends RMGLine {
         line.updateStnNameBg();
     }
 
-    // rewrite this to call fillThemeColour when flip direction
-    set direction(val) {
-        super.direction = val
-
-        this.fillThemeColour()
-    }
-
-    // rewrite this to call fillThemeColour when set current station
-    set currentStnId(val) {
-        super.currentStnId = val
-
-        this.fillThemeColour()
-    }
-
     set lineNames(val: Name) {
         super.lineNames = val;
         this.drawDestInfo();
     }
 
-    // rewrite this to get drawStns and recalled
-    updateStnTransfer(stnId: string, type, info = null) {
-        super.updateStnTransfer(stnId, type, info)
-
-        this.fillThemeColour()
-
-        // clear the original stations
-        $('#stn_icons').empty()
-        this.drawStns()
-    }
-
-    // rewrite this to call fillThemeColour when add station
-    addStn(prep: 'before' | 'after', stnId: string, loc, end: string): [string, StationInfo] {
-        let [newId, newInfo] = super.addStn(prep, stnId, loc, end)
-        this.fillThemeColour()
-        return [newId, newInfo]
-    }
-
     set svgHeight(val: number) {
         super.svgHeight = val
         this.drawLine()
-    }
-
-    set padding(val: number) {
-        super.padding = val;
-        this.fillThemeColour();
-    }
-
-    set branchSpacing(val: number) {
-        super.branchSpacing = val;
-        this.fillThemeColour();
-    }
-
-    removeStn(stnId: string) {
-        if (super.removeStn(stnId)) {
-            this.fillThemeColour();
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    updateBranchType(stnId: string, direction: DirectionLong, type: 'through' | 'nonthrough') {
-        // Chito: This method should be remove when this._stnState() is updated. 
-        if (!super.updateBranchType(stnId, direction, type)) {return false;}
-        this.fillThemeColour();
-        return true;
-    }
-
-    updateBranchFirst(stnId: string, direction: DirectionLong, first: string) {
-        if (super.updateBranchFirst(stnId, direction, first)) {
-            this.fillThemeColour();
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    updateBranchPos(stnId: string, direction: DirectionLong, pos: 0 | 1) {
-        // Chito: This method should be remove when this._stnState() is updated. 
-        if (!super.updateBranchPos(stnId, direction, pos)) {return false;}
-        this.fillThemeColour();
-        return true;
     }
 }
