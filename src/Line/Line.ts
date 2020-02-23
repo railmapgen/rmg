@@ -162,6 +162,13 @@ export class RMGLine {
         this.fillThemeColour();
     }
 
+    // Todo: get direction instead of direct
+    //       GET DIRECTION NOT WORK
+    get direct(): 'l' | 'r' {
+        console.log(this._direction)
+        return this._direction
+    }
+
     /**
      * Setter of train direction. 
      */

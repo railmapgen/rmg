@@ -15,13 +15,29 @@ export class Pids {
     constructor(line: RMGLine) {
         this._line = line
 
-        this._frameRate = 24; // TODO: default value or read from params/RMGLine?
-        this._duration = 240; // TODO: as above
+        this._frameRate = 24; // TODO: read from params/RMGLine
+        this._duration = 60; // TODO: read from params/RMGLine
 
         // set the start and end to the start and the end of the main branch
         let routes = this._line.routes;
         this._start = routes[0].filter(stnId => stnId !== 'lineend' && stnId !== 'linestart')[0]
         this._end = routes[0].filter(stnId => stnId !== 'lineend' && stnId !== 'linestart').reverse()[0]
+
+        // Todo: remove debug
+        this.start = 'kaxg'
+        this.end = 'sd6y'
+
+        let _: PidsTimeTableUI = {
+            'kaxg': ['00:00:00:01','00:00:00:10'],  // 人民广场
+            '7x7k': ['00:00:01:00','00:00:01:05'],  // 新闸路
+            'sd6y': ['00:00:01:10','00:00:01:20'],  // 上海火车站
+        }
+        this.updateTimeTable(_)
+
+        // this.t = '00:00:00:00'
+        // this.t = '00:00:00:20'
+        this.t = '00:00:01:00'
+        // this.t = '00:00:01:21'
     }
 
     /**
@@ -34,7 +50,31 @@ export class Pids {
         return (textsInt[0] * 3600 + textsInt[1] * 60 + textsInt[2]) * this._frameRate + textsInt[3]
     }
 
+    protected _servicingStnIds(){
+        // get the servicing stations
+        return this._line.routes.map(route => {
+            // Todo: get direction instead of direct
+            //       GET DIRECTION NOT WORK
+            if (this._line.direct == 'l') route = route.reverse()
+
+            let start = route.indexOf(this._start)
+            let end = route.indexOf(this._end)
+
+            // not in this route
+            if (!start || !end) return
+
+            // swap if start is bigger than end to be used in slice
+            if (start > end) [start, end] = [end, start]
+
+            // get the part in service
+            route = route.slice(start, end + 1)
+
+            return route
+        }).flat()
+    }
+
     protected _createTimeTable() {
+        this._timeTable = {}
         this._line.routes.map(route => {
             let start = route.indexOf(this._start)
             let end = route.indexOf(this._end)
@@ -61,6 +101,11 @@ export class Pids {
                 this._getFrame(timeTable[stnId][1])
             ]
         }
+    }
+
+    get timetableStnName() {
+        let stnIds = this._servicingStnIds()
+        return stnIds
     }
 
     set start(stnId: string) {
@@ -93,22 +138,7 @@ export class Pids {
 
         this._t = t
 
-        // get the servicing stations
-        let route = this._line.routes.map(route => {
-            let start = route.indexOf(this._start)
-            let end = route.indexOf(this._end)
-
-            // not in this route
-            if (!start || !end) return
-
-            // swap if start is bigger than end to be used in slice
-            if (start > end) [start, end] = [end, start]
-
-            // get the part after the destination
-            let route_pass = route.slice(end + 1)
-
-            return route
-        }).flat()
+        let route = this._servicingStnIds()
 
         if (!route) return
 
@@ -117,7 +147,7 @@ export class Pids {
         for (let i = 0; i < route.length; i++) {
             if (t < this._timeTable[route[i]][0]) {
                 // before this station
-                currentStnId = route[i - 1 < 0 ? i - 1 : 0]
+                currentStnId = route[i - 1 > 0 ? i - 1 : 0]
                 break
             } else if (t < this._timeTable[route[i]][1]) {
                 // at this station
@@ -128,13 +158,15 @@ export class Pids {
             }
         }
 
-        if (!currentStnId) return
+        if (!currentStnId) currentStnId = route[route.length-1]
 
         this._line.currentStnId = currentStnId
 
         // set stations' state after the destination to -1
         // and also other stations in branches where do not inculde _end
         // Todo: distinguish out of service stations and pass stations. Maybe set them to -2? 
+        // Todo: current style do not support multiple pass lines,
+        //       which means middle part of stations in service will not work properly
         Object.keys(this._line.stations)
             .filter(stnId => !route.includes(stnId))
             .map(stnId => this._line.stations[stnId].state = -1)

@@ -8,9 +8,11 @@ import { getParams } from '../utils';
 export function common() {
     // instantiating mdc
     const pidsList = new MDCList($('#pids_list')[0]);
+    const pidsTimetableList = new MDCList($('#pids_timetable_list')[0])
     const [durationField, framerateField] = 
         ['#duration', '#framerate'].map(selector => new MDCTextField($('#panel_pids').find(selector)[0]));
     const rangeDialog = new MDCDialog($('#panel_pids #range_diag')[0]);
+    const timetableDialog = new MDCDialog($('#panel_pids #timetable_diag')[0]);
     const [startSelect, endSelect] = 
         ['start', 'end'].map(selector => new MDCSelect($('#panel_pids #range_diag').find('#pids_'+selector)[0]));
     $('#panel_pids .mdc-list li').map((_,el) => new MDCRipple(el));
@@ -37,10 +39,26 @@ export function common() {
                 rangeDialog.open();
                 break;
             case 3:
-                console.log('timetable');
+                // Todo: add list automatically
+                // _refreshTimetable()
+                timetableDialog.open();
                 break;
         }
     });
+
+    function _refreshTimetable() {
+        $('#pids_timetable_list').empty()
+        window.myPids.timetableStnName.map(stnId => {
+            $('#pids_timetable_list').append(
+                $('<li>', { 'data-value': stnId })
+                    .addClass('mdc-list-item')
+                    .text(window.urlParams.get('style') === 'gzmtr' ?
+                        `${stnList[stnId].num}: ${stnList[stnId].name.join()}` :
+                        stnList[stnId].name.join())
+            )
+        }
+        )
+    }
 
     ($(durationField.root_).find('input') as JQuery<HTMLInputElement>)
         .on('input', event => {
