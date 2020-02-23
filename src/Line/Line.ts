@@ -581,9 +581,15 @@ export class RMGLine {
         $('style#global').text(`:root{--rmg-theme-colour:${this._themeColour};--rmg-theme-fg:${this._fgColour}}`);
     }
 
-    drawDestInfo() {
-        //
-    }
+    /**
+     * Stub for draw DestInfo. Rewrite this if you want to support destination canvas.
+     */
+    drawDestInfo() { }
+
+    /**
+     * Stub for draw Runin. Rewrite this if you want to support runin canvas.
+     */
+    drawRunin() { }
 
     updateStnName(stnId: string, names: Name) {
         let param = getParams();
