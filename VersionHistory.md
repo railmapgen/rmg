@@ -1,5 +1,11 @@
 # Version History
 
+## 2.16 (23 Feb 2020)
+
+### New Features
+
+- Running-in board is now available in Shanghai Metro style. 
+
 ## 2.15.2 (22 Feb 2020)
 
 ### Resolved Issues
