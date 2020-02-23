@@ -32,16 +32,16 @@ id="destination" style="
     </g>
 
     <g id="station_info_shmetro" style="display: none;" shmetro-specific>
-        <path id="line_shmetro_use"/>
+        <path id="line_shmetro_use" fill="var(--rmg-theme-colour)"/>
         <use id="arrow_left_use" xlink:href="#arrow_left"/>
         <!-- Todo: fix this absolute position -->
         <g id="dest_text">
-            <text class="rmg-name__zh rmg-name__shmetro--dest" font-size="500%">往</text>
-            <text class="rmg-name__en rmg-name__shmetro--dest" font-size="200%" dy="60">to</text>
+            <text class="rmg-name__zh rmg-name__shmetro--dest" font-size="400%">往</text>
+            <text class="rmg-name__en rmg-name__shmetro--dest" font-size="150%" dy="40">to</text>
         </g>
         <g id="line_number">
-            <rect width="125" height="125"></rect>
-            <text class="rmg-name__zh rmg-name__shmetro--line_number" font-size="700%" text-anchor="middle"></text>
+            <rect width="125" height="125" fill="var(--rmg-theme-colour)"/>
+            <text class="rmg-name__zh rmg-name__shmetro--line_number" fill="var(--rmg-theme-fg)" font-size="700%" text-anchor="middle"/>
         </g>
         <g id="line_name_text">
             <text class="rmg-name__zh rmg-name__shmetro--line_name" font-size="500%">号线</text>
