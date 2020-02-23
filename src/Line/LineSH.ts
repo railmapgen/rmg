@@ -5,6 +5,8 @@ import { RMGStation } from '../Station/Station';
 import { Name, StationInfo } from '../types';
 
 export class RMGLineSH extends RMGLine {
+    _svgRuninWidth: number
+
     constructor(param) {
         super(param);
     }
@@ -80,7 +82,7 @@ export class RMGLineSH extends RMGLine {
         var [destinations_zh, destinations_en]: String[][] = [[], []]
         this[`${this._direction}ValidDests`].forEach(stn => {
             destinations_zh.push(this.stations[stn].name[0])
-            destinations_en.push(this.stations[stn].name[1].replace('\\',' ')) // Chito: replace \ by space
+            destinations_en.push(this.stations[stn].name[1].replace('\\', ' ')) // Chito: replace \ by space
         });
         $('#station_info_shmetro > #dest_text > text:first-child').text(`往${destinations_zh.join("，")}`)
         $('#station_info_shmetro > #dest_text > text:last-child').text(`To ${destinations_en.join(", ")}`)
@@ -95,14 +97,12 @@ export class RMGLineSH extends RMGLine {
             lineNameX -= 180;
             lineNameZH = "号线"
             $('#station_info_shmetro > #line_number > rect').attr({
-                fill: 'var(--rmg-theme-colour)',
                 transform: `translate(${lineNameX - 150},${70 + dh})`,
                 width: 125, height: 125 // Chito: reset width and height (from pure-chinese name)
             })
             $('#station_info_shmetro > #line_number > text')
                 .show().text(lineNumber[0])
                 .attr({
-                    fill: 'var(--rmg-theme-fg)',
                     transform: `translate(${lineNameX - 87.5},${132.5 + dh})`,
                     style: 'letter-spacing:-5px', // Chito: 00 and 88 can fit in the box now (webkit)
                     'text-anchor': 'middle',
@@ -115,7 +115,6 @@ export class RMGLineSH extends RMGLine {
         } else {
             lineNameX -= 280;
             $('#station_info_shmetro > #line_number > rect').attr({
-                fill: 'var(--rmg-theme-colour)', 
                 transform: `translate(${lineNameX - 10},${60 + dh})`,
                 width: 260,
                 height: 150
@@ -145,8 +144,138 @@ export class RMGLineSH extends RMGLine {
             path = `M24,10 H ${this._svgDestWidth - 30} l 12,12 H 24 Z`
         }
         $('#line_shmetro_use').attr({
-            fill: 'var(--rmg-theme-colour)',
             transform: `translate(0,${220 + dh})`,
+            d: path,
+        })
+    }
+
+    get _prevStnIds(): string[] {
+        // reduce from https://stackoverflow.com/questions/43773999/remove-duplicates-from-arrays-using-reduce
+        // and https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
+        return this.routes
+            .map(route => route[route.indexOf(this._currentStnId) + (this._direction == 'l' ? 1 : -1)])
+            .flat()
+            // remove duplicate
+            .reduce((acc, cur) => {
+                if (!acc.includes(cur)) acc.push(cur)
+                return acc
+            }, [])
+    }
+
+    get _nextStnIds(): string[] {
+        return this.routes
+            .map(route => route[route.indexOf(this._currentStnId) + (this._direction == 'l' ? -1 : 1)])
+            .flat()
+            // remove duplicate
+            .reduce((acc, cur) => {
+                if (!acc.includes(cur)) acc.push(cur)
+                return acc
+            }, [])
+    }
+
+    _runinNextStn(dh: number, nextStnIds: string[]) {
+        if (this._direction == 'l') {
+            var x = 30
+            var dx = 50
+            var txtAnchor = 'start'
+        } else {
+            var x = this._svgRuninWidth - 30
+            var dx = -50
+            var txtAnchor = 'end'
+        }
+        $('g#next_stn_text').attr({ transform: `translate(${x}, ${dh + 175})`, 'text-anchor': txtAnchor, })
+        $('g#next_stn_text > text:first-child').text(nextStnIds.map(stnId => this.stations[stnId].name[0]).join('，'))
+        $('g#next_stn_text > text:last-child').text(nextStnIds.map(stnId => this.stations[stnId].name[1]).join('，'))
+        $('g#next_text').attr({ transform: `translate(${x}, ${dh + 130})`, 'text-anchor': txtAnchor, })
+        $('g#next_text > text:last-child').attr('dx', dx)
+    }
+
+    _runinPrevStn(dh: number, prevStnIds: string[]) {
+        if (this._direction == 'l') {
+            var x = this._svgRuninWidth - 30
+            var dx = -50
+            var txtAnchor = 'end'
+        } else {
+            var x = 30
+            var dx = 50
+            var txtAnchor = 'start'
+        }
+        $('g#prev_stn_text').attr({ transform: `translate(${x}, ${dh + 175})`, 'text-anchor': txtAnchor, })
+        $('g#prev_stn_text > text:first-child').text(prevStnIds.map(stnId => this.stations[stnId].name[0]).join('，'))
+        $('g#prev_stn_text > text:last-child').text(prevStnIds.map(stnId => this.stations[stnId].name[1]).join('，'))
+        $('g#prev_text').attr({ transform: `translate(${x}, ${dh + 130})`, 'text-anchor': txtAnchor, })
+        $('g#prev_text > text:last-child').attr('dx', dx)
+    }
+
+    drawRunin() {
+        this._svgRuninWidth = this._svgDestWidth
+
+        // get the height
+        let dh = this._svgHeight - 300
+
+        let nextStnIds = this._nextStnIds
+        let prevStnIds = this._prevStnIds
+
+        // current stn text
+        $('g#current_text > text:first-child').text(this.stations[this._currentStnId].name[0])
+        $('g#current_text > text:last-child').text(this.stations[this._currentStnId].name[1])
+
+        // show all text and hide when necessary
+        $('g#next_stn_text').show()
+        $('g#next_text').show()
+        $('g#prev_stn_text').show()
+        $('g#prev_text').show()
+
+        if (nextStnIds.length == 1 && ['linestart', 'lineend'].includes(nextStnIds[0])) {
+            // terminal station
+            if (this._direction == 'l')
+                $('g#current_text').attr({ transform: `translate(${30}, ${dh + 150})`, 'text-anchor': 'start', })
+            else
+                $('g#current_text').attr({ transform: `translate(${this._svgRuninWidth - 30}, ${dh + 150})`, 'text-anchor': 'end', })
+
+            this._runinPrevStn(dh, prevStnIds)
+
+            // clear next
+            $('g#next_stn_text').hide()
+            $('g#next_text').hide()
+
+            // the last decoration line
+            var path = `M24,10 H ${this._svgRuninWidth - 20} V 24 H 24 Z`
+            var fill = 'gray'
+        } else if (prevStnIds.length == 1 && ['linestart', 'lineend'].includes(prevStnIds[0])) {
+            // origin station
+            if (this._direction == 'l')
+                $('g#current_text').attr({ transform: `translate(${this._svgRuninWidth - 30}, ${dh + 150})`, 'text-anchor': 'end', })
+            else
+                $('g#current_text').attr({ transform: `translate(${30}, ${dh + 150})`, 'text-anchor': 'start', })
+
+            this._runinNextStn(dh, nextStnIds)
+
+            // clear prev
+            $('g#prev_stn_text').hide()
+            $('g#prev_text').hide()
+
+            // the last decoration line
+            if (this._direction == 'l') var path = `M38,10 H ${this._svgRuninWidth - 20} V 24 H 24 Z`
+            else var path = `M24,10 H ${this._svgRuninWidth - 30} l 12,12 H 24 Z`
+            var fill = 'var(--rmg-theme-colour)'
+        } else {
+            // general station
+            $('g#current_text').attr({ transform: `translate(${this._svgRuninWidth / 2}, ${dh + 150})`, 'text-anchor': 'middle', })
+
+            this._runinNextStn(dh, nextStnIds)
+            this._runinPrevStn(dh, prevStnIds)
+
+            // the last decoration line
+            if (this._direction == 'l') var path = `M38,10 H ${this._svgRuninWidth - 20} V 24 H 24 Z`
+            else var path = `M24,10 H ${this._svgRuninWidth - 30} l 12,12 H 24 Z`
+            var fill = 'var(--rmg-theme-colour)'
+        }
+
+        // the last decoration line
+        $('#run_in_line_shmetro_use').attr({
+            transform: `translate(0,${220 + dh})`,
+            fill: fill,
             d: path,
         })
     }
@@ -314,26 +443,26 @@ export class RMGLineSH extends RMGLine {
                 if (linePassStns[0] === branch[0]) {
                     // -1 -1 1 1
                     linePassStns.push(lineMainStns[0]);
-                } else if (lineMainStns[0] === branch[0] && lineMainStns[lineMainStns.length-1] === branch[branch.length-1] && linePassStns.length) {
+                } else if (lineMainStns[0] === branch[0] && lineMainStns[lineMainStns.length - 1] === branch[branch.length - 1] && linePassStns.length) {
                     linePassStns = branch;
                     lineMainStns = [];
                 } else {
                     // 1 1 -1 -1
-                    linePassStns.unshift(lineMainStns[lineMainStns.length-1]);
+                    linePassStns.unshift(lineMainStns[lineMainStns.length - 1]);
                 }
             }
-            
+
             // rewrite the second parameter to get the path correctly
             $('#line_main').append(
                 $('<path>', {
                     fill: 'var(--rmg-theme-colour)',
-                    d:this._linePath(lineMainStns, 'main')
+                    d: this._linePath(lineMainStns, 'main')
                 })
             );
             $('#line_pass').append(
                 $('<path>', {
                     fill: '#aaa',
-                    d:this._linePath(linePassStns, 'pass')
+                    d: this._linePath(linePassStns, 'pass')
                 })
             );
         });
@@ -365,14 +494,27 @@ export class RMGLineSH extends RMGLine {
         line.fillThemeColour();
         // change the func call here
 
+        // add this to draw the third canvas
+        line.drawRunin()
+
         line.drawStrip();
         line.drawDestInfo();
         line.updateStnNameBg();
     }
 
     set lineNames(val: Name) {
-        super.lineNames = val;
-        this.drawDestInfo();
+        super.lineNames = val
+        this.drawDestInfo()
+    }
+
+    set currentStnId(val: string) {
+        super.currentStnId = val
+        this.drawRunin()
+    }
+
+    set direction(val: 'l' | 'r') {
+        super.direction = val
+        this.drawRunin()
     }
 
     set svgHeight(val: number) {
