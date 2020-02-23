@@ -461,9 +461,8 @@ export const getBase64FontFace = async (svgEl: SVGSVGElement) => {
             $('head').append($('<style>', {type:'text/css', id:'googlefonts'}).text(csstext));
 
             let txt = Array.from(new Set($(svgEl).find('.rmg-name__zh').text().replace(/[\d\s]/g, '')));
-            return Promise
-                .all(txt.map(getRenderedFontFace))
-                .then(rules => rules.reduce((acc, val) => acc.concat(val), []))
+            return Promise.all(txt.map(getRenderedFontFace))
+                .then(rules => <string[]>[].concat(...rules))
                 .then(rules => Array.from(new Set(rules)))
                 .then(rules => {
                     return rules.map(async rule => {

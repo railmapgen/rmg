@@ -162,17 +162,10 @@ export function common() {
         $(event.target).find('svg [style="display: none;"]').remove();
         if (window.urlParams.get('style') === 'mtr') {
             getBase64FontFace($(event.target).find('svg')[0] as SVGSVGElement)
-                .then(response => {
-                    Promise.all(response)
-                        .then(uris => {
-                            $(event.target).find('svg').prepend($('<style>').text(uris.join(' ')));
-                        })
-                        .then(() => {
-                            // (<any>document).fonts.ready.then(() => {
-                            //     console.log('fonts loaded?');
-                                (<HTMLButtonElement>$('#preview_diag button[data-mdc-dialog-action="png"]')[0]).disabled = false;
-                            // });
-                        });
+                .then(async response => {
+                    let uris = await Promise.all(response);
+                    $(event.target).find('svg').prepend($('<style>').text(uris.join(' ')));
+                    (<HTMLButtonElement>$('#preview_diag button[data-mdc-dialog-action="png"]')[0]).disabled = false;
                 });
         } else {
             (<HTMLButtonElement>$('#preview_diag button[data-mdc-dialog-action="png"]')[0]).disabled = false;
