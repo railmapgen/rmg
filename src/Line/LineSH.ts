@@ -185,7 +185,7 @@ export class RMGLineSH extends RMGLine {
         }
         $('g#next_stn_text').attr({ transform: `translate(${x}, ${dh + 175})`, 'text-anchor': txtAnchor, })
         $('g#next_stn_text > text:first-child').text(nextStnIds.map(stnId => this.stations[stnId].name[0]).join('，'))
-        $('g#next_stn_text > text:last-child').text(nextStnIds.map(stnId => this.stations[stnId].name[1]).join('，'))
+        $('g#next_stn_text > text:last-child').text(nextStnIds.map(stnId => this.stations[stnId].name[1].replace('\\', ' ')).join('，'))
         $('g#next_text').attr({ transform: `translate(${x}, ${dh + 130})`, 'text-anchor': txtAnchor, })
         $('g#next_text > text:last-child').attr('dx', dx)
     }
@@ -202,7 +202,7 @@ export class RMGLineSH extends RMGLine {
         }
         $('g#prev_stn_text').attr({ transform: `translate(${x}, ${dh + 175})`, 'text-anchor': txtAnchor, })
         $('g#prev_stn_text > text:first-child').text(prevStnIds.map(stnId => this.stations[stnId].name[0]).join('，'))
-        $('g#prev_stn_text > text:last-child').text(prevStnIds.map(stnId => this.stations[stnId].name[1]).join('，'))
+        $('g#prev_stn_text > text:last-child').text(prevStnIds.map(stnId => this.stations[stnId].name[1].replace('\\', ' ')).join('，'))
         $('g#prev_text').attr({ transform: `translate(${x}, ${dh + 130})`, 'text-anchor': txtAnchor, })
         $('g#prev_text > text:last-child').attr('dx', dx)
     }
@@ -218,7 +218,7 @@ export class RMGLineSH extends RMGLine {
 
         // current stn text
         $('g#current_text > text:first-child').text(this.stations[this._currentStnId].name[0])
-        $('g#current_text > text:last-child').text(this.stations[this._currentStnId].name[1])
+        $('g#current_text > text:last-child').text(this.stations[this._currentStnId].name[1].replace('\\',' '));
 
         // show all text and hide when necessary
         $('g#next_stn_text').show()
@@ -477,6 +477,28 @@ export class RMGLineSH extends RMGLine {
         super.fillThemeColour();
 
         $('style#global').text(`:root{--rmg-theme-colour:${this._themeColour};--rmg-theme-fg:${this._fgColour}}`);
+    }
+
+    updateStnName(stnId: string, names: Name) {
+        super.updateStnName(stnId, names);
+
+        let stnInstance = this.stations[stnId];
+        if (stnInstance instanceof IntStationSH) {
+            $(`#rmg-name__shmetro--${stnId}`).parent().append(stnInstance.ungrpIconHTML)
+            $('#stn_icons').html($('#stn_icons').html()); // Refresh DOM
+        }
+        
+        if (this.stations[this._currentStnId].parents.includes(stnId) || this.stations[this._currentStnId].children.includes(stnId)) {
+            this.drawRunin();
+        }
+
+        if (this._currentStnId === stnId) {
+            this.drawRunin(); 
+        }
+
+        if (this.leftDests.includes(stnId) || this.rightDests.includes(stnId)) {
+            this.drawDestInfo();
+        }
     }
 
     updateStnNameBg() {
