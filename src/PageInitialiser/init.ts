@@ -7,7 +7,6 @@ export default function () {
     const linearProgress = new MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     linearProgress.close();
 
-
     let firstInit = [false, true, true, true, true, true];
     window.sliders = [] as MDCSlider[];
 
