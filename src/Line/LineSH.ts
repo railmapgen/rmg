@@ -139,7 +139,7 @@ export class RMGLineSH extends RMGLine {
         // the last decoration line
         let path = ''
         if (this._direction == 'l') {
-            path = `M38,10 H ${this._svgDestWidth - 20} V 24 H 24 Z`
+            path = `M38,10 H ${this._svgDestWidth - 20} l 0,12 H 24 Z`
         } else {
             path = `M24,10 H ${this._svgDestWidth - 30} l 12,12 H 24 Z`
         }
@@ -208,6 +208,7 @@ export class RMGLineSH extends RMGLine {
     }
 
     drawRunin() {
+        // Todo: use _svgRuninWidth instead of _svgDestWidth
         this._svgRuninWidth = this._svgDestWidth
 
         // get the height
@@ -238,10 +239,15 @@ export class RMGLineSH extends RMGLine {
             // clear next
             $('g#next_stn_text').hide()
             $('g#next_text').hide()
+            // clear gray line
+            $('#run_in_line_shmetro_gray').hide()
 
             // the last decoration line
-            var path = `M24,10 H ${this._svgRuninWidth - 20} V 24 H 24 Z`
-            var fill = 'gray'
+            $('#run_in_line_shmetro').attr({
+                transform: `translate(0,${220 + dh})`,
+                fill: 'gray',
+                d: `M24,10 H ${this._svgRuninWidth - 20} V 22 H 24 Z`,
+            })
         } else if (prevStnIds.length == 1 && ['linestart', 'lineend'].includes(prevStnIds[0])) {
             // origin station
             if (this._direction == 'l')
@@ -254,11 +260,17 @@ export class RMGLineSH extends RMGLine {
             // clear prev
             $('g#prev_stn_text').hide()
             $('g#prev_text').hide()
+            // clear gray line
+            $('#run_in_line_shmetro_gray').hide()
 
             // the last decoration line
-            if (this._direction == 'l') var path = `M38,10 H ${this._svgRuninWidth - 20} V 24 H 24 Z`
+            if (this._direction == 'l') var path = `M38,10 H ${this._svgRuninWidth - 20} l 0,12 H 24 Z`
             else var path = `M24,10 H ${this._svgRuninWidth - 30} l 12,12 H 24 Z`
-            var fill = 'var(--rmg-theme-colour)'
+            $('#run_in_line_shmetro').attr({
+                transform: `translate(0,${220 + dh})`,
+                fill: 'var(--rmg-theme-colour)',
+                d: path,
+            })
         } else {
             // general station
             $('g#current_text').attr({ transform: `translate(${this._svgRuninWidth / 2}, ${dh + 150})`, 'text-anchor': 'middle', })
@@ -269,15 +281,27 @@ export class RMGLineSH extends RMGLine {
             // the last decoration line
             if (this._direction == 'l') var path = `M38,10 H ${this._svgRuninWidth - 20} V 24 H 24 Z`
             else var path = `M24,10 H ${this._svgRuninWidth - 30} l 12,12 H 24 Z`
-            var fill = 'var(--rmg-theme-colour)'
-        }
 
-        // the last decoration line
-        $('#run_in_line_shmetro_use').attr({
-            transform: `translate(0,${220 + dh})`,
-            fill: fill,
-            d: path,
-        })
+            let middle = this._svgRuninWidth / 2
+            if (this._direction == 'l') {
+                var path = `M 38,10 H ${middle} V 22 H 24 Z`
+                var path_gray = `M ${middle},10 H ${this._svgRuninWidth - 30} l 0,12 H ${middle} Z`
+            }
+            else {
+                var path = `M ${middle},10 H ${this._svgRuninWidth - 30} l 12,12 H ${middle} Z`
+                var path_gray = `M 24,10 H ${middle} l 0,12 H 24 Z`
+            }
+            $('#run_in_line_shmetro').attr({
+                transform: `translate(0,${220 + dh})`,
+                fill: 'var(--rmg-theme-colour)',
+                d: path,
+            })
+            $('#run_in_line_shmetro_gray').attr({
+                transform: `translate(0,${220 + dh})`,
+                fill: 'gray',
+                d: path_gray,
+            }).show()
+        }
     }
 
     // rewrite this to append dom and then getBoundingClientRect
@@ -487,7 +511,7 @@ export class RMGLineSH extends RMGLine {
             $(`#rmg-name__shmetro--${stnId}`).parent().append(stnInstance.ungrpIconHTML)
             $('#stn_icons').html($('#stn_icons').html()); // Refresh DOM
         }
-        
+
         if (this.stations[this._currentStnId].parents.includes(stnId) || this.stations[this._currentStnId].children.includes(stnId)) {
             this.drawRunin();
         }
@@ -542,5 +566,10 @@ export class RMGLineSH extends RMGLine {
     set svgHeight(val: number) {
         super.svgHeight = val
         this.drawLine()
+    }
+
+    set svgDestWidth(val: number) {
+        super.svgDestWidth = val
+        this.drawRunin()
     }
 }
