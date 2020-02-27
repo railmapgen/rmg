@@ -381,6 +381,13 @@ export function updateParam() {
             param.stn_list[stnId].usage = '';
         }
     }
+
+    // Version 3.0
+    for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
+        if (!('facility' in stnInfo)) {
+            param.stn_list[stnId].facility = stnInfo.usage;
+        }
+    }
     putParams(param);
 }
 
