@@ -1,0 +1,62 @@
+{
+    "tab": {
+        "file": "檔案", 
+        "layout": "佈局", 
+        "design": "設計", 
+        "stations": "車站",
+        "info": "資訊"
+    },
+
+    "file": {
+        "tab": "檔案",
+        "lang": {
+            "button": "語言/Language", 
+            "title": "選擇語言"
+        }
+    },
+
+    "stations": {
+        "tab": "車站",
+        "add": {
+            "button": "新增車站",
+            "title": "選擇車站位置",
+            "prep": "相對位置",
+            "before": "先於",
+            "after": "後於",
+            "station": "車站",
+            "pivot": "定位車站",
+            "on": "位於",
+            "loc": "路線位置",
+            "centre": "主線",
+            "upper": "上方支線",
+            "lower": "下方支線",
+            "newUpper": "新增上方支線",
+            "newLower": "新增下方支線",
+            "bypass": "繞過所有車站直至",
+            "end": "支線終點"
+        },
+        "edit": {
+            "more": {
+                "facility": "設施",
+                "airport": "機場", 
+                "hsr": "高速鐵路", 
+                "disney": "迪士尼", 
+                "none": "無"
+            }
+        }
+    }, 
+
+    "colour": {
+        "title": "編輯名稱及顏色",
+        "city": "城市", 
+        "line": "路線", 
+        "colour": "背景色（十六進制）", 
+        "fg": "前景色", 
+        "fgBlack": "黑", 
+        "fgWhite": "白"
+    }, 
+
+    "dialog": {
+        "done": "完成"
+    }
+}

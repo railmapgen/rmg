@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title trans-tag="Title">Rail Map Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <link rel="stylesheet" href="styles/main.css">
+    <style type="text/css" id="global">
+        :root {
+            --rmg-theme-colour: #000;
+        }
+    </style>
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152882192-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-152882192-1');
+    </script>
+</head>
+<body>
+<div id="svgs">
+    <div class="show" style="display: none;" mtr-specific shmetro-specific>
+        ${require('./html/svg/destination.html')}
+    </div>
+    <div class="show" style="display: none;" gzmtr-specific shmetro-specific>
+        ${require('./html/svg/runin.html')}
+    </div>
+    <div class="show">
+        ${require('./html/svg/railmap.html')}
+    </div>
+</div>
+
+<div id="toggle">
+    <!-- <span class="mdc-tab__ripple"></span> -->
+    <span class="material-icons">menu</span>
+    <ul>
+        <li style="display: none;" mtr-specific shmetro-specific><span class="material-icons">directions</span></li>
+        <li style="display: none;" gzmtr-specific shmetro-specific><span class="material-icons">pin_drop</span></li>
+        <li><span class="material-icons">map</span></li>
+        <li><span class="material-icons">fullscreen</span></li>
+    </ul>
+</div>
+
+<div id="panels">
+    <!-- ${require('./html/panels.html')} -->
+</div>
+
+<canvas style="display: none;"></canvas>
+<!-- <script src="./node_modules/react/umd/react.development.js"></script> -->
+<!-- <script src="./node_modules/react-dom/umd/react-dom.development.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/react@16.13.0/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@16.13.0/umd/react-dom.production.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/i18next@19.3.2/dist/umd/i18next.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-i18next@11.3.3/dist/umd/react-i18next.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/i18next-xhr-backend@3.2.2/dist/umd/i18nextXHRBackend.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@material-ui/core@4.9.4/umd/material-ui.production.min.js"></script>
+<script>
+    window.urlParams = new URLSearchParams(window.location.search);
+</script>
+
+</body>
+</html>

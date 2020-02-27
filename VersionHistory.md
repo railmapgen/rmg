@@ -1,5 +1,16 @@
 # Version History
 
+## 3.0 (Beta) (27 Feb 2020)
+
+### New Features
+
+- Rewrite settings panel with React. 
+
+### Known Issues
+
+- Text are not completely translated. 
+- UI elements may have unexpected position. 
+
 ## 2.16 (23 Feb 2020)
 
 ### New Features

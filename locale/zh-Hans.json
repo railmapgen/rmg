@@ -1,0 +1,60 @@
+{
+    "tab": {
+        "file": "文件", 
+        "layout": "布局", 
+        "design": "设计", 
+        "stations": "车站",
+        "info": "信息"
+    },
+
+    "file": {
+        "lang": {
+            "button": "语言/Language", 
+            "title": "选择语言"
+        }
+    },
+
+    "stations": {
+        "add": {
+            "button": "添加车站",
+            "title": "选择车站位置",
+            "prep": "相对位置",
+            "before": "先于",
+            "after": "后于",
+            "station": "车站",
+            "pivot": "定位车站",
+            "on": "在",
+            "loc": "线路位置",
+            "centre": "主线",
+            "upper": "上方支线",
+            "lower": "下方支线",
+            "newUpper": "新建上方支线",
+            "newLower": "新建下方支线",
+            "bypass": "绕过所有车站直至",
+            "end": "支线终点"
+        },
+        "edit": {
+            "more": {
+                "facility": "设施",
+                "airport": "机场", 
+                "hsr": "高铁", 
+                "disney": "迪士尼", 
+                "none": "无"
+            }
+        }
+    }, 
+
+    "colour": {
+        "title": "编辑名称和颜色",
+        "city": "城市", 
+        "line": "线路", 
+        "colour": "背景色（十六进制）", 
+        "fg": "前景色", 
+        "fgBlack": "黑", 
+        "fgWhite": "白"
+    }, 
+
+    "dialog": {
+        "done": "完成"
+    }
+}

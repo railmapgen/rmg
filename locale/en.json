@@ -1,0 +1,60 @@
+{
+    "tab": {
+        "file": "File", 
+        "layout": "Layout", 
+        "design": "Design", 
+        "stations": "Stations",
+        "info": "Info"
+    },
+
+    "file": {
+        "lang": {
+            "button": "Language", 
+            "title": "Choose a Language"
+        }
+    },
+
+    "stations": {
+        "add": {
+            "button": "New Station",
+            "title": "Choose a location",
+            "prep": "Relative Position",
+            "before": "Before",
+            "after": "After",
+            "station": "station",
+            "pivot": "Pivot",
+            "on": "On",
+            "loc": "Location",
+            "centre": "centre line",
+            "upper": "upper branch",
+            "lower": "lower branch",
+            "newUpper": "new upper branch",
+            "newLower": "new lower branch",
+            "bypass": "Bypass all stations until",
+            "end": "End of Branch"
+        }, 
+        "edit": {
+            "more": {
+                "facility": "Facility",
+                "airport": "Airport", 
+                "hsr": "High Speed Rail", 
+                "disney": "Disneyland Resort", 
+                "none": "None"
+            }
+        }
+    }, 
+
+    "colour": {
+        "title": "Edit Names and Colours",
+        "city": "City", 
+        "line": "Line", 
+        "colour": "Background (HEX)", 
+        "fg": "Foreground", 
+        "fgBlack": "Black", 
+        "fgWhite": "White"
+    }, 
+
+    "dialog": {
+        "done": "Done"
+    }
+}
