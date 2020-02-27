@@ -29,7 +29,7 @@ jobs:
     - name: Add Artifacts
       run: |
         git checkout -b gh-pages
-        git add ./dist/*.* -f
+        git add ./dist/ -f
         git add index.html -f
         git add index3.html -f
         git config user.email "${{secrets.GIT_EMAIL}}"
