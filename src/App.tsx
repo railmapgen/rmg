@@ -5,9 +5,9 @@ import PanelTab from './panels/panels';
 
 export default function App(props) {
     return (
-        <React.Suspense fallback="loading">
-            <PanelTab />
-        </React.Suspense>
+        // <React.Suspense fallback="loading">
+            <PanelTab useSuspense={false} />
+        // </React.Suspense>
     );
 }
 

@@ -8,41 +8,7 @@ import { StationInfo, InterchangeInfo, StationTransfer, Name } from '../types';
 import { RMGLineGZ } from '../Line/LineGZ';
 
 import StationEditDialog from './panel-stations-edit-diag';
-
-const styles = {
-    // stnChip: {
-    //     height: 55, 
-    //     borderRadius: 8, 
-    //     margin: 8, 
-    //     width: 'calc((100% - 96px) / 6)', 
-    //     backgroundColor: 'white', 
-    //     boxShadow: '0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, .12)', 
-    //     '& .MuiChip-label': {
-    //         width: '100%'
-    //     }
-    // }, 
-    stnChipText: {
-        display: 'block',
-        textAlign: 'center' as 'center'
-    },
-    stnChipTextZH: {
-        fontSize: 18, 
-        fontFamily: 'Helvetica, Noto Serif KR, Noto Serif JP, Noto Serif TC, Noto Serif SC, serif', 
-        fontWeight: 600,
-        lineHeight: '1.2rem',
-    }, 
-    stnChipTextEN: {
-        fontFamily: 'Helvetica, Arial, sans-serif',
-        fontSize: '.75rem', 
-        lineHeight: '.9rem', 
-        whiteSpace: 'pre' as 'pre', 
-        overflow: 'hidden'
-    }, 
-}
-
-interface PanelStationsProps {
-    classes: any;
-}
+import StationChipSet from './panel-stations-chipset';
 
 interface PanelStationsState {
     theme: string[];
@@ -57,7 +23,7 @@ interface PanelStationsState {
     stnDeleteErrDialogOpened: boolean;
 }
 
-class PanelStations extends React.Component<PanelStationsProps, PanelStationsState> {
+export default class PanelStations extends React.Component<{}, PanelStationsState> {
     constructor(props) {
         super(props);
 
@@ -254,7 +220,6 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
             <div style={{width: '100%'}}>
                 <StationChipSet
                     stnList={this.state.stnList}
-                    classes={this.props.classes}
                     onSelection={this.stnChipSetSelection.bind(this)}
                     addStationClick={() => this.setState({stnAddDialogOpened: true})} />
                 <Snackbar
@@ -292,8 +257,7 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                     onUpdate={this.stnEditDialogUpdate.bind(this)}
                     stnId={this.state.stationSelected}
                     stnInfo={this.state.stnList[this.state.stationSelected] || this.state.stnList['linestart']}
-                    stnList={this.state.stnList}
-                    classes={this.props.classes} />
+                    stnList={this.state.stnList} />
                 <StationDeleteDialog 
                     open={this.state.stnDeleteDialogOpened}
                     onClose={this.stnDeleteClose.bind(this)}
@@ -303,58 +267,6 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                     onClose={() => this.setState({stnDeleteErrDialogOpened: false})} />
             </div>
         );
-    }
-}
-
-export default withStyles(styles)(PanelStations);
-
-interface StationChipSetProps {
-    classes: any;
-    stnList: {
-        [stnId: string]: StationInfo;
-    };
-    onSelection: (stnId: string) => void;
-    addStationClick: () => void;
-}
-
-class StationChipSet extends React.Component<StationChipSetProps> {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        let { classes } = this.props;
-        return (
-            <div>
-                <Chip
-                    key="add_stn"
-                    label="Add a Station"
-                    className={'stn-chip'}
-                    onClick={this.props.addStationClick}
-                />
-                {window.myLine.tpo.map(stnId => {
-                    let label = (
-                        <span>
-                            <span className={`${classes.stnChipText} ${classes.stnChipTextZH}`}>
-                                {this.props.stnList[stnId].name[0]}
-                            </span>
-                            <span className={`${classes.stnChipText} ${classes.stnChipTextEN}`}>
-                                {this.props.stnList[stnId].name[1].replace('\\','\r\n')}
-                            </span>
-                        </span>
-                    );
-                    return (
-                        <Chip 
-                            key={stnId} 
-                            icon={window.urlParams.get('style')==='gzmtr' && 
-                                <Avatar style={{backgroundColor: 'unset'}}>{this.props.stnList[stnId].num}</Avatar>}
-                            label={label}
-                            onClick={() => this.props.onSelection(stnId)}
-                            className={'stn-chip'} />
-                    )
-                })}
-            </div>
-        )
     }
 }
 

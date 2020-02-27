@@ -16,7 +16,6 @@ interface StationEditDialogProps {
     stnList: {
         [stnId: string]: StationInfo;
     };
-    classes: any;
 }
 
 interface StationEditDialogState {

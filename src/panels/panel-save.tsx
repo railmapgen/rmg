@@ -177,13 +177,13 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
                             <ListItemIcon>
                                 <Icon>folder_open</Icon>
                             </ListItemIcon>
-                            <ListItemText primary="Open From JSON" />
+                            <ListItemText primary={this.props.t('file.open.button')} />
                         </ListItem>
                         <ListItem button onClick={this.saveClick}>
                             <ListItemIcon>
                                 <Icon>save</Icon>
                             </ListItemIcon>
-                            <ListItemText primary="Save As JSON" />
+                            <ListItemText primary={this.props.t('file.save')} />
                         </ListItem>
                         <ListItem button onClick={() => this.setState({exportDialogOpened: true})}>
                             <ListItemIcon>
@@ -198,7 +198,7 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
                             <ListItemIcon>
                                 <Icon>style</Icon>
                             </ListItemIcon>
-                            <ListItemText primary="Style" secondary={allStyles[this.state.style]} />
+                            <ListItemText primary={this.props.t('file.style.button')} secondary={allStyles[this.state.style]} />
                         </ListItem>
                         <ListItem button onClick={() => this.setState({langDialogOpened: true})}>
                             <ListItemIcon>
@@ -526,12 +526,17 @@ function LangDialog(props: LangDialogProps) {
         if (lang === window.urlParams.get('lang')) {
             props.onClose();
         } else {
+            i18n.changeLanguage(lang);
             window.urlParams.set('lang', lang);
+            history.pushState({url:window.location.href}, null, '?' + window.urlParams.toString());
             window.gtag('event', 'set', {
                 event_category: 'language', 
                 event_label: window.urlParams.get('lang')
             });
-            window.location.href = '?' + window.urlParams.toString();
+            document.documentElement.setAttribute('lang',lang);
+            document.querySelector('title').textContent = t('title');
+            props.onClose();
+            // window.location.href = '?' + window.urlParams.toString();
         }
     }
 

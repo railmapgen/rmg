@@ -1,4 +1,6 @@
 {
+    "title": "铁路线路图生成器", 
+
     "tab": {
         "file": "文件", 
         "layout": "布局", 
@@ -8,6 +10,18 @@
     },
 
     "file": {
+        "open": {
+            "button": "从JSON文件打开", 
+            "title": "你的线路设置"
+        },
+        "save": "保存为JSON文件",
+        "style": {
+            "button": "风格", 
+            "title": "选择风格", 
+            "mtr": "港铁", 
+            "gzmtr": "广州地铁", 
+            "shmetro": "上海地铁 (Alpha)"
+        },
         "lang": {
             "button": "语言/Language", 
             "title": "选择语言"

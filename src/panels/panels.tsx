@@ -110,7 +110,7 @@ class PanelTab extends React.Component<PanelTabProps, PanelTabState> {
     constructor(props) {
         super(props);
         this.state = {
-            value: 3
+            value: 0
         };
         this.handleChange = this.handleChange.bind(this);
     }

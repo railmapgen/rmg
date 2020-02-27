@@ -1,4 +1,6 @@
 {
+    "title": "Rail Map Generator", 
+    
     "tab": {
         "file": "File", 
         "layout": "Layout", 
@@ -8,6 +10,18 @@
     },
 
     "file": {
+        "open": {
+            "button": "Open From JSON", 
+            "title": "Your Configuration"
+        },
+        "save": "Save As JSON",
+        "style": {
+            "button": "Style", 
+            "title": "Choose a Style", 
+            "mtr": "MTR", 
+            "gzmtr": "Guangzhou Metro", 
+            "shmetro": "Shanghai Metro (Alpha)"
+        },
         "lang": {
             "button": "Language", 
             "title": "Choose a Language"

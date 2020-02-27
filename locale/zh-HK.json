@@ -1,4 +1,6 @@
 {
+    "title": "鐵路路線圖產生器", 
+    
     "tab": {
         "file": "檔案", 
         "layout": "佈局", 
@@ -8,6 +10,18 @@
     },
 
     "file": {
+        "open": {
+            "button": "開啟自JSON檔案", 
+            "title": "你的路線設定"
+        },
+        "save": "儲存為JSON檔案",
+        "style": {
+            "button": "風格", 
+            "title": "選擇風格", 
+            "mtr": "港鐵", 
+            "gzmtr": "廣州地鐵", 
+            "shmetro": "上海地鐵 (Alpha)"
+        },
         "tab": "檔案",
         "lang": {
             "button": "語言/Language", 

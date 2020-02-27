@@ -196,10 +196,11 @@ body {
     text-align: center;
 }
 
-.stn-chip__text--zh {
+.stn-chip__text--zh, .stn-chip__label {
     font-weight: 500;
     font-size: 1rem;
     line-height: 1.2rem;
+    text-align: center;
 }
 
 .stn-chip-set > div:not(#add_stn) .stn-chip__text--zh {
@@ -261,7 +262,7 @@ button#osi_name .mdc-button__label {
     height: 48px;
     overflow: hidden;
     outline: none;
-    background: var(--mdc-theme-background);
+    background: var(--mdc-theme-background, white);
     box-shadow: none;
     border: 2px solid var(--mdc-theme-primary);
     border-width: 0 0 2px 2px;
