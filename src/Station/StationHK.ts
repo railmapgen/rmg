@@ -330,9 +330,17 @@ class OSI11StationHK extends Int2StationHK {
 
     constructor (id: string, data: StationInfo) {
         // data.int2 = data.osi11;
-        data.transfer.info[0].push(data.transfer.info[1][0]);
+        let newData = {
+            ...data, 
+            transfer: {
+                ...data.transfer, 
+                info: data.transfer.info
+                    .map((inf, idx) => idx===0 ? inf.concat([data.transfer.info[1][0]]) : inf)
+            }
+        }
+        // data.transfer.info[0].push(data.transfer.info[1][0]);
         // data.interchange[0].push(data.interchange[1][1]);
-        super(id, data);
+        super(id, newData);
 
         this._osiNames = data.transfer.osi_names[0];
         this._osiType = data.transfer.paid_area ? 'p' : 'u'; // u(npaid) or p(aid);
@@ -389,9 +397,17 @@ class OSI12StationHK extends Int3StationHK {
     
     constructor (id: string, data: StationInfo) {
         // data.int3 = data.osi12;
-        data.transfer.info[0].unshift(...data.transfer.info[1].slice(0,2));
+        let newData = {
+            ...data, 
+            transfer: {
+                ...data.transfer, 
+                info: data.transfer.info
+                    .map((inf,idx) => idx===0 ? data.transfer.info[1].slice(0,2) : inf),
+            }
+        }
+        // data.transfer.info[0].unshift(...data.transfer.info[1].slice(0,2));
         // data.interchange[0].unshift(...data.interchange[1].slice(1,3));
-        super(id, data);
+        super(id, newData);
 
         this._osiNames = data.transfer.osi_names[0];
         this._osiType = data.transfer.paid_area ? 'p' : 'u';
@@ -451,7 +467,7 @@ export class OSI22StationHK extends OSI12StationHK {
     constructor (id: string, data: StationInfo) {
         super(id, data);
         // data mutated by OSI12Station!!!
-        this._origIntInfo = data.transfer.info[0][2];
+        this._origIntInfo = data.transfer.info[0][0];
     }
 
     get _nameTxtAnchor() {return this._osiTxtAnchor;}
@@ -541,7 +557,7 @@ export class OSI22EndStationHK extends OSI12StationHK {
     constructor (id, data) {
         super(id, data);
         // data mutated by OSI12Station!!!
-        [this._origIntCity, this._origIntLine, this._origIntColour, this._origIntFg, this._origIntNameZH, this._origIntNameEN] = data.transfer.info[0][2];
+        [this._origIntCity, this._origIntLine, this._origIntColour, this._origIntFg, this._origIntNameZH, this._origIntNameEN] = data.transfer.info[0][0];
     }
 
     get origIntTickHTML() {

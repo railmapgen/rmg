@@ -381,6 +381,7 @@ export class RMGLineHK extends RMGLine {
         this.stations[stnId].usage = chipId;
         let param = getParams();
         param.stn_list[stnId].usage = chipId;
+        param.stn_list[stnId].facility = chipId;
         putParams(param);
 
         $(`#stn_icons #${stnId}`).remove();

@@ -167,11 +167,18 @@ class IntStationGZ extends RMGStationGZ {
 
 class BranchStationGZ extends IntStationGZ {
     constructor (id: string, data: StationInfo, lineInf) {
-        data.transfer.info[0].unshift(lineInf);
-        if (data.transfer.info[1]) {
-            data.transfer.info[0].push(...data.transfer.info[1]);
+        let newData = {
+            ...data, 
+            transfer: {
+                ...data.transfer, 
+                info: data.transfer.info.map((inf, idx) => idx===0 ? [lineInf].concat(inf) : inf)
+            }
         }
-        super(id, data);
+        // data.transfer.info[0].unshift(lineInf);
+        // if (data.transfer.info[1]) {
+        //     data.transfer.info[0].push(...data.transfer.info[1]);
+        // }
+        super(id, newData);
     }
 
     set lineInfo(info: InterchangeInfo) {

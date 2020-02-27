@@ -2,7 +2,7 @@ import { getTxtBoxDim, setParams, getParams, putParams, getRandomId } from '../u
 import { RMGStationGZ, IntStationGZ, BranchStationGZ, OSIStationGZ, getIntBoxGZ } from '../Station/StationGZ';
 import { RMGLine } from './Line';
 
-import { Name, StationInfo, RMGParam, InterchangeInfo, DirectionLong } from '../types';
+import { Name, StationInfo, RMGParam, InterchangeInfo, DirectionLong, StationTransfer } from '../types';
 
 export class RMGLineGZ extends RMGLine {
     private _psdNum: string;
@@ -688,6 +688,11 @@ export class RMGLineGZ extends RMGLine {
 
     updateStnTransfer(stnId: string, type, info=null) {
         super.updateStnTransfer(stnId, type, info);
+        this.loadLineNum();
+    }
+
+    updateStnTransfer2(stnId: string, info: StationTransfer) {
+        super.updateStnTransfer2(stnId, info);
         this.loadLineNum();
     }
 
