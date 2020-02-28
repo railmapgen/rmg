@@ -1,9 +1,12 @@
 import * as React from 'react';
-import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Icon, Divider, Button, ListItemIcon, RadioGroup, FormControlLabel, Radio, Switch, Chip, withStyles, Dialog, DialogTitle, DialogContent, Avatar, TextField, DialogActions } from '@material-ui/core';
-import { StationTransfer, InterchangeInfo, Name } from '../types';
-import ColourDialog from './panel-colour-diag';
+import { withTranslation, useTranslation } from 'react-i18next';
+import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Icon, Divider, Button, ListItemIcon, RadioGroup, FormControlLabel, Radio, Switch, Chip, withStyles, Dialog, DialogTitle, DialogContent, Avatar, TextField, DialogActions, Tooltip } from '@material-ui/core';
+import { StationTransfer, InterchangeInfo, Name } from '../../../types';
+import ColourDialog from '../../panel-colour-diag';
+import NameListItems from './name-list-items';
 
 interface StationEditInterchangeTabProps {
+    t: any;
     stnTrans: StationTransfer;
     onUpdate: (trans: StationTransfer) => void;
 }
@@ -12,7 +15,7 @@ interface StationEditInterchangeTabState {
     osiNameDialogOpened: boolean;
 }
 
-export default class StationEditInterchangeTab extends React.Component<StationEditInterchangeTabProps, StationEditInterchangeTabState> {
+class StationEditInterchangeTab extends React.Component<StationEditInterchangeTabProps, StationEditInterchangeTabState> {
     constructor(props) {
         super(props);
 
@@ -158,12 +161,14 @@ export default class StationEditInterchangeTab extends React.Component<StationEd
             <List>
                 <ListItem>
                     <ListItemText>
-                        <h3 style={{margin: 0}}>Within-station Interchange</h3>
+                        <h3 style={{margin: 0}}>{this.props.t('stations.edit.interchange.within')}</h3>
                     </ListItemText>
                     <ListItemSecondaryAction>
-                        <IconButton onClick={() => this.addClick(0)}>
-                            <Icon>add_circle</Icon>
-                        </IconButton>
+                        <Tooltip title={this.props.t('stations.edit.interchange.add')} aria-label="add">
+                            <IconButton onClick={() => this.addClick(0)}>
+                                <Icon>add_circle</Icon>
+                            </IconButton>
+                        </Tooltip>
                     </ListItemSecondaryAction>
                 </ListItem>
                 <ListItem>
@@ -172,10 +177,10 @@ export default class StationEditInterchangeTab extends React.Component<StationEd
                         onDelete={(i) => this.deleteClick(0, i)}
                         onUpdate={(val) => this.chipUpdate(0, val)}/>
                 </ListItem>
-                <Divider />
+                {['mtr','shmetro'].includes(window.urlParams.get('style')) && <div><Divider />
                 <ListItem>
                     <ListItemText>
-                        <h3 style={{margin: 0}}>Out-of-station Interchange</h3>
+                        <h3 style={{margin: 0}}>{this.props.t('stations.edit.interchange.osi')}</h3>
                     </ListItemText>
                     <ListItemSecondaryAction>
                         <Button
@@ -190,9 +195,11 @@ export default class StationEditInterchangeTab extends React.Component<StationEd
                             osiName={this.props.stnTrans.osi_names[0] || ['', '']}
                             onClose={() => this.setState({osiNameDialogOpened: false})}
                             onUpdate={this.osiNameUpdate.bind(this)} />
-                        <IconButton onClick={() => this.addClick(1)}>
-                            <Icon>add_circle</Icon>
-                        </IconButton>
+                        <Tooltip title={this.props.t('stations.edit.interchange.add')} aria-label="add">
+                            <IconButton onClick={() => this.addClick(1)}>
+                                <Icon>add_circle</Icon>
+                            </IconButton>
+                        </Tooltip>
                     </ListItemSecondaryAction>
                 </ListItem>
                 <ListItem>
@@ -203,46 +210,45 @@ export default class StationEditInterchangeTab extends React.Component<StationEd
                     />
                 </ListItem>
                 <ListItem>
-                    <span>
-                        Please note that some combinations of interchanges may not be displayed properly.
-                    </span>
-                </ListItem>
-                <Divider />
+                    <span>{this.props.t('stations.edit.interchange.note')}</span>
+                </ListItem></div>}
+                {window.urlParams.get('style')==='mtr' && <div><Divider />
                 <ListItem>
                     <ListItemText>
-                        <h3 style={{margin: 0}}>More Settings</h3>
+                        <h3 style={{margin: 0}}>{this.props.t('stations.edit.interchange.settings')}</h3>
                     </ListItemText>
                 </ListItem>
                 <ListItem>
                     <ListItemIcon>
                         <Icon>format_textdirection_l_to_r</Icon>
                     </ListItemIcon>
-                    <ListItemText primary="Text Direction" />
-                    <ListItemSecondaryAction>
-                        <RadioGroup name="tick_direc" row
-                            value={this.props.stnTrans.tick_direc}
-                            onChange={this.tickDirecChange.bind(this)}
-                        >
-                            <FormControlLabel
-                                value="l"
-                                control={<Radio color="secondary" />}
-                                label="Left"
-                                labelPlacement="end"
-                            />
-                            <FormControlLabel
-                                value="r"
-                                control={<Radio color="secondary" />}
-                                label="Right"
-                                labelPlacement="end"
-                            />
-                        </RadioGroup>
-                    </ListItemSecondaryAction>
+                    <ListItemText 
+                        primary={this.props.t('stations.edit.interchange.tickDirec.label')}
+                        secondary={
+                            <RadioGroup name="tick_direc" row
+                                    value={this.props.stnTrans.tick_direc}
+                                    onChange={this.tickDirecChange.bind(this)}
+                                >
+                                <FormControlLabel
+                                    value="l"
+                                    control={<Radio color="secondary" />}
+                                    label={this.props.t('stations.edit.interchange.tickDirec.l')}
+                                    labelPlacement="end"
+                                />
+                                <FormControlLabel
+                                    value="r"
+                                    control={<Radio color="secondary" />}
+                                    label={this.props.t('stations.edit.interchange.tickDirec.r')}
+                                    labelPlacement="end"
+                                />
+                            </RadioGroup>
+                        } />
                 </ListItem>
                 <ListItem>
                     <ListItemIcon>
                         <Icon>attach_money</Icon>
                     </ListItemIcon>
-                    <ListItemText primary="OSI within Paid Area" />
+                    <ListItemText primary={this.props.t('stations.edit.interchange.paidArea')} />
                     <ListItemSecondaryAction>
                         <Switch
                             edge="end"
@@ -250,11 +256,13 @@ export default class StationEditInterchangeTab extends React.Component<StationEd
                             checked={this.props.stnTrans.paid_area}
                         />
                     </ListItemSecondaryAction>
-                </ListItem>
+                </ListItem></div>}
             </List>
         )
     }
 }
+
+export default withTranslation()(StationEditInterchangeTab);
 
 // const NameDialog = React.lazy(() => import(/* webpackChunkName: "panelNameDiag" */ './panel-name-diag'));\
 
@@ -404,48 +412,27 @@ interface OSINameDialogProps {
     onClose: () => void;
 }
 
-class OSINameDialog extends React.Component<OSINameDialogProps> {
-    constructor(props) {
-        super(props);
-    }
+function OSINameDialog(props: OSINameDialogProps) {
+    const { t } = useTranslation();
 
-    render() {
-        return (
-            <Dialog open={this.props.open} onClose={this.props.onClose}>
-                <DialogTitle>Edit OSI Names</DialogTitle>
-                <DialogContent dividers>
-                    <List>
-                        <ListItem>
-                            <ListItemIcon>
-                                <Avatar>漢</Avatar>
-                            </ListItemIcon>
-                            <TextField 
-                                style={{width: '100%'}}
-                                variant="outlined"
-                                label="Name (in Chinese characters)"
-                                onChange={(e) => this.props.onUpdate(e.target.value, 0)}
-                                value={this.props.osiName[0]} />
-                        </ListItem>
-                        <ListItem>
-                            <ListItemIcon>
-                                <Avatar>A</Avatar>
-                            </ListItemIcon>
-                            <TextField 
-                                style={{width: '100%'}}
-                                variant="outlined"
-                                label="Name (in Latin characters)"
-                                onChange={(e) => this.props.onUpdate(e.target.value, 1)}
-                                value={this.props.osiName[1]}
-                                helperText="Use a backslash (\) to wrap text" />
-                        </ListItem>
-                    </List>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.props.onClose} color="primary" autoFocus>
-                        Done
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        )
-    }
+    const handleUpdate = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.props.onUpdate(event.target.value, index);
+    };
+
+
+    return (
+        <Dialog open={props.open} onClose={props.onClose}>
+            <DialogTitle>{t('stations.edit.interchange.osiName')}</DialogTitle>
+            <DialogContent dividers>
+                <List>
+                    <NameListItems onUpdate={handleUpdate} name={props.osiName} />
+                </List>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={props.onClose} color="primary" autoFocus>
+                    {t('dialog.done')}
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
 }

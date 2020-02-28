@@ -1,11 +1,12 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, Tabs, Tab, Icon, Typography, CircularProgress, DialogActions, Button, useTheme, useMediaQuery } from '@material-ui/core';
-import { StationInfo } from '../types';
+import { StationInfo } from '../../../types';
 
-const StationEditNameTab = React.lazy(() => import(/* webpackChunkName: "panelStationsName" */ './panel-stations-name'));
-const StationEditInterchangeTab = React.lazy(() => import(/* webpackChunkName: "panelStationsInterchange" */ './panel-stations-interchange'));
-const StationEditBranchTab = React.lazy(() => import(/* webpackChunkName: "panelStationsBranch" */ './panel-stations-branch'));
-const StationEditMoreTab = React.lazy(() => import(/* webpackChunkName: "panelStationsMore" */ './panel-stations-more'));
+const NameTab = React.lazy(() => import(/* webpackChunkName: "panelStationsName" */ './name-tab'));
+const InterchangeTab = React.lazy(() => import(/* webpackChunkName: "panelStationsInterchange" */ './interchange-tab'));
+const BranchTab = React.lazy(() => import(/* webpackChunkName: "panelStationsBranch" */ './branch-tab'));
+const MoreTab = React.lazy(() => import(/* webpackChunkName: "panelStationsMore" */ './more-tab'));
 
 interface StationEditDialogProps {
     onClose: () => void;
@@ -18,18 +19,11 @@ interface StationEditDialogProps {
     };
 }
 
-interface StationEditDialogState {
-    tabIndex: number;
-}
-
 export default function StationEditDialog(props: StationEditDialogProps) {
+    const { t } = useTranslation();
     const [tabIndex, setTabIndex] = React.useState(0);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    
-    const tabChange = (event, newValue) => {
-        setTabIndex(newValue);
-    }
 
     const tabClasses = {
         root: 'tab-nav',
@@ -39,32 +33,34 @@ export default function StationEditDialog(props: StationEditDialogProps) {
 
     return (
         <Dialog onClose={props.onClose} open={props.open} fullScreen={fullScreen}>
-            <DialogTitle>Edit Station Detail</DialogTitle>
-            <DialogContent dividers>
-                <div>
-                    <Tabs value={tabIndex} indicatorColor="primary" textColor="primary" onChange={tabChange} variant="scrollable" scrollButtons="off">
-                        <Tab 
-                            label={<span>Name</span>} 
-                            icon={<Icon>title</Icon>} 
-                            classes={tabClasses}
-                        />
-                        <Tab 
-                            label={<span>Interchange</span>} 
-                            icon={<Icon>transfer_within_a_station</Icon>} 
-                            classes={tabClasses}
-                        />
-                        <Tab 
-                            label={<span>Branch</span>} 
-                            icon={<Icon>share</Icon>} 
-                            classes={tabClasses}
-                        />
-                        <Tab 
-                            label={<span>More</span>} 
-                            icon={<Icon>more_horiz</Icon>} 
-                            classes={tabClasses}
-                        />
-                    </Tabs>
-                </div>
+            <DialogTitle>{t('stations.edit.title')}</DialogTitle>
+            <DialogContent dividers style={{padding: '0 16px'}}>
+                <Tabs value={tabIndex} 
+                    indicatorColor="primary" 
+                    textColor="primary" 
+                    onChange={(_,val) => setTabIndex(val)} 
+                    variant="scrollable" scrollButtons="off">
+                    <Tab 
+                        label={<span>{t('stations.edit.tab.name')}</span>} 
+                        icon={<Icon>title</Icon>} 
+                        classes={tabClasses}
+                    />
+                    <Tab 
+                        label={<span>{t('stations.edit.tab.interchange')}</span>} 
+                        icon={<Icon>transfer_within_a_station</Icon>} 
+                        classes={tabClasses}
+                    />
+                    <Tab 
+                        label={<span>{t('stations.edit.tab.branch')}</span>} 
+                        icon={<Icon>share</Icon>} 
+                        classes={tabClasses}
+                    />
+                    <Tab 
+                        label={<span>{t('stations.edit.tab.more')}</span>} 
+                        icon={<Icon>more_horiz</Icon>} 
+                        classes={tabClasses}
+                    />
+                </Tabs>
                 <Typography
                     component="div"
                     role="tabpanel">
@@ -72,14 +68,14 @@ export default function StationEditDialog(props: StationEditDialogProps) {
                         {((idx) => {
                             switch (idx) {
                                 case 0:
-                                    return <StationEditNameTab onUpdate={props.onUpdate} stnInfo={props.stnInfo} />
+                                    return <NameTab onUpdate={props.onUpdate} stnInfo={props.stnInfo} />
                                 case 1:
-                                    return <StationEditInterchangeTab
+                                    return <InterchangeTab
                                         stnTrans={props.stnInfo.transfer}
                                         onUpdate={(trans) => props.onUpdate(trans, 'transfer')}
                                         />
                                 case 2:
-                                    return <StationEditBranchTab
+                                    return <BranchTab
                                         branch={props.stnInfo.branch}
                                         parents={props.stnInfo.parents}
                                         children={props.stnInfo.children}
@@ -87,7 +83,7 @@ export default function StationEditDialog(props: StationEditDialogProps) {
                                         onUpdate={(value, field) => props.onUpdate(value, 'branch', field)}
                                         />
                                 case 3:
-                                    return <StationEditMoreTab
+                                    return <MoreTab
                                         facility={props.stnInfo.facility}
                                         services={new Set(props.stnInfo.services)}
                                         onUpdate={(value, field) => props.onUpdate(value, field)}
@@ -100,7 +96,7 @@ export default function StationEditDialog(props: StationEditDialogProps) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={props.onClose} color="primary" autoFocus>
-                    Done
+                    {t('dialog.done')}
                 </Button>
             </DialogActions>
         </Dialog>

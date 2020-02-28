@@ -3,8 +3,10 @@ import { useTranslation, withTranslation } from 'react-i18next';
 
 import { Grid, Card, List, ListItem, ListItemIcon, Icon, ListItemText, Divider, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
 
-import { RMGParam } from '../types';
-import { describeParams, getTransText, getParams, getBase64FontFace, test } from '../utils';
+import { RMGParam } from '../../types';
+import { describeParams, getTransText, getParams, getBase64FontFace, test } from '../../utils';
+
+import TemplateDialog from './template-diag';
 
 export default class PanelSave extends React.Component {
     constructor(props) {
@@ -37,6 +39,7 @@ const allLangs = {
 
 interface SaveListsProps {
     t: any;
+    i18n: any;
 }
 
 interface SaveListsState {
@@ -171,7 +174,7 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
                             <ListItemIcon>
                                 <Icon>note_add</Icon>
                             </ListItemIcon>
-                            <ListItemText primary="New Canvas" />
+                            <ListItemText primary={this.props.t('file.new.button')} />
                         </ListItem>
                         <ListItem button onClick={() => $('#upload-param').click()}>
                             <ListItemIcon>
@@ -189,7 +192,7 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
                             <ListItemIcon>
                                 <Icon>cloud_download</Icon>
                             </ListItemIcon>
-                            <ListItemText primary="Preview And Export" />
+                            <ListItemText primary={this.props.t('file.export.button')} />
                         </ListItem>
                     </List>
                     <Divider />
@@ -198,13 +201,15 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
                             <ListItemIcon>
                                 <Icon>style</Icon>
                             </ListItemIcon>
-                            <ListItemText primary={this.props.t('file.style.button')} secondary={allStyles[this.state.style]} />
+                            <ListItemText 
+                                primary={this.props.t('file.style.button')} 
+                                secondary={this.props.t('file.style.'+this.state.style)} />
                         </ListItem>
                         <ListItem button onClick={() => this.setState({langDialogOpened: true})}>
                             <ListItemIcon>
                                 <Icon>language</Icon>
                             </ListItemIcon>
-                            <ListItemText primary={this.props.t('file.lang.button')} secondary={allLangs[this.state.lang]} />
+                            <ListItemText primary={this.props.t('file.lang.button')} secondary={allLangs[this.props.i18n.language]} />
                         </ListItem>
                     </List>
                 </Card>
@@ -213,61 +218,13 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
                 <UploadInput onChange={this.uploadInputChange} />
                 <ImportDialog open={this.state.importDialogOpened} onClose={this.importDialogClose} content={this.state.importDialogContent} />
                 <ExportDialog open={this.state.exportDialogOpened} onClose={this.exportDialogClose} />
-                <PreviewDialog open={this.state.previewDialogOpened} onClose={this.previewDialogClose} canvas={this.state.previewDialogCanvas} />
+                <TranslatedPreviewDialog 
+                    open={this.state.previewDialogOpened} 
+                    onClose={this.previewDialogClose} 
+                    canvas={this.state.previewDialogCanvas} />
                 <StyleDialog open={this.state.styleDialogOpened} onClose={this.styleDialogClose} />
                 <LangDialog open={this.state.langDialogOpened} onClose={() => this.setState({langDialogOpened: false})} />
             </div>
-        );
-    }
-}
-
-interface TemplateDialogProps {
-    open: boolean;
-    onClose: (action: string) => void;
-}
-
-interface TemplateDialogState {
-    listItems: JSX.Element[];
-}
-
-class TemplateDialog extends React.Component<TemplateDialogProps, TemplateDialogState> {
-    constructor(props) {
-        super(props);
-        this.state = {
-            listItems: [] as JSX.Element[]
-        }
-    }
-
-    componentDidMount() {
-        fetch('templates/template_list.json')
-            .then(response => response.json())
-            .then((data: {desc: {[x: string]: string}; filename: string}[]) => {
-                let lang = window.urlParams.get('lang');
-                return data.map(d => (
-                    <ListItem button onClick={() => this.props.onClose(d.filename)} key={d.filename}>
-                        <ListItemText primary={getTransText(d.desc, lang)} />
-                    </ListItem>
-                ))
-            })
-            .then(listItems => this.setState({listItems}));
-    }
-
-    render() {
-        return (
-            <Dialog onClose={() => this.props.onClose('close')} aria-labelledby="simple-dialog-title" open={this.props.open}>
-                <DialogTitle>Choose a Template</DialogTitle>
-                <DialogContent dividers>
-                    <List>{this.state.listItems}</List>
-                    <DialogContentText>
-                        Please note that all unsaved changes will be lost.
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => this.props.onClose('close')} color="primary">
-                        Cancel
-                    </Button>
-                </DialogActions>
-            </Dialog>
         );
     }
 }
@@ -339,32 +296,37 @@ interface ExportDialogProps {
     open: boolean;
 }
 
-class ExportDialog extends React.Component<ExportDialogProps> {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <Dialog onClose={() => this.props.onClose('close')} aria-labelledby="simple-dialog-title" open={this.props.open}>
-                <DialogTitle>Choose a Canvas</DialogTitle>
+function ExportDialog(props: ExportDialogProps) {
+    const { t } = useTranslation();
+    return (
+        <Dialog onClose={() => props.onClose('close')} open={props.open}>
+            <DialogTitle>{t('file.export.title')}</DialogTitle>
+            <DialogContent dividers>
                 <List>
-                    <ListItem button onClick={() => this.props.onClose('destination')} key="destination" disabled={!['mtr', 'shmetro'].includes(window.urlParams.get('style'))}>
-                        <ListItemText primary="Destination Panel" />
+                    <ListItem button 
+                        onClick={() => props.onClose('destination')} 
+                        key="destination" 
+                        disabled={!['mtr', 'shmetro'].includes(window.urlParams.get('style'))}>
+                        <ListItemText primary={t('file.export.destination')} />
                     </ListItem>
-                    <ListItem button onClick={() => this.props.onClose('runin')} key="runin" disabled={!['gzmtr', 'shmetro'].includes(window.urlParams.get('style'))}>
-                        <ListItemText primary="Running-in Board" />
+                    <ListItem button 
+                        onClick={() => props.onClose('runin')} 
+                        key="runin" 
+                        disabled={!['gzmtr', 'shmetro'].includes(window.urlParams.get('style'))}>
+                        <ListItemText primary={t('file.export.runin')} />
                     </ListItem>
-                    <ListItem button onClick={() => this.props.onClose('railmap')} key="railmap">
-                        <ListItemText primary="Rail Map" />
+                    <ListItem button 
+                        onClick={() => props.onClose('railmap')} key="railmap">
+                        <ListItemText primary={t('file.export.railmap')} />
                     </ListItem>
                 </List>
-            </Dialog>
-        );
-    }
+            </DialogContent>
+        </Dialog>
+    );
 }
 
 interface PreviewDialogProps {
+    t: any;
     onClose: (action: string) => void;
     open: boolean;
     canvas: string;
@@ -465,18 +427,18 @@ class PreviewDialog extends React.Component<PreviewDialogProps, PreviewDialogSta
     render() {
         return (
             <Dialog onClose={() => this.props.onClose('close')} aria-labelledby="simple-dialog-title" open={this.props.open} maxWidth={false} id="preview_diag">
-                <DialogTitle >Preview And Export</DialogTitle>
+                <DialogTitle >{this.props.t('file.preview.title')}</DialogTitle>
                 <DialogContent dangerouslySetInnerHTML={{__html: this.state.svgEl.outerHTML}}>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => this.props.onClose('close')} color="primary" autoFocus>
-                        Cancel
+                        {this.props.t('dialog.cancel')}
                     </Button>
                     <Button onClick={() => this.handleClick('png')} color="primary" disabled={!this.state.svgLoadFinished}>
-                        Download As PNG (Beta)
+                        {this.props.t('file.preview.png')}
                     </Button>
                     <Button onClick={() => this.handleClick('svg')} color="primary" disabled={!this.state.svgLoadFinished}>
-                        Download As SVG
+                        {this.props.t('file.preview.svg')}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -484,34 +446,30 @@ class PreviewDialog extends React.Component<PreviewDialogProps, PreviewDialogSta
     }
 }
 
+const TranslatedPreviewDialog = withTranslation()(PreviewDialog);
+
 interface StyleDialogProps {
     onClose: (style: string) => void;
     open: boolean;
 }
 
-class StyleDialog extends React.Component<StyleDialogProps> {
-    constructor(props: Readonly<StyleDialogProps>) {
-        super(props);
-    }
+function StyleDialog(props: StyleDialogProps) {
+    const {t, i18n} = useTranslation();
 
-    render() {
-        let listItems = [] as JSX.Element[];
-        for (let [key, val] of Object.entries(allStyles)) {
-            listItems.push(
-                <ListItem button onClick={() => this.props.onClose(key)} key={key}>
-                    <ListItemText primary={val} />
-                </ListItem>
-            );
-        }
-        return (
-            <Dialog onClose={() => this.props.onClose('close')} aria-labelledby="simple-dialog-title" open={this.props.open}>
-                <DialogTitle>Choose a Style</DialogTitle>
+    return (
+        <Dialog onClose={() => props.onClose('close')} open={props.open}>
+            <DialogTitle>{t('file.style.title')}</DialogTitle>
+            <DialogContent dividers>
                 <List>
-                    {listItems}
+                    {Object.keys(allStyles).map(key => (
+                        <ListItem button onClick={() => props.onClose(key)} key={key}>
+                            <ListItemText primary={t('file.style.'+key)} />
+                        </ListItem>
+                    ))}
                 </List>
-            </Dialog>
-        );
-    }
+            </DialogContent>
+        </Dialog>
+    );
 }
 
 interface LangDialogProps {
@@ -534,7 +492,7 @@ function LangDialog(props: LangDialogProps) {
                 event_label: window.urlParams.get('lang')
             });
             document.documentElement.setAttribute('lang',lang);
-            document.querySelector('title').textContent = t('title');
+            document.title = t('title');
             props.onClose();
             // window.location.href = '?' + window.urlParams.toString();
         }
@@ -543,13 +501,15 @@ function LangDialog(props: LangDialogProps) {
     return (
         <Dialog onClose={props.onClose} open={props.open}>
             <DialogTitle>{t('file.lang.title')}</DialogTitle>
-            <List>
-                {Object.keys(allLangs).map(key => (
-                    <ListItem button onClick={() => handleClick(key)} key={key}>
-                        <ListItemText primary={allLangs[key]} />
-                    </ListItem>
-                ))}
-            </List>
+            <DialogContent dividers>
+                <List>
+                    {Object.keys(allLangs).map(key => (
+                        <ListItem button onClick={() => handleClick(key)} key={key}>
+                            <ListItemText primary={allLangs[key]} />
+                        </ListItem>
+                    ))}
+                </List>
+            </DialogContent>
         </Dialog>
     );
 }

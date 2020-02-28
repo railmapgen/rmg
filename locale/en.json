@@ -10,11 +10,28 @@
     },
 
     "file": {
+        "new": {
+            "button": "New Canvas", 
+            "title": "Choose a Template", 
+            "notice": "Please note that all unsaved changes will be lost."
+        },
         "open": {
             "button": "Open From JSON", 
             "title": "Your Configuration"
         },
         "save": "Save As JSON",
+        "export": {
+            "button": "Preview And Export", 
+            "title": "Choose a Canvas", 
+            "destination": "Destination Info Panel",
+            "runin": "Running-in Board", 
+            "railmap": "Rail Map"
+        }, 
+        "preview": {
+            "title": "Preview And Export", 
+            "png": "Download As PNG", 
+            "svg": "Donwload As SVG (Web Use)"
+        },
         "style": {
             "button": "Style", 
             "title": "Choose a Style", 
@@ -28,7 +45,57 @@
         }
     },
 
+    "layout": {
+        "size": {
+            "title": "Canvas Size", 
+            "destWidth": "Destination Panel Width", 
+            "width": "Rail Map Width", 
+            "height": "Canvas Height"
+        },
+        "y": "Vertical Position",
+        "branchSpacing": "Branch Spacing",
+        "padding": "Rail Map Margin", 
+        "directionGZ": {
+            "title": "Direction Indicator Position", 
+            "left": "Left", 
+            "right": "Right", 
+            "top": "Top", 
+            "bottom": "Bottom"
+        }
+    },
+
+    "design": {
+        "theme": "Theme Colour and Line Name", 
+        "direction": {
+            "button": "Train Direction", 
+            "l": "Left", 
+            "r": "Right"
+        }, 
+        "platform": "Platform Number", 
+        "reverse": "Reverse Entire Line", 
+        "flipName": "Flip Station Names Position", 
+        "MTRLegacy": "Destination Panel Legacy Style", 
+        "lineNum": "Line Number", 
+        "psd": "Platform Door Number", 
+        "panelType": {
+            "button": "Info Panel Type", 
+            "title": "Choose a Type for Info Panel", 
+            "gz28": "Line 2/8", 
+            "gz3": "Line 3", 
+            "gz1421": "Line 7/9/13/14/21", 
+            "gzgf": "Line 6/Guangfo Line"
+        }, 
+        "autoNum": {
+            "button": "Station Auto-numbering", 
+            "title": "Warning", 
+            "msg": "You are about to re-number all stations on the main line. This action can not be undo.",
+            "ascend": "Ascending Order", 
+            "descend": "Descending Order"
+        }
+    },
+
     "stations": {
+        "current": "Set As Current", 
         "add": {
             "button": "New Station",
             "title": "Choose a location",
@@ -48,15 +115,76 @@
             "end": "End of Branch"
         }, 
         "edit": {
+            "title": "Edit Station Detail",
+            "button": "Edit", 
+            "tab": {
+                "name": "Name", 
+                "interchange": "Interchange", 
+                "branch": "Branch", 
+                "more": "More"
+            },
+            "name": {
+                "nameZH": "Name (in Chinese characters)", 
+                "nameEN": "Name (in Latin characters)", 
+                "nameENHelper": "Use a backslash (\\) to wrap text", 
+                "num": "Station Number"
+            },
+            "interchange": {
+                "within": "Within-station Interchange", 
+                "osi": "Out-of-station Interchange",
+                "note": "Please note that some combinations of interchanges may not be displayed properly.", 
+                "add": "Add",
+                "osiName": "Edit OSI Station Name", 
+                "settings": "More Settings", 
+                "tickDirec": {
+                    "label": "Text Direction", 
+                    "l": "Left", 
+                    "r": "Right"
+                }, 
+                "paidArea": "OSI within Paid Area"
+            },
+            "branch": {
+                "left": "Branch on the Left", 
+                "right": "Branch on the Right",
+                "type": {
+                    "title": "Branch Type", 
+                    "na": "(No Branches Found)", 
+                    "through": "Through", 
+                    "nonThrough": "Non-through"
+                }, 
+                "first": "First Station on Branch", 
+                "pos": {
+                    "title": "Branch Position", 
+                    "upper": "Upper", 
+                    "lower": "Lower"
+                }
+            },
             "more": {
-                "facility": "Facility",
-                "airport": "Airport", 
-                "hsr": "High Speed Rail", 
-                "disney": "Disneyland Resort", 
-                "none": "None"
+                "facility": {
+                    "button": "Facility",
+                    "title": "Choose A Facility Near This Station",
+                    "airport": "Airport", 
+                    "hsr": "High Speed Rail", 
+                    "disney": "Disneyland Resort", 
+                    "none": "None"
+                }, 
+                "services": {
+                    "button": "Train Services", 
+                    "local": "Stopping", 
+                    "express": "Express"
+                }
             }
+        }, 
+        "remove": {
+            "button": "Remove"
         }
     }, 
+
+    "info": {
+        "title": "Rail Map Generator V3", 
+        "notice": "Notice: Due to copyright, licensing and other legal restrictions, Rail Map Generator uses Noto Serif CJK and Vegur instead of MTRSung and Myriad Pro respectively for MTR-style maps. If you have obtained the license of either font, please feel free to edit the relevant code chunk of the exported SVG file.", 
+        "feedback": "Report Issues"
+    },
 
     "colour": {
         "title": "Edit Names and Colours",
@@ -69,6 +197,8 @@
     }, 
 
     "dialog": {
-        "done": "Done"
+        "done": "Done", 
+        "cancel": "Cancel", 
+        "ok": "OK"
     }
 }

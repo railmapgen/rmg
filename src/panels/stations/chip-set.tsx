@@ -1,26 +1,28 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Chip, makeStyles, Avatar, Icon } from '@material-ui/core';
-import { StationInfo } from '../types';
+import { Chip, makeStyles, Avatar, Icon, createStyles } from '@material-ui/core';
+import { StationInfo } from '../../types';
 
-const useStyles = makeStyles({
-    stnChipText: {
-        display: 'block',
-        textAlign: 'center' as 'center'
-    },
-    stnChipTextZH: {
-        fontSize: 18, 
-        fontFamily: 'Helvetica, Noto Serif KR, Noto Serif JP, Noto Serif TC, Noto Serif SC, serif', 
-        fontWeight: 600,
-        lineHeight: '1.2rem',
-    }, 
-    stnChipTextEN: {
-        fontFamily: 'Helvetica, Arial, sans-serif',
-        fontSize: '.75rem', 
-        lineHeight: '.9rem', 
-        whiteSpace: 'pre' as 'pre', 
-        overflow: 'hidden'
-    }, 
+const useStyles = makeStyles(theme => {
+    return createStyles({
+        stnChipText: {
+            display: 'block',
+            textAlign: 'center' as 'center'
+        },
+        stnChipTextZH: {
+            fontSize: 18, 
+            fontFamily: 'Helvetica, Noto Serif KR, Noto Serif JP, Noto Serif TC, Noto Serif SC, serif', 
+            fontWeight: 600,
+            lineHeight: '1.2rem',
+        }, 
+        stnChipTextEN: {
+            fontFamily: 'Helvetica, Arial, sans-serif',
+            fontSize: '.75rem', 
+            lineHeight: '.9rem', 
+            whiteSpace: 'pre' as 'pre', 
+            overflow: 'hidden'
+        }
+    });
 })
 
 interface StationChipSetProps {
@@ -38,7 +40,7 @@ export default function StationChipSet(props: StationChipSetProps) {
         <div>
             <Chip
                 key="add_stn"
-                icon={<Icon>add_box</Icon>}
+                icon={<Avatar style={{backgroundColor: 'unset'}}><Icon>add_box</Icon></Avatar>}
                 label={t('stations.add.button')}
                 className={'stn-chip'}
                 classes={{label: 'stn-chip__label'}}

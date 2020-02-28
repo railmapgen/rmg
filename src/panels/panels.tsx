@@ -3,10 +3,10 @@ import * as React from 'react';
 import { Typography, Box, CircularProgress, Tabs, Tab, Icon, createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { withTranslation } from 'react-i18next';
 
-const PanelSave = React.lazy(() => import(/* webpackChunkName: "panelSave" */ './panel-save'));
+const PanelSave = React.lazy(() => import(/* webpackChunkName: "panelSave" */ './save'));
 const PanelLayout = React.lazy(() => import(/* webpackChunkName: "panelLayout" */ './panel-layout'));
 const PanelDesign = React.lazy(() => import(/* webpackChunkName: "panelDesign" */ './panel-design'));
-const PanelStations = React.lazy(() => import(/* webpackChunkName: "panelStations" */ './panel-stations'));
+const PanelStations = React.lazy(() => import(/* webpackChunkName: "panelStations" */ './stations'));
 const PanelInfo = React.lazy(() => import(/* webpackChunkName: "panelInfo" */ './panel-info'));
 
 interface PanelProps {
@@ -85,8 +85,8 @@ class Panel extends React.Component<PanelProps, PanelState> {
 const theme = createMuiTheme({
     palette: {
         primary: {
+            light: '#bb86fc',
             main: '#6200ee',
-            dark: '#bb86fc',
         },
         secondary: {
             main: '#018786',

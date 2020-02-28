@@ -5,8 +5,8 @@ import { List, ListItem, ListItemIcon, ListItemText, Icon, Dialog, DialogTitle, 
 const allFacilities = {
     '': 'None',
     airport: 'Airport', 
-    disney: 'Disneyland Resort', 
     hsr: 'High Speed Rail', 
+    disney: 'Disneyland Resort', 
 }
 
 const allServices = {
@@ -16,11 +16,11 @@ const allServices = {
 
 interface StationEditMoreTabProps {
     onUpdate: (value: any, field: string) => void;
-    facility: 'airport' | 'disney' | 'hsr' | '';
-    services: Set<'local' | 'express'>;
+    facility: keyof typeof allFacilities;
+    services: Set<keyof typeof allServices>;
 }
 
-export default function StationEditMoreTab(props: StationEditMoreTabProps) {
+export default (props: StationEditMoreTabProps) => {
     const {t, i18n} = useTranslation();
     const [facilityDialogOpen, setFacilityDialogOpen] = React.useState(false);
 
@@ -37,18 +37,19 @@ export default function StationEditMoreTab(props: StationEditMoreTabProps) {
     return (
         <div>
             <List>
-                <ListItem button onClick={() => setFacilityDialogOpen(true)}>
+                {window.urlParams.get('style')==='mtr' && <ListItem button onClick={() => setFacilityDialogOpen(true)}>
                     <ListItemIcon>
                         <Icon>place</Icon>
                     </ListItemIcon>
-                    <ListItemText primary={t('stations.edit.more.facility')} secondary={allFacilities[props.facility]} />
-                </ListItem>
-                <ListItem>
+                    <ListItemText 
+                        primary={t('stations.edit.more.facility.button')} 
+                        secondary={t('stations.edit.more.facility.'+(props.facility==='' ? 'none' : props.facility))} />
+                </ListItem>}
+                {window.urlParams.get('style')==='gzmtr' && <ListItem>
                     <ListItemIcon>
                         <Icon>train</Icon>
                     </ListItemIcon>
-                    <ListItemText primary="Train Services" />
-                    <ListItemSecondaryAction>
+                    <ListItemText primary={t('stations.edit.more.services.button')} secondary={
                         <FormGroup row>
                             {Object.keys(allServices).map((s: 'local' | 'express') => (
                                 <FormControlLabel
@@ -56,15 +57,15 @@ export default function StationEditMoreTab(props: StationEditMoreTabProps) {
                                         <Checkbox checked={props.services.has(s)} value={s}
                                             onChange={servicesChange(s)} disabled={s==='local'} />
                                     }
-                                    label={allServices[s]} key={s}
+                                    label={t('stations.edit.more.services.'+s)} key={s}
                                 />
                             ))}
                       </FormGroup>
-                    </ListItemSecondaryAction>
-                </ListItem>
+                    } />
+                </ListItem>}
             </List>
 
-            <FacilityDialog open={facilityDialogOpen} onClose={facilityDialogClose} facility={props.facility} />
+            {window.urlParams.get('style')==='mtr' && <FacilityDialog open={facilityDialogOpen} onClose={facilityDialogClose} facility={props.facility} />}
         </div>
     );
 }
@@ -72,13 +73,14 @@ export default function StationEditMoreTab(props: StationEditMoreTabProps) {
 interface FacilityDialogProps {
     open: boolean;
     onClose: (action: string) => void;
-    facility: 'airport' | 'disney' | 'hsr' | '';
+    facility: keyof typeof allFacilities;
 }
 
 function FacilityDialog(props: FacilityDialogProps) {
+    const { t } = useTranslation();
     return (
         <Dialog open={props.open} onClose={() => props.onClose('close')}>
-            <DialogTitle>Choose A Facility Near This Station</DialogTitle>
+            <DialogTitle>{t('stations.edit.more.facility.title')}</DialogTitle>
             <DialogContent dividers>
                 <RadioGroup
                     name="facility"
@@ -86,13 +88,14 @@ function FacilityDialog(props: FacilityDialogProps) {
                     onChange={(e) => props.onClose(e.target.value)}
                 >
                     {Object.keys(allFacilities).map(f => (
-                        <FormControlLabel value={f} key={f} control={<Radio />} label={allFacilities[f]} />
+                        <FormControlLabel value={f} key={f} control={<Radio />} 
+                            label={t('stations.edit.more.facility.'+(f==='' ? 'none' : f))} />
                     ))}
                 </RadioGroup>
             </DialogContent>
             <DialogActions>
                 <Button onClick={() => props.onClose('close')} color="primary" autoFocus>
-                    Done
+                    {t('dialog.done')}
                 </Button>
             </DialogActions>
         </Dialog>

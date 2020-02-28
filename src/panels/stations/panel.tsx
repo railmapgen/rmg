@@ -1,14 +1,20 @@
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, withTranslation } from 'react-i18next';
 
-import { Snackbar, Button, IconButton, Icon, Chip, Avatar, Dialog, DialogTitle, DialogContent, Tabs, Tab, Typography, DialogActions, List, ListItem, ListItemIcon, TextField, withStyles, CircularProgress, DialogContentText, Backdrop, MenuItem } from '@material-ui/core';
+import { Snackbar, Button, IconButton, Icon } from '@material-ui/core';
 
-import { getParams } from '../utils';
-import { StationInfo, InterchangeInfo, StationTransfer, Name } from '../types';
-import { RMGLineGZ } from '../Line/LineGZ';
+import { getParams, formatStnName } from '../../utils';
+import { StationInfo, InterchangeInfo, StationTransfer, Name } from '../../types';
+import { RMGLineGZ } from '../../Line/LineGZ';
 
-import StationEditDialog from './panel-stations-edit-diag';
-import StationChipSet from './panel-stations-chipset';
+import StationAddDialog from './add-diag';
+import StationEditDialog from './edit-diag';
+import StationChipSet from './chip-set';
+import { StationDeleteDialog, StationDeleteErrorDialog } from './delete-diags';
+
+interface PanelStationsProps {
+    t: any;
+}
 
 interface PanelStationsState {
     theme: string[];
@@ -23,7 +29,7 @@ interface PanelStationsState {
     stnDeleteErrDialogOpened: boolean;
 }
 
-export default class PanelStations extends React.Component<{}, PanelStationsState> {
+class PanelStations extends React.Component<PanelStationsProps, PanelStationsState> {
     constructor(props) {
         super(props);
 
@@ -226,19 +232,17 @@ export default class PanelStations extends React.Component<{}, PanelStationsStat
                     open={this.state.snackBarOpened}
                     onClose={(e, r) => this.snackBarClose(r)}
                     autoHideDuration={5000}
-                    message={`${
-                        window.urlParams.get('style')==='gzmtr' ? this.state.stnList[this.state.stationSelected]?.num + ': ' : ''
-                    }${this.state.stnList[this.state.stationSelected]?.name.join()}`}
+                    message={formatStnName(this.state.stnList[this.state.stationSelected])}
                     action={
                         <React.Fragment>
                             <Button color="secondary" size="small" onClick={() => this.snackBarClose('current')}>
-                                Set As Current
+                                {this.props.t('stations.current')}
                             </Button>
                             <Button color="secondary" size="small" onClick={() => this.snackBarClose('edit')}>
-                                Edit
+                                {this.props.t('stations.edit.button')}
                             </Button>
                             <Button color="secondary" size="small" onClick={() => this.snackBarClose('delete')}>
-                                Remove
+                                {this.props.t('stations.remove.button')}
                             </Button>
                             <IconButton size="small" aria-label="close" color="inherit" onClick={() => this.snackBarClose('close')}>
                                 <Icon fontSize="small">close</Icon>
@@ -270,196 +274,4 @@ export default class PanelStations extends React.Component<{}, PanelStationsStat
     }
 }
 
-interface StationAddDialogProps {
-    open: boolean;
-    stnList: {
-        [stnId: string]: StationInfo;
-    };
-    onClose: (action: 'close' | string[]) => void;
-}
-
-function StationAddDialog(props: StationAddDialogProps) {
-    const {t, i18n} = useTranslation();
-
-    const allLocs = {
-        centre: t('stations.add.centre'), 
-        upper: t('stations.add.upper'), 
-        lower: t('stations.add.lower'), 
-        newupper: t('stations.add.newUpper'), 
-        newlower: t('stations.add.newLower'), 
-    };
-    
-    const [prep, setPrep] = React.useState('before');
-    const [pivot, setPivot] = React.useState(
-        Object.keys(props.stnList).filter(stnId => !['linestart','lineend'].includes(stnId))[0]
-    );
-    const [loc, setLoc] = React.useState(Object.keys(allLocs)[0]);
-    const [locOK, setLocOK] = React.useState(Array(5).fill(true) as boolean[]);
-
-    const [end, setEnd] = React.useState('');
-    const [endList, setEndList] = React.useState([] as string[]);
-
-    // Hook for updating loc list and end lists when pivot changed
-    React.useEffect(() => {
-        let possibleLocs = window.myLine.newStnPossibleLoc(
-            prep as 'before' | 'after', 
-            pivot
-        );
-        console.log(possibleLocs);
-        setLocOK(possibleLocs.map(p => typeof p === 'number' ? Boolean(p) : Boolean(p.length)));
-        setEndList(possibleLocs[3]);
-    }, [pivot]);
-
-    // Hook for updating loc selection (first available) when locOK list changed
-    React.useEffect(() => {
-        setLoc(Object.keys(allLocs)[locOK.indexOf(true)]);
-    }, [locOK]);
-
-    // Hook for updating end selection when end list changed
-    React.useEffect(() => {
-        if (endList.length === 0) return;
-        setEnd(endList[0]);
-    }, [endList]);
-
-    const handleClick = (action: string) => {
-        if (action === 'close') {
-            props.onClose('close');
-        } else {
-            props.onClose([
-                prep, pivot, loc, end
-            ]);
-        }
-    }
-
-    return (
-        <Dialog open={props.open} onClose={() => handleClick('close')}>
-            <DialogTitle>{t('stations.add.title')}</DialogTitle>
-            <DialogContent dividers>
-                <List>
-                    <ListItem>
-                        <ListItemIcon>
-                            <Icon>control_camera</Icon> 
-                        </ListItemIcon>
-                        <TextField select
-                            style={{width: '100%'}}
-                            variant="outlined"
-                            label={t('stations.add.prep')}
-                            onChange={(e) => setPrep(e.target.value)}
-                            value={prep} >
-                            <MenuItem key="before" value="before">{t('stations.add.before')}</MenuItem>
-                            <MenuItem key="after" value="after">{t('stations.add.after')}</MenuItem>
-                        </TextField>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemIcon>
-                            <Icon>near_me</Icon> 
-                        </ListItemIcon>
-                        <TextField select
-                            style={{width: '100%'}}
-                            variant="outlined"
-                            label={t('stations.add.pivot')}
-                            onChange={(e) => setPivot(e.target.value)}
-                            value={pivot} >
-                            {window.myLine.tpo.map(stnId => (
-                                <MenuItem key={stnId} value={stnId}>
-                                    {`${window.urlParams.get('style')==='gzmtr' ? 
-                                        props.stnList[stnId]?.num + ': ' : ''
-                                        }${props.stnList[stnId]?.name.join()}`
-                                    }
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemIcon>
-                            <Icon>share</Icon> 
-                        </ListItemIcon>
-                        <TextField select
-                            style={{width: '100%'}}
-                            variant="outlined"
-                            label={t('stations.add.loc')}
-                            onChange={(e) => setLoc(e.target.value)}
-                            value={loc} >
-                            {Object.keys(allLocs).map((key, idx) => (
-                                <MenuItem key={key} value={key} disabled={!locOK[idx]}>{allLocs[key]}</MenuItem>
-                            ))}
-                        </TextField>
-                    </ListItem>
-                    <ListItem style={{display: ['newupper','newlower'].includes(loc) ? 'flex' : 'none'}}>
-                        <ListItemIcon>
-                            <Icon>undo</Icon>
-                        </ListItemIcon>
-                        <TextField select
-                            style={{width: '100%'}}
-                            variant="outlined"
-                            label={t('stations.add.end')}
-                            onChange={(e) => setEnd(e.target.value)}
-                            value={end} >
-                            {endList.map(stnId => (
-                                <MenuItem key={stnId} value={stnId}>{props.stnList[stnId].name.join()}</MenuItem>
-                            ))}
-                        </TextField>
-                    </ListItem>
-                </List>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => handleClick('close')} color="primary" autoFocus>
-                    Cancel
-                </Button>
-                <Button onClick={() => handleClick('accept')} color="primary" autoFocus>
-                    OK
-                </Button>
-            </DialogActions>
-        </Dialog>
-    )
-}
-
-interface StationDeleteDialogProps {
-    open: boolean;
-    stnInfo: StationInfo;
-    onClose: (action: string) => void;
-}
-
-function StationDeleteDialog(props: StationDeleteDialogProps) {
-    return (
-        <Dialog open={props.open}>
-            <DialogTitle>Warning</DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    Are you sure to delete station {props.stnInfo.name.join()} ? You can't undo this action.
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => props.onClose('close')} color="primary" autoFocus>
-                    Cancel
-                </Button>
-                <Button onClick={() => props.onClose('accept')} color="primary" autoFocus>
-                    Remove
-                </Button>
-            </DialogActions>
-        </Dialog>
-    )
-}
-
-interface StationDeleteErrorDialogProps {
-    open: boolean;
-    onClose: () => void;
-}
-
-function StationDeleteErrorDialog(props: StationDeleteErrorDialogProps) {
-    return (
-        <Dialog open={props.open} onClose={props.onClose}>
-            <DialogTitle>Deletion Error</DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    You are not allowed to delete this station!
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={props.onClose} color="primary" autoFocus>
-                    OK
-                </Button>
-            </DialogActions>
-        </Dialog>
-    )
-}
+export default withTranslation()(PanelStations);

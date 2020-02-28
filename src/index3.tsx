@@ -5,6 +5,7 @@ import { getParams } from './utils';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import App from './App';
+// import Notes from './SVG';
 
 declare global {
     interface Window {
@@ -81,3 +82,8 @@ ReactDOM.render(
     <App />, 
     $('#panels')[0]
 );
+
+// ReactDOM.render(
+//     <Notes />, 
+//     $('g#notes')[0]
+// );

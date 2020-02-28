@@ -1,5 +1,12 @@
 # Version History
 
+## 3.0 (Beta 2) (28 Feb 2020)
+
+### Resolved Issues
+
+- Fixed the issues of incomplete translations.
+- Fixed multiple displaying issues. 
+
 ## 3.0 (Beta) (27 Feb 2020)
 
 ### New Features

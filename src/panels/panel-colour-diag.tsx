@@ -41,7 +41,7 @@ const useCityList = () => {
     const [list, setList] = React.useState([] as CityEntry[]);
 
     React.useEffect(() => {
-        console.log('fetched city list')
+        console.log('fetched city list');
         fetch('data/city_list.json')
             .then(response => response.json())
             .then(data => setList(data));
@@ -54,6 +54,7 @@ const useLineList = (theme) => {
     const [list, setList] = React.useState([] as LineEntry[]);
 
     const listPromise = React.useMemo(() => {
+        if (!theme[0]) return;
         return fetch(`data/${theme[0]}.json`)
             .then(response => response.json() as Promise<LineEntry[]>);
     }, [theme[0]]);
@@ -253,7 +254,7 @@ export default function ColourDialog(props: ColourDialogProps) {
                                             backgroundColor: l.colour, 
                                             color: l.fg || '#fff', 
                                         }}>
-                                        {getTransText(l.name, window.urlParams.get('lang'))}
+                                        {getTransText(l.name, i18n.language)}
                                     </span>
                                 </MenuItem>
                             ))}

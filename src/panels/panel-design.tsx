@@ -9,6 +9,7 @@ import { RMGLineGZ } from '../Line/LineGZ';
 
 const NameDialog = React.lazy(() => import(/* webpackChunkName: "panelNameDiag" */ './panel-name-diag'));
 import ColourDialog from './panel-colour-diag';
+import { withTranslation, useTranslation } from 'react-i18next';
 
 export default class PanelDesign extends React.Component {
     constructor(props) {
@@ -19,7 +20,7 @@ export default class PanelDesign extends React.Component {
         return (
             <Grid container spacing={3} justify="center" alignItems="flex-start">
                 <Grid item xs={12} sm={6} md={5} lg={4}>
-                    <DesignList />
+                    <TranslatedDesignList />
                 </Grid>
                 {window.urlParams.get('style') === 'mtr' ? 
                 <Grid item xs={12} sm={6} md={5} lg={4}>
@@ -28,7 +29,7 @@ export default class PanelDesign extends React.Component {
                 <div />}
                 {window.urlParams.get('style') === 'gzmtr' ? 
                 <Grid item xs={12} sm={6} md={5} lg={4}>
-                    <DesignListGZMTR />
+                    <TranslatedDesignListGZMTR />
                 </Grid> : 
                 <div />}
             </Grid>
@@ -40,6 +41,10 @@ const allDirections = {
     l: 'Left', r: 'Right'
 };
 
+interface DesignListProps {
+    t: any;
+}
+
 interface DesignListState {
     theme: [string, string, string, '#000' | '#fff'];
     lineName: Name;
@@ -50,7 +55,7 @@ interface DesignListState {
     nameDialogOpened: boolean;
 }
 
-class DesignList extends React.Component<{}, DesignListState> {
+class DesignList extends React.Component<DesignListProps, DesignListState> {
     constructor(props) {
         super(props);
 
@@ -118,7 +123,7 @@ class DesignList extends React.Component<{}, DesignListState> {
                             <ListItemIcon>
                                 <Icon>color_lens</Icon>
                             </ListItemIcon>
-                            <ListItemText primary="Line Name and Theme Colour" secondary={
+                            <ListItemText primary={this.props.t('design.theme')} secondary={
                                 <span style={{
                                     backgroundColor: this.state.theme[2], 
                                     color: this.state.theme[3], 
@@ -131,14 +136,16 @@ class DesignList extends React.Component<{}, DesignListState> {
                             <ListItemIcon>
                                 <Icon>directions</Icon>
                             </ListItemIcon>
-                            <ListItemText primary="Train Direction" secondary={allDirections[this.state.direction]} />
+                            <ListItemText
+                                primary={this.props.t('design.direction.button')}
+                                secondary={this.props.t('design.direction.'+this.state.direction)} />
                         </ListItem>
                         <ListItem>
                             <ListItemIcon>
                                 <Icon>looks_one</Icon>
                             </ListItemIcon>
                             <TextField
-                                label="Platform Number" 
+                                label={this.props.t('design.platform')}
                                 variant="outlined" 
                                 value={this.state.platformNum} 
                                 onChange={this.platformNumChange} />
@@ -147,17 +154,11 @@ class DesignList extends React.Component<{}, DesignListState> {
                             <ListItemIcon>
                                 <Icon>cached</Icon>
                             </ListItemIcon>
-                            <ListItemText primary="Reverse Entire Line" />
+                            <ListItemText primary={this.props.t('design.reverse')} />
                         </ListItem>
                     </List>
                 </Paper>
 
-                {/* <NameDialog
-                    open={this.state.nameDialogOpened}
-                    theme={this.state.theme} lineName={this.state.lineName}
-                    onUpdate={this.nameDialogUpdate.bind(this)}
-                    onClose={() => this.setState({nameDialogOpened: false})}
-                /> */}
                 <ColourDialog
                     open={this.state.nameDialogOpened}
                     theme={this.state.theme} lineName={this.state.lineName}
@@ -169,55 +170,47 @@ class DesignList extends React.Component<{}, DesignListState> {
     }
 }
 
-interface DesignListMTRState {
-    destLegacy: boolean;
-}
+const TranslatedDesignList = withTranslation()(DesignList);
 
-class DesignListMTR extends React.Component<{}, DesignListMTRState> {
-    constructor(props) {
-        super(props);
+function DesignListMTR(props) {
+    const {t, i18n} = useTranslation();
 
-        this.state = {
-            destLegacy: getParams().dest_legacy
-        }
-    }
-
-    destLegacyChange(event) {
-        this.setState({destLegacy: event.target.checked});
+    const [destLegacy, setDestLegacy] = React.useState(getParams().dest_legacy);
+    
+    const destLegacyChange = (event) => {
+        setDestLegacy(event.target.checked);
         (window.myLine as RMGLineHK).destLegacy = event.target.checked;
-    }
+    };
 
-    render() {
-        return (
-            <div>
-                <Paper>
-                    <List component="nav">
-                        <ListItem button onClick={
-                            () => (window.myLine as RMGLineHK).txtFlip = !getParams().txt_flip
-                        }>
-                            <ListItemIcon>
-                                <Icon>swap_vert</Icon>
-                            </ListItemIcon>
-                            <ListItemText primary="Flip Station Names Position" />
-                        </ListItem>
-                        <ListItem>
-                            <ListItemIcon>
-                                <Icon>rotate_left</Icon>
-                            </ListItemIcon>
-                            <ListItemText primary="MTR Legacy Style" />
-                            <ListItemSecondaryAction>
-                                <Switch
-                                    edge="end"
-                                    onChange={this.destLegacyChange.bind(this)}
-                                    checked={this.state.destLegacy}
-                                />
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                    </List>
-                </Paper>
-            </div>
-        )
-    }
+    return (
+        <div>
+            <Paper>
+                <List component="nav">
+                    <ListItem button onClick={
+                        () => (window.myLine as RMGLineHK).txtFlip = !getParams().txt_flip
+                    }>
+                        <ListItemIcon>
+                            <Icon>swap_vert</Icon>
+                        </ListItemIcon>
+                        <ListItemText primary={t('design.flipName')} />
+                    </ListItem>
+                    <ListItem>
+                        <ListItemIcon>
+                            <Icon>rotate_left</Icon>
+                        </ListItemIcon>
+                        <ListItemText primary={t('design.MTRLegacy')} />
+                        <ListItemSecondaryAction>
+                            <Switch
+                                edge="end"
+                                onChange={destLegacyChange}
+                                checked={destLegacy}
+                            />
+                        </ListItemSecondaryAction>
+                    </ListItem>
+                </List>
+            </Paper>
+        </div>
+    );
 }
 
 const allInfoPanelTypes = {
@@ -225,6 +218,10 @@ const allInfoPanelTypes = {
     gz3: 'Line 3', 
     gzgf: 'Line 6/Guangfo Line',
     gz1421: 'Line 14/21', 
+}
+
+interface DesignListGZMTRProps {
+    t: any;
 }
 
 interface DesignListGZMTRState {
@@ -235,7 +232,7 @@ interface DesignListGZMTRState {
     autoNumDialogOpened: boolean;
 }
 
-class DesignListGZMTR extends React.Component<{}, DesignListGZMTRState> {
+class DesignListGZMTR extends React.Component<DesignListGZMTRProps, DesignListGZMTRState> {
     constructor(props) {
         super(props);
         
@@ -281,13 +278,13 @@ class DesignListGZMTR extends React.Component<{}, DesignListGZMTRState> {
                                 <Icon>looks_one</Icon>
                             </ListItemIcon>
                             <TextField
-                                label="Line Number" 
+                                label={this.props.t('design.lineNum')}
                                 variant="outlined" 
                                 value={this.state.lineNum} 
                                 onChange={this.lineNumChange.bind(this)}
                                 style={{marginRight: 5}} />
                             <TextField
-                                label="Platform Door Number" 
+                                label={this.props.t('design.psd')}
                                 variant="outlined" 
                                 value={this.state.psdNum} 
                                 onChange={this.psdNumChange.bind(this)} />
@@ -296,13 +293,15 @@ class DesignListGZMTR extends React.Component<{}, DesignListGZMTRState> {
                             <ListItemIcon>
                                 <Icon style={{transform: 'rotate(180deg)'}}>credit_card</Icon>
                             </ListItemIcon>
-                            <ListItemText primary="Info Panel Type" secondary={allInfoPanelTypes[this.state.panelType]} />
+                            <ListItemText
+                                primary={this.props.t('design.panelType.button')}
+                                secondary={this.props.t('design.panelType.'+this.state.panelType)} />
                         </ListItem>
                         <ListItem button onClick={() => this.setState({autoNumDialogOpened: true})}>
                             <ListItemIcon>
                                 <Icon>filter_1</Icon>
                             </ListItemIcon>
-                            <ListItemText primary="Station Auto-numbering" />
+                            <ListItemText primary={this.props.t('design.autoNum.button')} />
                         </ListItem>
                     </List>
                 </Card>
@@ -314,47 +313,31 @@ class DesignListGZMTR extends React.Component<{}, DesignListGZMTRState> {
     }
 }
 
-interface PanelTypeDialogProps {
-    onClose: (action: string) => void;
-    open: boolean;
-}
+const TranslatedDesignListGZMTR = withTranslation()(DesignListGZMTR);
 
-class PanelTypeDialog extends React.Component<PanelTypeDialogProps> {
-    constructor(props) {
-        super(props);
-    }
+function PanelTypeDialog(props) {
+    const {t, i18n} = useTranslation();
 
-    render() {
-        let listItems = [] as JSX.Element[];
-        for (let [key, val] of Object.entries(allInfoPanelTypes)) {
-            listItems.push(
-                <ListItem button onClick={() => this.props.onClose(key)} key={key}>
-                    <ListItemText primary={val} />
-                </ListItem>
-            );
-        }
-        return (
-            <Dialog onClose={() => this.props.onClose('close')} open={this.props.open}>
-                <DialogTitle>Choose a Type for Info Panel</DialogTitle>
+    return (
+        <Dialog onClose={() => props.onClose('close')} open={props.open}>
+            <DialogTitle>{t('design.panelType.title')}</DialogTitle>
+            <DialogContent dividers>
                 <List>
-                    {listItems}
+                    {Object.keys(allInfoPanelTypes).map(key => (
+                        <ListItem button onClick={() => props.onClose(key)} key={key}>
+                            <ListItemText primary={t('design.panelType.'+key)} />
+                        </ListItem>
+                    ))}
                 </List>
-            </Dialog>
-        );
-    }
+            </DialogContent>
+        </Dialog>
+    );
 }
 
-interface AutoNumDialogProps {
-    onClose: () => void;
-    open: boolean;
-}
+function AutoNumDialog(props) {
+    const {t, i18n} = useTranslation();
 
-class AutoNumDialog extends React.Component<AutoNumDialogProps> {
-    constructor(props) {
-        super(props);
-    }
-
-    handleClick(action: 'ascend' | 'descend') {
+    const handleClick = (action: 'ascend' | 'descend') => {
         let stnList = getParams().stn_list;
         let branch0 = window.myLine.branches[0];
         branch0.forEach((stnId, i) => {
@@ -372,30 +355,28 @@ class AutoNumDialog extends React.Component<AutoNumDialogProps> {
             // $(`#pivot__selection li[data-value="${stnId}"]`).text(`${num}: ${stnList[stnId].name.join()}`);
         });
 
-        this.props.onClose();
+        props.onClose();
     }
 
-    render() {
-        return (
-            <Dialog onClose={this.props.onClose} open={this.props.open}>
-                <DialogTitle>Warning</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        You are about to re-number all stations on the main line. This action can not be undo.
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.props.onClose} color="primary" autoFocus>
-                        Cancel
-                    </Button>
-                    <Button onClick={() => this.handleClick('ascend')} color="primary">
-                        Ascending Order
-                    </Button>
-                    <Button onClick={() => this.handleClick('descend')} color="primary">
-                        Descending Order
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        );
-    }
+    return (
+        <Dialog onClose={props.onClose} open={props.open}>
+            <DialogTitle>{t('design.autoNum.title')}</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    {t('design.autoNum.msg')}
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={props.onClose} color="primary" autoFocus>
+                    {t('dialog.cancel')}
+                </Button>
+                <Button onClick={() => handleClick('ascend')} color="primary">
+                    {t('design.autoNum.ascend')}
+                </Button>
+                <Button onClick={() => handleClick('descend')} color="primary">
+                    {t('design.autoNum.descend')}
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
 }
