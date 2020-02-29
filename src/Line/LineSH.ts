@@ -147,12 +147,17 @@ export class RMGLineSH extends RMGLine {
             transform: `translate(0,${220 + dh})`,
             d: path,
         })
+
+        // the platform screen doors flash light
+        // #20
+        // $('g#station_info_shmetro > rect').attr({ transform: `translate(${this._svgDestWidth / 2},${250 + dh})` })
     }
 
     get _prevStnIds(): string[] {
         // reduce from https://stackoverflow.com/questions/43773999/remove-duplicates-from-arrays-using-reduce
         // and https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
         return this.routes
+            .filter(route => route.includes(this._currentStnId))
             .map(route => route[route.indexOf(this._currentStnId) + (this._direction == 'l' ? 1 : -1)])
             .flat()
             // remove duplicate
@@ -164,6 +169,7 @@ export class RMGLineSH extends RMGLine {
 
     get _nextStnIds(): string[] {
         return this.routes
+            .filter(route => route.includes(this._currentStnId))
             .map(route => route[route.indexOf(this._currentStnId) + (this._direction == 'l' ? -1 : 1)])
             .flat()
             // remove duplicate
@@ -183,10 +189,19 @@ export class RMGLineSH extends RMGLine {
             var dx = -50
             var txtAnchor = 'end'
         }
-        $('g#next_stn_text').attr({ transform: `translate(${x}, ${dh + 175})`, 'text-anchor': txtAnchor, })
-        $('g#next_stn_text > text:first-child').text(nextStnIds.map(stnId => this.stations[stnId].name[0]).join('，'))
-        $('g#next_stn_text > text:last-child').text(nextStnIds.map(stnId => this.stations[stnId].name[1].replace('\\', ' ')).join('，'))
-        $('g#next_text').attr({ transform: `translate(${x}, ${dh + 130})`, 'text-anchor': txtAnchor, })
+        console.log(nextStnIds)
+        $('g#next_stn_text').attr({ transform: `translate(${x}, ${dh + 185})`, 'text-anchor': txtAnchor, })
+        $('g#next_stn_text > text:first-child').text(this.stations[nextStnIds[0]].name[0])
+        $('g#next_stn_text > text:last-child').text(this.stations[nextStnIds[0]].name[1])
+
+        if (nextStnIds.length > 1) {
+            $('g#next_stn_branch_text').attr({ transform: `translate(${x}, ${dh + 75})`, 'text-anchor': txtAnchor, })
+            $('g#next_stn_branch_text > text:first-child').text(this.stations[nextStnIds[1]].name[0])
+            $('g#next_stn_branch_text > text:last-child').text(this.stations[nextStnIds[1]].name[1])
+            dh -= 110  // move next_text to a higher position
+        }
+
+        $('g#next_text').attr({ transform: `translate(${x}, ${dh + 140})`, 'text-anchor': txtAnchor, })
         $('g#next_text > text:last-child').attr('dx', dx)
     }
 
@@ -200,10 +215,18 @@ export class RMGLineSH extends RMGLine {
             var dx = 50
             var txtAnchor = 'start'
         }
-        $('g#prev_stn_text').attr({ transform: `translate(${x}, ${dh + 175})`, 'text-anchor': txtAnchor, })
-        $('g#prev_stn_text > text:first-child').text(prevStnIds.map(stnId => this.stations[stnId].name[0]).join('，'))
-        $('g#prev_stn_text > text:last-child').text(prevStnIds.map(stnId => this.stations[stnId].name[1].replace('\\', ' ')).join('，'))
-        $('g#prev_text').attr({ transform: `translate(${x}, ${dh + 130})`, 'text-anchor': txtAnchor, })
+        $('g#prev_stn_text').attr({ transform: `translate(${x}, ${dh + 185})`, 'text-anchor': txtAnchor, })
+        $('g#prev_stn_text > text:first-child').text(this.stations[prevStnIds[0]].name[0])
+        $('g#prev_stn_text > text:last-child').text(this.stations[prevStnIds[0]].name[1])
+
+        if (prevStnIds.length > 1) {
+            $('g#prev_stn_branch_text').attr({ transform: `translate(${x}, ${dh + 75})`, 'text-anchor': txtAnchor, })
+            $('g#prev_stn_branch_text > text:first-child').text(this.stations[prevStnIds[1]].name[0])
+            $('g#prev_stn_branch_text > text:last-child').text(this.stations[prevStnIds[1]].name[1])
+            dh -= 110  // move prev_text to a higher position
+        }
+
+        $('g#prev_text').attr({ transform: `translate(${x}, ${dh + 140})`, 'text-anchor': txtAnchor, })
         $('g#prev_text > text:last-child').attr('dx', dx)
     }
 
@@ -219,28 +242,22 @@ export class RMGLineSH extends RMGLine {
 
         // current stn text
         $('g#current_text > text:first-child').text(this.stations[this._currentStnId].name[0])
-        $('g#current_text > text:last-child').text(this.stations[this._currentStnId].name[1].replace('\\',' '));
+        $('g#current_text > text:last-child').text(this.stations[this._currentStnId].name[1].replace('\\', ' '));
 
         // show all text and hide when necessary
-        $('g#next_stn_text').show()
-        $('g#next_text').show()
-        $('g#prev_stn_text').show()
-        $('g#prev_text').show()
+        $('g#next_stn_text, g#next_text, g#prev_stn_text, g#prev_text, g#next_stn_branch_text, g#prev_stn_branch_text').show()
 
         if (nextStnIds.length == 1 && ['linestart', 'lineend'].includes(nextStnIds[0])) {
             // terminal station
             if (this._direction == 'l')
-                $('g#current_text').attr({ transform: `translate(${30}, ${dh + 150})`, 'text-anchor': 'start', })
+                $('g#current_text').attr({ transform: `translate(${30}, ${dh + 160})`, 'text-anchor': 'start', })
             else
-                $('g#current_text').attr({ transform: `translate(${this._svgRuninWidth - 30}, ${dh + 150})`, 'text-anchor': 'end', })
+                $('g#current_text').attr({ transform: `translate(${this._svgRuninWidth - 30}, ${dh + 160})`, 'text-anchor': 'end', })
 
             this._runinPrevStn(dh, prevStnIds)
 
-            // clear next
-            $('g#next_stn_text').hide()
-            $('g#next_text').hide()
-            // clear gray line
-            $('#run_in_line_shmetro_gray').hide()
+            // clear
+            $('g#next_stn_text, g#next_text, #run_in_line_shmetro_pass, g#run_in_branch_shmetro, g#run_in_branch_shmetro_pass, g#next_stn_branch_text, g#prev_stn_branch_text').hide()
 
             // the last decoration line
             $('#run_in_line_shmetro').attr({
@@ -251,17 +268,14 @@ export class RMGLineSH extends RMGLine {
         } else if (prevStnIds.length == 1 && ['linestart', 'lineend'].includes(prevStnIds[0])) {
             // origin station
             if (this._direction == 'l')
-                $('g#current_text').attr({ transform: `translate(${this._svgRuninWidth - 30}, ${dh + 150})`, 'text-anchor': 'end', })
+                $('g#current_text').attr({ transform: `translate(${this._svgRuninWidth - 30}, ${dh + 160})`, 'text-anchor': 'end', })
             else
-                $('g#current_text').attr({ transform: `translate(${30}, ${dh + 150})`, 'text-anchor': 'start', })
+                $('g#current_text').attr({ transform: `translate(${30}, ${dh + 160})`, 'text-anchor': 'start', })
 
             this._runinNextStn(dh, nextStnIds)
 
-            // clear prev
-            $('g#prev_stn_text').hide()
-            $('g#prev_text').hide()
-            // clear gray line
-            $('#run_in_line_shmetro_gray').hide()
+            // clear
+            $('g#prev_stn_text, g#prev_text, #run_in_line_shmetro_pass, g#run_in_branch_shmetro, g#run_in_branch_shmetro_pass, g#next_stn_branch_text, g#prev_stn_branch_text').hide()
 
             // the last decoration line
             if (this._direction == 'l') var path = `M38,10 H ${this._svgRuninWidth - 20} l 0,12 H 24 Z`
@@ -273,32 +287,54 @@ export class RMGLineSH extends RMGLine {
             })
         } else {
             // general station
-            $('g#current_text').attr({ transform: `translate(${this._svgRuninWidth / 2}, ${dh + 150})`, 'text-anchor': 'middle', })
+            $('g#current_text').attr({ transform: `translate(${this._svgRuninWidth / 2}, ${dh + 160})`, 'text-anchor': 'middle', })
 
             this._runinNextStn(dh, nextStnIds)
             this._runinPrevStn(dh, prevStnIds)
 
             // the last decoration line
-            if (this._direction == 'l') var path = `M38,10 H ${this._svgRuninWidth - 20} V 24 H 24 Z`
-            else var path = `M24,10 H ${this._svgRuninWidth - 30} l 12,12 H 24 Z`
-
             let middle = this._svgRuninWidth / 2
+            let path = '', path_gray = ''
             if (this._direction == 'l') {
-                var path = `M 38,10 H ${middle} V 22 H 24 Z`
-                var path_gray = `M ${middle},10 H ${this._svgRuninWidth - 30} l 0,12 H ${middle} Z`
+                path = `M 38,10 H ${middle} V 22 H 24 Z`
+                path_gray = `M ${middle},10 H ${this._svgRuninWidth - 30} l 0,12 H ${middle} Z`
+
+                // for the fvcking branch decoration line
+                if (nextStnIds.length > 1) {
+                    $('g#run_in_branch_shmetro').attr({ transform: `translate(0,${110 + dh})`, }).show()
+                    $('path#run_in_line_branch_shmetro').attr({ d: `M 38,10 H ${this._svgRuninWidth / 6 + 3} V 22 H 24 Z`, })
+                    $('#run_in_line_branch_slash_shmetro').attr({ x1: this._svgRuninWidth / 6, y1: 15, x2: this._svgRuninWidth / 3, y2: 125 })
+                } else $('g#run_in_branch_shmetro, g#next_stn_branch_text').hide()
+                if (prevStnIds.length > 1) {
+                    $('g#run_in_branch_shmetro_pass').attr({ transform: `translate(0,${110 + dh})`, }).show()
+                    $('path#run_in_line_branch_shmetro_pass').attr({ d: `M ${this._svgRuninWidth / 6 * 5 - 3},10 H ${this._svgRuninWidth - 30} l 0,12 H ${this._svgRuninWidth / 6 * 5 - 3} Z`, })
+                    $('#run_in_line_branch_slash_shmetro_pass').attr({ x1: this._svgRuninWidth / 6 * 5, y1: 15, x2: this._svgRuninWidth / 6 * 4, y2: 125 })
+                } else $('g#run_in_branch_shmetro_pass, g#prev_stn_branch_text').hide()
             }
             else {
-                var path = `M ${middle},10 H ${this._svgRuninWidth - 30} l 12,12 H ${middle} Z`
-                var path_gray = `M 24,10 H ${middle} l 0,12 H 24 Z`
+                path = `M ${middle},10 H ${this._svgRuninWidth - 30} l 12,12 H ${middle} Z`
+                path_gray = `M 24,10 H ${middle} l 0,12 H 24 Z`
+
+                // for the fvcking branch decoration line
+                if (nextStnIds.length > 1) {
+                    $('g#run_in_branch_shmetro').attr({ transform: `translate(0,${110 + dh})`, }).show()
+                    $('path#run_in_line_branch_shmetro').attr({ d: `M ${this._svgRuninWidth / 6 * 5 - 3},10 H ${this._svgRuninWidth - 30} l 12,12 H ${this._svgRuninWidth / 6 * 5 - 3} Z`, })
+                    $('#run_in_line_branch_slash_shmetro').attr({ x1: this._svgRuninWidth / 6 * 5, y1: 15, x2: this._svgRuninWidth / 6 * 4, y2: 125 })
+                } else $('g#run_in_branch_shmetro, g#next_stn_branch_text').hide()
+                if (prevStnIds.length > 1) {
+                    $('g#run_in_branch_shmetro_pass').attr({ transform: `translate(0,${110 + dh})`, }).show()
+                    $('path#run_in_line_branch_shmetro_pass').attr({ d: `M 38,10 H ${this._svgRuninWidth / 6 + 3} V 22 H 24 Z`, })
+                    $('#run_in_line_branch_slash_shmetro_pass').attr({ x1: this._svgRuninWidth / 6, y1: 15, x2: this._svgRuninWidth / 3, y2: 125 })
+                } else $('g#run_in_branch_shmetro_pass, g#prev_stn_branch_text').hide()
             }
+
             $('#run_in_line_shmetro').attr({
                 transform: `translate(0,${220 + dh})`,
                 fill: 'var(--rmg-theme-colour)',
                 d: path,
             })
-            $('#run_in_line_shmetro_gray').attr({
+            $('#run_in_line_shmetro_pass').attr({
                 transform: `translate(0,${220 + dh})`,
-                fill: 'gray',
                 d: path_gray,
             }).show()
         }
@@ -517,7 +553,7 @@ export class RMGLineSH extends RMGLine {
         }
 
         if (this._currentStnId === stnId) {
-            this.drawRunin(); 
+            this.drawRunin();
         }
 
         if (this.leftDests.includes(stnId) || this.rightDests.includes(stnId)) {
