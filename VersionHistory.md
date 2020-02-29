@@ -1,5 +1,15 @@
 # Version History
 
+## 3.1 (1 Mar 2020)
+
+### New Features
+
+- Dark mode is coming!
+
+### Resolved Issues
+
+- Fixed the issues that interchanges do not display in Shanghai Metro style. 
+
 ## 3.0 (29 Feb 2020)
 
 ### Resolved Issues

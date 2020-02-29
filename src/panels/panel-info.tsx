@@ -73,11 +73,11 @@ export default (props) => {
                 </div>
             </Card>
 
-            <Typography variant="body2">
+            <Typography variant="body2" color="textPrimary">
                 {t('info.notice')}
             </Typography>
 
-            <Typography variant="body2">
+            <Typography variant="body2" color="textPrimary">
                 All flag emojis shown on Windows platforms are designed by <a href="https://openmoji.org/">OpenMoji</a> – the open-source emoji and icon project. License: <a href="https://creativecommons.org/licenses/by-sa/4.0/#">CC BY-SA 4.0</a>
             </Typography>
         </div>
