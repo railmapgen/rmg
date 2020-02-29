@@ -1,5 +1,11 @@
 # Version History
 
+## 3.0 (29 Feb 2020)
+
+### Resolved Issues
+
+- Fixed an error in station adding dialog. 
+
 ## 3.0 (Beta 2) (28 Feb 2020)
 
 ### Resolved Issues
