@@ -42,7 +42,7 @@ export default (props: StationAddDialogProps) => {
         console.log(possibleLocs);
         setLocOK(possibleLocs.map(p => typeof p === 'number' ? Boolean(p) : Boolean(p.length)));
         setEndList(possibleLocs[3]);
-    }, [pivot]);
+    }, [pivot, prep]);
 
     // Hook for updating loc selection (first available) when locOK list changed
     React.useEffect(() => {

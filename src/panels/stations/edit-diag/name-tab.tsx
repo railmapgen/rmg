@@ -21,7 +21,7 @@ export default (props: Props) => {
     return (
         <List>
             <NameListItems name={props.stnInfo.name} onUpdate={handleUpdate} />
-            <ListItem>
+            {window.urlParams.get('style')==='gzmtr' && <ListItem>
                 <ListItemIcon>
                     <Icon>looks_one</Icon>
                 </ListItemIcon>
@@ -31,7 +31,7 @@ export default (props: Props) => {
                     label={t('stations.edit.name.num')}
                     onChange={(e) => props.onUpdate(e.target.value, 'num')}
                     value={props.stnInfo.num} />
-            </ListItem>
+            </ListItem>}
         </List>
     );
 }
