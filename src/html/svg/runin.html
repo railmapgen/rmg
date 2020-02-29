@@ -79,7 +79,15 @@ id="runin" style="
 
     <g id="run_in_shmetro" style="display: none;" shmetro-specific>
         <path id="run_in_line_shmetro"/>
-        <path id="run_in_line_shmetro_gray"/>
+        <path id="run_in_line_shmetro_pass" fill="gray"/>
+        <g id="run_in_branch_shmetro">
+            <path id="run_in_line_branch_shmetro" fill="var(--rmg-theme-colour)"/>
+            <line id="run_in_line_branch_slash_shmetro" stroke="var(--rmg-theme-colour)" stroke-width="12"></line>
+        </g>
+        <g id="run_in_branch_shmetro_pass">
+            <path id="run_in_line_branch_shmetro_pass" fill="gray"/>
+            <line id="run_in_line_branch_slash_shmetro_pass" stroke="gray" stroke-width="12"></line>
+        </g>
         <g id="current_text">
             <text class="rmg-name__zh rmg-name__shmetro--dest" font-size="600%"></text>
             <text class="rmg-name__en rmg-name__shmetro--dest" font-size="250%" dy="50"></text>
@@ -89,6 +97,14 @@ id="runin" style="
             <text class="rmg-name__en rmg-name__shmetro--dest" font-size="150%" dy="25"></text>
         </g>
         <g id="prev_stn_text">
+            <text class="rmg-name__zh rmg-name__shmetro--dest" font-size="250%" fill="gray"></text>
+            <text class="rmg-name__en rmg-name__shmetro--dest" font-size="150%" fill="gray" dy="25"></text>
+        </g>
+        <g id="next_stn_branch_text">
+            <text class="rmg-name__zh rmg-name__shmetro--dest" font-size="250%"></text>
+            <text class="rmg-name__en rmg-name__shmetro--dest" font-size="150%" dy="25"></text>
+        </g>
+        <g id="prev_stn_branch_text">
             <text class="rmg-name__zh rmg-name__shmetro--dest" font-size="250%" fill="gray"></text>
             <text class="rmg-name__en rmg-name__shmetro--dest" font-size="150%" fill="gray" dy="25"></text>
         </g>
