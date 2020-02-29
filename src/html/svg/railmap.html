@@ -92,14 +92,14 @@ id="railmap" style="
         <path id="stn_gz_pass" stroke="#aaa" fill="#fff" stroke-width="2" d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "/>
         <circle id="stn_sh" fill="#fff" stroke="var(--rmg-theme-colour)" stroke-width="2" r="5"/>
         <circle id="stn_sh_pass" fill="#fff" stroke="#aaa" stroke-width="2" r="5"/>
-        <circle id="stn_sh_animation" fill="green" stroke="black" stroke-width="2" r="5"/>
-        <circle id="stn_sh_current_animation" fill="yellow" stroke="black" stroke-width="2" r="5"/>
-        <circle id="stn_sh_pass_animation" fill="red" stroke="black" stroke-width="2" r="5"/>
+        <circle id="stn_sh_animation" fill="LawnGreen" stroke="black" stroke-width="1" r="5" filter="url(#pidsLight)"/>
+        <circle id="stn_sh_current_animation" fill="yellow" stroke="black" stroke-width="1" r="5" filter="url(#pidsLight)"/>
+        <circle id="stn_sh_pass_animation" fill="OrangeRed" stroke="black" stroke-width="1" r="5" filter="url(#pidsLight)"/>
         <path id="int2_sh" fill="#fff" stroke="var(--rmg-theme-colour)" stroke-width="2" d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"/>
         <path id="int2_sh_pass" fill="#fff" stroke="#aaa" stroke-width="2" d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"/>
-        <path id="int2_sh_animation" fill="green" stroke="black" stroke-width="2" d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"/>
-        <path id="int2_sh_current_animation" fill="yellow" stroke="black" stroke-width="2" d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"/>
-        <path id="int2_sh_pass_animation" fill="red" stroke="black" stroke-width="2" d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"/>
+        <path id="int2_sh_animation" fill="LawnGreen" stroke="black" stroke-width="1" filter="url(#pidsLightInt)" d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"/>
+        <path id="int2_sh_current_animation" fill="yellow" stroke="black" stroke-width="1" filter="url(#pidsLightInt)" d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"/>
+        <path id="int2_sh_pass_animation" fill="OrangeRed" stroke="black" stroke-width="1" filter="url(#pidsLightInt)" d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"/>
 
         <path id="inttick_hk" d="M 0,0 v 17" stroke-linecap="round"/>
         <path id="inttick_gz" d="M 0,0 v 18" stroke-linecap="square"/>
@@ -108,6 +108,21 @@ id="railmap" style="
 
         <rect id="intbox_gz" x="-22.5" height="24" width="45" rx="4.5"/>
     </defs>
+
+    <filter id="pidsLight">
+        <feDiffuseLighting in="SourceGraphic" result="light" lighting-color="white" diffuseConstant="1">
+            <fePointLight x="-1" y="-1" z="3" />
+        </feDiffuseLighting>
+    
+        <feComposite in="SourceGraphic" in2="light" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" />
+    </filter>
+    <filter id="pidsLightInt">
+        <feDiffuseLighting in="SourceGraphic" result="light" lighting-color="white" diffuseConstant="1">
+            <fePointLight x="-1" y="4" z="7" />
+        </feDiffuseLighting>
+    
+        <feComposite in="SourceGraphic" in2="light" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" />
+    </filter>
 
     <rect id="outer" x="0" y="0"/>
     <rect id="box" x="0" y="0" fill="none" stroke="black"/>
