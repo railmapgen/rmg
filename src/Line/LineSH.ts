@@ -147,6 +147,10 @@ export class RMGLineSH extends RMGLine {
             transform: `translate(0,${220 + dh})`,
             d: path,
         })
+
+        // the platform screen doors flash light
+        // #20
+        // $('g#station_info_shmetro > rect').attr({ transform: `translate(${this._svgDestWidth / 2},${250 + dh})` })
     }
 
     get _prevStnIds(): string[] {
