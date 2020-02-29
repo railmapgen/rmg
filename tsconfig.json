@@ -10,8 +10,6 @@
         "jsx": "react"
     }, 
     "include": [
-        "./src/lang.ts", 
-        "./src/index.ts", 
         "./src/index3.tsx"
     ]
 }

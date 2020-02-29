@@ -31,7 +31,6 @@ jobs:
         git checkout -b gh-pages
         git add ./dist/ -f
         git add index.html -f
-        git add index3.html -f
         git config user.email "${{secrets.GIT_EMAIL}}"
         git config user.name "wongchito"
         git commit -m "Deploy to gh-pages from $GITHUB_SHA"
