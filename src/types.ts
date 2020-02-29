@@ -55,6 +55,7 @@ export interface StationInfo {
     interchange?: any;
     change_type?: string;
     usage?: 'airport' | 'disney' | 'hsr' | '';
+    facility?: 'airport' | 'disney' | 'hsr' | '';
 };
 
 export enum IntInfoTag {
@@ -64,7 +65,7 @@ export type InterchangeInfo = {
     [T in IntInfoTag]: string;
 };
 
-interface StationTransfer {
+export interface StationTransfer {
     /**
      * Interchange type of station. 
      */

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Serif+KR:600|Noto+Serif+JP:600|Noto+Serif+TC:600|Noto+Serif+SC:600%26display=swap');
+
 /*
 Dark Mode
 */
@@ -194,10 +196,11 @@ body {
     text-align: center;
 }
 
-.stn-chip__text--zh {
+.stn-chip__text--zh, .stn-chip__label {
     font-weight: 500;
     font-size: 1rem;
     line-height: 1.2rem;
+    text-align: center;
 }
 
 .stn-chip-set > div:not(#add_stn) .stn-chip__text--zh {
@@ -259,13 +262,30 @@ button#osi_name .mdc-button__label {
     height: 48px;
     overflow: hidden;
     outline: none;
-    background: var(--mdc-theme-background);
+    background: var(--mdc-theme-background, white);
     box-shadow: none;
     border: 2px solid var(--mdc-theme-primary);
     border-width: 0 0 2px 2px;
     color: var(--mdc-theme-primary);
     border-radius: 0 0 0 10px;
     z-index: 999;
+    cursor: pointer;
+}
+
+#toggle:before {
+    content: " ";
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: 1s all;
+    position: absolute;
+    z-index: -1;
+}
+
+#toggle:hover:before {
+    background: var(--mdc-theme-on-surface);
+    opacity: 0.05;
 }
 
 #toggle .mdc-tab__ripple:hover::before {
@@ -303,3 +323,66 @@ button#osi_name .mdc-button__label {
     border-width: 2px 0 0 0;
 }
 
+.stn-chip {
+    height: 55px !important;
+    border-radius: 8px !important;
+    margin: 8px !important;
+    width: calc((100% - 96px) / 6);
+    background-color: white !important;
+    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, .12); 
+}
+
+@media (max-width: 839px) and (min-width: 480px) {
+    .stn-chip {
+        height: 55px !important;
+        border-radius: 8px !important;
+        margin: 6px !important;
+        width: calc((100% - 48px) / 4);
+        background-color: white !important;
+        box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, .12); 
+    }
+}
+
+@media (max-width: 480px) {
+    .stn-chip {
+        height: 55px !important;
+        border-radius: 8px !important;
+        margin: 6px !important;
+        width: calc((100% - 24px) / 2);
+        background-color: white !important;
+        box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, .12); 
+    }
+}
+
+.stn-chip .MuiChip-label {
+    width: 100%;
+}
+
+.MuiTab-root.tab-nav {
+    min-width: calc(100% / 4);
+    padding: 6px 24px !important;
+    height: 48px;
+}
+
+.MuiTab-root.tab-nav-main {
+    min-width: calc(100% / 5);
+    padding: 6px 24px !important;
+    height: 48px;
+}
+
+.MuiTab-labelIcon.tab-nav {
+    min-height: unset;
+    padding-top: unset;
+}
+
+.MuiTab-wrapper.tab-nav {
+    flex-direction: row;
+}
+
+.MuiTab-wrapper.tab-nav > *:first-child {
+    margin-bottom: 0 !important;
+}
+
+.MuiTab-wrapper.tab-nav > *:not(:first-child) {
+    padding-left: 8px;
+}

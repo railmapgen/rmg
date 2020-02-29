@@ -6,11 +6,13 @@
         "allowJs": true,
         "sourceMap": true, 
         "moduleResolution": "node", 
-        "module": "ESNext"
+        "module": "ESNext", 
+        "jsx": "react"
     }, 
     "include": [
         "./src/lang.ts", 
         "./src/index.ts",
+        "./src/index3.tsx",
         "./src/Pids/Pids.ts"
     ]
 }

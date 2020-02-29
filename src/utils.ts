@@ -1,4 +1,4 @@
-import { RMGParam, Name } from './types';
+import { RMGParam, Name, StationInfo } from './types';
 
 export function putParams(instance: RMGParam) {
     localStorage.setItem('rmgParam', JSON.stringify(instance));
@@ -381,6 +381,13 @@ export function updateParam() {
             param.stn_list[stnId].usage = '';
         }
     }
+
+    // Version 3.0
+    for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
+        if (!('facility' in stnInfo)) {
+            param.stn_list[stnId].facility = stnInfo.usage;
+        }
+    }
     putParams(param);
 }
 
@@ -473,4 +480,13 @@ export const getBase64FontFace = async (svgEl: SVGSVGElement) => {
                     })
                 })
         })
+}
+
+/**
+ * Format display style of station name as `[num: ]nameZH,nameEN`.
+ */
+export const formatStnName = (stnInfo: StationInfo) => {
+    return `${
+        window.urlParams.get('style')==='gzmtr' ? (stnInfo?.num || '-')+': ' : ''
+    }${stnInfo?.name.join().replace('\\',' ')}`;
 }

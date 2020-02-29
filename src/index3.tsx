@@ -1,8 +1,11 @@
-import * as initSave from './PageInitialiser/save';
 import * as $ from 'jquery';
 import { RMGLine } from './Line/Line';
 import initLine from './Line/init';
-import initPanels from './PageInitialiser/init';
+import { getParams } from './utils';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import App from './App';
+// import Notes from './SVG';
 
 declare global {
     interface Window {
@@ -73,7 +76,14 @@ $('#toggle li').each((i,el) => {
 window.myLine = null;
 $(`[${window.urlParams.get('style')}-specific]`).show();
 // autoInit();
-initSave.common();
-
 initLine();
-initPanels();
+
+ReactDOM.render(
+    <App />, 
+    $('#panels')[0]
+);
+
+// ReactDOM.render(
+//     <Notes />, 
+//     $('g#notes')[0]
+// );

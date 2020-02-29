@@ -12,11 +12,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
 
-    <link href="https://cdn.jsdelivr.net/npm/material-components-web@4.0.0/dist/material-components-web.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/material-components-web@3.2.0/dist/material-components-web.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/main3.css">
     <style type="text/css" id="global">
         :root {
             --rmg-theme-colour: #000;
@@ -59,10 +58,20 @@
 </div>
 
 <div id="panels">
-    ${require('./html/panels.html')}
+    <!-- ${require('./html/panels.html')} -->
 </div>
 
 <canvas style="display: none;"></canvas>
+<!-- <script src="./node_modules/react/umd/react.development.js"></script> -->
+<!-- <script src="./node_modules/react-dom/umd/react-dom.development.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/react@16.13.0/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@16.13.0/umd/react-dom.production.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/i18next@19.3.2/dist/umd/i18next.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-i18next@11.3.3/dist/umd/react-i18next.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/i18next-xhr-backend@3.2.2/dist/umd/i18nextXHRBackend.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@material-ui/core@4.9.4/umd/material-ui.production.min.js"></script>
 <script>
     window.urlParams = new URLSearchParams(window.location.search);
 </script>

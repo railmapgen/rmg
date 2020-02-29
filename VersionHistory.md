@@ -1,5 +1,29 @@
 # Version History
 
+## 3.0 (Beta 2) (28 Feb 2020)
+
+### Resolved Issues
+
+- Fixed the issues of incomplete translations.
+- Fixed multiple displaying issues. 
+
+## 3.0 (Beta) (27 Feb 2020)
+
+### New Features
+
+- Rewrite settings panel with React. 
+
+### Known Issues
+
+- Text are not completely translated. 
+- UI elements may have unexpected position. 
+
+## 2.16 (23 Feb 2020)
+
+### New Features
+
+- Running-in board is now available in Shanghai Metro style. 
+
 ## 2.15.2 (22 Feb 2020)
 
 ### Resolved Issues

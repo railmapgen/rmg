@@ -1,7 +1,7 @@
 import { setParams, getParams, putParams, getRandomId, getNameFromId } from '../utils';
 import { RMGStation } from '../Station/Station';
 
-import { Name, StationInfo, RMGParam, DirectionLong } from '../types';
+import { Name, StationInfo, RMGParam, DirectionLong, StationTransfer } from '../types';
 
 export class RMGLine {
     protected _svgHeight: number;
@@ -599,9 +599,15 @@ export class RMGLine {
         $('style#global').text(`:root{--rmg-theme-colour:${this._themeColour};--rmg-theme-fg:${this._fgColour}}`);
     }
 
-    drawDestInfo() {
-        //
-    }
+    /**
+     * Stub for draw DestInfo. Rewrite this if you want to support destination canvas.
+     */
+    drawDestInfo() { }
+
+    /**
+     * Stub for draw Runin. Rewrite this if you want to support runin canvas.
+     */
+    drawRunin() { }
 
     updateStnName(stnId: string, names: Name) {
         let param = getParams();
@@ -644,6 +650,22 @@ export class RMGLine {
         putParams(param);
 
         // redraw station on demand
+    }
+
+    updateStnTransfer2(stnId: string, info: StationTransfer) {
+        let param = getParams();
+        param.stn_list[stnId].transfer = info;
+        putParams(param);
+
+        this.stations[stnId] = this._initStnInstance(stnId, param.stn_list[stnId]);
+        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
+            if (['linestart', 'lineend'].includes(stnId)) {continue;}
+            this._updateStnInstance(stnId);
+        }
+        RMGLine.clearSVG();
+        this.drawStns();
+        this.drawLine();
+        this.drawStrip();
     }
 
     updateStnTransfer(stnId: string, type, info=null) {
