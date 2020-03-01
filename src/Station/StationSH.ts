@@ -31,10 +31,10 @@ class RMGStationSH extends RMGStation {
 
     get nameHTML() {
         let [dx, dy] = this._dxdy
+        let dx_branch = [...this.branch.left, ...this.branch.right].length == 0 ? 0 : 30
         return $('<g>', {
-            'transform': `translate(${this.x - dx},${this.y + dy})rotate(-50)`,
+            'transform': `translate(${this.x - dx + dx_branch},${this.y + dy})rotate(-50)`,
             'text-anchor': this._tickRotation === 0 ? 'start' : 'end',
-            // class: `Name ${this.nameClass}`
             class: `Name Future`  // todo: fix this
         }).append(
             $('<text>').addClass('rmg-name__zh rmg-name__shmetro--station').text(this.name[0])
@@ -85,9 +85,10 @@ class IntStationSH extends RMGStationSH {
     // regular station name
     get nameHTML() {
         let [dx, dy] = this._dxdy;
+        let dx_branch = [...this.branch.left, ...this.branch.right].length == 0 ? 0 : 30
         // wrap the name, decro_line and int_line under g in order to rotate at once
         return $('<g>', {
-            transform: `translate(${this.x - dx},${this.y + dy})`,
+            transform: `translate(${this.x - dx + dx_branch},${this.y + dy})`,
         }).append(
             // the original name text
             $('<g>', {
