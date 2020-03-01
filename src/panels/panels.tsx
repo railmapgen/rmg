@@ -7,6 +7,7 @@ const PanelSave = React.lazy(() => import(/* webpackChunkName: "panelSave" */ '.
 const PanelLayout = React.lazy(() => import(/* webpackChunkName: "panelLayout" */ './layout'));
 const PanelDesign = React.lazy(() => import(/* webpackChunkName: "panelDesign" */ './design'));
 const PanelStations = React.lazy(() => import(/* webpackChunkName: "panelStations" */ './stations'));
+const PanelPids = React.lazy(() => import(/* webpackChunkName: "panelPids" */ './pids'));
 const PanelInfo = React.lazy(() => import(/* webpackChunkName: "panelInfo" */ './panel-info'));
 
 const darkTheme = createMuiTheme({
@@ -47,7 +48,7 @@ const useStyles = makeStyles(theme => (
         tab: {
             padding: '6px 24px', 
             height: 48, 
-            minWidth: 'calc(100% / 5)', 
+            minWidth: 'calc(100% / 6)', 
             '& .MuiTab-wrapper': {
                 flexDirection: 'row', 
             }, 
@@ -78,7 +79,7 @@ export default function PanelTab(props) {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const theme = prefersDarkMode ? darkTheme : lightTheme;
 
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = React.useState(4);
 
     const panel = (index: number) => {
         switch (index) {
@@ -91,6 +92,8 @@ export default function PanelTab(props) {
             case 3:
                 return <PanelStations />
             case 4: 
+                return <PanelPids />;
+            case 5:
                 return <PanelInfo />;
             default:
                 return <PanelSave />;
@@ -109,6 +112,7 @@ export default function PanelTab(props) {
                             ['layout', 'panorama'], 
                             ['design', 'brush'], 
                             ['stations', 'directions_transit'], 
+                            ['pids', 'ondemand_video'],
                             ['info', 'info']
                         ].map(val => (
                             <Tab label={<span>{t('tab.'+val[0])}</span>}
