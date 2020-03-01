@@ -9,35 +9,7 @@ const PanelDesign = React.lazy(() => import(/* webpackChunkName: "panelDesign" *
 const PanelStations = React.lazy(() => import(/* webpackChunkName: "panelStations" */ './stations'));
 const PanelInfo = React.lazy(() => import(/* webpackChunkName: "panelInfo" */ './panel-info'));
 
-const darkTheme = createMuiTheme({
-    palette: {
-        type: 'dark',
-        primary: {
-            main: '#bb86fc',
-        },
-        secondary: {
-            main: '#018786',
-        },
-        error: {
-            main: '#cf6679',
-        }, 
-    },
-});
 
-const lightTheme = createMuiTheme({
-    palette: {
-        primary: {
-            light: '#bb86fc',
-            main: '#6200ee',
-        },
-        secondary: {
-            main: '#018786',
-        },
-        error: {
-            main: '#b00020',
-        }, 
-    },
-});
 
 const useStyles = makeStyles(theme => (
     createStyles({
@@ -75,8 +47,6 @@ export default function PanelTab(props) {
     const { t, i18n } = useTranslation('', { useSuspense: false });
 
     const classes = useStyles();
-    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-    const theme = prefersDarkMode ? darkTheme : lightTheme;
 
     const [value, setValue] = React.useState(0);
 
@@ -99,36 +69,35 @@ export default function PanelTab(props) {
 
     return (
         <div>
-            <ThemeProvider theme={theme}>
-                <Typography className={classes.typography} component="div">
-                    <Tabs value={value} indicatorColor="primary" 
-                        textColor="primary" onChange={(_, val) => setValue(val)} 
-                        variant="scrollable" scrollButtons="off">
-                        {[
-                            ['file', 'insert_drive_file'], 
-                            ['layout', 'panorama'], 
-                            ['design', 'brush'], 
-                            ['stations', 'directions_transit'], 
-                            ['info', 'info']
-                        ].map(val => (
-                            <Tab label={<span>{t('tab.'+val[0])}</span>}
-                                icon={<Icon>{val[1]}</Icon>}
-                                className={classes.tab} />
-                        ))}
-                        />
-                    </Tabs>
-                </Typography>
-                <Typography
-                    className={classes.typography}
-                    component="div"
-                    role="tabpanel">
-                    <Box p={3} className={classes.box}>
-                        <React.Suspense fallback={<CircularProgress />}>
-                            {panel(value)}
-                        </React.Suspense>
-                    </Box>
-                </Typography>
-            </ThemeProvider>
+            <Typography className={classes.typography} component="div">
+                <Tabs value={value} indicatorColor="primary" 
+                    textColor="primary" onChange={(_, val) => setValue(val)} 
+                    variant="scrollable" scrollButtons="off">
+                    {[
+                        ['file', 'insert_drive_file'], 
+                        ['layout', 'panorama'], 
+                        ['design', 'brush'], 
+                        ['stations', 'directions_transit'], 
+                        ['info', 'info']
+                    ].map(val => (
+                        <Tab label={<span>{t('tab.'+val[0])}</span>}
+                            icon={<Icon>{val[1]}</Icon>}
+                            className={classes.tab} />
+                    ))}
+                    />
+                </Tabs>
+            </Typography>
+            <Typography
+                className={classes.typography}
+                component="div"
+                role="tabpanel">
+                <Box p={3} className={classes.box}>
+                    <React.Suspense fallback={<CircularProgress />}>
+                        {panel(value)}
+                    </React.Suspense>
+                </Box>
+            </Typography>
         </div>
     );
 }
+
