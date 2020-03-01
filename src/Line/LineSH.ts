@@ -18,8 +18,10 @@ export class RMGLineSH extends RMGLine {
                 return new IntStationSH(stnId, stnInfo);
             case 'osi11':
             case 'osi12':
+            case 'osi13':
             case 'osi21':
             case 'osi22':
+            case 'osi31':
                 return new OSIStationSH(stnId, stnInfo);
             default:
                 return new RMGStationSH(stnId, stnInfo);
@@ -176,7 +178,6 @@ export class RMGLineSH extends RMGLine {
             var dx = -50
             var txtAnchor = 'end'
         }
-        console.log(nextStnIds)
         $('g#next_stn_text').attr({ transform: `translate(${x}, ${dh + 185})`, 'text-anchor': txtAnchor, })
         $('g#next_stn_text > text:first-child').text(this.stations[nextStnIds[0]].name[0])
         $('g#next_stn_text > text:last-child').text(this.stations[nextStnIds[0]].name[1])
@@ -396,9 +397,9 @@ export class RMGLineSH extends RMGLine {
                 // type === 'pass'
                 // current at terminal(start) station, draw the litte pass line
                 if (this._direction === 'l') {
-                    return `M ${x},${y - 6} L ${x + e},${y - 6} l 0,12 L ${x - e},${y + 6} Z`
+                    return `M ${x},${y} L ${x + e},${y}`
                 } else {
-                    return `M ${x - e},${y - 6} L ${x},${y - 6} l 0,12 L ${x - e},${y + 6} Z`
+                    return `M ${x - e},${y} L ${x},${y}`
                 }
             }
         }
@@ -415,9 +416,9 @@ export class RMGLineSH extends RMGLine {
             } else {
                 // type === 'pass'
                 if (this._direction === 'l') {
-                    return `M ${x - e},${y - 6} H ${h + e} l 0,12 L ${x - e},${y + 6} Z`
+                    return `M ${x - e},${y} H ${h + e}`
                 } else {
-                    return `M ${x - e},${y - 6} H ${h + e} l 0,12 L ${x - e},${y + 6} Z`
+                    return `M ${x - e},${y} H ${h + e}`
                 }
             }
         } else {
@@ -432,20 +433,20 @@ export class RMGLineSH extends RMGLine {
                 if (this._direction === 'l') {
                     if (ym > y) {
                         // main line, left direction, center to upper
-                        return `M ${x - e},${y - 6} H ${xb + e} L ${xm},${ym - 6} l 0,12 L ${xb + e},${yb + 6} L ${x - e - 12},${y + 6} Z`
+                        return `M ${x - e},${y - 6} H ${xm + 6} V ${ym - 6} h -12 V ${y + 6} H ${x - e - 12} Z`
                     } else {
                         // main line, left direction, upper to center
                         // this same as the other, but replace x with xm and xm with x
-                        return `M ${xm},${ym - 6} H ${xb - e} L ${x},${y - 6} l 0,12 L ${xb - e},${yb + 6} L ${xm},${ym + 6} Z`
+                        return `M ${xm},${ym - 6} H ${x - 6} V ${y - 6} h 12 V ${ym + 6} H ${xm} Z`
                     }
                 } else {
                     if (ym > y) {
                         // main line, right direction, upper to center
-                        return `M ${x},${y - 6} H ${xb + e} L ${xm},${ym - 6} l 0,12 L ${xb + e},${yb + 6} L ${x},${y + 6} Z`
+                        return `M ${x},${y - 6} H ${xm + 6} V ${ym - 6} h -12 V ${y + 6} H ${x} Z`
                     } else {
                         // main line, right direction, center to upper
                         // this same as the other, but replace x with xm and xm with x
-                        return `M ${xm + e},${ym - 6} H ${xb - e} L ${x},${y - 6} l 0,12 L ${xb - e},${yb + 6} L ${xm + e + 12},${ym + 6} Z`
+                        return `M ${xm + e},${ym - 6} H ${x - 6} V ${y - 6} h 12 V ${ym + 6} H ${xm + e + 12} Z`
                     }
                 }
             } else {
@@ -453,20 +454,19 @@ export class RMGLineSH extends RMGLine {
                 if (this._direction === 'l') {
                     if (ym > y) {
                         // pass line, left direction, center to upper
-                        return `M ${x - e},${y - 6} H ${xb + e} L ${xm},${ym - 6} l 0,12 L ${xb + e},${yb + 6} L ${x - e},${y + 6} Z`
-                    } else {
+                        return `M ${x - e},${y} H ${xm} V ${ym}`
+                    }
+                    else {
                         // pass line, left direction, upper to center
-                        // this same as the other, but replace x with xm and xm with x
-                        return `M ${x},${y - 6} L ${xb - e},${yb - 6} H ${xm + e} l 0,12 L ${xb - e},${yb + 6} L ${x},${y + 6} Z`
+                        return `M ${x},${y} V ${ym} H ${xm + e}`
                     }
                 } else {
                     if (ym > y) {
                         // pass line, right direction, upper to center
-                        return `M ${x - e},${y - 6} H ${xb + e} L ${xm},${ym - 6} l 0,12 L ${xb + e},${yb + 6} L ${x - e},${y + 6} Z`
+                        return `M ${x - e},${y} H ${xm} V ${ym}`
                     } else {
                         // pass line, right direction, center to upper
-                        // this same as the other, but replace x with xm and xm with x
-                        return `M ${x},${y - 6} L ${xb - e},${yb - 6} H ${xm + e} l 0,12 L ${xb - e},${yb + 6} L ${x},${y + 6} Z`
+                        return `M ${x},${y} V ${ym} H ${xm + e}`
                     }
                 }
             }
@@ -508,7 +508,9 @@ export class RMGLineSH extends RMGLine {
             );
             $('#line_pass').append(
                 $('<path>', {
-                    fill: '#aaa',
+                    stroke: 'gray',
+                    'stroke-width': 12,
+                    fill: 'none',  // fix mysterious fill problem
                     d: this._linePath(linePassStns, 'pass')
                 })
             );

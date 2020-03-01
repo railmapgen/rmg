@@ -31,10 +31,10 @@ class RMGStationSH extends RMGStation {
 
     get nameHTML() {
         let [dx, dy] = this._dxdy
+        let dx_branch = [...this.branch.left, ...this.branch.right].length == 0 ? 0 : 30
         return $('<g>', {
-            'transform': `translate(${this.x - dx},${this.y + dy})rotate(-50)`,
+            'transform': `translate(${this.x - dx + dx_branch},${this.y + dy})rotate(-50)`,
             'text-anchor': this._tickRotation === 0 ? 'start' : 'end',
-            // class: `Name ${this.nameClass}`
             class: `Name Future`  // todo: fix this
         }).append(
             $('<text>').addClass('rmg-name__zh rmg-name__shmetro--station').text(this.name[0])
@@ -85,9 +85,10 @@ class IntStationSH extends RMGStationSH {
     // regular station name
     get nameHTML() {
         let [dx, dy] = this._dxdy;
+        let dx_branch = [...this.branch.left, ...this.branch.right].length == 0 ? 0 : 30
         // wrap the name, decro_line and int_line under g in order to rotate at once
         return $('<g>', {
-            transform: `translate(${this.x - dx},${this.y + dy})`,
+            transform: `translate(${this.x - dx + dx_branch},${this.y + dy})`,
         }).append(
             // the original name text
             $('<g>', {
@@ -117,10 +118,15 @@ class IntStationSH extends RMGStationSH {
         // get the exact station name width so that the
         // interchange station icon can be right after the station name
         let stnNameElem = $(`#rmg-name__shmetro--${this.id}`)
-        let bcr = stnNameElem.get(0).getBoundingClientRect()
-        let dx = bcr.right - bcr.left + 5
 
-        this._intInfos.map((stn, index) => {
+        // the original name position
+        let bcr = stnNameElem.get(0).getBoundingClientRect()
+        // the original name position's right x
+        let x = bcr.right - bcr.left + 5
+        // the int icon dx for each int station
+        let dx = 0
+
+        for (const [_, stn] of Object.entries(this._intInfos)) {
             // interchange line icon after station name
             let lineIconColour = stn[IntInfoTag.colour];
             let lineIconElem = $('<use>', {
@@ -145,27 +151,31 @@ class IntStationSH extends RMGStationSH {
                 var lineName = lineNumber[0]
                 lineIconElem.attr({
                     'xlink:href': '#int_sh_number',
-                    transform: `translate(${dx + index * 25},-12)`,
+                    transform: `translate(${x + dx},-12)`,
                 })
                 lineNameElem.attr({
                     // Todo: fix this hard-coded center(10) position
-                    transform: `translate(${dx + 10 + index * 25},8)`,
+                    transform: `translate(${x + 10 + dx},8)`,
                 }).text(lineName)
+
+                dx += 25  // 20 + 5(margin) for number line
             } else {
                 // letter line
                 var lineName = String(stn[IntInfoTag.nameZH])
                 lineIconElem.attr({
                     'xlink:href': '#int_sh_letter',
-                    transform: `translate(${dx + index * 70},-12)`,
+                    transform: `translate(${x + dx},-12)`,
                 })
                 lineNameElem.attr({
                     // Todo: fix this hard-coded center(30) position
-                    transform: `translate(${dx + 30 + index * 70},8)`,
+                    transform: `translate(${x + 30 + dx},8)`,
                 }).text(lineName)
+
+                dx += 65  // 60 + 5(margin) for letter line
             }
 
             lineElems.push(lineIconElem, lineNameElem)
-        })
+        }
 
         // rotate the station info now
         // other wise the bcr will be inaccurate due to the rotation
@@ -207,7 +217,7 @@ class OSIStationSH extends IntStationSH {
 
         return $('<g>', {
             class: `Name Future`,  // todo: fix this
-            transform: `translate(${dx + this._intInfos.length * 15 + 10},-30)`,
+            transform: `translate(${dx + this._intInfos.length * 15},-30)`,
             id: `rmg-name__shmetro--${this.id}`,
             'text-anchor': 'middle',
             'font-size': '50%',
