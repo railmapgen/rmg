@@ -217,7 +217,7 @@ class OSIStationSH extends IntStationSH {
 
         return $('<g>', {
             class: `Name Future`,  // todo: fix this
-            transform: `translate(${dx + this._intInfos.length * 15 + 10},-30)`,
+            transform: `translate(${dx + this._intInfos.length * 15},-30)`,
             id: `rmg-name__shmetro--${this.id}`,
             'text-anchor': 'middle',
             'font-size': '50%',
