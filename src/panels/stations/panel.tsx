@@ -74,7 +74,10 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                 stnList: {
                     ...prevState.stnList, 
                     [newId]: newInfo,
-                }
+                }, 
+                // trigger edit dialog
+                stnEditDialogOpened: true, 
+                stationSelected: newId,
             }));
         }
     }

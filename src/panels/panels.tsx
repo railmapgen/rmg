@@ -4,60 +4,10 @@ import { Typography, Box, CircularProgress, Tabs, Tab, Icon, createMuiTheme, The
 import { useTranslation } from 'react-i18next';
 
 const PanelSave = React.lazy(() => import(/* webpackChunkName: "panelSave" */ './save'));
-const PanelLayout = React.lazy(() => import(/* webpackChunkName: "panelLayout" */ './panel-layout'));
-const PanelDesign = React.lazy(() => import(/* webpackChunkName: "panelDesign" */ './panel-design'));
+const PanelLayout = React.lazy(() => import(/* webpackChunkName: "panelLayout" */ './layout'));
+const PanelDesign = React.lazy(() => import(/* webpackChunkName: "panelDesign" */ './design'));
 const PanelStations = React.lazy(() => import(/* webpackChunkName: "panelStations" */ './stations'));
 const PanelInfo = React.lazy(() => import(/* webpackChunkName: "panelInfo" */ './panel-info'));
-
-const panelStyles = makeStyles(theme => (
-    createStyles({
-        root: {
-            background: theme.palette.background.default,
-        }
-    })
-));
-
-interface PanelProps {
-    children?: React.ReactNode;
-    value: any;
-}
-
-function Panel(props: PanelProps) {
-    const classes = panelStyles();
-
-    const panel = (index: number) => {
-        switch (index) {
-            case 0:
-                return <PanelSave />;
-            case 1:
-                return <PanelLayout />;
-            case 2:
-                return <PanelDesign />;
-            case 3:
-                return <PanelStations />
-            case 4: 
-                return <PanelInfo />;
-            default:
-                return <PanelSave />;
-        };
-    };
-
-    const { children, value, ...other } = props;
-    return (
-        <Typography
-            className={classes.root}
-            component="div"
-            role="tabpanel"
-            {...other}>
-            <Box p={3} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                <React.Suspense fallback={<CircularProgress />}>
-                    {panel(props.value)}
-                </React.Suspense>
-            </Box>
-        </Typography>
-    );
-
-}
 
 const darkTheme = createMuiTheme({
     palette: {
@@ -89,54 +39,95 @@ const lightTheme = createMuiTheme({
     },
 });
 
-export default function PanelTab(props) {
-    const { t } = useTranslation('', { useSuspense: false });
+const useStyles = makeStyles(theme => (
+    createStyles({
+        typography: {
+            background: theme.palette.background.default,
+        }, 
+        tab: {
+            padding: '6px 24px', 
+            height: 48, 
+            minWidth: 'calc(100% / 5)', 
+            '& .MuiTab-wrapper': {
+                flexDirection: 'row', 
+            }, 
+            '&.MuiTab-labelIcon': {
+                minHeight: 'unset', 
+                '& .MuiTab-wrapper': {
+                    '& > *:first-child': {
+                        marginBottom: 0, 
+                    },
+                    '& > *:not(first-child)': {
+                        paddingLeft: 8
+                    },
+                }, 
+            },
+        }, 
+        box: {
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
+        }
+    })
+));
 
+export default function PanelTab(props) {
+    const { t, i18n } = useTranslation('', { useSuspense: false });
+
+    const classes = useStyles();
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const theme = prefersDarkMode ? darkTheme : lightTheme;
 
     const [value, setValue] = React.useState(0);
 
-    const tabClasses = {
-        root: 'tab-nav-main',
-        wrapper: 'tab-nav', 
-        labelIcon: 'tab-nav',
+    const panel = (index: number) => {
+        switch (index) {
+            case 0:
+                return <PanelSave />;
+            case 1:
+                return <PanelLayout />;
+            case 2:
+                return <PanelDesign />;
+            case 3:
+                return <PanelStations />
+            case 4: 
+                return <PanelInfo />;
+            default:
+                return <PanelSave />;
+        };
     };
+
     return (
         <div>
             <ThemeProvider theme={theme}>
-                <Typography style={{background: theme.palette.background.default}}>
+                <Typography className={classes.typography} component="div">
                     <Tabs value={value} indicatorColor="primary" 
-                        textColor="primary" onChange={(e, val) => setValue(val)} 
+                        textColor="primary" onChange={(_, val) => setValue(val)} 
                         variant="scrollable" scrollButtons="off">
-                        <Tab 
-                            label={<span>{t('tab.file')}</span>}
-                            icon={<Icon>insert_drive_file</Icon>}
-                            classes={tabClasses}
-                        />
-                        <Tab 
-                            label={<span>{t('tab.layout')}</span>}
-                            icon={<Icon>panorama</Icon>}
-                            classes={tabClasses}
-                        />
-                        <Tab 
-                            label={<span>{t('tab.design')}</span>}
-                            icon={<Icon>brush</Icon>}
-                            classes={tabClasses}
-                        />
-                        <Tab
-                            label={<span>{t('tab.stations')}</span>}
-                            icon={<Icon>directions_transit</Icon>}
-                            classes={tabClasses}
-                        />
-                        <Tab
-                            label={<span>{t('tab.info')}</span>}
-                            icon={<Icon>info</Icon>}
-                            classes={tabClasses}
+                        {[
+                            ['file', 'insert_drive_file'], 
+                            ['layout', 'panorama'], 
+                            ['design', 'brush'], 
+                            ['stations', 'directions_transit'], 
+                            ['info', 'info']
+                        ].map(val => (
+                            <Tab label={<span>{t('tab.'+val[0])}</span>}
+                                icon={<Icon>{val[1]}</Icon>}
+                                className={classes.tab} />
+                        ))}
                         />
                     </Tabs>
                 </Typography>
-                <Panel value={value} />
+                <Typography
+                    className={classes.typography}
+                    component="div"
+                    role="tabpanel">
+                    <Box p={3} className={classes.box}>
+                        <React.Suspense fallback={<CircularProgress />}>
+                            {panel(value)}
+                        </React.Suspense>
+                    </Box>
+                </Typography>
             </ThemeProvider>
         </div>
     );

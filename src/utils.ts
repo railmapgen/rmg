@@ -173,11 +173,6 @@ export function getNameFromId(stnId: string): Name {
     ];
 }
 
-export function describeParams(param: RMGParam) {
-    return `Number of stations: ${Object.keys(param.stn_list).length-2}
-            ${Object.entries(param.stn_list).map(x => ['linestart','lineend'].includes(x[0]) ? '' : x[1].name.join(' - ')).join('<br>').trim().replace(/\\/,' ')}`;
-}
-
 /**
  * Convert ISO 3166 alpha-2 country code (followed by BS 6879 UK subdivision code, if applicable) to flag Emoji. For Windows platform, an `img` element with image source from OpenMoji is returned. 
  */
@@ -403,6 +398,10 @@ const langFallback = (lang: string) => {
 
 export const getTransText = (obj: {[index: string]: string}, lang: string) => {
     return obj[langFallback(lang).find(l => obj[l])];
+}
+
+export const getTransText2 = (obj: {[index: string]: string}, langs: string[]) => {
+    return langs.reduce((acc, cur) => acc ? acc : (obj[cur] ? obj[cur] : acc), '');
 }
 
 /**
