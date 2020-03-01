@@ -137,10 +137,10 @@ export class RMGLineGZ extends RMGLine {
         this.drawStrip();
 
         let psdDy: string;
-        if (['gz3', 'gz1421'].includes(this._infoPanelType)) {
+        if (['gz3', 'gz1421', 'gz1'].includes(this._infoPanelType)) {
             $('#big_psd use').css('fill', 'var(--rmg-theme-colour)');
             $('#big_psd').css('fill', 'var(--rmg-theme-fg)');
-            psdDy = val==='gz3' ? '82px' : '62px';
+            psdDy = (val==='gz3' || val==='gz1') ? '82px' : '62px';
         } else {
             $('#big_psd use').css('fill', 'white');
             $('#big_psd').css('fill', '#000');
@@ -224,6 +224,7 @@ export class RMGLineGZ extends RMGLine {
                 case 'gz28':
                 case 'gzgf':
                     return 60;
+                case 'gz1':
                 case 'gz3':
                     return 40;
                 case 'gz1421':

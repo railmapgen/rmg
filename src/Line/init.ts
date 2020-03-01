@@ -1,5 +1,4 @@
 import { updateParam, getParams } from '../utils';
-import { MDCDialog } from '@material/dialog';
 import { Pids } from '../Pids/Pids';
 
 declare global {
@@ -39,11 +38,12 @@ if (localStorage.rmgParam != null) {
         updateParam();
         loadLine(getParams());
     } catch (err) {
-        let initErrDiag = MDCDialog.attachTo($('#init_err_diag')[0]);
-        $('#init_err_diag')
-            .find('#err_stack')
-            .html(err + '<br>' + err.stack.replace(/\n/g, '<br>'));
-        initErrDiag.open();
+        alert(err + 'Something error! Please start from a new canvas. ')
+        // let initErrDiag = MDCDialog.attachTo($('#init_err_diag')[0]);
+        // $('#init_err_diag')
+        //     .find('#err_stack')
+        //     .html(err + '<br>' + err.stack.replace(/\n/g, '<br>'));
+        // initErrDiag.open();
         console.error(err);
     }
 } else {

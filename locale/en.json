@@ -80,6 +80,7 @@
         "panelType": {
             "button": "Info Panel Type", 
             "title": "Choose a Type for Info Panel", 
+            "gz1": "Line 1",
             "gz28": "Line 2/8", 
             "gz3": "Line 3", 
             "gz1421": "Line 7/9/13/14/21", 

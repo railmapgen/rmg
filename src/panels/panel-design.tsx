@@ -214,6 +214,7 @@ function DesignListMTR(props) {
 }
 
 const allInfoPanelTypes = {
+    gz1: 'Line 1',
     gz28: 'Line 2/8', 
     gz3: 'Line 3', 
     gzgf: 'Line 6/Guangfo Line',
