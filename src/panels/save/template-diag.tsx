@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListItem, ListItemText, Dialog, DialogTitle, DialogContent, List, DialogContentText, DialogActions, Button } from '@material-ui/core';
-import { getTransText } from '../../utils';
+import { getTransText2 } from '../../utils';
 
 const useTemplateList = () => {
     const [list, setList] = React.useState([] as {desc: {[x: string]: string}; filename: string}[]);
@@ -32,7 +32,7 @@ export default (props: TemplateDialogProps) => {
                 <List>
                     {templateList.map(t => (
                         <ListItem button onClick={() => props.onClose(t.filename)} key={t.filename}>
-                            <ListItemText primary={getTransText(t.desc, i18n.language)} />
+                            <ListItemText primary={getTransText2(t.desc, i18n.languages)} />
                         </ListItem>
                     ))}
                 </List>

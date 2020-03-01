@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next';
 
 import { Grid, Card, List, ListItem, ListItemIcon, Icon, TextField, Typography, Slider, Paper, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
 
-import { getParams } from '../utils';
-import { RMGLineGZ } from '../Line/LineGZ';
+import { getParams } from '../../utils';
+import { RMGLineGZ } from '../../Line/LineGZ';
 
-export default function PanelLayout(props) {
+export default (props) => {
     const [expanded, setExpanded] = React.useState(false as false | number);
 
-    const handleChange = index => (event, isExpanded) => {
+    const handleChange = (index: number) => (event, isExpanded: boolean) => {
         setExpanded(isExpanded ? index : false);
     };
 

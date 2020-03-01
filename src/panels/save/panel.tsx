@@ -3,26 +3,21 @@ import { useTranslation, withTranslation } from 'react-i18next';
 
 import { Grid, Card, List, ListItem, ListItemIcon, Icon, ListItemText, Divider, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
 
-import { RMGParam } from '../../types';
-import { describeParams, getTransText, getParams, getBase64FontFace, test } from '../../utils';
+import { getParams, getBase64FontFace, test, getTransText2 } from '../../utils';
 
 import TemplateDialog from './template-diag';
+import UploadListItem from './upload-item';
 
-export default class PanelSave extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+export default (props) =>  {
+    let TranslatedSaveLists = withTranslation()(SaveLists);
 
-    render() {
-        let TranslatedSaveLists = withTranslation()(SaveLists);
-        return (
-            <Grid container spacing={3} justify="center" alignItems="center">
-                <Grid item xs={12} sm={8} md={6} lg={4}>
-                    <TranslatedSaveLists />
-                </Grid>
+    return (
+        <Grid container spacing={3} justify="center" alignItems="center">
+            <Grid item xs={12} sm={8} md={6} lg={4}>
+                <TranslatedSaveLists />
             </Grid>
-        );
-    }
+        </Grid>
+    );
 }
 
 const allStyles = {
@@ -46,8 +41,6 @@ interface SaveListsState {
     style: string;
     lang: string;
     templateDialogOpened: boolean;
-    importDialogOpened: boolean;
-    importDialogContent: RMGParam | {};
     exportDialogOpened: boolean;
     previewDialogOpened: boolean;
     previewDialogCanvas: string;
@@ -63,8 +56,6 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
             style: window.urlParams.get('style'), 
             lang: window.urlParams.get('lang'), 
             templateDialogOpened: false,
-            importDialogOpened: false, 
-            importDialogContent: {}, 
             exportDialogOpened: false,
             previewDialogOpened: false,
             previewDialogCanvas: '',
@@ -75,9 +66,6 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
         this.templateDialogClose = this.templateDialogClose.bind(this);
 
         this.saveClick = this.saveClick.bind(this);
-
-        this.uploadInputChange = this.uploadInputChange.bind(this);
-        this.importDialogClose = this.importDialogClose.bind(this);
 
         this.exportDialogClose = this.exportDialogClose.bind(this);
         this.previewDialogClose = this.previewDialogClose.bind(this);
@@ -105,25 +93,6 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
             download: 'rmg_param.json'
         });
         link[0].click();
-    }
-
-    uploadInputChange(param: RMGParam) {
-        this.setState({
-            importDialogOpened: true, 
-            importDialogContent: param
-        });
-    }
-
-    importDialogClose(action: string) {
-        if (action === 'close') {
-            ($('#upload-param')[0] as HTMLInputElement).value = '';
-            this.setState({importDialogOpened: false});
-            return;
-        }
-        if (action === 'accept') {
-            localStorage.rmgParam = JSON.stringify(this.state.importDialogContent);
-            location.reload(true);
-        }
     }
 
     exportDialogClose(action: string) {
@@ -176,12 +145,7 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
                             </ListItemIcon>
                             <ListItemText primary={this.props.t('file.new.button')} />
                         </ListItem>
-                        <ListItem button onClick={() => $('#upload-param').click()}>
-                            <ListItemIcon>
-                                <Icon>folder_open</Icon>
-                            </ListItemIcon>
-                            <ListItemText primary={this.props.t('file.open.button')} />
-                        </ListItem>
+                        <UploadListItem />
                         <ListItem button onClick={this.saveClick}>
                             <ListItemIcon>
                                 <Icon>save</Icon>
@@ -209,14 +173,15 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
                             <ListItemIcon>
                                 <Icon>language</Icon>
                             </ListItemIcon>
-                            <ListItemText primary={this.props.t('file.lang.button')} secondary={allLangs[this.props.i18n.language]} />
+                            <ListItemText 
+                                primary={this.props.t('file.lang.button')}
+                                secondary={getTransText2(allLangs, this.props.i18n.languages)} />
                         </ListItem>
                     </List>
                 </Card>
 
                 <TemplateDialog open={this.state.templateDialogOpened} onClose={this.templateDialogClose} />
-                <UploadInput onChange={this.uploadInputChange} />
-                <ImportDialog open={this.state.importDialogOpened} onClose={this.importDialogClose} content={this.state.importDialogContent} />
+                
                 <ExportDialog open={this.state.exportDialogOpened} onClose={this.exportDialogClose} />
                 <TranslatedPreviewDialog 
                     open={this.state.previewDialogOpened} 
@@ -225,68 +190,6 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
                 <StyleDialog open={this.state.styleDialogOpened} onClose={this.styleDialogClose} />
                 <LangDialog open={this.state.langDialogOpened} onClose={() => this.setState({langDialogOpened: false})} />
             </div>
-        );
-    }
-}
-
-interface UploadInputProps {
-    onChange: (param: RMGParam) => void;
-}
-
-class UploadInput extends React.Component<UploadInputProps> {
-    constructor(props) {
-        super(props);
-
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-        console.log(event.target.files[0]);
-        let filePromise = new Promise((resolve: (event: ProgressEvent<FileReader>) => void) => {
-            let reader = new FileReader();
-            reader.onloadend = resolve;
-            reader.readAsText(event.target.files[0]);
-        });
-        filePromise
-            .then(e => JSON.parse(e.target.result as string))
-            .then(param => this.props.onChange(param));
-    }
-
-    render() {
-        return <input type="file" accept="application/json" 
-            style={{display: 'none'}} id="upload-param" onChange={this.handleChange} />
-    }
-}
-
-interface ImportDialogProps {
-    onClose: (action: string) => void;
-    open: boolean;
-    content: {} | RMGParam;
-}
-
-class ImportDialog extends React.Component<ImportDialogProps> {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <Dialog onClose={() => this.props.onClose('close')} aria-labelledby="simple-dialog-title" open={this.props.open}>
-                <DialogTitle>Your Configuration</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        {Object.keys(this.props.content).length === 0 ? 'empty' : describeParams(this.props.content as RMGParam)}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => this.props.onClose('close')} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={() => this.props.onClose('accept')} color="primary" autoFocus>
-                        Import
-                    </Button>
-                </DialogActions>
-            </Dialog>
         );
     }
 }
@@ -485,11 +388,11 @@ function LangDialog(props: LangDialogProps) {
             props.onClose();
         } else {
             i18n.changeLanguage(lang);
-            window.urlParams.set('lang', lang);
-            history.pushState({url:window.location.href}, null, '?' + window.urlParams.toString());
+            // window.urlParams.set('lang', lang);
+            // history.pushState({url:window.location.href}, null, '?' + window.urlParams.toString());
             window.gtag('event', 'set', {
                 event_category: 'language', 
-                event_label: window.urlParams.get('lang')
+                event_label: lang
             });
             document.documentElement.setAttribute('lang',lang);
             document.title = t('title');

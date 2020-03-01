@@ -1,12 +1,36 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Dialog, DialogTitle, DialogContent, Tabs, Tab, Icon, Typography, CircularProgress, DialogActions, Button, useTheme, useMediaQuery } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, Tabs, Tab, Icon, Typography, CircularProgress, DialogActions, Button, useTheme, useMediaQuery, makeStyles, createStyles } from '@material-ui/core';
 import { StationInfo } from '../../../types';
 
 const NameTab = React.lazy(() => import(/* webpackChunkName: "panelStationsName" */ './name-tab'));
 const InterchangeTab = React.lazy(() => import(/* webpackChunkName: "panelStationsInterchange" */ './interchange-tab'));
 const BranchTab = React.lazy(() => import(/* webpackChunkName: "panelStationsBranch" */ './branch-tab'));
 const MoreTab = React.lazy(() => import(/* webpackChunkName: "panelStationsMore" */ './more-tab'));
+
+const useStyles = makeStyles(theme => (
+    createStyles({
+        tab: {
+            padding: '6px 24px', 
+            height: 48, 
+            minWidth: 'calc(100% / 4)', 
+            '& .MuiTab-wrapper': {
+                flexDirection: 'row', 
+            }, 
+            '&.MuiTab-labelIcon': {
+                minHeight: 'unset', 
+                '& .MuiTab-wrapper': {
+                    '& > *:first-child': {
+                        marginBottom: 0, 
+                    },
+                    '& > *:not(first-child)': {
+                        paddingLeft: 8
+                    },
+                }, 
+            },
+        }, 
+    })
+));
 
 interface StationEditDialogProps {
     onClose: () => void;
@@ -21,15 +45,12 @@ interface StationEditDialogProps {
 
 export default function StationEditDialog(props: StationEditDialogProps) {
     const { t } = useTranslation();
+
     const [tabIndex, setTabIndex] = React.useState(0);
+    
+    const classes = useStyles();
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
-    const tabClasses = {
-        root: 'tab-nav',
-        wrapper: 'tab-nav', 
-        labelIcon: 'tab-nav',
-    };
 
     return (
         <Dialog onClose={props.onClose} open={props.open} fullScreen={fullScreen}>
@@ -40,26 +61,16 @@ export default function StationEditDialog(props: StationEditDialogProps) {
                     textColor="primary" 
                     onChange={(_,val) => setTabIndex(val)} 
                     variant="scrollable" scrollButtons="off">
-                    <Tab 
-                        label={<span>{t('stations.edit.tab.name')}</span>} 
-                        icon={<Icon>title</Icon>} 
-                        classes={tabClasses}
-                    />
-                    <Tab 
-                        label={<span>{t('stations.edit.tab.interchange')}</span>} 
-                        icon={<Icon>transfer_within_a_station</Icon>} 
-                        classes={tabClasses}
-                    />
-                    <Tab 
-                        label={<span>{t('stations.edit.tab.branch')}</span>} 
-                        icon={<Icon>share</Icon>} 
-                        classes={tabClasses}
-                    />
-                    <Tab 
-                        label={<span>{t('stations.edit.tab.more')}</span>} 
-                        icon={<Icon>more_horiz</Icon>} 
-                        classes={tabClasses}
-                    />
+                    {[
+                        ['name', 'title'], 
+                        ['interchange', 'transfer_within_a_station'], 
+                        ['branch', 'share'], 
+                        ['more', 'more_horiz']
+                    ].map(val => (
+                        <Tab label={<span>{t('stations.edit.tab.'+val[0])}</span>}
+                            icon={<Icon>{val[1]}</Icon>}
+                            className={classes.tab} />
+                    ))}
                 </Tabs>
                 <Typography
                     component="div"

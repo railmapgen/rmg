@@ -1,5 +1,15 @@
 # Version History
 
+## 3.1.1 (1 Mar 2020)
+
+### New Features
+
+- Colour picker is back!
+
+### Resolved Issues
+
+- Improved robustness. 
+
 ## 3.1 (1 Mar 2020)
 
 ### New Features

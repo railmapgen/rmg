@@ -1,41 +1,66 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Dialog, DialogTitle, DialogContent, List, ListItem, Paper, Icon, InputBase, makeStyles, ListItemIcon, TextField, MenuItem, DialogActions, Button } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, List, ListItem, Paper, Icon, InputBase, makeStyles, ListItemIcon, TextField, MenuItem, DialogActions, Button, createStyles } from '@material-ui/core';
 
 import { Name, CityEntry, LineEntry } from '../types';
-import { countryCode2Emoji, getTransText } from '../utils';
+import { countryCode2Emoji, getTransText2 } from '../utils';
 
-const useStyles = makeStyles({
-    paperRoot: {
-        width: 250, 
-    },
-    iconRoot: {
-        position: 'absolute' as 'absolute',
-    },
-    inputBaseRoot: {
-        display: 'block', 
-    }, 
-    inputBaseInputZH: {
-        fontFamily: 'Helvetica, Arial, Noto Serif KR, Noto Serif JP, Noto Serif TC, Noto Serif SC, HiraMinProN-W6, serif', 
-        textAlign: 'center' as 'center',
-        fontSize: 36,
-        padding: 0, 
-        paddingTop: 6,
-        height: 45,
-    },
-    inputBaseInputEN: {
-        fontFamily: 'Helvetica, Arial, sans-serif',
-        textAlign: 'center' as 'center',
-        fontSize: 18, 
-        padding: 0, 
-        paddingBottom: 6,
-        height: 'auto',
-    },
-    menuItemSpan: {
-        padding: '0 .3rem',
-    }
-});
+const useStyles = makeStyles(theme => (
+    createStyles({
+        paperRoot: {
+            width: 250, 
+        },
+        listItemPaper: {
+            justifyContent: 'center'
+        },
+        iconRoot: {
+            position: 'absolute',
+        },
+        inputBaseRoot: {
+            display: 'block', 
+        }, 
+        inputBaseInputZH: {
+            fontFamily: 'Helvetica, Arial, Noto Serif KR, Noto Serif JP, Noto Serif TC, Noto Serif SC, HiraMinProN-W6, serif', 
+            textAlign: 'center',
+            fontSize: 36,
+            padding: 0, 
+            paddingTop: 6,
+            height: 45,
+        },
+        inputBaseInputEN: {
+            fontFamily: 'Helvetica, Arial, sans-serif',
+            textAlign: 'center',
+            fontSize: 18, 
+            padding: 0, 
+            paddingBottom: 6,
+            height: 'auto',
+        },
+        menuItemSpan: {
+            padding: '0 .3rem',
+        }, 
+        button: {
+            borderRadius: '50%', 
+            height: 28, 
+            width: 28, 
+            minWidth: 0, 
+            marginRight: 8, 
+            border: 'solid', 
+            padding: 0
+        }, 
+        inputColour: {
+            position: 'absolute', 
+            width: 0, 
+            height: 0, 
+            left: 27, 
+            top: 32
+        }, 
+        buttonContainer: {
+            display: 'flex', 
+            flexShrink: 1, 
+        }
+    })
+));
 
 const useCityList = () => {
     const [list, setList] = React.useState([] as CityEntry[]);
@@ -134,6 +159,29 @@ export default function ColourDialog(props: ColourDialogProps) {
         setHexTemp(props.theme[2]);
     }, [props.theme[2]]);
 
+    const colourChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let rgb = event.target.value;
+        setHexTemp(rgb);
+
+        if (props.theme[0] !== 'other') {
+                // if hex valid, modify theme city and props.hex
+                let newTheme = [
+                    'other', 
+                    props.theme[1], 
+                    rgb, 
+                    props.theme[3],
+                ]
+                props.onUpdate('theme', newTheme);
+                // then lineList will be updated by hook (along with selection)
+                // then line will be updated by hook
+        } else {
+                // if hex valid, modify props.hex
+                let newTheme = props.theme.map((val,idx) => idx===2 ? rgb : val);
+                props.onUpdate('theme', newTheme);
+                // then lineList will be updated by hook (actually only hex is changed)
+        }
+    };
+
     const hexChange = (event) => {
         let hex = event.target.value;
         if (hex.match(/^#[0-9a-fA-f]{0,6}$/) === null) return;
@@ -192,7 +240,7 @@ export default function ColourDialog(props: ColourDialogProps) {
             <DialogTitle>{t('colour.title')}</DialogTitle>
             <DialogContent dividers>
                 <List>
-                    <ListItem style={{justifyContent: 'center'}}>
+                    <ListItem className={classes.listItemPaper}>
                         <Paper className={classes.paperRoot}
                             style={{backgroundColor: props.theme[2]}}
                         >
@@ -231,7 +279,7 @@ export default function ColourDialog(props: ColourDialogProps) {
                                 <MenuItem key={c.id} value={c.id}>
                                     <span dangerouslySetInnerHTML={{
                                         __html: countryCode2Emoji(c.country) + 
-                                            getTransText(c.name, window.urlParams.get('lang'))
+                                            getTransText2(c.name, i18n.languages)
                                     }} />
                                 </MenuItem>
                             ))}
@@ -254,13 +302,23 @@ export default function ColourDialog(props: ColourDialogProps) {
                                             backgroundColor: l.colour, 
                                             color: l.fg || '#fff', 
                                         }}>
-                                        {getTransText(l.name, i18n.language)}
+                                        {getTransText2(l.name, i18n.languages)}
                                     </span>
                                 </MenuItem>
                             ))}
                         </TextField>
                     </ListItem>
                     <ListItem>
+                        <div className={classes.buttonContainer}>
+                            <input type="color" id="input-color" value={props.theme[2]}
+                                onChange={colourChange} className={classes.inputColour} />
+                            <label htmlFor="input-color">
+                                <Button className={classes.button} style={{
+                                    backgroundColor: props.theme[2], 
+                                    borderColor: props.theme[3] || '#fff', 
+                                }} variant="contained" component="span" />
+                            </label>
+                        </div>
                         <TextField 
                             error={!hexTemp?.match(/^#[0-9a-fA-f]{6}$/g)}
                             style={{width: '100%', marginRight:5}}

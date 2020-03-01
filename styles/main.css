@@ -1,10 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Serif+KR:600|Noto+Serif+JP:600|Noto+Serif+TC:600|Noto+Serif+SC:600%26display=swap');
 
-
-/* :root {
-    color-scheme: light dark;
-} */
-
 :root {
     background-color: #fafafa;
 }
@@ -121,37 +116,6 @@ body {
     padding: 12px;
 }
 
-.mdc-chip-set.stn-chip-set .mdc-chip {
-    height: 55px;
-    border-radius: 8px;
-    width: calc((100% - 96px) / 6);
-    margin: 8px;
-    background-color: var(--mdc-theme-surface, #fff);
-    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, .12);
-}
-
-@media (max-width: 839px) and (min-width: 480px) {
-    .mdc-chip-set.stn-chip-set {
-        padding: 8px;
-    }
-
-    .mdc-chip-set.stn-chip-set .mdc-chip {
-        width: calc((100% - 48px) / 4);
-        margin: 6px
-    }
-}
-
-@media (max-width: 479px) {
-    .mdc-chip-set.stn-chip-set {
-        padding: 8px;
-    }
-
-    .mdc-chip-set.stn-chip-set .mdc-chip {
-        width: calc((100% - 24px) / 2);
-        margin: 6px
-    }
-}
-
 .mdc-chip-set.stn-chip-set .mdc-chip__ripple {
     border-radius: 8px;
 }
@@ -187,23 +151,6 @@ body {
     font-family: Helvetica, Arial, sans-serif;
     font-size: .75rem;
     line-height: .9rem;
-}
-
-.mdc-chip-set.int-chip-set {
-    display: flex;
-    overflow-x: scroll;
-    flex-wrap: nowrap;
-}
-
-.mdc-chip span[role="checkbox"]:focus {
-    outline: none;
-}
-
-.mdc-chip-set.int-chip-set .mdc-chip {
-    flex: 0 0 auto;
-    border-radius: 4.5px;
-    height: 45px;
-    line-height: 1rem;
 }
 
 .mdc-chip-set.int-chip-set .mdc-chip__ripple {
@@ -295,33 +242,4 @@ button#osi_name .mdc-button__label {
     margin: 0 auto;
     border: 1px solid var(--mdc-theme-primary);
     border-width: 2px 0 0 0;
-}
-
-.MuiTab-root.tab-nav {
-    min-width: calc(100% / 4);
-    padding: 6px 24px !important;
-    height: 48px;
-}
-
-.MuiTab-root.tab-nav-main {
-    min-width: calc(100% / 5);
-    padding: 6px 24px !important;
-    height: 48px;
-}
-
-.MuiTab-labelIcon.tab-nav {
-    min-height: unset;
-    padding-top: unset;
-}
-
-.MuiTab-wrapper.tab-nav {
-    flex-direction: row;
-}
-
-.MuiTab-wrapper.tab-nav > *:first-child {
-    margin-bottom: 0 !important;
-}
-
-.MuiTab-wrapper.tab-nav > *:not(:first-child) {
-    padding-left: 8px;
 }

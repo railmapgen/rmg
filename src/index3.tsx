@@ -16,19 +16,19 @@ declare global {
     }
 }
 // window.test3 = test3;
-var requestLang = window.urlParams.get('lang') || localStorage.rmgLang || navigator.language.split('-').slice(0,2).join('-');
-switch (requestLang.toLowerCase()) {
-    case 'zh-cn':
-    case 'zh-hans':
-        window.urlParams.set('lang', 'zh-Hans');
-        break;
-    case 'zh':
-    case 'zh-hk':
-    case 'zh-tw':
-        window.urlParams.set('lang', 'zh-HK');
-        break;
-    default: window.urlParams.set('lang', 'en');
-}
+// var requestLang = window.urlParams.get('lang') || localStorage.rmgLang || navigator.language.split('-').slice(0,2).join('-');
+// switch (requestLang.toLowerCase()) {
+//     case 'zh-cn':
+//     case 'zh-hans':
+//         window.urlParams.set('lang', 'zh-Hans');
+//         break;
+//     case 'zh':
+//     case 'zh-hk':
+//     case 'zh-tw':
+//         window.urlParams.set('lang', 'zh-HK');
+//         break;
+//     default: window.urlParams.set('lang', 'en');
+// }
 // window.gtag('event', 'load', {
 //     event_category: 'language', 
 //     event_label: window.urlParams.get('lang'), 

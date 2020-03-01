@@ -78,7 +78,7 @@ export default (props) => {
             </Typography>
 
             <Typography variant="body2" color="textPrimary">
-                All flag emojis shown on Windows platforms are designed by <a href="https://openmoji.org/">OpenMoji</a> – the open-source emoji and icon project. License: <a href="https://creativecommons.org/licenses/by-sa/4.0/#">CC BY-SA 4.0</a>
+                All flag emojis shown on Windows platforms are designed by <Typography component="a" variant="body2" color="primary" href="https://openmoji.org/">OpenMoji</Typography> – the open-source emoji and icon project. License: <Typography component="a" variant="body2" color="primary" href="https://creativecommons.org/licenses/by-sa/4.0/#">CC BY-SA 4.0</Typography>
             </Typography>
         </div>
         
