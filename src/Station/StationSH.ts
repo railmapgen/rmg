@@ -118,10 +118,15 @@ class IntStationSH extends RMGStationSH {
         // get the exact station name width so that the
         // interchange station icon can be right after the station name
         let stnNameElem = $(`#rmg-name__shmetro--${this.id}`)
-        let bcr = stnNameElem.get(0).getBoundingClientRect()
-        let dx = bcr.right - bcr.left + 5
 
-        this._intInfos.map((stn, index) => {
+        // the original name position
+        let bcr = stnNameElem.get(0).getBoundingClientRect()
+        // the original name position's right x
+        let x = bcr.right - bcr.left + 5
+        // the int icon dx for each int station
+        let dx = 0
+
+        for (const [_, stn] of Object.entries(this._intInfos)) {
             // interchange line icon after station name
             let lineIconColour = stn[IntInfoTag.colour];
             let lineIconElem = $('<use>', {
@@ -146,27 +151,31 @@ class IntStationSH extends RMGStationSH {
                 var lineName = lineNumber[0]
                 lineIconElem.attr({
                     'xlink:href': '#int_sh_number',
-                    transform: `translate(${dx + index * 25},-12)`,
+                    transform: `translate(${x + dx},-12)`,
                 })
                 lineNameElem.attr({
                     // Todo: fix this hard-coded center(10) position
-                    transform: `translate(${dx + 10 + index * 25},8)`,
+                    transform: `translate(${x + 10 + dx},8)`,
                 }).text(lineName)
+
+                dx += 25  // 20 + 5(margin) for number line
             } else {
                 // letter line
                 var lineName = String(stn[IntInfoTag.nameZH])
                 lineIconElem.attr({
                     'xlink:href': '#int_sh_letter',
-                    transform: `translate(${dx + index * 70},-12)`,
+                    transform: `translate(${x + dx},-12)`,
                 })
                 lineNameElem.attr({
                     // Todo: fix this hard-coded center(30) position
-                    transform: `translate(${dx + 30 + index * 70},8)`,
+                    transform: `translate(${x + 30 + dx},8)`,
                 }).text(lineName)
+
+                dx += 65  // 60 + 5(margin) for letter line
             }
 
             lineElems.push(lineIconElem, lineNameElem)
-        })
+        }
 
         // rotate the station info now
         // other wise the bcr will be inaccurate due to the rotation

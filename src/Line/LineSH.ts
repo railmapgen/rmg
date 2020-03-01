@@ -18,8 +18,10 @@ export class RMGLineSH extends RMGLine {
                 return new IntStationSH(stnId, stnInfo);
             case 'osi11':
             case 'osi12':
+            case 'osi13':
             case 'osi21':
             case 'osi22':
+            case 'osi31':
                 return new OSIStationSH(stnId, stnInfo);
             default:
                 return new RMGStationSH(stnId, stnInfo);
