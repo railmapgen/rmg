@@ -55,50 +55,6 @@ body {
     overflow: hidden;
 }
 
-.mdc-select {
-    width: 100%;
-}
-
-.mdc-select__anchor {
-    width: 100%;
-}
-
-.mdc-select__selected-text {
-    min-width: auto;
-    overflow: hidden;
-}
-
-.station-card {
-    height: 100px;
-}
-
-.station-card__content {
-    font-family: sans-serif;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-    font-size: 1rem;
-    line-height: 1.5rem;
-    font-weight: 400;
-    letter-spacing: .03125em;
-    text-align: center;
-}
-
-.int-selection {
-    max-width: 100%;
-}
-
-@media (max-width: 839px) {
-    .mdc-snackbar .mdc-snackbar__surface {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .mdc-snackbar .mdc-snackbar__actions {
-        align-self: flex-end;
-        margin-bottom: 8px;
-    }
-}
-
 .mdc-chip-set.stn-chip-set {
     padding: 12px;
 }
@@ -143,18 +99,6 @@ body {
 .mdc-chip-set.int-chip-set .mdc-chip__ripple {
     border-radius: 4.5px;
     /* height: 45px; */
-}
-
-button#osi_name {
-    max-width: 100%;
-    padding: 0 8px 0 8px;
-    height: 40px;
-}
-
-button#osi_name .mdc-button__label {
-    line-height: 1rem;
-    white-space: nowrap;
-    overflow: hidden;
 }
 
 #panel_interchange .mdc-list-item__graphic {
