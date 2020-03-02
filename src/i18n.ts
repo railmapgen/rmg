@@ -16,7 +16,7 @@ i18n
             default: ['en'],
         },
         // lng: window.urlParams.get('lang'),
-        debug: true,
+        // debug: true,
         backend: {
             // for all available options read the backend's repository readme file
             loadPath: './locale/{{lng}}.json'
