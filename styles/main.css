@@ -55,19 +55,6 @@ body {
     overflow: hidden;
 }
 
-.panel {
-    display: none;
-}
-
-.panel--active {
-    display: block;
-}
-
-.flag-emoji {
-    height: 1em;
-    margin-right: 0.3em;
-}
-
 .mdc-select {
     width: 100%;
 }

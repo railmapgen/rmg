@@ -16,12 +16,13 @@ const allInfoPanelTypes = {
 
 interface DesignListGZMTRProps {
     t: any;
-}
-
-interface DesignListGZMTRState {
     lineNum: string;
     psdNum: string;
     panelType: string;
+    paramUpdate: (key, data) => void;
+}
+
+interface DesignListGZMTRState {
     panelTypeDialogOpened: boolean;
     autoNumDialogOpened: boolean;
 }
@@ -29,24 +30,20 @@ interface DesignListGZMTRState {
 class DesignListGZMTR extends React.Component<DesignListGZMTRProps, DesignListGZMTRState> {
     constructor(props) {
         super(props);
-        
-        let param = getParams();
+
         this.state = {
-            lineNum: param.line_num,
-            psdNum: param.psd_num,
-            panelType: param.info_panel_type,
             panelTypeDialogOpened: false,
             autoNumDialogOpened: false
         }
     }
 
-    lineNumChange(event) {
-        this.setState({lineNum: event.target.value});
+    lineNumChange(event: React.ChangeEvent<HTMLInputElement>) {
+        this.props.paramUpdate('line_num', event.target.value);
         (window.myLine as RMGLineGZ).lineNum = event.target.value;
     }
 
-    psdNumChange(event) {
-        this.setState({psdNum: event.target.value});
+    psdNumChange(event: React.ChangeEvent<HTMLInputElement>) {
+        this.props.paramUpdate('psd_num', event.target.value);
         (window.myLine as RMGLineGZ).psdNum = event.target.value;
     }
 
@@ -57,8 +54,9 @@ class DesignListGZMTR extends React.Component<DesignListGZMTRProps, DesignListGZ
         }
         this.setState({
             panelTypeDialogOpened: false, 
-            panelType: action
+            // panelType: action
         });
+        this.props.paramUpdate('info_panel_type', action);
         (window.myLine as RMGLineGZ).infoPanelType = action;
     }
 
@@ -74,13 +72,13 @@ class DesignListGZMTR extends React.Component<DesignListGZMTRProps, DesignListGZ
                             <TextField
                                 label={this.props.t('design.lineNum')}
                                 variant="outlined" 
-                                value={this.state.lineNum} 
+                                value={this.props.lineNum} 
                                 onChange={this.lineNumChange.bind(this)}
                                 style={{marginRight: 5}} />
                             <TextField
                                 label={this.props.t('design.psd')}
                                 variant="outlined" 
-                                value={this.state.psdNum} 
+                                value={this.props.psdNum} 
                                 onChange={this.psdNumChange.bind(this)} />
                         </ListItem>
                         <ListItem button onClick={() => this.setState({panelTypeDialogOpened: true})}>
@@ -89,7 +87,7 @@ class DesignListGZMTR extends React.Component<DesignListGZMTRProps, DesignListGZ
                             </ListItemIcon>
                             <ListItemText
                                 primary={this.props.t('design.panelType.button')}
-                                secondary={this.props.t('design.panelType.'+this.state.panelType)} />
+                                secondary={this.props.t('design.panelType.'+this.props.panelType)} />
                         </ListItem>
                         <ListItem button onClick={() => this.setState({autoNumDialogOpened: true})}>
                             <ListItemIcon>
@@ -101,7 +99,10 @@ class DesignListGZMTR extends React.Component<DesignListGZMTRProps, DesignListGZ
                 </Card>
 
                 <PanelTypeDialog open={this.state.panelTypeDialogOpened} onClose={this.panelTypeDialogClose.bind(this)} />
-                <AutoNumDialog open={this.state.autoNumDialogOpened} onClose={() => this.setState({autoNumDialogOpened: false})} />
+                <AutoNumDialog 
+                    open={this.state.autoNumDialogOpened} 
+                    onClose={() => this.setState({autoNumDialogOpened: false})}
+                    paramUpdate={this.props.paramUpdate} />
             </div>
         )
     }
@@ -128,11 +129,16 @@ function PanelTypeDialog(props) {
     );
 }
 
-function AutoNumDialog(props) {
-    const {t, i18n} = useTranslation();
+interface AutoNumDialogProps {
+    open: boolean;
+    onClose: () => void;
+    paramUpdate: (key, data) => void;
+}
+
+function AutoNumDialog(props: AutoNumDialogProps) {
+    const { t } = useTranslation();
 
     const handleClick = (action: 'ascend' | 'descend') => {
-        let stnList = getParams().stn_list;
         let branch0 = window.myLine.branches[0];
         branch0.forEach((stnId, i) => {
             let num: string;
@@ -143,7 +149,7 @@ function AutoNumDialog(props) {
             }
             (window.myLine as RMGLineGZ).updateStnNum(stnId, num);
         });
-
+        props.paramUpdate('stn_list', getParams().stn_list);
         props.onClose();
     }
 

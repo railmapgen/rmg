@@ -14,105 +14,6 @@ export function setParams(key: Extract<keyof RMGParam, string>, data: any) {
     putParams(param);
 }
 
-export function test(svgEl: JQuery<Element>) {
-    var [svgW, svgH] = svgEl.attr('viewBox').split(' ').slice(2);
-    svgEl.attr({
-        width: svgW, height: svgH
-    });
-
-    var canvas = <HTMLCanvasElement> $('canvas')[0];
-    $('canvas').attr({
-        width: Number(svgW)*2.5, height:Number(svgH)*2.5
-    });
-    var ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // bypass Chrome min font size (to be improved)
-
-    svgEl.find('.rmg-name__en.rmg-name__mtr--station').each((_,el) => {
-        $(el).attr('font-size', '11px');
-    });
-
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--station, .rmg-name__zh.IntName').each((_,el) => {
-        $(el).attr('font-size', '10px');
-    });
-
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--next2-dest').each((_,el) => {
-        $(el).attr('font-size', '8.5px')
-    });
-
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--int').each((_,el) => {
-        $(el).attr('font-size', '8px');
-    });
-
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--int-small, .rmg-name__en.IntName').each((_,el) => {
-        $(el).attr('font-size', '7px');
-    });
-
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--express').each((_,el) => {
-        $(el).attr('font-size', '6.5px');
-    });
-
-    svgEl.find('text:not([font-size]), tspan:not([font-size])').each((_,el) => {
-        $(el).attr('font-size', window.getComputedStyle(el).fontSize);
-    });
-
-    svgEl.find('text, tspan').each((_,el) => {
-        var elStyle = window.getComputedStyle(el);
-        $(el).attr({
-            'font-family': elStyle.getPropertyValue('font-family'), 
-            'fill': elStyle.getPropertyValue('fill'), 
-            'alignment-baseline': elStyle.getPropertyValue('alignment-baseline'), 
-            'dominant-baseline': elStyle.getPropertyValue('dominant-baseline'),
-            'text-anchor': elStyle.getPropertyValue('text-anchor')
-        }).removeAttr('class');
-    });
-
-    svgEl.find('#strip, #dest_strip').each((_,el) => {
-        var elStyle = window.getComputedStyle(el);
-        $(el).attr({
-            'stroke-width': elStyle.getPropertyValue('stroke-width')
-        });
-    });
-
-    var img = new Image();
-    img.onload = function() {
-        setTimeout(() => {
-            ctx.drawImage(img, 0, 0, Number(svgW)*2.5, Number(svgH)*2.5)
-            saveAs(
-                (<HTMLCanvasElement>$('canvas')[0]).toDataURL('image/png'), 
-                'rmg_export'
-            );
-        }, 2000)
-    };
-    // img.onloadend = () => {
-    //     console.log('img loaded')
-    // }
-    img.addEventListener('loadend', () => {
-        console.log('img loaded')
-    })
-    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl[0].outerHTML)));
-}
-
-function saveAs(uri: string, filename: string) {
-
-    var link = document.createElement('a');
-
-    if (typeof link.download === 'string') {
-        link.href = uri;
-        link.download = filename;
-        //Firefox requires the link to be in the body
-        document.body.appendChild(link);
-        //simulate click
-        link.click();
-        //remove the link when done
-        document.body.removeChild(link);
-
-    } else {
-        window.open(uri);
-    }
-}
-
 export function getTxtBoxDim(elem: SVGGraphicsElement, svg: string) {
     let svgNode = $('#' + svg)[0] as Element as SVGSVGElement;
     let bcr = elem.getBoundingClientRect();
@@ -173,27 +74,7 @@ export function getNameFromId(stnId: string): Name {
     ];
 }
 
-/**
- * Convert ISO 3166 alpha-2 country code (followed by BS 6879 UK subdivision code, if applicable) to flag Emoji. For Windows platform, an `img` element with image source from OpenMoji is returned. 
- */
-export function countryCode2Emoji(code: string): string {
-    var chars = code.toUpperCase().split('');
-    let codePoints: string[];
-    if (code.length == 2) {
-        codePoints = chars.map(char => (char.codePointAt(0)+127397).toString(16).toUpperCase());
-    } else {
-        codePoints = ['1F3F4', 'E007F'];
-        codePoints.splice(1, 0, 
-                ...chars.map(char => (char.codePointAt(0)+917536).toString(16).toUpperCase())
-            );
-    }
-    if (navigator.platform.indexOf('Win32')!==-1 || navigator.platform.indexOf('Win64')!==-1) {
-        return `<img src="images/flags/${codePoints.join('-')}.svg" class="flag-emoji"/>`;
-    } else {
-        // return `<img src="images/flags/${codePoints.join('-')}.svg" class="flag-emoji"/>`;
-        return String.fromCodePoint(...codePoints.map(cp => parseInt(cp, 16)));
-    }
-}
+
 
 export function rgb2Hex(rgb: string) {
     let hex = rgb.match(/[\d]+/g)
@@ -404,82 +285,7 @@ export const getTransText2 = (obj: {[index: string]: string}, langs: string[]) =
     return langs.reduce((acc, cur) => acc ? acc : (obj[cur] ? obj[cur] : acc), '');
 }
 
-/**
- * Helper function for filtering out the `CSSFontFaceRule` which renders the input character by matching character form and unicode range. 
- * @param char string with one Chinese character
- * @param charForm code indicating country-variant Noto Serif font
- */
-const getRFFHelper = async (char: string, charForm: 'SC' | 'TC' | 'JP' | 'KR'): Promise<string> => {
-    // console.log(char, charForm)
-    return document.fonts
-        .load('80px Noto Serif '+charForm, char)
-        .then(f => {
-            let ur = f[0].unicodeRange;
-            return Array.from(
-                ((<HTMLStyleElement>$('head > style#googlefonts')[0]).sheet as CSSStyleSheet)
-                    .cssRules)
-                .filter(rule => rule.cssText.includes('Noto Serif '+charForm))
-                .filter(rule => rule.cssText.includes(ur))[0].cssText
-        })
-}
 
-/**
- * Get `cssText` of `CSSFontFaceRule` which renders the input character. 
- * @param char string with one Chinese character
- */
-const getRenderedFontFace = async (char: string): Promise<string[]> => {
-    if (char === '门') {return Promise.all([getRFFHelper(char, 'SC')]);}
-    return Promise.all([getRFFHelper(char, 'KR')])
-        .catch(() => {
-            return Promise.all([getRFFHelper(char, 'JP')])
-                .catch(() => {
-                    return Promise.all([getRFFHelper(char, 'TC'), getRFFHelper(char, 'SC')])
-                        .catch(() => {
-                            return Promise.all([getRFFHelper(char, 'SC')])
-                        })
-                })
-        })
-}
-
-/**
- * Convert a `Blob` into Base64 data URL. 
- * @param blob 
- */
-const readBlobAsDataURL = (blob: Blob) => {
-    return new Promise((resolve: (value: string) => void) => {
-        let reader = new FileReader();
-        reader.onloadend = () => {
-            resolve((reader.result as string));
-        };
-        reader.readAsDataURL(blob);
-    });
-};
-
-/**
- * Get `CSSFontFaceRule` whose source is Base64 URL for all Chinese characters in a `SVGSVGElement`. 
- * @param svgEl `SVGSVGElement` to be exported
- */
-export const getBase64FontFace = async (svgEl: SVGSVGElement) => {
-    let src = 'https://fonts.googleapis.com/css?family=Noto+Serif+KR:600|Noto+Serif+JP:600|Noto+Serif+TC:600|Noto+Serif+SC:600%26display=swap';
-    return fetch(src)
-        .then(response => response.text())
-        .then(async csstext => {
-            $('head').append($('<style>', {type:'text/css', id:'googlefonts'}).text(csstext));
-
-            let txt = Array.from(new Set($(svgEl).find('.rmg-name__zh').text().replace(/[\d\s]/g, '')));
-            return Promise.all(txt.map(getRenderedFontFace))
-                .then(rules => <string[]>[].concat(...rules))
-                .then(rules => Array.from(new Set(rules)))
-                .then(rules => {
-                    return rules.map(async rule => {
-                        return fetch(rule.match(/https:[\w:/.-]+.woff2/g)[0])
-                            .then(response => response.blob())
-                            .then(readBlobAsDataURL)
-                            .then(uri => rule.replace(/src:[ \w('",\-:/.)]+;/g, `src: url('${uri}'); `));
-                    })
-                })
-        })
-}
 
 /**
  * Format display style of station name as `[num: ]nameZH,nameEN`.

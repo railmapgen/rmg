@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, List, ListItem, Paper, Icon, InputBase, makeStyles, ListItemIcon, TextField, MenuItem, DialogActions, Button, createStyles } from '@material-ui/core';
 
 import { Name, CityEntry, LineEntry } from '../types';
-import { countryCode2Emoji, getTransText2 } from '../utils';
+import { getTransText2 } from '../utils';
 
 const useStyles = makeStyles(theme => (
     createStyles({
@@ -16,6 +16,11 @@ const useStyles = makeStyles(theme => (
         },
         iconRoot: {
             position: 'absolute',
+        },
+        cityItem: {
+            display: 'flex', 
+            flexDirection: 'row', 
+            alignItems: 'center',
         },
         inputBaseRoot: {
             display: 'block', 
@@ -73,7 +78,7 @@ const useCityList = () => {
     }, []);
 
     return list;
-}
+};
 
 const useLineList = (theme) => {
     const [list, setList] = React.useState([] as LineEntry[]);
@@ -100,7 +105,7 @@ const useLineList = (theme) => {
         } else {
             listPromise.then(data => setList(data));
         }
-    }, [theme]);
+    }, [theme.toString()]);
 
     return list;
 }
@@ -277,10 +282,10 @@ export default function ColourDialog(props: ColourDialogProps) {
                             value={props.theme[0]} >
                             {cityList.map(c => (
                                 <MenuItem key={c.id} value={c.id}>
-                                    <span dangerouslySetInnerHTML={{
-                                        __html: countryCode2Emoji(c.country) + 
-                                            getTransText2(c.name, i18n.languages)
-                                    }} />
+                                    <span className={classes.cityItem}>
+                                        <CountryFlag code={c.country} />
+                                        <span>{getTransText2(c.name, i18n.languages)}</span>
+                                    </span>
                                 </MenuItem>
                             ))}
                         </TextField>
@@ -346,4 +351,48 @@ export default function ColourDialog(props: ColourDialogProps) {
             </DialogActions>
         </Dialog>
     )
+}
+
+const useEmojiStyles = makeStyles(() => (
+    createStyles({
+        img: {
+            height: 20, 
+            marginRight: '0.2rem'
+        }
+    })
+))
+
+interface CountryFlagProps {
+    code: string;
+}
+
+/**
+ * Convert ISO 3166 alpha-2 country code (followed by BS 6879 UK subdivision code, if applicable) to flag Emoji. For Windows platform, an `img` element with image source from OpenMoji is returned. 
+ */
+function CountryFlag(props: CountryFlagProps) {
+    const { i18n } = useTranslation();
+    const classes = useEmojiStyles();
+
+    let codePoints = [] as string[];
+
+    if (props.code.length === 2) {
+        codePoints = props.code
+            .toUpperCase().split('')
+            .map(char => (char.codePointAt(0)+127397).toString(16).toUpperCase());
+    } else {
+        codePoints = ['1F3F4', 'E007F'];
+        codePoints.splice(1, 0, 
+            ...props.code
+                .toUpperCase().split('')
+                .map(char => (char.codePointAt(0)+917536).toString(16).toUpperCase())
+        );
+    }
+
+    if (['zh-CN', 'zh-Hans'].includes(i18n.language) && props.code === 'TW') codePoints = ['1F3F4'];
+
+    return (
+        (navigator.platform.indexOf('Win32')!==-1 || navigator.platform.indexOf('Win64')!==-1) ?
+        <img src={`./images/flags/${codePoints.join('-')}.svg`} className={classes.img} /> :
+        <span>{String.fromCodePoint(...codePoints.map(cp => parseInt(cp, 16)))}</span>
+    );
 }

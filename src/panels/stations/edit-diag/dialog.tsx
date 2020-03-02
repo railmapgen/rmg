@@ -66,9 +66,9 @@ export default function StationEditDialog(props: StationEditDialogProps) {
                         ['interchange', 'transfer_within_a_station'], 
                         ['branch', 'share'], 
                         ['more', 'more_horiz']
-                    ].map(val => (
+                    ].map((val,i) => (
                         <Tab label={<span>{t('stations.edit.tab.'+val[0])}</span>}
-                            icon={<Icon>{val[1]}</Icon>}
+                            icon={<Icon>{val[1]}</Icon>} key={i}
                             className={classes.tab} />
                     ))}
                 </Tabs>

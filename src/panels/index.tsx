@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { createMuiTheme, useMediaQuery, ThemeProvider } from '@material-ui/core';
+import { createMuiTheme, useMediaQuery, ThemeProvider, CircularProgress } from '@material-ui/core';
 
 import PanelTabs from './panels';
+import { RMGParam } from '../types';
 
 const darkTheme = createMuiTheme({
     palette: {
@@ -33,14 +34,22 @@ const lightTheme = createMuiTheme({
     },
 });
 
-export default (props) => {
+interface Props {
+    param: RMGParam;
+    paramUpdate: (key, data) => void;
+    tpo: string[];
+}
+
+export default (props: Props) => {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const theme = prefersDarkMode ? darkTheme : lightTheme;
 
     return (
         <div>
             <ThemeProvider theme={theme}>
-                <PanelTabs />
+                <React.Suspense fallback={<CircularProgress />}>
+                    <PanelTabs {...props} />
+                </React.Suspense>
             </ThemeProvider>
         </div>
     );

@@ -284,23 +284,23 @@ export class RMGLine {
         };
     }
 
-    _topoOrder(from: string, tpo: string[] = []) {
-        var self = this;
-        tpo.push(from);
-        this.stations[from].children.forEach(child => {
-            if (this._stnIndegree(child) == 2 && this.stations[child].parents.indexOf(from)==0) {
-                // wait the other branch
-                return;
-            } 
-            tpo.concat(self._topoOrder(child, tpo));
-        });
-        return tpo;
-    }
+    // _topoOrder(from: string, tpo: string[] = []) {
+    //     var self = this;
+    //     tpo.push(from);
+    //     this.stations[from].children.forEach(child => {
+    //         if (this._stnIndegree(child) == 2 && this.stations[child].parents.indexOf(from)==0) {
+    //             // wait the other branch
+    //             return;
+    //         } 
+    //         tpo.concat(self._topoOrder(child, tpo));
+    //     });
+    //     return tpo;
+    // }
 
-    get tpo() {
-        let res = this._topoOrder('linestart');
-        return res.slice(1, res.length-1);
-    }
+    // get tpo() {
+    //     let res = this._topoOrder('linestart');
+    //     return res.slice(1, res.length-1);
+    // }
 
     get stripY() {return this._stripPc * this._svgHeight / 100;}
 
@@ -829,61 +829,61 @@ export class RMGLine {
         return true;
     }
 
-    newStnPossibleLoc(prep: 'before' | 'after', stnId: string): [number, number, number, string[], string[]] {
-        var deg = (prep == 'before') ? this._stnIndegree(stnId) : this._stnOutdegree(stnId);
-        switch (deg) {
-            case 2:
-                // 1 -> 2
-                return [1,1,1,[],[]];
-            case 1:
-                if (this._stnYShareMTR(stnId) == 0) {
-                    // 1 -> 1
-                    let state: string[] | 0 = this.newBranchPossibleEnd(prep, stnId);
-                    state = (state.length) ? state : [];
-                    return [1,0,0,state,state];
-                    // [1,0,0,1,1];
-                } else if (this._stnYShareMTR(stnId) < 0) {
-                    if (prep == 'before') {
-                        return [this._stnOutdegree(this.stations[stnId].parents[0])-1, 
-                            0,1,[],[]
-                        ];
-                    } else {
-                        return [this._stnIndegree(this.stations[stnId].children[0])-1, 
-                            0,1,[],[]
-                        ];
-                    }
-                } else {
-                    if (prep == 'before') {
-                        return [this._stnOutdegree(this.stations[stnId].parents[0])-1, 
-                            1,0,[],[]
-                        ];
-                    } else {
-                        return [this._stnIndegree(this.stations[stnId].children[0])-1, 
-                            1,0,[],[]
-                        ];
-                    }
-                }
-        }
-        return [0,0,0,[],[]];
-    }
+    // newStnPossibleLoc(prep: 'before' | 'after', stnId: string): [number, number, number, string[], string[]] {
+    //     var deg = (prep == 'before') ? this._stnIndegree(stnId) : this._stnOutdegree(stnId);
+    //     switch (deg) {
+    //         case 2:
+    //             // 1 -> 2
+    //             return [1,1,1,[],[]];
+    //         case 1:
+    //             if (this._stnYShareMTR(stnId) == 0) {
+    //                 // 1 -> 1
+    //                 let state: string[] | 0 = this.newBranchPossibleEnd(prep, stnId);
+    //                 state = (state.length) ? state : [];
+    //                 return [1,0,0,state,state];
+    //                 // [1,0,0,1,1];
+    //             } else if (this._stnYShareMTR(stnId) < 0) {
+    //                 if (prep == 'before') {
+    //                     return [this._stnOutdegree(this.stations[stnId].parents[0])-1, 
+    //                         0,1,[],[]
+    //                     ];
+    //                 } else {
+    //                     return [this._stnIndegree(this.stations[stnId].children[0])-1, 
+    //                         0,1,[],[]
+    //                     ];
+    //                 }
+    //             } else {
+    //                 if (prep == 'before') {
+    //                     return [this._stnOutdegree(this.stations[stnId].parents[0])-1, 
+    //                         1,0,[],[]
+    //                     ];
+    //                 } else {
+    //                     return [this._stnIndegree(this.stations[stnId].children[0])-1, 
+    //                         1,0,[],[]
+    //                     ];
+    //                 }
+    //             }
+    //     }
+    //     return [0,0,0,[],[]];
+    // }
 
-    newBranchPossibleEnd(prep: 'before' | 'after', stnId: string) {
-        let res: string[] = [];
-        if (prep == 'before') {
-            while (this._stnIndegree(stnId) == 1) {
-                stnId = this.stations[stnId].parents[0];
-                res.unshift(stnId);
-            }
-            res.pop();
-        } else {
-            while (this._stnOutdegree(stnId) == 1) {
-                stnId = this.stations[stnId].children[0];
-                res.push(stnId);
-            }
-            res.shift();
-        }
-        return res;
-    }
+    // newBranchPossibleEnd(prep: 'before' | 'after', stnId: string) {
+    //     let res: string[] = [];
+    //     if (prep == 'before') {
+    //         while (this._stnIndegree(stnId) == 1) {
+    //             stnId = this.stations[stnId].parents[0];
+    //             res.unshift(stnId);
+    //         }
+    //         res.pop();
+    //     } else {
+    //         while (this._stnOutdegree(stnId) == 1) {
+    //             stnId = this.stations[stnId].children[0];
+    //             res.push(stnId);
+    //         }
+    //         res.shift();
+    //     }
+    //     return res;
+    // }
 
     addStn(prep: 'before' | 'after', stnId: string, loc, end: string): [string, StationInfo] {
         let newId = getRandomId();
@@ -1177,6 +1177,7 @@ export class RMGLine {
         newInfo.num = '00';
         newInfo.interchange = [[]];
         newInfo.services = ['local'];
+        newInfo.facility = '';
         newInfo.transfer = {
             info: [[]], 
             type: 'none', 

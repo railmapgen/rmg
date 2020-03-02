@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { useTranslation, withTranslation } from 'react-i18next';
 
-import { Grid, Card, List, ListItem, ListItemIcon, Icon, ListItemText, Divider, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
+import { Grid, Card, List, ListItem, ListItemIcon, Icon, ListItemText, Divider, Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 
-import { getParams, getBase64FontFace, test, getTransText2 } from '../../utils';
+import { getTransText2 } from '../../utils';
 
 import TemplateDialog from './template-diag';
 import UploadListItem from './upload-item';
+import ExportDialog from './export-diag';
 
 export default (props) =>  {
     let TranslatedSaveLists = withTranslation()(SaveLists);
@@ -183,10 +184,10 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
                 <TemplateDialog open={this.state.templateDialogOpened} onClose={this.templateDialogClose} />
                 
                 <ExportDialog open={this.state.exportDialogOpened} onClose={this.exportDialogClose} />
-                <TranslatedPreviewDialog 
+                {/* <TranslatedPreviewDialog 
                     open={this.state.previewDialogOpened} 
                     onClose={this.previewDialogClose} 
-                    canvas={this.state.previewDialogCanvas} />
+                    canvas={this.state.previewDialogCanvas} /> */}
                 <StyleDialog open={this.state.styleDialogOpened} onClose={this.styleDialogClose} />
                 <LangDialog open={this.state.langDialogOpened} onClose={() => this.setState({langDialogOpened: false})} />
             </div>
@@ -194,162 +195,9 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
     }
 }
 
-interface ExportDialogProps {
-    onClose: (action: string) => void;
-    open: boolean;
-}
 
-function ExportDialog(props: ExportDialogProps) {
-    const { t } = useTranslation();
-    return (
-        <Dialog onClose={() => props.onClose('close')} open={props.open}>
-            <DialogTitle>{t('file.export.title')}</DialogTitle>
-            <DialogContent dividers>
-                <List>
-                    <ListItem button 
-                        onClick={() => props.onClose('destination')} 
-                        key="destination" 
-                        disabled={!['mtr', 'shmetro'].includes(window.urlParams.get('style'))}>
-                        <ListItemText primary={t('file.export.destination')} />
-                    </ListItem>
-                    <ListItem button 
-                        onClick={() => props.onClose('runin')} 
-                        key="runin" 
-                        disabled={!['gzmtr', 'shmetro'].includes(window.urlParams.get('style'))}>
-                        <ListItemText primary={t('file.export.runin')} />
-                    </ListItem>
-                    <ListItem button 
-                        onClick={() => props.onClose('railmap')} key="railmap">
-                        <ListItemText primary={t('file.export.railmap')} />
-                    </ListItem>
-                </List>
-            </DialogContent>
-        </Dialog>
-    );
-}
 
-interface PreviewDialogProps {
-    t: any;
-    onClose: (action: string) => void;
-    open: boolean;
-    canvas: string;
-}
 
-interface PreviewDialogState {
-    svgEl: SVGSVGElement;
-    svgLoadFinished: boolean;
-}
-
-class PreviewDialog extends React.Component<PreviewDialogProps, PreviewDialogState> {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            svgEl: $('<svg>')[0] as Element as SVGSVGElement, 
-            svgLoadFinished: false
-        }
-
-        this.handleClick = this.handleClick.bind(this);
-    }
-
-    handleClick(action: string) {
-        if (action === 'png') {
-            test($('#preview_diag svg'));
-        } else if (action === 'svg') {
-            let svgContent = $('#preview_diag svg');
-
-            var link = document.createElement('a');
-            link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgContent[0].outerHTML)));
-            link.download = 'rmg_export.svg';
-            link.click();
-        }
-        this.props.onClose('close');
-    }
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.canvas === this.props.canvas) return;
-        if (this.props.canvas === '') {
-            this.setState({
-                svgEl: $('<svg>')[0] as Element as SVGSVGElement, 
-                svgLoadFinished: false
-            });
-            return;
-        }
-        
-        let [thisSVGWidth, thisSVGHeight] = [
-            this.props.canvas=='railmap' ? getParams().svg_width : getParams().svg_dest_width, 
-            getParams().svg_height
-        ];
-        let MAX_WIDTH = Math.min($(window).width(), 1412) - 64 - 24*2;
-        let MAX_HEIGHT = $(window).height() - 64 - 64 - 52 - 8*2;
-        let scaleFactor = Math.min(MAX_WIDTH/thisSVGWidth, MAX_HEIGHT/thisSVGHeight);
-
-        let el = $(`div#svgs #${this.props.canvas}`).clone().attr({
-            viewBox: `0 0 ${thisSVGWidth} ${thisSVGHeight}`,
-            width: thisSVGWidth * scaleFactor, 
-            height: thisSVGHeight * scaleFactor
-        }).css({
-            all: 'initial'
-        });
-
-        let cssTxt = ['share', this.props.canvas]
-            .map(tag => {
-                return Array.from(
-                    (($(`link#css_${tag}`)[0] as HTMLLinkElement).sheet as CSSStyleSheet).cssRules
-                ).map(rule => rule.cssText).join(' ');
-            });
-        el.prepend(...cssTxt.map(txt => $('<style>').text(txt)))
-            .prepend(document.querySelector('style#global').outerHTML)
-            .find('[style="display: none;"]').remove();
-
-        if (window.urlParams.get('style') === 'mtr') {
-            getBase64FontFace(el[0] as Element as SVGSVGElement)
-            .then(async response => {
-                let uris = await Promise.all(response);
-                el.prepend($('<style>').text(uris.join(' ')));
-
-                this.setState({
-                    svgEl: el[0] as Element as SVGSVGElement
-                });
-
-                document.fonts.ready.then(() => {
-                    this.setState({
-                        svgLoadFinished: true
-                    })
-                })
-            });
-        } else {
-            this.setState({
-                svgEl: el[0] as Element as SVGSVGElement, 
-                svgLoadFinished: true
-            });
-        }
-        
-    }
-
-    render() {
-        return (
-            <Dialog onClose={() => this.props.onClose('close')} aria-labelledby="simple-dialog-title" open={this.props.open} maxWidth={false} id="preview_diag">
-                <DialogTitle >{this.props.t('file.preview.title')}</DialogTitle>
-                <DialogContent dangerouslySetInnerHTML={{__html: this.state.svgEl.outerHTML}}>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => this.props.onClose('close')} color="primary" autoFocus>
-                        {this.props.t('dialog.cancel')}
-                    </Button>
-                    <Button onClick={() => this.handleClick('png')} color="primary" disabled={!this.state.svgLoadFinished}>
-                        {this.props.t('file.preview.png')}
-                    </Button>
-                    <Button onClick={() => this.handleClick('svg')} color="primary" disabled={!this.state.svgLoadFinished}>
-                        {this.props.t('file.preview.svg')}
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        );
-    }
-}
-
-const TranslatedPreviewDialog = withTranslation()(PreviewDialog);
 
 interface StyleDialogProps {
     onClose: (style: string) => void;
@@ -387,7 +235,9 @@ function LangDialog(props: LangDialogProps) {
         if (lang === window.urlParams.get('lang')) {
             props.onClose();
         } else {
-            i18n.changeLanguage(lang);
+            i18n
+                .changeLanguage(lang)
+                .then(t => document.title = t('title'))
             // window.urlParams.set('lang', lang);
             // history.pushState({url:window.location.href}, null, '?' + window.urlParams.toString());
             window.gtag('event', 'set', {
@@ -395,7 +245,6 @@ function LangDialog(props: LangDialogProps) {
                 event_label: lang
             });
             document.documentElement.setAttribute('lang',lang);
-            document.title = t('title');
             props.onClose();
             // window.location.href = '?' + window.urlParams.toString();
         }

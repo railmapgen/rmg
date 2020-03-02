@@ -1,5 +1,5 @@
 import { RMGLine } from './Line';
-import { RMGParam, Name, DirectionLong, StationInfo } from '../types';
+import { RMGParam, Name, DirectionLong, StationInfo, StationTransfer } from '../types';
 import { getTxtBoxDim, setParams, getParams, putParams } from '../utils';
 import { RMGStationHK, Int2StationHK, Int3LStationHK, Int3RStationHK, OSI11LStationHK, OSI12LStationHK, OSI12RStationHK, OSI22EndStationHK, OSI22LStationHK, OSI22RStationHK, OSI11RStationHK, OSI22StationHK } from '../Station/StationHK';
 
@@ -372,6 +372,11 @@ export class RMGLineHK extends RMGLine {
     updateStnTransfer(stnId: string, type, info=null) {
         super.updateStnTransfer(stnId, type, info);
         this.loadFonts();
+        this.updateStnNameBg();
+    }
+
+    updateStnTransfer2(stnId: string, info: StationTransfer) {
+        super.updateStnTransfer2(stnId, info);
         this.updateStnNameBg();
     }
 

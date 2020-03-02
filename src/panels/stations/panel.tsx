@@ -14,13 +14,13 @@ import { StationDeleteDialog, StationDeleteErrorDialog } from './delete-diags';
 
 interface PanelStationsProps {
     t: any;
+    theme: [string, string, string, '#000' | '#fff'];
+    stnList: {[stnId: string]: StationInfo};
+    paramUpdate: (key, data) => void;
+    tpo: string[];
 }
 
 interface PanelStationsState {
-    theme: string[];
-    stnList: {
-        [stnId: string]: StationInfo;
-    };
     stationSelected: string;
     snackBarOpened: boolean;
     stnAddDialogOpened: boolean;
@@ -33,10 +33,7 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
     constructor(props) {
         super(props);
 
-        let param = getParams();
         this.state = {
-            theme: param.theme,
-            stnList: param.stn_list,
             stationSelected: '', 
             snackBarOpened: false,
             stnAddDialogOpened: false,
@@ -70,11 +67,12 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
         this.setState({stnAddDialogOpened: false});
         if (typeof action === 'object') {
             let [newId, newInfo] = window.myLine.addStn(action[0] as 'before' | 'after', action[1], action[2], action[3]);
+            this.props.paramUpdate('stn_list', getParams().stn_list);
             this.setState(prevState => ({
-                stnList: {
-                    ...prevState.stnList, 
-                    [newId]: newInfo,
-                }, 
+                // stnList: {
+                //     ...prevState.stnList, 
+                //     [newId]: newInfo,
+                // }, 
                 // trigger edit dialog
                 stnEditDialogOpened: true, 
                 stationSelected: newId,
@@ -85,38 +83,55 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
     stnEditDialogUpdate(value, field, index) {
         let stnId = this.state.stationSelected;
         if (field === 'name') {
-            this.setState(prevState => {
-                let name = Object.values({
-                    ...prevState.stnList[stnId].name, 
-                    [index]: value
-                }) as Name;
-                window.myLine.updateStnName(stnId, name);
+            let newName = this.props.stnList[stnId].name.map((val,idx) => idx===index ? value : val) as Name;
+            window.myLine.updateStnName(stnId, newName);
+            this.props.paramUpdate('stn_list', {
+                ...this.props.stnList,
+                [stnId]: {
+                    ...this.props.stnList[stnId], 
+                    name: newName
+                },
+            })
+            // this.setState(prevState => {
+            //     let name = Object.values({
+            //         ...prevState.stnList[stnId].name, 
+            //         [index]: value
+            //     }) as Name;
+            //     window.myLine.updateStnName(stnId, name);
 
-                return {
-                    stnList: {
-                        ...prevState.stnList, 
-                        [stnId]: {
-                            ...prevState.stnList[stnId], 
-                            name
-                        }
-                    }
-                };
-            });
+            //     return {
+            //         stnList: {
+            //             ...prevState.stnList, 
+            //             [stnId]: {
+            //                 ...prevState.stnList[stnId], 
+            //                 name
+            //             }
+            //         }
+            //     };
+            // });
         }
         if (field === 'num') {
-            this.setState(prevState => {
-                (window.myLine as RMGLineGZ).updateStnNum(stnId, value);
+            (window.myLine as RMGLineGZ).updateStnNum(stnId, value);
+            this.props.paramUpdate('stn_list', {
+                ...this.props.stnList, 
+                [stnId]: {
+                    ...this.props.stnList[stnId], 
+                    num: value,
+                }
+            })
+            // this.setState(prevState => {
+            //     (window.myLine as RMGLineGZ).updateStnNum(stnId, value);
 
-                return {
-                    stnList: {
-                        ...prevState.stnList, 
-                        [stnId]: {
-                            ...prevState.stnList[stnId], 
-                            num: value
-                        }
-                    }
-                };
-            });
+            //     return {
+            //         stnList: {
+            //             ...prevState.stnList, 
+            //             [stnId]: {
+            //                 ...prevState.stnList[stnId], 
+            //                 num: value
+            //             }
+            //         }
+            //     };
+            // });
         }
         if (field === 'transfer') {
             let updatedValue = {
@@ -124,23 +139,29 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                 info: (value as StationTransfer).info
                     .map(inf => (
                         inf.map(i => Object.values(i).length===0 ? 
-                            this.state.theme.concat(['轉綫', 'Line']) : i)
+                            this.props.theme.concat(['轉綫', 'Line']) : i)
                     )),
             } as StationTransfer;
 
             window.myLine.updateStnTransfer2(stnId, updatedValue);
-
-            this.setState(prevState => {
-                return {
-                    stnList: {
-                        ...prevState.stnList, 
-                        [stnId]: {
-                            ...prevState.stnList[stnId], 
-                            transfer: updatedValue
-                        }
-                    }
+            this.props.paramUpdate('stn_list', {
+                ...this.props.stnList, 
+                [stnId]: {
+                    ...this.props.stnList[stnId], 
+                    transfer: updatedValue
                 }
-            });
+            })
+            // this.setState(prevState => {
+            //     return {
+            //         stnList: {
+            //             ...prevState.stnList, 
+            //             [stnId]: {
+            //                 ...prevState.stnList[stnId], 
+            //                 transfer: updatedValue
+            //             }
+            //         }
+            //     }
+            // });
         }
         if (field === 'branch') {
             // TODO: use this when svg is created by react 
@@ -151,64 +172,85 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                     index.split('.')[1]==='left' ? 0 : 1,
                     value[index.split('.')[1]][0]
                 );
-                this.setState(prevState => {
-                    return {
-                        stnList: {
-                            ...prevState.stnList, 
-                            [stnId]: {
-                                ...prevState.stnList[stnId], 
-                                branch: value
-                            }
-                        }
+                this.props.paramUpdate('stn_list', {
+                    ...this.props.stnList, 
+                    [stnId]: {
+                        ...this.props.stnList[stnId], 
+                        branch: value
                     }
                 });
+                // this.setState(prevState => {
+                //     return {
+                //         stnList: {
+                //             ...prevState.stnList, 
+                //             [stnId]: {
+                //                 ...prevState.stnList[stnId], 
+                //                 branch: value
+                //             }
+                //         }
+                //     }
+                // });
             } else if (index.split('.')[0] === 'first') {
                 if (window.myLine.updateBranchFirst(
                     stnId, 
                     index.split('.')[1]==='left' ? 0 : 1,
                     value[index.split('.')[1]][1]
-                )) this.setState({stnList: getParams().stn_list});
+                )) this.props.paramUpdate('stn_list', getParams().stn_list);
             } else if (index.split('.')[0] === 'pos') {
                 if (window.myLine.updateBranchPos(
                     stnId, 
                     index.split('.')[1]==='left' ? 0 : 1,
                     value
-                )) this.setState({stnList: getParams().stn_list});
+                )) this.props.paramUpdate('stn_list', getParams().stn_list);
             }
         }
         if (field === 'facility') {
             window.myLine.updateStnUsage(stnId, value);
-            this.setState(prevState => {
-                return {
-                    stnList: {
-                        ...prevState.stnList, 
-                        [stnId]: {
-                            ...prevState.stnList[stnId], 
-                            facility: value,
-                        }
-                    }
+            this.props.paramUpdate('stn_list', {
+                ...this.props.stnList, 
+                [stnId]: {
+                    ...this.props.stnList[stnId], 
+                    facility: value,
                 }
             });
+            // this.setState(prevState => {
+            //     return {
+            //         stnList: {
+            //             ...prevState.stnList, 
+            //             [stnId]: {
+            //                 ...prevState.stnList[stnId], 
+            //                 facility: value,
+            //             }
+            //         }
+            //     }
+            // });
         }
         if (field === 'services') {
             window.myLine.updateStnServices(stnId, value);
-            let servicesSet = new Set(this.state.stnList[stnId].services);
+            let servicesSet = new Set(this.props.stnList[stnId].services);
             if (value.selected===false) {
                 servicesSet.delete(value.chipId);
             } else {
                 servicesSet.add(value.chipId);
             }
-            this.setState(prevState => {
-                return {
-                    stnList: {
-                        ...prevState.stnList, 
-                        [stnId]: {
-                            ...prevState.stnList[stnId], 
-                            services: Array.from(servicesSet),
-                        }
-                    }
+            this.props.paramUpdate('stn_list', {
+                ...this.props.stnList, 
+                [stnId]: {
+                    ...this.props.stnList[stnId], 
+                    services: Array.from(servicesSet)
                 }
-            });
+            })
+            // this.setState(prevState => {
+            //     return {
+            //         stnList: {
+            //             ...prevState.stnList, 
+            //             [stnId]: {
+            //                 ...prevState.stnList[stnId], 
+            //                 services: Array.from(servicesSet),
+            //             }
+            //         }
+            //     }
+            // });
         }
     }
 
@@ -219,7 +261,8 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
             if (!window.myLine.removeStn(stnId)) {
                 this.setState({stnDeleteErrDialogOpened: true});
             } else {
-                this.setState({stnList: getParams().stn_list});
+                this.props.paramUpdate('stn_list', getParams().stn_list);
+                // this.setState({stnList: getParams().stn_list});
             }
         }
     }
@@ -228,14 +271,14 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
         return (
             <div style={{width: '100%'}}>
                 <StationChipSet
-                    stnList={this.state.stnList}
+                    stnList={this.props.stnList} tpo={this.props.tpo}
                     onSelection={this.stnChipSetSelection.bind(this)}
                     addStationClick={() => this.setState({stnAddDialogOpened: true})} />
                 <Snackbar
                     open={this.state.snackBarOpened}
                     onClose={(e, r) => this.snackBarClose(r)}
                     autoHideDuration={5000}
-                    message={formatStnName(this.state.stnList[this.state.stationSelected])}
+                    message={formatStnName(this.props.stnList[this.state.stationSelected])}
                     action={
                         <React.Fragment>
                             <Button color="secondary" size="small" onClick={() => this.snackBarClose('current')}>
@@ -256,19 +299,19 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
 
                 <StationAddDialog
                     open={this.state.stnAddDialogOpened}
-                    stnList={this.state.stnList}
+                    stnList={this.props.stnList} tpo={this.props.tpo}
                     onClose={this.stnAddDialogClose.bind(this)} />
                 <StationEditDialog
                     open={this.state.stnEditDialogOpened}
                     onClose={() => this.setState({stnEditDialogOpened: false})}
                     onUpdate={this.stnEditDialogUpdate.bind(this)}
                     stnId={this.state.stationSelected}
-                    stnInfo={this.state.stnList[this.state.stationSelected] || this.state.stnList['linestart']}
-                    stnList={this.state.stnList} />
+                    stnInfo={this.props.stnList[this.state.stationSelected] || this.props.stnList['linestart']}
+                    stnList={this.props.stnList} />
                 <StationDeleteDialog 
                     open={this.state.stnDeleteDialogOpened}
                     onClose={this.stnDeleteClose.bind(this)}
-                    stnInfo={this.state.stnList[this.state.stationSelected] || this.state.stnList['linestart']} />
+                    stnInfo={this.props.stnList[this.state.stationSelected] || this.props.stnList['linestart']} />
                 <StationDeleteErrorDialog
                     open={this.state.stnDeleteErrDialogOpened}
                     onClose={() => this.setState({stnDeleteErrDialogOpened: false})} />

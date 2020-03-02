@@ -3,17 +3,80 @@ import { useTranslation } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, List, ListItem, ListItemIcon, Icon, TextField, MenuItem, DialogActions, Button } from '@material-ui/core';
 import { StationInfo } from '../../types';
 import { formatStnName } from '../../utils';
+import { getYShareMTR } from '../../methods';
+
+const newBranchPossibleEnd = (prep: 'before' | 'after', pivot: string, stnList: {[stnId: string]: StationInfo}) => {
+    let res: string[] = [];
+    if (prep == 'before') {
+        while (stnList[pivot].parents.length == 1) {
+            pivot = stnList[pivot].parents[0];
+            res.unshift(pivot);
+        }
+        res.pop();
+    } else {
+        while (stnList[pivot].children.length == 1) {
+            pivot = stnList[pivot].children[0];
+            res.push(pivot);
+        }
+        res.shift();
+    }
+    return res;
+};
+
+const newStnPossibleLoc = (
+    prep: 'before' | 'after', 
+    pivot: string, 
+    stnList: {[stnId: string]: StationInfo}
+    ): [number, number, number, string[], string[]] => {
+    let deg = stnList[pivot][prep==='before' ? 'parents' : 'children'].length;
+    switch (deg) {
+        case 2:
+            // 1 -> 2
+            return [1,1,1,[],[]];
+        case 1:
+            let y = getYShareMTR(pivot, stnList);
+            if (y == 0) {
+                // 1 -> 1
+                let state: string[] | 0 = newBranchPossibleEnd(prep, pivot, stnList);
+                state = (state.length) ? state : [];
+                return [1,0,0,state,state];
+                // [1,0,0,1,1];
+            } else if (y < 0) {
+                if (prep == 'before') {
+                    return [stnList[stnList[pivot].parents[0]].children.length -1, 
+                        0,1,[],[]
+                    ];
+                } else {
+                    return [stnList[stnList[pivot].children[0]].parents.length -1, 
+                        0,1,[],[]
+                    ];
+                }
+            } else {
+                if (prep == 'before') {
+                    return [stnList[stnList[pivot].parents[0]].children.length -1, 
+                        1,0,[],[]
+                    ];
+                } else {
+                    return [stnList[stnList[pivot].children[0]].parents.length -1, 
+                        1,0,[],[]
+                    ];
+                }
+            }
+    }
+    return [0,0,0,[],[]];
+};
 
 interface StationAddDialogProps {
     open: boolean;
     stnList: {
         [stnId: string]: StationInfo;
     };
+    tpo: string[];
     onClose: (action: 'close' | string[]) => void;
 }
 
 export default (props: StationAddDialogProps) => {
-    const {t, i18n} = useTranslation();
+    const { t } = useTranslation();
 
     const allLocs = {
         centre: t('stations.add.centre'), 
@@ -23,10 +86,8 @@ export default (props: StationAddDialogProps) => {
         newlower: t('stations.add.newLower'), 
     };
     
-    const [prep, setPrep] = React.useState('before');
-    const [pivot, setPivot] = React.useState(
-        Object.keys(props.stnList).filter(stnId => !['linestart','lineend'].includes(stnId))[0]
-    );
+    const [prep, setPrep] = React.useState('before' as 'before' | 'after');
+    const [pivot, setPivot] = React.useState(props.tpo[0]);
     const [loc, setLoc] = React.useState(Object.keys(allLocs)[0]);
     const [locOK, setLocOK] = React.useState(Array(5).fill(true) as boolean[]);
 
@@ -34,15 +95,12 @@ export default (props: StationAddDialogProps) => {
     const [endList, setEndList] = React.useState([] as string[]);
 
     // Hook for updating loc list and end lists when pivot changed
+    const newLocs = React.useMemo(() => newStnPossibleLoc(prep, pivot, props.stnList), [prep, pivot, props.stnList]);
     React.useEffect(() => {
-        let possibleLocs = window.myLine.newStnPossibleLoc(
-            prep as 'before' | 'after', 
-            pivot
-        );
-        console.log(possibleLocs);
-        setLocOK(possibleLocs.map(p => typeof p === 'number' ? Boolean(p) : Boolean(p.length)));
-        setEndList(possibleLocs[3]);
-    }, [pivot, prep]);
+        console.log('new')
+        setLocOK(newLocs.map(p => typeof p === 'number' ? Boolean(p) : Boolean(p.length)));
+        setEndList(newLocs[3]);
+    }, [newLocs.toString()]);
 
     // Hook for updating loc selection (first available) when locOK list changed
     React.useEffect(() => {
@@ -54,6 +112,11 @@ export default (props: StationAddDialogProps) => {
         if (endList.length === 0) return;
         setEnd(endList[0]);
     }, [endList]);
+
+    // Hook for setting new pivot in case of previous one being deleted
+    React.useEffect(() => {
+        if (!(pivot in props.stnList)) setPivot(props.tpo[0]);
+    }, [Object.keys(props.stnList).toString()]);
 
     const handleClick = (action: string) => {
         if (action === 'close') {
@@ -78,7 +141,7 @@ export default (props: StationAddDialogProps) => {
                             style={{width: '100%'}}
                             variant="outlined"
                             label={t('stations.add.prep')}
-                            onChange={(e) => setPrep(e.target.value)}
+                            onChange={(e) => setPrep(e.target.value as 'before' | 'after')}
                             value={prep} >
                             <MenuItem key="before" value="before">{t('stations.add.before')}</MenuItem>
                             <MenuItem key="after" value="after">{t('stations.add.after')}</MenuItem>
@@ -94,7 +157,7 @@ export default (props: StationAddDialogProps) => {
                             label={t('stations.add.pivot')}
                             onChange={(e) => setPivot(e.target.value)}
                             value={pivot} >
-                            {window.myLine.tpo.map(stnId => (
+                            {props.tpo.map(stnId => (
                                 <MenuItem key={stnId} value={stnId}>
                                     {formatStnName(props.stnList[stnId])}
                                 </MenuItem>
@@ -145,4 +208,4 @@ export default (props: StationAddDialogProps) => {
             </DialogActions>
         </Dialog>
     )
-}
+};

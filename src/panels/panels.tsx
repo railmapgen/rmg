@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { Typography, Box, CircularProgress, Tabs, Tab, Icon, createMuiTheme, ThemeProvider, makeStyles, createStyles, useMediaQuery } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
+import { RMGParam } from '../types';
 
 const PanelSave = React.lazy(() => import(/* webpackChunkName: "panelSave" */ './save'));
 const PanelLayout = React.lazy(() => import(/* webpackChunkName: "panelLayout" */ './layout'));
@@ -43,8 +44,14 @@ const useStyles = makeStyles(theme => (
     })
 ));
 
-export default function PanelTab(props) {
-    const { t, i18n } = useTranslation('', { useSuspense: false });
+interface Props {
+    param: RMGParam;
+    paramUpdate: (key, data) => void;
+    tpo: string[];
+}
+
+export default function PanelTab(props: Props) {
+    const { t, i18n } = useTranslation();
 
     const classes = useStyles();
 
@@ -55,11 +62,15 @@ export default function PanelTab(props) {
             case 0:
                 return <PanelSave />;
             case 1:
-                return <PanelLayout />;
+                return <PanelLayout {...(({tpo, ...o})=>o)(props)} />;
             case 2:
-                return <PanelDesign />;
+                return <PanelDesign {...(({tpo, ...o})=>o)(props)} />;
             case 3:
-                return <PanelStations />
+                return <PanelStations 
+                    theme={props.param.theme} 
+                    stnList={props.param.stn_list} 
+                    paramUpdate={props.paramUpdate}
+                    tpo={props.tpo} />
             case 4: 
                 return <PanelInfo />;
             default:
@@ -79,9 +90,9 @@ export default function PanelTab(props) {
                         ['design', 'brush'], 
                         ['stations', 'directions_transit'], 
                         ['info', 'info']
-                    ].map(val => (
+                    ].map((val,i) => (
                         <Tab label={<span>{t('tab.'+val[0])}</span>}
-                            icon={<Icon>{val[1]}</Icon>}
+                            icon={<Icon>{val[1]}</Icon>} key={i}
                             className={classes.tab} />
                     ))}
                     />

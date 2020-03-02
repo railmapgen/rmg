@@ -57,6 +57,7 @@ interface StationChipSetProps {
     stnList: {
         [stnId: string]: StationInfo;
     };
+    tpo: string[];
     onSelection: (stnId: string) => void;
     addStationClick: () => void;
 }
@@ -80,7 +81,7 @@ export default function StationChipSet(props: StationChipSetProps) {
                 classes={{label: classes.addChipLabel}}
                 onClick={props.addStationClick}
             />
-            {window.myLine.tpo.map(stnId => {
+            {props.tpo.map((stnId,i) => {
                 let label = (
                     <span>
                         <span className={`${classes.stnChipText} ${classes.stnChipTextZH}`}>

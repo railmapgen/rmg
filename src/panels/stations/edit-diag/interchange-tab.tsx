@@ -242,7 +242,8 @@ class StationEditInterchangeTab extends React.Component<StationEditInterchangeTa
                                     labelPlacement="end"
                                 />
                             </RadioGroup>
-                        } />
+                        }
+                        secondaryTypographyProps={{['component' as any]: 'div'}} />
                 </ListItem>
                 <ListItem>
                     <ListItemIcon>
