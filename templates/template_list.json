@@ -144,6 +144,14 @@
         }
     },
     {
+        "filename": "hongkong_sile", 
+        "desc": {
+            "en": "MTR South Island Line", 
+            "zh-Hans": "港铁南港岛线",
+            "zh-Hant": "港鐵南港島綫"
+        }
+    },
+    {
         "filename": "hongkong_tkl", 
         "desc": {
             "en": "MTR Tseung Kwan O Line", 
