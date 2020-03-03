@@ -21,6 +21,10 @@ export function test(svgEl: JQuery<Element>) {
         $(el).attr('font-size', '10px');
     });
 
+    svgEl.find('.rmg-name__en.rmg-name__mtr--osi').each((_,el) => {
+        $(el).attr('font-size', '9px');
+    });
+
     svgEl.find('.rmg-name__en.rmg-name__gzmtr--next2-dest').each((_,el) => {
         $(el).attr('font-size', '8.5px')
     });
