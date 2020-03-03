@@ -4,7 +4,7 @@ import initLine from './Line/init';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import App from './App';
-// import Notes from './SVG';
+import Notes from './SVG';
 
 declare global {
     interface Window {
@@ -53,10 +53,10 @@ $('#toggle li').each((i,el) => {
     });
 });
 
-window.myLine = null;
+// window.myLine = null;
 $(`[${window.urlParams.get('style')}-specific]`).show();
 // autoInit();
-initLine();
+// initLine();
 
 ReactDOM.render(
     <App />, 

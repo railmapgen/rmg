@@ -1,6 +1,8 @@
 import * as React from 'react';
 import './i18n';
+import SVGs from './svgs';
 import Panels from './panels';
+import { RMGLine } from './Line/RMGLine';
 import { getParams } from './utils';
 import { StationInfo } from './types';
 
@@ -89,9 +91,10 @@ export default function App() {
     };
 
     return (
-        // <React.Suspense fallback="loading">
+        <>
+            <SVGs param={param} />
             <Panels param={param} paramUpdate={handleUpdate} tpo={tpo} />
-        // </React.Suspense>
+        </>
     );
 }
 

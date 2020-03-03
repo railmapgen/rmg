@@ -41,17 +41,17 @@ export default (props: Props) => {
 
     const yPcChange = (event, value: number) => {
         props.paramUpdate('y_pc', value);
-        window.myLine.yPc = value;
+        // window.myLine.yPc = value;
     };
 
     const branchSpacingChange = (event, value: number) => {
         props.paramUpdate('branch_spacing', value);
-        window.myLine.branchSpacing = value;
+        // window.myLine.branchSpacing = value;
     };
 
     const paddingChange = (event, value: number) => {
         props.paramUpdate('padding', value);
-        window.myLine.padding = value;
+        // window.myLine.padding = value;
     };
 
     return (
