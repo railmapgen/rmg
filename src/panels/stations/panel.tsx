@@ -92,23 +92,6 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                     name: newName
                 },
             })
-            // this.setState(prevState => {
-            //     let name = Object.values({
-            //         ...prevState.stnList[stnId].name, 
-            //         [index]: value
-            //     }) as Name;
-            //     window.myLine.updateStnName(stnId, name);
-
-            //     return {
-            //         stnList: {
-            //             ...prevState.stnList, 
-            //             [stnId]: {
-            //                 ...prevState.stnList[stnId], 
-            //                 name
-            //             }
-            //         }
-            //     };
-            // });
         }
         if (field === 'num') {
             (window.myLine as RMGLineGZ).updateStnNum(stnId, value);
@@ -119,19 +102,6 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                     num: value,
                 }
             })
-            // this.setState(prevState => {
-            //     (window.myLine as RMGLineGZ).updateStnNum(stnId, value);
-
-            //     return {
-            //         stnList: {
-            //             ...prevState.stnList, 
-            //             [stnId]: {
-            //                 ...prevState.stnList[stnId], 
-            //                 num: value
-            //             }
-            //         }
-            //     };
-            // });
         }
         if (field === 'transfer') {
             let updatedValue = {
@@ -151,17 +121,6 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                     transfer: updatedValue
                 }
             })
-            // this.setState(prevState => {
-            //     return {
-            //         stnList: {
-            //             ...prevState.stnList, 
-            //             [stnId]: {
-            //                 ...prevState.stnList[stnId], 
-            //                 transfer: updatedValue
-            //             }
-            //         }
-            //     }
-            // });
         }
         if (field === 'branch') {
             // TODO: use this when svg is created by react 
@@ -179,17 +138,6 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                         branch: value
                     }
                 });
-                // this.setState(prevState => {
-                //     return {
-                //         stnList: {
-                //             ...prevState.stnList, 
-                //             [stnId]: {
-                //                 ...prevState.stnList[stnId], 
-                //                 branch: value
-                //             }
-                //         }
-                //     }
-                // });
             } else if (index.split('.')[0] === 'first') {
                 if (window.myLine.updateBranchFirst(
                     stnId, 
@@ -213,17 +161,6 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                     facility: value,
                 }
             });
-            // this.setState(prevState => {
-            //     return {
-            //         stnList: {
-            //             ...prevState.stnList, 
-            //             [stnId]: {
-            //                 ...prevState.stnList[stnId], 
-            //                 facility: value,
-            //             }
-            //         }
-            //     }
-            // });
         }
         if (field === 'services') {
             window.myLine.updateStnServices(stnId, value);
@@ -240,17 +177,6 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                     services: Array.from(servicesSet)
                 }
             })
-            // this.setState(prevState => {
-            //     return {
-            //         stnList: {
-            //             ...prevState.stnList, 
-            //             [stnId]: {
-            //                 ...prevState.stnList[stnId], 
-            //                 services: Array.from(servicesSet),
-            //             }
-            //         }
-            //     }
-            // });
         }
     }
 
