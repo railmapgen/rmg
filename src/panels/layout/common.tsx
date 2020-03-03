@@ -44,15 +44,69 @@ export default (props: Props) => {
         window.myLine.yPc = value;
     };
 
+    const yPcPanel = React.useMemo(() => (
+        <ExpansionPanel expanded={props.expanded === 1} onChange={props.onChange(1)}>
+            <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
+                <Icon style={{minWidth: 48}}>vertical_align_center</Icon>
+                <Typography>{t('layout.y')}</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+                <Slider
+                    value={props.yPc}
+                    onChange={yPcChange}
+                    step={0.01}
+                    marks={[{value: 0, label: '0%'}, {value: 100, label: '100%'}]}
+                    valueLabelDisplay="auto"
+                />
+            </ExpansionPanelDetails>
+        </ExpansionPanel>
+    ), [props.yPc, props.expanded]);
+
     const branchSpacingChange = (event, value: number) => {
         props.paramUpdate('branch_spacing', value);
         window.myLine.branchSpacing = value;
     };
 
+    const branchSpacingPanel = React.useMemo(() => (
+        <ExpansionPanel expanded={props.expanded === 2} onChange={props.onChange(2)}>
+            <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
+                <Icon style={{minWidth: 48}}>format_line_spacing</Icon>
+                <Typography>{t('layout.branchSpacing')}</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+                <Slider
+                    value={props.branchSpacing}
+                    onChange={branchSpacingChange}
+                    step={0.01}
+                    marks={[{value: 0, label: '0px'}, {value: 100, label: '100px'}]}
+                    valueLabelDisplay="auto"
+                />
+            </ExpansionPanelDetails>
+        </ExpansionPanel>
+    ), [props.branchSpacing, props.expanded]);
+
     const paddingChange = (event, value: number) => {
         props.paramUpdate('padding', value);
         window.myLine.padding = value;
     };
+
+    const paddingPanel = React.useMemo(() => (
+        <ExpansionPanel expanded={props.expanded === 3} onChange={props.onChange(3)}>
+            <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
+                <Icon style={{minWidth: 48}}>stay_current_landscape</Icon>
+                <Typography>{t('layout.padding')}</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+                <Slider
+                    value={props.padding}
+                    onChange={paddingChange}
+                    step={0.01} max={50}
+                    marks={[{value: 0, label: '0%'}, {value: 50, label: '50%'}]}
+                    valueLabelDisplay="auto"
+                />
+            </ExpansionPanelDetails>
+        </ExpansionPanel>
+    ), [props.padding, props.expanded]);
 
     return (
         <>
@@ -90,55 +144,13 @@ export default (props: Props) => {
                 </ExpansionPanel>
             </Grow>
             <Grow in={true} style={{ transformOrigin: '0 0 1' }} timeout={400}>
-                <ExpansionPanel expanded={props.expanded === 1} onChange={props.onChange(1)}>
-                    <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
-                        <Icon style={{minWidth: 48}}>vertical_align_center</Icon>
-                        <Typography>{t('layout.y')}</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                        <Slider
-                            value={props.yPc}
-                            onChange={yPcChange}
-                            step={0.01}
-                            marks={[{value: 0, label: '0%'}, {value: 100, label: '100%'}]}
-                            valueLabelDisplay="auto"
-                        />
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
+                {yPcPanel}
             </Grow>
             <Grow in={true} style={{ transformOrigin: '0 0 1' }} timeout={600}>
-                <ExpansionPanel expanded={props.expanded === 2} onChange={props.onChange(2)}>
-                    <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
-                        <Icon style={{minWidth: 48}}>format_line_spacing</Icon>
-                        <Typography>{t('layout.branchSpacing')}</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                        <Slider
-                            value={props.branchSpacing}
-                            onChange={branchSpacingChange}
-                            step={0.01}
-                            marks={[{value: 0, label: '0px'}, {value: 100, label: '100px'}]}
-                            valueLabelDisplay="auto"
-                        />
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
+                {branchSpacingPanel}
             </Grow>
             <Grow in={true} style={{ transformOrigin: '0 0 1' }} timeout={800}>
-                <ExpansionPanel expanded={props.expanded === 3} onChange={props.onChange(3)}>
-                    <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
-                        <Icon style={{minWidth: 48}}>stay_current_landscape</Icon>
-                        <Typography>{t('layout.padding')}</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                        <Slider
-                            value={props.padding}
-                            onChange={paddingChange}
-                            step={0.01}
-                            marks={[{value: 0, label: '0%'}, {value: 100, label: '100%'}]}
-                            valueLabelDisplay="auto"
-                        />
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
+                {paddingPanel}
             </Grow>
         </>
     )
