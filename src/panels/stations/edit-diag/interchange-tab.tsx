@@ -417,7 +417,7 @@ function OSINameDialog(props: OSINameDialogProps) {
     const { t } = useTranslation();
 
     const handleUpdate = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.props.onUpdate(event.target.value, index);
+        props.onUpdate(event.target.value, index);
     };
 
 

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import './i18n';
 import SVGs from './svgs';
+// import SVGs from './svgs';
 import Panels from './panels';
 import { RMGLine } from './Line/RMGLine';
 import { getParams } from './utils';
@@ -92,7 +93,7 @@ export default function App() {
 
     return (
         <>
-            <SVGs param={param} />
+            <SVGs myLine={new RMGLine(param)} />
             <Panels param={param} paramUpdate={handleUpdate} tpo={tpo} />
         </>
     );

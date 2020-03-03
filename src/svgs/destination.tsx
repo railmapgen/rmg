@@ -2,9 +2,11 @@ import * as React from 'react';
 import { RMGParam } from '../types';
 
 import Strip from './strip';
+import { RMGLine } from '../Line/RMGLine';
 
 interface Props {
-    param: RMGParam;
+    // param: RMGParam;
+    myLine: RMGLine
 }
 
 export default (props: Props) => {
@@ -16,13 +18,13 @@ export default (props: Props) => {
             style={{
                 width: 'var(--rmg-svg-width)', 
                 height: 'var(--rmg-svg-height)', 
-                ['--rmg-svg-width' as any]: props.param.svg_dest_width + 'px', 
-                ['--rmg-svg-height' as any]: props.param.svg_height + 'px', 
-                ['--rmg-theme-colour' as any]: props.param.theme[2], 
+                ['--rmg-svg-width' as any]: props.myLine.param.svg_dest_width + 'px', 
+                ['--rmg-svg-height' as any]: props.myLine.param.svg_height + 'px', 
+                ['--rmg-theme-colour' as any]: props.myLine.param.theme[2], 
             }} >
 
             <rect id="outer" x="0" y="0"/>
-            <Strip stripPc={props.param.strip_pc} />
+            <Strip stripPc={props.myLine.param.strip_pc} />
 
             <g id="dest_name">
                 <use xlinkHref="#arrow"/>
