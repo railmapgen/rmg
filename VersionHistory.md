@@ -8,6 +8,7 @@
 
 ### Resolved Issues
 
+- Fixed the issue of incorrect font size in exported PNG. 
 - Improved performance and robustness. 
 
 ## 3.1.1 (1 Mar 2020)
