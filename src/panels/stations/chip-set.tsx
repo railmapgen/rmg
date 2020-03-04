@@ -67,6 +67,10 @@ export default function StationChipSet(props: StationChipSetProps) {
     const isTablet = useMediaQuery('(max-width: 839px) and (min-width: 480px)');
     const isMobile = useMediaQuery('(max-width: 480px)');
     const classes = useStyles();
+
+    // const tpo = React.useMemo(() => props.tpo, [props.tpo.toString()]);
+    // const {tpo, stnList} = React.useMemo(() => props, [JSON.stringify(props.stnList)])
+
     return (
         <div>
             <Chip
@@ -85,10 +89,10 @@ export default function StationChipSet(props: StationChipSetProps) {
                 let label = (
                     <span>
                         <span className={`${classes.stnChipText} ${classes.stnChipTextZH}`}>
-                            {props.stnList[stnId].name[0]}
+                            {props.stnList[stnId]?.name[0] || ''}
                         </span>
                         <span className={`${classes.stnChipText} ${classes.stnChipTextEN}`}>
-                            {props.stnList[stnId].name[1].replace('\\','\r\n')}
+                            {props.stnList[stnId]?.name[1].replace('\\','\r\n') || ''}
                         </span>
                     </span>
                 );
@@ -96,7 +100,7 @@ export default function StationChipSet(props: StationChipSetProps) {
                     <Chip 
                         key={stnId} 
                         icon={window.urlParams.get('style')==='gzmtr' && 
-                            <Avatar style={{backgroundColor: 'unset'}}>{props.stnList[stnId].num}</Avatar>}
+                            <Avatar style={{backgroundColor: 'unset'}}>{props.stnList[stnId]?.num || '00'}</Avatar>}
                         label={label}
                         onClick={() => props.onSelection(stnId)}
                         classes={{label: classes.stnChipLabel}}

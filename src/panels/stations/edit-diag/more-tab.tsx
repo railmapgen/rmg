@@ -61,7 +61,7 @@ export default (props: StationEditMoreTabProps) => {
                                 />
                             ))}
                       </FormGroup>
-                    } />
+                    } secondaryTypographyProps={{['component' as any]: 'div'}} />
                 </ListItem>}
             </List>
 

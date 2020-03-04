@@ -1,5 +1,15 @@
 # Version History
 
+## 3.1.2 (4 Mar 2020)
+
+### New Features
+
+- New templates are available. 
+
+### Resolved Issues
+
+- Improved performance and robustness. 
+
 ## 3.1.1 (1 Mar 2020)
 
 ### New Features
