@@ -511,18 +511,22 @@ export class OSI22StationHK extends OSI12StationHK {
     get _osiNameDX(): number {return 0;}
 
     get osiNameHTML() {
-        var dy = this._dy - (this.namePos ? 18+9 : -27) + 8.34375 - 25.03125/2;
-        return $('<g>', {
+        var dy = this._dy - (this.namePos ? 18+9 : -27) + 8.34375 - 25.03125/2 - 5*(this._osiNames[1].split('\\').length-1);
+        let el = $('<g>', {
             'text-anchor': this._osiTxtAnchor, 
             transform: `translate(${this.x+this._osiNameDX},${this.y+dy})`, 
             class: 'Name ' + this._nameClass
         }).append(
             $('<text>').addClass('rmg-name__zh rmg-name__mtr--osi').text(this._osiNames[0])
-        ).append(
-            $('<text>', {
-                x:0, dy:12, class:'rmg-name__en rmg-name__mtr--osi'
-            }).text(this._osiNames[1])
         );
+        this._osiNames[1].split('\\').forEach((txt,i) => {
+            el.append(
+                $('<text>', {
+                    x:0, dy:12+i*10, class:'rmg-name__en rmg-name__mtr--osi'
+                }).text(txt)
+            );
+        });
+        return el;
     }
 
     get ungrpHTML() {
