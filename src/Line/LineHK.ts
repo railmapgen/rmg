@@ -413,12 +413,12 @@ export class RMGLineHK extends RMGLine {
         return res;
     }
 
-    removeStn(stnId: string) {
-        if (!super.removeStn(stnId)) {return false;}
-        this.loadFonts();
-        this.updateStnNameBg();
-        return true;
-    }
+    // removeStn(stnId: string) {
+    //     if (!super.removeStn(stnId)) {return false;}
+    //     this.loadFonts();
+    //     this.updateStnNameBg();
+    //     return true;
+    // }
 
     updateBranchType(stnId: string, direction: DirectionLong, type: 'through' | 'nonthrough') {
         if (!super.updateBranchType(stnId, direction, type)) {return false;}

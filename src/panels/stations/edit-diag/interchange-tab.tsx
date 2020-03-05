@@ -2,7 +2,7 @@ import * as React from 'react';
 import { withTranslation, useTranslation } from 'react-i18next';
 import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Icon, Divider, Button, ListItemIcon, RadioGroup, FormControlLabel, Radio, Switch, Chip, withStyles, Dialog, DialogTitle, DialogContent, Avatar, TextField, DialogActions, Tooltip } from '@material-ui/core';
 import { StationTransfer, InterchangeInfo, Name } from '../../../types';
-import ColourDialog from '../../panel-colour-diag';
+import ColourDialog from '../../colour-diag';
 import NameListItems from './name-list-items';
 
 interface StationEditInterchangeTabProps {
@@ -413,7 +413,7 @@ interface OSINameDialogProps {
     onClose: () => void;
 }
 
-function OSINameDialog(props: OSINameDialogProps) {
+const OSINameDialog = React.memo((props: OSINameDialogProps) => {
     const { t } = useTranslation();
 
     const handleUpdate = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -436,4 +436,10 @@ function OSINameDialog(props: OSINameDialogProps) {
             </DialogActions>
         </Dialog>
     );
-}
+}, (prevProps, nextProps) => {
+    if (prevProps.open !== nextProps.open) {
+        return false;
+    } else {
+        return prevProps.osiName.toString() === nextProps.osiName.toString();
+    }
+})

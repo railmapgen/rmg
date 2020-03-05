@@ -16,29 +16,29 @@ const useStyles = makeStyles(theme => (
     createStyles({
         typography: {
             background: theme.palette.background.default,
-        }, 
+        },
         tab: {
-            padding: '6px 24px', 
-            height: 48, 
-            minWidth: 'calc(100% / 5)', 
+            padding: '6px 24px',
+            height: 48,
+            minWidth: 'calc(100% / 5)',
             '& .MuiTab-wrapper': {
-                flexDirection: 'row', 
-            }, 
+                flexDirection: 'row',
+            },
             '&.MuiTab-labelIcon': {
-                minHeight: 'unset', 
+                minHeight: 'unset',
                 '& .MuiTab-wrapper': {
                     '& > *:first-child': {
-                        marginBottom: 0, 
+                        marginBottom: 0,
                     },
                     '& > *:not(first-child)': {
                         paddingLeft: 8
                     },
-                }, 
+                },
             },
-        }, 
+        },
         box: {
-            display: 'flex', 
-            justifyContent: 'center', 
+            display: 'flex',
+            justifyContent: 'center',
             alignItems: 'center',
         }
     })
@@ -62,42 +62,47 @@ export default function PanelTab(props: Props) {
             case 0:
                 return <PanelSave />;
             case 1:
-                return <PanelLayout {...(({tpo, ...o})=>o)(props)} />;
+                return <PanelLayout {...(({ tpo, ...o }) => o)(props)} />;
             case 2:
-                return <PanelDesign {...(({tpo, ...o})=>o)(props)} />;
+                return <PanelDesign {...(({ tpo, ...o }) => o)(props)} />;
             case 3:
-                return <PanelStations 
-                    theme={props.param.theme} 
-                    stnList={props.param.stn_list} 
+                return <PanelStations
+                    theme={props.param.theme}
+                    stnList={props.param.stn_list}
+                    currentId={props.param.current_stn_idx}
                     paramUpdate={props.paramUpdate}
                     tpo={props.tpo} />
-            case 4: 
+            case 4:
                 return <PanelInfo />;
             default:
                 return <PanelSave />;
         };
     };
 
+    const tabNav = React.useMemo(() => (
+        <Typography className={classes.typography} component="div">
+            <Tabs value={value} indicatorColor="primary"
+                textColor="primary" onChange={(_, val) => setValue(val)}
+                variant="scrollable" scrollButtons="off">
+                {[
+                    ['file', 'insert_drive_file'],
+                    ['layout', 'panorama'],
+                    ['design', 'brush'],
+                    ['stations', 'directions_transit'],
+                    ['info', 'info']
+                ].map((val, i) => (
+                    <Tab label={<span>{t('tab.' + val[0])}</span>}
+                        icon={<Icon>{val[1]}</Icon>} key={i}
+                        className={classes.tab} />
+                ))}
+                />
+                </Tabs>
+        </Typography>
+    ), [value]);
+
     return (
         <div>
-            <Typography className={classes.typography} component="div">
-                <Tabs value={value} indicatorColor="primary" 
-                    textColor="primary" onChange={(_, val) => setValue(val)} 
-                    variant="scrollable" scrollButtons="off">
-                    {[
-                        ['file', 'insert_drive_file'], 
-                        ['layout', 'panorama'], 
-                        ['design', 'brush'], 
-                        ['stations', 'directions_transit'], 
-                        ['info', 'info']
-                    ].map((val,i) => (
-                        <Tab label={<span>{t('tab.'+val[0])}</span>}
-                            icon={<Icon>{val[1]}</Icon>} key={i}
-                            className={classes.tab} />
-                    ))}
-                    />
-                </Tabs>
-            </Typography>
+            {tabNav}
             <Typography
                 className={classes.typography}
                 component="div"

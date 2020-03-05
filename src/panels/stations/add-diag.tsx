@@ -28,7 +28,7 @@ const newStnPossibleLoc = (
     pivot: string, 
     stnList: {[stnId: string]: StationInfo}
     ): [number, number, number, string[], string[]] => {
-    let deg = stnList[pivot][prep==='before' ? 'parents' : 'children'].length;
+    let deg = stnList[pivot] ? stnList[pivot][prep==='before' ? 'parents' : 'children'].length : 0;
     switch (deg) {
         case 2:
             // 1 -> 2

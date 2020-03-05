@@ -15,24 +15,30 @@ interface Props {
     paramUpdate: (key, data) => void;
 }
 
-export default (props: Props) => {
+const LayoutCommon = (props: Props) => {
     const { t } = useTranslation();
 
-    const svgDestWidthChange = (event) => {
+    const [isGrow, setIsGrow] = React.useState(false);
+    React.useEffect(() => {
+        setIsGrow(true);
+        return () => setIsGrow(false);
+    }, []);
+
+    const svgDestWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let _val = Number(event.target.value);
         if (isNaN(_val)) return;
         props.paramUpdate('svg_dest_width', _val);
         window.myLine.svgDestWidth = _val;
     }
 
-    const svgWidthChange = (event) => {
+    const svgWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let _val = Number(event.target.value);
         if (isNaN(_val)) return;
         props.paramUpdate('svg_width', _val);
         window.myLine.svgWidth = _val;
     }
 
-    const svgHeightChange = (event) => {
+    const svgHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let _val = Number(event.target.value);
         if (isNaN(_val)) return;
         props.paramUpdate('svg_height', _val);
@@ -110,7 +116,7 @@ export default (props: Props) => {
 
     return (
         <>
-            <Grow in={true} style={{ transformOrigin: '0 0 1' }} timeout={200}>
+            <Grow in={isGrow} style={{ transformOrigin: '0 0 1' }} timeout={200}>
                 <ExpansionPanel expanded={props.expanded === 0} onChange={props.onChange(0)}>
                     <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
                         <Icon style={{minWidth: 48}}>panorama_horizontal</Icon>
@@ -143,15 +149,17 @@ export default (props: Props) => {
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
             </Grow>
-            <Grow in={true} style={{ transformOrigin: '0 0 1' }} timeout={400}>
+            <Grow in={isGrow} style={{ transformOrigin: '0 0 1' }} timeout={400}>
                 {yPcPanel}
             </Grow>
-            <Grow in={true} style={{ transformOrigin: '0 0 1' }} timeout={600}>
+            <Grow in={isGrow} style={{ transformOrigin: '0 0 1' }} timeout={600}>
                 {branchSpacingPanel}
             </Grow>
-            <Grow in={true} style={{ transformOrigin: '0 0 1' }} timeout={800}>
+            <Grow in={isGrow} style={{ transformOrigin: '0 0 1' }} timeout={800}>
                 {paddingPanel}
             </Grow>
         </>
     )
 }
+
+export default LayoutCommon;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { List, ListItem, ListItemIcon, ListItemText, Icon, Dialog, DialogTitle, DialogContent, RadioGroup, FormControlLabel, Radio, DialogActions, Button, FormGroup, Checkbox, ListItemSecondaryAction } from '@material-ui/core';
+import { List, ListItem, ListItemIcon, ListItemText, Icon, Dialog, DialogTitle, DialogContent, RadioGroup, FormControlLabel, Radio, DialogActions, Button, FormGroup, Checkbox, ListItemSecondaryAction, ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails } from '@material-ui/core';
 
 const allFacilities = {
     '': 'None',

@@ -1,5 +1,14 @@
 # Version History
 
+## 3.1.3 (5 Mar 2020)
+
+### Resolved Issues
+
+- Fixed the error occurring while removing stations. 
+- Fixed the issues that OSI names in Latin characters are not split as expected. 
+- Disabled branch position selection for Shanghai Metro style. 
+- Improved performance. 
+
 ## 3.1.2 (4 Mar 2020)
 
 ### New Features
