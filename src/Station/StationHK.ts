@@ -244,8 +244,9 @@ class Int3StationHK extends RMGStationHK {
     }
 
     get iconHTML() {
+        let n = Math.min(this._intInfos.length+1, 5);
         return $('<use>', {
-            'xlink:href': '#int3_hk' + this._branchAffix, 
+            'xlink:href': '#int' + n + '_hk' + this._branchAffix, 
             transform: `translate(${this.x},${this.y+this._branchDy})rotate(${this._iconRotation})`, 
             class: this.iconClass
         });
@@ -261,9 +262,9 @@ class Int3StationHK extends RMGStationHK {
         this._intInfos
             .map(info => info[IntInfoTag.colour])
             .forEach((c, i) => {
-                if (i >= 2) {return;}
+                if (i >= 4) {return;}
                 let tickColour = (this.state === -1) ? '#aaa' : c;
-                let dy = (!this.namePos) ? 18*(i+1) : -18*(2-i);
+                let dy = (!this.namePos) ? 18*(i+1) : -18*(this._intInfos.length-i);
                 dy += this._dy;
                 dy *= this._tickFlip;
                 elems.push(
@@ -290,9 +291,9 @@ class Int3StationHK extends RMGStationHK {
         this._intInfos
             .map(info => [info[IntInfoTag.nameZH], info[IntInfoTag.nameEN]] as Name)
             .forEach((names, i) => {
-                if (i >=2) {return;}
+                if (i >=4) {return;}
                 let [nameHTML, nameZHLn, nameENLn] = joinIntName(names, 10, 7);
-                var dy = (!this.namePos) ? 18*(i+1) : -18*(2-i);
+                var dy = (!this.namePos) ? 18*(i+1) : -18*(this._intInfos.length-i);
                 dy += this._dy;
                 dy *= this._tickFlip;
                 dy += 5.953125 - (19.65625 + 13*(nameZHLn-1) + 7*(nameENLn-1))/2;
