@@ -225,7 +225,7 @@ class OSIStationSH extends IntStationSH {
             $('<text>').addClass('rmg-name__zh rmg-name__shmetro--station').text(`换乘${lineNames.join('，')}`)
         ).append(
             $('<text>', {
-                dy: 10, class: 'rmg-name__en rmg-name__shmetro--station'
+                dy: 10, class: 'rmg-name__zh rmg-name__shmetro--station'
             }).text('仅限公共交通卡'))
     }
 }
