@@ -670,22 +670,24 @@ export class RMGLineGZ extends RMGLine {
             let stnInfo = getParams().stn_list[end];
             this.stations[end] = this._initStnInstance(end, stnInfo);
             this._updateStnInstance(end);
-            this.redrawStn(end);
+            if (!['linestart', 'lineend'].includes(end)) {
+                this.redrawStn(end);
+            }
         }
         this.loadLineNum();
         this.loadDirection();
         return res;
     }
 
-    removeStn(stnId: string) {
-        if (super.removeStn(stnId)) {
-            this.loadLineNum();
-            this.loadDirection();
-            return true;
-        } else {
-            return false;
-        }
-    }
+    // removeStn(stnId: string) {
+    //     if (super.removeStn(stnId)) {
+    //         this.loadLineNum();
+    //         this.loadDirection();
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // }
 
     updateStnTransfer(stnId: string, type, info=null) {
         super.updateStnTransfer(stnId, type, info);

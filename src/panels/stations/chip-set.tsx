@@ -25,11 +25,11 @@ const useStyles = makeStyles(theme => {
         }, 
         stnChipText: {
             display: 'block',
-            textAlign: 'center' as 'center'
+            textAlign: 'center'
         },
         stnChipTextZH: {
             fontSize: 18, 
-            fontFamily: 'Helvetica, Noto Serif KR, Noto Serif JP, Noto Serif TC, Noto Serif SC, serif', 
+            fontFamily: 'Helvetica, Arial, Noto Serif KR, Noto Serif JP, Noto Serif TC, Noto Serif SC, HiraMinProN-W6, serif', 
             fontWeight: 600,
             lineHeight: '1.2rem',
         }, 
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => {
             fontFamily: 'Helvetica, Arial, sans-serif',
             fontSize: '.75rem', 
             lineHeight: '.9rem', 
-            whiteSpace: 'pre' as 'pre', 
+            whiteSpace: 'pre', 
             overflow: 'hidden'
         }, 
         addChipLabel: {
@@ -57,15 +57,17 @@ interface StationChipSetProps {
     stnList: {
         [stnId: string]: StationInfo;
     };
+    tpo: string[];
     onSelection: (stnId: string) => void;
     addStationClick: () => void;
 }
 
-export default function StationChipSet(props: StationChipSetProps) {
-    const {t, i18n} = useTranslation();
+export default React.memo((props: StationChipSetProps) => {
+    const {t} = useTranslation();
     const isTablet = useMediaQuery('(max-width: 839px) and (min-width: 480px)');
     const isMobile = useMediaQuery('(max-width: 480px)');
     const classes = useStyles();
+
     return (
         <div>
             <Chip
@@ -80,22 +82,22 @@ export default function StationChipSet(props: StationChipSetProps) {
                 classes={{label: classes.addChipLabel}}
                 onClick={props.addStationClick}
             />
-            {window.myLine.tpo.map(stnId => {
+            {props.tpo.map((stnId,i) => {
                 let label = (
                     <span>
                         <span className={`${classes.stnChipText} ${classes.stnChipTextZH}`}>
-                            {props.stnList[stnId].name[0]}
+                            {props.stnList[stnId]?.name[0] || ''}
                         </span>
                         <span className={`${classes.stnChipText} ${classes.stnChipTextEN}`}>
-                            {props.stnList[stnId].name[1].replace('\\','\r\n')}
+                            {props.stnList[stnId]?.name[1].replace('\\','\r\n') || ''}
                         </span>
                     </span>
                 );
                 return (
                     <Chip 
                         key={stnId} 
-                        icon={window.urlParams.get('style')==='gzmtr' && 
-                            <Avatar style={{backgroundColor: 'unset'}}>{props.stnList[stnId].num}</Avatar>}
+                        icon={window.urlParams.get('style')!=='gzmtr' ? <></> : 
+                            <Avatar style={{backgroundColor: 'unset'}}>{props.stnList[stnId]?.num || '00'}</Avatar>}
                         label={label}
                         onClick={() => props.onSelection(stnId)}
                         classes={{label: classes.stnChipLabel}}
@@ -108,4 +110,20 @@ export default function StationChipSet(props: StationChipSetProps) {
             })}
         </div>
     )
-}
+}, (prevProps, nextProps) => {
+    if (prevProps.tpo.toString() !== nextProps.tpo.toString()) {
+        return false;
+    } else {
+        let prevDeps = {};
+        let nextDeps = {};
+        Object.keys(nextProps.stnList).forEach(stnId => {
+            let { name, num } = nextProps.stnList[stnId];
+            nextDeps[stnId] = { name, num };
+        });
+        Object.keys(prevProps.stnList).forEach(stnId => {
+            let { name, num } = prevProps.stnList[stnId];
+            prevDeps[stnId] = { name, num };
+        });
+        return JSON.stringify(prevDeps) === JSON.stringify(nextDeps);
+    }
+})

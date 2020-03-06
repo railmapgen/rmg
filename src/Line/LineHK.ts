@@ -1,5 +1,5 @@
 import { RMGLine } from './Line';
-import { RMGParam, Name, DirectionLong, StationInfo } from '../types';
+import { RMGParam, Name, DirectionLong, StationInfo, StationTransfer } from '../types';
 import { getTxtBoxDim, setParams, getParams, putParams } from '../utils';
 import { RMGStationHK, Int2StationHK, Int3LStationHK, Int3RStationHK, OSI11LStationHK, OSI12LStationHK, OSI12RStationHK, OSI22EndStationHK, OSI22LStationHK, OSI22RStationHK, OSI11RStationHK, OSI22StationHK } from '../Station/StationHK';
 
@@ -375,6 +375,11 @@ export class RMGLineHK extends RMGLine {
         this.updateStnNameBg();
     }
 
+    updateStnTransfer2(stnId: string, info: StationTransfer) {
+        super.updateStnTransfer2(stnId, info);
+        this.updateStnNameBg();
+    }
+
     updateStnUsage(stnId: string, chipId) {
         if (this.stations[stnId].usage === chipId) {return;}
 
@@ -408,12 +413,12 @@ export class RMGLineHK extends RMGLine {
         return res;
     }
 
-    removeStn(stnId: string) {
-        if (!super.removeStn(stnId)) {return false;}
-        this.loadFonts();
-        this.updateStnNameBg();
-        return true;
-    }
+    // removeStn(stnId: string) {
+    //     if (!super.removeStn(stnId)) {return false;}
+    //     this.loadFonts();
+    //     this.updateStnNameBg();
+    //     return true;
+    // }
 
     updateBranchType(stnId: string, direction: DirectionLong, type: 'through' | 'nonthrough') {
         if (!super.updateBranchType(stnId, direction, type)) {return false;}

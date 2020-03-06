@@ -1,7 +1,6 @@
 import * as $ from 'jquery';
 import { RMGLine } from './Line/Line';
 import initLine from './Line/init';
-import { getParams } from './utils';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import App from './App';
@@ -15,25 +14,6 @@ declare global {
         // test3: any;
     }
 }
-// window.test3 = test3;
-var requestLang = window.urlParams.get('lang') || localStorage.rmgLang || navigator.language.split('-').slice(0,2).join('-');
-switch (requestLang.toLowerCase()) {
-    case 'zh-cn':
-    case 'zh-hans':
-        window.urlParams.set('lang', 'zh-Hans');
-        break;
-    case 'zh':
-    case 'zh-hk':
-    case 'zh-tw':
-        window.urlParams.set('lang', 'zh-HK');
-        break;
-    default: window.urlParams.set('lang', 'en');
-}
-// window.gtag('event', 'load', {
-//     event_category: 'language', 
-//     event_label: window.urlParams.get('lang'), 
-//     non_interaction: true
-// });
 
 switch (window.urlParams.get('style')) {
     case 'mtr':
@@ -76,7 +56,11 @@ $('#toggle li').each((i,el) => {
 window.myLine = null;
 $(`[${window.urlParams.get('style')}-specific]`).show();
 // autoInit();
-initLine();
+try {
+    initLine();
+} catch {
+    alert('Something went wrong. ')
+}
 
 ReactDOM.render(
     <App />, 

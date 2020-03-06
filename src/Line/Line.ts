@@ -19,7 +19,7 @@ export class RMGLine {
     public stations: {
         [index: string]: RMGStation;
     } = {};
-    protected _currentStnId: string;
+    public _currentStnId: string;
     protected _direction: 'l' | 'r';
     protected _platformNum: string;
     protected _lineNames: Name;
@@ -64,7 +64,7 @@ export class RMGLine {
      * * `state`
      * * plus style specific properties
      */
-    protected _updateStnInstance(stnId: string) {
+    public _updateStnInstance(stnId: string) {
         if (['linestart', 'lineend'].includes(stnId)) {return;}
         let instance = this.stations[stnId];
         instance.x = this._stnRealX(stnId);
@@ -291,23 +291,23 @@ export class RMGLine {
         };
     }
 
-    _topoOrder(from: string, tpo: string[] = []) {
-        var self = this;
-        tpo.push(from);
-        this.stations[from].children.forEach(child => {
-            if (this._stnIndegree(child) == 2 && this.stations[child].parents.indexOf(from)==0) {
-                // wait the other branch
-                return;
-            } 
-            tpo.concat(self._topoOrder(child, tpo));
-        });
-        return tpo;
-    }
+    // _topoOrder(from: string, tpo: string[] = []) {
+    //     var self = this;
+    //     tpo.push(from);
+    //     this.stations[from].children.forEach(child => {
+    //         if (this._stnIndegree(child) == 2 && this.stations[child].parents.indexOf(from)==0) {
+    //             // wait the other branch
+    //             return;
+    //         } 
+    //         tpo.concat(self._topoOrder(child, tpo));
+    //     });
+    //     return tpo;
+    // }
 
-    get tpo() {
-        let res = this._topoOrder('linestart');
-        return res.slice(1, res.length-1);
-    }
+    // get tpo() {
+    //     let res = this._topoOrder('linestart');
+    //     return res.slice(1, res.length-1);
+    // }
 
     get stripY() {return this._stripPc * this._svgHeight / 100;}
 
@@ -725,183 +725,183 @@ export class RMGLine {
         // }
     }
 
-    removeStn(stnId: string) {
-        var param = getParams();
+    // removeStn(stnId: string) {
+    //     var param = getParams();
 
-        var parents = this.stations[stnId].parents;
-        var children = this.stations[stnId].children;
+    //     var parents = this.stations[stnId].parents;
+    //     var children = this.stations[stnId].children;
 
-        var isLastMainBranchStn = true;
-        for (let id in this.stations) {
-            if ([stnId, 'linestart', 'lineend'].includes(id)) {continue;}
-            if (this._stnYShareMTR(id) == 0) {
-                isLastMainBranchStn = false;
-                break;
-            }
-        }
+    //     var isLastMainBranchStn = true;
+    //     for (let id in this.stations) {
+    //         if ([stnId, 'linestart', 'lineend'].includes(id)) {continue;}
+    //         if (this._stnYShareMTR(id) == 0) {
+    //             isLastMainBranchStn = false;
+    //             break;
+    //         }
+    //     }
 
-        if (parents.length == 2 && children.length == 2) {
-            // To be rewritten, join two branches
-            return false;
-        } else if (isLastMainBranchStn) {
-            // Last main line station
-            return false;
-        } else if (Object.keys(param.stn_list).length == 4) {
-            // Last two stations
-            return false;
-        } else if (parents.length == 2 || children.length == 2) {
-            parents.forEach(parId => {
-                param.stn_list[parId].children = children;
-                this.stations[parId].children = children;
-            });
-            children.forEach(childId => {
-                param.stn_list[childId].parents = parents;
-                this.stations[childId].parents = parents;
-            });
-            if (parents.length == 1) {
-                param.stn_list[parents[0]].branch.right = this.stations[stnId].branch.right;
-                this.stations[parents[0]].branch.right = this.stations[stnId].branch.right;
-            }
-            if (children.length == 1) {
-                param.stn_list[children[0]].branch.left = this.stations[stnId].branch.left;
-                this.stations[children[0]].branch.left = this.stations[stnId].branch.left;
-            }
-        } else if (this._stnOutdegree(parents[0])==2 && this._stnIndegree(children[0])==2) {
-            // 1 par 1 child, last station on upper/lower branch
-            // branch disappear
-            var childIdxOfPar = this.stations[parents[0]].children.indexOf(stnId);
-            var parIdxOfChild = this.stations[children[0]].parents.indexOf(stnId);
-            param.stn_list[parents[0]].children.splice(childIdxOfPar, 1);
-            this.stations[parents[0]].children.splice(childIdxOfPar, 1);
-            param.stn_list[children[0]].parents.splice(parIdxOfChild, 1);
-            this.stations[children[0]].parents.splice(parIdxOfChild, 1);
+    //     if (parents.length == 2 && children.length == 2) {
+    //         // To be rewritten, join two branches
+    //         return false;
+    //     } else if (isLastMainBranchStn) {
+    //         // Last main line station
+    //         return false;
+    //     } else if (Object.keys(param.stn_list).length == 4) {
+    //         // Last two stations
+    //         return false;
+    //     } else if (parents.length == 2 || children.length == 2) {
+    //         parents.forEach(parId => {
+    //             param.stn_list[parId].children = children;
+    //             this.stations[parId].children = children;
+    //         });
+    //         children.forEach(childId => {
+    //             param.stn_list[childId].parents = parents;
+    //             this.stations[childId].parents = parents;
+    //         });
+    //         if (parents.length == 1) {
+    //             param.stn_list[parents[0]].branch.right = this.stations[stnId].branch.right;
+    //             this.stations[parents[0]].branch.right = this.stations[stnId].branch.right;
+    //         }
+    //         if (children.length == 1) {
+    //             param.stn_list[children[0]].branch.left = this.stations[stnId].branch.left;
+    //             this.stations[children[0]].branch.left = this.stations[stnId].branch.left;
+    //         }
+    //     } else if (this._stnOutdegree(parents[0])==2 && this._stnIndegree(children[0])==2) {
+    //         // 1 par 1 child, last station on upper/lower branch
+    //         // branch disappear
+    //         var childIdxOfPar = this.stations[parents[0]].children.indexOf(stnId);
+    //         var parIdxOfChild = this.stations[children[0]].parents.indexOf(stnId);
+    //         param.stn_list[parents[0]].children.splice(childIdxOfPar, 1);
+    //         this.stations[parents[0]].children.splice(childIdxOfPar, 1);
+    //         param.stn_list[children[0]].parents.splice(parIdxOfChild, 1);
+    //         this.stations[children[0]].parents.splice(parIdxOfChild, 1);
 
-            param.stn_list[parents[0]].branch.right = [];
-            this.stations[parents[0]].branch.right = [];
-            param.stn_list[children[0]].branch.left = [];
-            this.stations[children[0]].branch.left = [];
-        } else {
-            // 1 par 1 child
-            parents.forEach(parId => {
-                var idx = param.stn_list[parId].children.indexOf(stnId);
-                if (children.length) {
-                    param.stn_list[parId].children[idx] = children[0];
-                    this.stations[parId].children[idx] = children[0];
-                } else {
-                    // Right dest
-                    param.stn_list[parId].children.splice(idx, 1);
-                    this.stations[parId].children.splice(idx, 1);
-                }
+    //         param.stn_list[parents[0]].branch.right = [];
+    //         this.stations[parents[0]].branch.right = [];
+    //         param.stn_list[children[0]].branch.left = [];
+    //         this.stations[children[0]].branch.left = [];
+    //     } else {
+    //         // 1 par 1 child
+    //         parents.forEach(parId => {
+    //             var idx = param.stn_list[parId].children.indexOf(stnId);
+    //             if (children.length) {
+    //                 param.stn_list[parId].children[idx] = children[0];
+    //                 this.stations[parId].children[idx] = children[0];
+    //             } else {
+    //                 // Right dest
+    //                 param.stn_list[parId].children.splice(idx, 1);
+    //                 this.stations[parId].children.splice(idx, 1);
+    //             }
 
-                if (this.stations[parId].branch.right[1] === stnId) {
-                    this.stations[parId].branch.right[1] = children[0];
-                    param.stn_list[parId].branch.right[1] = children[0];
-                }
-            });
-            children.forEach(childId => {
-                var idx = param.stn_list[childId].parents.indexOf(stnId);
-                if (parents.length) {
-                    param.stn_list[childId].parents[idx] = parents[0];
-                    this.stations[childId].parents[idx] = parents[0];
-                } else {
-                    // Left dest
-                    param.stn_list[childId].parents.splice(idx, 1);
-                    this.stations[childId].parents.splice(idx, 1);
-                }
+    //             if (this.stations[parId].branch.right[1] === stnId) {
+    //                 this.stations[parId].branch.right[1] = children[0];
+    //                 param.stn_list[parId].branch.right[1] = children[0];
+    //             }
+    //         });
+    //         children.forEach(childId => {
+    //             var idx = param.stn_list[childId].parents.indexOf(stnId);
+    //             if (parents.length) {
+    //                 param.stn_list[childId].parents[idx] = parents[0];
+    //                 this.stations[childId].parents[idx] = parents[0];
+    //             } else {
+    //                 // Left dest
+    //                 param.stn_list[childId].parents.splice(idx, 1);
+    //                 this.stations[childId].parents.splice(idx, 1);
+    //             }
 
-                if (this.stations[childId].branch.left[1] === stnId) {
-                    this.stations[childId].branch.left[1] = parents[0];
-                    param.stn_list[childId].branch.left[1] = parents[0];
-                }
-            })
-        }
+    //             if (this.stations[childId].branch.left[1] === stnId) {
+    //                 this.stations[childId].branch.left[1] = parents[0];
+    //                 param.stn_list[childId].branch.left[1] = parents[0];
+    //             }
+    //         })
+    //     }
 
-        delete param.stn_list[stnId];
-        delete this.stations[stnId];
+    //     delete param.stn_list[stnId];
+    //     delete this.stations[stnId];
 
-        var isCurrentStnChanged = false;
-        if (this._currentStnId == stnId) {
-            var newCurrentStnId = Object.keys(this.stations)[2];
-            this._currentStnId = newCurrentStnId;
-            param.current_stn_idx = newCurrentStnId;
-            isCurrentStnChanged = true;
-        }
-        putParams(param);
+    //     var isCurrentStnChanged = false;
+    //     if (this._currentStnId == stnId) {
+    //         var newCurrentStnId = Object.keys(this.stations)[2];
+    //         this._currentStnId = newCurrentStnId;
+    //         param.current_stn_idx = newCurrentStnId;
+    //         isCurrentStnChanged = true;
+    //     }
+    //     putParams(param);
 
-        parents.concat(children).forEach(neId => {
-            if (['linestart', 'lineend'].includes(neId)) {return;}
-            this.stations[neId] = this._initStnInstance(neId, param.stn_list[neId]);
-        });
+    //     parents.concat(children).forEach(neId => {
+    //         if (['linestart', 'lineend'].includes(neId)) {return;}
+    //         this.stations[neId] = this._initStnInstance(neId, param.stn_list[neId]);
+    //     });
 
 
-        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
-            if (['linestart', 'lineend'].includes(stnId)) {continue;}
-            this._updateStnInstance(stnId);
-        }
-        RMGLine.clearSVG();
-        this.drawStns();
-        this.drawLine();
-        this.drawStrip();
+    //     for (let [stnId, stnInstance] of Object.entries(this.stations)) {
+    //         if (['linestart', 'lineend'].includes(stnId)) {continue;}
+    //         this._updateStnInstance(stnId);
+    //     }
+    //     RMGLine.clearSVG();
+    //     this.drawStns();
+    //     this.drawLine();
+    //     this.drawStrip();
 
-        this.drawDestInfo();
-        return true;
-    }
+    //     this.drawDestInfo();
+    //     return true;
+    // }
 
-    newStnPossibleLoc(prep: 'before' | 'after', stnId: string): [number, number, number, string[], string[]] {
-        var deg = (prep == 'before') ? this._stnIndegree(stnId) : this._stnOutdegree(stnId);
-        switch (deg) {
-            case 2:
-                // 1 -> 2
-                return [1,1,1,[],[]];
-            case 1:
-                if (this._stnYShareMTR(stnId) == 0) {
-                    // 1 -> 1
-                    let state: string[] | 0 = this.newBranchPossibleEnd(prep, stnId);
-                    state = (state.length) ? state : [];
-                    return [1,0,0,state,state];
-                    // [1,0,0,1,1];
-                } else if (this._stnYShareMTR(stnId) < 0) {
-                    if (prep == 'before') {
-                        return [this._stnOutdegree(this.stations[stnId].parents[0])-1, 
-                            0,1,[],[]
-                        ];
-                    } else {
-                        return [this._stnIndegree(this.stations[stnId].children[0])-1, 
-                            0,1,[],[]
-                        ];
-                    }
-                } else {
-                    if (prep == 'before') {
-                        return [this._stnOutdegree(this.stations[stnId].parents[0])-1, 
-                            1,0,[],[]
-                        ];
-                    } else {
-                        return [this._stnIndegree(this.stations[stnId].children[0])-1, 
-                            1,0,[],[]
-                        ];
-                    }
-                }
-        }
-        return [0,0,0,[],[]];
-    }
+    // newStnPossibleLoc(prep: 'before' | 'after', stnId: string): [number, number, number, string[], string[]] {
+    //     var deg = (prep == 'before') ? this._stnIndegree(stnId) : this._stnOutdegree(stnId);
+    //     switch (deg) {
+    //         case 2:
+    //             // 1 -> 2
+    //             return [1,1,1,[],[]];
+    //         case 1:
+    //             if (this._stnYShareMTR(stnId) == 0) {
+    //                 // 1 -> 1
+    //                 let state: string[] | 0 = this.newBranchPossibleEnd(prep, stnId);
+    //                 state = (state.length) ? state : [];
+    //                 return [1,0,0,state,state];
+    //                 // [1,0,0,1,1];
+    //             } else if (this._stnYShareMTR(stnId) < 0) {
+    //                 if (prep == 'before') {
+    //                     return [this._stnOutdegree(this.stations[stnId].parents[0])-1, 
+    //                         0,1,[],[]
+    //                     ];
+    //                 } else {
+    //                     return [this._stnIndegree(this.stations[stnId].children[0])-1, 
+    //                         0,1,[],[]
+    //                     ];
+    //                 }
+    //             } else {
+    //                 if (prep == 'before') {
+    //                     return [this._stnOutdegree(this.stations[stnId].parents[0])-1, 
+    //                         1,0,[],[]
+    //                     ];
+    //                 } else {
+    //                     return [this._stnIndegree(this.stations[stnId].children[0])-1, 
+    //                         1,0,[],[]
+    //                     ];
+    //                 }
+    //             }
+    //     }
+    //     return [0,0,0,[],[]];
+    // }
 
-    newBranchPossibleEnd(prep: 'before' | 'after', stnId: string) {
-        let res: string[] = [];
-        if (prep == 'before') {
-            while (this._stnIndegree(stnId) == 1) {
-                stnId = this.stations[stnId].parents[0];
-                res.unshift(stnId);
-            }
-            res.pop();
-        } else {
-            while (this._stnOutdegree(stnId) == 1) {
-                stnId = this.stations[stnId].children[0];
-                res.push(stnId);
-            }
-            res.shift();
-        }
-        return res;
-    }
+    // newBranchPossibleEnd(prep: 'before' | 'after', stnId: string) {
+    //     let res: string[] = [];
+    //     if (prep == 'before') {
+    //         while (this._stnIndegree(stnId) == 1) {
+    //             stnId = this.stations[stnId].parents[0];
+    //             res.unshift(stnId);
+    //         }
+    //         res.pop();
+    //     } else {
+    //         while (this._stnOutdegree(stnId) == 1) {
+    //             stnId = this.stations[stnId].children[0];
+    //             res.push(stnId);
+    //         }
+    //         res.shift();
+    //     }
+    //     return res;
+    // }
 
     addStn(prep: 'before' | 'after', stnId: string, loc, end: string): [string, StationInfo] {
         let newId = getRandomId();
@@ -1195,6 +1195,7 @@ export class RMGLine {
         newInfo.num = '00';
         newInfo.interchange = [[]];
         newInfo.services = ['local'];
+        newInfo.facility = '';
         newInfo.transfer = {
             info: [[]], 
             type: 'none', 
@@ -1223,44 +1224,44 @@ export class RMGLine {
         return [newId, newInfo];
     }
 
-    reverseStns() {
-        var param = getParams();
-        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
-            if (stnId === 'linestart') {
-                param.stn_list['lineend'].parents = stnInstance.children.reverse();
-                param.stn_list['lineend'].branch = {
-                    left: stnInstance.branch.right, 
-                    right: []
-                };
-            } else if (stnId === 'lineend') {
-                param.stn_list['linestart'].children = stnInstance.parents.reverse();
-                param.stn_list['linestart'].branch = {
-                    left: [], 
-                    right: stnInstance.branch.left
-                }
-            } else {
-                var tmpArr = stnInstance.children.reverse().map(id => {
-                    switch (id) {
-                        case 'linestart': return 'lineend';
-                        case 'lineend': return 'linestart';
-                        default: return id;
-                    }
-                });
-                param.stn_list[stnId].children = stnInstance.parents.reverse().map(id => {
-                    switch (id) {
-                        case 'linestart': return 'lineend';
-                        case 'lineend': return 'linestart';
-                        default: return id;
-                    }
-                });
-                param.stn_list[stnId].parents = tmpArr;
-                param.stn_list[stnId].branch.left = stnInstance.branch.right;
-                param.stn_list[stnId].branch.right = stnInstance.branch.left;
-            }
-        }
-        putParams(param);
-        location.reload(true);
-    }
+    // reverseStns() {
+    //     var param = getParams();
+    //     for (let [stnId, stnInstance] of Object.entries(this.stations)) {
+    //         if (stnId === 'linestart') {
+    //             param.stn_list['lineend'].parents = stnInstance.children.reverse();
+    //             param.stn_list['lineend'].branch = {
+    //                 left: stnInstance.branch.right, 
+    //                 right: []
+    //             };
+    //         } else if (stnId === 'lineend') {
+    //             param.stn_list['linestart'].children = stnInstance.parents.reverse();
+    //             param.stn_list['linestart'].branch = {
+    //                 left: [], 
+    //                 right: stnInstance.branch.left
+    //             }
+    //         } else {
+    //             var tmpArr = stnInstance.children.reverse().map(id => {
+    //                 switch (id) {
+    //                     case 'linestart': return 'lineend';
+    //                     case 'lineend': return 'linestart';
+    //                     default: return id;
+    //                 }
+    //             });
+    //             param.stn_list[stnId].children = stnInstance.parents.reverse().map(id => {
+    //                 switch (id) {
+    //                     case 'linestart': return 'lineend';
+    //                     case 'lineend': return 'linestart';
+    //                     default: return id;
+    //                 }
+    //             });
+    //             param.stn_list[stnId].parents = tmpArr;
+    //             param.stn_list[stnId].branch.left = stnInstance.branch.right;
+    //             param.stn_list[stnId].branch.right = stnInstance.branch.left;
+    //         }
+    //     }
+    //     putParams(param);
+    //     location.reload(true);
+    // }
 
     updateBranchType(stnId: string, direction: DirectionLong, type: 'through' | 'nonthrough') {
         let direc = DirectionLong[direction];

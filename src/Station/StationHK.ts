@@ -360,18 +360,24 @@ class OSI11StationHK extends Int2StationHK {
     get _osiNameDX() {return 0;}
 
     get osiNameHTML() {
-        var dy = this._dy + 8.34375 - 25.03125/2;
-        return $('<g>', {
+        var dy = this._dy + 8.34375 - 25.03125/2 - (!this.namePos ? 0 : 10*(this._osiNames[1].split('\\').length-1));
+        let el = $('<g>', {
             'text-anchor': this._txtAnchor, 
             'transform': `translate(${this.x+this._osiNameDX},${this.y+dy+this._branchElDy})`, 
             'class': 'Name ' + this._nameClass
         }).append(
             $('<text>').addClass('rmg-name__zh rmg-name__mtr--osi').text(this._osiNames[0])
-        ).append(
-            $('<text>', {
-                'x':0, 'dy':12, 'class':'rmg-name__en rmg-name__mtr--osi'
-            }).text(this._osiNames[1])
-        );
+        )
+
+        this._osiNames[1].split('\\').forEach((txt, i) => {
+            el.append(
+                $('<text>', {
+                    x: 0, dy: 12+i*10, class: 'rmg-name__en rmg-name__mtr--osi'
+                }).text(txt)
+            );
+        });
+
+        return el;
     }
 
     get ungrpHTML() {
@@ -423,7 +429,7 @@ class OSI12StationHK extends Int3StationHK {
     }
 
     get _dy() {return (!this.namePos) ? (26-18) : -8;}
-    get _osiDY() {return (!this.namePos) ? (26+18+10) + 8.34375  : -(26+18+10) + 8.34375 - 25.03125;}
+    get _osiDY() {return (!this.namePos) ? (26+18+10) + 8.34375  : -(26+18+10) + 8.34375 - 25.03125 - 10*(this._osiNames[1].split('\\').length-1);}
     get _osiTxtAnchor() {return 'middle';}
     get _osiDX() {return 0;}
 
@@ -614,9 +620,9 @@ export class OSI22EndStationHK extends OSI12StationHK {
     get _osiDY() {
         let affix = this._branchAffix;
         if (affix === '') {
-            return !this.namePos ? (10) + 8.34375  : -(10) + 8.34375 - 25.03125;
+            return !this.namePos ? (10) + 8.34375  : -(10) + 8.34375 - 25.03125 - 10*(this._osiNames[1].split('\\').length-1);
         } else {
-            return !this.namePos ? (10) + 8.34375 - 9.68  : -(10) + 8.34375 - 25.03125 + 9.68;
+            return !this.namePos ? (10) + 8.34375 - 9.68  : -(10) + 8.34375 - 25.03125 + 9.68 - 10*(this._osiNames[1].split('\\').length-1);
         }
     }
     get _osiTxtAnchor() {return (this.children[0] == 'lineend') ? 'start' : 'end';}

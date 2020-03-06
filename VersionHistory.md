@@ -1,5 +1,35 @@
 # Version History
 
+## 3.1.3 (5 Mar 2020)
+
+### Resolved Issues
+
+- Fixed the error occurring while removing stations. 
+- Fixed the issues that OSI names in Latin characters are not split as expected. 
+- Disabled branch position selection for Shanghai Metro style. 
+- Improved performance. 
+
+## 3.1.2 (4 Mar 2020)
+
+### New Features
+
+- New templates are available. 
+
+### Resolved Issues
+
+- Fixed the issue of incorrect font size in exported PNG. 
+- Improved performance and robustness. 
+
+## 3.1.1 (1 Mar 2020)
+
+### New Features
+
+- Colour picker is back!
+
+### Resolved Issues
+
+- Improved robustness. 
+
 ## 3.1 (1 Mar 2020)
 
 ### New Features

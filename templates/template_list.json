@@ -71,6 +71,14 @@
         }
     }, 
     {
+        "filename": "guangzhou_gz7", 
+        "desc": {
+            "en": "Guangzhou Metro Line 7", 
+            "zh-Hans": "广州地铁7号线",
+            "zh-Hant": "廣州地鐵7號線"
+        }
+    }, 
+    {
         "filename": "guangzhou_gz8", 
         "desc": {
             "en": "Guangzhou Metro Line 8", 
@@ -141,6 +149,14 @@
             "en": "MTR Tuen Ma Line Phase 1", 
             "zh-Hans": "港铁屯马线一期",
             "zh-Hant": "港鐵屯馬綫一期"
+        }
+    },
+    {
+        "filename": "hongkong_sile", 
+        "desc": {
+            "en": "MTR South Island Line", 
+            "zh-Hans": "港铁南港岛线",
+            "zh-Hant": "港鐵南港島綫"
         }
     },
     {

@@ -130,7 +130,7 @@ function BranchSelectSet(props: BranchSelectSetProps) {
                     </MenuItem>
                 </TextField>
             </ListItem>
-            {branchEntry[0] && <div>
+            {branchEntry[0] && <>
                 <ListItem>
                     <ListItemIcon>
                         <Icon style={{transform: props.direction==='left' ? 'scale(-1)' : 'scale(1)'}}>
@@ -150,7 +150,7 @@ function BranchSelectSet(props: BranchSelectSetProps) {
                         ))}
                     </TextField>
                 </ListItem>
-                <ListItem>
+                {window.urlParams.get('style')!=='shmetro' && <ListItem>
                     <ListItemIcon>
                         <Icon>swap_vert</Icon>
                     </ListItemIcon>
@@ -167,8 +167,8 @@ function BranchSelectSet(props: BranchSelectSetProps) {
                             {t('stations.edit.branch.pos.lower')}
                         </MenuItem>
                     </TextField>
-                </ListItem>
-            </div>}
+                </ListItem>}
+            </>}
         </div>
     )
 }
