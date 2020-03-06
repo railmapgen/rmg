@@ -311,7 +311,7 @@ export class RMGLineSH extends RMGLine {
                 } else $('g#run_in_branch_shmetro, g#next_stn_branch_text').hide()
                 if (prevStnIds.length > 1) {
                     $('g#run_in_branch_shmetro_pass').attr({ transform: `translate(0,${110 + dh})`, }).show()
-                    $('path#run_in_line_branch_shmetro_pass').attr({ d: `M 38,10 H ${this._svgRuninWidth / 6 + 3} V 22 H 24 Z`, })
+                    $('path#run_in_line_branch_shmetro_pass').attr({ d: `M 24,10 H ${this._svgRuninWidth / 6 + 3} V 22 H 24 Z`, })
                     $('#run_in_line_branch_slash_shmetro_pass').attr({ x1: this._svgRuninWidth / 6, y1: 15, x2: this._svgRuninWidth / 3, y2: 125 })
                 } else $('g#run_in_branch_shmetro_pass, g#prev_stn_branch_text').hide()
             }
@@ -554,7 +554,7 @@ export class RMGLineSH extends RMGLine {
         $('#current_bg').hide();  // fix the mysterious black rect
     }
 
-    drawAnimation() {
+    drawAnimation(atStn: boolean) {
         Object.keys(this.stations).map(stnId => {
             let stnInstance = this.stations[stnId]
             if(stnInstance instanceof IntStationSH) var prefix = 'int2'
@@ -565,11 +565,13 @@ export class RMGLineSH extends RMGLine {
             } else if (stnInstance.state < 0) {
                 // passing stations
                 $(`#${stnId} > g:first-child > use`).attr('xlink:href', `#${prefix}_sh_pass_animation`)
-            } else if (stnInstance.state == 0) {
+            } else if (atStn && stnInstance.state == 0) {
                 // current station
                 $(`#${stnId} > g:first-child > use`).attr('xlink:href', `#${prefix}_sh_current_animation`)
+            }else if(!atStn && stnInstance.state == 0) {
+                // current station
+                $(`#${stnId} > g:first-child > use`).attr('xlink:href', `#${prefix}_sh_pass_animation`)
             }
-            // $(`#${stnId} use`).html($(`#${stnId} use`).html)
         })
     }
 

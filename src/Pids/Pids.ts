@@ -24,19 +24,25 @@ export class Pids {
         this._end = routes[0].filter(stnId => stnId !== 'lineend' && stnId !== 'linestart').reverse()[0]
 
         // Todo: remove debug
-        this.start = 'kaxg'
-        this.end = 'sd6y'
+        this.start = 'c04n'
+        this.end = 'iwf6'
 
         let _: PidsTimeTableUI = {
-            'kaxg': ['00:00:00:01','00:00:00:10'],  // 人民广场
-            '7x7k': ['00:00:01:00','00:00:01:05'],  // 新闸路
-            'sd6y': ['00:00:01:10','00:00:01:20'],  // 上海火车站
+            'c04n': ['00:00:00:00','00:00:00:01'],  // 娄塘
+            'wv2f': ['00:00:00:03','00:00:00:04'],  // 叶新公路
+            'eh16': ['00:00:00:06','00:00:00:07'],  // 高行
+            'p6yn': ['00:00:00:09','00:00:00:10'],  // 华泾高科
+            '1y2g': ['00:00:00:12','00:00:00:13'],  // 斯普林路
+            '6fjt': ['00:00:00:15','00:00:00:16'],  // 体育北路
+            'tvbn': ['00:00:00:18','00:00:00:19'],  // 阳泾西路
+            'apha': ['00:00:00:21','00:00:00:22'],  // 阳泾东路
+            'iwf6': ['00:00:01:00','00:00:01:01'],  // 外江桥保税区
         }
         this.updateTimeTable(_)
 
-        // this.t = '00:00:00:00'
+        this.t = '00:00:00:09'  // Todo: fix atStn
         // this.t = '00:00:00:20'
-        this.t = '00:00:01:00'
+        // this.t = '00:00:01:00'
         // this.t = '00:00:01:21'
     }
 
@@ -143,7 +149,7 @@ export class Pids {
         if (!route) return
 
         // set current stn according to _timeTable
-        let currentStnId = ''
+        let currentStnId = '', atStn = false
         for (let i = 0; i < route.length; i++) {
             if (t < this._timeTable[route[i]][0]) {
                 // before this station
@@ -152,6 +158,7 @@ export class Pids {
             } else if (t < this._timeTable[route[i]][1]) {
                 // at this station
                 currentStnId = route[i]
+                atStn = true
                 break
             } else {
                 // at next station
@@ -171,6 +178,6 @@ export class Pids {
             .filter(stnId => !route.includes(stnId))
             .map(stnId => this._line.stations[stnId].state = -1)
 
-        this._line.drawAnimation()
+        this._line.drawAnimation(atStn)
     }
 }

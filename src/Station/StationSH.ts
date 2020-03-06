@@ -33,7 +33,7 @@ class RMGStationSH extends RMGStation {
         let [dx, dy] = this._dxdy
         let dx_branch = [...this.branch.left, ...this.branch.right].length == 0 ? 0 : 30
         return $('<g>', {
-            'transform': `translate(${this.x - dx + dx_branch},${this.y + dy})rotate(-50)`,
+            'transform': `translate(${this.x - dx + dx_branch},${this.y + dy + 10})rotate(-45)`,
             'text-anchor': this._tickRotation === 0 ? 'start' : 'end',
             class: `Name Future`  // todo: fix this
         }).append(
@@ -88,7 +88,7 @@ class IntStationSH extends RMGStationSH {
         let dx_branch = [...this.branch.left, ...this.branch.right].length == 0 ? 0 : 30
         // wrap the name, decro_line and int_line under g in order to rotate at once
         return $('<g>', {
-            transform: `translate(${this.x - dx + dx_branch},${this.y + dy})`,
+            transform: `translate(${this.x - dx + dx_branch},${this.y + dy + 10})`,
         }).append(
             // the original name text
             $('<g>', {
@@ -180,7 +180,7 @@ class IntStationSH extends RMGStationSH {
         // rotate the station info now
         // other wise the bcr will be inaccurate due to the rotation
         let stnInfoElem = stnNameElem.parent();
-        stnInfoElem.attr('transform', `${stnInfoElem.attr('transform')}rotate(-50)`)
+        stnInfoElem.attr('transform', `${stnInfoElem.attr('transform')}rotate(-45)`)
 
         return lineElems;
     }
@@ -225,7 +225,7 @@ class OSIStationSH extends IntStationSH {
             $('<text>').addClass('rmg-name__zh rmg-name__shmetro--station').text(`换乘${lineNames.join('，')}`)
         ).append(
             $('<text>', {
-                dy: 10, class: 'rmg-name__en rmg-name__shmetro--station'
+                dy: 10, class: 'rmg-name__zh rmg-name__shmetro--station'
             }).text('仅限公共交通卡'))
     }
 }

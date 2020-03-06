@@ -548,7 +548,7 @@ export class RMGLine {
     /**
      * Stub for draw Animation. Rewrite this if you want to support pids.
      */
-    drawAnimation() { }
+    drawAnimation(atStn: boolean) { }
 
     /**
      * Stub for clear Animation. Rewrite this if you want to support pids.
