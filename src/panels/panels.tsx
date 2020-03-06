@@ -8,6 +8,7 @@ const PanelSave = React.lazy(() => import(/* webpackChunkName: "panelSave" */ '.
 const PanelLayout = React.lazy(() => import(/* webpackChunkName: "panelLayout" */ './layout'));
 const PanelDesign = React.lazy(() => import(/* webpackChunkName: "panelDesign" */ './design'));
 const PanelStations = React.lazy(() => import(/* webpackChunkName: "panelStations" */ './stations'));
+const PanelPids = React.lazy(() => import(/* webpackChunkName: "panelPids" */ './pids'));
 const PanelInfo = React.lazy(() => import(/* webpackChunkName: "panelInfo" */ './panel-info'));
 
 
@@ -18,9 +19,9 @@ const useStyles = makeStyles(theme => (
             background: theme.palette.background.default,
         },
         tab: {
-            padding: '6px 24px',
-            height: 48,
-            minWidth: 'calc(100% / 5)',
+            padding: '6px 24px', 
+            height: 48, 
+            minWidth: 'calc(100% / 6)', 
             '& .MuiTab-wrapper': {
                 flexDirection: 'row',
             },
@@ -55,7 +56,7 @@ export default function PanelTab(props: Props) {
 
     const classes = useStyles();
 
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = React.useState(4);
 
     const panel = (index: number) => {
         switch (index) {
@@ -66,13 +67,10 @@ export default function PanelTab(props: Props) {
             case 2:
                 return <PanelDesign {...(({ tpo, ...o }) => o)(props)} />;
             case 3:
-                return <PanelStations
-                    theme={props.param.theme}
-                    stnList={props.param.stn_list}
-                    currentId={props.param.current_stn_idx}
-                    paramUpdate={props.paramUpdate}
-                    tpo={props.tpo} />
-            case 4:
+                return <PanelStations />
+            case 4: 
+                return <PanelPids />;
+            case 5:
                 return <PanelInfo />;
             default:
                 return <PanelSave />;
@@ -102,17 +100,37 @@ export default function PanelTab(props: Props) {
 
     return (
         <div>
-            {tabNav}
-            <Typography
-                className={classes.typography}
-                component="div"
-                role="tabpanel">
-                <Box p={3} className={classes.box}>
-                    <React.Suspense fallback={<CircularProgress />}>
-                        {panel(value)}
-                    </React.Suspense>
-                </Box>
-            </Typography>
+            <ThemeProvider theme={theme}>
+                <Typography className={classes.typography} component="div">
+                    <Tabs value={value} indicatorColor="primary" 
+                        textColor="primary" onChange={(_, val) => setValue(val)} 
+                        variant="scrollable" scrollButtons="off">
+                        {[
+                            ['file', 'insert_drive_file'], 
+                            ['layout', 'panorama'], 
+                            ['design', 'brush'], 
+                            ['stations', 'directions_transit'], 
+                            ['pids', 'ondemand_video'],
+                            ['info', 'info']
+                        ].map(val => (
+                            <Tab label={<span>{t('tab.'+val[0])}</span>}
+                                icon={<Icon>{val[1]}</Icon>}
+                                className={classes.tab} />
+                        ))}
+                        />
+                    </Tabs>
+                </Typography>
+                <Typography
+                    className={classes.typography}
+                    component="div"
+                    role="tabpanel">
+                    <Box p={3} className={classes.box}>
+                        <React.Suspense fallback={<CircularProgress />}>
+                            {panel(value)}
+                        </React.Suspense>
+                    </Box>
+                </Typography>
+            </ThemeProvider>
         </div>
     );
 }

@@ -4,11 +4,13 @@ import initLine from './Line/init';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import App from './App';
+import { Pids } from './Pids/Pids';
 // import Notes from './SVG';
 
 declare global {
     interface Window {
         myLine?: RMGLine;
+        myPids?: Pids;
         urlParams?: URLSearchParams;
         gtag: any;
         // test3: any;
