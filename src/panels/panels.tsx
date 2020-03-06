@@ -98,7 +98,7 @@ export default function PanelTab(props: Props) {
                 />
                 </Tabs>
         </Typography>
-    ), [value]);
+    ), [value, i18n.language]);
 
     return (
         <div>

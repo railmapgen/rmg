@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ListItem, ListItemIcon, Icon, TextField, MenuItem, Button, makeStyles, createStyles } from '@material-ui/core';
+import { ListItem, ListItemIcon, Icon, TextField, MenuItem, Button, makeStyles, createStyles, Tooltip } from '@material-ui/core';
 import { CityEntry, LineEntry } from '../../types';
 import { getTransText2 } from '../../utils';
 
@@ -249,10 +249,13 @@ export default React.memo((props: ColourDialogProps) => {
                     <input type="color" id="input-color" value={props.theme[2]}
                         onChange={colourChange} className={classes.inputColour} />
                     <label htmlFor="input-color">
-                        <Button className={classes.button} style={{
-                            backgroundColor: props.theme[2],
-                            borderColor: props.theme[3] || '#fff',
-                        }} variant="contained" component="span" />
+                        <Tooltip title={t('colour.tooltip')} aria-label="colour picker">
+                            <Button className={classes.button} style={{
+                                backgroundColor: props.theme[2],
+                                borderColor: props.theme[3] || '#fff',
+                            }} variant="contained" component="span"> </Button>
+                        </Tooltip>
+
                     </label>
                 </div>
                 <TextField

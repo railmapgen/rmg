@@ -369,11 +369,11 @@ export class RMGLineHK extends RMGLine {
         if (stnId == this._currentStnId) {this.updateStnNameBg();}
     }
 
-    updateStnTransfer(stnId: string, type, info=null) {
-        super.updateStnTransfer(stnId, type, info);
-        this.loadFonts();
-        this.updateStnNameBg();
-    }
+    // updateStnTransfer(stnId: string, type, info=null) {
+    //     super.updateStnTransfer(stnId, type, info);
+    //     this.loadFonts();
+    //     this.updateStnNameBg();
+    // }
 
     updateStnTransfer2(stnId: string, info: StationTransfer) {
         super.updateStnTransfer2(stnId, info);
@@ -404,14 +404,14 @@ export class RMGLineHK extends RMGLine {
         }
     }
 
-    addStn(prep: 'before' | 'after', stnId: string, loc, end: string) {
-        let res = super.addStn(prep, stnId, loc, end);
+    // addStn(prep: 'before' | 'after', stnId: string, loc, end: string) {
+    //     let res = super.addStn(prep, stnId, loc, end);
 
-        this.loadFonts();
-        this.updateStnNameBg();
+    //     this.loadFonts();
+    //     this.updateStnNameBg();
 
-        return res;
-    }
+    //     return res;
+    // }
 
     // removeStn(stnId: string) {
     //     if (!super.removeStn(stnId)) {return false;}

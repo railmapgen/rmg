@@ -17,6 +17,13 @@ const darkTheme = createMuiTheme({
             main: '#cf6679',
         }, 
     },
+    overrides: {
+        MuiDialog: {
+            paper: {
+                minWidth: 280, 
+            }
+        }
+    }
 });
 
 const lightTheme = createMuiTheme({
@@ -32,6 +39,13 @@ const lightTheme = createMuiTheme({
             main: '#b00020',
         }, 
     },
+    overrides: {
+        MuiDialog: {
+            paper: {
+                minWidth: 280, 
+            }
+        }, 
+    }
 });
 
 interface Props {

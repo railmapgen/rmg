@@ -4,15 +4,16 @@ import { useTranslation, withTranslation } from 'react-i18next';
 import { Snackbar, Button, IconButton, Icon } from '@material-ui/core';
 
 import { getParams, formatStnName, setParams } from '../../utils';
-import { StationInfo, InterchangeInfo, StationTransfer, Name } from '../../types';
+import { StationInfo, StationTransfer, Name } from '../../types';
 import { RMGLineGZ } from '../../Line/LineGZ';
 
 import StationAddDialog from './add-diag';
 import StationEditDialog from './edit-diag';
 import StationChipSet from './chip-set';
 import { StationDeleteDialog, StationDeleteErrorDialog } from './delete-diags';
-import { RMGLine } from '../../Line/Line';
-import { removeStation } from './utils';
+import AutoNumDialog from './auto-num-diag';
+import StationFabs from './fabs';
+import { removeStation, reverseStations } from './utils';
 import { RMGLineHK } from '../../Line/LineHK';
 
 interface PanelStationsProps {
@@ -31,6 +32,7 @@ interface PanelStationsState {
     stnEditDialogOpened: boolean;
     stnDeleteDialogOpened: boolean;
     stnDeleteErrDialogOpened: boolean;
+    autoNumDialogOpened: boolean;
 }
 
 class PanelStations extends React.Component<PanelStationsProps, PanelStationsState> {
@@ -44,10 +46,11 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
             stnEditDialogOpened: false,
             stnDeleteDialogOpened: false,
             stnDeleteErrDialogOpened: false,
+            autoNumDialogOpened: false,
         }
     }
 
-    stnChipSetSelection(stnId: string) {
+    stnChipSetSelection = (stnId: string) => () => {
         console.log(stnId);
         this.setState({
             snackBarOpened: true,
@@ -67,20 +70,15 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
         }
     }
 
-    stnAddDialogClose(action: 'close' | string[]) {
-        this.setState({ stnAddDialogOpened: false });
-        if (typeof action === 'object') {
-            let [newId, newInfo] = window.myLine.addStn(action[0] as 'before' | 'after', action[1], action[2], action[3]);
-            this.props.paramUpdate('stn_list', getParams().stn_list);
-            this.setState(prevState => ({
-                // stnList: {
-                //     ...prevState.stnList, 
-                //     [newId]: newInfo,
-                // }, 
-                // trigger edit dialog
-                stnEditDialogOpened: true,
-                stationSelected: newId,
-            }));
+    stnAddDialogClose(action: 'close' | string ) {
+        if (action === 'close') {
+            this.setState({ stnAddDialogOpened: false});
+        } else {
+            this.setState({
+                stnAddDialogOpened: false, 
+                stnEditDialogOpened: true, 
+                stationSelected: action,
+            });
         }
     }
 
@@ -197,6 +195,7 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                 if (this.props.currentId === stnId) {
                     let newCurrentId = Object.keys(res).filter(id => !['linestart', 'lineend'].includes(id))[0];
                     this.props.paramUpdate('current_stn_idx', newCurrentId);
+                    setParams('current_stn_idx', newCurrentId);
                     window.myLine._currentStnId = newCurrentId;
                 }
                 let { parents, children } = this.props.stnList[stnId];
@@ -237,6 +236,21 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
         }
     }
 
+    fabsAction(action: string) {
+        if (action === 'add') {
+            this.setState({stnAddDialogOpened: true});
+        }
+        if (action === 'reverse') {
+            let newStnList = reverseStations(this.props.stnList);
+            // console.log(newStnList);
+            setParams('stn_list', newStnList);
+            location.reload(true);
+        }
+        if (action === 'autonum') {
+            this.setState({autoNumDialogOpened: true});
+        }
+    }
+
     render() {
         return (
             <div style={{ width: '100%' }}>
@@ -267,10 +281,13 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                     }
                 />
 
+                <StationFabs onAction={this.fabsAction.bind(this)} />
+
                 <StationAddDialog
                     open={this.state.stnAddDialogOpened}
                     stnList={this.props.stnList} tpo={this.props.tpo}
-                    onClose={this.stnAddDialogClose.bind(this)} />
+                    onClose={this.stnAddDialogClose.bind(this)}
+                    paramUpdate={this.props.paramUpdate} />
                 <StationEditDialog
                     open={this.state.stnEditDialogOpened}
                     onClose={() => this.setState({ stnEditDialogOpened: false })}
@@ -285,6 +302,10 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                 <StationDeleteErrorDialog
                     open={this.state.stnDeleteErrDialogOpened}
                     onClose={() => this.setState({ stnDeleteErrDialogOpened: false })} />
+                {window.urlParams.get('style')==='gzmtr' && <AutoNumDialog 
+                    open={this.state.autoNumDialogOpened} 
+                    onClose={() => this.setState({autoNumDialogOpened: false})}
+                    paramUpdate={this.props.paramUpdate} />}
             </div>
         );
     }

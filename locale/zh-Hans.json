@@ -72,7 +72,6 @@
             "r": "右行"
         }, 
         "platform": "站台号", 
-        "reverse": "翻转全线车站顺序",
         "flipName": "翻转车站名称位置", 
         "MTRLegacy": "旧款终点站牌样式", 
         "lineNum": "线路编码", 
@@ -97,8 +96,12 @@
 
     "stations": {
         "current": "设为当前车站",
+        "fab": {
+            "tooltip": "选项", 
+            "add": "添加车站", 
+            "reverse": "翻转全线车站顺序"
+        },
         "add": {
-            "button": "添加车站",
             "title": "选择车站位置",
             "prep": "相对位置",
             "before": "先于",
@@ -177,7 +180,13 @@
             }
         }, 
         "remove": {
-            "button": "删除"
+            "button": "删除", 
+            "title": "警告",
+            "msg": "是否确认删除车站{{name}}？此动作将不能被撤销。",
+            "error": {
+                "title": "删除错误", 
+                "msg": "此车站不能被删除！"
+            }
         }
     }, 
 
@@ -191,6 +200,7 @@
         "title": "编辑名称和颜色",
         "city": "城市", 
         "line": "线路", 
+        "tooltip": "颜色选择器",
         "colour": "背景色（十六进制）", 
         "fg": "前景色", 
         "fgBlack": "黑", 
@@ -201,5 +211,10 @@
         "done": "完成", 
         "cancel": "取消", 
         "ok": "好"
+    }, 
+    
+    "expansion": {
+        "collapse": "折叠", 
+        "expand": "展开"
     }
 }

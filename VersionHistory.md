@@ -1,5 +1,17 @@
 # Version History
 
+## 3.2 (6 Mar 2020)
+
+### New Features
+
+- Interchange stations with 3 and 4 lines are now supported in MTR style.
+- Improved UI. 
+
+### Resolved Issues
+
+- Fixed the issues that language switcher may not working randomly. 
+- Fixed the issues that OSI names in Latin characters are not split as expected. 
+
 ## 3.1.3 (5 Mar 2020)
 
 ### Resolved Issues

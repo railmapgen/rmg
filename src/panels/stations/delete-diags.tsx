@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
 import { StationInfo } from '../../types';
 
@@ -9,20 +10,23 @@ interface StationDeleteDialogProps {
 }
 
 export function StationDeleteDialog(props: StationDeleteDialogProps) {
+    const { t } = useTranslation();
     return (
         <Dialog open={props.open}>
-            <DialogTitle>Warning</DialogTitle>
+            <DialogTitle>{t('stations.remove.title')}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Are you sure to delete station {props.stnInfo.name.join()} ? You can't undo this action.
+                    <Trans i18nKey="stations.remove.msg">
+                        {{ name: props.stnInfo.name.join() }}
+                    </Trans>
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={() => props.onClose('close')} color="primary" autoFocus>
-                    Cancel
+                    {t('dialog.cancel')}
                 </Button>
-                <Button onClick={() => props.onClose('accept')} color="primary" autoFocus>
-                    Remove
+                <Button onClick={() => props.onClose('accept')} color="primary">
+                    {t('stations.remove.button')}
                 </Button>
             </DialogActions>
         </Dialog>
@@ -35,17 +39,18 @@ interface StationDeleteErrorDialogProps {
 }
 
 export function StationDeleteErrorDialog(props: StationDeleteErrorDialogProps) {
+    const { t } = useTranslation();
     return (
         <Dialog open={props.open} onClose={props.onClose}>
-            <DialogTitle>Deletion Error</DialogTitle>
+            <DialogTitle>{t('stations.remove.error.title')}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    You are not allowed to delete this station!
+                    {t('stations.remove.error.msg')}
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={props.onClose} color="primary" autoFocus>
-                    OK
+                    {t('dialog.ok')}
                 </Button>
             </DialogActions>
         </Dialog>

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ExpansionPanel, ExpansionPanelSummary, Icon, Typography, ExpansionPanelDetails, Grid, TextField, Slider, Grow } from '@material-ui/core';
+import { Grid, TextField, Slider } from '@material-ui/core';
+import StyledExpansionPanel from './styled-expansion-panel';
 
 interface Props {
     expanded: false | number;
@@ -45,121 +46,110 @@ const LayoutCommon = (props: Props) => {
         window.myLine.svgHeight = _val;
     }
 
-    const yPcChange = (event, value: number) => {
+    const sizePanel = React.useMemo(() => (
+        <StyledExpansionPanel in={isGrow} growTimeout={200}
+            expanded={props.expanded === 0}
+            onChange={props.onChange(0)}
+            icon="panorama_horizontal"
+            heading={t('layout.size.title')}>
+            <Grid container spacing={1} justify="center" alignItems="flex-start">
+                <Grid item xs={12} sm={4}>
+                    <TextField style={{ display: 'flex' }}
+                        label={t('layout.size.destWidth')}
+                        value={props.svgDestWidth.toString()}
+                        onChange={svgDestWidthChange} />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <TextField style={{ display: 'flex' }}
+                        label={t('layout.size.width')}
+                        value={props.svgWidth.toString()}
+                        onChange={svgWidthChange} />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <TextField style={{ display: 'flex' }}
+                        label={t('layout.size.height')}
+                        value={props.svgHeight.toString()}
+                        onChange={svgHeightChange} />
+                </Grid>
+            </Grid>
+        </StyledExpansionPanel>
+    ), [props.svgDestWidth, props.svgWidth, props.svgHeight, props.expanded, isGrow]);
+
+    const yPcChange = (_, value: number) => {
         props.paramUpdate('y_pc', value);
         window.myLine.yPc = value;
     };
 
     const yPcPanel = React.useMemo(() => (
-        <ExpansionPanel expanded={props.expanded === 1} onChange={props.onChange(1)}>
-            <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
-                <Icon style={{minWidth: 48}}>vertical_align_center</Icon>
-                <Typography>{t('layout.y')}</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-                <Slider
-                    value={props.yPc}
-                    onChange={yPcChange}
-                    step={0.01}
-                    marks={[{value: 0, label: '0%'}, {value: 100, label: '100%'}]}
-                    valueLabelDisplay="auto"
-                />
-            </ExpansionPanelDetails>
-        </ExpansionPanel>
-    ), [props.yPc, props.expanded]);
+        <StyledExpansionPanel in={isGrow} growTimeout={400}
+            expanded={props.expanded === 1}
+            onChange={props.onChange(1)}
+            icon="vertical_align_center"
+            heading={t('layout.y')}
+            secondaryHeading={props.yPc.toFixed(2) + '%'}>
+            <Slider
+                value={props.yPc}
+                onChange={yPcChange}
+                step={0.01}
+                marks={[{ value: 0, label: '0%' }, { value: 100, label: '100%' }]}
+                valueLabelDisplay="auto"
+            />
+        </StyledExpansionPanel>
+    ), [props.yPc, props.expanded, isGrow]);
 
-    const branchSpacingChange = (event, value: number) => {
+    const branchSpacingChange = (_, value: number) => {
         props.paramUpdate('branch_spacing', value);
         window.myLine.branchSpacing = value;
     };
 
     const branchSpacingPanel = React.useMemo(() => (
-        <ExpansionPanel expanded={props.expanded === 2} onChange={props.onChange(2)}>
-            <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
-                <Icon style={{minWidth: 48}}>format_line_spacing</Icon>
-                <Typography>{t('layout.branchSpacing')}</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-                <Slider
-                    value={props.branchSpacing}
-                    onChange={branchSpacingChange}
-                    step={0.01}
-                    marks={[{value: 0, label: '0px'}, {value: 100, label: '100px'}]}
-                    valueLabelDisplay="auto"
-                />
-            </ExpansionPanelDetails>
-        </ExpansionPanel>
-    ), [props.branchSpacing, props.expanded]);
+        <StyledExpansionPanel in={isGrow} growTimeout={600}
+            expanded={props.expanded === 2}
+            onChange={props.onChange(2)}
+            icon="format_line_spacing"
+            heading={t('layout.branchSpacing')}
+            secondaryHeading={props.branchSpacing.toFixed(2) + 'px'}>
+            <Slider
+                value={props.branchSpacing}
+                onChange={branchSpacingChange}
+                step={0.01}
+                marks={[{ value: 0, label: '0px' }, { value: 100, label: '100px' }]}
+                valueLabelDisplay="auto"
+            />
+        </StyledExpansionPanel>
+    ), [props.branchSpacing, props.expanded, isGrow]);
 
-    const paddingChange = (event, value: number) => {
+    const paddingChange = (_, value: number) => {
         props.paramUpdate('padding', value);
         window.myLine.padding = value;
     };
 
     const paddingPanel = React.useMemo(() => (
-        <ExpansionPanel expanded={props.expanded === 3} onChange={props.onChange(3)}>
-            <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
-                <Icon style={{minWidth: 48}}>stay_current_landscape</Icon>
-                <Typography>{t('layout.padding')}</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-                <Slider
-                    value={props.padding}
-                    onChange={paddingChange}
-                    step={0.01} max={50}
-                    marks={[{value: 0, label: '0%'}, {value: 50, label: '50%'}]}
-                    valueLabelDisplay="auto"
-                />
-            </ExpansionPanelDetails>
-        </ExpansionPanel>
-    ), [props.padding, props.expanded]);
+        <StyledExpansionPanel in={isGrow} growTimeout={800}
+            expanded={props.expanded === 3}
+            onChange={props.onChange(3)}
+            icon="stay_current_landscape"
+            heading={t('layout.padding')}
+            secondaryHeading={props.padding.toFixed(2) + '%'}>
+            <Slider
+                value={props.padding}
+                onChange={paddingChange}
+                step={0.01} max={50}
+                marks={[{ value: 0, label: '0%' }, { value: 50, label: '50%' }]}
+                valueLabelDisplay="auto"
+            />
+        </StyledExpansionPanel>
+    ), [props.padding, props.expanded, isGrow]);
 
     return (
         <>
-            <Grow in={isGrow} style={{ transformOrigin: '0 0 1' }} timeout={200}>
-                <ExpansionPanel expanded={props.expanded === 0} onChange={props.onChange(0)}>
-                    <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
-                        <Icon style={{minWidth: 48}}>panorama_horizontal</Icon>
-                        <Typography>{t('layout.size.title')}</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                        <Grid container spacing={1} justify="center" alignItems="flex-start">
-                            <Grid item xs={12} sm={4}>
-                                <TextField style={{display: 'flex'}}
-                                    label={t('layout.size.destWidth')} 
-                                    variant="outlined" 
-                                    value={props.svgDestWidth.toString()} 
-                                    onChange={svgDestWidthChange} />
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <TextField style={{display: 'flex'}}
-                                    label={t('layout.size.width')}
-                                    variant="outlined" 
-                                    value={props.svgWidth.toString()}
-                                    onChange={svgWidthChange} />
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <TextField style={{display: 'flex'}}
-                                    label={t('layout.size.height')}
-                                    variant="outlined" 
-                                    value={props.svgHeight.toString()} 
-                                    onChange={svgHeightChange} />
-                            </Grid>
-                        </Grid>
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
-            </Grow>
-            <Grow in={isGrow} style={{ transformOrigin: '0 0 1' }} timeout={400}>
-                {yPcPanel}
-            </Grow>
-            <Grow in={isGrow} style={{ transformOrigin: '0 0 1' }} timeout={600}>
-                {branchSpacingPanel}
-            </Grow>
-            <Grow in={isGrow} style={{ transformOrigin: '0 0 1' }} timeout={800}>
-                {paddingPanel}
-            </Grow>
+            {sizePanel}
+            {yPcPanel}
+            {branchSpacingPanel}
+            {paddingPanel}
         </>
     )
 }
 
 export default LayoutCommon;
+

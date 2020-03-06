@@ -3,8 +3,8 @@ import { Name, StationInfo } from '../../types';
 import { Paper, List, ListItem, ListItemIcon, Icon, ListItemText, TextField } from '@material-ui/core';
 import ColourDialog from '../colour-diag';
 import { useTranslation } from 'react-i18next';
-import {reverseStations} from './utils';
-import { setParams } from '../../utils';
+// import {reverseStations} from './utils';
+// import { setParams } from '../../utils';
 
 interface Props {
     theme: [string, string, string, '#000' | '#fff'];
@@ -46,13 +46,13 @@ const DesignList = (props: Props) => {
         window.myLine.platformNum = event.target.value;
     };
 
-    const reverseClick = () => {
-        // window.myLine.reverseStns();
-        let newStnList = reverseStations(props.stnList);
-        // console.log(newStnList);
-        setParams('stn_list', newStnList);
-        location.reload(true);
-    };
+    // const reverseClick = () => {
+    //     // window.myLine.reverseStns();
+    //     let newStnList = reverseStations(props.stnList);
+    //     // console.log(newStnList);
+    //     setParams('stn_list', newStnList);
+    //     location.reload(true);
+    // };
 
     return (
         <div>
@@ -88,12 +88,12 @@ const DesignList = (props: Props) => {
                             value={props.platformNum}
                             onChange={platformNumChange} />
                     </ListItem>
-                    <ListItem button onClick={reverseClick}>
+                    {/* <ListItem button onClick={reverseClick}>
                         <ListItemIcon>
                             <Icon>cached</Icon>
                         </ListItemIcon>
                         <ListItemText primary={t('design.reverse')} />
-                    </ListItem>
+                    </ListItem> */}
                 </List>
             </Paper>
 

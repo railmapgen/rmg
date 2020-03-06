@@ -10,30 +10,31 @@ import ThemeListItems from './theme-items';
 const useStyles = makeStyles(theme => (
     createStyles({
         paperRoot: {
-            width: 250, 
+            width: 250,
         },
         listItemPaper: {
             justifyContent: 'center'
         },
         iconRoot: {
             position: 'absolute',
+            color: theme.palette.action.active,
         },
         inputBaseRoot: {
-            display: 'block', 
-        }, 
+            display: 'block',
+        },
         inputBaseInputZH: {
-            fontFamily: 'Helvetica, Arial, Noto Serif KR, Noto Serif JP, Noto Serif TC, Noto Serif SC, HiraMinProN-W6, serif', 
+            fontFamily: 'Helvetica, Arial, Noto Serif KR, Noto Serif JP, Noto Serif TC, Noto Serif SC, HiraMinProN-W6, serif',
             textAlign: 'center',
             fontSize: 36,
-            padding: 0, 
+            padding: 0,
             paddingTop: 6,
             height: 45,
         },
         inputBaseInputEN: {
             fontFamily: 'Helvetica, Arial, sans-serif',
             textAlign: 'center',
-            fontSize: 18, 
-            padding: 0, 
+            fontSize: 18,
+            padding: 0,
             paddingBottom: 6,
             height: 'auto',
         },
@@ -50,10 +51,10 @@ interface ColourDialogProps {
 
 export default function ColourDialog(props: ColourDialogProps) {
     const classes = useStyles();
-    const {t, i18n} = useTranslation();
+    const { t } = useTranslation();
 
     const nameChange = (value: string, index: number) => {
-        let newName = props.lineName.map((val, idx) => idx===index ? value : val);
+        let newName = props.lineName.map((val, idx) => idx === index ? value : val);
         props.onUpdate('name', newName);
     }
 
@@ -71,16 +72,16 @@ export default function ColourDialog(props: ColourDialogProps) {
                 <List>
                     <ListItem className={classes.listItemPaper}>
                         <Paper className={classes.paperRoot}
-                            style={{backgroundColor: props.theme[2]}}
+                            style={{ backgroundColor: props.theme[2] }}
                         >
-                            <Icon color="action" className={classes.iconRoot}>edit</Icon>
+                            <Icon className={classes.iconRoot}>edit</Icon>
                             <InputBase
                                 value={props.lineName[0]}
                                 classes={{
                                     root: classes.inputBaseRoot,
                                     input: classes.inputBaseInputZH
                                 }}
-                                style={{color: props.theme[3] || '#fff'}}
+                                style={{ color: props.theme[3] || '#fff' }}
                                 onChange={(e) => nameChange(e.target.value, 0)}
                             />
                             <InputBase
@@ -89,7 +90,7 @@ export default function ColourDialog(props: ColourDialogProps) {
                                     root: classes.inputBaseRoot,
                                     input: classes.inputBaseInputEN,
                                 }}
-                                style={{color: props.theme[3] || '#fff'}}
+                                style={{ color: props.theme[3] || '#fff' }}
                                 onChange={(e) => nameChange(e.target.value, 1)}
                             />
                         </Paper>

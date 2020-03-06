@@ -73,7 +73,6 @@
             "r": "向右駛"
         }, 
         "platform": "月台編碼", 
-        "reverse": "反轉全線車站順序",
         "flipName": "反轉車站名稱位置", 
         "MTRLegacy": "舊款終點站牌樣式", 
         "lineNum": "路線編碼", 
@@ -98,8 +97,12 @@
 
     "stations": {
         "current": "設定為當前車站",
+        "fabs": {
+            "tooltip": "選項", 
+            "add": "新增車站", 
+            "reverse": "反轉全線車站順序"
+        },
         "add": {
-            "button": "新增車站",
             "title": "選擇車站位置",
             "prep": "相對位置",
             "before": "先於",
@@ -178,7 +181,13 @@
             }
         }, 
         "remove": {
-            "button": "移除"
+            "button": "移除",
+            "title": "警告", 
+            "msg": "是否確定移除車站{{name}}？此動作將無法被還原。", 
+            "error": {
+                "title": "移除錯誤", 
+                "msg": "此車站不能被移除！"
+            }
         }
     }, 
 
@@ -192,6 +201,7 @@
         "title": "編輯名稱及顏色",
         "city": "城市", 
         "line": "路線", 
+        "tooltip": "顏色選擇器",
         "colour": "背景色（十六進制）", 
         "fg": "前景色", 
         "fgBlack": "黑", 
@@ -202,5 +212,10 @@
         "done": "完成", 
         "cancel": "取消", 
         "ok": "好"
+    }, 
+    
+    "expansion": {
+        "collapse": "摺疊", 
+        "expand": "展開"
     }
 }

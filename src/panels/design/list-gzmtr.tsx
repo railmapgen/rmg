@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { withTranslation, useTranslation } from 'react-i18next';
 
-import { Card, List, ListItem, ListItemIcon, Icon, TextField, ListItemText, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
+import { Card, List, ListItem, ListItemIcon, Icon, TextField, ListItemText, Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 
-import { getParams } from '../../utils';
 import { RMGLineGZ } from '../../Line/LineGZ';
 
 const allInfoPanelTypes = {
@@ -89,20 +88,20 @@ class DesignListGZMTR extends React.Component<DesignListGZMTRProps, DesignListGZ
                                 primary={this.props.t('design.panelType.button')}
                                 secondary={this.props.t('design.panelType.'+this.props.panelType)} />
                         </ListItem>
-                        <ListItem button onClick={() => this.setState({autoNumDialogOpened: true})}>
+                        {/* <ListItem button onClick={() => this.setState({autoNumDialogOpened: true})}>
                             <ListItemIcon>
                                 <Icon>filter_1</Icon>
                             </ListItemIcon>
                             <ListItemText primary={this.props.t('design.autoNum.button')} />
-                        </ListItem>
+                        </ListItem> */}
                     </List>
                 </Card>
 
                 <PanelTypeDialog open={this.state.panelTypeDialogOpened} onClose={this.panelTypeDialogClose.bind(this)} />
-                <AutoNumDialog 
+                {/* <AutoNumDialog 
                     open={this.state.autoNumDialogOpened} 
                     onClose={() => this.setState({autoNumDialogOpened: false})}
-                    paramUpdate={this.props.paramUpdate} />
+                    paramUpdate={this.props.paramUpdate} /> */}
             </div>
         )
     }
@@ -129,49 +128,3 @@ function PanelTypeDialog(props) {
     );
 }
 
-interface AutoNumDialogProps {
-    open: boolean;
-    onClose: () => void;
-    paramUpdate: (key, data) => void;
-}
-
-function AutoNumDialog(props: AutoNumDialogProps) {
-    const { t } = useTranslation();
-
-    const handleClick = (action: 'ascend' | 'descend') => {
-        let branch0 = window.myLine.branches[0];
-        branch0.forEach((stnId, i) => {
-            let num: string;
-            if (action === 'ascend') {
-                num = (i+1).toString().padStart(2, '0');
-            } else {
-                num = (branch0.length-i).toString().padStart(2, '0');
-            }
-            (window.myLine as RMGLineGZ).updateStnNum(stnId, num);
-        });
-        props.paramUpdate('stn_list', getParams().stn_list);
-        props.onClose();
-    }
-
-    return (
-        <Dialog onClose={props.onClose} open={props.open}>
-            <DialogTitle>{t('design.autoNum.title')}</DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    {t('design.autoNum.msg')}
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={props.onClose} color="primary" autoFocus>
-                    {t('dialog.cancel')}
-                </Button>
-                <Button onClick={() => handleClick('ascend')} color="primary">
-                    {t('design.autoNum.ascend')}
-                </Button>
-                <Button onClick={() => handleClick('descend')} color="primary">
-                    {t('design.autoNum.descend')}
-                </Button>
-            </DialogActions>
-        </Dialog>
-    );
-}

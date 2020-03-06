@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { RMGLineGZ } from '../../Line/LineGZ';
-import { ExpansionPanel, ExpansionPanelSummary, Icon, Typography, ExpansionPanelDetails, Slider, Grow } from '@material-ui/core';
+import { Slider } from '@material-ui/core';
+import StyledExpansionPanel from './styled-expansion-panel';
 
 interface Props {
     expanded: false | number;
@@ -12,13 +13,13 @@ interface Props {
     paramUpdate: (key, data) => void;
 }
 
-export default (props: Props) => {
+const LayoutGZMTR = (props: Props) => {
     const { t } = useTranslation();
 
-    const [grow, setGrow] = React.useState(false);
+    const [isGrow, setIsGrow] = React.useState(false);
     React.useEffect(() => {
-        setGrow(true);
-        return () => setGrow(false);
+        setIsGrow(true);
+        return () => setIsGrow(false);
     }, []);
 
 
@@ -33,37 +34,35 @@ export default (props: Props) => {
     }
 
     const directionGZPanel = React.useMemo(() => (
-        <ExpansionPanel expanded={props.expanded === 4} onChange={props.onChange(4)}>
-            <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
-                <Icon style={{ minWidth: 48 }}>open_with</Icon>
-                <Typography>{t('layout.directionGZ.title')}</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails style={{ flexDirection: 'column' }}>
-                <Slider
-                    value={props.directionGZX}
-                    onChange={directionGZXChange}
-                    step={0.01}
-                    marks={[
-                        { value: 0, label: t('layout.directionGZ.left') },
-                        { value: 100, label: t('layout.directionGZ.right') }
-                    ]}
-                    valueLabelDisplay="auto" />
-                <Slider
-                    value={props.directionGZY}
-                    onChange={directionGZYChange}
-                    step={0.01}
-                    marks={[
-                        { value: 0, label: t('layout.directionGZ.top') },
-                        { value: 100, label: t('layout.directionGZ.bottom') }
-                    ]}
-                    valueLabelDisplay="auto" />
-            </ExpansionPanelDetails>
-        </ExpansionPanel>
-    ), [props.expanded, props.directionGZX, props.directionGZY]);
+        <StyledExpansionPanel in={isGrow} growTimeout={1000}
+            expanded={props.expanded === 4} onChange={props.onChange(4)}
+            icon="open_with" heading={t('layout.directionGZ.title')}>
+            <Slider
+                value={props.directionGZX}
+                onChange={directionGZXChange}
+                step={0.01}
+                marks={[
+                    { value: 0, label: t('layout.directionGZ.left') },
+                    { value: 100, label: t('layout.directionGZ.right') }
+                ]}
+                valueLabelDisplay="auto" />
+            <Slider
+                value={props.directionGZY}
+                onChange={directionGZYChange}
+                step={0.01}
+                marks={[
+                    { value: 0, label: t('layout.directionGZ.top') },
+                    { value: 100, label: t('layout.directionGZ.bottom') }
+                ]}
+                valueLabelDisplay="auto" />
+        </StyledExpansionPanel>
+    ), [props.expanded, props.directionGZX, props.directionGZY, isGrow]);
 
     return (
-        <Grow in={grow} style={{ transformOrigin: '0 0 1' }} timeout={1000}>
+        <>
             {directionGZPanel}
-        </Grow>
+        </>
     );
 }
+
+export default LayoutGZMTR;
