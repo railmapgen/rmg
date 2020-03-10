@@ -36,7 +36,7 @@ export class RMGStationHK extends RMGStation {
 
     constructor (id: string, data: StationInfo) {
         super(id, data);
-        this.usage = data.usage || '';
+        this.usage = data.facility || '';
     }
 
     /**

@@ -96,7 +96,7 @@
 
     "stations": {
         "current": "设为当前车站",
-        "fab": {
+        "fabs": {
             "tooltip": "选项", 
             "add": "添加车站", 
             "reverse": "翻转全线车站顺序"

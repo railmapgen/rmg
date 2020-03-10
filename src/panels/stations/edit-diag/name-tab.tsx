@@ -1,37 +1,34 @@
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
 
-import { List, ListItem, ListItemIcon, Avatar, TextField, Icon } from '@material-ui/core';
-import { StationInfo } from '../../../types';
+import { List } from '@material-ui/core';
+import { Name } from '../../../types';
 
 import NameListItems from './name-list-items';
+import NumListItem from './num-list-item';
+import { ParamContext } from '../../../context';
 
 interface Props {
-    onUpdate: (event, field, index?) => void;
-    stnInfo: StationInfo;
+    stnId: string;
 }
 
-export default (props: Props) => {
-    const { t } = useTranslation();
+const NameTab = (props: Props) => {
+    const { param, dispatch } = React.useContext(ParamContext);
+    const stnInfo = param.stn_list[props.stnId];
 
     const handleUpdate = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        props.onUpdate(event.target.value, 'name', index);
+        dispatch({
+            type: 'UPDATE_STATION_NAME', 
+            stnId: props.stnId, 
+            name: stnInfo.name.map((val, i) => index===i ? event.target.value : val) as Name,
+        });
     };
 
     return (
         <List>
-            <NameListItems name={props.stnInfo.name} onUpdate={handleUpdate} />
-            {window.urlParams.get('style')==='gzmtr' && <ListItem>
-                <ListItemIcon>
-                    <Icon>looks_one</Icon>
-                </ListItemIcon>
-                <TextField 
-                    style={{width: '100%'}}
-                    variant="outlined"
-                    label={t('stations.edit.name.num')}
-                    onChange={(e) => props.onUpdate(e.target.value, 'num')}
-                    value={props.stnInfo.num} />
-            </ListItem>}
+            <NameListItems name={stnInfo.name} onUpdate={handleUpdate} />
+            {window.urlParams.get('style') === 'gzmtr' && <NumListItem stnId={props.stnId} />}
         </List>
     );
-}
+};
+
+export default NameTab;

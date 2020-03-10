@@ -7,10 +7,10 @@ import { RMGLineGZ } from '../../Line/LineGZ';
 
 const allInfoPanelTypes = {
     gz1: 'Line 1',
-    gz28: 'Line 2/8', 
-    gz3: 'Line 3', 
+    gz28: 'Line 2/8',
+    gz3: 'Line 3',
     gzgf: 'Line 6/Guangfo Line',
-    gz1421: 'Line 14/21', 
+    gz1421: 'Line 14/21',
 }
 
 interface DesignListGZMTRProps {
@@ -48,11 +48,11 @@ class DesignListGZMTR extends React.Component<DesignListGZMTRProps, DesignListGZ
 
     panelTypeDialogClose(action: string) {
         if (action === 'close') {
-            this.setState({panelTypeDialogOpened: false});
+            this.setState({ panelTypeDialogOpened: false });
             return;
         }
         this.setState({
-            panelTypeDialogOpened: false, 
+            panelTypeDialogOpened: false,
             // panelType: action
         });
         this.props.paramUpdate('info_panel_type', action);
@@ -70,38 +70,28 @@ class DesignListGZMTR extends React.Component<DesignListGZMTRProps, DesignListGZ
                             </ListItemIcon>
                             <TextField
                                 label={this.props.t('design.lineNum')}
-                                variant="outlined" 
-                                value={this.props.lineNum} 
+                                variant="outlined"
+                                value={this.props.lineNum}
                                 onChange={this.lineNumChange.bind(this)}
-                                style={{marginRight: 5}} />
+                                style={{ marginRight: 5 }} />
                             <TextField
                                 label={this.props.t('design.psd')}
-                                variant="outlined" 
-                                value={this.props.psdNum} 
+                                variant="outlined"
+                                value={this.props.psdNum}
                                 onChange={this.psdNumChange.bind(this)} />
                         </ListItem>
-                        <ListItem button onClick={() => this.setState({panelTypeDialogOpened: true})}>
+                        <ListItem button onClick={() => this.setState({ panelTypeDialogOpened: true })}>
                             <ListItemIcon>
-                                <Icon style={{transform: 'rotate(180deg)'}}>credit_card</Icon>
+                                <Icon style={{ transform: 'rotate(180deg)' }}>credit_card</Icon>
                             </ListItemIcon>
                             <ListItemText
                                 primary={this.props.t('design.panelType.button')}
-                                secondary={this.props.t('design.panelType.'+this.props.panelType)} />
+                                secondary={this.props.t('design.panelType.' + this.props.panelType)} />
                         </ListItem>
-                        {/* <ListItem button onClick={() => this.setState({autoNumDialogOpened: true})}>
-                            <ListItemIcon>
-                                <Icon>filter_1</Icon>
-                            </ListItemIcon>
-                            <ListItemText primary={this.props.t('design.autoNum.button')} />
-                        </ListItem> */}
                     </List>
                 </Card>
 
                 <PanelTypeDialog open={this.state.panelTypeDialogOpened} onClose={this.panelTypeDialogClose.bind(this)} />
-                {/* <AutoNumDialog 
-                    open={this.state.autoNumDialogOpened} 
-                    onClose={() => this.setState({autoNumDialogOpened: false})}
-                    paramUpdate={this.props.paramUpdate} /> */}
             </div>
         )
     }
@@ -110,7 +100,7 @@ class DesignListGZMTR extends React.Component<DesignListGZMTRProps, DesignListGZ
 export default withTranslation()(DesignListGZMTR);
 
 function PanelTypeDialog(props) {
-    const {t, i18n} = useTranslation();
+    const { t } = useTranslation();
 
     return (
         <Dialog onClose={() => props.onClose('close')} open={props.open}>
@@ -119,7 +109,7 @@ function PanelTypeDialog(props) {
                 <List>
                     {Object.keys(allInfoPanelTypes).map(key => (
                         <ListItem button onClick={() => props.onClose(key)} key={key}>
-                            <ListItemText primary={t('design.panelType.'+key)} />
+                            <ListItemText primary={t('design.panelType.' + key)} />
                         </ListItem>
                     ))}
                 </List>

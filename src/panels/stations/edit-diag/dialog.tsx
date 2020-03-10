@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, Tabs, Tab, Icon, Typography, CircularProgress, DialogActions, Button, useTheme, useMediaQuery, makeStyles, createStyles } from '@material-ui/core';
-import { StationInfo } from '../../../types';
+import { InterchangeInfo, StationTransfer } from '../../../types';
+import { ParamContext } from '../../../context';
 
 const NameTab = React.lazy(() => import(/* webpackChunkName: "panelStationsName" */ './name-tab'));
 const InterchangeTab = React.lazy(() => import(/* webpackChunkName: "panelStationsInterchange" */ './interchange-tab'));
@@ -37,14 +38,14 @@ interface StationEditDialogProps {
     onUpdate: (value, field, index?) => void;
     open: boolean;
     stnId: string;
-    stnInfo: StationInfo;
-    stnList: {
-        [stnId: string]: StationInfo;
-    };
 }
 
 export default function StationEditDialog(props: StationEditDialogProps) {
     const { t } = useTranslation();
+
+    const { param, dispatch } = React.useContext(ParamContext);
+    const stnList = param.stn_list;
+    const stnInfo = stnList[props.stnId];
 
     const [tabIndex, setTabIndex] = React.useState(0);
 
@@ -71,6 +72,24 @@ export default function StationEditDialog(props: StationEditDialogProps) {
         </Tabs>
     ), [tabIndex]);
 
+    const interchangeUpdate = (transInfo: StationTransfer) => {
+        let updatedValue = {
+            ...transInfo,
+            info: transInfo.info
+                .map(inf => (
+                    inf.map(i => Object.values(i).length === 0 ?
+                        param.theme.concat(['轉綫', 'Line']) as unknown as InterchangeInfo : i)
+                )),
+        };
+
+        window.myLine.updateStnTransfer2(props.stnId, updatedValue);
+        dispatch({
+            type: 'UPDATE_STATION_TRANSFER', 
+            stnId: props.stnId, 
+            transfer: updatedValue,
+        });
+    };
+
     return (
         <Dialog onClose={props.onClose} open={props.open} fullScreen={fullScreen}>
             <DialogTitle>{t('stations.edit.title')}</DialogTitle>
@@ -83,24 +102,19 @@ export default function StationEditDialog(props: StationEditDialogProps) {
                         {((idx) => {
                             switch (idx) {
                                 case 0:
-                                    return <NameTab onUpdate={props.onUpdate} stnInfo={props.stnInfo} />
+                                    return <NameTab stnId={props.stnId} />
                                 case 1:
                                     return <InterchangeTab
-                                        stnTrans={props.stnInfo.transfer}
-                                        onUpdate={(trans) => props.onUpdate(trans, 'transfer')}
+                                        stnTrans={stnInfo.transfer}
+                                        onUpdate={interchangeUpdate}
+                                        stnId={props.stnId}
                                     />
                                 case 2:
-                                    return <BranchTab
-                                        branch={props.stnInfo.branch}
-                                        parents={props.stnInfo.parents}
-                                        children={props.stnInfo.children}
-                                        stnList={props.stnList}
-                                        onUpdate={(value, field) => props.onUpdate(value, 'branch', field)}
-                                    />
+                                    return <BranchTab stnId={props.stnId} />
                                 case 3:
                                     return <MoreTab
-                                        facility={props.stnInfo.facility}
-                                        services={new Set(props.stnInfo.services)}
+                                        facility={stnInfo.facility}
+                                        services={new Set(stnInfo.services)}
                                         onUpdate={(value, field) => props.onUpdate(value, field)}
                                     />
                             }

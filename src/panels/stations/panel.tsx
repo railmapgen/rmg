@@ -84,76 +84,6 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
 
     stnEditDialogUpdate(value, field, index) {
         let stnId = this.state.stationSelected;
-        if (field === 'name') {
-            let newName = this.props.stnList[stnId].name.map((val, idx) => idx === index ? value : val) as Name;
-            window.myLine.updateStnName(stnId, newName);
-            this.props.paramUpdate('stn_list', {
-                ...this.props.stnList,
-                [stnId]: {
-                    ...this.props.stnList[stnId],
-                    name: newName
-                },
-            })
-        }
-        if (field === 'num') {
-            (window.myLine as RMGLineGZ).updateStnNum(stnId, value);
-            this.props.paramUpdate('stn_list', {
-                ...this.props.stnList,
-                [stnId]: {
-                    ...this.props.stnList[stnId],
-                    num: value,
-                }
-            })
-        }
-        if (field === 'transfer') {
-            let updatedValue = {
-                ...value,
-                info: (value as StationTransfer).info
-                    .map(inf => (
-                        inf.map(i => Object.values(i).length === 0 ?
-                            this.props.theme.concat(['轉綫', 'Line']) : i)
-                    )),
-            } as StationTransfer;
-
-            window.myLine.updateStnTransfer2(stnId, updatedValue);
-            this.props.paramUpdate('stn_list', {
-                ...this.props.stnList,
-                [stnId]: {
-                    ...this.props.stnList[stnId],
-                    transfer: updatedValue,
-                }
-            })
-        }
-        if (field === 'branch') {
-            // TODO: use this when svg is created by react 
-            // window.myLine.updateBranch(stnId, value);
-            if (index.split('.')[0] === 'type') {
-                window.myLine.updateBranchType(
-                    stnId,
-                    index.split('.')[1] === 'left' ? 0 : 1,
-                    value[index.split('.')[1]][0]
-                );
-                this.props.paramUpdate('stn_list', {
-                    ...this.props.stnList,
-                    [stnId]: {
-                        ...this.props.stnList[stnId],
-                        branch: value
-                    }
-                });
-            } else if (index.split('.')[0] === 'first') {
-                if (window.myLine.updateBranchFirst(
-                    stnId,
-                    index.split('.')[1] === 'left' ? 0 : 1,
-                    value[index.split('.')[1]][1]
-                )) this.props.paramUpdate('stn_list', getParams().stn_list);
-            } else if (index.split('.')[0] === 'pos') {
-                if (window.myLine.updateBranchPos(
-                    stnId,
-                    index.split('.')[1] === 'left' ? 0 : 1,
-                    value
-                )) this.props.paramUpdate('stn_list', getParams().stn_list);
-            }
-        }
         if (field === 'facility') {
             window.myLine.updateStnUsage(stnId, value);
             this.props.paramUpdate('stn_list', {
@@ -292,9 +222,7 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                     open={this.state.stnEditDialogOpened}
                     onClose={() => this.setState({ stnEditDialogOpened: false })}
                     onUpdate={this.stnEditDialogUpdate.bind(this)}
-                    stnId={this.state.stationSelected}
-                    stnInfo={this.props.stnList[this.state.stationSelected] || this.props.stnList['linestart']}
-                    stnList={this.props.stnList} />
+                    stnId={this.state.stationSelected} />
                 <StationDeleteDialog
                     open={this.state.stnDeleteDialogOpened}
                     onClose={this.stnDeleteClose.bind(this)}

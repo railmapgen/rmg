@@ -18,12 +18,12 @@ interface Props {
     name: Name;
 }
 
-export default (props: Props) => {
+const NameListItems = (props: Props) => {
     const { t } = useTranslation();
     const classes = useStyles();
 
-    return (
-        <div>
+    return React.useMemo(() => (
+        <>
             <ListItem>
                 <ListItemIcon>
                     <span className={classes.listItemIcon}>漢</span>
@@ -47,6 +47,8 @@ export default (props: Props) => {
                     value={props.name[1]}
                     helperText={t('stations.edit.name.nameENHelper')} />
             </ListItem>
-        </div>
-    )
-}
+        </>
+    ), [props.name.toString()]);
+};
+
+export default NameListItems;

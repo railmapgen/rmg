@@ -79,7 +79,7 @@ interface StationAddDialogProps {
     paramUpdate: (key, data) => void;
 }
 
-const StationAddDialog = (props: StationAddDialogProps) => {
+const StationAddDialog = React.memo((props: StationAddDialogProps) => {
     const { t } = useTranslation();
 
     const allLocs = {
@@ -246,6 +246,22 @@ const StationAddDialog = (props: StationAddDialogProps) => {
             </DialogActions>
         </Dialog>
     )
-};
+}, (prevProps, nextProps) => {
+    if (prevProps.open !== nextProps.open) {
+        return false;
+    } else {
+        let prevDeps = {};
+        let nextDeps = {};
+        Object.keys(nextProps.stnList).forEach(stnId => {
+            let { name, num, parents, children } = nextProps.stnList[stnId];
+            nextDeps[stnId] = { name, num, parents, children };
+        });
+        Object.keys(prevProps.stnList).forEach(stnId => {
+            let { name, num, parents, children } = prevProps.stnList[stnId];
+            prevDeps[stnId] = { name, num, parents, children };
+        });
+        return JSON.stringify(prevDeps) === JSON.stringify(nextDeps);
+    }
+});
 
 export default StationAddDialog;

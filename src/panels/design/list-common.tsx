@@ -1,22 +1,20 @@
 import * as React from 'react';
-import { Name, StationInfo } from '../../types';
+import { useTranslation } from 'react-i18next';
+import { Name } from '../../types';
 import { Paper, List, ListItem, ListItemIcon, Icon, ListItemText, TextField } from '@material-ui/core';
 import ColourDialog from '../colour-diag';
-import { useTranslation } from 'react-i18next';
-// import {reverseStations} from './utils';
-// import { setParams } from '../../utils';
+import { ParamContext } from '../../context';
 
 interface Props {
     theme: [string, string, string, '#000' | '#fff'];
     lineName: Name;
-    direction: 'l' | 'r';
     platformNum: string;
-    stnList: {[stnId: string]: StationInfo};
     paramUpdate: (key, data) => void;
 }
 
 const DesignList = (props: Props) => {
     const { t } = useTranslation();
+    const { param, dispatch } = React.useContext(ParamContext);
 
     const [isCDiagOpen, setIsCDiagOpen] = React.useState(false);
 
@@ -32,7 +30,7 @@ const DesignList = (props: Props) => {
     };
 
     const directionClick = () => {
-        if (props.direction === 'r') {
+        if (param.direction === 'r') {
             props.paramUpdate('direction', 'l');
             window.myLine.direction = 'l';
         } else {
@@ -46,16 +44,8 @@ const DesignList = (props: Props) => {
         window.myLine.platformNum = event.target.value;
     };
 
-    // const reverseClick = () => {
-    //     // window.myLine.reverseStns();
-    //     let newStnList = reverseStations(props.stnList);
-    //     // console.log(newStnList);
-    //     setParams('stn_list', newStnList);
-    //     location.reload(true);
-    // };
-
     return (
-        <div>
+        <>
             <Paper>
                 <List component="nav">
                     <ListItem button onClick={() => setIsCDiagOpen(true)}>
@@ -76,7 +66,7 @@ const DesignList = (props: Props) => {
                         </ListItemIcon>
                         <ListItemText
                             primary={t('design.direction.button')}
-                            secondary={t('design.direction.' + props.direction)} />
+                            secondary={t('design.direction.' + param.direction)} />
                     </ListItem>
                     <ListItem>
                         <ListItemIcon>
@@ -88,12 +78,6 @@ const DesignList = (props: Props) => {
                             value={props.platformNum}
                             onChange={platformNumChange} />
                     </ListItem>
-                    {/* <ListItem button onClick={reverseClick}>
-                        <ListItemIcon>
-                            <Icon>cached</Icon>
-                        </ListItemIcon>
-                        <ListItemText primary={t('design.reverse')} />
-                    </ListItem> */}
                 </List>
             </Paper>
 
@@ -103,8 +87,8 @@ const DesignList = (props: Props) => {
                 onUpdate={nameDialogUpdate}
                 onClose={() => setIsCDiagOpen(false)}
             />
-        </div>
+        </>
     );
-}
+};
 
 export default DesignList;

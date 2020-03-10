@@ -62,7 +62,7 @@ export default function PanelTab(props: Props) {
             case 0:
                 return <PanelSave />;
             case 1:
-                return <PanelLayout {...(({ tpo, ...o }) => o)(props)} />;
+                return <PanelLayout />;
             case 2:
                 return <PanelDesign {...(({ tpo, ...o }) => o)(props)} />;
             case 3:

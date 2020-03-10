@@ -473,7 +473,7 @@ export class RMGLine {
     /**
      * Return state of a station (-1: passed, 0: current, 1: future).
      */
-    protected _stnState(stnId: string) {
+    public _stnState(stnId: string) {
         if (stnId == this._currentStnId) {return 0;}
         if (this._direction == 'r') {
             return this._isSuccessor(this._currentStnId, stnId) ? 1 : -1;
@@ -1245,108 +1245,108 @@ export class RMGLine {
     //     location.reload(true);
     // }
 
-    updateBranchType(stnId: string, direction: DirectionLong, type: 'through' | 'nonthrough') {
-        let direc = DirectionLong[direction];
-        // no change
-        if (this.stations[stnId].branch[direc][0] === type) {return false;}
+    // updateBranchType(stnId: string, direction: DirectionLong, type: 'through' | 'nonthrough') {
+    //     let direc = DirectionLong[direction];
+    //     // no change
+    //     if (this.stations[stnId].branch[direc][0] === type) {return false;}
 
-        this.stations[stnId].branch[direc][0] = type;
-        let param = getParams();
-        param.stn_list[stnId].branch[direc][0] = type;
-        putParams(param);
+    //     this.stations[stnId].branch[direc][0] = type;
+    //     let param = getParams();
+    //     param.stn_list[stnId].branch[direc][0] = type;
+    //     putParams(param);
 
-        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
-            if (['linestart', 'lineend'].includes(stnId)) {continue;}
-            stnInstance.state = this._stnState(stnId);
-        }
-        RMGLine.clearSVG();
-        this.drawStns();
-        this.drawLine();
-        this.drawDestInfo();
-        return true;
-    }
+    //     for (let [stnId, stnInstance] of Object.entries(this.stations)) {
+    //         if (['linestart', 'lineend'].includes(stnId)) {continue;}
+    //         stnInstance.state = this._stnState(stnId);
+    //     }
+    //     RMGLine.clearSVG();
+    //     this.drawStns();
+    //     this.drawLine();
+    //     this.drawDestInfo();
+    //     return true;
+    // }
 
-    updateBranchFirst(stnId: string, direction: DirectionLong, first: string) {
-        let direc = DirectionLong[direction];
-        // no change
-        if (this.stations[stnId].branch[direc][1] === first) {return false;}
+    // updateBranchFirst(stnId: string, direction: DirectionLong, first: string) {
+    //     let direc = DirectionLong[direction];
+    //     // no change
+    //     if (this.stations[stnId].branch[direc][1] === first) {return false;}
 
-        let branchEndId = first;
-        let param = getParams();
-        if (direc === 'right') {
-            while (this.stations[branchEndId].inDegree === 1) {
-                branchEndId = this.stations[branchEndId].children[0];
-            }
-            let branchFirstIdx = this.stations[stnId].children.indexOf(first);
+    //     let branchEndId = first;
+    //     let param = getParams();
+    //     if (direc === 'right') {
+    //         while (this.stations[branchEndId].inDegree === 1) {
+    //             branchEndId = this.stations[branchEndId].children[0];
+    //         }
+    //         let branchFirstIdx = this.stations[stnId].children.indexOf(first);
             
-            this.stations[stnId].branch.right[1] = param.stn_list[stnId].branch.right[1] = first;
-            this.stations[branchEndId].branch.left[1] = param.stn_list[branchEndId].branch.left[1] = this.stations[branchEndId].parents[branchFirstIdx];
-        } else {
-            while (this.stations[branchEndId].outDegree === 1) {
-                branchEndId = this.stations[branchEndId].parents[0];
-            }
-            let branchFirstIdx = this.stations[stnId].parents.indexOf(first);
+    //         this.stations[stnId].branch.right[1] = param.stn_list[stnId].branch.right[1] = first;
+    //         this.stations[branchEndId].branch.left[1] = param.stn_list[branchEndId].branch.left[1] = this.stations[branchEndId].parents[branchFirstIdx];
+    //     } else {
+    //         while (this.stations[branchEndId].outDegree === 1) {
+    //             branchEndId = this.stations[branchEndId].parents[0];
+    //         }
+    //         let branchFirstIdx = this.stations[stnId].parents.indexOf(first);
 
-            this.stations[stnId].branch.left[1] = param.stn_list[stnId].branch.left[1] = first;
-            this.stations[branchEndId].branch.right[1] = param.stn_list[branchEndId].branch.right[1] = this.stations[branchEndId].children[branchFirstIdx];
-        }
-        putParams(param);
+    //         this.stations[stnId].branch.left[1] = param.stn_list[stnId].branch.left[1] = first;
+    //         this.stations[branchEndId].branch.right[1] = param.stn_list[branchEndId].branch.right[1] = this.stations[branchEndId].children[branchFirstIdx];
+    //     }
+    //     putParams(param);
 
-        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
-            if (['linestart', 'lineend'].includes(stnId)) {continue;}
-            stnInstance.x = this._stnRealX(stnId);
-            stnInstance.y = this._stnRealY(stnId);
-            stnInstance.state = this._stnState(stnId);
-        }
-        RMGLine.clearSVG();
-        this.drawStns();
-        this.drawLine();
-        this.drawDestInfo();
+    //     for (let [stnId, stnInstance] of Object.entries(this.stations)) {
+    //         if (['linestart', 'lineend'].includes(stnId)) {continue;}
+    //         stnInstance.x = this._stnRealX(stnId);
+    //         stnInstance.y = this._stnRealY(stnId);
+    //         stnInstance.state = this._stnState(stnId);
+    //     }
+    //     RMGLine.clearSVG();
+    //     this.drawStns();
+    //     this.drawLine();
+    //     this.drawDestInfo();
 
-        return true;
-    }
+    //     return true;
+    // }
 
-    updateBranchPos(stnId: string, direction: DirectionLong, pos: 0 | 1) {
-        let direc = DirectionLong[direction];
-        // no change
-        if (direc === 'right') {
-            if (this.stations[stnId].children.indexOf(this.stations[stnId].branch.right[1]) === pos) {return false;}
-        } else {
-            if (this.stations[stnId].parents.indexOf(this.stations[stnId].branch.left[1]) === pos) {return false;}
-        }
+    // updateBranchPos(stnId: string, direction: DirectionLong, pos: 0 | 1) {
+    //     let direc = DirectionLong[direction];
+    //     // no change
+    //     if (direc === 'right') {
+    //         if (this.stations[stnId].children.indexOf(this.stations[stnId].branch.right[1]) === pos) {return false;}
+    //     } else {
+    //         if (this.stations[stnId].parents.indexOf(this.stations[stnId].branch.left[1]) === pos) {return false;}
+    //     }
 
-        let branchEndId = this.stations[stnId].branch[direc][1];
-        let param = getParams();
-        if (direc === 'right') {
-            while (this.stations[branchEndId].inDegree === 1) {
-                branchEndId = this.stations[branchEndId].children[0];
-            }
-            this.stations[stnId].children.reverse();
-            param.stn_list[stnId].children.reverse();
-            this.stations[branchEndId].parents.reverse();
-            param.stn_list[branchEndId].parents.reverse();
-        } else {
-            while (this.stations[branchEndId].outDegree === 1) {
-                branchEndId = this.stations[branchEndId].parents[0];
-            }
-            this.stations[stnId].parents.reverse();
-            param.stn_list[stnId].parents.reverse();
-            this.stations[branchEndId].children.reverse();
-            param.stn_list[branchEndId].children.reverse();
-        }
-        putParams(param);
+    //     let branchEndId = this.stations[stnId].branch[direc][1];
+    //     let param = getParams();
+    //     if (direc === 'right') {
+    //         while (this.stations[branchEndId].inDegree === 1) {
+    //             branchEndId = this.stations[branchEndId].children[0];
+    //         }
+    //         this.stations[stnId].children.reverse();
+    //         param.stn_list[stnId].children.reverse();
+    //         this.stations[branchEndId].parents.reverse();
+    //         param.stn_list[branchEndId].parents.reverse();
+    //     } else {
+    //         while (this.stations[branchEndId].outDegree === 1) {
+    //             branchEndId = this.stations[branchEndId].parents[0];
+    //         }
+    //         this.stations[stnId].parents.reverse();
+    //         param.stn_list[stnId].parents.reverse();
+    //         this.stations[branchEndId].children.reverse();
+    //         param.stn_list[branchEndId].children.reverse();
+    //     }
+    //     putParams(param);
 
-        for (let [stnId, stnInstance] of Object.entries(this.stations)) {
-            if (['linestart', 'lineend'].includes(stnId)) {continue;}
-            stnInstance.x = this._stnRealX(stnId);
-            stnInstance.y = this._stnRealY(stnId);
-        }
-        RMGLine.clearSVG();
-        this.drawStns();
-        this.drawLine();
-        this.drawDestInfo();
-        return true;
-    }
+    //     for (let [stnId, stnInstance] of Object.entries(this.stations)) {
+    //         if (['linestart', 'lineend'].includes(stnId)) {continue;}
+    //         stnInstance.x = this._stnRealX(stnId);
+    //         stnInstance.y = this._stnRealY(stnId);
+    //     }
+    //     RMGLine.clearSVG();
+    //     this.drawStns();
+    //     this.drawLine();
+    //     this.drawDestInfo();
+    //     return true;
+    // }
 
     static clearSVG() {
         $('#stn_icons, #line_main, #line_pass').empty();

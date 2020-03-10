@@ -87,6 +87,14 @@
         }
     }, 
     {
+        "filename": "guangzhou_gz9", 
+        "desc": {
+            "en": "Guangzhou Metro Line 9", 
+            "zh-Hans": "广州地铁9号线",
+            "zh-Hant": "廣州地鐵9號線"
+        }
+    }, 
+    {
         "filename": "guangzhou_gz14", 
         "desc": {
             "en": "Guangzhou Metro Line 14", 

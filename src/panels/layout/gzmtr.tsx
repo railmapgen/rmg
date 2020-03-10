@@ -3,18 +3,17 @@ import { useTranslation } from 'react-i18next';
 import { RMGLineGZ } from '../../Line/LineGZ';
 import { Slider } from '@material-ui/core';
 import StyledExpansionPanel from './styled-expansion-panel';
+import { ParamContext } from '../../context';
 
 interface Props {
     expanded: false | number;
     onChange: (index: number) => (event, isExpanded: boolean) => void;
-
-    directionGZX: number;
-    directionGZY: number;
-    paramUpdate: (key, data) => void;
 }
 
 const LayoutGZMTR = (props: Props) => {
     const { t } = useTranslation();
+
+    const { param, dispatch } = React.useContext(ParamContext);
 
     const [isGrow, setIsGrow] = React.useState(false);
     React.useEffect(() => {
@@ -22,24 +21,13 @@ const LayoutGZMTR = (props: Props) => {
         return () => setIsGrow(false);
     }, []);
 
-
-    const directionGZXChange = (_, value: number) => {
-        props.paramUpdate('direction_gz_x', value);
-        (window.myLine as RMGLineGZ).directionGZX = value;
-    }
-
-    const directionGZYChange = (_, value: number) => {
-        props.paramUpdate('direction_gz_y', value);
-        (window.myLine as RMGLineGZ).directionGZY = value;
-    }
-
     const directionGZPanel = React.useMemo(() => (
         <StyledExpansionPanel in={isGrow} growTimeout={1000}
             expanded={props.expanded === 4} onChange={props.onChange(4)}
             icon="open_with" heading={t('layout.directionGZ.title')}>
             <Slider
-                value={props.directionGZX}
-                onChange={directionGZXChange}
+                value={param.direction_gz_x}
+                onChange={(_, value: number) => dispatch({ type: 'SET_DIRECTION_GZ_X', value })}
                 step={0.01}
                 marks={[
                     { value: 0, label: t('layout.directionGZ.left') },
@@ -47,8 +35,8 @@ const LayoutGZMTR = (props: Props) => {
                 ]}
                 valueLabelDisplay="auto" />
             <Slider
-                value={props.directionGZY}
-                onChange={directionGZYChange}
+                value={param.direction_gz_y}
+                onChange={(_, value: number) => dispatch({ type: 'SET_DIRECTION_GZ_Y', value })}
                 step={0.01}
                 marks={[
                     { value: 0, label: t('layout.directionGZ.top') },
@@ -56,7 +44,7 @@ const LayoutGZMTR = (props: Props) => {
                 ]}
                 valueLabelDisplay="auto" />
         </StyledExpansionPanel>
-    ), [props.expanded, props.directionGZX, props.directionGZY, isGrow]);
+    ), [props.expanded, isGrow, param.direction_gz_x, param.direction_gz_y]);
 
     return (
         <>

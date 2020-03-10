@@ -699,28 +699,28 @@ export class RMGLineGZ extends RMGLine {
         this.loadLineNum();
     }
 
-    updateBranchType(stnId: string, direction: DirectionLong, type: 'through' | 'nonthrough') {
-        if (!super.updateBranchType(stnId, direction, type)) {return false;}
-        this.loadLineNum();
-        this.loadDirection();
-        return true;
-    }
+    // updateBranchType(stnId: string, direction: DirectionLong, type: 'through' | 'nonthrough') {
+    //     if (!super.updateBranchType(stnId, direction, type)) {return false;}
+    //     this.loadLineNum();
+    //     this.loadDirection();
+    //     return true;
+    // }
 
-    updateBranchFirst(stnId: string, direction: DirectionLong, first: string) {
-        if (!super.updateBranchFirst(stnId, direction, first)) {
-            return false;
-        }
-        this.loadLineNum();
-        this.loadDirection();
-        return true;
-    }
+    // updateBranchFirst(stnId: string, direction: DirectionLong, first: string) {
+    //     if (!super.updateBranchFirst(stnId, direction, first)) {
+    //         return false;
+    //     }
+    //     this.loadLineNum();
+    //     this.loadDirection();
+    //     return true;
+    // }
 
-    updateBranchPos(stnId: string, direction: DirectionLong, pos: 0 | 1) {
-        if (!super.updateBranchPos(stnId, direction, pos)) {return false;}
-        this.loadLineNum();
-        this.loadDirection();
-        return  true;
-    }
+    // updateBranchPos(stnId: string, direction: DirectionLong, pos: 0 | 1) {
+    //     if (!super.updateBranchPos(stnId, direction, pos)) {return false;}
+    //     this.loadLineNum();
+    //     this.loadDirection();
+    //     return  true;
+    // }
 
     static initSVG(line) {
         super.initSVG(line);

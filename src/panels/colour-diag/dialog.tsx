@@ -49,7 +49,7 @@ interface ColourDialogProps {
     onClose: () => void;
 }
 
-export default function ColourDialog(props: ColourDialogProps) {
+const ColourDialog = React.memo((props: ColourDialogProps) => {
     const classes = useStyles();
     const { t } = useTranslation();
 
@@ -58,10 +58,7 @@ export default function ColourDialog(props: ColourDialogProps) {
         props.onUpdate('name', newName);
     }
 
-
-
     const handleClose = () => {
-        // setHexTemp(props.theme[2]);
         props.onClose();
     }
 
@@ -105,5 +102,9 @@ export default function ColourDialog(props: ColourDialogProps) {
             </DialogActions>
         </Dialog>
     )
-}
+}, (prevProps, nextProps) => prevProps.open === nextProps.open &&
+    prevProps.lineName.toString() === nextProps.lineName.toString() &&
+    prevProps.theme.toString() === nextProps.theme.toString());
+
+export default ColourDialog;
 
