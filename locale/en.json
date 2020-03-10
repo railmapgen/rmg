@@ -23,7 +23,7 @@
         "export": {
             "button": "Preview And Export", 
             "title": "Choose a Canvas", 
-            "destination": "Destination Info Panel",
+            "destination": "Destination Info Sign",
             "runin": "Running-in Board", 
             "railmap": "Rail Map"
         }, 
@@ -48,7 +48,7 @@
     "layout": {
         "size": {
             "title": "Canvas Size", 
-            "destWidth": "Destination Panel Width", 
+            "destWidth": "Destination Sign Width", 
             "width": "Rail Map Width", 
             "height": "Canvas Height"
         },
@@ -72,7 +72,6 @@
             "r": "Right"
         }, 
         "platform": "Platform Number", 
-        "reverse": "Reverse Entire Line", 
         "flipName": "Flip Station Names Position", 
         "MTRLegacy": "Destination Panel Legacy Style", 
         "lineNum": "Line Number", 
@@ -97,8 +96,12 @@
 
     "stations": {
         "current": "Set As Current", 
+        "fabs": {
+            "tooltip": "Options", 
+            "add": "New Stations", 
+            "reverse": "Reverse Entire Line"
+        },
         "add": {
-            "button": "New Station",
             "title": "Choose a location",
             "prep": "Relative Position",
             "before": "Before",
@@ -177,7 +180,13 @@
             }
         }, 
         "remove": {
-            "button": "Remove"
+            "button": "Remove", 
+            "title": "Warning", 
+            "msg": "Are you sure to delete station {{name}}? You can't undo this action.",
+            "error": {
+                "title": "Deletion Error", 
+                "msg": "You are not allowed to delete this station!"
+            }
         }
     }, 
 
@@ -191,6 +200,7 @@
         "title": "Edit Names and Colours",
         "city": "City", 
         "line": "Line", 
+        "tooltip": "Colour Picker",
         "colour": "Background (HEX)", 
         "fg": "Foreground", 
         "fgBlack": "Black", 
@@ -201,5 +211,10 @@
         "done": "Done", 
         "cancel": "Cancel", 
         "ok": "OK"
+    }, 
+    
+    "expansion": {
+        "collapse": "Collapse", 
+        "expand": "Expand"
     }
 }

@@ -311,7 +311,7 @@ export class RMGLineSH extends RMGLine {
                 } else $('g#run_in_branch_shmetro, g#next_stn_branch_text').hide()
                 if (prevStnIds.length > 1) {
                     $('g#run_in_branch_shmetro_pass').attr({ transform: `translate(0,${110 + dh})`, }).show()
-                    $('path#run_in_line_branch_shmetro_pass').attr({ d: `M 38,10 H ${this._svgRuninWidth / 6 + 3} V 22 H 24 Z`, })
+                    $('path#run_in_line_branch_shmetro_pass').attr({ d: `M 24,10 H ${this._svgRuninWidth / 6 + 3} V 22 H 24 Z`, })
                     $('#run_in_line_branch_slash_shmetro_pass').attr({ x1: this._svgRuninWidth / 6, y1: 15, x2: this._svgRuninWidth / 3, y2: 125 })
                 } else $('g#run_in_branch_shmetro_pass, g#prev_stn_branch_text').hide()
             }

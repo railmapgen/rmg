@@ -36,7 +36,7 @@ export class RMGStationHK extends RMGStation {
 
     constructor (id: string, data: StationInfo) {
         super(id, data);
-        this.usage = data.usage || '';
+        this.usage = data.facility || '';
     }
 
     /**
@@ -244,8 +244,9 @@ class Int3StationHK extends RMGStationHK {
     }
 
     get iconHTML() {
+        let n = Math.min(this._intInfos.length+1, 5);
         return $('<use>', {
-            'xlink:href': '#int3_hk' + this._branchAffix, 
+            'xlink:href': '#int' + n + '_hk' + this._branchAffix, 
             transform: `translate(${this.x},${this.y+this._branchDy})rotate(${this._iconRotation})`, 
             class: this.iconClass
         });
@@ -261,9 +262,9 @@ class Int3StationHK extends RMGStationHK {
         this._intInfos
             .map(info => info[IntInfoTag.colour])
             .forEach((c, i) => {
-                if (i >= 2) {return;}
+                if (i >= 4) {return;}
                 let tickColour = (this.state === -1) ? '#aaa' : c;
-                let dy = (!this.namePos) ? 18*(i+1) : -18*(2-i);
+                let dy = (!this.namePos) ? 18*(i+1) : -18*(this._intInfos.length-i);
                 dy += this._dy;
                 dy *= this._tickFlip;
                 elems.push(
@@ -290,9 +291,9 @@ class Int3StationHK extends RMGStationHK {
         this._intInfos
             .map(info => [info[IntInfoTag.nameZH], info[IntInfoTag.nameEN]] as Name)
             .forEach((names, i) => {
-                if (i >=2) {return;}
+                if (i >=4) {return;}
                 let [nameHTML, nameZHLn, nameENLn] = joinIntName(names, 10, 7);
-                var dy = (!this.namePos) ? 18*(i+1) : -18*(2-i);
+                var dy = (!this.namePos) ? 18*(i+1) : -18*(this._intInfos.length-i);
                 dy += this._dy;
                 dy *= this._tickFlip;
                 dy += 5.953125 - (19.65625 + 13*(nameZHLn-1) + 7*(nameENLn-1))/2;
@@ -360,18 +361,24 @@ class OSI11StationHK extends Int2StationHK {
     get _osiNameDX() {return 0;}
 
     get osiNameHTML() {
-        var dy = this._dy + 8.34375 - 25.03125/2;
-        return $('<g>', {
+        var dy = this._dy + 8.34375 - 25.03125/2 - (!this.namePos ? 0 : 10*(this._osiNames[1].split('\\').length-1));
+        let el = $('<g>', {
             'text-anchor': this._txtAnchor, 
             'transform': `translate(${this.x+this._osiNameDX},${this.y+dy+this._branchElDy})`, 
             'class': 'Name ' + this._nameClass
         }).append(
             $('<text>').addClass('rmg-name__zh rmg-name__mtr--osi').text(this._osiNames[0])
-        ).append(
-            $('<text>', {
-                'x':0, 'dy':12, 'class':'rmg-name__en rmg-name__mtr--osi'
-            }).text(this._osiNames[1])
-        );
+        )
+
+        this._osiNames[1].split('\\').forEach((txt, i) => {
+            el.append(
+                $('<text>', {
+                    x: 0, dy: 12+i*10, class: 'rmg-name__en rmg-name__mtr--osi'
+                }).text(txt)
+            );
+        });
+
+        return el;
     }
 
     get ungrpHTML() {
@@ -423,7 +430,7 @@ class OSI12StationHK extends Int3StationHK {
     }
 
     get _dy() {return (!this.namePos) ? (26-18) : -8;}
-    get _osiDY() {return (!this.namePos) ? (26+18+10) + 8.34375  : -(26+18+10) + 8.34375 - 25.03125;}
+    get _osiDY() {return (!this.namePos) ? (26+18+10) + 8.34375  : -(26+18+10) + 8.34375 - 25.03125 - 10*(this._osiNames[1].split('\\').length-1);}
     get _osiTxtAnchor() {return 'middle';}
     get _osiDX() {return 0;}
 
@@ -505,18 +512,22 @@ export class OSI22StationHK extends OSI12StationHK {
     get _osiNameDX(): number {return 0;}
 
     get osiNameHTML() {
-        var dy = this._dy - (this.namePos ? 18+9 : -27) + 8.34375 - 25.03125/2;
-        return $('<g>', {
+        var dy = this._dy - (this.namePos ? 18+9 : -27) + 8.34375 - 25.03125/2 - 5*(this._osiNames[1].split('\\').length-1);
+        let el = $('<g>', {
             'text-anchor': this._osiTxtAnchor, 
             transform: `translate(${this.x+this._osiNameDX},${this.y+dy})`, 
             class: 'Name ' + this._nameClass
         }).append(
             $('<text>').addClass('rmg-name__zh rmg-name__mtr--osi').text(this._osiNames[0])
-        ).append(
-            $('<text>', {
-                x:0, dy:12, class:'rmg-name__en rmg-name__mtr--osi'
-            }).text(this._osiNames[1])
         );
+        this._osiNames[1].split('\\').forEach((txt,i) => {
+            el.append(
+                $('<text>', {
+                    x:0, dy:12+i*10, class:'rmg-name__en rmg-name__mtr--osi'
+                }).text(txt)
+            );
+        });
+        return el;
     }
 
     get ungrpHTML() {
@@ -614,9 +625,9 @@ export class OSI22EndStationHK extends OSI12StationHK {
     get _osiDY() {
         let affix = this._branchAffix;
         if (affix === '') {
-            return !this.namePos ? (10) + 8.34375  : -(10) + 8.34375 - 25.03125;
+            return !this.namePos ? (10) + 8.34375  : -(10) + 8.34375 - 25.03125 - 10*(this._osiNames[1].split('\\').length-1);
         } else {
-            return !this.namePos ? (10) + 8.34375 - 9.68  : -(10) + 8.34375 - 25.03125 + 9.68;
+            return !this.namePos ? (10) + 8.34375 - 9.68  : -(10) + 8.34375 - 25.03125 + 9.68 - 10*(this._osiNames[1].split('\\').length-1);
         }
     }
     get _osiTxtAnchor() {return (this.children[0] == 'lineend') ? 'start' : 'end';}

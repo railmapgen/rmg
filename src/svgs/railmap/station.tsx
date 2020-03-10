@@ -1,18 +1,14 @@
 import * as React from 'react';
-import { StationInfo, RMGParam } from '../../types';
-import { getYReal } from './methods';
-import { RMGLine } from '../../Line/RMGLine';
+import { ParamContext } from '../../context';
 
 interface Props {
     stnId: string;
-    // param: RMGParam;
-    myLine: RMGLine;
     isPass: boolean;
     isCurrent: boolean;
-    x: number;
 }
 
 export default (props: Props) => {
+    const { param } = React.useContext(ParamContext);
     /**
      * Top (in pixels) of station's Chinese name. 
      */
@@ -42,25 +38,16 @@ export default (props: Props) => {
      */
     const STN_NAME_LINE_GAP = 14;
 
-    const myLine = props.myLine;
-
-    const x = React.useMemo(
-        () => myLine._stnRealX(props.stnId), 
-        [myLine.param.padding, myLine.param.svg_width, JSON.stringify(myLine.param.stn_list)])
-    const y = React.useMemo(() => myLine._stnRealY(props.stnId), [myLine.param.branch_spacing, JSON.stringify(myLine.param.stn_list)]);
-
     return (
-        <g id={props.stnId} style={{
-            transform: `translate(${x}px,${y}px)`,
-        }}>
-            {props.isCurrent && <rect id="current_bg" x="0" y="0" width="100" height="20"/>}
+        <>
+            {props.isCurrent && <rect id="current_bg" x="0" y="0" width="100" height="20" />}
 
             <use xlinkHref="#stn_hk"
                 className={props.isPass ? 'rmg-stn__mtr--pass' : 'rmg-stn__mtr--future'} />
             <g id="stn_name" textAnchor="middle" transform="translate(0,20)"
                 className={`Name ${props.isPass ? 'Pass' : (props.isCurrent ? 'Current' : 'Future')}`}>
-                <text className='rmg-name__zh rmg-name__mtr--station'>{myLine.param.stn_list[props.stnId].name[0]}</text>
+                <text className='rmg-name__zh rmg-name__mtr--station'>{param.stn_list[props.stnId].name[0]}</text>
             </g>
-        </g>
+        </>
     )
 }

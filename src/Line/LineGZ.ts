@@ -1,4 +1,4 @@
-import { getTxtBoxDim, setParams, getParams, putParams, getRandomId } from '../utils';
+import { getTxtBoxDim, setParams, getParams, putParams } from '../utils';
 import { RMGStationGZ, IntStationGZ, BranchStationGZ, OSIStationGZ, getIntBoxGZ } from '../Station/StationGZ';
 import { RMGLine } from './Line';
 
@@ -664,61 +664,63 @@ export class RMGLineGZ extends RMGLine {
         }
     }
 
-    addStn(prep, stnId: string, loc, end) {
-        var res = super.addStn(prep, stnId, loc, end);
-        if (['newupper', 'newlower'].includes(loc)) {
-            let stnInfo = getParams().stn_list[end];
-            this.stations[end] = this._initStnInstance(end, stnInfo);
-            this._updateStnInstance(end);
-            this.redrawStn(end);
-        }
-        this.loadLineNum();
-        this.loadDirection();
-        return res;
-    }
+    // addStn(prep, stnId: string, loc, end) {
+    //     var res = super.addStn(prep, stnId, loc, end);
+    //     if (['newupper', 'newlower'].includes(loc)) {
+    //         let stnInfo = getParams().stn_list[end];
+    //         this.stations[end] = this._initStnInstance(end, stnInfo);
+    //         this._updateStnInstance(end);
+    //         if (!['linestart', 'lineend'].includes(end)) {
+    //             this.redrawStn(end);
+    //         }
+    //     }
+    //     this.loadLineNum();
+    //     this.loadDirection();
+    //     return res;
+    // }
 
-    removeStn(stnId: string) {
-        if (super.removeStn(stnId)) {
-            this.loadLineNum();
-            this.loadDirection();
-            return true;
-        } else {
-            return false;
-        }
-    }
+    // removeStn(stnId: string) {
+    //     if (super.removeStn(stnId)) {
+    //         this.loadLineNum();
+    //         this.loadDirection();
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // }
 
-    updateStnTransfer(stnId: string, type, info=null) {
-        super.updateStnTransfer(stnId, type, info);
-        this.loadLineNum();
-    }
+    // updateStnTransfer(stnId: string, type, info=null) {
+    //     super.updateStnTransfer(stnId, type, info);
+    //     this.loadLineNum();
+    // }
 
     updateStnTransfer2(stnId: string, info: StationTransfer) {
         super.updateStnTransfer2(stnId, info);
         this.loadLineNum();
     }
 
-    updateBranchType(stnId: string, direction: DirectionLong, type: 'through' | 'nonthrough') {
-        if (!super.updateBranchType(stnId, direction, type)) {return false;}
-        this.loadLineNum();
-        this.loadDirection();
-        return true;
-    }
+    // updateBranchType(stnId: string, direction: DirectionLong, type: 'through' | 'nonthrough') {
+    //     if (!super.updateBranchType(stnId, direction, type)) {return false;}
+    //     this.loadLineNum();
+    //     this.loadDirection();
+    //     return true;
+    // }
 
-    updateBranchFirst(stnId: string, direction: DirectionLong, first: string) {
-        if (!super.updateBranchFirst(stnId, direction, first)) {
-            return false;
-        }
-        this.loadLineNum();
-        this.loadDirection();
-        return true;
-    }
+    // updateBranchFirst(stnId: string, direction: DirectionLong, first: string) {
+    //     if (!super.updateBranchFirst(stnId, direction, first)) {
+    //         return false;
+    //     }
+    //     this.loadLineNum();
+    //     this.loadDirection();
+    //     return true;
+    // }
 
-    updateBranchPos(stnId: string, direction: DirectionLong, pos: 0 | 1) {
-        if (!super.updateBranchPos(stnId, direction, pos)) {return false;}
-        this.loadLineNum();
-        this.loadDirection();
-        return  true;
-    }
+    // updateBranchPos(stnId: string, direction: DirectionLong, pos: 0 | 1) {
+    //     if (!super.updateBranchPos(stnId, direction, pos)) {return false;}
+    //     this.loadLineNum();
+    //     this.loadDirection();
+    //     return  true;
+    // }
 
     static initSVG(line) {
         super.initSVG(line);

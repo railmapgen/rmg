@@ -2,10 +2,13 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, List, ListItem, ListItemIcon, Icon, TextField, MenuItem, DialogActions, Button } from '@material-ui/core';
 import { StationInfo } from '../../types';
-import { formatStnName } from '../../utils';
+import { formatStnName, setParams } from '../../utils';
 import { getYShareMTR } from '../../methods';
+import { addStation } from './utils';
+import { RMGLineGZ } from '../../Line/LineGZ';
+import { RMGLineHK } from '../../Line/LineHK';
 
-const newBranchPossibleEnd = (prep: 'before' | 'after', pivot: string, stnList: {[stnId: string]: StationInfo}) => {
+const newBranchPossibleEnd = (prep: 'before' | 'after', pivot: string, stnList: { [stnId: string]: StationInfo }) => {
     let res: string[] = [];
     if (prep == 'before') {
         while (stnList[pivot].parents.length == 1) {
@@ -24,46 +27,46 @@ const newBranchPossibleEnd = (prep: 'before' | 'after', pivot: string, stnList: 
 };
 
 const newStnPossibleLoc = (
-    prep: 'before' | 'after', 
-    pivot: string, 
-    stnList: {[stnId: string]: StationInfo}
-    ): [number, number, number, string[], string[]] => {
-    let deg = stnList[pivot][prep==='before' ? 'parents' : 'children'].length;
+    prep: 'before' | 'after',
+    pivot: string,
+    stnList: { [stnId: string]: StationInfo }
+): [number, number, number, string[], string[]] => {
+    let deg = stnList[pivot] ? stnList[pivot][prep === 'before' ? 'parents' : 'children'].length : 0;
     switch (deg) {
         case 2:
             // 1 -> 2
-            return [1,1,1,[],[]];
+            return [1, 1, 1, [], []];
         case 1:
             let y = getYShareMTR(pivot, stnList);
             if (y == 0) {
                 // 1 -> 1
                 let state: string[] | 0 = newBranchPossibleEnd(prep, pivot, stnList);
                 state = (state.length) ? state : [];
-                return [1,0,0,state,state];
+                return [1, 0, 0, state, state];
                 // [1,0,0,1,1];
             } else if (y < 0) {
                 if (prep == 'before') {
-                    return [stnList[stnList[pivot].parents[0]].children.length -1, 
-                        0,1,[],[]
+                    return [stnList[stnList[pivot].parents[0]].children.length - 1,
+                        0, 1, [], []
                     ];
                 } else {
-                    return [stnList[stnList[pivot].children[0]].parents.length -1, 
-                        0,1,[],[]
+                    return [stnList[stnList[pivot].children[0]].parents.length - 1,
+                        0, 1, [], []
                     ];
                 }
             } else {
                 if (prep == 'before') {
-                    return [stnList[stnList[pivot].parents[0]].children.length -1, 
-                        1,0,[],[]
+                    return [stnList[stnList[pivot].parents[0]].children.length - 1,
+                        1, 0, [], []
                     ];
                 } else {
-                    return [stnList[stnList[pivot].children[0]].parents.length -1, 
-                        1,0,[],[]
+                    return [stnList[stnList[pivot].children[0]].parents.length - 1,
+                        1, 0, [], []
                     ];
                 }
             }
     }
-    return [0,0,0,[],[]];
+    return [0, 0, 0, [], []];
 };
 
 interface StationAddDialogProps {
@@ -72,20 +75,21 @@ interface StationAddDialogProps {
         [stnId: string]: StationInfo;
     };
     tpo: string[];
-    onClose: (action: 'close' | string[]) => void;
+    onClose: (action: 'close' | string) => void;
+    paramUpdate: (key, data) => void;
 }
 
-export default (props: StationAddDialogProps) => {
+const StationAddDialog = React.memo((props: StationAddDialogProps) => {
     const { t } = useTranslation();
 
     const allLocs = {
-        centre: t('stations.add.centre'), 
-        upper: t('stations.add.upper'), 
-        lower: t('stations.add.lower'), 
-        newupper: t('stations.add.newUpper'), 
-        newlower: t('stations.add.newLower'), 
+        centre: t('stations.add.centre'),
+        upper: t('stations.add.upper'),
+        lower: t('stations.add.lower'),
+        newupper: t('stations.add.newUpper'),
+        newlower: t('stations.add.newLower'),
     };
-    
+
     const [prep, setPrep] = React.useState('before' as 'before' | 'after');
     const [pivot, setPivot] = React.useState(props.tpo[0]);
     const [loc, setLoc] = React.useState(Object.keys(allLocs)[0]);
@@ -122,11 +126,45 @@ export default (props: StationAddDialogProps) => {
         if (action === 'close') {
             props.onClose('close');
         } else {
-            props.onClose([
-                prep, pivot, loc, end
-            ]);
+            let [newId, res] = addStation(
+                prep as 'before' | 'after',
+                pivot,
+                loc as 'centre' | 'upper' | 'lower' | 'newupper' | 'newlower',
+                end as string,
+                props.stnList
+            );
+            // let [newId, newInfo] = window.myLine.addStn(action[0] as 'before' | 'after', action[1], action[2], action[3]);
+
+            // this.props.paramUpdate('stn_list', getParams().stn_list);
+            props.paramUpdate('stn_list', res);
+
+            // handle redrawing (will be removed)
+            setParams('stn_list', res);
+            Object.keys(res).forEach(stnId => {
+                window.myLine.stations[stnId] = window.myLine._initStnInstance(stnId, res[stnId]);
+            });
+            Object.keys(res).forEach(stnId => {
+                if (['linestart', 'lineend'].includes(stnId)) return;
+                window.myLine._updateStnInstance(stnId);
+            });
+
+            $('#stn_icons, #line_main, #line_pass').empty();
+            window.myLine.drawStns();
+            window.myLine.drawLine();
+            window.myLine.drawStrip();
+            window.myLine.drawDestInfo();
+
+            if (window.urlParams.get('style') === 'gzmtr') {
+                (window.myLine as RMGLineGZ).loadLineNum();
+                (window.myLine as RMGLineGZ).loadDirection();
+            }
+            if (window.urlParams.get('style') === 'mtr') {
+                (window.myLine as RMGLineHK).updateStnNameBg();
+            }
+
+            props.onClose(newId);
         }
-    }
+    };
 
     return (
         <Dialog open={props.open} onClose={() => handleClick('close')}>
@@ -135,10 +173,10 @@ export default (props: StationAddDialogProps) => {
                 <List>
                     <ListItem>
                         <ListItemIcon>
-                            <Icon>control_camera</Icon> 
+                            <Icon>control_camera</Icon>
                         </ListItemIcon>
                         <TextField select
-                            style={{width: '100%'}}
+                            style={{ width: '100%' }}
                             variant="outlined"
                             label={t('stations.add.prep')}
                             onChange={(e) => setPrep(e.target.value as 'before' | 'after')}
@@ -149,10 +187,10 @@ export default (props: StationAddDialogProps) => {
                     </ListItem>
                     <ListItem>
                         <ListItemIcon>
-                            <Icon>near_me</Icon> 
+                            <Icon>near_me</Icon>
                         </ListItemIcon>
                         <TextField select
-                            style={{width: '100%'}}
+                            style={{ width: '100%' }}
                             variant="outlined"
                             label={t('stations.add.pivot')}
                             onChange={(e) => setPivot(e.target.value)}
@@ -166,10 +204,10 @@ export default (props: StationAddDialogProps) => {
                     </ListItem>
                     <ListItem>
                         <ListItemIcon>
-                            <Icon>share</Icon> 
+                            <Icon>share</Icon>
                         </ListItemIcon>
                         <TextField select
-                            style={{width: '100%'}}
+                            style={{ width: '100%' }}
                             variant="outlined"
                             label={t('stations.add.loc')}
                             onChange={(e) => setLoc(e.target.value)}
@@ -179,12 +217,12 @@ export default (props: StationAddDialogProps) => {
                             ))}
                         </TextField>
                     </ListItem>
-                    <ListItem style={{display: ['newupper','newlower'].includes(loc) ? 'flex' : 'none'}}>
+                    <ListItem style={{ display: ['newupper', 'newlower'].includes(loc) ? 'flex' : 'none' }}>
                         <ListItemIcon>
                             <Icon>undo</Icon>
                         </ListItemIcon>
                         <TextField select
-                            style={{width: '100%'}}
+                            style={{ width: '100%' }}
                             variant="outlined"
                             label={t('stations.add.end')}
                             onChange={(e) => setEnd(e.target.value)}
@@ -208,4 +246,22 @@ export default (props: StationAddDialogProps) => {
             </DialogActions>
         </Dialog>
     )
-};
+}, (prevProps, nextProps) => {
+    if (prevProps.open !== nextProps.open) {
+        return false;
+    } else {
+        let prevDeps = {};
+        let nextDeps = {};
+        Object.keys(nextProps.stnList).forEach(stnId => {
+            let { name, num, parents, children } = nextProps.stnList[stnId];
+            nextDeps[stnId] = { name, num, parents, children };
+        });
+        Object.keys(prevProps.stnList).forEach(stnId => {
+            let { name, num, parents, children } = prevProps.stnList[stnId];
+            prevDeps[stnId] = { name, num, parents, children };
+        });
+        return JSON.stringify(prevDeps) === JSON.stringify(nextDeps);
+    }
+});
+
+export default StationAddDialog;

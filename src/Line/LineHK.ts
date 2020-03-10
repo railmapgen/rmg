@@ -369,11 +369,11 @@ export class RMGLineHK extends RMGLine {
         if (stnId == this._currentStnId) {this.updateStnNameBg();}
     }
 
-    updateStnTransfer(stnId: string, type, info=null) {
-        super.updateStnTransfer(stnId, type, info);
-        this.loadFonts();
-        this.updateStnNameBg();
-    }
+    // updateStnTransfer(stnId: string, type, info=null) {
+    //     super.updateStnTransfer(stnId, type, info);
+    //     this.loadFonts();
+    //     this.updateStnNameBg();
+    // }
 
     updateStnTransfer2(stnId: string, info: StationTransfer) {
         super.updateStnTransfer2(stnId, info);
@@ -385,7 +385,7 @@ export class RMGLineHK extends RMGLine {
 
         this.stations[stnId].usage = chipId;
         let param = getParams();
-        param.stn_list[stnId].usage = chipId;
+        // param.stn_list[stnId].usage = chipId;
         param.stn_list[stnId].facility = chipId;
         putParams(param);
 
@@ -404,39 +404,39 @@ export class RMGLineHK extends RMGLine {
         }
     }
 
-    addStn(prep: 'before' | 'after', stnId: string, loc, end: string) {
-        let res = super.addStn(prep, stnId, loc, end);
+    // addStn(prep: 'before' | 'after', stnId: string, loc, end: string) {
+    //     let res = super.addStn(prep, stnId, loc, end);
 
-        this.loadFonts();
-        this.updateStnNameBg();
+    //     this.loadFonts();
+    //     this.updateStnNameBg();
 
-        return res;
-    }
+    //     return res;
+    // }
 
-    removeStn(stnId: string) {
-        if (!super.removeStn(stnId)) {return false;}
-        this.loadFonts();
-        this.updateStnNameBg();
-        return true;
-    }
+    // removeStn(stnId: string) {
+    //     if (!super.removeStn(stnId)) {return false;}
+    //     this.loadFonts();
+    //     this.updateStnNameBg();
+    //     return true;
+    // }
 
-    updateBranchType(stnId: string, direction: DirectionLong, type: 'through' | 'nonthrough') {
-        if (!super.updateBranchType(stnId, direction, type)) {return false;}
-        this.loadFonts();
-        return true;
-    }
+    // updateBranchType(stnId: string, direction: DirectionLong, type: 'through' | 'nonthrough') {
+    //     if (!super.updateBranchType(stnId, direction, type)) {return false;}
+    //     this.loadFonts();
+    //     return true;
+    // }
 
-    updateBranchFirst(stnId: string, direction: DirectionLong, first: string) {
-        if (!super.updateBranchFirst(stnId, direction, first)) {return false;}
-        this.loadFonts();
-        return true;
-    }
+    // updateBranchFirst(stnId: string, direction: DirectionLong, first: string) {
+    //     if (!super.updateBranchFirst(stnId, direction, first)) {return false;}
+    //     this.loadFonts();
+    //     return true;
+    // }
 
-    updateBranchPos(stnId: string, direction: DirectionLong, pos: 0 | 1) {
-        if (!super.updateBranchPos(stnId, direction, pos)) {return false;}
-        this.loadFonts();
-        return true;
-    }
+    // updateBranchPos(stnId: string, direction: DirectionLong, pos: 0 | 1) {
+    //     if (!super.updateBranchPos(stnId, direction, pos)) {return false;}
+    //     this.loadFonts();
+    //     return true;
+    // }
 
     static initSVG(line) {
         super.initSVG(line);

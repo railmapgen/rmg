@@ -1,35 +1,31 @@
 import * as React from 'react';
-import { RMGParam } from '../types';
 
 import Strip from './strip';
-import { RMGLine } from '../Line/RMGLine';
+import { ParamContext } from '../context';
 
-interface Props {
-    // param: RMGParam;
-    myLine: RMGLine
-}
+export default () => {
+    const { param } = React.useContext(ParamContext);
 
-export default (props: Props) => {
     return (
-        <svg 
-            xmlns="http://www.w3.org/2000/svg" 
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
             id="destination"
             style={{
-                width: 'var(--rmg-svg-width)', 
-                height: 'var(--rmg-svg-height)', 
-                ['--rmg-svg-width' as any]: props.myLine.param.svg_dest_width + 'px', 
-                ['--rmg-svg-height' as any]: props.myLine.param.svg_height + 'px', 
-                ['--rmg-theme-colour' as any]: props.myLine.param.theme[2], 
+                width: 'var(--rmg-svg-width)',
+                height: 'var(--rmg-svg-height)',
+                ['--rmg-svg-width' as any]: param.svg_dest_width + 'px',
+                ['--rmg-svg-height' as any]: param.svg_height + 'px',
+                ['--rmg-theme-colour' as any]: param.theme[2],
             }} >
 
-            <rect id="outer" x="0" y="0"/>
-            <Strip stripPc={props.myLine.param.strip_pc} />
+            <rect id="outer" x="0" y="0" />
+            <Strip stripPc={param.strip_pc} />
 
             <g id="dest_name">
-                <use xlinkHref="#arrow"/>
+                <use xlinkHref="#arrow" />
                 <g id="platform">
-                    <circle cx="0" cy="0" r="75"/>
+                    <circle cx="0" cy="0" r="75" />
                     <text className="rmg-name__zh" dy="0"></text>
                 </g>
                 <g>

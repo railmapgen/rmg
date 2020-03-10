@@ -172,7 +172,7 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
                         </ListItem>
                         <ListItem button onClick={() => this.setState({langDialogOpened: true})}>
                             <ListItemIcon>
-                                <Icon>language</Icon>
+                                <Icon>translate</Icon>
                             </ListItemIcon>
                             <ListItemText 
                                 primary={this.props.t('file.lang.button')}
@@ -231,8 +231,8 @@ interface LangDialogProps {
 function LangDialog(props: LangDialogProps) {
     const {t, i18n} = useTranslation();
 
-    const handleClick = (lang) => {
-        if (lang === window.urlParams.get('lang')) {
+    const handleClick = (lang: string) => {
+        if (lang === i18n.language) {
             props.onClose();
         } else {
             i18n

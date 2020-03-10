@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { getParams } from '../../utils';
 import { RMGLineHK } from '../../Line/LineHK';
 import { Paper, List, ListItem, ListItemIcon, Icon, ListItemText, ListItemSecondaryAction, Switch } from '@material-ui/core';
 
@@ -10,7 +9,7 @@ interface Props {
     paramUpdate: (key, data) => void;
 }
 
-export default (props: Props) => {
+const DesignListMTR = (props: Props) => {
     const { t } = useTranslation();
     
     const destLegacyChange = (event) => {
@@ -22,7 +21,7 @@ export default (props: Props) => {
         let newFlip = !props.txtFlip;
         (window.myLine as RMGLineHK).txtFlip = newFlip;
         props.paramUpdate('txt_flip', newFlip)
-    }
+    };
 
     return (
         <div>
@@ -52,3 +51,5 @@ export default (props: Props) => {
         </div>
     );
 }
+
+export default DesignListMTR;

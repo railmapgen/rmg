@@ -1,7 +1,0 @@
-.MuiDialog-root .MuiDialog-paper {
-    min-width: 280px;
-}
-
-.MuiChip-clickable:hover, .MuiChip-clickable:focus {
-    background-color: #bb86fc;
-}

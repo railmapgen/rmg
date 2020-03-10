@@ -55,56 +55,6 @@ body {
     overflow: hidden;
 }
 
-.mdc-chip-set.stn-chip-set {
-    padding: 12px;
-}
-
-.mdc-chip-set.stn-chip-set .mdc-chip__ripple {
-    border-radius: 8px;
-}
-
-.mdc-chip-set.stn-chip-set .mdc-chip__icon.mdc-chip__icon--leading {
-    width: auto;
-}
-
-.mdc-chip-set.stn-chip-set span[role="gridcell"] {
-    width: 100%;
-    overflow: hidden;
-}
-
-.stn-chip__text {
-    display: block;
-    text-align: center;
-}
-
-.stn-chip__text--zh, .stn-chip__label {
-    font-weight: 500;
-    font-size: 1rem;
-    line-height: 1.2rem;
-    text-align: center;
-}
-
-.stn-chip-set > div:not(#add_stn) .stn-chip__text--zh {
-    font-size: 18px;
-    font-family: Helvetica, Noto Serif KR, Noto Serif JP, Noto Serif TC, Noto Serif SC, serif;
-    font-weight: 600;
-}
-
-.stn-chip__text--en {
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: .75rem;
-    line-height: .9rem;
-}
-
-.mdc-chip-set.int-chip-set .mdc-chip__ripple {
-    border-radius: 4.5px;
-    /* height: 45px; */
-}
-
-#panel_interchange .mdc-list-item__graphic {
-    margin-right: 8px;
-}
-
 #toggle {
     --mdc-theme-primary: #9a62ea;
     right: 0;

@@ -71,11 +71,27 @@
         }
     }, 
     {
+        "filename": "guangzhou_gz7", 
+        "desc": {
+            "en": "Guangzhou Metro Line 7", 
+            "zh-Hans": "广州地铁7号线",
+            "zh-Hant": "廣州地鐵7號線"
+        }
+    }, 
+    {
         "filename": "guangzhou_gz8", 
         "desc": {
             "en": "Guangzhou Metro Line 8", 
             "zh-Hans": "广州地铁8号线",
             "zh-Hant": "廣州地鐵8號線"
+        }
+    }, 
+    {
+        "filename": "guangzhou_gz9", 
+        "desc": {
+            "en": "Guangzhou Metro Line 9", 
+            "zh-Hans": "广州地铁9号线",
+            "zh-Hant": "廣州地鐵9號線"
         }
     }, 
     {
