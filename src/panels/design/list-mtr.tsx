@@ -19,7 +19,7 @@ const DesignListMTR = (props: Props) => {
 
     const txtFlipChange = () => {
         let newFlip = !props.txtFlip;
-        (window.myLine as RMGLineHK).txtFlip = newFlip;
+        // (window.myLine as RMGLineHK).txtFlip = newFlip;
         props.paramUpdate('txt_flip', newFlip)
     };
 

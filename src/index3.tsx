@@ -56,11 +56,11 @@ $('#toggle li').each((i,el) => {
 // window.myLine = null;
 $(`[${window.urlParams.get('style')}-specific]`).show();
 // autoInit();
-// try {
-//     initLine();
-// } catch {
-//     alert('Something went wrong. ')
-// }
+try {
+    initLine();
+} catch {
+    alert('Something went wrong. ')
+}
 
 ReactDOM.render(
     <App />, 

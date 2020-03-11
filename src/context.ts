@@ -2,7 +2,12 @@ import * as React from 'react';
 import { RMGParam, Name, StationTransfer, BranchInfo, StationInfo } from './types';
 import { RMGLineGZ } from './Line/LineGZ';
 
-export const ParamContext = React.createContext<{ param: RMGParam, dispatch: React.Dispatch<ReducerAction> }>(null);
+export const ParamContext = React.createContext<{ 
+    param: RMGParam, 
+    dispatch: React.Dispatch<ReducerAction>, 
+    branches: string[][], 
+    routes: string[][]
+}>(null);
 
 type ReducerAction = {
     type: 'ANY';
@@ -86,39 +91,39 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
                 [action.key]: action.data,
             };
         case 'SET_HEIGHT':
-            window.myLine.svgHeight = action.value;
+            // window.myLine.svgHeight = action.value;
             return {
                 ...state,
                 svg_height: action.value,
             };
         case 'SET_WIDTH':
             if (action.targetId === 'destination') {
-                window.myLine.svgDestWidth = action.value;
+                // window.myLine.svgDestWidth = action.value;
                 return {
                     ...state,
                     svg_dest_width: action.value,
                 };
             } else {
-                window.myLine.svgWidth = action.value;
+                // window.myLine.svgWidth = action.value;
                 return {
                     ...state,
                     svg_width: action.value,
                 };
             }
         case 'SET_Y':
-            window.myLine.yPc = action.value;
+            // window.myLine.yPc = action.value;
             return {
                 ...state,
                 y_pc: action.value,
             };
         case 'SET_BRANCH_SPACING':
-            window.myLine.branchSpacing = action.value;
+            // window.myLine.branchSpacing = action.value;
             return {
                 ...state,
                 branch_spacing: action.value,
             };
         case 'SET_PADDING':
-            window.myLine.padding = action.value;
+            // window.myLine.padding = action.value;
             return {
                 ...state,
                 padding: action.value,

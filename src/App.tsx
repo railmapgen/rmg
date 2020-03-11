@@ -5,7 +5,7 @@ import SVGs from './svgs';
 import Panels from './panels';
 import { RMGLine } from './Line/RMGLine';
 import { getParams } from './utils';
-import { getBranches, useTpo, Stations } from './methods';
+import { getBranches, useTpo, getRoutes } from './methods';
 import { ParamContext, paramReducer } from './context';
 
 export default function App() {
@@ -18,10 +18,8 @@ export default function App() {
         deps[stnId] = { parents, children, branch };
     });
 
-    // const yShares = React.useMemo(() => Stations.getYShares(param.stn_list), [JSON.stringify(deps)]);
-    // const xShares = React.useMemo(() => Stations.getXShares(param.stn_list), [JSON.stringify(deps)]);
-
     const branches = React.useMemo(() => getBranches(param.stn_list), [JSON.stringify(deps)]);
+    const routes = React.useMemo(() => getRoutes(param.stn_list), [JSON.stringify(deps)]);
     const tpo = useTpo(branches);
 
     const handleUpdate = (key, data) => dispatch({ type: 'ANY', key, data });
@@ -30,7 +28,9 @@ export default function App() {
         // <React.Suspense fallback="loading">
         <ParamContext.Provider value={{
             param,
-            dispatch
+            dispatch, 
+            branches, 
+            routes,
         }}>
             <SVGs />
             <Panels param={param} paramUpdate={handleUpdate} tpo={tpo} />

@@ -27,7 +27,7 @@ const loadLine = async (param) => {
 if (localStorage.rmgParam != null) {
     try {
         updateParam();
-        loadLine(getParams());
+        // loadLine(getParams());
     } catch (err) {
         alert(err + 'Something error! Please start from a new canvas. ')
         // let initErrDiag = MDCDialog.attachTo($('#init_err_diag')[0]);
@@ -41,7 +41,7 @@ if (localStorage.rmgParam != null) {
     $.getJSON(`templates/blank.json`, data => {
         localStorage.rmgParam = JSON.stringify(data);
         updateParam();
-        loadLine(getParams());
+        // loadLine(getParams());
     });
 }
     

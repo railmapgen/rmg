@@ -62,7 +62,8 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
         if (action === 'clickaway') return;
         this.setState({ snackBarOpened: false });
         if (action === 'current') {
-            window.myLine.currentStnId = this.state.stationSelected;
+            this.props.paramUpdate('current_stn_idx', this.state.stationSelected);
+            // window.myLine.currentStnId = this.state.stationSelected;
         } else if (action === 'edit') {
             this.setState({ stnEditDialogOpened: true });
         } else if (action === 'delete') {
