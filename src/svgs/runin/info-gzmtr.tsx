@@ -61,15 +61,9 @@ const InfoGZMTR = () => {
             </g>
 
             {nextStnId.length === 1 ? (
-                <BigNext
-                    nextId={nextStnId[0]}
-                    nameBBox={{ ...nameBBox, x: (param.svg_dest_width - nameBBox.width) / 2 }}
-                />
+                <BigNext nextId={nextStnId[0]} nameBBox={nameBBox} />
             ) : (
-                <BigNext2
-                    nextIds={nextStnId}
-                    nameBBox={{ ...nameBBox, x: (param.svg_dest_width - nameBBox.width) / 2 }}
-                />
+                <BigNext2 nextIds={nextStnId} nameBBox={nameBBox} />
             )}
         </g>
     );
@@ -109,6 +103,7 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
     React.useEffect(() => setNextBBox(nextNameEl.current.getBBox()), []);
 
     const nextNameZHCount = param.stn_list[props.nextId].name[0].length;
+    const nameBcrX = (param.svg_dest_width - props.nameBBox.width) / 2;
 
     return (
         <>
@@ -156,14 +151,13 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
                 style={{
                     ['--translate-x' as any]:
                         param.direction === 'l'
-                            ? `${(115 + 35 * ((nextNameZHCount <= 2 ? 1 : 0.5) + nextNameZHCount) + props.nameBBox.x) /
-                                  2 -
+                            ? `${(115 + 35 * ((nextNameZHCount <= 2 ? 1 : 0.5) + nextNameZHCount) + nameBcrX) / 2 -
                                   20}px`
                             : `${(param.svg_dest_width -
                                   45 -
                                   nextBBox.width -
                                   (nextNameZHCount <= 2 ? 70 + 35 : 35 * 2.5) +
-                                  props.nameBBox.x +
+                                  nameBcrX +
                                   props.nameBBox.width +
                                   55 +
                                   18.5 * 1.4) /
@@ -195,6 +189,7 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
     });
 
     const nextNameZHCount = Math.max(...props.nextIds.map(id => param.stn_list[id].name[0].length));
+    const nameBcrX = (param.svg_dest_width - props.nameBBox.width) / 2;
 
     return (
         <>
@@ -264,13 +259,13 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                 style={{
                     ['--translate-x' as any]:
                         param.direction === 'l'
-                            ? `${(99 + 27 * (1 + nextNameZHCount) + props.nameBBox.x) / 2 - 20}px`
+                            ? `${(99 + 27 * (1 + nextNameZHCount) + nameBcrX) / 2 - 20}px`
                             : `${(param.svg_dest_width -
                                   45 -
                                   nextBBox.width -
                                   41 -
                                   27 +
-                                  props.nameBBox.x +
+                                  nameBcrX +
                                   props.nameBBox.width +
                                   55 +
                                   18.5 * 1.4) /

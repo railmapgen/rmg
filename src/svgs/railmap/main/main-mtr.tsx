@@ -13,36 +13,28 @@ const MainMTR = () => {
         deps[stnId] = { parents, children, branch };
     });
 
-    const criticalPath = React.useMemo(() => getCriticalPath(param.stn_list), [
+    const criticalPath = React.useMemo(() => getCriticalPath(param.stn_list), [JSON.stringify(deps)]);
+    const xShares = React.useMemo(() => StationsMTR.getXShares(param.stn_list, criticalPath, branches), [
         JSON.stringify(deps),
     ]);
-    const xShares = React.useMemo(
-        () => StationsMTR.getXShares(param.stn_list, criticalPath, branches),
-        [JSON.stringify(deps)]
-    );
     const lineXs: [number, number] = [
         (param.svg_width * param.padding) / 100,
         param.svg_width * (1 - param.padding / 100),
     ];
 
-    const yShares = React.useMemo(() => StationsMTR.getYShares(param.stn_list, branches), [
-        JSON.stringify(deps),
-    ]);
+    const yShares = React.useMemo(() => StationsMTR.getYShares(param.stn_list, branches), [JSON.stringify(deps)]);
     const xs = xShare2RealX(xShares, criticalPath, lineXs);
     const ys = yShare2RealY(yShares, param.branch_spacing, branches);
 
     let stnStates = {} as { [stnId: string]: -1 | 0 | 1 };
     Object.keys(param.stn_list).forEach(
-        stnId =>
-            (stnStates[stnId] = StationsMTR.getStnState(
-                stnId,
-                param.current_stn_idx,
-                param.direction,
-                routes
-            ))
+        stnId => (stnStates[stnId] = StationsMTR.getStnState(stnId, param.current_stn_idx, param.direction, routes))
     );
 
-    const namePoss = StationsMTR.getNamePos(param.stn_list, criticalPath);
+    const namePoss = React.useMemo(() => StationsMTR.getNamePos(param.stn_list, criticalPath), [
+        JSON.stringify(deps),
+        JSON.stringify(criticalPath),
+    ]);
 
     const linePaths = StationsMTR.drawLine(
         branches,
@@ -97,10 +89,7 @@ const StationGroup = (props: StationGroupProps) => {
 
     let correctedNamePoss = {} as { [stnId: string]: boolean };
     Object.keys(props.namePoss).forEach(
-        stnId =>
-            (correctedNamePoss[stnId] = param.txt_flip
-                ? !props.namePoss[stnId]
-                : props.namePoss[stnId])
+        stnId => (correctedNamePoss[stnId] = param.txt_flip ? !props.namePoss[stnId] : props.namePoss[stnId])
     );
 
     return (
@@ -138,11 +127,7 @@ const xShare2RealX = (
     return realXs;
 };
 
-const yShare2RealY = (
-    yShares: { [stnId: string]: number },
-    branchSpacing: number,
-    branches: string[][]
-) => {
+const yShare2RealY = (yShares: { [stnId: string]: number }, branchSpacing: number, branches: string[][]) => {
     let realYs = {} as { [stnId: string]: number };
     Object.keys(yShares).forEach(stnId => {
         realYs[stnId] = -yShares[stnId] * branchSpacing;

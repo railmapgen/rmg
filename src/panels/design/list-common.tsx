@@ -20,28 +20,33 @@ const DesignList = (props: Props) => {
 
     const nameDialogUpdate = (key: string, value: any) => {
         if (key === 'name') {
-            window.myLine.lineNames = Object.values(value) as Name;
-            props.paramUpdate('line_name', Object.values(value) as Name);
+            // window.myLine.lineNames = Object.values(value) as Name;
+            // props.paramUpdate('line_name', Object.values(value) as Name);
+            dispatch({ type: 'SET_LINE_NAME', name: Object.values(value) as Name });
         }
         if (key === 'theme') {
-            window.myLine.theme = value;
-            props.paramUpdate('theme', value);
+            // window.myLine.theme = value;
+            // props.paramUpdate('theme', value);
+            dispatch({ type: 'SET_THEME', theme: value });
         }
     };
 
     const directionClick = () => {
         if (param.direction === 'r') {
-            props.paramUpdate('direction', 'l');
-            window.myLine.direction = 'l';
+            dispatch({ type: 'SET_DIRECTION', direction: 'l' });
+            // props.paramUpdate('direction', 'l');
+            // window.myLine.direction = 'l';
         } else {
-            props.paramUpdate('direction', 'r');
-            window.myLine.direction = 'r';
+            dispatch({ type: 'SET_DIRECTION', direction: 'r' });
+            // props.paramUpdate('direction', 'r');
+            // window.myLine.direction = 'r';
         }
     };
 
     const platformNumChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        props.paramUpdate('platform_num', event.target.value);
-        window.myLine.platformNum = event.target.value;
+        // props.paramUpdate('platform_num', event.target.value);
+        // window.myLine.platformNum = event.target.value;
+        dispatch({ type: 'SET_PLATFORM', platform: event.target.value });
     };
 
     return (
@@ -52,13 +57,20 @@ const DesignList = (props: Props) => {
                         <ListItemIcon>
                             <Icon>color_lens</Icon>
                         </ListItemIcon>
-                        <ListItemText primary={t('design.theme')} secondary={
-                            <span style={{
-                                backgroundColor: props.theme[2],
-                                color: props.theme[3],
-                                padding: '.1rem .3rem',
-                            }}>{Object.values(props.lineName).join()}</span>
-                        } />
+                        <ListItemText
+                            primary={t('design.theme')}
+                            secondary={
+                                <span
+                                    style={{
+                                        backgroundColor: props.theme[2],
+                                        color: props.theme[3],
+                                        padding: '.1rem .3rem',
+                                    }}
+                                >
+                                    {Object.values(props.lineName).join()}
+                                </span>
+                            }
+                        />
                     </ListItem>
                     <ListItem button onClick={directionClick}>
                         <ListItemIcon>
@@ -66,7 +78,8 @@ const DesignList = (props: Props) => {
                         </ListItemIcon>
                         <ListItemText
                             primary={t('design.direction.button')}
-                            secondary={t('design.direction.' + param.direction)} />
+                            secondary={t('design.direction.' + param.direction)}
+                        />
                     </ListItem>
                     <ListItem>
                         <ListItemIcon>
@@ -76,14 +89,16 @@ const DesignList = (props: Props) => {
                             label={t('design.platform')}
                             variant="outlined"
                             value={props.platformNum}
-                            onChange={platformNumChange} />
+                            onChange={platformNumChange}
+                        />
                     </ListItem>
                 </List>
             </Paper>
 
             <ColourDialog
                 open={isCDiagOpen}
-                theme={props.theme} lineName={props.lineName}
+                theme={props.theme}
+                lineName={props.lineName}
                 onUpdate={nameDialogUpdate}
                 onClose={() => setIsCDiagOpen(false)}
             />
