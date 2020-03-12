@@ -5,7 +5,7 @@ interface Props {
 }
 
 const StripMTR = React.memo((props: Props) => (
-    <rect id="strip" style={{['--strip-percentage' as any]: props.stripPc}} />
+    <rect id="strip" style={{ ['--strip-percentage' as any]: props.stripPc }} />
 ));
 
 export default StripMTR;

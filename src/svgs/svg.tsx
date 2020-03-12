@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Destination from './destination';
+import RunIn from './runin';
 import RailMap from './railmap';
 import { makeStyles, createStyles } from '@material-ui/core';
 
@@ -28,7 +29,8 @@ const SVGs = () => {
     const classes = useStyles();
     return (
         <div className={classes.root}>
-            <Destination />
+            {window.urlParams.get('style')==='mtr' && <Destination />}
+            {window.urlParams.get('style')==='gzmtr' && <RunIn />}
             <RailMap />
         </div>
     )

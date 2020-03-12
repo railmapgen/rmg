@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { ParamContext } from '../../context';
-import StripMTR from '../strip-mtr';
+import StripMTR from '../strip/strip-mtr';
 import InfoMTR from './info-mtr';
 
 const Destination = () => {
@@ -23,7 +23,8 @@ const Destination = () => {
             <DefsMTR />
 
             <rect id="outer" x={0} y={0} />
-            <StripMTR stripPc={param.strip_pc} />
+
+            {window.urlParams.get('style') === 'mtr' && <StripMTR stripPc={param.strip_pc} />}
 
             <InfoMTR />
 

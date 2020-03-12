@@ -179,33 +179,3 @@ export const useTpo = (branches: string[][]) => {
     return tpo;
 };
 
-const isPredecessor = (stnId1: string, stnId2: string, routes: string[][]) => {
-    for (let route of routes) {
-        let idx1 = route.indexOf(stnId1);
-        let idx2 = route.indexOf(stnId2);
-        if (idx1 !== -1 && idx2 !== -1 && idx2 < idx1) {
-            return true;
-        }
-    }
-    return false;
-};
-
-const isSuccessor = (stnId1: string, stnId2: string, routes: string[][]) => {
-    for (let route of routes) {
-        let idx1 = route.indexOf(stnId1);
-        let idx2 = route.indexOf(stnId2);
-        if (idx1 !== -1 && idx2 !== -1 && idx1 < idx2) {
-            return true;
-        }
-    }
-    return false;
-};
-
-export const getStnState = (stnId: string, currentId: string, direction: 'l' | 'r', routes: string[][]) => {
-    if (stnId == currentId) { return 0; }
-    if (direction == 'r') {
-        return isSuccessor(currentId, stnId, routes) ? 1 : -1;
-    } else {
-        return isPredecessor(currentId, stnId, routes) ? 1 : -1;
-    }
-};
