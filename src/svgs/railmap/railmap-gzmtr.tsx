@@ -1,12 +1,9 @@
 import * as React from 'react';
-
 import { ParamContext } from '../../context';
-import StripMTR from '../strip/strip-mtr';
 import StripGZMTR from '../strip/strip-gzmtr';
-import Main from './main';
-import Defs from './defs';
+import MainGZMTR from './main/main-gzmtr';
 
-const RailMap = () => {
+const RailMapGZMTR = () => {
     const { param } = React.useContext(ParamContext);
     return (
         <svg
@@ -19,26 +16,50 @@ const RailMap = () => {
                 ['--rmg-svg-width' as any]: param.svg_width + 'px',
                 ['--rmg-svg-height' as any]: param.svg_height + 'px',
                 ['--rmg-theme-colour' as any]: param.theme[2],
+                ['--rmg-theme-fg' as any]: param.theme[3],
             }}
         >
-            <React.Suspense fallback="loading">
-                <Defs />
-            </React.Suspense>
+            <DefsGZMTR />
 
             <rect id="outer" x={0} y={0} />
 
-            {window.urlParams.get('style') === 'mtr' && <StripMTR stripPc={param.strip_pc} />}
-            {window.urlParams.get('style') === 'gzmtr' && (
-                <StripGZMTR variant={param.info_panel_type} isShowLight={false} isShowPSD={false} />
-            )}
+            <StripGZMTR variant={param.info_panel_type} isShowLight={false} isShowPSD={false} />
 
-            <Main />
-            {window.urlParams.get('style') === 'gzmtr' && <DirectionIndicator />}
+            {(param.direction === 'l' && param.stn_list[param.current_stn_idx].parents.includes('linestart')) ||
+            (param.direction === 'r' && param.stn_list[param.current_stn_idx].children.includes('lineend')) ? (
+                <TerminusFlag />
+            ) : (
+                <>
+                    <MainGZMTR />
+                    <DirectionIndicator />
+                </>
+            )}
         </svg>
     );
 };
 
-export default RailMap;
+export default RailMapGZMTR;
+
+const DefsGZMTR = React.memo(() => (
+    <defs>
+        <path
+            id="stn"
+            className="rmg-stn"
+            d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "
+        />
+        <path
+            id="stn_pass"
+            stroke="#aaa"
+            fill="#fff"
+            strokeWidth={2}
+            d="M 0,9.25 V -9.25 H -9.25 a 9.25,9.25 0 0,0 0,18.5 h 18.5 a 9.25,9.25 0 0,0 0,-18.5 H 0 "
+        />
+        <path id="arrow_direction" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black" />
+
+        <path id="inttick" d="M 0,0 v 18" strokeLinecap="square" />
+        <rect id="intbox" x={-22.5} height={24} width={45} rx={4.5} />
+    </defs>
+));
 
 const DirectionIndicator = () => {
     const { param, routes } = React.useContext(ParamContext);
@@ -134,3 +155,16 @@ const DirectionIndicatorTextGroup2 = (props: { destIds: string[] }) => {
         </>
     );
 };
+
+const TerminusFlag = React.memo(() => (
+    <g id="terminus_gz">
+        <text className="rmg-name__zh">终 点 站</text>
+        <text dy={70} className="rmg-name__en">
+            Terminal
+        </text>
+        <g strokeWidth={8} stroke="#000">
+            <path d="M -160,68 h -160" />
+            <path d="M 160,68 h 160" />
+        </g>
+    </g>
+));

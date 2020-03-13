@@ -7,6 +7,7 @@ export const ParamContext = React.createContext<{
     dispatch: React.Dispatch<ReducerAction>;
     branches: string[][];
     routes: string[][];
+    deps: string;
 }>(null);
 
 type ReducerAction =

@@ -1,6 +1,18 @@
 import * as React from 'react';
 
-import { Typography, Box, CircularProgress, Tabs, Tab, Icon, createMuiTheme, ThemeProvider, makeStyles, createStyles, useMediaQuery } from '@material-ui/core';
+import {
+    Typography,
+    Box,
+    CircularProgress,
+    Tabs,
+    Tab,
+    Icon,
+    createMuiTheme,
+    ThemeProvider,
+    makeStyles,
+    createStyles,
+    useMediaQuery,
+} from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { RMGParam } from '../types';
 
@@ -10,9 +22,7 @@ const PanelDesign = React.lazy(() => import(/* webpackChunkName: "panelDesign" *
 const PanelStations = React.lazy(() => import(/* webpackChunkName: "panelStations" */ './stations'));
 const PanelInfo = React.lazy(() => import(/* webpackChunkName: "panelInfo" */ './panel-info'));
 
-
-
-const useStyles = makeStyles(theme => (
+const useStyles = makeStyles(theme =>
     createStyles({
         typography: {
             background: theme.palette.background.default,
@@ -31,7 +41,7 @@ const useStyles = makeStyles(theme => (
                         marginBottom: 0,
                     },
                     '& > *:not(first-child)': {
-                        paddingLeft: 8
+                        paddingLeft: 8,
                     },
                 },
             },
@@ -40,9 +50,9 @@ const useStyles = makeStyles(theme => (
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-        }
+        },
     })
-));
+);
 
 interface Props {
     param: RMGParam;
@@ -66,54 +76,62 @@ export default function PanelTab(props: Props) {
             case 2:
                 return <PanelDesign {...(({ tpo, ...o }) => o)(props)} />;
             case 3:
-                return <PanelStations
-                    theme={props.param.theme}
-                    stnList={props.param.stn_list}
-                    currentId={props.param.current_stn_idx}
-                    paramUpdate={props.paramUpdate}
-                    tpo={props.tpo} />
+                return (
+                    <PanelStations
+                        theme={props.param.theme}
+                        stnList={props.param.stn_list}
+                        currentId={props.param.current_stn_idx}
+                        paramUpdate={props.paramUpdate}
+                        tpo={props.tpo}
+                    />
+                );
             case 4:
                 return <PanelInfo />;
             default:
                 return <PanelSave />;
-        };
+        }
     };
 
-    const tabNav = React.useMemo(() => (
-        <Typography className={classes.typography} component="div">
-            <Tabs value={value} indicatorColor="primary"
-                textColor="primary" onChange={(_, val) => setValue(val)}
-                variant="scrollable" scrollButtons="off">
-                {[
-                    ['file', 'insert_drive_file'],
-                    ['layout', 'panorama'],
-                    ['design', 'brush'],
-                    ['stations', 'directions_transit'],
-                    ['info', 'info']
-                ].map((val, i) => (
-                    <Tab label={<span>{t('tab.' + val[0])}</span>}
-                        icon={<Icon>{val[1]}</Icon>} key={i}
-                        className={classes.tab} />
-                ))}
-                />
+    const tabNav = React.useMemo(
+        () => (
+            <Typography className={classes.typography} component="div">
+                <Tabs
+                    value={value}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    onChange={(_, val) => setValue(val)}
+                    variant="scrollable"
+                    scrollButtons="off"
+                >
+                    {[
+                        ['file', 'insert_drive_file'],
+                        ['layout', 'panorama'],
+                        ['design', 'brush'],
+                        ['stations', 'directions_transit'],
+                        ['info', 'info'],
+                    ].map((val, i) => (
+                        <Tab
+                            label={<span>{t('tab.' + val[0])}</span>}
+                            icon={<Icon>{val[1]}</Icon>}
+                            key={i}
+                            className={classes.tab}
+                        />
+                    ))}
+                    />
                 </Tabs>
-        </Typography>
-    ), [value, i18n.language]);
+            </Typography>
+        ),
+        [value, i18n.language, classes.tab]
+    );
 
     return (
         <div>
             {tabNav}
-            <Typography
-                className={classes.typography}
-                component="div"
-                role="tabpanel">
+            <Typography className={classes.typography} component="div" role="tabpanel">
                 <Box p={3} className={classes.box}>
-                    <React.Suspense fallback={<CircularProgress />}>
-                        {panel(value)}
-                    </React.Suspense>
+                    <React.Suspense fallback={<CircularProgress />}>{panel(value)}</React.Suspense>
                 </Box>
             </Typography>
         </div>
     );
 }
-

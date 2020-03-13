@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ParamContext } from '../../context';
+import StationNumberText from '../station-num-gzmtr';
 
 const InfoGZMTR = () => {
     const { param } = React.useContext(ParamContext);
@@ -60,7 +61,9 @@ const InfoGZMTR = () => {
                 <BigStnNum lineNum={param.line_num} stnNum={curStnInfo.num} />
             </g>
 
-            {nextStnId.length === 1 ? (
+            {nextStnId.includes('linestart') || nextStnId.includes('lineend') ? (
+                <></>
+            ) : nextStnId.length === 1 ? (
                 <BigNext nextId={nextStnId[0]} nameBBox={nameBBox} />
             ) : (
                 <BigNext2 nextIds={nextStnId} nameBBox={nameBBox} />
@@ -78,18 +81,9 @@ const BigStnNum = React.memo(
                 className="rmg-stn rmg-stn--future"
                 d="M 0,12.95 V -12.95 H -12.95 a 12.95,12.95 0 0,0 0,25.9 h 25.9 a 12.95,12.95 0 0,0 0,-25.9 H 0 "
             />
-            <text
-                className="rmg-name__zh rmg-name__gzmtr--line-num"
-                style={{ transform: 'translateX(-12.95px)scale(1.4)' }}
-            >
-                {props.lineNum}
-            </text>
-            <text
-                className="rmg-name__zh rmg-name__gzmtr--station-num"
-                style={{ transform: 'translateX(12.95px)scale(1.4)' }}
-            >
-                {props.stnNum}
-            </text>
+            <g transform="scale(1.4)">
+                <StationNumberText {...props} />
+            </g>
         </>
     ),
     (prevProps, nextProps) => prevProps.lineNum === nextProps.lineNum && prevProps.stnNum === nextProps.stnNum

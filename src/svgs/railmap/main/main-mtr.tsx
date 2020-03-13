@@ -5,26 +5,29 @@ import { StationsMTR } from '../methods/mtr';
 import StationMTR from './station/station-mtr';
 
 const MainMTR = () => {
-    const { param, branches, routes } = React.useContext(ParamContext);
+    const { param, branches, routes, deps } = React.useContext(ParamContext);
 
-    let deps = {};
-    Object.keys(param.stn_list).forEach(stnId => {
-        let { parents, children, branch } = param.stn_list[stnId];
-        deps[stnId] = { parents, children, branch };
-    });
-
-    const criticalPath = React.useMemo(() => getCriticalPath(param.stn_list), [JSON.stringify(deps)]);
-    const xShares = React.useMemo(() => StationsMTR.getXShares(param.stn_list, criticalPath, branches), [
-        JSON.stringify(deps),
-    ]);
+    const criticalPath = React.useMemo(() => getCriticalPath(param.stn_list, StationsMTR), [deps]);
+    const xShares = React.useMemo(() => StationsMTR.getXShares(param.stn_list, criticalPath, branches), [deps]);
     const lineXs: [number, number] = [
         (param.svg_width * param.padding) / 100,
         param.svg_width * (1 - param.padding / 100),
     ];
 
-    const yShares = React.useMemo(() => StationsMTR.getYShares(param.stn_list, branches), [JSON.stringify(deps)]);
-    const xs = xShare2RealX(xShares, criticalPath, lineXs);
-    const ys = yShare2RealY(yShares, param.branch_spacing, branches);
+    const yShares = React.useMemo(() => StationsMTR.getYShares(param.stn_list, branches), [deps]);
+    const xs = Object.keys(xShares).reduce(
+        (acc, cur) => ({ ...acc, [cur]: lineXs[0] + (xShares[cur] / criticalPath.len) * (lineXs[1] - lineXs[0]) }),
+        {} as typeof xShares
+    );
+    const ys = Object.keys(yShares).reduce(
+        (acc, cur) => ({
+            ...acc,
+            [cur]:
+                -yShares[cur] * param.branch_spacing +
+                (branches[0].includes(cur) ? 0 : yShares[cur] > 0 ? -9.68 : 9.68),
+        }),
+        {} as typeof yShares
+    );
 
     let stnStates = {} as { [stnId: string]: -1 | 0 | 1 };
     Object.keys(param.stn_list).forEach(
@@ -32,7 +35,7 @@ const MainMTR = () => {
     );
 
     const namePoss = React.useMemo(() => StationsMTR.getNamePos(param.stn_list, criticalPath), [
-        JSON.stringify(deps),
+        deps,
         JSON.stringify(criticalPath),
     ]);
 
@@ -48,10 +51,16 @@ const MainMTR = () => {
     );
 
     return (
-        <>
+        <g
+            id="main"
+            style={{
+                ['--y-percentage' as any]: param.y_pc,
+                transform: 'translateY(calc(var(--y-percentage) * var(--rmg-svg-height) / 100))',
+            }}
+        >
             <Lines paths={linePaths} />
             <StationGroup xs={xs} ys={ys} stnStates={stnStates} namePoss={namePoss} />
-        </>
+        </g>
     );
 };
 
@@ -113,24 +122,4 @@ const StationGroup = (props: StationGroupProps) => {
             })}
         </g>
     );
-};
-
-const xShare2RealX = (
-    xShares: { [stnId: string]: number },
-    cp: { len: number; nodes: string[] },
-    lineXs: [number, number]
-) => {
-    let realXs = {} as { [stnId: string]: number };
-    Object.keys(xShares).forEach(stnId => {
-        realXs[stnId] = lineXs[0] + (xShares[stnId] / cp.len) * (lineXs[1] - lineXs[0]);
-    });
-    return realXs;
-};
-
-const yShare2RealY = (yShares: { [stnId: string]: number }, branchSpacing: number, branches: string[][]) => {
-    let realYs = {} as { [stnId: string]: number };
-    Object.keys(yShares).forEach(stnId => {
-        realYs[stnId] = -yShares[stnId] * branchSpacing;
-    });
-    return realYs;
 };

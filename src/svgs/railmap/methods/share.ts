@@ -10,11 +10,7 @@ const cpm = (
     from: string,
     to: string,
     stnList: { [stnId: string]: StationInfo },
-    pathWeight: (
-        stnId1: string,
-        stnId2: string,
-        stnList: { [stnId: string]: StationInfo }
-    ) => number
+    pathWeight: (stnId1: string, stnId2: string, stnList: { [stnId: string]: StationInfo }) => number
 ) => {
     if (from == to) {
         return { len: 0, nodes: [from] };
@@ -41,7 +37,7 @@ const cpm = (
 /**
  * Getter of critical path (from left to right) and corresponding length of the entire line.
  */
-export const getCriticalPath = (stnList: { [stnId: string]: StationInfo }) => {
+export const getCriticalPath = (stnList: { [stnId: string]: StationInfo }, Stations) => {
     console.log('computing critical path');
     let allLengths: number[] = [];
     let criticalPaths: string[][] = [];
@@ -112,11 +108,7 @@ export class Stations {
             from: string,
             to: string,
             stnList: { [stnId: string]: StationInfo },
-            pathWeight: (
-                stnId1: string,
-                stnId2: string,
-                stnList: { [stnId: string]: StationInfo }
-            ) => number
+            pathWeight: (stnId1: string, stnId2: string, stnList: { [stnId: string]: StationInfo }) => number
         ) => { len: number; nodes: string[] },
         branches?: string[][]
     ): number {
@@ -162,29 +154,20 @@ export class Stations {
         var lengthToSource = cpm(partSource, stnId, this.stnList, this.pathWeight).len;
         var lengthToSink = cpm(stnId, partSink, this.stnList, this.pathWeight).len;
         if (leftOpenJaw) {
-            var actualPartLength = cpm(
-                this.criticalPath.nodes[0],
-                partSink,
-                this.stnList,
-                this.pathWeight
-            ).len;
+            var actualPartLength = cpm(this.criticalPath.nodes[0], partSink, this.stnList, this.pathWeight).len;
             let res =
-                self.getXShare(partSink, cpm) -
+                self.getXShare(partSink, cpm, branches) -
                 (lengthToSink / (lengthToSource + lengthToSink)) * actualPartLength;
             this.xShares[stnId] = res;
             return res;
         } else if (rightOpenJaw) {
-            var actualPartLength = cpm(
-                partSource,
-                this.criticalPath.nodes.slice(-1)[0],
-                this.stnList,
-                this.pathWeight
-            ).len;
+            var actualPartLength = cpm(partSource, this.criticalPath.nodes.slice(-1)[0], this.stnList, this.pathWeight)
+                .len;
         } else {
             var actualPartLength = cpm(partSource, partSink, this.stnList, this.pathWeight).len;
         }
         let res =
-            self.getXShare(partSource, cpm) +
+            self.getXShare(partSource, cpm, branches) +
             (lengthToSource / (lengthToSource + lengthToSink)) * actualPartLength;
         this.xShares[stnId] = res;
         return res;
@@ -401,22 +384,14 @@ export class Stations {
             if (y > prevY) {
                 path.push(
                     y === 0
-                        ? `h ${x -
-                              prevX -
-                              stnExtraH * this.leftWideFactor(stnId) -
-                              stnSpareH -
-                              stnDX * 2}`
+                        ? `h ${x - prevX - stnExtraH * this.leftWideFactor(stnId) - stnSpareH - stnDX * 2}`
                         : `h ${stnExtraH * this.rightWideFactor(prevId) + stnSpareH}`
                 );
                 path.push(this.pathTurnSE(branchSpacing));
             } else if (y < prevY) {
                 path.push(
                     y === 0
-                        ? `h ${x -
-                              prevX -
-                              stnExtraH * this.leftWideFactor(stnId) -
-                              stnSpareH -
-                              stnDX * 2}`
+                        ? `h ${x - prevX - stnExtraH * this.leftWideFactor(stnId) - stnSpareH - stnDX * 2}`
                         : `h ${stnExtraH * this.rightWideFactor(prevId) + stnSpareH}`
                 );
                 path.push(this.pathTurnNE(branchSpacing));
@@ -449,10 +424,7 @@ export class Stations {
                 linePassStns = branch;
             }
 
-            if (
-                lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length == 0 &&
-                lineMainStns.length
-            ) {
+            if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length == 0 && lineMainStns.length) {
                 // if two set disjoint
                 if (linePassStns[0] === branch[0]) {
                     // -1 -1 1 1

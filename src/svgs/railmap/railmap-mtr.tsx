@@ -1,5 +1,36 @@
 import * as React from 'react';
 
+import { ParamContext } from '../../context';
+import StripMTR from '../strip/strip-mtr';
+import MainMTR from './main/main-mtr';
+
+const RailMapMTR = () => {
+    const { param } = React.useContext(ParamContext);
+    return (
+        <svg
+            id="railmap"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            style={{
+                width: 'var(--rmg-svg-width)',
+                height: 'var(--rmg-svg-height)',
+                ['--rmg-svg-width' as any]: param.svg_width + 'px',
+                ['--rmg-svg-height' as any]: param.svg_height + 'px',
+                ['--rmg-theme-colour' as any]: param.theme[2],
+            }}
+        >
+            <DefsMTR />
+
+            <rect id="outer" x={0} y={0} />
+
+            <StripMTR stripPc={param.strip_pc} />
+            <MainMTR />
+        </svg>
+    );
+};
+
+export default RailMapMTR;
+
 const DefsMTR = React.memo(() => {
     return (
         <defs>
@@ -100,16 +131,8 @@ const DefsMTR = React.memo(() => {
                 d="M -6.369803765,4.84 a 8,8 0 1,1 12.73960753,0 a 8,8 0 0,1 0,9.68 a 8,8 0 1,1 -12.73960753,0 a 8,8 0 0,1 0,-9.68 Z"
                 className="rmg-stn__mtr"
             />
-            <path
-                id="int2"
-                d="M -8,0 v 18 a 8,8 0 0,0 16,0 v -18 a 8,8 0 0,0 -16,0 Z"
-                className="rmg-stn__mtr"
-            />
-            <path
-                id="int3"
-                d="M -8,0 v 36 a 8,8 0 0,0 16,0 v -36 a 8,8 0 0,0 -16,0 Z"
-                className="rmg-stn__mtr"
-            />
+            <path id="int2" d="M -8,0 v 18 a 8,8 0 0,0 16,0 v -18 a 8,8 0 0,0 -16,0 Z" className="rmg-stn__mtr" />
+            <path id="int3" d="M -8,0 v 36 a 8,8 0 0,0 16,0 v -36 a 8,8 0 0,0 -16,0 Z" className="rmg-stn__mtr" />
             <path
                 id="int3_b"
                 className="rmg-stn__mtr"
@@ -120,11 +143,7 @@ const DefsMTR = React.memo(() => {
                 className="rmg-stn__mtr"
                 d="M -8,19.36 v 36 a 8,8 0 0,0 16,0 v -36 a 8,8 0 0,0 -1.630196235,-4.84 a 8,8 0 0,0 0,-9.68 a 8,8 0 1,0 -12.73960758,0 a 8,8 0 0,0 0,9.68 a 8,8 0 0,0 -1.630196235,4.84 Z"
             />
-            <path
-                id="int4"
-                d="M -8,0 v 54 a 8,8 0 0,0 16,0 v -54 a 8,8 0 0,0 -16,0 Z"
-                className="rmg-stn__mtr"
-            />
+            <path id="int4" d="M -8,0 v 54 a 8,8 0 0,0 16,0 v -54 a 8,8 0 0,0 -16,0 Z" className="rmg-stn__mtr" />
             <path
                 id="int4_b"
                 className="rmg-stn__mtr"
@@ -135,11 +154,7 @@ const DefsMTR = React.memo(() => {
                 className="rmg-stn__mtr"
                 d="M -8,19.36 v 54 a 8,8 0 0,0 16,0 v -54 a 8,8 0 0,0 -1.630196235,-4.84 a 8,8 0 0,0 0,-9.68 a 8,8 0 1,0 -12.73960758,0 a 8,8 0 0,0 0,9.68 a 8,8 0 0,0 -1.630196235,4.84 Z"
             />
-            <path
-                id="int5"
-                d="M -8,0 v 72 a 8,8 0 0,0 16,0 v -72 a 8,8 0 0,0 -16,0 Z"
-                className="rmg-stn__mtr"
-            />
+            <path id="int5" d="M -8,0 v 72 a 8,8 0 0,0 16,0 v -72 a 8,8 0 0,0 -16,0 Z" className="rmg-stn__mtr" />
             <path
                 id="int5_b"
                 className="rmg-stn__mtr"
@@ -198,5 +213,3 @@ const DefsMTR = React.memo(() => {
         </defs>
     );
 });
-
-export default DefsMTR;

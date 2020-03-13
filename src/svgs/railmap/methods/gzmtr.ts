@@ -28,15 +28,16 @@ export class StationsGZMTR extends Stations {
         ) => { len: number; nodes: string[] },
         branches: string[][]
     ) {
+        branches = branches.map(branch => branch.filter(id => !['linestart', 'lineend'].includes(id)));
         if (stnId in this.xShares) return this.xShares[stnId];
 
         if (this.criticalPath.nodes.includes(stnId)) {
-            let res = super.getXShare(stnId, cpm);
+            let res = super.getXShare(stnId, cpm, branches);
             this.xShares[stnId] = res;
             return res;
         }
         if (this.criticalPath.nodes.toString() !== branches[0].toString()) {
-            let res = super.getXShare(stnId, cpm);
+            let res = super.getXShare(stnId, cpm, branches);
             this.xShares[stnId] = res;
             return res;
         } else {
@@ -62,48 +63,6 @@ export class StationsGZMTR extends Stations {
                 let res = this.getXShare(branchWithStn[branchWithStn.length - 1], cpm, branches) - lenToRight;
                 this.xShares[res] = res;
                 return res;
-            }
-        }
-    }
-
-    protected getYShare(stnId: string, branches: string[][]) {
-        if (stnId in this.yShares) return this.yShares[stnId];
-
-        if (['linestart', 'lineend'].includes(stnId)) {
-            this.yShares[stnId] = 0;
-            return 0;
-        }
-        if (branches[0].includes(stnId)) {
-            this.yShares[stnId] = 0;
-            return 0;
-        } else {
-            let i = 1;
-            while (i < branches.length) {
-                if (branches[i].includes(stnId)) {
-                    break;
-                }
-                i++;
-            }
-            if (branches[0].includes(branches[i][0])) {
-                var branchingStnId = branches[i][0];
-                var neToFind = 'children';
-                if (this.stnList[branchingStnId][neToFind].indexOf(branches[i][1]) == 0) {
-                    this.yShares[stnId] = 2;
-                    return 2;
-                } else {
-                    this.yShares[stnId] = -2;
-                    return -2;
-                }
-            } else {
-                var branchingStnId = branches[i].slice().reverse()[0];
-                var neToFind = 'parents';
-                if (this.stnList[branchingStnId][neToFind].indexOf(branches[i].slice().reverse()[1]) == 0) {
-                    this.yShares[stnId] = 2;
-                    return 2;
-                } else {
-                    this.yShares[stnId] = -2;
-                    return -2;
-                }
             }
         }
     }
