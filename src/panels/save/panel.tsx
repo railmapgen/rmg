@@ -1,7 +1,19 @@
 import * as React from 'react';
 import { useTranslation, withTranslation } from 'react-i18next';
 
-import { Grid, Card, List, ListItem, ListItemIcon, Icon, ListItemText, Divider, Dialog, DialogTitle, DialogContent } from '@material-ui/core';
+import {
+    Grid,
+    Card,
+    List,
+    ListItem,
+    ListItemIcon,
+    Icon,
+    ListItemText,
+    Divider,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+} from '@material-ui/core';
 
 import { getTransText2 } from '../../utils';
 
@@ -9,7 +21,7 @@ import TemplateDialog from './template-diag';
 import UploadListItem from './upload-item';
 import ExportDialog from './export-diag';
 
-export default (props) =>  {
+export default props => {
     let TranslatedSaveLists = withTranslation()(SaveLists);
 
     return (
@@ -19,19 +31,19 @@ export default (props) =>  {
             </Grid>
         </Grid>
     );
-}
+};
 
 const allStyles = {
-    gzmtr: 'Guangzhou Metro', 
-    mtr: 'MTR', 
-    shmetro: 'Shanghai Metro (Alpha)'
-}
+    gzmtr: 'Guangzhou Metro',
+    mtr: 'MTR',
+    shmetro: 'Shanghai Metro (Alpha)',
+};
 
 const allLangs = {
-    en: 'English', 
+    en: 'English',
     'zh-Hans': '中文（简体）',
-    'zh-HK': '中文（香港）'
-}
+    'zh-HK': '中文（香港）',
+};
 
 interface SaveListsProps {
     t: any;
@@ -54,15 +66,15 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
         super(props);
 
         this.state = {
-            style: window.urlParams.get('style'), 
-            lang: window.urlParams.get('lang'), 
+            style: window.urlParams.get('style'),
+            lang: window.urlParams.get('lang'),
             templateDialogOpened: false,
             exportDialogOpened: false,
             previewDialogOpened: false,
             previewDialogCanvas: '',
-            styleDialogOpened: false, 
-            langDialogOpened: false
-        }
+            styleDialogOpened: false,
+            langDialogOpened: false,
+        };
 
         this.templateDialogClose = this.templateDialogClose.bind(this);
 
@@ -76,7 +88,7 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
 
     templateDialogClose(action: string) {
         if (action === 'close') {
-            this.setState({templateDialogOpened: false});
+            this.setState({ templateDialogOpened: false });
             return;
         }
 
@@ -90,21 +102,21 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
 
     saveClick() {
         let link = $('<a>', {
-            href: 'data:application/json;base64,'+btoa(unescape(encodeURIComponent(localStorage.rmgParam))), 
-            download: 'rmg_param.json'
+            href: 'data:application/json;base64,' + btoa(unescape(encodeURIComponent(localStorage.rmgParam))),
+            download: 'rmg_param.json',
         });
         link[0].click();
     }
 
     exportDialogClose(action: string) {
         if (action === 'close') {
-            this.setState({exportDialogOpened: false});
+            this.setState({ exportDialogOpened: false });
             return;
         }
         this.setState({
-            exportDialogOpened: false, 
-            previewDialogOpened: true, 
-            previewDialogCanvas: action
+            exportDialogOpened: false,
+            previewDialogOpened: true,
+            previewDialogCanvas: action,
         });
     }
 
@@ -112,24 +124,24 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
         if (action === 'close') {
             this.setState({
                 previewDialogOpened: false,
-                previewDialogCanvas: ''
+                previewDialogCanvas: '',
             });
         }
     }
 
     styleDialogClose(action: string) {
         if (action === 'close' || action === this.state.style) {
-            this.setState({styleDialogOpened: false});
+            this.setState({ styleDialogOpened: false });
         } else {
             this.setState({
-                style: action, 
-                styleDialogOpened: false
+                style: action,
+                styleDialogOpened: false,
             });
 
             window.urlParams.set('style', action);
             window.gtag('event', 'set', {
-                event_category: 'style', 
-                event_label: action
+                event_category: 'style',
+                event_label: action,
             });
             window.location.href = '?' + window.urlParams.toString();
         }
@@ -140,7 +152,7 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
             <div>
                 <Card>
                     <List component="nav">
-                        <ListItem button onClick={() => this.setState({templateDialogOpened: true})}>
+                        <ListItem button onClick={() => this.setState({ templateDialogOpened: true })}>
                             <ListItemIcon>
                                 <Icon>note_add</Icon>
                             </ListItemIcon>
@@ -153,7 +165,7 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
                             </ListItemIcon>
                             <ListItemText primary={this.props.t('file.save')} />
                         </ListItem>
-                        <ListItem button onClick={() => this.setState({exportDialogOpened: true})}>
+                        <ListItem button onClick={() => this.setState({ exportDialogOpened: true })}>
                             <ListItemIcon>
                                 <Icon>cloud_download</Icon>
                             </ListItemIcon>
@@ -162,42 +174,43 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
                     </List>
                     <Divider />
                     <List component="nav">
-                        <ListItem button onClick={() => this.setState({styleDialogOpened: true})}>
+                        <ListItem button onClick={() => this.setState({ styleDialogOpened: true })}>
                             <ListItemIcon>
                                 <Icon>style</Icon>
                             </ListItemIcon>
-                            <ListItemText 
-                                primary={this.props.t('file.style.button')} 
-                                secondary={this.props.t('file.style.'+this.state.style)} />
+                            <ListItemText
+                                primary={this.props.t('file.style.button')}
+                                secondary={this.props.t('file.style.' + this.state.style)}
+                            />
                         </ListItem>
-                        <ListItem button onClick={() => this.setState({langDialogOpened: true})}>
+                        <ListItem button onClick={() => this.setState({ langDialogOpened: true })}>
                             <ListItemIcon>
                                 <Icon>translate</Icon>
                             </ListItemIcon>
-                            <ListItemText 
+                            <ListItemText
                                 primary={this.props.t('file.lang.button')}
-                                secondary={getTransText2(allLangs, this.props.i18n.languages)} />
+                                secondary={getTransText2(allLangs, this.props.i18n.languages)}
+                            />
                         </ListItem>
                     </List>
                 </Card>
 
                 <TemplateDialog open={this.state.templateDialogOpened} onClose={this.templateDialogClose} />
-                
+
                 <ExportDialog open={this.state.exportDialogOpened} onClose={this.exportDialogClose} />
                 {/* <TranslatedPreviewDialog 
                     open={this.state.previewDialogOpened} 
                     onClose={this.previewDialogClose} 
                     canvas={this.state.previewDialogCanvas} /> */}
                 <StyleDialog open={this.state.styleDialogOpened} onClose={this.styleDialogClose} />
-                <LangDialog open={this.state.langDialogOpened} onClose={() => this.setState({langDialogOpened: false})} />
+                <LangDialog
+                    open={this.state.langDialogOpened}
+                    onClose={() => this.setState({ langDialogOpened: false })}
+                />
             </div>
         );
     }
 }
-
-
-
-
 
 interface StyleDialogProps {
     onClose: (style: string) => void;
@@ -205,7 +218,7 @@ interface StyleDialogProps {
 }
 
 function StyleDialog(props: StyleDialogProps) {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
 
     return (
         <Dialog onClose={() => props.onClose('close')} open={props.open}>
@@ -214,7 +227,7 @@ function StyleDialog(props: StyleDialogProps) {
                 <List>
                     {Object.keys(allStyles).map(key => (
                         <ListItem button onClick={() => props.onClose(key)} key={key}>
-                            <ListItemText primary={t('file.style.'+key)} />
+                            <ListItemText primary={t('file.style.' + key)} />
                         </ListItem>
                     ))}
                 </List>
@@ -229,26 +242,24 @@ interface LangDialogProps {
 }
 
 function LangDialog(props: LangDialogProps) {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const handleClick = (lang: string) => {
         if (lang === i18n.language) {
             props.onClose();
         } else {
-            i18n
-                .changeLanguage(lang)
-                .then(t => document.title = t('title'))
+            i18n.changeLanguage(lang).then(t => (document.title = t('title')));
             // window.urlParams.set('lang', lang);
             // history.pushState({url:window.location.href}, null, '?' + window.urlParams.toString());
             window.gtag('event', 'set', {
-                event_category: 'language', 
-                event_label: lang
+                event_category: 'language',
+                event_label: lang,
             });
-            document.documentElement.setAttribute('lang',lang);
+            document.documentElement.setAttribute('lang', lang);
             props.onClose();
             // window.location.href = '?' + window.urlParams.toString();
         }
-    }
+    };
 
     return (
         <Dialog onClose={props.onClose} open={props.open}>

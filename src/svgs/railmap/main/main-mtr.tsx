@@ -7,8 +7,18 @@ import StationMTR from './station/station-mtr';
 const MainMTR = () => {
     const { param, branches, routes, deps } = React.useContext(ParamContext);
 
-    const criticalPath = React.useMemo(() => getCriticalPath(param.stn_list, StationsMTR), [deps]);
-    const xShares = React.useMemo(() => StationsMTR.getXShares(param.stn_list, criticalPath, branches), [deps]);
+    const deps2 = Object.keys(param.stn_list).reduce((acc, cur) => {
+        return { ...acc, [cur]: param.stn_list[cur].transfer };
+    }, {});
+
+    const criticalPath = React.useMemo(() => getCriticalPath(param.stn_list, StationsMTR), [
+        deps,
+        JSON.stringify(deps2),
+    ]);
+    const xShares = React.useMemo(() => StationsMTR.getXShares(param.stn_list, criticalPath, branches), [
+        deps,
+        JSON.stringify(deps2),
+    ]);
     const lineXs: [number, number] = [
         (param.svg_width * param.padding) / 100,
         param.svg_width * (1 - param.padding / 100),

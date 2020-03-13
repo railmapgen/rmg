@@ -90,6 +90,7 @@ const StationMTR = (props: Props) => {
             case 'osi31':
                 return 'int3';
             case 'osi11':
+            case 'osi21':
                 return 'osi11';
             case 'osi12':
             case 'osi13':
@@ -118,34 +119,21 @@ const StationMTR = (props: Props) => {
                     stnTrans={stnInfo.transfer}
                     stnState={props.stnState}
                     namePos={props.namePos}
-                    end={
-                        stnIcon === 'osi22end'
-                            ? stnInfo.parents[0] === 'linestart'
-                                ? 'left'
-                                : 'right'
-                            : null
-                    }
+                    end={stnIcon === 'osi22end' ? (stnInfo.parents[0] === 'linestart' ? 'left' : 'right') : null}
                 />
-                {stnInfo.transfer.type.includes('osi') && (
+                {stnIcon.includes('osi') && (
                     <OSIName
                         name={stnInfo.transfer.osi_names[0]}
                         stnState={props.stnState}
                         variant={
                             stnInfo.transfer.type === 'osi22' &&
-                            (stnInfo.parents[0] === 'linestart' ||
-                                stnInfo.children[0] === 'lineend')
+                            (stnInfo.parents[0] === 'linestart' || stnInfo.children[0] === 'lineend')
                                 ? 'osi22end'
                                 : (stnInfo.transfer.type as any)
                         }
                         tickDirec={stnInfo.transfer.tick_direc}
                         namePos={props.namePos}
-                        end={
-                            stnIcon === 'osi22end'
-                                ? stnInfo.parents[0] === 'linestart'
-                                    ? 'left'
-                                    : 'right'
-                                : null
-                        }
+                        end={stnIcon === 'osi22end' ? (stnInfo.parents[0] === 'linestart' ? 'left' : 'right') : null}
                     />
                 )}
             </g>
@@ -153,16 +141,12 @@ const StationMTR = (props: Props) => {
                 xlinkHref={'#' + stnIcon + branchAffix}
                 className={
                     (props.stnState === -1 ? 'rmg-stn__mtr--pass' : 'rmg-stn__mtr--future') +
-                    (stnInfo.transfer.paid_area
-                        ? ' rmg-stn__mtr--paid-osi'
-                        : ' rmg-stn__mtr--unpaid-osi')
+                    (stnInfo.transfer.paid_area ? ' rmg-stn__mtr--paid-osi' : ' rmg-stn__mtr--unpaid-osi')
                 }
                 style={{
                     transform:
                         `translateY(${branchDy}px)` +
-                        `scale(${stnInfo.children[0] === 'lineend' ? 1 : -1},${
-                            props.namePos ? -1 : 1
-                        })`,
+                        `scale(${stnInfo.children[0] === 'lineend' ? 1 : -1},${props.namePos ? -1 : 1})`,
                 }}
             />
             <g style={{ transform: `translateY(${branchDy}px)` }}>
@@ -233,10 +217,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
     const dy = props.namePos
         ? STN_NAME_LINE_GAP - NAME_ZH_TOP
-        : -STN_NAME_LINE_GAP -
-          NAME_ZH_TOP -
-          NAME_FULL_HEIGHT -
-          (props.name[1].split('\\').length - 1) * 11;
+        : -STN_NAME_LINE_GAP - NAME_ZH_TOP - NAME_FULL_HEIGHT - (props.name[1].split('\\').length - 1) * 11;
 
     const textAnchor = !props.nameDX ? 'middle' : props.nameDX > 0 ? 'start' : 'end';
     const osi22DY = !props.nameDX ? 0 : props.namePos ? 11.515625 : -11.515625;
@@ -259,9 +240,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
         <g
             textAnchor={textAnchor}
             style={{ transform: `translateY(${dy + osi22DY}px)` }}
-            className={`Name ${
-                props.stnState === -1 ? 'Pass' : props.stnState === 0 ? 'Current' : 'Future'
-            }`}
+            className={`Name ${props.stnState === -1 ? 'Pass' : props.stnState === 0 ? 'Current' : 'Future'}`}
         >
             {props.stnState === 0 && (
                 <rect
@@ -298,11 +277,7 @@ const StationName = (props: StationNameProps) => {
             <>
                 <text className="rmg-name__zh rmg-name__mtr--station">{props.name[0]}</text>
                 {props.name[1].split('\\').map((txt, i) => (
-                    <text
-                        key={i}
-                        className="rmg-name__en rmg-name__mtr--station"
-                        dy={props.nameGap + i * 11}
-                    >
+                    <text key={i} className="rmg-name__en rmg-name__mtr--station" dy={props.nameGap + i * 11}>
                         {txt}
                     </text>
                 ))}
@@ -313,17 +288,7 @@ const StationName = (props: StationNameProps) => {
 };
 
 interface IntTickGroupProps {
-    variant:
-        | 'int2'
-        | 'int3'
-        | 'osi11'
-        | 'osi12'
-        | 'osi22'
-        | 'osi22end'
-        | 'none'
-        | 'osi13'
-        | 'osi21'
-        | 'osi31';
+    variant: 'int2' | 'int3' | 'osi11' | 'osi12' | 'osi22' | 'osi22end' | 'none' | 'osi13' | 'osi21' | 'osi31';
     stnTrans: StationTransfer;
     stnState: -1 | 0 | 1;
     namePos: boolean;
@@ -351,9 +316,7 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                             key={i}
                             style={{
                                 transform: `translateY(${
-                                    !props.namePos
-                                        ? 18 * (i + 1)
-                                        : -18 * (props.stnTrans.info[0].length - i)
+                                    !props.namePos ? 18 * (i + 1) : -18 * (props.stnTrans.info[0].length - i)
                                 }px)`,
                             }}
                         >
@@ -367,6 +330,7 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                 </>
             );
         case 'osi11':
+        case 'osi21':
             return (
                 <g
                     style={{
@@ -389,9 +353,7 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                             key={i}
                             style={{
                                 transform: `translateY(${
-                                    !props.namePos
-                                        ? 8 + 18 * (i + 1)
-                                        : -8 - 18 * (props.stnTrans.info[1].length - i)
+                                    !props.namePos ? 8 + 18 * (i + 1) : -8 - 18 * (props.stnTrans.info[1].length - i)
                                 }px)`,
                             }}
                         >
@@ -420,9 +382,7 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                             key={i}
                             style={{
                                 transform: `translateY(${
-                                    !props.namePos
-                                        ? 8 + 18 * (i + 1)
-                                        : -8 - 18 * (props.stnTrans.info[1].length - i)
+                                    !props.namePos ? 8 + 18 * (i + 1) : -8 - 18 * (props.stnTrans.info[1].length - i)
                                 }px)`,
                             }}
                         >
@@ -450,9 +410,7 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                             key={i}
                             style={{
                                 transform: `translate(${props.end === 'left' ? -41 : 41}px,${
-                                    props.namePos
-                                        ? 18 * i
-                                        : -18 * (props.stnTrans.info[1].length - 1 - i)
+                                    props.namePos ? 18 * i : -18 * (props.stnTrans.info[1].length - 1 - i)
                                 }px)`,
                             }}
                         >
@@ -528,8 +486,7 @@ const IntTick = (props: IntTickProps) => {
                     stroke={props.intInfo[2]}
                     style={{ transform: `rotate(${props.rotation}deg)` }}
                     className={
-                        'rmg-line rmg-line__mtr rmg-line__change' +
-                        (props.stnState === -1 ? ' rmg-line__pass' : '')
+                        'rmg-line rmg-line__mtr rmg-line__change' + (props.stnState === -1 ? ' rmg-line__pass' : '')
                     }
                 />
                 <g
@@ -545,11 +502,7 @@ const IntTick = (props: IntTickProps) => {
                         </text>
                     ))}
                     {props.intInfo[5].split('\\').map((txt, i) => (
-                        <text
-                            key={nameZHLns + i}
-                            className="rmg-name__en IntName"
-                            dy={nameZHLns * 10 - 1 + 7 * i}
-                        >
+                        <text key={nameZHLns + i} className="rmg-name__en IntName" dy={nameZHLns * 10 - 1 + 7 * i}>
                             {txt}
                         </text>
                     ))}
@@ -563,7 +516,7 @@ const IntTick = (props: IntTickProps) => {
 interface OSINameProps {
     name: Name;
     stnState: -1 | 0 | 1;
-    variant: 'osi11' | 'osi12' | 'osi13' | 'osi22' | 'osi22end' | 'osi31';
+    variant: 'osi11' | 'osi12' | 'osi13' | 'osi22' | 'osi22end' | 'osi31' | 'osi21';
     tickDirec: 'l' | 'r';
     namePos: boolean;
     end?: 'left' | 'right';
@@ -573,6 +526,7 @@ const OSIName = (props: OSINameProps) => {
     const textAnchor = (variant => {
         switch (variant) {
             case 'osi11':
+            case 'osi21':
                 return props.tickDirec === 'l' ? 'end' : 'start';
             case 'osi22':
                 return props.tickDirec === 'l' ? 'start' : 'end';
@@ -584,6 +538,7 @@ const OSIName = (props: OSINameProps) => {
     const x = (variant => {
         switch (variant) {
             case 'osi11':
+            case 'osi21':
                 return props.tickDirec === 'l' ? -13 : 13;
             case 'osi22':
                 return props.tickDirec === 'l' ? 13 : -13;
@@ -597,6 +552,7 @@ const OSIName = (props: OSINameProps) => {
     const y = (variant => {
         switch (variant) {
             case 'osi11':
+            case 'osi21':
                 return (
                     (!props.namePos ? 26 : -26) +
                     8.34375 -
@@ -606,10 +562,7 @@ const OSIName = (props: OSINameProps) => {
             case 'osi12':
                 return !props.namePos
                     ? 26 + 18 + 10 + 8.34375
-                    : -(26 + 18 + 10) +
-                          8.34375 -
-                          25.03125 -
-                          10 * (props.name[1].split('\\').length - 1);
+                    : -(26 + 18 + 10) + 8.34375 - 25.03125 - 10 * (props.name[1].split('\\').length - 1);
             case 'osi22':
                 return (
                     (!props.namePos ? 26 - 18 : -8) -

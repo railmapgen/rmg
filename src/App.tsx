@@ -10,6 +10,8 @@ import { ParamContext, paramReducer } from './context';
 export default function App() {
     // const [param, setParam] = React.useState(getParams());
     const [param, dispatch] = React.useReducer(paramReducer, getParams());
+    const paramString = JSON.stringify(param);
+    React.useEffect(() => localStorage.setItem('rmgParam', paramString), [paramString]);
 
     const deps = Object.keys(param.stn_list).reduce(
         (acc, cur) =>

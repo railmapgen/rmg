@@ -1,5 +1,11 @@
 # Version History
 
+## 3.3 (13 Mar 2020)
+
+### New Features
+
+- Migrated the entire project to React. 
+
 ## 3.2.1 (10 Mar 2020)
 
 ### New Features

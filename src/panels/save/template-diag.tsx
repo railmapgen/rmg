@@ -1,10 +1,20 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ListItem, ListItemText, Dialog, DialogTitle, DialogContent, List, DialogContentText, DialogActions, Button } from '@material-ui/core';
+import {
+    ListItem,
+    ListItemText,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    List,
+    DialogContentText,
+    DialogActions,
+    Button,
+} from '@material-ui/core';
 import { getTransText2 } from '../../utils';
 
 const useTemplateList = () => {
-    const [list, setList] = React.useState([] as {desc: {[x: string]: string}; filename: string}[]);
+    const [list, setList] = React.useState([] as { desc: { [x: string]: string }; filename: string }[]);
 
     React.useEffect(() => {
         console.log('fetched template list');
@@ -14,7 +24,7 @@ const useTemplateList = () => {
     }, []);
 
     return list;
-} 
+};
 
 interface TemplateDialogProps {
     open: boolean;
@@ -23,6 +33,7 @@ interface TemplateDialogProps {
 
 export default (props: TemplateDialogProps) => {
     const { t, i18n } = useTranslation();
+
     const templateList = useTemplateList();
 
     return (
@@ -36,9 +47,7 @@ export default (props: TemplateDialogProps) => {
                         </ListItem>
                     ))}
                 </List>
-                <DialogContentText>
-                    {t('file.new.notice')}
-                </DialogContentText>
+                <DialogContentText>{t('file.new.notice')}</DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={() => props.onClose('close')} color="primary">
@@ -47,4 +56,4 @@ export default (props: TemplateDialogProps) => {
             </DialogActions>
         </Dialog>
     );
-}
+};

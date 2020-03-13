@@ -122,40 +122,40 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                 this.setState({ stnDeleteErrDialogOpened: true });
             } else {
                 // handle redrawing (will be removed)
-                delete window.myLine.stations[stnId];
+                // delete window.myLine.stations[stnId];
                 if (this.props.currentId === stnId) {
                     let newCurrentId = Object.keys(res).filter(id => !['linestart', 'lineend'].includes(id))[0];
                     this.props.paramUpdate('current_stn_idx', newCurrentId);
-                    setParams('current_stn_idx', newCurrentId);
-                    window.myLine._currentStnId = newCurrentId;
+                    // setParams('current_stn_idx', newCurrentId);
+                    // window.myLine._currentStnId = newCurrentId;
                 }
-                let { parents, children } = this.props.stnList[stnId];
-                [...parents, ...children].forEach(neId => {
-                    // if (['linestart','lineend'].includes(neId)) return;
-                    window.myLine.stations[neId] = window.myLine._initStnInstance(neId, res[neId]);
-                });
+                // let { parents, children } = this.props.stnList[stnId];
+                // [...parents, ...children].forEach(neId => {
+                //     // if (['linestart','lineend'].includes(neId)) return;
+                //     window.myLine.stations[neId] = window.myLine._initStnInstance(neId, res[neId]);
+                // });
 
-                Object.keys(res).forEach(id => {
-                    if (['linestart', 'lineend'].includes(id)) return;
-                    window.myLine._updateStnInstance(id);
-                });
+                // Object.keys(res).forEach(id => {
+                //     if (['linestart', 'lineend'].includes(id)) return;
+                //     window.myLine._updateStnInstance(id);
+                // });
 
-                $('#stn_icons, #line_main, #line_pass').empty();
-                window.myLine.drawStns();
-                window.myLine.drawLine();
-                window.myLine.drawStrip();
-                window.myLine.drawDestInfo();
+                // $('#stn_icons, #line_main, #line_pass').empty();
+                // window.myLine.drawStns();
+                // window.myLine.drawLine();
+                // window.myLine.drawStrip();
+                // window.myLine.drawDestInfo();
 
-                if (window.urlParams.get('style') === 'gzmtr') {
-                    (window.myLine as RMGLineGZ).loadLineNum();
-                    (window.myLine as RMGLineGZ).loadDirection();
-                }
-                if (window.urlParams.get('style') === 'mtr') {
-                    (window.myLine as RMGLineHK).updateStnNameBg();
-                }
+                // if (window.urlParams.get('style') === 'gzmtr') {
+                //     (window.myLine as RMGLineGZ).loadLineNum();
+                //     (window.myLine as RMGLineGZ).loadDirection();
+                // }
+                // if (window.urlParams.get('style') === 'mtr') {
+                //     (window.myLine as RMGLineHK).updateStnNameBg();
+                // }
 
                 this.props.paramUpdate('stn_list', res);
-                setParams('stn_list', res);
+                // setParams('stn_list', res);
             }
             // if (!window.myLine.removeStn(stnId)) {
             //     this.setState({ stnDeleteErrDialogOpened: true });
@@ -247,7 +247,6 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
                     <AutoNumDialog
                         open={this.state.autoNumDialogOpened}
                         onClose={() => this.setState({ autoNumDialogOpened: false })}
-                        paramUpdate={this.props.paramUpdate}
                     />
                 )}
             </div>

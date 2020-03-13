@@ -6,7 +6,7 @@ export class StationsMTR extends Stations {
         var res = 0;
         let { type, tick_direc } = this.stnList[stnId].transfer;
         if (tick_direc === 'l') {
-            if (['int3', 'osi11', 'osi12'].includes(type)) {
+            if (['int3', 'osi11', 'osi12', 'osi21', 'osi31'].includes(type)) {
                 res += 0.8;
             }
         }
@@ -20,7 +20,7 @@ export class StationsMTR extends Stations {
         var res = 0;
         let { type, tick_direc } = this.stnList[stnId].transfer;
         if (tick_direc === 'r') {
-            if (['int3', 'osi11', 'osi12'].includes(type)) {
+            if (['int3', 'osi11', 'osi12', 'osi21', 'osi31'].includes(type)) {
                 res += 0.8;
             }
         }

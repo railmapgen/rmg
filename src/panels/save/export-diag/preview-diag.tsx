@@ -13,58 +13,63 @@ interface Props {
 export default (props: Props) => {
     const { t } = useTranslation();
 
-    const [svgEl, setSvgEl] = React.useState($('<svg>')[0] as Element as SVGSVGElement);
+    const [svgEl, setSvgEl] = React.useState(($('<svg>')[0] as Element) as SVGSVGElement);
     const [isLoaded, setIsLoaded] = React.useState(false);
 
     React.useEffect(() => {
         if (props.canvas === '') {
-            setSvgEl($('<svg>')[0] as Element as SVGSVGElement);
+            setSvgEl(($('<svg>')[0] as Element) as SVGSVGElement);
             setIsLoaded(false);
             return;
         }
         let [thisSVGWidth, thisSVGHeight] = [
-            $(`div#svgs #${props.canvas}`).css('--rmg-svg-width').match(/\d+/g), 
-            $(`div#svgs #${props.canvas}`).css('--rmg-svg-height').match(/\d+/g)
+            $(`svg#${props.canvas}`)
+                .css('--rmg-svg-width')
+                .match(/\d+/g),
+            $(`svg#${props.canvas}`)
+                .css('--rmg-svg-height')
+                .match(/\d+/g),
         ].map(Number);
-        let MAX_WIDTH = Math.min($(window).width(), 1412) - 64 - 24*2;
-        let MAX_HEIGHT = $(window).height() - 64 - 64 - 52 - 8*2;
-        let scaleFactor = Math.min(MAX_WIDTH/thisSVGWidth, MAX_HEIGHT/thisSVGHeight);
+        let MAX_WIDTH = Math.min($(window).width(), 1412) - 64 - 24 * 2;
+        let MAX_HEIGHT = $(window).height() - 64 - 64 - 52 - 8 * 2;
+        let scaleFactor = Math.min(MAX_WIDTH / thisSVGWidth, MAX_HEIGHT / thisSVGHeight);
 
-        let el = $(`div#svgs #${props.canvas}`).clone().attr({
-            viewBox: `0 0 ${thisSVGWidth} ${thisSVGHeight}`,
-            width: thisSVGWidth * scaleFactor, 
-            height: thisSVGHeight * scaleFactor
-        }).css({
-            all: 'initial'
-        });
-
-        let cssTxt = ['share', props.canvas]
-            .map(tag => {
-                return Array.from(
-                    (($(`link#css_${tag}`)[0] as HTMLLinkElement).sheet as CSSStyleSheet).cssRules
-                ).map(rule => rule.cssText).join(' ');
+        let el = $(`svg#${props.canvas}`)
+            .clone()
+            .attr({
+                viewBox: `0 0 ${thisSVGWidth} ${thisSVGHeight}`,
+                width: thisSVGWidth * scaleFactor,
+                height: thisSVGHeight * scaleFactor,
+            })
+            .css({
+                all: 'initial',
             });
+
+        let cssTxt = ['share', props.canvas].map(tag => {
+            return Array.from((($(`link#css_${tag}`)[0] as HTMLLinkElement).sheet as CSSStyleSheet).cssRules)
+                .map(rule => rule.cssText)
+                .join(' ');
+        });
         el.prepend(...cssTxt.map(txt => $('<style>').text(txt)))
             .prepend(document.querySelector('style#global').outerHTML)
-            .find('[style="display: none;"]').remove();
+            .find('[style="display: none;"]')
+            .remove();
 
         if (window.urlParams.get('style') === 'mtr') {
-            import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper')
-                .then(({ getBase64FontFace }) => {
-                    getBase64FontFace(el[0] as Element as SVGSVGElement)
-                        .then(async response => {
-                            let uris = await Promise.all(response);
-                            el.prepend($('<style>').text(uris.join(' ')));
-            
-                            setSvgEl(el[0] as Element as SVGSVGElement);
-            
-                            document.fonts.ready.then(() => {
-                                setIsLoaded(true);
-                            })
-                        });
+            import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper').then(({ getBase64FontFace }) => {
+                getBase64FontFace((el[0] as Element) as SVGSVGElement).then(async response => {
+                    let uris = await Promise.all(response);
+                    el.prepend($('<style>').text(uris.join(' ')));
+
+                    setSvgEl((el[0] as Element) as SVGSVGElement);
+
+                    document.fonts.ready.then(() => {
+                        setIsLoaded(true);
+                    });
                 });
+            });
         } else {
-            setSvgEl(el[0] as Element as SVGSVGElement);
+            setSvgEl((el[0] as Element) as SVGSVGElement);
             setIsLoaded(true);
         }
     }, [props.canvas]);
@@ -81,12 +86,12 @@ export default (props: Props) => {
             link.click();
         }
         props.onClose('close');
-    }
+    };
 
-    return(
+    return (
         <Dialog onClose={handleClose('close')} open={props.open} maxWidth={false} id="preview_diag">
-            <DialogTitle >{t('file.preview.title')}</DialogTitle>
-            <DialogContent dangerouslySetInnerHTML={{__html: svgEl.outerHTML}} />
+            <DialogTitle>{t('file.preview.title')}</DialogTitle>
+            <DialogContent dangerouslySetInnerHTML={{ __html: svgEl.outerHTML }} />
             <DialogActions>
                 <Button onClick={handleClose('close')} color="primary" autoFocus>
                     {t('dialog.cancel')}
@@ -100,4 +105,4 @@ export default (props: Props) => {
             </DialogActions>
         </Dialog>
     );
-}
+};

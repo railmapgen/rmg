@@ -11,6 +11,7 @@ export const ParamContext = React.createContext<{
 }>(null);
 
 type ReducerAction =
+    | { type: 'GLOBAL'; data: RMGParam }
     | {
           type: 'ANY';
           key: string;
@@ -96,6 +97,11 @@ type ReducerAction =
           transfer: StationTransfer;
       }
     | {
+          type: 'UPDATE_STATION_OSI_NAME';
+          stnId: string;
+          name: Name;
+      }
+    | {
           type: 'UPDATE_STATION_TICK_DIREC';
           stnId: string;
           direction: 'l' | 'r';
@@ -132,12 +138,25 @@ type ReducerAction =
           right: string;
       }
     | {
+          type: 'UPDATE_STATION_FACILITY';
+          stnId: string;
+          facility: '' | 'airport' | 'hsr' | 'disney';
+      }
+    | {
+          type: 'UPDATE_STATION_SERVICES';
+          stnId: string;
+          serviceId: 'local' | 'express';
+          isChecked: boolean;
+      }
+    | {
           type: 'UPDATE_STATION_LIST';
           stnList: { [stnId: string]: StationInfo };
       };
 
 export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam => {
     switch (action.type) {
+        case 'GLOBAL':
+            return action.data;
         case 'ANY':
             return {
                 ...state,
@@ -265,6 +284,20 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
                     },
                 },
             };
+        case 'UPDATE_STATION_OSI_NAME':
+            return {
+                ...state,
+                stn_list: {
+                    ...state.stn_list,
+                    [action.stnId]: {
+                        ...state.stn_list[action.stnId],
+                        transfer: {
+                            ...state.stn_list[action.stnId].transfer,
+                            osi_names: [action.name],
+                        },
+                    },
+                },
+            };
         case 'UPDATE_STATION_TICK_DIREC':
             return {
                 ...state,
@@ -349,6 +382,32 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
                     [action.right]: {
                         ...state.stn_list[action.right],
                         children: state.stn_list[action.right].children.slice().reverse(),
+                    },
+                },
+            };
+        case 'UPDATE_STATION_FACILITY':
+            return {
+                ...state,
+                stn_list: {
+                    ...state.stn_list,
+                    [action.stnId]: {
+                        ...state.stn_list[action.stnId],
+                        facility: action.facility,
+                    },
+                },
+            };
+        case 'UPDATE_STATION_SERVICES':
+            return {
+                ...state,
+                stn_list: {
+                    ...state.stn_list,
+                    [action.stnId]: {
+                        ...state.stn_list[action.stnId],
+                        services: Array.from(
+                            action.isChecked
+                                ? new Set(state.stn_list[action.stnId].services).add(action.serviceId)
+                                : state.stn_list[action.stnId].services.filter(s => s !== action.serviceId)
+                        ),
                     },
                 },
             };
