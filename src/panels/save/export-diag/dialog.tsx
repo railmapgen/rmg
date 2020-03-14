@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, List, ListItem, ListItemText } from '@material-ui/core';
 
 import PreviewDialog from './preview-diag';
+import { CanvasContext } from '../../../context';
 
 interface Props {
     onClose: (action: string) => void;
@@ -11,7 +12,9 @@ interface Props {
 
 export default function ExportDialog(props: Props) {
     const { t } = useTranslation();
-    
+
+    const { canvasAvailable } = React.useContext(CanvasContext);
+
     const [previewDialogOpened, setPreviewDialogOpened] = React.useState(false);
     const [canvas, setCanvas] = React.useState('');
 
@@ -21,7 +24,7 @@ export default function ExportDialog(props: Props) {
             setCanvas(action);
         }
         props.onClose('close');
-    }
+    };
 
     const previewDialogClose = (action: string) => {
         if (action === 'close') {
@@ -36,29 +39,16 @@ export default function ExportDialog(props: Props) {
                 <DialogTitle>{t('file.export.title')}</DialogTitle>
                 <DialogContent dividers>
                     <List>
-                        <ListItem button key="destination" 
-                            onClick={handleClose('destination')} 
-                            disabled={!['mtr', 'shmetro'].includes(window.urlParams.get('style'))}>
-                            <ListItemText primary={t('file.export.destination')} />
-                        </ListItem>
-                        <ListItem button key="runin" 
-                            onClick={handleClose('runin')} 
-                            disabled={!['gzmtr', 'shmetro'].includes(window.urlParams.get('style'))}>
-                            <ListItemText primary={t('file.export.runin')} />
-                        </ListItem>
-                        <ListItem button key="railmap"
-                            onClick={handleClose('railmap')}>
-                            <ListItemText primary={t('file.export.railmap')} />
-                        </ListItem>
+                        {canvasAvailable.map(c => (
+                            <ListItem button key={c} onClick={handleClose(c)}>
+                                <ListItemText primary={t('file.export.' + c)} />
+                            </ListItem>
+                        ))}
                     </List>
                 </DialogContent>
             </Dialog>
 
-            <PreviewDialog
-                open={previewDialogOpened}
-                onClose={previewDialogClose}
-                canvas={canvas} />
+            <PreviewDialog open={previewDialogOpened} onClose={previewDialogClose} canvas={canvas} />
         </>
     );
 }
-

@@ -1,15 +1,13 @@
 {
     "compilerOptions": {
-        "target": "ES6",
+        "target": "ES3",
         "outDir": "./built",
         "lib": ["DOM", "ESNext"],
         "allowJs": true,
-        "sourceMap": true, 
-        "moduleResolution": "node", 
-        "module": "ESNext", 
+        "sourceMap": true,
+        "moduleResolution": "node",
+        "module": "ESNext",
         "jsx": "react"
-    }, 
-    "include": [
-        "./src/index3.tsx"
-    ]
+    },
+    "include": ["./src/index3.tsx"]
 }

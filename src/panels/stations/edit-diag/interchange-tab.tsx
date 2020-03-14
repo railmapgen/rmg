@@ -218,11 +218,9 @@ const intChipSetStyles = makeStyles(() =>
         },
         intChipTextZH: {
             fontSize: 18,
-            fontFamily: 'Helvetica, Noto Serif KR, Noto Serif JP, Noto Serif TC, Noto Serif SC, serif',
             lineHeight: '1.2rem',
         },
         intChipTextEN: {
-            fontFamily: 'Helvetica, Arial, sans-serif',
             fontSize: '.75rem',
             lineHeight: '.9rem',
             whiteSpace: 'pre-wrap' as 'pre-wrap',

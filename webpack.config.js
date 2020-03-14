@@ -38,7 +38,7 @@ module.exports = [
             publicPath: './dist/',
         },
         externals: {
-            jquery: 'jQuery',
+            // jquery: 'jQuery',
             react: 'React',
             'react-dom': 'ReactDOM',
             i18next: 'i18next',

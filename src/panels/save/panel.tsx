@@ -101,11 +101,10 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
     }
 
     saveClick() {
-        let link = $('<a>', {
-            href: 'data:application/json;base64,' + btoa(unescape(encodeURIComponent(localStorage.rmgParam))),
-            download: 'rmg_param.json',
-        });
-        link[0].click();
+        let link = document.createElement('a');
+        link.href = 'data:application/json;base64,' + btoa(unescape(encodeURIComponent(localStorage.rmgParam)));
+        link.download = 'rmg.param.' + new Date().toISOString() + '.json';
+        link.click();
     }
 
     exportDialogClose(action: string) {

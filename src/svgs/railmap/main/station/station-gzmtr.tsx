@@ -37,7 +37,7 @@ const StationGZMTR = (props: Props) => {
             <IntGroup
                 intInfos={
                     isNameShift
-                        ? ([
+                        ? (([
                               [
                                   param.theme[0],
                                   param.theme[1],
@@ -46,7 +46,7 @@ const StationGZMTR = (props: Props) => {
                                   param.line_name[0],
                                   param.line_name[1],
                               ],
-                          ] as InterchangeInfo[]).concat(stnInfo.transfer.info[0])
+                          ] as any[]) as InterchangeInfo[]).concat(stnInfo.transfer.info[0])
                         : stnInfo.transfer.info[0]
                 }
                 stnState={props.stnState}

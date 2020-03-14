@@ -16,6 +16,7 @@ import {
     useMediaQuery,
 } from '@material-ui/core';
 import { CanvasContext } from './context';
+import { ProvidedCanvas } from './types';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -36,7 +37,7 @@ const useStyles = makeStyles(theme =>
 );
 
 const AppAppBar = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const classes = useStyles();
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
@@ -58,7 +59,7 @@ const AppAppBar = () => {
                 </Toolbar>
             </AppBar>
         ),
-        [prefersDarkMode]
+        [prefersDarkMode, i18n.language]
     );
 };
 
@@ -71,7 +72,7 @@ const CanvasToggle = () => {
 
     const { canvasAvailable, setCanvasToShown } = React.useContext(CanvasContext);
     const [canvasButtonEl, setCanvasButtonEl] = React.useState<null | HTMLElement>(null);
-    const handleClick = (action: 'destination' | 'runin' | 'railmap' | 'all') => () => {
+    const handleClick = (action: ProvidedCanvas | 'all') => () => {
         setCanvasToShown(action);
         setCanvasButtonEl(null);
     };
@@ -86,14 +87,12 @@ const CanvasToggle = () => {
                 </Tooltip>
                 <Menu anchorEl={canvasButtonEl} open={Boolean(canvasButtonEl)} onClose={() => setCanvasButtonEl(null)}>
                     {canvasAvailable.map(c => (
-                        <MenuItem key={c} dense onClick={handleClick(c)}>
+                        <MenuItem key={c} onClick={handleClick(c)}>
                             {t('toggle.' + c)}
                         </MenuItem>
                     ))}
                     <Divider style={{ margin: '6px 0' }} />
-                    <MenuItem dense onClick={handleClick('all')}>
-                        {t('toggle.all')}
-                    </MenuItem>
+                    <MenuItem onClick={handleClick('all')}>{t('toggle.all')}</MenuItem>
                 </Menu>
             </>
         ),

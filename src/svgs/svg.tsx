@@ -8,17 +8,12 @@ import { CanvasContext } from '../context';
 const useStyles = makeStyles(() =>
     createStyles({
         root: {
-            height: '100%',
             display: 'flex',
             flexDirection: 'row',
             overflowX: 'scroll',
-            scrollbarWidth: 'none',
             '&::before, &::after': {
                 content: '""',
                 margin: 'auto',
-            },
-            '&::-webkit-scrollbar': {
-                display: 'none',
             },
             '& > svg': {
                 flex: '0 0 auto',

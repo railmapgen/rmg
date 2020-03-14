@@ -36,8 +36,6 @@ const useStyles = makeStyles(theme =>
             display: 'block',
         },
         inputBaseInputZH: {
-            fontFamily:
-                'Helvetica, Arial, Noto Serif KR, Noto Serif JP, Noto Serif TC, Noto Serif SC, HiraMinProN-W6, serif',
             textAlign: 'center',
             fontSize: 36,
             padding: 0,
@@ -45,7 +43,6 @@ const useStyles = makeStyles(theme =>
             height: 45,
         },
         inputBaseInputEN: {
-            fontFamily: 'Helvetica, Arial, sans-serif',
             textAlign: 'center',
             fontSize: 18,
             padding: 0,

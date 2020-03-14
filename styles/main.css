@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Noto+Serif+KR:600|Noto+Serif+JP:600|Noto+Serif+TC:600|Noto+Serif+SC:600%26display=swap');
-
 :root {
     background-color: #fafafa;
 }
@@ -14,114 +12,14 @@ body {
     width: 100%;
     height: 100%;
     margin: 0;
-    overflow: auto;
-}
-
-#svgs {
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    overflow-x: scroll;
-    scrollbar-width: none;
-}
-
-#svgs::-webkit-scrollbar, #svgs>div::-webkit-scrollbar {
-    display: none;
-}
-
-#svgs > div {
-    display: flex;
-    flex-direction: column;
-    left: 100%;
-    overflow: scroll;
-    width: 0;
-    transition: 500ms ease-in-out;
-}
-
-#svgs > div.show {
-    left: 0;
-    width: auto;
-    transition: 500ms ease-in-out;
-    flex: 0 0 auto;
-}
-
-
-#svgs > div > svg {
-    border: 1px solid black;
-}
-
-#panels {
-    /* flex-grow: 1; */
-    /* overflow: hidden; */
-    width: 100%;
-}
-
-#toggle {
-    --mdc-theme-primary: #9a62ea;
-    right: 0;
-    position: fixed;
-    top: 0;
-    width: 48px;
-    height: 48px;
     overflow: hidden;
-    outline: none;
-    background: var(--mdc-theme-background, white);
-    box-shadow: none;
-    border: 2px solid var(--mdc-theme-primary);
-    border-width: 0 0 2px 2px;
-    color: var(--mdc-theme-primary);
-    border-radius: 0 0 0 10px;
-    z-index: 999;
-    cursor: pointer;
 }
 
-#toggle:before {
-    content: " ";
-    display: block;
-    width: 100%;
+div#app {
+    display: flex;
     height: 100%;
-    opacity: 0;
-    transition: 1s all;
-    position: absolute;
-    z-index: -1;
-}
-
-#toggle:hover:before {
-    background: var(--mdc-theme-on-surface);
-    opacity: 0.05;
-}
-
-#toggle .mdc-tab__ripple:hover::before {
-    opacity: 0.05;
-}
-
-#toggle span.material-icons {
     width: 100%;
-    /* height: 100%; */
-    display: block;
-    text-align: center;
-    line-height: 48px;
-    font-size: 28px;
-}
-
-#toggle.show {
-    --mdc-theme-primary: #6200ee;
-    height: auto;
-}
-
-#toggle ul {
-    padding: 0;
-    text-align: center;
-    margin: 0;
-}
-
-#toggle li {
-    width: 48px;
-    height: 48px;
-    line-height: 48px;
-    font-size: 20px;
-    display: block;
-    margin: 0 auto;
-    border: 1px solid var(--mdc-theme-primary);
-    border-width: 2px 0 0 0;
+    flex-direction: column;
+    overflow: hidden;
+    position: absolute;
 }

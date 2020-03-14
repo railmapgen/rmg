@@ -1,7 +1,11 @@
 import * as React from 'react';
-import { RMGParam, Name, StationTransfer, BranchInfo, StationInfo, InterchangeInfo } from './types';
+import { RMGParam, Name, StationTransfer, BranchInfo, StationInfo, InterchangeInfo, ProvidedCanvas } from './types';
 
-export const CanvasContext = React.createContext(null);
+export const CanvasContext = React.createContext<{
+    canvasAvailable: ProvidedCanvas[];
+    canvasToShown: ProvidedCanvas | 'all';
+    setCanvasToShown: React.Dispatch<React.SetStateAction<ProvidedCanvas | 'all'>>;
+}>(null);
 
 export const ParamContext = React.createContext<{
     param: RMGParam;

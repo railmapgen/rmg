@@ -4,6 +4,7 @@ import { getCriticalPath } from '../methods/share';
 import { StationsGZMTR } from '../methods/gzmtr';
 import StationGZMTR from './station/station-gzmtr';
 import LineBox from './line-box-gzmtr';
+import { InterchangeInfo } from '../../../types';
 
 const cpm = (from: string, to: string, adjMat: { [key1: string]: { [key2: string]: number } }) => {
     if (from == to) {
@@ -203,14 +204,16 @@ const MainGZMTR = () => {
                 }}
             >
                 <LineBox
-                    info={[
-                        ,
-                        ,
-                        'var(--rmg-theme-colour)',
-                        'var(--rmg-theme-fg)',
-                        param.line_name[0],
-                        param.line_name[1],
-                    ]}
+                    info={
+                        ([
+                            ,
+                            ,
+                            'var(--rmg-theme-colour)',
+                            'var(--rmg-theme-fg)',
+                            param.line_name[0],
+                            param.line_name[1],
+                        ] as any) as InterchangeInfo
+                    }
                     stnState={1}
                 />
             </g>

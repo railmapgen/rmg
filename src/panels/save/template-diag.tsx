@@ -17,7 +17,7 @@ const useTemplateList = () => {
     const [list, setList] = React.useState([] as { desc: { [x: string]: string }; filename: string }[]);
 
     React.useEffect(() => {
-        console.log('fetched template list');
+        console.log('fetching template list');
         fetch('templates/template_list.json')
             .then(response => response.json())
             .then((data: typeof list) => setList(data));

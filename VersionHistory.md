@@ -1,5 +1,14 @@
 # Version History
 
+## 3.3.2 (14 Mar 2020)
+
+### Resolved Issues
+
+- Fixed the issues of overflow content. 
+- Fixed the errors of multiple within-station interchanges in MTR style. 
+- Improved backward compatibility. 
+- Improved robustness.
+
 ## 3.3.1 (14 Mar 2020)
 
 ### New Features

@@ -1,89 +1,71 @@
-export function test(svgEl: JQuery<Element>) {
-    var [svgW, svgH] = svgEl.attr('viewBox').split(' ').slice(2);
-    svgEl.attr({
-        width: svgW, height: svgH
-    });
+export function test(svgEl: SVGSVGElement) {
+    let svgW = svgEl.viewBox.baseVal.width;
+    let svgH = svgEl.viewBox.baseVal.height;
 
-    var canvas = <HTMLCanvasElement> $('canvas')[0];
-    $('canvas').attr({
-        width: Number(svgW)*2.5, height:Number(svgH)*2.5
-    });
-    var ctx = canvas.getContext("2d");
+    svgEl.setAttribute('width', svgW.toString());
+    svgEl.setAttribute('height', svgH.toString());
+
+    let canvas = document.querySelectorAll('canvas')[0];
+    canvas.width = Number(svgW) * 2.5;
+    canvas.height = Number(svgH) * 2.5;
+
+    let ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // bypass Chrome min font size (to be improved)
 
-    svgEl.find('.rmg-name__en.rmg-name__mtr--station').each((_,el) => {
-        $(el).attr('font-size', '11px');
-    });
+    svgEl.querySelectorAll('.rmg-name__en.rmg-name__mtr--station').forEach(el => el.setAttribute('font-size', '11px'));
 
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--station, .rmg-name__zh.IntName').each((_,el) => {
-        $(el).attr('font-size', '10px');
-    });
+    svgEl
+        .querySelectorAll('.rmg-name__en.rmg-name__gzmtr--station, .rmg-name__zh.IntName')
+        .forEach(el => el.setAttribute('font-size', '10px'));
 
-    svgEl.find('.rmg-name__en.rmg-name__mtr--osi').each((_,el) => {
-        $(el).attr('font-size', '9px');
-    });
+    svgEl.querySelectorAll('.rmg-name__en.rmg-name__mtr--osi').forEach(el => el.setAttribute('font-size', '9px'));
 
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--next2-dest').each((_,el) => {
-        $(el).attr('font-size', '8.5px')
-    });
+    svgEl
+        .querySelectorAll('.rmg-name__en.rmg-name__gzmtr--next2-dest')
+        .forEach(el => el.setAttribute('font-size', '8.5px'));
 
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--int').each((_,el) => {
-        $(el).attr('font-size', '8px');
-    });
+    svgEl.querySelectorAll('.rmg-name__en.rmg-name__gzmtr--int').forEach(el => el.setAttribute('font-size', '8px'));
 
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--int-small, .rmg-name__en.IntName').each((_,el) => {
-        $(el).attr('font-size', '7px');
-    });
+    svgEl
+        .querySelectorAll('.rmg-name__en.rmg-name__gzmtr--int-small, .rmg-name__en.IntName')
+        .forEach(el => el.setAttribute('font-size', '7px'));
 
-    svgEl.find('.rmg-name__en.rmg-name__gzmtr--express').each((_,el) => {
-        $(el).attr('font-size', '6.5px');
-    });
+    svgEl
+        .querySelectorAll('.rmg-name__en.rmg-name__gzmtr--express')
+        .forEach(el => el.setAttribute('font-size', '6.5px'));
 
-    svgEl.find('text:not([font-size]), tspan:not([font-size])').each((_,el) => {
-        $(el).attr('font-size', window.getComputedStyle(el).fontSize);
-    });
+    svgEl
+        .querySelectorAll('text:not([font-size]), tspan:not([font-size])')
+        .forEach(el => el.setAttribute('font-size', window.getComputedStyle(el).fontSize));
 
-    svgEl.find('text, tspan').each((_,el) => {
-        var elStyle = window.getComputedStyle(el);
-        $(el).attr({
-            'font-family': elStyle.getPropertyValue('font-family'), 
-            'fill': elStyle.getPropertyValue('fill'), 
-            'alignment-baseline': elStyle.getPropertyValue('alignment-baseline'), 
-            'dominant-baseline': elStyle.getPropertyValue('dominant-baseline'),
-            'text-anchor': elStyle.getPropertyValue('text-anchor')
-        }).removeAttr('class');
-    });
-
-    svgEl.find('#strip, #dest_strip').each((_,el) => {
-        var elStyle = window.getComputedStyle(el);
-        $(el).attr({
-            'stroke-width': elStyle.getPropertyValue('stroke-width')
-        });
+    svgEl.querySelectorAll('text, tspan').forEach(el => {
+        let elStyle = window.getComputedStyle(el);
+        el.setAttribute('font-family', elStyle.fontFamily);
+        el.setAttribute('fill', elStyle.fill);
+        el.setAttribute('dominant-baseline', elStyle.dominantBaseline);
+        el.setAttribute('text-anchor', elStyle.textAnchor);
+        el.removeAttribute('class');
     });
 
     var img = new Image();
     img.onload = function() {
         setTimeout(() => {
-            ctx.drawImage(img, 0, 0, Number(svgW)*2.5, Number(svgH)*2.5)
-            saveAs(
-                (<HTMLCanvasElement>$('canvas')[0]).toDataURL('image/png'), 
-                'rmg_export'
-            );
-        }, 2000)
+            ctx.drawImage(img, 0, 0, Number(svgW) * 2.5, Number(svgH) * 2.5);
+            saveAs(canvas.toDataURL('image/png'), 'rmg.' + new Date().toISOString() + '.png');
+        }, 2000);
     };
     // img.onloadend = () => {
     //     console.log('img loaded')
     // }
     img.addEventListener('loadend', () => {
-        console.log('img loaded')
-    })
-    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl[0].outerHTML)));
+        console.log('img loaded');
+    });
+    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl.outerHTML)));
 }
 
 function saveAs(uri: string, filename: string) {
-
     var link = document.createElement('a');
 
     if (typeof link.download === 'string') {
@@ -95,7 +77,6 @@ function saveAs(uri: string, filename: string) {
         link.click();
         //remove the link when done
         document.body.removeChild(link);
-
     } else {
         window.open(uri);
     }

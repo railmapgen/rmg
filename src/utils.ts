@@ -14,49 +14,22 @@ export function setParams(key: Extract<keyof RMGParam, string>, data: any) {
     putParams(param);
 }
 
-export function getTxtBoxDim(elem: SVGGraphicsElement, svg: string) {
-    let svgNode = $('#' + svg)[0] as Element as SVGSVGElement;
-    let bcr = elem.getBoundingClientRect();
-    let pt = svgNode.createSVGPoint();
-    let ctm = svgNode.getScreenCTM();
-    pt.x = bcr.left;
-    pt.y = bcr.top;
-    let pos = pt.matrixTransform(ctm.inverse());
-    return {x:pos.x, y:pos.y, width:bcr.width, height:bcr.height};
-}
-
-export function joinIntName(names: Name, dy1, dy2): [JQuery<HTMLElement>, number, number] {
-    var [nameZH, nameEN] = names.map(txt => txt.split(/\\/g));
-    var res = $('<text>').addClass('rmg-name__zh IntName').text(nameZH[0]);
-    for (let i=1; i<nameZH.length; i++) {
-        res = res.append(
-            $('<tspan>', {'x':0, 'dy':dy1, 'dominant-baseline': 'central'}).text(nameZH[i])
-        );
-    }
-    var btwGap = (nameZH.length == 1) ? 9 : 9;
-    res = res.append(
-        $('<tspan>', {
-            'x':0, 'dy':btwGap, 'class': 'rmg-name__en IntName'
-        }).text(nameEN[0])
-    );
-    for (let i=1; i<nameEN.length; i++) {
-        res = res.append(
-            $('<tspan>', {
-                'x':0, 'dy':dy2, 'class': 'rmg-name__en IntName'
-            }).text(nameEN[i])
-        );
-    }
-    return [res, nameZH.length, nameEN.length];
-}
-
 export function rgb2Hex(rgb: string) {
-    let hex = rgb.match(/[\d]+/g)
-        .map(dec => Number(dec).toString(16).padStart(2,'0'))
+    let hex = rgb
+        .match(/[\d]+/g)
+        .map(dec =>
+            Number(dec)
+                .toString(16)
+                .padStart(2, '0')
+        )
         .join('');
     switch (hex) {
-        case '000000': return '#000';
-        case 'ffffff': return '#fff';
-        default: return '#' + hex;
+        case '000000':
+            return '#000';
+        case 'ffffff':
+            return '#fff';
+        default:
+            return '#' + hex;
     }
 }
 
@@ -73,12 +46,18 @@ export function updateParam() {
 
     // Version 0.11
     if (!('char_form' in param)) {
-        param.char_form = (region => {switch (region) {
-            case 'KR': return 'trad';
-            case 'TC': return 'tw';
-            case 'SC': return 'cn';
-            case 'JP': return 'jp';
-        }})(param.fontZH[0].split(' ').reverse()[0])
+        param.char_form = (region => {
+            switch (region) {
+                case 'KR':
+                    return 'trad';
+                case 'TC':
+                    return 'tw';
+                case 'SC':
+                    return 'cn';
+                case 'JP':
+                    return 'jp';
+            }
+        })(param.fontZH[0].split(' ').reverse()[0]);
     }
     delete param.fontZH;
     delete param.fontEN;
@@ -87,35 +66,8 @@ export function updateParam() {
 
     // Version 0.12
     for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
-        // if (['linestart', 'lineend'].includes(stnId)) {continue;}
-        // if ('transfer' in stnInfo) {
-        //     delete param.stn_list[stnId].interchange;
-        //     switch (stnInfo.change_type) {
-        //         case 'int2':
-        //             param.stn_list[stnId].interchange = [[stnInfo.transfer[1]]];
-        //             break;
-        //         case 'int3_l':
-        //         case 'int3_r':
-        //             param.stn_list[stnId].interchange = [stnInfo.transfer.slice(1,3)];
-        //             break;
-        //         case 'osi11_pl':
-        //         case 'osi11_pr':
-        //         case 'osi11_ul':
-        //         case 'osi11_ur':
-        //             param.stn_list[stnId].interchange = [[], stnInfo.transfer.slice(0,2)];
-        //             break;
-        //         case 'osi12_pl':
-        //         case 'osi12_pr':
-        //         case 'osi12_ul':
-        //         case 'osi12_ur':
-        //             param.stn_list[stnId].interchange = [[], stnInfo.transfer];
-        //             break;
-        //     }
-        // }
-        // delete param.stn_list[stnId].transfer;
-        
         if (!('branch' in stnInfo)) {
-            param.stn_list[stnId].branch = { left:[], right:[] };
+            param.stn_list[stnId].branch = { left: [], right: [] };
             if (stnInfo.children.length == 2) {
                 param.stn_list[stnId].branch.right = ['through', stnInfo.children[1]];
             } else {
@@ -141,7 +93,9 @@ export function updateParam() {
         (<any>param.theme).push('#fff');
     }
     for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
-        if (['linestart', 'lineend'].includes(stnId)) {continue;}
+        if (['linestart', 'lineend'].includes(stnId)) {
+            continue;
+        }
         if (!('num' in stnInfo)) {
             param.stn_list[stnId].num = '00';
         }
@@ -153,7 +107,7 @@ export function updateParam() {
             stnInfo.interchange.map(arr => {
                 arr.map(intInfo => {
                     if (intInfo.length == 5) {
-                        intInfo.splice(3,0,'#fff');
+                        intInfo.splice(3, 0, '#fff');
                     }
                 });
             });
@@ -175,7 +129,7 @@ export function updateParam() {
         }
     }
 
-   // Version 2.1
+    // Version 2.1
     for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
         if (!('interchange' in stnInfo)) {
             param.stn_list[stnId].interchange = [[]];
@@ -208,12 +162,23 @@ export function updateParam() {
     for (let [stnId, stnInfo] of Object.entries(param.stn_list)) {
         if (!('transfer' in stnInfo)) {
             param.stn_list[stnId].transfer = {
-                type: stnInfo.change_type.split('_')[0] as 'none' | 'int2' | 'int3' | 'osi11' | 'osi12' | 'osi22', 
-                tick_direc: (stnInfo.change_type === 'none' || stnInfo.change_type === 'int2') ? 'r' : stnInfo.change_type.split('_')[1].split('').slice().reverse()[0] as 'l' | 'r', 
-                paid_area: (stnInfo.change_type.indexOf('osi')!==-1) ? stnInfo.change_type.split('_')[1][0]==='p' : true, 
-                osi_names: (stnInfo.change_type.indexOf('osi')!==-1) ? [stnInfo.interchange[1][0]] : [], 
-                info: (stnInfo.interchange.length === 2) ? [stnInfo.interchange[0], stnInfo.interchange[1].slice(1)] : stnInfo.interchange
-            }
+                type: stnInfo.change_type.split('_')[0] as 'none' | 'int2' | 'int3' | 'osi11' | 'osi12' | 'osi22',
+                tick_direc:
+                    stnInfo.change_type === 'none' || stnInfo.change_type === 'int2'
+                        ? 'r'
+                        : (stnInfo.change_type
+                              .split('_')[1]
+                              .split('')
+                              .slice()
+                              .reverse()[0] as 'l' | 'r'),
+                paid_area:
+                    stnInfo.change_type.indexOf('osi') !== -1 ? stnInfo.change_type.split('_')[1][0] === 'p' : true,
+                osi_names: stnInfo.change_type.indexOf('osi') !== -1 ? [stnInfo.interchange[1][0]] : [],
+                info:
+                    stnInfo.interchange.length === 2
+                        ? [stnInfo.interchange[0], stnInfo.interchange[1].slice(1)]
+                        : stnInfo.interchange,
+            };
         }
     }
 
@@ -240,31 +205,32 @@ export function updateParam() {
     putParams(param);
 }
 
-
 const langFallback = (lang: string) => {
     switch (lang) {
-        case 'en': return ['en'];
-        case 'zh-Hans': return ['zh-Hans', 'zh', 'en'];
-        case 'zh-HK': return ['zh-HK', 'zh-Hant', 'zh', 'en'];
-        default: return [lang, 'en'];
+        case 'en':
+            return ['en'];
+        case 'zh-Hans':
+            return ['zh-Hans', 'zh', 'en'];
+        case 'zh-HK':
+            return ['zh-HK', 'zh-Hant', 'zh', 'en'];
+        default:
+            return [lang, 'en'];
     }
-}
+};
 
-export const getTransText = (obj: {[index: string]: string}, lang: string) => {
+export const getTransText = (obj: { [index: string]: string }, lang: string) => {
     return obj[langFallback(lang).find(l => obj[l])];
-}
+};
 
-export const getTransText2 = (obj: {[index: string]: string}, langs: string[]) => {
-    return langs.reduce((acc, cur) => acc ? acc : (obj[cur] ? obj[cur] : acc), '');
-}
-
-
+export const getTransText2 = (obj: { [index: string]: string }, langs: string[]) => {
+    return langs.reduce((acc, cur) => (acc ? acc : obj[cur] ? obj[cur] : acc), '');
+};
 
 /**
  * Format display style of station name as `[num: ]nameZH,nameEN`.
  */
 export const formatStnName = (stnInfo: StationInfo) => {
     return `${
-        window.urlParams.get('style')==='gzmtr' ? (stnInfo?.num || '-')+': ' : ''
-    }${stnInfo?.name.join().replace('\\',' ')}`;
-}
+        window.urlParams.get('style') === 'gzmtr' ? (stnInfo?.num || '-') + ': ' : ''
+    }${stnInfo?.name.join().replace('\\', ' ')}`;
+};

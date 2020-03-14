@@ -84,11 +84,15 @@ const StationMTR = (props: Props) => {
         }
     }, [branchAffix, props.namePos, branchPos]);
 
-    const stnIcon = (({ type }) => {
+    const stnIcon = (({ type, info }) => {
         switch (type) {
             case 'int3':
             case 'osi31':
-                return 'int3';
+                if (info[0].length < 11) {
+                    return `int${info[0].length + 1}`;
+                } else {
+                    return 'int12';
+                }
             case 'osi11':
             case 'osi21':
                 return 'osi11';
