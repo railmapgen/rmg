@@ -140,14 +140,17 @@ const MainGZMTR = () => {
         return Object.keys(param.stn_list).reduce((acc, cur) => ({ ...acc, [cur]: getXShare(cur) }), {});
     }, [branches.toString(), JSON.stringify(adjMat)]);
 
-    const criticalPath = React.useMemo(() => getCriticalPath(param.stn_list, StationsGZMTR), [deps]);
+    const criticalPath = cpm('linestart', 'lineend', adjMat);
+    const realCP = cpm(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat);
+
+    // const criticalPath = React.useMemo(() => getCriticalPath(param.stn_list, StationsGZMTR), [deps]);
     // const xShares = React.useMemo(() => StationsGZMTR.getXShares(param.stn_list, criticalPath, branches), [deps]);
     const lineXs: [number, number] =
         param.direction === 'r'
             ? [(param.svg_width * param.padding) / 100 + 65, param.svg_width * (1 - param.padding / 100) - 20]
             : [(param.svg_width * param.padding) / 100, param.svg_width * (1 - param.padding / 100) - 65];
     const xs = Object.keys(xShares).reduce(
-        (acc, cur) => ({ ...acc, [cur]: lineXs[0] + (xShares[cur] / criticalPath.len) * (lineXs[1] - lineXs[0]) }),
+        (acc, cur) => ({ ...acc, [cur]: lineXs[0] + (xShares[cur] / realCP.len) * (lineXs[1] - lineXs[0]) }),
         {} as typeof xShares
     );
 

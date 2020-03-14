@@ -93,7 +93,7 @@ export default function StationEditDialog(props: StationEditDialogProps) {
                 ))}
             </Tabs>
         ),
-        [tabIndex]
+        [tabIndex, classes.tab]
     );
 
     const interchangeUpdate = (transInfo: StationTransfer) => {

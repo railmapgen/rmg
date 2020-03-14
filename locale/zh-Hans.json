@@ -1,95 +1,103 @@
 {
-    "title": "铁路线路图生成器", 
+    "title": "铁路线路图生成器",
+
+    "toggle": {
+        "tooltip": "切换画布",
+        "all": "显示全部",
+        "destination": "终点站牌",
+        "runin": "站名牌",
+        "railmap": "线路图"
+    },
 
     "tab": {
-        "file": "文件", 
-        "layout": "布局", 
-        "design": "设计", 
+        "file": "文件",
+        "layout": "布局",
+        "design": "设计",
         "stations": "车站",
         "info": "信息"
     },
 
     "file": {
         "new": {
-            "button": "新建画布", 
-            "title": "选择模板", 
+            "button": "新建画布",
+            "title": "选择模板",
             "notice": "请注意：所有未保存之更改将会丢失。"
         },
         "open": {
-            "button": "从JSON文件打开", 
+            "button": "从JSON文件打开",
             "title": "你的线路设置"
         },
         "save": "保存为JSON文件",
         "export": {
-            "button": "预览和输出", 
-            "title": "选择画布", 
+            "button": "预览和输出",
+            "title": "选择画布",
             "destination": "终点站牌",
-            "runin": "站名牌", 
+            "runin": "站名牌",
             "railmap": "线路图"
-        }, 
+        },
         "preview": {
-            "title": "预览和输出", 
-            "png": "下载PNG", 
+            "title": "预览和输出",
+            "png": "下载PNG",
             "svg": "下载SVG（网页用）"
         },
         "style": {
-            "button": "风格", 
-            "title": "选择风格", 
-            "mtr": "港铁", 
-            "gzmtr": "广州地铁", 
+            "button": "风格",
+            "title": "选择风格",
+            "mtr": "港铁",
+            "gzmtr": "广州地铁",
             "shmetro": "上海地铁 (Alpha)"
         },
         "lang": {
-            "button": "语言/Language", 
+            "button": "语言/Language",
             "title": "选择语言"
         }
     },
 
     "layout": {
         "size": {
-            "title": "画布尺寸", 
-            "destWidth": "站名牌宽度", 
-            "width": "线路图宽度", 
+            "title": "画布尺寸",
+            "destWidth": "站名牌宽度",
+            "width": "线路图宽度",
             "height": "画布高度"
         },
         "y": "垂直位置",
         "branchSpacing": "支线间距",
-        "padding": "线路图边距", 
+        "padding": "线路图边距",
         "directionGZ": {
-            "title": "终点站指示位置", 
-            "left": "左", 
-            "right": "右", 
-            "top": "顶部", 
+            "title": "终点站指示位置",
+            "left": "左",
+            "right": "右",
+            "top": "顶部",
             "bottom": "底部"
         }
     },
 
     "design": {
-        "theme": "主题颜色和线路名称", 
+        "theme": "主题颜色和线路名称",
         "direction": {
-            "button": "行驶方向", 
-            "l": "左行", 
+            "button": "行驶方向",
+            "l": "左行",
             "r": "右行"
-        }, 
-        "platform": "站台号", 
-        "flipName": "翻转车站名称位置", 
-        "MTRLegacy": "旧款终点站牌样式", 
-        "lineNum": "线路编码", 
-        "psd": "屏蔽门号", 
+        },
+        "platform": "站台号",
+        "flipName": "翻转车站名称位置",
+        "MTRLegacy": "旧款终点站牌样式",
+        "lineNum": "线路编码",
+        "psd": "屏蔽门号",
         "panelType": {
-            "button": "屏蔽门盖板样式", 
-            "title": "选择屏蔽门盖板样式", 
+            "button": "屏蔽门盖板样式",
+            "title": "选择屏蔽门盖板样式",
             "gz1": "一号线",
-            "gz28": "二/八号线", 
-            "gz3": "三号线", 
-            "gz1421": "七/九/十三/十四/二十一号线", 
+            "gz28": "二/八号线",
+            "gz3": "三号线",
+            "gz1421": "七/九/十三/十四/二十一号线",
             "gzgf": "六号线/广佛线"
-        }, 
+        },
         "autoNum": {
-            "button": "车站自动编码", 
-            "title": "警告", 
+            "button": "车站自动编码",
+            "title": "警告",
             "msg": "主线上的车站即将被重新编码。此动作将不能被撤销。",
-            "ascend": "升序编码", 
+            "ascend": "升序编码",
             "descend": "降序编码"
         }
     },
@@ -97,8 +105,8 @@
     "stations": {
         "current": "设为当前车站",
         "fabs": {
-            "tooltip": "选项", 
-            "add": "添加车站", 
+            "tooltip": "选项",
+            "add": "添加车站",
             "reverse": "翻转全线车站顺序"
         },
         "add": {
@@ -122,44 +130,44 @@
             "title": "编辑车站详情",
             "button": "编辑",
             "tab": {
-                "name": "名称", 
-                "interchange": "换乘", 
-                "branch": "支线", 
+                "name": "名称",
+                "interchange": "换乘",
+                "branch": "支线",
                 "more": "更多"
             },
             "name": {
-                "nameZH": "名称（汉字）", 
-                "nameEN": "名称（拉丁字母）", 
-                "nameENHelper": "用反斜杠（\\）使名称换行", 
+                "nameZH": "名称（汉字）",
+                "nameEN": "名称（拉丁字母）",
+                "nameENHelper": "用反斜杠（\\）使名称换行",
                 "num": "车站编码"
             },
             "interchange": {
-                "within": "站内换乘", 
+                "within": "站内换乘",
                 "osi": "出站换乘",
-                "note": "请注意，部分换乘组合可能无法正常显示。", 
+                "note": "请注意，部分换乘组合可能无法正常显示。",
                 "add": "添加",
-                "osiName": "编辑出站换乘车站名称", 
-                "settings": "更多设置", 
+                "osiName": "编辑出站换乘车站名称",
+                "settings": "更多设置",
                 "tickDirec": {
-                    "label": "换乘文字方向", 
-                    "l": "左", 
+                    "label": "换乘文字方向",
+                    "l": "左",
                     "r": "右"
-                }, 
+                },
                 "paidArea": "付费区内出站换乘"
             },
             "branch": {
-                "left": "左方支线", 
+                "left": "左方支线",
                 "right": "右方支线",
                 "type": {
-                    "title": "支线类型", 
-                    "na": "（未找到支线）", 
-                    "through": "贯通（无需换乘）", 
+                    "title": "支线类型",
+                    "na": "（未找到支线）",
+                    "through": "贯通（无需换乘）",
                     "nonthrough": "非贯通（需换乘）"
-                }, 
-                "first": "支线首站", 
+                },
+                "first": "支线首站",
                 "pos": {
-                    "title": "支线位置", 
-                    "upper": "上方", 
+                    "title": "支线位置",
+                    "upper": "上方",
                     "lower": "下方"
                 }
             },
@@ -167,54 +175,54 @@
                 "facility": {
                     "button": "设施",
                     "title": "选择车站附近的设施",
-                    "airport": "机场", 
-                    "hsr": "高铁", 
-                    "disney": "迪士尼", 
+                    "airport": "机场",
+                    "hsr": "高铁",
+                    "disney": "迪士尼",
                     "none": "无"
-                }, 
+                },
                 "services": {
-                    "button": "列车类别", 
-                    "local": "普通车", 
+                    "button": "列车类别",
+                    "local": "普通车",
                     "express": "快车"
                 }
             }
-        }, 
+        },
         "remove": {
-            "button": "删除", 
+            "button": "删除",
             "title": "警告",
             "msg": "是否确认删除车站{{name}}？此动作将不能被撤销。",
             "error": {
-                "title": "删除错误", 
+                "title": "删除错误",
                 "msg": "此车站不能被删除！"
             }
         }
-    }, 
+    },
 
     "info": {
-        "title": "铁路线路图生成器 V3", 
-        "notice": "请注意：由于著作权及有关法律限制，铁路线路图生成器使用思源宋体及Vegur，以代替港铁样式线路图所使用之地铁宋及Myriad Pro。如您拥有该字体之授权，可自行于输出之SVG文件内修改相关代码。", 
+        "title": "铁路线路图生成器 V3",
+        "notice": "请注意：由于著作权及有关法律限制，铁路线路图生成器使用思源宋体及Vegur，以代替港铁样式线路图所使用之地铁宋及Myriad Pro。如您拥有该字体之授权，可自行于输出之SVG文件内修改相关代码。",
         "feedback": "反馈问题"
     },
 
     "colour": {
         "title": "编辑名称和颜色",
-        "city": "城市", 
-        "line": "线路", 
+        "city": "城市",
+        "line": "线路",
         "tooltip": "颜色选择器",
-        "colour": "背景色（十六进制）", 
-        "fg": "前景色", 
-        "fgBlack": "黑", 
+        "colour": "背景色（十六进制）",
+        "fg": "前景色",
+        "fgBlack": "黑",
         "fgWhite": "白"
-    }, 
+    },
 
     "dialog": {
-        "done": "完成", 
-        "cancel": "取消", 
+        "done": "完成",
+        "cancel": "取消",
         "ok": "好"
-    }, 
-    
+    },
+
     "expansion": {
-        "collapse": "折叠", 
+        "collapse": "折叠",
         "expand": "展开"
     }
 }

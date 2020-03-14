@@ -1,78 +1,64 @@
 # How to add a new style for RMG?
 
-To successfully implement a new style, you must be at least familiar with `TypeScript`. 
+To successfully implement a new style, you must be familiar with `React` and `TypeScript`. 
 
 In this tutorial, MTR (Shenzhen) (`mtrsz`) is used as an example. 
 
+## Preparation
+
+You have to determine the canvases which should be implemented for the style you've chosen. You may choose any canvas from the following list. 
+
+- Destination sign, which shows the direction and the terminal station of the train, and the platform number (if applicable). 
+- Running-in board, which shows the name and relevant details of the current station. 
+- Rail map, which shows the map of the entire line. 
+
 ## Initialising
 
-To initialise your new style, following the example below to create or edit files. 
+The canvases of each style is implemented separately as React components, while some helper functions may be shared across different components as a module. 
 
-```TypeScript
-// /src/Station/StationMTRSZ.ts
-import { RMGStation } from './Station';
-import { ID, StationInfo } from '../utils';
+For example, if you wish to initialise the destination sign of your new style, follow the instruction below to create or edit files. 
 
-export class RMGStationMTRSZ extends RMGStation {
-    constructor (id: ID, data: StationInfo) {
-        super(id, data);
-    }
-}
-```
-
-```TypeScript
-// /src/Line/LineMTRSZ.ts
-import { RMGLine } from './Line';
-import { RMGStationMTRSZ } from '../Station/StationMTRSZ';
-import { RMGParam } from '../utils';
-
-export class RMGLineMTRSZ extends RMGLine {
-    constructor (param: RMGParam) {
-        super(param);
-    }
-}
-```
-
-```TypeScript
-// /src/Line/init.ts
+```tsx
+// /src/svgs/destination/index.ts
 
 // ...
-const getLineClass = async (style: string) => {
-    switch (style) {
-        // ...
-        case 'mtrsz': 
-            return import(/* webpackChunkName: "LineMTRSZ" */ './LineMTRSZ')
-                .then(({ RMGLineMTRSZ }) => RMGLineMTRSZ);
-    }
-}
-// ...
+case 'mtrsz': 
+    return React.lazy(() => import(/* webpackChunkName: "destinationMTRSZ" */ './destination-mtrsz'));
 ```
 
-```TypeScript
-// /src/index.ts
+```tsx
+// /src/svgs/destination/destination-mtrsz.tsx
+
+import * as React from 'react';
+
+const DestinationMTRSZ = () => {
+    return <>{/* */}</>;
+}
+
+export default DestinationMTRSZ;
+```
+
+Additionally, you have to tell `App` component which canvases are included in your style. 
+
+```tsx
+// /src/App.tsx
 
 // ...
-switch (window.urlParams.get('style')) {
-    case 'mtr':
+const canvasAvailable = 
     // ...
     case 'mtrsz':
-        break;
-    default: // ...
-}
+        // return a array of selected canvases
+        return ['destination'];
 // ...
 ```
 
-By now, your are able to test your new style by querying `?style=mtrsz` in your browser. If you want to change between styles without repeatedly modifying the address, you should add the following code chunk to `div#style_diag` of `index.html`. 
+By now, your are able to test your new style by querying `?style=mtrsz` in your browser. 
 
-```HTML
-<li class="mdc-list-item" data-mdc-dialog-action="mtrsz">
-    <span class="mdc-list-item__text" trans-tag="File.Style.MTRSZ"></span>
-</li>
-```
+## Description (Legacy)
 
 ### To add new text ui
 
-Add new language entry at ```/lang/*.json``` if you add selection at ```index.html:444```
+Add new language entry at ```/locale/*.json``` if you add selection at ```index.html:444```
 
 ### To change destination info
 
@@ -118,21 +104,21 @@ Rewite the ```updateStnNameBg``` in ```RMGLine**``` at ```/src/Line/Line**.ts```
 
 ### Line
 
-|func/parm|description|
-|-|-|
-|drawDestInfo|Control the left side of the preview, the destination info|
-|lValidDests|The left side destinations (includes all branches)|
-|rValidDests|The right side destinations (includes all branches)|
-|drawLine|Draw the line in the right side of the preview|
-|fillThemeColour|Fill Theme Colour|
-|initSVG|All magic starts here|
+| func/parm       | description                                                |
+| --------------- | ---------------------------------------------------------- |
+| drawDestInfo    | Control the left side of the preview, the destination info |
+| lValidDests     | The left side destinations (includes all branches)         |
+| rValidDests     | The right side destinations (includes all branches)        |
+| drawLine        | Draw the line in the right side of the preview             |
+| fillThemeColour | Fill Theme Colour                                          |
+| initSVG         | All magic starts here                                      |
 
 ### Station
 
-|func/parm|description|
-|-|-|
-|iconHTML|Draw the icon|
-|nameHTML|Draw the name|
+| func/parm | description   |
+| --------- | ------------- |
+| iconHTML  | Draw the icon |
+| nameHTML  | Draw the name |
 
 ## Old description
 

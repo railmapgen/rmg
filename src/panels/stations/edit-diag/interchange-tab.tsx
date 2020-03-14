@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { withTranslation, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     List,
     ListItem,
@@ -32,10 +32,6 @@ interface StationEditInterchangeTabProps {
     stnTrans: StationTransfer;
     stnId: string;
     onUpdate: (trans: StationTransfer) => void;
-}
-
-interface StationEditInterchangeTabState {
-    osiNameDialogOpened: boolean;
 }
 
 const StationEditInterchangeTab = (props: StationEditInterchangeTabProps) => {
@@ -145,15 +141,6 @@ const StationEditInterchangeTab = (props: StationEditInterchangeTabProps) => {
         props.onUpdate(transInfo);
     };
 
-    const chipUpdate = (index: number, val: InterchangeInfo[]) => {
-        let transInfo = {
-            ...props.stnTrans,
-            info: props.stnTrans.info.map((inf, idx) => (idx === index ? val : inf)),
-        };
-        console.log(transInfo);
-        props.onUpdate(transInfo);
-    };
-
     return (
         <List>
             <ListItem>
@@ -169,11 +156,7 @@ const StationEditInterchangeTab = (props: StationEditInterchangeTabProps) => {
                 </ListItemSecondaryAction>
             </ListItem>
             <ListItem>
-                <InterchangeChipSet
-                    intInfos={props.stnTrans.info[0]}
-                    onDelete={i => deleteClick(0, i)}
-                    onUpdate={val => chipUpdate(0, val)}
-                />
+                <InterchangeChipSet stnId={props.stnId} setIndex={0} onDelete={i => deleteClick(0, i)} />
             </ListItem>
             {['mtr', 'shmetro'].includes(window.urlParams.get('style')) && (
                 <>
@@ -207,11 +190,7 @@ const StationEditInterchangeTab = (props: StationEditInterchangeTabProps) => {
                         </ListItemSecondaryAction>
                     </ListItem>
                     <ListItem>
-                        <InterchangeChipSet
-                            intInfos={props.stnTrans.info[1] || []}
-                            onDelete={i => deleteClick(1, i)}
-                            onUpdate={val => chipUpdate(1, val)}
-                        />
+                        <InterchangeChipSet stnId={props.stnId} setIndex={1} onDelete={i => deleteClick(1, i)} />
                     </ListItem>
                     <ListItem>
                         <span>{t('stations.edit.interchange.note')}</span>
@@ -259,55 +238,47 @@ const intChipSetStyles = makeStyles(() =>
 );
 
 interface InterchangeChipSetProps {
-    intInfos: InterchangeInfo[];
+    stnId: string;
+    setIndex: number;
     onDelete: (i: number) => void;
-    onUpdate: (value: InterchangeInfo[]) => void;
 }
 
 const InterchangeChipSet = (props: InterchangeChipSetProps) => {
     const classes = intChipSetStyles();
 
-    const [chipSelected, setChipSelected] = React.useState(0);
+    const { param, dispatch } = React.useContext(ParamContext);
+    const intInfos = param.stn_list[props.stnId].transfer.info[props.setIndex];
+
+    const [chipSelected, setChipSelected] = React.useState<null | number>(null);
     const [nameDialogOpened, setNameDialogOpened] = React.useState(false);
-    const [nameDialogTheme, setNameDialogTheme] = React.useState(
-        ([] as any) as [string, string, string, '#000' | '#fff']
-    );
-    const [nameDialogName, setNameDialogName] = React.useState(([] as any) as Name);
 
     const handleClick = (index: number) => {
-        setNameDialogTheme([
-            props.intInfos[index][0],
-            props.intInfos[index][1],
-            props.intInfos[index][2],
-            props.intInfos[index][3] as '#fff' | '#000',
-        ]);
-        setNameDialogName([props.intInfos[index][4], props.intInfos[index][5]]);
-        setNameDialogOpened(true);
         setChipSelected(index);
+        setNameDialogOpened(true);
     };
 
     const nameDialogUpdate = (key, value) => {
         if (key === 'theme') {
-            let newInfos = props.intInfos.map((inf, idx) =>
-                idx === chipSelected ? (([...(value as string[]), inf[4], inf[5]] as any) as InterchangeInfo) : inf
-            );
-            props.onUpdate(newInfos);
-            setNameDialogTheme(value);
-            // console.log(newInfos)
+            dispatch({
+                type: 'UPDATE_STATION_INTERCHANGE_INFO',
+                stnId: props.stnId,
+                setIdx: props.setIndex,
+                intIdx: chipSelected,
+                info: ([...(value as string[]), , ,] as any) as InterchangeInfo,
+            });
         }
         if (key === 'name') {
-            let newInfos = props.intInfos.map((inf, idx) =>
-                idx === chipSelected
-                    ? (([inf[0], inf[1], inf[2], inf[3], value[0], value[1]] as any) as InterchangeInfo)
-                    : inf
-            );
-            props.onUpdate(newInfos);
-            setNameDialogName(value);
-            // console.log(newInfos)
+            dispatch({
+                type: 'UPDATE_STATION_INTERCHANGE_INFO',
+                stnId: props.stnId,
+                setIdx: props.setIndex,
+                intIdx: chipSelected,
+                info: ([, , , , value[0], value[1]] as any) as InterchangeInfo,
+            });
         }
     };
 
-    const intChips = props.intInfos.map((intInfo, i) => {
+    const intChips = intInfos?.map((intInfo, i) => {
         let label = (
             <span style={{ color: intInfo[3] }}>
                 <span className={`${classes.intChipText} ${classes.intChipTextZH}`}>{intInfo[4]}</span>
@@ -336,8 +307,21 @@ const InterchangeChipSet = (props: InterchangeChipSetProps) => {
 
             <ColourDialog
                 open={nameDialogOpened}
-                theme={nameDialogTheme}
-                lineName={nameDialogName}
+                theme={
+                    chipSelected === null
+                        ? (([] as any) as [string, string, string, '#000' | '#fff'])
+                        : [
+                              intInfos[chipSelected][0],
+                              intInfos[chipSelected][1],
+                              intInfos[chipSelected][2],
+                              intInfos[chipSelected][3] as '#fff' | '#000',
+                          ]
+                }
+                lineName={
+                    chipSelected === null
+                        ? (([] as any) as Name)
+                        : [intInfos[chipSelected][4], intInfos[chipSelected][5]]
+                }
                 onUpdate={nameDialogUpdate}
                 onClose={() => setNameDialogOpened(false)}
             />
@@ -361,7 +345,6 @@ const OSINameDialog = React.memo(
         const handleUpdate = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
             let newOSIName = props.osiName.map((val, i) => (i === index ? event.target.value : val)) as Name;
             dispatch({ type: 'UPDATE_STATION_OSI_NAME', stnId: props.stnId, name: newOSIName });
-            // props.onUpdate(event.target.value, index);
         };
 
         return (

@@ -3,8 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { List, ListItem, ListItemText, Divider, Icon, TextField, MenuItem, ListItemIcon } from '@material-ui/core';
 import { formatStnName, getParams, setParams } from '../../../utils';
 import { ParamContext } from '../../../context';
-import { RMGLineGZ } from '../../../Line/LineGZ';
-import { RMGLineHK } from '../../../Line/LineHK';
 
 interface StationEditBranchTabProps {
     stnId: string;

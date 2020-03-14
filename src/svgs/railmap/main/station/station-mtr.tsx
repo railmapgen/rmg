@@ -213,7 +213,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     React.useEffect(() => {
         if (props.stnState !== 0) return;
         setBBox(stnNameEl.current.getBBox());
-    }, [props.stnState]);
+    }, [props.stnState, props.name.toString()]);
 
     const dy = props.namePos
         ? STN_NAME_LINE_GAP - NAME_ZH_TOP
@@ -271,9 +271,9 @@ interface StationNameProps {
     nameGap: number;
 }
 
-const StationName = (props: StationNameProps) => {
-    return React.useMemo(
-        () => (
+const StationName = React.memo(
+    (props: StationNameProps) => {
+        return (
             <>
                 <text className="rmg-name__zh rmg-name__mtr--station">{props.name[0]}</text>
                 {props.name[1].split('\\').map((txt, i) => (
@@ -282,10 +282,11 @@ const StationName = (props: StationNameProps) => {
                     </text>
                 ))}
             </>
-        ),
-        [props.name[0], props.name[1]]
-    );
-};
+        );
+    },
+    (prevProps, nextProps) =>
+        prevProps.name.toString() === nextProps.name.toString() && prevProps.nameGap === nextProps.nameGap
+);
 
 interface IntTickGroupProps {
     variant: 'int2' | 'int3' | 'osi11' | 'osi12' | 'osi22' | 'osi22end' | 'none' | 'osi13' | 'osi21' | 'osi31';

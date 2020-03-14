@@ -2,7 +2,8 @@ import * as React from 'react';
 import Destination from './destination';
 import RunIn from './runin';
 import RailMap from './railmap';
-import { makeStyles, createStyles } from '@material-ui/core';
+import { makeStyles, createStyles, CircularProgress } from '@material-ui/core';
+import { CanvasContext } from '../context';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -12,6 +13,10 @@ const useStyles = makeStyles(() =>
             flexDirection: 'row',
             overflowX: 'scroll',
             scrollbarWidth: 'none',
+            '&::before, &::after': {
+                content: '""',
+                margin: 'auto',
+            },
             '&::-webkit-scrollbar': {
                 display: 'none',
             },
@@ -25,21 +30,26 @@ const useStyles = makeStyles(() =>
 
 const SVGs = () => {
     const classes = useStyles();
+
+    const { canvasAvailable, canvasToShown } = React.useContext(CanvasContext);
+
     return (
         <div className={classes.root}>
-            {['mtr', 'shmetro'].includes(window.urlParams.get('style')) && (
-                <React.Suspense fallback="loading">
+            {canvasAvailable.includes('destination') && ['destination', 'all'].includes(canvasToShown) && (
+                <React.Suspense fallback={<CircularProgress />}>
                     <Destination />
                 </React.Suspense>
             )}
-            {['gzmtr', 'shmetro'].includes(window.urlParams.get('style')) && (
-                <React.Suspense fallback="loading">
+            {canvasAvailable.includes('runin') && ['runin', 'all'].includes(canvasToShown) && (
+                <React.Suspense fallback={<CircularProgress />}>
                     <RunIn />
                 </React.Suspense>
             )}
-            <React.Suspense fallback="loading">
-                <RailMap />
-            </React.Suspense>
+            {canvasAvailable.includes('railmap') && ['railmap', 'all'].includes(canvasToShown) && (
+                <React.Suspense fallback={<CircularProgress />}>
+                    <RailMap />
+                </React.Suspense>
+            )}
         </div>
     );
 };

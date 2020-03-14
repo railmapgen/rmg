@@ -5,7 +5,6 @@ import { Snackbar, Button, IconButton, Icon } from '@material-ui/core';
 
 import { getParams, formatStnName, setParams } from '../../utils';
 import { StationInfo, StationTransfer, Name } from '../../types';
-import { RMGLineGZ } from '../../Line/LineGZ';
 
 import StationAddDialog from './add-diag';
 import StationEditDialog from './edit-diag';
@@ -14,7 +13,6 @@ import { StationDeleteDialog, StationDeleteErrorDialog } from './delete-diags';
 import AutoNumDialog from './auto-num-diag';
 import StationFabs from './fabs';
 import { removeStation, reverseStations } from './utils';
-import { RMGLineHK } from '../../Line/LineHK';
 
 interface PanelStationsProps {
     t: any;
@@ -86,7 +84,7 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
     stnEditDialogUpdate(value, field, index) {
         let stnId = this.state.stationSelected;
         if (field === 'facility') {
-            window.myLine.updateStnUsage(stnId, value);
+            // window.myLine.updateStnUsage(stnId, value);
             this.props.paramUpdate('stn_list', {
                 ...this.props.stnList,
                 [stnId]: {
@@ -96,7 +94,7 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
             });
         }
         if (field === 'services') {
-            window.myLine.updateStnServices(stnId, value);
+            // window.myLine.updateStnServices(stnId, value);
             let servicesSet = new Set(this.props.stnList[stnId].services);
             if (value.selected === false) {
                 servicesSet.delete(value.chipId);

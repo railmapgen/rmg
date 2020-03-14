@@ -17,8 +17,6 @@ import { StationInfo } from '../../types';
 import { formatStnName, setParams } from '../../utils';
 import { getYShareMTR } from '../../methods';
 import { addStation } from './utils';
-import { RMGLineGZ } from '../../Line/LineGZ';
-import { RMGLineHK } from '../../Line/LineHK';
 
 const newBranchPossibleEnd = (prep: 'before' | 'after', pivot: string, stnList: { [stnId: string]: StationInfo }) => {
     let res: string[] = [];

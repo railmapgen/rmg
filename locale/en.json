@@ -1,104 +1,112 @@
 {
-    "title": "Rail Map Generator", 
-    
+    "title": "Rail Map Generator",
+
+    "toggle": {
+        "tooltip": "Switch Canvas",
+        "all": "Show All",
+        "destination": "Destination Info Sign",
+        "runin": "Running-in Board",
+        "railmap": "Rail Map"
+    },
+
     "tab": {
-        "file": "File", 
-        "layout": "Layout", 
-        "design": "Design", 
+        "file": "File",
+        "layout": "Layout",
+        "design": "Design",
         "stations": "Stations",
         "info": "Info"
     },
 
     "file": {
         "new": {
-            "button": "New Canvas", 
-            "title": "Choose a Template", 
+            "button": "New Canvas",
+            "title": "Choose a Template",
             "notice": "Please note that all unsaved changes will be lost."
         },
         "open": {
-            "button": "Open From JSON", 
+            "button": "Open From JSON",
             "title": "Your Configuration"
         },
         "save": "Save As JSON",
         "export": {
-            "button": "Preview And Export", 
-            "title": "Choose a Canvas", 
+            "button": "Preview And Export",
+            "title": "Choose a Canvas",
             "destination": "Destination Info Sign",
-            "runin": "Running-in Board", 
+            "runin": "Running-in Board",
             "railmap": "Rail Map"
-        }, 
+        },
         "preview": {
-            "title": "Preview And Export", 
-            "png": "Download As PNG", 
+            "title": "Preview And Export",
+            "png": "Download As PNG",
             "svg": "Donwload As SVG (Web Use)"
         },
         "style": {
-            "button": "Style", 
-            "title": "Choose a Style", 
-            "mtr": "MTR", 
-            "gzmtr": "Guangzhou Metro", 
+            "button": "Style",
+            "title": "Choose a Style",
+            "mtr": "MTR",
+            "gzmtr": "Guangzhou Metro",
             "shmetro": "Shanghai Metro (Alpha)"
         },
         "lang": {
-            "button": "Language", 
+            "button": "Language",
             "title": "Choose a Language"
         }
     },
 
     "layout": {
         "size": {
-            "title": "Canvas Size", 
-            "destWidth": "Destination Sign Width", 
-            "width": "Rail Map Width", 
+            "title": "Canvas Size",
+            "destWidth": "Destination Sign Width",
+            "width": "Rail Map Width",
             "height": "Canvas Height"
         },
         "y": "Vertical Position",
         "branchSpacing": "Branch Spacing",
-        "padding": "Rail Map Margin", 
+        "padding": "Rail Map Margin",
         "directionGZ": {
-            "title": "Direction Indicator Position", 
-            "left": "Left", 
-            "right": "Right", 
-            "top": "Top", 
+            "title": "Direction Indicator Position",
+            "left": "Left",
+            "right": "Right",
+            "top": "Top",
             "bottom": "Bottom"
         }
     },
 
     "design": {
-        "theme": "Theme Colour and Line Name", 
+        "theme": "Theme Colour and Line Name",
         "direction": {
-            "button": "Train Direction", 
-            "l": "Left", 
+            "button": "Train Direction",
+            "l": "Left",
             "r": "Right"
-        }, 
-        "platform": "Platform Number", 
-        "flipName": "Flip Station Names Position", 
-        "MTRLegacy": "Destination Panel Legacy Style", 
-        "lineNum": "Line Number", 
-        "psd": "Platform Door Number", 
+        },
+        "platform": "Platform Number",
+        "flipName": "Flip Station Names Position",
+        "MTRLegacy": "Destination Panel Legacy Style",
+        "lineNum": "Line Number",
+        "psd": "Platform Door Number",
         "panelType": {
-            "button": "Info Panel Type", 
-            "title": "Choose a Type for Info Panel", 
+            "button": "Info Panel Type",
+            "title": "Choose a Type for Info Panel",
             "gz1": "Line 1",
-            "gz28": "Line 2/8", 
-            "gz3": "Line 3", 
-            "gz1421": "Line 7/9/13/14/21", 
+            "gz28": "Line 2/8",
+            "gz3": "Line 3",
+            "gz1421": "Line 7/9/13/14/21",
             "gzgf": "Line 6/Guangfo Line"
-        }, 
+        },
         "autoNum": {
-            "button": "Station Auto-numbering", 
-            "title": "Warning", 
+            "button": "Station Auto-numbering",
+            "title": "Warning",
             "msg": "You are about to re-number all stations on the main line. This action can not be undo.",
-            "ascend": "Ascending Order", 
+            "ascend": "Ascending Order",
             "descend": "Descending Order"
         }
     },
 
     "stations": {
-        "current": "Set As Current", 
+        "current": "Set As Current",
         "fabs": {
-            "tooltip": "Options", 
-            "add": "New Stations", 
+            "tooltip": "Options",
+            "add": "New Stations",
             "reverse": "Reverse Entire Line"
         },
         "add": {
@@ -117,49 +125,49 @@
             "newLower": "new lower branch",
             "bypass": "Bypass all stations until",
             "end": "End of Branch"
-        }, 
+        },
         "edit": {
             "title": "Edit Station Detail",
-            "button": "Edit", 
+            "button": "Edit",
             "tab": {
-                "name": "Name", 
-                "interchange": "Interchange", 
-                "branch": "Branch", 
+                "name": "Name",
+                "interchange": "Interchange",
+                "branch": "Branch",
                 "more": "More"
             },
             "name": {
-                "nameZH": "Name (in Chinese characters)", 
-                "nameEN": "Name (in Latin characters)", 
-                "nameENHelper": "Use a backslash (\\) to wrap text", 
+                "nameZH": "Name (in Chinese characters)",
+                "nameEN": "Name (in Latin characters)",
+                "nameENHelper": "Use a backslash (\\) to wrap text",
                 "num": "Station Number"
             },
             "interchange": {
-                "within": "Within-station Interchange", 
+                "within": "Within-station Interchange",
                 "osi": "Out-of-station Interchange",
-                "note": "Please note that some combinations of interchanges may not be displayed properly.", 
+                "note": "Please note that some combinations of interchanges may not be displayed properly.",
                 "add": "Add",
-                "osiName": "Edit OSI Station Name", 
-                "settings": "More Settings", 
+                "osiName": "Edit OSI Station Name",
+                "settings": "More Settings",
                 "tickDirec": {
-                    "label": "Text Direction", 
-                    "l": "Left", 
+                    "label": "Text Direction",
+                    "l": "Left",
                     "r": "Right"
-                }, 
+                },
                 "paidArea": "OSI within Paid Area"
             },
             "branch": {
-                "left": "Branch on the Left", 
+                "left": "Branch on the Left",
                 "right": "Branch on the Right",
                 "type": {
-                    "title": "Branch Type", 
-                    "na": "(No Branches Found)", 
-                    "through": "Through", 
+                    "title": "Branch Type",
+                    "na": "(No Branches Found)",
+                    "through": "Through",
                     "nonThrough": "Non-through"
-                }, 
-                "first": "First Station on Branch", 
+                },
+                "first": "First Station on Branch",
                 "pos": {
-                    "title": "Branch Position", 
-                    "upper": "Upper", 
+                    "title": "Branch Position",
+                    "upper": "Upper",
                     "lower": "Lower"
                 }
             },
@@ -167,54 +175,54 @@
                 "facility": {
                     "button": "Facility",
                     "title": "Choose A Facility Near This Station",
-                    "airport": "Airport", 
-                    "hsr": "High Speed Rail", 
-                    "disney": "Disneyland Resort", 
+                    "airport": "Airport",
+                    "hsr": "High Speed Rail",
+                    "disney": "Disneyland Resort",
                     "none": "None"
-                }, 
+                },
                 "services": {
-                    "button": "Train Services", 
-                    "local": "Stopping", 
+                    "button": "Train Services",
+                    "local": "Stopping",
                     "express": "Express"
                 }
             }
-        }, 
+        },
         "remove": {
-            "button": "Remove", 
-            "title": "Warning", 
+            "button": "Remove",
+            "title": "Warning",
             "msg": "Are you sure to delete station {{name}}? You can't undo this action.",
             "error": {
-                "title": "Deletion Error", 
+                "title": "Deletion Error",
                 "msg": "You are not allowed to delete this station!"
             }
         }
-    }, 
+    },
 
     "info": {
-        "title": "Rail Map Generator V3", 
-        "notice": "Notice: Due to copyright, licensing and other legal restrictions, Rail Map Generator uses Noto Serif CJK and Vegur instead of MTRSung and Myriad Pro respectively for MTR-style maps. If you have obtained the license of either font, please feel free to edit the relevant code chunk of the exported SVG file.", 
+        "title": "Rail Map Generator V3",
+        "notice": "Notice: Due to copyright, licensing and other legal restrictions, Rail Map Generator uses Noto Serif CJK and Vegur instead of MTRSung and Myriad Pro respectively for MTR-style maps. If you have obtained the license of either font, please feel free to edit the relevant code chunk of the exported SVG file.",
         "feedback": "Report Issues"
     },
 
     "colour": {
         "title": "Edit Names and Colours",
-        "city": "City", 
-        "line": "Line", 
+        "city": "City",
+        "line": "Line",
         "tooltip": "Colour Picker",
-        "colour": "Background (HEX)", 
-        "fg": "Foreground", 
-        "fgBlack": "Black", 
+        "colour": "Background (HEX)",
+        "fg": "Foreground",
+        "fgBlack": "Black",
         "fgWhite": "White"
-    }, 
+    },
 
     "dialog": {
-        "done": "Done", 
-        "cancel": "Cancel", 
+        "done": "Done",
+        "cancel": "Cancel",
         "ok": "OK"
-    }, 
-    
+    },
+
     "expansion": {
-        "collapse": "Collapse", 
+        "collapse": "Collapse",
         "expand": "Expand"
     }
 }

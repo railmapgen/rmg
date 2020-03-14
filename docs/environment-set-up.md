@@ -3,7 +3,7 @@
 ## Getting started
 
 ```bash
-$ git clone https://github.com/thekingofcity/RailMapGenerator.git
+$ git clone https://github.com/wongchito/RailMapGenerator.git
 $ cd RailMapGenerator
 $ npm install
 # launch the build whenever there is a modification
@@ -23,9 +23,11 @@ module.export = {
 }
 ```
 
+Uncomment local `React` and Material-UI scripts in `index3.html` for development. 
+
 ## Publishing
 
-Revert changes of `webpack.config.js` describe above.
+Revert changes of `webpack.config.js` described above.
 
 ```JavaScript
 module.export = {
@@ -35,3 +37,5 @@ module.export = {
     // ...
 }
 ```
+
+Revert all changed of `index3.html` described above. 

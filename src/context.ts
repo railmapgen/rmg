@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { RMGParam, Name, StationTransfer, BranchInfo, StationInfo } from './types';
-import { RMGLineGZ } from './Line/LineGZ';
+import { RMGParam, Name, StationTransfer, BranchInfo, StationInfo, InterchangeInfo } from './types';
+
+export const CanvasContext = React.createContext(null);
 
 export const ParamContext = React.createContext<{
     param: RMGParam;
@@ -95,6 +96,13 @@ type ReducerAction =
           type: 'UPDATE_STATION_TRANSFER';
           stnId: string;
           transfer: StationTransfer;
+      }
+    | {
+          type: 'UPDATE_STATION_INTERCHANGE_INFO';
+          stnId: string;
+          setIdx: number;
+          intIdx: number;
+          info: InterchangeInfo;
       }
     | {
           type: 'UPDATE_STATION_OSI_NAME';
@@ -281,6 +289,30 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
                     [action.stnId]: {
                         ...state.stn_list[action.stnId],
                         transfer: action.transfer,
+                    },
+                },
+            };
+        case 'UPDATE_STATION_INTERCHANGE_INFO':
+            return {
+                ...state,
+                stn_list: {
+                    ...state.stn_list,
+                    [action.stnId]: {
+                        ...state.stn_list[action.stnId],
+                        transfer: {
+                            ...state.stn_list[action.stnId].transfer,
+                            info: state.stn_list[action.stnId].transfer.info.map((infos, i) =>
+                                i === action.setIdx
+                                    ? infos.map((int, j) =>
+                                          j === action.intIdx
+                                              ? (([0, 1, 2, 3, 4, 5].map(k =>
+                                                    action.info[k] === undefined ? int[k] : action.info[k]
+                                                ) as unknown) as InterchangeInfo)
+                                              : int
+                                      )
+                                    : infos
+                            ),
+                        },
                     },
                 },
             };

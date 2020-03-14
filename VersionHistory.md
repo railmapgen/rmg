@@ -1,5 +1,16 @@
 # Version History
 
+## 3.3.1 (14 Mar 2020)
+
+### New Features
+
+- New templates available. 
+
+### Resolved Issues
+
+- Fixed an issue in interchange editing dialog. 
+- Improved documentation for new framework. 
+
 ## 3.3 (13 Mar 2020)
 
 ### New Features
