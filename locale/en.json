@@ -9,6 +9,11 @@
         "railmap": "Rail Map"
     },
 
+    "zoom": {
+        "in": "Zoom In",
+        "out": "Zoom Out"
+    },
+
     "tab": {
         "file": "File",
         "layout": "Layout",
@@ -77,10 +82,22 @@
         "direction": {
             "button": "Train Direction",
             "l": "Left",
-            "r": "Right"
+            "r": "Right",
+            "switch": "Switch"
         },
         "platform": "Platform Number",
         "flipName": "Flip Station Names Position",
+        "txtFlip": {
+            "text": "Station Names Position",
+            "flip": "Flip"
+        },
+        "MTRDest": {
+            "button": "Customise Direction Sign",
+            "legacy": "Show Name of Line",
+            "terminal": "Override Terminals",
+            "zh": "Chinese characters",
+            "en": "Latin characters"
+        },
         "MTRLegacy": "Destination Panel Legacy Style",
         "lineNum": "Line Number",
         "psd": "Platform Door Number",

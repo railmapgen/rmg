@@ -9,6 +9,11 @@
         "railmap": "线路图"
     },
 
+    "zoom": {
+        "in": "放大",
+        "out": "缩小"
+    },
+
     "tab": {
         "file": "文件",
         "layout": "布局",
@@ -77,10 +82,22 @@
         "direction": {
             "button": "行驶方向",
             "l": "左行",
-            "r": "右行"
+            "r": "右行",
+            "switch": "交换"
         },
         "platform": "站台号",
         "flipName": "翻转车站名称位置",
+        "txtFlip": {
+            "text": "车站名称位置",
+            "flip": "翻转"
+        },
+        "MTRDest": {
+            "button": "自定义终点站牌",
+            "legacy": "显示线路名称",
+            "terminal": "重写终点站信息",
+            "zh": "汉字",
+            "en": "拉丁字母"
+        },
         "MTRLegacy": "旧款终点站牌样式",
         "lineNum": "线路编码",
         "psd": "屏蔽门号",

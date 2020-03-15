@@ -215,7 +215,6 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     const stnNameEl = React.createRef<SVGGElement>();
     const [bBox, setBBox] = React.useState({ width: 0, x: 0 } as DOMRect);
     React.useEffect(() => {
-        if (props.stnState !== 0) return;
         setBBox(stnNameEl.current.getBBox());
     }, [props.stnState, props.name.toString()]);
 

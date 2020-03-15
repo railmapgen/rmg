@@ -50,6 +50,7 @@ const AppAppBar = () => {
                     </Typography>
 
                     <CanvasToggle />
+                    <ZoomToggles />
 
                     {/* <Tooltip title="Information">
                     <IconButton className={classes.menuButton}>
@@ -96,6 +97,35 @@ const CanvasToggle = () => {
                 </Menu>
             </>
         ),
-        [canvasAvailable.toString(), canvasButtonEl]
+        [canvasAvailable.toString(), canvasButtonEl, classes.menuButton]
+    );
+};
+
+const ZoomToggles = () => {
+    const { t } = useTranslation();
+    const classes = useStyles();
+    const { setCanvasScale } = React.useContext(CanvasContext);
+    return React.useMemo(
+        () => (
+            <>
+                <Tooltip title={t('zoom.out')}>
+                    <IconButton
+                        onClick={() => setCanvasScale(prevScale => (prevScale <= 0.1 ? prevScale : prevScale - 0.1))}
+                        className={classes.menuButton}
+                    >
+                        <Icon>zoom_out</Icon>
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title={t('zoom.in')}>
+                    <IconButton
+                        onClick={() => setCanvasScale(prevScale => prevScale + 0.1)}
+                        className={classes.menuButton}
+                    >
+                        <Icon>zoom_in</Icon>
+                    </IconButton>
+                </Tooltip>
+            </>
+        ),
+        [classes.menuButton]
     );
 };

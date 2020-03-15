@@ -18,9 +18,9 @@ const AutoNumDialog = (props: Props) => {
         branch0.forEach((stnId, i) => {
             let num: string;
             if (action === 'ascend') {
-                num = (i + 1).toString().padStart(2, '0');
+                num = i.toString().padStart(2, '0');
             } else {
-                num = (branch0.length - i).toString().padStart(2, '0');
+                num = (branch0.length - 1 - i).toString().padStart(2, '0');
             }
             dispatch({ type: 'UPDATE_STATION_NUM', stnId, num });
             // (window.myLine as RMGLineGZ).updateStnNum(stnId, num);

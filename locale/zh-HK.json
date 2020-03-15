@@ -9,6 +9,11 @@
         "railmap": "路線圖"
     },
 
+    "zoom": {
+        "in": "放大",
+        "out": "縮細"
+    },
+
     "tab": {
         "file": "檔案",
         "layout": "佈局",
@@ -78,11 +83,23 @@
         "direction": {
             "button": "行駛方向",
             "l": "向左駛",
-            "r": "向右駛"
+            "r": "向右駛",
+            "switch": "交換"
         },
         "platform": "月台編碼",
         "flipName": "反轉車站名稱位置",
+        "txtFlip": {
+            "text": "車站名稱位置",
+            "flip": "反轉"
+        },
         "MTRLegacy": "舊款終點站牌樣式",
+        "MTRDest": {
+            "button": "自訂終點站牌",
+            "legacy": "顯示路線名稱",
+            "terminal": "覆寫終點站資訊",
+            "zh": "漢字",
+            "en": "拉丁字母"
+        },
         "lineNum": "路線編碼",
         "psd": "幕門號",
         "panelType": {

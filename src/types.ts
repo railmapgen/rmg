@@ -137,6 +137,10 @@ export interface RMGParam {
      * Legacy style of destination information panel. (MTR specific)
      */
     dest_legacy?: boolean;
+    customiseMTRDest?: {
+        isLegacy: boolean;
+        terminal: false | Name;
+    };
     /**
      * Country-variant character form. (MTR specific)
      */

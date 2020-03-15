@@ -5,6 +5,8 @@ export const CanvasContext = React.createContext<{
     canvasAvailable: ProvidedCanvas[];
     canvasToShown: ProvidedCanvas | 'all';
     setCanvasToShown: React.Dispatch<React.SetStateAction<ProvidedCanvas | 'all'>>;
+    canvasScale: number;
+    setCanvasScale: React.Dispatch<React.SetStateAction<number>>;
 }>(null);
 
 export const ParamContext = React.createContext<{
@@ -61,7 +63,6 @@ type ReducerAction =
       }
     | {
           type: 'SET_DIRECTION';
-          direction: 'l' | 'r';
       }
     | {
           type: 'SET_PLATFORM';
@@ -73,6 +74,10 @@ type ReducerAction =
     | {
           type: 'SET_DEST_LEGACY';
           isLegacy: boolean;
+      }
+    | {
+          type: 'SET_TERMINAL_OVERRIDE';
+          terminal: Name | false;
       }
     | {
           type: 'SET_LINE_NUM';
@@ -229,7 +234,7 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
         case 'SET_DIRECTION':
             return {
                 ...state,
-                direction: action.direction,
+                direction: state.direction === 'l' ? 'r' : 'l',
             };
         case 'SET_PLATFORM':
             return {
@@ -245,6 +250,18 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
             return {
                 ...state,
                 dest_legacy: action.isLegacy,
+                customiseMTRDest: {
+                    ...state.customiseMTRDest,
+                    isLegacy: action.isLegacy,
+                },
+            };
+        case 'SET_TERMINAL_OVERRIDE':
+            return {
+                ...state,
+                customiseMTRDest: {
+                    ...state.customiseMTRDest,
+                    terminal: action.terminal,
+                },
             };
         case 'SET_LINE_NUM':
             return {

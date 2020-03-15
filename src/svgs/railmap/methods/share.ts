@@ -2,28 +2,44 @@ import * as Global from '../../../methods';
 import { StationInfo, RMGParam } from '../../../types';
 
 /**
- * Critical path and corresponding length from a station to another.
- * @param from ID of station on the left
- * @param to ID of station on the left
+ * Compute the adjacency list of the graph.
+ * @param stnList Key-value pairs of station info
+ * @param leftW Callback of left wide factor
+ * @param rightW Callback of right wide factor
  */
-const cpm = (
-    from: string,
-    to: string,
+export const adjacencyList = (
     stnList: { [stnId: string]: StationInfo },
-    pathWeight: (stnId1: string, stnId2: string, stnList: { [stnId: string]: StationInfo }) => number
+    leftW: (stnList: { [stnId: string]: StationInfo }, stnId: string) => number,
+    rightW: (stnList: { [stnId: string]: StationInfo }, stnId: string) => number
 ) => {
+    return Object.keys(stnList).reduce(
+        (acc, cur) => ({
+            ...acc,
+            [cur]: stnList[cur].children.reduce(
+                (a, c) => ({ ...a, [c]: 1 + leftW(stnList, c) + rightW(stnList, cur) }),
+                {}
+            ),
+        }),
+        {} as { [from: string]: { [to: string]: number } }
+    );
+};
+
+/**
+ * Compute critical path and its length from `from` node to `to` node with critical path method.
+ * @param from ID of station on the left
+ * @param to ID of station on the right
+ * @param adjMat Adjacency matrix in the form of `Object` returned from `adjacencyList` method.
+ */
+export const criticalPathMethod = (from: string, to: string, adjMat: ReturnType<typeof adjacencyList>) => {
     if (from == to) {
         return { len: 0, nodes: [from] };
     }
     let allLengths: number[] = [];
     let criticalPaths: string[][] = [];
-    stnList[from].children.forEach(child => {
-        let cp = cpm(child, to, stnList, pathWeight);
-        if (cp.len < 0) {
-            return;
-        }
-        allLengths.push(pathWeight(from, child, stnList) + cp.len); // TODO
-        // allLengths.push(1 + cp.len);
+    Object.keys(adjMat[from]).forEach(child => {
+        let cp = criticalPathMethod(child, to, adjMat);
+        if (cp.len < 0) return;
+        allLengths.push(adjMat[from][child] + cp.len);
         cp.nodes.unshift(from);
         criticalPaths.push(cp.nodes);
     });
@@ -34,25 +50,47 @@ const cpm = (
     };
 };
 
-/**
- * Getter of critical path (from left to right) and corresponding length of the entire line.
- */
-export const getCriticalPath = (stnList: { [stnId: string]: StationInfo }, Stations) => {
-    console.log('computing critical path');
-    let allLengths: number[] = [];
-    let criticalPaths: string[][] = [];
-    stnList.linestart.children.forEach(ld => {
-        stnList.lineend.parents.forEach(rd => {
-            let cp = cpm(ld, rd, stnList, new Stations({ stnList }).pathWeight);
-            allLengths.push(cp.len);
-            criticalPaths.push(cp.nodes);
-        });
-    });
-    let maxLen = Math.max(...allLengths);
-    return {
-        len: maxLen,
-        nodes: criticalPaths[allLengths.indexOf(maxLen)],
-    };
+export const getXShareMTR = (stnId: string, adjMat: ReturnType<typeof adjacencyList>, branches: string[][]) => {
+    let criticalPath = criticalPathMethod('linestart', 'lineend', adjMat);
+    if (criticalPath.nodes.includes(stnId)) {
+        return criticalPathMethod(criticalPath.nodes[1], stnId, adjMat).len;
+    } else {
+        // must has 1 parent and 1 child only
+        let branchOfStn = branches.filter(branch => branch.includes(stnId))[0];
+
+        let partSource = stnId;
+        while (!criticalPath.nodes.includes(partSource)) {
+            partSource = branchOfStn[branchOfStn.indexOf(partSource) - 1];
+        }
+        let partSink = stnId;
+        while (!criticalPath.nodes.includes(partSink)) {
+            partSink = branchOfStn[branchOfStn.indexOf(partSink) + 1];
+        }
+
+        let leftOpenJaw = partSource === 'linestart';
+        let rightOpenJaw = partSink === 'lineend';
+
+        // expand to fit
+        let lens = [];
+        if (!leftOpenJaw && !rightOpenJaw) {
+            lens[0] = criticalPathMethod(criticalPath.nodes[1], partSource, adjMat).len;
+            lens[1] = criticalPathMethod(partSource, partSink, adjMat).len;
+            lens[2] = criticalPathMethod(partSource, stnId, adjMat).len;
+            lens[3] = criticalPathMethod(stnId, partSink, adjMat).len;
+        } else if (leftOpenJaw) {
+            lens[0] = 0;
+            lens[1] = criticalPathMethod(criticalPath.nodes[1], partSink, adjMat).len;
+            lens[2] = criticalPathMethod(branchOfStn[1], stnId, adjMat).len;
+            lens[3] = criticalPathMethod(stnId, partSink, adjMat).len;
+        } else {
+            // right open jaw
+            lens[0] = criticalPathMethod(criticalPath.nodes[1], partSource, adjMat).len;
+            lens[1] = criticalPathMethod(partSource, criticalPath.nodes.slice(-2)[0], adjMat).len;
+            lens[2] = criticalPathMethod(partSource, stnId, adjMat).len;
+            lens[3] = criticalPathMethod(stnId, branchOfStn.slice(-2)[0], adjMat).len;
+        }
+        return lens[0] + (lens[2] * lens[1]) / (lens[2] + lens[3]);
+    }
 };
 
 const getYShare = (stnId: string, stnList: { [stnId: string]: StationInfo }) => {
@@ -101,97 +139,6 @@ export class Stations {
         }
         return 1 + this.rightWideFactor(stnId1) + this.leftWideFactor(stnId2);
     };
-
-    protected getXShare(
-        stnId: string,
-        cpm: (
-            from: string,
-            to: string,
-            stnList: { [stnId: string]: StationInfo },
-            pathWeight: (stnId1: string, stnId2: string, stnList: { [stnId: string]: StationInfo }) => number
-        ) => { len: number; nodes: string[] },
-        branches?: string[][]
-    ): number {
-        let self = this;
-        if (stnId in this.xShares) return this.xShares[stnId];
-
-        if (this.criticalPath.nodes.includes(stnId)) {
-            let res = cpm(this.criticalPath.nodes[0], stnId, this.stnList, this.pathWeight).len;
-            this.xShares[stnId] = res;
-            return res;
-        }
-
-        var partSource = stnId;
-        var partSink = stnId;
-        var leftOpenJaw = false;
-        var rightOpenJaw = false;
-
-        while (true) {
-            var parent = this.stnList[partSource].parents[0];
-            if (parent == 'linestart') {
-                leftOpenJaw = true;
-                break;
-            }
-            partSource = parent;
-            if (this.stnList[partSource].children.length > 1) {
-                break;
-            }
-        }
-
-        while (true) {
-            var children = this.stnList[partSink].children;
-            if (children[0] != 'lineend') {
-                partSink = children[0];
-            } else {
-                rightOpenJaw = true;
-                break;
-            }
-            if (this.stnList[partSink].parents.length > 1) {
-                break;
-            }
-        }
-
-        var lengthToSource = cpm(partSource, stnId, this.stnList, this.pathWeight).len;
-        var lengthToSink = cpm(stnId, partSink, this.stnList, this.pathWeight).len;
-        if (leftOpenJaw) {
-            var actualPartLength = cpm(this.criticalPath.nodes[0], partSink, this.stnList, this.pathWeight).len;
-            let res =
-                self.getXShare(partSink, cpm, branches) -
-                (lengthToSink / (lengthToSource + lengthToSink)) * actualPartLength;
-            this.xShares[stnId] = res;
-            return res;
-        } else if (rightOpenJaw) {
-            var actualPartLength = cpm(partSource, this.criticalPath.nodes.slice(-1)[0], this.stnList, this.pathWeight)
-                .len;
-        } else {
-            var actualPartLength = cpm(partSource, partSink, this.stnList, this.pathWeight).len;
-        }
-        let res =
-            self.getXShare(partSource, cpm, branches) +
-            (lengthToSource / (lengthToSource + lengthToSink)) * actualPartLength;
-        this.xShares[stnId] = res;
-        return res;
-    }
-
-    /**
-     * Horizontal position (in shares) of every station icon.
-     */
-    static getXShares(
-        stnList: { [stnId: string]: StationInfo },
-        cp: { len: number; nodes: string[] },
-        branches?: string[][]
-    ) {
-        console.log('computing x shares');
-        let stations = new this({ stnList, criticalPath: cp });
-
-        Object.keys(stnList).forEach(stnId => {
-            if (['linestart', 'lineend'].includes(stnId)) return;
-            if (stnId in stations.xShares) return;
-            stations.getXShare(stnId, cpm, branches);
-        });
-
-        return stations.xShares;
-    }
 
     protected getYShare(stnId: string, branches?: string[][]): number {
         if (stnId in this.yShares) return this.yShares[stnId];
@@ -469,3 +416,39 @@ export class Stations {
         return linePaths;
     }
 }
+
+export const drawLine = (branches: string[][], stnStates: { [stnId: string]: -1 | 0 | 1 }) => {
+    let linePaths = { main: [] as string[][], pass: [] as string[][] };
+    branches.map(branch => {
+        branch = branch.filter(stnId => !['linestart', 'lineend'].includes(stnId));
+        var lineMainStns = branch.filter(stnId => stnStates[stnId] >= 0);
+        var linePassStns = branch.filter(stnId => stnStates[stnId] <= 0);
+
+        if (lineMainStns.length === 1) {
+            linePassStns = branch;
+        }
+
+        if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length == 0 && lineMainStns.length) {
+            // if two set disjoint
+            if (linePassStns[0] === branch[0]) {
+                // -1 -1 1 1
+                linePassStns.push(lineMainStns[0]);
+            } else if (
+                lineMainStns[0] === branch[0] &&
+                lineMainStns[lineMainStns.length - 1] === branch[branch.length - 1] &&
+                linePassStns.length
+            ) {
+                linePassStns = branch;
+                lineMainStns = [];
+            } else {
+                // 1 1 -1 -1
+                linePassStns.unshift(lineMainStns[lineMainStns.length - 1]);
+            }
+        }
+
+        linePaths.main.push(lineMainStns);
+        linePaths.pass.push(linePassStns);
+    });
+
+    return linePaths;
+};

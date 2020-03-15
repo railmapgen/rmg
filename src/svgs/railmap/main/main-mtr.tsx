@@ -1,34 +1,63 @@
 import * as React from 'react';
 import { ParamContext } from '../../../context';
-import { getCriticalPath } from '../methods/share';
+import { adjacencyList, criticalPathMethod, getXShareMTR } from '../methods/share';
 import { StationsMTR } from '../methods/mtr';
 import StationMTR from './station/station-mtr';
+import { StationInfo } from '../../../types';
+
+const leftWideFactor = (stnList: { [stnId: string]: StationInfo }, stnId: string) => {
+    var res = 0;
+    let { type, tick_direc } = stnList[stnId].transfer;
+    if (tick_direc === 'l') {
+        if (['int3', 'osi11', 'osi12', 'osi21', 'osi31'].includes(type)) {
+            res += 0.8;
+        }
+    }
+    if (type === 'osi22') res += 0.8;
+    if (stnList[stnId].parents.length === 2) res += 0.4;
+    if (stnList[stnList[stnId].parents[0]].children.length === 2) res += 0.4;
+    return res;
+};
+
+const rightWideFactor = (stnList: { [stnId: string]: StationInfo }, stnId: string) => {
+    var res = 0;
+    let { type, tick_direc } = stnList[stnId].transfer;
+    if (tick_direc === 'r') {
+        if (['int3', 'osi11', 'osi12', 'osi21', 'osi31'].includes(type)) {
+            res += 0.8;
+        }
+    }
+    if (type === 'osi22') res += 0.8;
+    if (stnList[stnId].children.length === 2) res += 0.4;
+    if (stnList[stnList[stnId].children[0]].parents.length === 2) res += 0.4;
+    return res;
+};
 
 const MainMTR = () => {
     const { param, branches, routes, deps } = React.useContext(ParamContext);
 
-    const deps2 = Object.keys(param.stn_list).reduce((acc, cur) => {
-        return { ...acc, [cur]: param.stn_list[cur].transfer };
-    }, {});
+    const adjMat = adjacencyList(param.stn_list, leftWideFactor, rightWideFactor);
 
-    const criticalPath = React.useMemo(() => getCriticalPath(param.stn_list, StationsMTR), [
-        deps,
-        JSON.stringify(deps2),
-    ]);
-    const xShares = React.useMemo(() => StationsMTR.getXShares(param.stn_list, criticalPath, branches), [
-        deps,
-        JSON.stringify(deps2),
-    ]);
+    const criticalPath = criticalPathMethod('linestart', 'lineend', adjMat);
+    const realCP = criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat);
+
+    const xShares = React.useMemo(() => {
+        console.log('computing x shares');
+        return Object.keys(param.stn_list).reduce(
+            (acc, cur) => ({ ...acc, [cur]: getXShareMTR(cur, adjMat, branches) }),
+            {}
+        );
+    }, [branches.toString(), JSON.stringify(adjMat)]);
     const lineXs: [number, number] = [
         (param.svg_width * param.padding) / 100,
         param.svg_width * (1 - param.padding / 100),
     ];
-
-    const yShares = React.useMemo(() => StationsMTR.getYShares(param.stn_list, branches), [deps]);
     const xs = Object.keys(xShares).reduce(
-        (acc, cur) => ({ ...acc, [cur]: lineXs[0] + (xShares[cur] / criticalPath.len) * (lineXs[1] - lineXs[0]) }),
+        (acc, cur) => ({ ...acc, [cur]: lineXs[0] + (xShares[cur] / realCP.len) * (lineXs[1] - lineXs[0]) }),
         {} as typeof xShares
     );
+
+    const yShares = React.useMemo(() => StationsMTR.getYShares(param.stn_list, branches), [deps]);
     const ys = Object.keys(yShares).reduce(
         (acc, cur) => ({
             ...acc,

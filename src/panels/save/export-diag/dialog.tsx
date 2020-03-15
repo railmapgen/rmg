@@ -13,7 +13,7 @@ interface Props {
 export default function ExportDialog(props: Props) {
     const { t } = useTranslation();
 
-    const { canvasAvailable } = React.useContext(CanvasContext);
+    const { canvasAvailable, canvasToShown } = React.useContext(CanvasContext);
 
     const [previewDialogOpened, setPreviewDialogOpened] = React.useState(false);
     const [canvas, setCanvas] = React.useState('');
@@ -39,7 +39,7 @@ export default function ExportDialog(props: Props) {
                 <DialogTitle>{t('file.export.title')}</DialogTitle>
                 <DialogContent dividers>
                     <List>
-                        {canvasAvailable.map(c => (
+                        {(canvasToShown === 'all' ? canvasAvailable : [canvasToShown]).map(c => (
                             <ListItem button key={c} onClick={handleClose(c)}>
                                 <ListItemText primary={t('file.export.' + c)} />
                             </ListItem>

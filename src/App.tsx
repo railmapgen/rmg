@@ -57,12 +57,27 @@ export default function App(props: { canvas: ProvidedCanvas[] }) {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const theme = prefersDarkMode ? darkTheme : lightTheme;
 
-    const [canvasToShown, setCanvasToShown] = React.useState<'all' | ProvidedCanvas>('all');
+    const [canvasToShown, setCanvasToShown] = React.useState<'all' | ProvidedCanvas>(
+        props.canvas.includes(localStorage.rmgCanvas) ? localStorage.rmgCanvas : 'all'
+    );
+    React.useEffect(() => localStorage.setItem('rmgCanvas', canvasToShown), [canvasToShown]);
+    const [canvasScale, setCanvasScale] = React.useState(
+        Number(localStorage.rmgScale) >= 0.1 ? Number(localStorage.rmgScale) : 1
+    );
+    React.useEffect(() => localStorage.setItem('rmgScale', canvasScale.toString()), [canvasScale]);
 
     return (
         <>
             <ThemeProvider theme={theme}>
-                <CanvasContext.Provider value={{ canvasAvailable: props.canvas, canvasToShown, setCanvasToShown }}>
+                <CanvasContext.Provider
+                    value={{
+                        canvasAvailable: props.canvas,
+                        canvasToShown,
+                        setCanvasToShown,
+                        canvasScale,
+                        setCanvasScale,
+                    }}
+                >
                     <React.Suspense fallback={<LinearProgress />}>
                         <AppAppBar />
                     </React.Suspense>

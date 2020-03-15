@@ -1,45 +1,46 @@
 {
-  "name": "RailMapGenerator",
-  "version": "1.0.0",
-  "description": "Demo page: https://wongchito.github.io/RailMapGenerator/",
-  "main": "dist/index.min.js",
-  "directories": {
-    "lib": "lib"
-  },
-  "dependencies": {
-    "@material-ui/core": "^4.9.4",
-    "@types/jquery": "^3.3.31",
-    "i18next": "^19.3.2",
-    "i18next-browser-languagedetector": "^4.0.2",
-    "i18next-xhr-backend": "^3.2.2",
-    "jquery": "^3.4.1",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-i18next": "^11.3.3"
-  },
-  "devDependencies": {
-    "@types/css-font-loading-module": "0.0.3",
-    "@types/react": "^16.9.22",
-    "@types/react-dom": "^16.9.5",
-    "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^3.2.0",
-    "ts-loader": "^6.2.1",
-    "typescript": "^3.7.5",
-    "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wongchito/RailMapGenerator.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/wongchito/RailMapGenerator/issues"
-  },
-  "homepage": "https://github.com/wongchito/RailMapGenerator#readme"
+    "name": "RailMapGenerator",
+    "version": "1.0.0",
+    "description": "Demo page: https://wongchito.github.io/RailMapGenerator/",
+    "main": "dist/index.min.js",
+    "directories": {
+        "lib": "lib"
+    },
+    "dependencies": {
+        "@material-ui/core": "^4.9.4",
+        "i18next": "^19.3.2",
+        "i18next-browser-languagedetector": "^4.0.2",
+        "i18next-xhr-backend": "^3.2.2",
+        "react": "^16.12.0",
+        "react-dom": "^16.12.0",
+        "react-i18next": "^11.3.3"
+    },
+    "devDependencies": {
+        "@types/css-font-loading-module": "0.0.3",
+        "@types/react": "^16.9.22",
+        "@types/react-dom": "^16.9.5",
+        "html-loader": "^0.5.5",
+        "html-webpack-plugin": "^3.2.0",
+        "http-server": "^0.12.1",
+        "ts-loader": "^6.2.1",
+        "typescript": "^3.7.5",
+        "webpack": "^4.41.5",
+        "webpack-cli": "^3.3.10",
+        "workbox-webpack-plugin": "^5.0.0"
+    },
+    "scripts": {
+        "build": "webpack",
+        "start": "http-server"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/wongchito/RailMapGenerator.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/wongchito/RailMapGenerator/issues"
+    },
+    "homepage": "https://github.com/wongchito/RailMapGenerator#readme"
 }

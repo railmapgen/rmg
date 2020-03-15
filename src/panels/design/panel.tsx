@@ -1,47 +1,35 @@
 import * as React from 'react';
 
-import { Grid, CircularProgress } from '@material-ui/core';
-
-import { RMGParam } from '../../types';
+import { Grid, Paper, List, Divider, LinearProgress } from '@material-ui/core';
 
 import DesignCommon from './list-common';
 const DesignMTR = React.lazy(() => import(/* webpackChunkName: "panelDesignMTR" */ './list-mtr'));
 const DesignGZMTR = React.lazy(() => import(/* webpackChunkName: "panelDesignGZMTR" */ './list-gzmtr'));
 
-interface Props {
-    param: RMGParam;
-    paramUpdate: (key, data) => void;
-}
-
-export default (props: Props) => {
+const DesignPanel = () => {
     return (
         <Grid container spacing={3} justify="center" alignItems="flex-start">
-            <Grid item xs={12} sm={6} md={5} lg={4}>
-                <DesignCommon
-                    theme={props.param.theme}
-                    lineName={props.param.line_name}
-                    platformNum={props.param.platform_num}
-                    paramUpdate={props.paramUpdate}
-                />
+            <Grid item xs={12} sm={10} md={7} lg={5}>
+                <Paper>
+                    <List component="div" disablePadding>
+                        <DesignCommon />
+                        {window.urlParams.get('style') === 'mtr' && (
+                            <React.Suspense fallback={<LinearProgress />}>
+                                <Divider />
+                                <DesignMTR />
+                            </React.Suspense>
+                        )}
+                        {window.urlParams.get('style') === 'gzmtr' && (
+                            <React.Suspense fallback={<LinearProgress />}>
+                                <Divider />
+                                <DesignGZMTR />
+                            </React.Suspense>
+                        )}
+                    </List>
+                </Paper>
             </Grid>
-            {window.urlParams.get('style') === 'mtr' ? (
-                <Grid item xs={12} sm={6} md={5} lg={4}>
-                    <React.Suspense fallback={<CircularProgress />}>
-                        <DesignMTR />
-                    </React.Suspense>
-                </Grid>
-            ) : (
-                <></>
-            )}
-            {window.urlParams.get('style') === 'gzmtr' ? (
-                <Grid item xs={12} sm={6} md={5} lg={4}>
-                    <React.Suspense fallback={<CircularProgress />}>
-                        <DesignGZMTR />
-                    </React.Suspense>
-                </Grid>
-            ) : (
-                <></>
-            )}
         </Grid>
     );
 };
+
+export default DesignPanel;

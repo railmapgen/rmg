@@ -1,20 +1,34 @@
 import * as React from 'react';
 import { ParamContext } from '../../../context';
-import { getCriticalPath } from '../methods/share';
+import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine } from '../methods/share';
 import { StationsSHMetro } from '../methods/shmetro';
 import StationSHMetro from './station/station-shmetro';
 
 const MainSHMetro = () => {
     const { param, routes, branches, deps } = React.useContext(ParamContext);
 
-    const criticalPath = React.useMemo(() => getCriticalPath(param.stn_list, StationsSHMetro), [deps]);
-    const xShares = React.useMemo(() => StationsSHMetro.getXShares(param.stn_list, criticalPath, branches), [deps]);
+    const adjMat = adjacencyList(
+        param.stn_list,
+        () => 0,
+        () => 0
+    );
+
+    const criticalPath = criticalPathMethod('linestart', 'lineend', adjMat);
+    const realCP = criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat);
+
+    const xShares = React.useMemo(() => {
+        console.log('computing x shares');
+        return Object.keys(param.stn_list).reduce(
+            (acc, cur) => ({ ...acc, [cur]: getXShareMTR(cur, adjMat, branches) }),
+            {}
+        );
+    }, [branches.toString(), JSON.stringify(adjMat)]);
     const lineXs: [number, number] = [
         (param.svg_width * param.padding) / 100,
         param.svg_width * (1 - param.padding / 100),
     ];
     const xs = Object.keys(xShares).reduce(
-        (acc, cur) => ({ ...acc, [cur]: lineXs[0] + (xShares[cur] / criticalPath.len) * (lineXs[1] - lineXs[0]) }),
+        (acc, cur) => ({ ...acc, [cur]: lineXs[0] + (xShares[cur] / realCP.len) * (lineXs[1] - lineXs[0]) }),
         {} as typeof xShares
     );
 
@@ -35,11 +49,18 @@ const MainSHMetro = () => {
         stnId => (stnStates[stnId] = StationsSHMetro.getStnState(stnId, param.current_stn_idx, param.direction, routes))
     );
 
-    const linePaths = drawLine(branches, xs, ys, stnStates, param.direction);
+    const linePaths = drawLine(branches, stnStates);
+    const paths = Object.keys(linePaths).reduce(
+        (acc, cur: keyof typeof linePaths) => ({
+            ...acc,
+            [cur]: linePaths[cur].map(stns => _linePath(stns, cur, xs, ys, param.direction)),
+        }),
+        {} as { [key in keyof typeof linePaths]: string[] }
+    );
 
     return (
         <g id="main" transform={`translate(0,${param.svg_height - 63})`}>
-            <Line paths={linePaths} />
+            <Line paths={paths} />
             <StationGroup xs={xs} ys={ys} stnStates={stnStates} />
         </g>
     );
@@ -62,43 +83,6 @@ const Line = (props: { paths: { main: string[]; pass: string[] } }) => {
             </g>
         </>
     );
-};
-
-const drawLine = (branches: string[][], xs, ys, stnStates, direction: 'l' | 'r') => {
-    let paths = { main: [], pass: [] };
-
-    branches.map(branch => {
-        branch = branch.filter(stnId => !['linestart', 'lineend'].includes(stnId));
-        var lineMainStns = branch.filter(stnId => stnStates[stnId] >= 0);
-        var linePassStns = branch.filter(stnId => stnStates[stnId] <= 0);
-
-        if (lineMainStns.length === 1) {
-            linePassStns = branch;
-        }
-
-        if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length == 0 && lineMainStns.length) {
-            // if two set disjoint
-            if (linePassStns[0] === branch[0]) {
-                // -1 -1 1 1
-                linePassStns.push(lineMainStns[0]);
-            } else if (
-                lineMainStns[0] === branch[0] &&
-                lineMainStns[lineMainStns.length - 1] === branch[branch.length - 1] &&
-                linePassStns.length
-            ) {
-                linePassStns = branch;
-                lineMainStns = [];
-            } else {
-                // 1 1 -1 -1
-                linePassStns.unshift(lineMainStns[lineMainStns.length - 1]);
-            }
-        }
-
-        paths.main.push(_linePath(lineMainStns, 'main', xs, ys, direction));
-        paths.pass.push(_linePath(linePassStns, 'pass', xs, ys, direction));
-    });
-
-    return paths;
 };
 
 const _linePath = (stnIds: string[], type: 'main' | 'pass', xs, ys, direction: 'l' | 'r') => {

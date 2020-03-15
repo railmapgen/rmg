@@ -202,6 +202,11 @@ export function updateParam() {
             param.stn_list[stnId].facility = stnInfo.usage;
         }
     }
+
+    // Version 3.4
+    if (!('customiseMTRDest' in param)) {
+        param.customiseMTRDest = { isLegacy: param.dest_legacy, terminal: false };
+    }
     putParams(param);
 }
 

@@ -4,21 +4,10 @@ import { ParamContext } from '../../context';
 import StripMTR from '../strip/strip-mtr';
 import MainMTR from './main/main-mtr';
 
-const RailMapMTR = () => {
+const RailMapMTR = (props: React.SVGProps<SVGSVGElement>) => {
     const { param } = React.useContext(ParamContext);
     return (
-        <svg
-            id="railmap"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            style={{
-                width: 'var(--rmg-svg-width)',
-                height: 'var(--rmg-svg-height)',
-                ['--rmg-svg-width' as any]: param.svg_width + 'px',
-                ['--rmg-svg-height' as any]: param.svg_height + 'px',
-                ['--rmg-theme-colour' as any]: param.theme[2],
-            }}
-        >
+        <svg {...props}>
             <DefsMTR />
 
             <rect id="outer" x={0} y={0} />
@@ -136,7 +125,7 @@ const DefsMTR = React.memo(() => {
             {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => {
                 let h = 18 * (n - 1);
                 return (
-                    <>
+                    <React.Fragment key={n}>
                         <path
                             id={`int${n}`}
                             d={`M -8,0 v ${h} a 8,8 0 0,0 16,0 v -${h} a 8,8 0 0,0 -16,0 Z`}
@@ -152,7 +141,7 @@ const DefsMTR = React.memo(() => {
                             className="rmg-stn__mtr"
                             d={`M -8,19.36 v ${h} a 8,8 0 0,0 16,0 v -${h} a 8,8 0 0,0 -1.630196235,-4.84 a 8,8 0 0,0 0,-9.68 a 8,8 0 1,0 -12.73960758,0 a 8,8 0 0,0 0,9.68 a 8,8 0 0,0 -1.630196235,4.84 Z`}
                         />
-                    </>
+                    </React.Fragment>
                 );
             })}
 

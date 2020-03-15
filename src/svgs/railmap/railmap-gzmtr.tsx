@@ -3,22 +3,10 @@ import { ParamContext } from '../../context';
 import StripGZMTR from '../strip/strip-gzmtr';
 import MainGZMTR from './main/main-gzmtr';
 
-const RailMapGZMTR = () => {
+const RailMapGZMTR = (props: React.SVGProps<SVGSVGElement>) => {
     const { param } = React.useContext(ParamContext);
     return (
-        <svg
-            id="railmap"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            style={{
-                width: 'var(--rmg-svg-width)',
-                height: 'var(--rmg-svg-height)',
-                ['--rmg-svg-width' as any]: param.svg_width + 'px',
-                ['--rmg-svg-height' as any]: param.svg_height + 'px',
-                ['--rmg-theme-colour' as any]: param.theme[2],
-                ['--rmg-theme-fg' as any]: param.theme[3],
-            }}
-        >
+        <svg {...props}>
             <DefsGZMTR />
 
             <rect id="outer" x={0} y={0} />

@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = [
     {
@@ -52,6 +53,10 @@ module.exports = [
                 template: './src/index3.html',
                 filename: '../index.html',
             }),
+            // new WorkboxPlugin.GenerateSW({
+            //     clientsClaim: true,
+            //     skipWaiting: true,
+            // }),
         ],
     },
 ];

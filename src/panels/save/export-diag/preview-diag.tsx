@@ -38,9 +38,7 @@ export default (props: Props) => {
         let scaleFactor = Math.min(MAX_WIDTH / thisSVGWidth, MAX_HEIGHT / thisSVGHeight);
 
         let elem = document.querySelector(`svg#${props.canvas}`).cloneNode(true) as SVGSVGElement;
-        elem.viewBox.baseVal.width = thisSVGWidth;
-        elem.viewBox.baseVal.height = thisSVGHeight;
-        elem.setAttribute('width', (thisSVGWidth * scaleFactor).toString());
+        // elem.setAttribute('width', (thisSVGWidth * scaleFactor).toString());
         elem.setAttribute('height', (thisSVGHeight * scaleFactor).toString());
         elem.style.setProperty('all', 'initial');
 

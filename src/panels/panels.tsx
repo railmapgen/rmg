@@ -74,7 +74,7 @@ export default function PanelTab(props: Props) {
             case 1:
                 return <PanelLayout />;
             case 2:
-                return <PanelDesign {...(({ tpo, ...o }) => o)(props)} />;
+                return <PanelDesign />;
             case 3:
                 return (
                     <PanelStations

@@ -2,16 +2,18 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
-    Card,
-    List,
     ListItem,
     ListItemIcon,
     Icon,
     TextField,
     ListItemText,
-    Dialog,
-    DialogTitle,
-    DialogContent,
+    makeStyles,
+    createStyles,
+    FormControlLabel,
+    RadioGroup,
+    Radio,
+    Collapse,
+    Divider,
 } from '@material-ui/core';
 
 import { ParamContext } from '../../context';
@@ -24,78 +26,96 @@ const allInfoPanelTypes = {
     gz1421: 'Line 14/21',
 };
 
+const useStyles = makeStyles(theme =>
+    createStyles({
+        radioGroup: {
+            paddingLeft: theme.spacing(5),
+            paddingBottom: theme.spacing(1),
+        },
+    })
+);
+
 const DesignListGZMTR = () => {
     const { t } = useTranslation();
+
     const { param, dispatch } = React.useContext(ParamContext);
 
-    const [panelTypeDialogOpened, setPanelTypeDialogOpened] = React.useState(false);
-
-    const panelTypeDialogClose = (action: 'close' | 'gz1' | 'gz28' | 'gz3' | 'gz1421' | 'gzgf') => {
-        if (action !== 'close') dispatch({ type: 'SET_PANEL_TYPE', variant: action });
-        setPanelTypeDialogOpened(false);
-    };
-
     return (
-        <div>
-            <Card>
-                <List component="nav">
-                    <ListItem>
-                        <ListItemIcon>
-                            <Icon>looks_one</Icon>
-                        </ListItemIcon>
-                        <TextField
-                            label={t('design.lineNum')}
-                            variant="outlined"
-                            value={param.line_num}
-                            onChange={e => dispatch({ type: 'SET_LINE_NUM', num: e.target.value })}
-                            style={{ marginRight: 5 }}
-                        />
-                        <TextField
-                            label={t('design.psd')}
-                            variant="outlined"
-                            value={param.psd_num}
-                            onChange={e => dispatch({ type: 'SET_PSD_NUM', num: e.target.value })}
-                        />
-                    </ListItem>
-                    <ListItem button onClick={() => setPanelTypeDialogOpened(true)}>
-                        <ListItemIcon>
-                            <Icon style={{ transform: 'rotate(180deg)' }}>credit_card</Icon>
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={t('design.panelType.button')}
-                            secondary={t('design.panelType.' + param.info_panel_type)}
-                        />
-                    </ListItem>
-                </List>
-            </Card>
-
-            <PanelTypeDialog open={panelTypeDialogOpened} onClose={panelTypeDialogClose} />
-        </div>
+        <>
+            <ListItem>
+                <ListItemIcon>
+                    <Icon>looks_one</Icon>
+                </ListItemIcon>
+                <ListItemText primary={t('design.lineNum')} />
+                <TextField
+                    value={param.line_num}
+                    onChange={e => dispatch({ type: 'SET_LINE_NUM', num: e.target.value })}
+                    style={{ marginRight: 5 }}
+                />
+            </ListItem>
+            <Divider />
+            <ListItem>
+                <ListItemIcon>
+                    <Icon>looks_one</Icon>
+                </ListItemIcon>
+                <ListItemText primary={t('design.psd')} />
+                <TextField
+                    value={param.psd_num}
+                    onChange={e => dispatch({ type: 'SET_PSD_NUM', num: e.target.value })}
+                />
+            </ListItem>
+            <Divider />
+            <PanelTypeLi />
+        </>
     );
 };
 
 export default DesignListGZMTR;
 
-interface PanelTypeDialogProps {
-    open: boolean;
-    onClose: (action: 'close' | 'gz1' | 'gz28' | 'gz3' | 'gz1421' | 'gzgf') => void;
-}
-
-function PanelTypeDialog(props: PanelTypeDialogProps) {
+const PanelTypeLi = () => {
     const { t } = useTranslation();
+    const classes = useStyles();
 
-    return (
-        <Dialog onClose={() => props.onClose('close')} open={props.open}>
-            <DialogTitle>{t('design.panelType.title')}</DialogTitle>
-            <DialogContent dividers>
-                <List>
-                    {Object.keys(allInfoPanelTypes).map((key: keyof typeof allInfoPanelTypes) => (
-                        <ListItem button onClick={() => props.onClose(key)} key={key}>
-                            <ListItemText primary={t('design.panelType.' + key)} />
-                        </ListItem>
-                    ))}
-                </List>
-            </DialogContent>
-        </Dialog>
+    const { param, dispatch } = React.useContext(ParamContext);
+    const [open, setOpen] = React.useState(false);
+
+    return React.useMemo(
+        () => (
+            <>
+                <ListItem button onClick={() => setOpen(prevOpen => !prevOpen)}>
+                    <ListItemIcon>
+                        <Icon style={{ transform: 'rotate(180deg)' }}>credit_card</Icon>
+                    </ListItemIcon>
+                    <ListItemText
+                        primary={t('design.panelType.button')}
+                        secondary={open ? '' : t('design.panelType.' + param.info_panel_type)}
+                    />
+                    {open ? <Icon color="action">expand_less</Icon> : <Icon color="action">expand_more</Icon>}
+                </ListItem>
+                <Collapse in={open} unmountOnExit>
+                    <RadioGroup
+                        name="panel-type"
+                        value={param.info_panel_type}
+                        className={classes.radioGroup}
+                        onChange={e =>
+                            dispatch({
+                                type: 'SET_PANEL_TYPE',
+                                variant: e.target.value as 'gz1' | 'gz28' | 'gz3' | 'gz1421' | 'gzgf',
+                            })
+                        }
+                    >
+                        {Object.keys(allInfoPanelTypes).map(type => (
+                            <FormControlLabel
+                                value={type}
+                                key={type}
+                                control={<Radio size="small" color="primary" />}
+                                label={t('design.panelType.' + type)}
+                            />
+                        ))}
+                    </RadioGroup>
+                </Collapse>
+            </>
+        ),
+        [param.info_panel_type, open, classes.radioGroup]
     );
-}
+};
