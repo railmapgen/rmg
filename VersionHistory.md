@@ -1,5 +1,15 @@
 # Version History
 
+## 3.4.1 (16 Mar 2020)
+
+### New Features
+
+-   Notes can now be added to rail map canvas in Guangzhou Metro style.
+
+### Resolved Issues
+
+-   Fixed the scrolling issues in Firefox.
+
 ## 3.4 (15 Mar 2020)
 
 ### New Features

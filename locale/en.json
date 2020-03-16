@@ -116,6 +116,13 @@
             "msg": "You are about to re-number all stations on the main line. This action can not be undo.",
             "ascend": "Ascending Order",
             "descend": "Descending Order"
+        },
+        "notesGZMTR": {
+            "text": "Notes",
+            "addNotes": "Add notes",
+            "edit": "Edit",
+            "remove": "Remove",
+            "add": "Add"
         }
     },
 

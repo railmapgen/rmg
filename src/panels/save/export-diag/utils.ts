@@ -17,8 +17,10 @@ export function test(svgEl: SVGSVGElement) {
     svgEl.querySelectorAll('.rmg-name__en.rmg-name__mtr--station').forEach(el => el.setAttribute('font-size', '11px'));
 
     svgEl
-        .querySelectorAll('.rmg-name__en.rmg-name__gzmtr--station, .rmg-name__zh.IntName')
-        .forEach(el => el.setAttribute('font-size', '10px'));
+        .querySelectorAll('.rmg-name__en.rmg-name__gzmtr--station')
+        .forEach(el => el.setAttribute('font-size', '10.5px'));
+
+    svgEl.querySelectorAll('.rmg-name__zh.IntName').forEach(el => el.setAttribute('font-size', '10px'));
 
     svgEl.querySelectorAll('.rmg-name__en.rmg-name__mtr--osi').forEach(el => el.setAttribute('font-size', '9px'));
 

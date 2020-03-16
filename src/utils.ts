@@ -1,18 +1,4 @@
-import { RMGParam, Name, StationInfo } from './types';
-
-export function putParams(instance: RMGParam) {
-    localStorage.setItem('rmgParam', JSON.stringify(instance));
-}
-
-export function getParams() {
-    return JSON.parse(localStorage.rmgParam) as RMGParam;
-}
-
-export function setParams(key: Extract<keyof RMGParam, string>, data: any) {
-    let param = getParams();
-    param[key] = data;
-    putParams(param);
-}
+import { RMGParam, StationInfo } from './types';
 
 export function rgb2Hex(rgb: string) {
     let hex = rgb
@@ -34,7 +20,7 @@ export function rgb2Hex(rgb: string) {
 }
 
 export function updateParam() {
-    var param = getParams();
+    var param = JSON.parse(localStorage.rmgParam) as RMGParam;
 
     // Version 0.10
     if (!('line_name' in param)) {
@@ -207,25 +193,22 @@ export function updateParam() {
     if (!('customiseMTRDest' in param)) {
         param.customiseMTRDest = { isLegacy: param.dest_legacy, terminal: false };
     }
-    putParams(param);
-}
 
-const langFallback = (lang: string) => {
-    switch (lang) {
-        case 'en':
-            return ['en'];
-        case 'zh-Hans':
-            return ['zh-Hans', 'zh', 'en'];
-        case 'zh-HK':
-            return ['zh-HK', 'zh-Hant', 'zh', 'en'];
-        default:
-            return [lang, 'en'];
+    // Version 3.5
+    if (!('svgWidth' in param)) {
+        param.svgWidth = {
+            destination: param.svg_dest_width,
+            runin: param.svg_dest_width,
+            railmap: param.svg_width,
+        };
     }
-};
 
-export const getTransText = (obj: { [index: string]: string }, lang: string) => {
-    return obj[langFallback(lang).find(l => obj[l])];
-};
+    if (!('notesGZMTR' in param)) {
+        param.notesGZMTR = [];
+    }
+
+    localStorage.setItem('rmgParam', JSON.stringify(param));
+}
 
 export const getTransText2 = (obj: { [index: string]: string }, langs: string[]) => {
     return langs.reduce((acc, cur) => (acc ? acc : obj[cur] ? obj[cur] : acc), '');

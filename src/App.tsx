@@ -3,11 +3,10 @@ import './i18n';
 import AppAppBar from './app-appbar';
 import SVGs from './svgs';
 import Panels from './panels';
-import { getParams } from './utils';
 import { getBranches, useTpo, getRoutes } from './methods';
 import { CanvasContext, ParamContext, paramReducer } from './context';
 import { createMuiTheme, ThemeProvider, useMediaQuery, LinearProgress } from '@material-ui/core';
-import { ProvidedCanvas } from './types';
+import { ProvidedCanvas, RMGParam } from './types';
 
 const darkTheme = createMuiTheme({
     palette: {
@@ -44,6 +43,16 @@ const lightTheme = createMuiTheme({
             main: '#b00020',
         },
     },
+    // palette: {
+    //     primary: {
+    //         light: '#1A73E8',
+    //         main: '#3367D6',
+    //     },
+    //     text: {
+    //         primary: '#202124',
+    //         secondary: '#5f6368',
+    //     },
+    // },
     overrides: {
         MuiDialog: {
             paper: {
@@ -64,7 +73,7 @@ export default function App(props: { canvas: ProvidedCanvas[] }) {
     const [canvasScale, setCanvasScale] = React.useState(
         Number(localStorage.rmgScale) >= 0.1 ? Number(localStorage.rmgScale) : 1
     );
-    React.useEffect(() => localStorage.setItem('rmgScale', canvasScale.toString()), [canvasScale]);
+    React.useEffect(() => localStorage.setItem('rmgScale', canvasScale.toFixed(1)), [canvasScale]);
 
     return (
         <>
@@ -89,7 +98,7 @@ export default function App(props: { canvas: ProvidedCanvas[] }) {
 }
 
 const AppBody = () => {
-    const [param, dispatch] = React.useReducer(paramReducer, getParams());
+    const [param, dispatch] = React.useReducer(paramReducer, JSON.parse(localStorage.rmgParam) as RMGParam);
     const paramString = JSON.stringify(param);
     React.useEffect(() => localStorage.setItem('rmgParam', paramString), [paramString]);
 
@@ -112,7 +121,7 @@ const AppBody = () => {
     const handleUpdate = (key, data) => dispatch({ type: 'ANY', key, data });
 
     return (
-        <div style={{ flex: 1, overflow: 'overlay' }}>
+        <>
             <ParamContext.Provider
                 value={{
                     param,
@@ -123,9 +132,11 @@ const AppBody = () => {
                 }}
             >
                 <SVGs />
-                <Panels param={param} paramUpdate={handleUpdate} tpo={tpo} />
+                <div style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
+                    <Panels param={param} paramUpdate={handleUpdate} tpo={tpo} />
+                </div>
             </ParamContext.Provider>
             <canvas style={{ display: 'none' }} />
-        </div>
+        </>
     );
 };

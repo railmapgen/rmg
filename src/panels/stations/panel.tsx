@@ -3,8 +3,8 @@ import { useTranslation, withTranslation } from 'react-i18next';
 
 import { Snackbar, Button, IconButton, Icon } from '@material-ui/core';
 
-import { getParams, formatStnName, setParams } from '../../utils';
-import { StationInfo, StationTransfer, Name } from '../../types';
+import { formatStnName } from '../../utils';
+import { StationInfo, Name } from '../../types';
 
 import StationAddDialog from './add-diag';
 import StationEditDialog from './edit-diag';
@@ -119,48 +119,12 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
             if (res === false) {
                 this.setState({ stnDeleteErrDialogOpened: true });
             } else {
-                // handle redrawing (will be removed)
-                // delete window.myLine.stations[stnId];
                 if (this.props.currentId === stnId) {
                     let newCurrentId = Object.keys(res).filter(id => !['linestart', 'lineend'].includes(id))[0];
                     this.props.paramUpdate('current_stn_idx', newCurrentId);
-                    // setParams('current_stn_idx', newCurrentId);
-                    // window.myLine._currentStnId = newCurrentId;
                 }
-                // let { parents, children } = this.props.stnList[stnId];
-                // [...parents, ...children].forEach(neId => {
-                //     // if (['linestart','lineend'].includes(neId)) return;
-                //     window.myLine.stations[neId] = window.myLine._initStnInstance(neId, res[neId]);
-                // });
-
-                // Object.keys(res).forEach(id => {
-                //     if (['linestart', 'lineend'].includes(id)) return;
-                //     window.myLine._updateStnInstance(id);
-                // });
-
-                // $('#stn_icons, #line_main, #line_pass').empty();
-                // window.myLine.drawStns();
-                // window.myLine.drawLine();
-                // window.myLine.drawStrip();
-                // window.myLine.drawDestInfo();
-
-                // if (window.urlParams.get('style') === 'gzmtr') {
-                //     (window.myLine as RMGLineGZ).loadLineNum();
-                //     (window.myLine as RMGLineGZ).loadDirection();
-                // }
-                // if (window.urlParams.get('style') === 'mtr') {
-                //     (window.myLine as RMGLineHK).updateStnNameBg();
-                // }
-
                 this.props.paramUpdate('stn_list', res);
-                // setParams('stn_list', res);
             }
-            // if (!window.myLine.removeStn(stnId)) {
-            //     this.setState({ stnDeleteErrDialogOpened: true });
-            // } else {
-            //     this.props.paramUpdate('stn_list', getParams().stn_list);
-            //     // this.setState({stnList: getParams().stn_list});
-            // }
         }
     }
 
@@ -172,7 +136,7 @@ class PanelStations extends React.Component<PanelStationsProps, PanelStationsSta
             let newStnList = reverseStations(this.props.stnList);
             this.props.paramUpdate('stn_list', newStnList);
             // console.log(newStnList);
-            setParams('stn_list', newStnList);
+            // setParams('stn_list', newStnList);
             // location.reload(true);
         }
         if (action === 'autonum') {

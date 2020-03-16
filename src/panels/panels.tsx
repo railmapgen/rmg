@@ -65,7 +65,7 @@ export default function PanelTab(props: Props) {
 
     const classes = useStyles();
 
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = React.useState(2);
 
     const panel = (index: number) => {
         switch (index) {
@@ -125,13 +125,13 @@ export default function PanelTab(props: Props) {
     );
 
     return (
-        <div>
+        <>
             {tabNav}
-            <Typography className={classes.typography} component="div" role="tabpanel">
+            <Typography className={classes.typography} component="div" role="tabpanel" style={{ overflow: 'auto' }}>
                 <Box p={3} className={classes.box}>
                     <React.Suspense fallback={<CircularProgress />}>{panel(value)}</React.Suspense>
                 </Box>
             </Typography>
-        </div>
+        </>
     );
 }

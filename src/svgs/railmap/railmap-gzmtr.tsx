@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ParamContext } from '../../context';
 import StripGZMTR from '../strip/strip-gzmtr';
 import MainGZMTR from './main/main-gzmtr';
+import { Note } from '../../types';
 
 const RailMapGZMTR = (props: React.SVGProps<SVGSVGElement>) => {
     const { param } = React.useContext(ParamContext);
@@ -20,6 +21,9 @@ const RailMapGZMTR = (props: React.SVGProps<SVGSVGElement>) => {
                 <>
                     <MainGZMTR />
                     <DirectionIndicator />
+                    {param.notesGZMTR.map((note, i) => (
+                        <NoteBox key={i} note={note} />
+                    ))}
                 </>
             )}
         </svg>
@@ -156,3 +160,33 @@ const TerminusFlag = React.memo(() => (
         </g>
     </g>
 ));
+
+const NoteBox = React.memo(
+    (props: { note: Note }) => (
+        <g
+            className="note-box"
+            style={{ ['--x-percentage' as any]: props.note[2], ['--y-percentage' as any]: props.note[3] }}
+        >
+            <g fontSize="16px" letterSpacing="1.2px">
+                {props.note[0].split('\n').map((txt, i) => (
+                    <text key={i} className="rmg-name__zh" y={i * 18}>
+                        {txt}
+                    </text>
+                ))}
+            </g>
+
+            <g
+                fontSize="10px"
+                letterSpacing="0.39px"
+                transform={`translate(0,${18 * props.note[0].split('\n').length})`}
+            >
+                {props.note[1].split('\n').map((txt, i) => (
+                    <text key={i} className="rmg-name__en" y={i * 11}>
+                        {txt}
+                    </text>
+                ))}
+            </g>
+        </g>
+    ),
+    (prevProps, nextProps) => prevProps.note.toString() === nextProps.note.toString()
+);

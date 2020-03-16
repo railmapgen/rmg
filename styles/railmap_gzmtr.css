@@ -1,4 +1,6 @@
-.rmg-line {fill:none}
+.rmg-line {
+    fill: none;
+}
 
 .rmg-line__gzmtr {
     stroke-width: 4;
@@ -6,57 +8,97 @@
 }
 .rmg-line__gzmtr.rmg-line__pass {
     stroke: #aaa;
-    stroke-dasharray:4,4;
+    stroke-dasharray: 4, 4;
 }
 
 .rmg-stn--pass {
     stroke: #aaa;
 }
 
-.Name.Pass {fill: #aaa;}
-.Name.Current {fill: #fff;}
-.Name.CurrentGZ {fill: #f00;}
-.Name.Future {fill: #000;}
+.Name.Pass {
+    fill: #aaa;
+}
+.Name.Current {
+    fill: #fff;
+}
+.Name.CurrentGZ {
+    fill: #f00;
+}
+.Name.Future {
+    fill: #000;
+}
 
-.rmg-name__en.rmg-name__gzmtr--station {font-size: 10px;}
-.rmg-name__zh.rmg-name__gzmtr--station {font-size: 18px;}
-.rmg-name__en.rmg-name__gzmtr--express {font-size: 6.5px;}
-.rmg-name__zh.rmg-name__gzmtr--express {font-size: 13px;}
+.rmg-name__en.rmg-name__gzmtr--station {
+    font-size: 10.5px;
+}
+.rmg-name__zh.rmg-name__gzmtr--station {
+    font-size: 18px;
+}
+.rmg-name__en.rmg-name__gzmtr--express {
+    font-size: 6.5px;
+}
+.rmg-name__zh.rmg-name__gzmtr--express {
+    font-size: 13px;
+}
 
-.rmg-name__zh.rmg-name__gzmtr--int {font-size: 12px;}
-.rmg-name__en.rmg-name__gzmtr--int {font-size: 8px;}
-.rmg-name__en.rmg-name__gzmtr--int-small {font-size: 7px;}
+.rmg-name__zh.rmg-name__gzmtr--int {
+    font-size: 12px;
+}
+.rmg-name__en.rmg-name__gzmtr--int {
+    font-size: 8px;
+}
+.rmg-name__en.rmg-name__gzmtr--int-small {
+    font-size: 7px;
+}
 
-.StnNum{
+.StnNum {
     font-family: Arial;
     font-size: 14px;
     text-anchor: middle;
     alignment-baseline: central;
 }
 
-.rmg-name__zh.rmg-name__gzmtr--direc {font-size: 28px;}
-.rmg-name__en.rmg-name__gzmtr--direc {font-size: 14px;}
-.rmg-name__zh.rmg-name__gzmtr--direc2 {font-size: 25px;}
-.rmg-name__en.rmg-name__gzmtr--direc2 {font-size: 11.5px;}
+.rmg-name__zh.rmg-name__gzmtr--direc {
+    font-size: 28px;
+}
+.rmg-name__en.rmg-name__gzmtr--direc {
+    font-size: 14px;
+}
+.rmg-name__zh.rmg-name__gzmtr--direc2 {
+    font-size: 25px;
+}
+.rmg-name__en.rmg-name__gzmtr--direc2 {
+    font-size: 11.5px;
+}
 
 g#line_name {
-    transform: translate(var(--translate-x,0px),-18px)scale(1.5);
+    transform: translate(var(--translate-x, 0px), -18px) scale(1.5);
 }
 
 g#direction_gz {
-    transform: translate(var(--translate-x),var(--translate-y));
-    --translate-x: calc(var(--rmg-svg-width) * var(--x-percentage,50) / 100);
-    --translate-y: calc(var(--rmg-svg-height) * var(--y-percentage,70) / 100);
+    transform: translate(var(--translate-x), var(--translate-y));
+    --translate-x: calc(var(--rmg-svg-width) * var(--x-percentage, 50) / 100);
+    --translate-y: calc(var(--rmg-svg-height) * var(--y-percentage, 70) / 100);
 }
 g#direction_gz use {
-    transform: scale(0.35)rotate(var(--rotate,0deg));
+    transform: scale(0.35) rotate(var(--rotate, 0deg));
 }
 
 g#terminus_gz {
-    transform: translate(var(--translate-x),var(--translate-y));
+    transform: translate(var(--translate-x), var(--translate-y));
     --translate-x: calc(var(--rmg-svg-width) / 2);
     --translate-y: calc(var(--rmg-svg-height) / 2 - 50px);
     text-anchor: middle;
 }
-g#terminus_gz .rmg-name__zh {font-size: 90px;}
-g#terminus_gz .rmg-name__en {font-size: 36px;}
+g#terminus_gz .rmg-name__zh {
+    font-size: 90px;
+}
+g#terminus_gz .rmg-name__en {
+    font-size: 36px;
+}
+
+g.note-box {
+    transform: translate(var(--translate-x), var(--translate-y));
+    --translate-x: calc(var(--x-percentage, 0) * var(--rmg-svg-width) / 100);
+    --translate-y: calc(var(--y-percentage, 0) * var(--rmg-svg-height) / 100);
+}

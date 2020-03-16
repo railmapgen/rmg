@@ -1,5 +1,14 @@
 import * as React from 'react';
-import { RMGParam, Name, StationTransfer, BranchInfo, StationInfo, InterchangeInfo, ProvidedCanvas } from './types';
+import {
+    RMGParam,
+    Name,
+    StationTransfer,
+    BranchInfo,
+    StationInfo,
+    InterchangeInfo,
+    ProvidedCanvas,
+    Note,
+} from './types';
 
 export const CanvasContext = React.createContext<{
     canvasAvailable: ProvidedCanvas[];
@@ -90,6 +99,18 @@ type ReducerAction =
     | {
           type: 'SET_PANEL_TYPE';
           variant: 'gz1' | 'gz28' | 'gz3' | 'gz1421' | 'gzgf';
+      }
+    | {
+          type: 'ADD_NOTE_GZMTR';
+      }
+    | {
+          type: 'REMOVE_NOTE_GZMTR';
+          idx: number;
+      }
+    | {
+          type: 'UPDATE_NOTE_GZMTR';
+          idx: number;
+          note: Note;
       }
     | {
           type: 'UPDATE_STATION_NAME';
@@ -277,6 +298,21 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
             return {
                 ...state,
                 info_panel_type: action.variant,
+            };
+        case 'ADD_NOTE_GZMTR':
+            return {
+                ...state,
+                notesGZMTR: state.notesGZMTR.concat([['', '', 0, 0]]),
+            };
+        case 'REMOVE_NOTE_GZMTR':
+            return {
+                ...state,
+                notesGZMTR: state.notesGZMTR.filter((_, i) => i !== action.idx),
+            };
+        case 'UPDATE_NOTE_GZMTR':
+            return {
+                ...state,
+                notesGZMTR: state.notesGZMTR.map((note, i) => (i === action.idx ? action.note : note)),
             };
         case 'UPDATE_STATION_NAME':
             // window.myLine.updateStnName(action.stnId, action.name);

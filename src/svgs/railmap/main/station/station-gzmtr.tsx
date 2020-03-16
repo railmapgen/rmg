@@ -30,7 +30,7 @@ const StationGZMTR = (props: Props) => {
             : -9
         : tickRotation === 180
         ? -6
-        : (24 + (nameENLns - 1) * 12) * Math.cos(-45);
+        : (25 + (nameENLns - 1) * 15) * Math.cos(-45);
 
     return (
         <>
@@ -83,10 +83,7 @@ interface StationNameGElementProps {
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {
-    const nameDY =
-        props.tickRotation === 180
-            ? 17.5
-            : -4 - 21.921875 - (props.name[1].split('\\').length - 1) * 12 * Math.cos(-45);
+    const nameDY = props.tickRotation === 180 ? 17.5 : -20 - props.name[1].split('\\').length * 14 * Math.cos(-45);
 
     const stnNameEl = React.createRef<SVGGElement>();
     const [bBox, setBBox] = React.useState({} as DOMRect);
@@ -124,7 +121,7 @@ const StationName = (props: { name: Name }) => {
             <>
                 <text className="rmg-name__zh rmg-name__gzmtr--station">{props.name[0]}</text>
                 {props.name[1].split('\\').map((txt, i) => (
-                    <text key={i} className="rmg-name__en rmg-name__gzmtr--station" dy={15 + i * 10}>
+                    <text key={i} className="rmg-name__en rmg-name__gzmtr--station" dy={16 + i * 11}>
                         {txt}
                     </text>
                 ))}

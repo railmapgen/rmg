@@ -87,6 +87,8 @@ export interface StationTransfer {
     info: InterchangeInfo[][];
 }
 
+export type Note = [string, string, number, number];
+
 /**
  * Dictionary of configuration parameters for RMG, stored in `localStorage` as string.
  */
@@ -99,6 +101,11 @@ export interface RMGParam {
      * Width (in pixels) of `svg#destination`.
      */
     svg_dest_width: number;
+    svgWidth?: {
+        destination: number;
+        runin: number;
+        railmap: number;
+    };
     /**
      * Height (in pixels) of `svg`s.
      */
@@ -145,6 +152,7 @@ export interface RMGParam {
      * Country-variant character form. (MTR specific)
      */
     char_form?: 'trad' | 'cn' | 'tw' | 'jp';
+    notesGZMTR?: Note[];
     [propName: string]: any;
 }
 

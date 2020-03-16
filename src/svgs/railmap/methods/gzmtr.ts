@@ -23,17 +23,17 @@ export class StationsGZMTR extends Stations {
             }
             if (y === 0) {
                 if (y < prevY) {
-                    path.push(`H ${x - 30}`, 'a 30,30 0 0,0 30,-30', `V ${y}`);
+                    path.push(`H ${x - 40}`, 'a 40,40 0 0,0 40,-40', `V ${y}`);
                 }
                 if (y > prevY) {
-                    path.push(`H ${x - 30}`, 'a 30,30 0 0,1 30,30', `V ${y}`);
+                    path.push(`H ${x - 40}`, 'a 40,40 0 0,1 40,40', `V ${y}`);
                 }
             } else {
                 if (y < prevY) {
-                    path.push(`V ${y + 30}`, 'a 30,30 0 0,1 30,-30', `H ${x}`);
+                    path.push(`V ${y + 40}`, 'a 40,40 0 0,1 40,-40', `H ${x}`);
                 }
                 if (y > prevY) {
-                    path.push(`V ${y - 30}`, 'a 30,30 0 0,0 30,30', `H ${x}`);
+                    path.push(`V ${y - 40}`, 'a 40,40 0 0,0 40,40', `H ${x}`);
                 }
             }
             path.push(`H ${x}`);

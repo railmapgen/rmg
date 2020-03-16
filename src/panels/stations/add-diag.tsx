@@ -14,7 +14,7 @@ import {
     Button,
 } from '@material-ui/core';
 import { StationInfo } from '../../types';
-import { formatStnName, setParams } from '../../utils';
+import { formatStnName } from '../../utils';
 import { getYShareMTR } from '../../methods';
 import { addStation } from './utils';
 

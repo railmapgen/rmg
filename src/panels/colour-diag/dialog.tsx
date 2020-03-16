@@ -95,6 +95,7 @@ const ColourDialog = React.memo(
                                     }}
                                     style={{ color: props.theme[3] || '#fff' }}
                                     onChange={e => nameChange(e.target.value, 0)}
+                                    autoFocus
                                 />
                                 <InputBase
                                     value={props.lineName[1]}
@@ -111,7 +112,7 @@ const ColourDialog = React.memo(
                     </List>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary" autoFocus>
+                    <Button onClick={handleClose} color="primary">
                         {t('dialog.done')}
                     </Button>
                 </DialogActions>
