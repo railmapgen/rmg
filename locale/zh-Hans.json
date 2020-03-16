@@ -119,10 +119,11 @@
         },
         "notesGZMTR": {
             "text": "备注",
-            "addNotes": "添加备注",
+            "addNote": "添加备注",
             "edit": "编辑",
             "remove": "删除",
-            "add": "添加"
+            "add": "添加",
+            "editNote": "编辑备注"
         }
     },
 
@@ -239,10 +240,17 @@
         "fgWhite": "白"
     },
 
+    "editor": {
+        "zh": "汉字",
+        "en": "拉丁字母",
+        "enterToWrap": "用回车键文本换行"
+    },
+
     "dialog": {
         "done": "完成",
         "cancel": "取消",
-        "ok": "好"
+        "ok": "好",
+        "confirm": "确认"
     },
 
     "expansion": {

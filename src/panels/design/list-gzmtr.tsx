@@ -175,7 +175,7 @@ const NotesLi = () => {
                     <ListItem>
                         <ListItemText disableTypography>
                             <Typography color="primary" style={{ cursor: 'pointer' }} onClick={handleAdd}>
-                                {t('design.notesGZMTR.addNotes')}
+                                {t('design.notesGZMTR.addNote')}
                             </Typography>
                         </ListItemText>
                     </ListItem>
@@ -280,7 +280,8 @@ const NoteEditDialog = (props: AddNoteDialogProps) => {
 
     const [noteZH, setNoteZH] = React.useState(note[0] || '');
     const [noteEN, setNoteEN] = React.useState(note[1] || '');
-    const handleClose = () => {
+
+    const handleClick = () => {
         dispatch({ type: 'UPDATE_NOTE_GZMTR', idx: props.idx, note: [noteZH, noteEN, note[2], note[3]] });
         props.onClose();
     };
@@ -288,23 +289,33 @@ const NoteEditDialog = (props: AddNoteDialogProps) => {
     return React.useMemo(
         () => (
             <Dialog open onClose={props.onClose}>
-                <DialogTitle>{t('design.notesGZMTR.addNotes')}</DialogTitle>
+                <DialogTitle>{t('design.notesGZMTR.editNote')}</DialogTitle>
                 <DialogContent>
                     <TextField
                         variant="outlined"
+                        label={t('editor.zh')}
+                        margin="dense"
                         multiline
                         autoFocus
                         value={noteZH}
                         onChange={e => setNoteZH(e.target.value)}
+                        style={{ width: '100%' }}
+                        helperText={t('editor.enterToWrap')}
                     />
-                    <TextField variant="outlined" multiline value={noteEN} onChange={e => setNoteEN(e.target.value)} />
+                    <TextField
+                        variant="outlined"
+                        label={t('editor.en')}
+                        margin="dense"
+                        multiline
+                        value={noteEN}
+                        onChange={e => setNoteEN(e.target.value)}
+                        style={{ width: '100%' }}
+                        helperText={t('editor.enterToWrap')}
+                    />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={props.onClose} color="primary">
-                        {t('dialog.cancel')}
-                    </Button>
-                    <Button onClick={handleClose} color="primary">
-                        {t('design.notesGZMTR.add')}
+                    <Button variant="contained" onClick={handleClick} color="primary">
+                        {t('dialog.done')}
                     </Button>
                 </DialogActions>
             </Dialog>

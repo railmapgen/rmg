@@ -119,10 +119,11 @@
         },
         "notesGZMTR": {
             "text": "Notes",
-            "addNotes": "Add notes",
+            "addNote": "Add note",
             "edit": "Edit",
             "remove": "Remove",
-            "add": "Add"
+            "add": "Add",
+            "editNote": "Edit note"
         }
     },
 
@@ -239,10 +240,17 @@
         "fgWhite": "White"
     },
 
+    "editor": {
+        "zh": "Chinese characters",
+        "en": "Latin characters",
+        "enterToWrap": "Use Enter key to wrap text"
+    },
+
     "dialog": {
         "done": "Done",
         "cancel": "Cancel",
-        "ok": "OK"
+        "ok": "OK",
+        "confirm": "Confirm"
     },
 
     "expansion": {
