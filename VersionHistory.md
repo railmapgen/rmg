@@ -1,5 +1,11 @@
 # Version History
 
+## 3.4.2 (19 Mar 2020)
+
+### Resolved Issues
+
+-   Fixed the issues in Guangzhou Metro or Shanghai Metro style where interchange text overflows.
+
 ## 3.4.1 (16 Mar 2020)
 
 ### New Features

@@ -3,7 +3,8 @@ import Destination from './destination';
 import RunIn from './runin';
 import RailMap from './railmap';
 import { makeStyles, createStyles, CircularProgress } from '@material-ui/core';
-import { CanvasContext } from '../context';
+import { CanvasContext, ParamContext } from '../context';
+import { ProvidedCanvas } from '../types';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -26,24 +27,41 @@ const useStyles = makeStyles(() =>
 const SVGs = () => {
     const classes = useStyles();
 
-    const { canvasAvailable, canvasToShown } = React.useContext(CanvasContext);
+    const { param } = React.useContext(ParamContext);
+    const { canvasAvailable, canvasToShown, canvasScale } = React.useContext(CanvasContext);
+
+    const sharedProps = (canvas: ProvidedCanvas): React.SVGProps<SVGSVGElement> => ({
+        id: canvas,
+        xmlns: 'http://www.w3.org/2000/svg',
+        xmlnsXlink: 'http://www.w3.org/1999/xlink',
+        height: param.svg_height * canvasScale,
+        viewBox: `0 0 ${param.svgWidth[canvas]} ${param.svg_height}`,
+        style: {
+            ['--rmg-svg-width' as any]: param.svgWidth[canvas] + 'px',
+            ['--rmg-svg-height' as any]: param.svg_height + 'px',
+            ['--rmg-theme-colour' as any]: param.theme[2],
+            ['--rmg-theme-fg' as any]: param.theme[3],
+        },
+    });
 
     return (
         <div className={classes.root}>
-            {canvasAvailable.includes('destination') && ['destination', 'all'].includes(canvasToShown) && (
-                <React.Suspense fallback={<CircularProgress />}>
-                    <Destination />
-                </React.Suspense>
-            )}
-            {canvasAvailable.includes('runin') && ['runin', 'all'].includes(canvasToShown) && (
-                <React.Suspense fallback={<CircularProgress />}>
-                    <RunIn />
-                </React.Suspense>
-            )}
-            {canvasAvailable.includes('railmap') && ['railmap', 'all'].includes(canvasToShown) && (
-                <React.Suspense fallback={<CircularProgress />}>
-                    <RailMap />
-                </React.Suspense>
+            {canvasAvailable.map(
+                canvas =>
+                    [canvas, 'all'].includes(canvasToShown) && (
+                        <React.Suspense key={canvas} fallback={<CircularProgress />}>
+                            {(c => {
+                                switch (c) {
+                                    case 'destination':
+                                        return <Destination {...sharedProps(c)} />;
+                                    case 'runin':
+                                        return <RunIn {...sharedProps(c)} />;
+                                    case 'railmap':
+                                        return <RailMap {...sharedProps(c)} />;
+                                }
+                            })(canvas)}
+                        </React.Suspense>
+                    )
             )}
         </div>
     );

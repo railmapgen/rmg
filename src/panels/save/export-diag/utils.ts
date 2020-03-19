@@ -16,10 +16,6 @@ export function test(svgEl: SVGSVGElement) {
 
     svgEl.querySelectorAll('.rmg-name__en.rmg-name__mtr--station').forEach(el => el.setAttribute('font-size', '11px'));
 
-    svgEl
-        .querySelectorAll('.rmg-name__en.rmg-name__gzmtr--station')
-        .forEach(el => el.setAttribute('font-size', '10.5px'));
-
     svgEl.querySelectorAll('.rmg-name__zh.IntName').forEach(el => el.setAttribute('font-size', '10px'));
 
     svgEl.querySelectorAll('.rmg-name__en.rmg-name__mtr--osi').forEach(el => el.setAttribute('font-size', '9px'));
@@ -28,15 +24,7 @@ export function test(svgEl: SVGSVGElement) {
         .querySelectorAll('.rmg-name__en.rmg-name__gzmtr--next2-dest')
         .forEach(el => el.setAttribute('font-size', '8.5px'));
 
-    svgEl.querySelectorAll('.rmg-name__en.rmg-name__gzmtr--int').forEach(el => el.setAttribute('font-size', '8px'));
-
-    svgEl
-        .querySelectorAll('.rmg-name__en.rmg-name__gzmtr--int-small, .rmg-name__en.IntName')
-        .forEach(el => el.setAttribute('font-size', '7px'));
-
-    svgEl
-        .querySelectorAll('.rmg-name__en.rmg-name__gzmtr--express')
-        .forEach(el => el.setAttribute('font-size', '6.5px'));
+    svgEl.querySelectorAll('.rmg-name__en.IntName').forEach(el => el.setAttribute('font-size', '7px'));
 
     svgEl
         .querySelectorAll('text:not([font-size]), tspan:not([font-size])')

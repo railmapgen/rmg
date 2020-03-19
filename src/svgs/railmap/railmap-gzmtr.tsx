@@ -4,13 +4,11 @@ import StripGZMTR from '../strip/strip-gzmtr';
 import MainGZMTR from './main/main-gzmtr';
 import { Note } from '../../types';
 
-const RailMapGZMTR = (props: React.SVGProps<SVGSVGElement>) => {
+const RailMapGZMTR = () => {
     const { param } = React.useContext(ParamContext);
     return (
-        <svg {...props}>
+        <>
             <DefsGZMTR />
-
-            <rect id="outer" x={0} y={0} />
 
             <StripGZMTR variant={param.info_panel_type} isShowLight={false} isShowPSD={false} />
 
@@ -26,7 +24,7 @@ const RailMapGZMTR = (props: React.SVGProps<SVGSVGElement>) => {
                     ))}
                 </>
             )}
-        </svg>
+        </>
     );
 };
 

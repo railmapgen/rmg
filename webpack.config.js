@@ -5,7 +5,7 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 module.exports = [
     {
         entry: {
-            index: './src/index3',
+            index: './src/index',
         },
         // uncomment devtool for debugging
         // devtool: 'inline-source-map',

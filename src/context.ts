@@ -210,11 +210,20 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
                 return {
                     ...state,
                     svg_dest_width: action.value,
+                    svgWidth: {
+                        ...state.svgWidth,
+                        destination: action.value,
+                        runin: action.value,
+                    },
                 };
             } else {
                 return {
                     ...state,
                     svg_width: action.value,
+                    svgWidth: {
+                        ...state.svgWidth,
+                        railmap: action.value,
+                    },
                 };
             }
         case 'SET_Y':

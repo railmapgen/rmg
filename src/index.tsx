@@ -34,6 +34,10 @@ switch (window.urlParams.get('style')) {
 }
 history.pushState({ url: window.location.href }, null, '?' + window.urlParams.toString());
 
+/**
+ * @param style Style selected
+ * @returns An ordered array of the provided canvases' id.
+ */
 const canvasAvailable = ((style): ProvidedCanvas[] => {
     switch (style) {
         case 'mtr':

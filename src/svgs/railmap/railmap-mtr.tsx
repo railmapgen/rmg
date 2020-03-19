@@ -4,17 +4,15 @@ import { ParamContext } from '../../context';
 import StripMTR from '../strip/strip-mtr';
 import MainMTR from './main/main-mtr';
 
-const RailMapMTR = (props: React.SVGProps<SVGSVGElement>) => {
+const RailMapMTR = () => {
     const { param } = React.useContext(ParamContext);
     return (
-        <svg {...props}>
+        <>
             <DefsMTR />
-
-            <rect id="outer" x={0} y={0} />
 
             <StripMTR stripPc={param.strip_pc} />
             <MainMTR />
-        </svg>
+        </>
     );
 };
 

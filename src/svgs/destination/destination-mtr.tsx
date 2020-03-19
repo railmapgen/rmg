@@ -3,17 +3,13 @@ import * as React from 'react';
 import { ParamContext } from '../../context';
 import StripMTR from '../strip/strip-mtr';
 
-const DestinationMTR = () => {
-    const { param } = React.useContext(ParamContext);
-
-    return (
-        <>
-            <DefsMTR />
-            <StripMTR stripPc={param.strip_pc} />
-            <InfoMTR />
-        </>
-    );
-};
+const DestinationMTR = React.memo(() => (
+    <>
+        <DefsMTR />
+        <StripMTR stripPc={90} />
+        <InfoMTR />
+    </>
+));
 
 export default DestinationMTR;
 
@@ -53,7 +49,7 @@ const InfoMTR = () => {
         ];
     }
 
-    const destNameEl = React.createRef<SVGGElement>();
+    const destNameEl = React.useRef<SVGGElement>();
     const [bBox, setBBox] = React.useState({ width: 0 } as DOMRect);
     React.useEffect(() => setBBox(destNameEl.current.getBBox()), [
         destNames.toString(),
@@ -71,26 +67,39 @@ const InfoMTR = () => {
                 xlinkHref="#arrow"
                 style={{ transform: `translateX(${arrowX}px)rotate(${param.direction === 'l' ? 0 : 180}deg)` }}
             />
-            <g id="platform" style={{ transform: `translateX(${platformNumX}px)` }}>
-                <circle cx={0} cy={0} r={75} />
-                <text className="rmg-name__zh" dy={0}>
-                    {param.platform_num}
-                </text>
-            </g>
+            <PlatformNum num={param.platform_num} transform={`translate(${platformNumX},0)`} />
             <g
                 ref={destNameEl}
-                style={{
-                    transform: `translate(${destNameX}px,-25px)`,
-                    textAnchor: param.direction === 'l' ? 'start' : 'end',
-                }}
+                textAnchor={param.direction === 'l' ? 'start' : 'end'}
+                transform={`translate(${destNameX},-25)`}
             >
-                <text className="rmg-name__zh" fontSize="90px">
-                    {(param.dest_legacy ? param.line_name[0] : '') + '往' + destNames[0]}
+                <text className="rmg-name__zh" fontSize={90}>
+                    {(param.customiseMTRDest.isLegacy ? param.line_name[0] : '') + '往' + destNames[0]}
                 </text>
-                <text className="rmg-name__en" fontSize="45px" dy={80}>
-                    {(param.dest_legacy ? param.line_name[1] + ' ' : '') + 'to ' + destNames[1]}
+                <text className="rmg-name__en" fontSize={45} dy={80}>
+                    {(param.customiseMTRDest.isLegacy ? param.line_name[1] + ' ' : '') + 'to ' + destNames[1]}
                 </text>
             </g>
+        </g>
+    );
+};
+
+const PlatformNum = (props: { num: string } & React.SVGProps<SVGGElement>) => {
+    const { num, ...others } = props;
+
+    return (
+        <g id="platform" {...others}>
+            {React.useMemo(
+                () => (
+                    <>
+                        <circle cx={0} cy={0} r={75} />
+                        <text className="rmg-name__zh" dy={0}>
+                            {num}
+                        </text>
+                    </>
+                ),
+                [num]
+            )}
         </g>
     );
 };

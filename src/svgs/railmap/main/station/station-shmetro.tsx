@@ -47,7 +47,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
     // get the exact station name width so that the
     // interchange station icon can be right after the station name
-    const stnNameEl = React.createRef<SVGGElement>();
+    const stnNameEl = React.useRef<SVGGElement>();
     // the original name position
     const [bBox, setBBox] = React.useState({ width: 0 } as DOMRect);
     React.useEffect(() => setBBox(stnNameEl.current.getBBox()), [props.name.toString()]);
@@ -66,12 +66,10 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 (nameENLn - 1) * 12 * Math.cos(-45)})rotate(-50)`}
             textAnchor="start"
         >
-            <g ref={stnNameEl}>
-                <StationName name={props.name} />
-            </g>
-            <g transform={`translate(${x},0)`}>
-                <IntBoxGroup intInfos={props.isOSI ? props.infos.flat() : props.infos[0]} stnState={props.stnState} />
-            </g>
+            <StationName ref={stnNameEl} name={props.name} />
+
+            <IntBoxGroup intInfos={props.isOSI ? props.infos.flat() : props.infos[0]} transform={`translate(${x},0)`} />
+
             {props.isOSI && (
                 <g transform={`translate(${x + props.infos.flat().length * 15},-30)`}>
                     <OSIText osiInfos={props.infos[1]} />
@@ -81,95 +79,81 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     );
 };
 
-const StationName = (props: { name: Name }) => {
-    return (
-        <>
-            <text className="rmg-name__zh rmg-name__shmetro--station">{props.name[0]}</text>
-            {props.name[1].split('\\').map((txt, i) => (
-                <text key={i} className="rmg-name__en rmg-name__shmetro--station" fontSize="60%" dy={12 * (i + 1)}>
-                    {txt}
-                </text>
-            ))}
-        </>
-    );
-};
+const StationName = React.forwardRef((props: { name: Name }, ref: React.Ref<SVGGElement>) =>
+    React.useMemo(
+        () => (
+            <g ref={ref}>
+                <text className="rmg-name__zh">{props.name[0]}</text>
+                <g fontSize="60%">
+                    {props.name[1].split('\\').map((txt, i) => (
+                        <text key={i} className="rmg-name__en" dy={12 * (i + 1)}>
+                            {txt}
+                        </text>
+                    ))}
+                </g>
+            </g>
+        ),
+        [props.name.toString()]
+    )
+);
 
-const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; stnState: -1 | 0 | 1 }) => {
+const IntBoxGroup = (props: { intInfos: InterchangeInfo[] } & React.SVGProps<SVGGElement>) => {
+    const { intInfos, ...others } = props;
+
     let dx = 0;
     return (
-        <>
-            {props.intInfos.map((info, i) => {
-                const lineNumber = String(info[4]).match(/(\d*)\w+/);
+        <g {...others}>
+            {intInfos.map((info, i) => {
+                // start with digit
+                const isLineNumber = Boolean(info[4].match(/^\d.*$/));
                 const el = (
                     <g transform={`translate(${dx},0)`} key={i}>
-                        {lineNumber ? (
-                            <IntBoxNumber info={info} stnState={props.stnState} />
-                        ) : (
-                            <IntBoxLetter info={info} stnState={props.stnState} />
-                        )}
+                        {isLineNumber ? <IntBoxNumber info={info} /> : <IntBoxLetter info={info} />}
                     </g>
                 );
                 // 20 + 5(margin) for number line
                 // 60 + 5(margin) for letter line
-                dx += lineNumber ? 25 : 65;
+                dx += isLineNumber ? 25 : info[4].length * 16 + 12 + 5;
                 return el;
             })}
-        </>
+        </g>
     );
 };
 
-const IntBoxNumber = (props: { info: InterchangeInfo; stnState: -1 | 0 | 1 }) => {
-    // line starts with numbers or letters
-    const lineNumber = String(props.info[4]).match(/(\d*)\w+/);
-
-    return (
+const IntBoxNumber = React.memo(
+    (props: { info: InterchangeInfo }) => (
         <>
-            <use
-                xlinkHref="#int_sh_number"
-                transform="translate(0,-12)"
-                fill={props.info[2]}
-                className={
-                    'rmg-line__shmetro rmg-line__change' +
-                    (props.stnState === -1 ? ' rmg-line__pass' : 'rmg-line__pass')
-                }
-            />
-            {/* // Todo: fix this hard-coded center(10) position */}
-            <text
-                transform="translate(10,8)"
-                className="rmg-name__zh rmg-name__shmetro--line_name"
-                textAnchor="middle"
-                fill={props.info[3]}
-            >
-                {lineNumber[0]}
+            <rect height={30} width={20} y={-15} fill={props.info[2]} />
+            <text x={10} className="rmg-name__zh" textAnchor="middle" fill={props.info[3]} dominantBaseline="central">
+                {/* // line starts with numbers */}
+                {String(props.info[4]).match(/(\d*)\w+/)[0]}
             </text>
         </>
-    );
-};
+    ),
+    (prevProps, nextProps) => prevProps.info.toString() === nextProps.info.toString()
+);
 
-const IntBoxLetter = (props: { info: InterchangeInfo; stnState: -1 | 0 | 1 }) => {
-    return (
-        <>
-            <use
-                xlinkHref="#int_sh_letter"
-                transform="translate(0,-12)"
-                fill={props.info[2]}
-                className={
-                    'rmg-line__shmetro rmg-line__change' +
-                    (props.stnState === -1 ? ' rmg-line__pass' : 'rmg-line__pass')
-                }
-            />
-            {/* // Todo: fix this hard-coded center(30) position */}
-            <text
-                transform="translate(30,8)"
-                className="rmg-name__zh rmg-name__shmetro--line_name"
-                textAnchor="middle"
-                fill={props.info[3]}
-            >
-                {props.info[4]}
-            </text>
-        </>
-    );
-};
+const IntBoxLetter = React.memo(
+    (props: { info: InterchangeInfo }) => {
+        // box width: 16 * number of characters + 12
+        const textCount = props.info[4].split('\\')[0].length;
+        return (
+            <>
+                <rect height={30} width={textCount * 16 + 12} y={-15} fill={props.info[2]} />
+                <text
+                    x={textCount * 8 + 6}
+                    className="rmg-name__zh"
+                    textAnchor="middle"
+                    fill={props.info[3]}
+                    dominantBaseline="central"
+                >
+                    {props.info[4].split('\\')[0]}
+                </text>
+            </>
+        );
+    },
+    (prevProps, nextProps) => prevProps.info.toString() === nextProps.info.toString()
+);
 
 const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
     // get the all names from the out of station changes

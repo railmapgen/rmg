@@ -9,5 +9,5 @@
         "module": "ESNext",
         "jsx": "react"
     },
-    "include": ["./src/index3.tsx"]
+    "include": ["./src/index.tsx"]
 }

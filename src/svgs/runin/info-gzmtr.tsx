@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { ParamContext } from '../../context';
 import StationNumberText from '../station-num-gzmtr';
+import { Name } from '../../types';
 
 const InfoGZMTR = () => {
     const { param } = React.useContext(ParamContext);
     const curStnInfo = param.stn_list[param.current_stn_idx];
 
-    const curNameEl = React.createRef<SVGGElement>();
+    const curNameEl = React.useRef<SVGGElement>();
     const [nameBBox, setNameBBox] = React.useState({ width: 0 } as DOMRect);
     React.useEffect(() => setNameBBox(curNameEl.current.getBBox()), [curStnInfo.name[0], curStnInfo.name[1]]);
 
@@ -14,52 +15,26 @@ const InfoGZMTR = () => {
 
     return (
         <g>
-            <g
-                id="platform"
-                style={{
-                    ['--translate-x' as any]: `${param.direction === 'l' ? param.svg_dest_width - 100 : 100}px`,
-                }}
-            >
-                <circle cx={0} cy={0} r={30} fill="var(--rmg-theme-colour)" />
-                <text className="rmg-name__en" fontSize="38px" dy={-9.5}>
-                    {param.platform_num}
-                </text>
-                <text className="rmg-name__zh" fontSize="13px" dy={10}>
-                    站台
-                </text>
-                <text className="rmg-name__en" fontSize="9px" dy={21}>
-                    Platform
-                </text>
-            </g>
-            <g
-                id="big_name"
+            <BigName
                 ref={curNameEl}
+                curName={curStnInfo.name}
                 style={{
                     ['--translate-y' as any]: `${0.5 * param.svg_height -
                         50 -
                         (curStnInfo.name[1].split('\\').length - 1) * 18}px`,
                 }}
-            >
-                <text className="rmg-name__zh" fontSize="90px">
-                    {curStnInfo.name[0]}
-                </text>
-                {curStnInfo.name[1].split('\\').map((txt, i) => (
-                    <text key={i} className="rmg-name__en" dy={70 + i * 36} fontSize="36px">
-                        {txt}
-                    </text>
-                ))}
-            </g>
-            <g
-                id="big_stn_num"
+            />
+
+            <BigStnNum
+                lineNum={param.line_num}
+                stnNum={curStnInfo.num}
                 style={{
                     ['--translate-x' as any]: `${(param.svg_dest_width + nameBBox.width) / 2 + 55}px`,
                     ['--translate-y' as any]: `${0.5 * param.svg_height -
                         30 -
                         (curStnInfo.name[1].split('\\').length - 1) * 18}px`,
                 }}
-            >
-                <BigStnNum lineNum={param.line_num} stnNum={curStnInfo.num} />
-            </g>
+            />
 
             {nextStnId.includes('linestart') || nextStnId.includes('lineend') ? (
                 <></>
@@ -74,20 +49,54 @@ const InfoGZMTR = () => {
 
 export default InfoGZMTR;
 
-const BigStnNum = React.memo(
-    (props: { lineNum: string; stnNum: string }) => (
-        <>
-            <path
-                className="rmg-stn rmg-stn--future"
-                d="M 0,12.95 V -12.95 H -12.95 a 12.95,12.95 0 0,0 0,25.9 h 25.9 a 12.95,12.95 0 0,0 0,-25.9 H 0 "
-            />
-            <g transform="scale(1.4)">
-                <StationNumberText {...props} />
+const BigName = React.forwardRef(
+    (props: { curName: Name } & React.SVGProps<SVGGElement>, ref: React.Ref<SVGGElement>) => {
+        const { curName, ...others } = props;
+
+        return (
+            <g id="big_name" ref={ref} {...others}>
+                {React.useMemo(
+                    () => (
+                        <>
+                            <text className="rmg-name__zh" fontSize={90}>
+                                {curName[0]}
+                            </text>
+                            <g fontSize={36} className="rmg-name__en">
+                                {curName[1].split('\\').map((txt, i) => (
+                                    <text key={i} dy={70 + i * 36}>
+                                        {txt}
+                                    </text>
+                                ))}
+                            </g>
+                        </>
+                    ),
+                    [curName]
+                )}
             </g>
-        </>
-    ),
-    (prevProps, nextProps) => prevProps.lineNum === nextProps.lineNum && prevProps.stnNum === nextProps.stnNum
+        );
+    }
 );
+
+const BigStnNum = (props: { lineNum: string; stnNum: string } & React.SVGProps<SVGGElement>) => {
+    const { lineNum, stnNum, ...others } = props;
+
+    return (
+        <g id="big_stn_num" {...others}>
+            {React.useMemo(
+                () => (
+                    <>
+                        <path
+                            className="rmg-stn rmg-stn--future"
+                            d="M 0,12.95 V -12.95 H -12.95 a 12.95,12.95 0 0,0 0,25.9 h 25.9 a 12.95,12.95 0 0,0 0,-25.9 H 0 "
+                        />
+                        <StationNumberText transform="scale(1.4)" {...{ lineNum, stnNum }} />
+                    </>
+                ),
+                [lineNum, stnNum]
+            )}
+        </g>
+    );
+};
 
 const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
     const { param } = React.useContext(ParamContext);

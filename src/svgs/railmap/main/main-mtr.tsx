@@ -38,8 +38,13 @@ const MainMTR = () => {
 
     const adjMat = adjacencyList(param.stn_list, leftWideFactor, rightWideFactor);
 
-    const criticalPath = criticalPathMethod('linestart', 'lineend', adjMat);
-    const realCP = criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat);
+    const criticalPath = React.useMemo(() => criticalPathMethod('linestart', 'lineend', adjMat), [
+        JSON.stringify(adjMat),
+    ]);
+    const realCP = React.useMemo(
+        () => criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat),
+        [JSON.stringify(adjMat)]
+    );
 
     const xShares = React.useMemo(() => {
         console.log('computing x shares');

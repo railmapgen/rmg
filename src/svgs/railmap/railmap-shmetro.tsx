@@ -1,18 +1,13 @@
 import * as React from 'react';
-import { ParamContext } from '../../context';
 import MainSHMetro from './main/main-shmetro';
 
-const RailMapSHMetro = (props: React.SVGProps<SVGSVGElement>) => {
-    const { param } = React.useContext(ParamContext);
-    return (
-        <svg {...props}>
-            <DefsSHMetro />
-            <rect id="outer" x={0} y={0} />
+const RailMapSHMetro = React.memo(() => (
+    <>
+        <DefsSHMetro />
 
-            <MainSHMetro />
-        </svg>
-    );
-};
+        <MainSHMetro />
+    </>
+));
 
 export default RailMapSHMetro;
 
@@ -34,7 +29,5 @@ const DefsSHMetro = React.memo(() => (
             strokeWidth={2}
             d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"
         />
-        <rect id="int_sh_number" height={30} width={20} />
-        <rect id="int_sh_letter" height={30} width={60} />
     </defs>
 ));
