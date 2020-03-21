@@ -6,6 +6,7 @@
         "allowJs": true,
         "sourceMap": true,
         "moduleResolution": "node",
+        "downlevelIteration": true,
         "module": "ESNext",
         "jsx": "react"
     },

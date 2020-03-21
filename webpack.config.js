@@ -1,6 +1,5 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WorkboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = [
     {
@@ -39,7 +38,6 @@ module.exports = [
             publicPath: './dist/',
         },
         externals: {
-            // jquery: 'jQuery',
             react: 'React',
             'react-dom': 'ReactDOM',
             i18next: 'i18next',
