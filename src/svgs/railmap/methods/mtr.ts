@@ -1,5 +1,4 @@
 import { Stations } from './share';
-import { StationInfo } from '../../../types';
 
 export class StationsMTR extends Stations {
     protected leftWideFactor = (stnId: string) => {

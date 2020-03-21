@@ -61,8 +61,11 @@
     "layout": {
         "size": {
             "title": "画布尺寸",
-            "destWidth": "站名牌宽度",
-            "width": "线路图宽度",
+            "width": {
+                "destination": "终点站牌宽度",
+                "runin": "站名牌宽度",
+                "railmap": "线路图宽度"
+            },
             "height": "画布高度"
         },
         "y": "垂直位置",
@@ -70,6 +73,8 @@
         "padding": "线路图边距",
         "directionGZ": {
             "title": "终点站指示位置",
+            "horizontal": "水平位置",
+            "vertical": "垂直位置",
             "left": "左",
             "right": "右",
             "top": "顶部",
@@ -123,7 +128,8 @@
             "edit": "编辑",
             "remove": "删除",
             "add": "添加",
-            "editNote": "编辑备注"
+            "editNote": "编辑备注",
+            "border": "显示边框"
         }
     },
 

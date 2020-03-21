@@ -21,6 +21,12 @@ const darkTheme = createMuiTheme({
             main: '#cf6679',
         },
     },
+    // palette: {
+    //     type: 'dark',
+    //     primary: {
+    //         main: '#8ab4f8',
+    //     },
+    // },
     overrides: {
         MuiDialog: {
             paper: {
@@ -45,8 +51,7 @@ const lightTheme = createMuiTheme({
     },
     // palette: {
     //     primary: {
-    //         light: '#1A73E8',
-    //         main: '#3367D6',
+    //         main: '#1a73e8',
     //     },
     //     text: {
     //         primary: '#202124',

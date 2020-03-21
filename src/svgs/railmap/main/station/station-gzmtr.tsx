@@ -53,7 +53,7 @@ const StationGZMTR = (props: Props) => {
                 tickRotation={tickRotation}
             />
             <g>
-                <use xlinkHref="#stn" className={props.stnState === -1 ? 'rmg-stn--pass' : 'rmg-stn--future'} />
+                <use xlinkHref="#stn" stroke={props.stnState === -1 ? '#aaa' : 'var(--rmg-theme-colour)'} />
                 <StationNumberText
                     className={`Name ${props.stnState === -1 ? 'Pass' : 'Future'}`}
                     lineNum={param.line_num}
@@ -146,7 +146,7 @@ interface IntGroupProps {
 
 const IntGroup = (props: IntGroupProps) => (
     <>
-        <IntTicks className="rmg-line rmg-line__gzmtr rmg-line__change" {...props} />
+        <IntTicks strokeWidth={4} {...props} />
         <IntBoxs transform={`translate(0,${props.tickRotation === 180 ? -47 : 23})`} {...props} />
     </>
 );

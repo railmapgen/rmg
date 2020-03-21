@@ -66,14 +66,14 @@ const TerminalStation = (props: RunInProps) => {
                 id="run_in_line_shmetro"
                 transform={`translate(0,${220 + props.dh})`}
                 fill="gray"
-                d={`M24,10 H ${param.svg_dest_width - 20} V 22 H 24 Z`}
+                d={`M24,10 H ${param.svgWidth.runin - 20} V 22 H 24 Z`}
             />
             <g
                 id="current_text"
                 transform={
                     param.direction === 'l'
                         ? `translate(${30}, ${props.dh + 160})`
-                        : `translate(${param.svg_dest_width - 30}, ${props.dh + 160})`
+                        : `translate(${param.svgWidth.runin - 30}, ${props.dh + 160})`
                 }
                 textAnchor={param.direction === 'l' ? 'start' : 'end'}
             >
@@ -95,15 +95,15 @@ const OriginStation = (props: RunInProps) => {
                 fill="var(--rmg-theme-colour)"
                 d={
                     param.direction === 'l'
-                        ? `M38,10 H ${param.svg_dest_width - 20} l 0,12 H 24 Z`
-                        : `M24,10 H ${param.svg_dest_width - 30} l 12,12 H 24 Z`
+                        ? `M38,10 H ${param.svgWidth.runin - 20} l 0,12 H 24 Z`
+                        : `M24,10 H ${param.svgWidth.runin - 30} l 12,12 H 24 Z`
                 }
             />
             <g
                 id="current_text"
                 transform={
                     param.direction === 'l'
-                        ? `translate(${param.svg_dest_width - 30}, ${props.dh + 160})`
+                        ? `translate(${param.svgWidth.runin - 30}, ${props.dh + 160})`
                         : `translate(${30}, ${props.dh + 160})`
                 }
                 textAnchor={param.direction === 'l' ? 'end' : 'start'}
@@ -124,7 +124,7 @@ interface RunInGeneralProps {
 const GeneralStation = (props: RunInGeneralProps) => {
     const { param } = React.useContext(ParamContext);
 
-    const middle = param.svg_dest_width / 2;
+    const middle = param.svgWidth.runin / 2;
 
     return (
         <>
@@ -135,7 +135,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
                 d={
                     param.direction === 'l'
                         ? `M 38,10 H ${middle} V 22 H 24 Z`
-                        : `M ${middle},10 H ${param.svg_dest_width - 30} l 12,12 H ${middle} Z`
+                        : `M ${middle},10 H ${param.svgWidth.runin - 30} l 12,12 H ${middle} Z`
                 }
             />
             <path
@@ -144,7 +144,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
                 transform={`translate(0,${220 + props.dh})`}
                 d={
                     param.direction === 'l'
-                        ? `M ${middle},10 H ${param.svg_dest_width - 30} l 0,12 H ${middle} Z`
+                        ? `M ${middle},10 H ${param.svgWidth.runin - 30} l 0,12 H ${middle} Z`
                         : `M 24,10 H ${middle} l 0,12 H 24 Z`
                 }
             />
@@ -155,18 +155,18 @@ const GeneralStation = (props: RunInGeneralProps) => {
                         fill="var(--rmg-theme-colour)"
                         d={
                             param.direction === 'l'
-                                ? `M 38,10 H ${param.svg_dest_width / 6 + 3} V 22 H 24 Z`
-                                : `M ${(param.svg_dest_width / 6) * 5 - 3},10 H ${param.svg_dest_width -
-                                      30} l 12,12 H ${(param.svg_dest_width / 6) * 5 - 3} Z`
+                                ? `M 38,10 H ${param.svgWidth.runin / 6 + 3} V 22 H 24 Z`
+                                : `M ${(param.svgWidth.runin / 6) * 5 - 3},10 H ${param.svgWidth.runin -
+                                      30} l 12,12 H ${(param.svgWidth.runin / 6) * 5 - 3} Z`
                         }
                     />
                     <line
                         id="run_in_line_branch_slash_shmetro"
                         stroke="var(--rmg-theme-colour)"
                         strokeWidth="12"
-                        x1={param.direction === 'l' ? param.svg_dest_width / 6 : (param.svg_dest_width / 6) * 5}
+                        x1={param.direction === 'l' ? param.svgWidth.runin / 6 : (param.svgWidth.runin / 6) * 5}
                         y1={15}
-                        x2={param.direction === 'l' ? param.svg_dest_width / 3 : (param.svg_dest_width / 6) * 4}
+                        x2={param.direction === 'l' ? param.svgWidth.runin / 3 : (param.svgWidth.runin / 6) * 4}
                         y2={125}
                     />
                 </g>
@@ -178,25 +178,25 @@ const GeneralStation = (props: RunInGeneralProps) => {
                         fill="gray"
                         d={
                             param.direction === 'l'
-                                ? `M ${(param.svg_dest_width / 6) * 5 - 3},10 H ${param.svg_dest_width -
-                                      30} l 0,12 H ${(param.svg_dest_width / 6) * 5 - 3} Z`
-                                : `M 24,10 H ${param.svg_dest_width / 6 + 3} V 22 H 24 Z`
+                                ? `M ${(param.svgWidth.runin / 6) * 5 - 3},10 H ${param.svgWidth.runin -
+                                      30} l 0,12 H ${(param.svgWidth.runin / 6) * 5 - 3} Z`
+                                : `M 24,10 H ${param.svgWidth.runin / 6 + 3} V 22 H 24 Z`
                         }
                     />
                     <line
                         id="run_in_line_branch_slash_shmetro_pass"
                         stroke="gray"
                         strokeWidth="12"
-                        x1={param.direction === 'l' ? (param.svg_dest_width / 6) * 5 : param.svg_dest_width / 6}
+                        x1={param.direction === 'l' ? (param.svgWidth.runin / 6) * 5 : param.svgWidth.runin / 6}
                         y1={15}
-                        x2={param.direction === 'l' ? (param.svg_dest_width / 6) * 4 : param.svg_dest_width / 3}
+                        x2={param.direction === 'l' ? (param.svgWidth.runin / 6) * 4 : param.svgWidth.runin / 3}
                         y2={125}
                     />
                 </g>
             )}
             <g
                 id="current_text"
-                transform={`translate(${param.svg_dest_width / 2}, ${props.dh + 160})`}
+                transform={`translate(${param.svgWidth.runin / 2}, ${props.dh + 160})`}
                 textAnchor="middle"
             >
                 <CurrentText />
@@ -227,7 +227,7 @@ const CurrentText = () => {
 const PrevStn = (props: RunInProps) => {
     const { param } = React.useContext(ParamContext);
 
-    const x = param.direction === 'l' ? param.svg_dest_width - 30 : 30;
+    const x = param.direction === 'l' ? param.svgWidth.runin - 30 : 30;
     const dx = param.direction === 'l' ? -50 : 50;
     const txtAnchor = param.direction === 'l' ? 'end' : 'start';
 
@@ -270,7 +270,7 @@ const PrevStn = (props: RunInProps) => {
 const NextStn = (props: RunInProps) => {
     const { param } = React.useContext(ParamContext);
 
-    const x = param.direction === 'l' ? 30 : param.svg_dest_width - 30;
+    const x = param.direction === 'l' ? 30 : param.svgWidth.runin - 30;
     const dx = param.direction === 'l' ? 50 : -50;
     const txtAnchor = param.direction === 'l' ? 'start' : 'end';
 

@@ -57,7 +57,7 @@ const InfoMTR = () => {
     ]);
 
     const flagLength = 160 + 150 + bBox.width + 45 + 50;
-    const arrowX = (param.svg_dest_width - (param.direction === 'l' ? 1 : -1) * flagLength) / 2;
+    const arrowX = (param.svgWidth.destination - (param.direction === 'l' ? 1 : -1) * flagLength) / 2;
     const platformNumX = arrowX + (param.direction === 'l' ? 1 : -1) * (160 + 50 + 75);
     const destNameX = platformNumX + (param.direction === 'l' ? 1 : -1) * (75 + 45);
 

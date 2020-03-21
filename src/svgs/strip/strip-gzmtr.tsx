@@ -39,45 +39,6 @@ const StripGZMTR = (props: Props) => {
         }
     }, [props.variant]);
 
-    const psd = React.useMemo(() => {
-        return (
-            <g
-                id="big_psd"
-                style={{
-                    fill: ['gz3', 'gz1421', 'gz1'].includes(props.variant)
-                        ? 'var(--rmg-theme-fg)'
-                        : '#000',
-                    ['--psd-dy' as any]: ['gz1', 'gz3'].includes(props.variant)
-                        ? '82px'
-                        : props.variant === 'gz1421'
-                        ? '62px'
-                        : '58px',
-                }}
-            >
-                <rect
-                    height={40}
-                    width={40}
-                    rx={4}
-                    x={-20}
-                    style={{
-                        fill: ['gz3', 'gz1421', 'gz1'].includes(props.variant)
-                            ? 'var(--rmg-theme-colour)'
-                            : '#fff',
-                    }}
-                />
-                <text className="rmg-name__en" fontSize="20px" dy={12}>
-                    {props.isShowPSD}
-                </text>
-                <text className="rmg-name__zh" fontSize="12px" dy={26}>
-                    屏蔽门
-                </text>
-                <text className="rmg-name__en" fontSize="6.5px" dy={36}>
-                    Screen Door
-                </text>
-            </g>
-        );
-    }, [props.variant, props.isShowPSD]);
-
     return (
         <g>
             <rect
@@ -88,15 +49,48 @@ const StripGZMTR = (props: Props) => {
             />
             <g
                 style={{
-                    transform:
-                        'translate(calc(var(--rmg-svg-width) / 2),calc(var(--rmg-svg-height) - 30px))',
+                    transform: 'translate(calc(var(--rmg-svg-width) / 2),calc(var(--rmg-svg-height) - 30px))',
                 }}
             >
                 {props.isShowLight && indicatorLight}
             </g>
-            {props.isShowPSD && psd}
+            {props.isShowPSD && <PSD {...props} />}
         </g>
     );
 };
 
 export default StripGZMTR;
+
+const PSD = React.memo(
+    (props: Props) => (
+        <g
+            id="big_psd"
+            fill={['gz3', 'gz1421', 'gz1'].includes(props.variant) ? 'var(--rmg-theme-fg)' : '#000'}
+            style={{
+                ['--psd-dy' as any]: ['gz1', 'gz3'].includes(props.variant)
+                    ? '82px'
+                    : props.variant === 'gz1421'
+                    ? '62px'
+                    : '58px',
+            }}
+        >
+            <rect
+                height={40}
+                width={40}
+                rx={4}
+                x={-20}
+                fill={['gz3', 'gz1421', 'gz1'].includes(props.variant) ? 'var(--rmg-theme-colour)' : '#fff'}
+            />
+            <text className="rmg-name__en" fontSize={20} dy={12}>
+                {props.isShowPSD}
+            </text>
+            <text className="rmg-name__zh" fontSize={12} dy={26}>
+                屏蔽门
+            </text>
+            <text className="rmg-name__en" fontSize={6.5} dy={36}>
+                Screen Door
+            </text>
+        </g>
+    ),
+    (prevProps, nextProps) => prevProps.variant === nextProps.variant && prevProps.isShowPSD === nextProps.isShowPSD
+);

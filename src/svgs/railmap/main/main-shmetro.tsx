@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { ParamContext } from '../../../context';
-import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine } from '../methods/share';
-import { StationsSHMetro } from '../methods/shmetro';
+import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState } from '../methods/share';
 import StationSHMetro from './station/station-shmetro';
 
 const MainSHMetro = () => {
@@ -24,8 +23,8 @@ const MainSHMetro = () => {
         );
     }, [branches.toString(), JSON.stringify(adjMat)]);
     const lineXs: [number, number] = [
-        (param.svg_width * param.padding) / 100,
-        param.svg_width * (1 - param.padding / 100),
+        (param.svgWidth.railmap * param.padding) / 100,
+        param.svgWidth.railmap * (1 - param.padding / 100),
     ];
     const xs = Object.keys(xShares).reduce(
         (acc, cur) => ({ ...acc, [cur]: lineXs[0] + (xShares[cur] / realCP.len) * (lineXs[1] - lineXs[0]) }),
@@ -44,10 +43,11 @@ const MainSHMetro = () => {
         {} as typeof yShares
     );
 
-    let stnStates = {} as { [stnId: string]: -1 | 0 | 1 };
-    Object.keys(param.stn_list).forEach(
-        stnId => (stnStates[stnId] = StationsSHMetro.getStnState(stnId, param.current_stn_idx, param.direction, routes))
-    );
+    const stnStates = React.useMemo(() => getStnState(param.current_stn_idx, routes, param.direction), [
+        param.current_stn_idx,
+        param.direction,
+        routes.toString(),
+    ]);
 
     const linePaths = drawLine(branches, stnStates);
     const paths = Object.keys(linePaths).reduce(

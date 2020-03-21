@@ -87,7 +87,15 @@ export interface StationTransfer {
     info: InterchangeInfo[][];
 }
 
-export type Note = [string, string, number, number];
+/**
+ * Array of a single note entry for Guangzhou Metro style.
+ * @property 0 - text in Chinese characters
+ * @property 1 - text in Latin characters
+ * @property 2 - percentage of horizontal position
+ * @property 3 - percentage of vertical position
+ * @property 4 - flag of showing border
+ */
+export type Note = [string, string, number, number, boolean];
 
 /**
  * Dictionary of configuration parameters for RMG, stored in `localStorage` as string.

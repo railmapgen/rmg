@@ -26,6 +26,7 @@ import {
     Menu,
     MenuItem,
     Slider,
+    Switch,
 } from '@material-ui/core';
 
 import { ParamContext, paramReducer } from '../../context';
@@ -66,7 +67,6 @@ const DesignListGZMTR = () => {
                 <TextField
                     value={param.line_num}
                     onChange={e => dispatch({ type: 'SET_LINE_NUM', num: e.target.value })}
-                    style={{ marginRight: 5 }}
                 />
             </ListItem>
             <Divider />
@@ -254,6 +254,25 @@ const NotesEntry = (props: { idx: number; onEdit: () => void }) => {
                                     valueLabelDisplay="auto"
                                 />
                             </ListItem>
+                            <ListItem>
+                                <ListItemText primary={t('design.notesGZMTR.border')} />
+                                <ListItemSecondaryAction>
+                                    <Switch
+                                        edge="end"
+                                        color="primary"
+                                        checked={param.notesGZMTR[props.idx][4]}
+                                        onChange={(_, checked) =>
+                                            dispatch({
+                                                type: 'UPDATE_NOTE_GZMTR',
+                                                idx: props.idx,
+                                                note: param.notesGZMTR[props.idx].map((val, i) =>
+                                                    i === 4 ? checked : val
+                                                ) as Note,
+                                            })
+                                        }
+                                    />
+                                </ListItemSecondaryAction>
+                            </ListItem>
 
                             <MenuItem onClick={handleRemove}>{t('design.notesGZMTR.remove')}</MenuItem>
                         </Menu>
@@ -282,7 +301,7 @@ const NoteEditDialog = (props: AddNoteDialogProps) => {
     const [noteEN, setNoteEN] = React.useState(note[1] || '');
 
     const handleClick = () => {
-        dispatch({ type: 'UPDATE_NOTE_GZMTR', idx: props.idx, note: [noteZH, noteEN, note[2], note[3]] });
+        dispatch({ type: 'UPDATE_NOTE_GZMTR', idx: props.idx, note: [noteZH, noteEN, note[2], note[3], note[4]] });
         props.onClose();
     };
 

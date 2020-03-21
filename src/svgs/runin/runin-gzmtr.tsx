@@ -13,7 +13,7 @@ const RunInGZMTR = () => {
             <PlatformNum
                 num={param.platform_num}
                 style={{
-                    ['--translate-x' as any]: `${param.direction === 'l' ? param.svg_dest_width - 100 : 100}px`,
+                    ['--translate-x' as any]: `${param.direction === 'l' ? param.svgWidth.runin - 100 : 100}px`,
                 }}
             />
 

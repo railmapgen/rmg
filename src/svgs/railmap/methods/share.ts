@@ -104,6 +104,46 @@ export const getYReal = (stnId: string, param: RMGParam) => {
     return -getYShare(stnId, param.stn_list) * param.branch_spacing;
 };
 
+const _isPredecessor = (stnId1: string, stnId2: string, routes: string[][]) => {
+    for (let route of routes) {
+        let idx1 = route.indexOf(stnId1);
+        let idx2 = route.indexOf(stnId2);
+        if (idx2 !== -1 && idx2 < idx1) return true;
+    }
+    return false;
+};
+
+const _isSuccessor = (stnId1: string, stnId2: string, routes: string[][]) => {
+    for (let route of routes) {
+        let idx1 = route.indexOf(stnId1);
+        let idx2 = route.indexOf(stnId2);
+        if (idx1 !== -1 && idx1 < idx2) return true;
+    }
+    return false;
+};
+
+export const getStnState = (
+    currentId: string,
+    routes: string[][],
+    direction: 'l' | 'r'
+): { [stnId: string]: -1 | 0 | 1 } => {
+    console.log("computing stations' states");
+    return [...new Set([].concat(...routes))].reduce(
+        (acc, cur: string) => ({
+            ...acc,
+            [cur]:
+                cur === currentId
+                    ? 0
+                    : (direction === 'r'
+                        ? _isSuccessor(currentId, cur, routes)
+                        : _isPredecessor(currentId, cur, routes))
+                    ? 1
+                    : -1,
+        }),
+        {}
+    );
+};
+
 export class Stations {
     yShares = {} as { [stnId: string]: number };
     xShares = {} as { [stnId: string]: number };
@@ -183,39 +223,6 @@ export class Stations {
         });
 
         return stations.yShares;
-    }
-
-    private isPredecessor(stnId1: string, stnId2: string, routes: string[][]) {
-        for (let route of routes) {
-            let idx1 = route.indexOf(stnId1);
-            let idx2 = route.indexOf(stnId2);
-            if (idx1 !== -1 && idx2 !== -1 && idx2 < idx1) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private isSuccessor(stnId1: string, stnId2: string, routes: string[][]) {
-        for (let route of routes) {
-            let idx1 = route.indexOf(stnId1);
-            let idx2 = route.indexOf(stnId2);
-            if (idx1 !== -1 && idx2 !== -1 && idx1 < idx2) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    static getStnState(stnId: string, currentId: string, direction: 'l' | 'r', routes: string[][]) {
-        if (stnId == currentId) {
-            return 0;
-        }
-        if (direction == 'r') {
-            return new this({}).isSuccessor(currentId, stnId, routes) ? 1 : -1;
-        } else {
-            return new this({}).isPredecessor(currentId, stnId, routes) ? 1 : -1;
-        }
     }
 
     private getNamePos(stnId: string) {

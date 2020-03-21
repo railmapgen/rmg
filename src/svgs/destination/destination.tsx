@@ -9,10 +9,9 @@ const Destination = (style => {
     }
 })(window.urlParams.get('style'));
 
-const DestinationBase = (props: React.SVGProps<SVGSVGElement>) => (
+const DestinationBase = (props: React.SVGProps<SVGSVGElement> & { children?: React.ReactNode }) => (
     <svg {...props}>
-        <rect id="outer" x={0} y={0} />
-
+        {props.children}
         <Destination />
     </svg>
 );

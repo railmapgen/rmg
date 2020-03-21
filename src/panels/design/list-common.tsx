@@ -58,7 +58,7 @@ const DesignList = () => {
                         </span>
                     }
                 />
-                <Icon color="action">open_in_new</Icon>
+                <Icon color="action">arrow_right</Icon>
             </ListItem>
             <ColourDialog
                 open={isCDiagOpen}

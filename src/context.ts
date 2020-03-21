@@ -39,7 +39,7 @@ type ReducerAction =
       }
     | {
           type: 'SET_WIDTH';
-          targetId: 'destination' | 'railmap';
+          targetId: ProvidedCanvas;
           value: number;
       }
     | {
@@ -206,26 +206,13 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
                 svg_height: action.value,
             };
         case 'SET_WIDTH':
-            if (action.targetId === 'destination') {
-                return {
-                    ...state,
-                    svg_dest_width: action.value,
-                    svgWidth: {
-                        ...state.svgWidth,
-                        destination: action.value,
-                        runin: action.value,
-                    },
-                };
-            } else {
-                return {
-                    ...state,
-                    svg_width: action.value,
-                    svgWidth: {
-                        ...state.svgWidth,
-                        railmap: action.value,
-                    },
-                };
-            }
+            return {
+                ...state,
+                svgWidth: {
+                    ...state.svgWidth,
+                    [action.targetId]: action.value,
+                },
+            };
         case 'SET_Y':
             return {
                 ...state,
@@ -311,7 +298,7 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
         case 'ADD_NOTE_GZMTR':
             return {
                 ...state,
-                notesGZMTR: state.notesGZMTR.concat([['', '', 0, 0]]),
+                notesGZMTR: state.notesGZMTR.concat([['', '', 0, 0, false]]),
             };
         case 'REMOVE_NOTE_GZMTR':
             return {

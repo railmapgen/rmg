@@ -1,61 +1,93 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Slider } from '@material-ui/core';
-import StyledExpansionPanel from './styled-expansion-panel';
+import {
+    Slider,
+    ListItem,
+    ListItemText,
+    Icon,
+    Collapse,
+    makeStyles,
+    createStyles,
+    List,
+    ListItemIcon,
+    Divider,
+} from '@material-ui/core';
 import { ParamContext } from '../../context';
 
-interface Props {
-    expanded: false | number;
-    onChange: (index: number) => (event, isExpanded: boolean) => void;
-}
+const useStyles = makeStyles(theme =>
+    createStyles({
+        nestedList: {
+            paddingLeft: theme.spacing(5),
+        },
+        slider: {
+            width: 168,
+            marginLeft: 8,
+            marginRight: 8,
+        },
+    })
+);
 
-const LayoutGZMTR = (props: Props) => {
+export default React.memo(function LayoutGZMTR() {
+    return (
+        <>
+            <Divider />
+            <DirectionGZLi />
+        </>
+    );
+});
+
+const DirectionGZLi = () => {
     const { t } = useTranslation();
-
+    const classes = useStyles();
     const { param, dispatch } = React.useContext(ParamContext);
 
-    const [isGrow, setIsGrow] = React.useState(false);
-    React.useEffect(() => {
-        setIsGrow(true);
-        return () => setIsGrow(false);
-    }, []);
+    const [isOpen, setIsOpen] = React.useState(false);
 
-    const directionGZPanel = React.useMemo(
+    return React.useMemo(
         () => (
-            <StyledExpansionPanel
-                in={isGrow}
-                growTimeout={1000}
-                expanded={props.expanded === 4}
-                onChange={props.onChange(4)}
-                icon="open_with"
-                heading={t('layout.directionGZ.title')}
-            >
-                <Slider
-                    value={param.direction_gz_x}
-                    onChange={(_, value: number) => dispatch({ type: 'SET_DIRECTION_GZ_X', value })}
-                    step={0.01}
-                    marks={[
-                        { value: 0, label: t('layout.directionGZ.left') },
-                        { value: 100, label: t('layout.directionGZ.right') },
-                    ]}
-                    valueLabelDisplay="auto"
-                />
-                <Slider
-                    value={param.direction_gz_y}
-                    onChange={(_, value: number) => dispatch({ type: 'SET_DIRECTION_GZ_Y', value })}
-                    step={0.01}
-                    marks={[
-                        { value: 0, label: t('layout.directionGZ.top') },
-                        { value: 100, label: t('layout.directionGZ.bottom') },
-                    ]}
-                    valueLabelDisplay="auto"
-                />
-            </StyledExpansionPanel>
+            <>
+                <ListItem button onClick={() => setIsOpen(prevOpen => !prevOpen)}>
+                    <ListItemIcon>
+                        <Icon>open_with</Icon>
+                    </ListItemIcon>
+                    <ListItemText primary={t('layout.directionGZ.title')} />
+                    {isOpen ? <Icon color="action">expand_less</Icon> : <Icon color="action">expand_more</Icon>}
+                </ListItem>
+                <Collapse in={isOpen} unmountOnExit>
+                    <List component="div" disablePadding className={classes.nestedList}>
+                        <ListItem>
+                            <ListItemText primary={t('layout.directionGZ.horizontal')} />
+                            <Slider
+                                className={classes.slider}
+                                value={param.direction_gz_x}
+                                onChange={(_, value: number) => dispatch({ type: 'SET_DIRECTION_GZ_X', value })}
+                                step={0.01}
+                                marks={[
+                                    { value: 0, label: t('layout.directionGZ.left') },
+                                    { value: 100, label: t('layout.directionGZ.right') },
+                                ]}
+                                valueLabelDisplay="auto"
+                            />
+                        </ListItem>
+                        <Divider variant="middle" />
+                        <ListItem>
+                            <ListItemText primary={t('layout.directionGZ.vertical')} />
+                            <Slider
+                                className={classes.slider}
+                                value={param.direction_gz_y}
+                                onChange={(_, value: number) => dispatch({ type: 'SET_DIRECTION_GZ_Y', value })}
+                                step={0.01}
+                                marks={[
+                                    { value: 0, label: t('layout.directionGZ.top') },
+                                    { value: 100, label: t('layout.directionGZ.bottom') },
+                                ]}
+                                valueLabelDisplay="auto"
+                            />
+                        </ListItem>
+                    </List>
+                </Collapse>
+            </>
         ),
-        [props.expanded, isGrow, param.direction_gz_x, param.direction_gz_y]
+        [param.direction_gz_x, param.direction_gz_y, isOpen, classes.nestedList, classes.slider]
     );
-
-    return <>{directionGZPanel}</>;
 };
-
-export default LayoutGZMTR;

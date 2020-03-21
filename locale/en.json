@@ -61,8 +61,11 @@
     "layout": {
         "size": {
             "title": "Canvas Size",
-            "destWidth": "Destination Sign Width",
-            "width": "Rail Map Width",
+            "width": {
+                "destination": "Destination Sign Width",
+                "runin": "Running-in Board Width",
+                "railmap": "Rail Map Width"
+            },
             "height": "Canvas Height"
         },
         "y": "Vertical Position",
@@ -70,6 +73,8 @@
         "padding": "Rail Map Margin",
         "directionGZ": {
             "title": "Direction Indicator Position",
+            "horizontal": "Horizontal Position",
+            "vertical": "Vertical Position",
             "left": "Left",
             "right": "Right",
             "top": "Top",
@@ -123,7 +128,8 @@
             "edit": "Edit",
             "remove": "Remove",
             "add": "Add",
-            "editNote": "Edit note"
+            "editNote": "Edit note",
+            "border": "Show border"
         }
     },
 

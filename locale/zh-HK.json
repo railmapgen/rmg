@@ -62,8 +62,11 @@
     "layout": {
         "size": {
             "title": "畫布尺寸",
-            "destWidth": "站名牌闊度",
-            "width": "路線圖闊度",
+            "width": {
+                "destination": "終點站牌闊度",
+                "runin": "站名牌闊度",
+                "railmap": "路線圖闊度"
+            },
             "height": "畫布高度"
         },
         "y": "垂直位置",
@@ -71,6 +74,8 @@
         "padding": "路線圖邊距",
         "directionGZ": {
             "title": "終點站指示位置",
+            "horizontal": "水平位置",
+            "vertical": "垂直位置",
             "left": "左",
             "right": "右",
             "top": "頂部",
@@ -124,7 +129,8 @@
             "edit": "編輯",
             "remove": "移除",
             "add": "新增",
-            "editNote": "編輯備註"
+            "editNote": "編輯備註",
+            "border": "顯示邊線"
         }
     },
 

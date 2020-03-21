@@ -63,7 +63,7 @@ document.head.append(
 );
 
 const renderApp = () => {
-    ReactDOM.render(<App canvas={canvasAvailable} />, document.querySelectorAll('div#app')[0]);
+    ReactDOM.render(<App canvas={canvasAvailable} />, document.querySelectorAll('div#root')[0]);
 };
 
 if (localStorage.rmgParam) {
@@ -76,10 +76,9 @@ if (localStorage.rmgParam) {
     }
     renderApp();
 } else {
-    fetch('templates/blank.json')
-        .then(response => response.json())
-        .then(data => {
-            localStorage.setItem('rmgParam', JSON.stringify(data));
+    import('./panels/save/template-diag/templates/basic/blank')
+        .then(module => {
+            localStorage.setItem('rmgParam', JSON.stringify(module.default));
             updateParam();
         })
         .then(() => renderApp());

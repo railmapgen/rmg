@@ -13,11 +13,14 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
+    LinearProgress,
 } from '@material-ui/core';
 
 import { getTransText2 } from '../../utils';
 
-import TemplateDialog from './template-diag';
+const TemplateDialog = React.lazy(() => import(/* webpackChunkName: "panelSaveTemplateDialog" */ './template-diag'));
+
+// import TemplateDialog from './template-diag';
 import UploadListItem from './upload-item';
 import ExportDialog from './export-diag';
 
@@ -76,28 +79,12 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
             langDialogOpened: false,
         };
 
-        this.templateDialogClose = this.templateDialogClose.bind(this);
-
         this.saveClick = this.saveClick.bind(this);
 
         this.exportDialogClose = this.exportDialogClose.bind(this);
         this.previewDialogClose = this.previewDialogClose.bind(this);
 
         this.styleDialogClose = this.styleDialogClose.bind(this);
-    }
-
-    templateDialogClose(action: string) {
-        if (action === 'close') {
-            this.setState({ templateDialogOpened: false });
-            return;
-        }
-
-        fetch(`templates/${action}.json`)
-            .then(response => response.json())
-            .then(data => {
-                localStorage.rmgParam = JSON.stringify(data);
-                location.reload(true);
-            });
     }
 
     saveClick() {
@@ -194,13 +181,15 @@ class SaveLists extends React.Component<SaveListsProps, SaveListsState> {
                     </List>
                 </Card>
 
-                <TemplateDialog open={this.state.templateDialogOpened} onClose={this.templateDialogClose} />
+                <React.Suspense fallback={<LinearProgress />}>
+                    <TemplateDialog
+                        open={this.state.templateDialogOpened}
+                        onClose={() => this.setState({ templateDialogOpened: false })}
+                    />
+                </React.Suspense>
 
                 <ExportDialog open={this.state.exportDialogOpened} onClose={this.exportDialogClose} />
-                {/* <TranslatedPreviewDialog 
-                    open={this.state.previewDialogOpened} 
-                    onClose={this.previewDialogClose} 
-                    canvas={this.state.previewDialogCanvas} /> */}
+
                 <StyleDialog open={this.state.styleDialogOpened} onClose={this.styleDialogClose} />
                 <LangDialog
                     open={this.state.langDialogOpened}

@@ -4,10 +4,3 @@
 .rmg-name__en {
     font-family: Arial, sans-serif;
 }
-
-rect#outer {
-    width: var(--rmg-svg-width);
-    height: var(--rmg-svg-height);
-    fill: white;
-    stroke: none;
-}

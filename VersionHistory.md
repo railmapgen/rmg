@@ -1,5 +1,17 @@
 # Version History
 
+## 3.4.3 (21 Mar 2020)
+
+### New Features
+
+-   Widths of destination sign and running-in board can be adjusted separately.
+-   Border can be added to notes in Guangzhou Metro style.
+-   Span shared parts of names in Chinese and Latin characters in Guangzhou Metro style.
+
+### Resolved Issues
+
+-   Improved performance and robustness
+
 ## 3.4.2 (19 Mar 2020)
 
 ### Resolved Issues

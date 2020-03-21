@@ -32,8 +32,8 @@ const InfoSHMetro = () => {
 
     // arrow
     const isLeft = param.direction == 'l' ? 1 : -1;
-    let arrowX = (param.svg_dest_width - isLeft * flagLength) / 20;
-    arrowX = param.direction == 'l' ? arrowX : param.svg_dest_width - 20;
+    let arrowX = (param.svgWidth.destination - isLeft * flagLength) / 20;
+    arrowX = param.direction == 'l' ? arrowX : param.svgWidth.destination - 20;
     const arrowRotate = 90 * (1 - isLeft);
 
     // not in use now
@@ -52,7 +52,7 @@ const InfoSHMetro = () => {
     );
 
     // prepare for the line name
-    let lineNameX = param.direction === 'l' ? param.svg_dest_width : 360;
+    let lineNameX = param.direction === 'l' ? param.svgWidth.destination : 360;
     let [lineNameZH, lineNameEN] = param.line_name;
 
     // line starts with numbers or letters
@@ -75,8 +75,8 @@ const InfoSHMetro = () => {
                 fill="var(--rmg-theme-colour)"
                 d={
                     param.direction === 'l'
-                        ? `M38,10 H ${param.svg_dest_width - 20} l 0,12 H 24 Z`
-                        : `M24,10 H ${param.svg_dest_width - 30} l 12,12 H 24 Z`
+                        ? `M38,10 H ${param.svgWidth.destination - 20} l 0,12 H 24 Z`
+                        : `M24,10 H ${param.svgWidth.destination - 30} l 12,12 H 24 Z`
                 }
                 transform={`translate(0,${220 + dh})`}
             />
@@ -86,14 +86,14 @@ const InfoSHMetro = () => {
                 transform={`translate(${arrowX},${135 + dh})rotate(${arrowRotate})`}
             />
             {/* <!-- Todo: fix this absolute position --> */}
-            {/* Todo: fix svg_dest_width*0.8, this has only been tested on 1000 width */}
+            {/* Todo: fix svgWidth.destination*0.8, this has only been tested on 1000 width */}
             <g
                 ref={destTextEl}
                 id="dest_text"
                 style={{
                     textAnchor: param.direction === 'l' ? 'start' : 'end',
-                    transform: `translate(${param.svg_dest_width * (param.direction === 'l' ? 0.2 : 0.8)}px,${135 +
-                        dh}px)`,
+                    transform: `translate(${param.svgWidth.destination *
+                        (param.direction === 'l' ? 0.2 : 0.8)}px,${135 + dh}px)`,
                 }}
             >
                 <text className="rmg-name__zh rmg-name__shmetro--dest" fontSize="400%">

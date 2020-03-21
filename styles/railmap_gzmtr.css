@@ -1,20 +1,3 @@
-.rmg-line {
-    fill: none;
-}
-
-.rmg-line__gzmtr {
-    stroke-width: 4;
-    stroke: var(--rmg-theme-colour);
-}
-.rmg-line__gzmtr.rmg-line__pass {
-    stroke: #aaa;
-    stroke-dasharray: 4, 4;
-}
-
-.rmg-stn--pass {
-    stroke: #aaa;
-}
-
 .Name.Pass {
     fill: #aaa;
 }
@@ -26,30 +9,6 @@
 }
 .Name.Future {
     fill: #000;
-}
-
-.rmg-name__zh.rmg-name__gzmtr--int {
-    font-size: 12px;
-}
-
-.StnNum {
-    font-family: Arial;
-    font-size: 14px;
-    text-anchor: middle;
-    alignment-baseline: central;
-}
-
-.rmg-name__zh.rmg-name__gzmtr--direc {
-    font-size: 28px;
-}
-.rmg-name__en.rmg-name__gzmtr--direc {
-    font-size: 14px;
-}
-.rmg-name__zh.rmg-name__gzmtr--direc2 {
-    font-size: 25px;
-}
-.rmg-name__en.rmg-name__gzmtr--direc2 {
-    font-size: 11.5px;
 }
 
 g#line_name {
@@ -69,13 +28,6 @@ g#terminus_gz {
     transform: translate(var(--translate-x), var(--translate-y));
     --translate-x: calc(var(--rmg-svg-width) / 2);
     --translate-y: calc(var(--rmg-svg-height) / 2 - 50px);
-    text-anchor: middle;
-}
-g#terminus_gz .rmg-name__zh {
-    font-size: 90px;
-}
-g#terminus_gz .rmg-name__en {
-    font-size: 36px;
 }
 
 g.note-box {

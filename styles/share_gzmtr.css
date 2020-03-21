@@ -14,13 +14,6 @@ rect#strip_gz {
     height: var(--height, 60px);
 }
 
-rect#outer {
-    width: var(--rmg-svg-width);
-    height: var(--rmg-svg-height);
-    fill: white;
-    stroke: none;
-}
-
 .rmg-name__gzmtr {
     font-family: Arial, SimHei, STHeiti, PingFangSC-Regular, sans-serif;
 }

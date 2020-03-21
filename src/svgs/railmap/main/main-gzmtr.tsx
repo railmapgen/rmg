@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { ParamContext } from '../../../context';
-import { StationsGZMTR } from '../methods/gzmtr';
 import StationGZMTR from './station/station-gzmtr';
 import LineBox from './line-box-gzmtr';
 import { InterchangeInfo, StationInfo } from '../../../types';
-import { adjacencyList, criticalPathMethod } from '../methods/share';
+import { adjacencyList, criticalPathMethod, drawLine, getStnState } from '../methods/share';
 
 const wideFactor = (stnList: { [stnId: string]: StationInfo }, stnId: string) =>
     stnList[stnId].parents.length === 2 || stnList[stnId].children.length === 2 ? 0.25 : 0;
@@ -91,8 +90,11 @@ const MainGZMTR = () => {
 
     const lineXs: [number, number] =
         param.direction === 'r'
-            ? [(param.svg_width * param.padding) / 100 + 65, param.svg_width * (1 - param.padding / 100) - 20]
-            : [(param.svg_width * param.padding) / 100, param.svg_width * (1 - param.padding / 100) - 65];
+            ? [
+                  (param.svgWidth.railmap * param.padding) / 100 + 65,
+                  param.svgWidth.railmap * (1 - param.padding / 100) - 20,
+              ]
+            : [(param.svgWidth.railmap * param.padding) / 100, param.svgWidth.railmap * (1 - param.padding / 100) - 65];
     const xs = Object.keys(xShares).reduce(
         (acc, cur) => ({ ...acc, [cur]: lineXs[0] + (xShares[cur] / realCP.len) * (lineXs[1] - lineXs[0]) }),
         {} as typeof xShares
@@ -114,20 +116,19 @@ const MainGZMTR = () => {
         {} as typeof yShares
     );
 
-    let stnStates = {} as { [stnId: string]: -1 | 0 | 1 };
-    Object.keys(param.stn_list).forEach(
-        stnId => (stnStates[stnId] = StationsGZMTR.getStnState(stnId, param.current_stn_idx, param.direction, routes))
-    );
+    const stnStates = React.useMemo(() => getStnState(param.current_stn_idx, routes, param.direction), [
+        param.current_stn_idx,
+        param.direction,
+        routes.toString(),
+    ]);
 
-    const linePaths = StationsGZMTR.drawLine(
-        branches,
-        stnStates,
-        param.stn_list,
-        lineXs,
-        xs,
-        ys,
-        param.branch_spacing,
-        criticalPath
+    const linePaths = drawLine(branches, stnStates);
+    const paths = Object.keys(linePaths).reduce(
+        (acc, cur: keyof typeof linePaths) => ({
+            ...acc,
+            [cur]: linePaths[cur].map(stns => _linePath(stns, xs, ys)),
+        }),
+        {} as { [key in keyof typeof linePaths]: string[] }
     );
 
     return (
@@ -138,7 +139,7 @@ const MainGZMTR = () => {
                 transform: 'translateY(calc(var(--y-percentage) * var(--rmg-svg-height) / 100))',
             }}
         >
-            <Line paths={linePaths} />
+            <Line paths={paths} />
             <StationGroup xs={xs} ys={ys} stnStates={stnStates} />
             <g
                 id="line_name"
@@ -166,21 +167,49 @@ const MainGZMTR = () => {
 
 export default MainGZMTR;
 
-const Line = (props: { paths: { main: string[]; pass: string[] } }) => {
-    return (
-        <g style={{ fill: 'none', strokeWidth: 4 }}>
-            <g style={{ stroke: '#aaa', strokeDasharray: 4 }}>
+const Line = React.memo(
+    (props: { paths: { main: string[]; pass: string[] } }) => (
+        <g fill="none" strokeWidth={4}>
+            <g stroke="#aaa" strokeDasharray={4}>
                 {props.paths.pass.map((path, i) => (
                     <path key={i} d={path} />
                 ))}
             </g>
-            <g style={{ stroke: 'var(--rmg-theme-colour)' }}>
+            <g stroke="var(--rmg-theme-colour)">
                 {props.paths.main.map((path, i) => (
                     <path key={i} d={path} />
                 ))}
             </g>
         </g>
-    );
+    ),
+    (prevProps, nextProps) => JSON.stringify(prevProps.paths) === JSON.stringify(nextProps.paths)
+);
+
+const _linePath = (stnIds: string[], realXs: { [stnId: string]: number }, realYs: { [stnId: string]: number }) => {
+    let prevY: number;
+    var path = [];
+
+    stnIds.forEach(stnId => {
+        let x = realXs[stnId];
+        let y = realYs[stnId];
+        if (!prevY && prevY !== 0) {
+            prevY = y;
+            path.push(`M ${x},${y}`);
+            return;
+        }
+        if (y === 0) {
+            if (y < prevY) path.push(`H ${x - 40}`, 'a 40,40 0 0,0 40,-40', `V ${y}`);
+            if (y > prevY) path.push(`H ${x - 40}`, 'a 40,40 0 0,1 40,40', `V ${y}`);
+        } else {
+            if (y < prevY) path.push(`V ${y + 40}`, 'a 40,40 0 0,1 40,-40', `H ${x}`);
+            if (y > prevY) path.push(`V ${y - 40}`, 'a 40,40 0 0,0 40,40', `H ${x}`);
+        }
+        path.push(`H ${x}`);
+        prevY = y;
+    });
+
+    // simplify path
+    return path.join(' ').replace(/( H ([\d.]+))+/g, ' H $2');
 };
 
 interface StationGroupProps {

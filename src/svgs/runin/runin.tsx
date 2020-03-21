@@ -9,9 +9,9 @@ const RunIn = (style => {
     }
 })(window.urlParams.get('style'));
 
-const RunInBase = (props: React.SVGProps<SVGSVGElement>) => (
+const RunInBase = (props: React.SVGProps<SVGSVGElement> & { children?: React.ReactNode }) => (
     <svg {...props}>
-        <rect id="outer" x={0} y={0} />
+        {props.children}
         <RunIn />
     </svg>
 );

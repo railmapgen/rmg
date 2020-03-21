@@ -11,9 +11,9 @@ const RailMap = (style => {
     }
 })(window.urlParams.get('style'));
 
-const RailMapBase = (props: React.SVGProps<SVGSVGElement>) => (
+const RailMapBase = (props: React.SVGProps<SVGSVGElement> & { children?: React.ReactNode }) => (
     <svg {...props}>
-        <rect id="outer" x={0} y={0} />
+        {props.children}
         <RailMap />
     </svg>
 );

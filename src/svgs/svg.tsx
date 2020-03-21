@@ -30,7 +30,7 @@ const SVGs = () => {
     const { param } = React.useContext(ParamContext);
     const { canvasAvailable, canvasToShown, canvasScale } = React.useContext(CanvasContext);
 
-    const sharedProps = (canvas: ProvidedCanvas): React.SVGProps<SVGSVGElement> => ({
+    const sharedProps = (canvas: ProvidedCanvas): React.SVGProps<SVGSVGElement> & { children?: React.ReactNode } => ({
         id: canvas,
         xmlns: 'http://www.w3.org/2000/svg',
         xmlnsXlink: 'http://www.w3.org/1999/xlink',
@@ -42,6 +42,15 @@ const SVGs = () => {
             ['--rmg-theme-colour' as any]: param.theme[2],
             ['--rmg-theme-fg' as any]: param.theme[3],
         },
+        children: (
+            <rect
+                x={0}
+                y={0}
+                fill="white"
+                stroke="none"
+                style={{ height: 'var(--rmg-svg-height)', width: 'var(--rmg-svg-width)' }}
+            />
+        ),
     });
 
     return (

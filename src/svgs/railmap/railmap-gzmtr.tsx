@@ -54,16 +54,30 @@ const DefsGZMTR = React.memo(() => (
 const DirectionIndicator = () => {
     const { param, routes } = React.useContext(ParamContext);
 
-    const validDests = Array.from(
-        new Set(
-            routes
-                .filter(route => route.includes(param.current_stn_idx))
-                .map(route => {
-                    let res = route.filter(stnId => !['linestart', 'lineend'].includes(stnId));
-                    return param.direction === 'l' ? res[0] : res.reverse()[0];
-                })
-        )
+    const validDests = React.useMemo(
+        () => [
+            ...new Set(
+                routes.reduce(
+                    (acc, cur) =>
+                        cur.includes(param.current_stn_idx)
+                            ? acc.concat(
+                                  cur
+                                      .filter(stnId => !['linestart', 'lineend'].includes(stnId))
+                                      .slice(param.direction === 'l' ? 0 : -1)[0]
+                              )
+                            : acc,
+                    []
+                )
+            ),
+        ],
+        [param.current_stn_idx, param.direction, routes.toString()]
     );
+
+    const textGroupProps: TextGroupProps = {
+        textAnchor: param.direction === 'l' ? 'start' : 'end',
+        transform: `translate(${param.direction === 'l' ? 65 : -65},-5)`,
+        destIds: validDests,
+    };
 
     return (
         <g
@@ -74,40 +88,40 @@ const DirectionIndicator = () => {
                 xlinkHref="#arrow_direction"
                 style={{ ['--rotate' as any]: param.direction === 'l' ? '0deg' : '180deg' }}
             />
-            <g
-                style={{
-                    textAnchor: param.direction === 'l' ? 'start' : 'end',
-                    transform: `translate(${param.direction === 'l' ? 65 : -65}px,-5px)`,
-                }}
-            >
-                {validDests.length !== 2 ? (
-                    <DirectionIndicatorTextGroup destIds={validDests} />
-                ) : (
-                    <DirectionIndicatorTextGroup2 destIds={validDests} />
-                )}
-            </g>
+
+            {validDests.length !== 2 ? (
+                <DirectionIndicatorTextGroup {...textGroupProps} />
+            ) : (
+                <DirectionIndicatorTextGroup2 {...textGroupProps} />
+            )}
         </g>
     );
 };
 
-const DirectionIndicatorTextGroup = (props: { destIds: string[] }) => {
+type TextGroupProps = {
+    destIds: string[];
+} & React.SVGProps<SVGGElement>;
+
+const DirectionIndicatorTextGroup = (props: TextGroupProps) => {
+    const { destIds, ...others } = props;
     const { param } = React.useContext(ParamContext);
     return (
-        <>
-            <text className="rmg-name__zh rmg-name__gzmtr--direc">
-                {props.destIds.map(stnId => param.stn_list[stnId].name[0]).join('/') + '方向'}
+        <g {...others}>
+            <text className="rmg-name__zh" fontSize={28}>
+                {destIds.map(stnId => param.stn_list[stnId].name[0]).join('/') + '方向'}
             </text>
-            <text className="rmg-name__en rmg-name__gzmtr--direc" dy={22}>
-                {'Towards ' + props.destIds.map(stnId => param.stn_list[stnId].name[1].replace('\\', ' ')).join('/')}
+            <text className="rmg-name__en" fontSize={14} dy={22}>
+                {'Towards ' + destIds.map(stnId => param.stn_list[stnId].name[1].replace('\\', ' ')).join('/')}
             </text>
-        </>
+        </g>
     );
 };
 
-const DirectionIndicatorTextGroup2 = (props: { destIds: string[] }) => {
+const DirectionIndicatorTextGroup2 = (props: TextGroupProps) => {
+    const { destIds, ...others } = props;
     const { param } = React.useContext(ParamContext);
 
-    const charCounts = props.destIds.map(stnId => param.stn_list[stnId].name[0].length);
+    const charCounts = destIds.map(stnId => param.stn_list[stnId].name[0].length);
     const minCharCounts = Math.min(...charCounts);
     const charSpacing =
         minCharCounts > 1 && charCounts[0] !== charCounts[1]
@@ -115,19 +129,21 @@ const DirectionIndicatorTextGroup2 = (props: { destIds: string[] }) => {
             : 0;
 
     return (
-        <>
-            {props.destIds.map((id, i) => (
-                <React.Fragment key={i}>
+        <g {...others}>
+            {destIds.map((id, i) => (
+                <React.Fragment key={id}>
                     <text
-                        className="rmg-name__zh rmg-name__gzmtr--direc2"
+                        className="rmg-name__zh"
+                        fontSize={25}
                         x={param.direction === 'l' ? 0 : -75}
                         y={-21 + 42 * i}
-                        style={{ letterSpacing: charCounts[i] > charCounts[1 - i] ? '0em' : `${charSpacing}em` }}
+                        letterSpacing={charCounts[i] > charCounts[1 - i] ? '0em' : `${charSpacing}em`}
                     >
                         {param.stn_list[id].name[0]}
                     </text>
                     <text
-                        className="rmg-name__en rmg-name__gzmtr--direc2"
+                        className="rmg-name__en"
+                        fontSize={11.5}
                         x={param.direction === 'l' ? 0 : -75}
                         y={-1 + 42 * i}
                     >
@@ -136,20 +152,23 @@ const DirectionIndicatorTextGroup2 = (props: { destIds: string[] }) => {
                 </React.Fragment>
             ))}
             <text
-                className="rmg-name__zh rmg-name__gzmtr--direc"
+                className="rmg-name__zh"
+                fontSize={28}
                 x={param.direction === 'l' ? 25 * (Math.max(...charCounts) + 1) : 0}
                 y={5}
             >
                 方向
             </text>
-        </>
+        </g>
     );
 };
 
 const TerminusFlag = React.memo(() => (
-    <g id="terminus_gz">
-        <text className="rmg-name__zh">终 点 站</text>
-        <text dy={70} className="rmg-name__en">
+    <g id="terminus_gz" textAnchor="middle">
+        <text className="rmg-name__zh" fontSize={90}>
+            终 点 站
+        </text>
+        <text dy={70} className="rmg-name__en" fontSize={36}>
             Terminal
         </text>
         <g strokeWidth={8} stroke="#000">
@@ -160,31 +179,56 @@ const TerminusFlag = React.memo(() => (
 ));
 
 const NoteBox = React.memo(
-    (props: { note: Note }) => (
-        <g
-            className="note-box"
-            style={{ ['--x-percentage' as any]: props.note[2], ['--y-percentage' as any]: props.note[3] }}
-        >
-            <g fontSize="16px" letterSpacing="1.2px">
-                {props.note[0].split('\n').map((txt, i) => (
-                    <text key={i} className="rmg-name__zh" y={i * 18}>
-                        {txt}
-                    </text>
-                ))}
-            </g>
+    (props: { note: Note }) => {
+        const noteTextEl = React.useRef<SVGGElement>();
+        const [bBox, setBBox] = React.useState({ width: 0, height: 0, y: 0 } as DOMRect);
+        React.useEffect(() => setBBox(noteTextEl.current.getBBox()), [props.note[0], props.note[1]]);
 
+        return (
             <g
-                fontSize="10px"
-                letterSpacing="0.39px"
-                transform={`translate(0,${18 * props.note[0].split('\n').length})`}
+                className="note-box"
+                style={{ ['--x-percentage' as any]: props.note[2], ['--y-percentage' as any]: props.note[3] }}
             >
-                {props.note[1].split('\n').map((txt, i) => (
-                    <text key={i} className="rmg-name__en" y={i * 11}>
-                        {txt}
-                    </text>
-                ))}
+                {props.note[4] && (
+                    <rect
+                        height={bBox.height + 4}
+                        width={bBox.width + 4}
+                        x={-2}
+                        y={bBox.y - 2}
+                        fill="none"
+                        stroke="black"
+                        strokeWidth={0.5}
+                    />
+                )}
+                <g ref={noteTextEl}>
+                    <g fontSize={16} letterSpacing={1.2}>
+                        {props.note[0].split('\n').map((txt, i) => (
+                            <text key={i} className="rmg-name__zh" y={i * 18}>
+                                {txt}
+                            </text>
+                        ))}
+                    </g>
+
+                    <g
+                        fontSize={10}
+                        letterSpacing={0.33}
+                        transform={`translate(0,${18 * props.note[0].split('\n').length})`}
+                    >
+                        {props.note[1].split('\n').map((txt, i) => (
+                            <text
+                                key={i}
+                                className="rmg-name__en"
+                                y={i * 11}
+                                textLength={i < props.note[1].match(/\n/g)?.length ? bBox.width : 0}
+                                lengthAdjust="spacing"
+                            >
+                                {txt}
+                            </text>
+                        ))}
+                    </g>
+                </g>
             </g>
-        </g>
-    ),
+        );
+    },
     (prevProps, nextProps) => prevProps.note.toString() === nextProps.note.toString()
 );

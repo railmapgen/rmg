@@ -1,4 +1,4 @@
-import { RMGParam, StationInfo } from './types';
+import { RMGParam, StationInfo, Note } from './types';
 
 export function rgb2Hex(rgb: string) {
     let hex = rgb
@@ -194,7 +194,7 @@ export function updateParam() {
         param.customiseMTRDest = { isLegacy: param.dest_legacy, terminal: false };
     }
 
-    // Version 3.5
+    // Version 3.4
     if (!('svgWidth' in param)) {
         param.svgWidth = {
             destination: param.svg_dest_width,
@@ -206,6 +206,10 @@ export function updateParam() {
     if (!('notesGZMTR' in param)) {
         param.notesGZMTR = [];
     }
+
+    param.notesGZMTR = param.notesGZMTR.map((note: any[]) =>
+        note.length === 4 ? note.concat([false]) : note
+    ) as Note[];
 
     localStorage.setItem('rmgParam', JSON.stringify(param));
 }
