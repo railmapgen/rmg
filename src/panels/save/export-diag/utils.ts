@@ -9,7 +9,7 @@ export function test(svgEl: SVGSVGElement) {
     canvas.width = Number(svgW) * 2.5;
     canvas.height = Number(svgH) * 2.5;
 
-    let ctx = canvas.getContext('2d');
+    let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // bypass Chrome min font size (to be improved)
@@ -35,7 +35,7 @@ export function test(svgEl: SVGSVGElement) {
         el.setAttribute('font-family', elStyle.fontFamily);
         el.setAttribute('fill', elStyle.fill);
         el.setAttribute('dominant-baseline', elStyle.dominantBaseline);
-        el.setAttribute('text-anchor', elStyle.textAnchor);
+        el.setAttribute('text-anchor', elStyle.textAnchor || '');
         el.removeAttribute('class');
     });
 

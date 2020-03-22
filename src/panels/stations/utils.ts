@@ -1,4 +1,3 @@
-import { StationInfo, Name } from '../../types';
 import { getYShareMTR } from '../../methods';
 
 export const addStation = (
@@ -21,16 +20,16 @@ export const addStation = (
         children: [],
         branch: {
             left: [],
-            right: []
+            right: [],
         },
         transfer: {
             info: [[]],
             type: 'none',
             tick_direc: 'r',
             paid_area: true,
-            osi_names: []
+            osi_names: [],
         },
-        facility: ''
+        facility: '',
     };
 
     let newStnList = JSON.parse(JSON.stringify(stnList));
@@ -87,7 +86,7 @@ export const addStation = (
             }
         } else if (loc === 'lower') {
             if (stnList[stnId].parents.length === 2) {
-                if (stnList[stnId].branch.left[1] == stnList[stnId].parents[1]) {
+                if (stnList[stnId].branch.left[1] === stnList[stnId].parents[1]) {
                     newStnList[stnId].branch.left[1] = newId;
                 }
 
@@ -130,9 +129,9 @@ export const addStation = (
     } else {
         if (loc === 'centre') {
             newInfo.children = stnList[stnId].children;
-            if (stnList[stnId].children.length === 0 && getYShareMTR(stnId, stnList) != 0) {
+            if (stnList[stnId].children.length === 0 && getYShareMTR(stnId, stnList) !== 0) {
                 newInfo.parents = stnList.lineend.parents;
-            } else if (getYShareMTR(stnId, stnList) != 0) {
+            } else if (getYShareMTR(stnId, stnList) !== 0) {
                 // pivot on branch
                 newInfo.parents = stnList[stnList[stnId].children[0]].parents;
                 newInfo.branch.left = stnList[newInfo.children[0]].branch.left;
@@ -151,7 +150,7 @@ export const addStation = (
             });
         } else if (loc === 'upper') {
             if (stnList[stnId].children.length === 2) {
-                if (stnList[stnId].branch.right[1] == stnList[stnId].children[0]) {
+                if (stnList[stnId].branch.right[1] === stnList[stnId].children[0]) {
                     newStnList[stnId].branch.right[1] = newId;
                 }
 
@@ -178,7 +177,7 @@ export const addStation = (
             }
         } else if (loc === 'lower') {
             if (stnList[stnId].children.length === 2) {
-                if (stnList[stnId].branch.right[1] == stnList[stnId].children[1]) {
+                if (stnList[stnId].branch.right[1] === stnList[stnId].children[1]) {
                     newStnList[stnId].branch.right[1] = newId;
                 }
 
@@ -193,8 +192,7 @@ export const addStation = (
                 newInfo.children = stnList[stnId].children;
                 newInfo.parents = [stnId];
                 newInfo.children.forEach(child => {
-                    newStnList[child]
-                        .parents[stnList[child].parents.length === 1 ? 0 : 1] = newId;
+                    newStnList[child].parents[stnList[child].parents.length === 1 ? 0 : 1] = newId;
 
                     if (stnList[child].branch.left[1] === stnId) {
                         newStnList[child].branch.left[1] = newId;
@@ -221,43 +219,79 @@ export const addStation = (
         }
     }
 
-    return [newId, {
-        ...newStnList, 
-        [newId]: newInfo
-    }];
-}
+    return [
+        newId,
+        {
+            ...newStnList,
+            [newId]: newInfo,
+        },
+    ];
+};
 
 function getRandomId() {
-    return Math.floor(Math.random() * Math.pow(36, 4)).toString(36).padStart(4, '0');
+    return Math.floor(Math.random() * Math.pow(36, 4))
+        .toString(36)
+        .padStart(4, '0');
 }
 
 function getNameFromId(stnId: string): Name {
-    let numsZH = [
-        '癸', '甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', 
-        '日', '月', '金', '木', '水', '火', '土', 
-        '竹', '戈', '十', '大', '中', '一', '弓', 
-        '人', '心', '手', '口', 
-        '尸', '廿', '山', '女', '田', '難', '卜', '重'
-    ];
+    let numsZH = '癸甲乙丙丁戊己庚辛壬日月金木水火土竹戈十大中一弓人心手口尸廿山女田難卜重'.split('');
     let numsEN = [
-        'Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 
-        'Alfa', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf',
-        'Hotel', 'India', 'Juliett', 'Kilo', 'Lima', 'Mike', 'November', 
-        'Oscar', 'Papa', 'Quebec', 'Romeo', 
-        'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu'
+        'Zero',
+        'One',
+        'Two',
+        'Three',
+        'Four',
+        'Five',
+        'Six',
+        'Seven',
+        'Eight',
+        'Nine',
+        'Alfa',
+        'Bravo',
+        'Charlie',
+        'Delta',
+        'Echo',
+        'Foxtrot',
+        'Golf',
+        'Hotel',
+        'India',
+        'Juliett',
+        'Kilo',
+        'Lima',
+        'Mike',
+        'November',
+        'Oscar',
+        'Papa',
+        'Quebec',
+        'Romeo',
+        'Sierra',
+        'Tango',
+        'Uniform',
+        'Victor',
+        'Whiskey',
+        'X-ray',
+        'Yankee',
+        'Zulu',
     ];
     return [
-        stnId.split('').map(char => numsZH[parseInt(char, 36)]).join(''), 
-        stnId.split('').map(char => numsEN[parseInt(char, 36)]).join(' ')
+        stnId
+            .split('')
+            .map(char => numsZH[parseInt(char, 36)])
+            .join(''),
+        stnId
+            .split('')
+            .map(char => numsEN[parseInt(char, 36)])
+            .join(' '),
     ];
 }
 
 /**
- * Remove a station and update neighbour's parameters at the same time. 
+ * Remove a station and update neighbour's parameters at the same time.
  * (All descriptions are based on MTR style. )
  */
-export const removeStation = (stnId: string, stnList: { [stnId: string]: StationInfo }) => {
-    let newStnList = JSON.parse(JSON.stringify(stnList));
+export const removeStation = (stnId: string, stnList: StationDict) => {
+    let newStnList = JSON.parse(JSON.stringify(stnList)) as StationDict;
     let parents = newStnList[stnId].parents;
     let children = newStnList[stnId].children;
 
@@ -270,30 +304,30 @@ export const removeStation = (stnId: string, stnList: { [stnId: string]: Station
         }
     }
 
-    if (parents.length == 2 && children.length == 2) {
+    if (parents.length === 2 && children.length === 2) {
         // Todo: rewrite, join two branches rather than reject
         return false;
     } else if (isLastMainBranchStn) {
         // Last main line station
         return false;
-    } else if (Object.keys(newStnList).length == 4) {
+    } else if (Object.keys(newStnList).length === 4) {
         // Last two stations
         return false;
-    } else if (parents.length == 2 || children.length == 2) {
-        console.log('this case')
+    } else if (parents.length === 2 || children.length === 2) {
+        console.log('this case');
         parents.forEach(parId => {
             newStnList[parId].children = children;
         });
         children.forEach(childId => {
             newStnList[childId].parents = parents;
         });
-        if (parents.length == 1) {
+        if (parents.length === 1) {
             newStnList[parents[0]].branch.right = newStnList[stnId].branch.right;
         }
-        if (children.length == 1) {
+        if (children.length === 1) {
             newStnList[children[0]].branch.left = newStnList[stnId].branch.left;
         }
-    } else if (newStnList[parents[0]].children.length == 2 && newStnList[children[0]].parents.length == 2) {
+    } else if (newStnList[parents[0]].children.length === 2 && newStnList[children[0]].parents.length === 2) {
         // 1 par 1 child, last station on upper/lower branch
         // branch disappear
         var childIdxOfPar = newStnList[parents[0]].children.indexOf(stnId);
@@ -330,7 +364,7 @@ export const removeStation = (stnId: string, stnList: { [stnId: string]: Station
             if (newStnList[childId].branch.left[1] === stnId) {
                 newStnList[childId].branch.left[1] = parents[0];
             }
-        })
+        });
     }
 
     delete newStnList[stnId];
@@ -341,32 +375,38 @@ export const removeStation = (stnId: string, stnList: { [stnId: string]: Station
 export const reverseStations = (stnList: { [stnId: string]: StationInfo }) => {
     let newStnList = JSON.parse(JSON.stringify(stnList));
     Object.keys(stnList).forEach(stnId => {
-        let stnInfo = {...stnList[stnId]};
+        let stnInfo = { ...stnList[stnId] };
         if (stnId === 'linestart') {
             newStnList.lineend.parents = stnInfo.children.reverse();
             newStnList.lineend.branch = {
                 left: stnInfo.branch.right,
-                right: []
+                right: [],
             };
         } else if (stnId === 'lineend') {
             newStnList.linestart.children = stnInfo.parents.reverse();
             newStnList.linestart.branch = {
                 left: [],
-                right: stnInfo.branch.left
-            }
+                right: stnInfo.branch.left,
+            };
         } else {
             var tmpArr = stnInfo.children.reverse().map(id => {
                 switch (id) {
-                    case 'linestart': return 'lineend';
-                    case 'lineend': return 'linestart';
-                    default: return id;
+                    case 'linestart':
+                        return 'lineend';
+                    case 'lineend':
+                        return 'linestart';
+                    default:
+                        return id;
                 }
             });
             newStnList[stnId].children = stnInfo.parents.reverse().map(id => {
                 switch (id) {
-                    case 'linestart': return 'lineend';
-                    case 'lineend': return 'linestart';
-                    default: return id;
+                    case 'linestart':
+                        return 'lineend';
+                    case 'lineend':
+                        return 'linestart';
+                    default:
+                        return id;
                 }
             });
             newStnList[stnId].parents = tmpArr;

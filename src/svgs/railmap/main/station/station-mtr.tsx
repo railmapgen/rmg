@@ -1,6 +1,5 @@
-import * as React from 'react';
+import React, { useState, useContext, useMemo, useRef, useEffect } from 'react';
 import { ParamContext } from '../../../../context';
-import { Name, InterchangeInfo, StationTransfer } from '../../../../types';
 
 interface Props {
     stnId: string;
@@ -10,64 +9,76 @@ interface Props {
 }
 
 const StationMTR = (props: Props) => {
-    const { param } = React.useContext(ParamContext);
+    const { param } = useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
 
     /**
      * Arrays of directions of the branches a station has.
      */
-    const branchPos = React.useMemo(() => {
-        let pos: ('SE' | 'NE' | 'SW' | 'NW')[] = [];
-        if (stnInfo.children.length === 2) {
-            pos.push(stnInfo.children.indexOf(stnInfo.branch.right[1]) === 1 ? 'SE' : 'NE');
-        }
-        if (stnInfo.parents.length === 2) {
-            pos.push(stnInfo.parents.indexOf(stnInfo.branch.left[1]) === 1 ? 'SW' : 'NW');
-        }
-        return pos;
-    }, [stnInfo.parents.toString(), stnInfo.children.toString(), JSON.stringify(stnInfo.branch)]);
+    const branchPos = useMemo(
+        () => {
+            let pos: ('SE' | 'NE' | 'SW' | 'NW')[] = [];
+            if (stnInfo.branch.right.length) {
+                pos.push(stnInfo.children.indexOf(stnInfo.branch.right[1]) === 1 ? 'SE' : 'NE');
+            }
+            if (stnInfo.branch.left.length) {
+                pos.push(stnInfo.parents.indexOf(stnInfo.branch.left[1]) === 1 ? 'SW' : 'NW');
+            }
+            return pos;
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [stnInfo.parents.toString(), stnInfo.children.toString(), JSON.stringify(stnInfo.branch)]
+    );
 
     /**
      * Affix added to station icon's `href`.
      */
-    const branchAffix = React.useMemo(() => {
-        let pos = branchPos;
-        if (pos.length === 0) {
-            return '';
-        }
-        if (pos.includes('NW') && pos.includes('SE')) {
-            return '_bb';
-        }
-        if (pos.includes('NE') && pos.includes('SW')) {
-            return '_bb';
-        }
-        return '_b';
-    }, [branchPos.toString()]);
+    const branchAffix = useMemo(
+        () => {
+            let pos = branchPos;
+            if (pos.length === 0) {
+                return '';
+            }
+            if (pos.includes('NW') && pos.includes('SE')) {
+                return '_bb';
+            }
+            if (pos.includes('NE') && pos.includes('SW')) {
+                return '_bb';
+            }
+            return '_b';
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [branchPos.toString()]
+    );
 
     /**
      * Changes of vertical position of station icon due to branching shift (11px/line width). Icon rotation should also be applied when using this property.
      */
-    const branchDy = React.useMemo(() => {
-        let affix = branchAffix;
-        if (affix === '') {
-            return 0;
-        } else if (affix === '_bb') {
-            return props.namePos ? 9.68 : -9.68;
-        } else {
-            let pos = branchPos;
-            if (pos.includes('SE') || pos.includes('SW')) {
-                return props.namePos ? 9.68 : 0;
+    const branchDy = useMemo(
+        () => {
+            let affix = branchAffix;
+            if (affix === '') {
+                return 0;
+            } else if (affix === '_bb') {
+                return props.namePos ? 9.68 : -9.68;
+            } else {
+                let pos = branchPos;
+                if (pos.includes('SE') || pos.includes('SW')) {
+                    return props.namePos ? 9.68 : 0;
+                }
+                if (pos.includes('NE') || pos.includes('NW')) {
+                    return props.namePos ? 0 : -9.68;
+                }
             }
-            if (pos.includes('NE') || pos.includes('NW')) {
-                return props.namePos ? 0 : -9.68;
-            }
-        }
-    }, [branchPos.toString(), branchAffix, props.namePos]);
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [branchPos.toString(), branchAffix, props.namePos]
+    );
 
     /**
      * Changes of vertical position of other elements such as intTick or intName. The result of the ternary operator is the opposite of `this._branchDy`
      */
-    const branchElDy = React.useMemo(() => {
+    const branchElDy = useMemo(() => {
         let affix = branchAffix;
         if (affix === '') {
             return 0;
@@ -123,7 +134,7 @@ const StationMTR = (props: Props) => {
                     stnTrans={stnInfo.transfer}
                     stnState={props.stnState}
                     namePos={props.namePos}
-                    end={stnIcon === 'osi22end' ? (stnInfo.parents[0] === 'linestart' ? 'left' : 'right') : null}
+                    end={stnIcon === 'osi22end' ? (stnInfo.parents[0] === 'linestart' ? 'left' : 'right') : undefined}
                 />
                 {stnIcon.includes('osi') && (
                     <OSIName
@@ -137,7 +148,9 @@ const StationMTR = (props: Props) => {
                         }
                         tickDirec={stnInfo.transfer.tick_direc}
                         namePos={props.namePos}
-                        end={stnIcon === 'osi22end' ? (stnInfo.parents[0] === 'linestart' ? 'left' : 'right') : null}
+                        end={
+                            stnIcon === 'osi22end' ? (stnInfo.parents[0] === 'linestart' ? 'left' : 'right') : undefined
+                        }
                     />
                 )}
             </g>
@@ -164,7 +177,7 @@ const StationMTR = (props: Props) => {
                             ? stnInfo.transfer.tick_direc === 'l'
                                 ? 3
                                 : -3
-                            : null
+                            : undefined
                     }
                 />
             </g>
@@ -190,7 +203,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     /**
      * Height (in pixels) of station's Chinese name.
      */
-    const NAME_ZH_HEIGHT = 21.625;
+    // const NAME_ZH_HEIGHT = 21.625;
     /**
      * Top (in pixels) of station's English name (1 line).
      */
@@ -212,11 +225,13 @@ const StationNameGElement = (props: StationNameGElementProps) => {
      */
     const STN_NAME_LINE_GAP = 14;
 
-    const stnNameEl = React.createRef<SVGGElement>();
-    const [bBox, setBBox] = React.useState({ width: 0, x: 0 } as DOMRect);
-    React.useEffect(() => {
-        setBBox(stnNameEl.current.getBBox());
-    }, [props.stnState, props.name.toString()]);
+    const stnNameEl = useRef<SVGGElement | null>(null);
+    const [bBox, setBBox] = useState({ width: 0, x: 0 } as DOMRect);
+    useEffect(
+        () => setBBox(stnNameEl.current!.getBBox()),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.stnState, props.name.toString()]
+    );
 
     const dy = props.namePos
         ? STN_NAME_LINE_GAP - NAME_ZH_TOP
@@ -482,7 +497,7 @@ const IntTick = (props: IntTickProps) => {
         }
     })(props.rotation);
 
-    return React.useMemo(
+    return useMemo(
         () => (
             <>
                 <use
@@ -513,6 +528,7 @@ const IntTick = (props: IntTickProps) => {
                 </g>
             </>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.intInfo.toString(), props.rotation, props.stnState]
     );
 };

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ParamContext } from '../../context';
 import {
@@ -17,7 +17,6 @@ import {
     Grid,
     Button,
 } from '@material-ui/core';
-import { Name } from '../../types';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -135,14 +134,18 @@ const CustomiseDest = () => {
                                 <Grid item xs={12} sm={6}>
                                     <TextField
                                         label={t('design.MTRDest.zh')}
-                                        value={param.customiseMTRDest.terminal[0] || ''}
+                                        value={
+                                            param.customiseMTRDest.terminal ? param.customiseMTRDest.terminal[0] : ''
+                                        }
                                         onChange={handleChange(0)}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <TextField
                                         label={t('design.MTRDest.en')}
-                                        value={param.customiseMTRDest.terminal[1] || ''}
+                                        value={
+                                            param.customiseMTRDest.terminal ? param.customiseMTRDest.terminal[1] : ''
+                                        }
                                         onChange={handleChange(1)}
                                     />
                                 </Grid>
@@ -152,6 +155,7 @@ const CustomiseDest = () => {
                 </Collapse>
             </>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [JSON.stringify(param.customiseMTRDest), open, classes.nested, classes.grid]
     );
 };

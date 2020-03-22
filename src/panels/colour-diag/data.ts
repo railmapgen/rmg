@@ -1,5 +1,3 @@
-import { CityEntry } from '../../types';
-
 export const cityList: CityEntry[] = [
     {
         id: 'beijing',

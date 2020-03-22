@@ -2,7 +2,6 @@ import * as React from 'react';
 import { ParamContext } from '../../context';
 import StripGZMTR from '../strip/strip-gzmtr';
 import MainGZMTR from './main/main-gzmtr';
-import { Note } from '../../types';
 
 const RailMapGZMTR = () => {
     const { param } = React.useContext(ParamContext);
@@ -70,6 +69,7 @@ const DirectionIndicator = () => {
                 )
             ),
         ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [param.current_stn_idx, param.direction, routes.toString()]
     );
 
@@ -180,9 +180,13 @@ const TerminusFlag = React.memo(() => (
 
 const NoteBox = React.memo(
     (props: { note: Note }) => {
-        const noteTextEl = React.useRef<SVGGElement>();
+        const noteTextEl = React.useRef<SVGGElement | null>(null);
         const [bBox, setBBox] = React.useState({ width: 0, height: 0, y: 0 } as DOMRect);
-        React.useEffect(() => setBBox(noteTextEl.current.getBBox()), [props.note[0], props.note[1]]);
+        React.useEffect(
+            () => setBBox(noteTextEl.current!.getBBox()),
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            [props.note[0], props.note[1]]
+        );
 
         return (
             <g
@@ -219,7 +223,7 @@ const NoteBox = React.memo(
                                 key={i}
                                 className="rmg-name__en"
                                 y={i * 11}
-                                textLength={i < props.note[1].match(/\n/g)?.length ? bBox.width : 0}
+                                textLength={i < (props.note[1].match(/\n/g)?.length || 0) ? bBox.width : 0}
                                 lengthAdjust="spacing"
                             >
                                 {txt}

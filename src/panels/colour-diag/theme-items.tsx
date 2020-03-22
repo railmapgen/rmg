@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     ListItem,
@@ -11,7 +11,6 @@ import {
     createStyles,
     Tooltip,
 } from '@material-ui/core';
-import { LineEntry } from '../../types';
 import { getTransText2 } from '../../utils';
 import { cityList } from './data';
 
@@ -48,7 +47,7 @@ const useStyles = makeStyles(() =>
     })
 );
 
-const useLineList = theme => {
+const useLineList = (theme: Theme) => {
     const [list, setList] = React.useState([] as LineEntry[]);
 
     const listPromise = theme[0]
@@ -57,24 +56,24 @@ const useLineList = theme => {
           )
         : Promise.resolve([] as LineEntry[]);
 
-    // const listPromise = React.useMemo(() => {
-    //     if (!theme[0]) return;
-    //     console.log('fetching line list: ' + theme[0]);
-    //     return fetch(`data/${theme[0]}.json`).then(response => response.json() as Promise<LineEntry[]>);
-    // }, [theme[0]]);
-
-    React.useEffect(() => {
-        if (typeof theme[0] === 'undefined') {
-            return;
-        } else if (theme[0] === 'other') {
-            // mutate original list
-            listPromise.then(data => {
-                setList(data.map((l, i) => (i === 0 ? { ...l, colour: theme[2], fg: theme[3] || '#fff' } : { ...l })));
-            });
-        } else {
-            listPromise.then(data => setList(data));
-        }
-    }, [theme.toString()]);
+    useEffect(
+        () => {
+            if (typeof theme[0] === 'undefined') {
+                return;
+            } else if (theme[0] === 'other') {
+                // mutate original list
+                listPromise.then(data => {
+                    setList(
+                        data.map((l, i) => (i === 0 ? { ...l, colour: theme[2], fg: theme[3] || '#fff' } : { ...l }))
+                    );
+                });
+            } else {
+                listPromise.then(data => setList(data));
+            }
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [theme.toString()]
+    );
 
     return list;
 };
@@ -85,14 +84,14 @@ interface ColourDialogProps {
 }
 
 export default React.memo(
-    (props: ColourDialogProps) => {
+    function ThemeItems(props: ColourDialogProps) {
         // console.log('rerender');
         const classes = useStyles();
         const { t, i18n } = useTranslation();
 
         const [hexTemp, setHexTemp] = React.useState(props.theme[2]);
 
-        const cityChange = event => {
+        const cityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             let newTheme = props.theme.map((val, idx) => (idx === 0 ? event.target.value : val));
             props.onUpdate('theme', newTheme);
         };
@@ -101,14 +100,18 @@ export default React.memo(
         const lineList = useLineList(props.theme);
 
         // Hook for updating props.theme when lineList changed
-        React.useEffect(() => {
-            if (lineList.length === 0) return; // initialising, ignore
-            if (lineList.filter(l => l.id === props.theme[1]).length) return; // current city, ignore
-            let newTheme = [props.theme[0], lineList[0].id, lineList[0].colour, lineList[0].fg || '#fff'];
-            props.onUpdate('theme', newTheme);
-        }, [lineList]);
+        useEffect(
+            () => {
+                if (lineList.length === 0) return; // initialising, ignore
+                if (lineList.filter(l => l.id === props.theme[1]).length) return; // current city, ignore
+                let newTheme = [props.theme[0], lineList[0].id, lineList[0].colour, lineList[0].fg || '#fff'];
+                props.onUpdate('theme', newTheme);
+            },
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            [lineList]
+        );
 
-        const lineChange = event => {
+        const lineChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             let line = event.target.value;
             let newTheme = [
                 props.theme[0],
@@ -121,9 +124,13 @@ export default React.memo(
 
         // Hook for updating hexTemp when props.hex changed
         // which means valid hex has been updated to props
-        React.useEffect(() => {
-            setHexTemp(props.theme[2]);
-        }, [props.theme[2]]);
+        useEffect(
+            () => {
+                setHexTemp(props.theme[2]);
+            },
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            [props.theme[2]]
+        );
 
         const colourChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             let rgb = event.target.value;
@@ -143,7 +150,7 @@ export default React.memo(
             }
         };
 
-        const hexChange = event => {
+        const hexChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             let hex = event.target.value;
             if (hex.match(/^#[0-9a-fA-f]{0,6}$/) === null) return;
             setHexTemp(hex);
@@ -174,7 +181,7 @@ export default React.memo(
             }
         };
 
-        const fgChange = event => {
+        const fgChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             let newTheme = ['other', 'other', props.theme[2], event.target.value];
             props.onUpdate('theme', newTheme);
         };
@@ -294,14 +301,10 @@ const useEmojiStyles = makeStyles(() =>
     })
 );
 
-interface CountryFlagProps {
-    code: string;
-}
-
 /**
  * Convert ISO 3166 alpha-2 country code (followed by BS 6879 UK subdivision code, if applicable) to flag Emoji. For Windows platform, an `img` element with image source from OpenMoji is returned.
  */
-function CountryFlag(props: CountryFlagProps) {
+function CountryFlag(props: { code: string }) {
     const { i18n } = useTranslation();
     const classes = useEmojiStyles();
 
@@ -311,7 +314,7 @@ function CountryFlag(props: CountryFlagProps) {
         codePoints = props.code
             .toUpperCase()
             .split('')
-            .map(char => (char.codePointAt(0) + 127397).toString(16).toUpperCase());
+            .map(char => ((char.codePointAt(0) || 0) + 127397).toString(16).toUpperCase());
     } else {
         codePoints = ['1F3F4', 'E007F'];
         codePoints.splice(
@@ -320,15 +323,20 @@ function CountryFlag(props: CountryFlagProps) {
             ...props.code
                 .toUpperCase()
                 .split('')
-                .map(char => (char.codePointAt(0) + 917536).toString(16).toUpperCase())
+                .map(char => ((char.codePointAt(0) || 0) + 917536).toString(16).toUpperCase())
         );
     }
 
     if (['zh-CN', 'zh-Hans'].includes(i18n.language) && props.code === 'TW') codePoints = ['1F3F4'];
 
     return navigator.platform.indexOf('Win32') !== -1 || navigator.platform.indexOf('Win64') !== -1 ? (
-        <img src={`./images/flags/${codePoints.join('-')}.svg`} className={classes.img} />
+        <img
+            src={process.env.PUBLIC_URL + `/images/flags/${codePoints.join('-')}.svg`}
+            className={classes.img}
+            alt={`Flag of ${props.code}`}
+        />
     ) : (
+        // <img src={process.env.PUBLIC_URL + `/images/flags/${codePoints.join('-')}.svg`} className={classes.img} />
         <span>{String.fromCodePoint(...codePoints.map(cp => parseInt(cp, 16)))}</span>
     );
 }

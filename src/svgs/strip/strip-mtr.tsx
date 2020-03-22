@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React, { memo } from 'react';
 
-export default React.memo(function StripMTR(props: { stripPc: number }) {
+export default memo(function StripMTR(props: { stripPc: number }) {
     return (
         <rect
             fill="var(--rmg-theme-colour)"

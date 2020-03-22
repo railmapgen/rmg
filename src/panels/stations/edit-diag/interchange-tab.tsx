@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     List,
@@ -23,7 +23,6 @@ import {
     makeStyles,
     createStyles,
 } from '@material-ui/core';
-import { StationTransfer, InterchangeInfo, Name } from '../../../types';
 import { ParamContext } from '../../../context';
 import ColourDialog from '../../colour-diag';
 import NameListItems from './name-list-items';
@@ -37,7 +36,7 @@ interface StationEditInterchangeTabProps {
 const StationEditInterchangeTab = (props: StationEditInterchangeTabProps) => {
     const { t } = useTranslation();
 
-    const { param, dispatch } = React.useContext(ParamContext);
+    // const { param, dispatch } = React.useContext(ParamContext);
 
     const [osiNameDialogOpened, setOsiNameDialogOpened] = React.useState(false);
 
@@ -78,7 +77,7 @@ const StationEditInterchangeTab = (props: StationEditInterchangeTabProps) => {
                 ...props.stnTrans,
                 type: changeType as any,
                 osi_names: changeType.includes('osi') ? [props.stnTrans.osi_names[0] || ['車站名', 'Stn Name']] : [],
-                info: props.stnTrans.info.concat([[[, , , , , ,]]]),
+                info: props.stnTrans.info.concat([[Array(6) as InterchangeInfo]]),
             };
             // dispatch({ type: 'UPDATE_STATION_TRANSFER', stnId: props.stnId, transfer: transInfo });
             console.log(transInfo);
@@ -88,7 +87,9 @@ const StationEditInterchangeTab = (props: StationEditInterchangeTabProps) => {
                 ...props.stnTrans,
                 type: changeType as any,
                 osi_names: changeType.includes('osi') ? [props.stnTrans.osi_names[0] || ['車站名', 'Stn Name']] : [],
-                info: props.stnTrans.info.map((inf, idx) => (idx === index ? inf.concat([[, , , , , ,]]) : inf)),
+                info: props.stnTrans.info.map((inf, idx) =>
+                    idx === index ? inf.concat([Array(6) as InterchangeInfo]) : inf
+                ),
             };
             // dispatch({ type: 'UPDATE_STATION_TRANSFER', stnId: props.stnId, transfer: transInfo });
             console.log(transInfo);
@@ -158,7 +159,7 @@ const StationEditInterchangeTab = (props: StationEditInterchangeTabProps) => {
             <ListItem>
                 <InterchangeChipSet stnId={props.stnId} setIndex={0} onDelete={i => deleteClick(0, i)} />
             </ListItem>
-            {['mtr', 'shmetro'].includes(window.urlParams.get('style')) && (
+            {['mtr', 'shmetro'].includes(window.urlParams.get('style') || '') && (
                 <>
                     <Divider />
                     <ListItem>
@@ -247,7 +248,7 @@ const InterchangeChipSet = (props: InterchangeChipSetProps) => {
     const { param, dispatch } = React.useContext(ParamContext);
     const intInfos = param.stn_list[props.stnId].transfer.info[props.setIndex];
 
-    const [chipSelected, setChipSelected] = React.useState<null | number>(null);
+    const [chipSelected, setChipSelected] = React.useState(-1);
     const [nameDialogOpened, setNameDialogOpened] = React.useState(false);
 
     const handleClick = (index: number) => {
@@ -255,14 +256,14 @@ const InterchangeChipSet = (props: InterchangeChipSetProps) => {
         setNameDialogOpened(true);
     };
 
-    const nameDialogUpdate = (key, value) => {
+    const nameDialogUpdate = (key: string, value: any) => {
         if (key === 'theme') {
             dispatch({
                 type: 'UPDATE_STATION_INTERCHANGE_INFO',
                 stnId: props.stnId,
                 setIdx: props.setIndex,
                 intIdx: chipSelected,
-                info: ([...(value as string[]), , ,] as any) as InterchangeInfo,
+                info: (value as string[]).concat(Array(2)) as InterchangeInfo,
             });
         }
         if (key === 'name') {
@@ -271,7 +272,7 @@ const InterchangeChipSet = (props: InterchangeChipSetProps) => {
                 stnId: props.stnId,
                 setIdx: props.setIndex,
                 intIdx: chipSelected,
-                info: ([, , , , value[0], value[1]] as any) as InterchangeInfo,
+                info: Array(4).concat(value) as InterchangeInfo,
             });
         }
     };
@@ -306,7 +307,7 @@ const InterchangeChipSet = (props: InterchangeChipSetProps) => {
             <ColourDialog
                 open={nameDialogOpened}
                 theme={
-                    chipSelected === null
+                    chipSelected === -1
                         ? (([] as any) as [string, string, string, '#000' | '#fff'])
                         : [
                               intInfos[chipSelected][0],
@@ -316,9 +317,7 @@ const InterchangeChipSet = (props: InterchangeChipSetProps) => {
                           ]
                 }
                 lineName={
-                    chipSelected === null
-                        ? (([] as any) as Name)
-                        : [intInfos[chipSelected][4], intInfos[chipSelected][5]]
+                    chipSelected === -1 ? (([] as any) as Name) : [intInfos[chipSelected][4], intInfos[chipSelected][5]]
                 }
                 onUpdate={nameDialogUpdate}
                 onClose={() => setNameDialogOpened(false)}
@@ -376,33 +375,21 @@ const InterchangeMore = (props: { stnId: string }) => {
     const { param, dispatch } = React.useContext(ParamContext);
     const stnTrans = param.stn_list[props.stnId].transfer;
 
-    const tickDirecChange = (_, value: 'l' | 'r') => {
-        dispatch({
-            type: 'UPDATE_STATION_TICK_DIREC',
-            stnId: props.stnId,
-            direction: value,
-        });
-
-        // let newStnTrans = {
-        //     ...param.stn_list[props.stnId].transfer,
-        //     tick_direc: value,
-        // };
-        // window.myLine.updateStnTransfer2(props.stnId, newStnTrans);
+    const tickDirecChange = (_event: React.ChangeEvent<HTMLInputElement>, value: string) => {
+        if (value === 'l' || value === 'r')
+            dispatch({
+                type: 'UPDATE_STATION_TICK_DIREC',
+                stnId: props.stnId,
+                direction: value,
+            });
     };
 
-    const paidAreaChange = (_, checked: boolean) => {
+    const paidAreaChange = (_event: React.ChangeEvent<{}>, checked: boolean) =>
         dispatch({
             type: 'UPDATE_STATION_PAID_AREA',
             stnId: props.stnId,
             isPaid: checked,
         });
-
-        // let newStnTrans = {
-        //     ...param.stn_list[props.stnId].transfer,
-        //     paid_area: checked,
-        // };
-        // window.myLine.updateStnTransfer2(props.stnId, newStnTrans);
-    };
 
     return React.useMemo(
         () => (
@@ -449,6 +436,7 @@ const InterchangeMore = (props: { stnId: string }) => {
                 </ListItem>
             </>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.stnId, stnTrans.tick_direc, stnTrans.paid_area]
     );
 };

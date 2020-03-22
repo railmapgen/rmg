@@ -5,7 +5,7 @@ import { Grid, Paper, List, LinearProgress } from '@material-ui/core';
 import LayoutCommon from './common';
 const LayoutGZMTR = React.lazy(() => import(/* webpackChunkName: "panelLayoutGZMTR" */ './gzmtr'));
 
-export default React.memo(function LayouPanel() {
+export default React.memo(function LayoutPanel() {
     return (
         <Grid container spacing={3} justify="center" alignItems="flex-start">
             <Grid item xs={12} sm={10} md={7} lg={5}>

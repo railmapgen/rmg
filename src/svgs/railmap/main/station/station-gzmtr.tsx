@@ -1,6 +1,5 @@
-import * as React from 'react';
+import React, { useContext, useState, useEffect, useRef, useMemo } from 'react';
 import { ParamContext } from '../../../../context';
-import { Name, InterchangeInfo } from '../../../../types';
 import StationNumberText from '../../../station-num-gzmtr';
 import LineBox from '../line-box-gzmtr';
 
@@ -8,19 +7,18 @@ interface Props {
     stnId: string;
     stnState: -1 | 0 | 1;
     stnY: number;
-    namePos?: boolean;
 }
 
 const StationGZMTR = (props: Props) => {
-    const { param } = React.useContext(ParamContext);
+    const { param } = useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
 
     const isNameShift = stnInfo.parents.length === 2 || stnInfo.children.length === 2;
     const tickRotation =
         props.stnY > 0
             ? 180
-            : stnInfo.parents.indexOf(stnInfo.branch.left[1]) === 1 ||
-              stnInfo.children.indexOf(stnInfo.branch.right[1]) === 1
+            : stnInfo.parents.indexOf(stnInfo.branch.left[1] || '') === 1 ||
+              stnInfo.children.indexOf(stnInfo.branch.right[1] || '') === 1
             ? 180
             : 0;
     const nameENLns = stnInfo.name[1].split('\\').length;
@@ -84,9 +82,13 @@ interface StationNameGElementProps {
 const StationNameGElement = (props: StationNameGElementProps) => {
     const nameDY = props.tickRotation === 180 ? 17.5 : -20 - props.name[1].split('\\').length * 14 * Math.cos(-45);
 
-    const stnNameEl = React.useRef<SVGGElement>();
-    const [bBox, setBBox] = React.useState({ width: 0 } as DOMRect);
-    React.useEffect(() => setBBox(stnNameEl.current.getBBox()), [props.name.toString()]);
+    const stnNameEl = useRef<SVGGElement | null>(null);
+    const [bBox, setBBox] = useState({ width: 0 } as DOMRect);
+    useEffect(
+        () => setBBox(stnNameEl.current!.getBBox()),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.name.toString()]
+    );
 
     return (
         <g
@@ -108,7 +110,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 };
 
 const StationName = React.forwardRef((props: { name: Name }, ref: React.Ref<SVGGElement>) =>
-    React.useMemo(
+    useMemo(
         () => (
             <g ref={ref}>
                 <text className="rmg-name__zh" fontSize={18}>
@@ -123,6 +125,7 @@ const StationName = React.forwardRef((props: { name: Name }, ref: React.Ref<SVGG
                 </g>
             </g>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.name[0], props.name[1]]
     )
 );

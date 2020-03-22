@@ -1,18 +1,16 @@
-import * as React from 'react';
+import React, { memo } from 'react';
 import { ParamContext } from '../../context';
 
-const DestinationSHMetro = () => {
+export default memo(function DestinationSHMetro() {
     return (
         <>
             <DefsSHMetro />
             <InfoSHMetro />
         </>
     );
-};
+});
 
-export default DestinationSHMetro;
-
-const DefsSHMetro = React.memo(() => (
+const DefsSHMetro = memo(() => (
     <defs>
         <path id="arrow_left" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black" />
     </defs>
@@ -22,7 +20,7 @@ const InfoSHMetro = () => {
     const { param, routes } = React.useContext(ParamContext);
 
     const destTextEl = React.createRef<SVGGElement>();
-    const [bcr, setBcr] = React.useState({ width: 0 } as DOMRect);
+    const [bcr] = React.useState({ width: 0 } as DOMRect);
     // Chito: bcr.width = 0 or based on dest_text?
     // React.useEffect(() => setBcr(destTextEl.current.getBoundingClientRect()), []);
     const flagLength = 160 + 150 + bcr.width + 45 + 50;
@@ -31,13 +29,13 @@ const InfoSHMetro = () => {
     const dh = param.svg_height - 300;
 
     // arrow
-    const isLeft = param.direction == 'l' ? 1 : -1;
+    const isLeft = param.direction === 'l' ? 1 : -1;
     let arrowX = (param.svgWidth.destination - isLeft * flagLength) / 20;
-    arrowX = param.direction == 'l' ? arrowX : param.svgWidth.destination - 20;
+    arrowX = param.direction === 'l' ? arrowX : param.svgWidth.destination - 20;
     const arrowRotate = 90 * (1 - isLeft);
 
     // not in use now
-    const platformNumX = arrowX + isLeft * (160 + 50 + 75);
+    // const platformNumX = arrowX + isLeft * (160 + 50 + 75);
 
     // for each left valid destinations, get the name from id
     const validDests = Array.from(

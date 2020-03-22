@@ -1,15 +1,18 @@
-import * as React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ParamContext } from '../../context';
 import StationNumberText from '../station-num-gzmtr';
-import { Name } from '../../types';
 
 const InfoGZMTR = () => {
     const { param } = React.useContext(ParamContext);
     const curStnInfo = param.stn_list[param.current_stn_idx];
 
-    const curNameEl = React.useRef<SVGGElement>();
-    const [nameBBox, setNameBBox] = React.useState({ width: 0 } as DOMRect);
-    React.useEffect(() => setNameBBox(curNameEl.current.getBBox()), [curStnInfo.name[0], curStnInfo.name[1]]);
+    const curNameEl = React.useRef<SVGGElement | null>(null);
+    const [nameBBox, setNameBBox] = useState({ width: 0 } as DOMRect);
+    useEffect(
+        () => setNameBBox(curNameEl.current!.getBBox()),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [curStnInfo.name[0], curStnInfo.name[1]]
+    );
 
     const nextStnId = curStnInfo[param.direction === 'l' ? 'parents' : 'children'];
 
@@ -101,9 +104,9 @@ const BigStnNum = (props: { lineNum: string; stnNum: string } & React.SVGProps<S
 const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
     const { param } = React.useContext(ParamContext);
 
-    const [nextBBox, setNextBBox] = React.useState({ width: 0 } as DOMRect);
-    const nextNameEl = React.createRef<SVGGElement>();
-    React.useEffect(() => setNextBBox(nextNameEl.current.getBBox()), []);
+    const [nextBBox, setNextBBox] = useState({ width: 0 } as DOMRect);
+    const nextNameEl = React.useRef<SVGGElement | null>(null);
+    useEffect(() => setNextBBox(nextNameEl.current!.getBBox()), []);
 
     const nextNameZHCount = param.stn_list[props.nextId].name[0].length;
     const nameBcrX = (param.svgWidth.runin - props.nameBBox.width) / 2;
@@ -140,7 +143,7 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
                     }}
                 >
                     <text className="rmg-name__zh">{param.stn_list[props.nextId].name[0]}</text>
-                    {param.stn_list[props.nextId].name[1].split('\\').map((txt, i) => (
+                    {param.stn_list[props.nextId].name[1].split('\\').map((txt: string, i: number) => (
                         <text className="rmg-name__en" dy={30 + i * 17} key={i}>
                             {txt}
                         </text>
@@ -176,38 +179,50 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
 const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
     const { param, routes } = React.useContext(ParamContext);
 
-    const [nextBBox, setNextBBox] = React.useState({ width: 0 } as DOMRect);
-
-    const validRoutes = props.nextIds.map(stnId =>
-        routes
-            .filter(route => route.indexOf(stnId) !== -1)
-            .map(route => route.filter(s => !['linestart', 'lineend'].includes(s)))
+    const nextNames = props.nextIds.map(id => param.stn_list[id].name);
+    const [nextBBox, setNextBBox] = useState({ width: 0 } as DOMRect);
+    const nextNameEls = useRef<(SVGGElement | null)[]>([]);
+    useEffect(
+        () => {
+            setNextBBox(prevBBox => ({ ...prevBBox, width: 0 }));
+            nextNameEls.current.forEach(el => {
+                let nextBBox = el?.getBBox();
+                setNextBBox(prevBBox => {
+                    if (nextBBox) {
+                        return prevBBox.width > nextBBox.width ? prevBBox : nextBBox;
+                    } else {
+                        return prevBBox;
+                    }
+                });
+            });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [nextNames.toString()]
     );
-    const validEnds = validRoutes.map(routes => {
-        if (param.direction === 'l') {
-            return Array.from(new Set(routes.map(route => route[0]))).reverse();
-        } else {
-            return Array.from(new Set(routes.map(route => route.reverse()[0])));
-        }
-    });
 
-    const nextNameZHCount = Math.max(...props.nextIds.map(id => param.stn_list[id].name[0].length));
+    const validEnds = props.nextIds.map(stnId =>
+        routes.reduce(
+            (acc, route) =>
+                // filter routes not containing next station's id
+                route.includes(stnId)
+                    ? acc.concat(
+                          route
+                              .filter(s => !['linestart', 'lineend'].includes(s))
+                              // select first/last station's id
+                              .slice(param.direction === 'l' ? 0 : -1)[0]
+                      )
+                    : acc,
+            [] as string[]
+        )
+    );
+
+    const nextNameZHCount = Math.max(...nextNames.map(names => names[0].length));
     const nameBcrX = (param.svgWidth.runin - props.nameBBox.width) / 2;
 
     return (
         <>
             <g id="big_next_2">
-                {props.nextIds.map((stnId, i) => {
-                    const nextNameEl = React.createRef<SVGGElement>();
-                    React.useEffect(
-                        () =>
-                            setNextBBox(prevBBox => {
-                                let nextBBox = nextNameEl.current.getBBox();
-                                return prevBBox.width > nextBBox.width ? prevBBox : nextBBox;
-                            }),
-                        []
-                    );
-
+                {nextNames.map((name, i) => {
                     return (
                         <React.Fragment key={i}>
                             <g
@@ -225,7 +240,7 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                                 </text>
                             </g>
                             <g
-                                ref={nextNameEl}
+                                ref={el => (nextNameEls.current[i] = el)}
                                 textAnchor="start"
                                 style={{
                                     ['--translate-x' as any]:
@@ -234,8 +249,8 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                                             : `${param.svgWidth.runin - 45 - nextBBox.width}px`,
                                 }}
                             >
-                                <text className="rmg-name__zh">{param.stn_list[stnId].name[0]}</text>
-                                {param.stn_list[stnId].name[1].split('\\').map((txt, j) => (
+                                <text className="rmg-name__zh">{name[0]}</text>
+                                {name[1].split('\\').map((txt, j) => (
                                     <text key={j} className="rmg-name__en" y={22 + j * 13}>
                                         {txt}
                                     </text>

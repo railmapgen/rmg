@@ -73,11 +73,11 @@ export const getBase64FontFace = async (svgEl: SVGSVGElement) => {
             );
 
             return Promise.all(txt.map(getRenderedFontFace))
-                .then(rules => <string[]>[].concat(...rules))
-                .then(rules => Array.from(new Set(rules)))
+                .then(rules => ([] as string[]).concat(...rules))
+                .then(rules => [...new Set(rules)])
                 .then(rules => {
                     return rules.map(async rule => {
-                        return fetch(rule.match(/https:[\w:/.-]+.woff2/g)[0])
+                        return fetch(rule.match(/https:[\w:/.-]+.woff2/g)![0])
                             .then(response => response.blob())
                             .then(readBlobAsDataURL)
                             .then(uri => rule.replace(/src:[ \w('",\-:/.)]+;/g, `src: url('${uri}'); `));

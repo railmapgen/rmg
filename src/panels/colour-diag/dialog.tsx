@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -15,8 +15,6 @@ import {
     Button,
     createStyles,
 } from '@material-ui/core';
-
-import { Name } from '../../types';
 
 import ThemeListItems from './theme-items';
 
@@ -69,10 +67,6 @@ const ColourDialog = React.memo(
             let newName = props.lineName.map((val, idx) => (idx === index ? value : val));
             props.onUpdate('name', newName);
             // props.onUpdate('all', [...props.theme, ...newName]);
-        };
-
-        const themeChange = (key: string, value: any) => {
-            props.onUpdate('all', [...value, props.lineName[0], props.lineName[1]]);
         };
 
         const handleClose = () => {

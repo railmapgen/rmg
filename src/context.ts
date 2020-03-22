@@ -1,30 +1,23 @@
-import * as React from 'react';
-import {
-    RMGParam,
-    Name,
-    StationTransfer,
-    BranchInfo,
-    StationInfo,
-    InterchangeInfo,
-    ProvidedCanvas,
-    Note,
-} from './types';
+import React, { createContext } from 'react';
 
-export const CanvasContext = React.createContext<{
+interface ICanvasContext {
     canvasAvailable: ProvidedCanvas[];
     canvasToShown: ProvidedCanvas | 'all';
     setCanvasToShown: React.Dispatch<React.SetStateAction<ProvidedCanvas | 'all'>>;
     canvasScale: number;
     setCanvasScale: React.Dispatch<React.SetStateAction<number>>;
-}>(null);
+}
 
-export const ParamContext = React.createContext<{
+interface IParamContext {
     param: RMGParam;
     dispatch: React.Dispatch<ReducerAction>;
     branches: string[][];
     routes: string[][];
     deps: string;
-}>(null);
+}
+
+export const CanvasContext = createContext<ICanvasContext>({} as ICanvasContext);
+export const ParamContext = createContext<IParamContext>({} as IParamContext);
 
 type ReducerAction =
     | { type: 'GLOBAL'; data: RMGParam }
@@ -298,17 +291,17 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
         case 'ADD_NOTE_GZMTR':
             return {
                 ...state,
-                notesGZMTR: state.notesGZMTR.concat([['', '', 0, 0, false]]),
+                notesGZMTR: state.notesGZMTR?.concat([['', '', 0, 0, false]]),
             };
         case 'REMOVE_NOTE_GZMTR':
             return {
                 ...state,
-                notesGZMTR: state.notesGZMTR.filter((_, i) => i !== action.idx),
+                notesGZMTR: state.notesGZMTR?.filter((_, i) => i !== action.idx),
             };
         case 'UPDATE_NOTE_GZMTR':
             return {
                 ...state,
-                notesGZMTR: state.notesGZMTR.map((note, i) => (i === action.idx ? action.note : note)),
+                notesGZMTR: state.notesGZMTR?.map((note, i) => (i === action.idx ? action.note : note)),
             };
         case 'UPDATE_STATION_NAME':
             // window.myLine.updateStnName(action.stnId, action.name);
@@ -354,7 +347,7 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
                         ...state.stn_list[action.stnId],
                         transfer: {
                             ...state.stn_list[action.stnId].transfer,
-                            info: state.stn_list[action.stnId].transfer.info.map((infos, i) =>
+                            info: state.stn_list[action.stnId].transfer?.info.map((infos, i) =>
                                 i === action.setIdx
                                     ? infos.map((int, j) =>
                                           j === action.intIdx

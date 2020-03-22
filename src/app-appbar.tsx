@@ -12,11 +12,9 @@ import {
     Menu,
     MenuItem,
     Divider,
-    Popper,
     useMediaQuery,
 } from '@material-ui/core';
 import { CanvasContext } from './context';
-import { ProvidedCanvas } from './types';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -51,15 +49,10 @@ const AppAppBar = () => {
 
                     <CanvasToggle />
                     <ZoomToggles />
-
-                    {/* <Tooltip title="Information">
-                    <IconButton className={classes.menuButton}>
-                        <Icon>info</Icon>
-                    </IconButton>
-                </Tooltip> */}
                 </Toolbar>
             </AppBar>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [prefersDarkMode, i18n.language]
     );
 };
@@ -87,7 +80,7 @@ const CanvasToggle = () => {
                     </IconButton>
                 </Tooltip>
                 <Menu anchorEl={canvasButtonEl} open={Boolean(canvasButtonEl)} onClose={() => setCanvasButtonEl(null)}>
-                    {canvasAvailable.map(c => (
+                    {canvasAvailable.map((c: ProvidedCanvas) => (
                         <MenuItem key={c} onClick={handleClick(c)}>
                             {t('toggle.' + c)}
                         </MenuItem>
@@ -97,6 +90,7 @@ const CanvasToggle = () => {
                 </Menu>
             </>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [canvasAvailable.toString(), canvasButtonEl, classes.menuButton]
     );
 };
@@ -110,7 +104,9 @@ const ZoomToggles = () => {
             <>
                 <Tooltip title={t('zoom.out')}>
                     <IconButton
-                        onClick={() => setCanvasScale(prevScale => (prevScale <= 0.1 ? prevScale : prevScale - 0.1))}
+                        onClick={() =>
+                            setCanvasScale((prevScale: number) => (prevScale <= 0.1 ? prevScale : prevScale - 0.1))
+                        }
                         className={classes.menuButton}
                     >
                         <Icon>zoom_out</Icon>
@@ -118,7 +114,7 @@ const ZoomToggles = () => {
                 </Tooltip>
                 <Tooltip title={t('zoom.in')}>
                     <IconButton
-                        onClick={() => setCanvasScale(prevScale => prevScale + 0.1)}
+                        onClick={() => setCanvasScale((prevScale: number) => prevScale + 0.1)}
                         className={classes.menuButton}
                     >
                         <Icon>zoom_in</Icon>
@@ -126,6 +122,7 @@ const ZoomToggles = () => {
                 </Tooltip>
             </>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [classes.menuButton]
     );
 };

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     List,
@@ -16,9 +16,6 @@ import {
     Button,
     FormGroup,
     Checkbox,
-    ExpansionPanelSummary,
-    Typography,
-    ExpansionPanelDetails,
 } from '@material-ui/core';
 import { ParamContext } from '../../../context';
 
@@ -44,7 +41,7 @@ interface StationEditMoreTabProps {
 const MoreTab = (props: StationEditMoreTabProps) => {
     const { t } = useTranslation();
 
-    const { param, dispatch } = React.useContext(ParamContext);
+    const { dispatch } = React.useContext(ParamContext);
 
     const [facilityDialogOpen, setFacilityDialogOpen] = React.useState(false);
 
@@ -92,7 +89,7 @@ const MoreTab = (props: StationEditMoreTabProps) => {
                             primary={t('stations.edit.more.services.button')}
                             secondary={
                                 <FormGroup row>
-                                    {Object.keys(allServices).map((s: 'local' | 'express') => (
+                                    {(Object.keys(allServices) as (keyof typeof allServices)[]).map(s => (
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
@@ -125,7 +122,7 @@ export default MoreTab;
 
 interface FacilityDialogProps {
     open: boolean;
-    onClose: (action: string) => void;
+    onClose: (action: 'close' | '' | 'airport' | 'hsr' | 'disney') => void;
     facility: keyof typeof allFacilities;
 }
 
@@ -135,7 +132,11 @@ function FacilityDialog(props: FacilityDialogProps) {
         <Dialog open={props.open} onClose={() => props.onClose('close')}>
             <DialogTitle>{t('stations.edit.more.facility.title')}</DialogTitle>
             <DialogContent dividers>
-                <RadioGroup name="facility" value={props.facility} onChange={e => props.onClose(e.target.value)}>
+                <RadioGroup
+                    name="facility"
+                    value={props.facility}
+                    onChange={e => props.onClose(e.target.value as 'close' | '' | 'airport' | 'hsr' | 'disney')}
+                >
                     {Object.keys(allFacilities).map(f => (
                         <FormControlLabel
                             value={f}

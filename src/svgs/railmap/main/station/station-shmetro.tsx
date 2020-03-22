@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ParamContext } from '../../../../context';
-import { Name, InterchangeInfo } from '../../../../types';
 
 interface Props {
     stnId: string;
@@ -47,10 +46,14 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
     // get the exact station name width so that the
     // interchange station icon can be right after the station name
-    const stnNameEl = React.useRef<SVGGElement>();
+    const stnNameEl = React.useRef<SVGGElement | null>(null);
     // the original name position
     const [bBox, setBBox] = React.useState({ width: 0 } as DOMRect);
-    React.useEffect(() => setBBox(stnNameEl.current.getBBox()), [props.name.toString()]);
+    React.useEffect(
+        () => setBBox(stnNameEl.current!.getBBox()),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.name.toString()]
+    );
     // the original name position's right x
     const x = bBox.width + 5;
 
@@ -93,6 +96,7 @@ const StationName = React.forwardRef((props: { name: Name }, ref: React.Ref<SVGG
                 </g>
             </g>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.name.toString()]
     )
 );
@@ -126,7 +130,7 @@ const IntBoxNumber = React.memo(
             <rect height={30} width={20} y={-15} fill={props.info[2]} />
             <text x={10} className="rmg-name__zh" textAnchor="middle" fill={props.info[3]} dominantBaseline="central">
                 {/* // line starts with numbers */}
-                {String(props.info[4]).match(/(\d*)\w+/)[0]}
+                {props.info[4].match(/(\d*)\w+/)![0]}
             </text>
         </>
     ),
@@ -167,6 +171,7 @@ const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
                 </text>
             </g>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [lineNames.toString()]
     );
 };

@@ -1,6 +1,5 @@
-import * as React from 'react';
+import React from 'react';
 import { Chip, makeStyles, Avatar, createStyles, useMediaQuery } from '@material-ui/core';
-import { StationInfo } from '../../types';
 
 const useStyles = makeStyles(theme => {
     return createStyles({
@@ -106,17 +105,20 @@ const StationChipSet = React.memo(
         if (prevProps.tpo.toString() !== nextProps.tpo.toString()) {
             return false;
         } else {
-            let prevDeps = {};
-            let nextDeps = {};
-            Object.keys(nextProps.stnList).forEach(stnId => {
-                let { name, num } = nextProps.stnList[stnId];
-                nextDeps[stnId] = { name, num };
-            });
-            Object.keys(prevProps.stnList).forEach(stnId => {
-                let { name, num } = prevProps.stnList[stnId];
-                prevDeps[stnId] = { name, num };
-            });
-            return JSON.stringify(prevDeps) === JSON.stringify(nextDeps);
+            const getDeps = (stnList: { [stnId: string]: StationInfo }) =>
+                Object.keys(stnList).reduce(
+                    (acc, cur) =>
+                        acc +
+                        cur +
+                        ((...k: (keyof StationInfo)[]) => (o: StationInfo) =>
+                            k.reduce((a, c) => a + JSON.stringify(o[c]), ''))(
+                            'name',
+                            'num'
+                        )(stnList[cur]),
+                    ''
+                );
+
+            return getDeps(prevProps.stnList) === getDeps(nextProps.stnList);
         }
     }
 );

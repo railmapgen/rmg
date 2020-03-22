@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Dialog,
@@ -16,7 +16,6 @@ import {
     makeStyles,
     createStyles,
 } from '@material-ui/core';
-import { InterchangeInfo, StationTransfer } from '../../../types';
 import { ParamContext } from '../../../context';
 
 const NameTab = React.lazy(() => import(/* webpackChunkName: "panelStationsName" */ './name-tab'));
@@ -50,7 +49,7 @@ const useStyles = makeStyles(theme =>
 
 interface StationEditDialogProps {
     onClose: () => void;
-    onUpdate: (value, field, index?) => void;
+    onUpdate: (value: any, field: string, index?: number) => void;
     open: boolean;
     stnId: string;
 }
@@ -93,6 +92,7 @@ export default function StationEditDialog(props: StationEditDialogProps) {
                 ))}
             </Tabs>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [tabIndex, classes.tab]
     );
 

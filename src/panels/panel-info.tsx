@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Card,
@@ -48,7 +48,7 @@ const useStyles = makeStyles(() =>
     })
 );
 
-export default () => {
+export default memo(function PanelInfo() {
     const classes = useStyles();
     const { t } = useTranslation();
 
@@ -101,4 +101,4 @@ export default () => {
             </Typography>
         </div>
     );
-};
+});

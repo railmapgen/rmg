@@ -14,11 +14,10 @@ i18n.use(Backend)
             'zh-TW': ['zh-HK', 'zh-Hant'],
             default: ['en'],
         },
-        // lng: window.urlParams.get('lang'),
         // debug: true,
         backend: {
             // for all available options read the backend's repository readme file
-            loadPath: './locale/{{lng}}.json',
+            loadPath: process.env.PUBLIC_URL + '/locale/{{lng}}.json',
         },
 
         interpolation: {

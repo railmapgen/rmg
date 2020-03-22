@@ -2,11 +2,10 @@ import * as React from 'react';
 import { CircularProgress } from '@material-ui/core';
 
 import PanelTabs from './panels';
-import { RMGParam } from '../types';
 
 interface Props {
     param: RMGParam;
-    paramUpdate: (key, data) => void;
+    paramUpdate: (key: string, data: any) => void;
     tpo: string[];
 }
 

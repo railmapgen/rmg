@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ParamContext } from '../../../context';
 import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState } from '../methods/share';
 import StationSHMetro from './station/station-shmetro';
@@ -15,13 +15,17 @@ const MainSHMetro = () => {
     const criticalPath = criticalPathMethod('linestart', 'lineend', adjMat);
     const realCP = criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat);
 
-    const xShares = React.useMemo(() => {
-        console.log('computing x shares');
-        return Object.keys(param.stn_list).reduce(
-            (acc, cur) => ({ ...acc, [cur]: getXShareMTR(cur, adjMat, branches) }),
-            {}
-        );
-    }, [branches.toString(), JSON.stringify(adjMat)]);
+    const xShares = React.useMemo(
+        () => {
+            console.log('computing x shares');
+            return Object.keys(param.stn_list).reduce(
+                (acc, cur) => ({ ...acc, [cur]: getXShareMTR(cur, adjMat, branches) }),
+                {} as { [stnId: string]: number }
+            );
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [branches.toString(), JSON.stringify(adjMat)]
+    );
     const lineXs: [number, number] = [
         (param.svgWidth.railmap * param.padding) / 100,
         param.svgWidth.railmap * (1 - param.padding / 100),
@@ -31,31 +35,35 @@ const MainSHMetro = () => {
         {} as typeof xShares
     );
 
-    const yShares = React.useMemo(() => {
-        console.log('computing y shares');
-        return Object.keys(param.stn_list).reduce(
-            (acc, cur) => ({ ...acc, [cur]: branches[0].includes(cur) ? 0 : 3 }),
-            {} as { [stnId: string]: number }
-        );
-    }, [deps]);
+    const yShares = React.useMemo(
+        () => {
+            console.log('computing y shares');
+            return Object.keys(param.stn_list).reduce(
+                (acc, cur) => ({ ...acc, [cur]: branches[0].includes(cur) ? 0 : 3 }),
+                {} as { [stnId: string]: number }
+            );
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [deps]
+    );
     const ys = Object.keys(yShares).reduce(
         (acc, cur) => ({ ...acc, [cur]: -yShares[cur] * param.branch_spacing }),
         {} as typeof yShares
     );
 
-    const stnStates = React.useMemo(() => getStnState(param.current_stn_idx, routes, param.direction), [
-        param.current_stn_idx,
-        param.direction,
-        routes.toString(),
-    ]);
+    const stnStates = React.useMemo(
+        () => getStnState(param.current_stn_idx, routes, param.direction),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [param.current_stn_idx, param.direction, routes.toString()]
+    );
 
     const linePaths = drawLine(branches, stnStates);
-    const paths = Object.keys(linePaths).reduce(
-        (acc, cur: keyof typeof linePaths) => ({
+    const paths = (Object.keys(linePaths) as (keyof ReturnType<typeof drawLine>)[]).reduce(
+        (acc, cur) => ({
             ...acc,
             [cur]: linePaths[cur].map(stns => _linePath(stns, cur, xs, ys, param.direction)),
         }),
-        {} as { [key in keyof typeof linePaths]: string[] }
+        {} as { [key in keyof ReturnType<typeof drawLine>]: string[] }
     );
 
     return (
@@ -85,8 +93,14 @@ const Line = (props: { paths: { main: string[]; pass: string[] } }) => {
     );
 };
 
-const _linePath = (stnIds: string[], type: 'main' | 'pass', xs, ys, direction: 'l' | 'r') => {
-    var [prevId, prevY, prevX]: [string?, number?, number?] = [];
+const _linePath = (
+    stnIds: string[],
+    type: 'main' | 'pass',
+    xs: { [stnId: string]: number },
+    ys: { [stnId: string]: number },
+    direction: 'l' | 'r'
+) => {
+    var [prevY, prevX] = [] as number[];
     var path: { [key: string]: number[] } = {};
     const e = 30;
 
@@ -94,23 +108,23 @@ const _linePath = (stnIds: string[], type: 'main' | 'pass', xs, ys, direction: '
         var x = xs[stnId];
         var y = ys[stnId];
         if (!prevY && prevY !== 0) {
-            [prevId, prevX, prevY] = [stnId, x, y];
+            [prevX, prevY] = [x, y];
             path['start'] = [x, y];
             return;
         }
         if (y === 0) {
             // merge back to main line
-            if (y != prevY) {
+            if (y !== prevY) {
                 path['bifurcate'] = [prevX, prevY];
             }
         } else {
             // on the branch line
-            if (y != prevY) {
+            if (y !== prevY) {
                 path['bifurcate'] = [x, y];
             }
         }
         path['end'] = [x, y];
-        [prevId, prevX, prevY] = [stnId, x, y];
+        [prevX, prevY] = [x, y];
     });
 
     // generate path
@@ -163,10 +177,10 @@ const _linePath = (stnIds: string[], type: 'main' | 'pass', xs, ys, direction: '
         // keys in path: start, bifurcate, end
 
         // Todo: disable lower branch
-        let [x, y] = path['start'],
-            h = path['end'][0];
-        let [xb, yb] = path['bifurcate'],
-            [xm, ym] = path['end'];
+        let [x, y] = path['start'];
+        // let h = path['end'][0];
+        // let [xb, yb] = path['bifurcate']
+        let [xm, ym] = path['end'];
         if (type === 'main') {
             if (direction === 'l') {
                 if (ym > y) {
@@ -221,9 +235,9 @@ const StationGroup = (props: StationGroupProps) => {
 
     return (
         <g id="stn_icons">
-            {Object.keys(param.stn_list).map(stnId => {
-                if (['linestart', 'lineend'].includes(stnId)) return;
-                return (
+            {Object.keys(param.stn_list)
+                .filter(stnId => !['linestart', 'lineend'].includes(stnId))
+                .map(stnId => (
                     <g
                         key={stnId}
                         style={{
@@ -232,8 +246,7 @@ const StationGroup = (props: StationGroupProps) => {
                     >
                         <StationSHMetro stnId={stnId} stnState={props.stnStates[stnId]} />
                     </g>
-                );
-            })}
+                ))}
         </g>
     );
 };

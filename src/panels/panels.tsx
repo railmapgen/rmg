@@ -1,20 +1,7 @@
 import * as React from 'react';
 
-import {
-    Typography,
-    Box,
-    CircularProgress,
-    Tabs,
-    Tab,
-    Icon,
-    createMuiTheme,
-    ThemeProvider,
-    makeStyles,
-    createStyles,
-    useMediaQuery,
-} from '@material-ui/core';
+import { Typography, Box, CircularProgress, Tabs, Tab, Icon, makeStyles, createStyles } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
-import { RMGParam } from '../types';
 
 const PanelSave = React.lazy(() => import(/* webpackChunkName: "panelSave" */ './save'));
 const PanelLayout = React.lazy(() => import(/* webpackChunkName: "panelLayout" */ './layout'));
@@ -56,7 +43,7 @@ const useStyles = makeStyles(theme =>
 
 interface Props {
     param: RMGParam;
-    paramUpdate: (key, data) => void;
+    paramUpdate: (key: string, data: any) => void;
     tpo: string[];
 }
 
@@ -121,6 +108,7 @@ export default function PanelTab(props: Props) {
                 </Tabs>
             </Typography>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [value, i18n.language, classes.tab]
     );
 

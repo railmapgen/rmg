@@ -1,12 +1,10 @@
-import * as React from 'react';
-import './i18n';
+import React, { useState, useMemo, useEffect, useReducer } from 'react';
 import AppAppBar from './app-appbar';
 import SVGs from './svgs';
 import Panels from './panels';
 import { getBranches, useTpo, getRoutes } from './methods';
 import { CanvasContext, ParamContext, paramReducer } from './context';
 import { createMuiTheme, ThemeProvider, useMediaQuery, LinearProgress } from '@material-ui/core';
-import { ProvidedCanvas, RMGParam } from './types';
 
 const darkTheme = createMuiTheme({
     palette: {
@@ -71,14 +69,14 @@ export default function App(props: { canvas: ProvidedCanvas[] }) {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const theme = prefersDarkMode ? darkTheme : lightTheme;
 
-    const [canvasToShown, setCanvasToShown] = React.useState<'all' | ProvidedCanvas>(
+    const [canvasToShown, setCanvasToShown] = useState<'all' | ProvidedCanvas>(
         props.canvas.includes(localStorage.rmgCanvas) ? localStorage.rmgCanvas : 'all'
     );
-    React.useEffect(() => localStorage.setItem('rmgCanvas', canvasToShown), [canvasToShown]);
-    const [canvasScale, setCanvasScale] = React.useState(
+    useEffect(() => localStorage.setItem('rmgCanvas', canvasToShown), [canvasToShown]);
+    const [canvasScale, setCanvasScale] = useState(
         Number(localStorage.rmgScale) >= 0.1 ? Number(localStorage.rmgScale) : 1
     );
-    React.useEffect(() => localStorage.setItem('rmgScale', canvasScale.toFixed(1)), [canvasScale]);
+    useEffect(() => localStorage.setItem('rmgScale', canvasScale.toFixed(1)), [canvasScale]);
 
     return (
         <>
@@ -103,15 +101,15 @@ export default function App(props: { canvas: ProvidedCanvas[] }) {
 }
 
 const AppBody = () => {
-    const [param, dispatch] = React.useReducer(paramReducer, JSON.parse(localStorage.rmgParam) as RMGParam);
+    const [param, dispatch] = useReducer(paramReducer, JSON.parse(localStorage.rmgParam) as RMGParam);
     const paramString = JSON.stringify(param);
-    React.useEffect(() => localStorage.setItem('rmgParam', paramString), [paramString]);
+    useEffect(() => localStorage.setItem('rmgParam', paramString), [paramString]);
 
     const deps = Object.keys(param.stn_list).reduce(
         (acc, cur) =>
             acc +
             cur +
-            ((...k) => o => k.reduce((a, c) => a + JSON.stringify(o[c]), ''))(
+            ((...k: (keyof StationInfo)[]) => (o: StationInfo) => k.reduce((a, c) => a + JSON.stringify(o[c]), ''))(
                 'parents',
                 'children',
                 'branch'
@@ -119,11 +117,19 @@ const AppBody = () => {
         ''
     );
 
-    const branches = React.useMemo(() => getBranches(param.stn_list), [deps]);
-    const routes = React.useMemo(() => getRoutes(param.stn_list), [deps]);
+    const branches = useMemo(
+        () => getBranches(param.stn_list),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [deps]
+    );
+    const routes = useMemo(
+        () => getRoutes(param.stn_list),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [deps]
+    );
     const tpo = useTpo(branches);
 
-    const handleUpdate = (key, data) => dispatch({ type: 'ANY', key, data });
+    const handleUpdate = (key: string, data: any) => dispatch({ type: 'ANY', key, data });
 
     return (
         <>

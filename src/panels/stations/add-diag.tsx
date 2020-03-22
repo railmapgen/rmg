@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Dialog,
@@ -13,21 +13,20 @@ import {
     DialogActions,
     Button,
 } from '@material-ui/core';
-import { StationInfo } from '../../types';
 import { formatStnName } from '../../utils';
 import { getYShareMTR } from '../../methods';
 import { addStation } from './utils';
 
-const newBranchPossibleEnd = (prep: 'before' | 'after', pivot: string, stnList: { [stnId: string]: StationInfo }) => {
+const newBranchPossibleEnd = (prep: 'before' | 'after', pivot: string, stnList: StationDict) => {
     let res: string[] = [];
-    if (prep == 'before') {
-        while (stnList[pivot].parents.length == 1) {
+    if (prep === 'before') {
+        while (stnList[pivot].parents.length === 1) {
             pivot = stnList[pivot].parents[0];
             res.unshift(pivot);
         }
         res.pop();
     } else {
-        while (stnList[pivot].children.length == 1) {
+        while (stnList[pivot].children.length === 1) {
             pivot = stnList[pivot].children[0];
             res.push(pivot);
         }
@@ -48,20 +47,20 @@ const newStnPossibleLoc = (
             return [1, 1, 1, [], []];
         case 1:
             let y = getYShareMTR(pivot, stnList);
-            if (y == 0) {
+            if (y === 0) {
                 // 1 -> 1
                 let state: string[] | 0 = newBranchPossibleEnd(prep, pivot, stnList);
                 state = state.length ? state : [];
                 return [1, 0, 0, state, state];
                 // [1,0,0,1,1];
             } else if (y < 0) {
-                if (prep == 'before') {
+                if (prep === 'before') {
                     return [stnList[stnList[pivot].parents[0]].children.length - 1, 0, 1, [], []];
                 } else {
                     return [stnList[stnList[pivot].children[0]].parents.length - 1, 0, 1, [], []];
                 }
             } else {
-                if (prep == 'before') {
+                if (prep === 'before') {
                     return [stnList[stnList[pivot].parents[0]].children.length - 1, 1, 0, [], []];
                 } else {
                     return [stnList[stnList[pivot].children[0]].parents.length - 1, 1, 0, [], []];
@@ -78,7 +77,7 @@ interface StationAddDialogProps {
     };
     tpo: string[];
     onClose: (action: 'close' | string) => void;
-    paramUpdate: (key, data) => void;
+    paramUpdate: (key: string, data: any) => void;
 }
 
 const StationAddDialog = React.memo(
@@ -107,16 +106,22 @@ const StationAddDialog = React.memo(
             pivot,
             props.stnList,
         ]);
-        React.useEffect(() => {
-            console.log('new');
-            setLocOK(newLocs.map(p => (typeof p === 'number' ? Boolean(p) : Boolean(p.length))));
-            setEndList(newLocs[3]);
-        }, [newLocs.toString()]);
+        React.useEffect(
+            () => {
+                console.log('new');
+                setLocOK(newLocs.map(p => (typeof p === 'number' ? Boolean(p) : Boolean(p.length))));
+                setEndList(newLocs[3]);
+            },
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            [newLocs.toString()]
+        );
 
         // Hook for updating loc selection (first available) when locOK list changed
-        React.useEffect(() => {
-            setLoc(Object.keys(allLocs)[locOK.indexOf(true)]);
-        }, [locOK]);
+        React.useEffect(
+            () => setLoc(Object.keys(allLocs)[locOK.indexOf(true)]),
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            [locOK]
+        );
 
         // Hook for updating end selection when end list changed
         React.useEffect(() => {
@@ -125,9 +130,13 @@ const StationAddDialog = React.memo(
         }, [endList]);
 
         // Hook for setting new pivot in case of previous one being deleted
-        React.useEffect(() => {
-            if (!(pivot in props.stnList)) setPivot(props.tpo[0]);
-        }, [Object.keys(props.stnList).toString()]);
+        React.useEffect(
+            () => {
+                if (!(pivot in props.stnList)) setPivot(props.tpo[0]);
+            },
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            [Object.keys(props.stnList).toString()]
+        );
 
         const handleClick = (action: string) => {
             if (action === 'close') {
@@ -205,7 +214,7 @@ const StationAddDialog = React.memo(
                                 onChange={e => setLoc(e.target.value)}
                                 value={loc}
                             >
-                                {Object.keys(allLocs).map((key, idx) => (
+                                {(Object.keys(allLocs) as (keyof typeof allLocs)[]).map((key, idx) => (
                                     <MenuItem key={key} value={key} disabled={!locOK[idx]}>
                                         {allLocs[key]}
                                     </MenuItem>
@@ -248,17 +257,22 @@ const StationAddDialog = React.memo(
         if (prevProps.open !== nextProps.open) {
             return false;
         } else {
-            let prevDeps = {};
-            let nextDeps = {};
-            Object.keys(nextProps.stnList).forEach(stnId => {
-                let { name, num, parents, children } = nextProps.stnList[stnId];
-                nextDeps[stnId] = { name, num, parents, children };
-            });
-            Object.keys(prevProps.stnList).forEach(stnId => {
-                let { name, num, parents, children } = prevProps.stnList[stnId];
-                prevDeps[stnId] = { name, num, parents, children };
-            });
-            return JSON.stringify(prevDeps) === JSON.stringify(nextDeps);
+            const getDeps = (stnList: { [stnId: string]: StationInfo }) =>
+                Object.keys(stnList).reduce(
+                    (acc, cur) =>
+                        acc +
+                        cur +
+                        ((...k: (keyof StationInfo)[]) => (o: StationInfo) =>
+                            k.reduce((a, c) => a + JSON.stringify(o[c]), ''))(
+                            'parents',
+                            'children',
+                            'name',
+                            'num'
+                        )(stnList[cur]),
+                    ''
+                );
+
+            return getDeps(prevProps.stnList) === getDeps(nextProps.stnList);
         }
     }
 );

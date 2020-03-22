@@ -1,5 +1,4 @@
 import * as Global from '../../../methods';
-import { StationInfo, RMGParam } from '../../../types';
 
 /**
  * Compute the adjacency list of the graph.
@@ -31,7 +30,7 @@ export const adjacencyList = (
  * @param adjMat Adjacency matrix in the form of `Object` returned from `adjacencyList` method.
  */
 export const criticalPathMethod = (from: string, to: string, adjMat: ReturnType<typeof adjacencyList>) => {
-    if (from == to) {
+    if (from === to) {
         return { len: 0, nodes: [from] };
     }
     let allLengths: number[] = [];
@@ -128,7 +127,7 @@ export const getStnState = (
     direction: 'l' | 'r'
 ): { [stnId: string]: -1 | 0 | 1 } => {
     console.log("computing stations' states");
-    return [...new Set([].concat(...routes))].reduce(
+    return [...new Set(([] as string[]).concat(...routes))].reduce(
         (acc, cur: string) => ({
             ...acc,
             [cur]:
@@ -194,14 +193,14 @@ export class Stations {
         var stnPred = this.stnList[stnId].parents[0];
         if (stnPred) {
             // parent exist
-            if (this.stnList[stnPred].children.length == 1) {
+            if (this.stnList[stnPred].children.length === 1) {
                 // no sibling, then y same as parent
                 let res = this.getYShare(stnPred);
                 this.yShares[stnId] = res;
                 return res;
             } else {
                 // sibling exists, then y depends on its idx of being children
-                let res: 1 | -1 = this.stnList[stnPred].children.indexOf(stnId) == 0 ? 1 : -1;
+                let res: 1 | -1 = this.stnList[stnPred].children.indexOf(stnId) === 0 ? 1 : -1;
                 this.yShares[stnId] = res;
                 return res;
             }
@@ -212,7 +211,7 @@ export class Stations {
         }
     }
 
-    static getYShares(stnList, branches?: string[][]) {
+    static getYShares(stnList: StationDict, branches?: string[][]) {
         console.log('computing y shares');
         let stations = new this({ stnList });
 
@@ -225,7 +224,7 @@ export class Stations {
         return stations.yShares;
     }
 
-    private getNamePos(stnId: string) {
+    private getNamePos(stnId: string): boolean {
         if (stnId === 'linestart') {
             this.namePoss['linestart'] = true;
             return true;
@@ -247,7 +246,7 @@ export class Stations {
         return pos === 1;
     }
 
-    static getNamePos(stnList, cp) {
+    static getNamePos(stnList: StationDict, cp: { len: number; nodes: string[] }) {
         console.log('computing name position');
         let stations = new this({ stnList, criticalPath: cp });
 
@@ -300,8 +299,8 @@ export class Stations {
         branchSpacing: number,
         cp: { len: number; nodes: string[] }
     ) {
-        var [prevId, prevY, prevX]: [string?, number?, number?] = [];
-        var path = [];
+        var [prevId, prevY, prevX] = ([] as unknown) as [string, number, number];
+        var path = [] as string[];
 
         let { dx_a, dx_l } = this.pathTurnParams(branchSpacing);
         let stnDX = dx_a + dx_l / 2;
@@ -369,7 +368,7 @@ export class Stations {
         cp: { len: number; nodes: string[] }
     ) {
         let linePaths = { main: [] as string[], pass: [] as string[] };
-        branches.map((branch, i) => {
+        branches.forEach((branch, i) => {
             branch = branch.filter(stnId => !['linestart', 'lineend'].includes(stnId));
             var lineMainStns = branch.filter(stnId => stnStates[stnId] >= 0);
             var linePassStns = branch.filter(stnId => stnStates[stnId] <= 0);
@@ -378,7 +377,7 @@ export class Stations {
                 linePassStns = branch;
             }
 
-            if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length == 0 && lineMainStns.length) {
+            if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length === 0 && lineMainStns.length) {
                 // if two set disjoint
                 if (linePassStns[0] === branch[0]) {
                     // -1 -1 1 1
@@ -426,7 +425,7 @@ export class Stations {
 
 export const drawLine = (branches: string[][], stnStates: { [stnId: string]: -1 | 0 | 1 }) => {
     let linePaths = { main: [] as string[][], pass: [] as string[][] };
-    branches.map(branch => {
+    branches.forEach(branch => {
         branch = branch.filter(stnId => !['linestart', 'lineend'].includes(stnId));
         var lineMainStns = branch.filter(stnId => stnStates[stnId] >= 0);
         var linePassStns = branch.filter(stnId => stnStates[stnId] <= 0);
@@ -435,7 +434,7 @@ export const drawLine = (branches: string[][], stnStates: { [stnId: string]: -1 
             linePassStns = branch;
         }
 
-        if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length == 0 && lineMainStns.length) {
+        if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length === 0 && lineMainStns.length) {
             // if two set disjoint
             if (linePassStns[0] === branch[0]) {
                 // -1 -1 1 1

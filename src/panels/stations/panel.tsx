@@ -1,10 +1,9 @@
-import * as React from 'react';
-import { useTranslation, withTranslation } from 'react-i18next';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Snackbar, Button, IconButton, Icon } from '@material-ui/core';
 
 import { formatStnName } from '../../utils';
-import { StationInfo, Name } from '../../types';
 
 import StationAddDialog from './add-diag';
 import StationEditDialog from './edit-diag';
@@ -15,205 +14,175 @@ import StationFabs from './fabs';
 import { removeStation, reverseStations } from './utils';
 
 interface PanelStationsProps {
-    t: any;
     theme: [string, string, string, '#000' | '#fff'];
     stnList: { [stnId: string]: StationInfo };
-    paramUpdate: (key, data) => void;
+    paramUpdate: (key: string, data: any) => void;
     currentId: string;
     tpo: string[];
 }
 
-interface PanelStationsState {
-    stationSelected: string;
-    snackBarOpened: boolean;
-    stnAddDialogOpened: boolean;
-    stnEditDialogOpened: boolean;
-    stnDeleteDialogOpened: boolean;
-    stnDeleteErrDialogOpened: boolean;
-    autoNumDialogOpened: boolean;
-}
+const PanelStations = (props: PanelStationsProps) => {
+    const { t } = useTranslation();
 
-class PanelStations extends React.Component<PanelStationsProps, PanelStationsState> {
-    constructor(props) {
-        super(props);
+    const [stationSelected, setStationSelected] = useState('');
+    const [isSnackBarOpen, setIsSnackBarOpen] = useState(false);
+    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [isDeleteErrDialogOpen, setIsDeleteErrDialogOpen] = useState(false);
+    const [isAutoNumDialogOpen, setIsAutoNumDialogOpen] = useState(false);
 
-        this.state = {
-            stationSelected: '',
-            snackBarOpened: false,
-            stnAddDialogOpened: false,
-            stnEditDialogOpened: false,
-            stnDeleteDialogOpened: false,
-            stnDeleteErrDialogOpened: false,
-            autoNumDialogOpened: false,
-        };
-    }
-
-    stnChipSetSelection = (stnId: string) => () => {
-        console.log(stnId);
-        this.setState({
-            snackBarOpened: true,
-            stationSelected: stnId,
-        });
+    const stnChipSetSelection = (stnId: string) => () => {
+        setStationSelected(stnId);
+        setIsSnackBarOpen(true);
     };
 
-    snackBarClose(action: string) {
+    const snackBarClose = (action: string) => {
         if (action === 'clickaway') return;
-        this.setState({ snackBarOpened: false });
+        setIsSnackBarOpen(false);
         if (action === 'current') {
-            this.props.paramUpdate('current_stn_idx', this.state.stationSelected);
-            // window.myLine.currentStnId = this.state.stationSelected;
+            props.paramUpdate('current_stn_idx', stationSelected);
         } else if (action === 'edit') {
-            this.setState({ stnEditDialogOpened: true });
+            setIsEditDialogOpen(true);
         } else if (action === 'delete') {
-            this.setState({ stnDeleteDialogOpened: true });
+            setIsDeleteDialogOpen(true);
         }
-    }
+    };
 
-    stnAddDialogClose(action: 'close' | string) {
+    const stnAddDialogClose = (action: 'close' | string) => {
         if (action === 'close') {
-            this.setState({ stnAddDialogOpened: false });
+            setIsAddDialogOpen(false);
         } else {
-            this.setState({
-                stnAddDialogOpened: false,
-                stnEditDialogOpened: true,
-                stationSelected: action,
-            });
+            setIsAddDialogOpen(false);
+            setStationSelected(action);
+            setIsEditDialogOpen(true);
         }
-    }
+    };
 
-    stnEditDialogUpdate(value, field, index) {
-        let stnId = this.state.stationSelected;
+    const stnEditDialogUpdate = (value: any, field: string, index?: number) => {
+        let stnId = stationSelected;
         if (field === 'facility') {
-            // window.myLine.updateStnUsage(stnId, value);
-            this.props.paramUpdate('stn_list', {
-                ...this.props.stnList,
+            props.paramUpdate('stn_list', {
+                ...props.stnList,
                 [stnId]: {
-                    ...this.props.stnList[stnId],
+                    ...props.stnList[stnId],
                     facility: value,
                 },
             });
         }
         if (field === 'services') {
             // window.myLine.updateStnServices(stnId, value);
-            let servicesSet = new Set(this.props.stnList[stnId].services);
+            let servicesSet = new Set(props.stnList[stnId].services);
             if (value.selected === false) {
                 servicesSet.delete(value.chipId);
             } else {
                 servicesSet.add(value.chipId);
             }
-            this.props.paramUpdate('stn_list', {
-                ...this.props.stnList,
+            props.paramUpdate('stn_list', {
+                ...props.stnList,
                 [stnId]: {
-                    ...this.props.stnList[stnId],
-                    services: Array.from(servicesSet),
+                    ...props.stnList[stnId],
+                    services: [...servicesSet],
                 },
             });
         }
-    }
+    };
 
-    stnDeleteClose(action: string) {
-        let stnId = this.state.stationSelected;
-        this.setState({ stnDeleteDialogOpened: false });
+    const stnDeleteClose = (action: string) => {
+        let stnId = stationSelected;
+        setIsDeleteDialogOpen(false);
         if (action === 'accept') {
-            let res = removeStation(stnId, this.props.stnList);
+            let res = removeStation(stnId, props.stnList);
             if (res === false) {
-                this.setState({ stnDeleteErrDialogOpened: true });
+                setIsDeleteErrDialogOpen(true);
             } else {
-                if (this.props.currentId === stnId) {
+                if (props.currentId === stnId) {
                     let newCurrentId = Object.keys(res).filter(id => !['linestart', 'lineend'].includes(id))[0];
-                    this.props.paramUpdate('current_stn_idx', newCurrentId);
+                    props.paramUpdate('current_stn_idx', newCurrentId);
                 }
-                this.props.paramUpdate('stn_list', res);
+                props.paramUpdate('stn_list', res);
             }
         }
-    }
+    };
 
-    fabsAction(action: string) {
+    const fabsAction = (action: string) => {
         if (action === 'add') {
-            this.setState({ stnAddDialogOpened: true });
+            setIsAddDialogOpen(true);
         }
         if (action === 'reverse') {
-            let newStnList = reverseStations(this.props.stnList);
-            this.props.paramUpdate('stn_list', newStnList);
+            let newStnList = reverseStations(props.stnList);
+            props.paramUpdate('stn_list', newStnList);
             // console.log(newStnList);
             // setParams('stn_list', newStnList);
             // location.reload(true);
         }
         if (action === 'autonum') {
-            this.setState({ autoNumDialogOpened: true });
+            setIsAutoNumDialogOpen(true);
         }
-    }
+    };
 
-    render() {
-        return (
-            <div style={{ width: '100%' }}>
-                <StationChipSet
-                    stnList={this.props.stnList}
-                    tpo={this.props.tpo}
-                    onSelection={this.stnChipSetSelection.bind(this)}
-                    addStationClick={() => this.setState({ stnAddDialogOpened: true })}
-                />
-                <Snackbar
-                    open={this.state.snackBarOpened}
-                    onClose={(e, r) => this.snackBarClose(r)}
-                    autoHideDuration={5000}
-                    message={formatStnName(this.props.stnList[this.state.stationSelected])}
-                    action={
-                        <React.Fragment>
-                            <Button color="secondary" size="small" onClick={() => this.snackBarClose('current')}>
-                                {this.props.t('stations.current')}
-                            </Button>
-                            <Button color="secondary" size="small" onClick={() => this.snackBarClose('edit')}>
-                                {this.props.t('stations.edit.button')}
-                            </Button>
-                            <Button color="secondary" size="small" onClick={() => this.snackBarClose('delete')}>
-                                {this.props.t('stations.remove.button')}
-                            </Button>
-                            <IconButton
-                                size="small"
-                                aria-label="close"
-                                color="inherit"
-                                onClick={() => this.snackBarClose('close')}
-                            >
-                                <Icon fontSize="small">close</Icon>
-                            </IconButton>
-                        </React.Fragment>
-                    }
-                />
+    return (
+        <div style={{ width: '100%' }}>
+            <StationChipSet
+                stnList={props.stnList}
+                tpo={props.tpo}
+                onSelection={stnChipSetSelection}
+                addStationClick={() => setIsAddDialogOpen(true)}
+            />
+            <Snackbar
+                open={isSnackBarOpen}
+                onClose={(e, r) => snackBarClose(r)}
+                autoHideDuration={5000}
+                message={formatStnName(props.stnList[stationSelected])}
+                action={
+                    <React.Fragment>
+                        <Button color="secondary" size="small" onClick={() => snackBarClose('current')}>
+                            {t('stations.current')}
+                        </Button>
+                        <Button color="secondary" size="small" onClick={() => snackBarClose('edit')}>
+                            {t('stations.edit.button')}
+                        </Button>
+                        <Button color="secondary" size="small" onClick={() => snackBarClose('delete')}>
+                            {t('stations.remove.button')}
+                        </Button>
+                        <IconButton
+                            size="small"
+                            aria-label="close"
+                            color="inherit"
+                            onClick={() => snackBarClose('close')}
+                        >
+                            <Icon fontSize="small">close</Icon>
+                        </IconButton>
+                    </React.Fragment>
+                }
+            />
 
-                <StationFabs onAction={this.fabsAction.bind(this)} />
+            <StationFabs onAction={fabsAction} />
 
-                <StationAddDialog
-                    open={this.state.stnAddDialogOpened}
-                    stnList={this.props.stnList}
-                    tpo={this.props.tpo}
-                    onClose={this.stnAddDialogClose.bind(this)}
-                    paramUpdate={this.props.paramUpdate}
-                />
-                <StationEditDialog
-                    open={this.state.stnEditDialogOpened}
-                    onClose={() => this.setState({ stnEditDialogOpened: false })}
-                    onUpdate={this.stnEditDialogUpdate.bind(this)}
-                    stnId={this.state.stationSelected}
-                />
-                <StationDeleteDialog
-                    open={this.state.stnDeleteDialogOpened}
-                    onClose={this.stnDeleteClose.bind(this)}
-                    stnInfo={this.props.stnList[this.state.stationSelected] || this.props.stnList['linestart']}
-                />
-                <StationDeleteErrorDialog
-                    open={this.state.stnDeleteErrDialogOpened}
-                    onClose={() => this.setState({ stnDeleteErrDialogOpened: false })}
-                />
-                {window.urlParams.get('style') === 'gzmtr' && (
-                    <AutoNumDialog
-                        open={this.state.autoNumDialogOpened}
-                        onClose={() => this.setState({ autoNumDialogOpened: false })}
-                    />
-                )}
-            </div>
-        );
-    }
-}
+            <StationAddDialog
+                open={isAddDialogOpen}
+                stnList={props.stnList}
+                tpo={props.tpo}
+                onClose={stnAddDialogClose}
+                paramUpdate={props.paramUpdate}
+            />
+            <StationEditDialog
+                open={isEditDialogOpen}
+                onClose={() => setIsEditDialogOpen(false)}
+                onUpdate={stnEditDialogUpdate}
+                stnId={stationSelected}
+            />
+            <StationDeleteDialog
+                open={isDeleteDialogOpen}
+                onClose={stnDeleteClose}
+                stnInfo={props.stnList[stationSelected] || props.stnList['linestart']}
+            />
+            <StationDeleteErrorDialog open={isDeleteErrDialogOpen} onClose={() => setIsDeleteErrDialogOpen(false)} />
+            {window.urlParams.get('style') === 'gzmtr' && (
+                <AutoNumDialog open={isAutoNumDialogOpen} onClose={() => setIsAutoNumDialogOpen(false)} />
+            )}
+        </div>
+    );
+};
 
-export default withTranslation()(PanelStations);
+export default PanelStations;

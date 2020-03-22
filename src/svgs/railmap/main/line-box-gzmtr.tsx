@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { InterchangeInfo, Name } from '../../../types';
+import React, { useState, useRef, useEffect } from 'react';
 
 export default React.memo(
     function LineBox(props: { info: InterchangeInfo; stnState: -1 | 0 | 1 }) {
@@ -20,7 +19,7 @@ export default React.memo(
 
 const LineBoxName = React.memo(
     (props: { name: Name }) => {
-        let nameZHEl = [];
+        let nameZHEl = [] as JSX.Element[];
         let dy = 0;
         props.name[0].match(/\d+|\D+/g)?.forEach((t, i) => {
             if (isNaN(Number(t))) {
@@ -42,14 +41,22 @@ const LineBoxName = React.memo(
             }
         });
 
-        const nameZHGroupEl = React.useRef<SVGTextElement>();
-        const [zhBBox, setZhBBox] = React.useState({ width: 0 } as DOMRect);
-        React.useEffect(() => setZhBBox(nameZHGroupEl.current.getBBox()), [props.name[0]]);
+        const nameZHGroupEl = useRef<SVGTextElement | null>(null);
+        const [zhBBox, setZhBBox] = useState({ width: 0 } as DOMRect);
+        useEffect(
+            () => setZhBBox(nameZHGroupEl.current!.getBBox()),
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            [props.name[0]]
+        );
         const nameZHGroupScale = zhBBox.width > 43.5 ? 43.5 / zhBBox.width : 1;
 
-        const nameENEl = React.useRef<SVGTextElement>();
-        const [enBBox, setEnBBox] = React.useState({ width: 0 } as DOMRect);
-        React.useEffect(() => setEnBBox(nameENEl.current.getBBox()), [props.name[1]]);
+        const nameENEl = useRef<SVGTextElement | null>(null);
+        const [enBBox, setEnBBox] = useState({ width: 0 } as DOMRect);
+        useEffect(
+            () => setEnBBox(nameENEl.current!.getBBox()),
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            [props.name[1]]
+        );
         const nameENScale = enBBox.width > 43.5 ? 43.5 / enBBox.width : 1;
 
         return (
@@ -89,9 +96,13 @@ const LineBoxNameSpan = React.memo(
             }
         }
 
-        const nameEl = React.useRef<SVGTextElement>();
-        const [bBox, setBBox] = React.useState({ x: 0, width: 0 } as DOMRect);
-        React.useEffect(() => setBBox(nameEl.current.getBBox()), [props.name.toString()]);
+        const nameEl = useRef<SVGTextElement | null>(null);
+        const [bBox, setBBox] = useState({ x: 0, width: 0 } as DOMRect);
+        useEffect(
+            () => setBBox(nameEl.current!.getBBox()),
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            [props.name.toString()]
+        );
 
         const nameScale = bBox.width > 43.5 ? 43.5 / bBox.width : 1;
 

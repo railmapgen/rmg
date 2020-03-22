@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 interface Props {
     variant: 'gz1' | 'gz28' | 'gz3' | 'gz1421' | 'gzgf';

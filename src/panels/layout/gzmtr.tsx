@@ -60,7 +60,9 @@ const DirectionGZLi = () => {
                             <Slider
                                 className={classes.slider}
                                 value={param.direction_gz_x}
-                                onChange={(_, value: number) => dispatch({ type: 'SET_DIRECTION_GZ_X', value })}
+                                onChange={(_event, value) =>
+                                    dispatch({ type: 'SET_DIRECTION_GZ_X', value: value as number })
+                                }
                                 step={0.01}
                                 marks={[
                                     { value: 0, label: t('layout.directionGZ.left') },
@@ -75,7 +77,9 @@ const DirectionGZLi = () => {
                             <Slider
                                 className={classes.slider}
                                 value={param.direction_gz_y}
-                                onChange={(_, value: number) => dispatch({ type: 'SET_DIRECTION_GZ_Y', value })}
+                                onChange={(_event, value) =>
+                                    dispatch({ type: 'SET_DIRECTION_GZ_Y', value: value as number })
+                                }
                                 step={0.01}
                                 marks={[
                                     { value: 0, label: t('layout.directionGZ.top') },
@@ -88,6 +92,7 @@ const DirectionGZLi = () => {
                 </Collapse>
             </>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [param.direction_gz_x, param.direction_gz_y, isOpen, classes.nestedList, classes.slider]
     );
 };

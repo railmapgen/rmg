@@ -1,10 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import Destination from './destination';
 import RunIn from './runin';
 import RailMap from './railmap';
 import { makeStyles, createStyles, CircularProgress } from '@material-ui/core';
 import { CanvasContext, ParamContext } from '../context';
-import { ProvidedCanvas } from '../types';
 
 const useStyles = makeStyles(() =>
     createStyles({

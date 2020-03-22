@@ -16,7 +16,7 @@ export default (props: Props) => {
     const [svgEl, setSvgEl] = React.useState((document.createElement('svg') as Element) as SVGSVGElement);
     const [isLoaded, setIsLoaded] = React.useState(false);
 
-    const contentEl = React.useRef<HTMLDivElement>();
+    const contentEl = React.useRef<HTMLDivElement | null>(null);
 
     React.useEffect(() => {
         if (props.canvas === '') {
@@ -29,7 +29,7 @@ export default (props: Props) => {
                 key =>
                     (document.querySelector(`svg#${props.canvas}`) as SVGSVGElement).style
                         .getPropertyValue(key)
-                        .match(/\d+/g)[0]
+                        .match(/\d+/g)![0]
             )
             .map(Number);
 
@@ -37,7 +37,7 @@ export default (props: Props) => {
         let MAX_HEIGHT = window.innerHeight - 64 - 64 - 52 - 8 * 2;
         let scaleFactor = Math.min(MAX_WIDTH / thisSVGWidth, MAX_HEIGHT / thisSVGHeight);
 
-        let elem = document.querySelector(`svg#${props.canvas}`).cloneNode(true) as SVGSVGElement;
+        let elem = document.querySelector(`svg#${props.canvas}`)!.cloneNode(true) as SVGSVGElement;
         // elem.setAttribute('width', (thisSVGWidth * scaleFactor).toString());
         elem.setAttribute('height', (thisSVGHeight * scaleFactor).toString());
         elem.style.setProperty('all', 'initial');
@@ -76,7 +76,7 @@ export default (props: Props) => {
     }, [props.canvas]);
 
     const handleClose = (action: string) => () => {
-        let svgEl = contentEl.current.querySelector('svg');
+        let svgEl = contentEl.current!.querySelector('svg') as SVGSVGElement;
         if (action === 'png') {
             test(svgEl);
         } else if (action === 'svg') {

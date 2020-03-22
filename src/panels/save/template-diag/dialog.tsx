@@ -106,6 +106,7 @@ const NewDialog = (props: TemplateDialogProps) => {
                 </DialogActions>
             </Dialog>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.open, tabValue, isMobile, i18n.language, JSON.stringify(classes)]
     );
 };

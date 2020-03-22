@@ -1,9 +1,8 @@
-import * as React from 'react';
+import React from 'react';
 import { ParamContext } from '../../../context';
 import { adjacencyList, criticalPathMethod, getXShareMTR, getStnState } from '../methods/share';
 import { StationsMTR } from '../methods/mtr';
 import StationMTR from './station/station-mtr';
-import { StationInfo } from '../../../types';
 
 const leftWideFactor = (stnList: { [stnId: string]: StationInfo }, stnId: string) => {
     var res = 0;
@@ -38,21 +37,28 @@ const MainMTR = () => {
 
     const adjMat = adjacencyList(param.stn_list, leftWideFactor, rightWideFactor);
 
-    const criticalPath = React.useMemo(() => criticalPathMethod('linestart', 'lineend', adjMat), [
-        JSON.stringify(adjMat),
-    ]);
+    const criticalPath = React.useMemo(
+        () => criticalPathMethod('linestart', 'lineend', adjMat),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [JSON.stringify(adjMat)]
+    );
     const realCP = React.useMemo(
         () => criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [JSON.stringify(adjMat)]
     );
 
-    const xShares = React.useMemo(() => {
-        console.log('computing x shares');
-        return Object.keys(param.stn_list).reduce(
-            (acc, cur) => ({ ...acc, [cur]: getXShareMTR(cur, adjMat, branches) }),
-            {}
-        );
-    }, [branches.toString(), JSON.stringify(adjMat)]);
+    const xShares = React.useMemo(
+        () => {
+            console.log('computing x shares');
+            return Object.keys(param.stn_list).reduce(
+                (acc, cur) => ({ ...acc, [cur]: getXShareMTR(cur, adjMat, branches) }),
+                {} as { [stnId: string]: number }
+            );
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [branches.toString(), JSON.stringify(adjMat)]
+    );
     const lineXs: [number, number] = [
         (param.svgWidth.railmap * param.padding) / 100,
         param.svgWidth.railmap * (1 - param.padding / 100),
@@ -62,7 +68,11 @@ const MainMTR = () => {
         {} as typeof xShares
     );
 
-    const yShares = React.useMemo(() => StationsMTR.getYShares(param.stn_list, branches), [deps]);
+    const yShares = React.useMemo(
+        () => StationsMTR.getYShares(param.stn_list, branches),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [deps]
+    );
     const ys = Object.keys(yShares).reduce(
         (acc, cur) => ({
             ...acc,
@@ -73,16 +83,17 @@ const MainMTR = () => {
         {} as typeof yShares
     );
 
-    const stnStates = React.useMemo(() => getStnState(param.current_stn_idx, routes, param.direction), [
-        param.current_stn_idx,
-        param.direction,
-        routes.toString(),
-    ]);
+    const stnStates = React.useMemo(
+        () => getStnState(param.current_stn_idx, routes, param.direction),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [param.current_stn_idx, param.direction, routes.toString()]
+    );
 
-    const namePoss = React.useMemo(() => StationsMTR.getNamePos(param.stn_list, criticalPath), [
-        deps,
-        JSON.stringify(criticalPath),
-    ]);
+    const namePoss = React.useMemo(
+        () => StationsMTR.getNamePos(param.stn_list, criticalPath),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [deps, JSON.stringify(criticalPath)]
+    );
 
     const linePaths = StationsMTR.drawLine(
         branches,
@@ -148,9 +159,9 @@ const StationGroup = (props: StationGroupProps) => {
 
     return (
         <g id="stn_icons">
-            {Object.keys(param.stn_list).map(stnId => {
-                if (['linestart', 'lineend'].includes(stnId)) return;
-                return (
+            {Object.keys(param.stn_list)
+                .filter(stnId => !['linestart', 'lineend'].includes(stnId))
+                .map(stnId => (
                     <g
                         key={stnId}
                         style={{
@@ -163,8 +174,7 @@ const StationGroup = (props: StationGroupProps) => {
                             namePos={correctedNamePoss[stnId]}
                         />
                     </g>
-                );
-            })}
+                ))}
         </g>
     );
 };

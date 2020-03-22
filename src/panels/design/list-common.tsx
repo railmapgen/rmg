@@ -98,6 +98,7 @@ const DirectionLi = () => {
                 </Button>
             </ListItem>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [classes.dividerVertical, param.direction]
     );
 };
@@ -119,6 +120,7 @@ const PlatformNumLi = () => {
                 />
             </ListItem>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [param.platform_num]
     );
 };

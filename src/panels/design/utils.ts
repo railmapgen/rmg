@@ -1,34 +1,38 @@
-import { StationInfo } from '../../types';
-
-export const reverseStations = (stnList: { [stnId: string]: StationInfo }) => {
+export const reverseStations = (stnList: StationDict) => {
     let newStnList = JSON.parse(JSON.stringify(stnList));
     Object.keys(stnList).forEach(stnId => {
-        let stnInfo = {...stnList[stnId]};
+        let stnInfo = { ...stnList[stnId] };
         if (stnId === 'linestart') {
             newStnList.lineend.parents = stnInfo.children.reverse();
             newStnList.lineend.branch = {
                 left: stnInfo.branch.right,
-                right: []
+                right: [],
             };
         } else if (stnId === 'lineend') {
             newStnList.linestart.children = stnInfo.parents.reverse();
             newStnList.linestart.branch = {
                 left: [],
-                right: stnInfo.branch.left
-            }
+                right: stnInfo.branch.left,
+            };
         } else {
             var tmpArr = stnInfo.children.reverse().map(id => {
                 switch (id) {
-                    case 'linestart': return 'lineend';
-                    case 'lineend': return 'linestart';
-                    default: return id;
+                    case 'linestart':
+                        return 'lineend';
+                    case 'lineend':
+                        return 'linestart';
+                    default:
+                        return id;
                 }
             });
             newStnList[stnId].children = stnInfo.parents.reverse().map(id => {
                 switch (id) {
-                    case 'linestart': return 'lineend';
-                    case 'lineend': return 'linestart';
-                    default: return id;
+                    case 'linestart':
+                        return 'lineend';
+                    case 'lineend':
+                        return 'linestart';
+                    default:
+                        return id;
                 }
             });
             newStnList[stnId].parents = tmpArr;

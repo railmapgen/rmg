@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { List, ListItem, ListItemText, Divider, Icon, TextField, MenuItem, ListItemIcon } from '@material-ui/core';
 import { formatStnName } from '../../../utils';
@@ -54,6 +54,7 @@ const BranchSelectSet = (props: BranchSelectSetProps) => {
                 )}
             </>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.stnId, props.direction, branchEntry[0]]
     );
 };
@@ -114,6 +115,7 @@ const BranchTypeItem = (props: ItemProps) => {
                 </TextField>
             </ListItem>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.stnId, branchEntry[0]]
     );
 };
@@ -186,16 +188,19 @@ const BranchFirstItem = (props: ItemProps) => {
                 </TextField>
             </ListItem>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.stnId, branchEntry[1], neighbours.toString()]
     );
 };
 
 const BranchPosItem = (props: ItemProps) => {
+    // mount only if branchEntry[0] is not undefined
+
     const { t } = useTranslation();
 
     const { param, dispatch } = React.useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
-    const branchEntry = stnInfo.branch[props.direction];
+    const branchEntry = stnInfo.branch[props.direction] as ['through' | 'nonthrough', string];
     const neighbours = props.direction === 'left' ? stnInfo.parents : stnInfo.children;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -251,6 +256,7 @@ const BranchPosItem = (props: ItemProps) => {
                 </TextField>
             </ListItem>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.stnId, branchEntry[1], neighbours.toString()]
     );
 };

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -29,8 +29,7 @@ import {
     Switch,
 } from '@material-ui/core';
 
-import { ParamContext, paramReducer } from '../../context';
-import { Note } from '../../types';
+import { ParamContext } from '../../context';
 
 const allInfoPanelTypes = {
     gz1: 'Line 1',
@@ -134,6 +133,7 @@ const PanelTypeLi = () => {
                 </Collapse>
             </>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [param.info_panel_type, open, classes.radioGroup]
     );
 };
@@ -199,13 +199,13 @@ const NotesEntry = (props: { idx: number; onEdit: () => void }) => {
         props.onEdit();
     };
 
-    const handleSlide = (i: number) => (_, value: number) => {
+    const handleSlide = (i: number) => (_event: React.ChangeEvent<{}>, value: number | number[]) =>
+        typeof value === 'object' &&
         dispatch({
             type: 'UPDATE_NOTE_GZMTR',
             idx: props.idx,
             note: param.notesGZMTR[props.idx].map((val, j) => (j === i ? value : val)) as Note,
         });
-    };
 
     const handleRemove = () => {
         setToggleEl(null);
@@ -281,6 +281,7 @@ const NotesEntry = (props: { idx: number; onEdit: () => void }) => {
                 <Divider variant="middle" />
             </>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [param.notesGZMTR[props.idx].toString(), toggleEl]
     );
 };
@@ -339,6 +340,7 @@ const NoteEditDialog = (props: AddNoteDialogProps) => {
                 </DialogActions>
             </Dialog>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [noteZH, noteEN]
     );
 };

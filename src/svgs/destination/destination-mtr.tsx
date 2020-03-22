@@ -1,17 +1,17 @@
-import * as React from 'react';
+import React from 'react';
 
 import { ParamContext } from '../../context';
 import StripMTR from '../strip/strip-mtr';
 
-const DestinationMTR = React.memo(() => (
-    <>
-        <DefsMTR />
-        <StripMTR stripPc={90} />
-        <InfoMTR />
-    </>
-));
-
-export default DestinationMTR;
+export default React.memo(function DestinationMTR() {
+    return (
+        <>
+            <DefsMTR />
+            <StripMTR stripPc={90} />
+            <InfoMTR />
+        </>
+    );
+});
 
 const DefsMTR = React.memo(() => (
     <defs>
@@ -49,12 +49,13 @@ const InfoMTR = () => {
         ];
     }
 
-    const destNameEl = React.useRef<SVGGElement>();
+    const destNameEl = React.useRef<SVGGElement | null>(null);
     const [bBox, setBBox] = React.useState({ width: 0 } as DOMRect);
-    React.useEffect(() => setBBox(destNameEl.current.getBBox()), [
-        destNames.toString(),
-        param.customiseMTRDest.isLegacy,
-    ]);
+    React.useEffect(
+        () => setBBox(destNameEl.current!.getBBox()),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [destNames.toString(), param.customiseMTRDest.isLegacy]
+    );
 
     const flagLength = 160 + 150 + bBox.width + 45 + 50;
     const arrowX = (param.svgWidth.destination - (param.direction === 'l' ? 1 : -1) * flagLength) / 2;

@@ -7,41 +7,46 @@ const RunInSHMetro = () => {
     // get the height
     const dh = param.svg_height - 300;
 
-    const prevStnIds = React.useMemo(() => {
-        // reduce from https://stackoverflow.com/questions/43773999/remove-duplicates-from-arrays-using-reduce
-        // and https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
-        return (
-            routes
-                .filter(route => route.includes(param.current_stn_idx))
-                .map(route => route[route.indexOf(param.current_stn_idx) + (param.direction == 'l' ? 1 : -1)])
-                .flat()
-                // remove duplicate
-                .reduce((acc, cur) => {
-                    if (!acc.includes(cur)) acc.push(cur);
-                    return acc;
-                }, [])
-        );
-    }, [routes.toString(), param.current_stn_idx, param.direction]);
+    const prevStnIds = React.useMemo(
+        () => {
+            // reduce from https://stackoverflow.com/questions/43773999/remove-duplicates-from-arrays-using-reduce
+            // and https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
+            return (
+                routes
+                    .filter(route => route.includes(param.current_stn_idx))
+                    .map(route => route[route.indexOf(param.current_stn_idx) + (param.direction === 'l' ? 1 : -1)])
+                    .flat()
+                    // remove duplicate
+                    .reduce((acc, cur) => {
+                        if (!acc.includes(cur)) acc.push(cur);
+                        return acc;
+                    }, [])
+            );
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [routes.toString(), param.current_stn_idx, param.direction]
+    );
 
-    const nextStnIds = React.useMemo(() => {
-        return (
+    const nextStnIds = React.useMemo(
+        () =>
             routes
                 .filter(route => route.includes(param.current_stn_idx))
-                .map(route => route[route.indexOf(param.current_stn_idx) + (param.direction == 'l' ? -1 : 1)])
+                .map(route => route[route.indexOf(param.current_stn_idx) + (param.direction === 'l' ? -1 : 1)])
                 .flat()
                 // remove duplicate
                 .reduce((acc, cur) => {
                     if (!acc.includes(cur)) acc.push(cur);
                     return acc;
-                }, [])
-        );
-    }, [routes.toString(), param.current_stn_idx, param.direction]);
+                }, []),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [routes.toString(), param.current_stn_idx, param.direction]
+    );
 
     return (
         <g id="run_in_shmetro">
-            {nextStnIds.length == 1 && ['linestart', 'lineend'].includes(nextStnIds[0]) ? (
+            {nextStnIds.length === 1 && ['linestart', 'lineend'].includes(nextStnIds[0]) ? (
                 <TerminalStation dh={dh} stnIds={prevStnIds} />
-            ) : prevStnIds.length == 1 && ['linestart', 'lineend'].includes(prevStnIds[0]) ? (
+            ) : prevStnIds.length === 1 && ['linestart', 'lineend'].includes(prevStnIds[0]) ? (
                 <OriginStation dh={dh} stnIds={nextStnIds} />
             ) : (
                 <GeneralStation dh={dh} prevStnIds={prevStnIds} nextStnIds={nextStnIds} />
@@ -220,6 +225,7 @@ const CurrentText = () => {
                 </text>
             </>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [...param.stn_list[param.current_stn_idx].name]
     );
 };

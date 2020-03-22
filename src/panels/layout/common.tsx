@@ -112,6 +112,7 @@ const SizeLi = () => {
                 </Collapse>
             </>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [JSON.stringify(param.svgWidth), param.svg_height, isOpen, classes.nestedList]
     );
 };
@@ -131,7 +132,7 @@ const YLi = () => {
                 <Slider
                     className={classes.slider}
                     value={param.y_pc}
-                    onChange={(_, value: number) => dispatch({ type: 'SET_Y', value })}
+                    onChange={(_, value) => dispatch({ type: 'SET_Y', value: value as number })}
                     step={0.01}
                     marks={[
                         { value: 0, label: '0%' },
@@ -141,6 +142,7 @@ const YLi = () => {
                 />
             </ListItem>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [param.y_pc, classes.slider]
     );
 };
@@ -160,7 +162,7 @@ const BranchSpacingLi = () => {
                 <Slider
                     className={classes.slider}
                     value={param.branch_spacing}
-                    onChange={(_, value: number) => dispatch({ type: 'SET_BRANCH_SPACING', value })}
+                    onChange={(_, value) => dispatch({ type: 'SET_BRANCH_SPACING', value: value as number })}
                     step={0.01}
                     marks={[
                         { value: 0, label: '0px' },
@@ -170,6 +172,7 @@ const BranchSpacingLi = () => {
                 />
             </ListItem>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [param.branch_spacing, classes.slider]
     );
 };
@@ -189,7 +192,7 @@ const PaddingLi = () => {
                 <Slider
                     className={classes.slider}
                     value={param.padding}
-                    onChange={(_, value: number) => dispatch({ type: 'SET_PADDING', value })}
+                    onChange={(_, value) => dispatch({ type: 'SET_PADDING', value: value as number })}
                     step={0.01}
                     max={50}
                     marks={[
@@ -200,6 +203,7 @@ const PaddingLi = () => {
                 />
             </ListItem>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [param.padding, classes.slider]
     );
 };
