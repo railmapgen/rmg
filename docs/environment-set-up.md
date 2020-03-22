@@ -6,36 +6,10 @@
 $ git clone https://github.com/wongchito/RailMapGenerator.git
 $ cd RailMapGenerator
 $ npm install
-# launch the build whenever there is a modification
-$ npx webpack -watch
 ```
 
-## Debugging
+## Development
 
-Change relevant properties of `webpack.config.js` for development and debugging.
+Execute `npm start` at Terminal, the project will be built in development mode and the web page will be automatically open in your browser.
 
-```JavaScript
-module.export = {
-    // ...
-    devtool: 'inline-source-map',
-    mode: 'development',
-    // ...
-}
-```
-
-Uncomment local `React` and Material-UI scripts in `index3.html` for development. 
-
-## Publishing
-
-Revert changes of `webpack.config.js` described above.
-
-```JavaScript
-module.export = {
-    // ...
-    // devtool: 'inline-source-map',
-    mode = 'production',
-    // ...
-}
-```
-
-Revert all changed of `index3.html` described above. 
+Please note most of the dependencies are loaded from CDN in production build to reduce the loading time for users. These scripts are included in `/public/index.html`. You may choose to comment out these scripts to speed up your debugging, but please remember **NOT** to commit these changes.

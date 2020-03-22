@@ -1,5 +1,17 @@
 # Version History
 
+## 3.5 (22 Mar 2020)
+
+### New Features
+
+-   Update environment to `create-react-app` set-up. This includes the following changes:
+    -   New directories of assets, and
+    -   Strict mode in TypeScript.
+
+### Resolved Issues
+
+-   Fixed an issue in running-in board where the position of next stations are not updated automatically in Guangzhou Metro style.
+
 ## 3.4.3 (21 Mar 2020)
 
 ### New Features
