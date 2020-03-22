@@ -1,45 +1,52 @@
 {
-    "name": "RailMapGenerator",
-    "version": "1.0.0",
-    "description": "Demo page: https://wongchito.github.io/RailMapGenerator/",
-    "main": "dist/index.min.js",
-    "directories": {
-        "lib": "lib"
-    },
+    "homepage": "https://wongchito.github.io/RailMapGenerator",
+    "name": "rail-map-generator",
+    "version": "0.1.0",
     "dependencies": {
-        "@material-ui/core": "^4.9.4",
-        "i18next": "^19.3.2",
+        "@material-ui/core": "^4.9.7",
+        "i18next": "^19.3.3",
         "i18next-browser-languagedetector": "^4.0.2",
         "i18next-xhr-backend": "^3.2.2",
-        "react": "^16.12.0",
-        "react-dom": "^16.12.0",
-        "react-i18next": "^11.3.3"
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1",
+        "react-i18next": "^11.3.4"
     },
     "devDependencies": {
+        "@testing-library/jest-dom": "^4.2.4",
+        "@testing-library/react": "^9.5.0",
+        "@testing-library/user-event": "^7.2.1",
         "@types/css-font-loading-module": "0.0.3",
-        "@types/react": "^16.9.22",
+        "@types/jest": "^24.9.1",
+        "@types/node": "^12.12.30",
+        "@types/react": "^16.9.23",
         "@types/react-dom": "^16.9.5",
-        "html-loader": "^0.5.5",
-        "html-webpack-plugin": "^3.2.0",
-        "http-server": "^0.12.1",
-        "ts-loader": "^6.2.1",
-        "typescript": "^3.7.5",
-        "webpack": "^4.42.0",
-        "webpack-cli": "^3.3.10"
+        "gh-pages": "^2.2.0",
+        "react-app-rewired": "^2.1.5",
+        "react-scripts": "3.4.0",
+        "typescript": "^3.7.5"
     },
     "scripts": {
-        "build": "webpack",
-        "start": "http-server"
+        "start": "react-app-rewired start",
+        "build": "react-app-rewired build",
+        "test": "react-app-rewired test",
+        "eject": "react-scripts eject",
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d build",
+        "testdeploy": "gh-pages -d build --repo https://github.com/wongchito/rmg-test-page.git"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/wongchito/RailMapGenerator.git"
+    "eslintConfig": {
+        "extends": "react-app"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/wongchito/RailMapGenerator/issues"
-    },
-    "homepage": "https://github.com/wongchito/RailMapGenerator#readme"
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
 }
