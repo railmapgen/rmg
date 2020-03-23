@@ -1,4 +1,4 @@
-export default [
+const Chongqing: LineEntry[] = [
     {
         id: 'loop',
         name: {
@@ -171,3 +171,5 @@ export default [
         colour: '#3CB157',
     },
 ];
+
+export default Chongqing;

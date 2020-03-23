@@ -1,4 +1,4 @@
-export default [
+const Kaohsiung: LineEntry[] = [
     {
         id: 'red',
         name: {
@@ -108,3 +108,5 @@ export default [
         colour: '#0008bd',
     },
 ];
+
+export default Kaohsiung;

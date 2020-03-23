@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
-import { StationInfo } from '../../types';
 
 interface StationDeleteDialogProps {
     open: boolean;
@@ -16,9 +15,7 @@ export function StationDeleteDialog(props: StationDeleteDialogProps) {
             <DialogTitle>{t('stations.remove.title')}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    <Trans i18nKey="stations.remove.msg">
-                        {{ name: props.stnInfo.name.join() }}
-                    </Trans>
+                    <Trans i18nKey="stations.remove.msg">{{ name: props.stnInfo.name.join() }}</Trans>
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -30,7 +27,7 @@ export function StationDeleteDialog(props: StationDeleteDialogProps) {
                 </Button>
             </DialogActions>
         </Dialog>
-    )
+    );
 }
 
 interface StationDeleteErrorDialogProps {
@@ -44,9 +41,7 @@ export function StationDeleteErrorDialog(props: StationDeleteErrorDialogProps) {
         <Dialog open={props.open} onClose={props.onClose}>
             <DialogTitle>{t('stations.remove.error.title')}</DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                    {t('stations.remove.error.msg')}
-                </DialogContentText>
+                <DialogContentText>{t('stations.remove.error.msg')}</DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={props.onClose} color="primary" autoFocus>
@@ -54,5 +49,5 @@ export function StationDeleteErrorDialog(props: StationDeleteErrorDialogProps) {
                 </Button>
             </DialogActions>
         </Dialog>
-    )
+    );
 }

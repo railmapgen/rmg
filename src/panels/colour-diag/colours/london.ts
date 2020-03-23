@@ -1,4 +1,4 @@
-export default [
+const London: LineEntry[] = [
     {
         id: 'bakerloo',
         name: {
@@ -101,6 +101,7 @@ export default [
         id: 'elizabeth',
         name: {
             en: 'Elizabeth Line',
+            'zh-HK': '伊利沙伯綫',
         },
         colour: '#9364CC',
     },
@@ -133,3 +134,5 @@ export default [
         colour: '#DC241F',
     },
 ];
+
+export default London;

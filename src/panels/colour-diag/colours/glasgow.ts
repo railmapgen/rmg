@@ -1,4 +1,4 @@
-export default [
+const Glasgow: LineEntry[] = [
     {
         id: 'inner',
         name: {
@@ -14,3 +14,5 @@ export default [
         colour: '#f57c14',
     },
 ];
+
+export default Glasgow;

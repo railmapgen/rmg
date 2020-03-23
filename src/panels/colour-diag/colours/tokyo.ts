@@ -1,4 +1,4 @@
-export default [
+const Tokyo: LineEntry[] = [
     {
         id: 'g',
         name: {
@@ -667,3 +667,5 @@ export default [
         colour: '#2843ba',
     },
 ];
+
+export default Tokyo;

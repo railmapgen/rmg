@@ -1,4 +1,4 @@
-export default [
+const Shenzhen: LineEntry[] = [
     {
         id: 'sz1',
         name: {
@@ -153,3 +153,5 @@ export default [
         colour: '#FFD700',
     },
 ];
+
+export default Shenzhen;

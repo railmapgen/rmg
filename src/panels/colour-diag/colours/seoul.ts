@@ -1,4 +1,4 @@
-export default [
+const Seoul: LineEntry[] = [
     {
         id: 'su1',
         name: {
@@ -184,3 +184,5 @@ export default [
         colour: '#509F22',
     },
 ];
+
+export default Seoul;

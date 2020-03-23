@@ -1,4 +1,4 @@
-export default [
+const Edinburgh: LineEntry[] = [
     {
         id: 'tram',
         name: {
@@ -417,3 +417,5 @@ export default [
         colour: '#6b1687',
     },
 ];
+
+export default Edinburgh;

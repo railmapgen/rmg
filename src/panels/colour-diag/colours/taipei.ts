@@ -1,4 +1,4 @@
-export default [
+const Taipei: LineEntry[] = [
     {
         id: 'br',
         name: {
@@ -104,3 +104,5 @@ export default [
         colour: '#77bc1f',
     },
 ];
+
+export default Taipei;

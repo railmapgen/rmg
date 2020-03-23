@@ -1,4 +1,4 @@
-export default [
+const Xian: LineEntry[] = [
     {
         id: 'xa1',
         name: {
@@ -90,3 +90,5 @@ export default [
         colour: '#00C1D4',
     },
 ];
+
+export default Xian;

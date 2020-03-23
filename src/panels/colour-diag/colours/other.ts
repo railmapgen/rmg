@@ -1,4 +1,4 @@
-export default [
+const Other: LineEntry[] = [
     {
         id: 'other',
         name: {
@@ -9,3 +9,5 @@ export default [
         colour: '#aaaaaa',
     },
 ];
+
+export default Other;

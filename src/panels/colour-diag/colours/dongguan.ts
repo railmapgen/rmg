@@ -1,4 +1,4 @@
-export default [
+const Dongguan: LineEntry[] = [
     {
         id: 'r1',
         name: {
@@ -36,3 +36,5 @@ export default [
         colour: '#00AB4E',
     },
 ];
+
+export default Dongguan;

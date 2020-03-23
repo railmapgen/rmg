@@ -1,4 +1,4 @@
-export default [
+const HongKong: LineEntry[] = [
     {
         id: 'twl',
         name: {
@@ -162,15 +162,6 @@ export default [
         colour: '#431115',
     },
     {
-        id: 'lrl610p',
-        name: {
-            en: 'Light Rail Route 610P',
-            'zh-Hans': '轻铁610P线',
-            'zh-Hant': '輕鐵610P綫',
-        },
-        colour: '#4DC6F4',
-    },
-    {
         id: 'lrl614',
         name: {
             en: 'Light Rail Route 614',
@@ -232,15 +223,6 @@ export default [
             'zh-Hant': '輕鐵751綫',
         },
         colour: '#F47216',
-    },
-    {
-        id: 'lrl751p',
-        name: {
-            en: 'Light Rail Route 751P',
-            'zh-Hans': '轻铁751P线',
-            'zh-Hant': '輕鐵751P綫',
-        },
-        colour: '#000000',
     },
     {
         id: 'lrl761',
@@ -323,3 +305,5 @@ export default [
         colour: '#FD722D',
     },
 ];
+
+export default HongKong;

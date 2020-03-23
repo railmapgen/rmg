@@ -1,4 +1,4 @@
-export default [
+const Chengdu: LineEntry[] = [
     {
         id: 'cd1',
         name: {
@@ -432,3 +432,5 @@ export default [
         colour: '#99D6EA',
     },
 ];
+
+export default Chengdu;

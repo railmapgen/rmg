@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { List } from '@material-ui/core';
-import { Name } from '../../../types';
 
 import NameListItems from './name-list-items';
 import NumListItem from './num-list-item';
@@ -17,9 +16,9 @@ const NameTab = (props: Props) => {
 
     const handleUpdate = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
         dispatch({
-            type: 'UPDATE_STATION_NAME', 
-            stnId: props.stnId, 
-            name: stnInfo.name.map((val, i) => index===i ? event.target.value : val) as Name,
+            type: 'UPDATE_STATION_NAME',
+            stnId: props.stnId,
+            name: stnInfo.name.map((val, i) => (index === i ? event.target.value : val)) as Name,
         });
     };
 

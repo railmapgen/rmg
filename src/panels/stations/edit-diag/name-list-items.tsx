@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListItem, ListItemIcon, TextField, makeStyles, createStyles } from '@material-ui/core';
-import { Name } from '../../../types';
 
 const useStyles = makeStyles(() =>
     createStyles({

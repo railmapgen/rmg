@@ -1,4 +1,4 @@
-export default [
+const Shanghai: LineEntry[] = [
     {
         id: 'sh1',
         name: {
@@ -242,3 +242,5 @@ export default [
         colour: '#009090',
     },
 ];
+
+export default Shanghai;

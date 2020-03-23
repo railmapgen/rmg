@@ -1,4 +1,4 @@
-export default [
+const NewTaipei: LineEntry[] = [
     {
         id: 'lb',
         name: {
@@ -54,3 +54,5 @@ export default [
         colour: '#f6c2d8',
     },
 ];
+
+export default NewTaipei;

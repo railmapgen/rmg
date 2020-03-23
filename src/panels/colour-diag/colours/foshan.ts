@@ -1,4 +1,4 @@
-export default [
+const Foshan: LineEntry[] = [
     {
         id: 'fs1',
         name: {
@@ -72,3 +72,5 @@ export default [
         colour: '#32B7EA',
     },
 ];
+
+export default Foshan;

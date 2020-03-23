@@ -1,4 +1,4 @@
-export default [
+const SanFrancisco: LineEntry[] = [
     {
         id: 'orange',
         name: {
@@ -49,3 +49,5 @@ export default [
         colour: '#D4CFA2',
     },
 ];
+
+export default SanFrancisco;
