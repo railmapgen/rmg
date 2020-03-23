@@ -7,6 +7,7 @@
 -   Update environment to `create-react-app` set-up. This includes the following changes:
     -   New directories of assets, and
     -   Strict mode in TypeScript.
+-   Added error boundary to SVG components.
 
 ### Resolved Issues
 

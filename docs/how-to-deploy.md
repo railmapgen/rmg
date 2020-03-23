@@ -2,6 +2,10 @@
 
 This instruction is dedicated for collaborators who have write access to the repository.
 
+## Preview (Local)
+
+(To be added)
+
 ## Preview
 
 You may want to preview your changes in real GitHub pages before deploying to `origin` remote. By doing so, you should first prepare an empty (or unused) repository of your own. According to GitHub's policy, GitHub pages service is only available for PRO user or a public repository of a standard user.
@@ -24,6 +28,8 @@ $ npx gh-pages -d build --repo https://github.com/wongchito/rmg-test-page
 ```
 
 After previewing, please make sure you have reverted the changes you made to `package.json`.
+
+For more details please visit [Deployment - Create React App Docs](https://create-react-app.dev/docs/deployment#github-pages)
 
 ## Publish **(Danger)**
 
