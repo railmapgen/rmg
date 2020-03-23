@@ -55,7 +55,7 @@ export default memo(function PanelInfo() {
     return (
         <div className={classes.panel}>
             <Card className={classes.root}>
-                <CardMedia className={classes.media} image="./images/icons/android-chrome-512x512.png" />
+                <CardMedia className={classes.media} image={process.env.PUBLIC_URL + '/logo512.png'} />
                 <div className={classes.detail}>
                     <CardContent>
                         <Typography component="h6" variant="h6">

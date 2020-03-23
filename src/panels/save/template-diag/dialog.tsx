@@ -62,9 +62,10 @@ const NewDialog = (props: TemplateDialogProps) => {
     const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
 
     const [tabValue, setTabValue] = React.useState(0);
+    const selectedCompany = companies[tabValue].id;
 
     const handleClick = (filename: string) => () => {
-        import(/* webpackChunkName: "templates" */ `./templates/${companies[tabValue].id}/${filename}`)
+        import(/* webpackChunkName: "templates" */ `./templates/${selectedCompany}/${filename}`)
             .then(module => {
                 localStorage.rmgParam = JSON.stringify(module.default);
                 window.location.reload(true);
