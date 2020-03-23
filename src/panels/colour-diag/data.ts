@@ -8,6 +8,15 @@ export const cityList: CityEntry[] = [
         },
     },
     {
+        id: 'changsha',
+        country: 'CN',
+        name: {
+            en: 'Changsha',
+            'zh-Hans': '长沙',
+            'zh-Hant': '長沙',
+        },
+    },
+    {
         id: 'chengdu',
         country: 'CN',
         name: {
@@ -95,7 +104,7 @@ export const cityList: CityEntry[] = [
         },
     },
     {
-        id: 'macau',
+        id: 'macao',
         country: 'MO',
         name: {
             en: 'Macao',
