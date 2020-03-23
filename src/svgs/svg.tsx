@@ -4,6 +4,7 @@ import RunIn from './runin';
 import RailMap from './railmap';
 import { makeStyles, createStyles, CircularProgress } from '@material-ui/core';
 import { CanvasContext, ParamContext } from '../context';
+import ErrorBoundary from '../error-boundary';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -58,16 +59,18 @@ const SVGs = () => {
                 canvas =>
                     [canvas, 'all'].includes(canvasToShown) && (
                         <React.Suspense key={canvas} fallback={<CircularProgress />}>
-                            {(c => {
-                                switch (c) {
-                                    case 'destination':
-                                        return <Destination {...sharedProps(c)} />;
-                                    case 'runin':
-                                        return <RunIn {...sharedProps(c)} />;
-                                    case 'railmap':
-                                        return <RailMap {...sharedProps(c)} />;
-                                }
-                            })(canvas)}
+                            <ErrorBoundary>
+                                {(c => {
+                                    switch (c) {
+                                        case 'destination':
+                                            return <Destination {...sharedProps(c)} />;
+                                        case 'runin':
+                                            return <RunIn {...sharedProps(c)} />;
+                                        case 'railmap':
+                                            return <RailMap {...sharedProps(c)} />;
+                                    }
+                                })(canvas)}
+                            </ErrorBoundary>
                         </React.Suspense>
                     )
             )}
