@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Snackbar, Button, IconButton, Icon } from '@material-ui/core';
@@ -12,17 +12,19 @@ import { StationDeleteDialog, StationDeleteErrorDialog } from './delete-diags';
 import AutoNumDialog from './auto-num-diag';
 import StationFabs from './fabs';
 import { removeStation, reverseStations } from './utils';
+import { CanvasContext } from '../../context';
 
 interface PanelStationsProps {
     theme: [string, string, string, '#000' | '#fff'];
     stnList: { [stnId: string]: StationInfo };
     paramUpdate: (key: string, data: any) => void;
     currentId: string;
-    tpo: string[];
 }
 
 const PanelStations = (props: PanelStationsProps) => {
     const { t } = useTranslation();
+
+    const { rmgStyle } = useContext(CanvasContext);
 
     const [stationSelected, setStationSelected] = useState('');
     const [isSnackBarOpen, setIsSnackBarOpen] = useState(false);
@@ -125,7 +127,6 @@ const PanelStations = (props: PanelStationsProps) => {
         <div style={{ width: '100%' }}>
             <StationChipSet
                 stnList={props.stnList}
-                tpo={props.tpo}
                 onSelection={stnChipSetSelection}
                 addStationClick={() => setIsAddDialogOpen(true)}
             />
@@ -133,7 +134,7 @@ const PanelStations = (props: PanelStationsProps) => {
                 open={isSnackBarOpen}
                 onClose={(e, r) => snackBarClose(r)}
                 autoHideDuration={5000}
-                message={formatStnName(props.stnList[stationSelected])}
+                message={formatStnName(props.stnList[stationSelected], rmgStyle)}
                 action={
                     <React.Fragment>
                         <Button color="secondary" size="small" onClick={() => snackBarClose('current')}>
@@ -162,7 +163,6 @@ const PanelStations = (props: PanelStationsProps) => {
             <StationAddDialog
                 open={isAddDialogOpen}
                 stnList={props.stnList}
-                tpo={props.tpo}
                 onClose={stnAddDialogClose}
                 paramUpdate={props.paramUpdate}
             />
@@ -178,7 +178,7 @@ const PanelStations = (props: PanelStationsProps) => {
                 stnInfo={props.stnList[stationSelected] || props.stnList['linestart']}
             />
             <StationDeleteErrorDialog open={isDeleteErrDialogOpen} onClose={() => setIsDeleteErrDialogOpen(false)} />
-            {window.urlParams.get('style') === 'gzmtr' && (
+            {rmgStyle === 'gzmtr' && (
                 <AutoNumDialog open={isAutoNumDialogOpen} onClose={() => setIsAutoNumDialogOpen(false)} />
             )}
         </div>

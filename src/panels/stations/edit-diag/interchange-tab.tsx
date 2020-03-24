@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     List,
@@ -23,7 +23,7 @@ import {
     makeStyles,
     createStyles,
 } from '@material-ui/core';
-import { ParamContext } from '../../../context';
+import { ParamContext, CanvasContext } from '../../../context';
 import ColourDialog from '../../colour-diag';
 import NameListItems from './name-list-items';
 
@@ -35,6 +35,8 @@ interface StationEditInterchangeTabProps {
 
 const StationEditInterchangeTab = (props: StationEditInterchangeTabProps) => {
     const { t } = useTranslation();
+
+    const { rmgStyle } = useContext(CanvasContext);
 
     // const { param, dispatch } = React.useContext(ParamContext);
 
@@ -159,7 +161,7 @@ const StationEditInterchangeTab = (props: StationEditInterchangeTabProps) => {
             <ListItem>
                 <InterchangeChipSet stnId={props.stnId} setIndex={0} onDelete={i => deleteClick(0, i)} />
             </ListItem>
-            {['mtr', 'shmetro'].includes(window.urlParams.get('style') || '') && (
+            {['mtr', 'shmetro'].includes(rmgStyle || '') && (
                 <>
                     <Divider />
                     <ListItem>
@@ -198,7 +200,7 @@ const StationEditInterchangeTab = (props: StationEditInterchangeTabProps) => {
                     </ListItem>
                 </>
             )}
-            {window.urlParams.get('style') === 'mtr' && <InterchangeMore stnId={props.stnId} />}
+            {rmgStyle === 'mtr' && <InterchangeMore stnId={props.stnId} />}
         </List>
     );
 };

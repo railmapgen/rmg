@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     ListItem,
@@ -192,23 +192,7 @@ export default React.memo(
                     <ListItemIcon>
                         <Icon>location_city</Icon>
                     </ListItemIcon>
-                    <TextField
-                        select
-                        style={{ width: '100%' }}
-                        variant="outlined"
-                        label={t('colour.city')}
-                        onChange={cityChange}
-                        value={props.theme[0]}
-                    >
-                        {cityList.map(c => (
-                            <MenuItem key={c.id} value={c.id}>
-                                <span className={classes.cityItem}>
-                                    <CountryFlag code={c.country} />
-                                    <span>{getTransText2(c.name, i18n.languages)}</span>
-                                </span>
-                            </MenuItem>
-                        ))}
-                    </TextField>
+                    <CitySelect value={props.theme[0]} onChange={cityChange} />
                 </ListItem>
                 <ListItem>
                     <ListItemIcon>
@@ -221,6 +205,7 @@ export default React.memo(
                         label={t('colour.line')}
                         onChange={lineChange}
                         value={props.theme[1]}
+                        disabled={props.theme[0] === 'other'}
                     >
                         {lineList.map(l => (
                             <MenuItem key={l.id} value={l.id}>
@@ -292,6 +277,37 @@ export default React.memo(
     (prevProps, nextProps) => prevProps.theme.toString() === nextProps.theme.toString()
 );
 
+const CitySelect = (props: { value: string; onChange: (event: React.ChangeEvent<HTMLInputElement>) => void }) => {
+    const { t, i18n } = useTranslation();
+    const classes = useStyles();
+
+    const items = useMemo(
+        () =>
+            cityList.map(c => (
+                <MenuItem key={c.id} value={c.id}>
+                    <span className={classes.cityItem}>
+                        <CountryFlag code={c.country} />
+                        <span>{getTransText2(c.name, i18n.languages)}</span>
+                    </span>
+                </MenuItem>
+            )),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    );
+    return (
+        <TextField
+            select
+            style={{ width: '100%' }}
+            variant="outlined"
+            label={t('colour.city')}
+            value={props.value}
+            onChange={props.onChange}
+        >
+            {items}
+        </TextField>
+    );
+};
+
 const useEmojiStyles = makeStyles(() =>
     createStyles({
         img: {
@@ -316,17 +332,16 @@ function CountryFlag(props: { code: string }) {
             .split('')
             .map(char => ((char.codePointAt(0) || 0) + 127397).toString(16).toUpperCase());
     } else {
-        codePoints = ['1F3F4', 'E007F'];
-        codePoints.splice(
-            1,
-            0,
-            ...props.code
+        codePoints = ['1F3F4'].concat(
+            props.code
                 .toUpperCase()
                 .split('')
-                .map(char => ((char.codePointAt(0) || 0) + 917536).toString(16).toUpperCase())
+                .map(char => ((char.codePointAt(0) || 0) + 917536).toString(16).toUpperCase()),
+            'E007F'
         );
     }
 
+    // special case for simplified Chinese
     if (['zh-CN', 'zh-Hans'].includes(i18n.language) && props.code === 'TW') codePoints = ['1F3F4'];
 
     return navigator.platform.indexOf('Win32') !== -1 || navigator.platform.indexOf('Win64') !== -1 ? (

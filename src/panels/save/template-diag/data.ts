@@ -1,4 +1,4 @@
-export const companies: { id: string; name: { [lang: string]: string } }[] = [
+export const companies: CompanyEntry[] = [
     {
         id: 'basic',
         name: {
@@ -33,18 +33,18 @@ export const companies: { id: string; name: { [lang: string]: string } }[] = [
     },
 ];
 
-export const templateList: { [comp: string]: { filename: string; desc: { [lang: string]: string } }[] } = {
+export const templateList: { [comp: string]: { filename: string; name: ITrans }[] } = {
     basic: [
         {
             filename: 'blank',
-            desc: {
+            name: {
                 en: 'Blank',
                 zh: '空白',
             },
         },
         {
             filename: 'default',
-            desc: {
+            name: {
                 en: 'Default',
                 'zh-Hans': '默认',
                 'zh-Hant': '預設',
@@ -55,7 +55,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
     gzmtr: [
         {
             filename: 'gz1',
-            desc: {
+            name: {
                 en: 'Line 1',
                 'zh-Hans': '1号线',
                 'zh-Hant': '1號線',
@@ -63,7 +63,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'gz2',
-            desc: {
+            name: {
                 en: 'Line 2',
                 'zh-Hans': '2号线',
                 'zh-Hant': '2號線',
@@ -71,7 +71,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'gz3',
-            desc: {
+            name: {
                 en: 'Line 3',
                 'zh-Hans': '3号线',
                 'zh-Hant': '3號線',
@@ -79,7 +79,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'gz4',
-            desc: {
+            name: {
                 en: 'Line 4',
                 'zh-Hans': '4号线',
                 'zh-Hant': '4號線',
@@ -87,7 +87,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'gz5',
-            desc: {
+            name: {
                 en: 'Line 5',
                 'zh-Hans': '5号线',
                 'zh-Hant': '5號線',
@@ -95,7 +95,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'gz6',
-            desc: {
+            name: {
                 en: 'Line 6',
                 'zh-Hans': '6号线',
                 'zh-Hant': '6號線',
@@ -103,7 +103,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'gz7',
-            desc: {
+            name: {
                 en: 'Line 7',
                 'zh-Hans': '7号线',
                 'zh-Hant': '7號線',
@@ -111,7 +111,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'gz8',
-            desc: {
+            name: {
                 en: 'Line 8',
                 'zh-Hans': '8号线',
                 'zh-Hant': '8號線',
@@ -119,7 +119,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'gz9',
-            desc: {
+            name: {
                 en: 'Line 9',
                 'zh-Hans': '9号线',
                 'zh-Hant': '9號線',
@@ -127,7 +127,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'gz14',
-            desc: {
+            name: {
                 en: 'Line 14',
                 'zh-Hans': '14号线',
                 'zh-Hant': '14號線',
@@ -135,7 +135,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'gz21',
-            desc: {
+            name: {
                 en: 'Line 21',
                 'zh-Hans': '21号线',
                 'zh-Hant': '21號線',
@@ -143,7 +143,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'gf',
-            desc: {
+            name: {
                 en: 'Guangfo Line',
                 'zh-Hans': '广佛线',
                 'zh-Hant': '廣佛線',
@@ -154,7 +154,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
     mlm: [
         {
             filename: 'taipa',
-            desc: {
+            name: {
                 en: 'Taipa Line',
                 pt: 'Linha Taipa',
                 'zh-Hans': '氹仔线',
@@ -166,7 +166,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
     mtr: [
         {
             filename: 'twl',
-            desc: {
+            name: {
                 en: 'Tsuen Wan Line',
                 'zh-Hans': '荃湾线',
                 'zh-Hant': '荃灣綫',
@@ -174,7 +174,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'ktl',
-            desc: {
+            name: {
                 en: 'Kwun Tong Line',
                 'zh-Hans': '观塘线',
                 'zh-Hant': '觀塘綫',
@@ -182,7 +182,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'isl',
-            desc: {
+            name: {
                 en: 'Island Line',
                 'zh-Hans': '港岛线',
                 'zh-Hant': '港島綫',
@@ -190,7 +190,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'tkl',
-            desc: {
+            name: {
                 en: 'Tseung Kwan O Line',
                 'zh-Hans': '将军澳线',
                 'zh-Hant': '將軍澳綫',
@@ -198,7 +198,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'sile',
-            desc: {
+            name: {
                 en: 'South Island Line',
                 'zh-Hans': '南港岛线',
                 'zh-Hant': '南港島綫',
@@ -206,7 +206,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'ael',
-            desc: {
+            name: {
                 en: 'Airport Express',
                 'zh-Hans': '机场快线',
                 'zh-Hant': '機場快綫',
@@ -214,7 +214,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'eal',
-            desc: {
+            name: {
                 en: 'East Rail Line',
                 'zh-Hans': '东铁线',
                 'zh-Hant': '東鐵綫',
@@ -222,7 +222,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'wrl',
-            desc: {
+            name: {
                 en: 'West Rail Line',
                 'zh-Hans': '西铁线',
                 'zh-Hant': '西鐵綫',
@@ -230,7 +230,7 @@ export const templateList: { [comp: string]: { filename: string; desc: { [lang: 
         },
         {
             filename: 'mol',
-            desc: {
+            name: {
                 en: 'Tuen Ma Line Phase 1',
                 'zh-Hans': '屯马线一期',
                 'zh-Hant': '屯馬綫一期',

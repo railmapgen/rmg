@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useTranslation, withTranslation } from 'react-i18next';
 
 import {
@@ -18,9 +18,9 @@ import {
 
 import { getTransText2 } from '../../utils';
 
-// import TemplateDialog from './template-diag';
 import UploadListItem from './upload-item';
 import ExportDialog from './export-diag';
+import { CanvasContext } from '../../context';
 
 const TemplateDialog = React.lazy(() => import(/* webpackChunkName: "panelSaveTemplateDialog" */ './template-diag'));
 
@@ -51,7 +51,9 @@ const allLangs = {
 const SaveLists = () => {
     const { t, i18n } = useTranslation();
 
-    const [style, setStyle] = useState(window.urlParams.get('style'));
+    const { rmgStyle } = useContext(CanvasContext);
+
+    const [style, setStyle] = useState(rmgStyle);
     const [isTempDialogOpen, setIsTempDialogOpen] = useState(false);
     const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
     const [isStyleDialogOpen, setIsStyleDialogOpen] = useState(false);
@@ -68,19 +70,20 @@ const SaveLists = () => {
         setIsExportDialogOpen(false);
     };
 
-    const styleDialogClose = (action: string) => {
+    const styleDialogClose = (action: 'close' | ProvidedStyles) => {
         if (action === 'close' || action === style) {
             setIsStyleDialogOpen(false);
         } else {
             setStyle(action);
             setIsStyleDialogOpen(false);
 
-            window.urlParams.set('style', action);
+            // window.urlParams.set('style', action);
             window.gtag('event', 'set', {
                 event_category: 'style',
                 event_label: action,
             });
-            window.location.href = '?' + window.urlParams.toString();
+            window.location.href = process.env.PUBLIC_URL + '/' + action;
+            // window.location.href = '?' + window.urlParams.toString();
         }
     };
 
@@ -141,7 +144,7 @@ const SaveLists = () => {
 };
 
 interface StyleDialogProps {
-    onClose: (style: string) => void;
+    onClose: (style: 'close' | ProvidedStyles) => void;
     open: boolean;
 }
 
@@ -153,7 +156,7 @@ function StyleDialog(props: StyleDialogProps) {
             <DialogTitle>{t('file.style.title')}</DialogTitle>
             <DialogContent dividers>
                 <List>
-                    {Object.keys(allStyles).map(key => (
+                    {(Object.keys(allStyles) as ProvidedStyles[]).map(key => (
                         <ListItem button onClick={() => props.onClose(key)} key={key}>
                             <ListItemText primary={t('file.style.' + key)} />
                         </ListItem>

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { List, ListItem, ListItemText, Divider, Icon, TextField, MenuItem, ListItemIcon } from '@material-ui/core';
 import { formatStnName } from '../../../utils';
-import { ParamContext } from '../../../context';
+import { ParamContext, CanvasContext } from '../../../context';
 
 interface StationEditBranchTabProps {
     stnId: string;
@@ -38,7 +38,8 @@ interface BranchSelectSetProps {
 }
 
 const BranchSelectSet = (props: BranchSelectSetProps) => {
-    const { param } = React.useContext(ParamContext);
+    const { rmgStyle } = useContext(CanvasContext);
+    const { param } = useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
     const branchEntry = stnInfo.branch[props.direction];
 
@@ -49,7 +50,7 @@ const BranchSelectSet = (props: BranchSelectSetProps) => {
                 {branchEntry[0] && (
                     <>
                         <BranchFirstItem {...props} />
-                        {window.urlParams.get('style') !== 'shmetro' && <BranchPosItem {...props} />}
+                        {rmgStyle !== 'shmetro' && <BranchPosItem {...props} />}
                     </>
                 )}
             </>
@@ -123,7 +124,8 @@ const BranchTypeItem = (props: ItemProps) => {
 const BranchFirstItem = (props: ItemProps) => {
     const { t } = useTranslation();
 
-    const { param, dispatch } = React.useContext(ParamContext);
+    const { rmgStyle } = useContext(CanvasContext);
+    const { param, dispatch } = useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
     const branchEntry = stnInfo.branch[props.direction];
     const neighbours = props.direction === 'left' ? stnInfo.parents : stnInfo.children;
@@ -182,7 +184,7 @@ const BranchFirstItem = (props: ItemProps) => {
                 >
                     {neighbours.map(stnId => (
                         <MenuItem key={stnId} value={stnId}>
-                            {formatStnName(param.stn_list[stnId])}
+                            {formatStnName(param.stn_list[stnId], rmgStyle)}
                         </MenuItem>
                     ))}
                 </TextField>

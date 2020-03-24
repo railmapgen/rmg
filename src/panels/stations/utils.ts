@@ -228,52 +228,16 @@ export const addStation = (
     ];
 };
 
-function getRandomId() {
-    return Math.floor(Math.random() * Math.pow(36, 4))
+const getRandomId = () =>
+    Math.floor(Math.random() * Math.pow(36, 4))
         .toString(36)
         .padStart(4, '0');
-}
 
 function getNameFromId(stnId: string): Name {
     let numsZH = '癸甲乙丙丁戊己庚辛壬日月金木水火土竹戈十大中一弓人心手口尸廿山女田難卜重'.split('');
-    let numsEN = [
-        'Zero',
-        'One',
-        'Two',
-        'Three',
-        'Four',
-        'Five',
-        'Six',
-        'Seven',
-        'Eight',
-        'Nine',
-        'Alfa',
-        'Bravo',
-        'Charlie',
-        'Delta',
-        'Echo',
-        'Foxtrot',
-        'Golf',
-        'Hotel',
-        'India',
-        'Juliett',
-        'Kilo',
-        'Lima',
-        'Mike',
-        'November',
-        'Oscar',
-        'Papa',
-        'Quebec',
-        'Romeo',
-        'Sierra',
-        'Tango',
-        'Uniform',
-        'Victor',
-        'Whiskey',
-        'X-ray',
-        'Yankee',
-        'Zulu',
-    ];
+    let numsEN = 'Zero One Two Three Four Five Six Seven Eight Nine Alfa Bravo Charlie Delta Echo Foxtrot Golf Hotel India Juliett Kilo Lima Mike November Oscar Papa Quebec Romeo Sierra Tango Uniform Victor Whiskey X-ray Yankee Zulu'.split(
+        ' '
+    );
     return [
         stnId
             .split('')

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Chip, makeStyles, Avatar, createStyles, useMediaQuery } from '@material-ui/core';
+import { CanvasContext, ParamContext } from '../../context';
 
 const useStyles = makeStyles(theme => {
     return createStyles({
@@ -53,20 +54,22 @@ interface StationChipSetProps {
     stnList: {
         [stnId: string]: StationInfo;
     };
-    tpo: string[];
     onSelection: (stnId: string) => () => void;
     addStationClick: () => void;
 }
 
 const StationChipSet = React.memo(
     (props: StationChipSetProps) => {
+        const { rmgStyle } = useContext(CanvasContext);
+        const { tpo } = useContext(ParamContext);
+
         const isTablet = useMediaQuery('(max-width: 839px) and (min-width: 480px)');
         const isMobile = useMediaQuery('(max-width: 480px)');
         const classes = useStyles();
 
         return (
             <div>
-                {props.tpo.map((stnId, i) => {
+                {tpo.map((stnId, i) => {
                     let label = (
                         <span>
                             <span className={`${classes.stnChipText} ${classes.stnChipTextZH}`}>
@@ -81,7 +84,7 @@ const StationChipSet = React.memo(
                         <Chip
                             key={stnId}
                             icon={
-                                window.urlParams.get('style') !== 'gzmtr' ? (
+                                rmgStyle !== 'gzmtr' ? (
                                     <></>
                                 ) : (
                                     <Avatar style={{ backgroundColor: 'unset' }}>
@@ -102,24 +105,20 @@ const StationChipSet = React.memo(
         );
     },
     (prevProps, nextProps) => {
-        if (prevProps.tpo.toString() !== nextProps.tpo.toString()) {
-            return false;
-        } else {
-            const getDeps = (stnList: { [stnId: string]: StationInfo }) =>
-                Object.keys(stnList).reduce(
-                    (acc, cur) =>
-                        acc +
-                        cur +
-                        ((...k: (keyof StationInfo)[]) => (o: StationInfo) =>
-                            k.reduce((a, c) => a + JSON.stringify(o[c]), ''))(
-                            'name',
-                            'num'
-                        )(stnList[cur]),
-                    ''
-                );
+        const getDeps = (stnList: { [stnId: string]: StationInfo }) =>
+            Object.keys(stnList).reduce(
+                (acc, cur) =>
+                    acc +
+                    cur +
+                    ((...k: (keyof StationInfo)[]) => (o: StationInfo) =>
+                        k.reduce((a, c) => a + JSON.stringify(o[c]), ''))(
+                        'name',
+                        'num'
+                    )(stnList[cur]),
+                ''
+            );
 
-            return getDeps(prevProps.stnList) === getDeps(nextProps.stnList);
-        }
+        return getDeps(prevProps.stnList) === getDeps(nextProps.stnList);
     }
 );
 

@@ -94,7 +94,7 @@ const NewDialog = (props: TemplateDialogProps) => {
                         <List disablePadding>
                             {templateList[companies[tabValue].id].map(temp => (
                                 <ListItem button onClick={handleClick(temp.filename)} key={temp.filename}>
-                                    <ListItemText primary={getTransText2(temp.desc, i18n.languages)} />
+                                    <ListItemText primary={getTransText2(temp.name, i18n.languages)} />
                                 </ListItem>
                             ))}
                         </List>

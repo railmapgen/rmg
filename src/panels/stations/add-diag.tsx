@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Dialog,
@@ -16,6 +16,7 @@ import {
 import { formatStnName } from '../../utils';
 import { getYShareMTR } from '../../methods';
 import { addStation } from './utils';
+import { CanvasContext, ParamContext } from '../../context';
 
 const newBranchPossibleEnd = (prep: 'before' | 'after', pivot: string, stnList: StationDict) => {
     let res: string[] = [];
@@ -75,7 +76,6 @@ interface StationAddDialogProps {
     stnList: {
         [stnId: string]: StationInfo;
     };
-    tpo: string[];
     onClose: (action: 'close' | string) => void;
     paramUpdate: (key: string, data: any) => void;
 }
@@ -83,6 +83,8 @@ interface StationAddDialogProps {
 const StationAddDialog = React.memo(
     (props: StationAddDialogProps) => {
         const { t } = useTranslation();
+        const { rmgStyle } = useContext(CanvasContext);
+        const { tpo } = useContext(ParamContext);
 
         const allLocs = {
             centre: t('stations.add.centre'),
@@ -93,7 +95,7 @@ const StationAddDialog = React.memo(
         };
 
         const [prep, setPrep] = React.useState('before' as 'before' | 'after');
-        const [pivot, setPivot] = React.useState(props.tpo[0]);
+        const [pivot, setPivot] = React.useState(tpo[0]);
         const [loc, setLoc] = React.useState(Object.keys(allLocs)[0]);
         const [locOK, setLocOK] = React.useState(Array(5).fill(true) as boolean[]);
 
@@ -132,7 +134,7 @@ const StationAddDialog = React.memo(
         // Hook for setting new pivot in case of previous one being deleted
         React.useEffect(
             () => {
-                if (!(pivot in props.stnList)) setPivot(props.tpo[0]);
+                if (!(pivot in props.stnList)) setPivot(tpo[0]);
             },
             // eslint-disable-next-line react-hooks/exhaustive-deps
             [Object.keys(props.stnList).toString()]
@@ -195,9 +197,9 @@ const StationAddDialog = React.memo(
                                 onChange={e => setPivot(e.target.value)}
                                 value={pivot}
                             >
-                                {props.tpo.map(stnId => (
+                                {tpo.map(stnId => (
                                     <MenuItem key={stnId} value={stnId}>
-                                        {formatStnName(props.stnList[stnId])}
+                                        {formatStnName(props.stnList[stnId], rmgStyle)}
                                     </MenuItem>
                                 ))}
                             </TextField>
@@ -235,7 +237,7 @@ const StationAddDialog = React.memo(
                             >
                                 {endList.map(stnId => (
                                     <MenuItem key={stnId} value={stnId}>
-                                        {formatStnName(props.stnList[stnId])}
+                                        {formatStnName(props.stnList[stnId], rmgStyle)}
                                     </MenuItem>
                                 ))}
                             </TextField>

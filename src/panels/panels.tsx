@@ -44,7 +44,6 @@ const useStyles = makeStyles(theme =>
 interface Props {
     param: RMGParam;
     paramUpdate: (key: string, data: any) => void;
-    tpo: string[];
 }
 
 export default function PanelTab(props: Props) {
@@ -69,7 +68,6 @@ export default function PanelTab(props: Props) {
                         stnList={props.param.stn_list}
                         currentId={props.param.current_stn_idx}
                         paramUpdate={props.paramUpdate}
-                        tpo={props.tpo}
                     />
                 );
             case 4:

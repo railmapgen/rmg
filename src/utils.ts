@@ -1,22 +1,3 @@
-export function rgb2Hex(rgb: string) {
-    let hex = rgb
-        .match(/[\d]+/g)
-        ?.map(dec =>
-            Number(dec)
-                .toString(16)
-                .padStart(2, '0')
-        )
-        .join('');
-    switch (hex) {
-        case '000000':
-            return '#000';
-        case 'ffffff':
-            return '#fff';
-        default:
-            return '#' + hex;
-    }
-}
-
 export function updateParam() {
     var param = JSON.parse(localStorage.rmgParam) as { [x: string]: any };
 
@@ -198,15 +179,16 @@ export function updateParam() {
     localStorage.setItem('rmgParam', JSON.stringify(param));
 }
 
-export const getTransText2 = (obj: { [index: string]: string }, langs: string[]) => {
-    return langs.reduce((acc, cur) => (acc ? acc : obj[cur] ? obj[cur] : acc), '');
+export const getTransText2 = (obj: ITrans, langs: string[]) => {
+    for (let l of langs) {
+        if (obj[l]) return obj[l];
+    }
+    return obj.en;
 };
 
 /**
  * Format display style of station name as `[num: ]nameZH,nameEN`.
  */
-export const formatStnName = (stnInfo: StationInfo) => {
-    return `${
-        window.urlParams.get('style') === 'gzmtr' ? (stnInfo?.num || '-') + ': ' : ''
-    }${stnInfo?.name.join().replace('\\', ' ')}`;
+export const formatStnName = (stnInfo: StationInfo, style: ProvidedStyles) => {
+    return `${style === 'gzmtr' ? (stnInfo?.num || '-') + ': ' : ''}${stnInfo?.name.join().replace('\\', ' ')}`;
 };

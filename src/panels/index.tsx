@@ -6,7 +6,6 @@ import PanelTabs from './panels';
 interface Props {
     param: RMGParam;
     paramUpdate: (key: string, data: any) => void;
-    tpo: string[];
 }
 
 export default (props: Props) => {

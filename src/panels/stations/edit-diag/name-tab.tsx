@@ -1,17 +1,18 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 
 import { List } from '@material-ui/core';
 
 import NameListItems from './name-list-items';
 import NumListItem from './num-list-item';
-import { ParamContext } from '../../../context';
+import { ParamContext, CanvasContext } from '../../../context';
 
 interface Props {
     stnId: string;
 }
 
 const NameTab = (props: Props) => {
-    const { param, dispatch } = React.useContext(ParamContext);
+    const { rmgStyle } = useContext(CanvasContext);
+    const { param, dispatch } = useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
 
     const handleUpdate = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,7 +26,7 @@ const NameTab = (props: Props) => {
     return (
         <List>
             <NameListItems name={stnInfo.name} onUpdate={handleUpdate} />
-            {window.urlParams.get('style') === 'gzmtr' && <NumListItem stnId={props.stnId} />}
+            {rmgStyle === 'gzmtr' && <NumListItem stnId={props.stnId} />}
         </List>
     );
 };

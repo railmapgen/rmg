@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useContext, useMemo, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     TextField,
@@ -32,12 +32,13 @@ const useStyles = makeStyles(theme =>
     })
 );
 
-export default React.memo(function LayoutCommon() {
+export default memo(function LayoutCommon() {
+    const { rmgStyle } = useContext(CanvasContext);
     return (
         <>
             <SizeLi />
             <Divider />
-            {window.urlParams.get('style') !== 'shmetro' && (
+            {rmgStyle !== 'shmetro' && (
                 <>
                     <YLi />
                     <Divider />
@@ -54,12 +55,12 @@ const SizeLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
 
-    const { param, dispatch } = React.useContext(ParamContext);
-    const { canvasAvailable } = React.useContext(CanvasContext);
+    const { param, dispatch } = useContext(ParamContext);
+    const { canvasAvailable } = useContext(CanvasContext);
 
-    const [isOpen, setIsOpen] = React.useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
-    return React.useMemo(
+    return useMemo(
         () => (
             <>
                 <ListItem button onClick={() => setIsOpen(prevOpen => !prevOpen)}>
@@ -120,9 +121,9 @@ const SizeLi = () => {
 const YLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const { param, dispatch } = React.useContext(ParamContext);
+    const { param, dispatch } = useContext(ParamContext);
 
-    return React.useMemo(
+    return useMemo(
         () => (
             <ListItem>
                 <ListItemIcon>
@@ -150,9 +151,9 @@ const YLi = () => {
 const BranchSpacingLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const { param, dispatch } = React.useContext(ParamContext);
+    const { param, dispatch } = useContext(ParamContext);
 
-    return React.useMemo(
+    return useMemo(
         () => (
             <ListItem>
                 <ListItemIcon>
@@ -180,9 +181,9 @@ const BranchSpacingLi = () => {
 const PaddingLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const { param, dispatch } = React.useContext(ParamContext);
+    const { param, dispatch } = useContext(ParamContext);
 
-    return React.useMemo(
+    return useMemo(
         () => (
             <ListItem>
                 <ListItemIcon>

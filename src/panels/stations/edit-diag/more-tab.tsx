@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     List,
@@ -17,7 +17,7 @@ import {
     FormGroup,
     Checkbox,
 } from '@material-ui/core';
-import { ParamContext } from '../../../context';
+import { ParamContext, CanvasContext } from '../../../context';
 
 const allFacilities = {
     '': 'None',
@@ -41,6 +41,7 @@ interface StationEditMoreTabProps {
 const MoreTab = (props: StationEditMoreTabProps) => {
     const { t } = useTranslation();
 
+    const { rmgStyle } = useContext(CanvasContext);
     const { dispatch } = React.useContext(ParamContext);
 
     const [facilityDialogOpen, setFacilityDialogOpen] = React.useState(false);
@@ -67,7 +68,7 @@ const MoreTab = (props: StationEditMoreTabProps) => {
     return (
         <div>
             <List>
-                {window.urlParams.get('style') === 'mtr' && (
+                {rmgStyle === 'mtr' && (
                     <ListItem button onClick={() => setFacilityDialogOpen(true)}>
                         <ListItemIcon>
                             <Icon>place</Icon>
@@ -80,7 +81,7 @@ const MoreTab = (props: StationEditMoreTabProps) => {
                         />
                     </ListItem>
                 )}
-                {window.urlParams.get('style') === 'gzmtr' && (
+                {rmgStyle === 'gzmtr' && (
                     <ListItem>
                         <ListItemIcon>
                             <Icon>train</Icon>
@@ -111,7 +112,7 @@ const MoreTab = (props: StationEditMoreTabProps) => {
                 )}
             </List>
 
-            {window.urlParams.get('style') === 'mtr' && (
+            {rmgStyle === 'mtr' && (
                 <FacilityDialog open={facilityDialogOpen} onClose={facilityDialogClose} facility={props.facility} />
             )}
         </div>
