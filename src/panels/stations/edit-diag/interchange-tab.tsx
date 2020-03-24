@@ -309,8 +309,8 @@ const InterchangeChipSet = (props: InterchangeChipSetProps) => {
             <ColourDialog
                 open={nameDialogOpened}
                 theme={
-                    chipSelected === -1
-                        ? (([] as any) as [string, string, string, '#000' | '#fff'])
+                    intInfos?.[chipSelected] === undefined
+                        ? (([] as any) as Theme)
                         : [
                               intInfos[chipSelected][0],
                               intInfos[chipSelected][1],
@@ -319,7 +319,9 @@ const InterchangeChipSet = (props: InterchangeChipSetProps) => {
                           ]
                 }
                 lineName={
-                    chipSelected === -1 ? (([] as any) as Name) : [intInfos[chipSelected][4], intInfos[chipSelected][5]]
+                    intInfos?.[chipSelected] === undefined
+                        ? ['', '']
+                        : [intInfos[chipSelected][4], intInfos[chipSelected][5]]
                 }
                 onUpdate={nameDialogUpdate}
                 onClose={() => setNameDialogOpened(false)}

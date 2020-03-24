@@ -145,8 +145,10 @@ const AppBody = () => {
                     tpo,
                 }}
             >
-                <SVGs />
-                <div style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ overflowY: 'scroll' }}>
+                    <SVGs />
+                </div>
+                <div style={{ flex: 1, overflow: 'hidden' }}>
                     <Panels param={param} paramUpdate={handleUpdate} />
                 </div>
             </ParamContext.Provider>

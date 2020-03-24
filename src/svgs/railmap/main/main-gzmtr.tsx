@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ParamContext } from '../../../context';
 import StationGZMTR from './station/station-gzmtr';
 import LineBox from './line-box-gzmtr';
@@ -76,7 +76,7 @@ const MainGZMTR = () => {
 
     const adjMat = adjacencyList(param.stn_list, wideFactor, wideFactor);
 
-    const xShares = React.useMemo(
+    const xShares = useMemo(
         () => {
             console.log('computing x shares');
             return Object.keys(param.stn_list).reduce(
@@ -103,7 +103,7 @@ const MainGZMTR = () => {
         {} as typeof xShares
     );
 
-    const yShares = React.useMemo(
+    const yShares = useMemo(
         () => {
             console.log('computing y shares');
             return Object.keys(param.stn_list).reduce((acc, cur) => {
@@ -123,7 +123,7 @@ const MainGZMTR = () => {
         {} as typeof yShares
     );
 
-    const stnStates = React.useMemo(
+    const stnStates = useMemo(
         () => getStnState(param.current_stn_idx, routes, param.direction),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [param.current_stn_idx, param.direction, routes.toString()]

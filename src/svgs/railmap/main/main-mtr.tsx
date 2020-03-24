@@ -1,35 +1,38 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ParamContext } from '../../../context';
 import { adjacencyList, criticalPathMethod, getXShareMTR, getStnState } from '../methods/share';
 import { StationsMTR } from '../methods/mtr';
 import StationMTR from './station/station-mtr';
 
-const leftWideFactor = (stnList: { [stnId: string]: StationInfo }, stnId: string) => {
+const leftWideFactor = (stnList: StationDict, stnId: string) => {
     var res = 0;
     let { type, tick_direc } = stnList[stnId].transfer;
-    if (tick_direc === 'l') {
-        if (['int3', 'osi11', 'osi12', 'osi21', 'osi31'].includes(type)) {
-            res += 0.8;
-        }
-    }
+    if (tick_direc === 'l' && ['int3', 'osi11', 'osi12', 'osi21', 'osi31'].includes(type)) res += 0.8;
     if (type === 'osi22') res += 0.8;
     if (stnList[stnId].parents.length === 2) res += 0.4;
     if (stnList[stnList[stnId].parents[0]].children.length === 2) res += 0.4;
     return res;
 };
 
-const rightWideFactor = (stnList: { [stnId: string]: StationInfo }, stnId: string) => {
+const rightWideFactor = (stnList: StationDict, stnId: string) => {
     var res = 0;
     let { type, tick_direc } = stnList[stnId].transfer;
-    if (tick_direc === 'r') {
-        if (['int3', 'osi11', 'osi12', 'osi21', 'osi31'].includes(type)) {
-            res += 0.8;
-        }
-    }
+    if (tick_direc === 'r' && ['int3', 'osi11', 'osi12', 'osi21', 'osi31'].includes(type)) res += 0.8;
     if (type === 'osi22') res += 0.8;
     if (stnList[stnId].children.length === 2) res += 0.4;
     if (stnList[stnList[stnId].children[0]].parents.length === 2) res += 0.4;
     return res;
+};
+
+const getNamePos = (stnId: string, branches: string[][], isFlip: boolean) => {
+    let res: number;
+    if (branches[0].includes(stnId)) {
+        res = branches[0].indexOf(stnId) % 2;
+    } else {
+        let branchOfStn = branches.filter(branch => branch.includes(stnId))[0];
+        res = (branches[0].indexOf(branchOfStn[0]) + branchOfStn.indexOf(stnId) + 1) % 2;
+    }
+    return res === 0 ? isFlip : !isFlip;
 };
 
 const MainMTR = () => {
@@ -37,18 +40,18 @@ const MainMTR = () => {
 
     const adjMat = adjacencyList(param.stn_list, leftWideFactor, rightWideFactor);
 
-    const criticalPath = React.useMemo(
+    const criticalPath = useMemo(
         () => criticalPathMethod('linestart', 'lineend', adjMat),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [JSON.stringify(adjMat)]
     );
-    const realCP = React.useMemo(
+    const realCP = useMemo(
         () => criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [JSON.stringify(adjMat)]
     );
 
-    const xShares = React.useMemo(
+    const xShares = useMemo(
         () => {
             console.log('computing x shares');
             return Object.keys(param.stn_list).reduce(
@@ -68,7 +71,7 @@ const MainMTR = () => {
         {} as typeof xShares
     );
 
-    const yShares = React.useMemo(
+    const yShares = useMemo(
         () => StationsMTR.getYShares(param.stn_list, branches),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [deps]
@@ -83,16 +86,15 @@ const MainMTR = () => {
         {} as typeof yShares
     );
 
-    const stnStates = React.useMemo(
+    const stnStates = useMemo(
         () => getStnState(param.current_stn_idx, routes, param.direction),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [param.current_stn_idx, param.direction, routes.toString()]
     );
 
-    const namePoss = React.useMemo(
-        () => StationsMTR.getNamePos(param.stn_list, criticalPath),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [deps, JSON.stringify(criticalPath)]
+    const namePoss = Object.keys(param.stn_list).reduce(
+        (acc, id) => ({ ...acc, [id]: getNamePos(id, branches, param.txt_flip) }),
+        {} as { [stnId: string]: boolean }
     );
 
     const linePaths = StationsMTR.drawLine(
@@ -125,13 +127,13 @@ export default MainMTR;
 const Lines = React.memo(
     (props: { paths: { main: string[]; pass: string[] } }) => {
         return (
-            <g style={{ fill: 'none', strokeWidth: 9.68 }}>
-                <g style={{ stroke: 'var(--rmg-grey)' }}>
+            <g fill="none" strokeWidth={9.68}>
+                <g stroke="var(--rmg-grey)">
                     {props.paths.pass.map((path, i) => (
                         <path key={i} d={path} />
                     ))}
                 </g>
-                <g style={{ stroke: 'var(--rmg-theme-colour)' }}>
+                <g stroke="var(--rmg-theme-colour)">
                     {props.paths.main.map((path, i) => (
                         <path key={i} d={path} />
                     ))}
@@ -152,11 +154,6 @@ interface StationGroupProps {
 const StationGroup = (props: StationGroupProps) => {
     const { param } = React.useContext(ParamContext);
 
-    let correctedNamePoss = {} as { [stnId: string]: boolean };
-    Object.keys(props.namePoss).forEach(
-        stnId => (correctedNamePoss[stnId] = param.txt_flip ? !props.namePoss[stnId] : props.namePoss[stnId])
-    );
-
     return (
         <g id="stn_icons">
             {Object.keys(param.stn_list)
@@ -168,11 +165,7 @@ const StationGroup = (props: StationGroupProps) => {
                             transform: `translate(${props.xs[stnId]}px,${props.ys[stnId]}px)`,
                         }}
                     >
-                        <StationMTR
-                            stnId={stnId}
-                            stnState={props.stnStates[stnId]}
-                            namePos={correctedNamePoss[stnId]}
-                        />
+                        <StationMTR stnId={stnId} stnState={props.stnStates[stnId]} namePos={props.namePoss[stnId]} />
                     </g>
                 ))}
         </g>

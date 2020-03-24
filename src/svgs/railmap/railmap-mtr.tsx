@@ -111,11 +111,11 @@ const DefsMTR = React.memo(() => {
             <path
                 id="stn_b"
                 className="rmg-stn__mtr"
-                d="M -6.369803765,4.84 a 8,8 0 1,1 12.73960753,0 a 8,8 0 1,1 -12.73960758,0 Z"
+                d="M-6.369803765,4.84a8,8,0,1,1,12.73960753,0a8,8,0,1,1-12.73960758,0Z"
             />
             <path
                 id="stn_bb"
-                d="M -6.369803765,4.84 a 8,8 0 1,1 12.73960753,0 a 8,8 0 0,1 0,9.68 a 8,8 0 1,1 -12.73960753,0 a 8,8 0 0,1 0,-9.68 Z"
+                d="M-6.369803765,4.84a8,8,0,1,1,12.73960753,0a8,8,0,0,1,0,9.68a8,8,0,1,1-12.73960753,0a8,8,0,0,1,0,-9.68Z"
                 className="rmg-stn__mtr"
             />
             <path id="int2" d="M -8,0 v 18 a 8,8 0 0,0 16,0 v -18 a 8,8 0 0,0 -16,0 Z" className="rmg-stn__mtr" />
@@ -126,67 +126,67 @@ const DefsMTR = React.memo(() => {
                     <React.Fragment key={n}>
                         <path
                             id={`int${n}`}
-                            d={`M -8,0 v ${h} a 8,8 0 0,0 16,0 v -${h} a 8,8 0 0,0 -16,0 Z`}
+                            d={`M-8,0v${h}a8,8,0,0,0,16,0v-${h}a8,8,0,0,0-16,0Z`}
                             className="rmg-stn__mtr"
                         />
                         <path
                             id={`int${n}_b`}
                             className="rmg-stn__mtr"
-                            d={`M -8,9.68 v ${h} a 8,8 0 0,0 16,0 v -${h} a 8,8 0 0,0 -1.630196235,-4.84 a 8,8 0 1,0 -12.73960758,0 a 8,8 0 0,0 -1.630196235,4.84 Z`}
+                            d={`M-8,9.68v${h}a8,8,0,0,0,16,0v-${h}a8,8,0,0,0-1.630196235-4.84a8,8,0,1,0-12.73960758,0a8,8,0,0,0-1.630196235,4.84Z`}
                         />
                         <path
                             id={`int${n}_bb`}
                             className="rmg-stn__mtr"
-                            d={`M -8,19.36 v ${h} a 8,8 0 0,0 16,0 v -${h} a 8,8 0 0,0 -1.630196235,-4.84 a 8,8 0 0,0 0,-9.68 a 8,8 0 1,0 -12.73960758,0 a 8,8 0 0,0 0,9.68 a 8,8 0 0,0 -1.630196235,4.84 Z`}
+                            d={`M-8,19.36v${h}a8,8,0,0,0,16,0v-${h}a8,8,0,0,0-1.630196235-4.84a8,8,0,0,0,0-9.68a8,8,0,1,0-12.73960758,0a8,8,0,0,0,0,9.68a8,8,0,0,0-1.630196235,4.84Z`}
                         />
                     </React.Fragment>
                 );
             })}
 
             <g id="osi11">
-                <path d="M 0,0 V 26" />
+                <path d="M0,0V26" />
                 <use xlinkHref="#stn" />
                 <use xlinkHref="#stn" y={26} />
             </g>
             <g id="osi11_b">
-                <path d="M 0,0 V 35.68" />
+                <path d="M0,0V35.68" />
                 <use xlinkHref="#stn_b" />
                 <use xlinkHref="#stn" y={35.68} />
             </g>
             <g id="osi11_bb">
-                <path d="M 0,0 V 45.36" />
+                <path d="M0,0V45.36" />
                 <use xlinkHref="#stn_bb" />
                 <use xlinkHref="#stn" y={45.36} />
             </g>
 
             <g id="osi12">
-                <path d="M 0,0 V 26" />
+                <path d="M0,0V26" />
                 <use xlinkHref="#stn" />
                 <use xlinkHref="#int2" y={26} />
             </g>
             <g id="osi12_b">
-                <path d="M 0,11 V 35.68" />
+                <path d="M0,11V35.68" />
                 <use xlinkHref="#stn_b" />
                 <use xlinkHref="#int2" y={35.68} />
             </g>
             <g id="osi12_bb">
-                <path d="M 0,11 V 45.36" />
+                <path d="M0,11V45.36" />
                 <use xlinkHref="#stn_bb" />
                 <use xlinkHref="#int2" y={45.36} />
             </g>
 
             <g id="osi22end">
-                <path d="M 0,0 H 41" />
+                <path d="M0,0H41" />
                 <use xlinkHref="#stn" />
                 <use xlinkHref="#int2" x={41} y={-18} />
             </g>
             <g id="osi22end_b">
-                <path d="M 0,9.68 H 41" />
+                <path d="M0,9.68H41" />
                 <use xlinkHref="#stn_b" />
                 <use xlinkHref="#int2" x={41} y={-8.32} />
             </g>
 
-            <path id="inttick" d="M 0,0 v 17" strokeLinecap="round" />
+            <path id="inttick" d="M0,0v17" strokeLinecap="round" />
         </defs>
     );
 });

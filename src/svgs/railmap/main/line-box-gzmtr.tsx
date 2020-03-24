@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, memo } from 'react';
 
-export default React.memo(
+export default memo(
     function LineBox(props: { info: InterchangeInfo; stnState: -1 | 0 | 1 }) {
         return (
             <g textAnchor="middle" fill={props.stnState === -1 ? '#fff' : props.info[3]}>
@@ -17,7 +17,7 @@ export default React.memo(
         prevProps.info.toString() === nextProps.info.toString() && prevProps.stnState === nextProps.stnState
 );
 
-const LineBoxName = React.memo(
+const LineBoxName = memo(
     (props: { name: Name }) => {
         let nameZHEl = [] as JSX.Element[];
         let dy = 0;
@@ -85,7 +85,7 @@ const LineBoxName = React.memo(
     (prevProps, nextProps) => prevProps.name.toString() === nextProps.name.toString()
 );
 
-const LineBoxNameSpan = React.memo(
+const LineBoxNameSpan = memo(
     (props: { name: Name }) => {
         let sharedText = '';
         for (let idx in [...props.name[0]]) {

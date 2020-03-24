@@ -71,11 +71,14 @@ const StyleSpecificSVGs = memo(
         const { canvasToShown, setCanvasToShown, setCanvasAvailable } = useContext(CanvasContext);
         useEffect(
             () => {
-                ['share', ...Object.keys(props.canvasAvailable)].forEach(
-                    canvas =>
-                        ((document.getElementById('css_' + canvas) as HTMLLinkElement).href =
-                            process.env.PUBLIC_URL + `/styles/${canvas}_${props.rmgStyle}.css`)
-                );
+                ['share', 'destination', 'runin', 'railmap'].forEach(canvas => {
+                    if (canvas in props.canvasAvailable || canvas === 'share') {
+                        (document.getElementById('css_' + canvas) as HTMLLinkElement).href =
+                            process.env.PUBLIC_URL + `/styles/${canvas}_${props.rmgStyle}.css`;
+                    } else {
+                        (document.getElementById('css_' + canvas) as HTMLLinkElement).href = '';
+                    }
+                });
                 setCanvasAvailable(Object.keys(props.canvasAvailable) as ProvidedCanvas[]);
                 setCanvasToShown(prevCanvas =>
                     ['all', ...Object.keys(props.canvasAvailable)].includes(prevCanvas) ? prevCanvas : 'all'

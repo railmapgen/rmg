@@ -224,41 +224,6 @@ export class Stations {
         return stations.yShares;
     }
 
-    private getNamePos(stnId: string): boolean {
-        if (stnId === 'linestart') {
-            this.namePoss['linestart'] = true;
-            return true;
-        }
-        let self = this;
-        let pos = this.criticalPath.nodes.indexOf(stnId) % 2; // -1, 0 or 1;
-        if (pos === -1) {
-            let parId = this.stnList[stnId].parents[0];
-            if (this.stnList[parId].children.length === 2) {
-                let res = self.getNamePos(parId);
-                this.namePoss[stnId] = res;
-                return res;
-            }
-            let res = !self.getNamePos(parId);
-            this.namePoss[stnId] = res;
-            return res;
-        }
-        this.namePoss[stnId] = pos === 1;
-        return pos === 1;
-    }
-
-    static getNamePos(stnList: StationDict, cp: { len: number; nodes: string[] }) {
-        console.log('computing name position');
-        let stations = new this({ stnList, criticalPath: cp });
-
-        Object.keys(stnList).forEach(stnId => {
-            if (['linestart', 'lineend'].includes(stnId)) return;
-            if (stnId in stations.namePoss) return;
-            stations.getNamePos(stnId);
-        });
-
-        return stations.namePoss;
-    }
-
     /**
      * Parameters of the arcs involved in the `<path>` element.
      */

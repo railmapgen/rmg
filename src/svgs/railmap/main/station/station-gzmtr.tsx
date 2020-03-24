@@ -58,7 +58,7 @@ const StationGZMTR = (props: Props) => {
                     stnNum={stnInfo.num}
                 />
             </g>
-            <g style={{ transform: `translateX(${-nameDX}px)` }}>
+            <g transform={`translate(${-nameDX},0)`}>
                 <StationNameGElement
                     name={stnInfo.name}
                     stnState={props.stnState}

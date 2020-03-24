@@ -21,6 +21,7 @@ import { getTransText2 } from '../../utils';
 import UploadListItem from './upload-item';
 import ExportDialog from './export-diag';
 import { CanvasContext } from '../../context';
+import { Link } from 'react-router-dom';
 
 const TemplateDialog = React.lazy(() => import(/* webpackChunkName: "panelSaveTemplateDialog" */ './template-diag'));
 
@@ -36,12 +37,6 @@ export default function PanelSave() {
     );
 }
 
-const allStyles = {
-    gzmtr: 'Guangzhou Metro',
-    mtr: 'MTR',
-    shmetro: 'Shanghai Metro (Alpha)',
-};
-
 const allLangs = {
     en: 'English',
     'zh-Hans': '中文（简体）',
@@ -53,7 +48,6 @@ const SaveLists = () => {
 
     const { rmgStyle } = useContext(CanvasContext);
 
-    const [style, setStyle] = useState(rmgStyle);
     const [isTempDialogOpen, setIsTempDialogOpen] = useState(false);
     const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
     const [isStyleDialogOpen, setIsStyleDialogOpen] = useState(false);
@@ -71,19 +65,18 @@ const SaveLists = () => {
     };
 
     const styleDialogClose = (action: 'close' | ProvidedStyles) => {
-        if (action === 'close' || action === style) {
+        if (action === 'close' || action === rmgStyle) {
             setIsStyleDialogOpen(false);
         } else {
-            setStyle(action);
-            setIsStyleDialogOpen(false);
+            // setStyle(action);
+            // setIsStyleDialogOpen(false);
 
-            // window.urlParams.set('style', action);
             window.gtag('event', 'set', {
                 event_category: 'style',
                 event_label: action,
             });
-            window.location.href = process.env.PUBLIC_URL + '/' + action;
-            // window.location.href = '?' + window.urlParams.toString();
+            // window.location.href = process.env.PUBLIC_URL + '/' + action;
+            setIsStyleDialogOpen(false);
         }
     };
 
@@ -117,7 +110,7 @@ const SaveLists = () => {
                         <ListItemIcon>
                             <Icon>style</Icon>
                         </ListItemIcon>
-                        <ListItemText primary={t('file.style.button')} secondary={t('file.style.' + style)} />
+                        <ListItemText primary={t('file.style.button')} secondary={t('file.style.' + rmgStyle)} />
                     </ListItem>
                     <ListItem button onClick={() => setIsLangDialogOpen(true)}>
                         <ListItemIcon>
@@ -156,10 +149,12 @@ function StyleDialog(props: StyleDialogProps) {
             <DialogTitle>{t('file.style.title')}</DialogTitle>
             <DialogContent dividers>
                 <List>
-                    {(Object.keys(allStyles) as ProvidedStyles[]).map(key => (
-                        <ListItem button onClick={() => props.onClose(key)} key={key}>
-                            <ListItemText primary={t('file.style.' + key)} />
-                        </ListItem>
+                    {(['gzmtr', 'mtr', 'shmetro'] as ProvidedStyles[]).map(key => (
+                        <Link to={'/' + key} key={key} style={{ textDecoration: 'none', color: 'unset' }}>
+                            <ListItem button onClick={() => props.onClose(key)}>
+                                <ListItemText primary={t('file.style.' + key)} />
+                            </ListItem>
+                        </Link>
                     ))}
                 </List>
             </DialogContent>
@@ -180,7 +175,6 @@ function LangDialog(props: LangDialogProps) {
             props.onClose();
         } else {
             i18n.changeLanguage(lang).then(t => (document.title = t('title')));
-            // window.urlParams.set('lang', lang);
             // history.pushState({url:window.location.href}, null, '?' + window.urlParams.toString());
             window.gtag('event', 'set', {
                 event_category: 'language',
@@ -188,7 +182,6 @@ function LangDialog(props: LangDialogProps) {
             });
             document.documentElement.setAttribute('lang', lang);
             props.onClose();
-            // window.location.href = '?' + window.urlParams.toString();
         }
     };
 

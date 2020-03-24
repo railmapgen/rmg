@@ -99,11 +99,7 @@ const StationMTR = (props: Props) => {
         switch (type) {
             case 'int3':
             case 'osi31':
-                if (info[0].length < 11) {
-                    return `int${info[0].length + 1}`;
-                } else {
-                    return 'int12';
-                }
+                return info[0].length < 11 ? `int${info[0].length + 1}` : 'int12';
             case 'osi11':
             case 'osi21':
                 return 'osi11';
@@ -123,7 +119,7 @@ const StationMTR = (props: Props) => {
 
     return (
         <>
-            <g style={{ transform: `translateY(${branchElDy}px)` }}>
+            <g transform={`translate(0,${branchElDy})`}>
                 <IntTickGroup
                     variant={
                         stnInfo.transfer.type === 'osi22' &&
@@ -156,17 +152,15 @@ const StationMTR = (props: Props) => {
             </g>
             <use
                 xlinkHref={'#' + stnIcon + branchAffix}
-                className={
-                    (props.stnState === -1 ? 'rmg-stn__mtr--pass' : 'rmg-stn__mtr--future') +
-                    (stnInfo.transfer.paid_area ? ' rmg-stn__mtr--paid-osi' : ' rmg-stn__mtr--unpaid-osi')
-                }
+                stroke={props.stnState === -1 ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
+                className={stnInfo.transfer.paid_area ? 'rmg-stn__mtr--paid-osi' : 'rmg-stn__mtr--unpaid-osi'}
                 style={{
                     transform:
                         `translateY(${branchDy}px)` +
                         `scale(${stnInfo.children[0] === 'lineend' ? 1 : -1},${props.namePos ? -1 : 1})`,
                 }}
             />
-            <g style={{ transform: `translateY(${branchDy}px)` }}>
+            <g transform={`translate(0,${branchDy})`}>
                 <StationNameGElement
                     name={stnInfo.name}
                     namePos={props.namePos}
@@ -277,7 +271,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                     y={NAME_ZH_TOP - 1 + (props.name[1].split('\\').length - 1) * 5.5}
                 />
             )}
-            <g ref={stnNameEl} style={{ transform: `translateX(${facilityNameDX}px)` }}>
+            <g ref={stnNameEl} transform={`translate(${facilityNameDX},0)`}>
                 <StationName name={props.name} nameGap={NAME_ZH_EN_GAP} />
             </g>
         </g>
@@ -351,11 +345,7 @@ const IntTickGroup = (props: IntTickGroupProps) => {
         case 'osi11':
         case 'osi21':
             return (
-                <g
-                    style={{
-                        transform: `translateY(${props.namePos ? -26 : 26}px)`,
-                    }}
-                >
+                <g transform={`translate(0,${props.namePos ? -26 : 26})`}>
                     <IntTick
                         intInfo={props.stnTrans.info[1][0]}
                         stnState={props.stnState}
@@ -370,11 +360,9 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                     {props.stnTrans.info[1].map((intInfo, i) => (
                         <g
                             key={i}
-                            style={{
-                                transform: `translateY(${
-                                    !props.namePos ? 8 + 18 * (i + 1) : -8 - 18 * (props.stnTrans.info[1].length - i)
-                                }px)`,
-                            }}
+                            transform={`translate(0,${
+                                !props.namePos ? 8 + 18 * (i + 1) : -8 - 18 * (props.stnTrans.info[1].length - i)
+                            })`}
                         >
                             <IntTick
                                 intInfo={intInfo}
@@ -503,7 +491,7 @@ const IntTick = (props: IntTickProps) => {
                 <use
                     xlinkHref="#inttick"
                     stroke={props.intInfo[2]}
-                    style={{ transform: `rotate(${props.rotation}deg)` }}
+                    transform={`rotate(${props.rotation})`}
                     className={
                         'rmg-line rmg-line__mtr rmg-line__change' + (props.stnState === -1 ? ' rmg-line__pass' : '')
                     }
