@@ -1,4 +1,5 @@
 type ProvidedCanvas = 'destination' | 'runin' | 'railmap';
+type ProvidedStyles = 'mtr' | 'gzmtr' | 'shmetro';
 
 /**
  * Array of name `string`s. The first element is in Chinese characters and the second element is in Latin characters.
@@ -161,10 +162,7 @@ interface LineEntry {
     /**
      * Key-value pairs of multi-lingual names of the line.
      */
-    name: {
-        en: string;
-        [lang: string]: string;
-    };
+    name: ITrans;
     /**
      * Background colour (in #HEX).
      */
@@ -187,8 +185,15 @@ interface CityEntry {
     /**
      * Key-value pairs of multi-lingual names of the city.
      */
-    name: {
-        en: string;
-        [lang: string]: string;
-    };
+    name: ITrans;
+}
+
+interface CompanyEntry {
+    id: string;
+    name: ITrans;
+}
+
+interface ITrans {
+    en: string;
+    [lang: string]: string;
 }

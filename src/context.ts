@@ -1,7 +1,9 @@
 import React, { createContext } from 'react';
 
 interface ICanvasContext {
+    rmgStyle: ProvidedStyles;
     canvasAvailable: ProvidedCanvas[];
+    setCanvasAvailable: React.Dispatch<React.SetStateAction<ProvidedCanvas[]>>;
     canvasToShown: ProvidedCanvas | 'all';
     setCanvasToShown: React.Dispatch<React.SetStateAction<ProvidedCanvas | 'all'>>;
     canvasScale: number;
@@ -14,6 +16,7 @@ interface IParamContext {
     branches: string[][];
     routes: string[][];
     deps: string;
+    tpo: string[];
 }
 
 export const CanvasContext = createContext<ICanvasContext>({} as ICanvasContext);

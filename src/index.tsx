@@ -8,7 +8,6 @@ import * as serviceWorker from './serviceWorker';
 
 declare global {
     interface Window {
-        urlParams: URLSearchParams;
         gtag: any;
     }
 }
@@ -18,46 +17,23 @@ declare global {
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 
-switch (window.urlParams.get('style')) {
-    case 'mtr':
-    case 'gzmtr':
-    case 'shmetro':
-        break;
-    default:
-        window.urlParams.set('style', 'mtr');
-}
-window.history.pushState({ url: window.location.href }, '', '?' + window.urlParams.toString());
-
-/**
- * @param style Style selected
- * @returns An ordered array of the provided canvases' id.
- */
-const canvasAvailable = ((style): ProvidedCanvas[] => {
-    switch (style) {
-        case 'mtr':
-            return ['destination', 'railmap'];
-        case 'gzmtr':
-            return ['runin', 'railmap'];
-        case 'shmetro':
-            return ['destination', 'runin', 'railmap'];
-        default:
-            return [];
-    }
-})(window.urlParams.get('style'));
-
-// load stylesheets on demand
+// load empty stylesheet elements
 document.head.append(
-    ...['share', ...canvasAvailable].map(tag => {
+    ...['share', 'destination', 'runin', 'railmap'].map(tag => {
         let link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = process.env.PUBLIC_URL + `/styles/${tag}_${window.urlParams.get('style')}.css`;
-        link.id = `css_${tag}`;
+        link.id = 'css_' + tag;
         return link;
     })
 );
 
 const renderApp = () => {
-    ReactDOM.render(<App canvas={canvasAvailable} />, document.querySelectorAll('div#root')[0]);
+    ReactDOM.render(
+        // <React.Suspense fallback="loading">
+        <App />,
+        // </React.Suspense>,
+        document.querySelectorAll('div#root')[0]
+    );
 };
 
 if (localStorage.rmgParam) {

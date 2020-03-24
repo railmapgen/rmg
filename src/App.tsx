@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useReducer } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import AppAppBar from './app-appbar';
 import SVGs from './svgs';
 import Panels from './panels';
@@ -65,13 +66,12 @@ const lightTheme = createMuiTheme({
     },
 });
 
-export default function App(props: { canvas: ProvidedCanvas[] }) {
+export default function App() {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const theme = prefersDarkMode ? darkTheme : lightTheme;
 
-    const [canvasToShown, setCanvasToShown] = useState<'all' | ProvidedCanvas>(
-        props.canvas.includes(localStorage.rmgCanvas) ? localStorage.rmgCanvas : 'all'
-    );
+    const [canvasAvailable, setCanvasAvailable] = useState<ProvidedCanvas[]>([]);
+    const [canvasToShown, setCanvasToShown] = useState<'all' | ProvidedCanvas>(localStorage.rmgCanvas);
     useEffect(() => localStorage.setItem('rmgCanvas', canvasToShown), [canvasToShown]);
     const [canvasScale, setCanvasScale] = useState(
         Number(localStorage.rmgScale) >= 0.1 ? Number(localStorage.rmgScale) : 1
@@ -79,11 +79,13 @@ export default function App(props: { canvas: ProvidedCanvas[] }) {
     useEffect(() => localStorage.setItem('rmgScale', canvasScale.toFixed(1)), [canvasScale]);
 
     return (
-        <>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
             <ThemeProvider theme={theme}>
                 <CanvasContext.Provider
                     value={{
-                        canvasAvailable: props.canvas,
+                        rmgStyle: window.location.pathname.split('/')[2] as ProvidedStyles,
+                        canvasAvailable,
+                        setCanvasAvailable,
                         canvasToShown,
                         setCanvasToShown,
                         canvasScale,
@@ -96,7 +98,7 @@ export default function App(props: { canvas: ProvidedCanvas[] }) {
                     <AppBody />
                 </CanvasContext.Provider>
             </ThemeProvider>
-        </>
+        </BrowserRouter>
     );
 }
 
@@ -140,11 +142,12 @@ const AppBody = () => {
                     branches,
                     routes,
                     deps,
+                    tpo,
                 }}
             >
                 <SVGs />
                 <div style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
-                    <Panels param={param} paramUpdate={handleUpdate} tpo={tpo} />
+                    <Panels param={param} paramUpdate={handleUpdate} />
                 </div>
             </ParamContext.Provider>
             <canvas style={{ display: 'none' }} />
