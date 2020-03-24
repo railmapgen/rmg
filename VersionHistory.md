@@ -1,5 +1,16 @@
 # Version History
 
+## 3.5.1 (24 Mar 2020)
+
+### New Features
+
+-   You may now switch between styles without refreshing the whole web page.
+-   Improved layout for tablet/desktop users.
+
+### Resolved Issues
+
+-   Fixed an issue in design panel where sliders of note's position don't respond in Guangzhou Metro style.
+
 ## 3.5 (22 Mar 2020)
 
 ### New Features
