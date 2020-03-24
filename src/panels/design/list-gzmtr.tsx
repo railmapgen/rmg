@@ -200,7 +200,7 @@ const NotesEntry = (props: { idx: number; onEdit: () => void }) => {
     };
 
     const handleSlide = (i: number) => (_event: React.ChangeEvent<{}>, value: number | number[]) =>
-        typeof value === 'object' &&
+        typeof value === 'number' &&
         dispatch({
             type: 'UPDATE_NOTE_GZMTR',
             idx: props.idx,
