@@ -71,10 +71,13 @@ const StationNameGElement = (props: StationNameGElementProps) => {
         >
             <StationName ref={stnNameEl} name={props.name} />
 
-            <IntBoxGroup intInfos={props.isOSI ? props.infos.flat() : props.infos[0]} transform={`translate(${x},0)`} />
+            <IntBoxGroup
+                intInfos={props.isOSI ? ([] as InterchangeInfo[]).concat(...props.infos) : props.infos[0]}
+                transform={`translate(${x},0)`}
+            />
 
             {props.isOSI && (
-                <g transform={`translate(${x + props.infos.flat().length * 15},-30)`}>
+                <g transform={`translate(${x + props.infos.reduce((sum, infos) => sum + infos.length, 0) * 15},-30)`}>
                     <OSIText osiInfos={props.infos[1]} />
                 </g>
             )}

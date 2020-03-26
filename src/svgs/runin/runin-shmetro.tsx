@@ -15,12 +15,12 @@ const RunInSHMetro = () => {
                 routes
                     .filter(route => route.includes(param.current_stn_idx))
                     .map(route => route[route.indexOf(param.current_stn_idx) + (param.direction === 'l' ? 1 : -1)])
-                    .flat()
+                    // .flat()
                     // remove duplicate
                     .reduce((acc, cur) => {
                         if (!acc.includes(cur)) acc.push(cur);
                         return acc;
-                    }, [])
+                    }, [] as string[])
             );
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -32,12 +32,12 @@ const RunInSHMetro = () => {
             routes
                 .filter(route => route.includes(param.current_stn_idx))
                 .map(route => route[route.indexOf(param.current_stn_idx) + (param.direction === 'l' ? -1 : 1)])
-                .flat()
+                // .flat()
                 // remove duplicate
                 .reduce((acc, cur) => {
                     if (!acc.includes(cur)) acc.push(cur);
                     return acc;
-                }, []),
+                }, [] as string[]),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [routes.toString(), param.current_stn_idx, param.direction]
     );
