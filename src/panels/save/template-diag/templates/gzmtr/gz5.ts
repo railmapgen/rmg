@@ -13,6 +13,7 @@ export default {
     platform_num: '2',
     txt_bg_gap: 15,
     txt_flip: false,
+    info_panel_type: 'gz5',
     stn_list: {
         linestart: {
             parents: [],
