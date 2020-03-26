@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -9,9 +9,6 @@ import {
     ListItemText,
     makeStyles,
     createStyles,
-    FormControlLabel,
-    RadioGroup,
-    Radio,
     Collapse,
     Divider,
     List,
@@ -31,33 +28,17 @@ import {
 
 import { ParamContext } from '../../context';
 
-const allInfoPanelTypes = {
-    gz1: 'Line 1',
-    gz28: 'Line 2/8',
-    gz3: 'Line 3',
-    gz4: 'Line 4',
-    gz5: 'Line 5',
-    gz6: 'Line 6/Guangfo Line',
-    gz1421: 'Line 14/21',
-    gzgf: 'Guangfo Line Phase 1',
-};
-
 const useStyles = makeStyles(theme =>
     createStyles({
         nestedList: {
             paddingLeft: theme.spacing(5),
-        },
-        radioGroup: {
-            paddingLeft: theme.spacing(5),
-            paddingBottom: theme.spacing(1),
         },
     })
 );
 
 const DesignListGZMTR = () => {
     const { t } = useTranslation();
-
-    const { param, dispatch } = React.useContext(ParamContext);
+    const { param, dispatch } = useContext(ParamContext);
 
     return (
         <>
@@ -94,61 +75,44 @@ export default DesignListGZMTR;
 
 const PanelTypeLi = () => {
     const { t } = useTranslation();
-    const classes = useStyles();
+    const { param, dispatch } = useContext(ParamContext);
 
-    const { param, dispatch } = React.useContext(ParamContext);
-    const [open, setOpen] = React.useState(false);
-
-    return React.useMemo(
+    return useMemo(
         () => (
             <>
-                <ListItem button onClick={() => setOpen(prevOpen => !prevOpen)}>
+                <ListItem>
                     <ListItemIcon>
                         <Icon style={{ transform: 'rotate(180deg)' }}>credit_card</Icon>
                     </ListItemIcon>
-                    <ListItemText
-                        primary={t('design.panelType.button')}
-                        secondary={open ? '' : t('design.panelType.' + param.info_panel_type)}
-                    />
-                    {open ? <Icon color="action">expand_less</Icon> : <Icon color="action">expand_more</Icon>}
-                </ListItem>
-                <Collapse in={open} unmountOnExit>
-                    <RadioGroup
-                        name="panel-type"
+                    <ListItemText primary={t('design.panelType.button')} />
+                    <TextField
+                        select
+                        onChange={e => dispatch({ type: 'SET_PANEL_TYPE', variant: e.target.value as PanelTypeGZMTR })}
                         value={param.info_panel_type}
-                        className={classes.radioGroup}
-                        onChange={e =>
-                            dispatch({
-                                type: 'SET_PANEL_TYPE',
-                                variant: e.target.value as PanelTypeGZMTR,
-                            })
-                        }
+                        style={{ width: 166 }}
                     >
-                        {Object.keys(allInfoPanelTypes).map(type => (
-                            <FormControlLabel
-                                value={type}
-                                key={type}
-                                control={<Radio size="small" color="primary" />}
-                                label={t('design.panelType.' + type)}
-                            />
+                        {['gz1', 'gz28', 'gz3', 'gz4', 'gz5', 'gz6', 'gz1421', 'gzgf'].map(type => (
+                            <MenuItem key={type} value={type}>
+                                {t('design.panelType.' + type)}
+                            </MenuItem>
                         ))}
-                    </RadioGroup>
-                </Collapse>
+                    </TextField>
+                </ListItem>
             </>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.info_panel_type, open, classes.radioGroup]
+        [param.info_panel_type]
     );
 };
 
 const NotesLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const { param, dispatch } = React.useContext(ParamContext);
+    const { param, dispatch } = useContext(ParamContext);
 
-    const [isCollapse, setIsCollapse] = React.useState(false);
-    const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-    const [noteSelected, setNoteSelected] = React.useState(0);
+    const [isCollapse, setIsCollapse] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [noteSelected, setNoteSelected] = useState(0);
 
     const handleAdd = () => {
         setNoteSelected(param.notesGZMTR.length);
@@ -193,9 +157,9 @@ const NotesLi = () => {
 
 const NotesEntry = (props: { idx: number; onEdit: () => void }) => {
     const { t } = useTranslation();
-    const { param, dispatch } = React.useContext(ParamContext);
+    const { param, dispatch } = useContext(ParamContext);
 
-    const [toggleEl, setToggleEl] = React.useState<null | HTMLElement>(null);
+    const [toggleEl, setToggleEl] = useState<null | HTMLElement>(null);
 
     const handleEdit = () => {
         setToggleEl(null);
@@ -215,7 +179,7 @@ const NotesEntry = (props: { idx: number; onEdit: () => void }) => {
         dispatch({ type: 'REMOVE_NOTE_GZMTR', idx: props.idx });
     };
 
-    return React.useMemo(
+    return useMemo(
         () => (
             <>
                 <ListItem>
@@ -298,18 +262,18 @@ interface AddNoteDialogProps {
 const NoteEditDialog = (props: AddNoteDialogProps) => {
     const { t } = useTranslation();
 
-    const { param, dispatch } = React.useContext(ParamContext);
+    const { param, dispatch } = useContext(ParamContext);
     const note = param.notesGZMTR[props.idx] || ['', '', 0, 0];
 
-    const [noteZH, setNoteZH] = React.useState(note[0] || '');
-    const [noteEN, setNoteEN] = React.useState(note[1] || '');
+    const [noteZH, setNoteZH] = useState(note[0] || '');
+    const [noteEN, setNoteEN] = useState(note[1] || '');
 
     const handleClick = () => {
         dispatch({ type: 'UPDATE_NOTE_GZMTR', idx: props.idx, note: [noteZH, noteEN, note[2], note[3], note[4]] });
         props.onClose();
     };
 
-    return React.useMemo(
+    return useMemo(
         () => (
             <Dialog open onClose={props.onClose}>
                 <DialogTitle>{t('design.notesGZMTR.editNote')}</DialogTitle>
