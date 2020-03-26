@@ -65,14 +65,3 @@ g#platform {
 g#big_stn_num {
     transform: translate(var(--translate-x, 800px), var(--translate-y, 145px));
 }
-
-g#run_in_gzmtr use#indicator_light {
-    transform: translate(calc(var(--rmg-svg-width) / 2), calc(var(--rmg-svg-height) - 30px));
-}
-
-g#big_psd {
-    text-anchor: middle;
-    transform: translate(var(--translate-x), var(--translate-y));
-    --translate-x: calc(var(--rmg-svg-width) / 2 + 80px);
-    --translate-y: calc(var(--rmg-svg-height) - var(--psd-dy, 58px));
-}

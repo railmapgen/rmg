@@ -97,7 +97,7 @@ export function updateParam() {
         param.info_panel_type = 'gz28';
     }
     if (param.info_panel_type === 'gz_2') {
-        param.info_panel_type = 'gzgf';
+        param.info_panel_type = 'gz6';
     }
     if (param.info_panel_type === 'gz_3') {
         param.info_panel_type = 'gz3';

@@ -94,7 +94,7 @@ type ReducerAction =
       }
     | {
           type: 'SET_PANEL_TYPE';
-          variant: 'gz1' | 'gz28' | 'gz3' | 'gz1421' | 'gzgf';
+          variant: PanelTypeGZMTR;
       }
     | {
           type: 'ADD_NOTE_GZMTR';

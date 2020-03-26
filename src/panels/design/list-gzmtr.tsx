@@ -35,8 +35,11 @@ const allInfoPanelTypes = {
     gz1: 'Line 1',
     gz28: 'Line 2/8',
     gz3: 'Line 3',
-    gzgf: 'Line 6/Guangfo Line',
+    gz4: 'Line 4',
+    gz5: 'Line 5',
+    gz6: 'Line 6/Guangfo Line',
     gz1421: 'Line 14/21',
+    gzgf: 'Guangfo Line Phase 1',
 };
 
 const useStyles = makeStyles(theme =>
@@ -117,7 +120,7 @@ const PanelTypeLi = () => {
                         onChange={e =>
                             dispatch({
                                 type: 'SET_PANEL_TYPE',
-                                variant: e.target.value as 'gz1' | 'gz28' | 'gz3' | 'gz1421' | 'gzgf',
+                                variant: e.target.value as PanelTypeGZMTR,
                             })
                         }
                     >

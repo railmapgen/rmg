@@ -83,6 +83,7 @@ interface StationDict {
     [stnId: string]: StationInfo;
 }
 
+type PanelTypeGZMTR = 'gz1' | 'gz28' | 'gz3' | 'gz4' | 'gz5' | 'gz1421' | 'gz6' | 'gzgf';
 /**
  * Array of a single note entry for Guangzhou Metro style.
  * @property 0 - text in Chinese characters
@@ -150,6 +151,7 @@ interface RMGParam {
         isLegacy: boolean;
         terminal: false | Name;
     };
+    info_panel_type: PanelTypeGZMTR;
     notesGZMTR: Note[];
     [propName: string]: any;
 }
