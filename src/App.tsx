@@ -145,7 +145,7 @@ const AppBody = () => {
                     tpo,
                 }}
             >
-                <div style={{ overflowY: 'scroll' }}>
+                <div style={{ overflowY: 'auto' }}>
                     <SVGs />
                 </div>
                 <div style={{ flex: 1, overflow: 'hidden' }}>

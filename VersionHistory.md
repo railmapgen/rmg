@@ -1,5 +1,17 @@
 # Version History
 
+## 3.5.2 (27 Mar 2020)
+
+### New Features
+
+-   Added types of information panels for Line 4, Line 5 and Guangfo Line Phase 1 in Guangzhou Metro style.
+-   Updated information panel type selector.
+-   Deployed on [GitLab Pages](https://chitowong.gitlab.io/RailMapGenerator) as a backup plan.
+
+### Resolved Issues
+
+-   Fixed an backward compatibility issue in running-in board of Shanghai Metro style.
+
 ## 3.5.1 (24 Mar 2020)
 
 ### New Features

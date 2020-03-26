@@ -1,11 +1,13 @@
-# Railway Map and Information Panel Generator
+# Rail Map Generator (RMG)
 
-A tool for generating railway maps and information panels in the styles of following public transportation systems. 
+A tool for generating railway maps and information panels in the styles of following public transportation systems.
 
-- Guangzhou Metro (Guangzhou, China)
-- MTR (Hong Kong)
-- Shanghai Metro (Alpha) (Shanghai, China)
-- More styles are coming. 
+-   Guangzhou Metro (Guangzhou, China)
+-   MTR (Hong Kong)
+-   Shanghai Metro (Shanghai, China)
+-   More styles are coming.
+
+Make your own rail map on [GitHub Pages](https://wongchito.github.io/RailMapGenerator) | [GitLab Pages](https://chitowong.gitlab.io/RailMapGenerator)
 
 [Version History](VersionHistory.md) | [Documentations](./docs/)
 
@@ -13,7 +15,7 @@ A tool for generating railway maps and information panels in the styles of follo
 
 ### Getting started
 
-- use current canvas or click 'new canvas'
+-   use current canvas or click 'new canvas'
 
 ### Adding stations
 
