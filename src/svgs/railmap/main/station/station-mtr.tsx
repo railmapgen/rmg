@@ -154,11 +154,10 @@ const StationMTR = (props: Props) => {
                 xlinkHref={'#' + stnIcon + branchAffix}
                 stroke={props.stnState === -1 ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
                 className={stnInfo.transfer.paid_area ? 'rmg-stn__mtr--paid-osi' : 'rmg-stn__mtr--unpaid-osi'}
-                style={{
-                    transform:
-                        `translateY(${branchDy}px)` +
-                        `scale(${stnInfo.children[0] === 'lineend' ? 1 : -1},${props.namePos ? -1 : 1})`,
-                }}
+                transform={
+                    `translate(0,${branchDy})` +
+                    `scale(${stnInfo.children[0] === 'lineend' ? 1 : -1},${props.namePos ? -1 : 1})`
+                }
             />
             <g transform={`translate(0,${branchDy})`}>
                 <StationNameGElement
@@ -186,7 +185,7 @@ interface StationNameGElementProps {
     namePos: boolean;
     stnState: -1 | 0 | 1;
     nameDX?: number;
-    facility: '' | 'airport' | 'hsr' | 'disney';
+    facility: StationInfo['facility'];
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {
@@ -251,16 +250,16 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     return (
         <g
             textAnchor={textAnchor}
-            style={{ transform: `translateY(${dy + osi22DY}px)` }}
+            transform={`translate(0,${dy + osi22DY})`}
             className={`Name ${props.stnState === -1 ? 'Pass' : props.stnState === 0 ? 'Current' : 'Future'}`}
         >
             {props.stnState === 0 && (
                 <rect
-                    id="current_bg"
-                    x={bBox.x - 3 + (facilityNameDX === 0 ? 0 : facilityNameDX - 1)}
+                    x={bBox.x - 3 + (facilityNameDX === 0 ? 0 : facilityNameDX - 3 - NAME_FULL_HEIGHT)}
                     y={NAME_ZH_TOP - 1}
-                    width={bBox.width + 6 + (facilityNameDX === 0 ? 0 : 1)}
+                    width={bBox.width + 6 + (facilityNameDX === 0 ? 0 : 3 + NAME_FULL_HEIGHT)}
                     height={NAME_FULL_HEIGHT + (props.name[1].split('\\').length - 1) * 11 + 2}
+                    fill="var(--rmg-black)"
                 />
             )}
             {props.facility !== '' && (
@@ -387,11 +386,9 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                     {props.stnTrans.info[1].map((intInfo, i) => (
                         <g
                             key={i}
-                            style={{
-                                transform: `translateY(${
-                                    !props.namePos ? 8 + 18 * (i + 1) : -8 - 18 * (props.stnTrans.info[1].length - i)
-                                }px)`,
-                            }}
+                            transform={`translate(0,${
+                                !props.namePos ? 8 + 18 * (i + 1) : -8 - 18 * (props.stnTrans.info[1].length - i)
+                            })`}
                         >
                             <IntTick
                                 intInfo={intInfo}
@@ -415,11 +412,9 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                     {props.stnTrans.info[1].map((intInfo, i) => (
                         <g
                             key={i}
-                            style={{
-                                transform: `translate(${props.end === 'left' ? -41 : 41}px,${
-                                    props.namePos ? 18 * i : -18 * (props.stnTrans.info[1].length - 1 - i)
-                                }px)`,
-                            }}
+                            transform={`translate(${props.end === 'left' ? -41 : 41},${
+                                props.namePos ? 18 * i : -18 * (props.stnTrans.info[1].length - 1 - i)
+                            })`}
                         >
                             <IntTick
                                 intInfo={intInfo}
@@ -498,9 +493,7 @@ const IntTick = (props: IntTickProps) => {
                 />
                 <g
                     textAnchor={textAnchor}
-                    style={{
-                        transform: `translate(${x + (props.nameDX || 0)}px,${y}px)`,
-                    }}
+                    transform={`translate(${x + (props.nameDX || 0)},${y})`}
                     className={`Name ${props.stnState === -1 ? 'Pass' : 'Future'}`}
                 >
                     {props.intInfo[4].split('\\').map((txt, i) => (
@@ -591,7 +584,7 @@ const OSIName = (props: OSINameProps) => {
     return (
         <g
             textAnchor={textAnchor}
-            style={{ transform: `translate(${x}px,${y}px)` }}
+            transform={`translate(${x},${y})`}
             className={`Name ${props.stnState === -1 ? 'Pass' : 'Future'}`}
         >
             <text className="rmg-name__zh rmg-name__mtr--osi">{props.name[0]}</text>
