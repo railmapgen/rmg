@@ -205,19 +205,27 @@ export const templateList: { [comp: string]: { filename: string; name: ITrans }[
             },
         },
         {
-            filename: 'ael',
-            name: {
-                en: 'Airport Express',
-                'zh-Hans': '机场快线',
-                'zh-Hant': '機場快綫',
-            },
-        },
-        {
             filename: 'eal',
             name: {
                 en: 'East Rail Line',
                 'zh-Hans': '东铁线',
                 'zh-Hant': '東鐵綫',
+            },
+        },
+        {
+            filename: 'drl',
+            name: {
+                en: 'Disneyland Resort Line',
+                'zh-Hans': '迪士尼线',
+                'zh-Hant': '迪士尼綫',
+            },
+        },
+        {
+            filename: 'ael',
+            name: {
+                en: 'Airport Express',
+                'zh-Hans': '机场快线',
+                'zh-Hant': '機場快綫',
             },
         },
         {
