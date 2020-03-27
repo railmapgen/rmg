@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ParamContext } from '../../context';
 import {
@@ -37,31 +37,60 @@ const useStyles = makeStyles(theme =>
     })
 );
 
-const DesignListMTR = () => {
-    const { t } = useTranslation();
-    const classes = useStyles();
-
-    const { dispatch } = React.useContext(ParamContext);
-
+export default memo(function DesignListMTR() {
     return (
         <>
-            <ListItem>
-                <ListItemIcon>
-                    <Icon>text_rotation_none</Icon>
-                </ListItemIcon>
-                <ListItemText primary={t('design.txtFlip.text')} />
-                <Divider orientation="vertical" flexItem className={classes.divider} />
-                <Button variant="outlined" color="primary" onClick={() => dispatch({ type: 'SET_TEXT_FLIP' })}>
-                    {t('design.txtFlip.flip')}
-                </Button>
-            </ListItem>
+            <NamePosLi />
             <Divider />
             <CustomiseDest />
         </>
     );
-};
+});
 
-export default DesignListMTR;
+const NamePosLi = () => {
+    const { t } = useTranslation();
+    const classes = useStyles();
+
+    const { param, dispatch } = useContext(ParamContext);
+
+    return useMemo(
+        () => (
+            <>
+                <ListItem>
+                    <ListItemIcon>
+                        <Icon>text_rotation_none</Icon>
+                    </ListItemIcon>
+                    <ListItemText primary={t('design.txtFlip.text')} />
+                    <ListItemSecondaryAction>
+                        <Switch
+                            edge="end"
+                            color="primary"
+                            checked={param.namePosMTR.isStagger}
+                            onChange={(_, checked) => dispatch({ type: 'SET_TEXT_STAGGER', checked })}
+                        />
+                    </ListItemSecondaryAction>
+                </ListItem>
+                <Collapse in={param.namePosMTR.isStagger}>
+                    <List component="div" disablePadding>
+                        <ListItem className={classes.nested}>
+                            <ListItemText primary={t('design.txtFlip.flipText')} />
+                            <Divider orientation="vertical" flexItem className={classes.divider} />
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                onClick={() => dispatch({ type: 'SET_TEXT_FLIP' })}
+                            >
+                                {t('design.txtFlip.flip')}
+                            </Button>
+                        </ListItem>
+                    </List>
+                </Collapse>
+            </>
+        ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [param.namePosMTR.isStagger, classes.nested, classes.divider]
+    );
+};
 
 const CustomiseDest = () => {
     const { t } = useTranslation();
@@ -79,7 +108,7 @@ const CustomiseDest = () => {
         dispatch({ type: 'SET_TERMINAL_OVERRIDE', terminal });
     };
 
-    return React.useMemo(
+    return useMemo(
         () => (
             <>
                 <ListItem button onClick={() => setOpen(prevOpen => !prevOpen)}>

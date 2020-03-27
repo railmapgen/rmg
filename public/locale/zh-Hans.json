@@ -91,9 +91,9 @@
             "switch": "交换"
         },
         "platform": "站台号",
-        "flipName": "翻转车站名称位置",
         "txtFlip": {
-            "text": "车站名称位置",
+            "text": "交错显示车站名称",
+            "flipText": "车站名称位置",
             "flip": "翻转"
         },
         "MTRDest": {

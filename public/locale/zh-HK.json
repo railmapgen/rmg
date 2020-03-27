@@ -92,9 +92,9 @@
             "switch": "交換"
         },
         "platform": "月台編碼",
-        "flipName": "反轉車站名稱位置",
         "txtFlip": {
-            "text": "車站名稱位置",
+            "text": "交錯顯示車站名稱",
+            "flipText": "車站名稱位置",
             "flip": "反轉"
         },
         "MTRLegacy": "舊款終點站牌樣式",

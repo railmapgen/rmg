@@ -91,9 +91,9 @@
             "switch": "Switch"
         },
         "platform": "Platform Number",
-        "flipName": "Flip Station Names Position",
         "txtFlip": {
-            "text": "Station Names Position",
+            "text": "Stagger Stations' Names",
+            "flipText": "Position of Stations' Names",
             "flip": "Flip"
         },
         "MTRDest": {

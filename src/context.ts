@@ -74,6 +74,10 @@ type ReducerAction =
           platform: string;
       }
     | {
+          type: 'SET_TEXT_STAGGER';
+          checked: boolean;
+      }
+    | {
           type: 'SET_TEXT_FLIP';
       }
     | {
@@ -254,10 +258,21 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
                 ...state,
                 platform_num: action.platform,
             };
+        case 'SET_TEXT_STAGGER':
+            return {
+                ...state,
+                namePosMTR: {
+                    ...state.namePosMTR,
+                    isStagger: action.checked,
+                },
+            };
         case 'SET_TEXT_FLIP':
             return {
                 ...state,
-                txt_flip: !state.txt_flip,
+                namePosMTR: {
+                    ...state.namePosMTR,
+                    isFlip: !state.namePosMTR.isFlip,
+                },
             };
         case 'SET_DEST_LEGACY':
             return {

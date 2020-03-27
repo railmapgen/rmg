@@ -24,7 +24,8 @@ const rightWideFactor = (stnList: StationDict, stnId: string) => {
     return res;
 };
 
-const getNamePos = (stnId: string, branches: string[][], isFlip: boolean) => {
+const getNamePos = (stnId: string, branches: string[][], { isStagger, isFlip }: RMGParam['namePosMTR']) => {
+    if (!isStagger) return false;
     let res: number;
     if (branches[0].includes(stnId)) {
         res = branches[0].indexOf(stnId) % 2;
@@ -93,7 +94,7 @@ const MainMTR = () => {
     );
 
     const namePoss = Object.keys(param.stn_list).reduce(
-        (acc, id) => ({ ...acc, [id]: getNamePos(id, branches, param.txt_flip) }),
+        (acc, id) => ({ ...acc, [id]: getNamePos(id, branches, param.namePosMTR) }),
         {} as { [stnId: string]: boolean }
     );
 

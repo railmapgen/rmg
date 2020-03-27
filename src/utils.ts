@@ -181,6 +181,15 @@ export function updateParam() {
     delete param.strip_pc;
     delete param.txt_bg_gap;
 
+    // Version 3.5.4
+    if (!('namePosMTR' in param)) {
+        param.namePosMTR = {
+            isStagger: true,
+            isFlip: param.txt_flip,
+        };
+    }
+    delete param.txt_flip;
+
     localStorage.setItem('rmgParam', JSON.stringify(param));
 }
 

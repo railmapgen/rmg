@@ -23,6 +23,9 @@ interface BranchInfo {
  * @index 3 - foreground colour
  */
 type Theme = [string, string, string, '#000' | '#fff'];
+/**
+ * Equivalent to `[...Theme, ...Name]`.
+ */
 type InterchangeInfo = [string, string, string, '#000' | '#fff', string, string];
 
 interface StationTransfer {
@@ -131,10 +134,16 @@ interface RMGParam {
      * Key-value pairs of the information of each station.
      */
     stn_list: StationDict;
-    /**
-     * Flag of flipping station names. (MTR specific)
-     */
-    txt_flip: boolean;
+    namePosMTR: {
+        /**
+         * Flag of whether station names staggered. If false, place name above line.
+         */
+        isStagger: boolean;
+        /**
+         * Flag of flipping station names when `isStagger === true`.
+         */
+        isFlip: boolean;
+    };
     /**
      * Customise destination sign of MTR style.
      */
