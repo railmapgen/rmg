@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.5.4 ()
+## 3.5.4 (27 Mar 2020)
 
 ### New Features
 
