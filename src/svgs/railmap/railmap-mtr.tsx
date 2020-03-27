@@ -1,22 +1,18 @@
-import * as React from 'react';
+import React, { memo } from 'react';
 
-import { ParamContext } from '../../context';
 import StripMTR from '../strip/strip-mtr';
 import MainMTR from './main/main-mtr';
 
-const RailMapMTR = () => {
-    const { param } = React.useContext(ParamContext);
+export default memo(function RailMapMTR() {
     return (
         <>
             <DefsMTR />
 
-            <StripMTR stripPc={param.strip_pc} />
+            <StripMTR stripPc={90} />
             <MainMTR />
         </>
     );
-};
-
-export default RailMapMTR;
+});
 
 const DefsMTR = React.memo(() => {
     return (

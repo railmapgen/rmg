@@ -15,7 +15,13 @@ interface BranchInfo {
     left: ['through' | 'nonthrough', string] | [];
     right: ['through' | 'nonthrough', string] | [];
 }
-
+/**
+ * Colour theme of line, derived from `LineEntry`.
+ * @index 0 - city id
+ * @index 1 - line id
+ * @index 2 - background colour (in HEX)
+ * @index 3 - foreground colour
+ */
 type Theme = [string, string, string, '#000' | '#fff'];
 type InterchangeInfo = [string, string, string, '#000' | '#fff', string, string];
 
@@ -98,42 +104,28 @@ type Note = [string, string, number, number, boolean];
  * Dictionary of configuration parameters for RMG, stored in `localStorage` as string.
  */
 interface RMGParam {
-    /**
-     * Width (in pixels) of `svg#railmap`.
-     */
-    svg_width?: number;
-    /**
-     * Width (in pixels) of `svg#destination`.
-     */
-    svg_dest_width?: number;
     svgWidth: {
         destination: number;
         runin: number;
         railmap: number;
     };
-    /**
-     * Height (in pixels) of `svg`s.
-     */
     svg_height: number;
     /**
-     * Train direction.
+     * Vertical position (in percentage) of line.
      */
+    y_pc: number;
+    /**
+     * Left and right margin of line (in percentage).
+     */
+    padding: number;
+    /**
+     * Branch spacing (in pixels) of line.
+     */
+    branch_spacing: number;
     direction: 'l' | 'r';
-    /**
-     * Colour theme of line, derived from `LineEntry`.
-     * @index 0 - city id
-     * @index 1 - line id
-     * @index 2 - background colour (in HEX)
-     * @index 3 - foreground colour
-     */
-    theme: [string, string, string, '#fff' | '#000'];
-    /**
-     * Name of line.
-     */
+    platform_num: string;
+    theme: Theme;
     line_name: Name;
-    /**
-     * ID of current station.
-     */
     current_stn_idx: string;
     /**
      * Key-value pairs of the information of each station.
@@ -144,16 +136,25 @@ interface RMGParam {
      */
     txt_flip: boolean;
     /**
-     * Legacy style of destination information panel. (MTR specific)
+     * Customise destination sign of MTR style.
      */
-    dest_legacy?: boolean;
     customiseMTRDest: {
+        /**
+         * Flag of legacy style. (Show line name before 'to').
+         */
         isLegacy: boolean;
+        /**
+         * Customise terminal stations.
+         */
         terminal: false | Name;
     };
+    line_num: string;
+    psd_num: string;
     info_panel_type: PanelTypeGZMTR;
     notesGZMTR: Note[];
-    [propName: string]: any;
+    direction_gz_x: number;
+    direction_gz_y: number;
+    // [propName: string]: any;
 }
 
 interface LineEntry {

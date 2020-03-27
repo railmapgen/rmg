@@ -34,19 +34,17 @@ export function updateParam() {
 
     // Version 1.2
     if (!('psd_num' in param)) {
-        param.psd_num = 1;
+        param.psd_num = '1';
     }
+    param.psd_num = param.psd_num.toString();
     if (!('line_num' in param)) {
-        param.line_num = 1;
+        param.line_num = '1';
     }
     delete param.style;
     if (param.theme.length === 3) {
         param.theme.push('#fff');
     }
     for (let [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
-        if (['linestart', 'lineend'].includes(stnId)) {
-            continue;
-        }
         if (!('num' in stnInfo)) {
             param.stn_list[stnId].num = '00';
         }
@@ -130,6 +128,8 @@ export function updateParam() {
                         ? [stnInfo.interchange[0], stnInfo.interchange[1].slice(1)]
                         : stnInfo.interchange,
             };
+            delete param.stn_list[stnId].change_type;
+            delete param.stn_list[stnId].interchange;
         }
     }
 
@@ -140,17 +140,15 @@ export function updateParam() {
         }
     }
 
-    // Version 2.15
-    for (let [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
-        if (!('usage' in stnInfo)) {
-            param.stn_list[stnId].usage = '';
-        }
-    }
-
     // Version 3.0
     for (let [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('facility' in stnInfo)) {
-            param.stn_list[stnId].facility = stnInfo.usage;
+            if ('usage' in stnInfo) {
+                param.stn_list[stnId].facility = stnInfo.usage;
+                delete param.stn_list[stnId].usage;
+            } else {
+                param.stn_list[stnId].facility = '';
+            }
         }
     }
 
@@ -158,6 +156,7 @@ export function updateParam() {
     if (!('customiseMTRDest' in param)) {
         param.customiseMTRDest = { isLegacy: param.dest_legacy || false, terminal: false };
     }
+    delete param.dest_legacy;
 
     // Version 3.4
     if (!('svgWidth' in param)) {
@@ -167,6 +166,8 @@ export function updateParam() {
             railmap: param.svg_width,
         };
     }
+    delete param.svg_width;
+    delete param.svg_dest_width;
 
     if (!('notesGZMTR' in param)) {
         param.notesGZMTR = [];
@@ -175,6 +176,12 @@ export function updateParam() {
     param.notesGZMTR = param.notesGZMTR?.map((note: any[]) =>
         note.length === 4 ? note.concat([false]) : note
     ) as Note[];
+
+    // Version 3.5.3
+    delete param.char_form;
+    delete param.show_outer;
+    delete param.strip_pc;
+    delete param.txt_bg_gap;
 
     localStorage.setItem('rmgParam', JSON.stringify(param));
 }

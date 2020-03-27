@@ -262,7 +262,6 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
         case 'SET_DEST_LEGACY':
             return {
                 ...state,
-                dest_legacy: action.isLegacy,
                 customiseMTRDest: {
                     ...state.customiseMTRDest,
                     isLegacy: action.isLegacy,
