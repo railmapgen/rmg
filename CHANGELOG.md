@@ -1,5 +1,12 @@
 # Version History
 
+## 3.5.3 (27 Mar 2020)
+
+### Resolved Issues
+
+-   Completed type of `RMGParam` and get rid of index signatures.
+-   Simplified parameter update process.
+
 ## 3.5.2 (27 Mar 2020)
 
 ### New Features
