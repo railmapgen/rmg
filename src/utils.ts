@@ -35,8 +35,10 @@ export function updateParam() {
     // Version 1.2
     if (!('psd_num' in param)) {
         param.psd_num = '1';
+    } else {
+        param.psd_num = param.psd_num.toString();
     }
-    param.psd_num = param.psd_num.toString();
+
     if (!('line_num' in param)) {
         param.line_num = '1';
     }
@@ -44,14 +46,12 @@ export function updateParam() {
     if (param.theme.length === 3) {
         param.theme.push('#fff');
     }
+
+    // Version 1.3
     for (let [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('num' in stnInfo)) {
             param.stn_list[stnId].num = '00';
         }
-    }
-
-    // Version 1.3
-    for (let stnInfo of Object.values(param.stn_list as { [x: string]: any })) {
         if ('interchange' in stnInfo) {
             stnInfo.interchange.map((arr: any) => {
                 return arr.forEach((intInfo: any) => {
@@ -61,11 +61,6 @@ export function updateParam() {
                 });
             });
         }
-    }
-
-    // Version 1.4
-    if (!('info_panel_type' in param)) {
-        param.info_panel_type = 'panasonic';
     }
 
     // Version 1.5
@@ -85,21 +80,27 @@ export function updateParam() {
         }
     }
 
+    // Version 1.4
     // Version 2.2
-    if (param.info_panel_type === 'gz_1') {
+    // Version 2.3
+    if (!('info_panel_type' in param)) {
         param.info_panel_type = 'gz28';
+    } else {
+        param.info_panel_type = (type => {
+            switch (type) {
+                case 'gz_1':
+                case 'panasonic':
+                    return 'gz28';
+                case 'gz_2':
+                    return 'gz6';
+                case 'gz_3':
+                    return 'gz3';
+                default:
+                    return type;
+            }
+        })(param.info_panel_type);
     }
 
-    // Version 2.3
-    if (param.info_panel_type === 'panasonic') {
-        param.info_panel_type = 'gz28';
-    }
-    if (param.info_panel_type === 'gz_2') {
-        param.info_panel_type = 'gz6';
-    }
-    if (param.info_panel_type === 'gz_3') {
-        param.info_panel_type = 'gz3';
-    }
     if (!('direction_gz_x' in param)) {
         param.direction_gz_x = 50;
     }
@@ -134,14 +135,11 @@ export function updateParam() {
     }
 
     // Version 2.8
+    // Version 3.0
     for (let [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('services' in stnInfo)) {
             param.stn_list[stnId].services = ['local'];
         }
-    }
-
-    // Version 3.0
-    for (let [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('facility' in stnInfo)) {
             if ('usage' in stnInfo) {
                 param.stn_list[stnId].facility = stnInfo.usage;
@@ -196,6 +194,5 @@ export const getTransText2 = (obj: ITrans, langs: string[]) => {
 /**
  * Format display style of station name as `[num: ]nameZH,nameEN`.
  */
-export const formatStnName = (stnInfo: StationInfo, style: ProvidedStyles) => {
-    return `${style === 'gzmtr' ? (stnInfo?.num || '-') + ': ' : ''}${stnInfo?.name.join().replace('\\', ' ')}`;
-};
+export const formatStnName = (stnInfo: StationInfo, style: ProvidedStyles) =>
+    (style === 'gzmtr' ? (stnInfo?.num || '-') + ': ' : '') + stnInfo?.name.join().replace('\\', ' ');
