@@ -10,6 +10,7 @@
 ### Resolved Issues
 
 -   Fixed an error in rail map where the background of current station has incorrect size in MTR style.
+-   Fixed an error in destination sign where possible terminals are incorrect.
 
 ## 3.5.3 (27 Mar 2020)
 

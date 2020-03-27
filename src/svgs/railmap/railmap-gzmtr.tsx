@@ -56,17 +56,19 @@ const DirectionIndicator = () => {
     const validDests = React.useMemo(
         () => [
             ...new Set(
-                routes.reduce(
-                    (acc, cur) =>
-                        cur.includes(param.current_stn_idx)
-                            ? acc.concat(
-                                  cur
-                                      .filter(stnId => !['linestart', 'lineend'].includes(stnId))
-                                      .slice(param.direction === 'l' ? 0 : -1)[0]
-                              )
-                            : acc,
-                    []
-                )
+                routes
+                    .reduce(
+                        (acc, cur) =>
+                            cur.includes(param.current_stn_idx)
+                                ? acc.concat(
+                                      cur
+                                          .filter(stnId => !['linestart', 'lineend'].includes(stnId))
+                                          .slice(param.direction === 'l' ? 0 : -1)[0]
+                                  )
+                                : acc,
+                        []
+                    )
+                    .filter(id => id !== param.current_stn_idx)
             ),
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps
