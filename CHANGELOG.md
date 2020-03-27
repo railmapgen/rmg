@@ -1,4 +1,15 @@
-# Version History
+# Changelog
+
+## 3.5.4 ()
+
+### New Features
+
+-   You may now stop staggering stations' names in MTR style and place them above the line.
+-   New template available (MTR Disneyland Resort Line).
+
+### Resolved Issues
+
+-   Fixed an error in rail map where the background of current station has incorrect size in MTR style.
 
 ## 3.5.3 (27 Mar 2020)
 
