@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.5.5 (28 Mar 2020)
+
+### New Features
+
+-   New design of export and preview dialog, which allows you to customise the styles (including transparent background, border and scaling) of the exported images. (#2)
+-   New theme colours for Hangzhou.
+
+### Resolved Issues
+
+-   Fixed a typo in panel type's description.
+
 ## 3.5.4 (27 Mar 2020)
 
 ### New Features
