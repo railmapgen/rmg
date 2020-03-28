@@ -79,6 +79,14 @@ export const cityList: CityEntry[] = [
         },
     },
     {
+        id: 'hangzhou',
+        country: 'CN',
+        name: {
+            en: 'Hangzhou',
+            zh: '杭州',
+        },
+    },
+    {
         id: 'hongkong',
         country: 'HK',
         name: {
