@@ -42,8 +42,11 @@
         },
         "preview": {
             "title": "Preview And Export",
-            "png": "Download As PNG",
-            "svg": "Donwload As SVG (Web Use)"
+            "transparent": "Transparent Background",
+            "border": "Show Border",
+            "scale": "Scale",
+            "format": "Format",
+            "download": "Download"
         },
         "style": {
             "button": "Style",

@@ -42,8 +42,11 @@
         },
         "preview": {
             "title": "預覽及輸出",
-            "png": "下載PNG",
-            "svg": "下載SVG（網頁用）"
+            "transparent": "透明背景",
+            "border": "顯示邊線",
+            "scale": "縮放比例",
+            "format": "格式",
+            "download": "下載"
         },
         "style": {
             "button": "風格",

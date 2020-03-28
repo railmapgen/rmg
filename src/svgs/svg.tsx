@@ -97,6 +97,7 @@ const StyleSpecificSVGs = memo(
                                 <ErrorBoundary>
                                     <svg {...props.svgProps(canvas)}>
                                         <rect
+                                            id="canvas-bg"
                                             x={0}
                                             y={0}
                                             fill="white"

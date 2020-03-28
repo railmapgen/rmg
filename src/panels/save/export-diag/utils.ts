@@ -1,13 +1,12 @@
-export function test(svgEl: SVGSVGElement) {
+export function test(svgEl: SVGSVGElement, scale: number) {
     let svgW = svgEl.viewBox.baseVal.width;
     let svgH = svgEl.viewBox.baseVal.height;
 
-    svgEl.setAttribute('width', svgW.toString());
-    svgEl.setAttribute('height', svgH.toString());
+    svgEl.removeAttribute('height');
 
     let canvas = document.querySelectorAll('canvas')[0];
-    canvas.width = Number(svgW) * 2.5;
-    canvas.height = Number(svgH) * 2.5;
+    canvas.width = Number(svgW) * window.devicePixelRatio * scale;
+    canvas.height = Number(svgH) * window.devicePixelRatio * scale;
 
     let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -40,9 +39,9 @@ export function test(svgEl: SVGSVGElement) {
     });
 
     var img = new Image();
-    img.onload = function() {
+    img.onload = () => {
         setTimeout(() => {
-            ctx.drawImage(img, 0, 0, Number(svgW) * 2.5, Number(svgH) * 2.5);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             saveAs(canvas.toDataURL('image/png'), 'rmg.' + new Date().toISOString() + '.png');
         }, 2000);
     };
