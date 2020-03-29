@@ -24,6 +24,7 @@ import {
     MenuItem,
     Slider,
     Switch,
+    Select,
 } from '@material-ui/core';
 
 import { ParamContext } from '../../context';
@@ -85,18 +86,18 @@ const PanelTypeLi = () => {
                         <Icon style={{ transform: 'rotate(180deg)' }}>credit_card</Icon>
                     </ListItemIcon>
                     <ListItemText primary={t('design.panelType.button')} />
-                    <TextField
-                        select
-                        onChange={e => dispatch({ type: 'SET_PANEL_TYPE', variant: e.target.value as PanelTypeGZMTR })}
+                    <Select
+                        native
                         value={param.info_panel_type}
+                        onChange={e => dispatch({ type: 'SET_PANEL_TYPE', variant: e.target.value as PanelTypeGZMTR })}
                         style={{ width: 166 }}
                     >
                         {['gz1', 'gz28', 'gz3', 'gz4', 'gz5', 'gz6', 'gz1421', 'gzgf'].map(type => (
-                            <MenuItem key={type} value={type}>
+                            <option key={type} value={type}>
                                 {t('design.panelType.' + type)}
-                            </MenuItem>
+                            </option>
                         ))}
-                    </TextField>
+                    </Select>
                 </ListItem>
             </>
         ),

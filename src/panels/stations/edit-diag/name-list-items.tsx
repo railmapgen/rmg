@@ -26,7 +26,7 @@ const NameListItems = (props: Props) => {
             <>
                 <ListItem>
                     <ListItemIcon>
-                        <span className={classes.listItemIcon}>漢</span>
+                        <span className={classes.listItemIcon}>文</span>
                     </ListItemIcon>
                     <TextField
                         style={{ width: '100%' }}
@@ -34,6 +34,7 @@ const NameListItems = (props: Props) => {
                         label={t('stations.edit.name.nameZH')}
                         onChange={props.onUpdate(0)}
                         value={props.name[0]}
+                        autoFocus
                     />
                 </ListItem>
                 <ListItem>

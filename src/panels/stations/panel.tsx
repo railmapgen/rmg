@@ -8,30 +8,23 @@ import { formatStnName } from '../../utils';
 import StationAddDialog from './add-diag';
 import StationEditDialog from './edit-diag';
 import StationChipSet from './chip-set';
-import { StationDeleteDialog, StationDeleteErrorDialog } from './delete-diags';
+import StationDeleteDialog from './delete-diags';
 import AutoNumDialog from './auto-num-diag';
 import StationFabs from './fabs';
-import { removeStation, reverseStations } from './utils';
-import { CanvasContext } from '../../context';
+import { CanvasContext, ParamContext } from '../../context';
 
-interface PanelStationsProps {
-    theme: [string, string, string, '#000' | '#fff'];
-    stnList: { [stnId: string]: StationInfo };
-    paramUpdate: (key: string, data: any) => void;
-    currentId: string;
-}
-
-const PanelStations = (props: PanelStationsProps) => {
+const PanelStations = () => {
     const { t } = useTranslation();
 
     const { rmgStyle } = useContext(CanvasContext);
+    const { param, dispatch } = useContext(ParamContext);
+    const stnList = param.stn_list;
 
     const [stationSelected, setStationSelected] = useState('');
     const [isSnackBarOpen, setIsSnackBarOpen] = useState(false);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-    const [isDeleteErrDialogOpen, setIsDeleteErrDialogOpen] = useState(false);
     const [isAutoNumDialogOpen, setIsAutoNumDialogOpen] = useState(false);
 
     const stnChipSetSelection = (stnId: string) => () => {
@@ -43,7 +36,7 @@ const PanelStations = (props: PanelStationsProps) => {
         if (action === 'clickaway') return;
         setIsSnackBarOpen(false);
         if (action === 'current') {
-            props.paramUpdate('current_stn_idx', stationSelected);
+            dispatch({ type: 'SET_CURRENT_STATION', stnId: stationSelected });
         } else if (action === 'edit') {
             setIsEditDialogOpen(true);
         } else if (action === 'delete') {
@@ -52,58 +45,10 @@ const PanelStations = (props: PanelStationsProps) => {
     };
 
     const stnAddDialogClose = (action: 'close' | string) => {
-        if (action === 'close') {
-            setIsAddDialogOpen(false);
-        } else {
-            setIsAddDialogOpen(false);
+        setIsAddDialogOpen(false);
+        if (action !== 'close') {
             setStationSelected(action);
             setIsEditDialogOpen(true);
-        }
-    };
-
-    const stnEditDialogUpdate = (value: any, field: string, index?: number) => {
-        let stnId = stationSelected;
-        if (field === 'facility') {
-            props.paramUpdate('stn_list', {
-                ...props.stnList,
-                [stnId]: {
-                    ...props.stnList[stnId],
-                    facility: value,
-                },
-            });
-        }
-        if (field === 'services') {
-            // window.myLine.updateStnServices(stnId, value);
-            let servicesSet = new Set(props.stnList[stnId].services);
-            if (value.selected === false) {
-                servicesSet.delete(value.chipId);
-            } else {
-                servicesSet.add(value.chipId);
-            }
-            props.paramUpdate('stn_list', {
-                ...props.stnList,
-                [stnId]: {
-                    ...props.stnList[stnId],
-                    services: [...servicesSet],
-                },
-            });
-        }
-    };
-
-    const stnDeleteClose = (action: string) => {
-        let stnId = stationSelected;
-        setIsDeleteDialogOpen(false);
-        if (action === 'accept') {
-            let res = removeStation(stnId, props.stnList);
-            if (res === false) {
-                setIsDeleteErrDialogOpen(true);
-            } else {
-                if (props.currentId === stnId) {
-                    let newCurrentId = Object.keys(res).filter(id => !['linestart', 'lineend'].includes(id))[0];
-                    props.paramUpdate('current_stn_idx', newCurrentId);
-                }
-                props.paramUpdate('stn_list', res);
-            }
         }
     };
 
@@ -112,11 +57,7 @@ const PanelStations = (props: PanelStationsProps) => {
             setIsAddDialogOpen(true);
         }
         if (action === 'reverse') {
-            let newStnList = reverseStations(props.stnList);
-            props.paramUpdate('stn_list', newStnList);
-            // console.log(newStnList);
-            // setParams('stn_list', newStnList);
-            // location.reload(true);
+            dispatch({ type: 'REVERSE_STATIONS' });
         }
         if (action === 'autonum') {
             setIsAutoNumDialogOpen(true);
@@ -126,7 +67,7 @@ const PanelStations = (props: PanelStationsProps) => {
     return (
         <div style={{ width: '100%' }}>
             <StationChipSet
-                stnList={props.stnList}
+                stnList={stnList}
                 onSelection={stnChipSetSelection}
                 addStationClick={() => setIsAddDialogOpen(true)}
             />
@@ -134,7 +75,7 @@ const PanelStations = (props: PanelStationsProps) => {
                 open={isSnackBarOpen}
                 onClose={(e, r) => snackBarClose(r)}
                 autoHideDuration={5000}
-                message={formatStnName(props.stnList[stationSelected], rmgStyle)}
+                message={formatStnName(stnList[stationSelected], rmgStyle)}
                 action={
                     <React.Fragment>
                         <Button color="secondary" size="small" onClick={() => snackBarClose('current')}>
@@ -160,24 +101,18 @@ const PanelStations = (props: PanelStationsProps) => {
 
             <StationFabs onAction={fabsAction} />
 
-            <StationAddDialog
-                open={isAddDialogOpen}
-                stnList={props.stnList}
-                onClose={stnAddDialogClose}
-                paramUpdate={props.paramUpdate}
-            />
+            <StationAddDialog open={isAddDialogOpen} onClose={stnAddDialogClose} />
             <StationEditDialog
                 open={isEditDialogOpen}
                 onClose={() => setIsEditDialogOpen(false)}
-                onUpdate={stnEditDialogUpdate}
                 stnId={stationSelected}
             />
             <StationDeleteDialog
                 open={isDeleteDialogOpen}
-                onClose={stnDeleteClose}
-                stnInfo={props.stnList[stationSelected] || props.stnList['linestart']}
+                onClose={() => setIsDeleteDialogOpen(false)}
+                stnId={stationSelected}
             />
-            <StationDeleteErrorDialog open={isDeleteErrDialogOpen} onClose={() => setIsDeleteErrDialogOpen(false)} />
+
             {rmgStyle === 'gzmtr' && (
                 <AutoNumDialog open={isAutoNumDialogOpen} onClose={() => setIsAutoNumDialogOpen(false)} />
             )}

@@ -3,11 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ListItem, ListItemIcon, Icon, TextField } from '@material-ui/core';
 import { ParamContext } from '../../../context';
 
-interface Props {
-    stnId: string;
-}
-
-const NumListItem = (props: Props) => {
+const NumListItem = (props: { stnId: string }) => {
     const { t } = useTranslation();
     const { param, dispatch } = React.useContext(ParamContext);
 

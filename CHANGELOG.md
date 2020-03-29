@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.5.6 (29 Mar 2020)
+
+### Resolved Issues
+
+-   Fixed an error that occurs when reversing stations more than once.
+-   Caught errors in exporting process.
+-   Improved robustness.
+
 ## 3.5.5 (28 Mar 2020)
 
 ### New Features

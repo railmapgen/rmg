@@ -113,6 +113,13 @@ type ReducerAction =
           note: Note;
       }
     | {
+          type: 'SET_CURRENT_STATION';
+          stnId: string;
+      }
+    | {
+          type: 'REVERSE_STATIONS';
+      }
+    | {
           type: 'UPDATE_STATION_NAME';
           stnId: string;
           name: Name;
@@ -188,7 +195,7 @@ type ReducerAction =
       }
     | {
           type: 'UPDATE_STATION_LIST';
-          stnList: { [stnId: string]: StationInfo };
+          stnList: StationDict;
       };
 
 export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam => {
@@ -319,6 +326,57 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
             return {
                 ...state,
                 notesGZMTR: state.notesGZMTR?.map((note, i) => (i === action.idx ? action.note : note)),
+            };
+        case 'SET_CURRENT_STATION':
+            return {
+                ...state,
+                current_stn_idx: action.stnId,
+            };
+        case 'REVERSE_STATIONS':
+            return {
+                ...state,
+                stn_list: Object.keys(state.stn_list).reduce(
+                    (acc, stnId) => ({
+                        ...acc,
+                        [stnId]: (id => {
+                            switch (id) {
+                                case 'linestart':
+                                    return {
+                                        ...state.stn_list.lineend,
+                                        parents: [],
+                                        children: state.stn_list.lineend.parents.slice().reverse(),
+                                        branch: { left: [] as [], right: state.stn_list.lineend.branch.left },
+                                    };
+                                case 'lineend':
+                                    return {
+                                        ...state.stn_list.linestart,
+                                        parents: state.stn_list.linestart.children.slice().reverse(),
+                                        children: [],
+                                        branch: { left: state.stn_list.linestart.branch.right, right: [] as [] },
+                                    };
+                                default:
+                                    return {
+                                        ...state.stn_list[id],
+                                        parents: state.stn_list[id].children
+                                            .map(id =>
+                                                id === 'linestart' ? 'lineend' : id === 'lineend' ? 'linestart' : id
+                                            )
+                                            .reverse(),
+                                        children: state.stn_list[id].parents
+                                            .map(id =>
+                                                id === 'linestart' ? 'lineend' : id === 'lineend' ? 'linestart' : id
+                                            )
+                                            .reverse(),
+                                        branch: {
+                                            left: state.stn_list[id].branch.right,
+                                            right: state.stn_list[id].branch.left,
+                                        },
+                                    };
+                            }
+                        })(stnId),
+                    }),
+                    {} as StationDict
+                ),
             };
         case 'UPDATE_STATION_NAME':
             // window.myLine.updateStnName(action.stnId, action.name);

@@ -124,6 +124,7 @@ const CustomiseDest = () => {
                             <ListItemText primary={t('design.MTRDest.legacy')} />
                             <ListItemSecondaryAction>
                                 <Switch
+                                    color="primary"
                                     edge="end"
                                     onChange={(_, checked) => dispatch({ type: 'SET_DEST_LEGACY', isLegacy: checked })}
                                     checked={param.customiseMTRDest.isLegacy}
@@ -131,16 +132,10 @@ const CustomiseDest = () => {
                             </ListItemSecondaryAction>
                         </ListItem>
                         <ListItem className={classes.nested}>
-                            <ListItemText
-                                primary={t('design.MTRDest.terminal')}
-                                secondary={
-                                    param.customiseMTRDest.terminal === false
-                                        ? ''
-                                        : param.customiseMTRDest.terminal.join()
-                                }
-                            />
+                            <ListItemText primary={t('design.MTRDest.terminal')} />
                             <ListItemSecondaryAction>
                                 <Switch
+                                    color="primary"
                                     edge="end"
                                     checked={param.customiseMTRDest.terminal !== false}
                                     onChange={(_, checked) =>

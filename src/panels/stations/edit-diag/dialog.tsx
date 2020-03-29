@@ -49,7 +49,6 @@ const useStyles = makeStyles(theme =>
 
 interface StationEditDialogProps {
     onClose: () => void;
-    onUpdate: (value: any, field: string, index?: number) => void;
     open: boolean;
     stnId: string;
 }
@@ -138,21 +137,14 @@ export default function StationEditDialog(props: StationEditDialogProps) {
                                 case 2:
                                     return <BranchTab stnId={props.stnId} />;
                                 case 3:
-                                    return (
-                                        <MoreTab
-                                            facility={stnInfo.facility}
-                                            services={new Set(stnInfo.services)}
-                                            onUpdate={(value, field) => props.onUpdate(value, field)}
-                                            stnId={props.stnId}
-                                        />
-                                    );
+                                    return <MoreTab stnId={props.stnId} />;
                             }
                         })(tabIndex)}
                     </React.Suspense>
                 </Typography>
             </DialogContent>
             <DialogActions>
-                <Button onClick={props.onClose} color="primary" autoFocus>
+                <Button onClick={props.onClose} color="primary">
                     {t('dialog.done')}
                 </Button>
             </DialogActions>

@@ -4,11 +4,7 @@ import { List, ListItem, ListItemText, Divider, Icon, TextField, MenuItem, ListI
 import { formatStnName } from '../../../utils';
 import { ParamContext, CanvasContext } from '../../../context';
 
-interface StationEditBranchTabProps {
-    stnId: string;
-}
-
-function StationEditBranchTab(props: StationEditBranchTabProps) {
+function StationEditBranchTab(props: { stnId: string }) {
     const { t } = useTranslation();
 
     return (

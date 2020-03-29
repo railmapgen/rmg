@@ -6,7 +6,7 @@ export const addStation = (
     loc: 'centre' | 'upper' | 'lower' | 'newupper' | 'newlower',
     end: string,
     stnList: { [stnId: string]: StationInfo }
-) => {
+): [string, StationDict] => {
     // get new id
     let newId = getRandomId();
     while (Object.keys(stnList).includes(newId)) {
@@ -14,6 +14,7 @@ export const addStation = (
     }
     let newInfo: StationInfo = {
         name: getNameFromId(newId),
+        secondaryName: ['', ''],
         num: '00',
         services: ['local'],
         parents: [],
@@ -32,7 +33,7 @@ export const addStation = (
         facility: '',
     };
 
-    let newStnList = JSON.parse(JSON.stringify(stnList));
+    let newStnList = JSON.parse(JSON.stringify(stnList)) as StationDict;
 
     if (prep === 'before') {
         if (loc === 'centre') {
@@ -333,50 +334,5 @@ export const removeStation = (stnId: string, stnList: StationDict) => {
 
     delete newStnList[stnId];
 
-    return newStnList;
-};
-
-export const reverseStations = (stnList: { [stnId: string]: StationInfo }) => {
-    let newStnList = JSON.parse(JSON.stringify(stnList));
-    Object.keys(stnList).forEach(stnId => {
-        let stnInfo = { ...stnList[stnId] };
-        if (stnId === 'linestart') {
-            newStnList.lineend.parents = stnInfo.children.reverse();
-            newStnList.lineend.branch = {
-                left: stnInfo.branch.right,
-                right: [],
-            };
-        } else if (stnId === 'lineend') {
-            newStnList.linestart.children = stnInfo.parents.reverse();
-            newStnList.linestart.branch = {
-                left: [],
-                right: stnInfo.branch.left,
-            };
-        } else {
-            var tmpArr = stnInfo.children.reverse().map(id => {
-                switch (id) {
-                    case 'linestart':
-                        return 'lineend';
-                    case 'lineend':
-                        return 'linestart';
-                    default:
-                        return id;
-                }
-            });
-            newStnList[stnId].children = stnInfo.parents.reverse().map(id => {
-                switch (id) {
-                    case 'linestart':
-                        return 'lineend';
-                    case 'lineend':
-                        return 'linestart';
-                    default:
-                        return id;
-                }
-            });
-            newStnList[stnId].parents = tmpArr;
-            newStnList[stnId].branch.left = stnInfo.branch.right;
-            newStnList[stnId].branch.right = stnInfo.branch.left;
-        }
-    });
     return newStnList;
 };

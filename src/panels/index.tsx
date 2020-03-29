@@ -3,15 +3,10 @@ import { CircularProgress } from '@material-ui/core';
 
 import PanelTabs from './panels';
 
-interface Props {
-    param: RMGParam;
-    paramUpdate: (key: string, data: any) => void;
-}
-
-export default (props: Props) => {
+export default () => {
     return (
         <React.Suspense fallback={<CircularProgress />}>
-            <PanelTabs {...props} />
+            <PanelTabs />
         </React.Suspense>
     );
 };

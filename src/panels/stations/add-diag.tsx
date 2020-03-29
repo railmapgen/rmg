@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Dialog,
@@ -73,18 +73,15 @@ const newStnPossibleLoc = (
 
 interface StationAddDialogProps {
     open: boolean;
-    stnList: {
-        [stnId: string]: StationInfo;
-    };
     onClose: (action: 'close' | string) => void;
-    paramUpdate: (key: string, data: any) => void;
 }
 
-const StationAddDialog = React.memo(
-    (props: StationAddDialogProps) => {
+export default React.memo(
+    function StationAddDialog(props: StationAddDialogProps) {
         const { t } = useTranslation();
         const { rmgStyle } = useContext(CanvasContext);
-        const { tpo } = useContext(ParamContext);
+        const { param, dispatch, tpo } = useContext(ParamContext);
+        const stnList = param.stn_list;
 
         const allLocs = {
             centre: t('stations.add.centre'),
@@ -103,14 +100,9 @@ const StationAddDialog = React.memo(
         const [endList, setEndList] = React.useState([] as string[]);
 
         // Hook for updating loc list and end lists when pivot changed
-        const newLocs = React.useMemo(() => newStnPossibleLoc(prep, pivot, props.stnList), [
-            prep,
-            pivot,
-            props.stnList,
-        ]);
-        React.useEffect(
+        const newLocs = useMemo(() => newStnPossibleLoc(prep, pivot, stnList), [prep, pivot, stnList]);
+        useEffect(
             () => {
-                console.log('new');
                 setLocOK(newLocs.map(p => (typeof p === 'number' ? Boolean(p) : Boolean(p.length))));
                 setEndList(newLocs[3]);
             },
@@ -119,25 +111,25 @@ const StationAddDialog = React.memo(
         );
 
         // Hook for updating loc selection (first available) when locOK list changed
-        React.useEffect(
+        useEffect(
             () => setLoc(Object.keys(allLocs)[locOK.indexOf(true)]),
             // eslint-disable-next-line react-hooks/exhaustive-deps
             [locOK]
         );
 
         // Hook for updating end selection when end list changed
-        React.useEffect(() => {
+        useEffect(() => {
             if (endList.length === 0) return;
             setEnd(endList[0]);
         }, [endList]);
 
         // Hook for setting new pivot in case of previous one being deleted
-        React.useEffect(
+        useEffect(
             () => {
-                if (!(pivot in props.stnList)) setPivot(tpo[0]);
+                if (!(pivot in stnList)) setPivot(tpo[0]);
             },
             // eslint-disable-next-line react-hooks/exhaustive-deps
-            [Object.keys(props.stnList).toString()]
+            [Object.keys(stnList).toString()]
         );
 
         const handleClick = (action: string) => {
@@ -149,13 +141,9 @@ const StationAddDialog = React.memo(
                     pivot,
                     loc as 'centre' | 'upper' | 'lower' | 'newupper' | 'newlower',
                     end as string,
-                    props.stnList
+                    stnList
                 );
-                // let [newId, newInfo] = window.myLine.addStn(action[0] as 'before' | 'after', action[1], action[2], action[3]);
-
-                // this.props.paramUpdate('stn_list', getParams().stn_list);
-                props.paramUpdate('stn_list', res);
-
+                dispatch({ type: 'UPDATE_STATION_LIST', stnList: res });
                 props.onClose(newId);
             }
         };
@@ -199,7 +187,7 @@ const StationAddDialog = React.memo(
                             >
                                 {tpo.map(stnId => (
                                     <MenuItem key={stnId} value={stnId}>
-                                        {formatStnName(props.stnList[stnId], rmgStyle)}
+                                        {formatStnName(stnList[stnId], rmgStyle)}
                                     </MenuItem>
                                 ))}
                             </TextField>
@@ -237,7 +225,7 @@ const StationAddDialog = React.memo(
                             >
                                 {endList.map(stnId => (
                                     <MenuItem key={stnId} value={stnId}>
-                                        {formatStnName(props.stnList[stnId], rmgStyle)}
+                                        {formatStnName(stnList[stnId], rmgStyle)}
                                     </MenuItem>
                                 ))}
                             </TextField>
@@ -255,28 +243,5 @@ const StationAddDialog = React.memo(
             </Dialog>
         );
     },
-    (prevProps, nextProps) => {
-        if (prevProps.open !== nextProps.open) {
-            return false;
-        } else {
-            const getDeps = (stnList: { [stnId: string]: StationInfo }) =>
-                Object.keys(stnList).reduce(
-                    (acc, cur) =>
-                        acc +
-                        cur +
-                        ((...k: (keyof StationInfo)[]) => (o: StationInfo) =>
-                            k.reduce((a, c) => a + JSON.stringify(o[c]), ''))(
-                            'parents',
-                            'children',
-                            'name',
-                            'num'
-                        )(stnList[cur]),
-                    ''
-                );
-
-            return getDeps(prevProps.stnList) === getDeps(nextProps.stnList);
-        }
-    }
+    (prevProps, nextProps) => prevProps.open === nextProps.open
 );
-
-export default StationAddDialog;

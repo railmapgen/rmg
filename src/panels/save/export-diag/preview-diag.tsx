@@ -25,6 +25,10 @@ const useStyles = makeStyles(theme =>
         contentWrapper: {
             display: 'flex',
             overflow: 'hidden',
+            paddingTop: theme.spacing(1),
+            paddingBottom: theme.spacing(1),
+            paddingLeft: theme.spacing(3),
+            paddingRight: theme.spacing(3),
             [theme.breakpoints.down('xs')]: {
                 flexDirection: 'column',
             },
@@ -33,10 +37,17 @@ const useStyles = makeStyles(theme =>
             flex: 1,
         },
         contentControl: {
-            flex: 0,
+            flexGrow: 0,
+            flexShrink: 0,
             display: 'flex',
             flexDirection: 'column',
             minWidth: 250,
+        },
+        contentRoot: {
+            padding: 'unset',
+            '&:first-child': {
+                paddingTop: 'unset',
+            },
         },
     })
 );
@@ -123,17 +134,24 @@ export default (props: Props) => {
             elem.querySelector('rect#canvas-bg')?.setAttribute('fill', isTransparent ? 'none' : 'white');
 
             if (rmgStyle === 'mtr') {
-                import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper').then(({ getBase64FontFace }) =>
-                    getBase64FontFace(elem).then(async response => {
-                        let uris = await Promise.all(response);
-                        let s = document.createElement('style');
-                        s.innerText = uris.join(' ');
-                        elem.prepend(s);
-
+                import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper')
+                    .then(({ getBase64FontFace }) =>
+                        getBase64FontFace(elem)
+                            .then(async response => {
+                                let uris = await Promise.all(response);
+                                let s = document.createElement('style');
+                                s.innerText = uris.join(' ');
+                                elem.prepend(s);
+                            })
+                            .catch(err => {
+                                alert('Failed to fonts. Fonts in the exported PNG will be missing.');
+                                console.error(err);
+                            })
+                    )
+                    .then(() => {
                         setSvgEl(elem);
                         document.fonts.ready.then(() => setIsLoaded(true));
-                    })
-                );
+                    });
             } else {
                 setSvgEl(elem);
                 setIsLoaded(true);
@@ -169,9 +187,10 @@ export default (props: Props) => {
                     dangerouslySetInnerHTML={{ __html: svgEl.outerHTML }}
                     ref={contentEl}
                     className={classes.contentCanvas}
+                    classes={{ root: classes.contentRoot }}
                 />
                 <div className={classes.contentControl}>
-                    <DialogContent>
+                    <DialogContent classes={{ root: classes.contentRoot }}>
                         <List component="div" disablePadding>
                             <ListItem>
                                 <ListItemText primary={t('file.preview.transparent')} />

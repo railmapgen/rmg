@@ -74,12 +74,7 @@ const useStyles = makeStyles(theme =>
     })
 );
 
-interface Props {
-    param: RMGParam;
-    paramUpdate: (key: string, data: any) => void;
-}
-
-export default function PanelTab(props: Props) {
+export default function PanelTab() {
     const { t, i18n } = useTranslation();
 
     const classes = useStyles();
@@ -97,14 +92,7 @@ export default function PanelTab(props: Props) {
             case 2:
                 return <PanelDesign />;
             case 3:
-                return (
-                    <PanelStations
-                        theme={props.param.theme}
-                        stnList={props.param.stn_list}
-                        currentId={props.param.current_stn_idx}
-                        paramUpdate={props.paramUpdate}
-                    />
-                );
+                return <PanelStations />;
             case 4:
                 return <PanelInfo />;
             default:

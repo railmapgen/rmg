@@ -6,11 +6,7 @@ import NameListItems from './name-list-items';
 import NumListItem from './num-list-item';
 import { ParamContext, CanvasContext } from '../../../context';
 
-interface Props {
-    stnId: string;
-}
-
-const NameTab = (props: Props) => {
+const NameTab = (props: { stnId: string }) => {
     const { rmgStyle } = useContext(CanvasContext);
     const { param, dispatch } = useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];

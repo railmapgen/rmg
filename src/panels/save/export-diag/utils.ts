@@ -45,12 +45,6 @@ export function test(svgEl: SVGSVGElement, scale: number) {
             saveAs(canvas.toDataURL('image/png'), 'rmg.' + new Date().toISOString() + '.png');
         }, 2000);
     };
-    // img.onloadend = () => {
-    //     console.log('img loaded')
-    // }
-    img.addEventListener('loadend', () => {
-        console.log('img loaded');
-    });
     img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl.outerHTML)));
 }
 

@@ -129,9 +129,9 @@ export function updateParam() {
                         ? [stnInfo.interchange[0], stnInfo.interchange[1].slice(1)]
                         : stnInfo.interchange,
             };
-            delete param.stn_list[stnId].change_type;
-            delete param.stn_list[stnId].interchange;
         }
+        delete param.stn_list[stnId].change_type;
+        delete param.stn_list[stnId].interchange;
     }
 
     // Version 2.8
@@ -143,11 +143,11 @@ export function updateParam() {
         if (!('facility' in stnInfo)) {
             if ('usage' in stnInfo) {
                 param.stn_list[stnId].facility = stnInfo.usage;
-                delete param.stn_list[stnId].usage;
             } else {
                 param.stn_list[stnId].facility = '';
             }
         }
+        delete param.stn_list[stnId].usage;
     }
 
     // Version 3.4
@@ -189,6 +189,13 @@ export function updateParam() {
         };
     }
     delete param.txt_flip;
+
+    // Version 3.5.6
+    Object.keys(param.stn_list).forEach(stnId => {
+        if (!('secondaryName' in param.stn_list[stnId])) {
+            param.stn_list[stnId].secondaryName = ['', ''];
+        }
+    });
 
     localStorage.setItem('rmgParam', JSON.stringify(param));
 }

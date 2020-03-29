@@ -131,8 +131,6 @@ const AppBody = () => {
     );
     const tpo = useTpo(branches);
 
-    const handleUpdate = (key: string, data: any) => dispatch({ type: 'ANY', key, data });
-
     return (
         <>
             <ParamContext.Provider
@@ -149,7 +147,7 @@ const AppBody = () => {
                     <SVGs />
                 </div>
                 <div style={{ flex: 1, overflow: 'hidden' }}>
-                    <Panels param={param} paramUpdate={handleUpdate} />
+                    <Panels />
                 </div>
             </ParamContext.Provider>
             <canvas style={{ display: 'none' }} />

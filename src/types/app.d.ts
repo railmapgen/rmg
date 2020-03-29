@@ -53,11 +53,15 @@ interface StationTransfer {
     info: InterchangeInfo[][];
 }
 
+type Services = 'local' | 'express';
+type Facilities = 'airport' | 'disney' | 'hsr' | '';
+
 interface StationInfo {
     /**
      * Station name in two languages.
      */
     name: Name;
+    secondaryName: Name;
     /**
      * Station number. (GZMTR specific)
      */
@@ -81,11 +85,11 @@ interface StationInfo {
     /**
      * Array of services at this station.
      */
-    services: ('local' | 'express')[];
+    services: Services[];
     /**
      * Facility near the station
      */
-    facility: 'airport' | 'disney' | 'hsr' | '';
+    facility: Facilities;
 }
 
 interface StationDict {

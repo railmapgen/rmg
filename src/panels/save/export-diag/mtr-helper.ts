@@ -5,13 +5,13 @@
  */
 const getRFFHelper = async (char: string, charForm: 'SC' | 'TC' | 'JP' | 'KR'): Promise<string> =>
     document.fonts.load('80px Noto Serif ' + charForm, char).then(f => {
-        let ur = f[0].unicodeRange;
+        // console.log(char, f);
         return [
             ...([...document.querySelectorAll('style')].filter(el => el.id === 'googlefonts')[0].sheet as CSSStyleSheet)
                 .cssRules,
         ]
             .filter(rule => rule.cssText.includes('Noto Serif ' + charForm))
-            .filter(rule => rule.cssText.includes(ur))[0].cssText;
+            .filter(rule => rule.cssText.includes(f[0].unicodeRange))[0].cssText;
     });
 
 /**
@@ -25,7 +25,10 @@ const getRenderedFontFace = async (char: string): Promise<string[]> => {
     return Promise.all([getRFFHelper(char, 'KR')]).catch(() =>
         Promise.all([getRFFHelper(char, 'JP')]).catch(() =>
             Promise.all([getRFFHelper(char, 'TC'), getRFFHelper(char, 'SC')]).catch(() =>
-                Promise.all([getRFFHelper(char, 'SC')])
+                Promise.all([getRFFHelper(char, 'SC')]).catch(() => {
+                    console.warn(char + ': not found');
+                    return [];
+                })
             )
         )
     );
@@ -63,19 +66,17 @@ export const getBase64FontFace = (svgEl: SVGSVGElement) =>
                     [...(svgEl.querySelectorAll('.rmg-name__zh') as NodeListOf<SVGTextElement | SVGTSpanElement>)]
                         .map(el => el.innerHTML)
                         .join('')
-                        .replace(/[\d\s]/g, '')
+                        .replace(/[\d\w\s]/g, '')
                 ),
             ];
 
-            return Promise.all(txt.map(getRenderedFontFace))
-                .then(rules => ([] as string[]).concat(...rules))
-                .then(rules => [...new Set(rules)])
-                .then(rules =>
-                    rules.map(rule =>
-                        fetch(rule.match(/https:[\w:/.-]+.woff2/g)![0])
-                            .then(response => response.blob())
-                            .then(readBlobAsDataURL)
-                            .then(uri => rule.replace(/src:[ \w('",\-:/.)]+;/g, `src: url('${uri}'); `))
-                    )
+            return Promise.all(txt.map(getRenderedFontFace)).then(rules => {
+                document.querySelector('style#googlefonts')?.remove();
+                return [...new Set(([] as string[]).concat(...rules))].map(rule =>
+                    fetch(rule.match(/https:[\w:/.-]+.woff2/g)![0])
+                        .then(response => response.blob())
+                        .then(readBlobAsDataURL)
+                        .then(uri => rule.replace(/src:[ \w('",\-:/.)]+;/g, `src: url('${uri}'); `))
                 );
+            });
         });
