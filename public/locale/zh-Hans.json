@@ -173,10 +173,7 @@
                 "more": "更多"
             },
             "name": {
-                "nameZH": "名称（汉字）",
-                "nameEN": "名称（拉丁字母）",
-                "nameENHelper": "用反斜杠（\\）使名称换行",
-                "num": "车站编码"
+                "secondary": "车站第二名称"
             },
             "interchange": {
                 "within": "站内换乘",
@@ -255,7 +252,8 @@
     "editor": {
         "zh": "汉字",
         "en": "拉丁字母",
-        "enterToWrap": "用回车键文本换行"
+        "enterToWrap": "用回车键使文本换行",
+        "backslashToWrap": "用反斜杠（\\）使名称换行"
     },
 
     "dialog": {

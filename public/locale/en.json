@@ -173,10 +173,7 @@
                 "more": "More"
             },
             "name": {
-                "nameZH": "Name (in Chinese characters)",
-                "nameEN": "Name (in Latin characters)",
-                "nameENHelper": "Use a backslash (\\) to wrap text",
-                "num": "Station Number"
+                "secondary": "Secondary Station Name"
             },
             "interchange": {
                 "within": "Within-station Interchange",
@@ -255,7 +252,8 @@
     "editor": {
         "zh": "Chinese characters",
         "en": "Latin characters",
-        "enterToWrap": "Use Enter key to wrap text"
+        "enterToWrap": "Use Enter key to wrap text",
+        "backslashToWrap": "Use a backslash (\\) to wrap text"
     },
 
     "dialog": {

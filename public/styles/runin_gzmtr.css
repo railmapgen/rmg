@@ -8,17 +8,16 @@ g#big_name {
     --translate-x: calc(var(--rmg-svg-width) / 2);
 }
 
+g#big_sec {
+    transform: translate(var(--translate-x), var(--translate-y, 125px));
+    --translate-x: calc(var(--rmg-svg-width) / 2);
+}
+
 g#big_next {
     --translate-y: calc(var(--rmg-svg-height) / 2 - 40px);
 }
-g#big_next g {
+g#big_next > g {
     transform: translate(var(--translate-x, 80px), var(--translate-y));
-}
-g#big_next .rmg-name__zh {
-    font-size: 35px;
-}
-g#big_next .rmg-name__en {
-    font-size: 17px;
 }
 
 g#big_next_2 g:nth-child(1),

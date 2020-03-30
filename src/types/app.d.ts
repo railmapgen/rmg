@@ -61,7 +61,7 @@ interface StationInfo {
      * Station name in two languages.
      */
     name: Name;
-    secondaryName: Name;
+    secondaryName: false | Name;
     /**
      * Station number. (GZMTR specific)
      */

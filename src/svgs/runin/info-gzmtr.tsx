@@ -21,10 +21,12 @@ const InfoGZMTR = () => {
             <BigName
                 ref={curNameEl}
                 curName={curStnInfo.name}
+                curSecName={curStnInfo.secondaryName}
                 style={{
                     ['--translate-y' as any]: `${0.5 * param.svg_height -
                         50 -
-                        (curStnInfo.name[1].split('\\').length - 1) * 18}px`,
+                        (curStnInfo.name[1].split('\\').length - 1) * 18 -
+                        (curStnInfo.secondaryName ? 58 / 2 : 0)}px`,
                 }}
             />
 
@@ -35,7 +37,8 @@ const InfoGZMTR = () => {
                     ['--translate-x' as any]: `${(param.svgWidth.runin + nameBBox.width) / 2 + 55}px`,
                     ['--translate-y' as any]: `${0.5 * param.svg_height -
                         30 -
-                        (curStnInfo.name[1].split('\\').length - 1) * 18}px`,
+                        (curStnInfo.name[1].split('\\').length - 1) * 18 -
+                        (curStnInfo.secondaryName ? 58 / 2 : 0)}px`,
                 }}
             />
 
@@ -53,14 +56,14 @@ const InfoGZMTR = () => {
 export default InfoGZMTR;
 
 const BigName = React.forwardRef(
-    (props: { curName: Name } & React.SVGProps<SVGGElement>, ref: React.Ref<SVGGElement>) => {
-        const { curName, ...others } = props;
+    (props: { curName: Name; curSecName: false | Name } & React.SVGProps<SVGGElement>, ref: React.Ref<SVGGElement>) => {
+        const { curName, curSecName, ...others } = props;
 
         return (
-            <g id="big_name" ref={ref} {...others}>
+            <g id="big_name" {...others}>
                 {React.useMemo(
                     () => (
-                        <>
+                        <g ref={ref}>
                             <text className="rmg-name__zh" fontSize={90}>
                                 {curName[0]}
                             </text>
@@ -71,14 +74,54 @@ const BigName = React.forwardRef(
                                     </text>
                                 ))}
                             </g>
-                        </>
+                        </g>
                     ),
+                    // eslint-disable-next-line react-hooks/exhaustive-deps
                     [curName]
+                )}
+
+                {curSecName && (
+                    <BigSecName
+                        secName={curSecName}
+                        transform={`translate(0,${70 + curName[1].split('\\').length * 36})`}
+                    />
                 )}
             </g>
         );
     }
 );
+
+const BigSecName = (props: { secName: Name } & React.SVGProps<SVGGElement>) => {
+    const { secName, ...others } = props;
+    const nameEl = useRef<SVGGElement | null>(null);
+    const [bBox, setBBox] = useState({ x: 0, width: 0 } as DOMRect);
+    useEffect(
+        () => setBBox(nameEl.current!.getBBox()),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.secName.toString()]
+    );
+
+    return (
+        <g {...others}>
+            <g transform="translate(0,4.5)" fontSize={36}>
+                <text textAnchor="end" x={bBox.x - 3} className="rmg-name__zh">
+                    {'('}
+                </text>
+                <text textAnchor="start" x={bBox.width + bBox.x + 3} className="rmg-name__zh">
+                    {')'}
+                </text>
+            </g>
+            <g ref={nameEl} textAnchor="middle">
+                <text className="rmg-name__zh" fontSize={26}>
+                    {secName[0]}
+                </text>
+                <text dy={22} className="rmg-name__en" fontSize={14}>
+                    {secName[1]}
+                </text>
+            </g>
+        </g>
+    );
+};
 
 const BigStnNum = (props: { lineNum: string; stnNum: string } & React.SVGProps<SVGGElement>) => {
     const { lineNum, stnNum, ...others } = props;
@@ -103,10 +146,16 @@ const BigStnNum = (props: { lineNum: string; stnNum: string } & React.SVGProps<S
 
 const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
     const { param } = React.useContext(ParamContext);
+    const nextInfo = param.stn_list[props.nextId];
+    const { name, secondaryName } = nextInfo;
 
     const [nextBBox, setNextBBox] = useState({ width: 0 } as DOMRect);
     const nextNameEl = React.useRef<SVGGElement | null>(null);
-    useEffect(() => setNextBBox(nextNameEl.current!.getBBox()), []);
+    useEffect(
+        () => setNextBBox(nextNameEl.current!.getBBox()),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [name.toString()]
+    );
 
     const nextNameZHCount = param.stn_list[props.nextId].name[0].length;
     const nameBcrX = (param.svgWidth.runin - props.nameBBox.width) / 2;
@@ -125,8 +174,10 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
                                 : `${param.svgWidth.runin - 45 - nextBBox.width - 35 * 1.5}px`,
                     }}
                 >
-                    <text className="rmg-name__zh">下站</text>
-                    <text className="rmg-name__en" dy={30}>
+                    <text className="rmg-name__zh" fontSize={35}>
+                        下站
+                    </text>
+                    <text className="rmg-name__en" fontSize={17} dy={30}>
                         Next
                     </text>
                 </g>
@@ -142,13 +193,35 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
                                 : `${param.svgWidth.runin - 45 - nextBBox.width}px`,
                     }}
                 >
-                    <text className="rmg-name__zh">{param.stn_list[props.nextId].name[0]}</text>
-                    {param.stn_list[props.nextId].name[1].split('\\').map((txt: string, i: number) => (
-                        <text className="rmg-name__en" dy={30 + i * 17} key={i}>
-                            {txt}
-                        </text>
-                    ))}
+                    <text className="rmg-name__zh" fontSize={35}>
+                        {name[0]}
+                    </text>
+                    <g fontSize={17}>
+                        {name[1].split('\\').map((txt: string, i: number) => (
+                            <text className="rmg-name__en" dy={30 + i * 17} key={i}>
+                                {txt}
+                            </text>
+                        ))}
+                    </g>
                 </g>
+                {secondaryName && (
+                    <g
+                        textAnchor="middle"
+                        style={{
+                            ['--translate-x' as any]:
+                                param.direction === 'l'
+                                    ? nextNameZHCount <= 2
+                                        ? `${115 + 35}px`
+                                        : `${115 + 35 / 2}px`
+                                    : `${param.svgWidth.runin - 45 - nextBBox.width}px`,
+                        }}
+                    >
+                        <BigNextSec
+                            secName={secondaryName}
+                            transform={`translate(${nextBBox.width / 2},${30 + name[1].split('\\').length * 17 + 5})`}
+                        />
+                    </g>
+                )}
             </g>
             <path
                 id="arrow"
@@ -173,6 +246,39 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
                 }}
             />
         </>
+    );
+};
+
+const BigNextSec = (props: { secName: Name } & React.SVGProps<SVGGElement>) => {
+    const { secName, ...others } = props;
+
+    const nameEl = useRef<SVGGElement | null>(null);
+    const [bBox, setBBox] = useState({ x: 0, width: 0 } as DOMRect);
+    useEffect(
+        () => setBBox(nameEl.current!.getBBox()),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.secName.toString()]
+    );
+
+    return (
+        <g {...others}>
+            <g transform="translate(0,2.5)" fontSize={25}>
+                <text textAnchor="end" x={bBox.x - 3} className="rmg-name__zh">
+                    {'('}
+                </text>
+                <text textAnchor="start" x={bBox.width + bBox.x + 3} className="rmg-name__zh">
+                    {')'}
+                </text>
+            </g>
+            <g ref={nameEl}>
+                <text className="rmg-name__zh" fontSize={18}>
+                    {secName[0]}
+                </text>
+                <text className="rmg-name__en" fontSize={10} dy={15}>
+                    {secName[1]}
+                </text>
+            </g>
+        </g>
     );
 };
 

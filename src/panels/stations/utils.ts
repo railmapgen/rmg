@@ -14,7 +14,7 @@ export const addStation = (
     }
     let newInfo: StationInfo = {
         name: getNameFromId(newId),
-        secondaryName: ['', ''],
+        secondaryName: false,
         num: '00',
         services: ['local'],
         parents: [],

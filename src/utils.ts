@@ -193,7 +193,11 @@ export function updateParam() {
     // Version 3.5.6
     Object.keys(param.stn_list).forEach(stnId => {
         if (!('secondaryName' in param.stn_list[stnId])) {
-            param.stn_list[stnId].secondaryName = ['', ''];
+            param.stn_list[stnId].secondaryName = false;
+        } else {
+            if (param.stn_list[stnId].secondaryName !== false && param.stn_list[stnId].secondaryName.join() === ',') {
+                param.stn_list[stnId].secondaryName = false;
+            }
         }
     });
 

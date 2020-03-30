@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef, useMemo } from 'react';
+import React, { useContext, useState, useEffect, useRef, useMemo, forwardRef } from 'react';
 import { ParamContext } from '../../../../context';
 import StationNumberText from '../../../station-num-gzmtr';
 import LineBox from '../line-box-gzmtr';
@@ -61,6 +61,7 @@ const StationGZMTR = (props: Props) => {
             <g transform={`translate(${-nameDX},0)`}>
                 <StationNameGElement
                     name={stnInfo.name}
+                    secondaryName={stnInfo.secondaryName}
                     stnState={props.stnState}
                     tickRotation={tickRotation}
                     isExpress={stnInfo.services.includes('express')}
@@ -74,6 +75,7 @@ export default StationGZMTR;
 
 interface StationNameGElementProps {
     name: Name;
+    secondaryName: false | Name;
     stnState: -1 | 0 | 1;
     tickRotation: 0 | 180;
     isExpress: boolean;
@@ -90,6 +92,16 @@ const StationNameGElement = (props: StationNameGElementProps) => {
         [props.name.toString()]
     );
 
+    const secNameEl = useRef<SVGGElement | null>(null);
+    const [secNameBBox, setSecNameBBox] = useState({ x: 0, width: 0 } as DOMRect);
+    useEffect(
+        () => {
+            if (secNameEl.current) setSecNameBBox(secNameEl.current.getBBox());
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.secondaryName.toString()]
+    );
+
     return (
         <g
             textAnchor={props.tickRotation === 180 ? 'end' : 'start'}
@@ -97,19 +109,35 @@ const StationNameGElement = (props: StationNameGElementProps) => {
             transform={`translate(0,${nameDY})rotate(-45)`}
         >
             <StationName ref={stnNameEl} name={props.name} />
-
+            {props.secondaryName && (
+                <g
+                    transform={`translate(${(bBox.width + secNameBBox.width / 2 + 10) *
+                        (props.tickRotation === 180 ? -1 : 1)},${2 + 5 * (props.name[1].split('\\').length - 1)})`}
+                    className={`Name ${props.stnState === -1 ? 'Pass' : 'Future'}`}
+                >
+                    <g transform="translate(0,3)" fontSize={18}>
+                        <text textAnchor="end" x={secNameBBox.x - 3} className="rmg-name__zh">
+                            {'('}
+                        </text>
+                        <text textAnchor="start" x={secNameBBox.width + secNameBBox.x + 3} className="rmg-name__zh">
+                            {')'}
+                        </text>
+                    </g>
+                    <StationSecondaryName ref={secNameEl} secName={props.secondaryName} />
+                </g>
+            )}
             {props.isExpress && (
                 <ExpressTag
                     fill={props.stnState === -1 ? '#aaa' : 'var(--rmg-theme-colour)'}
-                    transform={`translate(${(bBox.width + 35) * (props.tickRotation === 180 ? -1 : 1)},${2 +
-                        5 * (props.name[1].split('\\').length - 1)})`}
+                    transform={`translate(${(bBox.width + secNameBBox.width + 20 + 35) *
+                        (props.tickRotation === 180 ? -1 : 1)},${2 + 5 * (props.name[1].split('\\').length - 1)})`}
                 />
             )}
         </g>
     );
 };
 
-const StationName = React.forwardRef((props: { name: Name }, ref: React.Ref<SVGGElement>) =>
+const StationName = forwardRef((props: { name: Name }, ref: React.Ref<SVGGElement>) =>
     useMemo(
         () => (
             <g ref={ref}>
@@ -127,6 +155,23 @@ const StationName = React.forwardRef((props: { name: Name }, ref: React.Ref<SVGG
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.name[0], props.name[1]]
+    )
+);
+
+const StationSecondaryName = forwardRef((props: { secName: Name }, ref: React.Ref<SVGGElement>) =>
+    useMemo(
+        () => (
+            <g ref={ref} textAnchor="middle">
+                <text className="rmg-name__zh" fontSize={13}>
+                    {props.secName[0]}
+                </text>
+                <text dy={10} className="rmg-name__en" fontSize={6.5}>
+                    {props.secName[1]}
+                </text>
+            </g>
+        ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.secName.toString()]
     )
 );
 

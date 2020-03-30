@@ -125,6 +125,11 @@ type ReducerAction =
           name: Name;
       }
     | {
+          type: 'UPDATE_STATION_SECONDARY_NAME';
+          stnId: string;
+          name: false | Name;
+      }
+    | {
           type: 'UPDATE_STATION_NUM';
           stnId: string;
           num: string;
@@ -387,6 +392,17 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
                     [action.stnId]: {
                         ...state.stn_list[action.stnId],
                         name: action.name,
+                    },
+                },
+            };
+        case 'UPDATE_STATION_SECONDARY_NAME':
+            return {
+                ...state,
+                stn_list: {
+                    ...state.stn_list,
+                    [action.stnId]: {
+                        ...state.stn_list[action.stnId],
+                        secondaryName: action.name,
                     },
                 },
             };
