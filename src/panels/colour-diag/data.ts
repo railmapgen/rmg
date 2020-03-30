@@ -122,11 +122,36 @@ export const cityList: CityEntry[] = [
         },
     },
     {
+        id: 'nanjing',
+        country: 'CN',
+        name: {
+            en: 'Nanjing',
+            zh: '南京',
+        },
+    },
+    {
         id: 'newtaipei',
         country: 'TW',
         name: {
             en: 'New Taipei',
             zh: '新北',
+        },
+    },
+    {
+        id: 'paris',
+        country: 'FR',
+        name: {
+            en: 'Paris',
+            zh: '巴黎',
+        },
+    },
+    {
+        id: 'qingdao',
+        country: 'CN',
+        name: {
+            en: 'Qingdao',
+            'zh-Hans': '青岛',
+            'zh-Hant': '青島',
         },
     },
     {
@@ -170,8 +195,15 @@ export const cityList: CityEntry[] = [
         country: 'TW',
         name: {
             en: 'Taipei',
-            'zh-Hans': '台北',
-            'zh-Hant': '臺北',
+            zh: '台北',
+        },
+    },
+    {
+        id: 'tianjin',
+        country: 'CN',
+        name: {
+            en: 'Tianjin',
+            zh: '天津',
         },
     },
     {
