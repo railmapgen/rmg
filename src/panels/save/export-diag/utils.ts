@@ -2,11 +2,14 @@ export function test(svgEl: SVGSVGElement, scale: number) {
     let svgW = svgEl.viewBox.baseVal.width;
     let svgH = svgEl.viewBox.baseVal.height;
 
-    svgEl.removeAttribute('height');
+    // svgEl.removeAttribute('height');
 
     let canvas = document.querySelectorAll('canvas')[0];
     canvas.width = Number(svgW) * window.devicePixelRatio * scale;
     canvas.height = Number(svgH) * window.devicePixelRatio * scale;
+
+    svgEl.setAttribute('width', canvas.width.toString());
+    svgEl.setAttribute('height', canvas.height.toString());
 
     let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     ctx.clearRect(0, 0, canvas.width, canvas.height);

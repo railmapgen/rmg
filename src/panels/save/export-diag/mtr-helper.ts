@@ -58,7 +58,7 @@ export const getBase64FontFace = (svgEl: SVGSVGElement) =>
             let s = document.createElement('style');
             s.type = 'text/css';
             s.id = 'googlefonts';
-            s.innerText = csstext;
+            s.textContent = csstext;
             document.head.append(s);
 
             let txt = [

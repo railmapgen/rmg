@@ -126,7 +126,7 @@ export default (props: Props) => {
                 )
                 .forEach(txt => {
                     let s = document.createElement('style');
-                    s.innerText = txt;
+                    s.textContent = txt;
                     elem.prepend(s);
                 });
 
@@ -140,7 +140,7 @@ export default (props: Props) => {
                             .then(async response => {
                                 let uris = await Promise.all(response);
                                 let s = document.createElement('style');
-                                s.innerText = uris.join(' ');
+                                s.textContent = uris.join(' ');
                                 elem.prepend(s);
                             })
                             .catch(err => {
