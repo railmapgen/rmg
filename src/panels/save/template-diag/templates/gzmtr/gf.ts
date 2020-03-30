@@ -312,7 +312,7 @@ export default {
     char_form: 'cn',
     psd_num: '3',
     line_num: 'GF',
-    info_panel_type: 'gzgf',
+    info_panel_type: 'gz6',
     direction_gz_x: 50,
     direction_gz_y: 70,
 };

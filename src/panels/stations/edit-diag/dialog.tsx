@@ -23,7 +23,7 @@ const InterchangeTab = React.lazy(() => import(/* webpackChunkName: "panelStatio
 const BranchTab = React.lazy(() => import(/* webpackChunkName: "panelStationsBranch" */ './branch-tab'));
 const MoreTab = React.lazy(() => import(/* webpackChunkName: "panelStationsMore" */ './more-tab'));
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles(() =>
     createStyles({
         tab: {
             padding: '6px 24px',
@@ -64,7 +64,7 @@ export default function StationEditDialog(props: StationEditDialogProps) {
 
     const classes = useStyles();
     const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
 
     const tabNav = React.useMemo(
         () => (

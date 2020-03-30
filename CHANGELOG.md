@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.6 (30 Mar 2020)
+
+### New Features
+
+-   New interface of station name editing dialogue.
+-   Secondary station name is supported in Guangzhou Metro style.
+-   New theme colours for Nanjing, Paris, Qingdao, Tianjin.
+
 ## 3.5.6 (29 Mar 2020)
 
 ### Resolved Issues
