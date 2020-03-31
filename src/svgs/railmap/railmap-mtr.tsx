@@ -114,6 +114,9 @@ const DefsMTR = React.memo(() => {
                 d="M-6.369803765,4.84a8,8,0,1,1,12.73960753,0a8,8,0,0,1,0,9.68a8,8,0,1,1-12.73960753,0a8,8,0,0,1,0,-9.68Z"
                 className="rmg-stn__mtr"
             />
+            <use id="int" xlinkHref="#stn" />
+            <use id="int_b" xlinkHref="#stn_b" />
+            <use id="int_bb" xlinkHref="#stn_bb" />
             <path id="int2" d="M -8,0 v 18 a 8,8 0 0,0 16,0 v -18 a 8,8 0 0,0 -16,0 Z" className="rmg-stn__mtr" />
 
             {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => {
@@ -170,6 +173,9 @@ const DefsMTR = React.memo(() => {
                 <use xlinkHref="#stn_bb" />
                 <use xlinkHref="#int2" y={45.36} />
             </g>
+            <use id="osi22" xlinkHref="#osi12" />
+            <use id="osi22_b" xlinkHref="#osi12_b" />
+            <use id="osi22_bb" xlinkHref="#osi12_bb" />
 
             <g id="osi22end">
                 <path d="M0,0H41" />

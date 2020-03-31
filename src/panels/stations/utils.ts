@@ -25,7 +25,7 @@ export const addStation = (
         },
         transfer: {
             info: [[]],
-            type: 'none',
+            // type: 'none',
             tick_direc: 'r',
             paid_area: true,
             osi_names: [],

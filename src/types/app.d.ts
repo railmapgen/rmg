@@ -32,7 +32,7 @@ interface StationTransfer {
     /**
      * Interchange type of station.
      */
-    type: 'none' | 'int2' | 'int3' | 'osi11' | 'osi12' | 'osi13' | 'osi21' | 'osi22' | 'osi31';
+    // type: 'none' | 'int2' | 'int3' | 'osi11' | 'osi12' | 'osi13' | 'osi21' | 'osi22' | 'osi31';
     /**
      * Direction of text/tick of interchanges.
      */

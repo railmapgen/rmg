@@ -8,10 +8,13 @@ import {
     ListItem,
     ListItemIcon,
     Icon,
-    TextField,
-    MenuItem,
     DialogActions,
     Button,
+    makeStyles,
+    createStyles,
+    ListItemText,
+    Select,
+    Divider,
 } from '@material-ui/core';
 import { formatStnName } from '../../utils';
 import { getYShareMTR } from '../../methods';
@@ -71,6 +74,18 @@ const newStnPossibleLoc = (
     return [0, 0, 0, [], []];
 };
 
+const useStyles = makeStyles(() =>
+    createStyles({
+        dialogContent: {
+            padding: 8,
+        },
+        select: {
+            width: 166,
+            marginLeft: 8,
+        },
+    })
+);
+
 interface StationAddDialogProps {
     open: boolean;
     onClose: (action: 'close' | string) => void;
@@ -79,6 +94,8 @@ interface StationAddDialogProps {
 export default React.memo(
     function StationAddDialog(props: StationAddDialogProps) {
         const { t } = useTranslation();
+        const classes = useStyles();
+
         const { rmgStyle } = useContext(CanvasContext);
         const { param, dispatch, tpo } = useContext(ParamContext);
         const stnList = param.stn_list;
@@ -151,84 +168,85 @@ export default React.memo(
         return (
             <Dialog open={props.open} onClose={() => handleClick('close')}>
                 <DialogTitle>{t('stations.add.title')}</DialogTitle>
-                <DialogContent dividers>
-                    <List>
+                <DialogContent className={classes.dialogContent}>
+                    <List component="div" disablePadding>
                         <ListItem>
                             <ListItemIcon>
                                 <Icon>control_camera</Icon>
                             </ListItemIcon>
-                            <TextField
-                                select
-                                style={{ width: '100%' }}
-                                variant="outlined"
-                                label={t('stations.add.prep')}
+                            <ListItemText primary={t('stations.add.prep')} />
+                            <Select
+                                native
                                 onChange={e => setPrep(e.target.value as 'before' | 'after')}
                                 value={prep}
+                                className={classes.select}
                             >
-                                <MenuItem key="before" value="before">
-                                    {t('stations.add.before')}
-                                </MenuItem>
-                                <MenuItem key="after" value="after">
-                                    {t('stations.add.after')}
-                                </MenuItem>
-                            </TextField>
+                                {['before', 'after'].map(p => (
+                                    <option key={p} value={p}>
+                                        {t('stations.add.' + p)}
+                                    </option>
+                                ))}
+                            </Select>
                         </ListItem>
+                        <Divider variant="middle" />
                         <ListItem>
                             <ListItemIcon>
                                 <Icon>near_me</Icon>
                             </ListItemIcon>
-                            <TextField
-                                select
-                                style={{ width: '100%' }}
-                                variant="outlined"
-                                label={t('stations.add.pivot')}
-                                onChange={e => setPivot(e.target.value)}
+                            <ListItemText primary={t('stations.add.pivot')} />
+                            <Select
+                                native
+                                onChange={e => setPivot(e.target.value as string)}
                                 value={pivot}
+                                className={classes.select}
                             >
                                 {tpo.map(stnId => (
-                                    <MenuItem key={stnId} value={stnId}>
+                                    <option key={stnId} value={stnId}>
                                         {formatStnName(stnList[stnId], rmgStyle)}
-                                    </MenuItem>
+                                    </option>
                                 ))}
-                            </TextField>
+                            </Select>
                         </ListItem>
+                        <Divider variant="middle" />
                         <ListItem>
                             <ListItemIcon>
                                 <Icon>share</Icon>
                             </ListItemIcon>
-                            <TextField
-                                select
-                                style={{ width: '100%' }}
-                                variant="outlined"
-                                label={t('stations.add.loc')}
-                                onChange={e => setLoc(e.target.value)}
+                            <ListItemText primary={t('stations.add.loc')} />
+                            <Select
+                                native
+                                onChange={e => setLoc(e.target.value as string)}
                                 value={loc}
+                                className={classes.select}
                             >
                                 {(Object.keys(allLocs) as (keyof typeof allLocs)[]).map((key, idx) => (
-                                    <MenuItem key={key} value={key} disabled={!locOK[idx]}>
+                                    <option key={key} value={key} disabled={!locOK[idx]}>
                                         {allLocs[key]}
-                                    </MenuItem>
+                                    </option>
                                 ))}
-                            </TextField>
+                            </Select>
                         </ListItem>
+                        <Divider
+                            variant="middle"
+                            style={{ display: ['newupper', 'newlower'].includes(loc) ? 'flex' : 'none' }}
+                        />
                         <ListItem style={{ display: ['newupper', 'newlower'].includes(loc) ? 'flex' : 'none' }}>
                             <ListItemIcon>
                                 <Icon>undo</Icon>
                             </ListItemIcon>
-                            <TextField
-                                select
-                                style={{ width: '100%' }}
-                                variant="outlined"
-                                label={t('stations.add.end')}
-                                onChange={e => setEnd(e.target.value)}
+                            <ListItemText primary={t('stations.add.end')} />
+                            <Select
+                                native
+                                onChange={e => setEnd(e.target.value as string)}
                                 value={end}
+                                className={classes.select}
                             >
                                 {endList.map(stnId => (
-                                    <MenuItem key={stnId} value={stnId}>
+                                    <option key={stnId} value={stnId}>
                                         {formatStnName(stnList[stnId], rmgStyle)}
-                                    </MenuItem>
+                                    </option>
                                 ))}
-                            </TextField>
+                            </Select>
                         </ListItem>
                     </List>
                 </DialogContent>

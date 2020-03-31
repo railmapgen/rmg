@@ -135,9 +135,16 @@ type ReducerAction =
           num: string;
       }
     | {
-          type: 'UPDATE_STATION_TRANSFER';
+          type: 'ADD_STATION_INTERCHANGE_INFO';
           stnId: string;
-          transfer: StationTransfer;
+          setIdx: number;
+          info: InterchangeInfo;
+      }
+    | {
+          type: 'REMOVE_STATION_INTERCHANGE_INFO';
+          stnId: string;
+          setIdx: number;
+          intIdx: number;
       }
     | {
           type: 'UPDATE_STATION_INTERCHANGE_INFO';
@@ -418,14 +425,39 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
                     },
                 },
             };
-        case 'UPDATE_STATION_TRANSFER':
+        case 'ADD_STATION_INTERCHANGE_INFO':
             return {
                 ...state,
                 stn_list: {
                     ...state.stn_list,
                     [action.stnId]: {
                         ...state.stn_list[action.stnId],
-                        transfer: action.transfer,
+                        transfer: {
+                            ...state.stn_list[action.stnId].transfer,
+                            info: (({ setIdx, info }) => {
+                                let nextInfo = state.stn_list[action.stnId].transfer.info.slice();
+                                nextInfo[setIdx] = (nextInfo[setIdx] || ([] as InterchangeInfo[])).concat([info]);
+                                return nextInfo;
+                            })(action),
+                        },
+                    },
+                },
+            };
+        case 'REMOVE_STATION_INTERCHANGE_INFO':
+            return {
+                ...state,
+                stn_list: {
+                    ...state.stn_list,
+                    [action.stnId]: {
+                        ...state.stn_list[action.stnId],
+                        transfer: {
+                            ...state.stn_list[action.stnId].transfer,
+                            info: state.stn_list[action.stnId].transfer.info.map((infos, i) =>
+                                i === action.setIdx
+                                    ? infos.slice(0, action.intIdx).concat(infos.slice(action.intIdx + 1))
+                                    : infos
+                            ),
+                        },
                     },
                 },
             };

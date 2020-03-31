@@ -10,9 +10,6 @@ import {
     Divider,
     Button,
     ListItemIcon,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
     Switch,
     Chip,
     Dialog,
@@ -22,126 +19,38 @@ import {
     Tooltip,
     makeStyles,
     createStyles,
+    Select,
 } from '@material-ui/core';
 import { ParamContext, CanvasContext } from '../../../context';
 import ColourDialog from '../../colour-diag';
 import NameListItems from './name-list-items';
 
-interface StationEditInterchangeTabProps {
-    stnTrans: StationTransfer;
-    stnId: string;
-    onUpdate: (trans: StationTransfer) => void;
-}
-
-const StationEditInterchangeTab = (props: StationEditInterchangeTabProps) => {
+const StationEditInterchangeTab = (props: { stnId: string }) => {
     const { t } = useTranslation();
 
     const { rmgStyle } = useContext(CanvasContext);
-
-    // const { param, dispatch } = React.useContext(ParamContext);
+    const { param, dispatch } = useContext(ParamContext);
+    const stnTrans = param.stn_list[props.stnId].transfer;
 
     const [osiNameDialogOpened, setOsiNameDialogOpened] = React.useState(false);
 
     const addClick = (index: number) => {
-        let ns = props.stnTrans.info.map(inf => inf.length);
-        if (ns.length === 1) {
-            ns[1] = 0;
-        }
-        ns[index] += 1;
-        let changeType: string;
-        if (ns[0] === 3 && ns[1] === 0) {
-            changeType = 'int3'; // was int4
-        } else if (ns[0] === 2 && ns[1] === 1) {
-            changeType = 'osi31';
-        } else if (ns[0] === 2 && ns[1] === 0) {
-            changeType = 'int3';
-        } else if (ns[0] === 1 && ns[1] === 2) {
-            changeType = 'osi22';
-        } else if (ns[0] === 1 && ns[1] === 1) {
-            changeType = 'osi21';
-        } else if (ns[0] === 1 && ns[1] === 0) {
-            changeType = 'int2';
-        } else if (ns[0] === 0 && ns[1] === 3) {
-            changeType = 'osi13';
-        } else if (ns[0] === 0 && ns[1] === 2) {
-            changeType = 'osi12';
-        } else if (ns[0] === 0 && ns[1] === 1) {
-            changeType = 'osi11';
-        } else if (ns[0] === 0 && ns[1] === 0) {
-            changeType = 'none';
-        } else {
-            // sum(ns) > 3
-            changeType = 'int3';
-        }
-        console.log(changeType);
-        if (props.stnTrans.info.length === 1 && index === 1) {
-            let transInfo = {
-                ...props.stnTrans,
-                type: changeType as any,
-                osi_names: changeType.includes('osi') ? [props.stnTrans.osi_names[0] || ['車站名', 'Stn Name']] : [],
-                info: props.stnTrans.info.concat([[Array(6) as InterchangeInfo]]),
-            };
-            // dispatch({ type: 'UPDATE_STATION_TRANSFER', stnId: props.stnId, transfer: transInfo });
-            console.log(transInfo);
-            props.onUpdate(transInfo);
-        } else {
-            let transInfo = {
-                ...props.stnTrans,
-                type: changeType as any,
-                osi_names: changeType.includes('osi') ? [props.stnTrans.osi_names[0] || ['車站名', 'Stn Name']] : [],
-                info: props.stnTrans.info.map((inf, idx) =>
-                    idx === index ? inf.concat([Array(6) as InterchangeInfo]) : inf
-                ),
-            };
-            // dispatch({ type: 'UPDATE_STATION_TRANSFER', stnId: props.stnId, transfer: transInfo });
-            console.log(transInfo);
-            props.onUpdate(transInfo);
-        }
+        let newInfo = [...param.theme, '轉綫', 'Line'] as InterchangeInfo;
+        dispatch({
+            type: 'ADD_STATION_INTERCHANGE_INFO',
+            stnId: props.stnId,
+            setIdx: index,
+            info: newInfo,
+        });
     };
 
     const deleteClick = (index: number, i: number) => {
-        let ns = props.stnTrans.info.map(inf => inf.length);
-        if (ns.length === 1) {
-            ns[1] = 0;
-        }
-        ns[index] -= 1;
-        let changeType: string;
-        if (ns[0] === 3 && ns[1] === 0) {
-            changeType = 'int3'; // was int4
-        } else if (ns[0] === 2 && ns[1] === 1) {
-            changeType = 'osi31';
-        } else if (ns[0] === 2 && ns[1] === 0) {
-            changeType = 'int3';
-        } else if (ns[0] === 1 && ns[1] === 2) {
-            changeType = 'osi22';
-        } else if (ns[0] === 1 && ns[1] === 1) {
-            changeType = 'osi21';
-        } else if (ns[0] === 1 && ns[1] === 0) {
-            changeType = 'int2';
-        } else if (ns[0] === 0 && ns[1] === 3) {
-            changeType = 'osi13';
-        } else if (ns[0] === 0 && ns[1] === 2) {
-            changeType = 'osi12';
-        } else if (ns[0] === 0 && ns[1] === 1) {
-            changeType = 'osi11';
-        } else if (ns[0] === 0 && ns[1] === 0) {
-            changeType = 'none';
-        } else {
-            // sum(ns) > 3
-            changeType = 'int3';
-        }
-        console.log(changeType);
-
-        let transInfo = {
-            ...props.stnTrans,
-            type: changeType as any,
-            osi_names: changeType.includes('osi') ? [props.stnTrans.osi_names[0] || ['車站名', 'Stn Name']] : [],
-            info: props.stnTrans.info.map((inf, idx) =>
-                idx === index ? inf.slice(0, i).concat(inf.slice(i + 1)) : inf
-            ),
-        };
-        console.log(transInfo);
-        props.onUpdate(transInfo);
+        dispatch({
+            type: 'REMOVE_STATION_INTERCHANGE_INFO',
+            stnId: props.stnId,
+            setIdx: index,
+            intIdx: i,
+        });
     };
 
     return (
@@ -175,13 +84,11 @@ const StationEditInterchangeTab = (props: StationEditInterchangeTabProps) => {
                                 style={{ lineHeight: '1rem', whiteSpace: 'pre', marginRight: 5 }}
                                 onClick={() => setOsiNameDialogOpened(true)}
                             >
-                                {props.stnTrans.osi_names[0]
-                                    ? props.stnTrans.osi_names[0].join('\r\n')
-                                    : '車站名\r\nStn Name'}
+                                {stnTrans.osi_names[0] ? stnTrans.osi_names[0].join('\r\n') : '車站名\r\nStn Name'}
                             </Button>
                             <OSINameDialog
                                 open={osiNameDialogOpened}
-                                osiName={props.stnTrans.osi_names[0] || ['', '']}
+                                osiName={stnTrans.osi_names[0] || ['', '']}
                                 stnId={props.stnId}
                                 onClose={() => setOsiNameDialogOpened(false)}
                             />
@@ -341,7 +248,7 @@ const OSINameDialog = React.memo(
     (props: OSINameDialogProps) => {
         const { t } = useTranslation();
 
-        const { dispatch } = React.useContext(ParamContext);
+        const { dispatch } = useContext(ParamContext);
 
         const handleUpdate = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
             let newOSIName = props.osiName.map((val, i) => (i === index ? event.target.value : val)) as Name;
@@ -364,13 +271,8 @@ const OSINameDialog = React.memo(
             </Dialog>
         );
     },
-    (prevProps, nextProps) => {
-        if (prevProps.open !== nextProps.open) {
-            return false;
-        } else {
-            return prevProps.osiName.toString() === nextProps.osiName.toString();
-        }
-    }
+    (prevProps, nextProps) =>
+        prevProps.open === nextProps.open && prevProps.osiName.toString() === nextProps.osiName.toString()
 );
 
 const InterchangeMore = (props: { stnId: string }) => {
@@ -379,21 +281,15 @@ const InterchangeMore = (props: { stnId: string }) => {
     const { param, dispatch } = React.useContext(ParamContext);
     const stnTrans = param.stn_list[props.stnId].transfer;
 
-    const tickDirecChange = (_event: React.ChangeEvent<HTMLInputElement>, value: string) => {
-        if (value === 'l' || value === 'r')
+    const tickDirecChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+        let direction = event.target.value;
+        if (direction === 'l' || direction === 'r')
             dispatch({
                 type: 'UPDATE_STATION_TICK_DIREC',
                 stnId: props.stnId,
-                direction: value,
+                direction,
             });
     };
-
-    const paidAreaChange = (_event: React.ChangeEvent<{}>, checked: boolean) =>
-        dispatch({
-            type: 'UPDATE_STATION_PAID_AREA',
-            stnId: props.stnId,
-            isPaid: checked,
-        });
 
     return React.useMemo(
         () => (
@@ -408,26 +304,16 @@ const InterchangeMore = (props: { stnId: string }) => {
                     <ListItemIcon>
                         <Icon>format_textdirection_l_to_r</Icon>
                     </ListItemIcon>
-                    <ListItemText
-                        primary={t('stations.edit.interchange.tickDirec.label')}
-                        secondary={
-                            <RadioGroup name="tick_direc" row value={stnTrans.tick_direc} onChange={tickDirecChange}>
-                                <FormControlLabel
-                                    value="l"
-                                    control={<Radio color="secondary" />}
-                                    label={t('stations.edit.interchange.tickDirec.l')}
-                                    labelPlacement="end"
-                                />
-                                <FormControlLabel
-                                    value="r"
-                                    control={<Radio color="secondary" />}
-                                    label={t('stations.edit.interchange.tickDirec.r')}
-                                    labelPlacement="end"
-                                />
-                            </RadioGroup>
-                        }
-                        secondaryTypographyProps={{ ['component' as any]: 'div' }}
-                    />
+                    <ListItemText primary={t('stations.edit.interchange.tickDirec.label')} />
+                    <ListItemSecondaryAction>
+                        <Select native value={stnTrans.tick_direc} onChange={tickDirecChange}>
+                            {['l', 'r'].map(d => (
+                                <option key={d} value={d}>
+                                    {t('stations.edit.interchange.tickDirec.' + d)}
+                                </option>
+                            ))}
+                        </Select>
+                    </ListItemSecondaryAction>
                 </ListItem>
                 <ListItem>
                     <ListItemIcon>
@@ -435,7 +321,18 @@ const InterchangeMore = (props: { stnId: string }) => {
                     </ListItemIcon>
                     <ListItemText primary={t('stations.edit.interchange.paidArea')} />
                     <ListItemSecondaryAction>
-                        <Switch edge="end" onChange={paidAreaChange} checked={stnTrans.paid_area} />
+                        <Switch
+                            color="primary"
+                            edge="end"
+                            onChange={(_, checked) =>
+                                dispatch({
+                                    type: 'UPDATE_STATION_PAID_AREA',
+                                    stnId: props.stnId,
+                                    isPaid: checked,
+                                })
+                            }
+                            checked={stnTrans.paid_area}
+                        />
                     </ListItemSecondaryAction>
                 </ListItem>
             </>

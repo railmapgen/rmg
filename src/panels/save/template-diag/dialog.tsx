@@ -91,6 +91,7 @@ const NewDialog = (props: TemplateDialogProps) => {
                         orientation={isMobile ? 'horizontal' : 'vertical'}
                         variant="scrollable"
                         scrollButtons="off"
+                        textColor="primary"
                         indicatorColor="primary"
                         onChange={(_, value) => setTabValue(value)}
                     >

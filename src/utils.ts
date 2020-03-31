@@ -112,7 +112,7 @@ export function updateParam() {
     for (let [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('transfer' in stnInfo)) {
             param.stn_list[stnId].transfer = {
-                type: stnInfo.change_type?.split('_')[0] as 'none' | 'int2' | 'int3' | 'osi11' | 'osi12' | 'osi22',
+                // type: stnInfo.change_type?.split('_')[0] as 'none' | 'int2' | 'int3' | 'osi11' | 'osi12' | 'osi22',
                 tick_direc:
                     stnInfo.change_type === 'none' || stnInfo.change_type === 'int2'
                         ? 'r'
@@ -191,6 +191,7 @@ export function updateParam() {
     delete param.txt_flip;
 
     // Version 3.5.6
+    // Version 3.6.2
     Object.keys(param.stn_list).forEach(stnId => {
         if (!('secondaryName' in param.stn_list[stnId])) {
             param.stn_list[stnId].secondaryName = false;
@@ -198,6 +199,10 @@ export function updateParam() {
             if (param.stn_list[stnId].secondaryName !== false && param.stn_list[stnId].secondaryName.join() === ',') {
                 param.stn_list[stnId].secondaryName = false;
             }
+        }
+
+        if ('type' in param.stn_list[stnId].transfer) {
+            delete param.stn_list[stnId].transfer.type;
         }
     });
 

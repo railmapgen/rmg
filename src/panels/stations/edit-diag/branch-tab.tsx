@@ -1,8 +1,26 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { List, ListItem, ListItemText, Divider, Icon, TextField, MenuItem, ListItemIcon } from '@material-ui/core';
+import {
+    List,
+    ListItem,
+    ListItemText,
+    Divider,
+    Icon,
+    ListItemIcon,
+    Select,
+    makeStyles,
+    createStyles,
+} from '@material-ui/core';
 import { formatStnName } from '../../../utils';
 import { ParamContext, CanvasContext } from '../../../context';
+
+const useStyles = makeStyles(() =>
+    createStyles({
+        select: {
+            width: 166,
+        },
+    })
+);
 
 function StationEditBranchTab(props: { stnId: string }) {
     const { t } = useTranslation();
@@ -63,12 +81,13 @@ interface ItemProps {
 
 const BranchTypeItem = (props: ItemProps) => {
     const { t } = useTranslation();
+    const classes = useStyles();
 
     const { param, dispatch } = React.useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
     const branchEntry = stnInfo.branch[props.direction];
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
         let branchType = event.target.value as 'na' | 'through' | 'nonthrough';
         if (branchType === 'na') {
             // no changes
@@ -92,24 +111,18 @@ const BranchTypeItem = (props: ItemProps) => {
                 <ListItemIcon>
                     <Icon>merge_type</Icon>
                 </ListItemIcon>
-                <TextField
-                    select
-                    style={{ width: '100%' }}
-                    variant="outlined"
-                    label={t('stations.edit.branch.type.title')}
-                    onChange={handleChange}
-                    value={branchEntry[0] || 'na'}
-                >
-                    <MenuItem key="na" value="na" disabled={branchEntry.length !== 0}>
+                <ListItemText primary={t('stations.edit.branch.type.title')} />
+                <Select native onChange={handleChange} value={branchEntry[0] || 'na'} className={classes.select}>
+                    <option value="na" disabled={branchEntry.length !== 0}>
                         {t('stations.edit.branch.type.na')}
-                    </MenuItem>
-                    <MenuItem key="through" value="through" disabled={branchEntry.length === 0}>
+                    </option>
+                    <option value="through" disabled={branchEntry.length === 0}>
                         {t('stations.edit.branch.type.through')}
-                    </MenuItem>
-                    <MenuItem key="nonthrough" value="nonthrough" disabled={branchEntry.length === 0}>
+                    </option>
+                    <option value="nonthrough" disabled={branchEntry.length === 0}>
                         {t('stations.edit.branch.type.nonThrough')}
-                    </MenuItem>
-                </TextField>
+                    </option>
+                </Select>
             </ListItem>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,6 +132,7 @@ const BranchTypeItem = (props: ItemProps) => {
 
 const BranchFirstItem = (props: ItemProps) => {
     const { t } = useTranslation();
+    const classes = useStyles();
 
     const { rmgStyle } = useContext(CanvasContext);
     const { param, dispatch } = useContext(ParamContext);
@@ -126,8 +140,8 @@ const BranchFirstItem = (props: ItemProps) => {
     const branchEntry = stnInfo.branch[props.direction];
     const neighbours = props.direction === 'left' ? stnInfo.parents : stnInfo.children;
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let branchFirst = event.target.value;
+    const handleChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+        let branchFirst = event.target.value as string;
         if (branchEntry[1] === branchFirst) {
             // no changes
             return;
@@ -170,20 +184,19 @@ const BranchFirstItem = (props: ItemProps) => {
                 <ListItemIcon>
                     <Icon style={{ transform: props.direction === 'left' ? 'scale(-1)' : 'scale(1)' }}>share</Icon>
                 </ListItemIcon>
-                <TextField
-                    select
-                    style={{ width: '100%' }}
-                    variant="outlined"
-                    label={t('stations.edit.branch.first')}
+                <ListItemText primary={t('stations.edit.branch.first')} />
+                <Select
+                    native
                     onChange={handleChange}
                     value={branchEntry[1] || neighbours[0]}
+                    className={classes.select}
                 >
                     {neighbours.map(stnId => (
-                        <MenuItem key={stnId} value={stnId}>
+                        <option key={stnId} value={stnId}>
                             {formatStnName(param.stn_list[stnId], rmgStyle)}
-                        </MenuItem>
+                        </option>
                     ))}
-                </TextField>
+                </Select>
             </ListItem>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -195,13 +208,14 @@ const BranchPosItem = (props: ItemProps) => {
     // mount only if branchEntry[0] is not undefined
 
     const { t } = useTranslation();
+    const classes = useStyles();
 
     const { param, dispatch } = React.useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
     const branchEntry = stnInfo.branch[props.direction] as ['through' | 'nonthrough', string];
     const neighbours = props.direction === 'left' ? stnInfo.parents : stnInfo.children;
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
         let branchPos: 0 | 1 = event.target.value === 'lower' ? 1 : 0;
         if (neighbours.indexOf(branchEntry[1]) === branchPos) {
             // no changes
@@ -237,21 +251,19 @@ const BranchPosItem = (props: ItemProps) => {
                 <ListItemIcon>
                     <Icon>swap_vert</Icon>
                 </ListItemIcon>
-                <TextField
-                    select
-                    style={{ width: '100%' }}
-                    variant="outlined"
-                    label={t('stations.edit.branch.pos.title')}
+                <ListItemText primary={t('stations.edit.branch.pos.title')} />
+                <Select
+                    native
                     onChange={handleChange}
                     value={neighbours.indexOf(branchEntry[1]) === 1 ? 'lower' : 'upper'}
+                    className={classes.select}
                 >
-                    <MenuItem key="upper" value="upper">
-                        {t('stations.edit.branch.pos.upper')}
-                    </MenuItem>
-                    <MenuItem key="lower" value="lower">
-                        {t('stations.edit.branch.pos.lower')}
-                    </MenuItem>
-                </TextField>
+                    {['upper', 'lower'].map(p => (
+                        <option key={p} value={p}>
+                            {t('stations.edit.branch.pos.' + p)}
+                        </option>
+                    ))}
+                </Select>
             </ListItem>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps

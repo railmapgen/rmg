@@ -16,7 +16,6 @@ import {
     makeStyles,
     createStyles,
 } from '@material-ui/core';
-import { ParamContext } from '../../../context';
 
 const NameTab = React.lazy(() => import(/* webpackChunkName: "panelStationsName" */ './name-tab'));
 const InterchangeTab = React.lazy(() => import(/* webpackChunkName: "panelStationsInterchange" */ './interchange-tab'));
@@ -56,10 +55,6 @@ interface StationEditDialogProps {
 export default function StationEditDialog(props: StationEditDialogProps) {
     const { t } = useTranslation();
 
-    const { param, dispatch } = React.useContext(ParamContext);
-    const stnList = param.stn_list;
-    const stnInfo = stnList[props.stnId];
-
     const [tabIndex, setTabIndex] = React.useState(0);
 
     const classes = useStyles();
@@ -95,26 +90,6 @@ export default function StationEditDialog(props: StationEditDialogProps) {
         [tabIndex, classes.tab]
     );
 
-    const interchangeUpdate = (transInfo: StationTransfer) => {
-        let updatedValue = {
-            ...transInfo,
-            info: transInfo.info.map(inf =>
-                inf.map(i =>
-                    Object.values(i).length === 0
-                        ? ((param.theme.concat(['轉綫', 'Line']) as unknown) as InterchangeInfo)
-                        : i
-                )
-            ),
-        };
-
-        // window.myLine.updateStnTransfer2(props.stnId, updatedValue);
-        dispatch({
-            type: 'UPDATE_STATION_TRANSFER',
-            stnId: props.stnId,
-            transfer: updatedValue,
-        });
-    };
-
     return (
         <Dialog onClose={props.onClose} open={props.open} fullScreen={fullScreen}>
             <DialogTitle>{t('stations.edit.title')}</DialogTitle>
@@ -127,13 +102,7 @@ export default function StationEditDialog(props: StationEditDialogProps) {
                                 case 0:
                                     return <NameTab stnId={props.stnId} />;
                                 case 1:
-                                    return (
-                                        <InterchangeTab
-                                            stnTrans={stnInfo.transfer}
-                                            onUpdate={interchangeUpdate}
-                                            stnId={props.stnId}
-                                        />
-                                    );
+                                    return <InterchangeTab stnId={props.stnId} />;
                                 case 2:
                                     return <BranchTab stnId={props.stnId} />;
                                 case 3:
