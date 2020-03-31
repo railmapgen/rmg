@@ -139,6 +139,7 @@ const Shanghai: LineEntry[] = [
             'zh-Hant': '15號線',
         },
         colour: '#BBA786',
+        fg: '#000',
     },
     {
         id: 'sh16',
