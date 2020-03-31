@@ -14,19 +14,13 @@ const StationSHMetro = (props: Props) => {
         <>
             <use
                 xlinkHref={
-                    '#' +
-                    (stnInfo.transfer.type === 'none' ? 'stn_sh' : 'int2_sh') +
-                    (props.stnState === -1 ? '_pass' : '')
+                    '#' + (stnInfo.transfer.info.reduce((acc, cur) => acc + cur.length, 0) ? 'int2_sh' : 'stn_sh')
                 }
+                stroke={props.stnState === -1 ? '#aaa' : 'var(--rmg-theme-colour)'}
                 className="rmg-stn"
             />
             <g transform={`translate(${[...stnInfo.branch.left, ...stnInfo.branch.right].length ? 30 : 0},0)`}>
-                <StationNameGElement
-                    name={stnInfo.name}
-                    infos={stnInfo.transfer.info}
-                    isOSI={stnInfo.transfer.type.includes('osi')}
-                    stnState={props.stnState}
-                />
+                <StationNameGElement name={stnInfo.name} infos={stnInfo.transfer.info} stnState={props.stnState} />
             </g>
         </>
     );
@@ -37,7 +31,6 @@ export default StationSHMetro;
 interface StationNameGElementProps {
     name: Name;
     infos: InterchangeInfo[][];
-    isOSI: boolean;
     stnState: -1 | 0 | 1;
 }
 
@@ -72,11 +65,11 @@ const StationNameGElement = (props: StationNameGElementProps) => {
             <StationName ref={stnNameEl} name={props.name} />
 
             <IntBoxGroup
-                intInfos={props.isOSI ? ([] as InterchangeInfo[]).concat(...props.infos) : props.infos[0]}
+                intInfos={props.infos[1] ? ([] as InterchangeInfo[]).concat(...props.infos) : props.infos[0]}
                 transform={`translate(${x},0)`}
             />
 
-            {props.isOSI && (
+            {props.infos[1] && (
                 <g transform={`translate(${x + props.infos.reduce((sum, infos) => sum + infos.length, 0) * 15},-30)`}>
                     <OSIText osiInfos={props.infos[1]} />
                 </g>

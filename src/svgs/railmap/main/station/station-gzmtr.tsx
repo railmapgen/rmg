@@ -93,10 +93,14 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     );
 
     const secNameEl = useRef<SVGGElement | null>(null);
-    const [secNameBBox, setSecNameBBox] = useState({ x: 0, width: 0 } as DOMRect);
+    const [secNameBBox, setSecNameBBox] = useState({ x: 0, width: -20 } as DOMRect);
     useEffect(
         () => {
-            if (secNameEl.current) setSecNameBBox(secNameEl.current.getBBox());
+            if (secNameEl.current) {
+                setSecNameBBox(secNameEl.current.getBBox());
+            } else {
+                setSecNameBBox(prevBBox => ({ ...prevBBox, width: -20 }));
+            }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.secondaryName.toString()]

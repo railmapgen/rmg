@@ -225,7 +225,7 @@ const NoteBox = React.memo(
                                 key={i}
                                 className="rmg-name__en"
                                 y={i * 11}
-                                textLength={i < (props.note[1].match(/\n/g)?.length || 0) ? bBox.width : 0}
+                                textLength={i < (props.note[1].match(/\n/g)?.length || 0) ? bBox.width : -1}
                                 lengthAdjust="spacing"
                             >
                                 {txt}

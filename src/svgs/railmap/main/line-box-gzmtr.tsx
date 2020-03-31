@@ -63,7 +63,7 @@ const LineBoxName = memo(
             <>
                 <text
                     ref={nameZHGroupEl}
-                    y={2}
+                    y={navigator.userAgent.includes('Firefox') ? -0.5 : 2}
                     className="rmg-name__zh"
                     fontSize={12}
                     transform={`scale(${nameZHGroupScale},1)`}

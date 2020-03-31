@@ -68,12 +68,14 @@ const useStyles = makeStyles(() =>
             '& .MuiInputBase-input': {
                 textAlign: 'center',
                 fontSize: '3rem',
+                lineHeight: '3rem',
             },
         },
         nameInputEN: {
             '& .MuiInputBase-input': {
                 textAlign: 'center',
                 fontSize: '1.2rem',
+                lineHeight: '1.2rem',
             },
         },
         'nameInputZH-mtr': {
@@ -108,7 +110,6 @@ const useStyles = makeStyles(() =>
         },
         secondaryNameRoot: {
             display: 'flex',
-
             justifyContent: 'center',
             alignItems: 'center',
             '& .MuiInputBase-input': {
@@ -126,6 +127,7 @@ const useStyles = makeStyles(() =>
         secondaryNameInputZH: {
             '& .MuiInputBase-input': {
                 fontSize: '1.5rem',
+                lineHeight: '1.5rem',
             },
         },
     })

@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.6.1 (31 Mar 2020)
+
+### Resolved Issues
+
+-   Fixed an error where exports from Firefox are empty. ([#26](https://github.com/wongchito/RailMapGenerator/issues/26))
+-   Improved compatibility for Safari and Firefox.
+
 ## 3.6 (30 Mar 2020)
 
 ### New Features

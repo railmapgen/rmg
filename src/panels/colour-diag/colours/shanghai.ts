@@ -138,7 +138,7 @@ const Shanghai: LineEntry[] = [
             'zh-Hans': '15号线',
             'zh-Hant': '15號線',
         },
-        colour: '#A4BCC2',
+        colour: '#BBA786',
     },
     {
         id: 'sh16',

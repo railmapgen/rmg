@@ -36,11 +36,16 @@ const useStyles = makeStyles(theme =>
         tab: {
             padding: '6px 24px',
             height: 48,
-            [theme.breakpoints.down('xs')]: {
-                minWidth: 'calc(100% / 5)',
-            },
             '& .MuiTab-wrapper': {
                 flexDirection: 'row',
+            },
+            [theme.breakpoints.up('sm')]: {
+                '& .MuiTab-wrapper': {
+                    justifyContent: 'flex-start',
+                },
+            },
+            [theme.breakpoints.down('xs')]: {
+                minWidth: 'calc(100% / 5)',
             },
             '&.MuiTab-labelIcon': {
                 minHeight: 'unset',

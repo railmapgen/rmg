@@ -42,8 +42,16 @@ const useStyles = makeStyles(theme =>
         },
         tab: {
             minWidth: 0,
+            '& .MuiTab-wrapper': {
+                flexDirection: 'row',
+            },
             [theme.breakpoints.down('xs')]: {
                 minWidth: 'calc(100% / 3)',
+            },
+            [theme.breakpoints.up('sm')]: {
+                '& .MuiTab-wrapper': {
+                    justifyContent: 'flex-start',
+                },
             },
         },
         tabpanel: {

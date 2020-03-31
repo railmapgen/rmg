@@ -95,27 +95,50 @@ const StationMTR = (props: Props) => {
         }
     }, [branchAffix, props.namePos, branchPos]);
 
-    const stnIcon = (({ type, info }) => {
-        switch (type) {
-            case 'int3':
-            case 'osi31':
-                return info[0].length < 11 ? `int${info[0].length + 1}` : 'int12';
-            case 'osi11':
-            case 'osi21':
-                return 'osi11';
-            case 'osi12':
-            case 'osi13':
+    const stnIcon = ((l: number[]) => {
+        const fallback = (n: number) => (n < 11 ? 'int' + (n + 1) : 'int12');
+        if (!l[1]) {
+            return !l[0] || l[0] === 1 ? 'stn' : fallback(l[0]);
+        } else if (l[1] === 1) {
+            return l[0] <= 1 ? 'osi11' : fallback(l[0]);
+        } else if (l[1] === 2) {
+            if (l[0] === 0) {
                 return 'osi12';
-            case 'osi22':
+            } else if (l[0] === 1) {
                 if (stnInfo.parents[0] === 'linestart' || stnInfo.children[0] === 'lineend') {
                     return 'osi22end';
                 } else {
                     return 'osi12';
                 }
-            default:
-                return 'stn';
+            } else {
+                return fallback(l[0]);
+            }
+        } else {
+            return l[0] ? 'osi12' : fallback(l[0]);
         }
-    })(stnInfo.transfer);
+    })(stnInfo.transfer.info.map(val => val.length));
+
+    // const i = (({ type, info }) => {
+    //     switch (type) {
+    //         case 'int3':
+    //         case 'osi31':
+    //             return info[0].length < 11 ? `int${info[0].length + 1}` : 'int12';
+    //         case 'osi11':
+    //         case 'osi21':
+    //             return 'osi11';
+    //         case 'osi12':
+    //         case 'osi13':
+    //             return 'osi12';
+    //         case 'osi22':
+    //             if (stnInfo.parents[0] === 'linestart' || stnInfo.children[0] === 'lineend') {
+    //                 return 'osi22end';
+    //             } else {
+    //                 return 'osi12';
+    //             }
+    //         default:
+    //             return 'stn';
+    //     }
+    // })(stnInfo.transfer);
 
     return (
         <>
@@ -221,7 +244,9 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     const stnNameEl = useRef<SVGGElement | null>(null);
     const [bBox, setBBox] = useState({ width: 0, x: 0 } as DOMRect);
     useEffect(
-        () => setBBox(stnNameEl.current!.getBBox()),
+        () => {
+            document.fonts.ready.then(() => setBBox(stnNameEl.current!.getBBox()));
+        },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.stnState, props.name.toString()]
     );
@@ -587,8 +612,8 @@ const OSIName = (props: OSINameProps) => {
             transform={`translate(${x},${y})`}
             className={`Name ${props.stnState === -1 ? 'Pass' : 'Future'}`}
         >
-            <text className="rmg-name__zh rmg-name__mtr--osi">{props.name[0]}</text>
-            {props.name[1].split('\\').map((txt, i) => (
+            <text className="rmg-name__zh rmg-name__mtr--osi">{props.name?.[0]}</text>
+            {props.name?.[1]?.split('\\').map((txt, i) => (
                 <text key={i} className="rmg-name__en rmg-name__mtr--osi" dy={12 + 10 * i}>
                     {txt}
                 </text>

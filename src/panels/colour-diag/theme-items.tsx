@@ -230,6 +230,7 @@ export default React.memo(
                             value={props.theme[2]}
                             onChange={colourChange}
                             className={classes.inputColour}
+                            style={{ opacity: 0 }}
                         />
                         <label htmlFor="input-color">
                             <Tooltip title={t('colour.tooltip')} aria-label="colour picker">
