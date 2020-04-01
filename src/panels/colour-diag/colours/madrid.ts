@@ -16,7 +16,6 @@ const Madrid: LineEntry[] = [
             'zh-Hant': '2號線',
         },
         colour: '#e1252b',
-        // fg: '000080', => ignore foreground
     },
     {
         id: 'md3',
@@ -26,7 +25,7 @@ const Madrid: LineEntry[] = [
             'zh-Hant': '3號線',
         },
         colour: '#ffe20b',
-        fg: '000080',
+        // fg: '000080',
     },
     {
         id: 'md4',
