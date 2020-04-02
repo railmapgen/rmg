@@ -1,5 +1,15 @@
 export const cityList: CityEntry[] = [
     {
+        id: 'barcelona',
+        country: 'ES',
+        name: {
+            en: 'Barcelona',
+            'zh-Hans': '巴塞罗那',
+            'zh-HK': '巴塞隆拿',
+            'zh-TW': '巴塞隆納',
+        },
+    },
+    {
         id: 'beijing',
         country: 'CN',
         name: {
