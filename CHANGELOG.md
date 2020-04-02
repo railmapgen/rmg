@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.6.2 (2 Mar 2020)
+
+### New Features
+
+-   New design of 'Stations' panel.
+-   New theme colours for Barcelona.
+
+### Resolved Issues
+
+-   Fixed an error where invalid attributes are passed to elements when secondary name is empty in Guangzhou Metro style.
+
 ## 3.6.1 (31 Mar 2020)
 
 ### Resolved Issues
