@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import {
     Typography,
-    Box,
     CircularProgress,
     Tabs,
     Tab,
@@ -70,11 +69,12 @@ const useStyles = makeStyles(theme =>
         tabpanel: {
             overflow: 'auto',
             flex: 1,
-        },
-        box: {
+            padding: theme.spacing(3),
+            paddingBottom: 0,
+            height: `calc(100% - ${theme.spacing(3)}px)`,
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center',
+            alignItems: 'flex-start',
         },
     })
 );
@@ -143,9 +143,7 @@ export default function PanelTab() {
         <div className={classes.root}>
             {tabNav}
             <Typography className={`${classes.typography} ${classes.tabpanel}`} component="div" role="tabpanel">
-                <Box p={3} className={classes.box}>
-                    <React.Suspense fallback={<CircularProgress />}>{panel(value)}</React.Suspense>
-                </Box>
+                <React.Suspense fallback={<CircularProgress />}>{panel(value)}</React.Suspense>
             </Typography>
         </div>
     );

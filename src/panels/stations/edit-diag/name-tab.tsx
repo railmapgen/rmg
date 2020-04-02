@@ -144,7 +144,7 @@ const NumInput = (props: Props) => {
             <TextField
                 fullWidth
                 className={classes.numInput}
-                value={param.stn_list[props.stnId].num}
+                value={param.stn_list[props.stnId]?.num}
                 onChange={e => dispatch({ type: 'UPDATE_STATION_NUM', stnId: props.stnId, num: e.target.value })}
             />
         </ListItem>
@@ -156,7 +156,7 @@ const NameInput = (props: Props) => {
     const classes = useStyles();
     const { rmgStyle } = useContext(CanvasContext);
     const { param, dispatch } = useContext(ParamContext);
-    const { name } = param.stn_list[props.stnId];
+    const { name } = param.stn_list[props.stnId] || param.stn_list.linestart;
     return (
         <ListItem style={{ flexDirection: 'column' }}>
             <TextField
@@ -193,7 +193,7 @@ const SecondaryNameInput = (props: Props) => {
     const { t } = useTranslation();
     const classes = useStyles();
     const { param, dispatch } = useContext(ParamContext);
-    const { secondaryName } = param.stn_list[props.stnId];
+    const { secondaryName } = param.stn_list[props.stnId] || param.stn_list.linestart;
     return (
         <>
             <ListItem>

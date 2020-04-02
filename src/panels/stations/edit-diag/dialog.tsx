@@ -15,6 +15,7 @@ import {
     useMediaQuery,
     makeStyles,
     createStyles,
+    Paper,
 } from '@material-ui/core';
 
 const NameTab = React.lazy(() => import(/* webpackChunkName: "panelStationsName" */ './name-tab'));
@@ -58,8 +59,6 @@ export default function StationEditDialog(props: StationEditDialogProps) {
     const [tabIndex, setTabIndex] = React.useState(0);
 
     const classes = useStyles();
-    const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
 
     const tabNav = React.useMemo(
         () => (
@@ -91,26 +90,40 @@ export default function StationEditDialog(props: StationEditDialogProps) {
     );
 
     return (
-        <Dialog onClose={props.onClose} open={props.open} fullScreen={fullScreen}>
+        <DialogWrapper {...props}>
+            {tabNav}
+            <Typography component="div" role="tabpanel">
+                <React.Suspense fallback={<CircularProgress />}>
+                    {(idx => {
+                        switch (idx) {
+                            case 0:
+                                return <NameTab stnId={props.stnId} />;
+                            case 1:
+                                return <InterchangeTab stnId={props.stnId} />;
+                            case 2:
+                                return <BranchTab stnId={props.stnId} />;
+                            case 3:
+                                return <MoreTab stnId={props.stnId} />;
+                        }
+                    })(tabIndex)}
+                </React.Suspense>
+            </Typography>
+        </DialogWrapper>
+    );
+}
+
+const DialogWrapper = (props: { children: React.ReactNode } & StationEditDialogProps) => {
+    const { t } = useTranslation();
+
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
+    const isDialog = useMediaQuery(theme.breakpoints.down('sm'));
+
+    return isDialog ? (
+        <Dialog onClose={props.onClose} open={props.open} fullScreen={isMobile}>
             <DialogTitle>{t('stations.edit.title')}</DialogTitle>
             <DialogContent dividers style={{ padding: '0 16px' }}>
-                {tabNav}
-                <Typography component="div" role="tabpanel">
-                    <React.Suspense fallback={<CircularProgress />}>
-                        {(idx => {
-                            switch (idx) {
-                                case 0:
-                                    return <NameTab stnId={props.stnId} />;
-                                case 1:
-                                    return <InterchangeTab stnId={props.stnId} />;
-                                case 2:
-                                    return <BranchTab stnId={props.stnId} />;
-                                case 3:
-                                    return <MoreTab stnId={props.stnId} />;
-                            }
-                        })(tabIndex)}
-                    </React.Suspense>
-                </Typography>
+                {props.children}
             </DialogContent>
             <DialogActions>
                 <Button onClick={props.onClose} color="primary">
@@ -118,5 +131,7 @@ export default function StationEditDialog(props: StationEditDialogProps) {
                 </Button>
             </DialogActions>
         </Dialog>
+    ) : (
+        <Paper>{props.children}</Paper>
     );
-}
+};
