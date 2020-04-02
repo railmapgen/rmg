@@ -225,7 +225,13 @@ const NoteBox = React.memo(
                                 key={i}
                                 className="rmg-name__en"
                                 y={i * 11}
-                                textLength={i < (props.note[1].match(/\n/g)?.length || 0) ? bBox.width : -1}
+                                textLength={
+                                    i < (props.note[1].match(/\n/g)?.length || 0)
+                                        ? bBox.width
+                                        : navigator.userAgent.includes('Firefox')
+                                        ? -1
+                                        : 0
+                                }
                                 lengthAdjust="spacing"
                             >
                                 {txt}

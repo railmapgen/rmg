@@ -83,7 +83,7 @@ const StationName = React.forwardRef((props: { name: Name }, ref: React.Ref<SVGG
         () => (
             <g ref={ref}>
                 <text className="rmg-name__zh">{props.name[0]}</text>
-                <g fontSize="60%">
+                <g fontSize={9.6}>
                     {props.name[1].split('\\').map((txt, i) => (
                         <text key={i} className="rmg-name__en" dy={12 * (i + 1)}>
                             {txt}
