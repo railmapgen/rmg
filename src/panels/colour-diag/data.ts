@@ -148,6 +148,15 @@ export const cityList: CityEntry[] = [
         },
     },
     {
+        id: 'oslo',
+        country: 'NO',
+        name: {
+            en: 'Oslo',
+            'zh-Hans': '奥斯陆',
+            'zh-Hant': '奧斯陸',
+        },
+    },
+    {
         id: 'paris',
         country: 'FR',
         name: {
@@ -201,6 +210,15 @@ export const cityList: CityEntry[] = [
         },
     },
     {
+        id: 'stockholm',
+        country: 'SE',
+        name: {
+            en: 'Stockholm',
+            'zh-Hans': '斯德哥尔摩',
+            'zh-Hant': '斯德哥爾摩',
+        },
+    },
+    {
         id: 'taipei',
         country: 'TW',
         name: {
@@ -236,6 +254,16 @@ export const cityList: CityEntry[] = [
         },
     },
     {
+        id: 'tyneandwear',
+        country: 'GBENG',
+        name: {
+            en: 'Tyne and Wear',
+            'zh-Hans': '泰恩-威尔',
+            'zh-HK': '泰威',
+            'zh-TW': '泰恩-威爾',
+        },
+    },
+    {
         id: 'xian',
         country: 'CN',
         name: {
@@ -247,9 +275,9 @@ export const cityList: CityEntry[] = [
         id: 'other',
         country: 'UN',
         name: {
-            en: 'Customise (Beta)',
-            'zh-Hans': '自定义 (Beta)',
-            'zh-Hant': '自訂 (Beta)',
+            en: 'Customise',
+            'zh-Hans': '自定义',
+            'zh-Hant': '自訂',
         },
     },
 ];
