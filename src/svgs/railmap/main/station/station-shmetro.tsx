@@ -69,7 +69,13 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 transform={`translate(${x},0)`}
             />
 
-            {props.infos[1] && (
+            {props.infos.flat().length && (<IntDecorationLine
+                intInfos={props.infos[1] ? ([] as InterchangeInfo[]).concat(...props.infos) : props.infos[0]}
+                x={x}
+                transform={`translate(0,${props.name[1].split('\\').length * 12 + 3})`}
+            />)}
+
+            {props.infos[1]?.length && (
                 <g transform={`translate(${x + props.infos.reduce((sum, infos) => sum + infos.length, 0) * 15},-30)`}>
                     <OSIText osiInfos={props.infos[1]} />
                 </g>
@@ -96,6 +102,27 @@ const StationName = React.forwardRef((props: { name: Name }, ref: React.Ref<SVGG
         [props.name.toString()]
     )
 );
+
+const IntDecorationLine = (props: { intInfos: InterchangeInfo[] } & React.SVGProps<SVGGElement>) => {
+    const { intInfos, x, ...others } = props;
+
+    // Is it possible to merge the two calculation in one place?
+    // another is in IntBoxGroup
+    let dx = Number(x) + intInfos.reduce((sum, info) => {
+        // start with digit
+        const isLineNumber = Boolean(info[4].match(/^\d.*$/));
+        // 20 + 5(margin) for number line
+        // 60 + 5(margin) for letter line
+        return sum + (isLineNumber ? 25 : info[4].length * 16 + 12 + 5);
+    }, 0);
+    dx -= 5; // minus the margin
+
+    return (
+        <g {...others}>
+            <line x1="0" y1="0" x2={dx} y2="0" stroke='black' strokeWidth={0.8} />
+        </g>
+    );
+};
 
 const IntBoxGroup = (props: { intInfos: InterchangeInfo[] } & React.SVGProps<SVGGElement>) => {
     const { intInfos, ...others } = props;
