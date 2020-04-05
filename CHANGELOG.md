@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.6.3 (5 Apr 2020)
+
+### New Features
+
+-   New theme colours for Oslo, Stockholm and Tyne and Wear.
+-   Added decoration line under names of stations whose are interchange stations in Shanghai Metro style. ([#29](https://github.com/wongchito/RailMapGenerator/issues/29))
+
+### Resolved Issues
+
+-   Fixed the issues where OSI text is not removed when OSI has been removed in Shanghai Metro style. ([#29](https://github.com/wongchito/RailMapGenerator/issues/29))
+
 ## 3.6.2 (2 Mar 2020)
 
 ### New Features
