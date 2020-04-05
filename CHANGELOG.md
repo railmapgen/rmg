@@ -1,15 +1,24 @@
 # Changelog
 
+## 3.6.4 (5 Apr 2020)
+
+### New Features
+
+-   Rotations of stations' names in Shanghai Metro style are now determined by train direction.
+-   New theme colours for Madrid.
+
+### New Features
+
 ## 3.6.3 (5 Apr 2020)
 
 ### New Features
 
 -   New theme colours for Oslo, Stockholm and Tyne and Wear.
--   Added decoration line under names of stations whose are interchange stations in Shanghai Metro style. ([#29](https://github.com/wongchito/RailMapGenerator/issues/29))
+-   Added decoration line under names of stations whose are interchange stations in Shanghai Metro style. (#29)
 
 ### Resolved Issues
 
--   Fixed the issues where OSI text is not removed when OSI has been removed in Shanghai Metro style. ([#29](https://github.com/wongchito/RailMapGenerator/issues/29))
+-   Fixed the issues where OSI text is not removed when OSI has been removed in Shanghai Metro style. (#29)
 
 ## 3.6.2 (2 Mar 2020)
 
@@ -26,7 +35,7 @@
 
 ### Resolved Issues
 
--   Fixed an error where exports from Firefox are empty. ([#26](https://github.com/wongchito/RailMapGenerator/issues/26))
+-   Fixed an error where exports from Firefox are empty. (#26)
 -   Improved compatibility for Safari and Firefox.
 
 ## 3.6 (30 Mar 2020)
