@@ -10,6 +10,10 @@ const StationSHMetro = (props: Props) => {
     const { param } = React.useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
 
+    const branchNameDX =
+        ([...stnInfo.branch.left, ...stnInfo.branch.right].length ? 8 + 12 * stnInfo.name[1].split('\\').length : 0) *
+        (param.direction === 'l' ? 1 : -1);
+
     return (
         <>
             <use
@@ -19,8 +23,13 @@ const StationSHMetro = (props: Props) => {
                 stroke={props.stnState === -1 ? '#aaa' : 'var(--rmg-theme-colour)'}
                 className="rmg-stn"
             />
-            <g transform={`translate(${[...stnInfo.branch.left, ...stnInfo.branch.right].length ? 30 : 0},0)`}>
-                <StationNameGElement name={stnInfo.name} infos={stnInfo.transfer.info} stnState={props.stnState} />
+            <g transform={`translate(${branchNameDX},0)`}>
+                <StationNameGElement
+                    name={stnInfo.name}
+                    infos={stnInfo.transfer.info}
+                    stnState={props.stnState}
+                    direction={param.direction}
+                />
             </g>
         </>
     );
@@ -32,6 +41,7 @@ interface StationNameGElementProps {
     name: Name;
     infos: InterchangeInfo[][];
     stnState: -1 | 0 | 1;
+    direction: 'l' | 'r';
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {
@@ -55,88 +65,106 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     // Chito: so, use BBox instead
 
     return (
-        <g
-            className="Name Future"
-            transform={`translate(${-(24 + (nameENLn - 1) * 12) * Math.cos(-45)},${-4 -
-                21.921875 -
-                (nameENLn - 1) * 12 * Math.cos(-45)})rotate(-50)`}
-            textAnchor="start"
-        >
-            <StationName ref={stnNameEl} name={props.name} />
-
-            <IntBoxGroup
-                intInfos={props.infos[1] ? ([] as InterchangeInfo[]).concat(...props.infos) : props.infos[0]}
-                transform={`translate(${x},0)`}
-            />
-
+        <g transform={`translate(${props.direction === 'l' ? 6 : -6},-6)rotate(${props.direction === 'l' ? -45 : 45})`}>
             {props.infos.reduce((sum, infos) => sum + infos.length, 0) && (
                 <IntDecorationLine
                     intInfos={props.infos[1] ? ([] as InterchangeInfo[]).concat(...props.infos) : props.infos[0]}
-                    x={x}
-                    transform={`translate(0,${props.name[1].split('\\').length * 12 + 3})`}
+                    xShift={x * (props.direction === 'l' ? 1 : -1)}
+                    stroke={props.stnState === -1 ? '#aaa' : 'black'}
                 />
             )}
 
-            {props.infos[1]?.length && (
-                <g transform={`translate(${x + props.infos.reduce((sum, infos) => sum + infos.length, 0) * 15},-30)`}>
-                    <OSIText osiInfos={props.infos[1]} />
-                </g>
-            )}
+            <IntBoxGroup
+                intInfos={props.infos[1] ? ([] as InterchangeInfo[]).concat(...props.infos) : props.infos[0]}
+                transform={`translate(${x * (props.direction === 'l' ? 1 : -1)},-11)`}
+                direction={props.direction}
+            />
+
+            <g
+                textAnchor={props.direction === 'l' ? 'start' : 'end'}
+                transform={`translate(0,${-14.15625 - 2 - 12 * (nameENLn - 1)})`}
+            >
+                <StationName
+                    ref={stnNameEl}
+                    stnName={props.name}
+                    fill={props.stnState === -1 ? '#aaa' : props.stnState === 0 ? 'red' : 'black'}
+                />
+
+                {props.infos[1]?.length && (
+                    <g
+                        transform={`translate(${(x + props.infos.reduce((sum, infos) => sum + infos.length, 0) * 15) *
+                            (props.direction === 'l' ? 1 : -1)},-22)`}
+                    >
+                        <OSIText osiInfos={props.infos[1]} />
+                    </g>
+                )}
+            </g>
         </g>
     );
 };
 
-const StationName = React.forwardRef((props: { name: Name }, ref: React.Ref<SVGGElement>) =>
-    React.useMemo(
-        () => (
-            <g ref={ref}>
-                <text className="rmg-name__zh">{props.name[0]}</text>
-                <g fontSize={9.6}>
-                    {props.name[1].split('\\').map((txt, i) => (
-                        <text key={i} className="rmg-name__en" dy={12 * (i + 1)}>
-                            {txt}
-                        </text>
-                    ))}
-                </g>
+const StationName = React.forwardRef(
+    (props: { stnName: Name } & React.SVGProps<SVGGElement>, ref: React.Ref<SVGGElement>) => {
+        const { stnName, ...others } = props;
+
+        return (
+            <g ref={ref} {...others}>
+                {React.useMemo(
+                    () => (
+                        <>
+                            <text className="rmg-name__zh">{stnName[0]}</text>
+                            <g fontSize={9.6}>
+                                {stnName[1].split('\\').map((txt, i) => (
+                                    <text key={i} className="rmg-name__en" dy={12 * (i + 1)}>
+                                        {txt}
+                                    </text>
+                                ))}
+                            </g>
+                        </>
+                    ),
+                    // eslint-disable-next-line react-hooks/exhaustive-deps
+                    [stnName.toString()]
+                )}
             </g>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.name.toString()]
-    )
+        );
+    }
 );
 
-const IntDecorationLine = (props: { intInfos: InterchangeInfo[] } & React.SVGProps<SVGGElement>) => {
-    const { intInfos, x, ...others } = props;
+const IntDecorationLine = (props: { intInfos: InterchangeInfo[]; xShift: number } & React.SVGProps<SVGLineElement>) => {
+    const { intInfos, xShift, ...others } = props;
 
     // Is it possible to merge the two calculation in one place?
     // another is in IntBoxGroup
     let dx =
-        Number(x) +
+        Math.abs(xShift) +
         intInfos.reduce((sum, info) => {
             // start with digit
             const isLineNumber = Boolean(info[4].match(/^\d.*$/));
             // 20 + 5(margin) for number line
             // 60 + 5(margin) for letter line
-            return sum + (isLineNumber ? 25 : info[4].length * 16 + 12 + 5);
+            return sum + (isLineNumber ? 25 : info[4].length * 14 + 12 + 5);
         }, 0);
     dx -= 5; // minus the margin
 
-    return (
-        <g {...others}>
-            <line x1="0" y1="0" x2={dx} y2="0" stroke="black" strokeWidth={0.8} />
-        </g>
-    );
+    dx *= xShift > 0 ? 1 : -1;
+
+    return <line x1={0} x2={dx} strokeWidth={0.8} {...others} />;
 };
 
-const IntBoxGroup = (props: { intInfos: InterchangeInfo[] } & React.SVGProps<SVGGElement>) => {
-    const { intInfos, ...others } = props;
+const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; direction: 'l' | 'r' } & React.SVGProps<SVGGElement>) => {
+    const { intInfos, direction, ...others } = props;
 
     let dx = 0;
     return (
-        <g {...others}>
+        <g fontSize={14} textAnchor="middle" {...others}>
             {intInfos.map((info, i) => {
                 // start with digit
                 const isLineNumber = Boolean(info[4].match(/^\d.*$/));
+
+                if (props.direction === 'r' && i === 0) {
+                    dx -= isLineNumber ? 20 : info[4].length * 14 + 12 + 0;
+                }
+
                 const el = (
                     <g transform={`translate(${dx},0)`} key={i}>
                         {isLineNumber ? <IntBoxNumber info={info} /> : <IntBoxLetter info={info} />}
@@ -144,7 +172,11 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[] } & React.SVGProps<SVG
                 );
                 // 20 + 5(margin) for number line
                 // 60 + 5(margin) for letter line
-                dx += isLineNumber ? 25 : info[4].length * 16 + 12 + 5;
+                if (props.direction === 'l') {
+                    dx += isLineNumber ? 25 : info[4].length * 14 + 12 + 5;
+                } else {
+                    dx -= isLineNumber ? 25 : info[4].length * 14 + 12 + 5;
+                }
                 return el;
             })}
         </g>
@@ -154,8 +186,8 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[] } & React.SVGProps<SVG
 const IntBoxNumber = React.memo(
     (props: { info: InterchangeInfo }) => (
         <>
-            <rect height={30} width={20} y={-15} fill={props.info[2]} />
-            <text x={10} className="rmg-name__zh" textAnchor="middle" fill={props.info[3]} dominantBaseline="central">
+            <use xlinkHref="#intbox_number" fill={props.info[2]} />
+            <text x={10} className="rmg-name__zh" fill={props.info[3]} dominantBaseline="central">
                 {/* // line starts with numbers */}
                 {props.info[4].match(/(\d*)\w+/)![0]}
             </text>
@@ -170,14 +202,8 @@ const IntBoxLetter = React.memo(
         const textCount = props.info[4].split('\\')[0].length;
         return (
             <>
-                <rect height={30} width={textCount * 16 + 12} y={-15} fill={props.info[2]} />
-                <text
-                    x={textCount * 8 + 6}
-                    className="rmg-name__zh"
-                    textAnchor="middle"
-                    fill={props.info[3]}
-                    dominantBaseline="central"
-                >
+                <rect height={22} width={textCount * 14 + 12} y={-11} fill={props.info[2]} />
+                <text x={textCount * 7 + 6} className="rmg-name__zh" fill={props.info[3]} dominantBaseline="central">
                     {props.info[4].split('\\')[0]}
                 </text>
             </>
