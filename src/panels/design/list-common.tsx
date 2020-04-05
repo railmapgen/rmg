@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     ListItem,
@@ -10,20 +10,29 @@ import {
     makeStyles,
     createStyles,
     Button,
+    ListItemSecondaryAction,
+    Switch,
+    Collapse,
+    List,
 } from '@material-ui/core';
 import ColourDialog from '../colour-diag';
-import { ParamContext } from '../../context';
+import { ParamContext, CanvasContext } from '../../context';
 
 const useStyles = makeStyles(theme =>
     createStyles({
         dividerVertical: {
             margin: theme.spacing(0, 2),
         },
+        nestedList: {
+            paddingLeft: theme.spacing(5),
+        },
     })
 );
 
 const DesignList = () => {
     const { t } = useTranslation();
+
+    const { rmgStyle } = useContext(CanvasContext);
     const { param, dispatch } = React.useContext(ParamContext);
 
     const [isCDiagOpen, setIsCDiagOpen] = React.useState(false);
@@ -69,7 +78,7 @@ const DesignList = () => {
             <Divider />
             <DirectionLi />
             <Divider />
-            <PlatformNumLi />
+            {rmgStyle === 'shmetro' ? <PlatformNumSHMetroLi /> : <PlatformNumLi />}
         </>
     );
 };
@@ -121,5 +130,48 @@ const PlatformNumLi = () => {
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [param.platform_num]
+    );
+};
+
+const PlatformNumSHMetroLi = () => {
+    const { t } = useTranslation();
+    const classes = useStyles();
+    const { param, dispatch } = useContext(ParamContext);
+
+    const handleSwitch = (_: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+        if (checked) {
+            dispatch({ type: 'SET_PLATFORM', platform: '' });
+        } else {
+            dispatch({ type: 'SET_PLATFORM', platform: false });
+        }
+    };
+
+    return useMemo(
+        () => (
+            <>
+                <ListItem>
+                    <ListItemIcon>
+                        <Icon>looks_one</Icon>
+                    </ListItemIcon>
+                    <ListItemText primary={t('design.platform')} />
+                    <ListItemSecondaryAction>
+                        <Switch color="primary" checked={param.platform_num !== false} onChange={handleSwitch} />
+                    </ListItemSecondaryAction>
+                </ListItem>
+                <Collapse in={param.platform_num !== false} unmountOnExit>
+                    <List component="div" disablePadding className={classes.nestedList}>
+                        <ListItem>
+                            <TextField
+                                placeholder={t('design.platform')}
+                                value={param.platform_num}
+                                onChange={e => dispatch({ type: 'SET_PLATFORM', platform: e.target.value })}
+                            />
+                        </ListItem>
+                    </List>
+                </Collapse>
+            </>
+        ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [param.platform_num, classes.nestedList]
     );
 };

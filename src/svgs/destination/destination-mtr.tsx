@@ -82,7 +82,7 @@ const InfoMTR = () => {
     );
 };
 
-const PlatformNum = (props: { num: string } & React.SVGProps<SVGGElement>) => {
+const PlatformNum = (props: { num: string | false } & React.SVGProps<SVGGElement>) => {
     const { num, ...others } = props;
 
     return (

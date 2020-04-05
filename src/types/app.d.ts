@@ -130,7 +130,7 @@ interface RMGParam {
      */
     branch_spacing: number;
     direction: 'l' | 'r';
-    platform_num: string;
+    platform_num: string | false;
     theme: Theme;
     line_name: Name;
     current_stn_idx: string;

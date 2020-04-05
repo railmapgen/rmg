@@ -71,7 +71,7 @@ type ReducerAction =
       }
     | {
           type: 'SET_PLATFORM';
-          platform: string;
+          platform: string | false;
       }
     | {
           type: 'SET_TEXT_STAGGER';
