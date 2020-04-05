@@ -132,6 +132,15 @@ export const cityList: CityEntry[] = [
         },
     },
     {
+        id: 'madrid',
+        country: 'ES',
+        name: {
+            en: 'Madrid',
+            'zh-Hans': '马德里',
+            'zh-Hant': '馬德里',
+        },
+    },
+    {
         id: 'nanjing',
         country: 'CN',
         name: {
