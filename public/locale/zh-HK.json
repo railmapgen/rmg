@@ -46,7 +46,11 @@
             "border": "顯示邊線",
             "scale": "縮放比例",
             "format": "格式",
-            "download": "下載"
+            "download": "下載",
+            "terms": {
+                "accept": "我同意",
+                "tandc": "條款及細則"
+            }
         },
         "style": {
             "button": "風格",
@@ -261,7 +265,8 @@
         "done": "完成",
         "cancel": "取消",
         "ok": "好",
-        "confirm": "確認"
+        "confirm": "確認",
+        "close": "關閉"
     },
 
     "expansion": {

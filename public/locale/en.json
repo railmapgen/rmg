@@ -46,7 +46,11 @@
             "border": "Show Border",
             "scale": "Scale",
             "format": "Format",
-            "download": "Download"
+            "download": "Download",
+            "terms": {
+                "accept": "I accept the ",
+                "tandc": "Terms and Conditions"
+            }
         },
         "style": {
             "button": "Style",
@@ -260,7 +264,8 @@
         "done": "Done",
         "cancel": "Cancel",
         "ok": "OK",
-        "confirm": "Confirm"
+        "confirm": "Confirm",
+        "close": "Close"
     },
 
     "expansion": {

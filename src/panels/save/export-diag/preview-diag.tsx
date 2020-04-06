@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Dialog,
@@ -15,6 +15,8 @@ import {
     ListItemText,
     ListItemSecondaryAction,
     Divider,
+    Checkbox,
+    Typography,
 } from '@material-ui/core';
 
 import { test } from './utils';
@@ -49,6 +51,14 @@ const useStyles = makeStyles(theme =>
                 paddingTop: 'unset',
             },
         },
+        contentControlContent: {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+        },
+        formControlRoot: {
+            margin: 0,
+        },
     })
 );
 
@@ -71,6 +81,9 @@ export default (props: Props) => {
     const [isTransparent, setIsTransparent] = useState(false);
     const [scale, setScale] = useState(1);
     const [format, setFormat] = useState('png');
+
+    const [isAccept, setIsAccept] = useState(false);
+    const [isTermsDialogOpen, setIsTermsDialogOpen] = useState(false);
 
     const handleShowBorder = (_: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         svgEl.querySelector('rect#canvas-bg')?.setAttribute('stroke', checked ? 'black' : 'none');
@@ -190,7 +203,7 @@ export default (props: Props) => {
                     classes={{ root: classes.contentRoot }}
                 />
                 <div className={classes.contentControl}>
-                    <DialogContent classes={{ root: classes.contentRoot }}>
+                    <DialogContent classes={{ root: classes.contentRoot }} className={classes.contentControlContent}>
                         <List component="div" disablePadding>
                             <ListItem>
                                 <ListItemText primary={t('file.preview.transparent')} />
@@ -263,6 +276,28 @@ export default (props: Props) => {
                                 </ListItemSecondaryAction>
                             </ListItem>
                         </List>
+                        <ListItem style={{ padding: 0 }}>
+                            <Checkbox
+                                color="primary"
+                                size="small"
+                                checked={isAccept}
+                                onChange={(_, checked) => setIsAccept(checked)}
+                            />
+                            <Typography variant="body2">
+                                {t('file.preview.terms.accept')}
+                                <Typography
+                                    component="a"
+                                    color="primary"
+                                    variant="body2"
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={() => setIsTermsDialogOpen(true)}
+                                >
+                                    {t('file.preview.terms.tandc')}
+                                </Typography>
+                            </Typography>
+
+                            <TermsDialog open={isTermsDialogOpen} onClose={() => setIsTermsDialogOpen(false)} />
+                        </ListItem>
                     </DialogContent>
                     <DialogActions>
                         <Button variant="outlined" onClick={handleClose('close')} color="primary" autoFocus>
@@ -272,7 +307,7 @@ export default (props: Props) => {
                             variant="contained"
                             onClick={handleClose('download')}
                             color="primary"
-                            disabled={!isLoaded}
+                            disabled={!isLoaded || !isAccept}
                         >
                             {t('file.preview.download')}
                         </Button>
@@ -280,5 +315,90 @@ export default (props: Props) => {
                 </div>
             </div>
         </Dialog>
+    );
+};
+
+const TermsDialog = (props: { open: boolean; onClose: () => void }) => {
+    const { t } = useTranslation();
+    return useMemo(
+        () => (
+            <Dialog open={props.open} onClose={props.onClose}>
+                <DialogTitle>{t('file.preview.terms.tandc')}</DialogTitle>
+                <DialogContent dividers>
+                    <Typography component="p">
+                        The downloaded image may be modified, published, or used for other purposes, under the following
+                        conditions.
+                    </Typography>
+                    <Typography component="ol">
+                        <Typography component="li">
+                            The layout of the elements on the sign or rail map, is designed by{' '}
+                            <Typography component="a" color="primary" href="http://www.gzmtr.com" target="_blank">
+                                Guangzhou Metro Corporation
+                            </Typography>
+                            ,{' '}
+                            <Typography component="a" color="primary" href="http://www.mtr.com.hk" target="_blank">
+                                MTR Corporation
+                            </Typography>{' '}
+                            or{' '}
+                            <Typography component="a" color="primary" href="http://www.shmetro.com" target="_blank">
+                                Shanghai Shentong Metro Group
+                            </Typography>
+                            , depending on your selection. You shall grant appropriate permit or license from the
+                            relevant company above before using the downloaded image for commercial purposes, if it is
+                            required to do so.
+                        </Typography>
+                        <Typography component="li">
+                            The elements including shapes and lines on the image are drawn by{' '}
+                            <Typography
+                                component="a"
+                                color="primary"
+                                href="https://github.com/wongchito"
+                                target="_blank"
+                            >
+                                Chito Wong
+                            </Typography>{' '}
+                            and{' '}
+                            <Typography
+                                component="a"
+                                color="primary"
+                                href="https://github.com/thekingofcity"
+                                target="_blank"
+                            >
+                                thekingofcity
+                            </Typography>
+                            , based on the design standards or rules of the companies listed above. You may use them for
+                            any purposes, but it is recommended to state the name and the link of software alongside.
+                        </Typography>
+                        <Typography component="li">
+                            The fonts of the Chinese characters in MTR style are provided by{' '}
+                            <Typography
+                                component="a"
+                                color="primary"
+                                href="https://www.google.com/get/noto/help/cjk/"
+                                target="_blank"
+                            >
+                                Google Inc.
+                            </Typography>{' '}
+                            while all others fonts are rendered from local files. You shall grant appropriate permit or
+                            license from the manufacturers before using the downloaded image for commercial purposes.
+                        </Typography>
+                    </Typography>
+                    <Typography component="p">
+                        We reserve the rights, without notice, to modify, add, or remove these terms.
+                    </Typography>
+                    <Typography component="p">本條款及細則暫只提供英文版，敬請原諒。</Typography>
+                    <Typography component="p" variant="body2">
+                        Last modified: 6 Apr 2020, 12:39 UTC
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="outlined" color="primary" onClick={props.onClose}>
+                        {t('dialog.close')}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.open]
     );
 };
