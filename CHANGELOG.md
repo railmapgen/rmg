@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.6.5 (6 Apr 2020)
+
+### New Features
+
+-   Added Terms and Conditions in the preview dialogue.
+
+### Resolved Issues
+
+-   Improved decoration line under stations' names in Shanghai Metro style.
+
 ## 3.6.4 (5 Apr 2020)
 
 ### New Features
