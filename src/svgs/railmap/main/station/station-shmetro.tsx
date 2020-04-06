@@ -67,10 +67,11 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     return (
         <g transform={`translate(${props.direction === 'l' ? 6 : -6},-6)rotate(${props.direction === 'l' ? -45 : 45})`}>
             {props.infos.reduce((sum, infos) => sum + infos.length, 0) && (
-                <IntDecorationLine
-                    intInfos={props.infos[1] ? ([] as InterchangeInfo[]).concat(...props.infos) : props.infos[0]}
-                    xShift={x * (props.direction === 'l' ? 1 : -1)}
+                <line
+                    x1={0}
+                    x2={x * (props.direction === 'l' ? 1 : -1)}
                     stroke={props.stnState === -1 ? '#aaa' : 'black'}
+                    strokeWidth={0.5}
                 />
             )}
 
@@ -129,27 +130,6 @@ const StationName = React.forwardRef(
         );
     }
 );
-
-const IntDecorationLine = (props: { intInfos: InterchangeInfo[]; xShift: number } & React.SVGProps<SVGLineElement>) => {
-    const { intInfos, xShift, ...others } = props;
-
-    // Is it possible to merge the two calculation in one place?
-    // another is in IntBoxGroup
-    let dx =
-        Math.abs(xShift) +
-        intInfos.reduce((sum, info) => {
-            // start with digit
-            const isLineNumber = Boolean(info[4].match(/^\d.*$/));
-            // 20 + 5(margin) for number line
-            // 60 + 5(margin) for letter line
-            return sum + (isLineNumber ? 25 : info[4].length * 14 + 12 + 5);
-        }, 0);
-    dx -= 5; // minus the margin
-
-    dx *= xShift > 0 ? 1 : -1;
-
-    return <line x1={0} x2={dx} strokeWidth={0.8} {...others} />;
-};
 
 const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; direction: 'l' | 'r' } & React.SVGProps<SVGGElement>) => {
     const { intInfos, direction, ...others } = props;
