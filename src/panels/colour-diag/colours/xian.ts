@@ -1,3 +1,8 @@
+/**
+ * Line 1-6, 9: http://www.ditiezu.com/thread-668313-1-1.html.
+ * Line 14: http://www.ditiezu.com/thread-668349-1-1.html.
+ * Line 8, 11: https://zh.wikipedia.org/wiki/Template:西安地铁颜色.
+ */
 const Xian: LineEntry[] = [
     {
         id: 'xa1',
@@ -69,7 +74,7 @@ const Xian: LineEntry[] = [
             'zh-Hans': '9号线',
             'zh-Hant': '9號線',
         },
-        colour: '#FF8E29',
+        colour: '#FF9E1B',
     },
     {
         id: 'xa11',

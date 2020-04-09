@@ -60,7 +60,6 @@ A typical example of an entry of `guangzhou.json`:
 | Shenzhen  | [道路交通管理设施设置技术标准 第 5 部分: 交通枢纽客运服务标志（征求意见稿）](http://www.sz.gov.cn/cn/xxgk/zfxxgj/tzgg/201104/P020110425642051308137.pdf) <br> [Template:深圳地铁颜色 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/Template:深圳地铁颜色) |
 | Tianjin   | [Template:天津轨道交通颜色 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/Template:天津轨道交通颜色)                                                                                                                                                       |
 | Toronto   | [Signage Manual and Standards - Toronto Transit Commission](https://joeclark.org/design/signage/TTC/2015/TTCWayfindingStandardsManual_201409.pdf)                                                                                                                     |
-| Xi'an     | [西安轨道交通标准色号-西 安 区-地铁族](http://www.ditiezu.com/forum.php?mod=viewthread&tid=642532) <br> [Template:西安地铁颜色 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/Template:西安地铁颜色)(Line 8, 9 and 11)                                     |
 
 #### Notes
 
