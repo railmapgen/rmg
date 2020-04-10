@@ -1,23 +1,17 @@
-import React, { memo } from 'react';
+import React, { memo, useContext, useMemo } from 'react';
 import { ParamContext } from '../../context';
 
 export default memo(function DestinationSHMetro() {
     return (
         <>
-            <DefsSHMetro />
+            {/* <DefsSHMetro /> */}
             <InfoSHMetro />
         </>
     );
 });
 
-const DefsSHMetro = memo(() => (
-    <defs>
-        <path id="arrow_left" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black" />
-    </defs>
-));
-
 const InfoSHMetro = () => {
-    const { param, routes } = React.useContext(ParamContext);
+    const { param, routes } = useContext(ParamContext);
 
     const destTextEl = React.createRef<SVGGElement>();
     const [bcr] = React.useState({ width: 0 } as DOMRect);
@@ -41,115 +35,122 @@ const InfoSHMetro = () => {
     const validDests = Array.from(
         new Set(
             routes
-                .filter(route => route.includes(param.current_stn_idx))
-                .map(route => {
-                    let res = route.filter(stnId => !['linestart', 'lineend'].includes(stnId));
+                .filter((route) => route.includes(param.current_stn_idx))
+                .map((route) => {
+                    let res = route.filter((stnId) => !['linestart', 'lineend'].includes(stnId));
                     return param.direction === 'l' ? res[0] : res.reverse()[0];
                 })
         )
     );
 
-    // prepare for the line name
-    let lineNameX = param.direction === 'l' ? param.svgWidth.destination : 360;
-    let [lineNameZH, lineNameEN] = param.line_name;
-
-    // line starts with numbers or letters
-    const lineNumber = lineNameZH.match(/(\d*)\w+/);
-    if (lineNumber) {
-        lineNameX -= 180;
-        lineNameZH = '号线';
-    } else {
-        lineNameX -= 280;
-    }
+    const isLineNumber = Boolean(param.line_name[0].match(/^[\w\d]+/));
 
     // the platform screen doors flash light
     // #20
     // $('g#station_info_shmetro > rect').attr({ transform: `translate(${this._svgDestWidth / 2},${250 + dh})` })
 
     return (
-        <g id="station_info_shmetro">
+        <g transform={`translate(0,${dh})`}>
             <path
-                id="line_shmetro_use"
                 fill="var(--rmg-theme-colour)"
                 d={
                     param.direction === 'l'
-                        ? `M38,10 H ${param.svgWidth.destination - 20} l 0,12 H 24 Z`
-                        : `M24,10 H ${param.svgWidth.destination - 30} l 12,12 H 24 Z`
+                        ? `M36,10 H ${param.svgWidth.destination - 24} l 0,12 H 24 Z`
+                        : `M24,10 H ${param.svgWidth.destination - 36} l 12,12 H 24 Z`
                 }
-                transform={`translate(0,${220 + dh})`}
+                transform="translate(0,220)"
             />
-            <use
-                id="arrow_left_use"
-                xlinkHref="#arrow_left"
-                transform={`translate(${arrowX},${135 + dh})rotate(${arrowRotate})`}
+            <path
+                d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
+                fill="black"
+                transform={`translate(${arrowX},135)rotate(${arrowRotate})`}
             />
+
             {/* <!-- Todo: fix this absolute position --> */}
             {/* Todo: fix svgWidth.destination*0.8, this has only been tested on 1000 width */}
             <g
                 ref={destTextEl}
-                id="dest_text"
-                style={{
-                    textAnchor: param.direction === 'l' ? 'start' : 'end',
-                    transform: `translate(${param.svgWidth.destination *
-                        (param.direction === 'l' ? 0.2 : 0.8)}px,${135 + dh}px)`,
-                }}
+                textAnchor={param.direction === 'l' ? 'start' : 'end'}
+                transform={`translate(${param.svgWidth.destination * (param.direction === 'l' ? 0.2 : 0.8)},135)`}
             >
-                <text className="rmg-name__zh rmg-name__shmetro--dest" fontSize="400%">
-                    {'往' + validDests.map(id => param.stn_list[id].name[0]).join('，')}
+                <text className="rmg-name__zh" fontSize="400%">
+                    {'往' + validDests.map((id) => param.stn_list[id].name[0]).join('，')}
                 </text>
-                <text className="rmg-name__en rmg-name__shmetro--dest" fontSize="150%" dy={40}>
+                <text className="rmg-name__en" fontSize="150%" dy={40}>
                     {'To ' +
                         validDests
-                            .map(id => param.stn_list[id].name[1])
+                            .map((id) => param.stn_list[id].name[1])
                             .join(', ')
                             .replace('\\', ' ')}
                 </text>
             </g>
-            <g id="line_number">
-                <rect
-                    fill="var(--rmg-theme-colour)"
-                    transform={
-                        lineNumber
-                            ? `translate(${lineNameX - 150},${70 + dh})`
-                            : `translate(${lineNameX - 10},${60 + dh})`
-                    }
-                    width={lineNumber ? 125 : 260}
-                    height={lineNumber ? 125 : 150}
-                />
-                {lineNumber && (
-                    <text
-                        className="rmg-name__zh rmg-name__shmetro--line_number"
-                        fill="var(--rmg-theme-fg)"
-                        fontSize="700%"
-                        textAnchor="middle"
-                        dominantBaseline="central"
-                        transform={`translate(${lineNameX - 87.5},${132.5 + dh})`}
-                        style={{ letterSpacing: '-5px' }}
-                    >
-                        {lineNumber[0]}
-                    </text>
-                )}
-            </g>
-            <g
-                id="line_name_text"
-                fill={lineNumber ? 'black' : 'var(--rmg-theme-fg)'}
-                transform={`translate(${lineNameX},${135 + dh})`}
-                textAnchor="start"
-            >
-                <text className="rmg-name__zh rmg-name__shmetro--line_name" fontSize="500%">
-                    {lineNameZH}
-                </text>
-                {/* // Todo: set the eng in the middle */}
-                <text
-                    className="rmg-name__en rmg-name__shmetro--line_name"
-                    fontSize="200%"
-                    dy={60}
-                    dx={lineNumber ? 0 : 50}
-                >
-                    {lineNameEN}
-                </text>
-            </g>
-            {/* <!-- # 20 <rect width="40" height="30" fill="orange"/> --> */}
+            {isLineNumber ? <LineNameBoxNumber /> : <LineNameBoxText />}
         </g>
+    );
+};
+
+const LineNameBoxText = () => {
+    const { param } = useContext(ParamContext);
+
+    const boxX = param.direction === 'l' ? param.svgWidth.destination - 24 - 130 : 24 + 130;
+
+    return useMemo(
+        () => (
+            <g transform={`translate(${boxX},60)`}>
+                <rect fill="var(--rmg-theme-colour)" x={-130} width={260} height={150} />
+                <g textAnchor="middle" transform="translate(0,75)" fill="var(--rmg-theme-fg)">
+                    <text className="rmg-name__zh" fontSize={80}>
+                        {param.line_name[0]}
+                    </text>
+                    <text className="rmg-name__en" fontSize={32} dy={60}>
+                        {param.line_name[1]}
+                    </text>
+                </g>
+            </g>
+        ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [boxX, param.line_name.toString()]
+    );
+};
+
+const LineNameBoxNumber = () => {
+    const { param } = useContext(ParamContext);
+
+    const [lineNumber, lineNameRes] = param.line_name[0].match(/^[\w\d]+|.+/g);
+
+    // Number width: 135
+    // Text width: 160
+    // Gap: 20
+    // Left: 135/2 + 20 + 160 = 247.5
+    // Right: 135/2 =
+    const boxX = param.direction === 'l' ? param.svgWidth.destination - 24 - 247.5 : 24 + 67.5;
+
+    return useMemo(
+        () => (
+            <g transform={`translate(${boxX},60)`}>
+                <rect fill="var(--rmg-theme-colour)" x={-67.5} width={135} height={150} />
+                <text
+                    className="rmg-name__zh"
+                    fill="var(--rmg-theme-fg)"
+                    fontSize={112}
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                    transform="translate(0,75)"
+                    letterSpacing={-5}
+                >
+                    {lineNumber}
+                </text>
+                <g textAnchor="start" transform="translate(87.5,75)">
+                    <text className="rmg-name__zh" fontSize={80}>
+                        {lineNameRes}
+                    </text>
+                    <text className="rmg-name__en" fontSize={32} dy={60}>
+                        {param.line_name[1]}
+                    </text>
+                </g>
+            </g>
+        ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [boxX, param.line_name.toString()]
     );
 };
