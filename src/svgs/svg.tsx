@@ -49,7 +49,7 @@ const SVGs = () => {
     return (
         <div className={classes.root}>
             <Switch>
-                {(Object.keys(canvasList) as ProvidedStyles[]).map(s => (
+                {(Object.keys(canvasList) as ProvidedStyles[]).map((s) => (
                     <Route path={`/${s}`} key={s}>
                         <StyleSpecificSVGs rmgStyle={s} canvasAvailable={canvasList[s]} svgProps={sharedProps} />
                     </Route>
@@ -71,7 +71,7 @@ const StyleSpecificSVGs = memo(
         const { canvasToShown, setCanvasToShown, setCanvasAvailable } = useContext(CanvasContext);
         useEffect(
             () => {
-                ['share', 'destination', 'runin', 'railmap'].forEach(canvas => {
+                ['share', 'destination', 'runin', 'railmap'].forEach((canvas) => {
                     if (canvas in props.canvasAvailable || canvas === 'share') {
                         (document.getElementById('css_' + canvas) as HTMLLinkElement).href =
                             process.env.PUBLIC_URL + `/styles/${canvas}_${props.rmgStyle}.css`;
@@ -80,7 +80,7 @@ const StyleSpecificSVGs = memo(
                     }
                 });
                 setCanvasAvailable(Object.keys(props.canvasAvailable) as ProvidedCanvas[]);
-                setCanvasToShown(prevCanvas =>
+                setCanvasToShown((prevCanvas) =>
                     ['all', ...Object.keys(props.canvasAvailable)].includes(prevCanvas) ? prevCanvas : 'all'
                 );
             },
@@ -91,20 +91,24 @@ const StyleSpecificSVGs = memo(
         return (
             <>
                 {(Object.keys(props.canvasAvailable) as (keyof typeof props.canvasAvailable)[]).map(
-                    canvas =>
+                    (canvas) =>
                         ['all', canvas].includes(canvasToShown) && (
                             <React.Suspense key={canvas} fallback={<CircularProgress />}>
                                 <ErrorBoundary>
                                     <svg {...props.svgProps(canvas)}>
                                         <rect
                                             id="canvas-bg"
-                                            x={0}
-                                            y={0}
                                             fill="white"
-                                            stroke="none"
                                             style={{ height: 'var(--rmg-svg-height)', width: 'var(--rmg-svg-width)' }}
                                         />
                                         {props.canvasAvailable[canvas]}
+                                        <rect
+                                            id="canvas-border"
+                                            fill="none"
+                                            strokeWidth={3}
+                                            stroke="none"
+                                            style={{ height: 'var(--rmg-svg-height)', width: 'var(--rmg-svg-width)' }}
+                                        />
                                     </svg>
                                 </ErrorBoundary>
                             </React.Suspense>
