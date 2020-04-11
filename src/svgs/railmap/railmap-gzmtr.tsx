@@ -9,7 +9,11 @@ const RailMapGZMTR = () => {
         <>
             <DefsGZMTR />
 
-            <StripGZMTR variant={param.info_panel_type} isShowLight={false} isShowPSD={false} />
+            <StripGZMTR
+                variant={param.info_panel_type}
+                isShowLight={param.info_panel_type === 'gz2otis'}
+                isShowPSD={param.info_panel_type === 'gz2otis' && param.psd_num}
+            />
 
             {(param.direction === 'l' && param.stn_list[param.current_stn_idx].parents.includes('linestart')) ||
             (param.direction === 'r' && param.stn_list[param.current_stn_idx].children.includes('lineend')) ? (
@@ -22,6 +26,10 @@ const RailMapGZMTR = () => {
                         <NoteBox key={i} note={note} />
                     ))}
                 </>
+            )}
+
+            {param.info_panel_type === 'gz2otis' && (
+                <line x2={param.svgWidth.railmap} transform="translate(0,90)" strokeWidth={3} stroke="black" />
             )}
         </>
     );
@@ -62,13 +70,13 @@ const DirectionIndicator = () => {
                             cur.includes(param.current_stn_idx)
                                 ? acc.concat(
                                       cur
-                                          .filter(stnId => !['linestart', 'lineend'].includes(stnId))
+                                          .filter((stnId) => !['linestart', 'lineend'].includes(stnId))
                                           .slice(param.direction === 'l' ? 0 : -1)[0]
                                   )
                                 : acc,
                         []
                     )
-                    .filter(id => id !== param.current_stn_idx)
+                    .filter((id) => id !== param.current_stn_idx)
             ),
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -110,10 +118,10 @@ const DirectionIndicatorTextGroup = (props: TextGroupProps) => {
     return (
         <g {...others}>
             <text className="rmg-name__zh" fontSize={28}>
-                {destIds.map(stnId => param.stn_list[stnId].name[0]).join('/') + '方向'}
+                {destIds.map((stnId) => param.stn_list[stnId].name[0]).join('/') + '方向'}
             </text>
             <text className="rmg-name__en" fontSize={14} dy={22}>
-                {'Towards ' + destIds.map(stnId => param.stn_list[stnId].name[1].replace('\\', ' ')).join('/')}
+                {'Towards ' + destIds.map((stnId) => param.stn_list[stnId].name[1].replace('\\', ' ')).join('/')}
             </text>
         </g>
     );
@@ -123,7 +131,7 @@ const DirectionIndicatorTextGroup2 = (props: TextGroupProps) => {
     const { destIds, ...others } = props;
     const { param } = React.useContext(ParamContext);
 
-    const charCounts = destIds.map(stnId => param.stn_list[stnId].name[0].length);
+    const charCounts = destIds.map((stnId) => param.stn_list[stnId].name[0].length);
     const minCharCounts = Math.min(...charCounts);
     const charSpacing =
         minCharCounts > 1 && charCounts[0] !== charCounts[1]

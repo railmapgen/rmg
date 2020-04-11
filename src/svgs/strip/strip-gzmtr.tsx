@@ -7,9 +7,10 @@ interface Props {
 }
 
 const StripGZMTR = (props: Props) => {
-    const stripHeight = (variant => {
+    const stripHeight = ((variant) => {
         switch (variant) {
             case 'gz28':
+            case 'gz2otis':
             case 'gz6':
             case 'gzgf':
                 return 60;
@@ -30,6 +31,7 @@ const StripGZMTR = (props: Props) => {
             case 'gz1':
                 return <circle cy={-58} r={16} fill="red" />;
             case 'gz28':
+            case 'gz2otis':
                 return <ellipse cy={-30} rx={24} ry={12} fill="orange" />;
             case 'gz3':
                 return <rect x={-15} y={-55} height={30} width={30} fill="red" />;
@@ -65,7 +67,7 @@ const StripGZMTR = (props: Props) => {
             >
                 {props.isShowLight && indicatorLight}
             </g>
-            {props.isShowPSD && <PSD {...props} />}
+            {props.isShowPSD !== false && <PSD {...props} />}
         </g>
     );
 };
@@ -77,7 +79,7 @@ const PSD = React.memo(
         /**
          * Flag of whether PSD number is stick within the strip area. If `true`, should fill with white, otherwise, fill with theme colour.
          */
-        const isInStrip = ['gz28', 'gz6', 'gzgf'].includes(props.variant);
+        const isInStrip = ['gz28', 'gz2otis', 'gz6', 'gzgf'].includes(props.variant);
         const psdDy = ((variant: PanelTypeGZMTR) => {
             switch (variant) {
                 case 'gz1':

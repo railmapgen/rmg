@@ -96,7 +96,7 @@ interface StationDict {
     [stnId: string]: StationInfo;
 }
 
-type PanelTypeGZMTR = 'gz1' | 'gz28' | 'gz3' | 'gz4' | 'gz5' | 'gz1421' | 'gz6' | 'gzgf';
+type PanelTypeGZMTR = 'gz1' | 'gz28' | 'gz2otis' | 'gz3' | 'gz4' | 'gz5' | 'gz1421' | 'gz6' | 'gzgf';
 /**
  * Array of a single note entry for Guangzhou Metro style.
  * @property 0 - text in Chinese characters

@@ -16,39 +16,52 @@ const InfoGZMTR = () => {
 
     const nextStnId = curStnInfo[param.direction === 'l' ? 'parents' : 'children'];
 
+    const otisTransforms = {
+        name: `translate(${((param.direction === 'l' ? 1 : -1) * param.svgWidth.runin) / 4},45)`,
+        next: `translate(${((param.direction === 'l' ? 1 : -1) * param.svgWidth.runin) / 10},45)`,
+    };
+
     return (
         <g>
-            <BigName
-                ref={curNameEl}
-                curName={curStnInfo.name}
-                curSecName={curStnInfo.secondaryName}
-                style={{
-                    ['--translate-y' as any]: `${0.5 * param.svg_height -
-                        50 -
-                        (curStnInfo.name[1].split('\\').length - 1) * 18 -
-                        (curStnInfo.secondaryName ? 58 / 2 : 0)}px`,
-                }}
-            />
+            <g transform={param.info_panel_type === 'gz2otis' ? otisTransforms.name : ''}>
+                <BigName
+                    ref={curNameEl}
+                    curName={curStnInfo.name}
+                    curSecName={curStnInfo.secondaryName}
+                    style={{
+                        ['--translate-y' as any]: `${
+                            0.5 * param.svg_height -
+                            50 -
+                            (curStnInfo.name[1].split('\\').length - 1) * 18 -
+                            (curStnInfo.secondaryName ? 58 / 2 : 0)
+                        }px`,
+                    }}
+                />
 
-            <BigStnNum
-                lineNum={param.line_num}
-                stnNum={curStnInfo.num}
-                style={{
-                    ['--translate-x' as any]: `${(param.svgWidth.runin + nameBBox.width) / 2 + 55}px`,
-                    ['--translate-y' as any]: `${0.5 * param.svg_height -
-                        30 -
-                        (curStnInfo.name[1].split('\\').length - 1) * 18 -
-                        (curStnInfo.secondaryName ? 58 / 2 : 0)}px`,
-                }}
-            />
+                <BigStnNum
+                    lineNum={param.line_num}
+                    stnNum={curStnInfo.num}
+                    style={{
+                        ['--translate-x' as any]: `${(param.svgWidth.runin + nameBBox.width) / 2 + 55}px`,
+                        ['--translate-y' as any]: `${
+                            0.5 * param.svg_height -
+                            30 -
+                            (curStnInfo.name[1].split('\\').length - 1) * 18 -
+                            (curStnInfo.secondaryName ? 58 / 2 : 0)
+                        }px`,
+                    }}
+                />
+            </g>
 
-            {nextStnId.includes('linestart') || nextStnId.includes('lineend') ? (
-                <></>
-            ) : nextStnId.length === 1 ? (
-                <BigNext nextId={nextStnId[0]} nameBBox={nameBBox} />
-            ) : (
-                <BigNext2 nextIds={nextStnId} nameBBox={nameBBox} />
-            )}
+            <g transform={param.info_panel_type === 'gz2otis' ? otisTransforms.next : ''}>
+                {nextStnId.includes('linestart') || nextStnId.includes('lineend') ? (
+                    <></>
+                ) : nextStnId.length === 1 ? (
+                    <BigNext nextId={nextStnId[0]} nameBBox={nameBBox} />
+                ) : (
+                    <BigNext2 nextIds={nextStnId} nameBBox={nameBBox} />
+                )}
+            </g>
         </g>
     );
 };
@@ -230,18 +243,21 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
                 style={{
                     ['--translate-x' as any]:
                         param.direction === 'l'
-                            ? `${(115 + 35 * ((nextNameZHCount <= 2 ? 1 : 0.5) + nextNameZHCount) + nameBcrX) / 2 -
-                                  20}px`
-                            : `${(param.svgWidth.runin -
-                                  45 -
-                                  nextBBox.width -
-                                  (nextNameZHCount <= 2 ? 70 + 35 : 35 * 2.5) +
-                                  nameBcrX +
-                                  props.nameBBox.width +
-                                  55 +
-                                  18.5 * 1.4) /
-                                  2 +
-                                  20}px`,
+                            ? `${
+                                  (115 + 35 * ((nextNameZHCount <= 2 ? 1 : 0.5) + nextNameZHCount) + nameBcrX) / 2 - 20
+                              }px`
+                            : `${
+                                  (param.svgWidth.runin -
+                                      45 -
+                                      nextBBox.width -
+                                      (nextNameZHCount <= 2 ? 70 + 35 : 35 * 2.5) +
+                                      nameBcrX +
+                                      props.nameBBox.width +
+                                      55 +
+                                      18.5 * 1.4) /
+                                      2 +
+                                  20
+                              }px`,
                     ['--rotate' as any]: param.direction === 'l' ? '0deg' : '180deg',
                 }}
             />
@@ -285,15 +301,15 @@ const BigNextSec = (props: { secName: Name } & React.SVGProps<SVGGElement>) => {
 const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
     const { param, routes } = React.useContext(ParamContext);
 
-    const nextNames = props.nextIds.map(id => param.stn_list[id].name);
+    const nextNames = props.nextIds.map((id) => param.stn_list[id].name);
     const [nextBBox, setNextBBox] = useState({ width: 0 } as DOMRect);
     const nextNameEls = useRef<(SVGGElement | null)[]>([]);
     useEffect(
         () => {
-            setNextBBox(prevBBox => ({ ...prevBBox, width: 0 }));
-            nextNameEls.current.forEach(el => {
+            setNextBBox((prevBBox) => ({ ...prevBBox, width: 0 }));
+            nextNameEls.current.forEach((el) => {
                 let nextBBox = el?.getBBox();
-                setNextBBox(prevBBox => {
+                setNextBBox((prevBBox) => {
                     if (nextBBox) {
                         return prevBBox.width > nextBBox.width ? prevBBox : nextBBox;
                     } else {
@@ -306,14 +322,14 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
         [nextNames.toString()]
     );
 
-    const validEnds = props.nextIds.map(stnId =>
+    const validEnds = props.nextIds.map((stnId) =>
         routes.reduce(
             (acc, route) =>
                 // filter routes not containing next station's id
                 route.includes(stnId)
                     ? acc.concat(
                           route
-                              .filter(s => !['linestart', 'lineend'].includes(s))
+                              .filter((s) => !['linestart', 'lineend'].includes(s))
                               // select first/last station's id
                               .slice(param.direction === 'l' ? 0 : -1)[0]
                       )
@@ -322,7 +338,7 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
         )
     );
 
-    const nextNameZHCount = Math.max(...nextNames.map(names => names[0].length));
+    const nextNameZHCount = Math.max(...nextNames.map((names) => names[0].length));
     const nameBcrX = (param.svgWidth.runin - props.nameBBox.width) / 2;
 
     return (
@@ -346,7 +362,7 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                                 </text>
                             </g>
                             <g
-                                ref={el => (nextNameEls.current[i] = el)}
+                                ref={(el) => (nextNameEls.current[i] = el)}
                                 textAnchor="start"
                                 style={{
                                     ['--translate-x' as any]:
@@ -362,12 +378,12 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                                     </text>
                                 ))}
                                 <text className="rmg-name__zh" y={-35}>
-                                    {validEnds[i].map(s => param.stn_list[s].name[0]).join('/') + '方向'}
+                                    {validEnds[i].map((s) => param.stn_list[s].name[0]).join('/') + '方向'}
                                 </text>
                                 <text className="rmg-name__en rmg-name__gzmtr--next2-dest" y={-20}>
                                     {'Towards ' +
                                         validEnds[i]
-                                            .map(s => param.stn_list[s].name[1])
+                                            .map((s) => param.stn_list[s].name[1])
                                             .join('/')
                                             .replace('\\', ' ')}
                                 </text>
@@ -384,17 +400,19 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                     ['--translate-x' as any]:
                         param.direction === 'l'
                             ? `${(99 + 27 * (1 + nextNameZHCount) + nameBcrX) / 2 - 20}px`
-                            : `${(param.svgWidth.runin -
-                                  45 -
-                                  nextBBox.width -
-                                  41 -
-                                  27 +
-                                  nameBcrX +
-                                  props.nameBBox.width +
-                                  55 +
-                                  18.5 * 1.4) /
-                                  2 +
-                                  20}px`,
+                            : `${
+                                  (param.svgWidth.runin -
+                                      45 -
+                                      nextBBox.width -
+                                      41 -
+                                      27 +
+                                      nameBcrX +
+                                      props.nameBBox.width +
+                                      55 +
+                                      18.5 * 1.4) /
+                                      2 +
+                                  20
+                              }px`,
                     ['--rotate' as any]: param.direction === 'l' ? '0deg' : '180deg',
                 }}
             />

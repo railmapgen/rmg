@@ -29,7 +29,7 @@ import {
 
 import { ParamContext } from '../../context';
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
     createStyles({
         nestedList: {
             paddingLeft: theme.spacing(5),
@@ -50,7 +50,7 @@ const DesignListGZMTR = () => {
                 <ListItemText primary={t('design.lineNum')} />
                 <TextField
                     value={param.line_num}
-                    onChange={e => dispatch({ type: 'SET_LINE_NUM', num: e.target.value })}
+                    onChange={(e) => dispatch({ type: 'SET_LINE_NUM', num: e.target.value })}
                 />
             </ListItem>
             <Divider />
@@ -61,7 +61,7 @@ const DesignListGZMTR = () => {
                 <ListItemText primary={t('design.psd')} />
                 <TextField
                     value={param.psd_num}
-                    onChange={e => dispatch({ type: 'SET_PSD_NUM', num: e.target.value })}
+                    onChange={(e) => dispatch({ type: 'SET_PSD_NUM', num: e.target.value })}
                 />
             </ListItem>
             <Divider />
@@ -89,10 +89,12 @@ const PanelTypeLi = () => {
                     <Select
                         native
                         value={param.info_panel_type}
-                        onChange={e => dispatch({ type: 'SET_PANEL_TYPE', variant: e.target.value as PanelTypeGZMTR })}
+                        onChange={(e) =>
+                            dispatch({ type: 'SET_PANEL_TYPE', variant: e.target.value as PanelTypeGZMTR })
+                        }
                         style={{ width: 166 }}
                     >
-                        {['gz1', 'gz28', 'gz3', 'gz4', 'gz5', 'gz6', 'gz1421', 'gzgf'].map(type => (
+                        {['gz1', 'gz28', 'gz2otis', 'gz3', 'gz4', 'gz5', 'gz6', 'gz1421', 'gzgf'].map((type) => (
                             <option key={type} value={type}>
                                 {t('design.panelType.' + type)}
                             </option>
@@ -128,7 +130,7 @@ const NotesLi = () => {
 
     return (
         <>
-            <ListItem button onClick={() => setIsCollapse(prevOpen => !prevOpen)}>
+            <ListItem button onClick={() => setIsCollapse((prevOpen) => !prevOpen)}>
                 <ListItemIcon>
                     <Icon>notes</Icon>
                 </ListItemIcon>
@@ -190,7 +192,7 @@ const NotesEntry = (props: { idx: number; onEdit: () => void }) => {
                         style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                     />
                     <ListItemSecondaryAction>
-                        <IconButton size="small" onClick={e => setToggleEl(e.currentTarget)}>
+                        <IconButton size="small" onClick={(e) => setToggleEl(e.currentTarget)}>
                             <Icon>more_vert</Icon>
                         </IconButton>
                         <Menu anchorEl={toggleEl} open={Boolean(toggleEl)} onClose={() => setToggleEl(null)}>
@@ -286,7 +288,7 @@ const NoteEditDialog = (props: AddNoteDialogProps) => {
                         multiline
                         autoFocus
                         value={noteZH}
-                        onChange={e => setNoteZH(e.target.value)}
+                        onChange={(e) => setNoteZH(e.target.value)}
                         style={{ width: '100%' }}
                         helperText={t('editor.enterToWrap')}
                     />
@@ -296,7 +298,7 @@ const NoteEditDialog = (props: AddNoteDialogProps) => {
                         margin="dense"
                         multiline
                         value={noteEN}
-                        onChange={e => setNoteEN(e.target.value)}
+                        onChange={(e) => setNoteEN(e.target.value)}
                         style={{ width: '100%' }}
                         helperText={t('editor.enterToWrap')}
                     />

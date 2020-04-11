@@ -6,18 +6,30 @@ import InfoGZMTR from './info-gzmtr';
 
 const RunInGZMTR = () => {
     const { param } = React.useContext(ParamContext);
+
+    const otisTransforms = {
+        platform: `translate(${param.direction === 'l' ? 50 : -50},45)`,
+    };
     return (
         <>
-            <StripGZMTR variant={param.info_panel_type} isShowLight={true} isShowPSD={param.psd_num} />
-
-            <PlatformNum
-                num={param.platform_num}
-                style={{
-                    ['--translate-x' as any]: `${param.direction === 'l' ? param.svgWidth.runin - 100 : 100}px`,
-                }}
+            <StripGZMTR
+                variant={param.info_panel_type}
+                isShowLight={param.info_panel_type !== 'gz2otis'}
+                isShowPSD={param.info_panel_type !== 'gz2otis' && param.psd_num}
             />
 
+            <g transform={param.info_panel_type === 'gz2otis' ? otisTransforms.platform : ''}>
+                <PlatformNum
+                    num={param.platform_num}
+                    style={{
+                        ['--translate-x' as any]: `${param.direction === 'l' ? param.svgWidth.runin - 100 : 100}px`,
+                    }}
+                />
+            </g>
+
             <InfoGZMTR />
+
+            {param.info_panel_type === 'gz2otis' && <OtisFrame />}
         </>
     );
 };
@@ -46,6 +58,16 @@ const PlatformNum = (props: { num: string | false } & React.SVGProps<SVGGElement
                 ),
                 [num]
             )}
+        </g>
+    );
+};
+
+const OtisFrame = () => {
+    const { param } = React.useContext(ParamContext);
+    return (
+        <g id="otis_frame" strokeWidth={3} stroke="black">
+            <line y2={param.svg_height} transform={`translate(${param.svgWidth.runin / 2},0)`} />
+            <line x2={param.svgWidth.runin} transform="translate(0,90)" />
         </g>
     );
 };
