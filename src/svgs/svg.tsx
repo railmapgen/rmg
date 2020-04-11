@@ -121,7 +121,7 @@ const StyleSpecificSVGs = memo(
 
 // Canvas available
 
-const RunInGZMTR = lazy(() => import(/* webpackChunkName: "runinMTR" */ './runin/runin-gzmtr'));
+const RunInGZMTR = lazy(() => import(/* webpackChunkName: "runinGZMTR" */ './runin/runin-gzmtr'));
 const RailMapGZMTR = lazy(() => import(/* webpackChunkName: "railmapGZMTR" */ './railmap/railmap-gzmtr'));
 
 const DestinationMTR = lazy(() => import(/* webpackChunkName: "destinationMTR" */ './destination/destination-mtr'));

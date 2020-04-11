@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.6.6 (11 Apr 2020)
+
+### New Features
+
+-   Supported panel type of Guangzhou Metro Line 2/8 (Otis).
+-   Supported progressive web app (PWA) (beta).
+
+### Resolved Issues
+
+-   Fixed alignment issue in destination sign of Shanghai Metro style.
+-   Reordered canvas's background and border.
+-   Improved algorithms of loading rendered fonts in MTR style.
+
 ## 3.6.5 (6 Apr 2020)
 
 ### New Features

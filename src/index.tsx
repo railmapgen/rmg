@@ -15,11 +15,11 @@ declare global {
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+serviceWorker.register();
 
 // load empty stylesheet elements
 document.head.append(
-    ...['share', 'destination', 'runin', 'railmap'].map(tag => {
+    ...['share', 'destination', 'runin', 'railmap'].map((tag) => {
         let link = document.createElement('link');
         link.rel = 'stylesheet';
         link.id = 'css_' + tag;
@@ -47,7 +47,7 @@ if (localStorage.rmgParam) {
     renderApp();
 } else {
     import('./panels/save/template-diag/templates/basic/blank')
-        .then(module => {
+        .then((module) => {
             localStorage.setItem('rmgParam', JSON.stringify(module.default));
             updateParam();
         })
