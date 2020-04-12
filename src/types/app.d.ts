@@ -187,6 +187,10 @@ interface LineEntry {
      * Foreground colour. Mandatory field if foreground colour is black.
      */
     fg?: '#000' | '#fff';
+    /**
+     * Pantone colour. If defined, colour is converted with Pantone Color Finder (https://www.pantone.com/color-finder).
+     */
+    pantone?: string;
 }
 
 interface CityEntry {

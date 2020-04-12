@@ -219,6 +219,14 @@ export const cityList: CityEntry[] = [
         },
     },
     {
+        id: 'singapore',
+        country: 'SG',
+        name: {
+            en: 'Singapore',
+            zh: '新加坡',
+        },
+    },
+    {
         id: 'stockholm',
         country: 'SE',
         name: {
