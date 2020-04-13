@@ -105,6 +105,16 @@ export const cityList: CityEntry[] = [
         },
     },
     {
+        id: 'kansai',
+        country: 'JP',
+        name: {
+            en: 'Kansai Area',
+            ja: '近畿地方',
+            'zh-Hans': '近畿地方（关西地方）',
+            'zh-Hant': '近畿地方（關西地方）',
+        },
+    },
+    {
         id: 'kaohsiung',
         country: 'TW',
         name: {
@@ -154,6 +164,15 @@ export const cityList: CityEntry[] = [
         name: {
             en: 'New Taipei',
             zh: '新北',
+        },
+    },
+    {
+        id: 'osaka',
+        country: 'JP',
+        name: {
+            en: 'Osaka',
+            ja: '大阪',
+            zh: '大阪',
         },
     },
     {
