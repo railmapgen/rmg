@@ -1,11 +1,23 @@
 # Changelog
 
+## 3.6.7 (13 Apr 2020)
+
+### New Features
+
+-   New palettes: Kansai Area and Osaka
+-   Redesign layout of colour editing dialogue.
+
+### Resolved Issues
+
+-   Fixed the issue where font size in exported PNG is incorrect.
+-   Fixed the issue where font are not correctly rendered in exported PNG.
+
 ## 3.6.6 (11 Apr 2020)
 
 ### New Features
 
 -   Supported panel type of Guangzhou Metro Line 2/8 (Otis).
--   Supported progressive web app (PWA) (beta).
+-   ~~Supported progressive web app (PWA) (beta).~~
 
 ### Resolved Issues
 
