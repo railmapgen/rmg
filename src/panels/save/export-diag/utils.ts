@@ -28,9 +28,9 @@ export function test(svgEl: SVGSVGElement, scale: number) {
 
     svgEl.querySelectorAll('.rmg-name__en.IntName').forEach(el => el.setAttribute('font-size', '7px'));
 
-    svgEl
-        .querySelectorAll('text:not([font-size]), tspan:not([font-size])')
-        .forEach(el => el.setAttribute('font-size', window.getComputedStyle(el).fontSize));
+    // svgEl
+    //     .querySelectorAll('text:not([font-size]), tspan:not([font-size])')
+    //     .forEach((el) => el.setAttribute('font-size', window.getComputedStyle(el).fontSize));
 
     svgEl.querySelectorAll('text, tspan').forEach(el => {
         let elStyle = window.getComputedStyle(el);
@@ -38,7 +38,7 @@ export function test(svgEl: SVGSVGElement, scale: number) {
         el.setAttribute('fill', elStyle.fill);
         el.setAttribute('dominant-baseline', elStyle.dominantBaseline);
         el.setAttribute('text-anchor', elStyle.textAnchor || '');
-        el.removeAttribute('class');
+        // el.removeAttribute('class');
     });
 
     var img = new Image();

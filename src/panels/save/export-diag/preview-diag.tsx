@@ -22,7 +22,7 @@ import {
 import { test } from './utils';
 import { CanvasContext } from '../../../context';
 
-const useStyles = makeStyles((theme) =>
+const useStyles = makeStyles(theme =>
     createStyles({
         contentWrapper: {
             display: 'flex',
@@ -112,7 +112,7 @@ export default (props: Props) => {
             }
             let [, thisSVGHeight] = ['--rmg-svg-width', '--rmg-svg-height']
                 .map(
-                    (key) =>
+                    key =>
                         (document.querySelector(`svg#${props.canvas}`) as SVGSVGElement).style
                             .getPropertyValue(key)
                             .match(/\d+/g)![0]
@@ -129,15 +129,15 @@ export default (props: Props) => {
             elem.style.setProperty('all', 'initial');
 
             ['share', props.canvas]
-                .map((tag) =>
+                .map(tag =>
                     [
-                        ...([...document.querySelectorAll('link')].filter((l) => l.id === 'css_' + tag)[0]
+                        ...([...document.querySelectorAll('link')].filter(l => l.id === 'css_' + tag)[0]
                             ?.sheet as CSSStyleSheet).cssRules,
                     ]
-                        .map((rule) => rule.cssText)
+                        .map(rule => rule.cssText)
                         .join(' ')
                 )
-                .forEach((txt) => {
+                .forEach(txt => {
                     let s = document.createElement('style');
                     s.textContent = txt;
                     elem.prepend(s);
@@ -150,13 +150,13 @@ export default (props: Props) => {
                 import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper')
                     .then(({ getBase64FontFace }) =>
                         getBase64FontFace(elem)
-                            .then(async (response) => {
+                            .then(async response => {
                                 let uris = await Promise.all(response);
                                 let s = document.createElement('style');
                                 s.textContent = uris.join(' ');
                                 elem.prepend(s);
                             })
-                            .catch((err) => {
+                            .catch(err => {
                                 alert('Failed to fonts. Fonts in the exported PNG will be missing.');
                                 console.error(err);
                             })
@@ -251,7 +251,7 @@ export default (props: Props) => {
                                             3,
                                             4,
                                             5,
-                                        ].map((ratio) => (
+                                        ].map(ratio => (
                                             <option key={ratio} value={ratio}>
                                                 {(ratio * 100).toFixed(0) + '%'}
                                             </option>
@@ -266,7 +266,7 @@ export default (props: Props) => {
                                     <Select
                                         native
                                         value={format}
-                                        onChange={(e) => setFormat(e.target.value as string)}
+                                        onChange={e => setFormat(e.target.value as string)}
                                         style={{ width: 65 }}
                                         disabled={!isLoaded}
                                     >
