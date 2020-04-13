@@ -248,10 +248,12 @@
         "city": "City",
         "line": "Line",
         "tooltip": "Colour Picker",
-        "colour": "Background (HEX)",
+        "colour": "Background",
         "fg": "Foreground",
         "fgBlack": "Black",
-        "fgWhite": "White"
+        "fgWhite": "White",
+        "palette": "Palette",
+        "custom": "Custom"
     },
 
     "editor": {

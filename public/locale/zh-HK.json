@@ -249,10 +249,12 @@
         "city": "城市",
         "line": "路線",
         "tooltip": "顏色選擇器",
-        "colour": "背景色（十六進制）",
+        "colour": "背景色",
         "fg": "前景色",
         "fgBlack": "黑",
-        "fgWhite": "白"
+        "fgWhite": "白",
+        "palette": "顏色",
+        "custom": "自訂"
     },
 
     "editor": {

@@ -1,15 +1,17 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+    List,
     ListItem,
-    ListItemIcon,
-    Icon,
     TextField,
     MenuItem,
     Button,
     makeStyles,
     createStyles,
     Tooltip,
+    ListItemText,
+    Divider,
+    Select,
 } from '@material-ui/core';
 import { getTransText2 } from '../../utils';
 import { cityList } from './data';
@@ -26,11 +28,11 @@ const useStyles = makeStyles(() =>
         },
         button: {
             borderRadius: '50%',
-            height: 28,
-            width: 28,
+            height: 24,
+            width: 24,
             minWidth: 0,
             marginRight: 8,
-            border: 'solid',
+            // border: 'solid',
             padding: 0,
         },
         inputColour: {
@@ -83,202 +85,188 @@ interface ColourDialogProps {
     onUpdate: (key: string, value: any) => void;
 }
 
-export default React.memo(
-    function ThemeItems(props: ColourDialogProps) {
-        // console.log('rerender');
-        const classes = useStyles();
-        const { t, i18n } = useTranslation();
+export const PalettePanel = (props: ColourDialogProps) => {
+    const { t, i18n } = useTranslation();
+    const classes = useStyles();
 
-        const [hexTemp, setHexTemp] = React.useState(props.theme[2]);
+    const cityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let newTheme = props.theme.map((val, idx) => (idx === 0 ? event.target.value : val));
+        props.onUpdate('theme', newTheme);
+    };
 
-        const cityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            let newTheme = props.theme.map((val, idx) => (idx === 0 ? event.target.value : val));
+    // Hook for fetching line list of current city
+    const lineList = useLineList(props.theme);
+
+    // Hook for updating props.theme when lineList changed
+    useEffect(
+        () => {
+            if (lineList.length === 0) return; // initialising, ignore
+            if (lineList.filter(l => l.id === props.theme[1]).length) return; // current city, ignore
+            let newTheme = [props.theme[0], lineList[0].id, lineList[0].colour, lineList[0].fg || '#fff'];
             props.onUpdate('theme', newTheme);
-        };
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [lineList]
+    );
 
-        // Hook for fetching line list of current city
-        const lineList = useLineList(props.theme);
+    const lineChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let line = event.target.value;
+        let newTheme = [
+            props.theme[0],
+            line,
+            lineList.filter(l => l.id === line)[0].colour,
+            lineList.filter(l => l.id === line)[0].fg || '#fff',
+        ];
+        props.onUpdate('theme', newTheme);
+    };
 
-        // Hook for updating props.theme when lineList changed
-        useEffect(
-            () => {
-                if (lineList.length === 0) return; // initialising, ignore
-                if (lineList.filter(l => l.id === props.theme[1]).length) return; // current city, ignore
-                let newTheme = [props.theme[0], lineList[0].id, lineList[0].colour, lineList[0].fg || '#fff'];
-                props.onUpdate('theme', newTheme);
-            },
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            [lineList]
-        );
+    return (
+        <List component="div" disablePadding>
+            <CitySelectItem value={props.theme[0]} onChange={cityChange} />
+            <Divider variant="middle" />
+            <ListItem>
+                <ListItemText primary={t('colour.line')} />
+                <TextField
+                    select
+                    style={{ width: 166 }}
+                    onChange={lineChange}
+                    value={props.theme[1]}
+                    disabled={props.theme[0] === 'other'}
+                >
+                    {lineList.map(l => (
+                        <MenuItem key={l.id} value={l.id}>
+                            <span
+                                className={classes.menuItemSpan}
+                                style={{
+                                    backgroundColor: l.colour,
+                                    color: l.fg || '#fff',
+                                }}
+                            >
+                                {getTransText2(l.name, i18n.languages)}
+                            </span>
+                        </MenuItem>
+                    ))}
+                </TextField>
+            </ListItem>
+        </List>
+    );
+};
 
-        const lineChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            let line = event.target.value;
-            let newTheme = [
-                props.theme[0],
-                line,
-                lineList.filter(l => l.id === line)[0].colour,
-                lineList.filter(l => l.id === line)[0].fg || '#fff',
-            ];
+export const CustomPanel = (props: ColourDialogProps) => {
+    const { t } = useTranslation();
+    const classes = useStyles();
+
+    const [hexTemp, setHexTemp] = useState(props.theme[2]);
+
+    const colourChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let rgb = event.target.value;
+        setHexTemp(rgb);
+
+        if (props.theme[0] !== 'other') {
+            // if hex valid, modify theme city and props.hex
+            let newTheme = ['other', 'other', rgb, props.theme[3]];
             props.onUpdate('theme', newTheme);
-        };
+            // then lineList will be updated by hook (along with selection)
+            // then line will be updated by hook
+        } else {
+            // if hex valid, modify props.hex
+            let newTheme = props.theme.map((val, idx) => (idx === 2 ? rgb : val));
+            props.onUpdate('theme', newTheme);
+            // then lineList will be updated by hook (actually only hex is changed)
+        }
+    };
 
-        // Hook for updating hexTemp when props.hex changed
-        // which means valid hex has been updated to props
-        useEffect(
-            () => {
-                setHexTemp(props.theme[2]);
-            },
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            [props.theme[2]]
-        );
+    const hexChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let hex = event.target.value;
+        if (hex.match(/^#[0-9a-fA-F]{0,6}$/) === null) return;
+        setHexTemp(hex);
 
-        const colourChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            let rgb = event.target.value;
-            setHexTemp(rgb);
-
-            if (props.theme[0] !== 'other') {
+        if (props.theme[0] !== 'other') {
+            if (hex.match(/^#[0-9a-fA-f]{6}$/) !== null) {
                 // if hex valid, modify theme city and props.hex
-                let newTheme = ['other', props.theme[1], rgb, props.theme[3]];
+                let newTheme = ['other', 'other', hex, props.theme[3]];
                 props.onUpdate('theme', newTheme);
                 // then lineList will be updated by hook (along with selection)
                 // then line will be updated by hook
             } else {
+                // if hex not valid, modify theme city only
+                let newTheme = ['other', 'other', ...props.theme.slice(2)];
+                props.onUpdate('theme', newTheme);
+                // then lineList will be updated by hook (along with selection)
+                // then line will be updated by hook
+            }
+        } else {
+            if (hex.match(/^#[0-9a-fA-F]{6}$/) !== null) {
                 // if hex valid, modify props.hex
-                let newTheme = props.theme.map((val, idx) => (idx === 2 ? rgb : val));
+                let newTheme = props.theme.map((val, idx) => (idx === 2 ? hex : val));
                 props.onUpdate('theme', newTheme);
                 // then lineList will be updated by hook (actually only hex is changed)
-            }
-        };
-
-        const hexChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            let hex = event.target.value;
-            if (hex.match(/^#[0-9a-fA-f]{0,6}$/) === null) return;
-            setHexTemp(hex);
-
-            if (props.theme[0] !== 'other') {
-                if (hex.match(/^#[0-9a-fA-f]{6}$/) !== null) {
-                    // if hex valid, modify theme city and props.hex
-                    let newTheme = ['other', props.theme[1], hex, props.theme[3]];
-                    props.onUpdate('theme', newTheme);
-                    // then lineList will be updated by hook (along with selection)
-                    // then line will be updated by hook
-                } else {
-                    // if hex not valid, modify theme city only
-                    let newTheme = ['other', props.theme[1], props.theme[2], props.theme[3]];
-                    props.onUpdate('theme', newTheme);
-                    // then lineList will be updated by hook (along with selection)
-                    // then line will be updated by hook
-                }
             } else {
-                if (hex.match(/^#[0-9a-fA-f]{6}$/) !== null) {
-                    // if hex valid, modify props.hex
-                    let newTheme = props.theme.map((val, idx) => (idx === 2 ? hex : val));
-                    props.onUpdate('theme', newTheme);
-                    // then lineList will be updated by hook (actually only hex is changed)
-                } else {
-                    // if hex not valid, do nothing
-                }
+                // if hex not valid, do nothing
             }
-        };
+        }
+    };
 
-        const fgChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            let newTheme = ['other', 'other', props.theme[2], event.target.value];
-            props.onUpdate('theme', newTheme);
-        };
+    const fgChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+        let newTheme = ['other', 'other', props.theme[2], event.target.value as string];
+        props.onUpdate('theme', newTheme);
+    };
 
-        return (
-            <>
-                <ListItem>
-                    <ListItemIcon>
-                        <Icon>location_city</Icon>
-                    </ListItemIcon>
-                    <CitySelect value={props.theme[0]} onChange={cityChange} />
-                </ListItem>
-                <ListItem>
-                    <ListItemIcon>
-                        <Icon>subway</Icon>
-                    </ListItemIcon>
-                    <TextField
-                        select
-                        style={{ width: '100%' }}
-                        variant="outlined"
-                        label={t('colour.line')}
-                        onChange={lineChange}
-                        value={props.theme[1]}
-                        disabled={props.theme[0] === 'other'}
-                    >
-                        {lineList.map(l => (
-                            <MenuItem key={l.id} value={l.id}>
-                                <span
-                                    className={classes.menuItemSpan}
-                                    style={{
-                                        backgroundColor: l.colour,
-                                        color: l.fg || '#fff',
-                                    }}
-                                >
-                                    {getTransText2(l.name, i18n.languages)}
-                                </span>
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                </ListItem>
-                <ListItem>
-                    <div className={classes.buttonContainer}>
-                        <input
-                            type="color"
-                            id="input-color"
-                            value={props.theme[2]}
-                            onChange={colourChange}
-                            className={classes.inputColour}
-                            style={{ opacity: 0 }}
-                        />
-                        <label htmlFor="input-color">
-                            <Tooltip title={t('colour.tooltip')} aria-label="colour picker">
-                                <Button
-                                    className={classes.button}
-                                    style={{
-                                        backgroundColor: props.theme[2],
-                                        borderColor: props.theme[3] || '#fff',
-                                    }}
-                                    variant="contained"
-                                    component="span"
-                                >
-                                    {' '}
-                                </Button>
-                            </Tooltip>
-                        </label>
-                    </div>
-                    <TextField
-                        error={!hexTemp?.match(/^#[0-9a-fA-f]{6}$/g)}
-                        style={{ width: '100%', marginRight: 5 }}
-                        variant="outlined"
-                        label={t('colour.colour')}
-                        onChange={hexChange}
-                        value={hexTemp?.toUpperCase()}
-                    ></TextField>
-                    <TextField
-                        select
-                        style={{ width: '100%' }}
-                        variant="outlined"
-                        label={t('colour.fg')}
-                        onChange={fgChange}
-                        value={props.theme[3] || '#fff'}
-                    >
-                        <MenuItem key="#fff" value="#fff">
-                            {t('colour.fgWhite')}
-                        </MenuItem>
-                        <MenuItem key="#000" value="#000">
-                            {t('colour.fgBlack')}
-                        </MenuItem>
-                    </TextField>
-                </ListItem>
-            </>
-        );
-    },
-    (prevProps, nextProps) => prevProps.theme.toString() === nextProps.theme.toString()
-);
+    return (
+        <List component="div" disablePadding>
+            <ListItem>
+                <ListItemText primary={t('colour.colour')} />
+                <div className={classes.buttonContainer}>
+                    <input
+                        type="color"
+                        id="input-color"
+                        value={props.theme[2]}
+                        onChange={colourChange}
+                        className={classes.inputColour}
+                        style={{ opacity: 0 }}
+                    />
+                    <label htmlFor="input-color">
+                        <Tooltip title={t('colour.tooltip')} aria-label="colour picker">
+                            <Button
+                                className={classes.button}
+                                style={{
+                                    backgroundColor: props.theme[2],
+                                    borderColor: props.theme[3] || '#fff',
+                                }}
+                                variant="contained"
+                                component="span"
+                            >
+                                {' '}
+                            </Button>
+                        </Tooltip>
+                    </label>
+                </div>
+                <TextField
+                    error={!hexTemp?.match(/^#[0-9a-fA-F]{6}$/g)}
+                    style={{ width: 85 }}
+                    onChange={hexChange}
+                    value={hexTemp?.toUpperCase()}
+                />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem>
+                <ListItemText primary={t('colour.fg')} />
+                <Select
+                    native
+                    style={{ width: 85 }}
+                    label={t('colour.fg')}
+                    onChange={fgChange}
+                    value={props.theme[3] || '#fff'}
+                >
+                    <option value="#fff">{t('colour.fgWhite')}</option>
+                    <option value="#000">{t('colour.fgBlack')}</option>
+                </Select>
+            </ListItem>
+        </List>
+    );
+};
 
-const CitySelect = (props: { value: string; onChange: (event: React.ChangeEvent<HTMLInputElement>) => void }) => {
+const CitySelectItem = (props: { value: string; onChange: (event: React.ChangeEvent<HTMLInputElement>) => void }) => {
     const { t, i18n } = useTranslation();
     const classes = useStyles();
 
@@ -296,16 +284,12 @@ const CitySelect = (props: { value: string; onChange: (event: React.ChangeEvent<
         []
     );
     return (
-        <TextField
-            select
-            style={{ width: '100%' }}
-            variant="outlined"
-            label={t('colour.city')}
-            value={props.value}
-            onChange={props.onChange}
-        >
-            {items}
-        </TextField>
+        <ListItem>
+            <ListItemText primary={t('colour.city')} />
+            <TextField select style={{ width: 166 }} value={props.value} onChange={props.onChange}>
+                {items}
+            </TextField>
+        </ListItem>
     );
 };
 

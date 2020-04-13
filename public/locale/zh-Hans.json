@@ -248,10 +248,12 @@
         "city": "城市",
         "line": "线路",
         "tooltip": "颜色选择器",
-        "colour": "背景色（十六进制）",
+        "colour": "背景色",
         "fg": "前景色",
         "fgBlack": "黑",
-        "fgWhite": "白"
+        "fgWhite": "白",
+        "palette": "颜色库",
+        "custom": "自定义"
     },
 
     "editor": {

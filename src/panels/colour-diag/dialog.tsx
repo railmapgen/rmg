@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
     Dialog,
     DialogTitle,
     DialogContent,
-    List,
-    ListItem,
     Paper,
     Icon,
     InputBase,
@@ -14,14 +12,45 @@ import {
     DialogActions,
     Button,
     createStyles,
+    Tabs,
+    Tab,
 } from '@material-ui/core';
+import { PalettePanel, CustomPanel } from './theme-items';
 
-import ThemeListItems from './theme-items';
-
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
     createStyles({
+        contentWrapper: {
+            display: 'flex',
+            overflow: 'hidden',
+            paddingTop: theme.spacing(1),
+            paddingBottom: theme.spacing(1),
+            paddingLeft: theme.spacing(3),
+            paddingRight: theme.spacing(3),
+            [theme.breakpoints.down('xs')]: {
+                flexDirection: 'column',
+            },
+        },
+        contentLeft: {
+            flexShrink: 0,
+            padding: 'unset',
+            margin: `0 ${theme.spacing(1)}px`,
+        },
+        contentControl: {
+            flexGrow: 0,
+            flexShrink: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            width: 270,
+        },
+        contentRoot: {
+            padding: 'unset',
+            '&:first-child': {
+                paddingTop: 'unset',
+            },
+        },
+
         paperRoot: {
-            width: 250,
+            maxWidth: 250,
         },
         listItemPaper: {
             justifyContent: 'center',
@@ -50,7 +79,7 @@ const useStyles = makeStyles(theme =>
     })
 );
 
-interface ColourDialogProps {
+interface Props {
     open: boolean;
     theme: [string, string, string, '#000' | '#fff'];
     lineName: Name;
@@ -58,65 +87,101 @@ interface ColourDialogProps {
     onClose: () => void;
 }
 
-const ColourDialog = React.memo(
-    (props: ColourDialogProps) => {
-        const classes = useStyles();
-        const { t } = useTranslation();
+const Dialog2 = (props: Props) => {
+    const { t } = useTranslation();
+    const classes = useStyles();
 
-        const nameChange = (value: string, index: number) => {
-            let newName = props.lineName.map((val, idx) => (idx === index ? value : val));
-            props.onUpdate('name', newName);
-            // props.onUpdate('all', [...props.theme, ...newName]);
-        };
+    const nameChange = (value: string, index: number) => {
+        let newName = props.lineName.map((val, idx) => (idx === index ? value : val));
+        props.onUpdate('name', newName);
+        // props.onUpdate('all', [...props.theme, ...newName]);
+    };
 
-        const handleClose = () => {
-            props.onClose();
-        };
-
-        return (
-            <Dialog onClose={handleClose} open={props.open}>
-                <DialogTitle>{t('colour.title')}</DialogTitle>
-                <DialogContent dividers>
-                    <List>
-                        <ListItem className={classes.listItemPaper}>
-                            <Paper className={classes.paperRoot} style={{ backgroundColor: props.theme[2] }}>
-                                <Icon className={classes.iconRoot}>edit</Icon>
-                                <InputBase
-                                    value={props.lineName[0]}
-                                    classes={{
-                                        root: classes.inputBaseRoot,
-                                        input: classes.inputBaseInputZH,
-                                    }}
-                                    style={{ color: props.theme[3] || '#fff' }}
-                                    onChange={e => nameChange(e.target.value, 0)}
-                                    autoFocus
-                                />
-                                <InputBase
-                                    value={props.lineName[1]}
-                                    classes={{
-                                        root: classes.inputBaseRoot,
-                                        input: classes.inputBaseInputEN,
-                                    }}
-                                    style={{ color: props.theme[3] || '#fff' }}
-                                    onChange={e => nameChange(e.target.value, 1)}
-                                />
-                            </Paper>
-                        </ListItem>
-                        <ThemeListItems theme={props.theme} onUpdate={props.onUpdate} />
-                    </List>
+    return (
+        <Dialog open={props.open} onClose={props.onClose} maxWidth={false}>
+            <DialogTitle>{t('colour.title')}</DialogTitle>
+            <div className={classes.contentWrapper}>
+                <DialogContent className={classes.contentLeft}>
+                    <Paper className={classes.paperRoot} style={{ backgroundColor: props.theme[2] }}>
+                        <Icon className={classes.iconRoot}>edit</Icon>
+                        <InputBase
+                            value={props.lineName[0]}
+                            classes={{
+                                root: classes.inputBaseRoot,
+                                input: classes.inputBaseInputZH,
+                            }}
+                            style={{ color: props.theme[3] || '#fff' }}
+                            onChange={(e) => nameChange(e.target.value, 0)}
+                            autoFocus
+                        />
+                        <InputBase
+                            value={props.lineName[1]}
+                            classes={{
+                                root: classes.inputBaseRoot,
+                                input: classes.inputBaseInputEN,
+                            }}
+                            style={{ color: props.theme[3] || '#fff' }}
+                            onChange={(e) => nameChange(e.target.value, 1)}
+                        />
+                    </Paper>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        {t('dialog.done')}
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        );
-    },
-    (prevProps, nextProps) =>
-        prevProps.open === nextProps.open &&
-        prevProps.lineName.toString() === nextProps.lineName.toString() &&
-        prevProps.theme.toString() === nextProps.theme.toString()
-);
+                <div className={classes.contentControl}>
+                    <DialogContent classes={{ root: classes.contentRoot }}>
+                        <ColourControl theme={props.theme} onUpdate={props.onUpdate} />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={props.onClose} color="primary">
+                            {t('dialog.done')}
+                        </Button>
+                    </DialogActions>
+                </div>
+            </div>
+        </Dialog>
+    );
+};
 
-export default ColourDialog;
+export default Dialog2;
+
+const ColourControl = (props: { theme: Theme; onUpdate: Props['onUpdate'] }) => {
+    const { t } = useTranslation();
+    const [tabIndex, setTabIndex] = useState(props.theme[0] === 'other' ? 1 : 0);
+
+    const handleTabChange = (_: React.ChangeEvent<{}>, value: any) => {
+        if (value === 1) {
+            // props.onUpdate('theme', ['other', 'other', ...props.theme.slice(2)]);
+        }
+        setTabIndex(value);
+    };
+
+    const tabNav = (
+        <Tabs
+            value={tabIndex}
+            indicatorColor="primary"
+            textColor="primary"
+            onChange={handleTabChange}
+            variant="fullWidth"
+            scrollButtons="off"
+        >
+            <Tab label={t('colour.palette')} style={{ minWidth: 'unset' }} />
+            <Tab label={t('colour.custom')} style={{ minWidth: 'unset' }} />
+        </Tabs>
+    );
+
+    const panel = ((idx) => {
+        switch (idx) {
+            case 0:
+                return <PalettePanel {...props} />;
+            case 1:
+                return <CustomPanel {...props} />;
+            default:
+                return <></>;
+        }
+    })(tabIndex);
+
+    return (
+        <>
+            {tabNav}
+            {panel}
+        </>
+    );
+};
