@@ -70,21 +70,16 @@ const NamePosLi = () => {
                         />
                     </ListItemSecondaryAction>
                 </ListItem>
-                <Collapse in={param.namePosMTR.isStagger}>
-                    <List component="div" disablePadding>
-                        <ListItem className={classes.nested}>
-                            <ListItemText primary={t('design.txtFlip.flipText')} />
-                            <Divider orientation="vertical" flexItem className={classes.divider} />
-                            <Button
-                                variant="outlined"
-                                color="primary"
-                                onClick={() => dispatch({ type: 'SET_TEXT_FLIP' })}
-                            >
-                                {t('design.txtFlip.flip')}
-                            </Button>
-                        </ListItem>
-                    </List>
-                </Collapse>
+
+                <List component="div" disablePadding>
+                    <ListItem className={classes.nested}>
+                        <ListItemText primary={t('design.txtFlip.flipText')} />
+                        <Divider orientation="vertical" flexItem className={classes.divider} />
+                        <Button variant="outlined" color="primary" onClick={() => dispatch({ type: 'SET_TEXT_FLIP' })}>
+                            {t('design.txtFlip.flip')}
+                        </Button>
+                    </ListItem>
+                </List>
             </>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -144,7 +144,8 @@ interface RMGParam {
          */
         isStagger: boolean;
         /**
-         * Flag of flipping station names when `isStagger === true`.
+         * Flag of flipping station names.
+         * When `isStagger === false`, names are above line if `isFlip === false`.
          */
         isFlip: boolean;
     };

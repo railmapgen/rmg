@@ -48,7 +48,7 @@ const rightWideFactor = (stnList: StationDict, stnId: string) => {
 };
 
 const getNamePos = (stnId: string, branches: string[][], { isStagger, isFlip }: RMGParam['namePosMTR']) => {
-    if (!isStagger) return false;
+    if (!isStagger) return isFlip;
     let res: number;
     if (branches[0].includes(stnId)) {
         res = branches[0].indexOf(stnId) % 2;
