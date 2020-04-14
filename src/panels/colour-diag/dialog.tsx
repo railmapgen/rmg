@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -6,6 +6,8 @@ import {
     DialogTitle,
     DialogContent,
     Paper,
+    ListItem,
+    List,
     Icon,
     InputBase,
     makeStyles,
@@ -14,10 +16,14 @@ import {
     createStyles,
     Tabs,
     Tab,
+    Chip,
+    Divider,
+    ListItemText,
 } from '@material-ui/core';
 import { PalettePanel, CustomPanel } from './theme-items';
+import { ParamContext } from '../../context';
 
-const useStyles = makeStyles((theme) =>
+const useStyles = makeStyles(theme =>
     createStyles({
         contentWrapper: {
             display: 'flex',
@@ -31,9 +37,7 @@ const useStyles = makeStyles((theme) =>
             },
         },
         contentLeft: {
-            flexShrink: 0,
-            padding: 'unset',
-            margin: `0 ${theme.spacing(1)}px`,
+            maxWidth: 280,
         },
         contentControl: {
             flexGrow: 0,
@@ -41,12 +45,6 @@ const useStyles = makeStyles((theme) =>
             display: 'flex',
             flexDirection: 'column',
             width: 270,
-        },
-        contentRoot: {
-            padding: 'unset',
-            '&:first-child': {
-                paddingTop: 'unset',
-            },
         },
 
         paperRoot: {
@@ -76,6 +74,30 @@ const useStyles = makeStyles((theme) =>
             paddingBottom: 6,
             height: 'auto',
         },
+
+        chipWrapper: {
+            overflowX: 'auto',
+            display: 'flex',
+        },
+        chipRoot: {
+            borderRadius: 4.5,
+            height: 32,
+            lineHeight: '1rem',
+            margin: 2,
+        },
+        chipLabel: {
+            padding: '0 6px',
+            '& > span': {
+                display: 'block',
+                textAlign: 'center',
+            },
+            '& > span:first-child': {
+                fontSize: '1rem',
+            },
+            '& > span:last-child': {
+                lineHeight: '0.8rem',
+            },
+        },
     })
 );
 
@@ -91,74 +113,140 @@ const Dialog2 = (props: Props) => {
     const { t } = useTranslation();
     const classes = useStyles();
 
-    const nameChange = (value: string, index: number) => {
-        let newName = props.lineName.map((val, idx) => (idx === index ? value : val));
-        props.onUpdate('name', newName);
-        // props.onUpdate('all', [...props.theme, ...newName]);
-    };
-
     return (
-        <Dialog open={props.open} onClose={props.onClose} maxWidth={false}>
+        <Dialog open={props.open} onClose={props.onClose}>
             <DialogTitle>{t('colour.title')}</DialogTitle>
-            <div className={classes.contentWrapper}>
-                <DialogContent className={classes.contentLeft}>
-                    <Paper className={classes.paperRoot} style={{ backgroundColor: props.theme[2] }}>
-                        <Icon className={classes.iconRoot}>edit</Icon>
-                        <InputBase
-                            value={props.lineName[0]}
-                            classes={{
-                                root: classes.inputBaseRoot,
-                                input: classes.inputBaseInputZH,
-                            }}
-                            style={{ color: props.theme[3] || '#fff' }}
-                            onChange={(e) => nameChange(e.target.value, 0)}
-                            autoFocus
-                        />
-                        <InputBase
-                            value={props.lineName[1]}
-                            classes={{
-                                root: classes.inputBaseRoot,
-                                input: classes.inputBaseInputEN,
-                            }}
-                            style={{ color: props.theme[3] || '#fff' }}
-                            onChange={(e) => nameChange(e.target.value, 1)}
-                        />
-                    </Paper>
-                </DialogContent>
+            <DialogContent className={classes.contentWrapper}>
+                <List component="div" disablePadding className={classes.contentLeft}>
+                    <LineNameInput theme={props.theme} lineName={props.lineName} onUpdate={props.onUpdate} />
+                    <Divider />
+                    <RecentChipSet onUpdate={props.onUpdate} />
+                </List>
                 <div className={classes.contentControl}>
-                    <DialogContent classes={{ root: classes.contentRoot }}>
-                        <ColourControl theme={props.theme} onUpdate={props.onUpdate} />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={props.onClose} color="primary">
-                            {t('dialog.done')}
-                        </Button>
-                    </DialogActions>
+                    <ColourControl theme={props.theme} onUpdate={props.onUpdate} />
                 </div>
-            </div>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={props.onClose} color="primary">
+                    {t('dialog.done')}
+                </Button>
+            </DialogActions>
         </Dialog>
     );
 };
 
 export default Dialog2;
 
+const LineNameInput = (props: { lineName: Name; theme: Theme; onUpdate: Props['onUpdate'] }) => {
+    const classes = useStyles();
+
+    const nameChange = (value: string, index: number) => {
+        let newName = props.lineName.map((val, idx) => (idx === index ? value : val));
+        props.onUpdate('name', newName);
+    };
+
+    return (
+        <ListItem style={{ justifyContent: 'center' }}>
+            <Paper className={classes.paperRoot} style={{ backgroundColor: props.theme[2] }}>
+                <Icon className={classes.iconRoot}>edit</Icon>
+                <InputBase
+                    value={props.lineName[0]}
+                    classes={{
+                        root: classes.inputBaseRoot,
+                        input: classes.inputBaseInputZH,
+                    }}
+                    style={{ color: props.theme[3] || '#fff' }}
+                    onChange={e => nameChange(e.target.value, 0)}
+                    autoFocus
+                />
+                <InputBase
+                    value={props.lineName[1]}
+                    classes={{
+                        root: classes.inputBaseRoot,
+                        input: classes.inputBaseInputEN,
+                    }}
+                    style={{ color: props.theme[3] || '#fff' }}
+                    onChange={e => nameChange(e.target.value, 1)}
+                />
+            </Paper>
+        </ListItem>
+    );
+};
+
+const RecentChipSet = (props: { onUpdate: Props['onUpdate'] }) => {
+    const { t } = useTranslation();
+    const classes = useStyles();
+
+    const { param } = useContext(ParamContext);
+
+    const allInfos = useMemo(
+        () =>
+            new Set(
+                Object.values(param.stn_list)
+                    .reduce(
+                        (acc, { transfer }) => {
+                            const { info } = transfer;
+                            return acc.concat(...info);
+                        },
+                        [[...param.theme, ...param.line_name] as InterchangeInfo]
+                    )
+                    .map(val => JSON.stringify(val))
+                    .reverse()
+            ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    );
+
+    const chips = useMemo(
+        () =>
+            [...allInfos].map((x, i) => {
+                const info: InterchangeInfo = JSON.parse(x);
+                const label = info.slice(4).map((txt, i) => (
+                    <span key={i} style={{ color: info[3] }}>
+                        {txt}
+                    </span>
+                ));
+
+                return (
+                    <Chip
+                        key={i}
+                        onClick={() => {
+                            props.onUpdate('theme', info.slice(0, 4));
+                            props.onUpdate('name', info.slice(4));
+                        }}
+                        style={{ backgroundColor: info[2] }}
+                        className={classes.chipRoot}
+                        classes={{ label: classes.chipLabel }}
+                        {...{ label }}
+                    />
+                );
+            }),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    );
+
+    return (
+        <ListItem>
+            <ListItemText
+                primary={t('colour.recent')}
+                secondary={chips}
+                secondaryTypographyProps={{ component: 'div' }}
+                classes={{ secondary: classes.chipWrapper }}
+            />
+        </ListItem>
+    );
+};
+
 const ColourControl = (props: { theme: Theme; onUpdate: Props['onUpdate'] }) => {
     const { t } = useTranslation();
     const [tabIndex, setTabIndex] = useState(props.theme[0] === 'other' ? 1 : 0);
-
-    const handleTabChange = (_: React.ChangeEvent<{}>, value: any) => {
-        if (value === 1) {
-            // props.onUpdate('theme', ['other', 'other', ...props.theme.slice(2)]);
-        }
-        setTabIndex(value);
-    };
 
     const tabNav = (
         <Tabs
             value={tabIndex}
             indicatorColor="primary"
             textColor="primary"
-            onChange={handleTabChange}
+            onChange={(_, val) => setTabIndex(val)}
             variant="fullWidth"
             scrollButtons="off"
         >
@@ -167,7 +255,7 @@ const ColourControl = (props: { theme: Theme; onUpdate: Props['onUpdate'] }) => 
         </Tabs>
     );
 
-    const panel = ((idx) => {
+    const panel = (idx => {
         switch (idx) {
             case 0:
                 return <PalettePanel {...props} />;

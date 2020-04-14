@@ -253,7 +253,8 @@
         "fgBlack": "Black",
         "fgWhite": "White",
         "palette": "Palette",
-        "custom": "Custom"
+        "custom": "Custom",
+        "recent": "Recently Used"
     },
 
     "editor": {

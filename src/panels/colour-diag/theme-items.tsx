@@ -62,16 +62,11 @@ const useLineList = (theme: Theme) => {
         () => {
             if (typeof theme[0] === 'undefined') {
                 return;
-            } else if (theme[0] === 'other') {
-                // mutate original list
-                listPromise.then(data => {
-                    setList(
-                        data.map((l, i) => (i === 0 ? { ...l, colour: theme[2], fg: theme[3] || '#fff' } : { ...l }))
-                    );
-                });
-            } else {
-                listPromise.then(data => setList(data));
             }
+            (async () => {
+                const data = await listPromise;
+                setList(theme[0] === 'other' ? [{ ...data[0], colour: theme[2], fg: theme[3] || '#fff' }] : data);
+            })();
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [theme.toString()]
@@ -89,10 +84,8 @@ export const PalettePanel = (props: ColourDialogProps) => {
     const { t, i18n } = useTranslation();
     const classes = useStyles();
 
-    const cityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let newTheme = props.theme.map((val, idx) => (idx === 0 ? event.target.value : val));
-        props.onUpdate('theme', newTheme);
-    };
+    const cityChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+        props.onUpdate('theme', [event.target.value, ...props.theme.slice(1)]);
 
     // Hook for fetching line list of current city
     const lineList = useLineList(props.theme);
@@ -102,7 +95,8 @@ export const PalettePanel = (props: ColourDialogProps) => {
         () => {
             if (lineList.length === 0) return; // initialising, ignore
             if (lineList.filter(l => l.id === props.theme[1]).length) return; // current city, ignore
-            let newTheme = [props.theme[0], lineList[0].id, lineList[0].colour, lineList[0].fg || '#fff'];
+            let { id, colour, fg } = lineList[0];
+            let newTheme = [props.theme[0], id, colour, fg || '#fff'];
             props.onUpdate('theme', newTheme);
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -111,12 +105,8 @@ export const PalettePanel = (props: ColourDialogProps) => {
 
     const lineChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let line = event.target.value;
-        let newTheme = [
-            props.theme[0],
-            line,
-            lineList.filter(l => l.id === line)[0].colour,
-            lineList.filter(l => l.id === line)[0].fg || '#fff',
-        ];
+        let { colour, fg } = lineList.filter(l => l.id === line)[0];
+        let newTheme = [props.theme[0], line, colour, fg || '#fff'];
         props.onUpdate('theme', newTheme);
     };
 
@@ -158,22 +148,16 @@ export const CustomPanel = (props: ColourDialogProps) => {
 
     const [hexTemp, setHexTemp] = useState(props.theme[2]);
 
+    useEffect(
+        () => setHexTemp(props.theme[2]),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.theme[2]]
+    );
+
     const colourChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let rgb = event.target.value;
-        setHexTemp(rgb);
-
-        if (props.theme[0] !== 'other') {
-            // if hex valid, modify theme city and props.hex
-            let newTheme = ['other', 'other', rgb, props.theme[3]];
-            props.onUpdate('theme', newTheme);
-            // then lineList will be updated by hook (along with selection)
-            // then line will be updated by hook
-        } else {
-            // if hex valid, modify props.hex
-            let newTheme = props.theme.map((val, idx) => (idx === 2 ? rgb : val));
-            props.onUpdate('theme', newTheme);
-            // then lineList will be updated by hook (actually only hex is changed)
-        }
+        // setHexTemp(rgb);
+        props.onUpdate('theme', ['other', 'other', rgb, props.theme[3]]);
     };
 
     const hexChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -208,7 +192,7 @@ export const CustomPanel = (props: ColourDialogProps) => {
     };
 
     const fgChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-        let newTheme = ['other', 'other', props.theme[2], event.target.value as string];
+        let newTheme = ['other', 'other', props.theme[2], event.target.value];
         props.onUpdate('theme', newTheme);
     };
 

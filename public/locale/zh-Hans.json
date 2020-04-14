@@ -253,7 +253,8 @@
         "fgBlack": "黑",
         "fgWhite": "白",
         "palette": "颜色库",
-        "custom": "自定义"
+        "custom": "自定义",
+        "recent": "最近使用"
     },
 
     "editor": {
