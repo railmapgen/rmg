@@ -27,7 +27,7 @@ const Stockholm: LineEntry[] = [
         colour: '#00A84D',
     },
     {
-        id: 'p',
+        id: 'pt',
         name: {
             en: 'Commuter Rail',
             sv: 'Pendeltåg',
@@ -83,7 +83,7 @@ const Stockholm: LineEntry[] = [
         colour: '#A6559D',
     },
     {
-        id: 'p',
+        id: 'pb',
         name: {
             en: 'Commuter Ferry',
             sv: 'Pendelbåt',
