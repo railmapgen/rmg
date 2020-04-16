@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.7 (14 Apr 2020)
+
+### New Features
+
+-   Stations' names can now be placed below the line when they are not staggered in MTR style.
+-   Added selections of recently used colour-name combinations in colour editing dialogue. ([#25](https://github.com/wongchito/RailMapGenerator/issues/25))
+-   Supported platform number in Shanghai Metro style.
+
+### Resolved Issues
+
+-   Simplified paths (strip) with `<marker>`.
+-   Refined sizes, aspect ratios and alignments of some elements in Shanghai Metro style.
+
 ## 3.6.7 (13 Apr 2020)
 
 ### New Features
