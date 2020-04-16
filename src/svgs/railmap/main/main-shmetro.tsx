@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { ParamContext } from '../../../context';
 import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState } from '../methods/share';
 import StationSHMetro from './station/station-shmetro';
 
 const MainSHMetro = () => {
-    const { param, routes, branches, deps } = React.useContext(ParamContext);
+    const { param, routes, branches, deps } = useContext(ParamContext);
 
     const adjMat = adjacencyList(
         param.stn_list,
@@ -79,12 +79,12 @@ export default MainSHMetro;
 const Line = (props: { paths: { main: string[]; pass: string[] } }) => {
     return (
         <>
-            <g className="rmg-line rmg-line__pass rmg-line__shmetro">
+            <g>
                 {props.paths.pass.map((path, i) => (
                     <path key={i} stroke="gray" strokeWidth={12} fill="none" d={path} />
                 ))}
             </g>
-            <g className="rmg-line rmg-line__shmetro">
+            <g>
                 {props.paths.main.map((path, i) => (
                     <path key={i} fill="var(--rmg-theme-colour)" d={path} />
                 ))}
@@ -231,19 +231,14 @@ interface StationGroupProps {
 }
 
 const StationGroup = (props: StationGroupProps) => {
-    const { param } = React.useContext(ParamContext);
+    const { param } = useContext(ParamContext);
 
     return (
-        <g id="stn_icons">
+        <g>
             {Object.keys(param.stn_list)
                 .filter(stnId => !['linestart', 'lineend'].includes(stnId))
                 .map(stnId => (
-                    <g
-                        key={stnId}
-                        style={{
-                            transform: `translate(${props.xs[stnId]}px,${props.ys[stnId]}px)`,
-                        }}
-                    >
+                    <g key={stnId} transform={`translate(${props.xs[stnId]},${props.ys[stnId]})`}>
                         <StationSHMetro stnId={stnId} stnState={props.stnStates[stnId]} />
                     </g>
                 ))}

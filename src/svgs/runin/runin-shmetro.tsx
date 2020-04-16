@@ -1,13 +1,13 @@
-import * as React from 'react';
+import React, { useContext, useMemo, memo } from 'react';
 import { ParamContext } from '../../context';
 
 const RunInSHMetro = () => {
-    const { param, routes } = React.useContext(ParamContext);
+    const { param, routes } = useContext(ParamContext);
 
     // get the height
     const dh = param.svg_height - 300;
 
-    const prevStnIds = React.useMemo(
+    const prevStnIds = useMemo(
         () => {
             // reduce from https://stackoverflow.com/questions/43773999/remove-duplicates-from-arrays-using-reduce
             // and https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
@@ -17,69 +17,65 @@ const RunInSHMetro = () => {
                     .map(route => route[route.indexOf(param.current_stn_idx) + (param.direction === 'l' ? 1 : -1)])
                     // .flat()
                     // remove duplicate
-                    .reduce((acc, cur) => {
-                        if (!acc.includes(cur)) acc.push(cur);
-                        return acc;
-                    }, [] as string[])
+                    .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[])
             );
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [routes.toString(), param.current_stn_idx, param.direction]
     );
 
-    const nextStnIds = React.useMemo(
+    const nextStnIds = useMemo(
         () =>
             routes
                 .filter(route => route.includes(param.current_stn_idx))
                 .map(route => route[route.indexOf(param.current_stn_idx) + (param.direction === 'l' ? -1 : 1)])
                 // .flat()
                 // remove duplicate
-                .reduce((acc, cur) => {
-                    if (!acc.includes(cur)) acc.push(cur);
-                    return acc;
-                }, [] as string[]),
+                .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [routes.toString(), param.current_stn_idx, param.direction]
     );
 
     return (
-        <g id="run_in_shmetro">
-            {nextStnIds.length === 1 && ['linestart', 'lineend'].includes(nextStnIds[0]) ? (
-                <TerminalStation dh={dh} stnIds={prevStnIds} />
-            ) : prevStnIds.length === 1 && ['linestart', 'lineend'].includes(prevStnIds[0]) ? (
-                <OriginStation dh={dh} stnIds={nextStnIds} />
-            ) : (
-                <GeneralStation dh={dh} prevStnIds={prevStnIds} nextStnIds={nextStnIds} />
-            )}
-        </g>
+        <>
+            <DefsSHMetro />
+            <g transform={`translate(0,${dh})`}>
+                {nextStnIds.length === 1 && ['linestart', 'lineend'].includes(nextStnIds[0]) ? (
+                    <TerminalStation stnIds={prevStnIds} />
+                ) : prevStnIds.length === 1 && ['linestart', 'lineend'].includes(prevStnIds[0]) ? (
+                    <OriginStation stnIds={nextStnIds} />
+                ) : (
+                    <GeneralStation prevStnIds={prevStnIds} nextStnIds={nextStnIds} />
+                )}
+            </g>
+        </>
     );
 };
 
 export default RunInSHMetro;
 
-interface RunInProps {
-    dh: number;
-    stnIds: string[];
-}
+const DefsSHMetro = memo(() => (
+    <defs>
+        {/* An extension of the line/path. Remember to minus the stroke-width.  */}
+        <marker id="slope" viewBox="-1.5 0 3 1.5" refY={0.5}>
+            <path d="M0,0L1,1H-1z" fill="var(--rmg-theme-colour)" />
+        </marker>
+    </defs>
+));
 
-const TerminalStation = (props: RunInProps) => {
-    const { param } = React.useContext(ParamContext);
+const TerminalStation = (props: { stnIds: string[] }) => {
+    const { param } = useContext(ParamContext);
 
     return (
         <>
             <path
-                id="run_in_line_shmetro"
-                transform={`translate(0,${220 + props.dh})`}
-                fill="gray"
-                d={`M24,10 H ${param.svgWidth.runin - 20} V 22 H 24 Z`}
+                transform="translate(0,220)"
+                stroke="gray"
+                strokeWidth={12}
+                d={`M24,16 H ${param.svgWidth.runin - 24}`}
             />
             <g
-                id="current_text"
-                transform={
-                    param.direction === 'l'
-                        ? `translate(${30}, ${props.dh + 160})`
-                        : `translate(${param.svgWidth.runin - 30}, ${props.dh + 160})`
-                }
+                transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},160)`}
                 textAnchor={param.direction === 'l' ? 'start' : 'end'}
             >
                 <CurrentText />
@@ -89,28 +85,24 @@ const TerminalStation = (props: RunInProps) => {
     );
 };
 
-const OriginStation = (props: RunInProps) => {
-    const { param } = React.useContext(ParamContext);
+const OriginStation = (props: { stnIds: string[] }) => {
+    const { param } = useContext(ParamContext);
 
     return (
         <>
             <path
-                id="run_in_line_shmetro"
-                transform={`translate(0,${220 + props.dh})`}
-                fill="var(--rmg-theme-colour)"
+                transform="translate(0,220)"
+                stroke="var(--rmg-theme-colour)"
+                strokeWidth={12}
                 d={
                     param.direction === 'l'
-                        ? `M38,10 H ${param.svgWidth.runin - 20} l 0,12 H 24 Z`
-                        : `M24,10 H ${param.svgWidth.runin - 30} l 12,12 H 24 Z`
+                        ? `M ${param.svgWidth.runin - 24},16 H 36`
+                        : `M24,16 H ${param.svgWidth.runin - 36}`
                 }
+                markerEnd="url(#slope)"
             />
             <g
-                id="current_text"
-                transform={
-                    param.direction === 'l'
-                        ? `translate(${param.svgWidth.runin - 30}, ${props.dh + 160})`
-                        : `translate(${30}, ${props.dh + 160})`
-                }
+                transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},160)`}
                 textAnchor={param.direction === 'l' ? 'end' : 'start'}
             >
                 <CurrentText />
@@ -121,197 +113,149 @@ const OriginStation = (props: RunInProps) => {
 };
 
 interface RunInGeneralProps {
-    dh: number;
     prevStnIds: string[];
     nextStnIds: string[];
 }
 
 const GeneralStation = (props: RunInGeneralProps) => {
-    const { param } = React.useContext(ParamContext);
-
+    const { param } = useContext(ParamContext);
     const middle = param.svgWidth.runin / 2;
 
     return (
         <>
-            <path
-                id="run_in_line_shmetro"
-                transform={`translate(0,${220 + props.dh})`}
-                fill="var(--rmg-theme-colour)"
-                d={
-                    param.direction === 'l'
-                        ? `M 38,10 H ${middle} V 22 H 24 Z`
-                        : `M ${middle},10 H ${param.svgWidth.runin - 30} l 12,12 H ${middle} Z`
-                }
-            />
-            <path
-                id="run_in_line_shmetro_pass"
-                fill="gray"
-                transform={`translate(0,${220 + props.dh})`}
-                d={
-                    param.direction === 'l'
-                        ? `M ${middle},10 H ${param.svgWidth.runin - 30} l 0,12 H ${middle} Z`
-                        : `M 24,10 H ${middle} l 0,12 H 24 Z`
-                }
-            />
-            {props.nextStnIds.length > 1 && (
-                <g id="run_in_branch_shmetro" transform={`translate(0,${110 + props.dh})`}>
+            <g transform="translate(0,220)" strokeWidth={12}>
+                <path
+                    stroke="var(--rmg-theme-colour)"
+                    d={`M ${middle},16 H ${param.direction === 'l' ? 36 : param.svgWidth.runin - 36}`}
+                    markerEnd="url(#slope)"
+                />
+                <path
+                    stroke="gray"
+                    d={`M ${middle},16 H ${param.direction === 'l' ? param.svgWidth.runin - 24 : 24} `}
+                />
+            </g>
+            <g transform="translate(0,110)" strokeWidth={12} fill="none">
+                {props.nextStnIds.length > 1 && (
                     <path
-                        id="run_in_line_branch_shmetro"
-                        fill="var(--rmg-theme-colour)"
-                        d={
-                            param.direction === 'l'
-                                ? `M 38,10 H ${param.svgWidth.runin / 6 + 3} V 22 H 24 Z`
-                                : `M ${(param.svgWidth.runin / 6) * 5 - 3},10 H ${param.svgWidth.runin -
-                                      30} l 12,12 H ${(param.svgWidth.runin / 6) * 5 - 3} Z`
-                        }
-                    />
-                    <line
-                        id="run_in_line_branch_slash_shmetro"
                         stroke="var(--rmg-theme-colour)"
-                        strokeWidth="12"
-                        x1={param.direction === 'l' ? param.svgWidth.runin / 6 : (param.svgWidth.runin / 6) * 5}
-                        y1={15}
-                        x2={param.direction === 'l' ? param.svgWidth.runin / 3 : (param.svgWidth.runin / 6) * 4}
-                        y2={125}
-                    />
-                </g>
-            )}
-            {props.prevStnIds.length > 1 && (
-                <g id="run_in_branch_shmetro_pass" transform={`translate(0,${110 + props.dh})`}>
-                    <path
-                        id="run_in_line_branch_shmetro_pass"
-                        fill="gray"
                         d={
                             param.direction === 'l'
-                                ? `M ${(param.svgWidth.runin / 6) * 5 - 3},10 H ${param.svgWidth.runin -
-                                      30} l 0,12 H ${(param.svgWidth.runin / 6) * 5 - 3} Z`
-                                : `M 24,10 H ${param.svgWidth.runin / 6 + 3} V 22 H 24 Z`
+                                ? `M${param.svgWidth.runin / 3},125 L${param.svgWidth.runin / 6},10 H36`
+                                : `M${(param.svgWidth.runin / 3) * 2},125 L${(param.svgWidth.runin / 6) * 5},10 H${
+                                      param.svgWidth.runin - 36
+                                  }`
+                        }
+                        markerEnd="url(#slope)"
+                    />
+                )}
+                {props.prevStnIds.length > 1 && (
+                    <path
+                        stroke="gray"
+                        d={
+                            param.direction === 'l'
+                                ? `M${(param.svgWidth.runin / 3) * 2},125 L${(param.svgWidth.runin / 6) * 5},10 H${
+                                      param.svgWidth.runin - 24
+                                  }`
+                                : `M${param.svgWidth.runin / 3},125 L${param.svgWidth.runin / 6},10 H24`
                         }
                     />
-                    <line
-                        id="run_in_line_branch_slash_shmetro_pass"
-                        stroke="gray"
-                        strokeWidth="12"
-                        x1={param.direction === 'l' ? (param.svgWidth.runin / 6) * 5 : param.svgWidth.runin / 6}
-                        y1={15}
-                        x2={param.direction === 'l' ? (param.svgWidth.runin / 6) * 4 : param.svgWidth.runin / 3}
-                        y2={125}
-                    />
-                </g>
-            )}
-            <g
-                id="current_text"
-                transform={`translate(${param.svgWidth.runin / 2}, ${props.dh + 160})`}
-                textAnchor="middle"
-            >
+                )}
+            </g>
+            <g transform={`translate(${param.svgWidth.runin / 2},160)`} textAnchor="middle">
                 <CurrentText />
             </g>
-            <NextStn dh={props.dh} stnIds={props.nextStnIds} />
-            <PrevStn dh={props.dh} stnIds={props.prevStnIds} />
+            <NextStn stnIds={props.nextStnIds} />
+            <PrevStn stnIds={props.prevStnIds} />
         </>
     );
 };
 
 const CurrentText = () => {
-    const { param } = React.useContext(ParamContext);
-    return React.useMemo(
+    const { param } = useContext(ParamContext);
+    const { name } = param.stn_list[param.current_stn_idx];
+    return useMemo(
         () => (
             <>
-                <text className="rmg-name__zh rmg-name__shmetro--dest" fontSize="600%">
-                    {param.stn_list[param.current_stn_idx].name[0]}
+                <text className="rmg-name__zh" fontSize={112}>
+                    {name[0]}
                 </text>
-                <text className="rmg-name__en rmg-name__shmetro--dest" fontSize="250%" dy="50">
-                    {param.stn_list[param.current_stn_idx].name[1].replace('\\', ' ')}
+                <text className="rmg-name__en" fontSize={36} dy={50}>
+                    {name[1].replace('\\', ' ')}
                 </text>
             </>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [...param.stn_list[param.current_stn_idx].name]
+        [...name]
     );
 };
 
-const PrevStn = (props: RunInProps) => {
-    const { param } = React.useContext(ParamContext);
+const NextText = (props: { nextName: Name } & React.SVGProps<SVGGElement>) => {
+    const { nextName, ...others } = props;
+    return (
+        <g {...others}>
+            {useMemo(
+                () => (
+                    <>
+                        <text className="rmg-name__zh" fontSize={48}>
+                            {nextName[0]}
+                        </text>
+                        <text className="rmg-name__en" fontSize={24} dy={28}>
+                            {nextName[1].replace('\\', ' ')}
+                        </text>
+                    </>
+                ),
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+                [...nextName]
+            )}
+        </g>
+    );
+};
 
-    const x = param.direction === 'l' ? param.svgWidth.runin - 30 : 30;
-    const dx = param.direction === 'l' ? -50 : 50;
-    const txtAnchor = param.direction === 'l' ? 'end' : 'start';
+const PrevStn = (props: { stnIds: string[] }) => {
+    const { param } = useContext(ParamContext);
 
     return (
-        <>
-            <g id="prev_stn_text" transform={`translate(${x}, ${props.dh + 185})`} textAnchor={txtAnchor}>
-                <text className="rmg-name__zh rmg-name__shmetro--dest" fontSize="250%" fill="gray">
-                    {param.stn_list[props.stnIds[0]].name[0]}
-                </text>
-                <text className="rmg-name__en rmg-name__shmetro--dest" fontSize="150%" fill="gray" dy="25">
-                    {param.stn_list[props.stnIds[0]].name[1].replace('\\', ' ')}
-                </text>
-            </g>
+        <g
+            fill="gray"
+            textAnchor={param.direction === 'l' ? 'end' : 'start'}
+            transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},0)`}
+        >
+            <NextText nextName={param.stn_list[props.stnIds[0]].name} transform="translate(0,183)" />
             {props.stnIds.length > 1 && (
-                <g id="prev_stn_branch_text" transform={`translate(${x}, ${props.dh + 75})`} textAnchor={txtAnchor}>
-                    <text className="rmg-name__zh rmg-name__shmetro--dest" fontSize="250%" fill="gray">
-                        {param.stn_list[props.stnIds[1]].name[0]}
-                    </text>
-                    <text className="rmg-name__en rmg-name__shmetro--dest" fontSize="150%" fill="gray" dy="25">
-                        {param.stn_list[props.stnIds[1]].name[1].replace('\\', ' ')}
-                    </text>
-                </g>
+                <NextText nextName={param.stn_list[props.stnIds[1]].name} transform="translate(0,70)" />
             )}
-            <g
-                id="prev_text"
-                transform={`translate(${x}, ${props.dh - (props.stnIds.length > 1 ? 110 : 0) + 140})`}
-                textAnchor={txtAnchor}
-            >
-                <text className="rmg-name__zh rmg-name__shmetro--dest" fontSize="100%" fill="gray">
+            <g transform={`translate(0, ${-(props.stnIds.length > 1 ? 110 : 0) + 125})`}>
+                <text className="rmg-name__zh" fontSize={22}>
                     上一站
                 </text>
-                <text className="rmg-name__en rmg-name__shmetro--dest" fontSize="75%" fill="gray" dx={dx}>
+                <text className="rmg-name__en" fontSize={12} dx={param.direction === 'l' ? -70 : 70}>
                     Past Stop
                 </text>
             </g>
-        </>
+        </g>
     );
 };
 
-const NextStn = (props: RunInProps) => {
-    const { param } = React.useContext(ParamContext);
-
-    const x = param.direction === 'l' ? 30 : param.svgWidth.runin - 30;
-    const dx = param.direction === 'l' ? 50 : -50;
-    const txtAnchor = param.direction === 'l' ? 'start' : 'end';
+const NextStn = (props: { stnIds: string[] }) => {
+    const { param } = useContext(ParamContext);
 
     return (
-        <>
-            <g id="next_stn_text" transform={`translate(${x}, ${props.dh + 185})`} textAnchor={txtAnchor}>
-                <text className="rmg-name__zh rmg-name__shmetro--dest" fontSize="250%">
-                    {param.stn_list[props.stnIds[0]].name[0]}
-                </text>
-                <text className="rmg-name__en rmg-name__shmetro--dest" fontSize="150%" dy="25">
-                    {param.stn_list[props.stnIds[0]].name[1].replace('\\', ' ')}
-                </text>
-            </g>
+        <g
+            textAnchor={param.direction === 'l' ? 'start' : 'end'}
+            transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},0)`}
+        >
+            <NextText nextName={param.stn_list[props.stnIds[0]].name} transform="translate(0,183)" />
             {props.stnIds.length > 1 && (
-                <g id="next_stn_branch_text" transform={`translate(${x}, ${props.dh + 75})`} textAnchor={txtAnchor}>
-                    <text className="rmg-name__zh rmg-name__shmetro--dest" fontSize="250%">
-                        {param.stn_list[props.stnIds[1]].name[0]}
-                    </text>
-                    <text className="rmg-name__en rmg-name__shmetro--dest" fontSize="150%" dy="25">
-                        {param.stn_list[props.stnIds[1]].name[1].replace('\\', ' ')}
-                    </text>
-                </g>
+                <NextText nextName={param.stn_list[props.stnIds[1]].name} transform="translate(0,70)" />
             )}
-            <g
-                id="next_text"
-                transform={`translate(${x}, ${props.dh - (props.stnIds.length > 1 ? 110 : 0) + 140})`}
-                textAnchor={txtAnchor}
-            >
-                <text className="rmg-name__zh rmg-name__shmetro--dest" fontSize="100%">
+            <g transform={`translate(0, ${-(props.stnIds.length > 1 ? 110 : 0) + 125})`}>
+                <text className="rmg-name__zh" fontSize={22}>
                     下一站
                 </text>
-                <text className="rmg-name__en rmg-name__shmetro--dest" fontSize="75%" dx={dx}>
+                <text className="rmg-name__en" fontSize={12} dx={param.direction === 'l' ? 70 : -70}>
                     Next Stop
                 </text>
             </g>
-        </>
+        </g>
     );
 };

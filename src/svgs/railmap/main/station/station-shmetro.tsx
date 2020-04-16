@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext, useRef, memo } from 'react';
 import { ParamContext } from '../../../../context';
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
 }
 
 const StationSHMetro = (props: Props) => {
-    const { param } = React.useContext(ParamContext);
+    const { param } = useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
 
     const branchNameDX =
@@ -21,7 +21,6 @@ const StationSHMetro = (props: Props) => {
                     '#' + (stnInfo.transfer.info.reduce((acc, cur) => acc + cur.length, 0) ? 'int2_sh' : 'stn_sh')
                 }
                 stroke={props.stnState === -1 ? '#aaa' : 'var(--rmg-theme-colour)'}
-                className="rmg-stn"
             />
             <g transform={`translate(${branchNameDX},0)`}>
                 <StationNameGElement
@@ -49,13 +48,13 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
     // get the exact station name width so that the
     // interchange station icon can be right after the station name
-    const stnNameEl = React.useRef<SVGGElement | null>(null);
+    const stnNameEl = useRef<SVGGElement | null>(null);
     // the original name position
     const [bBox, setBBox] = React.useState({ width: 0 } as DOMRect);
     React.useEffect(
         () => setBBox(stnNameEl.current!.getBBox()),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.name.toString()]
+        [...props.name]
     );
     // the original name position's right x
     const x = bBox.width + 5;
@@ -69,7 +68,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
             {props.infos.reduce((sum, infos) => sum + infos.length, 0) && (
                 <line
                     x1={0}
-                    x2={x * (props.direction === 'l' ? 1 : -1)}
+                    x2={props.direction === 'l' ? x : -x}
                     stroke={props.stnState === -1 ? '#aaa' : 'black'}
                     strokeWidth={0.5}
                 />
@@ -77,7 +76,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
             <IntBoxGroup
                 intInfos={props.infos[1] ? ([] as InterchangeInfo[]).concat(...props.infos) : props.infos[0]}
-                transform={`translate(${x * (props.direction === 'l' ? 1 : -1)},-11)`}
+                transform={`translate(${x * (props.direction === 'l' ? 1 : -1)},-10.75)`}
                 direction={props.direction}
             />
 
@@ -93,8 +92,10 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
                 {props.infos[1]?.length && (
                     <g
-                        transform={`translate(${(x + props.infos.reduce((sum, infos) => sum + infos.length, 0) * 15) *
-                            (props.direction === 'l' ? 1 : -1)},-22)`}
+                        transform={`translate(${
+                            (x + props.infos.reduce((sum, infos) => sum + infos.length, 0) * 15) *
+                            (props.direction === 'l' ? 1 : -1)
+                        },-22)`}
                     >
                         <OSIText osiInfos={props.infos[1]} />
                     </g>
@@ -124,7 +125,7 @@ const StationName = React.forwardRef(
                         </>
                     ),
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                    [stnName.toString()]
+                    [...stnName]
                 )}
             </g>
         );
@@ -163,7 +164,7 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; direction: 'l' | 'r' 
     );
 };
 
-const IntBoxNumber = React.memo(
+const IntBoxNumber = memo(
     (props: { info: InterchangeInfo }) => (
         <>
             <use xlinkHref="#intbox_number" fill={props.info[2]} />
@@ -176,7 +177,7 @@ const IntBoxNumber = React.memo(
     (prevProps, nextProps) => prevProps.info.toString() === nextProps.info.toString()
 );
 
-const IntBoxLetter = React.memo(
+const IntBoxLetter = memo(
     (props: { info: InterchangeInfo }) => {
         // box width: 16 * number of characters + 12
         const textCount = props.info[4].split('\\')[0].length;
@@ -198,13 +199,13 @@ const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
     return React.useMemo(
         () => (
             <g textAnchor="middle" fontSize="50%">
-                <text className="rmg-name__zh rmg-name__shmetro--station">{'换乘' + lineNames.join('，')}</text>
-                <text className="rmg-name__zh rmg-name__shmetro--station" dy={10}>
+                <text className="rmg-name__zh">{'换乘' + lineNames.join('，')}</text>
+                <text className="rmg-name__zh" dy={10}>
                     仅限公共交通卡
                 </text>
             </g>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [lineNames.toString()]
+        [...lineNames]
     );
 };
