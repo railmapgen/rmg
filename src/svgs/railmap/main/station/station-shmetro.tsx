@@ -142,8 +142,8 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; direction: 'l' | 'r' 
                 // start with digit
                 const isLineNumber = Boolean(info[4].match(/^\d.*$/));
 
-                if (props.direction === 'r' && i === 0) {
-                    dx -= isLineNumber ? 20 : info[4].length * 14 + 12 + 0;
+                if (props.direction === 'r') {
+                    dx -= (isLineNumber ? 20 : info[4].length * 14 + 12 + 0) + (i === 0 ? 0 : 5);
                 }
 
                 const el = (
@@ -155,8 +155,6 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; direction: 'l' | 'r' 
                 // 60 + 5(margin) for letter line
                 if (props.direction === 'l') {
                     dx += isLineNumber ? 25 : info[4].length * 14 + 12 + 5;
-                } else {
-                    dx -= isLineNumber ? 25 : info[4].length * 14 + 12 + 5;
                 }
                 return el;
             })}
@@ -206,6 +204,6 @@ const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
             </g>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [...lineNames]
+        [lineNames.toString()]
     );
 };

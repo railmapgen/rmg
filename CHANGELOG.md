@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.7.1 (22 Apr 2020)
+
+### Resolved Issues
+
+-   Fixed the issue where interchange boxes mis-align in Shanghai Metro style. 
+
 ## 3.7 (14 Apr 2020)
 
 ### New Features
