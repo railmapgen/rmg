@@ -5,6 +5,7 @@
 ### Resolved Issues
 
 -   Fixed the issue where interchange boxes mis-align in Shanghai Metro style. 
+-   Fixed [#42](https://github.com/wongchito/RailMapGenerator/issues/42).
 
 ## 3.7 (14 Apr 2020)
 
