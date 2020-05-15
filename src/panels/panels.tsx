@@ -131,7 +131,6 @@ export default function PanelTab() {
                             className={classes.tab}
                         />
                     ))}
-                    />
                 </Tabs>
             </Typography>
         ),

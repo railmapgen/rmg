@@ -1,10 +1,21 @@
 # Changelog
 
+## 3.7.2 (15 May 2020)
+
+### New Features
+
+-   Updated TypeScript to 3.9.2.
+-   Added Prettier to local dependencies.
+
+### Resolved Issues
+
+-   Fixed typos.
+
 ## 3.7.1 (22 Apr 2020)
 
 ### Resolved Issues
 
--   Fixed the issue where interchange boxes mis-align in Shanghai Metro style. 
+-   Fixed the issue where interchange boxes mis-align in Shanghai Metro style.
 -   Fixed [#42](https://github.com/wongchito/RailMapGenerator/issues/42).
 
 ## 3.7 (14 Apr 2020)
