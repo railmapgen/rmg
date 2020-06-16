@@ -61,14 +61,14 @@ const MainSHMetro = () => {
     const paths = (Object.keys(linePaths) as (keyof ReturnType<typeof drawLine>)[]).reduce(
         (acc, cur) => ({
             ...acc,
-            [cur]: linePaths[cur].map(stns => _linePath(stns, cur, xs, ys, param.direction)),
+            [cur]: linePaths[cur].map(stns => _linePath(stns, cur, xs, ys, param.direction)).filter(path => path !== ''),
         }),
         {} as { [key in keyof ReturnType<typeof drawLine>]: string[] }
     );
 
     return (
         <g id="main" transform={`translate(0,${param.svg_height - 63})`}>
-            <Line paths={paths} />
+            <Line paths={paths} direction={param.direction}/>
             <StationGroup xs={xs} ys={ys} stnStates={stnStates} />
         </g>
     );
@@ -76,17 +76,23 @@ const MainSHMetro = () => {
 
 export default MainSHMetro;
 
-const Line = (props: { paths: { main: string[]; pass: string[] } }) => {
+const Line = (props: { paths: { main: string[]; pass: string[] }, direction: 'l' | 'r' }) => {
     return (
         <>
             <g>
                 {props.paths.pass.map((path, i) => (
-                    <path key={i} stroke="gray" strokeWidth={12} fill="none" d={path} />
+                    <path key={i} stroke="gray" strokeWidth={12} fill="none" d={path}
+                        markerStart={props.direction === 'l' ? "url(#arrow_gray)" : undefined}
+                        markerEnd={props.direction === 'r' ? "url(#arrow_gray)" : undefined}
+                    />
                 ))}
             </g>
             <g>
                 {props.paths.main.map((path, i) => (
-                    <path key={i} fill="var(--rmg-theme-colour)" d={path} />
+                    <path key={i} stroke="var(--rmg-theme-colour)" strokeWidth={12} fill="none" d={path}
+                        markerStart={props.direction === 'l' ? "url(#arrow_theme_left)" : undefined}
+                        markerEnd={props.direction === 'r' ? "url(#arrow_theme_right)" : undefined}
+                    />
                 ))}
             </g>
         </>
@@ -139,9 +145,9 @@ const _linePath = (
         if (type === 'main') {
             // current at terminal(end) station, draw the litte main line
             if (direction === 'l') {
-                return `M ${x},${y - 6} L ${x - e},${y - 6} l -12,12 L ${x},${y + 6} Z`;
+                return `M ${x - e},${y} L ${x},${y}`;
             } else {
-                return `M ${x},${y - 6} L ${x + e},${y - 6} l 12,12 L ${x},${y + 6} Z`;
+                return `M ${x},${y} L ${x + e},${y}`;
             }
         } else {
             // type === 'pass'
@@ -159,16 +165,16 @@ const _linePath = (
             h = path['end'][0];
         if (type === 'main') {
             if (direction === 'l') {
-                return `M ${x - e},${y - 6} H ${h} l 0,12 L ${x - 42},${y + 6} Z`;
+                return `M ${x - e},${y} H ${h}`;
             } else {
-                return `M ${x},${y - 6} H ${h + e} l 12,12 L ${x},${y + 6} Z`;
+                return `M ${x},${y} H ${h + e}`;
             }
         } else {
             // type === 'pass'
             if (direction === 'l') {
-                return `M ${x - e},${y} H ${h + e}`;
+                return `M ${x},${y} H ${h + e}`;
             } else {
-                return `M ${x - e},${y} H ${h + e}`;
+                return `M ${x - e},${y} H ${h}`;
             }
         }
     } else {
@@ -185,20 +191,20 @@ const _linePath = (
             if (direction === 'l') {
                 if (ym > y) {
                     // main line, left direction, center to upper
-                    return `M ${x - e},${y - 6} H ${xm + 6} V ${ym - 6} h -12 V ${y + 6} H ${x - e - 12} Z`;
+                    return `M ${x - e},${y} H ${xm} V ${ym}`;
                 } else {
                     // main line, left direction, upper to center
-                    // this same as the other, but replace x with xm and xm with x
-                    return `M ${xm},${ym - 6} H ${x - 6} V ${y - 6} h 12 V ${ym + 6} H ${xm} Z`;
+                    return `M ${x},${y} V ${ym} H ${xm}`;  // wrong marker
+                    // return `M ${xm},${ym - 6} H ${x - 6} V ${y - 6} h 12 V ${ym + 6} H ${xm} Z`;
                 }
             } else {
                 if (ym > y) {
                     // main line, right direction, upper to center
-                    return `M ${x},${y - 6} H ${xm + 6} V ${ym - 6} h -12 V ${y + 6} H ${x} Z`;
+                    return `M ${x},${y} H ${xm} V ${ym}`;  // wrong marker
+                    // return `M ${x},${y - 6} H ${xm + 6} V ${ym - 6} h -12 V ${y + 6} H ${x} Z`;
                 } else {
                     // main line, right direction, center to upper
-                    // this same as the other, but replace x with xm and xm with x
-                    return `M ${xm + e},${ym - 6} H ${x - 6} V ${y - 6} h 12 V ${ym + 6} H ${xm + e + 12} Z`;
+                    return `M ${x},${y} V ${ym} H ${xm + e}`;
                 }
             }
         } else {
