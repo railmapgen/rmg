@@ -223,7 +223,8 @@
                 "services": {
                     "button": "列車類別",
                     "local": "普通",
-                    "express": "快速"
+                    "express": "快速",
+                    "direct": "直達"
                 }
             }
         },

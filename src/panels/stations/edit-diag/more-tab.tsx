@@ -21,7 +21,8 @@ export default memo(function MoreTab(props: { stnId: string }) {
         <div>
             <List>
                 {rmgStyle === 'mtr' && <FacilityLi stnId={props.stnId} />}
-                {rmgStyle === 'gzmtr' && <ServiceLi stnId={props.stnId} />}
+                {rmgStyle === 'gzmtr' && <ServiceLi stnId={props.stnId} services={['local', 'express'] as Services[]} />}
+                {rmgStyle === 'shmetro' && <ServiceLi stnId={props.stnId} services={['local', 'express', 'direct'] as Services[]} />}
             </List>
         </div>
     );
@@ -59,7 +60,7 @@ const FacilityLi = (props: { stnId: string }) => {
     );
 };
 
-const ServiceLi = (props: { stnId: string }) => {
+const ServiceLi = (props: { stnId: string, services: Services[] }) => {
     const { t } = useTranslation();
     const { param, dispatch } = useContext(ParamContext);
     const services = new Set(param.stn_list[props.stnId].services);
@@ -82,7 +83,7 @@ const ServiceLi = (props: { stnId: string }) => {
                 primary={t('stations.edit.more.services.button')}
                 secondary={
                     <FormGroup row>
-                        {(['local', 'express'] as Services[]).map(s => (
+                        {props.services.map(s => (
                             <FormControlLabel
                                 control={
                                     <Checkbox

@@ -222,7 +222,8 @@
                 "services": {
                     "button": "列车类别",
                     "local": "普通车",
-                    "express": "快车"
+                    "express": "快车",
+                    "direct": "直达车"
                 }
             }
         },

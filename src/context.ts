@@ -202,7 +202,7 @@ type ReducerAction =
     | {
           type: 'UPDATE_STATION_SERVICES';
           stnId: string;
-          serviceId: 'local' | 'express';
+          serviceId: Services;
           isChecked: boolean;
       }
     | {

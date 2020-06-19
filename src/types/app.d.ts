@@ -53,7 +53,7 @@ interface StationTransfer {
     info: InterchangeInfo[][];
 }
 
-type Services = 'local' | 'express';
+type Services = 'local' | 'express' | 'direct';
 type Facilities = 'airport' | 'disney' | 'hsr' | '';
 
 interface StationInfo {

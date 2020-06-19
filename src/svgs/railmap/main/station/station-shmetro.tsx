@@ -14,12 +14,18 @@ const StationSHMetro = (props: Props) => {
         ([...stnInfo.branch.left, ...stnInfo.branch.right].length ? 8 + 12 * stnInfo.name[1].split('\\').length : 0) *
         (param.direction === 'l' ? 1 : -1);
 
+    let stationIconStyle = 'stn_sh';
+    if (stnInfo.services.length === 3)
+        stationIconStyle = 'direct_sh'
+    else if (stnInfo.services.length === 2)
+        stationIconStyle = 'express_sh'
+    else if (stnInfo.transfer.info.reduce((acc, cur) => acc + cur.length, 0))
+        stationIconStyle = 'int2_sh'
+
     return (
         <>
             <use
-                xlinkHref={
-                    '#' + (stnInfo.transfer.info.reduce((acc, cur) => acc + cur.length, 0) ? 'int2_sh' : 'stn_sh')
-                }
+                xlinkHref={`#${stationIconStyle}`}
                 stroke={props.stnState === -1 ? '#aaa' : 'var(--rmg-theme-colour)'}
             />
             <g transform={`translate(${branchNameDX},0)`}>
@@ -95,7 +101,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                         transform={`translate(${
                             (x + props.infos.reduce((sum, infos) => sum + infos.length, 0) * 15) *
                             (props.direction === 'l' ? 1 : -1)
-                        },-22)`}
+                            },-22)`}
                     >
                         <OSIText osiInfos={props.infos[1]} />
                     </g>

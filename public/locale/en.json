@@ -222,7 +222,8 @@
                 "services": {
                     "button": "Train Services",
                     "local": "Stopping",
-                    "express": "Express"
+                    "express": "Express",
+                    "direct": "Direct"
                 }
             }
         },
