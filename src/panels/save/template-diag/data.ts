@@ -31,6 +31,14 @@ export const companies: CompanyEntry[] = [
             'zh-Hant': '港鐵',
         },
     },
+    {
+        id: 'shmetro',
+        name: {
+            en: 'Shanghai Metro',
+            'zh-Hans': '上海地铁',
+            'zh-Hant': '上海地鐵',
+        },
+    },
 ];
 
 export const templateList: { [comp: string]: { filename: string; name: ITrans }[] } = {
@@ -242,6 +250,25 @@ export const templateList: { [comp: string]: { filename: string; name: ITrans }[
                 en: 'Tuen Ma Line Phase 1',
                 'zh-Hans': '屯马线一期',
                 'zh-Hant': '屯馬綫一期',
+            },
+        },
+    ],
+
+    shmetro: [
+        {
+            filename: 'sh1',
+            name: {
+                en: 'Line 1',
+                'zh-Hans': '1号线',
+                'zh-Hant': '1號線',
+            },
+        },
+        {
+            filename: 'sh16',
+            name: {
+                en: 'Line 16',
+                'zh-Hans': '16号线',
+                'zh-Hant': '16號線',
             },
         },
     ],
