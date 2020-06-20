@@ -119,18 +119,19 @@ const Line = (props: { paths: servicesPath[], direction: 'l' | 'r' }) => {
             {props.paths.map((servicePath, i) => (
                 <g key={`servicePath${i}`} transform={`translate(0,${i * 25})`}>
                     <g>
-                        {servicePath.pass.map((path, i) => (
-                            <path key={i} stroke="gray" strokeWidth={12} fill="none" d={path}
+                        {servicePath.pass.map((path, j) => (
+                            <path key={j} stroke="gray" strokeWidth={12} fill="none" d={path}
                                 markerStart={props.direction === 'l' ? "url(#arrow_gray)" : undefined}
                                 markerEnd={props.direction === 'r' ? "url(#arrow_gray)" : undefined}
                             />
                         ))}
                     </g>
                     <g>
-                        {servicePath.main.map((path, i) => (
-                            <path key={i} stroke="var(--rmg-theme-colour)" strokeWidth={12} fill="none" d={path}
+                        {servicePath.main.map((path, j) => (
+                            <path key={j} stroke="var(--rmg-theme-colour)" strokeWidth={12} fill="none" d={path}
                                 markerStart={props.direction === 'l' ? "url(#arrow_theme_left)" : undefined}
                                 markerEnd={props.direction === 'r' ? "url(#arrow_theme_right)" : undefined}
+                                style={{ filter: `contrast(${100 - 25 * i}%)` }}
                             />
                         ))}
                     </g>
@@ -325,11 +326,13 @@ const ServicesElements = (props: { servicesLevel: Services[], direction: 'l' | '
                     <text className="rmg-name__zh" fontSize={9} y={3}>{`${service}运行线`}</text>
                 </g>
             ))}
-            <g transform={`translate(${props.direction === 'r' ? 50 : param.svgWidth.railmap - dx_hint},${props.dy})`}>
+            <g transform={`translate(${props.direction === 'r' ? 30 : param.svgWidth.railmap - dx_hint},${props.dy})`}>
                 <text className="rmg-name__zh">图例：</text>
                 {servicesLevel.map((serviceLevel, i) => (
                     <g key={`serviceLevel${i}`} transform={`translate(${i * 150 + 50},0)`}>
-                        <line x1="0" x2="35" y1="-5" y2="-5" stroke="var(--rmg-theme-colour)" strokeWidth="12" />
+                        <line x1="0" x2="35" y1="-5" y2="-5"
+                            stroke="var(--rmg-theme-colour)" strokeWidth="12" 
+                            style={{ filter: `contrast(${100 - 25 * i}%)` }}/>
                         <use x="17.5" y="-5" xlinkHref="#stn_sh" fill="var(--rmg-theme-colour)" />
                         <text x="40" className="rmg-name__zh">{`${serviceLevel}停靠站`}</text>
                     </g>
