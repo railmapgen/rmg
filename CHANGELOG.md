@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.8 (20 Jun 2020)
+
+### New Features
+
+-   Added express and direct services for Shanghai Metro style.
+-   New templates are available: Shanghai Metro Line 1 and Shanghai Metro Line 16.
+
 ## 3.7.2 (15 May 2020)
 
 ### New Features
