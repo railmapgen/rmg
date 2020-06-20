@@ -15,12 +15,9 @@ const StationSHMetro = (props: Props) => {
         (param.direction === 'l' ? 1 : -1);
 
     let stationIconStyle = 'stn_sh';
-    if (stnInfo.services.length === 3)
-        stationIconStyle = 'direct_sh'
-    else if (stnInfo.services.length === 2)
-        stationIconStyle = 'express_sh'
-    else if (stnInfo.transfer.info.reduce((acc, cur) => acc + cur.length, 0))
-        stationIconStyle = 'int2_sh'
+    if (stnInfo.services.length === 3) stationIconStyle = 'direct_sh';
+    else if (stnInfo.services.length === 2) stationIconStyle = 'express_sh';
+    else if (stnInfo.transfer.info.reduce((acc, cur) => acc + cur.length, 0)) stationIconStyle = 'int2_sh';
 
     return (
         <>
@@ -101,7 +98,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                         transform={`translate(${
                             (x + props.infos.reduce((sum, infos) => sum + infos.length, 0) * 15) *
                             (props.direction === 'l' ? 1 : -1)
-                            },-22)`}
+                        },-22)`}
                     >
                         <OSIText osiInfos={props.infos[1]} />
                     </g>

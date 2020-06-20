@@ -63,17 +63,20 @@ const MainSHMetro = () => {
         [param.current_stn_idx, param.direction, routes.toString()]
     );
 
-    const services: Services[] = ['local', 'express', 'direct']
+    const services: Services[] = ['local', 'express', 'direct'];
     const servicesLevel = Object.values(param.stn_list)
         .map(stationInfo => stationInfo.services)
-        .flat()  // all services
-        .reduce((acc, cur) => {
-            acc[services.indexOf(cur)] = true;
-            return acc
-        }, [false, false, false] as [boolean, boolean, boolean])  // set the flag in order
-        .map((bool, i) => [services[i], bool] as [Services, boolean])  // zip
-        .filter(s => s[1])  // get the existing service
-        .map(s => s[0])  // maintain the services' order
+        .flat() // all services
+        .reduce(
+            (acc, cur) => {
+                acc[services.indexOf(cur)] = true;
+                return acc;
+            },
+            [false, false, false] as [boolean, boolean, boolean]
+        ) // set the flag in order
+        .map((bool, i) => [services[i], bool] as [Services, boolean]) // zip
+        .filter(s => s[1]) // get the existing service
+        .map(s => s[0]); // maintain the services' order
 
     const linePaths = drawLine(branches, stnStates);
 
@@ -94,18 +97,20 @@ const MainSHMetro = () => {
         (Object.keys(linePaths) as (keyof ReturnType<typeof drawLine>)[]).reduce(
             (acc, cur) => ({
                 ...acc,
-                [cur]: linePaths[cur].map(stns => _linePath(stns, cur, xs, ys, param.direction, services, servicesLevel.length)).filter(path => path !== ''),
-                service: services
+                [cur]: linePaths[cur]
+                    .map(stns => _linePath(stns, cur, xs, ys, param.direction, services, servicesLevel.length))
+                    .filter(path => path !== ''),
+                service: services,
             }),
-            {} as servicesPath)
+            {} as servicesPath
+        )
     );
 
     return (
         <g id="main" transform={`translate(0,${param.svg_height - 63})`}>
             <Line paths={paths} direction={param.direction} />
             <StationGroup xs={xs} ys={ys} stnStates={stnStates} />
-            <ServicesElements servicesLevel={servicesLevel}
-                dy={-param.svg_height + 100} direction={param.direction} />
+            <ServicesElements servicesLevel={servicesLevel} dy={-param.svg_height + 100} direction={param.direction} />
             <DirectionElements />
         </g>
     );
@@ -113,24 +118,34 @@ const MainSHMetro = () => {
 
 export default MainSHMetro;
 
-const Line = (props: { paths: servicesPath[], direction: 'l' | 'r' }) => {
+const Line = (props: { paths: servicesPath[]; direction: 'l' | 'r' }) => {
     return (
         <>
             {props.paths.map((servicePath, i) => (
                 <g key={`servicePath${i}`} transform={`translate(0,${i * 25})`}>
                     <g>
                         {servicePath.pass.map((path, j) => (
-                            <path key={j} stroke="gray" strokeWidth={12} fill="none" d={path}
-                                markerStart={props.direction === 'l' ? "url(#arrow_gray)" : undefined}
-                                markerEnd={props.direction === 'r' ? "url(#arrow_gray)" : undefined}
+                            <path
+                                key={j}
+                                stroke="gray"
+                                strokeWidth={12}
+                                fill="none"
+                                d={path}
+                                markerStart={props.direction === 'l' ? 'url(#arrow_gray)' : undefined}
+                                markerEnd={props.direction === 'r' ? 'url(#arrow_gray)' : undefined}
                             />
                         ))}
                     </g>
                     <g>
                         {servicePath.main.map((path, j) => (
-                            <path key={j} stroke="var(--rmg-theme-colour)" strokeWidth={12} fill="none" d={path}
-                                markerStart={props.direction === 'l' ? "url(#arrow_theme_left)" : undefined}
-                                markerEnd={props.direction === 'r' ? "url(#arrow_theme_right)" : undefined}
+                            <path
+                                key={j}
+                                stroke="var(--rmg-theme-colour)"
+                                strokeWidth={12}
+                                fill="none"
+                                d={path}
+                                markerStart={props.direction === 'l' ? 'url(#arrow_theme_left)' : undefined}
+                                markerEnd={props.direction === 'r' ? 'url(#arrow_theme_right)' : undefined}
                                 style={{ filter: `contrast(${100 - 25 * i}%)` }}
                             />
                         ))}
@@ -148,17 +163,17 @@ const _linePath = (
     ys: { [stnId: string]: number },
     direction: 'l' | 'r',
     services: Services,
-    servicesMax: number,
+    servicesMax: number
 ) => {
     var [prevY, prevX] = [] as number[];
     var path: { [key: string]: number[] } = {};
     const e = 30;
 
     const servicesDelta = {
-        'local': 0,
-        'express': 20,
-        'direct': 40
-    }[services];  // Todo: enum Services could be a better idea?
+        local: 0,
+        express: 20,
+        direct: 40,
+    }[services]; // Todo: enum Services could be a better idea?
     const servicesPassDelta = servicesMax > 1 ? 50 : 0;
 
     stnIds.forEach(stnId => {
@@ -245,12 +260,12 @@ const _linePath = (
                     return `M ${x - e},${y} H ${xm} V ${ym}`;
                 } else {
                     // main line, left direction, upper to center
-                    return `M ${x},${y} V ${ym} H ${xm}`;  // wrong marker
+                    return `M ${x},${y} V ${ym} H ${xm}`; // wrong marker
                 }
             } else {
                 if (ym > y) {
                     // main line, right direction, upper to center
-                    return `M ${x},${y} H ${xm} V ${ym}`;  // wrong marker
+                    return `M ${x},${y} H ${xm} V ${ym}`; // wrong marker
                 } else {
                     // main line, right direction, center to upper
                     return `M ${x},${y} V ${ym} H ${xm + e}`;
@@ -301,18 +316,19 @@ const StationGroup = (props: StationGroupProps) => {
     );
 };
 
-const ServicesElements = (props: { servicesLevel: Services[], direction: 'l' | 'r', dy: number }) => {
+const ServicesElements = (props: { servicesLevel: Services[]; direction: 'l' | 'r'; dy: number }) => {
     const { param } = useContext(ParamContext);
 
-    if (props.servicesLevel.length === 1) return (<></>);
+    if (props.servicesLevel.length === 1) return <></>;
 
-    const servicesLevel = props.servicesLevel.map(service => (
-        {
-            'local': '普通车',
-            'express': '大站车',
-            'direct': '直达车'
-        }[service]
-    ));
+    const servicesLevel = props.servicesLevel.map(
+        service =>
+            ({
+                local: '普通车',
+                express: '大站车',
+                direct: '直达车',
+            }[service])
+    );
 
     let dx = props.direction === 'r' ? 5 : param.svgWidth.railmap - 55;
 
@@ -330,29 +346,41 @@ const ServicesElements = (props: { servicesLevel: Services[], direction: 'l' | '
                 <text className="rmg-name__zh">图例：</text>
                 {servicesLevel.map((serviceLevel, i) => (
                     <g key={`serviceLevel${i}`} transform={`translate(${i * 150 + 50},0)`}>
-                        <line x1="0" x2="35" y1="-5" y2="-5"
-                            stroke="var(--rmg-theme-colour)" strokeWidth="12" 
-                            style={{ filter: `contrast(${100 - 25 * i}%)` }}/>
+                        <line
+                            x1="0"
+                            x2="35"
+                            y1="-5"
+                            y2="-5"
+                            stroke="var(--rmg-theme-colour)"
+                            strokeWidth="12"
+                            style={{ filter: `contrast(${100 - 25 * i}%)` }}
+                        />
                         <use x="17.5" y="-5" xlinkHref="#stn_sh" fill="var(--rmg-theme-colour)" />
                         <text x="40" className="rmg-name__zh">{`${serviceLevel}停靠站`}</text>
                     </g>
                 ))}
             </g>
         </g>
-    )
-}
+    );
+};
 
 const DirectionElements = () => {
     const { param } = useContext(ParamContext);
 
     return (
-        <g transform={`translate(${param.direction === 'l' ? 50 : param.svgWidth.railmap - 150},${-param.svg_height + 100})`}>
+        <g
+            transform={`translate(${param.direction === 'l' ? 50 : param.svgWidth.railmap - 150},${
+                -param.svg_height + 100
+            })`}
+        >
             <text className="rmg-name__zh">列车前进方向</text>
             <path
                 d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
                 fill="var(--rmg-theme-colour)"
-                transform={`translate(${param.direction === 'l' ? -30 : 125},-5)rotate(${param.direction === 'l' ? 0 : 180})scale(0.15)`}
+                transform={`translate(${param.direction === 'l' ? -30 : 125},-5)rotate(${
+                    param.direction === 'l' ? 0 : 180
+                })scale(0.15)`}
             />
         </g>
-    )
-}
+    );
+};
