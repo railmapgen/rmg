@@ -30,5 +30,21 @@ const DefsSHMetro = React.memo(() => (
         <marker id="arrow_theme_right" refY={0.5}>
             <path d="M0,0L1,1H-1z" fill="var(--rmg-theme-colour)" />
         </marker>
+
+        {/* Contrast filters for lines */}
+        <filter id="contrast-direct" filterUnits="userSpaceOnUse">
+            <feComponentTransfer>
+                <feFuncR type="linear" slope={0.5} intercept={0.25} />
+                <feFuncG type="linear" slope={0.5} intercept={0.25} />
+                <feFuncB type="linear" slope={0.5} intercept={0.25} />
+            </feComponentTransfer>
+        </filter>
+        <filter id="contrast-express" filterUnits="userSpaceOnUse">
+            <feComponentTransfer>
+                <feFuncR type="linear" slope={0.75} intercept={0.125} />
+                <feFuncG type="linear" slope={0.75} intercept={0.125} />
+                <feFuncB type="linear" slope={0.75} intercept={0.125} />
+            </feComponentTransfer>
+        </filter>
     </defs>
 ));

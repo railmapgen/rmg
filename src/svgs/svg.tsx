@@ -35,6 +35,7 @@ const SVGs = () => {
             xmlnsXlink: 'http://www.w3.org/1999/xlink',
             height: param.svg_height * canvasScale,
             viewBox: `0 0 ${param.svgWidth[canvas]} ${param.svg_height}`,
+            colorInterpolationFilters: 'sRGB',
             style: {
                 ['--rmg-svg-width' as any]: param.svgWidth[canvas] + 'px',
                 ['--rmg-svg-height' as any]: param.svg_height + 'px',
@@ -49,7 +50,7 @@ const SVGs = () => {
     return (
         <div className={classes.root}>
             <Switch>
-                {(Object.keys(canvasList) as ProvidedStyles[]).map((s) => (
+                {(Object.keys(canvasList) as ProvidedStyles[]).map(s => (
                     <Route path={`/${s}`} key={s}>
                         <StyleSpecificSVGs rmgStyle={s} canvasAvailable={canvasList[s]} svgProps={sharedProps} />
                     </Route>
@@ -71,7 +72,7 @@ const StyleSpecificSVGs = memo(
         const { canvasToShown, setCanvasToShown, setCanvasAvailable } = useContext(CanvasContext);
         useEffect(
             () => {
-                ['share', 'destination', 'runin', 'railmap'].forEach((canvas) => {
+                ['share', 'destination', 'runin', 'railmap'].forEach(canvas => {
                     if (canvas in props.canvasAvailable || canvas === 'share') {
                         (document.getElementById('css_' + canvas) as HTMLLinkElement).href =
                             process.env.PUBLIC_URL + `/styles/${canvas}_${props.rmgStyle}.css`;
@@ -80,7 +81,7 @@ const StyleSpecificSVGs = memo(
                     }
                 });
                 setCanvasAvailable(Object.keys(props.canvasAvailable) as ProvidedCanvas[]);
-                setCanvasToShown((prevCanvas) =>
+                setCanvasToShown(prevCanvas =>
                     ['all', ...Object.keys(props.canvasAvailable)].includes(prevCanvas) ? prevCanvas : 'all'
                 );
             },
@@ -91,7 +92,7 @@ const StyleSpecificSVGs = memo(
         return (
             <>
                 {(Object.keys(props.canvasAvailable) as (keyof typeof props.canvasAvailable)[]).map(
-                    (canvas) =>
+                    canvas =>
                         ['all', canvas].includes(canvasToShown) && (
                             <React.Suspense key={canvas} fallback={<CircularProgress />}>
                                 <ErrorBoundary>

@@ -110,7 +110,12 @@ const MainSHMetro = () => {
         <g id="main" transform={`translate(0,${param.svg_height - 63})`}>
             <Line paths={paths} direction={param.direction} />
             <StationGroup xs={xs} ys={ys} stnStates={stnStates} />
-            <ServicesElements servicesLevel={servicesLevel} dy={-param.svg_height + 100} direction={param.direction} />
+            <ServicesElements
+                servicesLevel={servicesLevel}
+                dy={-param.svg_height + 100}
+                direction={param.direction}
+                lineXs={lineXs}
+            />
             <DirectionElements />
         </g>
     );
@@ -146,7 +151,7 @@ const Line = (props: { paths: servicesPath[]; direction: 'l' | 'r' }) => {
                                 d={path}
                                 markerStart={props.direction === 'l' ? 'url(#arrow_theme_left)' : undefined}
                                 markerEnd={props.direction === 'r' ? 'url(#arrow_theme_right)' : undefined}
-                                style={{ filter: `contrast(${100 - 25 * i}%)` }}
+                                filter={i === 2 ? 'url(#contrast-direct)' : i === 1 ? 'url(#contrast-express)' : ''}
                             />
                         ))}
                     </g>
@@ -316,7 +321,7 @@ const StationGroup = (props: StationGroupProps) => {
     );
 };
 
-const ServicesElements = (props: { servicesLevel: Services[]; direction: 'l' | 'r'; dy: number }) => {
+const ServicesElements = (props: { servicesLevel: Services[]; direction: 'l' | 'r'; dy: number; lineXs: number[] }) => {
     const { param } = useContext(ParamContext);
 
     if (props.servicesLevel.length === 1) return <></>;
@@ -330,16 +335,17 @@ const ServicesElements = (props: { servicesLevel: Services[]; direction: 'l' | '
             }[service])
     );
 
-    let dx = props.direction === 'r' ? 5 : param.svgWidth.railmap - 55;
+    // let dx = props.direction === 'r' ? 5 : param.svgWidth.railmap - 55;
+    const labelX = props.direction === 'r' ? props.lineXs[0] - 42 : props.lineXs[1] + 42;
 
     let dx_hint = props.servicesLevel.length === 2 ? 350 : 500;
 
     return (
         <g>
             {servicesLevel.map((service, i) => (
-                <g key={service} transform={`translate(${dx},${i * 25})`}>
-                    <rect height={10} width={55} fill={'white'} stroke={'black'} y={-5}></rect>
-                    <text className="rmg-name__zh" fontSize={9} y={3}>{`${service}运行线`}</text>
+                <g key={service} transform={`translate(${labelX},${i * 25})`}>
+                    <rect x={-27.5} height={10} width={55} fill={'white'} stroke={'black'} y={-5}></rect>
+                    <text className="rmg-name__zh" fontSize={9} y={3} textAnchor="middle">{`${service}运行线`}</text>
                 </g>
             ))}
             <g transform={`translate(${props.direction === 'r' ? 30 : param.svgWidth.railmap - dx_hint},${props.dy})`}>
@@ -353,7 +359,7 @@ const ServicesElements = (props: { servicesLevel: Services[]; direction: 'l' | '
                             y2="-5"
                             stroke="var(--rmg-theme-colour)"
                             strokeWidth="12"
-                            style={{ filter: `contrast(${100 - 25 * i}%)` }}
+                            filter={i === 2 ? 'url(#contrast-direct)' : i === 1 ? 'url(#contrast-express)' : ''}
                         />
                         <use x="17.5" y="-5" xlinkHref="#stn_sh" fill="var(--rmg-theme-colour)" />
                         <text x="40" className="rmg-name__zh">{`${serviceLevel}停靠站`}</text>
