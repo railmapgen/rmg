@@ -200,9 +200,14 @@ const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
     return React.useMemo(
         () => (
             <g textAnchor="middle" fontSize="50%">
-                <text className="rmg-name__zh">{'换乘' + lineNames.join('，')}</text>
-                <text className="rmg-name__zh" dy={10}>
+                <text className="rmg-name__zh" dy={-5}>
+                    {'换乘' + lineNames.join('，')}
+                </text>
+                <text className="rmg-name__zh" dy={5}>
                     仅限公共交通卡
+                </text>
+                <text className="rmg-name__en" dy={12.5} fontSize="75%">
+                    Only for Public Transportation Card
                 </text>
             </g>
         ),
