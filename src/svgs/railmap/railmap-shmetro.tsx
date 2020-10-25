@@ -20,6 +20,14 @@ const DefsSHMetro = React.memo(() => (
 
         <rect id="intbox_number" height={22} width={20} y={-11} />
 
+        <g id="intbox_maglev">
+            <rect id="maglev_5" height="140" width="130" y="40" x="30" strokeWidth={10}/>
+            <path id="maglev_3" fill="white" d="m90,55a40,5 0 0 0 -40,3a5,5 0 0 0 -5,5a5,60 0 0 0 -3,60a5,5 0 0 0 5,5l96,0a5,5 0 0 0 5,-5a5,60 0 0 0 -3,-60a5,5 0 0 0 -5,-5a40,5 0 0 0 -40,-3l-5,-10l-5,10"/>
+            <path id="maglev_4" fill="white" d="m90,140l-40,0a10,5 0 0 1 -10,-5l0,25a10,15 0 0 0 10,15l15,0l0,-10l-15,0l0,-15l90,0l0,15l-15,0l0,10l15,0a10,15 0 0 0 10,-15l0,-25a10,5 0 0 1 -10,5l-50,0"/>
+            <rect id="maglev_1" height="25" width="40" y="80" x="50"/>
+            <rect id="maglev_2" height="25" width="40" y="80" x="100" />
+        </g>
+
         {/* An extension of the line/path. Remember to minus the stroke-width.  */}
         <marker id="arrow_gray" viewBox="-1.5 0 3 1.5" refY={0.5}>
             <path d="M0,0L1,1H-1z" fill="gray" />

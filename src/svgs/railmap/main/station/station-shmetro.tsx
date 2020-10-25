@@ -144,26 +144,44 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; direction: 'l' | 'r' 
             {intInfos.map((info, i) => {
                 // start with digit
                 const isLineNumber = Boolean(info[4].match(/^\d.*$/));
+                const isMaglev = Boolean(info[4].match(/^磁(悬)*浮/));
 
                 if (props.direction === 'r') {
                     dx -= (isLineNumber ? 20 : info[4].length * 14 + 12 + 0) + (i === 0 ? 0 : 5);
                 }
 
-                const el = (
-                    <g transform={`translate(${dx},0)`} key={i}>
-                        {isLineNumber ? <IntBoxNumber info={info} /> : <IntBoxLetter info={info} />}
-                    </g>
-                );
                 // 20 + 5(margin) for number line
                 // 60 + 5(margin) for letter line
                 if (props.direction === 'l') {
                     dx += isLineNumber ? 25 : info[4].length * 14 + 12 + 5;
                 }
-                return el;
+
+                if (isMaglev) {
+                    return <g transform={`translate(${dx - 38},-17)scale(0.15)`} key={i}>
+                        <IntBoxMaglev info={info} />
+                    </g>
+                }else if(isLineNumber){
+                    return <g transform={`translate(${dx},0)`} key={i}>
+                    <IntBoxNumber info={info} />
+                </g>
+                }else{
+                    return <g transform={`translate(${dx},0)`} key={i}>
+                    <IntBoxLetter info={info} />
+                </g>
+                }
             })}
         </g>
     );
 };
+
+const IntBoxMaglev = memo(
+    (props: { info: InterchangeInfo }) => (
+        <>
+            <use xlinkHref="#intbox_maglev" fill={props.info[2]} stroke={props.info[2]}/>
+        </>
+    ),
+    (prevProps, nextProps) => prevProps.info.toString() === nextProps.info.toString()
+);
 
 const IntBoxNumber = memo(
     (props: { info: InterchangeInfo }) => (
