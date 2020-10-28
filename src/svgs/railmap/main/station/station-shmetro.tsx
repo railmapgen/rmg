@@ -152,9 +152,8 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; direction: 'l' | 'r' 
 
                 let el = <g />;
                 if (isMaglev) {
-                    // Chito: need to fix maglev icon's aspect ratio and scale (22:20)
                     el = (
-                        <g transform={`translate(${dx},-17)scale(0.15)`} key={i}>
+                        <g transform={`translate(${dx},0)`} key={i}>
                             <IntBoxMaglev info={info} />
                         </g>
                     );

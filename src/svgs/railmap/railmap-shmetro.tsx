@@ -20,9 +20,8 @@ const DefsSHMetro = React.memo(() => (
 
         <rect id="intbox_number" height={22} width={20} y={-11} />
 
-        <g id="intbox_maglev" transform="translate(-30,0)">
-            // Chito: need to fix maglev icon's aspect ratio and scale (22:20)
-            <rect id="maglev_5" height="140" width="130" y="40" x="30" strokeWidth={10} />
+        <g id="intbox_maglev" transform="translate(-5,-16)scale(0.14)">
+            <rect id="maglev_5" height="143" width="130" y="40" x="30" strokeWidth={10} />
             <path
                 id="maglev_3"
                 fill="white"
