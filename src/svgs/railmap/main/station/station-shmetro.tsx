@@ -147,28 +147,37 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; direction: 'l' | 'r' 
                 const isMaglev = Boolean(info[4].match(/^磁(悬)*浮/));
 
                 if (props.direction === 'r') {
-                    dx -= (isLineNumber ? 20 : info[4].length * 14 + 12 + 0) + (i === 0 ? 0 : 5);
+                    dx -= (isLineNumber || isMaglev ? 20 : info[4].length * 14 + 12 + 0) + (i === 0 ? 0 : 5);
+                }
+
+                let el = <g />;
+                if (isMaglev) {
+                    // Chito: need to fix maglev icon's aspect ratio and scale (22:20)
+                    el = (
+                        <g transform={`translate(${dx},-17)scale(0.15)`} key={i}>
+                            <IntBoxMaglev info={info} />
+                        </g>
+                    );
+                } else if (isLineNumber) {
+                    el = (
+                        <g transform={`translate(${dx},0)`} key={i}>
+                            <IntBoxNumber info={info} />
+                        </g>
+                    );
+                } else {
+                    el = (
+                        <g transform={`translate(${dx},0)`} key={i}>
+                            <IntBoxLetter info={info} />
+                        </g>
+                    );
                 }
 
                 // 20 + 5(margin) for number line
                 // 60 + 5(margin) for letter line
                 if (props.direction === 'l') {
-                    dx += isLineNumber ? 25 : info[4].length * 14 + 12 + 5;
+                    dx += isLineNumber || isMaglev ? 25 : info[4].length * 14 + 12 + 5;
                 }
-
-                if (isMaglev) {
-                    return <g transform={`translate(${dx - 38},-17)scale(0.15)`} key={i}>
-                        <IntBoxMaglev info={info} />
-                    </g>
-                }else if(isLineNumber){
-                    return <g transform={`translate(${dx},0)`} key={i}>
-                    <IntBoxNumber info={info} />
-                </g>
-                }else{
-                    return <g transform={`translate(${dx},0)`} key={i}>
-                    <IntBoxLetter info={info} />
-                </g>
-                }
+                return el;
             })}
         </g>
     );
@@ -177,7 +186,7 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; direction: 'l' | 'r' 
 const IntBoxMaglev = memo(
     (props: { info: InterchangeInfo }) => (
         <>
-            <use xlinkHref="#intbox_maglev" fill={props.info[2]} stroke={props.info[2]}/>
+            <use xlinkHref="#intbox_maglev" fill={props.info[2]} stroke={props.info[2]} />
         </>
     ),
     (prevProps, nextProps) => prevProps.info.toString() === nextProps.info.toString()
