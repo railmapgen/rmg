@@ -153,7 +153,7 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; direction: 'l' | 'r' 
                 let el = <g />;
                 if (isMaglev) {
                     el = (
-                        <g transform={`translate(${dx},0)`} key={i}>
+                        <g transform={`translate(${dx},-16)scale(0.1428571429)`} key={i}>
                             <IntBoxMaglev info={info} />
                         </g>
                     );
