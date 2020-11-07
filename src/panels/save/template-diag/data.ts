@@ -258,15 +258,39 @@ export const templateList: { [comp: string]: { filename: string; name: ITrans }[
         {
             filename: 'sh1',
             name: {
-                en: 'Line 1',
+                en: 'Shanghai Metro Line 1',
                 'zh-Hans': '1号线',
                 'zh-Hant': '1號線',
             },
         },
         {
+            filename: 'sh2',
+            name: {
+                en: 'Shanghai Metro Line 2',
+                'zh-Hans': '2号线',
+                'zh-Hant': '2號線',
+            },
+        },
+        {
+            filename: 'sh5',
+            name: {
+                en: 'Shanghai Metro Line 5',
+                'zh-Hans': '5号线',
+                'zh-Hant': '5號線',
+            },
+        },
+        {
+            filename: 'sh11',
+            name: {
+                en: 'Shanghai Metro Line 11',
+                'zh-Hans': '11号线',
+                'zh-Hant': '11號線',
+            },
+        },
+        {
             filename: 'sh16',
             name: {
-                en: 'Line 16',
+                en: 'Shanghai Metro Line 16',
                 'zh-Hans': '16号线',
                 'zh-Hant': '16號線',
             },
