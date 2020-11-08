@@ -29,7 +29,7 @@
         "gh-pages": "^2.2.0",
         "prettier": "2.0.5",
         "react-app-rewired": "^2.1.5",
-        "react-scripts": "3.4.0",
+        "react-scripts": "^3.4.4",
         "typescript": "^3.9.2"
     },
     "scripts": {
