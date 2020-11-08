@@ -266,25 +266,25 @@ export const templateList: { [comp: string]: { filename: string; name: ITrans }[
         {
             filename: 'sh2',
             name: {
-                en: 'Line 2',
-                'zh-Hans': '2号线',
-                'zh-Hant': '2號線',
+                en: 'Line 2 by Tianxiu11111',
+                'zh-Hans': '2号线 by Tianxiu11111',
+                'zh-Hant': '2號線 by Tianxiu11111',
             },
         },
         {
             filename: 'sh5',
             name: {
-                en: 'Line 5',
-                'zh-Hans': '5号线',
-                'zh-Hant': '5號線',
+                en: 'Line 5 by Tianxiu11111',
+                'zh-Hans': '5号线 by Tianxiu11111',
+                'zh-Hant': '5號線 by Tianxiu11111',
             },
         },
         {
             filename: 'sh11',
             name: {
-                en: 'Line 11',
-                'zh-Hans': '11号线',
-                'zh-Hant': '11號線',
+                en: 'Line 11 by Tianxiu11111',
+                'zh-Hans': '11号线 by Tianxiu11111',
+                'zh-Hant': '11號線 by Tianxiu11111',
             },
         },
         {
