@@ -280,6 +280,22 @@ export const templateList: { [comp: string]: { filename: string; name: ITrans }[
             },
         },
         {
+            filename: 'sh6',
+            name: {
+                en: 'Line 6 by Thomastzc',
+                'zh-Hans': '6号线 by Thomastzc',
+                'zh-Hant': '6號線 by Thomastzc',
+            },
+        },
+        {
+            filename: 'sh7',
+            name: {
+                en: 'Line 7 by Thomastzc',
+                'zh-Hans': '7号线 by Thomastzc',
+                'zh-Hant': '7號線 by Thomastzc',
+            },
+        },
+        {
             filename: 'sh11',
             name: {
                 en: 'Line 11 by Tianxiu11111',
