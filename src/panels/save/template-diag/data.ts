@@ -296,6 +296,14 @@ export const templateList: { [comp: string]: { filename: string; name: ITrans }[
             },
         },
         {
+            filename: 'sh8',
+            name: {
+                en: 'Line 8 by Thomastzc',
+                'zh-Hans': '8号线 by Thomastzc',
+                'zh-Hant': '8號線 by Thomastzc',
+            },
+        },
+        {
             filename: 'sh11',
             name: {
                 en: 'Line 11 by Tianxiu11111',
