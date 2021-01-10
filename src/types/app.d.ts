@@ -97,6 +97,7 @@ interface StationDict {
 }
 
 type PanelTypeGZMTR = 'gz1' | 'gz28' | 'gz2otis' | 'gz3' | 'gz4' | 'gz5' | 'gz1421' | 'gz6' | 'gzgf';
+type PanelTypeShmetro = 'sh' | 'sh2020';
 /**
  * Array of a single note entry for Guangzhou Metro style.
  * @property 0 - text in Chinese characters
@@ -164,7 +165,7 @@ interface RMGParam {
     };
     line_num: string;
     psd_num: string;
-    info_panel_type: PanelTypeGZMTR;
+    info_panel_type: PanelTypeGZMTR | PanelTypeShmetro;
     notesGZMTR: Note[];
     direction_gz_x: number;
     direction_gz_y: number;

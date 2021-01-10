@@ -124,7 +124,9 @@
             "gz6": "Line 6/Guangfo Line",
             "gzgf": "Line 6/Guangfo Line Phase 2",
             "gz4": "Line 4",
-            "gz5": "Line 5"
+            "gz5": "Line 5",
+            "sh": "Default",
+            "sh2020": "2020 new style"
         },
         "autoNum": {
             "button": "Station Auto-numbering",
