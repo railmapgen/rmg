@@ -16,13 +16,22 @@ import { ParamContext, CanvasContext } from '../../../context';
 
 export default memo(function MoreTab(props: { stnId: string }) {
     const { rmgStyle } = useContext(CanvasContext);
+    // type hint for the following
+    // https://stackoverflow.com/a/56628792
+    // https://www.typescriptlang.org/docs/handbook/advanced-types.html#mapped-types
+    const rmgStyleServices: { [rmgStyle in ProvidedStyles]?: Services[] } = {
+        'gzmtr': ['local', 'express'],
+        'shmetro': ['local', 'express', 'direct'],
+    }
+    const rmgStyleFacility: ProvidedStyles[] = ['mtr',]
 
     return (
         <div>
             <List>
-                {rmgStyle === 'mtr' && <FacilityLi stnId={props.stnId} />}
-                {rmgStyle === 'gzmtr' && <ServiceLi stnId={props.stnId} services={['local', 'express'] as Services[]} />}
-                {rmgStyle === 'shmetro' && <ServiceLi stnId={props.stnId} services={['local', 'express', 'direct'] as Services[]} />}
+                {rmgStyle in rmgStyleServices &&
+                    <ServiceLi stnId={props.stnId} services={rmgStyleServices[rmgStyle] as Services[]} />}
+                {rmgStyleFacility.includes(rmgStyle) &&
+                    <FacilityLi stnId={props.stnId} />}
             </List>
         </div>
     );

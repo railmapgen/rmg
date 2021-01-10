@@ -266,25 +266,49 @@ export const templateList: { [comp: string]: { filename: string; name: ITrans }[
         {
             filename: 'sh2',
             name: {
-                en: 'Shanghai Metro Line 2',
-                'zh-Hans': '2号线',
-                'zh-Hant': '2號線',
+                en: 'Line 2 by Tianxiu11111',
+                'zh-Hans': '2号线 by Tianxiu11111',
+                'zh-Hant': '2號線 by Tianxiu11111',
             },
         },
         {
             filename: 'sh5',
             name: {
-                en: 'Shanghai Metro Line 5',
-                'zh-Hans': '5号线',
-                'zh-Hant': '5號線',
+                en: 'Line 5 by Tianxiu11111',
+                'zh-Hans': '5号线 by Tianxiu11111',
+                'zh-Hant': '5號線 by Tianxiu11111',
+            },
+        },
+        {
+            filename: 'sh6',
+            name: {
+                en: 'Line 6 by Thomastzc',
+                'zh-Hans': '6号线 by Thomastzc',
+                'zh-Hant': '6號線 by Thomastzc',
+            },
+        },
+        {
+            filename: 'sh7',
+            name: {
+                en: 'Line 7 by Thomastzc',
+                'zh-Hans': '7号线 by Thomastzc',
+                'zh-Hant': '7號線 by Thomastzc',
+            },
+        },
+        {
+            filename: 'sh8',
+            name: {
+                en: 'Line 8 by Thomastzc',
+                'zh-Hans': '8号线 by Thomastzc',
+                'zh-Hant': '8號線 by Thomastzc',
             },
         },
         {
             filename: 'sh11',
             name: {
-                en: 'Shanghai Metro Line 11',
-                'zh-Hans': '11号线',
-                'zh-Hant': '11號線',
+                en: 'Line 11 by Tianxiu11111',
+                'zh-Hans': '11号线 by Tianxiu11111',
+                'zh-Hant': '11號線 by Tianxiu11111',
             },
         },
         {
