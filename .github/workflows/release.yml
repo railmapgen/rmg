@@ -30,7 +30,7 @@ jobs:
       - name: Release to UAT
         if: ${{ github.event.inputs.environment == 'UAT' }}
         run: |
-          pwd
+          ls -la
           rm -r docs/
           cp -r ${{ github.event.inputs.version }}/UAT/ docs/
           git add .
