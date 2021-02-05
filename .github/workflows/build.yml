@@ -8,16 +8,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v1.1.0
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
-          version: 15.4.0
-
-      - name: Install requirements
-        run: npm ci
+          node-version: '14'
+      - run: npm ci
 
       - name: Build
         run: |
