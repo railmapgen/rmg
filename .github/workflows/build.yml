@@ -23,12 +23,12 @@ jobs:
           git config --global user.name "Build Agent"
           git config --global user.email rmg.build.agent@users.noreply.github.com
           npm version patch -m 'Build RMG version %s'
+          echo "RMG_VER=$(echo "console.log(require('./package.json').version)" | node)" >> $GITHUB_ENV
           git push && git push --tags
 
       - name: Copy PRD Artifacts
         run: |
           git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.UAT_REPO_NAME }}.git
-          echo "RMG_VER=$(echo "console.log(require('./package.json').version)" | node)" >> $GITHUB_ENV
           mkdir ${{ env.UAT_REPO_NAME }}/$RMG_VER/
           cp -r build/ ${{ env.UAT_REPO_NAME }}/$RMG_VER/PRD/
 
