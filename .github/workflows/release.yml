@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version
+        required: true
+      environment:
+        description: Environment (UAT/PRD)
+        default: UAT
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    env:
+      UAT_REPO_NAME: uat-rail-map-generator
+
+    steps:
+      - name: Release to UAT
+        if: ${{ inputs.environment == 'UAT' }}
+        run: |
+          git clone https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.UAT_REPO_NAME }}.git
+          cd ${{ env.UAT_REPO_NAME }}/
+          rm -r docs/
+          cp -r ${{ inputs.version }}/${{ inputs.environment }}/ docs/
+          git add .
+          git config --global user.name "Release Agent"
+          git config --global user.email rmg.release.agent@users.noreply.github.com
+          git commit -m "Build RMG version $RMG_VER"
+          git push
