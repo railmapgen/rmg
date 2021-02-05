@@ -55,5 +55,6 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
-    }
+    },
+    "version": "3.8.1"
 }
