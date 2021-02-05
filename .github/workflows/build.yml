@@ -25,8 +25,7 @@ jobs:
       - name: Copy PRD Artifacts
         run: |
           git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/uat-rail-map-generator.git
-          RMG_VER=$(echo \"console.log(require('./package.json').version)\" | node)
-          echo "RMG_VER=$RMG_VER" >> $GITHUB_ENV
+          echo "RMG_VER=$(echo "console.log(require('./package.json').version)" | node)" >> $GITHUB_ENV
           cp -r build/ uat-rail-map-generator/$RMG_VER/PRD/
 
       - name: Build UAT and Copy Artifacts
