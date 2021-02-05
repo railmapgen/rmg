@@ -17,17 +17,35 @@ jobs:
 
     env:
       UAT_REPO_NAME: uat-rail-map-generator
+      PRD_REPO_NAME: RailMapGenerator
 
     steps:
+      - name: Configure Git
+        run: |
+          git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.UAT_REPO_NAME }}.git
+          cd ${{ env.UAT_REPO_NAME }}/
+          git config --global user.name "Release Agent"
+          git config --global user.email rmg.release.agent@users.noreply.github.com
+
       - name: Release to UAT
         if: ${{ github.event.inputs.environment == 'UAT' }}
         run: |
-          git clone https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.UAT_REPO_NAME }}.git
-          cd ${{ env.UAT_REPO_NAME }}/
           rm -r docs/
-          cp -r ${{ github.event.inputs.version }}/${{ github.event.inputs.environment }}/ docs/
+          cp -r ${{ github.event.inputs.version }}/UAT/ docs/
           git add .
-          git config --global user.name "Release Agent"
-          git config --global user.email rmg.release.agent@users.noreply.github.com
-          git commit -m "Build RMG version $RMG_VER"
+          git commit -m "Release RMG version $RMG_VER to UAT"
+          git push
+
+      - name: Release to PRD
+        if: ${{ github.event.inputs.environment == 'PRD' }}
+        run: |
+          git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.PRD_REPO_NAME }}.git
+          cd ${{ env.PRD_REPO_NAME }}/
+          git checkout gh-pages
+          rm -r *
+          cd ..
+          cp -r ${{ github.event.inputs.version }}/PRD/ ${{ env.PRD_REPO_NAME }}/
+          cd ${{ env.PRD_REPO_NAME }}/
+          git add .
+          git commit -m "Release RMG version $RMG_VER to PRD"
           git push
