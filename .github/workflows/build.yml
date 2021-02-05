@@ -1,0 +1,37 @@
+name: Build
+
+on: push
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1.1.0
+        with:
+          version: 15.4.0
+
+      - name: Install requirements
+        run: npm ci
+
+      - name: Build
+        run: |
+          npm run build
+          git config user.name "Build Agent"
+          git config user.email rmg.build.agent@users.noreply.github.com
+          RMG_VERSION=$(npm version patch -m 'Build RMG version %s')
+          git push && git push --tags
+
+      - name: Upload Artifacts
+        run: |
+          git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/uat-rail-map-generator.git
+          cp -r build/ uat-rail-map-generator/$RMG_VERSION/
+          cd uat-rail-map-generator/
+          git add .
+          git commit -m "Build RMG version $RMG_VERSION"
+          git push
