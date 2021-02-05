@@ -44,7 +44,7 @@ const AppAppBar = () => {
             <AppBar position="sticky" className={prefersDarkMode ? classes.rootDark : classes.rootLight}>
                 <Toolbar variant="dense">
                     <Typography variant="h6" className={classes.title} color="textPrimary">
-                        {t('title')}
+                        {process.env.PUBLIC_URL.includes('uat') ? t('titleUAT') : t('title')}
                     </Typography>
 
                     <CanvasToggle />

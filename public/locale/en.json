@@ -1,5 +1,6 @@
 {
     "title": "Rail Map Generator",
+    "titleUAT": "RMG UAT",
 
     "toggle": {
         "tooltip": "Switch Canvas",

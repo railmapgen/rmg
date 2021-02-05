@@ -33,7 +33,7 @@ jobs:
           rm -r docs/
           cp -r ${{ github.event.inputs.version }}/UAT/ docs/
           git add .
-          git commit -m "Release RMG version $RMG_VER to UAT"
+          git commit -m "Release RMG version ${{ github.event.inputs.version }} to UAT"
           git push
 
       - name: Release to PRD on GitHub Pages
@@ -47,9 +47,8 @@ jobs:
           cp -r ${{ github.event.inputs.version }}/PRD/* ${{ env.PRD_REPO_NAME }}/
           cd ${{ env.PRD_REPO_NAME }}/
           git add .
-          git commit -m "Release RMG version $RMG_VER to PRD"
+          git commit -m "Release RMG version ${{ github.event.inputs.version }} to PRD"
           git push
-          cp .gitlab-ci.yml ../
 
       - name: Release to PRD on GitLab Pages
         if: ${{ github.event.inputs.environment == 'PRD' }}
@@ -61,7 +60,8 @@ jobs:
           rm -r *
           cd ..
           cp -r ${{ github.event.inputs.version }}/PRD/ ${{ env.PRD_REPO_NAME }}/
-          cp .gitlab-ci.yml ${{ env.PRD_REPO_NAME }}/
+          cd ${{ env.PRD_REPO_NAME }}/
+          echo "image: node:12.12.0\npages:\n\tstage: deploy\n\tscript:\n\t\t- mv PRD public\n\tartifacts:\n\t\tpaths:\n\t\t\t- public\n\tonly:\n\t\t- master" > .gitlab-ci.yml
           git add .
-          git commit -m "Release RMG version $RMG_VER to PRD"
+          git commit -m "Release RMG version ${{ github.event.inputs.version }} to PRD"
           git push
