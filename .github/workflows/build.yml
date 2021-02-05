@@ -24,7 +24,7 @@ jobs:
 
       - name: Upload Artifacts
         run: |
-          git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/uat-rail-map-generator.git
+          git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/uat-rail-map-generator.git
           cp -r build/ uat-rail-map-generator/$RMG_VERSION/
           cd uat-rail-map-generator/
           git add .
