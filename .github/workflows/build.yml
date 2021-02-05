@@ -7,6 +7,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      UAT_REPO_NAME: uat-rail-map-generator
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -24,20 +27,21 @@ jobs:
 
       - name: Copy PRD Artifacts
         run: |
-          git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/uat-rail-map-generator.git
+          git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.UAT_REPO_NAME }}.git
           echo "RMG_VER=$(echo "console.log(require('./package.json').version)" | node)" >> $GITHUB_ENV
-          cp -r build/ uat-rail-map-generator/$RMG_VER/PRD/
+          mkdir ${{ env.UAT_REPO_NAME }}/$RMG_VER/
+          cp -r build/ ${{ env.UAT_REPO_NAME }}/$RMG_VER/PRD/
 
       - name: Build UAT and Copy Artifacts
         run: |
-          echo "var pkg=require('./package.json'); pkg.homepage=\"https://wongchito.github.io/uat-rail-map-generator\"; console.log(JSON.stringify(pkg));" | node > package-new.json
+          echo "var pkg=require('./package.json'); pkg.homepage=\"https://wongchito.github.io/${{ env.UAT_REPO_NAME }}\"; console.log(JSON.stringify(pkg));" | node > package-new.json
           cp package-new.json package.json
           npm run build
-          cp -r build/ uat-rail-map-generator/$RMG_VER/UAT/
+          cp -r build/ ${{ env.UAT_REPO_NAME }}/$RMG_VER/UAT/
 
       - name: Upload Artifacts
         run: |
-          cd uat-rail-map-generator/
+          cd ${{ env.UAT_REPO_NAME }}/
           git add .
           git commit -m "Build RMG version $RMG_VERSION"
           git push
