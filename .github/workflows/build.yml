@@ -14,18 +14,30 @@ jobs:
           node-version: '14'
       - run: npm ci
 
-      - name: Build
+      - name: Build PRD
         run: |
           npm run build
           git config --global user.name "Build Agent"
           git config --global user.email rmg.build.agent@users.noreply.github.com
-          echo "RMG_VERSION=$(npm version patch -m 'Build RMG version %s')" >> $GITHUB_ENV
+          npm version patch -m 'Build RMG version %s'
           git push && git push --tags
+
+      - name: Copy PRD Artifacts
+        run: |
+          git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/uat-rail-map-generator.git
+          RMG_VER=$(echo \"console.log(require('./package.json').version)\" | node)
+          echo "RMG_VER=$RMG_VER" >> $GITHUB_ENV
+          cp -r build/ uat-rail-map-generator/$RMG_VER/PRD/
+
+      - name: Build UAT and Copy Artifacts
+        run: |
+          echo "var pkg=require('./package.json'); pkg.homepage=\"https://wongchito.github.io/uat-rail-map-generator\"; console.log(JSON.stringify(pkg));" | node > package-new.json
+          cp package-new.json package.json
+          npm run build
+          cp -r build/ uat-rail-map-generator/$RMG_VER/UAT/
 
       - name: Upload Artifacts
         run: |
-          git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/uat-rail-map-generator.git
-          cp -r build/ uat-rail-map-generator/$RMG_VERSION/
           cd uat-rail-map-generator/
           git add .
           git commit -m "Build RMG version $RMG_VERSION"
