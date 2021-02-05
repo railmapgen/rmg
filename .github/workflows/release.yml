@@ -36,7 +36,7 @@ jobs:
           git commit -m "Release RMG version $RMG_VER to UAT"
           git push
 
-      - name: Release to PRD
+      - name: Release to PRD on GitHub Pages
         if: ${{ github.event.inputs.environment == 'PRD' }}
         run: |
           cd ${{ env.UAT_REPO_NAME }}/
@@ -44,8 +44,24 @@ jobs:
           cd ${{ env.PRD_REPO_NAME }}/
           rm -r *
           cd ..
-          cp -r ${{ github.event.inputs.version }}/PRD/ ${{ env.PRD_REPO_NAME }}/
+          cp -r ${{ github.event.inputs.version }}/PRD/* ${{ env.PRD_REPO_NAME }}/
           cd ${{ env.PRD_REPO_NAME }}/
+          git add .
+          git commit -m "Release RMG version $RMG_VER to PRD"
+          git push
+          cp .gitlab-ci.yml ../
+
+      - name: Release to PRD on GitLab Pages
+        if: ${{ github.event.inputs.environment == 'PRD' }}
+        run: |
+          cd ${{ env.UAT_REPO_NAME }}/
+          rm -r ${{ env.PRD_REPO_NAME }}/
+          git clone --depth 1 https://chitowong:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/chitowong/RailMapGenerator.git
+          cd ${{ env.PRD_REPO_NAME }}/
+          rm -r *
+          cd ..
+          cp -r ${{ github.event.inputs.version }}/PRD/ ${{ env.PRD_REPO_NAME }}/
+          cp .gitlab-ci.yml ${{ env.PRD_REPO_NAME }}/
           git add .
           git commit -m "Release RMG version $RMG_VER to PRD"
           git push
