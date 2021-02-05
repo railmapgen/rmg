@@ -23,14 +23,13 @@ jobs:
       - name: Configure Git
         run: |
           git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.UAT_REPO_NAME }}.git
-          cd ${{ env.UAT_REPO_NAME }}/
           git config --global user.name "Release Agent"
           git config --global user.email rmg.release.agent@users.noreply.github.com
 
       - name: Release to UAT
         if: ${{ github.event.inputs.environment == 'UAT' }}
         run: |
-          ls -la
+          cd ${{ env.UAT_REPO_NAME }}/
           rm -r docs/
           cp -r ${{ github.event.inputs.version }}/UAT/ docs/
           git add .
@@ -40,6 +39,7 @@ jobs:
       - name: Release to PRD
         if: ${{ github.event.inputs.environment == 'PRD' }}
         run: |
+          cd ${{ env.UAT_REPO_NAME }}/
           git clone --single-branch --branch gh-pages --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.PRD_REPO_NAME }}.git
           cd ${{ env.PRD_REPO_NAME }}/
           rm -r *
