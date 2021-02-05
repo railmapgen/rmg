@@ -20,12 +20,12 @@ jobs:
 
     steps:
       - name: Release to UAT
-        if: ${{ inputs.environment == 'UAT' }}
+        if: ${{ github.event.inputs.environment == 'UAT' }}
         run: |
           git clone https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.UAT_REPO_NAME }}.git
           cd ${{ env.UAT_REPO_NAME }}/
           rm -r docs/
-          cp -r ${{ inputs.version }}/${{ inputs.environment }}/ docs/
+          cp -r ${{ github.event.inputs.version }}/${{ github.event.inputs.environment }}/ docs/
           git add .
           git config --global user.name "Release Agent"
           git config --global user.email rmg.release.agent@users.noreply.github.com
