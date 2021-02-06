@@ -61,7 +61,16 @@ jobs:
           cd ..
           cp -r ${{ github.event.inputs.version }}/PRD/ ${{ env.PRD_REPO_NAME }}/
           cd ${{ env.PRD_REPO_NAME }}/
-          echo "image: node:12.12.0\npages:\n\tstage: deploy\n\tscript:\n\t\t- mv PRD public\n\tartifacts:\n\t\tpaths:\n\t\t\t- public\n\tonly:\n\t\t- master" > .gitlab-ci.yml
+          echo "image: node:12.12.0" >> .gitlab-ci.yml
+          echo "pages:" >> .gitlab-ci.yml
+          echo "  stage: deploy" >> .gitlab-ci.yml
+          echo "  script:" >> .gitlab-ci.yml
+          echo "    - mv PRD public" >> .gitlab-ci.yml
+          echo "  artifacts:" >> .gitlab-ci.yml
+          echo "    path:" >> .gitlab-ci.yml
+          echo "      - public" >> .gitlab-ci.yml
+          echo "    only:" >> .gitlab-ci.yml
+          echo "      - master" >> .gitlab-ci.yml
           git add .
           git commit -m "Release RMG version ${{ github.event.inputs.version }} to PRD"
           git push
