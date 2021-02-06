@@ -4,4 +4,4 @@ This directory contains documentations for developing new style or providing ext
 
 -   [Environment Set Up](./environment-set-up.md)
 -   [Add a New Style](./how-to-add-style.md)
--   [Preview and Deploy](./how-to-deploy.md)
+-   [Test, Build and Deploy](./docs/how-to-build.md)
