@@ -40,12 +40,11 @@ jobs:
         if: ${{ github.event.inputs.environment == 'PRD' }}
         run: |
           cd ${{ env.UAT_REPO_NAME }}/
-          git clone --single-branch --branch gh-pages --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.PRD_REPO_NAME }}.git
-          cd ${{ env.PRD_REPO_NAME }}/
-          rm -r *
-          cd ..
-          cp -r ${{ github.event.inputs.version }}/PRD/* ${{ env.PRD_REPO_NAME }}/
-          cd ${{ env.PRD_REPO_NAME }}/
+          mkdir GitHub-PRD
+          git clone --single-branch --branch gh-pages --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.PRD_REPO_NAME }}.git GitHub-PRD/
+          rm -rf GitHub-PRD/*
+          cp -r ${{ github.event.inputs.version }}/PRD/* GitHub-PRD/
+          cd GitHub-PRD/
           git add .
           git commit -m "Release RMG version ${{ github.event.inputs.version }} to PRD"
           git push
@@ -54,23 +53,21 @@ jobs:
         if: ${{ github.event.inputs.environment == 'PRD' }}
         run: |
           cd ${{ env.UAT_REPO_NAME }}/
-          rm -r ${{ env.PRD_REPO_NAME }}/
-          git clone --depth 1 https://chitowong:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/chitowong/RailMapGenerator.git
-          cd ${{ env.PRD_REPO_NAME }}/
-          rm -r *
-          cd ..
-          cp -r ${{ github.event.inputs.version }}/PRD/ ${{ env.PRD_REPO_NAME }}/
-          cd ${{ env.PRD_REPO_NAME }}/
+          mkdir GitLab-PRD
+          git clone --depth 1 https://chitowong:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/chitowong/${{ env.PRD_REPO_NAME }}.git GitLab-PRD/
+          rm -rf GitLab-PRD/*
+          cp -r ${{ github.event.inputs.version }}/PRD/ GitLab-PRD/
+          cd GitLab-PRD/
           echo "image: node:12.12.0" >> .gitlab-ci.yml
           echo "pages:" >> .gitlab-ci.yml
           echo "  stage: deploy" >> .gitlab-ci.yml
           echo "  script:" >> .gitlab-ci.yml
           echo "    - mv PRD public" >> .gitlab-ci.yml
           echo "  artifacts:" >> .gitlab-ci.yml
-          echo "    path:" >> .gitlab-ci.yml
+          echo "    paths:" >> .gitlab-ci.yml
           echo "      - public" >> .gitlab-ci.yml
-          echo "    only:" >> .gitlab-ci.yml
-          echo "      - master" >> .gitlab-ci.yml
+          echo "  only:" >> .gitlab-ci.yml
+          echo "    - master" >> .gitlab-ci.yml
           git add .
           git commit -m "Release RMG version ${{ github.event.inputs.version }} to PRD"
           git push
