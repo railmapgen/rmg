@@ -108,8 +108,8 @@ const MainSHMetro = () => {
 
     return (
         <g id="main" transform={`translate(0,${param.svg_height - 63})`}>
-            <StationGroup xs={xs} ys={ys} stnStates={stnStates} />
             <Line paths={paths} direction={param.direction} />
+            <StationGroup xs={xs} ys={ys} stnStates={stnStates} />
             <ServicesElements
                 servicesLevel={servicesLevel}
                 dy={-param.svg_height + 100}

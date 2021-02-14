@@ -11,3 +11,8 @@ export const PanelTypesGZMTR: PanelTypeGZMTR[] = [
     'gz6',
     'gzgf',
 ];
+
+export const PanelTypesShmetro: PanelTypeShmetro[] = [
+    'sh',
+    'sh2020',
+];
