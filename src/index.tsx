@@ -6,6 +6,8 @@ import App from './App';
 import { updateParam } from './utils';
 import * as serviceWorker from './serviceWorker';
 
+import { ProvidedCanvases } from './constants';
+
 declare global {
     interface Window {
         gtag: any;
@@ -19,7 +21,7 @@ serviceWorker.unregister();
 
 // load empty stylesheet elements
 document.head.append(
-    ...['share', 'destination', 'runin', 'railmap'].map(tag => {
+    ...['share', ...ProvidedCanvases].map(tag => {
         let link = document.createElement('link');
         link.rel = 'stylesheet';
         link.id = 'css_' + tag;

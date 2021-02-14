@@ -3,10 +3,7 @@ image: node:12.12.0 # can be upgraded, depending on your node version used
 pages:
     stage: deploy
     script:
-        - npm install
-        - npm run build
-        - rm -rf public
-        - mv build public
+        - mv PRD public
     artifacts:
         paths:
             - public # mandatory, other folder won't work

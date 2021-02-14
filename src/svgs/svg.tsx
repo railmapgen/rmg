@@ -4,6 +4,8 @@ import { CanvasContext, ParamContext } from '../context';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import ErrorBoundary from '../error-boundary';
 
+import { ProvidedCanvases } from '../constants';
+
 const useStyles = makeStyles(() =>
     createStyles({
         root: {
@@ -72,7 +74,7 @@ const StyleSpecificSVGs = memo(
         const { canvasToShown, setCanvasToShown, setCanvasAvailable } = useContext(CanvasContext);
         useEffect(
             () => {
-                ['share', 'destination', 'runin', 'railmap'].forEach(canvas => {
+                ['share', ...ProvidedCanvases].forEach(canvas => {
                     if (canvas in props.canvasAvailable || canvas === 'share') {
                         (document.getElementById('css_' + canvas) as HTMLLinkElement).href =
                             process.env.PUBLIC_URL + `/styles/${canvas}_${props.rmgStyle}.css`;
