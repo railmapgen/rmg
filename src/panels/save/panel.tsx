@@ -66,7 +66,6 @@ const SaveLists = () => {
 
     const styleDialogClose = (action: 'close' | ProvidedStyles) => {
         if (action === 'close' || action === rmgStyle) {
-            setIsStyleDialogOpen(false);
         } else {
             // setStyle(action);
             // setIsStyleDialogOpen(false);
@@ -76,8 +75,13 @@ const SaveLists = () => {
                 event_label: action,
             });
             // window.location.href = process.env.PUBLIC_URL + '/' + action;
-            setIsStyleDialogOpen(false);
         }
+        setIsStyleDialogOpen(false);
+
+        // TODO: how about integrity check?
+        // e.g. when user switch from guangzhou mtr to shanghai metro
+        // the info_panel_type will be invaild
+        // do we need to set info_panel_type to default or prompt up a dialog 
     };
 
     return (
