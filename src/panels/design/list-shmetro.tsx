@@ -50,7 +50,7 @@ const PanelTypeLi = () => {
                     <Select
                         native
                         value={param.info_panel_type}
-                        onChange={e => dispatch({ type: 'SET_PANEL_TYPE', variant: e.target.value as PanelTypeGZMTR })}
+                        onChange={e => dispatch({ type: 'SET_PANEL_TYPE', variant: e.target.value as PanelTypeShmetro })}
                         style={{ width: 166 }}
                     >
                         {PanelTypesShmetro.map(type => (
