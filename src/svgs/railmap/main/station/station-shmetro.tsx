@@ -10,9 +10,10 @@ const StationSHMetro = (props: Props) => {
     const { param } = useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
 
+    // shift station name if the line bifurcate here
     const branchNameDX =
         ([...stnInfo.branch.left, ...stnInfo.branch.right].length ? 8 + 12 * stnInfo.name[1].split('\\').length : 0) *
-        (param.direction === 'l' ? 1 : -1);
+        (param.direction === 'l' ? -1 : 1);
 
     let stationIconStyle = '';
     let stationIconColor: {[pos: string]: string} = {};
@@ -35,7 +36,7 @@ const StationSHMetro = (props: Props) => {
         <>
             <use
                 xlinkHref={`#${stationIconStyle}`}
-                {...stationIconColor}
+                {...stationIconColor}  // different styles use either `fill` or `stroke`
             />
             <g transform={`translate(${branchNameDX},0)`}>
                 <StationNameGElement
@@ -81,7 +82,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     // Chito: so, use BBox instead
 
     return (
-        <g transform={`translate(${props.direction === 'l' ? 6 : -6},${props.info_panel_type === 'sh' ? -6 : -20})rotate(${props.direction === 'l' ? -45 : 45})`}>
+        <g transform={`translate(${props.direction === 'l' ? 6 : -6},${props.info_panel_type === 'sh2020' ? -20 : -6})rotate(${props.direction === 'l' ? -45 : 45})`}>
             {props.infos.reduce((sum, infos) => sum + infos.length, 0) && (
                 <line
                     x1={0}
