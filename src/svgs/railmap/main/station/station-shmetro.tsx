@@ -86,7 +86,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 <line
                     x1={0}
                     x2={props.direction === 'l' ? x : -x}
-                    stroke={props.stnState === -1 ? '#aaa' : 'black'}
+                    stroke={props.stnState === -1 ? 'gray' : 'black'}
                     strokeWidth={0.5}
                 />
             )}
@@ -104,7 +104,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 <StationName
                     ref={stnNameEl}
                     stnName={props.name}
-                    fill={props.stnState === -1 ? '#aaa' : props.stnState === 0 ? 'red' : 'black'}
+                    fill={props.stnState === -1 ? 'gray' : props.stnState === 0 ? 'red' : 'black'}
                 />
 
                 {props.infos[1]?.length && (
