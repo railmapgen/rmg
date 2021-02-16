@@ -15,15 +15,16 @@ const StationSHMetro = (props: Props) => {
         (param.direction === 'l' ? 1 : -1);
 
     let stationIconStyle = '';
-    if (param.info_panel_type === 'sh') {
+    if (param.info_panel_type === 'sh2020') {
+        if (stnInfo.services.length === 3) stationIconStyle = 'stn_sh_2020_direct';
+        else if (stnInfo.services.length === 2) stationIconStyle = 'stn_sh_2020_expres';
+        else stationIconStyle = 'stn_sh_2020';
+    } else {
+        // param.info_panel_type === 'sh' or others (from other styles)
         if (stnInfo.services.length === 3) stationIconStyle = 'direct_sh';
         else if (stnInfo.services.length === 2) stationIconStyle = 'express_sh';
         else if (stnInfo.transfer.info.reduce((acc, cur) => acc + cur.length, 0)) stationIconStyle = 'int2_sh';
         else stationIconStyle = 'stn_sh';
-    } else if (param.info_panel_type === 'sh2020') {
-        if (stnInfo.services.length === 3) stationIconStyle = 'stn_sh_2020_direct';
-        else if (stnInfo.services.length === 2) stationIconStyle = 'stn_sh_2020_expres';
-        else stationIconStyle = 'stn_sh_2020';
     }
 
     return (
