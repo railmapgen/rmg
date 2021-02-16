@@ -18,7 +18,7 @@ const StationSHMetro = (props: Props) => {
     let stationIconColor: {[pos: string]: string} = {};
     if (param.info_panel_type === 'sh2020') {
         if (stnInfo.services.length === 3) stationIconStyle = 'stn_sh_2020_direct';
-        else if (stnInfo.services.length === 2) stationIconStyle = 'stn_sh_2020_expres';
+        else if (stnInfo.services.length === 2) stationIconStyle = 'stn_sh_2020_express';
         else stationIconStyle = 'stn_sh_2020';
         stationIconColor.fill = props.stnState === -1 ? 'gray' : 'var(--rmg-theme-colour)';
     } else {
