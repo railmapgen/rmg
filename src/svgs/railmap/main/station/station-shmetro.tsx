@@ -15,32 +15,28 @@ const StationSHMetro = (props: Props) => {
         (param.direction === 'l' ? 1 : -1);
 
     let stationIconStyle = '';
+    let stationIconColor: {[pos: string]: string} = {};
     if (param.info_panel_type === 'sh2020') {
         if (stnInfo.services.length === 3) stationIconStyle = 'stn_sh_2020_direct';
         else if (stnInfo.services.length === 2) stationIconStyle = 'stn_sh_2020_expres';
         else stationIconStyle = 'stn_sh_2020';
+        stationIconColor.fill = props.stnState === -1 ? 'gray' : 'var(--rmg-theme-colour)';
     } else {
         // param.info_panel_type === 'sh' or others (from other styles)
         if (stnInfo.services.length === 3) stationIconStyle = 'direct_sh';
         else if (stnInfo.services.length === 2) stationIconStyle = 'express_sh';
         else if (stnInfo.transfer.info.reduce((acc, cur) => acc + cur.length, 0)) stationIconStyle = 'int2_sh';
         else stationIconStyle = 'stn_sh';
+        stationIconColor.stroke = props.stnState === -1 ? 'gray' : 'var(--rmg-theme-colour)';
     }
+
 
     return (
         <>
-            {param.info_panel_type === 'sh2020' && (
                 <use
                     xlinkHref={`#${stationIconStyle}`}
-                    fill={props.stnState === -1 ? 'gray' : 'var(--rmg-theme-colour)'}
+                {...stationIconColor}
                 />
-            )}
-            {param.info_panel_type === 'sh' && (
-                <use
-                    xlinkHref={`#${stationIconStyle}`}
-                    stroke={props.stnState === -1 ? '#aaa' : 'var(--rmg-theme-colour)'}
-                />
-            )}
             <g transform={`translate(${branchNameDX},0)`}>
                 <StationNameGElement
                     name={stnInfo.name}
