@@ -33,10 +33,10 @@ const StationSHMetro = (props: Props) => {
 
     return (
         <>
-                <use
-                    xlinkHref={`#${stationIconStyle}`}
+            <use
+                xlinkHref={`#${stationIconStyle}`}
                 {...stationIconColor}
-                />
+            />
             <g transform={`translate(${branchNameDX},0)`}>
                 <StationNameGElement
                     name={stnInfo.name}
