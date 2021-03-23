@@ -1,5 +1,24 @@
 # Changelog
 
+# 3.8.25 (23 Mar 2021)
+
+### New Features
+
+-   Shanghai Metro's 2020 new style (#68).
+
+# 3.8.20 (8 Nov 2021)
+
+### New Features
+
+-   New templates are available: Shanghai Metro Line 2, Shanghai Metro Line 5 and Shanghai Metro Line 16.
+
+# 3.8.18 (25 Oct 2021)
+
+### New Features
+
+-   Shanghai Metro Style supports **Maglev** icon.
+-   Shanghai Metro Style supports **Only for Public Transportation Card** hint.
+
 ## 3.8 (20 Jun 2020)
 
 ### New Features
