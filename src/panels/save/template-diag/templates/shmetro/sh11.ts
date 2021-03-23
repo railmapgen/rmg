@@ -819,7 +819,7 @@ export default {
         rjrf: {
             name: [
                 "上海西站",
-                "West Shanghai Railway Station"
+                "Shanghai West Railway Station"
             ],
             secondaryName: false,
             num: "00",
