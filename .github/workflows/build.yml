@@ -7,6 +7,11 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    # Only run the build on the master branch
+    # as develop branches have their own builds
+    # and do not want to change the version frequently.
+    if: ${{ github.ref == 'refs/heads/master' }}
+
     env:
       UAT_REPO_NAME: uat-rail-map-generator
 
