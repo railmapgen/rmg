@@ -10,20 +10,33 @@ const StationSHMetro = (props: Props) => {
     const { param } = useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
 
+    // shift station name if the line bifurcate here
     const branchNameDX =
         ([...stnInfo.branch.left, ...stnInfo.branch.right].length ? 8 + 12 * stnInfo.name[1].split('\\').length : 0) *
-        (param.direction === 'l' ? 1 : -1);
+        (param.direction === 'l' ? -1 : 1);
 
-    let stationIconStyle = 'stn_sh';
-    if (stnInfo.services.length === 3) stationIconStyle = 'direct_sh';
-    else if (stnInfo.services.length === 2) stationIconStyle = 'express_sh';
-    else if (stnInfo.transfer.info.reduce((acc, cur) => acc + cur.length, 0)) stationIconStyle = 'int2_sh';
+    let stationIconStyle = '';
+    let stationIconColor: {[pos: string]: string} = {};
+    if (param.info_panel_type === 'sh2020') {
+        if (stnInfo.services.length === 3) stationIconStyle = 'stn_sh_2020_direct';
+        else if (stnInfo.services.length === 2) stationIconStyle = 'stn_sh_2020_express';
+        else stationIconStyle = 'stn_sh_2020';
+        stationIconColor.fill = props.stnState === -1 ? 'gray' : 'var(--rmg-theme-colour)';
+    } else {
+        // param.info_panel_type === 'sh' or others (from other styles)
+        if (stnInfo.services.length === 3) stationIconStyle = 'direct_sh';
+        else if (stnInfo.services.length === 2) stationIconStyle = 'express_sh';
+        else if (stnInfo.transfer.info.reduce((acc, cur) => acc + cur.length, 0)) stationIconStyle = 'int2_sh';
+        else stationIconStyle = 'stn_sh';
+        stationIconColor.stroke = props.stnState === -1 ? 'gray' : 'var(--rmg-theme-colour)';
+    }
+
 
     return (
         <>
             <use
                 xlinkHref={`#${stationIconStyle}`}
-                stroke={props.stnState === -1 ? '#aaa' : 'var(--rmg-theme-colour)'}
+                {...stationIconColor}  // different styles use either `fill` or `stroke`
             />
             <g transform={`translate(${branchNameDX},0)`}>
                 <StationNameGElement
@@ -31,6 +44,7 @@ const StationSHMetro = (props: Props) => {
                     infos={stnInfo.transfer.info}
                     stnState={props.stnState}
                     direction={param.direction}
+                    info_panel_type={param.info_panel_type}
                 />
             </g>
         </>
@@ -44,6 +58,7 @@ interface StationNameGElementProps {
     infos: InterchangeInfo[][];
     stnState: -1 | 0 | 1;
     direction: 'l' | 'r';
+    info_panel_type: PanelTypeGZMTR | PanelTypeShmetro;
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {
@@ -67,12 +82,12 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     // Chito: so, use BBox instead
 
     return (
-        <g transform={`translate(${props.direction === 'l' ? 6 : -6},-6)rotate(${props.direction === 'l' ? -45 : 45})`}>
+        <g transform={`translate(${props.direction === 'l' ? 6 : -6},${props.info_panel_type === 'sh2020' ? -20 : -6})rotate(${props.direction === 'l' ? -45 : 45})`}>
             {props.infos.reduce((sum, infos) => sum + infos.length, 0) && (
                 <line
                     x1={0}
                     x2={props.direction === 'l' ? x : -x}
-                    stroke={props.stnState === -1 ? '#aaa' : 'black'}
+                    stroke={props.stnState === -1 ? 'gray' : 'black'}
                     strokeWidth={0.5}
                 />
             )}
@@ -90,7 +105,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 <StationName
                     ref={stnNameEl}
                     stnName={props.name}
-                    fill={props.stnState === -1 ? '#aaa' : props.stnState === 0 ? 'red' : 'black'}
+                    fill={props.stnState === -1 ? 'gray' : props.stnState === 0 ? 'red' : 'black'}
                 />
 
                 {props.infos[1]?.length && (
