@@ -1,4 +1,4 @@
-name: Build
+name: Build 2
 
 on:
   workflow_dispatch:
@@ -21,11 +21,8 @@ jobs:
       - name: Build PRD
         run: |
           npm run build
-          git config --global user.name "Build Agent"
-          git config --global user.email rmg.build.agent@users.noreply.github.com
-          npm version patch -m 'Build RMG version %s'
-          echo "RMG_VER=$(echo "console.log(require('./package.json').version)" | node)" >> $GITHUB_ENV
-          git push && git push --tags
+          chmod -x ./build.sh
+          ./build.sh
 
       - name: Copy PRD Artifacts
         run: |
