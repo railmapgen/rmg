@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface Props {
-    variant: PanelTypeGZMTR;
+    variant: PanelTypeGZMTR | PanelTypeShmetro;
     isShowLight: boolean;
     isShowPSD: false | string;
 }
@@ -80,7 +80,7 @@ const PSD = React.memo(
          * Flag of whether PSD number is stick within the strip area. If `true`, should fill with white, otherwise, fill with theme colour.
          */
         const isInStrip = ['gz28', 'gz2otis', 'gz6', 'gzgf'].includes(props.variant);
-        const psdDy = ((variant: PanelTypeGZMTR) => {
+        const psdDy = ((variant: PanelTypeGZMTR | PanelTypeShmetro) => {
             switch (variant) {
                 case 'gz1':
                 case 'gz3':

@@ -98,7 +98,7 @@ type ReducerAction =
       }
     | {
           type: 'SET_PANEL_TYPE';
-          variant: PanelTypeGZMTR;
+          variant: PanelTypeGZMTR | PanelTypeShmetro;
       }
     | {
           type: 'ADD_NOTE_GZMTR';

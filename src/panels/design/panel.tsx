@@ -6,6 +6,7 @@ import DesignCommon from './list-common';
 import { CanvasContext } from '../../context';
 const DesignMTR = React.lazy(() => import(/* webpackChunkName: "panelDesignMTR" */ './list-mtr'));
 const DesignGZMTR = React.lazy(() => import(/* webpackChunkName: "panelDesignGZMTR" */ './list-gzmtr'));
+const DesignShmetro = React.lazy(() => import(/* webpackChunkName: "panelDesignShmetro" */ './list-shmetro'));
 
 const DesignPanel = () => {
     const { rmgStyle } = useContext(CanvasContext);
@@ -25,6 +26,12 @@ const DesignPanel = () => {
                             <React.Suspense fallback={<LinearProgress />}>
                                 <Divider />
                                 <DesignGZMTR />
+                            </React.Suspense>
+                        )}
+                        {rmgStyle === 'shmetro' && (
+                            <React.Suspense fallback={<LinearProgress />}>
+                                <Divider />
+                                <DesignShmetro />
                             </React.Suspense>
                         )}
                     </List>
