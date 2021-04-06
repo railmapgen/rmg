@@ -20,8 +20,10 @@ else
   VERSION=`node -p "require('./package.json').version"`
   GITHASH=$(git log -n 1 --pretty=%h)
   export RELEASE_VERSION="$VERSION.$BRANCH.$GITHASH"
-  git tag -a "${APP_NAME}-${RELEASE_VERSION}" -m "${APP_NAME}-${RELEASE_VERSION} release"
+#  git tag -a "${APP_NAME}-${RELEASE_VERSION}" -m "${APP_NAME}-${RELEASE_VERSION} release"
 fi
 
 git push origin HEAD
 git push origin "${APP_NAME}-${RELEASE_VERSION}"
+
+echo "RMG_VER=${RELEASE_VERSION}" >> $GITHUB_ENV
