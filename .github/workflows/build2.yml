@@ -23,6 +23,7 @@ jobs:
           npm run build
           chmod -x ./build.sh
           ./build.sh
+          echo "RMG_VER=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
       - name: Copy PRD Artifacts
         run: |

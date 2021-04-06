@@ -12,7 +12,6 @@ then
   # build with a normal version
   npm version patch -m "${APP_NAME}-%s release" --force || { echo "Release Error"; exit 1; }
   export RELEASE_VERSION=$(node -p "require('./package.json').version")
-#  git tag -a "${APP_NAME}-${RELEASE_VERSION}" -m "${APP_NAME}-${RELEASE_VERSION}"
 else
   # build with a hashed version
   VERSION=`node -p "require('./package.json').version"`
