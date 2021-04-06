@@ -1,6 +1,9 @@
 #!/bin/bash
 set -x
 
+# build
+npm run build
+
 export APP_NAME=rmg
 BRANCH=$(git branch | grep \* | cut -d ' ' -f2)
 
