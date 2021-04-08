@@ -46,3 +46,6 @@ cd $UAT_REPO_NAME/
 git add .
 git commit -m "Build RMG version $RMG_VER"
 git push
+
+# print version
+echo "====================\n$RMG_VER\n===================="
