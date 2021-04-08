@@ -29,14 +29,15 @@ else
   export RELEASE_VERSION="$VERSION.$BRANCH.$GITHASH"
 fi
 
-echo "RMG_VER=${RELEASE_VERSION}" >> $GITHUB_ENV
+#echo "RMG_VER=${RELEASE_VERSION}" >> $GITHUB_ENV
+RMG_VER=$RELEASE_VERSION
 
 # copy PRD artifact to repository
 mkdir $UAT_REPO_NAME/$RMG_VER/
 cp -r build/ $UAT_REPO_NAME/$RMG_VER/PRD/
 
 # build UAT and copy artifact to repository
-node -p "console.log(require('./package.json'))" | sed '2 s/RailMapGenerator/uat-rail-map-generator/' > package-new.json
+cat package.json | sed '2 s/RailMapGenerator/uat-rail-map-generator/' > package-new.json
 cp package-new.json package.json
 npm run build
 cp -r build/ $UAT_REPO_NAME/$RMG_VER/UAT/
