@@ -5,7 +5,7 @@ set -x
 npm run build
 
 export APP_NAME=rmg
-BRANCH=$(git branch | grep \* | cut -d ' ' -f2)
+BRANCH=$(git branch | grep \* | cut -d ' ' -f2 | tr '/' '.')
 
 git config --global user.name "Build Agent"
 git config --global user.email rmg.build.agent@users.noreply.github.com
