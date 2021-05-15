@@ -6,7 +6,7 @@ import App from './App';
 import { updateParam } from './utils';
 import * as serviceWorker from './serviceWorker';
 
-import { ProvidedCanvases } from './constants';
+import { ProvidedCanvases } from './constants/constants';
 
 declare global {
     interface Window {
@@ -48,7 +48,7 @@ if (localStorage.rmgParam) {
     }
     renderApp();
 } else {
-    import('./panels/save/template-diag/templates/basic/blank')
+    import('./constants/templates/basic/blank')
         .then(module => {
             localStorage.setItem('rmgParam', JSON.stringify(module.default));
             updateParam();

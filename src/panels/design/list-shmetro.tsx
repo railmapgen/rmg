@@ -1,17 +1,10 @@
 import React, { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import {
-    ListItem,
-    ListItemIcon,
-    Icon,
-    ListItemText,
-    Divider,
-    Select,
-} from '@material-ui/core';
+import { ListItem, ListItemIcon, Icon, ListItemText, Divider, Select } from '@material-ui/core';
 
 import { ParamContext } from '../../context';
-import { PanelTypesShmetro } from '../../constants';
+import { PanelTypesShmetro } from '../../constants/constants';
 
 const DesignListShmetro = () => {
     return (
@@ -50,7 +43,9 @@ const PanelTypeLi = () => {
                     <Select
                         native
                         value={param.info_panel_type}
-                        onChange={e => dispatch({ type: 'SET_PANEL_TYPE', variant: e.target.value as PanelTypeShmetro })}
+                        onChange={e =>
+                            dispatch({ type: 'SET_PANEL_TYPE', variant: e.target.value as PanelTypeShmetro })
+                        }
                         style={{ width: 166 }}
                     >
                         {PanelTypesShmetro.map(type => (

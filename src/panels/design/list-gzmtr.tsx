@@ -28,7 +28,7 @@ import {
 } from '@material-ui/core';
 
 import { ParamContext } from '../../context';
-import { PanelTypesGZMTR } from '../../constants';
+import { PanelTypesGZMTR } from '../../constants/constants';
 
 const useStyles = makeStyles(theme =>
     createStyles({

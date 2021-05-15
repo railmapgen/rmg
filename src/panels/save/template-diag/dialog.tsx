@@ -18,7 +18,7 @@ import {
     useMediaQuery,
 } from '@material-ui/core';
 import { getTransText2 } from '../../../utils';
-import { companies, templateList } from './data';
+import { companies, templateList } from '../../../constants/templates/data';
 
 interface TemplateDialogProps {
     open: boolean;
@@ -73,7 +73,7 @@ const NewDialog = (props: TemplateDialogProps) => {
     const selectedCompany = companies[tabValue].id;
 
     const handleClick = (filename: string) => () => {
-        import(/* webpackChunkName: "templates" */ `./templates/${selectedCompany}/${filename}`)
+        import(/* webpackChunkName: "templates" */ `../../../constants/templates/${selectedCompany}/${filename}`)
             .then(module => {
                 localStorage.rmgParam = JSON.stringify(module.default);
                 window.location.reload(true);

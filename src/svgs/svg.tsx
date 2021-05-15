@@ -4,7 +4,7 @@ import { CanvasContext, ParamContext } from '../context';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import ErrorBoundary from '../error-boundary';
 
-import { ProvidedCanvases } from '../constants';
+import { ProvidedCanvases } from '../constants/constants';
 
 const useStyles = makeStyles(() =>
     createStyles({
