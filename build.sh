@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+set -eux
 
 # git config
 git config --global user.name "Build Agent"
@@ -27,6 +27,7 @@ else
   VERSION=`node -p "require('./package.json').version"`
   GITHASH=$(git log -n 1 --pretty=%h)
   export RELEASE_VERSION="$VERSION.$BRANCH.$GITHASH"
+  git push origin "${APP_NAME}-${RELEASE_VERSION}"
 fi
 
 #echo "RMG_VER=${RELEASE_VERSION}" >> $GITHUB_ENV
@@ -46,7 +47,7 @@ cp -r build/ $UAT_REPO_NAME/$RMG_VER/UAT/
 cd $UAT_REPO_NAME/
 git add .
 git commit -m "Build RMG version $RMG_VER"
-git push
+git push --force
 
 # print version
-echo "====================\n$RMG_VER\n===================="
+echo "Build Success: $RMG_VER"
