@@ -1,4 +1,4 @@
-type ProvidedCanvas = 'destination' | 'runin' | 'railmap';
+type ProvidedCanvas = 'destination' | 'runin' | 'railmap' | 'indoor';
 type ProvidedStyles = 'mtr' | 'gzmtr' | 'shmetro';
 
 /**
@@ -116,6 +116,7 @@ interface RMGParam {
         destination: number;
         runin: number;
         railmap: number;
+        indoor: number;
     };
     svg_height: number;
     /**

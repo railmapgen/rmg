@@ -3,7 +3,7 @@ import { ParamContext } from '../../../context';
 import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState } from '../methods/share';
 import StationSHMetro from './station/station-shmetro';
 
-interface servicesPath {
+export interface servicesPath {
     main: string[];
     pass: string[];
     service: Services;
@@ -163,18 +163,18 @@ const Line = (props: { paths: servicesPath[]; direction: 'l' | 'r' }) => {
     );
 };
 
-const _linePath = (
+export const _linePath = (
     stnIds: string[],
     type: 'main' | 'pass',
     xs: { [stnId: string]: number },
     ys: { [stnId: string]: number },
     direction: 'l' | 'r',
     services: Services,
-    servicesMax: number
+    servicesMax: number,
+    e : number = 30,  // extra short line on either end, will be 0 in `indoor`
 ) => {
     var [prevY, prevX] = [] as number[];
     var path: { [key: string]: number[] } = {};
-    const e = 30;
 
     const servicesDelta = {
         local: 0,

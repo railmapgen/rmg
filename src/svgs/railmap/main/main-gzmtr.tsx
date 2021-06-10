@@ -7,7 +7,7 @@ import { adjacencyList, criticalPathMethod, drawLine, getStnState } from '../met
 const wideFactor = (stnList: StationDict, stnId: string) =>
     stnList[stnId].parents.length === 2 || stnList[stnId].children.length === 2 ? 0.25 : 0;
 
-const getXShare = (stnId: string, adjMat: ReturnType<typeof adjacencyList>, branches: string[][]): number => {
+export const getXShare = (stnId: string, adjMat: ReturnType<typeof adjacencyList>, branches: string[][]): number => {
     let criticalPath = criticalPathMethod('linestart', 'lineend', adjMat);
     if (criticalPath.nodes.includes(stnId)) {
         return criticalPathMethod(criticalPath.nodes[1], stnId, adjMat).len;

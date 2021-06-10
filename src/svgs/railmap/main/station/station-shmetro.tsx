@@ -31,7 +31,6 @@ const StationSHMetro = (props: Props) => {
         stationIconColor.stroke = props.stnState === -1 ? 'gray' : 'var(--rmg-theme-colour)';
     }
 
-
     return (
         <>
             <use
@@ -237,12 +236,12 @@ const IntBoxLetter = memo(
 
 const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
     // get the all names from the out of station changes
-    const lineNames = props.osiInfos.map(info => info[4]);
+    const lineNames = props.osiInfos.map(info => info[4]).join('，');
     return React.useMemo(
         () => (
             <g textAnchor="middle" fontSize="50%">
                 <text className="rmg-name__zh" dy={-5}>
-                    {'换乘' + lineNames.join('，')}
+                    {`换乘${lineNames}`}
                 </text>
                 <text className="rmg-name__zh" dy={5}>
                     仅限公共交通卡

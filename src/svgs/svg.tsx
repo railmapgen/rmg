@@ -135,6 +135,7 @@ const DestinationSHMetro = lazy(() =>
 );
 const RunInSHMetro = lazy(() => import(/* webpackChunkName: "runinSHMetro" */ './runin/runin-shmetro'));
 const RailMapSHMetro = lazy(() => import(/* webpackChunkName: "railmapSHMetro" */ './railmap/railmap-shmetro'));
+const IndoorSHMetro = lazy(() => import(/* webpackChunkName: "indoorSHMetro" */ './indoor/indoor-shmetro'));
 
 /**
  * Each value of this object is an object of ORDERED key-value pairs
@@ -152,5 +153,6 @@ const canvasList: { [s in ProvidedStyles]: { [c in ProvidedCanvas]?: JSX.Element
         destination: <DestinationSHMetro />,
         runin: <RunInSHMetro />,
         railmap: <RailMapSHMetro />,
+        indoor: <IndoorSHMetro />,
     },
 };
