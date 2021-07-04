@@ -362,7 +362,7 @@ export default {
     line_name: ['1号线', 'Line 1'],
     psd_num: '1',
     line_num: 'TW',
-    info_panel_type: 'gz28',
+    info_panel_type: 'sh',
     direction_gz_x: 50,
     direction_gz_y: 70,
     customiseMTRDest: { isLegacy: false, terminal: false },

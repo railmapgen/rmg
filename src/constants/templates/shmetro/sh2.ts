@@ -1126,7 +1126,7 @@ export default {
     ],
     psd_num: "",
     line_num: "2",
-    info_panel_type: "gz28",
+    info_panel_type: "sh",
     direction_gz_x: 2.21,
     direction_gz_y: 12.724668484036409,
     customiseMTRDest: {
