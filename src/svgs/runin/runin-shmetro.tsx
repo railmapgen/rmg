@@ -66,8 +66,9 @@ const GeneralStation = (props: RunInGeneralProps) => {
     const { param } = useContext(ParamContext);
     const middle = param.svgWidth.runin / 2;
 
-    let termianl = props.nextStnIds.length === 1 && ['linestart', 'lineend'].includes(props.nextStnIds[0])
-    let original = props.prevStnIds.length === 1 && ['linestart', 'lineend'].includes(props.prevStnIds[0])
+    const termianl = props.nextStnIds.length === 1 && ['linestart', 'lineend'].includes(props.nextStnIds[0])
+    const original = props.prevStnIds.length === 1 && ['linestart', 'lineend'].includes(props.prevStnIds[0])
+
     return (
         <>
             <g transform="translate(0,110)" strokeWidth={12} fill="none">
@@ -151,8 +152,8 @@ const GeneralStation = (props: RunInGeneralProps) => {
                 </>
             )}
 
-            {original && (<NextStn stnIds={props.nextStnIds} />)}
-            {termianl && (<PrevStn stnIds={props.prevStnIds} />)}
+            {(original || !termianl) && (<NextStn stnIds={props.nextStnIds} />)}
+            {(termianl || !original) && (<PrevStn stnIds={props.prevStnIds} />)}
         </>
     );
 };
