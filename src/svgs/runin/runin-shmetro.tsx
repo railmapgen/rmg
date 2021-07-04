@@ -40,13 +40,7 @@ const RunInSHMetro = () => {
         <>
             <DefsSHMetro />
             <g transform={`translate(0,${dh})`}>
-                {nextStnIds.length === 1 && ['linestart', 'lineend'].includes(nextStnIds[0]) ? (
-                    <TerminalStation stnIds={prevStnIds} />
-                ) : prevStnIds.length === 1 && ['linestart', 'lineend'].includes(prevStnIds[0]) ? (
-                    <OriginStation stnIds={nextStnIds} />
-                ) : (
-                    <GeneralStation prevStnIds={prevStnIds} nextStnIds={nextStnIds} />
-                )}
+                <GeneralStation prevStnIds={prevStnIds} nextStnIds={nextStnIds} />
             </g>
         </>
     );
@@ -63,55 +57,6 @@ const DefsSHMetro = memo(() => (
     </defs>
 ));
 
-const TerminalStation = (props: { stnIds: string[] }) => {
-    const { param } = useContext(ParamContext);
-
-    return (
-        <>
-            <path
-                transform="translate(0,220)"
-                stroke="gray"
-                strokeWidth={12}
-                d={`M24,16 H ${param.svgWidth.runin - 24}`}
-            />
-            <g
-                transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},160)`}
-                textAnchor={param.direction === 'l' ? 'start' : 'end'}
-            >
-                <CurrentText />
-            </g>
-            <PrevStn {...props} />
-        </>
-    );
-};
-
-const OriginStation = (props: { stnIds: string[] }) => {
-    const { param } = useContext(ParamContext);
-
-    return (
-        <>
-            <path
-                transform="translate(0,220)"
-                stroke="var(--rmg-theme-colour)"
-                strokeWidth={12}
-                d={
-                    param.direction === 'l'
-                        ? `M ${param.svgWidth.runin - 24},16 H 36`
-                        : `M24,16 H ${param.svgWidth.runin - 36}`
-                }
-                markerEnd="url(#slope)"
-            />
-            <g
-                transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},160)`}
-                textAnchor={param.direction === 'l' ? 'end' : 'start'}
-            >
-                <CurrentText />
-            </g>
-            <NextStn {...props} />
-        </>
-    );
-};
-
 interface RunInGeneralProps {
     prevStnIds: string[];
     nextStnIds: string[];
@@ -121,19 +66,10 @@ const GeneralStation = (props: RunInGeneralProps) => {
     const { param } = useContext(ParamContext);
     const middle = param.svgWidth.runin / 2;
 
+    let termianl = props.nextStnIds.length === 1 && ['linestart', 'lineend'].includes(props.nextStnIds[0])
+    let original = props.prevStnIds.length === 1 && ['linestart', 'lineend'].includes(props.prevStnIds[0])
     return (
         <>
-            <g transform="translate(0,220)" strokeWidth={12}>
-                <path
-                    stroke="var(--rmg-theme-colour)"
-                    d={`M ${middle},16 H ${param.direction === 'l' ? 36 : param.svgWidth.runin - 36}`}
-                    markerEnd="url(#slope)"
-                />
-                <path
-                    stroke="gray"
-                    d={`M ${middle},16 H ${param.direction === 'l' ? param.svgWidth.runin - 24 : 24} `}
-                />
-            </g>
             <g transform="translate(0,110)" strokeWidth={12} fill="none">
                 {props.nextStnIds.length > 1 && (
                     <path
@@ -161,11 +97,62 @@ const GeneralStation = (props: RunInGeneralProps) => {
                     />
                 )}
             </g>
-            <g transform={`translate(${param.svgWidth.runin / 2},160)`} textAnchor="middle">
-                <CurrentText />
-            </g>
-            <NextStn stnIds={props.nextStnIds} />
-            <PrevStn stnIds={props.prevStnIds} />
+
+            {termianl ? (
+                <>
+                    <path
+                        transform="translate(0,220)"
+                        stroke="gray"
+                        strokeWidth={12}
+                        d={`M24,16 H ${param.svgWidth.runin - 24}`}
+                    />
+
+                    <g transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},160)`}
+                        textAnchor={param.direction === 'l' ? 'start' : 'end'} >
+                        <CurrentText />
+                    </g>
+                </>
+            ) : original ? (
+                <>
+                    <path
+                        transform="translate(0,220)"
+                        stroke="var(--rmg-theme-colour)"
+                        strokeWidth={12}
+                        d={
+                            param.direction === 'l'
+                                ? `M ${param.svgWidth.runin - 24},16 H 36`
+                                : `M24,16 H ${param.svgWidth.runin - 36}`
+                        }
+                        markerEnd="url(#slope)"
+                    />
+
+                    <g transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},160)`}
+                        textAnchor={param.direction === 'l' ? 'end' : 'start'} >
+                        <CurrentText />
+                    </g>
+                </>
+            ) : (
+                <>
+                    <g transform="translate(0,220)" strokeWidth={12}>
+                        <path
+                            stroke="var(--rmg-theme-colour)"
+                            d={`M ${middle},16 H ${param.direction === 'l' ? 36 : param.svgWidth.runin - 36}`}
+                            markerEnd="url(#slope)"
+                        />
+                        <path
+                            stroke="gray"
+                            d={`M ${middle},16 H ${param.direction === 'l' ? param.svgWidth.runin - 24 : 24} `}
+                        />
+                    </g>
+        
+                    <g transform={`translate(${middle},160)`} textAnchor="middle">
+                        <CurrentText />
+                    </g>
+                </>
+            )}
+
+            {original && (<NextStn stnIds={props.nextStnIds} />)}
+            {termianl && (<PrevStn stnIds={props.prevStnIds} />)}
         </>
     );
 };
