@@ -76,7 +76,8 @@ const NewDialog = (props: TemplateDialogProps) => {
         import(/* webpackChunkName: "templates" */ `../../../constants/templates/${selectedCompany}/${filename}`)
             .then(module => {
                 localStorage.rmgParam = JSON.stringify(module.default);
-                window.location.reload(true);
+                // TODO: electron will fail here
+                // window.location.reload(true);
             })
             .catch(err => console.error(err));
     };
