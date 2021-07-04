@@ -1,5 +1,14 @@
 # Changelog
 
+# 3.8.26 (07 Jul 2021)
+
+### New Features
+
+-   New runin terminal style of Shanghai Metro 2020 (#83).
+-   Parallel destination name of Shanghai Metro 2020 (#83).
+-   Missing maglev in the template of Shanghai Metro line 2 (#85).
+-   Update the template of Shanghai Metro line 1.
+
 # 3.8.25 (23 Mar 2021)
 
 ### New Features
