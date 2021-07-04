@@ -297,6 +297,7 @@ export default {
                 paid_area: true,
                 osi_names: [],
                 info: [
+                    [],
                     [
                         [
                             "shanghai",
@@ -773,8 +774,7 @@ export default {
                             "磁悬浮",
                             "Maglev"
                         ]
-                    ],
-                    []
+                    ]
                 ]
             },
             services: [
@@ -974,7 +974,7 @@ export default {
                 "zloz"
             ],
             name: [
-                "川 沙",
+                "川沙",
                 "Chuansha"
             ],
             branch: {
@@ -1111,7 +1111,16 @@ export default {
             },
             transfer: {
                 info: [
-                    []
+                    [
+                        [
+                            "shanghai",
+                            "maglev",
+                            "#009090",
+                            "#fff",
+                            "磁悬浮",
+                            "Maglev"
+                        ]
+                    ]
                 ],
                 tick_direc: "r",
                 paid_area: true,
