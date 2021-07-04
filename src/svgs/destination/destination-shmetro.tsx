@@ -99,7 +99,7 @@ const Terminal = forwardRef((props: { destNames: string[][] }, ref: React.Ref<SV
                 () => (
                     <>
                         {/* translate is not a generalized implementation, only dest length of 1 and 2 are supported */}
-                        <g transform={`translate(0,${props.destNames[0].length == 2 ? -20 : 20})`}>
+                        <g transform={`translate(0,${props.destNames[0].length === 2 ? -20 : 20})`}>
                             <path
                                 d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
                                 fill="black"
