@@ -27,6 +27,7 @@ else
   VERSION=`node -p "require('./package.json').version"`
   GITHASH=$(git log -n 1 --pretty=%h)
   export RELEASE_VERSION="$VERSION.$BRANCH.$GITHASH"
+  git tag -a "${APP_NAME}-${RELEASE_VERSION}" -m "${APP_NAME}-${RELEASE_VERSION}"
   git push origin "${APP_NAME}-${RELEASE_VERSION}"
 fi
 
