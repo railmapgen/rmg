@@ -237,19 +237,11 @@ export const templateList: { [comp: string]: { filename: string; name: ITrans }[
             },
         },
         {
-            filename: 'wrl',
+            filename: 'tml',
             name: {
-                en: 'West Rail Line',
-                'zh-Hans': '西铁线',
-                'zh-Hant': '西鐵綫',
-            },
-        },
-        {
-            filename: 'mol',
-            name: {
-                en: 'Tuen Ma Line Phase 1',
-                'zh-Hans': '屯马线一期',
-                'zh-Hant': '屯馬綫一期',
+                en: 'Tuen Ma Line',
+                'zh-Hans': '屯马线',
+                'zh-Hant': '屯馬綫',
             },
         },
     ],
