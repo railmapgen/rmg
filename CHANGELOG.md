@@ -1,6 +1,13 @@
 # Changelog
 
-# 3.8.26 (07 Jul 2021)
+## 3.8.35 (05 Jul 2021)
+
+### Resolved Issues
+
+- Change MTR Tuen Ma Line Phase 1 from colour palette to Tuen Ma Line
+- Update Tuen Ma Line template, marks the opening of Sung Wong Toi and To Kwa Wan stations
+
+## 3.8.26 (07 Jul 2021)
 
 ### New Features
 
@@ -9,19 +16,19 @@
 -   Missing maglev in the template of Shanghai Metro line 2 (#85).
 -   Update the template of Shanghai Metro line 1.
 
-# 3.8.25 (23 Mar 2021)
+## 3.8.25 (23 Mar 2021)
 
 ### New Features
 
 -   Shanghai Metro's 2020 new style (#68).
 
-# 3.8.20 (8 Nov 2021)
+## 3.8.20 (8 Nov 2021)
 
 ### New Features
 
 -   New templates are available: Shanghai Metro Line 2, Shanghai Metro Line 5 and Shanghai Metro Line 16.
 
-# 3.8.18 (25 Oct 2021)
+## 3.8.18 (25 Oct 2021)
 
 ### New Features
 
