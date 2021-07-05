@@ -99,20 +99,11 @@ const HongKong: LineEntry[] = [
         colour: '#61B4E4',
     },
     {
-        id: 'wrl',
-        name: {
-            en: 'West Rail Line',
-            'zh-Hans': '西铁线',
-            'zh-Hant': '西鐵綫',
-        },
-        colour: '#B6008D',
-    },
-    {
         id: 'mol',
         name: {
-            en: 'Tuen Ma Line Phase 1',
-            'zh-Hans': '屯马线一期',
-            'zh-Hant': '屯馬綫一期',
+            en: 'Tuen Ma Line',
+            'zh-Hans': '屯马线',
+            'zh-Hant': '屯馬綫',
         },
         colour: '#9A3820',
     },
@@ -303,6 +294,15 @@ const HongKong: LineEntry[] = [
             'zh-Hant': '九廣輕鐵',
         },
         colour: '#FD722D',
+    },
+    {
+        id: 'wrl',
+        name: {
+            en: 'West Rail Line',
+            'zh-Hans': '西铁线',
+            'zh-Hant': '西鐵綫',
+        },
+        colour: '#B6008D',
     },
 ];
 
