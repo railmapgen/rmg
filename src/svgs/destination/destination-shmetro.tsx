@@ -176,7 +176,7 @@ const LineNameBoxText = () => {
 const LineNameBoxNumber = () => {
     const { param } = useContext(ParamContext);
 
-    const [lineNumber, lineNameRes] = param.line_name[0].match(/^[\w\d]+|.+/g);
+    const [lineNumber, lineNameRes] = param.line_name[0].match(/^[\w\d]+|.+/g) as string[];
 
     // Number width: 108
     // Text width: 136

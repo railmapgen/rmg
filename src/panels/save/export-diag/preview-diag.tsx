@@ -68,7 +68,7 @@ interface Props {
     canvas: string;
 }
 
-export default (props: Props) => {
+export default function PreviewDialog(props: Props) {
     const { t } = useTranslation();
     const classes = useStyles();
 
@@ -316,7 +316,7 @@ export default (props: Props) => {
             </div>
         </Dialog>
     );
-};
+}
 
 const TermsDialog = (props: { open: boolean; onClose: () => void }) => {
     const { t } = useTranslation();

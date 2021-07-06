@@ -1,4 +1,4 @@
-export default {
+const params = {
     svg_height: 370,
     padding: 2.45,
     y_pc: 68.02,
@@ -457,3 +457,5 @@ export default {
     ],
     namePosMTR: { isStagger: true, isFlip: true },
 };
+
+export default params;

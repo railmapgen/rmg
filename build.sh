@@ -1,6 +1,9 @@
 #!/bin/bash
 set -eux
 
+# run tests
+npm run test:no-watch
+
 # git config
 git config --global user.name "Build Agent"
 git config --global user.email rmg.build.agent@users.noreply.github.com
