@@ -9,7 +9,7 @@ A tool for generating railway maps and information panels in the styles of follo
 
 Make your own rail map on [GitHub Pages](https://wongchito.github.io/RailMapGenerator) | [GitLab Pages](https://chitowong.gitlab.io/RailMapGenerator)
 
-[Changelog](CHANGELOG.md) | [Documentations](./docs/)
+[Changelog](https://github.com/wongchito/RailMapGenerator/wiki/Change-Log) | [Documentations](./docs/)
 
 <!-- ## User guide
 
