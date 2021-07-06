@@ -1,4 +1,4 @@
-export default {
+const params = {
     svg_height: 300,
     padding: 2.88,
     y_pc: 40,
@@ -1394,3 +1394,5 @@ export default {
         isFlip: false
     }
 };
+
+export default params;
