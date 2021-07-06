@@ -13,9 +13,6 @@ export APP_NAME=rmg
 BRANCH=$(git branch | grep \* | cut -d ' ' -f2 | tr '/' '.')
 UAT_REPO_NAME=uat-rail-map-generator
 
-# build PRD
-npm run build
-
 # bump version and git tag
 if [ "$BRANCH" = "master" ]
 then
@@ -23,14 +20,23 @@ then
   npm version patch -m "${APP_NAME}-%s release" --force || { echo "Release Error"; exit 1; }
   export RELEASE_VERSION=$(node -p "require('./package.json').version")
 #  git tag -a "${APP_NAME}-${RELEASE_VERSION}" -m "${APP_NAME}-${RELEASE_VERSION} release"
-  git push origin HEAD
-  git push origin "${APP_NAME}-${RELEASE_VERSION}"
 else
   # build with a hashed version
   VERSION=`node -p "require('./package.json').version"`
   GITHASH=$(git log -n 1 --pretty=%h)
   export RELEASE_VERSION="$VERSION.$BRANCH.$GITHASH"
   git tag -a "${APP_NAME}-${RELEASE_VERSION}" -m "${APP_NAME}-${RELEASE_VERSION}"
+fi
+
+# build PRD
+npm run build
+
+# push tag and commit
+if [ "$BRANCH" = "master" ]
+then
+  git push origin HEAD
+  git push origin "${APP_NAME}-${RELEASE_VERSION}"
+else
   git push origin "${APP_NAME}-${RELEASE_VERSION}"
 fi
 
