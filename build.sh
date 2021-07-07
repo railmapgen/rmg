@@ -29,7 +29,7 @@ else
 fi
 
 # build PRD
-npm run build
+CI='' npm run build
 
 # push tag and commit
 if [ "$BRANCH" = "master" ]
