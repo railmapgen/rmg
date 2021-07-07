@@ -1,6 +1,4 @@
-export function updateParam() {
-    var param = JSON.parse(localStorage.rmgParam) as { [x: string]: any };
-
+export const updateParam = (param: { [x: string]: any }) => {
     // Version 0.10
     if (!('line_name' in param)) {
         param.line_name = ['路線名', 'Name of Line'];
@@ -206,8 +204,8 @@ export function updateParam() {
         }
     });
 
-    localStorage.setItem('rmgParam', JSON.stringify(param));
-}
+    return param;
+};
 
 export const getTransText2 = (obj: ITrans, langs: string[]) => {
     for (let l of langs) {

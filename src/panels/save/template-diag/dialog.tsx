@@ -72,13 +72,14 @@ const NewDialog = (props: TemplateDialogProps) => {
     const [tabValue, setTabValue] = React.useState(0);
     const selectedCompany = companies[tabValue].id;
 
-    const handleClick = (filename: string) => () => {
-        import(/* webpackChunkName: "templates" */ `../../../constants/templates/${selectedCompany}/${filename}`)
-            .then(module => {
-                localStorage.rmgParam = JSON.stringify(module.default);
-                window.location.reload(true);
-            })
-            .catch(err => console.error(err));
+    const handleClick = (filename: string) => async () => {
+        try {
+            const module = await import(/* webpackChunkName: "templates" */ `../../../constants/templates/${selectedCompany}/${filename}`)
+            await window.rmgStorage.writeFile('rmgParam', JSON.stringify(module.default));
+            window.location.reload(true);
+        } catch (err) {
+            console.error(err)
+        }
     };
 
     return React.useMemo(

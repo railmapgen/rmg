@@ -72,11 +72,15 @@ export default function App() {
 
     const [canvasAvailable, setCanvasAvailable] = useState<ProvidedCanvas[]>([]);
     const [canvasToShown, setCanvasToShown] = useState<'all' | ProvidedCanvas>(localStorage.rmgCanvas);
-    useEffect(() => localStorage.setItem('rmgCanvas', canvasToShown), [canvasToShown]);
+    useEffect(() => {
+        window.rmgStorage.writeFile('rmgCanvas', canvasToShown).then();
+    }, [canvasToShown]);
     const [canvasScale, setCanvasScale] = useState(
         Number(localStorage.rmgScale) >= 0.1 ? Number(localStorage.rmgScale) : 1
     );
-    useEffect(() => localStorage.setItem('rmgScale', canvasScale.toFixed(1)), [canvasScale]);
+    useEffect(() => {
+        window.rmgStorage.writeFile('rmgScale', canvasScale.toFixed(1)).then();
+    }, [canvasScale]);
 
     return (
         <BrowserRouter basename={process.env.PUBLIC_URL}>
@@ -105,7 +109,9 @@ export default function App() {
 const AppBody = () => {
     const [param, dispatch] = useReducer(paramReducer, JSON.parse(localStorage.rmgParam) as RMGParam);
     const paramString = JSON.stringify(param);
-    useEffect(() => localStorage.setItem('rmgParam', paramString), [paramString]);
+    useEffect(() => {
+        window.rmgStorage.writeFile('rmgParam', paramString).then()
+    }, [paramString]);
 
     const deps = Object.keys(param.stn_list).reduce(
         (acc, cur) =>

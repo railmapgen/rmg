@@ -7,10 +7,13 @@ import { updateParam } from './utils';
 import * as serviceWorker from './serviceWorker';
 
 import { ProvidedCanvases } from './constants/constants';
+import StorageService from './util/storage/storageService';
+import getRmgStorage from './util/storage';
 
 declare global {
     interface Window {
         gtag: any;
+        rmgStorage: StorageService;
     }
 }
 
@@ -31,27 +34,28 @@ document.head.append(
 
 const renderApp = () => {
     ReactDOM.render(
-        // <React.Suspense fallback="loading">
+        // <React.StrictMode>
         <App />,
-        // </React.Suspense>,
-        document.querySelectorAll('div#root')[0]
+        // </React.StrictMode>,
+        document.getElementById('root')
     );
 };
 
-if (localStorage.rmgParam) {
-    try {
-        updateParam();
-    } catch (err) {
-        alert(err + 'Something error! Please refresh to start from a new canvas. ');
-        console.error(err);
-        localStorage.removeItem('rmgParam');
-    }
-    renderApp();
-} else {
-    import('./constants/templates/basic/blank')
-        .then(module => {
-            localStorage.setItem('rmgParam', JSON.stringify(module.default));
-            updateParam();
-        })
-        .then(() => renderApp());
-}
+getRmgStorage().then(rmgStorage => {
+    rmgStorage.init().then(async () => {
+        try {
+            const contents = await rmgStorage.readFile('rmgParam');
+
+            const updatedParam = updateParam(JSON.parse(contents));
+            await rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
+        } catch (err) {
+            console.warn(err);
+            const module = await import('./constants/templates/basic/blank');
+            const updatedParam = updateParam(module.default);
+            await rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
+        } finally {
+            window.rmgStorage = rmgStorage;
+            renderApp();
+        }
+    });
+});
