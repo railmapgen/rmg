@@ -1,17 +1,19 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+    createStyles,
     Fab,
-    Tooltip,
     Icon,
+    ListItemIcon,
+    ListItemText,
+    makeStyles,
     Menu,
     MenuItem,
-    createStyles,
-    makeStyles,
-    ListItemText,
-    ListItemIcon,
+    Tooltip,
 } from '@material-ui/core';
-import { CanvasContext } from '../../context';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux';
+import { RmgStyle } from '../../constants/constants';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -30,7 +32,7 @@ interface Props {
 const StationFabs = React.memo(
     (props: Props) => {
         const { t } = useTranslation();
-        const { rmgStyle } = useContext(CanvasContext);
+        const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
         const classes = useStyles();
         const [fabEl, setFabEl] = React.useState<null | HTMLElement>(null);
 
@@ -60,7 +62,7 @@ const StationFabs = React.memo(
                         </ListItemIcon>
                         <ListItemText primary={t('stations.fabs.reverse')} />
                     </MenuItem>
-                    {rmgStyle === 'gzmtr' && (
+                    {rmgStyle === RmgStyle.GZMTR && (
                         <MenuItem onClick={handleAction('autonum')}>
                             <ListItemIcon>
                                 <Icon>filter_1</Icon>

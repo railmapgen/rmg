@@ -1,26 +1,28 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
     Button,
-    Switch,
-    makeStyles,
+    Checkbox,
     createStyles,
-    Select,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Divider,
     List,
     ListItem,
-    ListItemText,
     ListItemSecondaryAction,
-    Divider,
-    Checkbox,
+    ListItemText,
+    makeStyles,
+    Select,
+    Switch,
     Typography,
 } from '@material-ui/core';
 
 import { test } from './utils';
-import { CanvasContext } from '../../../context';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux';
+import { RmgStyle } from '../../../constants/constants';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -72,7 +74,7 @@ export default function PreviewDialog(props: Props) {
     const { t } = useTranslation();
     const classes = useStyles();
 
-    const { rmgStyle } = React.useContext(CanvasContext);
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
 
     const [svgEl, setSvgEl] = useState((document.createElement('svg') as Element) as SVGSVGElement);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -146,7 +148,7 @@ export default function PreviewDialog(props: Props) {
             elem.querySelector('rect#canvas-border')?.setAttribute('stroke', showBorder ? 'black' : 'none');
             elem.querySelector('rect#canvas-bg')?.setAttribute('fill', isTransparent ? 'none' : 'white');
 
-            if (rmgStyle === 'mtr') {
+            if (rmgStyle === RmgStyle.MTR) {
                 import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper')
                     .then(({ getBase64FontFace }) =>
                         getBase64FontFace(elem)

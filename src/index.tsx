@@ -6,14 +6,18 @@ import App from './App';
 import { updateParam } from './utils';
 import * as serviceWorker from './serviceWorker';
 
-import { ProvidedCanvases } from './constants/constants';
+import { AllCanvas, CanvasType } from "./constants/constants";
 import StorageService from './util/storage/storageService';
 import getRmgStorage from './util/storage';
+import store from './redux';
+import { Provider } from 'react-redux';
+import { setCanvasScale, setCanvasToShow } from './redux/app/action';
 
 declare global {
     interface Window {
         gtag: any;
         rmgStorage: StorageService;
+        rmgStore: any;
     }
 }
 
@@ -24,7 +28,7 @@ serviceWorker.unregister();
 
 // load empty stylesheet elements
 document.head.append(
-    ...['share', ...ProvidedCanvases].map(tag => {
+    ...['share', ...Object.values(CanvasType)].map(tag => {
         let link = document.createElement('link');
         link.rel = 'stylesheet';
         link.id = 'css_' + tag;
@@ -35,14 +39,18 @@ document.head.append(
 const renderApp = () => {
     ReactDOM.render(
         // <React.StrictMode>
-        <App />,
+        <Provider store={store}>
+            <App />
+        </Provider>,
         // </React.StrictMode>,
         document.getElementById('root')
     );
 };
 
-getRmgStorage().then(rmgStorage => {
-    rmgStorage.init().then(async () => {
+getRmgStorage()
+    .then(async rmgStorage => {
+        // setup storage and param
+        await rmgStorage.init();
         try {
             const contents = await rmgStorage.readFile('rmgParam');
 
@@ -55,7 +63,22 @@ getRmgStorage().then(rmgStorage => {
             await rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
         } finally {
             window.rmgStorage = rmgStorage;
-            renderApp();
         }
+    })
+    .then(async () => {
+        // style being setup in SVG's router
+
+        // setup canvas scale
+        const canvasScaleString = await window.rmgStorage.readFile('rmgScale');
+        const canvasScale = Number(canvasScaleString);
+        canvasScale >= 0.1 && store.dispatch(setCanvasScale(canvasScale));
+
+        // setup canvas to show
+        const canvasToShow = await window.rmgStorage.readFile('rmgCanvas') as CanvasType | typeof AllCanvas;
+        store.dispatch(setCanvasToShow(canvasToShow));
+
+        window.rmgStore = store;
+    })
+    .then(() => {
+        renderApp();
     });
-});

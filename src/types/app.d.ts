@@ -1,6 +1,3 @@
-type ProvidedCanvas = 'destination' | 'runin' | 'railmap';
-type ProvidedStyles = 'mtr' | 'gzmtr' | 'shmetro';
-
 /**
  * Array of name `string`s. The first element is in Chinese characters and the second element is in Latin characters.
  */

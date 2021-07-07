@@ -1,14 +1,5 @@
 import React, { createContext } from 'react';
-
-interface ICanvasContext {
-    rmgStyle: ProvidedStyles;
-    canvasAvailable: ProvidedCanvas[];
-    setCanvasAvailable: React.Dispatch<React.SetStateAction<ProvidedCanvas[]>>;
-    canvasToShown: ProvidedCanvas | 'all';
-    setCanvasToShown: React.Dispatch<React.SetStateAction<ProvidedCanvas | 'all'>>;
-    canvasScale: number;
-    setCanvasScale: React.Dispatch<React.SetStateAction<number>>;
-}
+import { CanvasType } from './constants/constants';
 
 interface IParamContext {
     param: RMGParam;
@@ -19,7 +10,6 @@ interface IParamContext {
     tpo: string[];
 }
 
-export const CanvasContext = createContext<ICanvasContext>({} as ICanvasContext);
 export const ParamContext = createContext<IParamContext>({} as IParamContext);
 
 type ReducerAction =
@@ -35,7 +25,7 @@ type ReducerAction =
       }
     | {
           type: 'SET_WIDTH';
-          targetId: ProvidedCanvas;
+          targetId: CanvasType;
           value: number;
       }
     | {

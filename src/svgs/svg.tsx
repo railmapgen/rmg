@@ -1,10 +1,13 @@
-import React, { useContext, useEffect, memo, lazy } from 'react';
-import { makeStyles, createStyles, CircularProgress } from '@material-ui/core';
-import { CanvasContext, ParamContext } from '../context';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import React, { lazy, memo, useEffect } from 'react';
+import { CircularProgress, createStyles, makeStyles } from '@material-ui/core';
+import { ParamContext } from '../context';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import ErrorBoundary from '../error-boundary';
 
-import { ProvidedCanvases } from '../constants/constants';
+import { AllCanvas, canvasConfig, CanvasType, RmgStyle } from '../constants/constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCanvas, setRmgStyle } from '../redux/app/action';
+import { RootState } from '../redux';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -28,10 +31,11 @@ const SVGs = () => {
     const classes = useStyles();
 
     const { param } = React.useContext(ParamContext);
-    const { canvasScale } = React.useContext(CanvasContext);
+
+    const canvasScale = useSelector((store: RootState) => store.app.canvasScale);
 
     const sharedProps = React.useCallback(
-        (canvas: ProvidedCanvas): React.SVGProps<SVGSVGElement> => ({
+        (canvas: CanvasType): React.SVGProps<SVGSVGElement> => ({
             id: canvas,
             xmlns: 'http://www.w3.org/2000/svg',
             xmlnsXlink: 'http://www.w3.org/1999/xlink',
@@ -52,12 +56,12 @@ const SVGs = () => {
     return (
         <div className={classes.root}>
             <Switch>
-                {(Object.keys(canvasList) as ProvidedStyles[]).map(s => (
+                {(Object.entries(canvasConfig) as [RmgStyle, CanvasType[]][]).map(([s, canvases]) => (
                     <Route path={`/${s}`} key={s}>
-                        <StyleSpecificSVGs rmgStyle={s} canvasAvailable={canvasList[s]} svgProps={sharedProps} />
+                        <StyleSpecificSVGs style={s} canvasAvailable={canvasList[s]} svgProps={sharedProps} />
                     </Route>
                 ))}
-                <Redirect to={'/' + (new URLSearchParams(window.location.search).get('style') || 'mtr')} />
+                <Redirect to={'/' + RmgStyle.MTR} />
             </Switch>
         </div>
     );
@@ -67,25 +71,28 @@ export default SVGs;
 
 const StyleSpecificSVGs = memo(
     (props: {
-        rmgStyle: ProvidedStyles;
-        canvasAvailable: { [canvas in ProvidedCanvas]?: JSX.Element };
-        svgProps: (canvas: ProvidedCanvas) => React.SVGProps<SVGSVGElement>;
+        style: RmgStyle;
+        canvasAvailable: { [canvas in CanvasType]?: JSX.Element };
+        svgProps: (canvas: CanvasType) => React.SVGProps<SVGSVGElement>;
     }) => {
-        const { canvasToShown, setCanvasToShown, setCanvasAvailable } = useContext(CanvasContext);
+        const dispatch = useDispatch();
+
+        const canvasToShow = useSelector((store: RootState) => store.app.canvasToShow);
+
+        dispatch(setRmgStyle(props.style));
+
         useEffect(
             () => {
-                ['share', ...ProvidedCanvases].forEach(canvas => {
+                ['share', ...Object.values(CanvasType)].forEach(canvas => {
                     if (canvas in props.canvasAvailable || canvas === 'share') {
                         (document.getElementById('css_' + canvas) as HTMLLinkElement).href =
-                            process.env.PUBLIC_URL + `/styles/${canvas}_${props.rmgStyle}.css`;
+                            process.env.PUBLIC_URL + `/styles/${canvas}_${props.style}.css`;
                     } else {
                         (document.getElementById('css_' + canvas) as HTMLLinkElement).href = '';
                     }
                 });
-                setCanvasAvailable(Object.keys(props.canvasAvailable) as ProvidedCanvas[]);
-                setCanvasToShown(prevCanvas =>
-                    ['all', ...Object.keys(props.canvasAvailable)].includes(prevCanvas) ? prevCanvas : 'all'
-                );
+                
+                ![...canvasConfig[props.style], AllCanvas].includes(canvasToShow) && dispatch(selectCanvas(AllCanvas));
             },
             // eslint-disable-next-line react-hooks/exhaustive-deps
             []
@@ -95,7 +102,7 @@ const StyleSpecificSVGs = memo(
             <>
                 {(Object.keys(props.canvasAvailable) as (keyof typeof props.canvasAvailable)[]).map(
                     canvas =>
-                        ['all', canvas].includes(canvasToShown) && (
+                        [AllCanvas, canvas].includes(canvasToShow) && (
                             <React.Suspense key={canvas} fallback={<CircularProgress />}>
                                 <ErrorBoundary>
                                     <svg {...props.svgProps(canvas)}>
@@ -139,18 +146,18 @@ const RailMapSHMetro = lazy(() => import(/* webpackChunkName: "railmapSHMetro" *
 /**
  * Each value of this object is an object of ORDERED key-value pairs
  */
-const canvasList: { [s in ProvidedStyles]: { [c in ProvidedCanvas]?: JSX.Element } } = {
-    gzmtr: {
-        runin: <RunInGZMTR />,
-        railmap: <RailMapGZMTR />,
+const canvasList: { [s in RmgStyle]: { [c in CanvasType]?: JSX.Element } } = {
+    [RmgStyle.GZMTR]: {
+        [CanvasType.RunIn]: <RunInGZMTR />,
+        [CanvasType.RailMap]: <RailMapGZMTR />,
     },
-    mtr: {
-        destination: <DestinationMTR />,
-        railmap: <RailMapMTR />,
+    [RmgStyle.MTR]: {
+        [CanvasType.Destination]: <DestinationMTR />,
+        [CanvasType.RailMap]: <RailMapMTR />,
     },
-    shmetro: {
-        destination: <DestinationSHMetro />,
-        runin: <RunInSHMetro />,
-        railmap: <RailMapSHMetro />,
+    [RmgStyle.SHMetro]: {
+        [CanvasType.Destination]: <DestinationSHMetro />,
+        [CanvasType.RunIn]: <RunInSHMetro />,
+        [CanvasType.RailMap]: <RailMapSHMetro />,
     },
 };

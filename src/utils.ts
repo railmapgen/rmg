@@ -1,3 +1,5 @@
+import { RmgStyle } from './constants/constants';
+
 export const updateParam = (param: { [x: string]: any }) => {
     // Version 0.10
     if (!('line_name' in param)) {
@@ -114,11 +116,7 @@ export const updateParam = (param: { [x: string]: any }) => {
                 tick_direc:
                     stnInfo.change_type === 'none' || stnInfo.change_type === 'int2'
                         ? 'r'
-                        : (stnInfo.change_type
-                              ?.split('_')[1]
-                              .split('')
-                              .slice()
-                              .reverse()[0] as 'l' | 'r'),
+                        : (stnInfo.change_type?.split('_')[1].split('').slice().reverse()[0] as 'l' | 'r'),
                 paid_area:
                     stnInfo.change_type?.indexOf('osi') !== -1 ? stnInfo.change_type?.split('_')[1][0] === 'p' : true,
                 osi_names: stnInfo.change_type?.indexOf('osi') !== -1 ? [stnInfo.interchange[1][0]] : [],
@@ -217,5 +215,5 @@ export const getTransText2 = (obj: ITrans, langs: string[]) => {
 /**
  * Format display style of station name as `[num: ]nameZH,nameEN`.
  */
-export const formatStnName = (stnInfo: StationInfo, style: ProvidedStyles) =>
-    (style === 'gzmtr' ? (stnInfo?.num || '-') + ': ' : '') + stnInfo?.name.join().replace('\\', ' ');
+export const formatStnName = (stnInfo: StationInfo, style: RmgStyle) =>
+    (style === RmgStyle.GZMTR ? (stnInfo?.num || '-') + ': ' : '') + stnInfo?.name.join().replace('\\', ' ');

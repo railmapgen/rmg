@@ -1,6 +1,9 @@
 import React, { useContext } from 'react';
-import { Chip, makeStyles, Avatar, createStyles, useMediaQuery } from '@material-ui/core';
-import { CanvasContext, ParamContext } from '../../context';
+import { Avatar, Chip, createStyles, makeStyles, useMediaQuery } from '@material-ui/core';
+import { ParamContext } from '../../context';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux';
+import { RmgStyle } from '../../constants/constants';
 
 const useStyles = makeStyles(theme => {
     return createStyles({
@@ -60,7 +63,7 @@ interface StationChipSetProps {
 
 const StationChipSet = React.memo(
     (props: StationChipSetProps) => {
-        const { rmgStyle } = useContext(CanvasContext);
+        const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
         const { tpo } = useContext(ParamContext);
 
         const isTablet = useMediaQuery('(max-width: 839px) and (min-width: 480px)');
@@ -84,7 +87,7 @@ const StationChipSet = React.memo(
                         <Chip
                             key={stnId}
                             icon={
-                                rmgStyle !== 'gzmtr' ? (
+                                rmgStyle !== RmgStyle.GZMTR ? (
                                     <></>
                                 ) : (
                                     <Avatar style={{ backgroundColor: 'unset' }}>

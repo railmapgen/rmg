@@ -19,7 +19,9 @@ import {
 import { formatStnName } from '../../utils';
 import { getYShareMTR } from '../../methods';
 import { addStation } from './utils';
-import { CanvasContext, ParamContext } from '../../context';
+import { ParamContext } from '../../context';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux';
 
 const newBranchPossibleEnd = (prep: 'before' | 'after', pivot: string, stnList: StationDict) => {
     let res: string[] = [];
@@ -96,7 +98,7 @@ export default React.memo(
         const { t } = useTranslation();
         const classes = useStyles();
 
-        const { rmgStyle } = useContext(CanvasContext);
+        const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
         const { param, dispatch, tpo } = useContext(ParamContext);
         const stnList = param.stn_list;
 

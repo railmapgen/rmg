@@ -1,34 +1,37 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+    Button,
+    Chip,
+    createStyles,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Divider,
+    Icon,
+    IconButton,
     List,
     ListItem,
-    ListItemText,
-    ListItemSecondaryAction,
-    IconButton,
-    Icon,
-    Divider,
-    Button,
     ListItemIcon,
-    Switch,
-    Chip,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    Tooltip,
+    ListItemSecondaryAction,
+    ListItemText,
     makeStyles,
-    createStyles,
     Select,
+    Switch,
+    Tooltip,
 } from '@material-ui/core';
-import { ParamContext, CanvasContext } from '../../../context';
+import { ParamContext } from '../../../context';
 import ColourDialog from '../../colour-diag';
 import NameListItems from './name-list-items';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux';
+import { RmgStyle } from '../../../constants/constants';
 
 const StationEditInterchangeTab = (props: { stnId: string }) => {
     const { t } = useTranslation();
 
-    const { rmgStyle } = useContext(CanvasContext);
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const { param, dispatch } = useContext(ParamContext);
     const stnTrans = param.stn_list[props.stnId].transfer;
 
@@ -70,7 +73,7 @@ const StationEditInterchangeTab = (props: { stnId: string }) => {
             <ListItem>
                 <InterchangeChipSet stnId={props.stnId} setIndex={0} onDelete={i => deleteClick(0, i)} />
             </ListItem>
-            {['mtr', 'shmetro'].includes(rmgStyle || '') && (
+            {[RmgStyle.MTR, RmgStyle.SHMetro].includes(rmgStyle || '') && (
                 <>
                     <Divider />
                     <ListItem>
@@ -107,7 +110,7 @@ const StationEditInterchangeTab = (props: { stnId: string }) => {
                     </ListItem>
                 </>
             )}
-            {rmgStyle === 'mtr' && <InterchangeMore stnId={props.stnId} />}
+            {rmgStyle === RmgStyle.MTR && <InterchangeMore stnId={props.stnId} />}
         </List>
     );
 };

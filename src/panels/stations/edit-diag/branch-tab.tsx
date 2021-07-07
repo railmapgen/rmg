@@ -1,18 +1,21 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    List,
-    ListItem,
-    ListItemText,
+    createStyles,
     Divider,
     Icon,
+    List,
+    ListItem,
     ListItemIcon,
-    Select,
+    ListItemText,
     makeStyles,
-    createStyles,
+    Select,
 } from '@material-ui/core';
 import { formatStnName } from '../../../utils';
-import { ParamContext, CanvasContext } from '../../../context';
+import { ParamContext } from '../../../context';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux';
+import { RmgStyle } from '../../../constants/constants';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -52,7 +55,7 @@ interface BranchSelectSetProps {
 }
 
 const BranchSelectSet = (props: BranchSelectSetProps) => {
-    const { rmgStyle } = useContext(CanvasContext);
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const { param } = useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
     const branchEntry = stnInfo.branch[props.direction];
@@ -64,7 +67,7 @@ const BranchSelectSet = (props: BranchSelectSetProps) => {
                 {branchEntry[0] && (
                     <>
                         <BranchFirstItem {...props} />
-                        {rmgStyle !== 'shmetro' && <BranchPosItem {...props} />}
+                        {rmgStyle !== RmgStyle.SHMetro && <BranchPosItem {...props} />}
                     </>
                 )}
             </>
@@ -134,7 +137,7 @@ const BranchFirstItem = (props: ItemProps) => {
     const { t } = useTranslation();
     const classes = useStyles();
 
-    const { rmgStyle } = useContext(CanvasContext);
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const { param, dispatch } = useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
     const branchEntry = stnInfo.branch[props.direction];

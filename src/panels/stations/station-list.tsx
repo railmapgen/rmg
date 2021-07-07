@@ -1,21 +1,24 @@
 import React, { useContext, useState } from 'react';
 import {
-    makeStyles,
     createStyles,
-    Paper,
-    List,
-    ListItem,
-    ListItemText,
     Divider,
     Icon,
-    Typography,
-    ListItemSecondaryAction,
     IconButton,
+    List,
+    ListItem,
+    ListItemSecondaryAction,
+    ListItemText,
+    makeStyles,
     Menu,
     MenuItem,
+    Paper,
+    Typography,
 } from '@material-ui/core';
-import { ParamContext, CanvasContext } from '../../context';
+import { ParamContext } from '../../context';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux';
+import { RmgStyle } from '../../constants/constants';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -70,7 +73,7 @@ const StationEntry = (props: { stnId: string; isSelected: boolean; onAction: (ac
     const { t } = useTranslation();
     const classes = useStyles();
 
-    const { rmgStyle } = useContext(CanvasContext);
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const { param, dispatch } = useContext(ParamContext);
 
     const { name, num } = param.stn_list[props.stnId] || param.stn_list.linestart;
@@ -89,7 +92,7 @@ const StationEntry = (props: { stnId: string; isSelected: boolean; onAction: (ac
 
     return (
         <ListItem className={props.isSelected ? classes.selectedItem : ''}>
-            {rmgStyle === 'gzmtr' && <Typography className={classes.listItemNum}>{num}</Typography>}
+            {rmgStyle === RmgStyle.GZMTR && <Typography className={classes.listItemNum}>{num}</Typography>}
             <ListItemText primary={name[0]} secondary={name[1].replace('\\', ' ')} className={classes.listItemText} />
             <ListItemSecondaryAction>
                 <IconButton size="small" onClick={e => setToggleEl(e.currentTarget)}>
