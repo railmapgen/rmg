@@ -1,4 +1,29 @@
-export const ProvidedCanvases: ProvidedCanvas[] = ['destination', 'runin', 'railmap'];
+export enum LoadingStatus {
+    init = 'init',
+    loading = 'loading',
+    loaded = 'loaded',
+    failed = 'failed',
+}
+
+export enum RmgStyle {
+    MTR = 'mtr',
+    GZMTR = 'gzmtr',
+    SHMetro = 'shmetro',
+}
+
+export enum CanvasType {
+    Destination = 'destination',
+    RunIn = 'runin',
+    RailMap = 'railmap',
+}
+
+export const AllCanvas = 'all';
+
+export const canvasConfig: { [s in RmgStyle]: CanvasType[] } = {
+    [RmgStyle.MTR]: [CanvasType.Destination, CanvasType.RailMap],
+    [RmgStyle.GZMTR]: [CanvasType.RunIn, CanvasType.RailMap],
+    [RmgStyle.SHMetro]: [CanvasType.Destination, CanvasType.RunIn, CanvasType.RailMap],
+};
 
 export const PanelTypesGZMTR: PanelTypeGZMTR[] = [
     'gz1',
@@ -12,7 +37,4 @@ export const PanelTypesGZMTR: PanelTypeGZMTR[] = [
     'gzgf',
 ];
 
-export const PanelTypesShmetro: PanelTypeShmetro[] = [
-    'sh',
-    'sh2020',
-];
+export const PanelTypesShmetro: PanelTypeShmetro[] = ['sh', 'sh2020'];

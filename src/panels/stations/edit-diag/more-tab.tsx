@@ -1,37 +1,40 @@
-import React, { useContext, memo } from 'react';
+import React, { memo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+    Checkbox,
+    FormControlLabel,
+    FormGroup,
+    Icon,
     List,
     ListItem,
     ListItemIcon,
-    ListItemText,
-    Icon,
-    FormControlLabel,
-    FormGroup,
-    Checkbox,
     ListItemSecondaryAction,
+    ListItemText,
     Select,
 } from '@material-ui/core';
-import { ParamContext, CanvasContext } from '../../../context';
+import { ParamContext } from '../../../context';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux';
+import { RmgStyle } from '../../../constants/constants';
 
 export default memo(function MoreTab(props: { stnId: string }) {
-    const { rmgStyle } = useContext(CanvasContext);
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     // type hint for the following
     // https://stackoverflow.com/a/56628792
     // https://www.typescriptlang.org/docs/handbook/advanced-types.html#mapped-types
-    const rmgStyleServices: { [rmgStyle in ProvidedStyles]?: Services[] } = {
-        'gzmtr': ['local', 'express'],
-        'shmetro': ['local', 'express', 'direct'],
-    }
-    const rmgStyleFacility: ProvidedStyles[] = ['mtr',]
+    const rmgStyleServices: { [rmgStyle in RmgStyle]?: Services[] } = {
+        gzmtr: ['local', 'express'],
+        shmetro: ['local', 'express', 'direct'],
+    };
+    const rmgStyleFacility: RmgStyle[] = [RmgStyle.MTR];
 
     return (
         <div>
             <List>
-                {rmgStyle in rmgStyleServices &&
-                    <ServiceLi stnId={props.stnId} services={rmgStyleServices[rmgStyle] as Services[]} />}
-                {rmgStyleFacility.includes(rmgStyle) &&
-                    <FacilityLi stnId={props.stnId} />}
+                {rmgStyle in rmgStyleServices && (
+                    <ServiceLi stnId={props.stnId} services={rmgStyleServices[rmgStyle] as Services[]} />
+                )}
+                {rmgStyleFacility.includes(rmgStyle) && <FacilityLi stnId={props.stnId} />}
             </List>
         </div>
     );
