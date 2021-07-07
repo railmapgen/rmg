@@ -1,8 +1,18 @@
 import rootReducer, { RootState } from '../';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { SET_CANVAS_SCALE, SET_CANVAS_SCALE_STATUS, SET_RMG_STYLE, setRmgStyle, zoomIn, zoomOut } from "./action";
-import { LoadingStatus, RmgStyle } from '../../constants/constants';
+import {
+    selectCanvas,
+    SET_CANVAS_SCALE,
+    SET_CANVAS_SCALE_STATUS,
+    SET_CANVAS_TO_SHOW,
+    SET_CANVAS_TO_SHOW_STATUS,
+    SET_RMG_STYLE,
+    setRmgStyle,
+    zoomIn,
+    zoomOut,
+} from './action';
+import { CanvasType, LoadingStatus, RmgStyle } from '../../constants/constants';
 
 const realStore = rootReducer.getState();
 const mockStore = configureStore<RootState>([thunk])({ ...realStore });
@@ -75,6 +85,31 @@ describe('Tests for app actions', () => {
         expect(actions).toHaveLength(3);
         expect(
             actions.find(action => action.type === SET_CANVAS_SCALE && action.canvasScale === expectedZoomedInScale)
+        ).toBeDefined();
+    });
+
+    it('Can handle select canvas correctly', async () => {
+        await mockStore.dispatch(selectCanvas(CanvasType.RailMap) as any);
+
+        expect(mockEmptyPromise).toBeCalledTimes(1);
+        expect(mockEmptyPromise).toBeCalledWith('rmgCanvas', CanvasType.RailMap);
+
+        const actions = mockStore.getActions();
+        expect(actions).toHaveLength(3);
+        expect(
+            actions.find(
+                action =>
+                    action.type === SET_CANVAS_TO_SHOW_STATUS && action.canvasToShowStatus === LoadingStatus.loading
+            )
+        ).toBeDefined();
+        expect(
+            actions.find(action => action.type === SET_CANVAS_TO_SHOW && action.canvasToShow === CanvasType.RailMap)
+        ).toBeDefined();
+        expect(
+            actions.find(
+                action =>
+                    action.type === SET_CANVAS_TO_SHOW_STATUS && action.canvasToShowStatus === LoadingStatus.loaded
+            )
         ).toBeDefined();
     });
 });
