@@ -50,7 +50,7 @@ cp -r build/ $UAT_REPO_NAME/$RMG_VER/PRD/
 # build UAT and copy artifact to repository
 cat package.json | sed '2 s/RailMapGenerator/uat-rail-map-generator/' > package-new.json
 cp package-new.json package.json
-npm run build
+CI='' npm run build
 cp -r build/ $UAT_REPO_NAME/$RMG_VER/UAT/
 
 # upload artifacts
