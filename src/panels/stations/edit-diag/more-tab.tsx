@@ -15,16 +15,13 @@ import {
 import { ParamContext } from '../../../context';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux';
-import { RmgStyle } from '../../../constants/constants';
+import { Facilities, RmgStyle, Services } from "../../../constants/constants";
 
 export default memo(function MoreTab(props: { stnId: string }) {
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
-    // type hint for the following
-    // https://stackoverflow.com/a/56628792
-    // https://www.typescriptlang.org/docs/handbook/advanced-types.html#mapped-types
-    const rmgStyleServices: { [rmgStyle in RmgStyle]?: Services[] } = {
-        gzmtr: ['local', 'express'],
-        shmetro: ['local', 'express', 'direct'],
+    const rmgStyleServices: { [s in RmgStyle]?: Services[] } = {
+        [RmgStyle.GZMTR]: [Services.local, Services.express],
+        [RmgStyle.SHMetro]: [Services.local, Services.express, Services.direct],
     };
     const rmgStyleFacility: RmgStyle[] = [RmgStyle.MTR];
 
@@ -61,7 +58,7 @@ const FacilityLi = (props: { stnId: string }) => {
                         })
                     }
                 >
-                    {(['', 'airport', 'hsr', 'disney'] as Facilities[]).map(f => (
+                    {Object.values(Facilities).map(f => (
                         <option key={f} value={f}>
                             {t('stations.edit.more.facility.' + (f === '' ? 'none' : f))}
                         </option>

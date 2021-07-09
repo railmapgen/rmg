@@ -1,27 +1,28 @@
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
+    Button,
+    Chip,
+    createStyles,
     Dialog,
-    DialogTitle,
+    DialogActions,
     DialogContent,
-    Paper,
-    ListItem,
-    List,
+    DialogTitle,
+    Divider,
     Icon,
     InputBase,
-    makeStyles,
-    DialogActions,
-    Button,
-    createStyles,
-    Tabs,
-    Tab,
-    Chip,
-    Divider,
+    List,
+    ListItem,
     ListItemText,
+    makeStyles,
+    Paper,
+    Tab,
+    Tabs,
 } from '@material-ui/core';
-import { PalettePanel, CustomPanel } from './theme-items';
+import { CustomPanel, PalettePanel } from './theme-items';
 import { ParamContext } from '../../context';
+import { InterchangeInfo, MonoColour, Name, Theme } from '../../constants/constants';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -103,7 +104,7 @@ const useStyles = makeStyles(theme =>
 
 interface Props {
     open: boolean;
-    theme: [string, string, string, '#000' | '#fff'];
+    theme: Theme;
     lineName: Name;
     onUpdate: (key: string, value: any) => void;
     onClose: () => void;
@@ -155,7 +156,7 @@ const LineNameInput = (props: { lineName: Name; theme: Theme; onUpdate: Props['o
                         root: classes.inputBaseRoot,
                         input: classes.inputBaseInputZH,
                     }}
-                    style={{ color: props.theme[3] || '#fff' }}
+                    style={{ color: props.theme[3] || MonoColour.white }}
                     onChange={e => nameChange(e.target.value, 0)}
                     autoFocus
                 />
@@ -165,7 +166,7 @@ const LineNameInput = (props: { lineName: Name; theme: Theme; onUpdate: Props['o
                         root: classes.inputBaseRoot,
                         input: classes.inputBaseInputEN,
                     }}
-                    style={{ color: props.theme[3] || '#fff' }}
+                    style={{ color: props.theme[3] || MonoColour.white }}
                     onChange={e => nameChange(e.target.value, 1)}
                 />
             </Paper>

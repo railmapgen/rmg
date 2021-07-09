@@ -3,7 +3,7 @@ import { Avatar, Chip, createStyles, makeStyles, useMediaQuery } from '@material
 import { ParamContext } from '../../context';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux';
-import { RmgStyle } from '../../constants/constants';
+import { RmgStyle, StationDict, StationInfo } from "../../constants/constants";
 
 const useStyles = makeStyles(theme => {
     return createStyles({
@@ -54,9 +54,7 @@ const useStyles = makeStyles(theme => {
 });
 
 interface StationChipSetProps {
-    stnList: {
-        [stnId: string]: StationInfo;
-    };
+    stnList: StationDict;
     onSelection: (stnId: string) => () => void;
     addStationClick: () => void;
 }

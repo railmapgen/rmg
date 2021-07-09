@@ -18,7 +18,9 @@ import {
     useMediaQuery,
 } from '@material-ui/core';
 import { getTransText2 } from '../../../utils';
-import { companies, templateList } from '../../../constants/templates/data';
+import { templateList } from '../../../constants/templates/data';
+import { companies } from '../../../constants/company-config';
+import { LanguageCode } from "../../../constants/constants";
 
 interface TemplateDialogProps {
     open: boolean;
@@ -97,14 +99,14 @@ const NewDialog = (props: TemplateDialogProps) => {
                         onChange={(_, value) => setTabValue(value)}
                     >
                         {companies.map(c => (
-                            <Tab key={c.id} label={getTransText2(c.name, i18n.languages)} className={classes.tab} />
+                            <Tab key={c.id} label={getTransText2(c.name, i18n.languages as LanguageCode[])} className={classes.tab} />
                         ))}
                     </Tabs>
                     <Typography component="div" role="tabpanel" className={classes.tabpanel}>
                         <List disablePadding>
                             {templateList[companies[tabValue].id].map(temp => (
                                 <ListItem button onClick={handleClick(temp.filename)} key={temp.filename}>
-                                    <ListItemText primary={getTransText2(temp.name, i18n.languages)} />
+                                    <ListItemText primary={getTransText2(temp.name, i18n.languages as LanguageCode[])} />
                                 </ListItem>
                             ))}
                         </List>

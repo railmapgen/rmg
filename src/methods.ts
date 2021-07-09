@@ -1,4 +1,5 @@
 import React from 'react';
+import { StationDict } from './constants/constants';
 
 /**
  * Vertical position (in shares) of station icon if using MTR style (for consistency of method `RMGLine.newStnPossibleLoc()`).

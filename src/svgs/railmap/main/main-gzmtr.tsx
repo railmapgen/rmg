@@ -3,6 +3,7 @@ import { ParamContext } from '../../../context';
 import StationGZMTR from './station/station-gzmtr';
 import LineBox from './line-box-gzmtr';
 import { adjacencyList, criticalPathMethod, drawLine, getStnState } from '../methods/share';
+import { InterchangeInfo, StationDict } from "../../../constants/constants";
 
 const wideFactor = (stnList: StationDict, stnId: string) =>
     stnList[stnId].parents.length === 2 || stnList[stnId].children.length === 2 ? 0.25 : 0;

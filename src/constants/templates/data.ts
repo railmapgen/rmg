@@ -1,47 +1,7 @@
-export const companies: CompanyEntry[] = [
-    {
-        id: 'basic',
-        name: {
-            en: 'Basic',
-            zh: '基本',
-        },
-    },
-    {
-        id: 'gzmtr',
-        name: {
-            en: 'Guangzhou Metro',
-            'zh-Hans': '广州地铁',
-            'zh-Hant': '廣州地鐵',
-        },
-    },
-    {
-        id: 'mlm',
-        name: {
-            en: 'Macao LRT',
-            pt: 'Metro Ligeiro de Macau',
-            'zh-Hans': '澳门轻轨',
-            'zh-Hant': '澳門輕軌',
-        },
-    },
-    {
-        id: 'mtr',
-        name: {
-            en: 'MTR',
-            'zh-Hans': '港铁',
-            'zh-Hant': '港鐵',
-        },
-    },
-    {
-        id: 'shmetro',
-        name: {
-            en: 'Shanghai Metro',
-            'zh-Hans': '上海地铁',
-            'zh-Hant': '上海地鐵',
-        },
-    },
-];
+import { Translation } from '../constants';
+import { CompanyCode } from '../company-config';
 
-export const templateList: { [comp: string]: { filename: string; name: ITrans }[] } = {
+export const templateList: Record<CompanyCode, { filename: string; name: Translation }[]> = {
     basic: [
         {
             filename: 'blank',

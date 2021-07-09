@@ -22,6 +22,7 @@ import { addStation } from './utils';
 import { ParamContext } from '../../context';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux';
+import { StationDict, StationInfo } from "../../constants/constants";
 
 const newBranchPossibleEnd = (prep: 'before' | 'after', pivot: string, stnList: StationDict) => {
     let res: string[] = [];

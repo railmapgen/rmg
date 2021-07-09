@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ParamContext } from '../../context';
 import StationNumberText from '../station-num-gzmtr';
+import { Name } from "../../constants/constants";
 
 const InfoGZMTR = () => {
     const { param } = React.useContext(ParamContext);

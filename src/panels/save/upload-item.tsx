@@ -12,6 +12,7 @@ import {
     DialogActions,
     Button,
 } from '@material-ui/core';
+import { RMGParam } from '../../constants/constants';
 
 export default function UploadLi() {
     const { t } = useTranslation();

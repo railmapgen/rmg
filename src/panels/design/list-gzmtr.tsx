@@ -28,7 +28,7 @@ import {
 } from '@material-ui/core';
 
 import { ParamContext } from '../../context';
-import { PanelTypesGZMTR } from '../../constants/constants';
+import { PanelTypeGZMTR, Note } from '../../constants/constants';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -93,7 +93,7 @@ const PanelTypeLi = () => {
                         onChange={e => dispatch({ type: 'SET_PANEL_TYPE', variant: e.target.value as PanelTypeGZMTR })}
                         style={{ width: 166 }}
                     >
-                        {PanelTypesGZMTR.map(type => (
+                        {Object.values(PanelTypeGZMTR).map(type => (
                             <option key={type} value={type}>
                                 {t('design.panelType.' + type)}
                             </option>
