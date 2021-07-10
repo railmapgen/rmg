@@ -25,7 +25,7 @@ jobs:
         run: |
           cd ${{ env.UAT_REPO_NAME }}/
           mkdir BitBucket-PRD
-          git clone --single-branch --branch gh-pages --depth 1 https://chitowong:${{ secrets.BITBUCKET }}@bitbucket.org/rail-map-generator/rail-map-generator.bitbucket.io.git BitBucket-PRD/
+          git clone --depth 1 https://chitowong:${{ secrets.BITBUCKET }}@bitbucket.org/rail-map-generator/rail-map-generator.bitbucket.io.git BitBucket-PRD/
           rm -rf BitBucket-PRD/*
           cp -r ${{ github.event.inputs.version }}/PRD/* BitBucket-PRD/
           cd BitBucket-PRD/
