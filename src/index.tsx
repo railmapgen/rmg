@@ -6,7 +6,7 @@ import App from './App';
 import { updateParam } from './utils';
 import * as serviceWorker from './serviceWorker';
 
-import { AllCanvas, CanvasType } from "./constants/constants";
+import { AllCanvas, CanvasType } from './constants/constants';
 import StorageService from './util/storage/storageService';
 import getRmgStorage from './util/storage';
 import store from './redux';
@@ -57,7 +57,7 @@ getRmgStorage()
             const updatedParam = updateParam(JSON.parse(contents));
             await rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
         } catch (err) {
-            console.warn(err);
+            console.warn('Error in reading rmgParam', err);
             const module = await import('./constants/templates/basic/blank');
             const updatedParam = updateParam(module.default);
             await rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
@@ -69,13 +69,27 @@ getRmgStorage()
         // style being setup in SVG's router
 
         // setup canvas scale
-        const canvasScaleString = await window.rmgStorage.readFile('rmgScale');
-        const canvasScale = Number(canvasScaleString);
-        canvasScale >= 0.1 && store.dispatch(setCanvasScale(canvasScale));
-
+        try {
+            const canvasScaleString = await window.rmgStorage.readFile('rmgScale');
+            const canvasScale = Number(canvasScaleString);
+            canvasScale >= 0.1 && store.dispatch(setCanvasScale(canvasScale));
+        } catch (err) {
+            console.warn('Error in reading rmgScale file', err);
+            console.log('Initiating rmgScale as 1');
+            await window.rmgStorage.writeFile('rmgScale', '1');
+            store.dispatch(setCanvasScale(1));
+        }
+        
         // setup canvas to show
-        const canvasToShow = await window.rmgStorage.readFile('rmgCanvas') as CanvasType | typeof AllCanvas;
-        store.dispatch(setCanvasToShow(canvasToShow));
+        try {
+            const canvasToShow = await window.rmgStorage.readFile('rmgCanvas') as CanvasType | typeof AllCanvas;
+            store.dispatch(setCanvasToShow(canvasToShow));
+        } catch(err) {
+            console.warn('Error in reading rmgCanvas file', err);
+            console.log('Initiating rmgCanvas as "all"');
+            await window.rmgStorage.writeFile('rmgCanvas', AllCanvas);
+            store.dispatch(setCanvasToShow(AllCanvas));
+        }
 
         window.rmgStore = store;
     })
