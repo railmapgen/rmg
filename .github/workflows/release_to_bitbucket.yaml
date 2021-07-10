@@ -27,7 +27,8 @@ jobs:
           mkdir BitBucket-PRD
           git clone --depth 1 https://chitowong:${{ secrets.BITBUCKET }}@bitbucket.org/rail-map-generator/rail-map-generator.bitbucket.io.git BitBucket-PRD/
           rm -rf BitBucket-PRD/*
-          cp -r ${{ github.event.inputs.version }}/PRD/* BitBucket-PRD/
+          mkdir BitBucket-PRD/RailMapGenerator
+          cp -r ${{ github.event.inputs.version }}/PRD/* BitBucket-PRD/RailMapGenerator/
           cd BitBucket-PRD/
           git add .
           git commit -m "Release RMG version ${{ github.event.inputs.version }} to PRD"
