@@ -374,7 +374,7 @@ const ServicesElements = (props: { servicesLevel: Services[]; direction: 'l' | '
 const DirectionElements = () => {
     const { param } = useContext(ParamContext);
 
-    return (
+    return React.useMemo(()=>(
         <g
             transform={`translate(${param.direction === 'l' ? 50 : param.svgWidth.railmap - 150},${
                 -param.svg_height + 100
@@ -389,5 +389,7 @@ const DirectionElements = () => {
                 })scale(0.15)`}
             />
         </g>
-    );
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [param.direction, param.svgWidth.railmap]);
 };

@@ -132,7 +132,11 @@ const StationName = React.forwardRef(
                 {React.useMemo(
                     () => (
                         <>
-                            <text className="rmg-name__zh">{stnName[0]}</text>
+                            {stnName[0].split('\\').map((txt, i, array) => (
+                                <text key={i} className="rmg-name__zh" dy={(array.length - 1 - i) * -15}>
+                                    {txt}
+                                </text>
+                            ))}
                             <g fontSize={9.6}>
                                 {stnName[1].split('\\').map((txt, i) => (
                                     <text key={i} className="rmg-name__en" dy={12 * (i + 1)}>
