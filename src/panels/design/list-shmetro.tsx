@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ListItem, ListItemIcon, Icon, ListItemText, Divider, Select } from '@material-ui/core';
 
 import { ParamContext } from '../../context';
-import { PanelTypesShmetro } from '../../constants/constants';
+import { PanelTypeShmetro } from '../../constants/constants';
 
 const DesignListShmetro = () => {
     return (
@@ -48,7 +48,7 @@ const PanelTypeLi = () => {
                         }
                         style={{ width: 166 }}
                     >
-                        {PanelTypesShmetro.map(type => (
+                        {Object.values(PanelTypeShmetro).map(type => (
                             <option key={type} value={type}>
                                 {t('design.panelType.' + type)}
                             </option>

@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { ParamContext } from '../../../context';
 import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState } from '../methods/share';
 import StationSHMetro from './station/station-shmetro';
+import { Services } from '../../../constants/constants';
 
 interface servicesPath {
     main: string[];
@@ -63,7 +64,7 @@ const MainSHMetro = () => {
         [param.current_stn_idx, param.direction, routes.toString()]
     );
 
-    const services: Services[] = ['local', 'express', 'direct'];
+    const services = Object.values(Services);
     const servicesLevel = Object.values(param.stn_list)
         .map(stationInfo => stationInfo.services)
         .flat() // all services

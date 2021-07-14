@@ -1,4 +1,5 @@
 import * as Global from '../../../methods';
+import { RMGParam, StationDict, StationInfo } from "../../../constants/constants";
 
 /**
  * Compute the adjacency list of the graph.
@@ -147,7 +148,7 @@ export class Stations {
     yShares = {} as { [stnId: string]: number };
     xShares = {} as { [stnId: string]: number };
     namePoss = {} as { [stnId: string]: boolean };
-    stnList = {} as { [stnId: string]: StationInfo };
+    stnList = {} as StationDict;
     criticalPath = {} as { len: number; nodes: string[] };
 
     constructor(data: { stnList?: any; criticalPath?: any }) {

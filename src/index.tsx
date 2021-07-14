@@ -12,6 +12,7 @@ import getRmgStorage from './util/storage';
 import store from './redux';
 import { Provider } from 'react-redux';
 import { setCanvasScale, setCanvasToShow } from './redux/app/action';
+import { setFullParam } from './redux/param/action';
 
 declare global {
     interface Window {
@@ -66,6 +67,11 @@ getRmgStorage()
         }
     })
     .then(async () => {
+        // init param store with localStorage
+        const contents = await window.rmgStorage.readFile('rmgParam');
+        store.dispatch(setFullParam(JSON.parse(contents)));
+    })
+    .then(async () => {
         // style being setup in SVG's router
 
         // setup canvas scale
@@ -79,7 +85,7 @@ getRmgStorage()
             await window.rmgStorage.writeFile('rmgScale', '1');
             store.dispatch(setCanvasScale(1));
         }
-        
+
         // setup canvas to show
         try {
             const canvasToShow = await window.rmgStorage.readFile('rmgCanvas') as CanvasType | typeof AllCanvas;

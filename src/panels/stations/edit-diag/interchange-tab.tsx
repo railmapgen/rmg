@@ -26,7 +26,7 @@ import ColourDialog from '../../colour-diag';
 import NameListItems from './name-list-items';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux';
-import { RmgStyle } from '../../../constants/constants';
+import { RmgStyle, InterchangeInfo, Name, Theme, MonoColour } from "../../../constants/constants";
 
 const StationEditInterchangeTab = (props: { stnId: string }) => {
     const { t } = useTranslation();
@@ -225,7 +225,7 @@ const InterchangeChipSet = (props: InterchangeChipSetProps) => {
                               intInfos[chipSelected][0],
                               intInfos[chipSelected][1],
                               intInfos[chipSelected][2],
-                              intInfos[chipSelected][3] as '#fff' | '#000',
+                              intInfos[chipSelected][3] as MonoColour,
                           ]
                 }
                 lineName={

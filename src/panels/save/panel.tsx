@@ -23,7 +23,7 @@ import ExportDialog from './export-diag';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux';
-import { RmgStyle } from '../../constants/constants';
+import { LanguageCode, RmgStyle } from "../../constants/constants";
 import { setRmgStyle } from '../../redux/app/action';
 
 const TemplateDialog = React.lazy(() => import(/* webpackChunkName: "panelSaveTemplateDialog" */ './template-diag'));
@@ -125,7 +125,7 @@ const SaveLists = () => {
                         </ListItemIcon>
                         <ListItemText
                             primary={t('file.lang.button')}
-                            secondary={getTransText2(allLangs, i18n.languages)}
+                            secondary={getTransText2(allLangs, i18n.languages as LanguageCode[])}
                         />
                     </ListItem>
                 </List>

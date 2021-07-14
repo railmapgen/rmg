@@ -3,6 +3,7 @@ import { ParamContext } from '../../../context';
 import { adjacencyList, criticalPathMethod, getXShareMTR, getStnState } from '../methods/share';
 import { StationsMTR } from '../methods/mtr';
 import StationMTR from './station/station-mtr';
+import { RMGParam, StationDict } from '../../../constants/constants';
 
 const leftWideFactor = (stnList: StationDict, stnId: string) => {
     var res = 0;

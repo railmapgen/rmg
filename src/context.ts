@@ -1,5 +1,19 @@
 import React, { createContext } from 'react';
-import { CanvasType } from './constants/constants';
+import {
+    CanvasType,
+    RMGParam,
+    ShortDirection,
+    Theme,
+    PanelTypeShmetro,
+    PanelTypeGZMTR,
+    StationDict,
+    InterchangeInfo,
+    Facilities,
+    Services,
+    Note,
+    Name,
+    MonoColour,
+} from './constants/constants';
 
 interface IParamContext {
     param: RMGParam;
@@ -54,7 +68,7 @@ type ReducerAction =
       }
     | {
           type: 'SET_THEME';
-          theme: [string, string, string, '#fff' | '#000'];
+          theme: [string, string, string, MonoColour];
       }
     | {
           type: 'SET_DIRECTION';
@@ -255,12 +269,12 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
         case 'SET_THEME':
             return {
                 ...state,
-                theme: action.theme,
+                theme: action.theme as Theme,
             };
         case 'SET_DIRECTION':
             return {
                 ...state,
-                direction: state.direction === 'l' ? 'r' : 'l',
+                direction: state.direction === ShortDirection.left ? ShortDirection.right : ShortDirection.left,
             };
         case 'SET_PLATFORM':
             return {
@@ -312,7 +326,7 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
         case 'SET_PANEL_TYPE':
             return {
                 ...state,
-                info_panel_type: action.variant,
+                info_panel_type: action.variant as  PanelTypeGZMTR | PanelTypeShmetro,
             };
         case 'ADD_NOTE_GZMTR':
             return {
@@ -464,9 +478,9 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
                                 i === action.setIdx
                                     ? infos.map((int, j) =>
                                           j === action.intIdx
-                                              ? (([0, 1, 2, 3, 4, 5].map(k =>
+                                              ? ([0, 1, 2, 3, 4, 5].map(k =>
                                                     action.info[k] === undefined ? int[k] : action.info[k]
-                                                ) as unknown) as InterchangeInfo)
+                                                ) as unknown as InterchangeInfo)
                                               : int
                                       )
                                     : infos
@@ -498,7 +512,7 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
                         ...state.stn_list[action.stnId],
                         transfer: {
                             ...state.stn_list[action.stnId].transfer,
-                            tick_direc: action.direction,
+                            tick_direc: action.direction as ShortDirection,
                         },
                     },
                 },
@@ -583,7 +597,7 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
                     ...state.stn_list,
                     [action.stnId]: {
                         ...state.stn_list[action.stnId],
-                        facility: action.facility,
+                        facility: action.facility as Facilities,
                     },
                 },
             };
@@ -596,7 +610,7 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
                         ...state.stn_list[action.stnId],
                         services: Array.from(
                             action.isChecked
-                                ? new Set(state.stn_list[action.stnId].services).add(action.serviceId)
+                                ? new Set(state.stn_list[action.stnId].services).add(action.serviceId as Services)
                                 : state.stn_list[action.stnId].services.filter(s => s !== action.serviceId)
                         ),
                     },

@@ -2,6 +2,7 @@ import React from 'react';
 
 import { ParamContext } from '../../context';
 import StripMTR from '../strip/strip-mtr';
+import { Name } from "../../constants/constants";
 
 export default React.memo(function DestinationMTR() {
     return (

@@ -17,6 +17,7 @@ import {
     Grid,
     Button,
 } from '@material-ui/core';
+import { Name } from "../../constants/constants";
 
 const useStyles = makeStyles(theme =>
     createStyles({

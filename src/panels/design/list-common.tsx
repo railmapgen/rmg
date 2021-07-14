@@ -19,7 +19,7 @@ import ColourDialog from '../colour-diag';
 import { ParamContext } from '../../context';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux';
-import { RmgStyle } from '../../constants/constants';
+import { Name, RmgStyle } from "../../constants/constants";
 
 const useStyles = makeStyles(theme =>
     createStyles({

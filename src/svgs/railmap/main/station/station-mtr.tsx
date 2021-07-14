@@ -1,5 +1,6 @@
 import React, { useState, useContext, useMemo, useRef, useEffect } from 'react';
 import { ParamContext } from '../../../../context';
+import { Facilities, InterchangeInfo, Name, StationTransfer } from "../../../../constants/constants";
 
 interface Props {
     stnId: string;
@@ -180,7 +181,7 @@ interface StationNameGElementProps {
     namePos: boolean;
     stnState: -1 | 0 | 1;
     nameDX?: number;
-    facility: StationInfo['facility'];
+    facility: Facilities;
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {

@@ -1,4 +1,4 @@
-import { RmgStyle } from './constants/constants';
+import { LanguageCode, Note, RmgStyle, StationInfo, Translation } from "./constants/constants";
 
 export const updateParam = (param: { [x: string]: any }) => {
     // Version 0.10
@@ -205,11 +205,11 @@ export const updateParam = (param: { [x: string]: any }) => {
     return param;
 };
 
-export const getTransText2 = (obj: ITrans, langs: string[]) => {
+export const getTransText2 = (obj: Translation, langs: LanguageCode[]) => {
     for (let l of langs) {
         if (obj[l]) return obj[l];
     }
-    return obj.en;
+    return obj[LanguageCode.English];
 };
 
 /**

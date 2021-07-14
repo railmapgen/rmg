@@ -1,5 +1,6 @@
 import React, { useContext, useRef, memo } from 'react';
 import { ParamContext } from '../../../../context';
+import { InterchangeInfo, Name, PanelTypeGZMTR, PanelTypeShmetro } from "../../../../constants/constants";
 
 interface Props {
     stnId: string;
