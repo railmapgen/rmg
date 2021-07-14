@@ -13,7 +13,7 @@ const StationSHMetro = (props: Props) => {
     // shift station name if the line bifurcate here
     const branchNameDX =
         ([...stnInfo.branch.left, ...stnInfo.branch.right].length ? 8 + 12 * stnInfo.name[1].split('\\').length : 0) *
-        (param.direction === 'l' ? -1 : 1);
+        (param.direction === 'r' ? -1 : 1);
 
     let stationIconStyle = '';
     let stationIconColor: {[pos: string]: string} = {};

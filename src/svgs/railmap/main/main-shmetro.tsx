@@ -247,7 +247,7 @@ const _linePath = (
             if (direction === 'l') {
                 return `M ${x - e},${y} H ${h + e + servicesPassDelta}`;
             } else {
-                return `M ${x - e - servicesPassDelta},${y} H ${h}`;
+                return `M ${x - e - servicesPassDelta},${y} H ${h + e}`;
             }
         }
     } else {
@@ -263,18 +263,18 @@ const _linePath = (
             if (direction === 'l') {
                 if (ym > y) {
                     // main line, left direction, center to upper
-                    return `M ${x - e},${y} H ${xb + Math.abs(xb-xm) / 2} V ${ym}`;
+                    return `M ${x - e},${y} H ${xm} V ${ym}`;
                 } else {
                     // main line, left direction, upper to center
-                    return `M ${x},${y} H ${xb - Math.abs(xb-x) / 2} V ${ym} H ${xm}`; // wrong marker
+                    return `M ${x},${y} V ${ym} H ${xm}`; // wrong marker
                 }
             } else {
                 if (ym > y) {
                     // main line, right direction, upper to center
-                    return `M ${x},${y} H ${xb + Math.abs(xb - xm) / 2} V ${ym} H ${xm}`; // wrong marker
+                    return `M ${x},${y} H ${xm} V ${ym}`; // wrong marker
                 } else {
                     // main line, right direction, center to upper
-                    return `M ${x + Math.abs(xb-x) / 2},${y} V ${ym} H ${xm + e}`;
+                    return `M ${x},${y} V ${ym} H ${xm + e}`;
                 }
             }
         } else {
@@ -282,18 +282,18 @@ const _linePath = (
             if (direction === 'l') {
                 if (ym > y) {
                     // pass line, left direction, center to upper
-                    return `M ${x - e},${y} H ${xb + Math.abs(xb - xm) / 2} V ${ym}`;
+                    return `M ${x - e},${y} H ${xm} V ${ym}`;
                 } else {
                     // pass line, left direction, upper to center
-                    return `M ${x},${y} H ${xb - Math.abs(xb-x) / 2} V ${ym} H ${xm + e}`;
+                    return `M ${x},${y} V ${ym} H ${xm + e}`;
                 }
             } else {
                 if (ym > y) {
                     // pass line, right direction, upper to center
-                    return `M ${x - e},${y} H ${xb + Math.abs(xb-xm) / 2} V ${ym}`;
+                    return `M ${x - e},${y} H ${xm} V ${ym}`;
                 } else {
                     // pass line, right direction, center to upper
-                    return `M ${x},${y} H ${xb - Math.abs(xb-x) / 2} V ${ym} H ${xm + e}`;
+                    return `M ${x},${y} V ${ym} H ${xm + e}`;
                 }
             }
         }
