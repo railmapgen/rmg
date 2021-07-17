@@ -33,12 +33,9 @@ const InfoSHMetro = () => {
                 })
         ),
     ];
-    const destNames: Name = [
-        validDests.map(id => param.stn_list[id].name[0]).join('，'),
-        validDests
-            .map(id => param.stn_list[id].name[1])
-            .join(', ')
-            .replace('\\', ' '),
+    const destNames: string[][] = [
+        validDests.map(id => param.stn_list[id].name[0]),
+        validDests.map(id => param.stn_list[id].name[1])
     ];
 
     const terminalEl = useRef<SVGGElement | null>(null);
@@ -46,7 +43,7 @@ const InfoSHMetro = () => {
     useEffect(
         () => setTerminalBBox(terminalEl.current!.getBBox()),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [...destNames]
+        [...destNames.flat()]
     );
 
     const [middle, MARGIN, PADDING, LINEBOX_WIDTH, PLATFORM_WIDTH] = [param.svgWidth.destination / 2, 10, 36, 264, 325];
@@ -93,7 +90,7 @@ const InfoSHMetro = () => {
     );
 };
 
-const Terminal = forwardRef((props: { destNames: Name }, ref: React.Ref<SVGGElement>) => {
+const Terminal = forwardRef((props: { destNames: string[][] }, ref: React.Ref<SVGGElement>) => {
     const { param } = useContext(ParamContext);
 
     return (
@@ -101,26 +98,33 @@ const Terminal = forwardRef((props: { destNames: Name }, ref: React.Ref<SVGGElem
             {useMemo(
                 () => (
                     <>
-                        <path
-                            d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
-                            fill="black"
-                            transform={`rotate(${param.direction === 'l' ? 0 : 180})scale(0.8)`}
-                        />
+                        {/* translate is not a generalized implementation, only dest length of 1 and 2 are supported */}
+                        <g transform={`translate(0,${props.destNames[0].length === 2 ? -20 : 20})`}>
+                            <path
+                                d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
+                                fill="black"
+                                transform={`rotate(${param.direction === 'l' ? 0 : 180})scale(0.8)`}
+                            />
+                        </g>
                         <g
                             textAnchor={param.direction === 'l' ? 'start' : 'end'}
-                            transform={`translate(${param.direction === 'l' ? 128 + 20 : -128 - 20},15)`}
+                            transform={`translate(${param.direction === 'l' ? 128 + 20 : -128 - 20},25)`}
                         >
-                            <text className="rmg-name__zh" fontSize={90}>
-                                {'往' + props.destNames[0]}
-                            </text>
-                            <text className="rmg-name__en" fontSize={30} dy={44}>
-                                {'To ' + props.destNames[1]}
-                            </text>
+                            {props.destNames[0].map((name, i) => (
+                                <text className="rmg-name__zh" fontSize={70} dy={i * -100 + 7} key={i}>
+                                    {'往' + name}
+                                </text>
+                            ))}
+                            {props.destNames[1].map((name, i) => (
+                                <text className="rmg-name__en" fontSize={25} dy={i * -100 + 40} key={i}>
+                                    {'To ' + name}
+                                </text>
+                            ))}
                         </g>
                     </>
                 ),
                 // eslint-disable-next-line react-hooks/exhaustive-deps
-                [param.direction, ...props.destNames]
+                [param.direction, ...props.destNames.flat()]
             )}
         </g>
     );
@@ -131,7 +135,7 @@ const PlatformNum = () => {
 
     // Total width: 325
     return (
-        <g transform={`translate(${-325 / 2 + 60},130)`}>
+        <g transform={`translate(${-325 / 2 + 60},150)`}>
             <circle r={60} fill="none" stroke="black" strokeWidth={2} />
             <text className="rmg-name__en" dominantBaseline="central" fontSize={120} textAnchor="middle">
                 {param.platform_num}
@@ -172,7 +176,7 @@ const LineNameBoxText = () => {
 const LineNameBoxNumber = () => {
     const { param } = useContext(ParamContext);
 
-    const [lineNumber, lineNameRes] = param.line_name[0].match(/^[\w\d]+|.+/g);
+    const [lineNumber, lineNameRes] = param.line_name[0].match(/^[\w\d]+|.+/g) as string[];
 
     // Number width: 108
     // Text width: 136

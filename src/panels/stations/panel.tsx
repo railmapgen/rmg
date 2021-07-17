@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Snackbar, Button, IconButton, Icon } from '@material-ui/core';
+import { Button, Icon, IconButton, Snackbar } from '@material-ui/core';
 
 import { formatStnName } from '../../utils';
 
@@ -11,12 +11,15 @@ import StationChipSet from './chip-set';
 import StationDeleteDialog from './delete-diags';
 import AutoNumDialog from './auto-num-diag';
 import StationFabs from './fabs';
-import { CanvasContext, ParamContext } from '../../context';
+import { ParamContext } from '../../context';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux';
+import { RmgStyle } from '../../constants/constants';
 
 const PanelStations = () => {
     const { t } = useTranslation();
 
-    const { rmgStyle } = useContext(CanvasContext);
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const { param, dispatch } = useContext(ParamContext);
     const stnList = param.stn_list;
 
@@ -113,7 +116,7 @@ const PanelStations = () => {
                 stnId={stationSelected}
             />
 
-            {rmgStyle === 'gzmtr' && (
+            {rmgStyle === RmgStyle.GZMTR && (
                 <AutoNumDialog open={isAutoNumDialogOpen} onClose={() => setIsAutoNumDialogOpen(false)} />
             )}
         </div>

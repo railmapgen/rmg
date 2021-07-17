@@ -14,7 +14,10 @@ import {
     Divider,
     InputAdornment,
 } from '@material-ui/core';
-import { ParamContext, CanvasContext } from '../../context';
+import { ParamContext } from '../../context';
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux";
+import { canvasConfig } from "../../constants/constants";
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -33,7 +36,7 @@ const useStyles = makeStyles(theme =>
 );
 
 export default memo(function LayoutCommon() {
-    const { rmgStyle } = useContext(CanvasContext);
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     return (
         <>
             <SizeLi />
@@ -56,7 +59,8 @@ const SizeLi = () => {
     const classes = useStyles();
 
     const { param, dispatch } = useContext(ParamContext);
-    const { canvasAvailable } = useContext(CanvasContext);
+
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -72,7 +76,7 @@ const SizeLi = () => {
                 </ListItem>
                 <Collapse in={isOpen} unmountOnExit>
                     <List component="div" disablePadding className={classes.nestedList}>
-                        {canvasAvailable.map(canvas => (
+                        {canvasConfig[rmgStyle].map(canvas => (
                             <React.Fragment key={canvas}>
                                 <ListItem>
                                     <ListItemText primary={t('layout.size.width.' + canvas)} />

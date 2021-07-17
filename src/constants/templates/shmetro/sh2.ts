@@ -1,4 +1,4 @@
-export default {
+const params = {
     svg_height: 300,
     padding: 3.47,
     y_pc: 68.02,
@@ -297,6 +297,7 @@ export default {
                 paid_area: true,
                 osi_names: [],
                 info: [
+                    [],
                     [
                         [
                             "shanghai",
@@ -773,8 +774,7 @@ export default {
                             "磁悬浮",
                             "Maglev"
                         ]
-                    ],
-                    []
+                    ]
                 ]
             },
             services: [
@@ -974,7 +974,7 @@ export default {
                 "zloz"
             ],
             name: [
-                "川 沙",
+                "川沙",
                 "Chuansha"
             ],
             branch: {
@@ -1111,7 +1111,16 @@ export default {
             },
             transfer: {
                 info: [
-                    []
+                    [
+                        [
+                            "shanghai",
+                            "maglev",
+                            "#009090",
+                            "#fff",
+                            "磁悬浮",
+                            "Maglev"
+                        ]
+                    ]
                 ],
                 tick_direc: "r",
                 paid_area: true,
@@ -1126,7 +1135,7 @@ export default {
     ],
     psd_num: "",
     line_num: "2",
-    info_panel_type: "gz28",
+    info_panel_type: "sh",
     direction_gz_x: 2.21,
     direction_gz_y: 12.724668484036409,
     customiseMTRDest: {
@@ -1144,3 +1153,5 @@ export default {
         isFlip: true
     }
 };
+
+export default params;

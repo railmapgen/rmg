@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useTranslation, withTranslation } from 'react-i18next';
 
 import {
@@ -20,8 +20,11 @@ import { getTransText2 } from '../../utils';
 
 import UploadListItem from './upload-item';
 import ExportDialog from './export-diag';
-import { CanvasContext } from '../../context';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux';
+import { LanguageCode, RmgStyle } from "../../constants/constants";
+import { setRmgStyle } from '../../redux/app/action';
 
 const TemplateDialog = React.lazy(() => import(/* webpackChunkName: "panelSaveTemplateDialog" */ './template-diag'));
 
@@ -46,7 +49,7 @@ const allLangs = {
 const SaveLists = () => {
     const { t, i18n } = useTranslation();
 
-    const { rmgStyle } = useContext(CanvasContext);
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
 
     const [isTempDialogOpen, setIsTempDialogOpen] = useState(false);
     const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
@@ -64,7 +67,7 @@ const SaveLists = () => {
         setIsExportDialogOpen(false);
     };
 
-    const styleDialogClose = (action: 'close' | ProvidedStyles) => {
+    const styleDialogClose = (action: 'close' | RmgStyle) => {
         if (action === 'close' || action === rmgStyle) {
         } else {
             // setStyle(action);
@@ -122,7 +125,7 @@ const SaveLists = () => {
                         </ListItemIcon>
                         <ListItemText
                             primary={t('file.lang.button')}
-                            secondary={getTransText2(allLangs, i18n.languages)}
+                            secondary={getTransText2(allLangs, i18n.languages as LanguageCode[])}
                         />
                     </ListItem>
                 </List>
@@ -141,21 +144,27 @@ const SaveLists = () => {
 };
 
 interface StyleDialogProps {
-    onClose: (style: 'close' | ProvidedStyles) => void;
+    onClose: (style: 'close' | RmgStyle) => void;
     open: boolean;
 }
 
 function StyleDialog(props: StyleDialogProps) {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
+
+    const handleClose = (key: RmgStyle) => () => {
+        dispatch(setRmgStyle(key));
+        props.onClose(key);
+    }
 
     return (
         <Dialog onClose={() => props.onClose('close')} open={props.open}>
             <DialogTitle>{t('file.style.title')}</DialogTitle>
             <DialogContent dividers>
                 <List>
-                    {(['gzmtr', 'mtr', 'shmetro'] as ProvidedStyles[]).map(key => (
+                    {Object.values(RmgStyle).map(key => (
                         <Link to={'/' + key} key={key} style={{ textDecoration: 'none', color: 'unset' }}>
-                            <ListItem button onClick={() => props.onClose(key)}>
+                            <ListItem button onClick={handleClose(key)}>
                                 <ListItemText primary={t('file.style.' + key)} />
                             </ListItem>
                         </Link>

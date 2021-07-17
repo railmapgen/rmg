@@ -1,4 +1,5 @@
 import React from 'react';
+import { MonoColour, PanelTypeGZMTR, PanelTypeShmetro } from '../../constants/constants';
 
 interface Props {
     variant: PanelTypeGZMTR | PanelTypeShmetro;
@@ -99,7 +100,7 @@ const PSD = React.memo(
         return (
             <g
                 textAnchor="middle"
-                fill={isInStrip ? '#000' : 'var(--rmg-theme-fg)'}
+                fill={isInStrip ? MonoColour.black : 'var(--rmg-theme-fg)'}
                 style={{
                     ['--psd-dy' as any]: psdDy,
                     transform: 'translate(var(--translate-x), var(--translate-y))',

@@ -12,6 +12,7 @@ import {
     DialogActions,
     Button,
 } from '@material-ui/core';
+import { RMGParam } from '../../constants/constants';
 
 export default function UploadLi() {
     const { t } = useTranslation();
@@ -34,15 +35,19 @@ export default function UploadLi() {
             });
     };
 
-    const handleClose = (action: string) => () => {
+    const handleClose = (action: string) => async () => {
         if (action === 'close') {
             (document.getElementById('upload-param') as HTMLInputElement).value = '';
             setOpen(false);
             return;
         }
         if (action === 'accept') {
-            localStorage.rmgParam = JSON.stringify(importedParam);
-            window.location.reload(true);
+            try {
+                await window.rmgStorage.writeFile('rmgParam', JSON.stringify(importedParam));
+                window.location.reload(true);
+            } catch (err) {
+                console.error(err);
+            }
         }
     };
 

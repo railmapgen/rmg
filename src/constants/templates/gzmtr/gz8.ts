@@ -1,4 +1,4 @@
-export default {
+const params = {
     svg_height: 300,
     padding: 2.300062293353778,
     y_pc: 40,
@@ -385,3 +385,5 @@ export default {
     notesGZMTR: [],
     namePosMTR: { isStagger: true, isFlip: false },
 };
+
+export default params;

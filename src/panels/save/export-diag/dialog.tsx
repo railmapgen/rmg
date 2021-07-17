@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Dialog, DialogTitle, DialogContent, List, ListItem, ListItemText } from '@material-ui/core';
+import { Dialog, DialogContent, DialogTitle, List, ListItem, ListItemText } from '@material-ui/core';
 
 import PreviewDialog from './preview-diag';
-import { CanvasContext } from '../../../context';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux';
+import { AllCanvas, canvasConfig } from '../../../constants/constants';
 
 interface Props {
     onClose: (action: string) => void;
@@ -13,7 +15,8 @@ interface Props {
 export default function ExportDialog(props: Props) {
     const { t } = useTranslation();
 
-    const { canvasAvailable, canvasToShown } = React.useContext(CanvasContext);
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+    const canvasToShow = useSelector((store: RootState) => store.app.canvasToShow);
 
     const [previewDialogOpened, setPreviewDialogOpened] = React.useState(false);
     const [canvas, setCanvas] = React.useState('');
@@ -39,7 +42,7 @@ export default function ExportDialog(props: Props) {
                 <DialogTitle>{t('file.export.title')}</DialogTitle>
                 <DialogContent dividers>
                     <List>
-                        {(canvasToShown === 'all' ? canvasAvailable : [canvasToShown]).map(c => (
+                        {(canvasToShow === AllCanvas ? canvasConfig[rmgStyle] : [canvasToShow]).map(c => (
                             <ListItem button key={c} onClick={handleClose(c)}>
                                 <ListItemText primary={t('file.export.' + c)} />
                             </ListItem>

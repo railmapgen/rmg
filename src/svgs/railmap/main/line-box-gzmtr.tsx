@@ -1,9 +1,10 @@
-import React, { useState, useRef, useEffect, memo } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
+import { InterchangeInfo, MonoColour, Name } from '../../../constants/constants';
 
 export default memo(
     function LineBox(props: { info: InterchangeInfo; stnState: -1 | 0 | 1 }) {
         return (
-            <g textAnchor="middle" fill={props.stnState === -1 ? '#fff' : props.info[3]}>
+            <g textAnchor="middle" fill={props.stnState === -1 ? MonoColour.white : props.info[3]}>
                 <use xlinkHref="#intbox" fill={props.stnState === -1 ? '#aaa' : props.info[2]} />
                 {props.info[4][0] === props.info[5][0] ? (
                     <LineBoxNameSpan name={props.info.slice(-2) as Name} />

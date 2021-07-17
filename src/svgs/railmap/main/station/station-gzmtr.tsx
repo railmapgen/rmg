@@ -1,7 +1,8 @@
-import React, { useContext, useState, useEffect, useRef, useMemo, forwardRef } from 'react';
+import React, { forwardRef, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ParamContext } from '../../../../context';
 import StationNumberText from '../../../station-num-gzmtr';
 import LineBox from '../line-box-gzmtr';
+import { InterchangeInfo, Name, Services } from "../../../../constants/constants";
 
 interface Props {
     stnId: string;
@@ -64,7 +65,7 @@ const StationGZMTR = (props: Props) => {
                     secondaryName={stnInfo.secondaryName}
                     stnState={props.stnState}
                     tickRotation={tickRotation}
-                    isExpress={stnInfo.services.includes('express')}
+                    isExpress={stnInfo.services.includes(Services.express)}
                 />
             </g>
         </>

@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { ParamContext } from '../../../context';
 import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState } from '../methods/share';
 import StationSHMetro from './station/station-shmetro';
+import { Services } from '../../../constants/constants';
 
 export interface servicesPath {
     main: string[];
@@ -63,7 +64,7 @@ const MainSHMetro = () => {
         [param.current_stn_idx, param.direction, routes.toString()]
     );
 
-    const services: Services[] = ['local', 'express', 'direct'];
+    const services = Object.values(Services);
     const servicesLevel = Object.values(param.stn_list)
         .map(stationInfo => stationInfo.services)
         .flat() // all services
@@ -247,7 +248,7 @@ export const _linePath = (
             if (direction === 'l') {
                 return `M ${x - e},${y} H ${h + e + servicesPassDelta}`;
             } else {
-                return `M ${x - e - servicesPassDelta},${y} H ${h}`;
+                return `M ${x - e - servicesPassDelta},${y} H ${h + e}`;
             }
         }
     } else {
@@ -263,18 +264,18 @@ export const _linePath = (
             if (direction === 'l') {
                 if (ym > y) {
                     // main line, left direction, center to upper
-                    return `M ${x - e},${y} H ${xb + Math.abs(xb-xm) / 2} V ${ym}`;
+                    return `M ${x - e},${y} H ${xm} V ${ym}`;
                 } else {
                     // main line, left direction, upper to center
-                    return `M ${x},${y} H ${xb - Math.abs(xb-x) / 2} V ${ym} H ${xm}`; // wrong marker
+                    return `M ${x},${y} V ${ym} H ${xm}`; // wrong marker
                 }
             } else {
                 if (ym > y) {
                     // main line, right direction, upper to center
-                    return `M ${x},${y} H ${xb + Math.abs(xb - xm) / 2} V ${ym} H ${xm}`; // wrong marker
+                    return `M ${x},${y} H ${xm} V ${ym}`; // wrong marker
                 } else {
                     // main line, right direction, center to upper
-                    return `M ${x + Math.abs(xb-x) / 2},${y} V ${ym} H ${xm + e}`;
+                    return `M ${x},${y} V ${ym} H ${xm + e}`;
                 }
             }
         } else {
@@ -282,18 +283,18 @@ export const _linePath = (
             if (direction === 'l') {
                 if (ym > y) {
                     // pass line, left direction, center to upper
-                    return `M ${x - e},${y} H ${xb + Math.abs(xb - xm) / 2} V ${ym}`;
+                    return `M ${x - e},${y} H ${xm} V ${ym}`;
                 } else {
                     // pass line, left direction, upper to center
-                    return `M ${x},${y} H ${xb - Math.abs(xb-x) / 2} V ${ym} H ${xm + e}`;
+                    return `M ${x},${y} V ${ym} H ${xm + e}`;
                 }
             } else {
                 if (ym > y) {
                     // pass line, right direction, upper to center
-                    return `M ${x - e},${y} H ${xb + Math.abs(xb-xm) / 2} V ${ym}`;
+                    return `M ${x - e},${y} H ${xm} V ${ym}`;
                 } else {
                     // pass line, right direction, center to upper
-                    return `M ${x},${y} H ${xb - Math.abs(xb-x) / 2} V ${ym} H ${xm + e}`;
+                    return `M ${x},${y} V ${ym} H ${xm + e}`;
                 }
             }
         }
@@ -374,7 +375,7 @@ const ServicesElements = (props: { servicesLevel: Services[]; direction: 'l' | '
 const DirectionElements = () => {
     const { param } = useContext(ParamContext);
 
-    return (
+    return React.useMemo(()=>(
         <g
             transform={`translate(${param.direction === 'l' ? 50 : param.svgWidth.railmap - 150},${
                 -param.svg_height + 100
@@ -389,5 +390,7 @@ const DirectionElements = () => {
                 })scale(0.15)`}
             />
         </g>
-    );
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [param.direction, param.svgWidth.railmap]);
 };

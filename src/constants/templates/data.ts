@@ -1,47 +1,7 @@
-export const companies: CompanyEntry[] = [
-    {
-        id: 'basic',
-        name: {
-            en: 'Basic',
-            zh: '基本',
-        },
-    },
-    {
-        id: 'gzmtr',
-        name: {
-            en: 'Guangzhou Metro',
-            'zh-Hans': '广州地铁',
-            'zh-Hant': '廣州地鐵',
-        },
-    },
-    {
-        id: 'mlm',
-        name: {
-            en: 'Macao LRT',
-            pt: 'Metro Ligeiro de Macau',
-            'zh-Hans': '澳门轻轨',
-            'zh-Hant': '澳門輕軌',
-        },
-    },
-    {
-        id: 'mtr',
-        name: {
-            en: 'MTR',
-            'zh-Hans': '港铁',
-            'zh-Hant': '港鐵',
-        },
-    },
-    {
-        id: 'shmetro',
-        name: {
-            en: 'Shanghai Metro',
-            'zh-Hans': '上海地铁',
-            'zh-Hant': '上海地鐵',
-        },
-    },
-];
+import { Translation } from '../constants';
+import { CompanyCode } from '../company-config';
 
-export const templateList: { [comp: string]: { filename: string; name: ITrans }[] } = {
+export const templateList: Record<CompanyCode, { filename: string; name: Translation }[]> = {
     basic: [
         {
             filename: 'blank',
@@ -237,19 +197,11 @@ export const templateList: { [comp: string]: { filename: string; name: ITrans }[
             },
         },
         {
-            filename: 'wrl',
+            filename: 'tml',
             name: {
-                en: 'West Rail Line',
-                'zh-Hans': '西铁线',
-                'zh-Hant': '西鐵綫',
-            },
-        },
-        {
-            filename: 'mol',
-            name: {
-                en: 'Tuen Ma Line Phase 1',
-                'zh-Hans': '屯马线一期',
-                'zh-Hant': '屯馬綫一期',
+                en: 'Tuen Ma Line',
+                'zh-Hans': '屯马线',
+                'zh-Hant': '屯馬綫',
             },
         },
     ],
@@ -258,7 +210,7 @@ export const templateList: { [comp: string]: { filename: string; name: ITrans }[
         {
             filename: 'sh1',
             name: {
-                en: 'Shanghai Metro Line 1',
+                en: 'Line 1',
                 'zh-Hans': '1号线',
                 'zh-Hant': '1號線',
             },
@@ -267,54 +219,54 @@ export const templateList: { [comp: string]: { filename: string; name: ITrans }[
             filename: 'sh2',
             name: {
                 en: 'Line 2 by Tianxiu11111',
-                'zh-Hans': '2号线 by Tianxiu11111',
-                'zh-Hant': '2號線 by Tianxiu11111',
+                'zh-Hans': '2号线 来自 Tianxiu11111',
+                'zh-Hant': '2號線 來自 Tianxiu11111',
             },
         },
         {
             filename: 'sh5',
             name: {
                 en: 'Line 5 by Tianxiu11111',
-                'zh-Hans': '5号线 by Tianxiu11111',
-                'zh-Hant': '5號線 by Tianxiu11111',
+                'zh-Hans': '5号线 来自 Tianxiu11111',
+                'zh-Hant': '5號線 來自 Tianxiu11111',
             },
         },
         {
             filename: 'sh6',
             name: {
                 en: 'Line 6 by Thomastzc',
-                'zh-Hans': '6号线 by Thomastzc',
-                'zh-Hant': '6號線 by Thomastzc',
+                'zh-Hans': '6号线 来自 Thomastzc',
+                'zh-Hant': '6號線 來自 Thomastzc',
             },
         },
         {
             filename: 'sh7',
             name: {
                 en: 'Line 7 by Thomastzc',
-                'zh-Hans': '7号线 by Thomastzc',
-                'zh-Hant': '7號線 by Thomastzc',
+                'zh-Hans': '7号线 来自 Thomastzc',
+                'zh-Hant': '7號線 來自 Thomastzc',
             },
         },
         {
             filename: 'sh8',
             name: {
                 en: 'Line 8 by Thomastzc',
-                'zh-Hans': '8号线 by Thomastzc',
-                'zh-Hant': '8號線 by Thomastzc',
+                'zh-Hans': '8号线 来自 Thomastzc',
+                'zh-Hant': '8號線 來自 Thomastzc',
             },
         },
         {
             filename: 'sh11',
             name: {
                 en: 'Line 11 by Tianxiu11111',
-                'zh-Hans': '11号线 by Tianxiu11111',
-                'zh-Hant': '11號線 by Tianxiu11111',
+                'zh-Hans': '11号线 来自 Tianxiu11111',
+                'zh-Hant': '11號線 來自 Tianxiu11111',
             },
         },
         {
             filename: 'sh16',
             name: {
-                en: 'Shanghai Metro Line 16',
+                en: 'Line 16',
                 'zh-Hans': '16号线',
                 'zh-Hant': '16號線',
             },

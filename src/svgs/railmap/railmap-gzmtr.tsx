@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ParamContext } from '../../context';
 import StripGZMTR from '../strip/strip-gzmtr';
 import MainGZMTR from './main/main-gzmtr';
+import { Note } from "../../constants/constants";
 
 const RailMapGZMTR = () => {
     const { param } = React.useContext(ParamContext);

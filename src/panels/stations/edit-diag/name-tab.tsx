@@ -1,32 +1,35 @@
 import React, { useContext } from 'react';
 import {
-    TextField,
-    makeStyles,
+    Collapse,
     createStyles,
+    Icon,
     List,
     ListItem,
-    ListItemSecondaryAction,
-    Switch,
-    ListItemText,
-    Collapse,
     ListItemIcon,
-    Icon,
+    ListItemSecondaryAction,
+    ListItemText,
+    makeStyles,
+    Switch,
+    TextField,
 } from '@material-ui/core';
-import { ParamContext, CanvasContext } from '../../../context';
+import { ParamContext } from '../../../context';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux';
+import { RmgStyle } from '../../../constants/constants';
 
 interface Props {
     stnId: string;
 }
 
 const NameTab = (props: Props) => {
-    const { rmgStyle } = useContext(CanvasContext);
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
 
     return (
         <List component="div">
-            {rmgStyle === 'gzmtr' && <NumInput {...props} />}
+            {rmgStyle === RmgStyle.GZMTR && <NumInput {...props} />}
             <NameInput {...props} />
-            {rmgStyle === 'gzmtr' && <SecondaryNameInput {...props} />}
+            {rmgStyle === RmgStyle.GZMTR && <SecondaryNameInput {...props} />}
         </List>
     );
 };
@@ -154,7 +157,7 @@ const NumInput = (props: Props) => {
 const NameInput = (props: Props) => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const { rmgStyle } = useContext(CanvasContext);
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const { param, dispatch } = useContext(ParamContext);
     const { name } = param.stn_list[props.stnId] || param.stn_list.linestart;
     return (
@@ -163,9 +166,9 @@ const NameInput = (props: Props) => {
                 fullWidth
                 placeholder={t('editor.zh')}
                 className={`${classes.nameInputZH} ${
-                    rmgStyle === 'gzmtr'
+                    rmgStyle === RmgStyle.GZMTR
                         ? classes['nameInputZH-gzmtr']
-                        : rmgStyle === 'mtr'
+                        : rmgStyle === RmgStyle.MTR
                         ? classes['nameInputZH-mtr']
                         : ''
                 }`}
@@ -178,7 +181,7 @@ const NameInput = (props: Props) => {
             <TextField
                 fullWidth
                 placeholder={t('editor.en')}
-                className={`${classes.nameInputEN} ${rmgStyle === 'mtr' ? classes['nameInputEN-mtr'] : ''}`}
+                className={`${classes.nameInputEN} ${rmgStyle === RmgStyle.MTR ? classes['nameInputEN-mtr'] : ''}`}
                 value={name[1]}
                 onChange={e =>
                     dispatch({ type: 'UPDATE_STATION_NAME', stnId: props.stnId, name: [name[0], e.target.value] })

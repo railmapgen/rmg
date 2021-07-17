@@ -1,4 +1,4 @@
-export default {
+const params = {
     "svg_height": 300,
     "padding": 8.750201061605276,
     "y_pc": 40,
@@ -1070,7 +1070,7 @@ export default {
     ],
     "psd_num": "1",
     "line_num": "TW",
-    "info_panel_type": "gz28",
+    "info_panel_type": "sh",
     "direction_gz_x": 50,
     "direction_gz_y": 70,
     "customiseMTRDest": {
@@ -1088,3 +1088,5 @@ export default {
         "isFlip": false
     }
 }
+
+export default params;

@@ -14,7 +14,10 @@ import {
     Divider,
     useMediaQuery,
 } from '@material-ui/core';
-import { CanvasContext } from './context';
+import { AllCanvas, canvasConfig, CanvasType } from "./constants/constants";
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from './redux';
+import { selectCanvas, zoomIn, zoomOut } from "./redux/app/action";
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -61,13 +64,14 @@ export default AppAppBar;
 
 const CanvasToggle = () => {
     const { t } = useTranslation();
-
     const classes = useStyles();
+    const dispatch = useDispatch();
 
-    const { canvasAvailable, setCanvasToShown } = React.useContext(CanvasContext);
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+
     const [canvasButtonEl, setCanvasButtonEl] = React.useState<null | HTMLElement>(null);
-    const handleClick = (action: ProvidedCanvas | 'all') => () => {
-        setCanvasToShown(action);
+    const handleClick = (action: CanvasType | typeof AllCanvas) => () => {
+        dispatch(selectCanvas(action));
         setCanvasButtonEl(null);
     };
 
@@ -80,33 +84,32 @@ const CanvasToggle = () => {
                     </IconButton>
                 </Tooltip>
                 <Menu anchorEl={canvasButtonEl} open={Boolean(canvasButtonEl)} onClose={() => setCanvasButtonEl(null)}>
-                    {canvasAvailable.map((c: ProvidedCanvas) => (
+                    {canvasConfig[rmgStyle].map(c => (
                         <MenuItem key={c} onClick={handleClick(c)}>
                             {t('toggle.' + c)}
                         </MenuItem>
                     ))}
                     <Divider style={{ margin: '6px 0' }} />
-                    <MenuItem onClick={handleClick('all')}>{t('toggle.all')}</MenuItem>
+                    <MenuItem onClick={handleClick(AllCanvas)}>{t('toggle.all')}</MenuItem>
                 </Menu>
             </>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [canvasAvailable.toString(), canvasButtonEl, classes.menuButton]
+        [rmgStyle, canvasButtonEl, classes.menuButton]
     );
 };
 
 const ZoomToggles = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const { setCanvasScale } = React.useContext(CanvasContext);
+    const dispatch = useDispatch();
+
     return React.useMemo(
         () => (
             <>
                 <Tooltip title={t('zoom.out')}>
                     <IconButton
-                        onClick={() =>
-                            setCanvasScale((prevScale: number) => (prevScale <= 0.1 ? prevScale : prevScale - 0.1))
-                        }
+                        onClick={() => dispatch(zoomOut())}
                         className={classes.menuButton}
                     >
                         <Icon>zoom_out</Icon>
@@ -114,7 +117,7 @@ const ZoomToggles = () => {
                 </Tooltip>
                 <Tooltip title={t('zoom.in')}>
                     <IconButton
-                        onClick={() => setCanvasScale((prevScale: number) => prevScale + 0.1)}
+                        onClick={() => dispatch(zoomIn())}
                         className={classes.menuButton}
                     >
                         <Icon>zoom_in</Icon>

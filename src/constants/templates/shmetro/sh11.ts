@@ -1,5 +1,5 @@
-export default {
-    svg_height: 500,
+const params = {
+    svg_height: 300,
     padding: 2.88,
     y_pc: 40,
     branch_spacing: 39.68,
@@ -1376,7 +1376,7 @@ export default {
     ],
     psd_num: "1",
     line_num: "TW",
-    info_panel_type: "gz28",
+    info_panel_type: "sh",
     direction_gz_x: 50,
     direction_gz_y: 70,
     customiseMTRDest: {
@@ -1395,3 +1395,5 @@ export default {
         isFlip: false
     }
 };
+
+export default params;

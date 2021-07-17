@@ -1,5 +1,6 @@
 import React, { useContext, useMemo, memo } from 'react';
 import { ParamContext } from '../../context';
+import { Name } from "../../constants/constants";
 
 const RunInSHMetro = () => {
     const { param, routes } = useContext(ParamContext);
@@ -40,13 +41,7 @@ const RunInSHMetro = () => {
         <>
             <DefsSHMetro />
             <g transform={`translate(0,${dh})`}>
-                {nextStnIds.length === 1 && ['linestart', 'lineend'].includes(nextStnIds[0]) ? (
-                    <TerminalStation stnIds={prevStnIds} />
-                ) : prevStnIds.length === 1 && ['linestart', 'lineend'].includes(prevStnIds[0]) ? (
-                    <OriginStation stnIds={nextStnIds} />
-                ) : (
-                    <GeneralStation prevStnIds={prevStnIds} nextStnIds={nextStnIds} />
-                )}
+                <GeneralStation prevStnIds={prevStnIds} nextStnIds={nextStnIds} />
             </g>
         </>
     );
@@ -63,55 +58,6 @@ const DefsSHMetro = memo(() => (
     </defs>
 ));
 
-const TerminalStation = (props: { stnIds: string[] }) => {
-    const { param } = useContext(ParamContext);
-
-    return (
-        <>
-            <path
-                transform="translate(0,220)"
-                stroke="gray"
-                strokeWidth={12}
-                d={`M24,16 H ${param.svgWidth.runin - 24}`}
-            />
-            <g
-                transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},160)`}
-                textAnchor={param.direction === 'l' ? 'start' : 'end'}
-            >
-                <CurrentText />
-            </g>
-            <PrevStn {...props} />
-        </>
-    );
-};
-
-const OriginStation = (props: { stnIds: string[] }) => {
-    const { param } = useContext(ParamContext);
-
-    return (
-        <>
-            <path
-                transform="translate(0,220)"
-                stroke="var(--rmg-theme-colour)"
-                strokeWidth={12}
-                d={
-                    param.direction === 'l'
-                        ? `M ${param.svgWidth.runin - 24},16 H 36`
-                        : `M24,16 H ${param.svgWidth.runin - 36}`
-                }
-                markerEnd="url(#slope)"
-            />
-            <g
-                transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},160)`}
-                textAnchor={param.direction === 'l' ? 'end' : 'start'}
-            >
-                <CurrentText />
-            </g>
-            <NextStn {...props} />
-        </>
-    );
-};
-
 interface RunInGeneralProps {
     prevStnIds: string[];
     nextStnIds: string[];
@@ -121,27 +67,26 @@ const GeneralStation = (props: RunInGeneralProps) => {
     const { param } = useContext(ParamContext);
     const middle = param.svgWidth.runin / 2;
 
+    const termianl = props.nextStnIds.length === 1 && ['linestart', 'lineend'].includes(props.nextStnIds[0])
+    const original = props.prevStnIds.length === 1 && ['linestart', 'lineend'].includes(props.prevStnIds[0])
+
+    const nextNames = props.nextStnIds.map(stnId=>param.stn_list[stnId].name)
+    const nextBranchLineDy = (props.nextStnIds.length > 1 ? (nextNames[0][0].split('\\').length - 1) * -50 +
+                                                       (nextNames[0][1].split('\\').length - 1) * -30 : 0) + 10
+    const prevNames = props.prevStnIds.map(stnId=>param.stn_list[stnId].name)
+    const prevBranchLineDy = (props.prevStnIds.length > 1 ? (prevNames[0][0].split('\\').length - 1) * -50 +
+                                                        (prevNames[0][1].split('\\').length - 1) * -30 : 0) + 10
+
     return (
         <>
-            <g transform="translate(0,220)" strokeWidth={12}>
-                <path
-                    stroke="var(--rmg-theme-colour)"
-                    d={`M ${middle},16 H ${param.direction === 'l' ? 36 : param.svgWidth.runin - 36}`}
-                    markerEnd="url(#slope)"
-                />
-                <path
-                    stroke="gray"
-                    d={`M ${middle},16 H ${param.direction === 'l' ? param.svgWidth.runin - 24 : 24} `}
-                />
-            </g>
             <g transform="translate(0,110)" strokeWidth={12} fill="none">
                 {props.nextStnIds.length > 1 && (
                     <path
                         stroke="var(--rmg-theme-colour)"
                         d={
                             param.direction === 'l'
-                                ? `M${param.svgWidth.runin / 3},125 L${param.svgWidth.runin / 6},10 H36`
-                                : `M${(param.svgWidth.runin / 3) * 2},125 L${(param.svgWidth.runin / 6) * 5},10 H${
+                                ? `M${param.svgWidth.runin / 3},125 L${param.svgWidth.runin / 6},${nextBranchLineDy} H36`
+                                : `M${(param.svgWidth.runin / 3) * 2},125 L${(param.svgWidth.runin / 6) * 5},${nextBranchLineDy} H${
                                       param.svgWidth.runin - 36
                                   }`
                         }
@@ -153,19 +98,70 @@ const GeneralStation = (props: RunInGeneralProps) => {
                         stroke="gray"
                         d={
                             param.direction === 'l'
-                                ? `M${(param.svgWidth.runin / 3) * 2},125 L${(param.svgWidth.runin / 6) * 5},10 H${
+                                ? `M${(param.svgWidth.runin / 3) * 2},125 L${(param.svgWidth.runin / 6) * 5},${prevBranchLineDy} H${
                                       param.svgWidth.runin - 24
                                   }`
-                                : `M${param.svgWidth.runin / 3},125 L${param.svgWidth.runin / 6},10 H24`
+                                : `M${param.svgWidth.runin / 3},125 L${param.svgWidth.runin / 6},${prevBranchLineDy} H24`
                         }
                     />
                 )}
             </g>
-            <g transform={`translate(${param.svgWidth.runin / 2},160)`} textAnchor="middle">
-                <CurrentText />
-            </g>
-            <NextStn stnIds={props.nextStnIds} />
-            <PrevStn stnIds={props.prevStnIds} />
+
+            {termianl && param.info_panel_type === 'sh' ? (
+                <>
+                    <path
+                        transform="translate(0,220)"
+                        stroke="gray"
+                        strokeWidth={12}
+                        d={`M24,16 H ${param.svgWidth.runin - 24}`}
+                    />
+
+                    <g transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},160)`}
+                        textAnchor={param.direction === 'l' ? 'start' : 'end'} >
+                        <CurrentText />
+                    </g>
+                </>
+            ) : original && param.info_panel_type === 'sh' ? (
+                <>
+                    <path
+                        transform="translate(0,220)"
+                        stroke="var(--rmg-theme-colour)"
+                        strokeWidth={12}
+                        d={
+                            param.direction === 'l'
+                                ? `M ${param.svgWidth.runin - 24},16 H 36`
+                                : `M24,16 H ${param.svgWidth.runin - 36}`
+                        }
+                        markerEnd="url(#slope)"
+                    />
+
+                    <g transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},160)`}
+                        textAnchor={param.direction === 'l' ? 'end' : 'start'} >
+                        <CurrentText />
+                    </g>
+                </>
+            ) : (
+                <>
+                    <g transform="translate(0,220)" strokeWidth={12}>
+                        <path
+                            stroke="var(--rmg-theme-colour)"
+                            d={`M ${middle},16 H ${param.direction === 'l' ? 36 : param.svgWidth.runin - 36}`}
+                            markerEnd="url(#slope)"
+                        />
+                        <path
+                            stroke="gray"
+                            d={`M ${middle},16 H ${param.direction === 'l' ? param.svgWidth.runin - 24 : 24} `}
+                        />
+                    </g>
+        
+                    <g transform={`translate(${middle},160)`} textAnchor="middle">
+                        <CurrentText />
+                    </g>
+                </>
+            )}
+
+            {(original || !termianl) && (<NextStn stnIds={props.nextStnIds} />)}
+            {(termianl || !original) && (<PrevStn stnIds={props.prevStnIds} />)}
         </>
     );
 };
@@ -196,12 +192,18 @@ const NextText = (props: { nextName: Name } & React.SVGProps<SVGGElement>) => {
             {useMemo(
                 () => (
                     <>
-                        <text className="rmg-name__zh" fontSize={48}>
-                            {nextName[0]}
-                        </text>
-                        <text className="rmg-name__en" fontSize={24} dy={28}>
-                            {nextName[1].replace('\\', ' ')}
-                        </text>
+                        {nextName[0].split('\\').map((name, i, array)=>(
+                            <text className="rmg-name__zh" fontSize={48} key={name}
+                                dy={(array.length - 1 - i) * -50 - (nextName[1].split('\\').length - 1) * 30}>
+                                {name}
+                            </text>
+                        ))}
+                        {nextName[1].split('\\').map((name, i, array)=>(
+                            <text className="rmg-name__en" fontSize={24} key={name}
+                                dy={28 + (array.length - 1 - i) * -30}>
+                                {name}
+                            </text>
+                        ))}
                     </>
                 ),
                 // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -213,6 +215,12 @@ const NextText = (props: { nextName: Name } & React.SVGProps<SVGGElement>) => {
 
 const PrevStn = (props: { stnIds: string[] }) => {
     const { param } = useContext(ParamContext);
+    const nextNames = props.stnIds.map(stnId=>param.stn_list[stnId].name)
+    const prevHintDy = (props.stnIds.length > 1 ? 15 : 125) +
+        nextNames.map(name => name[0].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -50 +
+        nextNames.map(name => name[1].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -30
+    const nextBranchTextDy = (props.stnIds.length > 1 ? (nextNames[0][0].split('\\').length - 1) * -50 +
+        (nextNames[0][1].split('\\').length - 1) * -30 : 0) + 70
 
     return (
         <g
@@ -220,11 +228,11 @@ const PrevStn = (props: { stnIds: string[] }) => {
             textAnchor={param.direction === 'l' ? 'end' : 'start'}
             transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},0)`}
         >
-            <NextText nextName={param.stn_list[props.stnIds[0]].name} transform="translate(0,183)" />
+            <NextText nextName={nextNames[0]} transform="translate(0,183)" />
             {props.stnIds.length > 1 && (
-                <NextText nextName={param.stn_list[props.stnIds[1]].name} transform="translate(0,70)" />
+                <NextText nextName={nextNames[1]} transform={`translate(0,${nextBranchTextDy})`} />
             )}
-            <g transform={`translate(0, ${-(props.stnIds.length > 1 ? 110 : 0) + 125})`}>
+            <g transform={`translate(0, ${prevHintDy})`}>
                 <text className="rmg-name__zh" fontSize={22}>
                     上一站
                 </text>
@@ -238,6 +246,12 @@ const PrevStn = (props: { stnIds: string[] }) => {
 
 const NextStn = (props: { stnIds: string[] }) => {
     const { param } = useContext(ParamContext);
+    const nextNames = props.stnIds.map(stnId=>param.stn_list[stnId].name)
+    const nextHintDy = (props.stnIds.length > 1 ? 15 : 125) +
+        nextNames.map(name => name[0].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -50 +
+        nextNames.map(name => name[1].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -30
+    const nextBranchTextDy = (props.stnIds.length > 1 ? (nextNames[0][0].split('\\').length - 1) * -50 +
+                                                       (nextNames[0][1].split('\\').length - 1) * -30 : 0) + 70
 
     return (
         <g
@@ -246,9 +260,9 @@ const NextStn = (props: { stnIds: string[] }) => {
         >
             <NextText nextName={param.stn_list[props.stnIds[0]].name} transform="translate(0,183)" />
             {props.stnIds.length > 1 && (
-                <NextText nextName={param.stn_list[props.stnIds[1]].name} transform="translate(0,70)" />
+                <NextText nextName={param.stn_list[props.stnIds[1]].name} transform={`translate(0,${nextBranchTextDy})`}/>
             )}
-            <g transform={`translate(0, ${-(props.stnIds.length > 1 ? 110 : 0) + 125})`}>
+            <g transform={`translate(0, ${nextHintDy})`}>
                 <text className="rmg-name__zh" fontSize={22}>
                     下一站
                 </text>

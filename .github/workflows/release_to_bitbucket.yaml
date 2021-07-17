@@ -1,0 +1,35 @@
+name: Release to BitBucket
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    env:
+      UAT_REPO_NAME: uat-rail-map-generator
+
+    steps:
+      - name: Configure Git
+        run: |
+          git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.UAT_REPO_NAME }}.git
+          git config --global user.name "Release Agent"
+          git config --global user.email rmg.release.agent@users.noreply.github.com
+
+      - name: Release to PRD on GitHub Pages
+        run: |
+          cd ${{ env.UAT_REPO_NAME }}/
+          mkdir BitBucket-PRD
+          git clone --depth 1 https://chitowong:${{ secrets.BITBUCKET }}@bitbucket.org/rail-map-generator/rail-map-generator.bitbucket.io.git BitBucket-PRD/
+          rm -rf BitBucket-PRD/*
+          mkdir BitBucket-PRD/RailMapGenerator
+          cp -r ${{ github.event.inputs.version }}/PRD/* BitBucket-PRD/RailMapGenerator/
+          cd BitBucket-PRD/
+          git add .
+          git commit -m "Release RMG version ${{ github.event.inputs.version }} to PRD"
+          git push --force

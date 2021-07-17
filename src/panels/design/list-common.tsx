@@ -1,22 +1,25 @@
 import React, { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+    Button,
+    Collapse,
+    createStyles,
+    Divider,
+    Icon,
+    List,
     ListItem,
     ListItemIcon,
-    Icon,
-    ListItemText,
-    TextField,
-    Divider,
-    makeStyles,
-    createStyles,
-    Button,
     ListItemSecondaryAction,
+    ListItemText,
+    makeStyles,
     Switch,
-    Collapse,
-    List,
+    TextField,
 } from '@material-ui/core';
 import ColourDialog from '../colour-diag';
-import { ParamContext, CanvasContext } from '../../context';
+import { ParamContext } from '../../context';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux';
+import { Name, RmgStyle } from "../../constants/constants";
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -32,7 +35,7 @@ const useStyles = makeStyles(theme =>
 const DesignList = () => {
     const { t } = useTranslation();
 
-    const { rmgStyle } = useContext(CanvasContext);
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const { param, dispatch } = React.useContext(ParamContext);
 
     const [isCDiagOpen, setIsCDiagOpen] = React.useState(false);
@@ -78,7 +81,7 @@ const DesignList = () => {
             <Divider />
             <DirectionLi />
             <Divider />
-            {rmgStyle === 'shmetro' ? <PlatformNumSHMetroLi /> : <PlatformNumLi />}
+            {rmgStyle === RmgStyle.SHMetro ? <PlatformNumSHMetroLi /> : <PlatformNumLi />}
         </>
     );
 };
