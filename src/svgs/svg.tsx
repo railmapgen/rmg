@@ -160,5 +160,6 @@ const canvasList: { [s in RmgStyle]: { [c in CanvasType]?: JSX.Element } } = {
         [CanvasType.Destination]: <DestinationSHMetro />,
         [CanvasType.RunIn]: <RunInSHMetro />,
         [CanvasType.RailMap]: <RailMapSHMetro />,
+        [CanvasType.Indoor]: <IndoorSHMetro />,
     },
 };

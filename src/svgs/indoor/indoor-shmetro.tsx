@@ -3,7 +3,7 @@ import { ParamContext } from '../../context';
 import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState } from '../railmap/methods/share';
 import { servicesPath, _linePath } from '../railmap/main/main-shmetro';
 import StationSHMetro from './station-shmetro';
-import {getXShare} from '../railmap/main/main-gzmtr';
+import {Services} from '../../constants/constants';
 
 export default memo(function IndoorWrapperSHMetro() {
     return (
@@ -42,7 +42,7 @@ const IndoorSHMetro = () => {
         () => {
             console.log('computing x shares');
             return Object.keys(param.stn_list).reduce(
-                (acc, cur) => ({ ...acc, [cur]: getXShare(cur, adjMat, branches) }),
+                (acc, cur) => ({ ...acc, [cur]: getXShareMTR(cur, adjMat, branches) }),
                 {} as { [stnId: string]: number }
             );
         },
@@ -101,8 +101,8 @@ const IndoorSHMetro = () => {
     const paths = [(Object.keys(linePaths) as (keyof ReturnType<typeof drawLine>)[]).reduce(
         (acc, cur) => ({
             ...acc,
-            [cur]: linePaths[cur].map(stns => _linePath(stns, cur, xs, ys, param.direction, 'local', 1, 0)),
-            service: 'local' as Services,
+            [cur]: linePaths[cur].map(stns => _linePath(stns, cur, xs, ys, param.direction, Services.local, 1, 0)),
+            service: Services.local,
         }),
         {} as servicesPath
     ),]
