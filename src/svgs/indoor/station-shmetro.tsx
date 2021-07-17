@@ -12,33 +12,23 @@ const StationSHMetro = (props: Props) => {
     const { param } = useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
 
-    // shift station name if the line bifurcate here
-    const branchNameDX =
-        ([...stnInfo.branch.left, ...stnInfo.branch.right].length ? 8 + 12 * stnInfo.name[1].split('\\').length : 0) *
-        (param.direction === 'l' ? -1 : 1);
-
     let stationIconStyle = '';
-    let stationIconColor: {[pos: string]: string} = {};
-
     if (stnInfo.transfer.info.reduce((acc, cur) => acc + cur.length, 0)) stationIconStyle = 'int2_indoor_sh';
     else stationIconStyle = 'stn_indoor_sh';
-    stationIconColor.stroke = 'var(--rmg-theme-colour)';
 
     return (
         <>
             <use
                 xlinkHref={`#${stationIconStyle}`}
-                {...stationIconColor}  // different styles use either `fill` or `stroke`
+                stroke='var(--rmg-theme-colour)'
             />
-            <g transform={`translate(${branchNameDX},0)`}>
-                <StationNameGElement
-                    name={stnInfo.name}
-                    infos={stnInfo.transfer.info}
-                    stnState={props.stnState}
-                    direction={param.direction}
-                    nameDirection={props.nameDirection}
-                />
-            </g>
+            <StationNameGElement
+                name={stnInfo.name}
+                infos={stnInfo.transfer.info}
+                stnState={props.stnState}
+                direction={param.direction}
+                nameDirection={props.nameDirection}
+            />
         </>
     );
 };
@@ -54,8 +44,6 @@ interface StationNameGElementProps {
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {
-    const nameENLn = props.name[1].split('\\').length;
-
     // get the exact station name width so that the
     // interchange station icon can be right after the station name
     const stnNameEl = useRef<SVGGElement | null>(null);
@@ -94,16 +82,12 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 arrowDirection={props.nameDirection}
             />)}
 
-            <g
-                textAnchor='middle'
-                transform={`translate(0,${-14.15625 - 2 - 12 * (nameENLn - 1)})`}
-            >
-                <StationName
-                    ref={stnNameEl}
-                    stnName={props.name}
-                    fill='black'
-                />
-            </g>
+            <StationName
+                ref={stnNameEl}
+                stnName={props.name}
+                nameDirection={props.nameDirection}
+                fill='black'
+            />
 
             // TODO: add osi text
             {props.infos[1]?.length && (
@@ -116,18 +100,25 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 };
 
 const StationName = React.forwardRef(
-    (props: { stnName: Name } & React.SVGProps<SVGGElement>, ref: React.Ref<SVGGElement>) => {
-        const { stnName, ...others } = props
+    (props: { stnName: Name, nameDirection: 'upward' | 'downward' } & React.SVGProps<SVGGElement>, ref: React.Ref<SVGGElement>) => {
+        const { stnName, nameDirection, ...others } = props
+        const name = stnName[0].split('\\')
+        const nameENLn = stnName[1].split('\\').length
 
         return (
-            <g ref={ref} {...others}>
+            <g ref={ref} {...others} textAnchor='middle'
+                transform={`translate(0,${nameDirection === 'upward' ? -14.15625 - 2 : -14.15625 - 2 - 12 * (nameENLn - 1)})`}>
                 {React.useMemo(
                     () => (
                         <>
-                            <text className="rmg-name__zh">{stnName[0]}</text>
+                            {name.map((txt, i, array) => (<text key={i} className="rmg-name__zh"
+                                dy={nameDirection === 'upward' ? 16 * i : (array.length - 1 - i) * -16}>
+                                {txt}
+                            </text>))}
                             <g fontSize={9.6}>
                                 {stnName[1].split('\\').map((txt, i) => (
-                                    <text key={i} className="rmg-name__en" dy={12 * (i + 1)}>
+                                    <text key={i} className="rmg-name__en"
+                                        dy={12 * (i + 1) + (nameDirection === 'upward' ? name.length > 1 ? name.length * 7.5 : 0 : 0)}>
                                         {txt}
                                     </text>
                                 ))}
