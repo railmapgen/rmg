@@ -4,7 +4,7 @@ import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState 
 import StationSHMetro from './station/station-shmetro';
 import { Services } from '../../../constants/constants';
 
-export interface servicesPath {
+interface servicesPath {
     main: string[];
     pass: string[];
     service: Services;
@@ -164,7 +164,7 @@ const Line = (props: { paths: servicesPath[]; direction: 'l' | 'r' }) => {
     );
 };
 
-export const _linePath = (
+const _linePath = (
     stnIds: string[],
     type: 'main' | 'pass',
     xs: { [stnId: string]: number },
