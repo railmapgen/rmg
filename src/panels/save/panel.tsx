@@ -56,9 +56,10 @@ const SaveLists = () => {
     const [isStyleDialogOpen, setIsStyleDialogOpen] = useState(false);
     const [isLangDialogOpen, setIsLangDialogOpen] = useState(false);
 
-    const saveClick = () => {
+    const saveClick = async () => {
+        const rmgParamContents = await window.rmgStorage.readFile('rmgParam');
         let link = document.createElement('a');
-        link.href = 'data:application/json;base64,' + btoa(unescape(encodeURIComponent(localStorage.rmgParam)));
+        link.href = 'data:application/json;base64,' + btoa(unescape(encodeURIComponent(rmgParamContents)));
         link.download = 'rmg.param.' + new Date().toISOString() + '.json';
         link.click();
     };

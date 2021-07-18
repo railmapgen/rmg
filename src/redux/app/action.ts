@@ -46,7 +46,7 @@ const setCanvasScaleStatus = (canvasScaleStatus: LoadingStatus) => {
 };
 
 export const zoomIn = () => {
-    return async (dispatch: Dispatch<any>, getState: () => RootState) => {
+    return async (dispatch: Dispatch, getState: () => RootState) => {
         dispatch(setCanvasScaleStatus(LoadingStatus.loading));
         try {
             const newScale = Number((getState().app.canvasScale + 0.1).toFixed(1));
@@ -60,7 +60,7 @@ export const zoomIn = () => {
 };
 
 export const zoomOut = () => {
-    return async (dispatch: Dispatch<any>, getState: () => RootState) => {
+    return async (dispatch: Dispatch, getState: () => RootState) => {
         dispatch(setCanvasScaleStatus(LoadingStatus.loading));
         try {
             const { canvasScale } = getState().app;
@@ -87,7 +87,7 @@ const setCanvasToShowStatus = (canvasToShowStatus: LoadingStatus) => {
 };
 
 export const selectCanvas = (canvas: CanvasType | typeof AllCanvas) => {
-    return async (dispatch: Dispatch<any>) => {
+    return async (dispatch: Dispatch) => {
         dispatch(setCanvasToShowStatus(LoadingStatus.loading));
         try {
             dispatch(setCanvasToShow(canvas));

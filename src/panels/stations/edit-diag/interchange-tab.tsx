@@ -32,13 +32,14 @@ const StationEditInterchangeTab = (props: { stnId: string }) => {
     const { t } = useTranslation();
 
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+    const theme = useSelector((store: RootState) => store.param.theme);
     const { param, dispatch } = useContext(ParamContext);
     const stnTrans = param.stn_list[props.stnId].transfer;
 
     const [osiNameDialogOpened, setOsiNameDialogOpened] = React.useState(false);
 
     const addClick = (index: number) => {
-        let newInfo = [...param.theme, '轉綫', 'Line'] as InterchangeInfo;
+        let newInfo: InterchangeInfo = [...theme, '轉綫', 'Line'];
         dispatch({
             type: 'ADD_STATION_INTERCHANGE_INFO',
             stnId: props.stnId,

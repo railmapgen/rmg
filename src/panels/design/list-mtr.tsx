@@ -1,4 +1,4 @@
-import React, { useContext, memo, useMemo } from 'react';
+import React, { useContext, memo, useMemo, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ParamContext } from '../../context';
 import {
@@ -17,7 +17,15 @@ import {
     Grid,
     Button,
 } from '@material-ui/core';
-import { Name } from "../../constants/constants";
+import { Name } from '../../constants/constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux';
+import {
+    customiseDestinationName,
+    flipStationNames,
+    toggleLineNameBeforeDestination,
+    staggerStationNames,
+} from '../../redux/param/action';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -51,11 +59,24 @@ export default memo(function DesignListMTR() {
 const NamePosLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
+    const reduxDispatch = useDispatch();
 
-    const { param, dispatch } = useContext(ParamContext);
+    const namePosition = useSelector((store: RootState) => store.param.namePosMTR);
 
-    return useMemo(
-        () => (
+    const { dispatch } = useContext(ParamContext);
+
+    return useMemo(() => {
+        const handleStaggerChange = (_: ChangeEvent, checked: boolean) => {
+            dispatch({ type: 'SET_TEXT_STAGGER', checked });
+            reduxDispatch(staggerStationNames(checked));
+        };
+
+        const handleFlip = () => {
+            dispatch({ type: 'SET_TEXT_FLIP' });
+            reduxDispatch(flipStationNames());
+        };
+
+        return (
             <>
                 <ListItem>
                     <ListItemIcon>
@@ -66,8 +87,8 @@ const NamePosLi = () => {
                         <Switch
                             edge="end"
                             color="primary"
-                            checked={param.namePosMTR.isStagger}
-                            onChange={(_, checked) => dispatch({ type: 'SET_TEXT_STAGGER', checked })}
+                            checked={namePosition.isStagger}
+                            onChange={handleStaggerChange}
                         />
                     </ListItemSecondaryAction>
                 </ListItem>
@@ -76,36 +97,51 @@ const NamePosLi = () => {
                     <ListItem className={classes.nested}>
                         <ListItemText primary={t('design.txtFlip.flipText')} />
                         <Divider orientation="vertical" flexItem className={classes.divider} />
-                        <Button variant="outlined" color="primary" onClick={() => dispatch({ type: 'SET_TEXT_FLIP' })}>
+                        <Button variant="outlined" color="primary" onClick={handleFlip}>
                             {t('design.txtFlip.flip')}
                         </Button>
                     </ListItem>
                 </List>
             </>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.namePosMTR.isStagger, classes.nested, classes.divider]
-    );
+        );
+    }, [namePosition.isStagger, classes.nested, classes.divider, dispatch, reduxDispatch, t]);
 };
 
 const CustomiseDest = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const { param, dispatch } = React.useContext(ParamContext);
+    const reduxDispatch = useDispatch();
+
+    const customisedMtrDestination = useSelector((store: RootState) => store.param.customiseMTRDest);
+    const { dispatch } = React.useContext(ParamContext);
     const [open, setOpen] = React.useState(
-        param.customiseMTRDest.isLegacy || param.customiseMTRDest.terminal !== false
+        customisedMtrDestination.isLegacy || customisedMtrDestination.terminal !== false
     );
 
-    const handleChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        let terminal =
-            param.customiseMTRDest.terminal !== false
-                ? (param.customiseMTRDest.terminal.map((val, i) => (i === index ? event.target.value : val)) as Name)
-                : false;
-        dispatch({ type: 'SET_TERMINAL_OVERRIDE', terminal });
-    };
+    return useMemo(() => {
+        const handleShowNameChange = (_: ChangeEvent, checked: boolean) => {
+            dispatch({ type: 'SET_DEST_LEGACY', isLegacy: checked });
+            reduxDispatch(toggleLineNameBeforeDestination(checked));
+        };
 
-    return useMemo(
-        () => (
+        const handleIsCustomisedChange = (_: ChangeEvent, checked: boolean) => {
+            const customisedName = checked ? (['', ''] as Name) : false;
+            dispatch({ type: 'SET_TERMINAL_OVERRIDE', terminal: customisedName });
+            reduxDispatch(customiseDestinationName(customisedName));
+        };
+
+        const handleNameChange =
+            (index: number) =>
+            ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+                let terminal =
+                    customisedMtrDestination.terminal !== false
+                        ? (customisedMtrDestination.terminal.map((val, i) => (i === index ? value : val)) as Name)
+                        : false;
+                dispatch({ type: 'SET_TERMINAL_OVERRIDE', terminal });
+                reduxDispatch(customiseDestinationName(terminal));
+            };
+
+        return (
             <>
                 <ListItem button onClick={() => setOpen(prevOpen => !prevOpen)}>
                     <ListItemIcon>
@@ -122,8 +158,8 @@ const CustomiseDest = () => {
                                 <Switch
                                     color="primary"
                                     edge="end"
-                                    onChange={(_, checked) => dispatch({ type: 'SET_DEST_LEGACY', isLegacy: checked })}
-                                    checked={param.customiseMTRDest.isLegacy}
+                                    onChange={handleShowNameChange}
+                                    checked={customisedMtrDestination.isLegacy}
                                 />
                             </ListItemSecondaryAction>
                         </ListItem>
@@ -133,17 +169,12 @@ const CustomiseDest = () => {
                                 <Switch
                                     color="primary"
                                     edge="end"
-                                    checked={param.customiseMTRDest.terminal !== false}
-                                    onChange={(_, checked) =>
-                                        dispatch({
-                                            type: 'SET_TERMINAL_OVERRIDE',
-                                            terminal: checked ? ['', ''] : false,
-                                        })
-                                    }
+                                    checked={customisedMtrDestination.terminal !== false}
+                                    onChange={handleIsCustomisedChange}
                                 />
                             </ListItemSecondaryAction>
                         </ListItem>
-                        <Collapse in={param.customiseMTRDest.terminal !== false} unmountOnExit>
+                        <Collapse in={customisedMtrDestination.terminal !== false} unmountOnExit>
                             <Grid
                                 container
                                 spacing={1}
@@ -155,18 +186,22 @@ const CustomiseDest = () => {
                                     <TextField
                                         label={t('design.MTRDest.zh')}
                                         value={
-                                            param.customiseMTRDest.terminal ? param.customiseMTRDest.terminal[0] : ''
+                                            customisedMtrDestination.terminal
+                                                ? customisedMtrDestination.terminal[0]
+                                                : ''
                                         }
-                                        onChange={handleChange(0)}
+                                        onChange={handleNameChange(0)}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <TextField
                                         label={t('design.MTRDest.en')}
                                         value={
-                                            param.customiseMTRDest.terminal ? param.customiseMTRDest.terminal[1] : ''
+                                            customisedMtrDestination.terminal
+                                                ? customisedMtrDestination.terminal[1]
+                                                : ''
                                         }
-                                        onChange={handleChange(1)}
+                                        onChange={handleNameChange(1)}
                                     />
                                 </Grid>
                             </Grid>
@@ -174,8 +209,15 @@ const CustomiseDest = () => {
                     </List>
                 </Collapse>
             </>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [JSON.stringify(param.customiseMTRDest), open, classes.nested, classes.grid]
-    );
+        );
+    }, [
+        customisedMtrDestination.isLegacy,
+        customisedMtrDestination.terminal,
+        open,
+        classes.nested,
+        classes.grid,
+        t,
+        dispatch,
+        reduxDispatch,
+    ]);
 };

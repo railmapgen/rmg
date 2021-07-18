@@ -13,6 +13,7 @@ import store from './redux';
 import { Provider } from 'react-redux';
 import { setCanvasScale, setCanvasToShow } from './redux/app/action';
 import { setFullParam } from './redux/param/action';
+import autoSaveScheduler from './util/auto-save-scheduler';
 
 declare global {
     interface Window {
@@ -88,9 +89,9 @@ getRmgStorage()
 
         // setup canvas to show
         try {
-            const canvasToShow = await window.rmgStorage.readFile('rmgCanvas') as CanvasType | typeof AllCanvas;
+            const canvasToShow = (await window.rmgStorage.readFile('rmgCanvas')) as CanvasType | typeof AllCanvas;
             store.dispatch(setCanvasToShow(canvasToShow));
-        } catch(err) {
+        } catch (err) {
             console.warn('Error in reading rmgCanvas file', err);
             console.log('Initiating rmgCanvas as "all"');
             await window.rmgStorage.writeFile('rmgCanvas', AllCanvas);
@@ -101,4 +102,7 @@ getRmgStorage()
     })
     .then(() => {
         renderApp();
+    })
+    .then(() => {
+        autoSaveScheduler();
     });

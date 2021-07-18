@@ -229,7 +229,7 @@ export interface RMGParam {
  * @property 3 - percentage of vertical position
  * @property 4 - flag of showing border
  */
-export type Note = [string, string, number, number, boolean];
+export type Note = [...Name, number, number, boolean];
 
 export enum LanguageCode {
     Catalan = 'ca',

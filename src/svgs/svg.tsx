@@ -1,6 +1,5 @@
 import React, { lazy, memo, useEffect } from 'react';
 import { CircularProgress, createStyles, makeStyles } from '@material-ui/core';
-import { ParamContext } from '../context';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import ErrorBoundary from '../error-boundary';
 
@@ -30,33 +29,34 @@ const useStyles = makeStyles(() =>
 const SVGs = () => {
     const classes = useStyles();
 
-    const { param } = React.useContext(ParamContext);
-
     const canvasScale = useSelector((store: RootState) => store.app.canvasScale);
+    const svgHeight = useSelector((store: RootState) => store.param.svg_height);
+    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
+    const theme = useSelector((store: RootState) => store.param.theme);
 
     const sharedProps = React.useCallback(
         (canvas: CanvasType): React.SVGProps<SVGSVGElement> => ({
             id: canvas,
             xmlns: 'http://www.w3.org/2000/svg',
             xmlnsXlink: 'http://www.w3.org/1999/xlink',
-            height: param.svg_height * canvasScale,
-            viewBox: `0 0 ${param.svgWidth[canvas]} ${param.svg_height}`,
+            height: svgHeight * canvasScale,
+            viewBox: `0 0 ${svgWidths[canvas]} ${svgHeight}`,
             colorInterpolationFilters: 'sRGB',
             style: {
-                ['--rmg-svg-width' as any]: param.svgWidth[canvas] + 'px',
-                ['--rmg-svg-height' as any]: param.svg_height + 'px',
-                ['--rmg-theme-colour' as any]: param.theme[2],
-                ['--rmg-theme-fg' as any]: param.theme[3],
+                ['--rmg-svg-width' as any]: svgWidths[canvas] + 'px',
+                ['--rmg-svg-height' as any]: svgHeight + 'px',
+                ['--rmg-theme-colour' as any]: theme[2],
+                ['--rmg-theme-fg' as any]: theme[3],
             },
         }),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.svg_height, JSON.stringify(param.svgWidth), param.theme[2], param.theme[3], canvasScale]
+        [svgHeight, JSON.stringify(svgWidths), theme, canvasScale]
     );
 
     return (
         <div className={classes.root}>
             <Switch>
-                {(Object.entries(canvasConfig) as [RmgStyle, CanvasType[]][]).map(([s, canvases]) => (
+                {Object.values(RmgStyle).map(s => (
                     <Route path={`/${s}`} key={s}>
                         <StyleSpecificSVGs style={s} canvasAvailable={canvasList[s]} svgProps={sharedProps} />
                     </Route>
