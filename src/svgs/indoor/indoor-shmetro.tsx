@@ -1,7 +1,6 @@
 import React, { memo, useContext, useMemo, forwardRef, useRef, useState, useEffect } from 'react';
 import { ParamContext } from '../../context';
-import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState } from '../railmap/methods/share';
-import { servicesPath, _linePath } from '../railmap/main/main-shmetro';
+import { adjacencyList, getXShareMTR, criticalPathMethod, getStnState } from '../railmap/methods/share';
 import StationSHMetro from './station-shmetro';
 import { StationsMTR } from '../railmap/methods/mtr';
 import { StationDict } from "../../constants/constants";
@@ -40,7 +39,6 @@ const rightWideFactor = (stnList: StationDict, stnId: string) => {
     return res
 }
 
-// refactor the same code here and main-shmetro
 const IndoorSHMetro = () => {
     const { param, routes, branches, deps } = useContext(ParamContext);
 
@@ -73,71 +71,6 @@ const IndoorSHMetro = () => {
         {} as typeof xShares
     );
 
-    const getPathLength = (adjMat: ReturnType<typeof adjacencyList>, from: string, to: string): number => {
-        let cnt = 0, cur = from
-        while (Object.keys(adjMat[cur]).length > 0) {
-            cnt += 1
-            // we choose the first for all the cases so that the length for different branches will end in the same node
-            cur = Object.keys(adjMat[cur])[0]
-        }
-        return cnt
-    }
-    const getIntersectionStn = (adjMat: ReturnType<typeof adjacencyList>) => {
-        const start = Object.keys(adjMat['linestart'])
-
-        let a = start[0], b = start[1]
-        const lenA = getPathLength(adjMat, a, 'lineend')
-        const lenB = getPathLength(adjMat, b, 'lineend')
-        if (lenA < lenB) {
-            for (let i = 0; i < lenB - lenA; i++) b = Object.keys(adjMat[b])[0]
-        } else {
-            for (let i = 0; i < lenA - lenB; i++) a = Object.keys(adjMat[a])[0]
-        }
-        while (a !== b) {
-            a = Object.keys(adjMat[a])[0]
-            b = Object.keys(adjMat[b])[0]
-        }
-        return a
-    }
-    const getBranchesAndMainLine = (adjMat: ReturnType<typeof adjacencyList>) => {
-        const start = Object.keys(adjMat['linestart'])
-        const intersection = getIntersectionStn(adjMat)
-        return {
-            'branches': [
-                criticalPathMethod(start[0], intersection, adjMat).nodes,
-                criticalPathMethod(start[1], intersection, adjMat).nodes
-            ],
-            'main': criticalPathMethod(intersection, 'lineend', adjMat).nodes
-        }
-    }
-    // first deal with the branches that start from the beginning and merge in the middle
-    // let branchesAndMainLine = getBranchesAndMainLine(adjMat)
-    if (Object.keys(adjMat['linestart']).length >1){
-    }
-    // const getYShares = (adjMat: ReturnType<typeof adjacencyList>, stnId: string) => {
-    //     const branches = branchesAndMainLine.branches
-    //     const main = branchesAndMainLine.main
-
-    //     if(main.includes(stnId)){
-    //         return 3
-    //     }else if(branches[0].includes(stnId)){
-    //         return 0
-    //     }else{
-    //         return 6
-    //     }
-    // }
-
-    // const yShares = React.useMemo(
-    //     () => {
-    //         console.log('computing y shares');
-    //         return Object.keys(param.stn_list).reduce(
-    //             (acc, cur) => ({ ...acc, [cur]: getYShares(adjMat, cur)}),
-    //             {} as { [stnId: string]: number }
-    //         );
-    //     },
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    //     [deps]
-    // );
     const yShares = useMemo(
         () => StationsMTR.getYShares(param.stn_list, branches),
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -154,19 +87,6 @@ const IndoorSHMetro = () => {
         [param.current_stn_idx, param.direction, routes.toString()]
     );
 
-    // const linePaths = drawLine(branches, stnStates);
-
-    // // `paths: servicesPath[]` is supposed to be paths of different service
-    // // but for `indoor`, only `local` is enough
-    // const paths = [(Object.keys(linePaths) as (keyof ReturnType<typeof drawLine>)[]).reduce(
-    //     (acc, cur) => ({
-    //         ...acc,
-    //         [cur]: linePaths[cur].map(stns => _linePath(stns, cur, xs, ys, param.direction, Services.local, 1, 0)),
-    //         service: Services.local,
-    //     }),
-    //     {} as servicesPath
-    // ),]
-
     const linePaths = StationsMTR.drawLine(
         branches,
         stnStates,
@@ -181,10 +101,9 @@ const IndoorSHMetro = () => {
 
     return (
         <g id="main" transform={`translate(0,${param.svg_height - 150})`}>
-            {/* <Line paths={paths} direction={param.direction} /> */}
             <Lines paths={linePaths} />
             <StationGroup xs={xs} ys={ys} xShares={xShares} stnStates={stnStates} />
-            <DirectionElements />
+            <InfoElements />
         </g>
     );
 }
@@ -207,34 +126,6 @@ const Lines = React.memo(
     (prevProps, nextProps) => JSON.stringify(prevProps.paths) === JSON.stringify(nextProps.paths)
 );
 
-const Line = (props: { paths: servicesPath[]; direction: 'l' | 'r' }) => {
-    return (
-        <>
-            {props.paths.map((_, i) => (  // only use i here to adjust the height for different services
-                <g key={`servicePath${i}`} transform={`translate(0,${i * 25})`}>
-                    <g>
-                        {props.paths.flatMap(path =>
-                            Object
-                                .values(path)
-                                .filter(v => v instanceof Array)  // string[][]
-                                .reduce((r, k) => r.concat(k), [] as string[]) as string[]
-                        ).map((path, j) => (
-                            <path
-                                key={j}
-                                stroke="var(--rmg-theme-colour)"
-                                strokeWidth={12}
-                                fill="none"
-                                d={path}
-                                strokeLinejoin="round"
-                            />
-                        ))}
-                    </g>
-                </g>
-            ))}
-        </>
-    );
-};
-
 interface StationGroupProps {
     xs: { [stnId: string]: number };
     ys: { [stnId: string]: number };
@@ -249,30 +140,26 @@ const StationGroup = (props: StationGroupProps) => {
         <g>
             {Object.keys(param.stn_list)
                 .filter(stnId => !['linestart', 'lineend'].includes(stnId))
-                .map(stnId => {
-
-                    let nameDirection = branches
-                        .filter(branch => branch.includes(stnId))
-                        .map(branch => branch.indexOf(stnId) % 2 === 0 ? 'downward' : 'upward')[0] as 'upward' | 'downward'
-
-                    return (<g key={stnId} transform={`translate(${props.xs[stnId]},${props.ys[stnId]})`}>
+                .map(stnId => (<g key={stnId} transform={`translate(${props.xs[stnId]},${props.ys[stnId]})`}>
                         <StationSHMetro
                             stnId={stnId}
                             stnState={props.stnStates[stnId]}
-                            nameDirection={nameDirection} />
+                            nameDirection={branches
+                                .filter(branch => branch.includes(stnId))
+                                .map(branch => branch.indexOf(stnId) % 2 === 0 ?
+                                    'downward' : 'upward')[0] as 'upward' | 'downward'} />
                     </g>)
-                    }
                 )
             }
         </g>
     );
 };
 
-const DirectionElements = () => {
+const InfoElements = () => {
     const { param } = useContext(ParamContext);
 
-    return React.useMemo(()=>(
-        <g transform={`translate(${param.svgWidth.indoor/2},-120)`}>
+    return React.useMemo(() => (
+        <g transform={`translate(${param.svgWidth.indoor / 2},-120)`}>
             <g transform="translate(-800,210)">
                 <rect x="-5" y="-25" width="100" height="70" fill="none" stroke="black" rx="5"></rect>
                 <line x1="30" x2="30" y1="-20" y2="40" stroke="black"></line>
@@ -299,6 +186,66 @@ const DirectionElements = () => {
             </text>
         </g>
     ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [param.direction, param.svgWidth.indoor]);
+        [param.svgWidth.indoor]);
 };
+
+/* Some unused functions to split branches from the main line.
+ * Note the branches here has a slightly different meaning.
+ * It refers to all the line sections that have a parallel line
+ * rather than the upper or the bottom branch section.
+ * 
+ * Currently these functions only can be used on a line that
+ * branches in the middle and ends at the linestart, which also
+ * means that linestart has two children in the adjMat.
+*/
+const getPathLength = (adjMat: ReturnType<typeof adjacencyList>, from: string, to: string): number => {
+    let cnt = 0, cur = from
+    while (Object.keys(adjMat[cur]).length > 0) {
+        cnt += 1
+        // we choose the first for all the cases so that the length for different branches will end in the same node
+        cur = Object.keys(adjMat[cur])[0]
+    }
+    return cnt
+}
+const getIntersectionStn = (adjMat: ReturnType<typeof adjacencyList>) => {
+    const start = Object.keys(adjMat['linestart'])
+
+    let a = start[0], b = start[1]
+    const lenA = getPathLength(adjMat, a, 'lineend')
+    const lenB = getPathLength(adjMat, b, 'lineend')
+    if (lenA < lenB) {
+        for (let i = 0; i < lenB - lenA; i++) b = Object.keys(adjMat[b])[0]
+    } else {
+        for (let i = 0; i < lenA - lenB; i++) a = Object.keys(adjMat[a])[0]
+    }
+    while (a !== b) {
+        a = Object.keys(adjMat[a])[0]
+        b = Object.keys(adjMat[b])[0]
+    }
+    return a
+}
+const getBranchesAndMainLine = (adjMat: ReturnType<typeof adjacencyList>) => {
+    const start = Object.keys(adjMat['linestart'])
+    const intersection = getIntersectionStn(adjMat)
+    return {
+        'branches': [
+            criticalPathMethod(start[0], intersection, adjMat).nodes,
+            criticalPathMethod(start[1], intersection, adjMat).nodes
+        ],
+        'main': criticalPathMethod(intersection, 'lineend', adjMat).nodes
+    }
+}
+const getYShares = (adjMat: ReturnType<typeof adjacencyList>,
+    branchesAndMainLine: ReturnType<typeof getBranchesAndMainLine>,
+    stnId: string) => {
+    const branches = branchesAndMainLine.branches
+    const main = branchesAndMainLine.main
+
+    if (main.includes(stnId)) {
+        return 3
+    } else if (branches[0].includes(stnId)) {
+        return 0
+    } else {
+        return 6
+    }
+}
