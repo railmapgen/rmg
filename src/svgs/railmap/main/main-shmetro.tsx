@@ -213,7 +213,7 @@ export const _linePath = (
         // keys in path: none
         return '';
     } else if (!path.hasOwnProperty('end')) {
-        // litte line (only beyond terminal station)
+        // little line (only beyond terminal station)
         // keys in path: start
         let [x, y] = path['start'];
         if (type === 'main') {
