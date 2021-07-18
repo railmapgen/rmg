@@ -8,7 +8,7 @@ import { InterchangeInfo, StationDict } from "../../../constants/constants";
 const wideFactor = (stnList: StationDict, stnId: string) =>
     stnList[stnId].parents.length === 2 || stnList[stnId].children.length === 2 ? 0.25 : 0;
 
-export const getXShare = (stnId: string, adjMat: ReturnType<typeof adjacencyList>, branches: string[][]): number => {
+const getXShare = (stnId: string, adjMat: ReturnType<typeof adjacencyList>, branches: string[][]): number => {
     let criticalPath = criticalPathMethod('linestart', 'lineend', adjMat);
     if (criticalPath.nodes.includes(stnId)) {
         return criticalPathMethod(criticalPath.nodes[1], stnId, adjMat).len;

@@ -258,7 +258,7 @@ export const _linePath = (
 
         // Todo: disable lower branch
         let [x, y] = path['start'];
-        let xb = path['bifurcate'][0];
+        // let xb = path['bifurcate'][0];
         let [xm, ym] = path['end'];
         if (type === 'main') {
             if (direction === 'l') {

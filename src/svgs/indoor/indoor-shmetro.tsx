@@ -1,4 +1,4 @@
-import React, { memo, useContext, useMemo, forwardRef, useRef, useState, useEffect } from 'react';
+import React, { memo, useContext, useMemo } from 'react';
 import { ParamContext } from '../../context';
 import { adjacencyList, getXShareMTR, criticalPathMethod, getStnState } from '../railmap/methods/share';
 import StationSHMetro from './station-shmetro';
@@ -186,6 +186,7 @@ const InfoElements = () => {
             </text>
         </g>
     ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [param.svgWidth.indoor]);
 };
 
@@ -198,6 +199,7 @@ const InfoElements = () => {
  * branches in the middle and ends at the linestart, which also
  * means that linestart has two children in the adjMat.
 */
+/*
 const getPathLength = (adjMat: ReturnType<typeof adjacencyList>, from: string, to: string): number => {
     let cnt = 0, cur = from
     while (Object.keys(adjMat[cur]).length > 0) {
@@ -249,3 +251,4 @@ const getYShares = (adjMat: ReturnType<typeof adjacencyList>,
         return 6
     }
 }
+*/

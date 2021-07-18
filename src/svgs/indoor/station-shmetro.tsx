@@ -1,4 +1,4 @@
-import React, { useContext, useRef, memo } from 'react';
+import React, { useContext } from 'react';
 import { ParamContext } from '../../context';
 import { InterchangeInfo, Name } from "../../constants/constants";
 
@@ -44,23 +44,6 @@ interface StationNameGElementProps {
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {
-    // get the exact station name width so that the
-    // interchange station icon can be right after the station name
-    const stnNameEl = useRef<SVGGElement | null>(null);
-    // the original name position
-    const [bBox, setBBox] = React.useState({ width: 0 } as DOMRect);
-    React.useEffect(
-        () => setBBox(stnNameEl.current!.getBBox()),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [...props.name]
-    );
-    // the original name position's right x
-    const x = bBox.width + 5;
-
-    // rotate the station info now
-    // other wise the bcr will be inaccurate due to the rotation
-    // Chito: so, use BBox instead
-
     return (
         <g transform={`translate(0,${props.nameDirection === 'upward' ? 60 : -30})`}>
             <line
@@ -83,13 +66,11 @@ const StationNameGElement = (props: StationNameGElementProps) => {
             />)}
 
             <StationName
-                ref={stnNameEl}
                 stnName={props.name}
                 nameDirection={props.nameDirection}
                 fill='black'
             />
 
-            // TODO: add osi text
             {props.infos[1]?.length && (
                 <g transform={`translate(0,${props.nameDirection==='upward'?-160:130})`}>
                     <OSIText osiInfos={props.infos[1]} />
