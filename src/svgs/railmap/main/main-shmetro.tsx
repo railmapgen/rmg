@@ -171,11 +171,11 @@ const _linePath = (
     ys: { [stnId: string]: number },
     direction: 'l' | 'r',
     services: Services,
-    servicesMax: number
+    servicesMax: number,
+    e : number = 30,  // extra short line on either end, will be 0 in `indoor`
 ) => {
     var [prevY, prevX] = [] as number[];
     var path: { [key: string]: number[] } = {};
-    const e = 30;
 
     const servicesDelta = {
         local: 0,
@@ -213,7 +213,7 @@ const _linePath = (
         // keys in path: none
         return '';
     } else if (!path.hasOwnProperty('end')) {
-        // litte line (only beyond terminal station)
+        // little line (only beyond terminal station)
         // keys in path: start
         let [x, y] = path['start'];
         if (type === 'main') {
@@ -258,7 +258,7 @@ const _linePath = (
 
         // Todo: disable lower branch
         let [x, y] = path['start'];
-        let xb = path['bifurcate'][0];
+        // let xb = path['bifurcate'][0];
         let [xm, ym] = path['end'];
         if (type === 'main') {
             if (direction === 'l') {

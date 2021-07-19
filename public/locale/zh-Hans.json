@@ -6,7 +6,8 @@
         "all": "显示全部",
         "destination": "终点站牌",
         "runin": "站名牌",
-        "railmap": "线路图"
+        "railmap": "线路图",
+        "indoor": "门板图"
     },
 
     "zoom": {
@@ -38,7 +39,8 @@
             "title": "选择画布",
             "destination": "终点站牌",
             "runin": "站名牌",
-            "railmap": "线路图"
+            "railmap": "线路图",
+            "indoor": "门板图"
         },
         "preview": {
             "title": "预览和输出",
@@ -71,7 +73,8 @@
             "width": {
                 "destination": "终点站牌宽度",
                 "runin": "站名牌宽度",
-                "railmap": "线路图宽度"
+                "railmap": "线路图宽度",
+                "indoor": "门板图宽度"
             },
             "height": "画布高度"
         },
