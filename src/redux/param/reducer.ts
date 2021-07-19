@@ -7,6 +7,7 @@ const initialState: RMGParam = {
         destination: 100,
         runin: 100,
         railmap: 100,
+        indoor: 100,
     },
     svg_height: 100,
     y_pc: 50,

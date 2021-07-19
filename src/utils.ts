@@ -158,7 +158,12 @@ export const updateParam = (param: { [x: string]: any }) => {
             destination: param.svg_dest_width,
             runin: param.svg_dest_width,
             railmap: param.svg_width,
+            indoor: param.svg_width,
         };
+    }
+    // Version 3.8
+    if (!('indoor' in param.svgWidth)) {
+        param.svgWidth.indoor = param.svgWidth.railmap;
     }
     delete param.svg_width;
     delete param.svg_dest_width;

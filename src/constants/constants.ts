@@ -17,6 +17,7 @@ export enum CanvasType {
     Destination = 'destination',
     RunIn = 'runin',
     RailMap = 'railmap',
+    Indoor = 'indoor',
 }
 
 export const AllCanvas = 'all';
@@ -24,7 +25,7 @@ export const AllCanvas = 'all';
 export const canvasConfig: { [s in RmgStyle]: CanvasType[] } = {
     [RmgStyle.MTR]: [CanvasType.Destination, CanvasType.RailMap],
     [RmgStyle.GZMTR]: [CanvasType.RunIn, CanvasType.RailMap],
-    [RmgStyle.SHMetro]: [CanvasType.Destination, CanvasType.RunIn, CanvasType.RailMap],
+    [RmgStyle.SHMetro]: [CanvasType.Destination, CanvasType.RunIn, CanvasType.RailMap, CanvasType.Indoor],
 };
 
 /**
