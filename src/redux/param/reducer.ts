@@ -15,6 +15,8 @@ import {
     SET_PANEL_TYPE,
     SET_PLATFORM,
     SET_PSD_NUM,
+    SET_STATION,
+    SET_STATIONS_BULK,
     SET_SVG_HEIGHT,
     SET_SVG_WIDTH,
     SET_THEME,
@@ -33,6 +35,8 @@ import {
     setPanelTypeAction,
     setPlatformAction,
     setPsdNumAction,
+    setStationAction,
+    setStationsBulkAction,
     setSvgHeightAction,
     setSvgWidthAction,
     setThemeAction,
@@ -93,6 +97,8 @@ export default function ParamReducer(
         | setNotesAction
         | setNamePositionAction
         | setCustomisedMtrDestinationAction
+        | setStationAction
+        | setStationsBulkAction
 ) {
     switch (action.type) {
         case SET_FULL_PARAM:
@@ -147,6 +153,12 @@ export default function ParamReducer(
             break;
         case SET_CUSTOMISED_MTR_DESTINATION:
             state.customiseMTRDest = action.customisedMtrDestination;
+            break;
+        case SET_STATION:
+            state.stn_list[action.stationId] = action.station;
+            break;
+        case SET_STATIONS_BULK:
+            state.stn_list = action.stations;
             break;
         default:
             break;

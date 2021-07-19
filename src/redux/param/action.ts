@@ -6,6 +6,8 @@ import {
     PanelTypeShmetro,
     RMGParam,
     ShortDirection,
+    StationDict,
+    StationInfo,
     Theme,
 } from '../../constants/constants';
 import { Dispatch } from 'redux';
@@ -33,6 +35,10 @@ export const SET_PANEL_TYPE = 'SET_PANEL_TYPE';
 export const SET_NOTES = 'SET_NOTES';
 export const SET_NAME_POSITION = 'SET_NAME_POSITION';
 export const SET_CUSTOMISED_MTR_DESTINATION = 'SET_CUSTOMISED_MTR_DESTINATION';
+
+// stations
+export const SET_STATION = 'SET_STATION';
+export const SET_STATIONS_BULK = 'SET_STATIONS_BULK';
 
 export interface setFullParamAction {
     type: typeof SET_FULL_PARAM;
@@ -123,6 +129,17 @@ export interface setNamePositionAction {
 export interface setCustomisedMtrDestinationAction {
     type: typeof SET_CUSTOMISED_MTR_DESTINATION;
     customisedMtrDestination: RMGParam['customiseMTRDest'];
+}
+
+export interface setStationAction {
+    type: typeof SET_STATION;
+    stationId: string;
+    station: StationInfo;
+}
+
+export interface setStationsBulkAction {
+    type: typeof SET_STATIONS_BULK;
+    stations: StationDict;
 }
 
 export const setFullParam = (fullParam: RMGParam): setFullParamAction => {
@@ -246,4 +263,12 @@ export const customiseDestinationName = (customisedName: Name | false) => {
         const customisedMtrDestination = getState().param.customiseMTRDest;
         dispatch(setCustomisedMtrDestination({ ...customisedMtrDestination, terminal: customisedName }));
     };
+};
+
+const setStation = (stationId: string, station: StationInfo): setStationAction => {
+    return { type: SET_STATION, stationId, station };
+};
+
+const setStationsBulk = (stations: StationDict): setStationsBulkAction => {
+    return { type: SET_STATIONS_BULK, stations };
 };
