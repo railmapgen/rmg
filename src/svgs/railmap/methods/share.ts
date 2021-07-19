@@ -263,7 +263,8 @@ export class Stations {
         realXs: { [stnId: string]: number },
         realYs: { [stnId: string]: number },
         branchSpacing: number,
-        cp: { len: number; nodes: string[] }
+        cp: { len: number; nodes: string[] },
+        e: number,
     ) {
         var [prevId, prevY, prevX] = ([] as unknown) as [string, number, number];
         var path = [] as string[];
@@ -292,10 +293,10 @@ export class Stations {
                 } else {
                     // started form branching station, this is branch line
                     if (realXs[stnIds[1]] > 0) {
-                        path.push(`M ${x},${y + 9.68}`);
+                        path.push(`M ${x},${y + e}`);
                     }
                     if (realYs[stnIds[1]] < 0) {
-                        path.push(`M ${x},${y - 9.68}`);
+                        path.push(`M ${x},${y - e}`);
                     }
                 }
                 return;
@@ -331,7 +332,8 @@ export class Stations {
         xs: { [stnId: string]: number },
         ys: { [stnId: string]: number },
         branchSpacing: number,
-        cp: { len: number; nodes: string[] }
+        cp: { len: number; nodes: string[] },
+        e: number = 9.68
     ) {
         let linePaths = { main: [] as string[], pass: [] as string[] };
         branches.forEach((branch, i) => {
@@ -369,7 +371,8 @@ export class Stations {
                     xs,
                     ys,
                     branchSpacing,
-                    cp
+                    cp,
+                    e
                 )
             );
             linePaths.pass.push(
@@ -380,7 +383,8 @@ export class Stations {
                     xs,
                     ys,
                     branchSpacing,
-                    cp
+                    cp,
+                    e
                 )
             );
         });

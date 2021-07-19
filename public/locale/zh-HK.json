@@ -6,7 +6,8 @@
         "all": "顯示全部",
         "destination": "終點站牌",
         "runin": "站名牌",
-        "railmap": "路線圖"
+        "railmap": "路線圖",
+        "indoor": "門板圖"
     },
 
     "zoom": {
@@ -38,7 +39,8 @@
             "title": "選擇畫布",
             "destination": "終點站牌",
             "runin": "站名牌",
-            "railmap": "路線圖"
+            "railmap": "路線圖",
+            "indoor": "門板圖"
         },
         "preview": {
             "title": "預覽及輸出",
@@ -72,7 +74,8 @@
             "width": {
                 "destination": "終點站牌闊度",
                 "runin": "站名牌闊度",
-                "railmap": "路線圖闊度"
+                "railmap": "路線圖闊度",
+                "indoor": "門板圖闊度"
             },
             "height": "畫布高度"
         },
