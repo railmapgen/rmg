@@ -1,4 +1,4 @@
-import React, { useState, useContext, useMemo, memo } from 'react';
+import React, { ChangeEvent, memo, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     TextField,
@@ -15,9 +15,16 @@ import {
     InputAdornment,
 } from '@material-ui/core';
 import { ParamContext } from '../../context';
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux";
-import { canvasConfig } from "../../constants/constants";
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux';
+import { canvasConfig, CanvasType, RmgStyle } from '../../constants/constants';
+import {
+    setBranchSpacing,
+    setPaddingPercentage,
+    setSvgHeight,
+    setSvgWidth,
+    setYPercentage,
+} from '../../redux/param/action';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -41,7 +48,7 @@ export default memo(function LayoutCommon() {
         <>
             <SizeLi />
             <Divider />
-            {rmgStyle !== 'shmetro' && (
+            {rmgStyle !== RmgStyle.SHMetro && (
                 <>
                     <YLi />
                     <Divider />
@@ -57,12 +64,35 @@ export default memo(function LayoutCommon() {
 const SizeLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
+    const reduxDispatch = useDispatch();
 
-    const { param, dispatch } = useContext(ParamContext);
+    const { dispatch } = useContext(ParamContext);
 
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+    const svgHeight = useSelector((store: RootState) => store.param.svg_height);
+    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
 
     const [isOpen, setIsOpen] = useState(false);
+
+    const handleSvgWidthChange =
+        (canvas: CanvasType) =>
+        ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+            if (!isNaN(Number(value))) {
+                dispatch({
+                    type: 'SET_WIDTH',
+                    targetId: canvas,
+                    value: Number(value),
+                });
+                reduxDispatch(setSvgWidth(Number(value), canvas));
+            }
+        };
+
+    const handleSvgHeightChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+        if (!isNaN(Number(value))) {
+            dispatch({ type: 'SET_HEIGHT', value: Number(value) });
+            reduxDispatch(setSvgHeight(Number(value)));
+        }
+    };
 
     return useMemo(
         () => (
@@ -81,15 +111,8 @@ const SizeLi = () => {
                                 <ListItem>
                                     <ListItemText primary={t('layout.size.width.' + canvas)} />
                                     <TextField
-                                        value={param.svgWidth[canvas].toString()}
-                                        onChange={e =>
-                                            !isNaN(Number(e.target.value)) &&
-                                            dispatch({
-                                                type: 'SET_WIDTH',
-                                                targetId: canvas,
-                                                value: Number(e.target.value),
-                                            })
-                                        }
+                                        value={svgWidths[canvas].toString()}
+                                        onChange={handleSvgWidthChange(canvas)}
                                         className={classes.textField}
                                         InputProps={{
                                             endAdornment: <InputAdornment position="end">px</InputAdornment>,
@@ -102,11 +125,8 @@ const SizeLi = () => {
                         <ListItem>
                             <ListItemText primary={t('layout.size.height')} />
                             <TextField
-                                value={param.svg_height.toString()}
-                                onChange={e =>
-                                    !isNaN(Number(e.target.value)) &&
-                                    dispatch({ type: 'SET_HEIGHT', value: Number(e.target.value) })
-                                }
+                                value={svgHeight.toString()}
+                                onChange={handleSvgHeightChange}
                                 className={classes.textField}
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end">px</InputAdornment>,
@@ -118,17 +138,25 @@ const SizeLi = () => {
             </>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [JSON.stringify(param.svgWidth), param.svg_height, isOpen, classes.nestedList]
+        [JSON.stringify(svgWidths), svgHeight, isOpen, classes.nestedList]
     );
 };
 
 const YLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const { param, dispatch } = useContext(ParamContext);
+    const reduxDispatch = useDispatch();
+    const { dispatch } = useContext(ParamContext);
 
-    return useMemo(
-        () => (
+    const yPercentage = useSelector((store: RootState) => store.param.y_pc);
+
+    return useMemo(() => {
+        const handleSliderChange = (_: ChangeEvent<{}>, value: number | number[]) => {
+            dispatch({ type: 'SET_Y', value: value as number });
+            reduxDispatch(setYPercentage(value as number));
+        };
+
+        return (
             <ListItem>
                 <ListItemIcon>
                     <Icon>vertical_align_center</Icon>
@@ -136,8 +164,8 @@ const YLi = () => {
                 <ListItemText primary={t('layout.y')} />
                 <Slider
                     className={classes.slider}
-                    value={param.y_pc}
-                    onChange={(_, value) => dispatch({ type: 'SET_Y', value: value as number })}
+                    value={yPercentage}
+                    onChange={handleSliderChange}
                     step={0.01}
                     marks={[
                         { value: 0, label: '0%' },
@@ -146,19 +174,25 @@ const YLi = () => {
                     valueLabelDisplay="auto"
                 />
             </ListItem>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.y_pc, classes.slider]
-    );
+        );
+    }, [yPercentage, classes.slider, t, dispatch, reduxDispatch]);
 };
 
 const BranchSpacingLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const { param, dispatch } = useContext(ParamContext);
+    const reduxDispatch = useDispatch();
+    const { dispatch } = useContext(ParamContext);
 
-    return useMemo(
-        () => (
+    const branchSpacing = useSelector((store: RootState) => store.param.branch_spacing);
+
+    return useMemo(() => {
+        const handleSliderChange = (_: ChangeEvent<{}>, value: number | number[]) => {
+            dispatch({ type: 'SET_BRANCH_SPACING', value: value as number });
+            reduxDispatch(setBranchSpacing(value as number));
+        };
+
+        return (
             <ListItem>
                 <ListItemIcon>
                     <Icon>format_line_spacing</Icon>
@@ -166,8 +200,8 @@ const BranchSpacingLi = () => {
                 <ListItemText primary={t('layout.branchSpacing')} />
                 <Slider
                     className={classes.slider}
-                    value={param.branch_spacing}
-                    onChange={(_, value) => dispatch({ type: 'SET_BRANCH_SPACING', value: value as number })}
+                    value={branchSpacing}
+                    onChange={handleSliderChange}
                     step={0.01}
                     marks={[
                         { value: 0, label: '0px' },
@@ -176,19 +210,25 @@ const BranchSpacingLi = () => {
                     valueLabelDisplay="auto"
                 />
             </ListItem>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.branch_spacing, classes.slider]
-    );
+        );
+    }, [branchSpacing, classes.slider, t, dispatch, reduxDispatch]);
 };
 
 const PaddingLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const { param, dispatch } = useContext(ParamContext);
+    const reduxDispatch = useDispatch();
+    const { dispatch } = useContext(ParamContext);
 
-    return useMemo(
-        () => (
+    const paddingPercentage = useSelector((store: RootState) => store.param.padding);
+
+    return useMemo(() => {
+        const handleSliderChange = (_: ChangeEvent<{}>, value: number | number[]) => {
+            dispatch({ type: 'SET_PADDING', value: value as number });
+            reduxDispatch(setPaddingPercentage(value as number));
+        };
+
+        return (
             <ListItem>
                 <ListItemIcon>
                     <Icon>stay_current_landscape</Icon>
@@ -196,8 +236,8 @@ const PaddingLi = () => {
                 <ListItemText primary={t('layout.padding')} />
                 <Slider
                     className={classes.slider}
-                    value={param.padding}
-                    onChange={(_, value) => dispatch({ type: 'SET_PADDING', value: value as number })}
+                    value={paddingPercentage}
+                    onChange={handleSliderChange}
                     step={0.01}
                     max={50}
                     marks={[
@@ -207,8 +247,6 @@ const PaddingLi = () => {
                     valueLabelDisplay="auto"
                 />
             </ListItem>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.padding, classes.slider]
-    );
+        );
+    }, [paddingPercentage, classes.slider, t, dispatch, reduxDispatch]);
 };

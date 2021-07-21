@@ -24,7 +24,7 @@ else
   VERSION=`node -p "require('./package.json').version"`
   GITHASH=$(git log -n 1 --pretty=%h)
   export RMG_VER="$VERSION.$BRANCH.$GITHASH"
-  git tag -a "${APP_NAME}-${RMG_VER}" -m "${APP_NAME}-${RMG_VER}"
+  # git tag -a "${APP_NAME}-${RMG_VER}" -m "${APP_NAME}-${RMG_VER}"
 fi
 
 # build PRD and copy artifact to repository
@@ -42,8 +42,8 @@ cp -r build/ $UAT_REPO_NAME/$RMG_VER/UAT/
 if [ "$BRANCH" = "master" ]
 then
   git push origin HEAD
+  git push origin "${APP_NAME}-${RMG_VER}"
 fi
-git push origin "${APP_NAME}-${RMG_VER}"
 
 # upload artifacts
 cd $UAT_REPO_NAME/

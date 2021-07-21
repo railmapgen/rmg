@@ -139,10 +139,12 @@ const useStyles = makeStyles(() =>
 const NumInput = (props: Props) => {
     const classes = useStyles();
     const { param, dispatch } = useContext(ParamContext);
+    const lineNum = useSelector((store: RootState) => store.param.line_num);
+
     return (
         <ListItem style={{ justifyContent: 'center' }}>
             <div className={classes.lineNumRoot}>
-                <span>{param.line_num}</span>
+                <span>{lineNum}</span>
             </div>
             <TextField
                 fullWidth

@@ -23,6 +23,8 @@ import {
 import { CustomPanel, PalettePanel } from './theme-items';
 import { ParamContext } from '../../context';
 import { InterchangeInfo, MonoColour, Name, Theme } from '../../constants/constants';
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux";
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -178,6 +180,8 @@ const RecentChipSet = (props: { onUpdate: Props['onUpdate'] }) => {
     const { t } = useTranslation();
     const classes = useStyles();
 
+    const theme = useSelector((store: RootState) => store.param.theme);
+    const lineName = useSelector((store: RootState) => store.param.line_name);
     const { param } = useContext(ParamContext);
 
     const allInfos = useMemo(
@@ -189,7 +193,7 @@ const RecentChipSet = (props: { onUpdate: Props['onUpdate'] }) => {
                             const { info } = transfer;
                             return acc.concat(...info);
                         },
-                        [[...param.theme, ...param.line_name] as InterchangeInfo]
+                        [[...theme, ...lineName]]
                     )
                     .map(val => JSON.stringify(val))
                     .reverse()

@@ -1,10 +1,13 @@
-import React, { useContext, useMemo } from 'react';
+import React, { ChangeEvent, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ListItem, ListItemIcon, Icon, ListItemText, Divider, Select } from '@material-ui/core';
 
 import { ParamContext } from '../../context';
 import { PanelTypeShmetro } from '../../constants/constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux';
+import { setPanelType } from '../../redux/param/action';
 
 const DesignListShmetro = () => {
     return (
@@ -30,34 +33,30 @@ export default DesignListShmetro;
 
 const PanelTypeLi = () => {
     const { t } = useTranslation();
-    const { param, dispatch } = useContext(ParamContext);
+    const reduxDispatch = useDispatch();
 
-    return useMemo(
-        () => (
-            <>
-                <ListItem>
-                    <ListItemIcon>
-                        <Icon style={{ transform: 'rotate(180deg)' }}>credit_card</Icon>
-                    </ListItemIcon>
-                    <ListItemText primary={t('design.panelType.button')} />
-                    <Select
-                        native
-                        value={param.info_panel_type}
-                        onChange={e =>
-                            dispatch({ type: 'SET_PANEL_TYPE', variant: e.target.value as PanelTypeShmetro })
-                        }
-                        style={{ width: 166 }}
-                    >
-                        {Object.values(PanelTypeShmetro).map(type => (
-                            <option key={type} value={type}>
-                                {t('design.panelType.' + type)}
-                            </option>
-                        ))}
-                    </Select>
-                </ListItem>
-            </>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.info_panel_type]
-    );
+    const panelType = useSelector((store: RootState) => store.param.info_panel_type);
+    const { dispatch } = useContext(ParamContext);
+
+    return useMemo(() => {
+        const handleChange = ({ target: { value } }: ChangeEvent<{ name?: string; value: unknown }>) => {
+            dispatch({ type: 'SET_PANEL_TYPE', variant: value as PanelTypeShmetro });
+            reduxDispatch(setPanelType(value as PanelTypeShmetro));
+        };
+        return (
+            <ListItem>
+                <ListItemIcon>
+                    <Icon style={{ transform: 'rotate(180deg)' }}>credit_card</Icon>
+                </ListItemIcon>
+                <ListItemText primary={t('design.panelType.button')} />
+                <Select native value={panelType} onChange={handleChange} style={{ width: 166 }}>
+                    {Object.values(PanelTypeShmetro).map(type => (
+                        <option key={type} value={type}>
+                            {t('design.panelType.' + type)}
+                        </option>
+                    ))}
+                </Select>
+            </ListItem>
+        );
+    }, [panelType, t, dispatch, reduxDispatch]);
 };

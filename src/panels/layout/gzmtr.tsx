@@ -13,6 +13,10 @@ import {
     Divider,
 } from '@material-ui/core';
 import { ParamContext } from '../../context';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux';
+import { ChangeEvent } from 'react';
+import { setDirectionIndicatorX, setDirectionIndicatorY } from '../../redux/param/action';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -39,12 +43,26 @@ export default React.memo(function LayoutGZMTR() {
 const DirectionGZLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const { param, dispatch } = React.useContext(ParamContext);
+    const reduxDispatch = useDispatch();
+
+    const directionIndicatorX = useSelector((store: RootState) => store.param.direction_gz_x);
+    const directionIndicatorY = useSelector((store: RootState) => store.param.direction_gz_y);
+    const { dispatch } = React.useContext(ParamContext);
 
     const [isOpen, setIsOpen] = React.useState(false);
 
-    return React.useMemo(
-        () => (
+    return React.useMemo(() => {
+        const handleXChange = (_: ChangeEvent<{}>, value: number | number[]) => {
+            dispatch({ type: 'SET_DIRECTION_GZ_X', value: value as number });
+            reduxDispatch(setDirectionIndicatorX(value as number));
+        };
+
+        const handleYChange = (_: ChangeEvent<{}>, value: number | number[]) => {
+            dispatch({ type: 'SET_DIRECTION_GZ_Y', value: value as number });
+            reduxDispatch(setDirectionIndicatorY(value as number));
+        };
+
+        return (
             <>
                 <ListItem button onClick={() => setIsOpen(prevOpen => !prevOpen)}>
                     <ListItemIcon>
@@ -59,10 +77,8 @@ const DirectionGZLi = () => {
                             <ListItemText primary={t('layout.directionGZ.horizontal')} />
                             <Slider
                                 className={classes.slider}
-                                value={param.direction_gz_x}
-                                onChange={(_event, value) =>
-                                    dispatch({ type: 'SET_DIRECTION_GZ_X', value: value as number })
-                                }
+                                value={directionIndicatorX}
+                                onChange={handleXChange}
                                 step={0.01}
                                 marks={[
                                     { value: 0, label: t('layout.directionGZ.left') },
@@ -76,10 +92,8 @@ const DirectionGZLi = () => {
                             <ListItemText primary={t('layout.directionGZ.vertical')} />
                             <Slider
                                 className={classes.slider}
-                                value={param.direction_gz_y}
-                                onChange={(_event, value) =>
-                                    dispatch({ type: 'SET_DIRECTION_GZ_Y', value: value as number })
-                                }
+                                value={directionIndicatorY}
+                                onChange={handleYChange}
                                 step={0.01}
                                 marks={[
                                     { value: 0, label: t('layout.directionGZ.top') },
@@ -91,8 +105,15 @@ const DirectionGZLi = () => {
                     </List>
                 </Collapse>
             </>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.direction_gz_x, param.direction_gz_y, isOpen, classes.nestedList, classes.slider]
-    );
+        );
+    }, [
+        directionIndicatorX,
+        directionIndicatorY,
+        isOpen,
+        classes.nestedList,
+        classes.slider,
+        t,
+        dispatch,
+        reduxDispatch,
+    ]);
 };
