@@ -14,9 +14,10 @@ import {
 } from '@material-ui/core';
 import { ParamContext } from '../../../context';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
+import { updateStationName, updateStationNum, updateStationSecondaryName } from "../../../redux/param/action";
 
 interface Props {
     stnId: string;
@@ -138,6 +139,8 @@ const useStyles = makeStyles(() =>
 
 const NumInput = (props: Props) => {
     const classes = useStyles();
+    const reduxDispatch = useDispatch();
+    
     const { param, dispatch } = useContext(ParamContext);
     const lineNum = useSelector((store: RootState) => store.param.line_num);
 
@@ -150,7 +153,10 @@ const NumInput = (props: Props) => {
                 fullWidth
                 className={classes.numInput}
                 value={param.stn_list[props.stnId]?.num}
-                onChange={e => dispatch({ type: 'UPDATE_STATION_NUM', stnId: props.stnId, num: e.target.value })}
+                onChange={e => {
+                    dispatch({ type: 'UPDATE_STATION_NUM', stnId: props.stnId, num: e.target.value });
+                    reduxDispatch(updateStationNum(props.stnId, e.target.value));
+                }}
             />
         </ListItem>
     );
@@ -159,6 +165,8 @@ const NumInput = (props: Props) => {
 const NameInput = (props: Props) => {
     const { t } = useTranslation();
     const classes = useStyles();
+    const reduxDispatch = useDispatch();
+    
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const { param, dispatch } = useContext(ParamContext);
     const { name } = param.stn_list[props.stnId] || param.stn_list.linestart;
@@ -175,9 +183,10 @@ const NameInput = (props: Props) => {
                         : ''
                 }`}
                 value={name[0]}
-                onChange={e =>
-                    dispatch({ type: 'UPDATE_STATION_NAME', stnId: props.stnId, name: [e.target.value, name[1]] })
-                }
+                onChange={e => {
+                    dispatch({ type: 'UPDATE_STATION_NAME', stnId: props.stnId, name: [e.target.value, name[1]] });
+                    reduxDispatch(updateStationName(props.stnId, [e.target.value, name[1]]));
+                }}
                 autoFocus
             />
             <TextField
@@ -185,9 +194,10 @@ const NameInput = (props: Props) => {
                 placeholder={t('editor.en')}
                 className={`${classes.nameInputEN} ${rmgStyle === RmgStyle.MTR ? classes['nameInputEN-mtr'] : ''}`}
                 value={name[1]}
-                onChange={e =>
-                    dispatch({ type: 'UPDATE_STATION_NAME', stnId: props.stnId, name: [name[0], e.target.value] })
-                }
+                onChange={e => {
+                    dispatch({ type: 'UPDATE_STATION_NAME', stnId: props.stnId, name: [name[0], e.target.value] });
+                    reduxDispatch(updateStationName(props.stnId, [name[0], e.target.value]));
+                }}
                 helperText={t('editor.backslashToWrap')}
             />
         </ListItem>
@@ -197,6 +207,8 @@ const NameInput = (props: Props) => {
 const SecondaryNameInput = (props: Props) => {
     const { t } = useTranslation();
     const classes = useStyles();
+    const reduxDispatch = useDispatch();
+    
     const { param, dispatch } = useContext(ParamContext);
     const { secondaryName } = param.stn_list[props.stnId] || param.stn_list.linestart;
     return (
@@ -211,13 +223,14 @@ const SecondaryNameInput = (props: Props) => {
                         color="primary"
                         edge="end"
                         checked={secondaryName !== false}
-                        onChange={(_, checked) =>
+                        onChange={(_, checked) => {
                             dispatch({
                                 type: 'UPDATE_STATION_SECONDARY_NAME',
                                 stnId: props.stnId,
                                 name: checked ? ['', ''] : false,
-                            })
-                        }
+                            });
+                            reduxDispatch(updateStationSecondaryName(props.stnId, checked ? ['', ''] : false));
+                        }}
                     />
                 </ListItemSecondaryAction>
             </ListItem>
@@ -234,25 +247,37 @@ const SecondaryNameInput = (props: Props) => {
                             placeholder={t('editor.zh')}
                             className={classes.secondaryNameInputZH}
                             value={secondaryName ? secondaryName[0] : ''}
-                            onChange={e =>
+                            onChange={e => {
                                 dispatch({
                                     type: 'UPDATE_STATION_SECONDARY_NAME',
                                     stnId: props.stnId,
                                     name: [e.target.value, secondaryName ? secondaryName[1] : ''],
-                                })
-                            }
+                                });
+                                reduxDispatch(
+                                    updateStationSecondaryName(props.stnId, [
+                                        e.target.value,
+                                        secondaryName ? secondaryName[1] : '',
+                                    ])
+                                );
+                            }}
                         />
                         <TextField
                             fullWidth
                             placeholder={t('editor.en')}
                             value={secondaryName ? secondaryName[1] : ''}
-                            onChange={e =>
+                            onChange={e => {
                                 dispatch({
                                     type: 'UPDATE_STATION_SECONDARY_NAME',
                                     stnId: props.stnId,
                                     name: [secondaryName ? secondaryName[0] : '', e.target.value],
-                                })
-                            }
+                                });
+                                reduxDispatch(
+                                    updateStationSecondaryName(props.stnId, [
+                                        secondaryName ? secondaryName[0] : '',
+                                        e.target.value,
+                                    ])
+                                );
+                            }}
                         />
                     </div>
                     <span className={classes.secondaryNameParenthesis}>{')'}</span>

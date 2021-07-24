@@ -2,6 +2,8 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
 import { ParamContext } from '../../context';
+import { useDispatch } from "react-redux";
+import { updateStationNum } from "../../redux/param/action";
 
 interface Props {
     open: boolean;
@@ -10,6 +12,7 @@ interface Props {
 
 const AutoNumDialog = (props: Props) => {
     const { t } = useTranslation();
+    const reduxDispatch = useDispatch();
 
     const { dispatch, branches } = React.useContext(ParamContext);
 
@@ -23,6 +26,7 @@ const AutoNumDialog = (props: Props) => {
                 num = (branch0.length - 1 - i).toString().padStart(2, '0');
             }
             dispatch({ type: 'UPDATE_STATION_NUM', stnId, num });
+            reduxDispatch(updateStationNum(stnId, num));
             // (window.myLine as RMGLineGZ).updateStnNum(stnId, num);
         });
         // props.paramUpdate('stn_list', getParams().stn_list);

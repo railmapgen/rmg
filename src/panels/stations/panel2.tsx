@@ -8,9 +8,10 @@ import StationEditDialog from './edit-diag';
 import StationDeleteDialog from './delete-diags';
 import StationFabs from './fabs';
 import AutoNumDialog from './auto-num-diag';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '../../redux';
 import { RmgStyle } from '../../constants/constants';
+import { reverseStations } from "../../redux/param/action";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -27,6 +28,7 @@ const useStyles = makeStyles(() =>
 
 const PanelStations2 = () => {
     const classes = useStyles();
+    const reduxDispatch = useDispatch();
 
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const { dispatch } = useContext(ParamContext);
@@ -58,6 +60,7 @@ const PanelStations2 = () => {
         }
         if (action === 'reverse') {
             dispatch({ type: 'REVERSE_STATIONS' });
+            reduxDispatch(reverseStations());
         }
         if (action === 'autonum') {
             setIsAutoNumDialogOpen(true);

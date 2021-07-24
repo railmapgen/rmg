@@ -1,7 +1,8 @@
-import { CityCode } from '../../constants/city-config';
-import { MonoColour, PanelTypeGZMTR, RMGParam, ShortDirection } from '../../constants/constants';
+import { CityCode } from "../../constants/city-config";
+import { MonoColour, PanelTypeGZMTR, RMGParam, ShortDirection } from "../../constants/constants";
 import {
     SET_BRANCH_SPACING,
+    SET_CURRENT_STATION,
     SET_CUSTOMISED_MTR_DESTINATION,
     SET_DIRECTION,
     SET_DIRECTION_INDICATOR_X,
@@ -22,6 +23,7 @@ import {
     SET_THEME,
     SET_Y_PERCENTAGE,
     setBranchSpacingAction,
+    setCurrentStationAction,
     setCustomisedMtrDestinationAction,
     setDirectionAction,
     setDirectionIndicatorXAction,
@@ -40,8 +42,8 @@ import {
     setSvgHeightAction,
     setSvgWidthAction,
     setThemeAction,
-    setYPercentageAction,
-} from './action';
+    setYPercentageAction
+} from "./action";
 
 const initialState: RMGParam = {
     svgWidth: {
@@ -97,6 +99,7 @@ export default function ParamReducer(
         | setNotesAction
         | setNamePositionAction
         | setCustomisedMtrDestinationAction
+        | setCurrentStationAction
         | setStationAction
         | setStationsBulkAction
 ) {
@@ -153,6 +156,9 @@ export default function ParamReducer(
             break;
         case SET_CUSTOMISED_MTR_DESTINATION:
             state.customiseMTRDest = action.customisedMtrDestination;
+            break;
+        case SET_CURRENT_STATION:
+            state.current_stn_idx = action.currentStation;
             break;
         case SET_STATION:
             state.stn_list[action.stationId] = action.station;

@@ -1,10 +1,15 @@
 import {
+    BranchStyle,
     CanvasType,
+    Direction,
+    Facilities,
+    InterchangeInfo,
     Name,
     Note,
     PanelTypeGZMTR,
     PanelTypeShmetro,
     RMGParam,
+    Services,
     ShortDirection,
     StationDict,
     StationInfo,
@@ -37,6 +42,7 @@ export const SET_NAME_POSITION = 'SET_NAME_POSITION';
 export const SET_CUSTOMISED_MTR_DESTINATION = 'SET_CUSTOMISED_MTR_DESTINATION';
 
 // stations
+export const SET_CURRENT_STATION = 'SET_CURRENT_STATION';
 export const SET_STATION = 'SET_STATION';
 export const SET_STATIONS_BULK = 'SET_STATIONS_BULK';
 
@@ -129,6 +135,11 @@ export interface setNamePositionAction {
 export interface setCustomisedMtrDestinationAction {
     type: typeof SET_CUSTOMISED_MTR_DESTINATION;
     customisedMtrDestination: RMGParam['customiseMTRDest'];
+}
+
+export interface setCurrentStationAction {
+    type: typeof SET_CURRENT_STATION;
+    currentStation: string;
 }
 
 export interface setStationAction {
@@ -265,10 +276,275 @@ export const customiseDestinationName = (customisedName: Name | false) => {
     };
 };
 
+export const setCurrentStation = (currentStation: string): setCurrentStationAction => {
+    return { type: SET_CURRENT_STATION, currentStation };
+};
+
 const setStation = (stationId: string, station: StationInfo): setStationAction => {
     return { type: SET_STATION, stationId, station };
 };
 
-const setStationsBulk = (stations: StationDict): setStationsBulkAction => {
+export const setStationsBulk = (stations: StationDict): setStationsBulkAction => {
     return { type: SET_STATIONS_BULK, stations };
+};
+
+export const reverseStations = () => {
+    return (dispatch: Dispatch, getState: () => RootState) => {
+        const { stn_list } = getState().param;
+        const newStationList = Object.keys(stn_list).reduce(
+            (acc, stnId) => ({
+                ...acc,
+                [stnId]: (id => {
+                    switch (id) {
+                        case 'linestart':
+                            return {
+                                ...stn_list.lineend,
+                                parents: [],
+                                children: stn_list.lineend.parents.slice().reverse(),
+                                branch: { left: [] as [], right: stn_list.lineend.branch.left },
+                            };
+                        case 'lineend':
+                            return {
+                                ...stn_list.linestart,
+                                parents: stn_list.linestart.children.slice().reverse(),
+                                children: [],
+                                branch: { left: stn_list.linestart.branch.right, right: [] as [] },
+                            };
+                        default:
+                            return {
+                                ...stn_list[id],
+                                parents: stn_list[id].children
+                                    .map(id => (id === 'linestart' ? 'lineend' : id === 'lineend' ? 'linestart' : id))
+                                    .reverse(),
+                                children: stn_list[id].parents
+                                    .map(id => (id === 'linestart' ? 'lineend' : id === 'lineend' ? 'linestart' : id))
+                                    .reverse(),
+                                branch: {
+                                    left: stn_list[id].branch.right,
+                                    right: stn_list[id].branch.left,
+                                },
+                            };
+                    }
+                })(stnId),
+            }),
+            {} as StationDict
+        );
+        dispatch(setStationsBulk(newStationList));
+    };
+};
+
+export const updateStationName = (stationId: string, name: Name) => {
+    return (dispatch: Dispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+        dispatch(setStation(stationId, { ...stationInfo, name }));
+    };
+};
+
+export const updateStationSecondaryName = (stationId: string, secondaryName: Name | false) => {
+    return (dispatch: Dispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+        dispatch(setStation(stationId, { ...stationInfo, secondaryName }));
+    };
+};
+
+export const updateStationNum = (stationId: string, num: string) => {
+    return (dispatch: Dispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+        dispatch(setStation(stationId, { ...stationInfo, num }));
+    };
+};
+
+/**
+ *
+ * @param stationId
+ * @param setIndex - set 0: within-station interchange. set 1: OSI 1, etc
+ * @param interchangeInfo
+ */
+export const addInterchange = (stationId: string, setIndex: number, interchangeInfo: InterchangeInfo) => {
+    return (dispatch: Dispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+
+        const newTransferInfo = stationInfo.transfer.info.map(i => i.slice());
+        if (newTransferInfo.length > setIndex) {
+            newTransferInfo[setIndex].push(interchangeInfo);
+        } else {
+            newTransferInfo[setIndex] = [interchangeInfo];
+        }
+
+        dispatch(
+            setStation(stationId, { ...stationInfo, transfer: { ...stationInfo.transfer, info: newTransferInfo } })
+        );
+    };
+};
+
+export const removeInterchange = (stationId: string, setIndex: number, interchangeIndex: number) => {
+    return (dispatch: Dispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+
+        if (
+            stationInfo.transfer.info.length > setIndex &&
+            stationInfo.transfer.info[setIndex].length > interchangeIndex
+        ) {
+            const newTransferInfo = stationInfo.transfer.info.map((set, setIdx) =>
+                setIdx === setIndex ? set.filter((_, intIdx) => intIdx !== interchangeIndex) : set
+            );
+            dispatch(
+                setStation(stationId, { ...stationInfo, transfer: { ...stationInfo.transfer, info: newTransferInfo } })
+            );
+        }
+    };
+};
+
+export const updateInterchange = (
+    stationId: string,
+    setIndex: number,
+    interchangeIndex: number,
+    interchangeInfo: InterchangeInfo
+) => {
+    return (dispatch: Dispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+
+        if (
+            stationInfo.transfer.info.length > setIndex &&
+            stationInfo.transfer.info[setIndex].length > interchangeIndex
+        ) {
+            const newTransferInfo = stationInfo.transfer.info.map((set, setIdx) =>
+                setIdx === setIndex
+                    ? set.map((int, intIdx) => (intIdx === interchangeIndex ? interchangeInfo : int))
+                    : set
+            );
+            dispatch(
+                setStation(stationId, { ...stationInfo, transfer: { ...stationInfo.transfer, info: newTransferInfo } })
+            );
+        }
+    };
+};
+
+export const updateStationOsiName = (stationId: string, osiName: Name) => {
+    return (dispatch: Dispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+        dispatch(
+            setStation(stationId, {
+                ...stationInfo,
+                transfer: { ...stationInfo.transfer, osi_names: [osiName] },
+            })
+        );
+    };
+};
+
+export const updateStationTickDirection = (stationId: string, tickDirection: ShortDirection) => {
+    return (dispatch: Dispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+        dispatch(
+            setStation(stationId, {
+                ...stationInfo,
+                transfer: { ...stationInfo.transfer, tick_direc: tickDirection },
+            })
+        );
+    };
+};
+
+export const updateStationPaidArea = (stationId: string, isPaidArea: boolean) => {
+    return (dispatch: Dispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+        dispatch(
+            setStation(stationId, {
+                ...stationInfo,
+                transfer: { ...stationInfo.transfer, paid_area: isPaidArea },
+            })
+        );
+    };
+};
+
+export const updateStationBranchType = (stationId: string, direction: Direction, branchStyle: BranchStyle) => {
+    return (dispatch: Dispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+        dispatch(
+            setStation(stationId, {
+                ...stationInfo,
+                branch: { ...stationInfo.branch, [direction]: [branchStyle, stationInfo.branch[direction][1]] },
+            })
+        );
+    };
+};
+
+export type UpdateStationBranchFirstStationArgType = { stnId: string; direction: Direction; first: string };
+
+// FIXME
+export const updateStationBranchFirstStation = (
+    branches: [UpdateStationBranchFirstStationArgType, UpdateStationBranchFirstStationArgType]
+) => {
+    return (dispatch: Dispatch, getState: () => RootState) => {
+        const { stn_list } = getState().param;
+        dispatch(
+            setStationsBulk({
+                ...stn_list,
+                [branches[0].stnId]: {
+                    ...stn_list[branches[0].stnId],
+                    branch: {
+                        ...stn_list[branches[0].stnId].branch,
+                        [branches[0].direction]: [
+                            stn_list[branches[0].stnId].branch[branches[0].direction][0],
+                            branches[0].first,
+                        ],
+                    },
+                },
+                [branches[1].stnId]: {
+                    ...stn_list[branches[1].stnId],
+                    branch: {
+                        ...stn_list[branches[1].stnId].branch,
+                        [branches[1].direction]: [
+                            stn_list[branches[1].stnId].branch[branches[1].direction][0],
+                            branches[1].first,
+                        ],
+                    },
+                },
+            })
+        );
+    };
+};
+
+export const flipStationBranchPosition = (left: string, right: string) => {
+    return (dispatch: Dispatch, getState: () => RootState) => {
+        const { stn_list } = getState().param;
+        dispatch(
+            setStationsBulk({
+                ...stn_list,
+                [left]: { ...stn_list[left], parents: stn_list[left].parents.slice().reverse() },
+                [right]: { ...stn_list[right], children: stn_list[right].children.slice().reverse() },
+            })
+        );
+    };
+};
+
+export const updateStationFacility = (stationId: string, facility: Facilities) => {
+    return (dispatch: Dispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+        dispatch(setStation(stationId, { ...stationInfo, facility }));
+    };
+};
+
+export const addStationService = (stationId: string, service: Services) => {
+    return (dispatch: Dispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+
+        if (!stationInfo.services.includes(service)) {
+            dispatch(setStation(stationId, { ...stationInfo, services: stationInfo.services.concat(service) }));
+        }
+    };
+};
+
+export const removeStationService = (stationId: string, service: Services) => {
+    return (dispatch: Dispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+
+        if (stationInfo.services.includes(service)) {
+            dispatch(
+                setStation(stationId, {
+                    ...stationInfo,
+                    services: stationInfo.services.filter(s => s !== service),
+                })
+            );
+        }
+    };
 };

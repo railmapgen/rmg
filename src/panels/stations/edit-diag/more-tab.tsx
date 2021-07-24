@@ -13,9 +13,10 @@ import {
     Select,
 } from '@material-ui/core';
 import { ParamContext } from '../../../context';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux';
-import { Facilities, RmgStyle, Services } from "../../../constants/constants";
+import { Facilities, RmgStyle, Services } from '../../../constants/constants';
+import { addStationService, removeStationService, updateStationFacility } from '../../../redux/param/action';
 
 export default memo(function MoreTab(props: { stnId: string }) {
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
@@ -39,6 +40,7 @@ export default memo(function MoreTab(props: { stnId: string }) {
 
 const FacilityLi = (props: { stnId: string }) => {
     const { t } = useTranslation();
+    const reduxDispatch = useDispatch();
     const { param, dispatch } = useContext(ParamContext);
     return (
         <ListItem>
@@ -50,13 +52,14 @@ const FacilityLi = (props: { stnId: string }) => {
                 <Select
                     native
                     value={param.stn_list[props.stnId].facility}
-                    onChange={e =>
+                    onChange={({ target: { value } }) => {
                         dispatch({
                             type: 'UPDATE_STATION_FACILITY',
                             stnId: props.stnId,
-                            facility: e.target.value as Facilities,
-                        })
-                    }
+                            facility: value as Facilities,
+                        });
+                        reduxDispatch(updateStationFacility(props.stnId, value as Facilities));
+                    }}
                 >
                     {Object.values(Facilities).map(f => (
                         <option key={f} value={f}>
@@ -71,18 +74,26 @@ const FacilityLi = (props: { stnId: string }) => {
 
 const ServiceLi = (props: { stnId: string, services: Services[] }) => {
     const { t } = useTranslation();
+    const reduxDispatch = useDispatch();
     const { param, dispatch } = useContext(ParamContext);
     const services = new Set(param.stn_list[props.stnId].services);
 
-    const handleChange = (service: Services) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (service === 'local') return;
-        dispatch({
-            type: 'UPDATE_STATION_SERVICES',
-            stnId: props.stnId,
-            serviceId: service,
-            isChecked: event.target.checked,
-        });
-    };
+    const handleChange =
+        (service: Services) =>
+        ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
+            if (service === Services.local) return; // cannot remove local service
+            dispatch({
+                type: 'UPDATE_STATION_SERVICES',
+                stnId: props.stnId,
+                serviceId: service,
+                isChecked: checked,
+            });
+            if (checked) {
+                reduxDispatch(addStationService(props.stnId, service));
+            } else {
+                reduxDispatch(removeStationService(props.stnId, service));
+            }
+        };
     return (
         <ListItem>
             <ListItemIcon>

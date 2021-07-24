@@ -3,6 +3,8 @@ import { useTranslation, Trans } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
 import { ParamContext } from '../../context';
 import { removeStation } from './utils';
+import { useDispatch } from 'react-redux';
+import { setCurrentStation, setStationsBulk } from "../../redux/param/action";
 
 interface Props {
     open: boolean;
@@ -11,6 +13,7 @@ interface Props {
 
 export default function StationDeleteDialog(props: Props & { stnId: string }) {
     const { t } = useTranslation();
+    const reduxDispatch = useDispatch();
 
     const { param, dispatch } = useContext(ParamContext);
     const stnList = param.stn_list;
@@ -26,8 +29,10 @@ export default function StationDeleteDialog(props: Props & { stnId: string }) {
                 if (param.current_stn_idx === props.stnId) {
                     let newCurrentId = Object.keys(res).filter(id => !['linestart', 'lineend'].includes(id))[0];
                     dispatch({ type: 'SET_CURRENT_STATION', stnId: newCurrentId });
+                    reduxDispatch(setCurrentStation(newCurrentId));
                 }
                 dispatch({ type: 'UPDATE_STATION_LIST', stnList: res });
+                reduxDispatch(setStationsBulk(res));
             }
         }
         props.onClose();

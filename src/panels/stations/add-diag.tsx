@@ -20,9 +20,10 @@ import { formatStnName } from '../../utils';
 import { getYShareMTR } from '../../methods';
 import { addStation } from './utils';
 import { ParamContext } from '../../context';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '../../redux';
 import { StationDict, StationInfo } from "../../constants/constants";
+import { setStationsBulk } from "../../redux/param/action";
 
 const newBranchPossibleEnd = (prep: 'before' | 'after', pivot: string, stnList: StationDict) => {
     let res: string[] = [];
@@ -98,6 +99,7 @@ export default React.memo(
     function StationAddDialog(props: StationAddDialogProps) {
         const { t } = useTranslation();
         const classes = useStyles();
+        const reduxDispatch = useDispatch();
 
         const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
         const { param, dispatch, tpo } = useContext(ParamContext);
@@ -164,6 +166,7 @@ export default React.memo(
                     stnList
                 );
                 dispatch({ type: 'UPDATE_STATION_LIST', stnList: res });
+                reduxDispatch(setStationsBulk(res));
                 props.onClose(newId);
             }
         };

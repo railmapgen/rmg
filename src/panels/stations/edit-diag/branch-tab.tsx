@@ -13,9 +13,15 @@ import {
 } from '@material-ui/core';
 import { formatStnName } from '../../../utils';
 import { ParamContext } from '../../../context';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux';
-import { RmgStyle } from '../../../constants/constants';
+import { BranchStyle, Direction, RmgStyle } from '../../../constants/constants';
+import {
+    flipStationBranchPosition,
+    updateStationBranchFirstStation,
+    UpdateStationBranchFirstStationArgType,
+    updateStationBranchType,
+} from '../../../redux/param/action';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -35,14 +41,14 @@ function StationEditBranchTab(props: { stnId: string }) {
                     <h3 style={{ margin: 0 }}>{t('stations.edit.branch.left')}</h3>
                 </ListItemText>
             </ListItem>
-            <BranchSelectSet stnId={props.stnId} direction="left" />
+            <BranchSelectSet stnId={props.stnId} direction={Direction.left} />
             <Divider />
             <ListItem>
                 <ListItemText>
                     <h3 style={{ margin: 0 }}>{t('stations.edit.branch.right')}</h3>
                 </ListItemText>
             </ListItem>
-            <BranchSelectSet stnId={props.stnId} direction="right" />
+            <BranchSelectSet stnId={props.stnId} direction={Direction.right} />
         </List>
     );
 }
@@ -51,7 +57,7 @@ export default StationEditBranchTab;
 
 interface BranchSelectSetProps {
     stnId: string;
-    direction: 'left' | 'right';
+    direction: Direction;
 }
 
 const BranchSelectSet = (props: BranchSelectSetProps) => {
@@ -79,19 +85,20 @@ const BranchSelectSet = (props: BranchSelectSetProps) => {
 
 interface ItemProps {
     stnId: string;
-    direction: 'left' | 'right';
+    direction: Direction;
 }
 
 const BranchTypeItem = (props: ItemProps) => {
     const { t } = useTranslation();
     const classes = useStyles();
+    const reduxDispatch = useDispatch();
 
     const { param, dispatch } = React.useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
     const branchEntry = stnInfo.branch[props.direction];
 
     const handleChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-        let branchType = event.target.value as 'na' | 'through' | 'nonthrough';
+        let branchType = event.target.value as 'na' | BranchStyle;
         if (branchType === 'na') {
             // no changes
             return;
@@ -105,6 +112,7 @@ const BranchTypeItem = (props: ItemProps) => {
                 direction: props.direction,
                 branchType,
             });
+            reduxDispatch(updateStationBranchType(props.stnId, props.direction, branchType));
         }
     };
 
@@ -136,6 +144,7 @@ const BranchTypeItem = (props: ItemProps) => {
 const BranchFirstItem = (props: ItemProps) => {
     const { t } = useTranslation();
     const classes = useStyles();
+    const reduxDispatch = useDispatch();
 
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const { param, dispatch } = useContext(ParamContext);
@@ -163,21 +172,23 @@ const BranchFirstItem = (props: ItemProps) => {
                 }
                 branchEndFirst = stnList[branchEndId].children[neighbours.indexOf(branchFirst)];
             }
+            const branchesArg: [UpdateStationBranchFirstStationArgType, UpdateStationBranchFirstStationArgType] = [
+                {
+                    stnId: props.stnId,
+                    direction: props.direction,
+                    first: branchFirst,
+                },
+                {
+                    stnId: branchEndId,
+                    direction: props.direction === Direction.left ? Direction.right : Direction.left,
+                    first: branchEndFirst,
+                },
+            ];
             dispatch({
                 type: 'UPDATE_STATION_BRANCH_FIRST',
-                branches: [
-                    {
-                        stnId: props.stnId,
-                        direction: props.direction,
-                        first: branchFirst,
-                    },
-                    {
-                        stnId: branchEndId,
-                        direction: props.direction === 'left' ? 'right' : 'left',
-                        first: branchEndFirst,
-                    },
-                ],
+                branches: branchesArg,
             });
+            reduxDispatch(updateStationBranchFirstStation(branchesArg));
         }
     };
 
@@ -212,6 +223,7 @@ const BranchPosItem = (props: ItemProps) => {
 
     const { t } = useTranslation();
     const classes = useStyles();
+    const reduxDispatch = useDispatch();
 
     const { param, dispatch } = React.useContext(ParamContext);
     const stnInfo = param.stn_list[props.stnId];
@@ -226,7 +238,7 @@ const BranchPosItem = (props: ItemProps) => {
         } else {
             let branchEndId = branchEntry[1];
             let stnList = param.stn_list;
-            if (props.direction === 'right') {
+            if (props.direction === Direction.right) {
                 while (stnList[branchEndId].parents.length === 1) {
                     branchEndId = stnList[branchEndId].children[0];
                 }
@@ -235,6 +247,7 @@ const BranchPosItem = (props: ItemProps) => {
                     right: props.stnId,
                     left: branchEndId,
                 });
+                reduxDispatch(flipStationBranchPosition(branchEndId, props.stnId));
             } else {
                 while (stnList[branchEndId].children.length === 1) {
                     branchEndId = stnList[branchEndId].parents[0];
@@ -244,6 +257,7 @@ const BranchPosItem = (props: ItemProps) => {
                     left: props.stnId,
                     right: branchEndId,
                 });
+                reduxDispatch(flipStationBranchPosition(props.stnId, branchEndId));
             }
         }
     };

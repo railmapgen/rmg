@@ -24,12 +24,20 @@ import {
 import { ParamContext } from '../../../context';
 import ColourDialog from '../../colour-diag';
 import NameListItems from './name-list-items';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux';
-import { RmgStyle, InterchangeInfo, Name, Theme, MonoColour } from "../../../constants/constants";
+import { InterchangeInfo, MonoColour, Name, RmgStyle, ShortDirection, Theme } from '../../../constants/constants';
+import {
+    addInterchange,
+    removeInterchange,
+    updateInterchange,
+    updateStationOsiName, updateStationPaidArea,
+    updateStationTickDirection
+} from "../../../redux/param/action";
 
 const StationEditInterchangeTab = (props: { stnId: string }) => {
     const { t } = useTranslation();
+    const reduxDispatch = useDispatch();
 
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const theme = useSelector((store: RootState) => store.param.theme);
@@ -46,6 +54,7 @@ const StationEditInterchangeTab = (props: { stnId: string }) => {
             setIdx: index,
             info: newInfo,
         });
+        reduxDispatch(addInterchange(props.stnId, index, newInfo));
     };
 
     const deleteClick = (index: number, i: number) => {
@@ -55,6 +64,7 @@ const StationEditInterchangeTab = (props: { stnId: string }) => {
             setIdx: index,
             intIdx: i,
         });
+        reduxDispatch(removeInterchange(props.stnId, index, i));
     };
 
     return (
@@ -157,6 +167,7 @@ interface InterchangeChipSetProps {
 
 const InterchangeChipSet = (props: InterchangeChipSetProps) => {
     const classes = intChipSetStyles();
+    const reduxDispatch = useDispatch();
 
     const { param, dispatch } = React.useContext(ParamContext);
     const intInfos = param.stn_list[props.stnId].transfer.info[props.setIndex];
@@ -171,22 +182,26 @@ const InterchangeChipSet = (props: InterchangeChipSetProps) => {
 
     const nameDialogUpdate = (key: string, value: any) => {
         if (key === 'theme') {
+            const newInfo = (value as string[]).concat(Array(2)) as InterchangeInfo;
             dispatch({
                 type: 'UPDATE_STATION_INTERCHANGE_INFO',
                 stnId: props.stnId,
                 setIdx: props.setIndex,
                 intIdx: chipSelected,
-                info: (value as string[]).concat(Array(2)) as InterchangeInfo,
+                info: newInfo,
             });
+            reduxDispatch(updateInterchange(props.stnId, props.setIndex, chipSelected, newInfo));
         }
         if (key === 'name') {
+            const newInfo = Array(4).concat(value) as InterchangeInfo;
             dispatch({
                 type: 'UPDATE_STATION_INTERCHANGE_INFO',
                 stnId: props.stnId,
                 setIdx: props.setIndex,
                 intIdx: chipSelected,
-                info: Array(4).concat(value) as InterchangeInfo,
+                info: newInfo,
             });
+            reduxDispatch(updateInterchange(props.stnId, props.setIndex, chipSelected, newInfo));
         }
     };
 
@@ -251,12 +266,14 @@ interface OSINameDialogProps {
 const OSINameDialog = React.memo(
     (props: OSINameDialogProps) => {
         const { t } = useTranslation();
+        const reduxDispatch = useDispatch();
 
         const { dispatch } = useContext(ParamContext);
 
         const handleUpdate = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
             let newOSIName = props.osiName.map((val, i) => (i === index ? event.target.value : val)) as Name;
             dispatch({ type: 'UPDATE_STATION_OSI_NAME', stnId: props.stnId, name: newOSIName });
+            reduxDispatch(updateStationOsiName(props.stnId, newOSIName));
         };
 
         return (
@@ -281,18 +298,21 @@ const OSINameDialog = React.memo(
 
 const InterchangeMore = (props: { stnId: string }) => {
     const { t } = useTranslation();
+    const reduxDispatch = useDispatch();
 
     const { param, dispatch } = React.useContext(ParamContext);
     const stnTrans = param.stn_list[props.stnId].transfer;
 
     const tickDirecChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
         let direction = event.target.value;
-        if (direction === 'l' || direction === 'r')
+        if (direction === 'l' || direction === 'r') {
             dispatch({
                 type: 'UPDATE_STATION_TICK_DIREC',
                 stnId: props.stnId,
                 direction,
             });
+            reduxDispatch(updateStationTickDirection(props.stnId, direction as ShortDirection));
+        }
     };
 
     return React.useMemo(
@@ -328,13 +348,14 @@ const InterchangeMore = (props: { stnId: string }) => {
                         <Switch
                             color="primary"
                             edge="end"
-                            onChange={(_, checked) =>
+                            onChange={(_, checked) => {
                                 dispatch({
                                     type: 'UPDATE_STATION_PAID_AREA',
                                     stnId: props.stnId,
                                     isPaid: checked,
-                                })
-                            }
+                                });
+                                reduxDispatch(updateStationPaidArea(props.stnId, checked));
+                            }}
                             checked={stnTrans.paid_area}
                         />
                     </ListItemSecondaryAction>
