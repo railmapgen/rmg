@@ -102,8 +102,8 @@ export default React.memo(
         const reduxDispatch = useDispatch();
 
         const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
-        const { param, dispatch, tpo } = useContext(ParamContext);
-        const stnList = param.stn_list;
+        const stnList = useSelector((store: RootState) => store.param.stn_list);
+        const { dispatch, tpo } = useContext(ParamContext);
 
         const allLocs = {
             centre: t('stations.add.centre'),

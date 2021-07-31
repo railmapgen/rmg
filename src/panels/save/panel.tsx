@@ -50,6 +50,7 @@ const SaveLists = () => {
     const { t, i18n } = useTranslation();
 
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+    const param = useSelector((store: RootState) => store.param);
 
     const [isTempDialogOpen, setIsTempDialogOpen] = useState(false);
     const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
@@ -57,9 +58,8 @@ const SaveLists = () => {
     const [isLangDialogOpen, setIsLangDialogOpen] = useState(false);
 
     const saveClick = async () => {
-        const rmgParamContents = await window.rmgStorage.readFile('rmgParam');
         let link = document.createElement('a');
-        link.href = 'data:application/json;base64,' + btoa(unescape(encodeURIComponent(rmgParamContents)));
+        link.href = 'data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(param))));
         link.download = 'rmg.param.' + new Date().toISOString() + '.json';
         link.click();
     };

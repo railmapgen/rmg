@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -21,10 +21,9 @@ import {
     Tabs,
 } from '@material-ui/core';
 import { CustomPanel, PalettePanel } from './theme-items';
-import { ParamContext } from '../../context';
 import { InterchangeInfo, MonoColour, Name, Theme } from '../../constants/constants';
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -182,12 +181,12 @@ const RecentChipSet = (props: { onUpdate: Props['onUpdate'] }) => {
 
     const theme = useSelector((store: RootState) => store.param.theme);
     const lineName = useSelector((store: RootState) => store.param.line_name);
-    const { param } = useContext(ParamContext);
+    const stationList = useSelector((store: RootState) => store.param.stn_list);
 
     const allInfos = useMemo(
         () =>
             new Set(
-                Object.values(param.stn_list)
+                Object.values(stationList)
                     .reduce(
                         (acc, { transfer }) => {
                             const { info } = transfer;

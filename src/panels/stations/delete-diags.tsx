@@ -3,8 +3,9 @@ import { useTranslation, Trans } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
 import { ParamContext } from '../../context';
 import { removeStation } from './utils';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentStation, setStationsBulk } from "../../redux/param/action";
+import { RootState } from '../../redux';
 
 interface Props {
     open: boolean;
@@ -12,21 +13,23 @@ interface Props {
 }
 
 export default function StationDeleteDialog(props: Props & { stnId: string }) {
+    const { stnId, open, onClose } = props;
     const { t } = useTranslation();
     const reduxDispatch = useDispatch();
 
-    const { param, dispatch } = useContext(ParamContext);
-    const stnList = param.stn_list;
+    const { dispatch } = useContext(ParamContext);
+    const stnList = useSelector((store: RootState) => store.param.stn_list);
+    const currentStationIndex = useSelector((store: RootState) => store.param.current_stn_idx);
 
     const [isError, setIsError] = useState(false);
 
     const handleClick = (action: 'close' | 'accept') => () => {
         if (action === 'accept') {
-            let res = removeStation(props.stnId, stnList);
+            let res = removeStation(stnId, stnList);
             if (res === false) {
                 setIsError(true);
             } else {
-                if (param.current_stn_idx === props.stnId) {
+                if (currentStationIndex === stnId) {
                     let newCurrentId = Object.keys(res).filter(id => !['linestart', 'lineend'].includes(id))[0];
                     dispatch({ type: 'SET_CURRENT_STATION', stnId: newCurrentId });
                     reduxDispatch(setCurrentStation(newCurrentId));
@@ -35,11 +38,11 @@ export default function StationDeleteDialog(props: Props & { stnId: string }) {
                 reduxDispatch(setStationsBulk(res));
             }
         }
-        props.onClose();
+        onClose();
     };
     return (
         <>
-            <Dialog open={props.open} onClose={handleClick('close')}>
+            <Dialog open={open} onClose={handleClick('close')}>
                 <DialogTitle>{t('stations.remove.title')}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
