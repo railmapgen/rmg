@@ -19,6 +19,11 @@ then
   # build with a normal version
   npm version patch -m "${APP_NAME}-%s release" --force || { echo "Release Error"; exit 1; }
   export RMG_VER=$(node -p "require('./package.json').version")
+
+  # build PRD and copy artifact to repository
+  CI='' npm run build
+  mkdir $UAT_REPO_NAME/$RMG_VER/
+  cp -r build/ $UAT_REPO_NAME/$RMG_VER/PRD/
 else
   # build with a hashed version
   VERSION=`node -p "require('./package.json').version"`
@@ -26,11 +31,6 @@ else
   export RMG_VER="$VERSION.$BRANCH.$GITHASH"
   # git tag -a "${APP_NAME}-${RMG_VER}" -m "${APP_NAME}-${RMG_VER}"
 fi
-
-# build PRD and copy artifact to repository
-CI='' npm run build
-mkdir $UAT_REPO_NAME/$RMG_VER/
-cp -r build/ $UAT_REPO_NAME/$RMG_VER/PRD/
 
 # build UAT and copy artifact to repository
 cat package.json | sed '2 s/RailMapGenerator/uat-rail-map-generator/' > package-new.json
