@@ -1,8 +1,9 @@
-import React, { forwardRef, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { ParamContext } from '../../../../context';
+import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import StationNumberText from '../../../station-num-gzmtr';
 import LineBox from '../line-box-gzmtr';
-import { InterchangeInfo, Name, Services } from "../../../../constants/constants";
+import { InterchangeInfo, Name, Services } from '../../../../constants/constants';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../redux';
 
 interface Props {
     stnId: string;
@@ -11,12 +12,16 @@ interface Props {
 }
 
 const StationGZMTR = (props: Props) => {
-    const { param } = useContext(ParamContext);
-    const stnInfo = param.stn_list[props.stnId];
+    const { stnId, stnState, stnY } = props;
+
+    const theme = useSelector((store: RootState) => store.param.theme);
+    const lineName = useSelector((store: RootState) => store.param.line_name);
+    const lineNumber = useSelector((store: RootState) => store.param.line_num);
+    const stnInfo = useSelector((store: RootState) => store.param.stn_list[stnId]);
 
     const isNameShift = stnInfo.parents.length === 2 || stnInfo.children.length === 2;
     const tickRotation =
-        props.stnY > 0
+        stnY > 0
             ? 180
             : stnInfo.parents.indexOf(stnInfo.branch.left[1] || '') === 1 ||
               stnInfo.children.indexOf(stnInfo.branch.right[1] || '') === 1
@@ -38,24 +43,23 @@ const StationGZMTR = (props: Props) => {
                     isNameShift
                         ? (([
                               [
-                                  param.theme[0],
-                                  param.theme[1],
+                                  theme[0],
+                                  theme[1],
                                   'var(--rmg-theme-colour)',
                                   'var(--rmg-theme-fg)',
-                                  param.line_name[0],
-                                  param.line_name[1],
+                                  ...lineName
                               ],
                           ] as any[]) as InterchangeInfo[]).concat(stnInfo.transfer.info[0])
                         : stnInfo.transfer.info[0]
                 }
-                stnState={props.stnState}
+                stnState={stnState}
                 tickRotation={tickRotation}
             />
             <g>
-                <use xlinkHref="#stn" stroke={props.stnState === -1 ? '#aaa' : 'var(--rmg-theme-colour)'} />
+                <use xlinkHref="#stn" stroke={stnState === -1 ? '#aaa' : 'var(--rmg-theme-colour)'} />
                 <StationNumberText
-                    className={`Name ${props.stnState === -1 ? 'Pass' : 'Future'}`}
-                    lineNum={param.line_num}
+                    className={`Name ${stnState === -1 ? 'Pass' : 'Future'}`}
+                    lineNum={lineNumber}
                     stnNum={stnInfo.num}
                 />
             </g>
@@ -63,7 +67,7 @@ const StationGZMTR = (props: Props) => {
                 <StationNameGElement
                     name={stnInfo.name}
                     secondaryName={stnInfo.secondaryName}
-                    stnState={props.stnState}
+                    stnState={stnState}
                     tickRotation={tickRotation}
                     isExpress={stnInfo.services.includes(Services.express)}
                 />

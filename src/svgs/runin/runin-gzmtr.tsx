@@ -1,35 +1,42 @@
-import * as React from 'react';
-
-import { ParamContext } from '../../context';
+import React from 'react';
 import StripGZMTR from '../strip/strip-gzmtr';
 import InfoGZMTR from './info-gzmtr';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux';
+import { CanvasType, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 
 const RunInGZMTR = () => {
-    const { param } = React.useContext(ParamContext);
+    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
+    const direction = useSelector((store: RootState) => store.param.direction);
+    const infoPanelType = useSelector((store: RootState) => store.param.info_panel_type);
+    const platformNumber = useSelector((store: RootState) => store.param.platform_num);
+    const psdNumber = useSelector((store: RootState) => store.param.psd_num);
 
     const otisTransforms = {
-        platform: `translate(${param.direction === 'l' ? 50 : -50},45)`,
+        platform: `translate(${direction === ShortDirection.left ? 50 : -50},45)`,
     };
     return (
         <>
             <StripGZMTR
-                variant={param.info_panel_type}
-                isShowLight={param.info_panel_type !== 'gz2otis'}
-                isShowPSD={param.info_panel_type !== 'gz2otis' && param.psd_num}
+                variant={infoPanelType}
+                isShowLight={infoPanelType !== PanelTypeGZMTR.gz2otis}
+                isShowPSD={infoPanelType !== PanelTypeGZMTR.gz2otis && psdNumber}
             />
 
-            <g transform={param.info_panel_type === 'gz2otis' ? otisTransforms.platform : ''}>
+            <g transform={infoPanelType === PanelTypeGZMTR.gz2otis ? otisTransforms.platform : ''}>
                 <PlatformNum
-                    num={param.platform_num}
+                    num={platformNumber}
                     style={{
-                        ['--translate-x' as any]: `${param.direction === 'l' ? param.svgWidth.runin - 100 : 100}px`,
+                        ['--translate-x' as any]: `${
+                            direction === ShortDirection.left ? svgWidths[CanvasType.RunIn] - 100 : 100
+                        }px`,
                     }}
                 />
             </g>
 
             <InfoGZMTR />
 
-            {param.info_panel_type === 'gz2otis' && <OtisFrame />}
+            {infoPanelType === PanelTypeGZMTR.gz2otis && <OtisFrame />}
         </>
     );
 };
@@ -63,11 +70,12 @@ const PlatformNum = (props: { num: string | false } & React.SVGProps<SVGGElement
 };
 
 const OtisFrame = () => {
-    const { param } = React.useContext(ParamContext);
+    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
+    const svgHeight = useSelector((store: RootState) => store.param.svg_height);
     return (
         <g id="otis_frame" strokeWidth={3} stroke="black">
-            <line y2={param.svg_height} transform={`translate(${param.svgWidth.runin / 2},0)`} />
-            <line x2={param.svgWidth.runin} transform="translate(0,90)" />
+            <line y2={svgHeight} transform={`translate(${svgWidths[CanvasType.RunIn] / 2},0)`} />
+            <line x2={svgWidths[CanvasType.RunIn]} transform="translate(0,90)" />
         </g>
     );
 };
