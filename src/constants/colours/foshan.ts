@@ -1,5 +1,6 @@
 import { LanguageCode, PaletteEntry } from '../constants';
 
+// https://zh.wikipedia.org/wiki/Template:%E4%BD%9B%E5%B1%B1%E5%9C%B0%E9%93%81%E9%A2%9C%E8%89%B2
 const Foshan: PaletteEntry[] = [
     {
         id: 'fs1',
@@ -17,7 +18,7 @@ const Foshan: PaletteEntry[] = [
             [LanguageCode.ChineseSimp]: '2号线',
             [LanguageCode.ChineseTrad]: '2號線',
         },
-        colour: '#009900',
+        colour: '#DD0027',
     },
     {
         id: 'fs3',
@@ -26,7 +27,7 @@ const Foshan: PaletteEntry[] = [
             [LanguageCode.ChineseSimp]: '3号线',
             [LanguageCode.ChineseTrad]: '3號線',
         },
-        colour: '#0000FF',
+        colour: '#4747C5',
     },
     {
         id: 'fs4',

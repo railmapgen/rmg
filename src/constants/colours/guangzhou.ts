@@ -1,5 +1,6 @@
 import { LanguageCode, MonoColour, PaletteEntry } from '../constants';
 
+// https://zh.wikipedia.org/wiki/Template:%E5%B9%BF%E5%B7%9E%E5%9C%B0%E9%93%81%E9%A2%9C%E8%89%B2
 const Guangzhou: PaletteEntry[] = [
     {
         id: 'gz1',
@@ -164,7 +165,7 @@ const Guangzhou: PaletteEntry[] = [
             [LanguageCode.ChineseSimp]: '18号线',
             [LanguageCode.ChineseTrad]: '18號線',
         },
-        colour: '#D48BC8',
+        colour: '#0047BA',
     },
     {
         id: 'gz19',
@@ -200,7 +201,7 @@ const Guangzhou: PaletteEntry[] = [
             [LanguageCode.ChineseSimp]: '22号线',
             [LanguageCode.ChineseTrad]: '22號線',
         },
-        colour: '#041E42',
+        colour: '#A65A29',
     },
     {
         id: 'gfl',
@@ -228,6 +229,15 @@ const Guangzhou: PaletteEntry[] = [
             [LanguageCode.ChineseTrad]: '海珠環島新型有軌電車',
         },
         colour: '#44A729',
+    },
+    {
+        id: 'thp1',
+        name: {
+            [LanguageCode.English]: 'Huangpu Tram Line 1',
+            [LanguageCode.ChineseSimp]: '黄埔有轨电车1号线',
+            [LanguageCode.ChineseTrad]: '黃埔有軌電車1號線',
+        },
+        colour: '#D42D1B',
     },
     {
         id: 'gfloop',
