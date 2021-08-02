@@ -49,6 +49,7 @@ const mockInterchange2: InterchangeInfo = [
     'Int 2 ZH',
     'Int 2 EN',
 ];
+const mockUpdatedThemeInterchange = [CityCode.London, 'bakerloo', '#AAAAAA', MonoColour.white].concat(Array(2));
 
 describe('Tests for param actions', () => {
     it('Can add empty note as expected', () => {
@@ -414,7 +415,7 @@ describe('Tests for param actions', () => {
             ...realStore,
             param: { ...realStore.param, stn_list: mockStationList },
         });
-        mockStore.dispatch(updateInterchange('test', 0, 0, mockInterchange2) as any);
+        mockStore.dispatch(updateInterchange('test', 0, 0, mockUpdatedThemeInterchange as any) as any);
 
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(1);
@@ -424,7 +425,9 @@ describe('Tests for param actions', () => {
         const stationTransferInfo = setStationAction.station.transfer.info;
         expect(stationTransferInfo).toHaveLength(1);
         expect(stationTransferInfo[0]).toHaveLength(1);
-        expect(stationTransferInfo[0]).toContainEqual(mockInterchange2);
+        expect(stationTransferInfo[0]).toContainEqual(
+            mockUpdatedThemeInterchange.slice(0, 4).concat(mockInterchange1.slice(4))
+        );
     });
 
     // TODO
