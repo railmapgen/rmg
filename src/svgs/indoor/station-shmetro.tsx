@@ -125,9 +125,7 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; arrowDirection: 'upwa
     // get the interchange line names
     // TODO: support out-of-system transfer InterchangeInfo[2][] (e.g. maglev)
     const lineNames = intInfos
-        .filter(intInfo => intInfo[4].indexOf('线') >= 0)
-        .map(intInfo => intInfo[4].replace('号线', '')
-                        .replace('线', '').trim())
+        .map(intInfo => intInfo[4].replace(/^(\d+)(.*)$/, "$1"))
         .join('，')
     const lineNamesEn = intInfos
         .map(intInfo => intInfo[5].replace('Line', '')
@@ -171,7 +169,7 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; arrowDirection: 'upwa
             textAnchor="middle"
             fontSize="66%">
             <text className="rmg-name__zh" dy={-5}>
-                {`换乘${lineNames}号线`}
+                {`换乘${lineNames}${lineNames.endsWith('线') || lineNames.endsWith('線') || lineNames.endsWith('綫') ? '' : '号线'}`}
             </text>
             <text className="rmg-name__en" dy={5} fontSize="75%">
                 {`Interchange Line ${lineNamesEn}`}
