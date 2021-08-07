@@ -1,4 +1,4 @@
-import { AllCanvas, CanvasType, LoadingStatus, RmgStyle } from "../../constants/constants";
+import { AllCanvas, CanvasType, LoadingStatus, RmgStyle } from '../../constants/constants';
 import { Dispatch } from 'redux';
 import { RootState } from '../index';
 
@@ -81,7 +81,6 @@ export const setCanvasToShow = (canvasToShow: CanvasType | typeof AllCanvas) => 
     return { type: SET_CANVAS_TO_SHOW, canvasToShow } as setCanvasToShowAction;
 };
 
-
 const setCanvasToShowStatus = (canvasToShowStatus: LoadingStatus) => {
     return { type: SET_CANVAS_TO_SHOW_STATUS, canvasToShowStatus } as setCanvasToShowStatusAction;
 };
@@ -96,5 +95,5 @@ export const selectCanvas = (canvas: CanvasType | typeof AllCanvas) => {
         } catch (err) {
             dispatch(setCanvasToShowStatus(LoadingStatus.failed));
         }
-    }
-}
+    };
+};

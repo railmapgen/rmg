@@ -208,11 +208,11 @@ const NameInput = (props: Props) => {
 };
 
 const SecondaryNameInput = (props: Props) => {
-    const {stnId} = props;
+    const { stnId } = props;
     const { t } = useTranslation();
     const classes = useStyles();
     const reduxDispatch = useDispatch();
-    
+
     const { dispatch } = useContext(ParamContext);
     const { secondaryName } = useSelector((store: RootState) => store.param.stn_list[stnId]);
     return (

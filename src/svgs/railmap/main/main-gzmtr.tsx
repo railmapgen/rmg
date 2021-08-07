@@ -76,7 +76,7 @@ const getXShare = (stnId: string, adjMat: ReturnType<typeof adjacencyList>, bran
 
 const MainGZMTR = () => {
     const { branches, routes, deps } = React.useContext(ParamContext);
-    
+
     const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
     const yPercentage = useSelector((store: RootState) => store.param.y_pc);
     const paddingPercentage = useSelector((store: RootState) => store.param.padding);
@@ -166,15 +166,13 @@ const MainGZMTR = () => {
             <g
                 id="line_name"
                 style={{
-                    ['--translate-x' as any]: direction === ShortDirection.right ? `${lineXs[0] - 65}px` : `${lineXs[1] + 65}px`,
+                    ['--translate-x' as any]:
+                        direction === ShortDirection.right ? `${lineXs[0] - 65}px` : `${lineXs[1] + 65}px`,
                 }}
             >
                 <LineBox
                     info={
-                        Array(2).concat(
-                            ['var(--rmg-theme-colour)', 'var(--rmg-theme-fg)'],
-                            lineName
-                        ) as InterchangeInfo
+                        Array(2).concat(['var(--rmg-theme-colour)', 'var(--rmg-theme-fg)'], lineName) as InterchangeInfo
                     }
                     stnState={1}
                 />

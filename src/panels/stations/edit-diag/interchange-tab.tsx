@@ -239,7 +239,7 @@ const InterchangeChipSet = (props: InterchangeChipSetProps) => {
                 open={nameDialogOpened}
                 theme={
                     intInfos?.[chipSelected] === undefined
-                        ? (([] as any) as Theme)
+                        ? ([] as any as Theme)
                         : [
                               intInfos[chipSelected][0],
                               intInfos[chipSelected][1],

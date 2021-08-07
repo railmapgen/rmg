@@ -1,6 +1,6 @@
 import React, { useState, useContext, useMemo, useRef, useEffect } from 'react';
 import { ParamContext } from '../../../../context';
-import { Facilities, InterchangeInfo, Name, StationTransfer } from "../../../../constants/constants";
+import { Facilities, InterchangeInfo, Name, StationTransfer } from '../../../../constants/constants';
 
 interface Props {
     stnId: string;

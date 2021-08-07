@@ -41,15 +41,11 @@ const StationGZMTR = (props: Props) => {
             <IntGroup
                 intInfos={
                     isNameShift
-                        ? (([
+                        ? (
                               [
-                                  theme[0],
-                                  theme[1],
-                                  'var(--rmg-theme-colour)',
-                                  'var(--rmg-theme-fg)',
-                                  ...lineName
-                              ],
-                          ] as any[]) as InterchangeInfo[]).concat(stnInfo.transfer.info[0])
+                                  [theme[0], theme[1], 'var(--rmg-theme-colour)', 'var(--rmg-theme-fg)', ...lineName],
+                              ] as any[] as InterchangeInfo[]
+                          ).concat(stnInfo.transfer.info[0])
                         : stnInfo.transfer.info[0]
                 }
                 stnState={stnState}
@@ -123,8 +119,9 @@ const StationNameGElement = (props: StationNameGElementProps) => {
             <StationName ref={stnNameEl} name={props.name} />
             {props.secondaryName && (
                 <g
-                    transform={`translate(${(bBox.width + secNameBBox.width / 2 + 10) *
-                        (props.tickRotation === 180 ? -1 : 1)},${2 + 5 * (props.name[1].split('\\').length - 1)})`}
+                    transform={`translate(${
+                        (bBox.width + secNameBBox.width / 2 + 10) * (props.tickRotation === 180 ? -1 : 1)
+                    },${2 + 5 * (props.name[1].split('\\').length - 1)})`}
                     className={`Name ${props.stnState === -1 ? 'Pass' : 'Future'}`}
                 >
                     <g transform="translate(0,3)" fontSize={18}>
@@ -141,8 +138,9 @@ const StationNameGElement = (props: StationNameGElementProps) => {
             {props.isExpress && (
                 <ExpressTag
                     fill={props.stnState === -1 ? '#aaa' : 'var(--rmg-theme-colour)'}
-                    transform={`translate(${(bBox.width + secNameBBox.width + 20 + 35) *
-                        (props.tickRotation === 180 ? -1 : 1)},${2 + 5 * (props.name[1].split('\\').length - 1)})`}
+                    transform={`translate(${
+                        (bBox.width + secNameBBox.width + 20 + 35) * (props.tickRotation === 180 ? -1 : 1)
+                    },${2 + 5 * (props.name[1].split('\\').length - 1)})`}
                 />
             )}
         </g>

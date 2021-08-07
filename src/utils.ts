@@ -1,4 +1,4 @@
-import { LanguageCode, Note, RmgStyle, StationInfo, Translation } from "./constants/constants";
+import { LanguageCode, Note, RmgStyle, StationInfo, Translation } from './constants/constants';
 
 export const updateParam = (param: { [x: string]: any }) => {
     // Version 0.10

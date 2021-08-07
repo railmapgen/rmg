@@ -8,10 +8,10 @@ import StationEditDialog from './edit-diag';
 import StationDeleteDialog from './delete-diags';
 import StationFabs from './fabs';
 import AutoNumDialog from './auto-num-diag';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux';
 import { RmgStyle } from '../../constants/constants';
-import { reverseStations } from "../../redux/param/action";
+import { reverseStations } from '../../redux/param/action';
 
 const useStyles = makeStyles(() =>
     createStyles({

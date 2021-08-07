@@ -84,13 +84,13 @@ const DirectionIndicator = () => {
                             cur.includes(currentStationIndex)
                                 ? acc.concat(
                                       cur
-                                          .filter((stnId) => !['linestart', 'lineend'].includes(stnId))
+                                          .filter(stnId => !['linestart', 'lineend'].includes(stnId))
                                           .slice(direction === ShortDirection.left ? 0 : -1)[0]
                                   )
                                 : acc,
                         []
                     )
-                    .filter((id) => id !== currentStationIndex)
+                    .filter(id => id !== currentStationIndex)
             ),
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -132,10 +132,10 @@ const DirectionIndicatorTextGroup = (props: TextGroupProps) => {
     return (
         <g {...others}>
             <text className="rmg-name__zh" fontSize={28}>
-                {destIds.map((stnId) => stationList[stnId].name[0]).join('/') + '方向'}
+                {destIds.map(stnId => stationList[stnId].name[0]).join('/') + '方向'}
             </text>
             <text className="rmg-name__en" fontSize={14} dy={22}>
-                {'Towards ' + destIds.map((stnId) => stationList[stnId].name[1].replace('\\', ' ')).join('/')}
+                {'Towards ' + destIds.map(stnId => stationList[stnId].name[1].replace('\\', ' ')).join('/')}
             </text>
         </g>
     );
@@ -147,7 +147,7 @@ const DirectionIndicatorTextGroup2 = (props: TextGroupProps) => {
     const direction = useSelector((store: RootState) => store.param.direction);
     const stationList = useSelector((store: RootState) => store.param.stn_list);
 
-    const charCounts = destIds.map((stnId) => stationList[stnId].name[0].length);
+    const charCounts = destIds.map(stnId => stationList[stnId].name[0].length);
     const minCharCounts = Math.min(...charCounts);
     const charSpacing =
         minCharCounts > 1 && charCounts[0] !== charCounts[1]

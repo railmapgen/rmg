@@ -1,5 +1,5 @@
 import * as Global from '../../../methods';
-import { RMGParam, StationDict, StationInfo } from "../../../constants/constants";
+import { RMGParam, ShortDirection, StationDict, StationInfo } from '../../../constants/constants';
 
 /**
  * Compute the adjacency list of the graph.
@@ -134,9 +134,11 @@ export const getStnState = (
             [cur]:
                 cur === currentId
                     ? 0
-                    : (direction === 'r'
-                        ? _isSuccessor(currentId, cur, routes)
-                        : _isPredecessor(currentId, cur, routes))
+                    : (
+                          direction === ShortDirection.right
+                              ? _isSuccessor(currentId, cur, routes)
+                              : _isPredecessor(currentId, cur, routes)
+                      )
                     ? 1
                     : -1,
         }),
@@ -264,9 +266,9 @@ export class Stations {
         realYs: { [stnId: string]: number },
         branchSpacing: number,
         cp: { len: number; nodes: string[] },
-        e: number,
+        e: number
     ) {
-        var [prevId, prevY, prevX] = ([] as unknown) as [string, number, number];
+        var [prevId, prevY, prevX] = [] as unknown as [string, number, number];
         var path = [] as string[];
 
         let { dx_a, dx_l } = this.pathTurnParams(branchSpacing);

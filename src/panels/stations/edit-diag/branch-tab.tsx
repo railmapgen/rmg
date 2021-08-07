@@ -95,7 +95,7 @@ const BranchTypeItem = (props: ItemProps) => {
     const { dispatch } = React.useContext(ParamContext);
     const branchEntry = useSelector((store: RootState) => store.param.stn_list[stnId].branch[direction]);
 
-    const handleChange = ({ target: {value} }: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+    const handleChange = ({ target: { value } }: React.ChangeEvent<{ name?: string; value: unknown }>) => {
         let branchType = value as 'na' | BranchStyle;
         if (branchType === 'na') {
             // no changes

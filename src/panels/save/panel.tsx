@@ -23,7 +23,7 @@ import ExportDialog from './export-diag';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux';
-import { LanguageCode, RmgStyle } from "../../constants/constants";
+import { LanguageCode, RmgStyle } from '../../constants/constants';
 import { setRmgStyle } from '../../redux/app/action';
 
 const TemplateDialog = React.lazy(() => import(/* webpackChunkName: "panelSaveTemplateDialog" */ './template-diag'));
@@ -85,7 +85,7 @@ const SaveLists = () => {
         // TODO: how about integrity check?
         // e.g. when user switch from guangzhou mtr to shanghai metro
         // the info_panel_type will be invaild
-        // do we need to set info_panel_type to default or prompt up a dialog 
+        // do we need to set info_panel_type to default or prompt up a dialog
     };
 
     return (
@@ -156,7 +156,7 @@ function StyleDialog(props: StyleDialogProps) {
     const handleClose = (key: RmgStyle) => () => {
         dispatch(setRmgStyle(key));
         props.onClose(key);
-    }
+    };
 
     return (
         <Dialog onClose={() => props.onClose('close')} open={props.open}>

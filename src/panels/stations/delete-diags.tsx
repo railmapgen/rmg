@@ -4,7 +4,7 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, B
 import { ParamContext } from '../../context';
 import { removeStation } from './utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentStation, setStationsBulk } from "../../redux/param/action";
+import { setCurrentStation, setStationsBulk } from '../../redux/param/action';
 import { RootState } from '../../redux';
 
 interface Props {

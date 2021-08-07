@@ -7,7 +7,8 @@ const Kansai: PaletteEntry[] = [
     {
         id: 'a',
         name: {
-            [LanguageCode.English]: 'Hokuriku Line/Biwako Line/JR Kyōto Line/JR Kōbe Line (Tōkaidō Line)/San-yō Line/Akō Line (A)',
+            [LanguageCode.English]:
+                'Hokuriku Line/Biwako Line/JR Kyōto Line/JR Kōbe Line (Tōkaidō Line)/San-yō Line/Akō Line (A)',
             ja: '北陸線・琵琶湖線・ＪＲ京都線・ＪＲ神戸線（東海道線）・・山陽線・赤穂線',
             [LanguageCode.ChineseSimp]: '北陆线/琵琶湖线/JR京都线/JR神户线/山阳线/赤穗线',
             [LanguageCode.ChineseTrad]: '北陸線/琵琶湖線/JR京都線/JR神戶線/山陽線/赤穗線',

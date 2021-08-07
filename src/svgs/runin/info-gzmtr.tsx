@@ -315,15 +315,15 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
     const direction = useSelector((store: RootState) => store.param.direction);
     const stationList = useSelector((store: RootState) => store.param.stn_list);
 
-    const nextNames = nextIds.map((id) => stationList[id].name);
+    const nextNames = nextIds.map(id => stationList[id].name);
     const [nextBBox, setNextBBox] = useState({ width: 0 } as DOMRect);
     const nextNameEls = useRef<(SVGGElement | null)[]>([]);
     useEffect(
         () => {
-            setNextBBox((prevBBox) => ({ ...prevBBox, width: 0 }));
-            nextNameEls.current.forEach((el) => {
+            setNextBBox(prevBBox => ({ ...prevBBox, width: 0 }));
+            nextNameEls.current.forEach(el => {
                 let nextBBox = el?.getBBox();
-                setNextBBox((prevBBox) => {
+                setNextBBox(prevBBox => {
                     if (nextBBox) {
                         return prevBBox.width > nextBBox.width ? prevBBox : nextBBox;
                     } else {
@@ -336,14 +336,14 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
         [nextNames.toString()]
     );
 
-    const validEnds = props.nextIds.map((stnId) =>
+    const validEnds = props.nextIds.map(stnId =>
         routes.reduce(
             (acc, route) =>
                 // filter routes not containing next station's id
                 route.includes(stnId)
                     ? acc.concat(
                           route
-                              .filter((s) => !['linestart', 'lineend'].includes(s))
+                              .filter(s => !['linestart', 'lineend'].includes(s))
                               // select first/last station's id
                               .slice(direction === ShortDirection.left ? 0 : -1)[0]
                       )
@@ -352,7 +352,7 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
         )
     );
 
-    const nextNameZHCount = Math.max(...nextNames.map((names) => names[0].length));
+    const nextNameZHCount = Math.max(...nextNames.map(names => names[0].length));
     const nameBcrX = (svgWidths[CanvasType.RunIn] - nameBBox.width) / 2;
 
     return (
@@ -376,7 +376,7 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                                 </text>
                             </g>
                             <g
-                                ref={(el) => (nextNameEls.current[i] = el)}
+                                ref={el => (nextNameEls.current[i] = el)}
                                 textAnchor="start"
                                 style={{
                                     ['--translate-x' as any]:
@@ -392,12 +392,12 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                                     </text>
                                 ))}
                                 <text className="rmg-name__zh" y={-35}>
-                                    {validEnds[i].map((s) => stationList[s].name[0]).join('/') + '方向'}
+                                    {validEnds[i].map(s => stationList[s].name[0]).join('/') + '方向'}
                                 </text>
                                 <text className="rmg-name__en rmg-name__gzmtr--next2-dest" y={-20}>
                                     {'Towards ' +
                                         validEnds[i]
-                                            .map((s) => stationList[s].name[1])
+                                            .map(s => stationList[s].name[1])
                                             .join('/')
                                             .replace('\\', ' ')}
                                 </text>
