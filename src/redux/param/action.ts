@@ -410,7 +410,13 @@ export const updateInterchange = (
         ) {
             const newTransferInfo = stationInfo.transfer.info.map((set, setIdx) =>
                 setIdx === setIndex
-                    ? set.map((int, intIdx) => (intIdx === interchangeIndex ? interchangeInfo : int))
+                    ? set.map((int, intIdx) =>
+                          intIdx === interchangeIndex
+                              ? ([0, 1, 2, 3, 4, 5].map(i =>
+                                    interchangeInfo[i] === undefined ? int[i] : interchangeInfo[i]
+                                ) as InterchangeInfo)
+                              : int
+                      )
                     : set
             );
             dispatch(

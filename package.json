@@ -30,6 +30,7 @@
         "cross-env": "^7.0.3",
         "enzyme": "^3.11.0",
         "enzyme-adapter-react-16": "^1.15.6",
+        "eslint-plugin-prettier": "^3.4.0",
         "prettier": "2.3.0",
         "react-app-rewired": "^2.1.8",
         "react-scripts": "^4.0.3",
@@ -43,12 +44,6 @@
         "test:no-watch": "cross-env CI=true react-scripts test --env=jsdom",
         "eject": "react-scripts eject"
     },
-    "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ]
-    },
     "browserslist": {
         "production": [
             ">0.2%",
@@ -61,5 +56,5 @@
             "last 1 safari version"
         ]
     },
-    "version": "3.9.6"
+    "version": "3.9.9"
 }
