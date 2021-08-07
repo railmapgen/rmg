@@ -160,7 +160,7 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; direction: 'l' | 'r' 
     let dx = 0;
     return (
         <g fontSize={14} textAnchor="middle" {...others}>
-            {intInfos.map((info, i) => {
+            {(direction === 'l' ? intInfos : [...intInfos].reverse()).map((info, i) => {
                 // start with digit
                 const isLineNumber = Boolean(info[4].match(/^\d.*$/));
                 const isMaglev = Boolean(info[4].match(/^磁(悬)*浮/));
