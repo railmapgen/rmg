@@ -2,7 +2,9 @@ import React from 'react';
 
 import { ParamContext } from '../../context';
 import StripMTR from '../strip/strip-mtr';
-import { Name } from '../../constants/constants';
+import { CanvasType, Name, ShortDirection } from '../../constants/constants';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux';
 
 export default React.memo(function DestinationMTR() {
     return (
@@ -21,29 +23,38 @@ const DefsMTR = React.memo(() => (
 ));
 
 const InfoMTR = () => {
-    const { param, routes } = React.useContext(ParamContext);
+    const { routes } = React.useContext(ParamContext);
+
+    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
+    const direction = useSelector((store: RootState) => store.param.direction);
+    const customisedMTRDestination = useSelector((store: RootState) => store.param.customiseMTRDest);
+    const platformNumber = useSelector((store: RootState) => store.param.platform_num);
+    const lineName = useSelector((store: RootState) => store.param.line_name);
+
+    const currentStationIndex = useSelector((store: RootState) => store.param.current_stn_idx);
+    const stationList = useSelector((store: RootState) => store.param.stn_list);
 
     let destNames: Name;
-    if (param.customiseMTRDest.terminal !== false) {
-        destNames = param.customiseMTRDest.terminal;
+    if (customisedMTRDestination.terminal !== false) {
+        destNames = customisedMTRDestination.terminal;
     } else {
         const validDests = [
             ...new Set(
                 routes
-                    .filter(route => route.includes(param.current_stn_idx))
+                    .filter(route => route.includes(currentStationIndex))
                     .map(
                         route =>
                             route
                                 .filter(stnId => !['linestart', 'lineend'].includes(stnId))
-                                .slice(param.direction === 'l' ? 0 : -1)[0]
+                                .slice(direction === ShortDirection.left ? 0 : -1)[0]
                     )
-                    .filter(id => id !== param.current_stn_idx)
+                    .filter(id => id !== currentStationIndex)
             ),
         ];
         destNames = [
-            validDests.map(stnId => param.stn_list[stnId].name[0]).join('/'),
+            validDests.map(stnId => stationList[stnId].name[0]).join('/'),
             validDests
-                .map(stnId => param.stn_list[stnId].name[1])
+                .map(stnId => stationList[stnId].name[1])
                 .join('/')
                 .replace('\\', ' '),
         ];
@@ -54,29 +65,32 @@ const InfoMTR = () => {
     React.useEffect(
         () => setBBox(destNameEl.current!.getBBox()),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [destNames.toString(), param.customiseMTRDest.isLegacy]
+        [destNames.toString(), customisedMTRDestination.isLegacy]
     );
 
     const flagLength = 160 + 150 + bBox.width + 45 + 50;
-    const arrowX = (param.svgWidth.destination - (param.direction === 'l' ? 1 : -1) * flagLength) / 2;
-    const platformNumX = arrowX + (param.direction === 'l' ? 1 : -1) * (160 + 50 + 75);
-    const destNameX = platformNumX + (param.direction === 'l' ? 1 : -1) * (75 + 45);
+    const arrowX = (svgWidths[CanvasType.Destination] - (direction === ShortDirection.left ? 1 : -1) * flagLength) / 2;
+    const platformNumX = arrowX + (direction === ShortDirection.left ? 1 : -1) * (160 + 50 + 75);
+    const destNameX = platformNumX + (direction === ShortDirection.left ? 1 : -1) * (75 + 45);
 
     return (
         <g id="dest_name" style={{ transform: 'translateY(calc(var(--rmg-svg-height) / 2 - 20px))' }}>
-            <use xlinkHref="#arrow" transform={`translate(${arrowX},0)rotate(${param.direction === 'l' ? 0 : 180})`} />
-            <PlatformNum num={param.platform_num} transform={`translate(${platformNumX},0)`} />
+            <use
+                xlinkHref="#arrow"
+                transform={`translate(${arrowX},0)rotate(${direction === ShortDirection.left ? 0 : 180})`}
+            />
+            <PlatformNum num={platformNumber} transform={`translate(${platformNumX},0)`} />
             <g
                 ref={destNameEl}
-                textAnchor={param.direction === 'l' ? 'start' : 'end'}
+                textAnchor={direction === ShortDirection.left ? 'start' : 'end'}
                 transform={`translate(${destNameX},-25)`}
                 fill="var(--rmg-black)"
             >
                 <text className="rmg-name__zh" fontSize={90}>
-                    {(param.customiseMTRDest.isLegacy ? param.line_name[0] : '') + '往' + destNames[0]}
+                    {(customisedMTRDestination.isLegacy ? lineName[0] : '') + '往' + destNames[0]}
                 </text>
                 <text className="rmg-name__en" fontSize={45} dy={80}>
-                    {(param.customiseMTRDest.isLegacy ? param.line_name[1] + ' ' : '') + 'to ' + destNames[1]}
+                    {(customisedMTRDestination.isLegacy ? lineName[1] + ' ' : '') + 'to ' + destNames[1]}
                 </text>
             </g>
         </g>

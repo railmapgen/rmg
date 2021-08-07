@@ -3,7 +3,9 @@ import { ParamContext } from '../../../context';
 import { adjacencyList, criticalPathMethod, getXShareMTR, getStnState } from '../methods/share';
 import { StationsMTR } from '../methods/mtr';
 import StationMTR from './station/station-mtr';
-import { RMGParam, StationDict } from '../../../constants/constants';
+import { CanvasType, RMGParam, StationDict } from '../../../constants/constants';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux';
 
 const leftWideFactor = (stnList: StationDict, stnId: string) => {
     var res = 0;
@@ -61,9 +63,19 @@ const getNamePos = (stnId: string, branches: string[][], { isStagger, isFlip }: 
 };
 
 const MainMTR = () => {
-    const { param, branches, routes, deps } = React.useContext(ParamContext);
+    const { branches, routes, deps } = React.useContext(ParamContext);
 
-    const adjMat = adjacencyList(param.stn_list, leftWideFactor, rightWideFactor);
+    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
+    const yPercentage = useSelector((store: RootState) => store.param.y_pc);
+    const paddingPercentage = useSelector((store: RootState) => store.param.padding);
+    const branchSpacing = useSelector((store: RootState) => store.param.branch_spacing);
+    const direction = useSelector((store: RootState) => store.param.direction);
+    const namePosition = useSelector((store: RootState) => store.param.namePosMTR);
+
+    const currentStationIndex = useSelector((store: RootState) => store.param.current_stn_idx);
+    const stationList = useSelector((store: RootState) => store.param.stn_list);
+
+    const adjMat = adjacencyList(stationList, leftWideFactor, rightWideFactor);
 
     const criticalPath = useMemo(
         () => criticalPathMethod('linestart', 'lineend', adjMat),
@@ -79,7 +91,7 @@ const MainMTR = () => {
     const xShares = useMemo(
         () => {
             console.log('computing x shares');
-            return Object.keys(param.stn_list).reduce(
+            return Object.keys(stationList).reduce(
                 (acc, cur) => ({ ...acc, [cur]: getXShareMTR(cur, adjMat, branches) }),
                 {} as { [stnId: string]: number }
             );
@@ -88,8 +100,8 @@ const MainMTR = () => {
         [branches.toString(), JSON.stringify(adjMat)]
     );
     const lineXs: [number, number] = [
-        (param.svgWidth.railmap * param.padding) / 100,
-        param.svgWidth.railmap * (1 - param.padding / 100),
+        (svgWidths[CanvasType.RailMap] * paddingPercentage) / 100,
+        svgWidths[CanvasType.RailMap] * (1 - paddingPercentage / 100),
     ];
     const xs = Object.keys(xShares).reduce(
         (acc, cur) => ({ ...acc, [cur]: lineXs[0] + (xShares[cur] / realCP.len) * (lineXs[1] - lineXs[0]) }),
@@ -97,39 +109,37 @@ const MainMTR = () => {
     );
 
     const yShares = useMemo(
-        () => StationsMTR.getYShares(param.stn_list, branches),
+        () => StationsMTR.getYShares(stationList, branches),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [deps]
     );
     const ys = Object.keys(yShares).reduce(
         (acc, cur) => ({
             ...acc,
-            [cur]:
-                -yShares[cur] * param.branch_spacing +
-                (branches[0].includes(cur) ? 0 : yShares[cur] > 0 ? -9.68 : 9.68),
+            [cur]: -yShares[cur] * branchSpacing + (branches[0].includes(cur) ? 0 : yShares[cur] > 0 ? -9.68 : 9.68),
         }),
         {} as typeof yShares
     );
 
     const stnStates = useMemo(
-        () => getStnState(param.current_stn_idx, routes, param.direction),
+        () => getStnState(currentStationIndex, routes, direction),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.current_stn_idx, param.direction, routes.toString()]
+        [currentStationIndex, direction, routes.toString()]
     );
 
-    const namePoss = Object.keys(param.stn_list).reduce(
-        (acc, id) => ({ ...acc, [id]: getNamePos(id, branches, param.namePosMTR) }),
-        {} as { [stnId: string]: boolean }
+    const namePoss = Object.keys(stationList).reduce<{ [stnId: string]: boolean }>(
+        (acc, id) => ({ ...acc, [id]: getNamePos(id, branches, namePosition) }),
+        {}
     );
 
     const linePaths = StationsMTR.drawLine(
         branches,
         stnStates,
-        param.stn_list,
+        stationList,
         lineXs,
         xs,
         ys,
-        param.branch_spacing,
+        branchSpacing,
         criticalPath
     );
 
@@ -137,7 +147,7 @@ const MainMTR = () => {
         <g
             id="main"
             style={{
-                ['--y-percentage' as any]: param.y_pc,
+                ['--y-percentage' as any]: yPercentage,
                 transform: 'translateY(calc(var(--y-percentage) * var(--rmg-svg-height) / 100))',
             }}
         >
@@ -177,20 +187,22 @@ interface StationGroupProps {
 }
 
 const StationGroup = (props: StationGroupProps) => {
-    const { param } = React.useContext(ParamContext);
+    const { xs, ys, stnStates, namePoss } = props;
+
+    const stationList = useSelector((store: RootState) => store.param.stn_list);
 
     return (
         <g id="stn_icons">
-            {Object.keys(param.stn_list)
+            {Object.keys(stationList)
                 .filter(stnId => !['linestart', 'lineend'].includes(stnId))
                 .map(stnId => (
                     <g
                         key={stnId}
                         style={{
-                            transform: `translate(${props.xs[stnId]}px,${props.ys[stnId]}px)`,
+                            transform: `translate(${xs[stnId]}px,${ys[stnId]}px)`,
                         }}
                     >
-                        <StationMTR stnId={stnId} stnState={props.stnStates[stnId]} namePos={props.namePoss[stnId]} />
+                        <StationMTR stnId={stnId} stnState={stnStates[stnId]} namePos={namePoss[stnId]} />
                     </g>
                 ))}
         </g>
