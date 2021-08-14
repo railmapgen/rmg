@@ -100,11 +100,13 @@ const IndoorSHMetro = () => {
     );
 
     return (
-        <g id="main" transform={`translate(0,${param.svg_height - 200})`}>
-            <Lines paths={linePaths} />
-            <StationGroup xs={xs} ys={ys} xShares={xShares} stnStates={stnStates} />
+        <>
+            <g id="main" transform={`translate(0,${param.svg_height / 2})`}>
+                <Lines paths={linePaths} />
+                <StationGroup xs={xs} ys={ys} xShares={xShares} stnStates={stnStates} />
+            </g>
             <InfoElements />
-        </g>
+        </>
     );
 }
 
@@ -141,14 +143,14 @@ const StationGroup = (props: StationGroupProps) => {
             {Object.keys(param.stn_list)
                 .filter(stnId => !['linestart', 'lineend'].includes(stnId))
                 .map(stnId => (<g key={stnId} transform={`translate(${props.xs[stnId]},${props.ys[stnId]})`}>
-                        <StationSHMetro
-                            stnId={stnId}
-                            stnState={props.stnStates[stnId]}
-                            nameDirection={branches
-                                .filter(branch => branch.includes(stnId))
-                                .map(branch => branch.indexOf(stnId) % 2 === 0 ?
-                                    'downward' : 'upward')[0] as 'upward' | 'downward'} />
-                    </g>)
+                    <StationSHMetro
+                        stnId={stnId}
+                        stnState={props.stnStates[stnId]}
+                        nameDirection={branches
+                            .filter(branch => branch.includes(stnId))
+                            .map(branch => branch.indexOf(stnId) % 2 === 0 ?
+                                'downward' : 'upward')[0] as 'upward' | 'downward'} />
+                </g>)
                 )
             }
         </g>
@@ -160,12 +162,12 @@ const InfoElements = () => {
 
     return React.useMemo(() => (
         <>
-            <g transform={`translate(${param.svgWidth.indoor / 2},${-param.svg_height+250})`}>
+            <g transform={`translate(${param.svgWidth.indoor / 2},50)`}>
                 <text textAnchor="middle" fontSize="30" className="rmg-name__zh">
                     轨道交通{param.line_name[0]}运营线路示意图
                 </text>
             </g>
-            <g transform={`translate(${param.svgWidth.indoor / 2},-100)`}>
+            <g transform={`translate(${param.svgWidth.indoor / 2},${param.svg_height - 300})`}>
                 <text textAnchor="middle" fontSize="18" className="rmg-name__zh" dx="-30" dy="230">
                     友情提示：请留意您需要换乘线路的首末班时间，以免耽误您的出行，末班车进站前三分钟停售该末班车车票。
                 </text>
@@ -198,7 +200,7 @@ const InfoElements = () => {
  * Note the branches here has a slightly different meaning.
  * It refers to all the line sections that have a parallel line
  * rather than the upper or the bottom branch section.
- * 
+ *
  * Currently these functions only can be used on a line that
  * branches in the middle and ends at the linestart, which also
  * means that linestart has two children in the adjMat.
