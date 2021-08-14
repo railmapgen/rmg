@@ -1,5 +1,5 @@
 const params = {
-    svg_height: 300,
+    svg_height: 400,
     padding: 3.47,
     y_pc: 68.02,
     branch_spacing: 64.32,
