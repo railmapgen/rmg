@@ -357,7 +357,7 @@ export const updateStationNum = (stationId: string, num: string) => {
 /**
  *
  * @param stationId
- * @param setIndex - set 0: within-station interchange. set 1: OSI 1, etc
+ * @param setIndex - set 0: within-station interchange. set 1: Out of station(OSI) transfer. set 2: Out of system(OSysI) transfer
  * @param interchangeInfo
  */
 export const addInterchange = (stationId: string, setIndex: number, interchangeInfo: InterchangeInfo) => {

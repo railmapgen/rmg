@@ -84,7 +84,7 @@ const StationEditInterchangeTab = (props: { stnId: string }) => {
             <ListItem>
                 <InterchangeChipSet stnId={props.stnId} setIndex={0} onDelete={i => deleteClick(0, i)} />
             </ListItem>
-            {[RmgStyle.MTR, RmgStyle.SHMetro].includes(rmgStyle || '') && (
+            {/* Out of station transfer */[RmgStyle.MTR, RmgStyle.SHMetro].includes(rmgStyle || '') && (
                 <>
                     <Divider />
                     <ListItem>
@@ -92,20 +92,24 @@ const StationEditInterchangeTab = (props: { stnId: string }) => {
                             <h3 style={{ margin: 0 }}>{t('stations.edit.interchange.osi')}</h3>
                         </ListItemText>
                         <ListItemSecondaryAction>
-                            <Button
-                                variant="outlined"
-                                color="primary"
-                                style={{ lineHeight: '1rem', whiteSpace: 'pre', marginRight: 5 }}
-                                onClick={() => setOsiNameDialogOpened(true)}
-                            >
-                                {stnTrans.osi_names[0] ? stnTrans.osi_names[0].join('\r\n') : '車站名\r\nStn Name'}
-                            </Button>
-                            <OSINameDialog
-                                open={osiNameDialogOpened}
-                                osiName={stnTrans.osi_names[0] || ['', '']}
-                                stnId={props.stnId}
-                                onClose={() => setOsiNameDialogOpened(false)}
-                            />
+                            {[RmgStyle.MTR].includes(rmgStyle || '') && (
+                                <React.Fragment>
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        style={{ lineHeight: '1rem', whiteSpace: 'pre', marginRight: 5 }}
+                                        onClick={() => setOsiNameDialogOpened(true)}
+                                    >
+                                        {stnTrans.osi_names[0] ? stnTrans.osi_names[0].join('\r\n') : '車站名\r\nStn Name'}
+                                    </Button>
+                                    <OSINameDialog
+                                        open={osiNameDialogOpened}
+                                        osiName={stnTrans.osi_names[0] || ['', '']}
+                                        stnId={props.stnId}
+                                        onClose={() => setOsiNameDialogOpened(false)}
+                                    />
+                                </React.Fragment>
+                            )}
                             <Tooltip title={t('stations.edit.interchange.add')} aria-label="add">
                                 <IconButton onClick={() => addClick(1)}>
                                     <Icon>add_circle</Icon>
@@ -121,7 +125,27 @@ const StationEditInterchangeTab = (props: { stnId: string }) => {
                     </ListItem>
                 </>
             )}
-            {rmgStyle === RmgStyle.MTR && <InterchangeMore stnId={props.stnId} />}
+            {/* Out of system transfer */[RmgStyle.SHMetro].includes(rmgStyle || '') && (
+                <>
+                    <Divider />
+                    <ListItem>
+                        <ListItemText>
+                            <h3 style={{ margin: 0 }}>{t('stations.edit.interchange.osysi')}</h3>
+                        </ListItemText>
+                        <ListItemSecondaryAction>
+                            <Tooltip title={t('stations.edit.interchange.add')} aria-label="add">
+                                <IconButton onClick={() => addClick(2)}>
+                                    <Icon>add_circle</Icon>
+                                </IconButton>
+                            </Tooltip>
+                        </ListItemSecondaryAction>
+                    </ListItem>
+                    <ListItem>
+                        <InterchangeChipSet stnId={props.stnId} setIndex={2} onDelete={i => deleteClick(2, i)} />
+                    </ListItem>
+                </>
+            )}
+            {/* MTR more settings */rmgStyle === RmgStyle.MTR && <InterchangeMore stnId={props.stnId} />}
         </List>
     );
 };
