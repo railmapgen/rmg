@@ -71,7 +71,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
             />
 
             {props.infos[1]?.length && (
-                <g transform={`translate(0,${props.nameDirection === 'upward' ? -160 : 130})`}>
+                <g transform={`translate(0,${props.nameDirection === 'upward' ? -185 : 150})`}>
                     <OSIText osiInfos={props.infos[1]} />
                 </g>
             )}
@@ -168,7 +168,7 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; arrowDirection: 'upwa
 
         </>)}
 
-        <g transform={`translate(0,${arrowDirection === 'upward' ? -140 : 120})`} textAnchor="middle">
+        <g transform={`translate(0,${arrowDirection === 'upward' ? -145 : 125})`} textAnchor="middle">
             <text className="rmg-name__zh" dy={-7}>
                 {`换乘${lineNames}`}
             </text>
