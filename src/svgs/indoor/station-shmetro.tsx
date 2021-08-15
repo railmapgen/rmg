@@ -172,7 +172,7 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; arrowDirection: 'upwa
             <text className="rmg-name__zh" dy={-7}>
                 {`换乘${lineNames}`}
             </text>
-            <text className="rmg-name__en" dy={5} fontSize="75%">
+            <text className="rmg-name__en" dy={5} fontSize={9.6}>
                 {`Interchange Line ${lineNamesEn}`}
             </text>
         </g>
