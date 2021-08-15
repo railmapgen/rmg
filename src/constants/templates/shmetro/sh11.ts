@@ -1,8 +1,8 @@
 const params = {
-    svg_height: 450,
+    svg_height: 500,
     padding: 2.88,
     y_pc: 40,
-    branch_spacing: 64.51,
+    branch_spacing: 75.2,
     theme: [
         "shanghai",
         "sh11",
@@ -1387,7 +1387,7 @@ const params = {
         destination: 1500,
         runin: 1500,
         railmap: 2200,
-        indoor: 3000,
+        indoor: 3500,
     },
     notesGZMTR: [],
     namePosMTR: {

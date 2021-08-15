@@ -1227,7 +1227,8 @@ const params = {
     "svgWidth": {
         "destination": 1500,
         "runin": 1500,
-        "railmap": 2000
+        "railmap": 2000,
+        "indoor": 2500,
     },
     "notesGZMTR": [],
     "namePosMTR": {
