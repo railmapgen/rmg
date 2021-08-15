@@ -71,7 +71,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
             />
 
             {props.infos[1]?.length && (
-                <g transform={`translate(0,${props.nameDirection==='upward'?-160:130})`}>
+                <g transform={`translate(0,${props.nameDirection === 'upward' ? -160 : 130})`}>
                     <OSIText osiInfos={props.infos[1]} />
                 </g>
             )}
@@ -133,7 +133,7 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; arrowDirection: 'upwa
             .join('，')].filter(name => name && name !== '号线').join('，')
     const lineNamesEn = intInfos
         .map(intInfo => intInfo[5].replace('Line', '')
-                        .replace('line', '').trim())
+            .replace('line', '').trim())
         .join(',')
 
     return (<g>
