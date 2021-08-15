@@ -1,5 +1,5 @@
 const params = {
-    "svg_height": 300,
+    "svg_height": 400,
     "padding": 8.750201061605276,
     "y_pc": 40,
     "branch_spacing": 45,
@@ -1088,7 +1088,8 @@ const params = {
     "svgWidth": {
         "destination": 1600,
         "runin": 1200,
-        "railmap": 1800
+        "railmap": 2000,
+        "indoor": 2500,
     },
     "notesGZMTR": [],
     "namePosMTR": {
