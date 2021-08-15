@@ -16,12 +16,11 @@ export default memo(function IndoorWrapperSHMetro() {
 
 export const DefsSHMetro = React.memo(() => (
     <defs>
-        <circle id="stn_indoor_sh" fill="white" strokeWidth={5} stroke="var(--rmg-theme-colour)" r={8} />
+        <circle id="stn_indoor_sh" fill="white" strokeWidth={5} stroke="var(--rmg-theme-colour)"
+            r={8} transform="scale(1.5)" />
         <path id="int2_indoor_sh" fill="white" strokeWidth={4} d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"
-            stroke="black" transform="translate(0, -6.5)scale(1.33)" />
-        <path id="express_sh" fill="white" strokeWidth={2} d="M -5,0 a 5,5 0 1 1 10,0 V25 a 5,5 0 1 1 -10,0Z" />
-        <path id="direct_sh" fill="whitef" strokeWidth={2} d="M -5,0 a 5,5 0 1 1 10,0 V50 a 5,5 0 1 1 -10,0Z" />
-        <path id="int_indoor_arrow_sh" stroke="black" strokeWidth={1} d="M -7.5,0 v -30 h -7.5 l 15,-15 l 15,15 h -7.5 v 30 Z " />
+            stroke="black" transform="translate(0, -10)scale(2)" />
+        <path id="int_indoor_arrow_sh" stroke="black" strokeWidth={1} d="M -7.5,0 v -40 h -7.5 l 15,-15 l 15,15 h -7.5 v 40 Z " />
     </defs>
 ));
 
@@ -113,7 +112,7 @@ const IndoorSHMetro = () => {
 const Lines = React.memo(
     (props: { paths: { main: string[]; pass: string[] } }) => {
         return (
-            <g fill="none" strokeWidth={9.68}>
+            <g fill="none" strokeWidth={12}>
                 <g stroke="var(--rmg-theme-colour)">
                     {props.paths.main.map((path, i) => (
                         <path key={i} d={path} />

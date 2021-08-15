@@ -18,16 +18,16 @@ const StationSHMetro = (props: Props) => {
 
     return (
         <>
-            <use
-                xlinkHref={`#${stationIconStyle}`}
-                stroke='var(--rmg-theme-colour)'
-            />
             <StationNameGElement
                 name={stnInfo.name}
                 infos={stnInfo.transfer.info}
                 stnState={props.stnState}
                 direction={param.direction}
                 nameDirection={props.nameDirection}
+            />
+            <use
+                xlinkHref={`#${stationIconStyle}`}
+                stroke='var(--rmg-theme-colour)'
             />
         </>
     );
@@ -49,19 +49,18 @@ const StationNameGElement = (props: StationNameGElementProps) => {
             <line
                 x1={-30}
                 x2={30}
-                y1={props.nameDirection === 'upward' ? -33 : 0}
-                y2={props.nameDirection === 'upward' ? -33 : 0}
+                y1={props.nameDirection === 'upward' ? -23 : -10}
+                y2={props.nameDirection === 'upward' ? -23 : -10}
                 stroke='black'
             />
             <line
-                y1={props.nameDirection === 'upward' ? -33 : 0}
-                y2={props.nameDirection === 'upward' ? -33 - 17 : 20}
+                y1={props.nameDirection === 'upward' ? -23 : -10}
+                y2={props.nameDirection === 'upward' ? -23 - 25 : 20}
                 stroke='black'
             />
 
             {props.infos.reduce((sum, infos) => sum + infos.length, 0) && (<IntBoxGroup
                 intInfos={props.infos[1] ? ([] as InterchangeInfo[]).concat(...props.infos) : props.infos[0]}
-                transform={`translate(0,-10.75)`}
                 arrowDirection={props.nameDirection}
             />)}
 
@@ -88,7 +87,7 @@ const StationName = React.forwardRef(
 
         return (
             <g ref={ref} {...others} textAnchor='middle'
-                transform={`translate(0,${nameDirection === 'upward' ? -14.15625 - 2 : -14.15625 - 2 - 12 * (nameENLn - 1)})`}>
+                transform={`translate(0,${nameDirection === 'upward' ? -2 : -30 - 12 * (nameENLn - 1)})`}>
                 {React.useMemo(
                     () => (
                         <>
@@ -169,11 +168,8 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; arrowDirection: 'upwa
 
         </>)}
 
-        <g
-            transform={`translate(0,${arrowDirection === 'upward' ? -130 : 105})`}
-            textAnchor="middle"
-            fontSize="66%">
-            <text className="rmg-name__zh" dy={-5}>
+        <g transform={`translate(0,${arrowDirection === 'upward' ? -140 : 120})`} textAnchor="middle">
+            <text className="rmg-name__zh" dy={-7}>
                 {`换乘${lineNames}`}
             </text>
             <text className="rmg-name__en" dy={5} fontSize="75%">
@@ -201,6 +197,6 @@ const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
             </g>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [lineNames.toString()]
+        [lineNames]
     );
 };
