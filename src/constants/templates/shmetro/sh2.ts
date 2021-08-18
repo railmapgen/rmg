@@ -1,5 +1,5 @@
 const params = {
-    svg_height: 300,
+    svg_height: 500,
     padding: 3.47,
     y_pc: 68.02,
     branch_spacing: 64.32,
@@ -646,6 +646,7 @@ const params = {
         destination: 1500,
         runin: 1500,
         railmap: 2000,
+        indoor: 3000,
     },
     notesGZMTR: [],
     namePosMTR: {
