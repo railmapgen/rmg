@@ -1,4 +1,4 @@
-const params ={
+const params = {
     svg_height: 300,
     svg_width: 1250,
     svg_dest_width: 1250,
