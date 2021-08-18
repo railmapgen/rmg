@@ -326,7 +326,7 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
         case 'SET_PANEL_TYPE':
             return {
                 ...state,
-                info_panel_type: action.variant as  PanelTypeGZMTR | PanelTypeShmetro,
+                info_panel_type: action.variant as PanelTypeGZMTR | PanelTypeShmetro,
             };
         case 'ADD_NOTE_GZMTR':
             return {

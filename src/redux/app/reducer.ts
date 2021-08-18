@@ -7,9 +7,10 @@ import {
     SET_RMG_STYLE,
     setCanvasScaleAction,
     setCanvasScaleStatusAction,
-    setCanvasToShowAction, setCanvasToShowStatusAction,
-    setRmgStyleAction
-} from "./action";
+    setCanvasToShowAction,
+    setCanvasToShowStatusAction,
+    setRmgStyleAction,
+} from './action';
 
 interface AppState {
     rmgStyle: RmgStyle;
@@ -29,7 +30,12 @@ const initialState: AppState = {
 
 export default function AppReducer(
     state = initialState,
-    action: setRmgStyleAction | setCanvasScaleAction | setCanvasScaleStatusAction | setCanvasToShowAction | setCanvasToShowStatusAction
+    action:
+        | setRmgStyleAction
+        | setCanvasScaleAction
+        | setCanvasScaleStatusAction
+        | setCanvasToShowAction
+        | setCanvasToShowStatusAction
 ): AppState {
     switch (action.type) {
         case SET_RMG_STYLE:

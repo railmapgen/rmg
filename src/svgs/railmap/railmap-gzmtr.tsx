@@ -1,36 +1,45 @@
-import * as React from 'react';
+import React from 'react';
 import { ParamContext } from '../../context';
 import StripGZMTR from '../strip/strip-gzmtr';
 import MainGZMTR from './main/main-gzmtr';
-import { Note } from "../../constants/constants";
+import { CanvasType, Note, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux';
 
 const RailMapGZMTR = () => {
-    const { param } = React.useContext(ParamContext);
+    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
+    const direction = useSelector((store: RootState) => store.param.direction);
+    const psdNumber = useSelector((store: RootState) => store.param.psd_num);
+    const infoPanelType = useSelector((store: RootState) => store.param.info_panel_type);
+    const notes = useSelector((store: RootState) => store.param.notesGZMTR);
+    const currentStationIndex = useSelector((store: RootState) => store.param.current_stn_idx);
+    const curStnInfo = useSelector((store: RootState) => store.param.stn_list[currentStationIndex]);
+
     return (
         <>
             <DefsGZMTR />
 
             <StripGZMTR
-                variant={param.info_panel_type}
-                isShowLight={param.info_panel_type === 'gz2otis'}
-                isShowPSD={param.info_panel_type === 'gz2otis' && param.psd_num}
+                variant={infoPanelType}
+                isShowLight={infoPanelType === PanelTypeGZMTR.gz2otis}
+                isShowPSD={infoPanelType === PanelTypeGZMTR.gz2otis && psdNumber}
             />
 
-            {(param.direction === 'l' && param.stn_list[param.current_stn_idx].parents.includes('linestart')) ||
-            (param.direction === 'r' && param.stn_list[param.current_stn_idx].children.includes('lineend')) ? (
+            {(direction === ShortDirection.left && curStnInfo.parents.includes('linestart')) ||
+            (direction === ShortDirection.right && curStnInfo.children.includes('lineend')) ? (
                 <TerminusFlag />
             ) : (
                 <>
                     <MainGZMTR />
                     <DirectionIndicator />
-                    {param.notesGZMTR.map((note, i) => (
+                    {notes.map((note, i) => (
                         <NoteBox key={i} note={note} />
                     ))}
                 </>
             )}
 
-            {param.info_panel_type === 'gz2otis' && (
-                <line x2={param.svgWidth.railmap} transform="translate(0,90)" strokeWidth={3} stroke="black" />
+            {infoPanelType === PanelTypeGZMTR.gz2otis && (
+                <line x2={svgWidths[CanvasType.RailMap]} transform="translate(0,90)" strokeWidth={3} stroke="black" />
             )}
         </>
     );
@@ -60,7 +69,11 @@ const DefsGZMTR = React.memo(() => (
 ));
 
 const DirectionIndicator = () => {
-    const { param, routes } = React.useContext(ParamContext);
+    const { routes } = React.useContext(ParamContext);
+    const direction = useSelector((store: RootState) => store.param.direction);
+    const directionIndicatorX = useSelector((store: RootState) => store.param.direction_gz_x);
+    const directionIndicatorY = useSelector((store: RootState) => store.param.direction_gz_y);
+    const currentStationIndex = useSelector((store: RootState) => store.param.current_stn_idx);
 
     const validDests = React.useMemo(
         () => [
@@ -68,36 +81,36 @@ const DirectionIndicator = () => {
                 routes
                     .reduce(
                         (acc, cur) =>
-                            cur.includes(param.current_stn_idx)
+                            cur.includes(currentStationIndex)
                                 ? acc.concat(
                                       cur
-                                          .filter((stnId) => !['linestart', 'lineend'].includes(stnId))
-                                          .slice(param.direction === 'l' ? 0 : -1)[0]
+                                          .filter(stnId => !['linestart', 'lineend'].includes(stnId))
+                                          .slice(direction === ShortDirection.left ? 0 : -1)[0]
                                   )
                                 : acc,
                         []
                     )
-                    .filter((id) => id !== param.current_stn_idx)
+                    .filter(id => id !== currentStationIndex)
             ),
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.current_stn_idx, param.direction, routes.toString()]
+        [currentStationIndex, direction, routes.toString()]
     );
 
     const textGroupProps: TextGroupProps = {
-        textAnchor: param.direction === 'l' ? 'start' : 'end',
-        transform: `translate(${param.direction === 'l' ? 65 : -65},-5)`,
+        textAnchor: direction === ShortDirection.left ? 'start' : 'end',
+        transform: `translate(${direction === ShortDirection.left ? 65 : -65},-5)`,
         destIds: validDests,
     };
 
     return (
         <g
             id="direction_gz"
-            style={{ ['--x-percentage' as any]: param.direction_gz_x, ['--y-percentage' as any]: param.direction_gz_y }}
+            style={{ ['--x-percentage' as any]: directionIndicatorX, ['--y-percentage' as any]: directionIndicatorY }}
         >
             <use
                 xlinkHref="#arrow_direction"
-                style={{ ['--rotate' as any]: param.direction === 'l' ? '0deg' : '180deg' }}
+                style={{ ['--rotate' as any]: direction === ShortDirection.left ? '0deg' : '180deg' }}
             />
 
             {validDests.length !== 2 ? (
@@ -115,14 +128,14 @@ type TextGroupProps = {
 
 const DirectionIndicatorTextGroup = (props: TextGroupProps) => {
     const { destIds, ...others } = props;
-    const { param } = React.useContext(ParamContext);
+    const stationList = useSelector((store: RootState) => store.param.stn_list);
     return (
         <g {...others}>
             <text className="rmg-name__zh" fontSize={28}>
-                {destIds.map((stnId) => param.stn_list[stnId].name[0]).join('/') + '方向'}
+                {destIds.map(stnId => stationList[stnId].name[0]).join('/') + '方向'}
             </text>
             <text className="rmg-name__en" fontSize={14} dy={22}>
-                {'Towards ' + destIds.map((stnId) => param.stn_list[stnId].name[1].replace('\\', ' ')).join('/')}
+                {'Towards ' + destIds.map(stnId => stationList[stnId].name[1].replace('\\', ' ')).join('/')}
             </text>
         </g>
     );
@@ -130,9 +143,11 @@ const DirectionIndicatorTextGroup = (props: TextGroupProps) => {
 
 const DirectionIndicatorTextGroup2 = (props: TextGroupProps) => {
     const { destIds, ...others } = props;
-    const { param } = React.useContext(ParamContext);
 
-    const charCounts = destIds.map((stnId) => param.stn_list[stnId].name[0].length);
+    const direction = useSelector((store: RootState) => store.param.direction);
+    const stationList = useSelector((store: RootState) => store.param.stn_list);
+
+    const charCounts = destIds.map(stnId => stationList[stnId].name[0].length);
     const minCharCounts = Math.min(...charCounts);
     const charSpacing =
         minCharCounts > 1 && charCounts[0] !== charCounts[1]
@@ -146,26 +161,26 @@ const DirectionIndicatorTextGroup2 = (props: TextGroupProps) => {
                     <text
                         className="rmg-name__zh"
                         fontSize={25}
-                        x={param.direction === 'l' ? 0 : -75}
+                        x={direction === ShortDirection.left ? 0 : -75}
                         y={-21 + 42 * i}
                         letterSpacing={charCounts[i] > charCounts[1 - i] ? '0em' : `${charSpacing}em`}
                     >
-                        {param.stn_list[id].name[0]}
+                        {stationList[id].name[0]}
                     </text>
                     <text
                         className="rmg-name__en"
                         fontSize={11.5}
-                        x={param.direction === 'l' ? 0 : -75}
+                        x={direction === ShortDirection.left ? 0 : -75}
                         y={-1 + 42 * i}
                     >
-                        {'Towards ' + param.stn_list[id].name[1].replace('\\', ' ')}
+                        {'Towards ' + stationList[id].name[1].replace('\\', ' ')}
                     </text>
                 </React.Fragment>
             ))}
             <text
                 className="rmg-name__zh"
                 fontSize={28}
-                x={param.direction === 'l' ? 25 * (Math.max(...charCounts) + 1) : 0}
+                x={direction === ShortDirection.left ? 25 * (Math.max(...charCounts) + 1) : 0}
                 y={5}
             >
                 方向

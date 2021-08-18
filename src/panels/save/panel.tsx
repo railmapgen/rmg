@@ -23,7 +23,7 @@ import ExportDialog from './export-diag';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux';
-import { LanguageCode, RmgStyle } from "../../constants/constants";
+import { LanguageCode, RmgStyle } from '../../constants/constants';
 import { setRmgStyle } from '../../redux/app/action';
 
 const TemplateDialog = React.lazy(() => import(/* webpackChunkName: "panelSaveTemplateDialog" */ './template-diag'));
@@ -50,6 +50,7 @@ const SaveLists = () => {
     const { t, i18n } = useTranslation();
 
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+    const param = useSelector((store: RootState) => store.param);
 
     const [isTempDialogOpen, setIsTempDialogOpen] = useState(false);
     const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
@@ -57,9 +58,8 @@ const SaveLists = () => {
     const [isLangDialogOpen, setIsLangDialogOpen] = useState(false);
 
     const saveClick = async () => {
-        const rmgParamContents = await window.rmgStorage.readFile('rmgParam');
         let link = document.createElement('a');
-        link.href = 'data:application/json;base64,' + btoa(unescape(encodeURIComponent(rmgParamContents)));
+        link.href = 'data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(param))));
         link.download = 'rmg.param.' + new Date().toISOString() + '.json';
         link.click();
     };
@@ -85,7 +85,7 @@ const SaveLists = () => {
         // TODO: how about integrity check?
         // e.g. when user switch from guangzhou mtr to shanghai metro
         // the info_panel_type will be invaild
-        // do we need to set info_panel_type to default or prompt up a dialog 
+        // do we need to set info_panel_type to default or prompt up a dialog
     };
 
     return (
@@ -156,7 +156,7 @@ function StyleDialog(props: StyleDialogProps) {
     const handleClose = (key: RmgStyle) => () => {
         dispatch(setRmgStyle(key));
         props.onClose(key);
-    }
+    };
 
     return (
         <Dialog onClose={() => props.onClose('close')} open={props.open}>

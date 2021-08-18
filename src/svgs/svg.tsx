@@ -91,7 +91,7 @@ const StyleSpecificSVGs = memo(
                         (document.getElementById('css_' + canvas) as HTMLLinkElement).href = '';
                     }
                 });
-                
+
                 ![...canvasConfig[props.style], AllCanvas].includes(canvasToShow) && dispatch(selectCanvas(AllCanvas));
             },
             // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -137,8 +137,8 @@ const RailMapGZMTR = lazy(() => import(/* webpackChunkName: "railmapGZMTR" */ '.
 const DestinationMTR = lazy(() => import(/* webpackChunkName: "destinationMTR" */ './destination/destination-mtr'));
 const RailMapMTR = lazy(() => import(/* webpackChunkName: "railmapMTR" */ './railmap/railmap-mtr'));
 
-const DestinationSHMetro = lazy(() =>
-    import(/* webpackChunkName: "destinationSHMetro" */ './destination/destination-shmetro')
+const DestinationSHMetro = lazy(
+    () => import(/* webpackChunkName: "destinationSHMetro" */ './destination/destination-shmetro')
 );
 const RunInSHMetro = lazy(() => import(/* webpackChunkName: "runinSHMetro" */ './runin/runin-shmetro'));
 const RailMapSHMetro = lazy(() => import(/* webpackChunkName: "railmapSHMetro" */ './railmap/railmap-shmetro'));
