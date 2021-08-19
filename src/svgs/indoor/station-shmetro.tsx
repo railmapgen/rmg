@@ -131,10 +131,13 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; arrowDirection: 'upwa
             .filter(intInfo => !intInfo[4].match(/^\d+.*$/))
             .map(intInfo => intInfo[4])
             .join('，')].filter(name => name && name !== '号线').join('，')
-    const lineNamesEn = intInfos
-        .map(intInfo => intInfo[5].replace('Line', '')
-            .replace('line', '').trim())
-        .join(',')
+    const lineNamesEn = ['Line '.concat(intInfos
+        .filter(intInfo => intInfo[5].match(/^L|line$/))
+        .map(intInfo => intInfo[5].replace('Line', '').replace('line', '').trim())
+        .join(',')), intInfos
+            .filter(intInfo => !intInfo[5].match(/^L|line$/))
+            .map(intInfo => intInfo[5])
+            .join('，')].filter(name => name && name !== 'Line ').join(',')
 
     return (<g>
         <use
@@ -173,7 +176,7 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; arrowDirection: 'upwa
                 {`换乘${lineNames}`}
             </text>
             <text className="rmg-name__en" dy={5} fontSize={9.6}>
-                {`Interchange Line ${lineNamesEn}`}
+                {`Interchange ${lineNamesEn}`}
             </text>
         </g>
     </g>)
