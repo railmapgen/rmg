@@ -54,7 +54,7 @@ const NameListItems = (props: Props) => {
             </>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.name.toString()]
+        [props.name?.toString() || '']
     );
 };
 

@@ -24,6 +24,7 @@ import {
     toggleLineNameBeforeDestination,
     updateInterchange,
     updateNote,
+    updateStationOsiName,
 } from './action';
 import { BranchStyle, InterchangeInfo, MonoColour, Name, Note, Services, StationDict } from '../../constants/constants';
 import { CityCode } from '../../constants/city-config';
@@ -338,7 +339,7 @@ describe('Tests for param actions', () => {
         const setStationAction: setStationAction = actions[0];
         const stationTransferInfo = setStationAction.station.transfer.info;
         expect(stationTransferInfo).toHaveLength(2); // empty within-station, and osi with 1 info
-        expect(stationTransferInfo[0]).not.toBeDefined();
+        expect(stationTransferInfo[0]).toHaveLength(0); // concat with length 0 array to info, to avoid error while stringify JSON
         expect(stationTransferInfo[1]).toHaveLength(1);
         expect(stationTransferInfo[1]).toContainEqual(mockInterchange1);
     });
@@ -364,6 +365,29 @@ describe('Tests for param actions', () => {
         expect(stationTransferInfo).toHaveLength(1); // 2 within-station
         expect(stationTransferInfo[0]).toHaveLength(2);
         expect(stationTransferInfo[0]).toEqual([mockInterchange1, mockInterchange2]);
+    });
+
+    it('Can add OSI name for station as expected', () => {
+        const mockStationList = {
+            test: {
+                transfer: { osi_names: [] },
+            },
+        } as any as StationDict;
+        const mockStore = configureStore<RootState>([thunk])({
+            ...realStore,
+            param: { ...realStore.param, stn_list: mockStationList },
+        });
+        mockStore.dispatch(updateStationOsiName('test', 1, ['Name ZH', 'Name EN']) as any);
+
+        const actions = mockStore.getActions();
+        expect(actions).toHaveLength(1);
+        expect(actions.find(action => action.type === SET_STATION)).toBeDefined();
+
+        const setStationAction: setStationAction = actions[0];
+        const stationOsiNames = setStationAction.station.transfer.osi_names;
+        expect(stationOsiNames).toHaveLength(2);
+        expect(stationOsiNames[0]).toEqual(['車站名', 'Stn Name']); // dummy name
+        expect(stationOsiNames[1]).toEqual(['Name ZH', 'Name EN']);
     });
 
     it('Can remove interchange info as expected', () => {

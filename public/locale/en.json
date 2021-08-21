@@ -189,6 +189,7 @@
             "interchange": {
                 "within": "Within-station Interchange",
                 "osi": "Out-of-station Interchange",
+                "osysi": "Out-of-system Interchange",
                 "note": "Please note that some combinations of interchanges may not be displayed properly.",
                 "add": "Add",
                 "osiName": "Edit OSI Station Name",
