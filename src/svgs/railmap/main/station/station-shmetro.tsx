@@ -27,7 +27,7 @@ const StationSHMetro = (props: Props) => {
         // param.info_panel_type === 'sh' or others (from other styles)
         if (stnInfo.services.length === 3) stationIconStyle = 'direct_sh';
         else if (stnInfo.services.length === 2) stationIconStyle = 'express_sh';
-        else if (stnInfo.transfer.info.reduce((acc, cur) => acc + cur.length, 0)) stationIconStyle = 'int2_sh';
+        else if ([...stnInfo.transfer.info[0], ...stnInfo.transfer.info[1] || []].length > 0) stationIconStyle = 'int2_sh';
         else stationIconStyle = 'stn_sh';
         stationIconColor.stroke = props.stnState === -1 ? 'gray' : 'var(--rmg-theme-colour)';
     }
@@ -83,7 +83,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
     return (
         <g transform={`translate(${props.direction === 'l' ? 6 : -6},${props.info_panel_type === 'sh2020' ? -20 : -6})rotate(${props.direction === 'l' ? -45 : 45})`}>
-            {props.infos.flat().length > 0 && (
+            {[...props.infos[0], ...props.infos[1] || []].length > 0 && (
                 <>
                     <line
                         x1={0}
