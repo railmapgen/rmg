@@ -1,4 +1,4 @@
-import { Translation } from "./constants";
+import { Translation } from './constants';
 
 export enum CityCode {
     Barcelona = 'barcelona',

@@ -368,6 +368,9 @@ export const addInterchange = (stationId: string, setIndex: number, interchangeI
         if (newTransferInfo.length > setIndex) {
             newTransferInfo[setIndex].push(interchangeInfo);
         } else {
+            for (let i = newTransferInfo.length; i < setIndex; i++) {
+                newTransferInfo[i] = [];
+            }
             newTransferInfo[setIndex] = [interchangeInfo];
         }
 
@@ -426,13 +429,23 @@ export const updateInterchange = (
     };
 };
 
-export const updateStationOsiName = (stationId: string, osiName: Name) => {
+export const updateStationOsiName = (stationId: string, setIndex: number, osiName: Name) => {
     return (dispatch: Dispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
+
+        const newOsiNames = stationInfo.transfer.osi_names.map(i => i.slice()) as Name[];
+        if (newOsiNames.length > setIndex) {
+            newOsiNames[setIndex] = osiName;
+        } else {
+            for (let i = newOsiNames.length; i < setIndex; i++) {
+                newOsiNames[i] = ['車站名', 'Stn Name'];
+            }
+            newOsiNames[setIndex] = osiName;
+        }
         dispatch(
             setStation(stationId, {
                 ...stationInfo,
-                transfer: { ...stationInfo.transfer, osi_names: [osiName] },
+                transfer: { ...stationInfo.transfer, osi_names: newOsiNames },
             })
         );
     };

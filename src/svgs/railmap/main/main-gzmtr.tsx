@@ -3,7 +3,9 @@ import { ParamContext } from '../../../context';
 import StationGZMTR from './station/station-gzmtr';
 import LineBox from './line-box-gzmtr';
 import { adjacencyList, criticalPathMethod, drawLine, getStnState } from '../methods/share';
-import { InterchangeInfo, StationDict } from "../../../constants/constants";
+import { CanvasType, InterchangeInfo, ShortDirection, StationDict } from '../../../constants/constants';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux';
 
 const wideFactor = (stnList: StationDict, stnId: string) =>
     stnList[stnId].parents.length === 2 || stnList[stnId].children.length === 2 ? 0.25 : 0;
@@ -73,14 +75,23 @@ const getXShare = (stnId: string, adjMat: ReturnType<typeof adjacencyList>, bran
 };
 
 const MainGZMTR = () => {
-    const { param, branches, routes, deps } = React.useContext(ParamContext);
+    const { branches, routes, deps } = React.useContext(ParamContext);
 
-    const adjMat = adjacencyList(param.stn_list, wideFactor, wideFactor);
+    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
+    const yPercentage = useSelector((store: RootState) => store.param.y_pc);
+    const paddingPercentage = useSelector((store: RootState) => store.param.padding);
+    const branchSpacing = useSelector((store: RootState) => store.param.branch_spacing);
+    const direction = useSelector((store: RootState) => store.param.direction);
+    const lineName = useSelector((store: RootState) => store.param.line_name);
+    const currentStationIndex = useSelector((store: RootState) => store.param.current_stn_idx);
+    const stationList = useSelector((store: RootState) => store.param.stn_list);
+
+    const adjMat = adjacencyList(stationList, wideFactor, wideFactor);
 
     const xShares = useMemo(
         () => {
             console.log('computing x shares');
-            return Object.keys(param.stn_list).reduce(
+            return Object.keys(stationList).reduce(
                 (acc, cur) => ({ ...acc, [cur]: getXShare(cur, adjMat, branches) }),
                 {} as { [stnId: string]: number }
             );
@@ -93,12 +104,15 @@ const MainGZMTR = () => {
     const realCP = criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat);
 
     const lineXs: [number, number] =
-        param.direction === 'r'
+        direction === ShortDirection.right
             ? [
-                  (param.svgWidth.railmap * param.padding) / 100 + 65,
-                  param.svgWidth.railmap * (1 - param.padding / 100) - 20,
+                  (svgWidths[CanvasType.RailMap] * paddingPercentage) / 100 + 65,
+                  svgWidths[CanvasType.RailMap] * (1 - paddingPercentage / 100) - 20,
               ]
-            : [(param.svgWidth.railmap * param.padding) / 100, param.svgWidth.railmap * (1 - param.padding / 100) - 65];
+            : [
+                  (svgWidths[CanvasType.RailMap] * paddingPercentage) / 100,
+                  svgWidths[CanvasType.RailMap] * (1 - paddingPercentage / 100) - 65,
+              ];
     const xs = Object.keys(xShares).reduce(
         (acc, cur) => ({ ...acc, [cur]: lineXs[0] + (xShares[cur] / realCP.len) * (lineXs[1] - lineXs[0]) }),
         {} as typeof xShares
@@ -107,12 +121,12 @@ const MainGZMTR = () => {
     const yShares = useMemo(
         () => {
             console.log('computing y shares');
-            return Object.keys(param.stn_list).reduce((acc, cur) => {
+            return Object.keys(stationList).reduce((acc, cur) => {
                 if (branches[0].includes(cur)) {
                     return { ...acc, [cur]: 0 };
                 } else {
                     let branchOfStn = branches.slice(1).filter(branch => branch.includes(cur))[0];
-                    return { ...acc, [cur]: param.stn_list[branchOfStn[0]].children.indexOf(branchOfStn[1]) ? -2 : 2 };
+                    return { ...acc, [cur]: stationList[branchOfStn[0]].children.indexOf(branchOfStn[1]) ? -2 : 2 };
                 }
             }, {} as { [stnId: string]: number });
         },
@@ -120,14 +134,14 @@ const MainGZMTR = () => {
         [deps]
     );
     const ys = Object.keys(yShares).reduce(
-        (acc, cur) => ({ ...acc, [cur]: -yShares[cur] * param.branch_spacing }),
+        (acc, cur) => ({ ...acc, [cur]: -yShares[cur] * branchSpacing }),
         {} as typeof yShares
     );
 
     const stnStates = useMemo(
-        () => getStnState(param.current_stn_idx, routes, param.direction),
+        () => getStnState(currentStationIndex, routes, direction),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.current_stn_idx, param.direction, routes.toString()]
+        [currentStationIndex, direction, routes.toString()]
     );
 
     const linePaths = drawLine(branches, stnStates);
@@ -143,7 +157,7 @@ const MainGZMTR = () => {
         <g
             id="main"
             style={{
-                ['--y-percentage' as any]: param.y_pc,
+                ['--y-percentage' as any]: yPercentage,
                 transform: 'translateY(calc(var(--y-percentage) * var(--rmg-svg-height) / 100))',
             }}
         >
@@ -152,15 +166,13 @@ const MainGZMTR = () => {
             <g
                 id="line_name"
                 style={{
-                    ['--translate-x' as any]: param.direction === 'r' ? `${lineXs[0] - 65}px` : `${lineXs[1] + 65}px`,
+                    ['--translate-x' as any]:
+                        direction === ShortDirection.right ? `${lineXs[0] - 65}px` : `${lineXs[1] + 65}px`,
                 }}
             >
                 <LineBox
                     info={
-                        Array(2).concat(
-                            ['var(--rmg-theme-colour)', 'var(--rmg-theme-fg)'],
-                            param.line_name
-                        ) as InterchangeInfo
+                        Array(2).concat(['var(--rmg-theme-colour)', 'var(--rmg-theme-fg)'], lineName) as InterchangeInfo
                     }
                     stnState={1}
                 />
@@ -223,20 +235,22 @@ interface StationGroupProps {
 }
 
 const StationGroup = (props: StationGroupProps) => {
-    const { param } = React.useContext(ParamContext);
+    const { xs, ys, stnStates } = props;
+
+    const stationList = useSelector((store: RootState) => store.param.stn_list);
 
     return (
         <g id="stn_icons">
-            {Object.keys(param.stn_list)
+            {Object.keys(stationList)
                 .filter(stnId => !['linestart', 'lineend'].includes(stnId))
                 .map(stnId => (
                     <g
                         key={stnId}
                         style={{
-                            transform: `translate(${props.xs[stnId]}px,${props.ys[stnId]}px)`,
+                            transform: `translate(${xs[stnId]}px,${ys[stnId]}px)`,
                         }}
                     >
-                        <StationGZMTR stnId={stnId} stnState={props.stnStates[stnId]} stnY={props.ys[stnId]} />
+                        <StationGZMTR stnId={stnId} stnState={stnStates[stnId]} stnY={ys[stnId]} />
                     </g>
                 ))}
         </g>

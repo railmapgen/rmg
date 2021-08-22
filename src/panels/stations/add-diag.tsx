@@ -20,10 +20,10 @@ import { formatStnName } from '../../utils';
 import { getYShareMTR } from '../../methods';
 import { addStation } from './utils';
 import { ParamContext } from '../../context';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux';
-import { StationDict, StationInfo } from "../../constants/constants";
-import { setStationsBulk } from "../../redux/param/action";
+import { StationDict, StationInfo } from '../../constants/constants';
+import { setStationsBulk } from '../../redux/param/action';
 
 const newBranchPossibleEnd = (prep: 'before' | 'after', pivot: string, stnList: StationDict) => {
     let res: string[] = [];
@@ -102,8 +102,8 @@ export default React.memo(
         const reduxDispatch = useDispatch();
 
         const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
-        const { param, dispatch, tpo } = useContext(ParamContext);
-        const stnList = param.stn_list;
+        const stnList = useSelector((store: RootState) => store.param.stn_list);
+        const { dispatch, tpo } = useContext(ParamContext);
 
         const allLocs = {
             centre: t('stations.add.centre'),

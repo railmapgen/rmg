@@ -11,7 +11,7 @@ describe('Unit tests for LocalStorage implementation', () => {
 
     afterEach(() => {
         window.localStorage.removeItem(mockFilename);
-    })
+    });
 
     it('Can write to storage', async () => {
         await storage.writeFile(mockFilename, mockFileContent);
@@ -28,5 +28,5 @@ describe('Unit tests for LocalStorage implementation', () => {
         window.localStorage.setItem(mockFilename, mockFileContent);
         await storage.deleteFile(mockFilename);
         expect(window.localStorage.getItem(mockFilename)).toBeNull();
-    })
+    });
 });

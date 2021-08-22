@@ -160,6 +160,7 @@ type ReducerAction =
     | {
           type: 'UPDATE_STATION_OSI_NAME';
           stnId: string;
+          setIndex: number;
           name: Name;
       }
     | {
@@ -326,7 +327,7 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
         case 'SET_PANEL_TYPE':
             return {
                 ...state,
-                info_panel_type: action.variant as  PanelTypeGZMTR | PanelTypeShmetro,
+                info_panel_type: action.variant as PanelTypeGZMTR | PanelTypeShmetro,
             };
         case 'ADD_NOTE_GZMTR':
             return {
@@ -439,8 +440,15 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
                         transfer: {
                             ...state.stn_list[action.stnId].transfer,
                             info: (({ setIdx, info }) => {
-                                let nextInfo = state.stn_list[action.stnId].transfer.info.slice();
-                                nextInfo[setIdx] = (nextInfo[setIdx] || ([] as InterchangeInfo[])).concat([info]);
+                                let nextInfo = state.stn_list[action.stnId].transfer.info.map(i => i.slice());
+                                if (nextInfo.length > setIdx) {
+                                    nextInfo[setIdx].push(info);
+                                } else {
+                                    for (let i = nextInfo.length; i < setIdx; i++) {
+                                        nextInfo[i] = [];
+                                    }
+                                    nextInfo[setIdx] = [info];
+                                }
                                 return nextInfo;
                             })(action),
                         },
@@ -498,7 +506,18 @@ export const paramReducer = (state: RMGParam, action: ReducerAction): RMGParam =
                         ...state.stn_list[action.stnId],
                         transfer: {
                             ...state.stn_list[action.stnId].transfer,
-                            osi_names: [action.name],
+                            osi_names: (({ setIndex, name }) => {
+                                const newOsiNames = state.stn_list[action.stnId].transfer.osi_names.map(i => i.slice());
+                                if (newOsiNames.length > setIndex) {
+                                    newOsiNames[setIndex] = name;
+                                } else {
+                                    for (let i = newOsiNames.length; i < setIndex; i++) {
+                                        newOsiNames[i] = ['車站名', 'Stn Name'];
+                                    }
+                                    newOsiNames[setIndex] = name;
+                                }
+                                return newOsiNames as Name[];
+                            })(action),
                         },
                     },
                 },

@@ -8,7 +8,7 @@ interface Props {
 }
 
 const StripGZMTR = (props: Props) => {
-    const stripHeight = ((variant) => {
+    const stripHeight = (variant => {
         switch (variant) {
             case 'gz28':
             case 'gz2otis':

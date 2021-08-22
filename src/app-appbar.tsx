@@ -14,10 +14,10 @@ import {
     Divider,
     useMediaQuery,
 } from '@material-ui/core';
-import { AllCanvas, canvasConfig, CanvasType } from "./constants/constants";
+import { AllCanvas, canvasConfig, CanvasType } from './constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './redux';
-import { selectCanvas, zoomIn, zoomOut } from "./redux/app/action";
+import { selectCanvas, zoomIn, zoomOut } from './redux/app/action';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -108,18 +108,12 @@ const ZoomToggles = () => {
         () => (
             <>
                 <Tooltip title={t('zoom.out')}>
-                    <IconButton
-                        onClick={() => dispatch(zoomOut())}
-                        className={classes.menuButton}
-                    >
+                    <IconButton onClick={() => dispatch(zoomOut())} className={classes.menuButton}>
                         <Icon>zoom_out</Icon>
                     </IconButton>
                 </Tooltip>
                 <Tooltip title={t('zoom.in')}>
-                    <IconButton
-                        onClick={() => dispatch(zoomIn())}
-                        className={classes.menuButton}
-                    >
+                    <IconButton onClick={() => dispatch(zoomIn())} className={classes.menuButton}>
                         <Icon>zoom_in</Icon>
                     </IconButton>
                 </Tooltip>

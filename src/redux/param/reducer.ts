@@ -1,5 +1,5 @@
-import { CityCode } from "../../constants/city-config";
-import { MonoColour, PanelTypeGZMTR, RMGParam, ShortDirection } from "../../constants/constants";
+import { CityCode } from '../../constants/city-config';
+import { MonoColour, PanelTypeGZMTR, RMGParam, ShortDirection } from '../../constants/constants';
 import {
     SET_BRANCH_SPACING,
     SET_CURRENT_STATION,
@@ -42,8 +42,8 @@ import {
     setSvgHeightAction,
     setSvgWidthAction,
     setThemeAction,
-    setYPercentageAction
-} from "./action";
+    setYPercentageAction,
+} from './action';
 
 const initialState: RMGParam = {
     svgWidth: {

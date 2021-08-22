@@ -66,7 +66,11 @@ const useLineList = (theme: Theme) => {
             }
             (async () => {
                 const data = await listPromise;
-                setList(theme[0] === CityCode.Other ? [{ ...data[0], colour: theme[2], fg: theme[3] || MonoColour.white }] : data);
+                setList(
+                    theme[0] === CityCode.Other
+                        ? [{ ...data[0], colour: theme[2], fg: theme[3] || MonoColour.white }]
+                        : data
+                );
             })();
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -312,7 +316,11 @@ function CountryFlag(props: { code: string }) {
     }
 
     // special case for simplified Chinese
-    if ([LanguageCode.ChineseCN, LanguageCode.ChineseSimp].includes(i18n.language as LanguageCode) && props.code === 'TW') codePoints = ['1F3F4'];
+    if (
+        [LanguageCode.ChineseCN, LanguageCode.ChineseSimp].includes(i18n.language as LanguageCode) &&
+        props.code === 'TW'
+    )
+        codePoints = ['1F3F4'];
 
     return navigator.platform.indexOf('Win32') !== -1 || navigator.platform.indexOf('Win64') !== -1 ? (
         <img

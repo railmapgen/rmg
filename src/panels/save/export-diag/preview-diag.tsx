@@ -76,7 +76,7 @@ export default function PreviewDialog(props: Props) {
 
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
 
-    const [svgEl, setSvgEl] = useState((document.createElement('svg') as Element) as SVGSVGElement);
+    const [svgEl, setSvgEl] = useState(document.createElement('svg') as Element as SVGSVGElement);
     const [isLoaded, setIsLoaded] = useState(false);
 
     const [showBorder, setShowBorder] = useState(false);
@@ -108,7 +108,7 @@ export default function PreviewDialog(props: Props) {
     useEffect(
         () => {
             if (props.canvas === '') {
-                setSvgEl((document.createElement('svg') as Element) as SVGSVGElement);
+                setSvgEl(document.createElement('svg') as Element as SVGSVGElement);
                 setIsLoaded(false);
                 return;
             }
@@ -133,8 +133,10 @@ export default function PreviewDialog(props: Props) {
             ['share', props.canvas]
                 .map(tag =>
                     [
-                        ...([...document.querySelectorAll('link')].filter(l => l.id === 'css_' + tag)[0]
-                            ?.sheet as CSSStyleSheet).cssRules,
+                        ...(
+                            [...document.querySelectorAll('link')].filter(l => l.id === 'css_' + tag)[0]
+                                ?.sheet as CSSStyleSheet
+                        ).cssRules,
                     ]
                         .map(rule => rule.cssText)
                         .join(' ')
@@ -236,23 +238,8 @@ export default function PreviewDialog(props: Props) {
                                 <ListItemSecondaryAction>
                                     <Select native value={scale} onChange={handleScaleChange} disabled={!isLoaded}>
                                         {[
-                                            0.25,
-                                            0.33,
-                                            0.5,
-                                            0.67,
-                                            0.75,
-                                            0.8,
-                                            0.9,
-                                            1,
-                                            1.1,
-                                            1.25,
-                                            1.5,
-                                            1.75,
-                                            2,
-                                            2.5,
-                                            3,
-                                            4,
-                                            5,
+                                            0.25, 0.33, 0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3,
+                                            4, 5,
                                         ].map(ratio => (
                                             <option key={ratio} value={ratio}>
                                                 {(ratio * 100).toFixed(0) + '%'}

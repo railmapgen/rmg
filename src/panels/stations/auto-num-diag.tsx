@@ -2,8 +2,8 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
 import { ParamContext } from '../../context';
-import { useDispatch } from "react-redux";
-import { updateStationNum } from "../../redux/param/action";
+import { useDispatch } from 'react-redux';
+import { updateStationNum } from '../../redux/param/action';
 
 interface Props {
     open: boolean;

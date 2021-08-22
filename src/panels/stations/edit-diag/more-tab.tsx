@@ -30,7 +30,7 @@ export default memo(function MoreTab(props: { stnId: string }) {
         <div>
             <List>
                 {rmgStyle in rmgStyleServices && (
-                    <ServiceLi stnId={props.stnId} services={rmgStyleServices[rmgStyle] as Services[]} />
+                    <ServiceLi stnId={props.stnId} providedServices={rmgStyleServices[rmgStyle] as Services[]} />
                 )}
                 {rmgStyleFacility.includes(rmgStyle) && <FacilityLi stnId={props.stnId} />}
             </List>
@@ -39,9 +39,12 @@ export default memo(function MoreTab(props: { stnId: string }) {
 });
 
 const FacilityLi = (props: { stnId: string }) => {
+    const { stnId } = props;
     const { t } = useTranslation();
     const reduxDispatch = useDispatch();
-    const { param, dispatch } = useContext(ParamContext);
+    const { dispatch } = useContext(ParamContext);
+
+    const { facility } = useSelector((store: RootState) => store.param.stn_list[stnId]);
     return (
         <ListItem>
             <ListItemIcon>
@@ -51,14 +54,14 @@ const FacilityLi = (props: { stnId: string }) => {
             <ListItemSecondaryAction>
                 <Select
                     native
-                    value={param.stn_list[props.stnId].facility}
+                    value={facility}
                     onChange={({ target: { value } }) => {
                         dispatch({
                             type: 'UPDATE_STATION_FACILITY',
-                            stnId: props.stnId,
+                            stnId: stnId,
                             facility: value as Facilities,
                         });
-                        reduxDispatch(updateStationFacility(props.stnId, value as Facilities));
+                        reduxDispatch(updateStationFacility(stnId, value as Facilities));
                     }}
                 >
                     {Object.values(Facilities).map(f => (
@@ -72,11 +75,13 @@ const FacilityLi = (props: { stnId: string }) => {
     );
 };
 
-const ServiceLi = (props: { stnId: string, services: Services[] }) => {
+const ServiceLi = (props: { stnId: string; providedServices: Services[] }) => {
+    const { stnId, providedServices } = props;
     const { t } = useTranslation();
     const reduxDispatch = useDispatch();
-    const { param, dispatch } = useContext(ParamContext);
-    const services = new Set(param.stn_list[props.stnId].services);
+    const { dispatch } = useContext(ParamContext);
+
+    const { services } = useSelector((store: RootState) => store.param.stn_list[stnId]);
 
     const handleChange =
         (service: Services) =>
@@ -103,14 +108,14 @@ const ServiceLi = (props: { stnId: string, services: Services[] }) => {
                 primary={t('stations.edit.more.services.button')}
                 secondary={
                     <FormGroup row>
-                        {props.services.map(s => (
+                        {providedServices.map(s => (
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={services.has(s)}
+                                        checked={services.includes(s)}
                                         value={s}
                                         onChange={handleChange(s)}
-                                        disabled={s === 'local'}
+                                        disabled={s === Services.local}
                                     />
                                 }
                                 label={t('stations.edit.more.services.' + s)}

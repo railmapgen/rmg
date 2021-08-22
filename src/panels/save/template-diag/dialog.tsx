@@ -20,7 +20,7 @@ import {
 import { getTransText2 } from '../../../utils';
 import { templateList } from '../../../constants/templates/data';
 import { companies } from '../../../constants/company-config';
-import { LanguageCode } from "../../../constants/constants";
+import { LanguageCode } from '../../../constants/constants';
 
 interface TemplateDialogProps {
     open: boolean;
@@ -76,11 +76,13 @@ const NewDialog = (props: TemplateDialogProps) => {
 
     const handleClick = (filename: string) => async () => {
         try {
-            const module = await import(/* webpackChunkName: "templates" */ `../../../constants/templates/${selectedCompany}/${filename}`)
+            const module = await import(
+                /* webpackChunkName: "templates" */ `../../../constants/templates/${selectedCompany}/${filename}`
+            );
             await window.rmgStorage.writeFile('rmgParam', JSON.stringify(module.default));
             window.location.reload(true);
         } catch (err) {
-            console.error(err)
+            console.error(err);
         }
     };
 
@@ -99,14 +101,20 @@ const NewDialog = (props: TemplateDialogProps) => {
                         onChange={(_, value) => setTabValue(value)}
                     >
                         {companies.map(c => (
-                            <Tab key={c.id} label={getTransText2(c.name, i18n.languages as LanguageCode[])} className={classes.tab} />
+                            <Tab
+                                key={c.id}
+                                label={getTransText2(c.name, i18n.languages as LanguageCode[])}
+                                className={classes.tab}
+                            />
                         ))}
                     </Tabs>
                     <Typography component="div" role="tabpanel" className={classes.tabpanel}>
                         <List disablePadding>
                             {templateList[companies[tabValue].id].map(temp => (
                                 <ListItem button onClick={handleClick(temp.filename)} key={temp.filename}>
-                                    <ListItemText primary={getTransText2(temp.name, i18n.languages as LanguageCode[])} />
+                                    <ListItemText
+                                        primary={getTransText2(temp.name, i18n.languages as LanguageCode[])}
+                                    />
                                 </ListItem>
                             ))}
                         </List>

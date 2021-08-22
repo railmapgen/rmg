@@ -2,6 +2,7 @@ import { LanguageCode, Translation } from './constants';
 
 export enum CompanyCode {
     basic = 'basic',
+    bjsubway = 'bjsubway',
     gzmtr = 'gzmtr',
     mlm = 'mlm',
     mtr = 'mtr',
@@ -19,6 +20,14 @@ export const companies: CompanyEntry[] = [
         name: {
             [LanguageCode.English]: 'Basic',
             [LanguageCode.Chinese]: '基本',
+        },
+    },
+    {
+        id: CompanyCode.bjsubway,
+        name: {
+            [LanguageCode.English]: 'Beijing Subway',
+            [LanguageCode.ChineseSimp]: '北京地铁',
+            [LanguageCode.ChineseTrad]: '北京地鐵',
         },
     },
     {
