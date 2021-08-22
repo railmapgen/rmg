@@ -27,7 +27,7 @@ const StationSHMetro = (props: Props) => {
         // param.info_panel_type === 'sh' or others (from other styles)
         if (stnInfo.services.length === 3) stationIconStyle = 'direct_sh';
         else if (stnInfo.services.length === 2) stationIconStyle = 'express_sh';
-        else if (stnInfo.transfer.info.reduce((acc, cur) => acc + cur.length, 0)) stationIconStyle = 'int2_sh';
+        else if ([...stnInfo.transfer.info[0], ...stnInfo.transfer.info[1] || []].length > 0) stationIconStyle = 'int2_sh';
         else stationIconStyle = 'stn_sh';
         stationIconColor.stroke = props.stnState === -1 ? 'gray' : 'var(--rmg-theme-colour)';
     }
@@ -83,20 +83,21 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
     return (
         <g transform={`translate(${props.direction === 'l' ? 6 : -6},${props.info_panel_type === 'sh2020' ? -20 : -6})rotate(${props.direction === 'l' ? -45 : 45})`}>
-            {props.infos.reduce((sum, infos) => sum + infos.length, 0) && (
-                <line
-                    x1={0}
-                    x2={props.direction === 'l' ? x : -x}
-                    stroke={props.stnState === -1 ? 'gray' : 'black'}
-                    strokeWidth={0.5}
-                />
+            {[...props.infos[0], ...props.infos[1] || []].length > 0 && (
+                <>
+                    <line
+                        x1={0}
+                        x2={props.direction === 'l' ? x : -x}
+                        stroke={props.stnState === -1 ? 'gray' : 'black'}
+                        strokeWidth={0.5}
+                    />
+                    <IntBoxGroup
+                        intInfos={[...props.infos[0], ...props.infos[1] || []]}
+                        transform={`translate(${x * (props.direction === 'l' ? 1 : -1)},-10.75)`}
+                        direction={props.direction}
+                    />
+                </>
             )}
-
-            <IntBoxGroup
-                intInfos={props.infos[1] ? ([] as InterchangeInfo[]).concat(...props.infos) : props.infos[0]}
-                transform={`translate(${x * (props.direction === 'l' ? 1 : -1)},-10.75)`}
-                direction={props.direction}
-            />
 
             <g
                 textAnchor={props.direction === 'l' ? 'start' : 'end'}
@@ -108,7 +109,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                     fill={props.stnState === -1 ? 'gray' : props.stnState === 0 ? 'red' : 'black'}
                 />
 
-                {props.infos[1]?.length && (
+                {props.infos[1]?.length > 0 && (
                     <g
                         transform={`translate(${
                             (x + props.infos.reduce((sum, infos) => sum + infos.length, 0) * 15) *

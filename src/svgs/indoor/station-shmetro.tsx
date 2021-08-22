@@ -13,7 +13,7 @@ const StationSHMetro = (props: Props) => {
     const stnInfo = param.stn_list[props.stnId];
 
     let stationIconStyle = '';
-    if (stnInfo.transfer.info.reduce((acc, cur) => acc + cur.length, 0)) stationIconStyle = 'int2_indoor_sh';
+    if (stnInfo.transfer.info.flat().length > 0) stationIconStyle = 'int2_indoor_sh';
     else stationIconStyle = 'stn_indoor_sh';
 
     return (
@@ -59,8 +59,8 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 stroke='black'
             />
 
-            {props.infos.reduce((sum, infos) => sum + infos.length, 0) && (<IntBoxGroup
-                intInfos={props.infos[1] ? ([] as InterchangeInfo[]).concat(...props.infos) : props.infos[0]}
+            {[...props.infos[0], ...props.infos[1] || []].length > 0 && (<IntBoxGroup
+                intInfos={[...props.infos[0], ...props.infos[1] || []]}
                 arrowDirection={props.nameDirection}
             />)}
 
@@ -70,9 +70,17 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 fill='black'
             />
 
-            {props.infos[1]?.length && (
+            {props.infos[1]?.length > 0 && (
                 <g transform={`translate(0,${props.nameDirection === 'upward' ? -185 : 150})`}>
                     <OSIText osiInfos={props.infos[1]} />
+                </g>
+            )}
+
+            {props.infos[2]?.length > 0 && (
+                <g transform={`translate(0,${props.nameDirection === 'upward' ?
+                    (props.infos[1]?.length ? -210 : (props.infos[0].length ? -180 : -100)) :
+                    (props.infos[1]?.length ? 190 : (props.infos[0].length ? 160 : 75))})`}>
+                    <OSysIText osysiInfos={props.infos[2]} />
                 </g>
             )}
         </g>
@@ -183,13 +191,11 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; arrowDirection: 'upwa
 };
 
 const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
-    // get the all names from the out of station changes
-    const lineNames = props.osiInfos.map(info => info[4]).join('，');
     return React.useMemo(
         () => (
             <g textAnchor="middle" fontSize="50%">
                 <text className="rmg-name__zh" dy={-5}>
-                    {'换乘' + lineNames}
+                    {`换乘${props.osiInfos.map(info => info[4]).join('，')}`}
                 </text>
                 <text className="rmg-name__zh" dy={5}>
                     仅限公共交通卡
@@ -200,6 +206,23 @@ const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
             </g>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [lineNames]
-    );
-};
+        [props.osiInfos]
+    )
+}
+
+const OSysIText = (props: { osysiInfos: InterchangeInfo[] }) => {
+    return React.useMemo(
+        () => (
+            <g textAnchor="middle">
+                <text className="rmg-name__zh" dy={-5}>
+                    {`转乘${props.osysiInfos.map(info => info[4]).join('，')}`}
+                </text>
+                <text className="rmg-name__en" dy={7.5} fontSize="75%">
+                    {`To ${props.osysiInfos.map(info => info[5]).join(', ')}`}
+                </text>
+            </g>
+        ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.osysiInfos]
+    )
+}
