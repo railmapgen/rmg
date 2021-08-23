@@ -1,4 +1,4 @@
-export default {
+const params = {
     svg_height: 300,
     svg_width: 900,
     svg_dest_width: 1100,
@@ -123,3 +123,5 @@ export default {
     psd_num: '3',
     line_num: 'TP',
 };
+
+export default params;

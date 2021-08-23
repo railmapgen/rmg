@@ -10,6 +10,7 @@ import {
     CardActions,
     Button,
 } from '@material-ui/core';
+import { version } from '../../package.json';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -59,7 +60,7 @@ export default memo(function PanelInfo() {
                 <div className={classes.detail}>
                     <CardContent>
                         <Typography component="h6" variant="h6">
-                            {t('info.title')}
+                            {t('info.title')} {version}
                         </Typography>
                         <Typography variant="subtitle2" color="textSecondary">
                             @wongchito and @thekingofcity

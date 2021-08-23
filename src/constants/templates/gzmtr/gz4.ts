@@ -1,4 +1,4 @@
-export default {
+const params = {
     svg_height: 300,
     svg_width: 1400,
     svg_dest_width: 1100,
@@ -388,3 +388,5 @@ export default {
     svgWidth: { destination: 1100, runin: 1100, railmap: 1400 },
     notesGZMTR: [],
 };
+
+export default params;

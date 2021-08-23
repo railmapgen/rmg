@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListItem, ListItemIcon, TextField, makeStyles, createStyles } from '@material-ui/core';
+import { Name } from '../../../constants/constants';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -53,7 +54,7 @@ const NameListItems = (props: Props) => {
             </>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.name.toString()]
+        [props.name?.toString() || '']
     );
 };
 

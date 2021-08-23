@@ -1,4 +1,5 @@
 import * as Global from '../../../methods';
+import { RMGParam, ShortDirection, StationDict, StationInfo } from '../../../constants/constants';
 
 /**
  * Compute the adjacency list of the graph.
@@ -133,9 +134,11 @@ export const getStnState = (
             [cur]:
                 cur === currentId
                     ? 0
-                    : (direction === 'r'
-                        ? _isSuccessor(currentId, cur, routes)
-                        : _isPredecessor(currentId, cur, routes))
+                    : (
+                          direction === ShortDirection.right
+                              ? _isSuccessor(currentId, cur, routes)
+                              : _isPredecessor(currentId, cur, routes)
+                      )
                     ? 1
                     : -1,
         }),
@@ -147,7 +150,7 @@ export class Stations {
     yShares = {} as { [stnId: string]: number };
     xShares = {} as { [stnId: string]: number };
     namePoss = {} as { [stnId: string]: boolean };
-    stnList = {} as { [stnId: string]: StationInfo };
+    stnList = {} as StationDict;
     criticalPath = {} as { len: number; nodes: string[] };
 
     constructor(data: { stnList?: any; criticalPath?: any }) {
@@ -262,9 +265,10 @@ export class Stations {
         realXs: { [stnId: string]: number },
         realYs: { [stnId: string]: number },
         branchSpacing: number,
-        cp: { len: number; nodes: string[] }
+        cp: { len: number; nodes: string[] },
+        e: number
     ) {
-        var [prevId, prevY, prevX] = ([] as unknown) as [string, number, number];
+        var [prevId, prevY, prevX] = [] as unknown as [string, number, number];
         var path = [] as string[];
 
         let { dx_a, dx_l } = this.pathTurnParams(branchSpacing);
@@ -291,10 +295,10 @@ export class Stations {
                 } else {
                     // started form branching station, this is branch line
                     if (realXs[stnIds[1]] > 0) {
-                        path.push(`M ${x},${y + 9.68}`);
+                        path.push(`M ${x},${y + e}`);
                     }
                     if (realYs[stnIds[1]] < 0) {
-                        path.push(`M ${x},${y - 9.68}`);
+                        path.push(`M ${x},${y - e}`);
                     }
                 }
                 return;
@@ -330,7 +334,8 @@ export class Stations {
         xs: { [stnId: string]: number },
         ys: { [stnId: string]: number },
         branchSpacing: number,
-        cp: { len: number; nodes: string[] }
+        cp: { len: number; nodes: string[] },
+        e: number = 9.68
     ) {
         let linePaths = { main: [] as string[], pass: [] as string[] };
         branches.forEach((branch, i) => {
@@ -368,7 +373,8 @@ export class Stations {
                     xs,
                     ys,
                     branchSpacing,
-                    cp
+                    cp,
+                    e
                 )
             );
             linePaths.pass.push(
@@ -379,7 +385,8 @@ export class Stations {
                     xs,
                     ys,
                     branchSpacing,
-                    cp
+                    cp,
+                    e
                 )
             );
         });

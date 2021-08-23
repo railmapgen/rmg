@@ -1,21 +1,25 @@
 import React, { useContext, useState } from 'react';
 import {
-    makeStyles,
     createStyles,
-    Paper,
-    List,
-    ListItem,
-    ListItemText,
     Divider,
     Icon,
-    Typography,
-    ListItemSecondaryAction,
     IconButton,
+    List,
+    ListItem,
+    ListItemSecondaryAction,
+    ListItemText,
+    makeStyles,
     Menu,
     MenuItem,
+    Paper,
+    Typography,
 } from '@material-ui/core';
-import { ParamContext, CanvasContext } from '../../context';
+import { ParamContext } from '../../context';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux';
+import { RmgStyle } from '../../constants/constants';
+import { setCurrentStation } from '../../redux/param/action';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -67,29 +71,34 @@ const StationList = (props: Props) => {
 export default StationList;
 
 const StationEntry = (props: { stnId: string; isSelected: boolean; onAction: (action: 'edit' | 'remove') => void }) => {
+    const { stnId, isSelected, onAction } = props;
     const { t } = useTranslation();
     const classes = useStyles();
+    const reduxDispatch = useDispatch();
 
-    const { rmgStyle } = useContext(CanvasContext);
-    const { param, dispatch } = useContext(ParamContext);
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+    const stationInfo = useSelector((store: RootState) => store.param.stn_list[stnId]);
+    const { dispatch } = useContext(ParamContext);
 
-    const { name, num } = param.stn_list[props.stnId] || param.stn_list.linestart;
+    const name = stationInfo?.name || ['', ''];
+    const num = stationInfo?.num || '00';
 
     const [toggleEl, setToggleEl] = useState<null | HTMLElement>(null);
 
     const handleCurrent = () => {
-        dispatch({ type: 'SET_CURRENT_STATION', stnId: props.stnId });
+        dispatch({ type: 'SET_CURRENT_STATION', stnId });
+        reduxDispatch(setCurrentStation(stnId));
         setToggleEl(null);
     };
 
     const handleAction = (action: 'edit' | 'remove') => () => {
-        props.onAction(action);
+        onAction(action);
         setToggleEl(null);
     };
 
     return (
-        <ListItem className={props.isSelected ? classes.selectedItem : ''}>
-            {rmgStyle === 'gzmtr' && <Typography className={classes.listItemNum}>{num}</Typography>}
+        <ListItem className={isSelected ? classes.selectedItem : ''}>
+            {rmgStyle === RmgStyle.GZMTR && <Typography className={classes.listItemNum}>{num}</Typography>}
             <ListItemText primary={name[0]} secondary={name[1].replace('\\', ' ')} className={classes.listItemText} />
             <ListItemSecondaryAction>
                 <IconButton size="small" onClick={e => setToggleEl(e.currentTarget)}>

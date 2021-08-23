@@ -1,4 +1,4 @@
-export default {
+const params = {
     svg_height: 300,
     svg_width: 1000,
     svg_dest_width: 1000,
@@ -152,3 +152,5 @@ export default {
     direction_gz_x: 50,
     direction_gz_y: 70,
 };
+
+export default params;

@@ -1,20 +1,21 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+    Button,
+    createStyles,
+    Divider,
     List,
     ListItem,
-    TextField,
-    MenuItem,
-    Button,
-    makeStyles,
-    createStyles,
-    Tooltip,
     ListItemText,
-    Divider,
+    makeStyles,
+    MenuItem,
     Select,
+    TextField,
+    Tooltip,
 } from '@material-ui/core';
 import { getTransText2 } from '../../utils';
-import { cityList } from './data';
+import { CityCode, cityList } from '../../constants/city-config';
+import { ColourHex, LanguageCode, MonoColour, PaletteEntry, Theme } from '../../constants/constants';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -50,13 +51,13 @@ const useStyles = makeStyles(() =>
 );
 
 const useLineList = (theme: Theme) => {
-    const [list, setList] = React.useState([] as LineEntry[]);
+    const [list, setList] = React.useState([] as PaletteEntry[]);
 
     const listPromise = theme[0]
-        ? import(/* webpackChunkName: "colours" */ `./colours/${theme[0]}`).then(
-              module => module.default as LineEntry[]
+        ? import(/* webpackChunkName: "colours" */ `../../constants/colours/${theme[0]}`).then(
+              module => module.default as PaletteEntry[]
           )
-        : Promise.resolve([] as LineEntry[]);
+        : Promise.resolve([] as PaletteEntry[]);
 
     useEffect(
         () => {
@@ -65,7 +66,11 @@ const useLineList = (theme: Theme) => {
             }
             (async () => {
                 const data = await listPromise;
-                setList(theme[0] === 'other' ? [{ ...data[0], colour: theme[2], fg: theme[3] || '#fff' }] : data);
+                setList(
+                    theme[0] === CityCode.Other
+                        ? [{ ...data[0], colour: theme[2], fg: theme[3] || MonoColour.white }]
+                        : data
+                );
             })();
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,7 +81,7 @@ const useLineList = (theme: Theme) => {
 };
 
 interface ColourDialogProps {
-    theme: [string, string, string, '#000' | '#fff'];
+    theme: Theme;
     onUpdate: (key: string, value: any) => void;
 }
 
@@ -96,7 +101,7 @@ export const PalettePanel = (props: ColourDialogProps) => {
             if (lineList.length === 0) return; // initialising, ignore
             if (lineList.filter(l => l.id === props.theme[1]).length) return; // current city, ignore
             let { id, colour, fg } = lineList[0];
-            let newTheme = [props.theme[0], id, colour, fg || '#fff'];
+            let newTheme = [props.theme[0], id, colour, fg || MonoColour.white];
             props.onUpdate('theme', newTheme);
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -106,7 +111,7 @@ export const PalettePanel = (props: ColourDialogProps) => {
     const lineChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let line = event.target.value;
         let { colour, fg } = lineList.filter(l => l.id === line)[0];
-        let newTheme = [props.theme[0], line, colour, fg || '#fff'];
+        let newTheme = [props.theme[0], line, colour, fg || MonoColour.white];
         props.onUpdate('theme', newTheme);
     };
 
@@ -129,10 +134,10 @@ export const PalettePanel = (props: ColourDialogProps) => {
                                 className={classes.menuItemSpan}
                                 style={{
                                     backgroundColor: l.colour,
-                                    color: l.fg || '#fff',
+                                    color: l.fg || MonoColour.white,
                                 }}
                             >
-                                {getTransText2(l.name, i18n.languages)}
+                                {getTransText2(l.name, i18n.languages as LanguageCode[])}
                             </span>
                         </MenuItem>
                     ))}
@@ -157,24 +162,24 @@ export const CustomPanel = (props: ColourDialogProps) => {
     const colourChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let rgb = event.target.value;
         // setHexTemp(rgb);
-        props.onUpdate('theme', ['other', 'other', rgb, props.theme[3]]);
+        props.onUpdate('theme', [CityCode.Other, 'other', rgb, props.theme[3]]);
     };
 
     const hexChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let hex = event.target.value;
         if (hex.match(/^#[0-9a-fA-F]{0,6}$/) === null) return;
-        setHexTemp(hex);
+        setHexTemp(hex as ColourHex);
 
         if (props.theme[0] !== 'other') {
             if (hex.match(/^#[0-9a-fA-f]{6}$/) !== null) {
                 // if hex valid, modify theme city and props.hex
-                let newTheme = ['other', 'other', hex, props.theme[3]];
+                let newTheme = [CityCode.Other, 'other', hex, props.theme[3]];
                 props.onUpdate('theme', newTheme);
                 // then lineList will be updated by hook (along with selection)
                 // then line will be updated by hook
             } else {
                 // if hex not valid, modify theme city only
-                let newTheme = ['other', 'other', ...props.theme.slice(2)];
+                let newTheme = [CityCode.Other, 'other', ...props.theme.slice(2)];
                 props.onUpdate('theme', newTheme);
                 // then lineList will be updated by hook (along with selection)
                 // then line will be updated by hook
@@ -192,7 +197,7 @@ export const CustomPanel = (props: ColourDialogProps) => {
     };
 
     const fgChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-        let newTheme = ['other', 'other', props.theme[2], event.target.value];
+        let newTheme = [CityCode.Other, 'other', props.theme[2], event.target.value];
         props.onUpdate('theme', newTheme);
     };
 
@@ -215,7 +220,7 @@ export const CustomPanel = (props: ColourDialogProps) => {
                                 className={classes.button}
                                 style={{
                                     backgroundColor: props.theme[2],
-                                    borderColor: props.theme[3] || '#fff',
+                                    borderColor: props.theme[3] || MonoColour.white,
                                 }}
                                 variant="contained"
                                 component="span"
@@ -240,7 +245,7 @@ export const CustomPanel = (props: ColourDialogProps) => {
                     style={{ width: 85 }}
                     label={t('colour.fg')}
                     onChange={fgChange}
-                    value={props.theme[3] || '#fff'}
+                    value={props.theme[3] || MonoColour.white}
                 >
                     <option value="#fff">{t('colour.fgWhite')}</option>
                     <option value="#000">{t('colour.fgBlack')}</option>
@@ -260,7 +265,7 @@ const CitySelectItem = (props: { value: string; onChange: (event: React.ChangeEv
                 <MenuItem key={c.id} value={c.id}>
                     <span className={classes.cityItem}>
                         <CountryFlag code={c.country} />
-                        <span>{getTransText2(c.name, i18n.languages)}</span>
+                        <span>{getTransText2(c.name, i18n.languages as LanguageCode[])}</span>
                     </span>
                 </MenuItem>
             )),
@@ -311,7 +316,11 @@ function CountryFlag(props: { code: string }) {
     }
 
     // special case for simplified Chinese
-    if (['zh-CN', 'zh-Hans'].includes(i18n.language) && props.code === 'TW') codePoints = ['1F3F4'];
+    if (
+        [LanguageCode.ChineseCN, LanguageCode.ChineseSimp].includes(i18n.language as LanguageCode) &&
+        props.code === 'TW'
+    )
+        codePoints = ['1F3F4'];
 
     return navigator.platform.indexOf('Win32') !== -1 || navigator.platform.indexOf('Win64') !== -1 ? (
         <img

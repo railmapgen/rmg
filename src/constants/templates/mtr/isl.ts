@@ -1,4 +1,4 @@
-export default {
+const params = {
     svg_height: 300,
     svg_width: 1200,
     svg_dest_width: 1000,
@@ -182,3 +182,5 @@ export default {
     line_num: 'IS',
     info_panel_type: 'gz_1',
 };
+
+export default params;

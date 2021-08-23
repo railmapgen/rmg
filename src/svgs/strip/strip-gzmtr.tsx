@@ -1,4 +1,5 @@
 import React from 'react';
+import { MonoColour, PanelTypeGZMTR, PanelTypeShmetro } from '../../constants/constants';
 
 interface Props {
     variant: PanelTypeGZMTR | PanelTypeShmetro;
@@ -7,7 +8,7 @@ interface Props {
 }
 
 const StripGZMTR = (props: Props) => {
-    const stripHeight = ((variant) => {
+    const stripHeight = (variant => {
         switch (variant) {
             case 'gz28':
             case 'gz2otis':
@@ -99,7 +100,7 @@ const PSD = React.memo(
         return (
             <g
                 textAnchor="middle"
-                fill={isInStrip ? '#000' : 'var(--rmg-theme-fg)'}
+                fill={isInStrip ? MonoColour.black : 'var(--rmg-theme-fg)'}
                 style={{
                     ['--psd-dy' as any]: psdDy,
                     transform: 'translate(var(--translate-x), var(--translate-y))',

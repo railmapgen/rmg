@@ -1,5 +1,14 @@
-import React, { useState, useContext, useMemo, useRef, useEffect } from 'react';
-import { ParamContext } from '../../../../context';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import {
+    Direction,
+    Facilities,
+    InterchangeInfo,
+    Name,
+    ShortDirection,
+    StationTransfer,
+} from '../../../../constants/constants';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../redux';
 
 interface Props {
     stnId: string;
@@ -9,8 +18,8 @@ interface Props {
 }
 
 const StationMTR = (props: Props) => {
-    const { param } = useContext(ParamContext);
-    const stnInfo = param.stn_list[props.stnId];
+    const { stnId, stnState, namePos } = props;
+    const stnInfo = useSelector((store: RootState) => store.param.stn_list[stnId]);
 
     /**
      * Arrays of directions of the branches a station has.
@@ -60,19 +69,19 @@ const StationMTR = (props: Props) => {
             if (affix === '') {
                 return 0;
             } else if (affix === '_bb') {
-                return props.namePos ? 9.68 : -9.68;
+                return namePos ? 9.68 : -9.68;
             } else {
                 let pos = branchPos;
                 if (pos.includes('SE') || pos.includes('SW')) {
-                    return props.namePos ? 9.68 : 0;
+                    return namePos ? 9.68 : 0;
                 }
                 if (pos.includes('NE') || pos.includes('NW')) {
-                    return props.namePos ? 0 : -9.68;
+                    return namePos ? 0 : -9.68;
                 }
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [branchPos.toString(), branchAffix, props.namePos]
+        [branchPos.toString(), branchAffix, namePos]
     );
 
     /**
@@ -83,17 +92,17 @@ const StationMTR = (props: Props) => {
         if (affix === '') {
             return 0;
         } else if (affix === '_bb') {
-            return props.namePos ? -9.68 : 9.68;
+            return namePos ? -9.68 : 9.68;
         } else {
             let pos = branchPos;
             if (pos.includes('SE') || pos.includes('SW')) {
-                return props.namePos ? 0 : 9.68;
+                return namePos ? 0 : 9.68;
             }
             if (pos.includes('NE') || pos.includes('NW')) {
-                return props.namePos ? -9.68 : 0;
+                return namePos ? -9.68 : 0;
             }
         }
-    }, [branchAffix, props.namePos, branchPos]);
+    }, [branchAffix, namePos, branchPos]);
 
     const stnIcon = ((l: number[]) => {
         const fallback = (n: number) => (n < 11 ? 'int' + (n + 1) : 'int12');
@@ -134,37 +143,47 @@ const StationMTR = (props: Props) => {
                 <IntTickGroup
                     variant={stnIcon}
                     stnTrans={stnInfo.transfer}
-                    stnState={props.stnState}
-                    namePos={props.namePos}
-                    end={stnIcon === 'osi22end' ? (stnInfo.parents[0] === 'linestart' ? 'left' : 'right') : undefined}
+                    stnState={stnState}
+                    namePos={namePos}
+                    end={
+                        stnIcon === 'osi22end'
+                            ? stnInfo.parents[0] === 'linestart'
+                                ? Direction.left
+                                : Direction.right
+                            : undefined
+                    }
                 />
                 {stnIcon.includes('osi') && (
                     <OSIName
                         name={stnInfo.transfer.osi_names[0]}
-                        stnState={props.stnState}
+                        stnState={stnState}
                         variant={stnIcon}
                         tickDirec={stnInfo.transfer.tick_direc}
-                        namePos={props.namePos}
+                        namePos={namePos}
                         end={
-                            stnIcon === 'osi22end' ? (stnInfo.parents[0] === 'linestart' ? 'left' : 'right') : undefined
+                            stnIcon === 'osi22end'
+                                ? stnInfo.parents[0] === 'linestart'
+                                    ? Direction.left
+                                    : Direction.right
+                                : undefined
                         }
                     />
                 )}
             </g>
             <use
                 xlinkHref={'#' + stnIcon + branchAffix}
-                stroke={props.stnState === -1 ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
+                stroke={stnState === -1 ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
                 className={stnInfo.transfer.paid_area ? 'rmg-stn__mtr--paid-osi' : 'rmg-stn__mtr--unpaid-osi'}
                 transform={
                     `translate(0,${branchDy})` +
-                    `scale(${stnInfo.children[0] === 'lineend' ? 1 : -1},${props.namePos ? -1 : 1})`
+                    `scale(${stnInfo.children[0] === 'lineend' ? 1 : -1},${namePos ? -1 : 1})`
                 }
             />
             <g transform={`translate(0,${branchDy})`}>
                 <StationNameGElement
                     name={stnInfo.name}
-                    namePos={props.namePos}
-                    stnState={props.stnState}
+                    namePos={namePos}
+                    stnState={stnState}
                     facility={stnInfo.facility}
                     nameDX={stnIcon === 'osi22' ? (stnInfo.transfer.tick_direc === 'l' ? 3 : -3) : undefined}
                 />
@@ -180,10 +199,11 @@ interface StationNameGElementProps {
     namePos: boolean;
     stnState: -1 | 0 | 1;
     nameDX?: number;
-    facility: StationInfo['facility'];
+    facility: Facilities;
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {
+    const { name, namePos, stnState, nameDX, facility } = props;
     /**
      * Top (in pixels) of station's Chinese name.
      */
@@ -220,55 +240,55 @@ const StationNameGElement = (props: StationNameGElementProps) => {
             document.fonts.ready.then(() => setBBox(stnNameEl.current!.getBBox()));
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.stnState, props.name.toString()]
+        [stnState, name.toString()]
     );
 
-    const dy = props.namePos
+    const dy = namePos
         ? STN_NAME_LINE_GAP - NAME_ZH_TOP
-        : -STN_NAME_LINE_GAP - NAME_ZH_TOP - NAME_FULL_HEIGHT - (props.name[1].split('\\').length - 1) * 11;
+        : -STN_NAME_LINE_GAP - NAME_ZH_TOP - NAME_FULL_HEIGHT - (name[1].split('\\').length - 1) * 11;
 
-    const textAnchor = !props.nameDX ? 'middle' : props.nameDX > 0 ? 'start' : 'end';
-    const osi22DY = !props.nameDX ? 0 : props.namePos ? 10 : -10;
+    const textAnchor = !nameDX ? 'middle' : nameDX > 0 ? 'start' : 'end';
+    const osi22DY = !nameDX ? 0 : namePos ? 10 : -10;
 
-    const facilityX = !props.nameDX
+    const facilityX = !nameDX
         ? -(bBox.width + 3) / 2
-        : props.nameDX > 0
-        ? props.nameDX + (NAME_FULL_HEIGHT + 2) / 2
-        : -(NAME_FULL_HEIGHT + 2) / 2 - bBox.width + props.nameDX;
+        : nameDX > 0
+        ? nameDX + (NAME_FULL_HEIGHT + 2) / 2
+        : -(NAME_FULL_HEIGHT + 2) / 2 - bBox.width + nameDX;
     const facilityNameDX =
-        props.facility === ''
+        facility === Facilities.none
             ? 0
-            : !props.nameDX
+            : !nameDX
             ? (NAME_FULL_HEIGHT + 2 + 3) / 2
-            : props.nameDX < 0
+            : nameDX < 0
             ? 0
-            : NAME_FULL_HEIGHT + 2 + 3 + props.nameDX;
+            : NAME_FULL_HEIGHT + 2 + 3 + nameDX;
 
     return (
         <g
             textAnchor={textAnchor}
             transform={`translate(0,${dy + osi22DY})`}
-            className={`Name ${props.stnState === -1 ? 'Pass' : props.stnState === 0 ? 'Current' : 'Future'}`}
+            className={`Name ${stnState === -1 ? 'Pass' : stnState === 0 ? 'Current' : 'Future'}`}
         >
-            {props.stnState === 0 && (
+            {stnState === 0 && (
                 <rect
                     x={bBox.x - 3 + (facilityNameDX === 0 ? 0 : facilityNameDX - 3 - NAME_FULL_HEIGHT)}
                     y={NAME_ZH_TOP - 1}
                     width={bBox.width + 6 + (facilityNameDX === 0 ? 0 : 3 + NAME_FULL_HEIGHT)}
-                    height={NAME_FULL_HEIGHT + (props.name[1].split('\\').length - 1) * 11 + 2}
+                    height={NAME_FULL_HEIGHT + (name[1].split('\\').length - 1) * 11 + 2}
                     fill="var(--rmg-black)"
                 />
             )}
-            {props.facility !== '' && (
+            {facility !== Facilities.none && (
                 <use
-                    xlinkHref={'#' + props.facility}
-                    fill={props.stnState === -1 ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
+                    xlinkHref={'#' + facility}
+                    fill={stnState === -1 ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
                     x={facilityX}
-                    y={NAME_ZH_TOP - 1 + (props.name[1].split('\\').length - 1) * 5.5}
+                    y={NAME_ZH_TOP - 1 + (name[1].split('\\').length - 1) * 5.5}
                 />
             )}
             <g ref={stnNameEl} transform={`translate(${facilityNameDX},0)`}>
-                <StationName name={props.name} nameGap={NAME_ZH_EN_GAP} />
+                <StationName name={name} nameGap={NAME_ZH_EN_GAP} />
             </g>
         </g>
     );
@@ -301,46 +321,39 @@ interface IntTickGroupProps {
     stnTrans: StationTransfer;
     stnState: -1 | 0 | 1;
     namePos: boolean;
-    end?: 'left' | 'right';
+    end?: Direction;
 }
 
 const IntTickGroup = (props: IntTickGroupProps) => {
-    switch (props.variant) {
+    const { variant, stnTrans, stnState, namePos, end } = props;
+    switch (variant) {
         case 'int':
             return (
                 <g>
-                    <IntTick
-                        intInfo={props.stnTrans.info[0][0]}
-                        stnState={props.stnState}
-                        rotation={props.namePos ? 180 : 0}
-                    />
+                    <IntTick intInfo={stnTrans.info[0][0]} stnState={stnState} rotation={namePos ? 180 : 0} />
                 </g>
             );
 
         case 'osi11':
             return (
-                <g transform={`translate(0,${props.namePos ? -26 : 26})`}>
-                    <IntTick
-                        intInfo={props.stnTrans.info[1][0]}
-                        stnState={props.stnState}
-                        rotation={props.namePos ? 180 : 0}
-                    />
+                <g transform={`translate(0,${namePos ? -26 : 26})`}>
+                    <IntTick intInfo={stnTrans.info[1][0]} stnState={stnState} rotation={namePos ? 180 : 0} />
                 </g>
             );
         case 'osi12':
             return (
                 <>
-                    {props.stnTrans.info[1].map((intInfo, i) => (
+                    {stnTrans.info[1].map((intInfo, i) => (
                         <g
                             key={i}
                             transform={`translate(0,${
-                                !props.namePos ? 8 + 18 * (i + 1) : -8 - 18 * (props.stnTrans.info[1].length - i)
+                                !namePos ? 8 + 18 * (i + 1) : -8 - 18 * (stnTrans.info[1].length - i)
                             })`}
                         >
                             <IntTick
                                 intInfo={intInfo}
-                                stnState={props.stnState}
-                                rotation={props.stnTrans.tick_direc === 'r' ? -90 : 90}
+                                stnState={stnState}
+                                rotation={stnTrans.tick_direc === ShortDirection.right ? -90 : 90}
                             />
                         </g>
                     ))}
@@ -351,23 +364,23 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                 <>
                     <g>
                         <IntTick
-                            intInfo={props.stnTrans.info[0][0]}
-                            stnState={props.stnState}
-                            rotation={props.namePos ? 0 : 180}
-                            nameDX={props.stnTrans.tick_direc === 'r' ? 3 : -3}
+                            intInfo={stnTrans.info[0][0]}
+                            stnState={stnState}
+                            rotation={namePos ? 0 : 180}
+                            nameDX={stnTrans.tick_direc === ShortDirection.right ? 3 : -3}
                         />
                     </g>
-                    {props.stnTrans.info[1].map((intInfo, i) => (
+                    {stnTrans.info[1].map((intInfo, i) => (
                         <g
                             key={i}
                             transform={`translate(0,${
-                                !props.namePos ? 8 + 18 * (i + 1) : -8 - 18 * (props.stnTrans.info[1].length - i)
+                                !namePos ? 8 + 18 * (i + 1) : -8 - 18 * (stnTrans.info[1].length - i)
                             })`}
                         >
                             <IntTick
                                 intInfo={intInfo}
-                                stnState={props.stnState}
-                                rotation={props.stnTrans.tick_direc === 'r' ? -90 : 90}
+                                stnState={stnState}
+                                rotation={stnTrans.tick_direc === ShortDirection.right ? -90 : 90}
                             />
                         </g>
                     ))}
@@ -377,45 +390,41 @@ const IntTickGroup = (props: IntTickGroupProps) => {
             return (
                 <>
                     <g>
-                        <IntTick
-                            intInfo={props.stnTrans.info[0][0]}
-                            stnState={props.stnState}
-                            rotation={props.namePos ? 180 : 0}
-                        />
+                        <IntTick intInfo={stnTrans.info[0][0]} stnState={stnState} rotation={namePos ? 180 : 0} />
                     </g>
-                    {props.stnTrans.info[1].map((intInfo, i) => (
+                    {stnTrans.info[1].map((intInfo, i) => (
                         <g
                             key={i}
-                            transform={`translate(${props.end === 'left' ? -41 : 41},${
-                                props.namePos ? 18 * i : -18 * (props.stnTrans.info[1].length - 1 - i)
+                            transform={`translate(${end === Direction.left ? -41 : 41},${
+                                namePos ? 18 * i : -18 * (stnTrans.info[1].length - 1 - i)
                             })`}
                         >
                             <IntTick
                                 intInfo={intInfo}
-                                stnState={props.stnState}
-                                rotation={props.end === 'left' ? 90 : -90}
+                                stnState={stnState}
+                                rotation={end === Direction.left ? 90 : -90}
                             />
                         </g>
                     ))}
                 </>
             );
         default:
-            if (props.variant.includes('int')) {
+            if (variant.includes('int')) {
                 return (
                     <>
-                        {props.stnTrans.info[0].map((intInfo, i) => (
+                        {stnTrans.info[0].map((intInfo, i) => (
                             <g
                                 key={i}
                                 style={{
                                     transform: `translateY(${
-                                        !props.namePos ? 18 * (i + 1) : -18 * (props.stnTrans.info[0].length - i)
+                                        !namePos ? 18 * (i + 1) : -18 * (stnTrans.info[0].length - i)
                                     }px)`,
                                 }}
                             >
                                 <IntTick
                                     intInfo={intInfo}
-                                    stnState={props.stnState}
-                                    rotation={props.stnTrans.tick_direc === 'r' ? -90 : 90}
+                                    stnState={stnState}
+                                    rotation={stnTrans.tick_direc === ShortDirection.right ? -90 : 90}
                                 />
                             </g>
                         ))}
@@ -435,8 +444,10 @@ interface IntTickProps {
 }
 
 const IntTick = (props: IntTickProps) => {
-    const nameZHLns = props.intInfo[4].split('\\').length;
-    const nameENLns = props.intInfo[5].split('\\').length;
+    const { intInfo, stnState, rotation, nameDX } = props;
+
+    const nameZHLns = intInfo[4].split('\\').length;
+    const nameENLns = intInfo[5].split('\\').length;
 
     const x = (rotation => {
         switch (rotation) {
@@ -447,7 +458,7 @@ const IntTick = (props: IntTickProps) => {
             default:
                 return 0;
         }
-    })(props.rotation);
+    })(rotation);
 
     const y = (rotation => {
         switch (rotation) {
@@ -458,7 +469,7 @@ const IntTick = (props: IntTickProps) => {
             default:
                 return 5.953125 - (19.65625 + 10 * (nameZHLns - 1) + 7 * (nameENLns - 1) - 1) / 2;
         }
-    })(props.rotation);
+    })(rotation);
 
     const textAnchor = (rotation => {
         switch (rotation) {
@@ -467,38 +478,36 @@ const IntTick = (props: IntTickProps) => {
             case -90:
                 return 'start';
             default:
-                if (!props.nameDX) {
+                if (!nameDX) {
                     return 'middle';
-                } else if (props.nameDX > 0) {
+                } else if (nameDX > 0) {
                     return 'start';
                 } else {
                     return 'end';
                 }
         }
-    })(props.rotation);
+    })(rotation);
 
     return useMemo(
         () => (
             <>
                 <use
                     xlinkHref="#inttick"
-                    stroke={props.intInfo[2]}
-                    transform={`rotate(${props.rotation})`}
-                    className={
-                        'rmg-line rmg-line__mtr rmg-line__change' + (props.stnState === -1 ? ' rmg-line__pass' : '')
-                    }
+                    stroke={intInfo[2]}
+                    transform={`rotate(${rotation})`}
+                    className={'rmg-line rmg-line__mtr rmg-line__change' + (stnState === -1 ? ' rmg-line__pass' : '')}
                 />
                 <g
                     textAnchor={textAnchor}
-                    transform={`translate(${x + (props.nameDX || 0)},${y})`}
-                    className={`Name ${props.stnState === -1 ? 'Pass' : 'Future'}`}
+                    transform={`translate(${x + (nameDX || 0)},${y})`}
+                    className={`Name ${stnState === -1 ? 'Pass' : 'Future'}`}
                 >
-                    {props.intInfo[4].split('\\').map((txt, i) => (
+                    {intInfo[4].split('\\').map((txt, i) => (
                         <text key={i} className="rmg-name__zh IntName" dy={10 * i}>
                             {txt}
                         </text>
                     ))}
-                    {props.intInfo[5].split('\\').map((txt, i) => (
+                    {intInfo[5].split('\\').map((txt, i) => (
                         <text key={nameZHLns + i} className="rmg-name__en IntName" dy={nameZHLns * 10 - 1 + 7 * i}>
                             {txt}
                         </text>
@@ -507,7 +516,7 @@ const IntTick = (props: IntTickProps) => {
             </>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.intInfo.toString(), props.rotation, props.stnState]
+        [intInfo.toString(), rotation, stnState]
     );
 };
 
@@ -515,74 +524,74 @@ interface OSINameProps {
     name: Name;
     stnState: -1 | 0 | 1;
     variant: string;
-    tickDirec: 'l' | 'r';
+    tickDirec: ShortDirection;
     namePos: boolean;
-    end?: 'left' | 'right';
+    end?: Direction;
 }
 
 const OSIName = (props: OSINameProps) => {
+    const { name, stnState, variant, tickDirec, namePos, end } = props;
+
     const textAnchor = (variant => {
         switch (variant) {
             case 'osi11':
-                return props.tickDirec === 'l' ? 'end' : 'start';
+                return tickDirec === ShortDirection.left ? 'end' : 'start';
             case 'osi22':
-                return props.tickDirec === 'l' ? 'start' : 'end';
+                return tickDirec === ShortDirection.left ? 'start' : 'end';
             default:
                 return 'middle';
         }
-    })(props.variant);
+    })(variant);
 
     const x = (variant => {
         switch (variant) {
             case 'osi11':
-                return props.tickDirec === 'l' ? -13 : 13;
+                return tickDirec === ShortDirection.left ? -13 : 13;
             case 'osi22':
-                return props.tickDirec === 'l' ? 13 : -13;
+                return tickDirec === ShortDirection.left ? 13 : -13;
             case 'osi22end':
-                return props.end === 'left' ? -41 : 41;
+                return end === Direction.left ? -41 : 41;
             default:
                 return 0;
         }
-    })(props.variant);
+    })(variant);
 
     const y = (variant => {
         switch (variant) {
             case 'osi11':
                 return (
-                    (!props.namePos ? 26 : -26) +
+                    (!namePos ? 26 : -26) +
                     8.34375 -
                     25.03125 / 2 -
-                    (!props.namePos ? 0 : 10 * (props.name?.[1]?.split('\\').length - 1))
+                    (!namePos ? 0 : 10 * (name?.[1]?.split('\\').length - 1))
                 );
             case 'osi12':
-                return !props.namePos
+                return !namePos
                     ? 26 + 18 + 10 + 8.34375
-                    : -(26 + 18 + 10) + 8.34375 - 25.03125 - 10 * (props.name?.[1]?.split('\\').length - 1);
+                    : -(26 + 18 + 10) + 8.34375 - 25.03125 - 10 * (name?.[1]?.split('\\').length - 1);
             case 'osi22':
                 return (
-                    (!props.namePos ? 26 - 18 : -8) -
-                    (props.namePos ? 18 + 9 : -27) +
+                    (!namePos ? 26 - 18 : -8) -
+                    (namePos ? 18 + 9 : -27) +
                     8.34375 -
                     25.03125 / 2 -
-                    5 * (props.name?.[1]?.split('\\').length - 1)
+                    5 * (name?.[1]?.split('\\').length - 1)
                 );
             case 'osi22end':
-                return !props.namePos
-                    ? 10 + 8.34375
-                    : -10 + 8.34375 - 25.03125 - 10 * (props.name?.[1]?.split('\\').length - 1);
+                return !namePos ? 10 + 8.34375 : -10 + 8.34375 - 25.03125 - 10 * (name?.[1]?.split('\\').length - 1);
             default:
                 return 0;
         }
-    })(props.variant);
+    })(variant);
 
     return (
         <g
             textAnchor={textAnchor}
             transform={`translate(${x},${y})`}
-            className={`Name ${props.stnState === -1 ? 'Pass' : 'Future'}`}
+            className={`Name ${stnState === -1 ? 'Pass' : 'Future'}`}
         >
-            <text className="rmg-name__zh rmg-name__mtr--osi">{props.name?.[0]}</text>
-            {props.name?.[1]?.split('\\').map((txt, i) => (
+            <text className="rmg-name__zh rmg-name__mtr--osi">{name?.[0]}</text>
+            {name?.[1]?.split('\\').map((txt, i) => (
                 <text key={i} className="rmg-name__en rmg-name__mtr--osi" dy={12 + 10 * i}>
                     {txt}
                 </text>

@@ -1,11 +1,12 @@
-import React, { useState, useMemo, useEffect, useReducer } from 'react';
+import React, { useMemo, useEffect, useReducer } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import AppAppBar from './app-appbar';
 import SVGs from './svgs';
 import Panels from './panels';
 import { getBranches, useTpo, getRoutes } from './methods';
-import { CanvasContext, ParamContext, paramReducer } from './context';
+import { ParamContext, paramReducer } from './context';
 import { createMuiTheme, ThemeProvider, useMediaQuery, LinearProgress } from '@material-ui/core';
+import { RMGParam, StationInfo } from './constants/constants';
 
 const darkTheme = createMuiTheme({
     palette: {
@@ -70,33 +71,13 @@ export default function App() {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const theme = prefersDarkMode ? darkTheme : lightTheme;
 
-    const [canvasAvailable, setCanvasAvailable] = useState<ProvidedCanvas[]>([]);
-    const [canvasToShown, setCanvasToShown] = useState<'all' | ProvidedCanvas>(localStorage.rmgCanvas);
-    useEffect(() => localStorage.setItem('rmgCanvas', canvasToShown), [canvasToShown]);
-    const [canvasScale, setCanvasScale] = useState(
-        Number(localStorage.rmgScale) >= 0.1 ? Number(localStorage.rmgScale) : 1
-    );
-    useEffect(() => localStorage.setItem('rmgScale', canvasScale.toFixed(1)), [canvasScale]);
-
     return (
         <BrowserRouter basename={process.env.PUBLIC_URL}>
             <ThemeProvider theme={theme}>
-                <CanvasContext.Provider
-                    value={{
-                        rmgStyle: window.location.pathname.split('/')[2] as ProvidedStyles,
-                        canvasAvailable,
-                        setCanvasAvailable,
-                        canvasToShown,
-                        setCanvasToShown,
-                        canvasScale,
-                        setCanvasScale,
-                    }}
-                >
-                    <React.Suspense fallback={<LinearProgress />}>
-                        <AppAppBar />
-                    </React.Suspense>
-                    <AppBody />
-                </CanvasContext.Provider>
+                <React.Suspense fallback={<LinearProgress />}>
+                    <AppAppBar />
+                </React.Suspense>
+                <AppBody />
             </ThemeProvider>
         </BrowserRouter>
     );
@@ -105,13 +86,19 @@ export default function App() {
 const AppBody = () => {
     const [param, dispatch] = useReducer(paramReducer, JSON.parse(localStorage.rmgParam) as RMGParam);
     const paramString = JSON.stringify(param);
-    useEffect(() => localStorage.setItem('rmgParam', paramString), [paramString]);
+    useEffect(() => {
+        window.rmgStorage.writeFile('rmgParam', paramString).then();
+    }, [paramString]);
 
     const deps = Object.keys(param.stn_list).reduce(
         (acc, cur) =>
             acc +
             cur +
-            ((...k: (keyof StationInfo)[]) => (o: StationInfo) => k.reduce((a, c) => a + JSON.stringify(o[c]), ''))(
+            (
+                (...k: (keyof StationInfo)[]) =>
+                (o: StationInfo) =>
+                    k.reduce((a, c) => a + JSON.stringify(o[c]), '')
+            )(
                 'parents',
                 'children',
                 'branch'

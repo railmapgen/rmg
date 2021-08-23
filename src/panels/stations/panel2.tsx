@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
-import { Grid, makeStyles, createStyles } from '@material-ui/core';
-import { ParamContext, CanvasContext } from '../../context';
+import React, { useContext, useState } from 'react';
+import { createStyles, Grid, makeStyles } from '@material-ui/core';
+import { ParamContext } from '../../context';
 
 import StationList from './station-list';
 import StationAddDialog from './add-diag';
@@ -8,6 +8,10 @@ import StationEditDialog from './edit-diag';
 import StationDeleteDialog from './delete-diags';
 import StationFabs from './fabs';
 import AutoNumDialog from './auto-num-diag';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux';
+import { RmgStyle } from '../../constants/constants';
+import { reverseStations } from '../../redux/param/action';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -24,8 +28,9 @@ const useStyles = makeStyles(() =>
 
 const PanelStations2 = () => {
     const classes = useStyles();
+    const reduxDispatch = useDispatch();
 
-    const { rmgStyle } = useContext(CanvasContext);
+    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const { dispatch } = useContext(ParamContext);
 
     const [stnSelected, setStnSelected] = useState('');
@@ -55,6 +60,7 @@ const PanelStations2 = () => {
         }
         if (action === 'reverse') {
             dispatch({ type: 'REVERSE_STATIONS' });
+            reduxDispatch(reverseStations());
         }
         if (action === 'autonum') {
             setIsAutoNumDialogOpen(true);
@@ -90,7 +96,7 @@ const PanelStations2 = () => {
                 onClose={() => setIsDeleteDialogOpen(false)}
                 stnId={stnToRemove}
             />
-            {rmgStyle === 'gzmtr' && (
+            {rmgStyle === RmgStyle.GZMTR && (
                 <AutoNumDialog open={isAutoNumDialogOpen} onClose={() => setIsAutoNumDialogOpen(false)} />
             )}
         </>

@@ -1,10 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ParamContext } from '../../context';
 import StationNumberText from '../station-num-gzmtr';
+import { CanvasType, Name, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux';
 
 const InfoGZMTR = () => {
-    const { param } = React.useContext(ParamContext);
-    const curStnInfo = param.stn_list[param.current_stn_idx];
+    const svgHeight = useSelector((store: RootState) => store.param.svg_height);
+    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
+    const direction = useSelector((store: RootState) => store.param.direction);
+    const infoPanelType = useSelector((store: RootState) => store.param.info_panel_type);
+    const lineNumber = useSelector((store: RootState) => store.param.line_num);
+    const currentStationIndex = useSelector((store: RootState) => store.param.current_stn_idx);
+    const curStnInfo = useSelector((store: RootState) => store.param.stn_list[currentStationIndex]);
 
     const curNameEl = React.useRef<SVGGElement | null>(null);
     const [nameBBox, setNameBBox] = useState({ width: 0 } as DOMRect);
@@ -14,23 +22,23 @@ const InfoGZMTR = () => {
         [curStnInfo.name[0], curStnInfo.name[1]]
     );
 
-    const nextStnId = curStnInfo[param.direction === 'l' ? 'parents' : 'children'];
+    const nextStnId = curStnInfo[direction === ShortDirection.left ? 'parents' : 'children'];
 
     const otisTransforms = {
-        name: `translate(${((param.direction === 'l' ? 1 : -1) * param.svgWidth.runin) / 4},45)`,
-        next: `translate(${((param.direction === 'l' ? 1 : -1) * param.svgWidth.runin) / 10},45)`,
+        name: `translate(${((direction === ShortDirection.left ? 1 : -1) * svgWidths[CanvasType.RunIn]) / 4},45)`,
+        next: `translate(${((direction === ShortDirection.left ? 1 : -1) * svgWidths[CanvasType.RunIn]) / 10},45)`,
     };
 
     return (
         <g>
-            <g transform={param.info_panel_type === 'gz2otis' ? otisTransforms.name : ''}>
+            <g transform={infoPanelType === PanelTypeGZMTR.gz2otis ? otisTransforms.name : ''}>
                 <BigName
                     ref={curNameEl}
                     curName={curStnInfo.name}
                     curSecName={curStnInfo.secondaryName}
                     style={{
                         ['--translate-y' as any]: `${
-                            0.5 * param.svg_height -
+                            0.5 * svgHeight -
                             50 -
                             (curStnInfo.name[1].split('\\').length - 1) * 18 -
                             (curStnInfo.secondaryName ? 58 / 2 : 0)
@@ -39,12 +47,12 @@ const InfoGZMTR = () => {
                 />
 
                 <BigStnNum
-                    lineNum={param.line_num}
+                    lineNum={lineNumber}
                     stnNum={curStnInfo.num}
                     style={{
-                        ['--translate-x' as any]: `${(param.svgWidth.runin + nameBBox.width) / 2 + 55}px`,
+                        ['--translate-x' as any]: `${(svgWidths[CanvasType.RunIn] + nameBBox.width) / 2 + 55}px`,
                         ['--translate-y' as any]: `${
-                            0.5 * param.svg_height -
+                            0.5 * svgHeight -
                             30 -
                             (curStnInfo.name[1].split('\\').length - 1) * 18 -
                             (curStnInfo.secondaryName ? 58 / 2 : 0)
@@ -53,7 +61,7 @@ const InfoGZMTR = () => {
                 />
             </g>
 
-            <g transform={param.info_panel_type === 'gz2otis' ? otisTransforms.next : ''}>
+            <g transform={infoPanelType === PanelTypeGZMTR.gz2otis ? otisTransforms.next : ''}>
                 {nextStnId.includes('linestart') || nextStnId.includes('lineend') ? (
                     <></>
                 ) : nextStnId.length === 1 ? (
@@ -158,8 +166,10 @@ const BigStnNum = (props: { lineNum: string; stnNum: string } & React.SVGProps<S
 };
 
 const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
-    const { param } = React.useContext(ParamContext);
-    const nextInfo = param.stn_list[props.nextId];
+    const { nextId, nameBBox } = props;
+    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
+    const direction = useSelector((store: RootState) => store.param.direction);
+    const nextInfo = useSelector((store: RootState) => store.param.stn_list[nextId]);
     const { name, secondaryName } = nextInfo;
 
     const [nextBBox, setNextBBox] = useState({ width: 0 } as DOMRect);
@@ -170,8 +180,8 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
         [name.toString()]
     );
 
-    const nextNameZHCount = param.stn_list[props.nextId].name[0].length;
-    const nameBcrX = (param.svgWidth.runin - props.nameBBox.width) / 2;
+    const nextNameZHCount = name[0].length;
+    const nameBcrX = (svgWidths[CanvasType.RunIn] - nameBBox.width) / 2;
 
     return (
         <>
@@ -180,11 +190,11 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
                     textAnchor="middle"
                     style={{
                         ['--translate-x' as any]:
-                            param.direction === 'l'
+                            direction === ShortDirection.left
                                 ? '80px'
                                 : nextNameZHCount <= 2
-                                ? `${param.svgWidth.runin - 45 - nextBBox.width - 70}px`
-                                : `${param.svgWidth.runin - 45 - nextBBox.width - 35 * 1.5}px`,
+                                ? `${svgWidths[CanvasType.RunIn] - 45 - nextBBox.width - 70}px`
+                                : `${svgWidths[CanvasType.RunIn] - 45 - nextBBox.width - 35 * 1.5}px`,
                     }}
                 >
                     <text className="rmg-name__zh" fontSize={35}>
@@ -199,11 +209,11 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
                     ref={nextNameEl}
                     style={{
                         ['--translate-x' as any]:
-                            param.direction === 'l'
+                            direction === ShortDirection.left
                                 ? nextNameZHCount <= 2
                                     ? `${115 + 35}px`
                                     : `${115 + 35 / 2}px`
-                                : `${param.svgWidth.runin - 45 - nextBBox.width}px`,
+                                : `${svgWidths[CanvasType.RunIn] - 45 - nextBBox.width}px`,
                     }}
                 >
                     <text className="rmg-name__zh" fontSize={35}>
@@ -222,11 +232,11 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
                         textAnchor="middle"
                         style={{
                             ['--translate-x' as any]:
-                                param.direction === 'l'
+                                direction === ShortDirection.left
                                     ? nextNameZHCount <= 2
                                         ? `${115 + 35}px`
                                         : `${115 + 35 / 2}px`
-                                    : `${param.svgWidth.runin - 45 - nextBBox.width}px`,
+                                    : `${svgWidths[CanvasType.RunIn] - 45 - nextBBox.width}px`,
                         }}
                     >
                         <BigNextSec
@@ -242,12 +252,12 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
                 fill="black"
                 style={{
                     ['--translate-x' as any]:
-                        param.direction === 'l'
+                        direction === ShortDirection.left
                             ? `${
                                   (115 + 35 * ((nextNameZHCount <= 2 ? 1 : 0.5) + nextNameZHCount) + nameBcrX) / 2 - 20
                               }px`
                             : `${
-                                  (param.svgWidth.runin -
+                                  (svgWidths[CanvasType.RunIn] -
                                       45 -
                                       nextBBox.width -
                                       (nextNameZHCount <= 2 ? 70 + 35 : 35 * 2.5) +
@@ -258,7 +268,7 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
                                       2 +
                                   20
                               }px`,
-                    ['--rotate' as any]: param.direction === 'l' ? '0deg' : '180deg',
+                    ['--rotate' as any]: direction === ShortDirection.left ? '0deg' : '180deg',
                 }}
             />
         </>
@@ -299,17 +309,21 @@ const BigNextSec = (props: { secName: Name } & React.SVGProps<SVGGElement>) => {
 };
 
 const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
-    const { param, routes } = React.useContext(ParamContext);
+    const { nextIds, nameBBox } = props;
+    const { routes } = React.useContext(ParamContext);
+    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
+    const direction = useSelector((store: RootState) => store.param.direction);
+    const stationList = useSelector((store: RootState) => store.param.stn_list);
 
-    const nextNames = props.nextIds.map((id) => param.stn_list[id].name);
+    const nextNames = nextIds.map(id => stationList[id].name);
     const [nextBBox, setNextBBox] = useState({ width: 0 } as DOMRect);
     const nextNameEls = useRef<(SVGGElement | null)[]>([]);
     useEffect(
         () => {
-            setNextBBox((prevBBox) => ({ ...prevBBox, width: 0 }));
-            nextNameEls.current.forEach((el) => {
+            setNextBBox(prevBBox => ({ ...prevBBox, width: 0 }));
+            nextNameEls.current.forEach(el => {
                 let nextBBox = el?.getBBox();
-                setNextBBox((prevBBox) => {
+                setNextBBox(prevBBox => {
                     if (nextBBox) {
                         return prevBBox.width > nextBBox.width ? prevBBox : nextBBox;
                     } else {
@@ -322,24 +336,24 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
         [nextNames.toString()]
     );
 
-    const validEnds = props.nextIds.map((stnId) =>
+    const validEnds = props.nextIds.map(stnId =>
         routes.reduce(
             (acc, route) =>
                 // filter routes not containing next station's id
                 route.includes(stnId)
                     ? acc.concat(
                           route
-                              .filter((s) => !['linestart', 'lineend'].includes(s))
+                              .filter(s => !['linestart', 'lineend'].includes(s))
                               // select first/last station's id
-                              .slice(param.direction === 'l' ? 0 : -1)[0]
+                              .slice(direction === ShortDirection.left ? 0 : -1)[0]
                       )
                     : acc,
             [] as string[]
         )
     );
 
-    const nextNameZHCount = Math.max(...nextNames.map((names) => names[0].length));
-    const nameBcrX = (param.svgWidth.runin - props.nameBBox.width) / 2;
+    const nextNameZHCount = Math.max(...nextNames.map(names => names[0].length));
+    const nameBcrX = (svgWidths[CanvasType.RunIn] - nameBBox.width) / 2;
 
     return (
         <>
@@ -351,9 +365,9 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                                 textAnchor="middle"
                                 style={{
                                     ['--translate-x' as any]:
-                                        param.direction === 'l'
+                                        direction === ShortDirection.left
                                             ? '72px'
-                                            : `${param.svgWidth.runin - 45 - nextBBox.width - 41}px`,
+                                            : `${svgWidths[CanvasType.RunIn] - 45 - nextBBox.width - 41}px`,
                                 }}
                             >
                                 <text className="rmg-name__zh">下站</text>
@@ -362,13 +376,13 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                                 </text>
                             </g>
                             <g
-                                ref={(el) => (nextNameEls.current[i] = el)}
+                                ref={el => (nextNameEls.current[i] = el)}
                                 textAnchor="start"
                                 style={{
                                     ['--translate-x' as any]:
-                                        param.direction === 'l'
+                                        direction === ShortDirection.left
                                             ? '113px'
-                                            : `${param.svgWidth.runin - 45 - nextBBox.width}px`,
+                                            : `${svgWidths[CanvasType.RunIn] - 45 - nextBBox.width}px`,
                                 }}
                             >
                                 <text className="rmg-name__zh">{name[0]}</text>
@@ -378,12 +392,12 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                                     </text>
                                 ))}
                                 <text className="rmg-name__zh" y={-35}>
-                                    {validEnds[i].map((s) => param.stn_list[s].name[0]).join('/') + '方向'}
+                                    {validEnds[i].map(s => stationList[s].name[0]).join('/') + '方向'}
                                 </text>
                                 <text className="rmg-name__en rmg-name__gzmtr--next2-dest" y={-20}>
                                     {'Towards ' +
                                         validEnds[i]
-                                            .map((s) => param.stn_list[s].name[1])
+                                            .map(s => stationList[s].name[1])
                                             .join('/')
                                             .replace('\\', ' ')}
                                 </text>
@@ -398,10 +412,10 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                 fill="black"
                 style={{
                     ['--translate-x' as any]:
-                        param.direction === 'l'
+                        direction === ShortDirection.left
                             ? `${(99 + 27 * (1 + nextNameZHCount) + nameBcrX) / 2 - 20}px`
                             : `${
-                                  (param.svgWidth.runin -
+                                  (svgWidths[CanvasType.RunIn] -
                                       45 -
                                       nextBBox.width -
                                       41 -
@@ -413,7 +427,7 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                                       2 +
                                   20
                               }px`,
-                    ['--rotate' as any]: param.direction === 'l' ? '0deg' : '180deg',
+                    ['--rotate' as any]: direction === ShortDirection.left ? '0deg' : '180deg',
                 }}
             />
         </>

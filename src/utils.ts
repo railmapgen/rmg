@@ -1,6 +1,6 @@
-export function updateParam() {
-    var param = JSON.parse(localStorage.rmgParam) as { [x: string]: any };
+import { LanguageCode, Note, RmgStyle, StationInfo, Translation } from './constants/constants';
 
+export const updateParam = (param: { [x: string]: any }) => {
     // Version 0.10
     if (!('line_name' in param)) {
         param.line_name = ['路線名', 'Name of Line'];
@@ -116,11 +116,7 @@ export function updateParam() {
                 tick_direc:
                     stnInfo.change_type === 'none' || stnInfo.change_type === 'int2'
                         ? 'r'
-                        : (stnInfo.change_type
-                              ?.split('_')[1]
-                              .split('')
-                              .slice()
-                              .reverse()[0] as 'l' | 'r'),
+                        : (stnInfo.change_type?.split('_')[1].split('').slice().reverse()[0] as 'l' | 'r'),
                 paid_area:
                     stnInfo.change_type?.indexOf('osi') !== -1 ? stnInfo.change_type?.split('_')[1][0] === 'p' : true,
                 osi_names: stnInfo.change_type?.indexOf('osi') !== -1 ? [stnInfo.interchange[1][0]] : [],
@@ -162,7 +158,12 @@ export function updateParam() {
             destination: param.svg_dest_width,
             runin: param.svg_dest_width,
             railmap: param.svg_width,
+            indoor: param.svg_width,
         };
+    }
+    // Version 3.8
+    if (!('indoor' in param.svgWidth)) {
+        param.svgWidth.indoor = param.svgWidth.railmap;
     }
     delete param.svg_width;
     delete param.svg_dest_width;
@@ -206,18 +207,18 @@ export function updateParam() {
         }
     });
 
-    localStorage.setItem('rmgParam', JSON.stringify(param));
-}
+    return param;
+};
 
-export const getTransText2 = (obj: ITrans, langs: string[]) => {
+export const getTransText2 = (obj: Translation, langs: LanguageCode[]) => {
     for (let l of langs) {
         if (obj[l]) return obj[l];
     }
-    return obj.en;
+    return obj[LanguageCode.English];
 };
 
 /**
  * Format display style of station name as `[num: ]nameZH,nameEN`.
  */
-export const formatStnName = (stnInfo: StationInfo, style: ProvidedStyles) =>
-    (style === 'gzmtr' ? (stnInfo?.num || '-') + ': ' : '') + stnInfo?.name.join().replace('\\', ' ');
+export const formatStnName = (stnInfo: StationInfo, style: RmgStyle) =>
+    (style === RmgStyle.GZMTR ? (stnInfo?.num || '-') + ': ' : '') + stnInfo?.name.join().replace('\\', ' ');

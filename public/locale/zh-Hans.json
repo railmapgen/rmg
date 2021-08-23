@@ -6,7 +6,8 @@
         "all": "显示全部",
         "destination": "终点站牌",
         "runin": "站名牌",
-        "railmap": "线路图"
+        "railmap": "线路图",
+        "indoor": "门板图"
     },
 
     "zoom": {
@@ -38,7 +39,8 @@
             "title": "选择画布",
             "destination": "终点站牌",
             "runin": "站名牌",
-            "railmap": "线路图"
+            "railmap": "线路图",
+            "indoor": "门板图"
         },
         "preview": {
             "title": "预览和输出",
@@ -71,7 +73,8 @@
             "width": {
                 "destination": "终点站牌宽度",
                 "runin": "站名牌宽度",
-                "railmap": "线路图宽度"
+                "railmap": "线路图宽度",
+                "indoor": "门板图宽度"
             },
             "height": "画布高度"
         },
@@ -185,6 +188,7 @@
             "interchange": {
                 "within": "站内换乘",
                 "osi": "出站换乘",
+                "osysi": "出站转乘",
                 "note": "请注意，部分换乘组合可能无法正常显示。",
                 "add": "添加",
                 "osiName": "编辑出站换乘车站名称",
@@ -241,7 +245,7 @@
     },
 
     "info": {
-        "title": "铁路线路图生成器 V3",
+        "title": "铁路线路图生成器",
         "notice": "请注意：由于著作权及有关法律限制，铁路线路图生成器使用思源宋体及Vegur，以代替港铁样式线路图所使用之地铁宋及Myriad Pro。如您拥有该字体之授权，可自行于输出之SVG文件内修改相关代码。",
         "feedback": "反馈问题"
     },

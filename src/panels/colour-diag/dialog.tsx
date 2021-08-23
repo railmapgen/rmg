@@ -1,27 +1,29 @@
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
+    Button,
+    Chip,
+    createStyles,
     Dialog,
-    DialogTitle,
+    DialogActions,
     DialogContent,
-    Paper,
-    ListItem,
-    List,
+    DialogTitle,
+    Divider,
     Icon,
     InputBase,
-    makeStyles,
-    DialogActions,
-    Button,
-    createStyles,
-    Tabs,
-    Tab,
-    Chip,
-    Divider,
+    List,
+    ListItem,
     ListItemText,
+    makeStyles,
+    Paper,
+    Tab,
+    Tabs,
 } from '@material-ui/core';
-import { PalettePanel, CustomPanel } from './theme-items';
-import { ParamContext } from '../../context';
+import { CustomPanel, PalettePanel } from './theme-items';
+import { InterchangeInfo, MonoColour, Name, Theme } from '../../constants/constants';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -103,7 +105,7 @@ const useStyles = makeStyles(theme =>
 
 interface Props {
     open: boolean;
-    theme: [string, string, string, '#000' | '#fff'];
+    theme: Theme;
     lineName: Name;
     onUpdate: (key: string, value: any) => void;
     onClose: () => void;
@@ -155,7 +157,7 @@ const LineNameInput = (props: { lineName: Name; theme: Theme; onUpdate: Props['o
                         root: classes.inputBaseRoot,
                         input: classes.inputBaseInputZH,
                     }}
-                    style={{ color: props.theme[3] || '#fff' }}
+                    style={{ color: props.theme[3] || MonoColour.white }}
                     onChange={e => nameChange(e.target.value, 0)}
                     autoFocus
                 />
@@ -165,7 +167,7 @@ const LineNameInput = (props: { lineName: Name; theme: Theme; onUpdate: Props['o
                         root: classes.inputBaseRoot,
                         input: classes.inputBaseInputEN,
                     }}
-                    style={{ color: props.theme[3] || '#fff' }}
+                    style={{ color: props.theme[3] || MonoColour.white }}
                     onChange={e => nameChange(e.target.value, 1)}
                 />
             </Paper>
@@ -177,18 +179,20 @@ const RecentChipSet = (props: { onUpdate: Props['onUpdate'] }) => {
     const { t } = useTranslation();
     const classes = useStyles();
 
-    const { param } = useContext(ParamContext);
+    const theme = useSelector((store: RootState) => store.param.theme);
+    const lineName = useSelector((store: RootState) => store.param.line_name);
+    const stationList = useSelector((store: RootState) => store.param.stn_list);
 
     const allInfos = useMemo(
         () =>
             new Set(
-                Object.values(param.stn_list)
+                Object.values(stationList)
                     .reduce(
                         (acc, { transfer }) => {
                             const { info } = transfer;
                             return acc.concat(...info);
                         },
-                        [[...param.theme, ...param.line_name] as InterchangeInfo]
+                        [[...theme, ...lineName]]
                     )
                     .map(val => JSON.stringify(val))
                     .reverse()

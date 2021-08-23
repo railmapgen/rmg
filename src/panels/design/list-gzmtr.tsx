@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo } from 'react';
+import React, { useContext, useState, useMemo, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -28,7 +28,10 @@ import {
 } from '@material-ui/core';
 
 import { ParamContext } from '../../context';
-import { PanelTypesGZMTR } from '../../constants/constants';
+import { PanelTypeGZMTR, Note } from '../../constants/constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux';
+import { addNote, removeNote, setLineNum, setPanelType, setPsdNum, updateNote } from '../../redux/param/action';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -40,7 +43,21 @@ const useStyles = makeStyles(theme =>
 
 const DesignListGZMTR = () => {
     const { t } = useTranslation();
-    const { param, dispatch } = useContext(ParamContext);
+    const reduxDispatch = useDispatch();
+
+    const lineNum = useSelector((store: RootState) => store.param.line_num);
+    const psdNum = useSelector((store: RootState) => store.param.psd_num);
+    const { dispatch } = useContext(ParamContext);
+
+    const handleLineNumChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+        dispatch({ type: 'SET_LINE_NUM', num: value });
+        reduxDispatch(setLineNum(value));
+    };
+
+    const handlePsdNumChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+        dispatch({ type: 'SET_PSD_NUM', num: value });
+        reduxDispatch(setPsdNum(value));
+    };
 
     return (
         <>
@@ -49,10 +66,7 @@ const DesignListGZMTR = () => {
                     <Icon>looks_one</Icon>
                 </ListItemIcon>
                 <ListItemText primary={t('design.lineNum')} />
-                <TextField
-                    value={param.line_num}
-                    onChange={e => dispatch({ type: 'SET_LINE_NUM', num: e.target.value })}
-                />
+                <TextField value={lineNum} onChange={handleLineNumChange} />
             </ListItem>
             <Divider />
             <ListItem>
@@ -60,10 +74,7 @@ const DesignListGZMTR = () => {
                     <Icon>looks_one</Icon>
                 </ListItemIcon>
                 <ListItemText primary={t('design.psd')} />
-                <TextField
-                    value={param.psd_num}
-                    onChange={e => dispatch({ type: 'SET_PSD_NUM', num: e.target.value })}
-                />
+                <TextField value={psdNum} onChange={handlePsdNumChange} />
             </ListItem>
             <Divider />
             <PanelTypeLi />
@@ -77,48 +88,51 @@ export default DesignListGZMTR;
 
 const PanelTypeLi = () => {
     const { t } = useTranslation();
-    const { param, dispatch } = useContext(ParamContext);
+    const reduxDispatch = useDispatch();
 
-    return useMemo(
-        () => (
-            <>
-                <ListItem>
-                    <ListItemIcon>
-                        <Icon style={{ transform: 'rotate(180deg)' }}>credit_card</Icon>
-                    </ListItemIcon>
-                    <ListItemText primary={t('design.panelType.button')} />
-                    <Select
-                        native
-                        value={param.info_panel_type}
-                        onChange={e => dispatch({ type: 'SET_PANEL_TYPE', variant: e.target.value as PanelTypeGZMTR })}
-                        style={{ width: 166 }}
-                    >
-                        {PanelTypesGZMTR.map(type => (
-                            <option key={type} value={type}>
-                                {t('design.panelType.' + type)}
-                            </option>
-                        ))}
-                    </Select>
-                </ListItem>
-            </>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.info_panel_type]
-    );
+    const panelType = useSelector((store: RootState) => store.param.info_panel_type);
+    const { dispatch } = useContext(ParamContext);
+
+    return useMemo(() => {
+        const handleChange = ({ target: { value } }: ChangeEvent<{ name?: string; value: unknown }>) => {
+            dispatch({ type: 'SET_PANEL_TYPE', variant: value as PanelTypeGZMTR });
+            reduxDispatch(setPanelType(value as PanelTypeGZMTR));
+        };
+
+        return (
+            <ListItem>
+                <ListItemIcon>
+                    <Icon style={{ transform: 'rotate(180deg)' }}>credit_card</Icon>
+                </ListItemIcon>
+                <ListItemText primary={t('design.panelType.button')} />
+                <Select native value={panelType} onChange={handleChange} style={{ width: 166 }}>
+                    {Object.values(PanelTypeGZMTR).map(type => (
+                        <option key={type} value={type}>
+                            {t('design.panelType.' + type)}
+                        </option>
+                    ))}
+                </Select>
+            </ListItem>
+        );
+    }, [panelType, t, dispatch, reduxDispatch]);
 };
 
 const NotesLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const { param, dispatch } = useContext(ParamContext);
+    const reduxDispatch = useDispatch();
+    const { dispatch } = useContext(ParamContext);
+
+    const notes = useSelector((store: RootState) => store.param.notesGZMTR);
 
     const [isCollapse, setIsCollapse] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [noteSelected, setNoteSelected] = useState(0);
 
     const handleAdd = () => {
-        setNoteSelected(param.notesGZMTR.length);
+        setNoteSelected(notes.length);
         dispatch({ type: 'ADD_NOTE_GZMTR' });
+        reduxDispatch(addNote());
         setIsDialogOpen(true);
     };
 
@@ -138,7 +152,7 @@ const NotesLi = () => {
             </ListItem>
             <Collapse in={isCollapse} unmountOnExit>
                 <List component="div" disablePadding className={classes.nestedList}>
-                    {param.notesGZMTR.map((_, i) => (
+                    {notes.map((_, i) => (
                         <NotesEntry key={i} idx={i} onEdit={handleUpdate(i)} />
                     ))}
                     <ListItem>
@@ -159,7 +173,11 @@ const NotesLi = () => {
 
 const NotesEntry = (props: { idx: number; onEdit: () => void }) => {
     const { t } = useTranslation();
-    const { param, dispatch } = useContext(ParamContext);
+    const reduxDispatch = useDispatch();
+    const { dispatch } = useContext(ParamContext);
+
+    const notes = useSelector((store: RootState) => store.param.notesGZMTR);
+    const selectedNote = notes[props.idx];
 
     const [toggleEl, setToggleEl] = useState<null | HTMLElement>(null);
 
@@ -168,17 +186,34 @@ const NotesEntry = (props: { idx: number; onEdit: () => void }) => {
         props.onEdit();
     };
 
-    const handleSlide = (i: number) => (_event: React.ChangeEvent<{}>, value: number | number[]) =>
-        typeof value === 'number' &&
+    const handleSlide = (i: number) => (_event: React.ChangeEvent<{}>, value: number | number[]) => {
+        if (typeof value === 'number') {
+            const updatedNote = selectedNote.map((val, j) => (j === i ? value : val)) as Note;
+
+            dispatch({
+                type: 'UPDATE_NOTE_GZMTR',
+                idx: props.idx,
+                note: updatedNote,
+            });
+            reduxDispatch(updateNote(props.idx, updatedNote));
+        }
+    };
+
+    const handleChangeBorder = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+        const updatedNote = selectedNote.map((val, i) => (i === 4 ? checked : val)) as Note;
+
         dispatch({
             type: 'UPDATE_NOTE_GZMTR',
             idx: props.idx,
-            note: param.notesGZMTR[props.idx].map((val, j) => (j === i ? value : val)) as Note,
+            note: updatedNote,
         });
+        reduxDispatch(updateNote(props.idx, updatedNote));
+    };
 
     const handleRemove = () => {
         setToggleEl(null);
         dispatch({ type: 'REMOVE_NOTE_GZMTR', idx: props.idx });
+        reduxDispatch(removeNote(props.idx));
     };
 
     return useMemo(
@@ -186,8 +221,8 @@ const NotesEntry = (props: { idx: number; onEdit: () => void }) => {
             <>
                 <ListItem>
                     <ListItemText
-                        primary={param.notesGZMTR[props.idx][0]}
-                        secondary={param.notesGZMTR[props.idx][1]}
+                        primary={selectedNote[0]}
+                        secondary={selectedNote[1]}
                         style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                     />
                     <ListItemSecondaryAction>
@@ -199,7 +234,7 @@ const NotesEntry = (props: { idx: number; onEdit: () => void }) => {
 
                             <ListItem component="div">
                                 <Slider
-                                    value={param.notesGZMTR[props.idx][2]}
+                                    value={selectedNote[2]}
                                     onChange={handleSlide(2)}
                                     step={0.01}
                                     marks={[
@@ -212,7 +247,7 @@ const NotesEntry = (props: { idx: number; onEdit: () => void }) => {
                             </ListItem>
                             <ListItem>
                                 <Slider
-                                    value={param.notesGZMTR[props.idx][3]}
+                                    value={selectedNote[3]}
                                     onChange={handleSlide(3)}
                                     step={0.01}
                                     marks={[
@@ -229,16 +264,8 @@ const NotesEntry = (props: { idx: number; onEdit: () => void }) => {
                                     <Switch
                                         edge="end"
                                         color="primary"
-                                        checked={param.notesGZMTR[props.idx][4]}
-                                        onChange={(_, checked) =>
-                                            dispatch({
-                                                type: 'UPDATE_NOTE_GZMTR',
-                                                idx: props.idx,
-                                                note: param.notesGZMTR[props.idx].map((val, i) =>
-                                                    i === 4 ? checked : val
-                                                ) as Note,
-                                            })
-                                        }
+                                        checked={selectedNote[4]}
+                                        onChange={handleChangeBorder}
                                     />
                                 </ListItemSecondaryAction>
                             </ListItem>
@@ -251,7 +278,7 @@ const NotesEntry = (props: { idx: number; onEdit: () => void }) => {
             </>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.notesGZMTR[props.idx].toString(), toggleEl]
+        [selectedNote.toString(), toggleEl]
     );
 };
 
@@ -263,15 +290,19 @@ interface AddNoteDialogProps {
 
 const NoteEditDialog = (props: AddNoteDialogProps) => {
     const { t } = useTranslation();
+    const reduxDispatch = useDispatch();
 
-    const { param, dispatch } = useContext(ParamContext);
-    const note = param.notesGZMTR[props.idx] || ['', '', 0, 0];
+    const { dispatch } = useContext(ParamContext);
+    const notes = useSelector((store: RootState) => store.param.notesGZMTR);
+    const selectedNote = notes[props.idx] || ['', '', 0, 0, false];
 
-    const [noteZH, setNoteZH] = useState(note[0] || '');
-    const [noteEN, setNoteEN] = useState(note[1] || '');
+    const [noteZH, setNoteZH] = useState(selectedNote[0] || '');
+    const [noteEN, setNoteEN] = useState(selectedNote[1] || '');
 
     const handleClick = () => {
-        dispatch({ type: 'UPDATE_NOTE_GZMTR', idx: props.idx, note: [noteZH, noteEN, note[2], note[3], note[4]] });
+        const updatedNote: Note = [noteZH, noteEN, selectedNote[2], selectedNote[3], selectedNote[4]];
+        dispatch({ type: 'UPDATE_NOTE_GZMTR', idx: props.idx, note: updatedNote });
+        reduxDispatch(updateNote(props.idx, updatedNote));
         props.onClose();
     };
 

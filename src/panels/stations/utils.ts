@@ -1,11 +1,20 @@
 import { getYShareMTR } from '../../methods';
+import {
+    BranchStyle,
+    Facilities,
+    Name,
+    Services,
+    ShortDirection,
+    StationDict,
+    StationInfo,
+} from '../../constants/constants';
 
 export const addStation = (
     prep: 'before' | 'after',
     stnId: string,
     loc: 'centre' | 'upper' | 'lower' | 'newupper' | 'newlower',
     end: string,
-    stnList: { [stnId: string]: StationInfo }
+    stnList: StationDict
 ): [string, StationDict] => {
     // get new id
     let newId = getRandomId();
@@ -16,7 +25,7 @@ export const addStation = (
         name: getNameFromId(newId),
         secondaryName: false,
         num: '00',
-        services: ['local'],
+        services: [Services.local],
         parents: [],
         children: [],
         branch: {
@@ -26,11 +35,11 @@ export const addStation = (
         transfer: {
             info: [[]],
             // type: 'none',
-            tick_direc: 'r',
+            tick_direc: ShortDirection.right,
             paid_area: true,
             osi_names: [],
         },
-        facility: '',
+        facility: Facilities.none,
     };
 
     let newStnList = JSON.parse(JSON.stringify(stnList)) as StationDict;
@@ -114,8 +123,8 @@ export const addStation = (
                 });
             }
         } else {
-            newStnList[stnId].branch.left = ['through', newId];
-            newStnList[end].branch.right = ['through', newId];
+            newStnList[stnId].branch.left = [BranchStyle.through, newId];
+            newStnList[end].branch.right = [BranchStyle.through, newId];
             newInfo.parents = [end];
             newInfo.children = [stnId];
 
@@ -204,8 +213,8 @@ export const addStation = (
                 });
             }
         } else {
-            newStnList[stnId].branch.right = ['through', newId];
-            newStnList[end].branch.left = ['through', newId];
+            newStnList[stnId].branch.right = [BranchStyle.through, newId];
+            newStnList[end].branch.left = [BranchStyle.through, newId];
 
             newInfo.children = [end];
             newInfo.parents = [stnId];
@@ -225,7 +234,7 @@ export const addStation = (
         {
             ...newStnList,
             [newId]: newInfo,
-        },
+        } as StationDict,
     ];
 };
 
@@ -236,9 +245,10 @@ const getRandomId = () =>
 
 function getNameFromId(stnId: string): Name {
     let numsZH = '癸甲乙丙丁戊己庚辛壬日月金木水火土竹戈十大中一弓人心手口尸廿山女田難卜重'.split('');
-    let numsEN = 'Zero One Two Three Four Five Six Seven Eight Nine Alfa Bravo Charlie Delta Echo Foxtrot Golf Hotel India Juliett Kilo Lima Mike November Oscar Papa Quebec Romeo Sierra Tango Uniform Victor Whiskey X-ray Yankee Zulu'.split(
-        ' '
-    );
+    let numsEN =
+        'Zero One Two Three Four Five Six Seven Eight Nine Alfa Bravo Charlie Delta Echo Foxtrot Golf Hotel India Juliett Kilo Lima Mike November Oscar Papa Quebec Romeo Sierra Tango Uniform Victor Whiskey X-ray Yankee Zulu'.split(
+            ' '
+        );
     return [
         stnId
             .split('')

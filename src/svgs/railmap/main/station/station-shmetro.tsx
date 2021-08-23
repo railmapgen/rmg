@@ -1,5 +1,6 @@
 import React, { useContext, useRef, memo } from 'react';
 import { ParamContext } from '../../../../context';
+import { InterchangeInfo, Name, PanelTypeGZMTR, PanelTypeShmetro } from "../../../../constants/constants";
 
 interface Props {
     stnId: string;
@@ -13,7 +14,7 @@ const StationSHMetro = (props: Props) => {
     // shift station name if the line bifurcate here
     const branchNameDX =
         ([...stnInfo.branch.left, ...stnInfo.branch.right].length ? 8 + 12 * stnInfo.name[1].split('\\').length : 0) *
-        (param.direction === 'l' ? -1 : 1);
+        (param.direction === 'r' ? -1 : 1);
 
     let stationIconStyle = '';
     let stationIconColor: {[pos: string]: string} = {};
@@ -26,11 +27,10 @@ const StationSHMetro = (props: Props) => {
         // param.info_panel_type === 'sh' or others (from other styles)
         if (stnInfo.services.length === 3) stationIconStyle = 'direct_sh';
         else if (stnInfo.services.length === 2) stationIconStyle = 'express_sh';
-        else if (stnInfo.transfer.info.reduce((acc, cur) => acc + cur.length, 0)) stationIconStyle = 'int2_sh';
+        else if ([...stnInfo.transfer.info[0], ...stnInfo.transfer.info[1] || []].length > 0) stationIconStyle = 'int2_sh';
         else stationIconStyle = 'stn_sh';
         stationIconColor.stroke = props.stnState === -1 ? 'gray' : 'var(--rmg-theme-colour)';
     }
-
 
     return (
         <>
@@ -83,20 +83,21 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
     return (
         <g transform={`translate(${props.direction === 'l' ? 6 : -6},${props.info_panel_type === 'sh2020' ? -20 : -6})rotate(${props.direction === 'l' ? -45 : 45})`}>
-            {props.infos.reduce((sum, infos) => sum + infos.length, 0) && (
-                <line
-                    x1={0}
-                    x2={props.direction === 'l' ? x : -x}
-                    stroke={props.stnState === -1 ? 'gray' : 'black'}
-                    strokeWidth={0.5}
-                />
+            {[...props.infos[0], ...props.infos[1] || []].length > 0 && (
+                <>
+                    <line
+                        x1={0}
+                        x2={props.direction === 'l' ? x : -x}
+                        stroke={props.stnState === -1 ? 'gray' : 'black'}
+                        strokeWidth={0.5}
+                    />
+                    <IntBoxGroup
+                        intInfos={[...props.infos[0], ...props.infos[1] || []]}
+                        transform={`translate(${x * (props.direction === 'l' ? 1 : -1)},-10.75)`}
+                        direction={props.direction}
+                    />
+                </>
             )}
-
-            <IntBoxGroup
-                intInfos={props.infos[1] ? ([] as InterchangeInfo[]).concat(...props.infos) : props.infos[0]}
-                transform={`translate(${x * (props.direction === 'l' ? 1 : -1)},-10.75)`}
-                direction={props.direction}
-            />
 
             <g
                 textAnchor={props.direction === 'l' ? 'start' : 'end'}
@@ -108,7 +109,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                     fill={props.stnState === -1 ? 'gray' : props.stnState === 0 ? 'red' : 'black'}
                 />
 
-                {props.infos[1]?.length && (
+                {props.infos[1]?.length > 0 && (
                     <g
                         transform={`translate(${
                             (x + props.infos.reduce((sum, infos) => sum + infos.length, 0) * 15) *
@@ -132,7 +133,11 @@ const StationName = React.forwardRef(
                 {React.useMemo(
                     () => (
                         <>
-                            <text className="rmg-name__zh">{stnName[0]}</text>
+                            {stnName[0].split('\\').map((txt, i, array) => (
+                                <text key={i} className="rmg-name__zh" dy={(array.length - 1 - i) * -15}>
+                                    {txt}
+                                </text>
+                            ))}
                             <g fontSize={9.6}>
                                 {stnName[1].split('\\').map((txt, i) => (
                                     <text key={i} className="rmg-name__en" dy={12 * (i + 1)}>
@@ -156,7 +161,7 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; direction: 'l' | 'r' 
     let dx = 0;
     return (
         <g fontSize={14} textAnchor="middle" {...others}>
-            {intInfos.map((info, i) => {
+            {(direction === 'l' ? intInfos : [...intInfos].reverse()).map((info, i) => {
                 // start with digit
                 const isLineNumber = Boolean(info[4].match(/^\d.*$/));
                 const isMaglev = Boolean(info[4].match(/^磁(悬)*浮/));
@@ -237,12 +242,12 @@ const IntBoxLetter = memo(
 
 const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
     // get the all names from the out of station changes
-    const lineNames = props.osiInfos.map(info => info[4]);
+    const lineNames = props.osiInfos.map(info => info[4]).join('，');
     return React.useMemo(
         () => (
             <g textAnchor="middle" fontSize="50%">
                 <text className="rmg-name__zh" dy={-5}>
-                    {'换乘' + lineNames.join('，')}
+                    {`换乘${lineNames}`}
                 </text>
                 <text className="rmg-name__zh" dy={5}>
                     仅限公共交通卡
