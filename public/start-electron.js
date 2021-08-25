@@ -1,17 +1,18 @@
 const electron = require('electron'),
   app = electron.app,
   BrowserWindow = electron.BrowserWindow;
-   
+
 const path = require('path'),
   isDev = require('electron-is-dev');
-   
+
 let mainWindow;
-   
+
 const createWindow = () => {
-  mainWindow = new BrowserWindow({ width: 480, height: 320 })
+  mainWindow = new BrowserWindow({ width: 480, height: 320, webPreferences: {devTools: true} })
   const appUrl = isDev ? 'http://localhost:3000' :
-    `file://${path.join(__dirname, '../build/index.html')}`
+    `file://${path.join(__dirname, '../build/index.html#/shmetro')}`
   mainWindow.loadURL(appUrl)
+  // mainWindow.webContents.openDevTools()
   // mainWindow.maximize()
   // mainWindow.setFullScreen(true)
   mainWindow.on('closed', () => mainWindow = null)
