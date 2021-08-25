@@ -80,7 +80,7 @@ const NewDialog = (props: TemplateDialogProps) => {
                 /* webpackChunkName: "templates" */ `../../../constants/templates/${selectedCompany}/${filename}`
             );
             await window.rmgStorage.writeFile('rmgParam', JSON.stringify(module.default));
-            // TODO: electron will fail here
+            // TODO: electron will fail here, wait for #96
             // window.location.reload(true);
         } catch (err) {
             console.error(err);
