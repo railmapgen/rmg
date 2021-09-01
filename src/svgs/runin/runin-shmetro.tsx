@@ -1,9 +1,12 @@
 import React, { useContext, useMemo, memo } from 'react';
 import { ParamContext } from '../../context';
-import { Name } from "../../constants/constants";
+import { Name } from '../../constants/constants';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux';
 
 const RunInSHMetro = () => {
-    const { param, routes } = useContext(ParamContext);
+    const { routes } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
 
     // get the height
     const dh = param.svg_height - 300;
@@ -64,16 +67,16 @@ interface RunInGeneralProps {
 }
 
 const GeneralStation = (props: RunInGeneralProps) => {
-    const { param } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
     const middle = param.svgWidth.runin / 2;
 
-    const termianl = props.nextStnIds.length === 1 && ['linestart', 'lineend'].includes(props.nextStnIds[0])
-    const original = props.prevStnIds.length === 1 && ['linestart', 'lineend'].includes(props.prevStnIds[0])
+    const termianl = props.nextStnIds.length === 1 && ['linestart', 'lineend'].includes(props.nextStnIds[0]);
+    const original = props.prevStnIds.length === 1 && ['linestart', 'lineend'].includes(props.prevStnIds[0]);
 
-    const nextNames = props.nextStnIds.map(stnId=>param.stn_list[stnId].name)
+    const nextNames = props.nextStnIds.map(stnId => param.stn_list[stnId].name);
     const nextBranchLineDy = (props.nextStnIds.length > 1 ? (nextNames[0][0].split('\\').length - 1) * -50 +
                                                        (nextNames[0][1].split('\\').length - 1) * -30 : 0) + 10
-    const prevNames = props.prevStnIds.map(stnId=>param.stn_list[stnId].name)
+    const prevNames = props.prevStnIds.map(stnId => param.stn_list[stnId].name);
     const prevBranchLineDy = (props.prevStnIds.length > 1 ? (prevNames[0][0].split('\\').length - 1) * -50 +
                                                         (prevNames[0][1].split('\\').length - 1) * -30 : 0) + 10
 
@@ -153,7 +156,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
                             d={`M ${middle},16 H ${param.direction === 'l' ? param.svgWidth.runin - 24 : 24} `}
                         />
                     </g>
-        
+
                     <g transform={`translate(${middle},160)`} textAnchor="middle">
                         <CurrentText />
                     </g>
@@ -167,7 +170,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
 };
 
 const CurrentText = () => {
-    const { param } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
     const { name } = param.stn_list[param.current_stn_idx];
     return useMemo(
         () => (
@@ -214,8 +217,8 @@ const NextText = (props: { nextName: Name } & React.SVGProps<SVGGElement>) => {
 };
 
 const PrevStn = (props: { stnIds: string[] }) => {
-    const { param } = useContext(ParamContext);
-    const nextNames = props.stnIds.map(stnId=>param.stn_list[stnId].name)
+    const param = useSelector((store: RootState) => store.param);
+    const nextNames = props.stnIds.map(stnId => param.stn_list[stnId].name);
     const prevHintDy = (props.stnIds.length > 1 ? 15 : 125) +
         nextNames.map(name => name[0].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -50 +
         nextNames.map(name => name[1].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -30
@@ -245,8 +248,8 @@ const PrevStn = (props: { stnIds: string[] }) => {
 };
 
 const NextStn = (props: { stnIds: string[] }) => {
-    const { param } = useContext(ParamContext);
-    const nextNames = props.stnIds.map(stnId=>param.stn_list[stnId].name)
+    const param = useSelector((store: RootState) => store.param);
+    const nextNames = props.stnIds.map(stnId => param.stn_list[stnId].name);
     const nextHintDy = (props.stnIds.length > 1 ? 15 : 125) +
         nextNames.map(name => name[0].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -50 +
         nextNames.map(name => name[1].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -30

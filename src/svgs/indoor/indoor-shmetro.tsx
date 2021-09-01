@@ -4,6 +4,8 @@ import { adjacencyList, getXShareMTR, criticalPathMethod, getStnState } from '..
 import StationSHMetro from './station-shmetro';
 import { StationsMTR } from '../railmap/methods/mtr';
 import { StationDict } from "../../constants/constants";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux';
 
 export default memo(function IndoorWrapperSHMetro() {
     return (
@@ -39,7 +41,8 @@ const rightWideFactor = (stnList: StationDict, stnId: string) => {
 }
 
 const IndoorSHMetro = () => {
-    const { param, routes, branches, deps } = useContext(ParamContext);
+    const { routes, branches, deps } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
 
     const adjMat = adjacencyList(
         param.stn_list,
@@ -135,7 +138,8 @@ interface StationGroupProps {
 }
 
 const StationGroup = (props: StationGroupProps) => {
-    const { param, branches } = useContext(ParamContext);
+    const { branches } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
 
     return (
         <g>
@@ -157,7 +161,7 @@ const StationGroup = (props: StationGroupProps) => {
 };
 
 const InfoElements = () => {
-    const { param } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
 
     return React.useMemo(() => (
         <>
