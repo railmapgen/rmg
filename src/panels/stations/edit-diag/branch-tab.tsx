@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     createStyles,
@@ -12,7 +12,6 @@ import {
     Select,
 } from '@material-ui/core';
 import { formatStnName } from '../../../utils';
-import { ParamContext } from '../../../context';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux';
 import { BranchStyle, Direction, RmgStyle } from '../../../constants/constants';
@@ -90,9 +89,8 @@ const BranchTypeItem = (props: ItemProps) => {
     const { stnId, direction } = props;
     const { t } = useTranslation();
     const classes = useStyles();
-    const reduxDispatch = useDispatch();
+    const dispatch = useDispatch();
 
-    const { dispatch } = React.useContext(ParamContext);
     const branchEntry = useSelector((store: RootState) => store.param.stn_list[stnId].branch[direction]);
 
     const handleChange = ({ target: { value } }: React.ChangeEvent<{ name?: string; value: unknown }>) => {
@@ -104,13 +102,7 @@ const BranchTypeItem = (props: ItemProps) => {
             // no changes
             return;
         } else {
-            dispatch({
-                type: 'UPDATE_STATION_BRANCH_TYPE',
-                stnId,
-                direction,
-                branchType,
-            });
-            reduxDispatch(updateStationBranchType(stnId, direction, branchType));
+            dispatch(updateStationBranchType(stnId, direction, branchType));
         }
     };
 
@@ -143,11 +135,10 @@ const BranchFirstItem = (props: ItemProps) => {
     const { stnId, direction } = props;
     const { t } = useTranslation();
     const classes = useStyles();
-    const reduxDispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const stnList = useSelector((store: RootState) => store.param.stn_list);
-    const { dispatch } = useContext(ParamContext);
     const stnInfo = stnList[stnId];
     const branchEntry = stnInfo.branch[direction];
     const neighbours = direction === Direction.left ? stnInfo.parents : stnInfo.children;
@@ -179,11 +170,7 @@ const BranchFirstItem = (props: ItemProps) => {
                     first: branchEndFirst,
                 },
             ];
-            dispatch({
-                type: 'UPDATE_STATION_BRANCH_FIRST',
-                branches: branchesArg,
-            });
-            reduxDispatch(updateStationBranchFirstStation(branchesArg));
+            dispatch(updateStationBranchFirstStation(branchesArg));
         }
     };
 
@@ -217,9 +204,8 @@ const BranchPosItem = (props: ItemProps) => {
     const { stnId, direction } = props;
     const { t } = useTranslation();
     const classes = useStyles();
-    const reduxDispatch = useDispatch();
+    const dispatch = useDispatch();
 
-    const { dispatch } = React.useContext(ParamContext);
     const stnList = useSelector((store: RootState) => store.param.stn_list);
     const stnInfo = stnList[stnId];
     const branchEntry = stnInfo.branch[direction] as [BranchStyle, string]; // mount only if branchEntry[0] is not undefined
@@ -236,22 +222,12 @@ const BranchPosItem = (props: ItemProps) => {
                 while (stnList[branchEndId].parents.length === 1) {
                     branchEndId = stnList[branchEndId].children[0];
                 }
-                dispatch({
-                    type: 'UPDATE_STATION_BRANCH_POS',
-                    right: stnId,
-                    left: branchEndId,
-                });
-                reduxDispatch(flipStationBranchPosition(branchEndId, stnId));
+                dispatch(flipStationBranchPosition(branchEndId, stnId));
             } else {
                 while (stnList[branchEndId].children.length === 1) {
                     branchEndId = stnList[branchEndId].parents[0];
                 }
-                dispatch({
-                    type: 'UPDATE_STATION_BRANCH_POS',
-                    left: stnId,
-                    right: branchEndId,
-                });
-                reduxDispatch(flipStationBranchPosition(stnId, branchEndId));
+                dispatch(flipStationBranchPosition(stnId, branchEndId));
             }
         }
     };

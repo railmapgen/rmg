@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Button,
@@ -21,7 +21,6 @@ import {
     Switch,
     Tooltip,
 } from '@material-ui/core';
-import { ParamContext } from '../../../context';
 import ColourDialog from '../../colour-diag';
 import NameListItems from './name-list-items';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,37 +38,22 @@ import {
 const StationEditInterchangeTab = (props: { stnId: string }) => {
     const { stnId } = props;
     const { t } = useTranslation();
-    const reduxDispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const theme = useSelector((store: RootState) => store.param.theme);
     const { transfer } = useSelector((store: RootState) => store.param.stn_list[stnId]);
-    const { dispatch } = useContext(ParamContext);
 
     const [osiNameDialog0Opened, setOsiNameDialog0Opened] = React.useState(false);
     const [osiNameDialog1Opened, setOsiNameDialog1Opened] = React.useState(false);
 
-    const isDevOrUat = window.location.hostname === 'localhost' || window.location.pathname.includes('uat');
-
     const addClick = (index: number) => {
         let newInfo: InterchangeInfo = [...theme, '轉綫', 'Line'];
-        dispatch({
-            type: 'ADD_STATION_INTERCHANGE_INFO',
-            stnId,
-            setIdx: index,
-            info: newInfo,
-        });
-        reduxDispatch(addInterchange(stnId, index, newInfo));
+        dispatch(addInterchange(stnId, index, newInfo));
     };
 
     const deleteClick = (setIdx: number, intIdx: number) => {
-        dispatch({
-            type: 'REMOVE_STATION_INTERCHANGE_INFO',
-            stnId,
-            setIdx,
-            intIdx,
-        });
-        reduxDispatch(removeInterchange(stnId, setIdx, intIdx));
+        dispatch(removeInterchange(stnId, setIdx, intIdx));
     };
 
     return (
@@ -89,7 +73,9 @@ const StationEditInterchangeTab = (props: { stnId: string }) => {
             <ListItem>
                 <InterchangeChipSet stnId={stnId} setIndex={0} onDelete={i => deleteClick(0, i)} />
             </ListItem>
-            {/* Out of station transfer */[RmgStyle.MTR, RmgStyle.SHMetro].includes(rmgStyle) && (
+
+            {/* Out of station transfer */}
+            {[RmgStyle.MTR, RmgStyle.SHMetro].includes(rmgStyle) && (
                 <>
                     <Divider />
                     <ListItem>
@@ -105,7 +91,9 @@ const StationEditInterchangeTab = (props: { stnId: string }) => {
                                         style={{ lineHeight: '1rem', whiteSpace: 'pre', marginRight: 5 }}
                                         onClick={() => setOsiNameDialog0Opened(true)}
                                     >
-                                        {transfer.osi_names[0] ? transfer.osi_names[0].join('\r\n') : '車站名\r\nStn Name'}
+                                        {transfer.osi_names[0]
+                                            ? transfer.osi_names[0].join('\r\n')
+                                            : '車站名\r\nStn Name'}
                                     </Button>
                                     <OSINameDialog
                                         open={osiNameDialog0Opened}
@@ -127,7 +115,9 @@ const StationEditInterchangeTab = (props: { stnId: string }) => {
                     </ListItem>
                 </>
             )}
-            {/* Out of system transfer */[RmgStyle.SHMetro].includes(rmgStyle || '') && (
+
+            {/* Out of system transfer */}
+            {[RmgStyle.SHMetro].includes(rmgStyle || '') && (
                 <>
                     <Divider />
                     <ListItem>
@@ -143,7 +133,9 @@ const StationEditInterchangeTab = (props: { stnId: string }) => {
                                         style={{ lineHeight: '1rem', whiteSpace: 'pre', marginRight: 5 }}
                                         onClick={() => setOsiNameDialog1Opened(true)}
                                     >
-                                        {transfer.osi_names[1] ? transfer.osi_names[1].join('\r\n') : '車站名\r\nStn Name'}
+                                        {transfer.osi_names[1]
+                                            ? transfer.osi_names[1].join('\r\n')
+                                            : '車站名\r\nStn Name'}
                                     </Button>
                                     <OSINameDialog
                                         open={osiNameDialog1Opened}
@@ -170,7 +162,7 @@ const StationEditInterchangeTab = (props: { stnId: string }) => {
                     <span>{t('stations.edit.interchange.note')}</span>
                 </ListItem>
             )}
-            {/* MTR more settings */rmgStyle === RmgStyle.MTR && <InterchangeMore stnId={props.stnId} />}
+            {/* MTR more settings */ rmgStyle === RmgStyle.MTR && <InterchangeMore stnId={props.stnId} />}
         </List>
     );
 };
@@ -217,9 +209,8 @@ interface InterchangeChipSetProps {
 const InterchangeChipSet = (props: InterchangeChipSetProps) => {
     const { stnId, setIndex, onDelete } = props;
     const classes = intChipSetStyles();
-    const reduxDispatch = useDispatch();
+    const dispatch = useDispatch();
 
-    const { dispatch } = React.useContext(ParamContext);
     const intInfos = useSelector((store: RootState) => store.param.stn_list[stnId].transfer.info[setIndex]);
 
     const [chipSelected, setChipSelected] = React.useState(-1);
@@ -233,25 +224,11 @@ const InterchangeChipSet = (props: InterchangeChipSetProps) => {
     const nameDialogUpdate = (key: string, value: any) => {
         if (key === 'theme') {
             const newInfo = (value as string[]).concat(Array(2)) as InterchangeInfo;
-            dispatch({
-                type: 'UPDATE_STATION_INTERCHANGE_INFO',
-                stnId,
-                setIdx: setIndex,
-                intIdx: chipSelected,
-                info: newInfo,
-            });
-            reduxDispatch(updateInterchange(stnId, setIndex, chipSelected, newInfo));
+            dispatch(updateInterchange(stnId, setIndex, chipSelected, newInfo));
         }
         if (key === 'name') {
             const newInfo = Array(4).concat(value) as InterchangeInfo;
-            dispatch({
-                type: 'UPDATE_STATION_INTERCHANGE_INFO',
-                stnId,
-                setIdx: setIndex,
-                intIdx: chipSelected,
-                info: newInfo,
-            });
-            reduxDispatch(updateInterchange(stnId, setIndex, chipSelected, newInfo));
+            dispatch(updateInterchange(stnId, setIndex, chipSelected, newInfo));
         }
     };
 
@@ -316,9 +293,7 @@ interface OSINameDialogProps {
 const OSINameDialog = (props: OSINameDialogProps) => {
     const { open, stnId, setIndex, onClose } = props;
     const { t } = useTranslation();
-    const reduxDispatch = useDispatch();
-
-    const { dispatch } = useContext(ParamContext);
+    const dispatch = useDispatch();
 
     const osiName = useSelector((store: RootState) => store.param.stn_list[stnId].transfer.osi_names[setIndex]) || [
         '車站名',
@@ -329,8 +304,7 @@ const OSINameDialog = (props: OSINameDialogProps) => {
         (index: number) =>
         ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
             let newOSIName = osiName.map((val, i) => (i === index ? value : val)) as Name;
-            dispatch({ type: 'UPDATE_STATION_OSI_NAME', stnId, setIndex, name: newOSIName });
-            reduxDispatch(updateStationOsiName(stnId, setIndex, newOSIName));
+            dispatch(updateStationOsiName(stnId, setIndex, newOSIName));
         };
 
     return (
@@ -353,17 +327,15 @@ const OSINameDialog = (props: OSINameDialogProps) => {
 const InterchangeMore = (props: { stnId: string }) => {
     const { stnId } = props;
     const { t } = useTranslation();
-    const reduxDispatch = useDispatch();
+    const dispatch = useDispatch();
 
-    const { dispatch } = React.useContext(ParamContext);
     const { transfer } = useSelector((store: RootState) => store.param.stn_list[stnId]);
 
     return React.useMemo(() => {
         const tickDirecChange = ({ target: { value } }: React.ChangeEvent<{ name?: string; value: unknown }>) => {
             let direction = value;
             if (direction === ShortDirection.left || direction === ShortDirection.right) {
-                dispatch({ type: 'UPDATE_STATION_TICK_DIREC', stnId, direction });
-                reduxDispatch(updateStationTickDirection(stnId, direction as ShortDirection));
+                dispatch(updateStationTickDirection(stnId, direction as ShortDirection));
             }
         };
 
@@ -400,12 +372,7 @@ const InterchangeMore = (props: { stnId: string }) => {
                             color="primary"
                             edge="end"
                             onChange={(_, checked) => {
-                                dispatch({
-                                    type: 'UPDATE_STATION_PAID_AREA',
-                                    stnId,
-                                    isPaid: checked,
-                                });
-                                reduxDispatch(updateStationPaidArea(stnId, checked));
+                                dispatch(updateStationPaidArea(stnId, checked));
                             }}
                             checked={transfer.paid_area}
                         />
@@ -413,5 +380,5 @@ const InterchangeMore = (props: { stnId: string }) => {
                 </ListItem>
             </>
         );
-    }, [stnId, t, dispatch, reduxDispatch, transfer.paid_area, transfer.tick_direc]);
+    }, [stnId, t, dispatch, transfer.paid_area, transfer.tick_direc]);
 };

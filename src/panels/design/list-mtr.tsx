@@ -1,6 +1,5 @@
-import React, { useContext, memo, useMemo, ChangeEvent } from 'react';
+import React, { memo, useMemo, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ParamContext } from '../../context';
 import {
     Divider,
     List,
@@ -59,21 +58,13 @@ export default memo(function DesignListMTR() {
 const NamePosLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const reduxDispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const namePosition = useSelector((store: RootState) => store.param.namePosMTR);
 
-    const { dispatch } = useContext(ParamContext);
-
     return useMemo(() => {
         const handleStaggerChange = (_: ChangeEvent, checked: boolean) => {
-            dispatch({ type: 'SET_TEXT_STAGGER', checked });
-            reduxDispatch(staggerStationNames(checked));
-        };
-
-        const handleFlip = () => {
-            dispatch({ type: 'SET_TEXT_FLIP' });
-            reduxDispatch(flipStationNames());
+            dispatch(staggerStationNames(checked));
         };
 
         return (
@@ -97,37 +88,34 @@ const NamePosLi = () => {
                     <ListItem className={classes.nested}>
                         <ListItemText primary={t('design.txtFlip.flipText')} />
                         <Divider orientation="vertical" flexItem className={classes.divider} />
-                        <Button variant="outlined" color="primary" onClick={handleFlip}>
+                        <Button variant="outlined" color="primary" onClick={() => dispatch(flipStationNames())}>
                             {t('design.txtFlip.flip')}
                         </Button>
                     </ListItem>
                 </List>
             </>
         );
-    }, [namePosition.isStagger, classes.nested, classes.divider, dispatch, reduxDispatch, t]);
+    }, [namePosition.isStagger, classes.nested, classes.divider, dispatch, t]);
 };
 
 const CustomiseDest = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const reduxDispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const customisedMtrDestination = useSelector((store: RootState) => store.param.customiseMTRDest);
-    const { dispatch } = React.useContext(ParamContext);
     const [open, setOpen] = React.useState(
         customisedMtrDestination.isLegacy || customisedMtrDestination.terminal !== false
     );
 
     return useMemo(() => {
         const handleShowNameChange = (_: ChangeEvent, checked: boolean) => {
-            dispatch({ type: 'SET_DEST_LEGACY', isLegacy: checked });
-            reduxDispatch(toggleLineNameBeforeDestination(checked));
+            dispatch(toggleLineNameBeforeDestination(checked));
         };
 
         const handleIsCustomisedChange = (_: ChangeEvent, checked: boolean) => {
             const customisedName = checked ? (['', ''] as Name) : false;
-            dispatch({ type: 'SET_TERMINAL_OVERRIDE', terminal: customisedName });
-            reduxDispatch(customiseDestinationName(customisedName));
+            dispatch(customiseDestinationName(customisedName));
         };
 
         const handleNameChange =
@@ -137,8 +125,7 @@ const CustomiseDest = () => {
                     customisedMtrDestination.terminal !== false
                         ? (customisedMtrDestination.terminal.map((val, i) => (i === index ? value : val)) as Name)
                         : false;
-                dispatch({ type: 'SET_TERMINAL_OVERRIDE', terminal });
-                reduxDispatch(customiseDestinationName(terminal));
+                dispatch(customiseDestinationName(terminal));
             };
 
         return (
@@ -218,6 +205,5 @@ const CustomiseDest = () => {
         classes.grid,
         t,
         dispatch,
-        reduxDispatch,
     ]);
 };

@@ -12,7 +12,6 @@ import {
     ListItemIcon,
     Divider,
 } from '@material-ui/core';
-import { ParamContext } from '../../context';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux';
 import { ChangeEvent } from 'react';
@@ -43,23 +42,20 @@ export default React.memo(function LayoutGZMTR() {
 const DirectionGZLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const reduxDispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const directionIndicatorX = useSelector((store: RootState) => store.param.direction_gz_x);
     const directionIndicatorY = useSelector((store: RootState) => store.param.direction_gz_y);
-    const { dispatch } = React.useContext(ParamContext);
 
     const [isOpen, setIsOpen] = React.useState(false);
 
     return React.useMemo(() => {
         const handleXChange = (_: ChangeEvent<{}>, value: number | number[]) => {
-            dispatch({ type: 'SET_DIRECTION_GZ_X', value: value as number });
-            reduxDispatch(setDirectionIndicatorX(value as number));
+            dispatch(setDirectionIndicatorX(value as number));
         };
 
         const handleYChange = (_: ChangeEvent<{}>, value: number | number[]) => {
-            dispatch({ type: 'SET_DIRECTION_GZ_Y', value: value as number });
-            reduxDispatch(setDirectionIndicatorY(value as number));
+            dispatch(setDirectionIndicatorY(value as number));
         };
 
         return (
@@ -106,14 +102,5 @@ const DirectionGZLi = () => {
                 </Collapse>
             </>
         );
-    }, [
-        directionIndicatorX,
-        directionIndicatorY,
-        isOpen,
-        classes.nestedList,
-        classes.slider,
-        t,
-        dispatch,
-        reduxDispatch,
-    ]);
+    }, [directionIndicatorX, directionIndicatorY, isOpen, classes.nestedList, classes.slider, t, dispatch]);
 };
