@@ -74,11 +74,10 @@ const StationEntry = (props: { stnId: string; isSelected: boolean; onAction: (ac
     const { stnId, isSelected, onAction } = props;
     const { t } = useTranslation();
     const classes = useStyles();
-    const reduxDispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const stationInfo = useSelector((store: RootState) => store.param.stn_list[stnId]);
-    const { dispatch } = useContext(ParamContext);
 
     const name = stationInfo?.name || ['', ''];
     const num = stationInfo?.num || '00';
@@ -86,8 +85,7 @@ const StationEntry = (props: { stnId: string; isSelected: boolean; onAction: (ac
     const [toggleEl, setToggleEl] = useState<null | HTMLElement>(null);
 
     const handleCurrent = () => {
-        dispatch({ type: 'SET_CURRENT_STATION', stnId });
-        reduxDispatch(setCurrentStation(stnId));
+        dispatch(setCurrentStation(stnId));
         setToggleEl(null);
     };
 

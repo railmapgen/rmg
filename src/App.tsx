@@ -86,7 +86,6 @@ export default function App() {
 }
 
 const AppBody = () => {
-    const dispatch = () => {}; // dummy dispatch callback
     const param = useSelector((store: RootState) => store.param);
     const paramString = JSON.stringify(param);
     useEffect(() => {
@@ -123,7 +122,7 @@ const AppBody = () => {
 
     return (
         <>
-            <ParamContext.Provider value={{ dispatch, branches, routes, deps, tpo }}>
+            <ParamContext.Provider value={{ branches, routes, deps, tpo }}>
                 <div style={{ overflowY: 'auto' }}>
                     <SVGs />
                 </div>
