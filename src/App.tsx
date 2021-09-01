@@ -1,12 +1,14 @@
-import React, { useMemo, useEffect, useReducer } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import AppAppBar from './app-appbar';
 import SVGs from './svgs';
 import Panels from './panels';
 import { getBranches, useTpo, getRoutes } from './methods';
-import { ParamContext, paramReducer } from './context';
+import { ParamContext } from './context';
 import { createMuiTheme, ThemeProvider, useMediaQuery, LinearProgress } from '@material-ui/core';
-import { RMGParam, StationInfo } from './constants/constants';
+import { StationInfo } from './constants/constants';
+import { useSelector } from 'react-redux';
+import { RootState } from './redux';
 
 const darkTheme = createMuiTheme({
     palette: {
@@ -84,7 +86,8 @@ export default function App() {
 }
 
 const AppBody = () => {
-    const [param, dispatch] = useReducer(paramReducer, JSON.parse(localStorage.rmgParam) as RMGParam);
+    const dispatch = () => {}; // dummy dispatch callback
+    const param = useSelector((store: RootState) => store.param);
     const paramString = JSON.stringify(param);
     useEffect(() => {
         window.rmgStorage.writeFile('rmgParam', paramString).then();
@@ -120,16 +123,7 @@ const AppBody = () => {
 
     return (
         <>
-            <ParamContext.Provider
-                value={{
-                    param,
-                    dispatch,
-                    branches,
-                    routes,
-                    deps,
-                    tpo,
-                }}
-            >
+            <ParamContext.Provider value={{ dispatch, branches, routes, deps, tpo }}>
                 <div style={{ overflowY: 'auto' }}>
                     <SVGs />
                 </div>
