@@ -1,5 +1,7 @@
 import React, { memo, useContext, useMemo, forwardRef, useRef, useState, useEffect } from 'react';
 import { ParamContext } from '../../context';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux';
 
 export default memo(function DestinationSHMetro() {
     return (
@@ -20,7 +22,8 @@ const DefsSHMetro = memo(() => (
 ));
 
 const InfoSHMetro = () => {
-    const { param, routes } = useContext(ParamContext);
+    const { routes } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
 
     // for each left valid destinations, get the name from id
     const validDests = [
@@ -35,7 +38,7 @@ const InfoSHMetro = () => {
     ];
     const destNames: string[][] = [
         validDests.map(id => param.stn_list[id].name[0]),
-        validDests.map(id => param.stn_list[id].name[1])
+        validDests.map(id => param.stn_list[id].name[1]),
     ];
 
     const terminalEl = useRef<SVGGElement | null>(null);
@@ -91,7 +94,7 @@ const InfoSHMetro = () => {
 };
 
 const Terminal = forwardRef((props: { destNames: string[][] }, ref: React.Ref<SVGGElement>) => {
-    const { param } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
 
     return (
         <g ref={ref} transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.destination - 36},145)`}>
@@ -131,7 +134,7 @@ const Terminal = forwardRef((props: { destNames: string[][] }, ref: React.Ref<SV
 });
 
 const PlatformNum = () => {
-    const { param } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
 
     // Total width: 325
     return (
@@ -148,7 +151,7 @@ const PlatformNum = () => {
 };
 
 const LineNameBoxText = () => {
-    const { param } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
     const { line_name } = param;
 
     const boxX = param.direction === 'l' ? param.svgWidth.destination - 36 - 132 : 36 + 132;
@@ -174,7 +177,7 @@ const LineNameBoxText = () => {
 };
 
 const LineNameBoxNumber = () => {
-    const { param } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
 
     const [lineNumber, lineNameRes] = param.line_name[0].match(/^[\w\d]+|.+/g) as string[];
 
