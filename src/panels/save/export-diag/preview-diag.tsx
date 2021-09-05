@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Button,
@@ -20,9 +20,11 @@ import {
 } from '@material-ui/core';
 
 import { test } from './utils';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
+import { setCurrentStation } from '../../../redux/param/action';
+import { ParamContext } from '../../../context';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -74,6 +76,9 @@ export default function PreviewDialog(props: Props) {
     const { t } = useTranslation();
     const classes = useStyles();
 
+    const reduxDispatch = useDispatch();
+    // const { dispatch } = useContext(ParamContext);
+
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
 
     const [svgEl, setSvgEl] = useState(document.createElement('svg') as Element as SVGSVGElement);
@@ -124,6 +129,10 @@ export default function PreviewDialog(props: Props) {
             // let MAX_WIDTH = Math.min(window.innerWidth, 1412) - 64 - 24 * 2;
             // let MAX_HEIGHT = window.innerHeight - 64 - 64 - 52 - 8 * 2;
             // let scaleFactor = Math.min(MAX_WIDTH / thisSVGWidth, MAX_HEIGHT / thisSVGHeight);
+
+            let stnId = 'iwf6'
+            // dispatch({ type: 'SET_CURRENT_STATION', stnId })
+            reduxDispatch(setCurrentStation(stnId))
 
             let elem = document.querySelector(`svg#${props.canvas}`)!.cloneNode(true) as SVGSVGElement;
             // elem.setAttribute('width', (thisSVGWidth * scaleFactor).toString());
