@@ -1,4 +1,4 @@
-import React, { memo, useContext } from 'react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Checkbox,
@@ -12,7 +12,6 @@ import {
     ListItemText,
     Select,
 } from '@material-ui/core';
-import { ParamContext } from '../../../context';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux';
 import { Facilities, RmgStyle, Services } from '../../../constants/constants';
@@ -41,8 +40,7 @@ export default memo(function MoreTab(props: { stnId: string }) {
 const FacilityLi = (props: { stnId: string }) => {
     const { stnId } = props;
     const { t } = useTranslation();
-    const reduxDispatch = useDispatch();
-    const { dispatch } = useContext(ParamContext);
+    const dispatch = useDispatch();
 
     const { facility } = useSelector((store: RootState) => store.param.stn_list[stnId]);
     return (
@@ -56,12 +54,7 @@ const FacilityLi = (props: { stnId: string }) => {
                     native
                     value={facility}
                     onChange={({ target: { value } }) => {
-                        dispatch({
-                            type: 'UPDATE_STATION_FACILITY',
-                            stnId: stnId,
-                            facility: value as Facilities,
-                        });
-                        reduxDispatch(updateStationFacility(stnId, value as Facilities));
+                        dispatch(updateStationFacility(stnId, value as Facilities));
                     }}
                 >
                     {Object.values(Facilities).map(f => (
@@ -78,8 +71,7 @@ const FacilityLi = (props: { stnId: string }) => {
 const ServiceLi = (props: { stnId: string; providedServices: Services[] }) => {
     const { stnId, providedServices } = props;
     const { t } = useTranslation();
-    const reduxDispatch = useDispatch();
-    const { dispatch } = useContext(ParamContext);
+    const dispatch = useDispatch();
 
     const { services } = useSelector((store: RootState) => store.param.stn_list[stnId]);
 
@@ -87,16 +79,10 @@ const ServiceLi = (props: { stnId: string; providedServices: Services[] }) => {
         (service: Services) =>
         ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
             if (service === Services.local) return; // cannot remove local service
-            dispatch({
-                type: 'UPDATE_STATION_SERVICES',
-                stnId: props.stnId,
-                serviceId: service,
-                isChecked: checked,
-            });
             if (checked) {
-                reduxDispatch(addStationService(props.stnId, service));
+                dispatch(addStationService(props.stnId, service));
             } else {
-                reduxDispatch(removeStationService(props.stnId, service));
+                dispatch(removeStationService(props.stnId, service));
             }
         };
     return (

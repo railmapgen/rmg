@@ -1,6 +1,7 @@
-import React, { useContext, useRef, memo } from 'react';
-import { ParamContext } from '../../../../context';
-import { InterchangeInfo, Name, PanelTypeGZMTR, PanelTypeShmetro } from "../../../../constants/constants";
+import React, { useRef, memo } from 'react';
+import { InterchangeInfo, Name, PanelTypeGZMTR, PanelTypeShmetro } from '../../../../constants/constants';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../redux';
 
 interface Props {
     stnId: string;
@@ -8,7 +9,7 @@ interface Props {
 }
 
 const StationSHMetro = (props: Props) => {
-    const { param } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
     const stnInfo = param.stn_list[props.stnId];
 
     // shift station name if the line bifurcate here
@@ -17,7 +18,7 @@ const StationSHMetro = (props: Props) => {
         (param.direction === 'r' ? -1 : 1);
 
     let stationIconStyle = '';
-    let stationIconColor: {[pos: string]: string} = {};
+    let stationIconColor: { [pos: string]: string } = {};
     if (param.info_panel_type === 'sh2020') {
         if (stnInfo.services.length === 3) stationIconStyle = 'stn_sh_2020_direct';
         else if (stnInfo.services.length === 2) stationIconStyle = 'stn_sh_2020_express';
@@ -27,7 +28,8 @@ const StationSHMetro = (props: Props) => {
         // param.info_panel_type === 'sh' or others (from other styles)
         if (stnInfo.services.length === 3) stationIconStyle = 'direct_sh';
         else if (stnInfo.services.length === 2) stationIconStyle = 'express_sh';
-        else if ([...stnInfo.transfer.info[0], ...stnInfo.transfer.info[1] || []].length > 0) stationIconStyle = 'int2_sh';
+        else if ([...stnInfo.transfer.info[0], ...(stnInfo.transfer.info[1] || [])].length > 0)
+            stationIconStyle = 'int2_sh';
         else stationIconStyle = 'stn_sh';
         stationIconColor.stroke = props.stnState === -1 ? 'gray' : 'var(--rmg-theme-colour)';
     }
@@ -36,7 +38,7 @@ const StationSHMetro = (props: Props) => {
         <>
             <use
                 xlinkHref={`#${stationIconStyle}`}
-                {...stationIconColor}  // different styles use either `fill` or `stroke`
+                {...stationIconColor} // different styles use either `fill` or `stroke`
             />
             <g transform={`translate(${branchNameDX},0)`}>
                 <StationNameGElement

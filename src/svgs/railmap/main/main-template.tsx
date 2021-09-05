@@ -2,9 +2,12 @@ import React, { useContext, useMemo } from 'react';
 import { ParamContext } from '../../../context';
 import { adjacencyList, criticalPathMethod, getXShareMTR } from '../methods/share';
 import { StationDict } from '../../../constants/constants';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux';
 
 const MainTemplate = () => {
-    const { param, branches } = useContext(ParamContext);
+    const { branches } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
 
     const adjMat = adjacencyList(param.stn_list, leftWideFactor, rightWideFactor);
     const criticalPath = useMemo(

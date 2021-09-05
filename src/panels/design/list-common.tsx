@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useContext, useMemo } from 'react';
+import React, { ChangeEvent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Button,
@@ -16,7 +16,6 @@ import {
     TextField,
 } from '@material-ui/core';
 import ColourDialog from '../colour-diag';
-import { ParamContext } from '../../context';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux';
 import { Name, RmgStyle, ShortDirection } from '../../constants/constants';
@@ -35,24 +34,20 @@ const useStyles = makeStyles(theme =>
 
 const DesignList = () => {
     const { t } = useTranslation();
-    const reduxDispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const lineName = useSelector((store: RootState) => store.param.line_name);
     const theme = useSelector((store: RootState) => store.param.theme);
 
-    const { dispatch } = React.useContext(ParamContext);
-
     const [isCDiagOpen, setIsCDiagOpen] = React.useState(false);
 
     const nameDialogUpdate = (key: string, value: any) => {
         if (key === 'name') {
-            dispatch({ type: 'SET_LINE_NAME', name: Object.values(value) as Name });
-            reduxDispatch(setLineName(Object.values(value) as Name));
+            dispatch(setLineName(Object.values(value) as Name));
         }
         if (key === 'theme') {
-            dispatch({ type: 'SET_THEME', theme: value });
-            reduxDispatch(setTheme(value));
+            dispatch(setTheme(value));
         }
     };
 
@@ -98,15 +93,13 @@ export default DesignList;
 const DirectionLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const reduxDispatch = useDispatch();
-    const { dispatch } = React.useContext(ParamContext);
+    const dispatch = useDispatch();
 
     const direction = useSelector((store: RootState) => store.param.direction);
 
     return React.useMemo(() => {
         const handleDirectionChange = () => {
-            dispatch({ type: 'SET_DIRECTION' });
-            reduxDispatch(setDirection(direction === ShortDirection.left ? ShortDirection.right : ShortDirection.left));
+            dispatch(setDirection(direction === ShortDirection.left ? ShortDirection.right : ShortDirection.left));
         };
 
         return (
@@ -121,20 +114,18 @@ const DirectionLi = () => {
                 </Button>
             </ListItem>
         );
-    }, [classes.dividerVertical, direction, t, dispatch, reduxDispatch]);
+    }, [classes.dividerVertical, direction, t, dispatch]);
 };
 
 const PlatformNumLi = () => {
     const { t } = useTranslation();
-    const reduxDispatch = useDispatch();
-    const { dispatch } = React.useContext(ParamContext);
+    const dispatch = useDispatch();
 
     const platform = useSelector((store: RootState) => store.param.platform_num);
 
     return React.useMemo(() => {
         const handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-            dispatch({ type: 'SET_PLATFORM', platform: value });
-            reduxDispatch(setPlatform(value));
+            dispatch(setPlatform(value));
         };
 
         return (
@@ -146,31 +137,27 @@ const PlatformNumLi = () => {
                 <TextField value={platform} onChange={handleChange} />
             </ListItem>
         );
-    }, [platform, dispatch, reduxDispatch, t]);
+    }, [platform, dispatch, t]);
 };
 
 const PlatformNumSHMetroLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const reduxDispatch = useDispatch();
-    const { dispatch } = useContext(ParamContext);
+    const dispatch = useDispatch();
 
     const platform = useSelector((store: RootState) => store.param.platform_num);
 
     return useMemo(() => {
         const handleSwitch = (_: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
             if (checked) {
-                dispatch({ type: 'SET_PLATFORM', platform: '' });
-                reduxDispatch(setPlatform(''));
+                dispatch(setPlatform(''));
             } else {
-                dispatch({ type: 'SET_PLATFORM', platform: false });
-                reduxDispatch(setPlatform(false));
+                dispatch(setPlatform(false));
             }
         };
 
         const handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-            dispatch({ type: 'SET_PLATFORM', platform: value });
-            reduxDispatch(setPlatform(value));
+            dispatch(setPlatform(value));
         };
 
         return (
@@ -193,5 +180,5 @@ const PlatformNumSHMetroLi = () => {
                 </Collapse>
             </>
         );
-    }, [platform, classes.nestedList, t, reduxDispatch, dispatch]);
+    }, [platform, classes.nestedList, t, dispatch]);
 };

@@ -1,7 +1,6 @@
-import React, { useContext, useState, memo } from 'react';
+import React, { useState, memo } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
-import { ParamContext } from '../../context';
 import { removeStation } from './utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentStation, setStationsBulk } from '../../redux/param/action';
@@ -15,9 +14,8 @@ interface Props {
 export default function StationDeleteDialog(props: Props & { stnId: string }) {
     const { stnId, open, onClose } = props;
     const { t } = useTranslation();
-    const reduxDispatch = useDispatch();
+    const dispatch = useDispatch();
 
-    const { dispatch } = useContext(ParamContext);
     const stnList = useSelector((store: RootState) => store.param.stn_list);
     const currentStationIndex = useSelector((store: RootState) => store.param.current_stn_idx);
 
@@ -31,11 +29,9 @@ export default function StationDeleteDialog(props: Props & { stnId: string }) {
             } else {
                 if (currentStationIndex === stnId) {
                     let newCurrentId = Object.keys(res).filter(id => !['linestart', 'lineend'].includes(id))[0];
-                    dispatch({ type: 'SET_CURRENT_STATION', stnId: newCurrentId });
-                    reduxDispatch(setCurrentStation(newCurrentId));
+                    dispatch(setCurrentStation(newCurrentId));
                 }
-                dispatch({ type: 'UPDATE_STATION_LIST', stnList: res });
-                reduxDispatch(setStationsBulk(res));
+                dispatch(setStationsBulk(res));
             }
         }
         onClose();
