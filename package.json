@@ -51,10 +51,10 @@
         "deploy": "gh-pages -d build",
         "testdeploy": "gh-pages -d build --repo https://github.com/wongchito/rmg-test-page.git",
         "electron-dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
-        "electron-package": "./node_modules/.bin/electron-builder -c.extraMetadata.main=build/start-electron.js",
-        "electron-package-win": ".\\node_modules\\.bin\\electron-builder -c.extraMetadata.main=build/start-electron.js"
+        "electron-package": "./node_modules/.bin/electron-builder -c.extraMetadata.main=build/electron.js",
+        "electron-package-win": ".\\node_modules\\.bin\\electron-builder -c.extraMetadata.main=build/electron.js"
     },
-    "main": "public/start-electron.js",
+    "main": "public/electron.js",
     "eslintConfig": {
         "extends": "react-app"
     },
