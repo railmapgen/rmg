@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo, ChangeEvent } from 'react';
+import React, { useState, useMemo, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -27,7 +27,6 @@ import {
     Select,
 } from '@material-ui/core';
 
-import { ParamContext } from '../../context';
 import { PanelTypeGZMTR, Note } from '../../constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux';
