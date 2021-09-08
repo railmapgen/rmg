@@ -30,14 +30,6 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
-            filename: 'bj2',
-            name: {
-                en: 'Line 2 by AnDanJuneUnderline',
-                'zh-Hans': '2号线 来自 AnDanJuneUnderline',
-                'zh-Hant': '2號線 來自 AnDanJuneUnderline',
-            },
-        },
-        {
             filename: 'bj4',
             name: {
                 en: 'Line 4 by AnDanJuneUnderline',
@@ -67,14 +59,6 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
                 en: 'Batong Line by AnDanJuneUnderline',
                 'zh-Hans': '八通线 来自 AnDanJuneUnderline',
                 'zh-Hant': '八通線 來自 AnDanJuneUnderline',
-            },
-        },
-        {
-            filename: 'cae',
-            name: {
-                en: 'Capital Airport Express by AnDanJuneUnderline',
-                'zh-Hans': '首都机场线 来自 AnDanJuneUnderline',
-                'zh-Hant': '首都機場線 來自 AnDanJuneUnderline',
             },
         },
     ],

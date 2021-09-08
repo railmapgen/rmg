@@ -99,11 +99,11 @@ export default React.memo(
     function StationAddDialog(props: StationAddDialogProps) {
         const { t } = useTranslation();
         const classes = useStyles();
-        const reduxDispatch = useDispatch();
+        const dispatch = useDispatch();
 
         const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
         const stnList = useSelector((store: RootState) => store.param.stn_list);
-        const { dispatch, tpo } = useContext(ParamContext);
+        const { tpo } = useContext(ParamContext);
 
         const allLocs = {
             centre: t('stations.add.centre'),
@@ -165,8 +165,7 @@ export default React.memo(
                     end as string,
                     stnList
                 );
-                dispatch({ type: 'UPDATE_STATION_LIST', stnList: res });
-                reduxDispatch(setStationsBulk(res));
+                dispatch(setStationsBulk(res));
                 props.onClose(newId);
             }
         };

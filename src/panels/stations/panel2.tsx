@@ -1,7 +1,5 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { createStyles, Grid, makeStyles } from '@material-ui/core';
-import { ParamContext } from '../../context';
-
 import StationList from './station-list';
 import StationAddDialog from './add-diag';
 import StationEditDialog from './edit-diag';
@@ -28,10 +26,9 @@ const useStyles = makeStyles(() =>
 
 const PanelStations2 = () => {
     const classes = useStyles();
-    const reduxDispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
-    const { dispatch } = useContext(ParamContext);
 
     const [stnSelected, setStnSelected] = useState('');
     const [isOpen, setIsOpen] = useState(false);
@@ -59,8 +56,7 @@ const PanelStations2 = () => {
             setIsAddDialogOpen(true);
         }
         if (action === 'reverse') {
-            dispatch({ type: 'REVERSE_STATIONS' });
-            reduxDispatch(reverseStations());
+            dispatch(reverseStations());
         }
         if (action === 'autonum') {
             setIsAutoNumDialogOpen(true);

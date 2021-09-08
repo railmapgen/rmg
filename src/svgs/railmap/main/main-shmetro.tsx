@@ -3,6 +3,8 @@ import { ParamContext } from '../../../context';
 import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState } from '../methods/share';
 import StationSHMetro from './station/station-shmetro';
 import { Services } from '../../../constants/constants';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux';
 
 interface servicesPath {
     main: string[];
@@ -11,7 +13,8 @@ interface servicesPath {
 }
 
 const MainSHMetro = () => {
-    const { param, routes, branches, deps } = useContext(ParamContext);
+    const { routes, branches, deps } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
 
     const adjMat = adjacencyList(
         param.stn_list,
@@ -308,7 +311,7 @@ interface StationGroupProps {
 }
 
 const StationGroup = (props: StationGroupProps) => {
-    const { param } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
 
     return (
         <g>
@@ -324,7 +327,7 @@ const StationGroup = (props: StationGroupProps) => {
 };
 
 const ServicesElements = (props: { servicesLevel: Services[]; direction: 'l' | 'r'; dy: number; lineXs: number[] }) => {
-    const { param } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
 
     if (props.servicesLevel.length === 1) return <></>;
 
@@ -373,24 +376,26 @@ const ServicesElements = (props: { servicesLevel: Services[]; direction: 'l' | '
 };
 
 const DirectionElements = () => {
-    const { param } = useContext(ParamContext);
+    const param = useSelector((store: RootState) => store.param);
 
-    return React.useMemo(()=>(
-        <g
-            transform={`translate(${param.direction === 'l' ? 50 : param.svgWidth.railmap - 150},${
-                -param.svg_height + 100
-            })`}
-        >
-            <text className="rmg-name__zh">列车前进方向</text>
-            <path
-                d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
-                fill="var(--rmg-theme-colour)"
-                transform={`translate(${param.direction === 'l' ? -30 : 125},-5)rotate(${
-                    param.direction === 'l' ? 0 : 180
-                })scale(0.15)`}
-            />
-        </g>
-    ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [param.direction, param.svgWidth.railmap]);
+    return React.useMemo(
+        () => (
+            <g
+                transform={`translate(${param.direction === 'l' ? 50 : param.svgWidth.railmap - 150},${
+                    -param.svg_height + 100
+                })`}
+            >
+                <text className="rmg-name__zh">列车前进方向</text>
+                <path
+                    d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
+                    fill="var(--rmg-theme-colour)"
+                    transform={`translate(${param.direction === 'l' ? -30 : 125},-5)rotate(${
+                        param.direction === 'l' ? 0 : 180
+                    })scale(0.15)`}
+                />
+            </g>
+        ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [param.direction, param.svgWidth.railmap]
+    );
 };

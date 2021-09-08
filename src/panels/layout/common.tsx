@@ -1,4 +1,4 @@
-import React, { ChangeEvent, memo, useContext, useMemo, useState } from 'react';
+import React, { ChangeEvent, memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     TextField,
@@ -14,7 +14,6 @@ import {
     Divider,
     InputAdornment,
 } from '@material-ui/core';
-import { ParamContext } from '../../context';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux';
 import { canvasConfig, CanvasType, RmgStyle } from '../../constants/constants';
@@ -64,9 +63,7 @@ export default memo(function LayoutCommon() {
 const SizeLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const reduxDispatch = useDispatch();
-
-    const { dispatch } = useContext(ParamContext);
+    const dispatch = useDispatch();
 
     const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
     const svgHeight = useSelector((store: RootState) => store.param.svg_height);
@@ -78,19 +75,13 @@ const SizeLi = () => {
         (canvas: CanvasType) =>
         ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
             if (!isNaN(Number(value))) {
-                dispatch({
-                    type: 'SET_WIDTH',
-                    targetId: canvas,
-                    value: Number(value),
-                });
-                reduxDispatch(setSvgWidth(Number(value), canvas));
+                dispatch(setSvgWidth(Number(value), canvas));
             }
         };
 
     const handleSvgHeightChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
         if (!isNaN(Number(value))) {
-            dispatch({ type: 'SET_HEIGHT', value: Number(value) });
-            reduxDispatch(setSvgHeight(Number(value)));
+            dispatch(setSvgHeight(Number(value)));
         }
     };
 
@@ -145,15 +136,13 @@ const SizeLi = () => {
 const YLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const reduxDispatch = useDispatch();
-    const { dispatch } = useContext(ParamContext);
+    const dispatch = useDispatch();
 
     const yPercentage = useSelector((store: RootState) => store.param.y_pc);
 
     return useMemo(() => {
         const handleSliderChange = (_: ChangeEvent<{}>, value: number | number[]) => {
-            dispatch({ type: 'SET_Y', value: value as number });
-            reduxDispatch(setYPercentage(value as number));
+            dispatch(setYPercentage(value as number));
         };
 
         return (
@@ -175,21 +164,19 @@ const YLi = () => {
                 />
             </ListItem>
         );
-    }, [yPercentage, classes.slider, t, dispatch, reduxDispatch]);
+    }, [yPercentage, classes.slider, t, dispatch]);
 };
 
 const BranchSpacingLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const reduxDispatch = useDispatch();
-    const { dispatch } = useContext(ParamContext);
+    const dispatch = useDispatch();
 
     const branchSpacing = useSelector((store: RootState) => store.param.branch_spacing);
 
     return useMemo(() => {
         const handleSliderChange = (_: ChangeEvent<{}>, value: number | number[]) => {
-            dispatch({ type: 'SET_BRANCH_SPACING', value: value as number });
-            reduxDispatch(setBranchSpacing(value as number));
+            dispatch(setBranchSpacing(value as number));
         };
 
         return (
@@ -211,21 +198,19 @@ const BranchSpacingLi = () => {
                 />
             </ListItem>
         );
-    }, [branchSpacing, classes.slider, t, dispatch, reduxDispatch]);
+    }, [branchSpacing, classes.slider, t, dispatch]);
 };
 
 const PaddingLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const reduxDispatch = useDispatch();
-    const { dispatch } = useContext(ParamContext);
+    const dispatch = useDispatch();
 
     const paddingPercentage = useSelector((store: RootState) => store.param.padding);
 
     return useMemo(() => {
         const handleSliderChange = (_: ChangeEvent<{}>, value: number | number[]) => {
-            dispatch({ type: 'SET_PADDING', value: value as number });
-            reduxDispatch(setPaddingPercentage(value as number));
+            dispatch(setPaddingPercentage(value as number));
         };
 
         return (
@@ -248,5 +233,5 @@ const PaddingLi = () => {
                 />
             </ListItem>
         );
-    }, [paddingPercentage, classes.slider, t, dispatch, reduxDispatch]);
+    }, [paddingPercentage, classes.slider, t, dispatch]);
 };
