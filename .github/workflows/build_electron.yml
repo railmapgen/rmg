@@ -1,6 +1,6 @@
 name: Build electron
 
-on: push
+on: [push, workflow_dispatch]
 
 jobs:
   release:
