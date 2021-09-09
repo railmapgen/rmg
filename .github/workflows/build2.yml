@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
-      - run: npm ci
+      - run: npm i
 
       - name: Clone UAT repo
         run: git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.UAT_REPO_NAME }}.git

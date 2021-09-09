@@ -1,6 +1,5 @@
 import StorageLocalStorage from './storageLocalStorage';
 import StorageService from './storageService';
-import StorageIndexedDB from './storageIndexedDB';
 
 export default async function getRmgStorage(): Promise<StorageService> {
     if (!window.indexedDB) {
