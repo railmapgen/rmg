@@ -1,4 +1,4 @@
-name: Build electron
+name: Build Electron
 
 on: push
 
