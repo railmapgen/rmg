@@ -1,4 +1,4 @@
-import React, { ChangeEvent, memo, useMemo, useState } from 'react';
+import React, { ChangeEvent, memo, useMemo, useState, Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     TextField,
@@ -85,51 +85,47 @@ const SizeLi = () => {
         }
     };
 
-    return useMemo(
-        () => (
-            <>
-                <ListItem button onClick={() => setIsOpen(prevOpen => !prevOpen)}>
-                    <ListItemIcon>
-                        <Icon>panorama_horizontal</Icon>
-                    </ListItemIcon>
-                    <ListItemText primary={t('layout.size.title')} />
-                    {isOpen ? <Icon color="action">expand_less</Icon> : <Icon color="action">expand_more</Icon>}
-                </ListItem>
-                <Collapse in={isOpen} unmountOnExit>
-                    <List component="div" disablePadding className={classes.nestedList}>
-                        {canvasConfig[rmgStyle].map(canvas => (
-                            <React.Fragment key={canvas}>
-                                <ListItem>
-                                    <ListItemText primary={t('layout.size.width.' + canvas)} />
-                                    <TextField
-                                        value={svgWidths[canvas].toString()}
-                                        onChange={handleSvgWidthChange(canvas)}
-                                        className={classes.textField}
-                                        InputProps={{
-                                            endAdornment: <InputAdornment position="end">px</InputAdornment>,
-                                        }}
-                                    />
-                                </ListItem>
-                                <Divider variant="middle" />
-                            </React.Fragment>
-                        ))}
-                        <ListItem>
-                            <ListItemText primary={t('layout.size.height')} />
-                            <TextField
-                                value={svgHeight.toString()}
-                                onChange={handleSvgHeightChange}
-                                className={classes.textField}
-                                InputProps={{
-                                    endAdornment: <InputAdornment position="end">px</InputAdornment>,
-                                }}
-                            />
-                        </ListItem>
-                    </List>
-                </Collapse>
-            </>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [JSON.stringify(svgWidths), svgHeight, isOpen, classes.nestedList]
+    return (
+        <>
+            <ListItem button onClick={() => setIsOpen(prevOpen => !prevOpen)}>
+                <ListItemIcon>
+                    <Icon>panorama_horizontal</Icon>
+                </ListItemIcon>
+                <ListItemText primary={t('layout.size.title')} />
+                {isOpen ? <Icon color="action">expand_less</Icon> : <Icon color="action">expand_more</Icon>}
+            </ListItem>
+            <Collapse in={isOpen} unmountOnExit>
+                <List component="div" disablePadding className={classes.nestedList}>
+                    {canvasConfig[rmgStyle].map(canvas => (
+                        <Fragment key={canvas + '.width'}>
+                            <ListItem>
+                                <ListItemText primary={t('layout.size.width.' + canvas)} />
+                                <TextField
+                                    defaultValue={svgWidths[canvas].toString()}
+                                    onChange={handleSvgWidthChange(canvas)}
+                                    className={classes.textField}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">px</InputAdornment>,
+                                    }}
+                                />
+                            </ListItem>
+                            <Divider variant="middle" />
+                        </Fragment>
+                    ))}
+                    <ListItem>
+                        <ListItemText primary={t('layout.size.height')} />
+                        <TextField
+                            value={svgHeight.toString()}
+                            onChange={handleSvgHeightChange}
+                            className={classes.textField}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">px</InputAdornment>,
+                            }}
+                        />
+                    </ListItem>
+                </List>
+            </Collapse>
+        </>
     );
 };
 
