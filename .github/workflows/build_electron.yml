@@ -1,7 +1,9 @@
 name: Build Electron
 
 on:
-  workflow_dispatch:
+  push:
+    tags:
+      - rmg-*
 
 jobs:
   release:
