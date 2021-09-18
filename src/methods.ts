@@ -1,4 +1,3 @@
-import React from 'react';
 import { StationDict } from './constants/constants';
 
 /**
@@ -149,38 +148,4 @@ export const getRoutes = (stnList: StationDict) => {
     }
 
     return branches;
-};
-
-/**
- * Memo of topological ordering for all stations by stacking all branches into an one-dimensional array.
- * @param branches Branches from `useBranches` memo
- */
-export const useTpo = (branches: string[][]) => {
-    const [tpo, setTpo] = React.useState([] as string[]);
-
-    React.useEffect(
-        () => {
-            console.log('computing tpo');
-            if (branches.length === 1) {
-                setTpo(branches[0].slice(1, -1));
-                return;
-            } else {
-                let res = branches
-                    .reduce(
-                        (acc, cur) => {
-                            let idx = acc.indexOf(cur.slice(-1)[0]);
-                            return acc.slice(0, idx).concat(cur.slice(1), acc.slice(idx + 1));
-                        },
-                        ['lineend']
-                    )
-                    .slice(0, -1);
-                setTpo(res);
-                return;
-            }
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [branches.toString()]
-    );
-
-    return tpo;
 };

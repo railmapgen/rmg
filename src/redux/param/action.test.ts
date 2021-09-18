@@ -16,18 +16,28 @@ import {
     SET_NOTES,
     SET_STATION,
     SET_STATIONS_BULK,
-    setCustomisedMtrDestinationAction,
+    setCustomisedMtrDestinationAction, setFullParam,
     setNamePositionAction,
-    setNotesAction,
-    setStationAction,
+    setNotesAction, setStation,
+    setStationAction, setStationsBulk,
     staggerStationNames,
     toggleLineNameBeforeDestination,
     updateInterchange,
     updateNote,
     updateStationOsiName,
 } from './action';
-import { BranchStyle, InterchangeInfo, MonoColour, Name, Note, Services, StationDict } from '../../constants/constants';
+import {
+    BranchStyle,
+    InterchangeInfo,
+    MonoColour,
+    Name,
+    Note,
+    RMGParam,
+    Services,
+    StationDict, StationInfo,
+} from '../../constants/constants';
 import { CityCode } from '../../constants/city-config';
+import { SET_DEPS_STR } from '../helper/action';
 
 const realStore = rootReducer.getState();
 
@@ -53,6 +63,30 @@ const mockInterchange2: InterchangeInfo = [
 const mockUpdatedThemeInterchange = [CityCode.London, 'bakerloo', '#AAAAAA', MonoColour.white].concat(Array(2));
 
 describe('Tests for param actions', () => {
+    it('Can trigger helpers to update when setting stations', () => {
+        let actions: any[];
+
+        const mockStore = configureStore<RootState>([thunk])({...realStore});
+        mockStore.dispatch(setFullParam({} as RMGParam) as any);
+        actions = mockStore.getActions()
+        expect(actions).toHaveLength(2);
+        expect(actions.find(action => action.type === SET_DEPS_STR)).toBeDefined();
+
+        mockStore.clearActions();
+
+        mockStore.dispatch(setStation('test-id', {} as StationInfo) as any);
+        actions = mockStore.getActions()
+        expect(actions).toHaveLength(2);
+        expect(actions.find(action => action.type === SET_DEPS_STR)).toBeDefined();
+
+        mockStore.clearActions();
+
+        mockStore.dispatch(setStationsBulk({} as StationDict) as any);
+        actions = mockStore.getActions()
+        expect(actions).toHaveLength(2);
+        expect(actions.find(action => action.type === SET_DEPS_STR)).toBeDefined();
+    });
+
     it('Can add empty note as expected', () => {
         const mockStore = configureStore<RootState>([thunk])({ ...realStore });
 
