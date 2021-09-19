@@ -58,6 +58,7 @@ const calcAndGetDepsStr = () => {
 
 const calcBranches = () => {
     return (dispatch: AppDispatch, getState: () => RootState) => {
+        console.log('Re-calculating branches...');
         const stnList = getState().param.stn_list;
         const nextBranches = getBranches(stnList);
         dispatch(setBranches(nextBranches));
@@ -67,6 +68,7 @@ const calcBranches = () => {
 
 const calcRoutes = () => {
     return (dispatch: AppDispatch, getState: () => RootState) => {
+        console.log('Re-calculating routes...');
         const stnList = getState().param.stn_list;
         dispatch(setRoutes(getRoutes(stnList)));
     };
@@ -75,20 +77,23 @@ const calcRoutes = () => {
 /**
  * Calculate topology ordering for all stations by stacking all branches into an 1-dimension array
  */
-const calcTpo = () => {
+export const calcTpo = () => {
     return (dispatch: AppDispatch, getState: () => RootState) => {
-        console.log('Calculating topology ordering...');
+        console.log('Re-calculating topology ordering...');
         const branches = getState().helper.branches;
         if (branches.length === 1) {
             dispatch(setTpo(branches[0].slice(1, -1)));
         } else {
-            const tpo = branches.reduce(
-                (acc, cur) => {
-                    let idx = acc.indexOf(cur[cur.length - 1]);
-                    return [...acc.slice(0, idx), ...cur.slice(1), ...acc.slice(idx + 1)];
-                },
-                ['lineend']
-            );
+            const tpo = branches
+                .reduce(
+                    (acc, cur) => {
+                        // insert the other branch before the rest of the main branch
+                        let idx = acc.indexOf(cur[cur.length - 1]);
+                        return [...acc.slice(0, idx), ...cur.slice(1), ...acc.slice(idx + 1)];
+                    },
+                    ['lineend']
+                )
+                .slice(0, -1);
             dispatch(setTpo(tpo));
         }
     };

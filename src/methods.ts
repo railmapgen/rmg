@@ -37,8 +37,6 @@ export const getYShareMTR = (stnId: string, stnList: StationDict): -1 | 0 | 1 =>
  * /
  */
 export const getBranches = (stnList: StationDict) => {
-    console.log('computing branches');
-
     var stack = ['linestart'];
     var branches = [['linestart']];
     var branchCount = 0;
@@ -98,8 +96,6 @@ export const getBranches = (stnList: StationDict) => {
  * /
  */
 export const getRoutes = (stnList: StationDict) => {
-    console.log('computing routes');
-
     var stack = ['linestart'];
     var branches = [['linestart']];
     var branchCount = 0;
