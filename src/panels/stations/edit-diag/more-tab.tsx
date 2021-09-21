@@ -12,13 +12,12 @@ import {
     ListItemText,
     Select,
 } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux';
+import { useAppDispatch, useAppSelector } from '../../../redux';
 import { Facilities, RmgStyle, Services } from '../../../constants/constants';
 import { addStationService, removeStationService, updateStationFacility } from '../../../redux/param/action';
 
 export default memo(function MoreTab(props: { stnId: string }) {
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
     const rmgStyleServices: { [s in RmgStyle]?: Services[] } = {
         [RmgStyle.GZMTR]: [Services.local, Services.express],
         [RmgStyle.SHMetro]: [Services.local, Services.express, Services.direct],
@@ -40,9 +39,9 @@ export default memo(function MoreTab(props: { stnId: string }) {
 const FacilityLi = (props: { stnId: string }) => {
     const { stnId } = props;
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const { facility } = useSelector((store: RootState) => store.param.stn_list[stnId]);
+    const { facility } = useAppSelector(store => store.param.stn_list[stnId]);
     return (
         <ListItem>
             <ListItemIcon>
@@ -71,9 +70,9 @@ const FacilityLi = (props: { stnId: string }) => {
 const ServiceLi = (props: { stnId: string; providedServices: Services[] }) => {
     const { stnId, providedServices } = props;
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const { services } = useSelector((store: RootState) => store.param.stn_list[stnId]);
+    const { services } = useAppSelector(store => store.param.stn_list[stnId]);
 
     const handleChange =
         (service: Services) =>

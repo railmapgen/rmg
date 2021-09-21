@@ -2,9 +2,8 @@ import React, { useState, memo } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
 import { removeStation } from './utils';
-import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentStation, setStationsBulk } from '../../redux/param/action';
-import { RootState } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../redux';
 
 interface Props {
     open: boolean;
@@ -14,10 +13,10 @@ interface Props {
 export default function StationDeleteDialog(props: Props & { stnId: string }) {
     const { stnId, open, onClose } = props;
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const stnList = useSelector((store: RootState) => store.param.stn_list);
-    const currentStationIndex = useSelector((store: RootState) => store.param.current_stn_idx);
+    const stnList = useAppSelector(store => store.param.stn_list);
+    const currentStationIndex = useAppSelector(store => store.param.current_stn_idx);
 
     const [isError, setIsError] = useState(false);
 

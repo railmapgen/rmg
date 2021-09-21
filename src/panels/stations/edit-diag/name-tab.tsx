@@ -13,8 +13,7 @@ import {
     TextField,
 } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux';
+import { useAppDispatch, useAppSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
 import { updateStationName, updateStationNum, updateStationSecondaryName } from '../../../redux/param/action';
 
@@ -23,7 +22,7 @@ interface Props {
 }
 
 const NameTab = (props: Props) => {
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
 
     return (
         <List component="div">
@@ -139,10 +138,10 @@ const useStyles = makeStyles(() =>
 const NumInput = (props: Props) => {
     const { stnId } = props;
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const lineNum = useSelector((store: RootState) => store.param.line_num);
-    const stationInfo = useSelector((store: RootState) => store.param.stn_list[stnId]);
+    const lineNum = useAppSelector(store => store.param.line_num);
+    const stationInfo = useAppSelector(store => store.param.stn_list[stnId]);
 
     return (
         <ListItem style={{ justifyContent: 'center' }}>
@@ -165,10 +164,10 @@ const NameInput = (props: Props) => {
     const { stnId } = props;
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
-    const { name } = useSelector((store: RootState) => store.param.stn_list[stnId]);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const { name } = useAppSelector(store => store.param.stn_list[stnId]);
     return (
         <ListItem style={{ flexDirection: 'column' }}>
             <TextField
@@ -201,9 +200,9 @@ const SecondaryNameInput = (props: Props) => {
     const { stnId } = props;
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const { secondaryName } = useSelector((store: RootState) => store.param.stn_list[stnId]);
+    const { secondaryName } = useAppSelector(store => store.param.stn_list[stnId]);
     return (
         <>
             <ListItem>

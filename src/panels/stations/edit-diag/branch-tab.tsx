@@ -12,8 +12,7 @@ import {
     Select,
 } from '@material-ui/core';
 import { formatStnName } from '../../../utils';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux';
+import { useAppDispatch, useAppSelector } from '../../../redux';
 import { BranchStyle, Direction, RmgStyle } from '../../../constants/constants';
 import {
     flipStationBranchPosition,
@@ -60,8 +59,8 @@ interface BranchSelectSetProps {
 
 const BranchSelectSet = (props: BranchSelectSetProps) => {
     const { stnId, direction } = props;
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
-    const branchEntry = useSelector((store: RootState) => store.param.stn_list[stnId].branch[direction]);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const branchEntry = useAppSelector(store => store.param.stn_list[stnId].branch[direction]);
 
     return React.useMemo(
         () => (
@@ -89,9 +88,9 @@ const BranchTypeItem = (props: ItemProps) => {
     const { stnId, direction } = props;
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const branchEntry = useSelector((store: RootState) => store.param.stn_list[stnId].branch[direction]);
+    const branchEntry = useAppSelector(store => store.param.stn_list[stnId].branch[direction]);
 
     const handleChange = ({ target: { value } }: React.ChangeEvent<{ name?: string; value: unknown }>) => {
         let branchType = value as 'na' | BranchStyle;
@@ -135,10 +134,10 @@ const BranchFirstItem = (props: ItemProps) => {
     const { stnId, direction } = props;
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
-    const stnList = useSelector((store: RootState) => store.param.stn_list);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const stnList = useAppSelector(store => store.param.stn_list);
     const stnInfo = stnList[stnId];
     const branchEntry = stnInfo.branch[direction];
     const neighbours = direction === Direction.left ? stnInfo.parents : stnInfo.children;
@@ -204,9 +203,9 @@ const BranchPosItem = (props: ItemProps) => {
     const { stnId, direction } = props;
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const stnList = useSelector((store: RootState) => store.param.stn_list);
+    const stnList = useAppSelector(store => store.param.stn_list);
     const stnInfo = stnList[stnId];
     const branchEntry = stnInfo.branch[direction] as [BranchStyle, string]; // mount only if branchEntry[0] is not undefined
     const neighbours = direction === Direction.left ? stnInfo.parents : stnInfo.children;

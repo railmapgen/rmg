@@ -20,8 +20,7 @@ import {
 } from '@material-ui/core';
 
 import { test } from './utils';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../redux';
+import { useAppSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
 
 const useStyles = makeStyles(theme =>
@@ -74,7 +73,7 @@ export default function PreviewDialog(props: Props) {
     const { t } = useTranslation();
     const classes = useStyles();
 
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
 
     const [svgEl, setSvgEl] = useState(document.createElement('svg') as Element as SVGSVGElement);
     const [isLoaded, setIsLoaded] = useState(false);

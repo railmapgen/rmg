@@ -1,12 +1,11 @@
 import React, { useContext, useMemo, memo } from 'react';
 import { ParamContext } from '../../context';
 import { Name } from '../../constants/constants';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppSelector } from '../../redux';
 
 const RunInSHMetro = () => {
     const { routes } = useContext(ParamContext);
-    const param = useSelector((store: RootState) => store.param);
+    const param = useAppSelector(store => store.param);
 
     // get the height
     const dh = param.svg_height - 300;
@@ -67,7 +66,7 @@ interface RunInGeneralProps {
 }
 
 const GeneralStation = (props: RunInGeneralProps) => {
-    const param = useSelector((store: RootState) => store.param);
+    const param = useAppSelector(store => store.param);
     const middle = param.svgWidth.runin / 2;
 
     const termianl = props.nextStnIds.length === 1 && ['linestart', 'lineend'].includes(props.nextStnIds[0]);
@@ -170,7 +169,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
 };
 
 const CurrentText = () => {
-    const param = useSelector((store: RootState) => store.param);
+    const param = useAppSelector(store => store.param);
     const { name } = param.stn_list[param.current_stn_idx];
     return useMemo(
         () => (
@@ -217,7 +216,7 @@ const NextText = (props: { nextName: Name } & React.SVGProps<SVGGElement>) => {
 };
 
 const PrevStn = (props: { stnIds: string[] }) => {
-    const param = useSelector((store: RootState) => store.param);
+    const param = useAppSelector(store => store.param);
     const nextNames = props.stnIds.map(stnId => param.stn_list[stnId].name);
     const prevHintDy = (props.stnIds.length > 1 ? 15 : 125) +
         nextNames.map(name => name[0].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -50 +
@@ -248,7 +247,7 @@ const PrevStn = (props: { stnIds: string[] }) => {
 };
 
 const NextStn = (props: { stnIds: string[] }) => {
-    const param = useSelector((store: RootState) => store.param);
+    const param = useAppSelector(store => store.param);
     const nextNames = props.stnIds.map(stnId => param.stn_list[stnId].name);
     const nextHintDy = (props.stnIds.length > 1 ? 15 : 125) +
         nextNames.map(name => name[0].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -50 +

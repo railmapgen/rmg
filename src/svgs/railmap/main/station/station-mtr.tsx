@@ -7,8 +7,7 @@ import {
     ShortDirection,
     StationTransfer,
 } from '../../../../constants/constants';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../../redux';
+import { useAppSelector } from '../../../../redux';
 
 interface Props {
     stnId: string;
@@ -19,7 +18,7 @@ interface Props {
 
 const StationMTR = (props: Props) => {
     const { stnId, stnState, namePos } = props;
-    const stnInfo = useSelector((store: RootState) => store.param.stn_list[stnId]);
+    const stnInfo = useAppSelector(store => store.param.stn_list[stnId]);
 
     /**
      * Arrays of directions of the branches a station has.
