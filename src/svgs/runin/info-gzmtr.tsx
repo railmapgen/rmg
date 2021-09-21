@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ParamContext } from '../../context';
 import StationNumberText from '../station-num-gzmtr';
 import { CanvasType, Name, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 import { useAppSelector } from '../../redux';
@@ -309,7 +308,7 @@ const BigNextSec = (props: { secName: Name } & React.SVGProps<SVGGElement>) => {
 
 const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
     const { nextIds, nameBBox } = props;
-    const { routes } = React.useContext(ParamContext);
+    const { routes } = useAppSelector(store => store.helper);
     const svgWidths = useAppSelector(store => store.param.svgWidth);
     const direction = useAppSelector(store => store.param.direction);
     const stationList = useAppSelector(store => store.param.stn_list);

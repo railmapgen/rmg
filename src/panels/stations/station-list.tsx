@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import {
     createStyles,
     Divider,
@@ -14,7 +14,6 @@ import {
     Paper,
     Typography,
 } from '@material-ui/core';
-import { ParamContext } from '../../context';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../redux';
 import { RmgStyle } from '../../constants/constants';
@@ -47,7 +46,7 @@ interface Props {
 }
 
 const StationList = (props: Props) => {
-    const { tpo } = useContext(ParamContext);
+    const tpo = useAppSelector(store => store.helper.tpo);
 
     return (
         <Paper>

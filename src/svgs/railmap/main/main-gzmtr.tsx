@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-import { ParamContext } from '../../../context';
 import StationGZMTR from './station/station-gzmtr';
 import LineBox from './line-box-gzmtr';
 import { adjacencyList, criticalPathMethod, drawLine, getStnState } from '../methods/share';
@@ -74,7 +73,7 @@ const getXShare = (stnId: string, adjMat: ReturnType<typeof adjacencyList>, bran
 };
 
 const MainGZMTR = () => {
-    const { branches, routes, deps } = React.useContext(ParamContext);
+    const { branches, routes, depsStr: deps } = useAppSelector(store => store.helper);
 
     const svgWidths = useAppSelector(store => store.param.svgWidth);
     const yPercentage = useAppSelector(store => store.param.y_pc);
