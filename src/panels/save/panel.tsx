@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useTranslation, withTranslation } from 'react-i18next';
-
 import {
     Grid,
     Card,
@@ -15,14 +14,11 @@ import {
     DialogContent,
     LinearProgress,
 } from '@material-ui/core';
-
 import { getTransText2 } from '../../utils';
-
 import UploadListItem from './upload-item';
 import ExportDialog from './export-diag';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../redux';
 import { LanguageCode, RmgStyle } from '../../constants/constants';
 import { setRmgStyle } from '../../redux/app/action';
 
@@ -49,8 +45,8 @@ const allLangs = {
 const SaveLists = () => {
     const { t, i18n } = useTranslation();
 
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
-    const param = useSelector((store: RootState) => store.param);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const param = useAppSelector(store => store.param);
 
     const [isTempDialogOpen, setIsTempDialogOpen] = useState(false);
     const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
@@ -151,7 +147,7 @@ interface StyleDialogProps {
 
 function StyleDialog(props: StyleDialogProps) {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const handleClose = (key: RmgStyle) => () => {
         dispatch(setRmgStyle(key));

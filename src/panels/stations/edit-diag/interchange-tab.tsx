@@ -23,8 +23,7 @@ import {
 } from '@material-ui/core';
 import ColourDialog from '../../colour-diag';
 import NameListItems from './name-list-items';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux';
+import { useAppDispatch, useAppSelector } from '../../../redux';
 import { InterchangeInfo, MonoColour, Name, RmgStyle, ShortDirection, Theme } from '../../../constants/constants';
 import {
     addInterchange,
@@ -38,11 +37,11 @@ import {
 const StationEditInterchangeTab = (props: { stnId: string }) => {
     const { stnId } = props;
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
-    const theme = useSelector((store: RootState) => store.param.theme);
-    const { transfer } = useSelector((store: RootState) => store.param.stn_list[stnId]);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const theme = useAppSelector(store => store.param.theme);
+    const { transfer } = useAppSelector(store => store.param.stn_list[stnId]);
 
     const [osiNameDialog0Opened, setOsiNameDialog0Opened] = React.useState(false);
     const [osiNameDialog1Opened, setOsiNameDialog1Opened] = React.useState(false);
@@ -209,9 +208,9 @@ interface InterchangeChipSetProps {
 const InterchangeChipSet = (props: InterchangeChipSetProps) => {
     const { stnId, setIndex, onDelete } = props;
     const classes = intChipSetStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const intInfos = useSelector((store: RootState) => store.param.stn_list[stnId].transfer.info[setIndex]);
+    const intInfos = useAppSelector(store => store.param.stn_list[stnId].transfer.info[setIndex]);
 
     const [chipSelected, setChipSelected] = React.useState(-1);
     const [nameDialogOpened, setNameDialogOpened] = React.useState(false);
@@ -293,9 +292,9 @@ interface OSINameDialogProps {
 const OSINameDialog = (props: OSINameDialogProps) => {
     const { open, stnId, setIndex, onClose } = props;
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const osiName = useSelector((store: RootState) => store.param.stn_list[stnId].transfer.osi_names[setIndex]) || [
+    const osiName = useAppSelector(store => store.param.stn_list[stnId].transfer.osi_names[setIndex]) || [
         '車站名',
         'Stn Name',
     ];
@@ -327,9 +326,9 @@ const OSINameDialog = (props: OSINameDialogProps) => {
 const InterchangeMore = (props: { stnId: string }) => {
     const { stnId } = props;
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const { transfer } = useSelector((store: RootState) => store.param.stn_list[stnId]);
+    const { transfer } = useAppSelector(store => store.param.stn_list[stnId]);
 
     return React.useMemo(() => {
         const tickDirecChange = ({ target: { value } }: React.ChangeEvent<{ name?: string; value: unknown }>) => {

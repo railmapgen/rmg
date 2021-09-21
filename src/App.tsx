@@ -5,8 +5,7 @@ import SVGs from './svgs';
 import Panels from './panels';
 import { ParamContext } from './context';
 import { createMuiTheme, ThemeProvider, useMediaQuery, LinearProgress } from '@material-ui/core';
-import { useSelector } from 'react-redux';
-import { RootState } from './redux';
+import { useAppSelector } from './redux';
 
 const darkTheme = createMuiTheme({
     palette: {
@@ -84,11 +83,11 @@ export default function App() {
 }
 
 const AppBody = () => {
-    const param = useSelector((store: RootState) => store.param);
-    const deps = useSelector((store: RootState) => store.helper.depsStr);
-    const branches = useSelector((store: RootState) => store.helper.branches);
-    const routes = useSelector((store: RootState) => store.helper.routes);
-    const tpo = useSelector((store: RootState) => store.helper.tpo);
+    const param = useAppSelector(store => store.param);
+    const deps = useAppSelector(store => store.helper.depsStr);
+    const branches = useAppSelector(store => store.helper.branches);
+    const routes = useAppSelector(store => store.helper.routes);
+    const tpo = useAppSelector(store => store.helper.tpo);
 
     const paramString = JSON.stringify(param);
     useEffect(() => {

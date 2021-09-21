@@ -14,8 +14,7 @@ import {
     Divider,
     InputAdornment,
 } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../redux';
 import { canvasConfig, CanvasType, RmgStyle } from '../../constants/constants';
 import {
     setBranchSpacing,
@@ -42,7 +41,7 @@ const useStyles = makeStyles(theme =>
 );
 
 export default memo(function LayoutCommon() {
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
     return (
         <>
             <SizeLi />
@@ -63,11 +62,11 @@ export default memo(function LayoutCommon() {
 const SizeLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
-    const svgHeight = useSelector((store: RootState) => store.param.svg_height);
-    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const svgHeight = useAppSelector(store => store.param.svg_height);
+    const svgWidths = useAppSelector(store => store.param.svgWidth);
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -132,9 +131,9 @@ const SizeLi = () => {
 const YLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const yPercentage = useSelector((store: RootState) => store.param.y_pc);
+    const yPercentage = useAppSelector(store => store.param.y_pc);
 
     return useMemo(() => {
         const handleSliderChange = (_: ChangeEvent<{}>, value: number | number[]) => {
@@ -166,9 +165,9 @@ const YLi = () => {
 const BranchSpacingLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const branchSpacing = useSelector((store: RootState) => store.param.branch_spacing);
+    const branchSpacing = useAppSelector(store => store.param.branch_spacing);
 
     return useMemo(() => {
         const handleSliderChange = (_: ChangeEvent<{}>, value: number | number[]) => {
@@ -200,9 +199,9 @@ const BranchSpacingLi = () => {
 const PaddingLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const paddingPercentage = useSelector((store: RootState) => store.param.padding);
+    const paddingPercentage = useAppSelector(store => store.param.padding);
 
     return useMemo(() => {
         const handleSliderChange = (_: ChangeEvent<{}>, value: number | number[]) => {

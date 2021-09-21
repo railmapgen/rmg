@@ -11,8 +11,7 @@ import {
     MenuItem,
     Tooltip,
 } from '@material-ui/core';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppSelector } from '../../redux';
 import { RmgStyle } from '../../constants/constants';
 
 const useStyles = makeStyles(theme =>
@@ -32,7 +31,7 @@ interface Props {
 const StationFabs = React.memo(
     (props: Props) => {
         const { t } = useTranslation();
-        const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+        const rmgStyle = useAppSelector(store => store.app.rmgStyle);
         const classes = useStyles();
         const [fabEl, setFabEl] = React.useState<null | HTMLElement>(null);
 

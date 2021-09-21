@@ -2,17 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ParamContext } from '../../context';
 import StationNumberText from '../station-num-gzmtr';
 import { CanvasType, Name, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppSelector } from '../../redux';
 
 const InfoGZMTR = () => {
-    const svgHeight = useSelector((store: RootState) => store.param.svg_height);
-    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
-    const direction = useSelector((store: RootState) => store.param.direction);
-    const infoPanelType = useSelector((store: RootState) => store.param.info_panel_type);
-    const lineNumber = useSelector((store: RootState) => store.param.line_num);
-    const currentStationIndex = useSelector((store: RootState) => store.param.current_stn_idx);
-    const curStnInfo = useSelector((store: RootState) => store.param.stn_list[currentStationIndex]);
+    const svgHeight = useAppSelector(store => store.param.svg_height);
+    const svgWidths = useAppSelector(store => store.param.svgWidth);
+    const direction = useAppSelector(store => store.param.direction);
+    const infoPanelType = useAppSelector(store => store.param.info_panel_type);
+    const lineNumber = useAppSelector(store => store.param.line_num);
+    const currentStationIndex = useAppSelector(store => store.param.current_stn_idx);
+    const curStnInfo = useAppSelector(store => store.param.stn_list[currentStationIndex]);
 
     const curNameEl = React.useRef<SVGGElement | null>(null);
     const [nameBBox, setNameBBox] = useState({ width: 0 } as DOMRect);
@@ -167,9 +166,9 @@ const BigStnNum = (props: { lineNum: string; stnNum: string } & React.SVGProps<S
 
 const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
     const { nextId, nameBBox } = props;
-    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
-    const direction = useSelector((store: RootState) => store.param.direction);
-    const nextInfo = useSelector((store: RootState) => store.param.stn_list[nextId]);
+    const svgWidths = useAppSelector(store => store.param.svgWidth);
+    const direction = useAppSelector(store => store.param.direction);
+    const nextInfo = useAppSelector(store => store.param.stn_list[nextId]);
     const { name, secondaryName } = nextInfo;
 
     const [nextBBox, setNextBBox] = useState({ width: 0 } as DOMRect);
@@ -311,9 +310,9 @@ const BigNextSec = (props: { secName: Name } & React.SVGProps<SVGGElement>) => {
 const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
     const { nextIds, nameBBox } = props;
     const { routes } = React.useContext(ParamContext);
-    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
-    const direction = useSelector((store: RootState) => store.param.direction);
-    const stationList = useSelector((store: RootState) => store.param.stn_list);
+    const svgWidths = useAppSelector(store => store.param.svgWidth);
+    const direction = useAppSelector(store => store.param.direction);
+    const stationList = useAppSelector(store => store.param.stn_list);
 
     const nextNames = nextIds.map(id => stationList[id].name);
     const [nextBBox, setNextBBox] = useState({ width: 0 } as DOMRect);

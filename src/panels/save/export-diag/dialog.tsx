@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogTitle, List, ListItem, ListItemText } from '@material-ui/core';
 
 import PreviewDialog from './preview-diag';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../redux';
+import { useAppSelector } from '../../../redux';
 import { AllCanvas, canvasConfig } from '../../../constants/constants';
 
 interface Props {
@@ -15,8 +14,8 @@ interface Props {
 export default function ExportDialog(props: Props) {
     const { t } = useTranslation();
 
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
-    const canvasToShow = useSelector((store: RootState) => store.app.canvasToShow);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const canvasToShow = useAppSelector(store => store.app.canvasToShow);
 
     const [previewDialogOpened, setPreviewDialogOpened] = React.useState(false);
     const [canvas, setCanvas] = React.useState('');

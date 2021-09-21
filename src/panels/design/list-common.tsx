@@ -16,8 +16,7 @@ import {
     TextField,
 } from '@material-ui/core';
 import ColourDialog from '../colour-diag';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../redux';
 import { Name, RmgStyle, ShortDirection } from '../../constants/constants';
 import { setDirection, setLineName, setPlatform, setTheme } from '../../redux/param/action';
 
@@ -34,11 +33,11 @@ const useStyles = makeStyles(theme =>
 
 const DesignList = () => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
-    const lineName = useSelector((store: RootState) => store.param.line_name);
-    const theme = useSelector((store: RootState) => store.param.theme);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const lineName = useAppSelector(store => store.param.line_name);
+    const theme = useAppSelector(store => store.param.theme);
 
     const [isCDiagOpen, setIsCDiagOpen] = React.useState(false);
 
@@ -93,9 +92,9 @@ export default DesignList;
 const DirectionLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const direction = useSelector((store: RootState) => store.param.direction);
+    const direction = useAppSelector(store => store.param.direction);
 
     return React.useMemo(() => {
         const handleDirectionChange = () => {
@@ -119,9 +118,9 @@ const DirectionLi = () => {
 
 const PlatformNumLi = () => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const platform = useSelector((store: RootState) => store.param.platform_num);
+    const platform = useAppSelector(store => store.param.platform_num);
 
     return React.useMemo(() => {
         const handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
@@ -143,9 +142,9 @@ const PlatformNumLi = () => {
 const PlatformNumSHMetroLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const platform = useSelector((store: RootState) => store.param.platform_num);
+    const platform = useAppSelector(store => store.param.platform_num);
 
     return useMemo(() => {
         const handleSwitch = (_: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {

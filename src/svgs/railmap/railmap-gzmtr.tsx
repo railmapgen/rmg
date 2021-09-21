@@ -3,17 +3,16 @@ import { ParamContext } from '../../context';
 import StripGZMTR from '../strip/strip-gzmtr';
 import MainGZMTR from './main/main-gzmtr';
 import { CanvasType, Note, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppSelector } from '../../redux';
 
 const RailMapGZMTR = () => {
-    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
-    const direction = useSelector((store: RootState) => store.param.direction);
-    const psdNumber = useSelector((store: RootState) => store.param.psd_num);
-    const infoPanelType = useSelector((store: RootState) => store.param.info_panel_type);
-    const notes = useSelector((store: RootState) => store.param.notesGZMTR);
-    const currentStationIndex = useSelector((store: RootState) => store.param.current_stn_idx);
-    const curStnInfo = useSelector((store: RootState) => store.param.stn_list[currentStationIndex]);
+    const svgWidths = useAppSelector(store => store.param.svgWidth);
+    const direction = useAppSelector(store => store.param.direction);
+    const psdNumber = useAppSelector(store => store.param.psd_num);
+    const infoPanelType = useAppSelector(store => store.param.info_panel_type);
+    const notes = useAppSelector(store => store.param.notesGZMTR);
+    const currentStationIndex = useAppSelector(store => store.param.current_stn_idx);
+    const curStnInfo = useAppSelector(store => store.param.stn_list[currentStationIndex]);
 
     return (
         <>
@@ -70,10 +69,10 @@ const DefsGZMTR = React.memo(() => (
 
 const DirectionIndicator = () => {
     const { routes } = React.useContext(ParamContext);
-    const direction = useSelector((store: RootState) => store.param.direction);
-    const directionIndicatorX = useSelector((store: RootState) => store.param.direction_gz_x);
-    const directionIndicatorY = useSelector((store: RootState) => store.param.direction_gz_y);
-    const currentStationIndex = useSelector((store: RootState) => store.param.current_stn_idx);
+    const direction = useAppSelector(store => store.param.direction);
+    const directionIndicatorX = useAppSelector(store => store.param.direction_gz_x);
+    const directionIndicatorY = useAppSelector(store => store.param.direction_gz_y);
+    const currentStationIndex = useAppSelector(store => store.param.current_stn_idx);
 
     const validDests = React.useMemo(
         () => [
@@ -128,7 +127,7 @@ type TextGroupProps = {
 
 const DirectionIndicatorTextGroup = (props: TextGroupProps) => {
     const { destIds, ...others } = props;
-    const stationList = useSelector((store: RootState) => store.param.stn_list);
+    const stationList = useAppSelector(store => store.param.stn_list);
     return (
         <g {...others}>
             <text className="rmg-name__zh" fontSize={28}>
@@ -144,8 +143,8 @@ const DirectionIndicatorTextGroup = (props: TextGroupProps) => {
 const DirectionIndicatorTextGroup2 = (props: TextGroupProps) => {
     const { destIds, ...others } = props;
 
-    const direction = useSelector((store: RootState) => store.param.direction);
-    const stationList = useSelector((store: RootState) => store.param.stn_list);
+    const direction = useAppSelector(store => store.param.direction);
+    const stationList = useAppSelector(store => store.param.stn_list);
 
     const charCounts = destIds.map(stnId => stationList[stnId].name[0].length);
     const minCharCounts = Math.min(...charCounts);

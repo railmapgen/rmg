@@ -1,7 +1,6 @@
 import React from 'react';
 import { InterchangeInfo, Name } from "../../constants/constants";
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppSelector } from '../../redux';
 
 interface Props {
     stnId: string;
@@ -10,7 +9,7 @@ interface Props {
 }
 
 const StationSHMetro = (props: Props) => {
-    const param = useSelector((store: RootState) => store.param);
+    const param = useAppSelector(store => store.param);
     const stnInfo = param.stn_list[props.stnId];
 
     let stationIconStyle = '';

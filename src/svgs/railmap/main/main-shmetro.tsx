@@ -3,8 +3,7 @@ import { ParamContext } from '../../../context';
 import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState } from '../methods/share';
 import StationSHMetro from './station/station-shmetro';
 import { Services } from '../../../constants/constants';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../redux';
+import { useAppSelector } from '../../../redux';
 
 interface servicesPath {
     main: string[];
@@ -14,7 +13,7 @@ interface servicesPath {
 
 const MainSHMetro = () => {
     const { routes, branches, deps } = useContext(ParamContext);
-    const param = useSelector((store: RootState) => store.param);
+    const param = useAppSelector(store => store.param);
 
     const adjMat = adjacencyList(
         param.stn_list,
@@ -311,7 +310,7 @@ interface StationGroupProps {
 }
 
 const StationGroup = (props: StationGroupProps) => {
-    const param = useSelector((store: RootState) => store.param);
+    const param = useAppSelector(store => store.param);
 
     return (
         <g>
@@ -327,7 +326,7 @@ const StationGroup = (props: StationGroupProps) => {
 };
 
 const ServicesElements = (props: { servicesLevel: Services[]; direction: 'l' | 'r'; dy: number; lineXs: number[] }) => {
-    const param = useSelector((store: RootState) => store.param);
+    const param = useAppSelector(store => store.param);
 
     if (props.servicesLevel.length === 1) return <></>;
 
@@ -376,7 +375,7 @@ const ServicesElements = (props: { servicesLevel: Services[]; direction: 'l' | '
 };
 
 const DirectionElements = () => {
-    const param = useSelector((store: RootState) => store.param);
+    const param = useAppSelector(store => store.param);
 
     return React.useMemo(
         () => (

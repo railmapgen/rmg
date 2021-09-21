@@ -1,8 +1,7 @@
-import rootReducer, { RootState } from '../index';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import rootReducer from '../index';
 import { StationDict } from '../../constants/constants';
 import { SET_BRANCHES, SET_DEPS_STR, SET_ROUTES, SET_TPO, triggerHelpersUpdate } from './action';
+import { createMockAppStore } from '../../setupTests';
 
 const realStore = rootReducer.getState();
 
@@ -26,11 +25,11 @@ const mockStationList = {
 
 describe('Unit tests for helper actions', () => {
     it('Can initial helpers as expected', () => {
-        const mockStore = configureStore<RootState>([thunk])({
+        const mockStore = createMockAppStore({
             ...realStore,
             param: { ...realStore.param, stn_list: mockStationList },
         });
-        mockStore.dispatch(triggerHelpersUpdate() as any);
+        mockStore.dispatch(triggerHelpersUpdate());
 
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(4);

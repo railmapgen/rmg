@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Slider,
@@ -12,8 +12,7 @@ import {
     ListItemIcon,
     Divider,
 } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../redux';
 import { ChangeEvent } from 'react';
 import { setDirectionIndicatorX, setDirectionIndicatorY } from '../../redux/param/action';
 
@@ -42,10 +41,10 @@ export default React.memo(function LayoutGZMTR() {
 const DirectionGZLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const directionIndicatorX = useSelector((store: RootState) => store.param.direction_gz_x);
-    const directionIndicatorY = useSelector((store: RootState) => store.param.direction_gz_y);
+    const directionIndicatorX = useAppSelector(store => store.param.direction_gz_x);
+    const directionIndicatorY = useAppSelector(store => store.param.direction_gz_y);
 
     const [isOpen, setIsOpen] = React.useState(false);
 

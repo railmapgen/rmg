@@ -16,8 +16,7 @@ import {
 } from '@material-ui/core';
 import { ParamContext } from '../../context';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../redux';
 import { RmgStyle } from '../../constants/constants';
 import { setCurrentStation } from '../../redux/param/action';
 
@@ -74,10 +73,10 @@ const StationEntry = (props: { stnId: string; isSelected: boolean; onAction: (ac
     const { stnId, isSelected, onAction } = props;
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
-    const stationInfo = useSelector((store: RootState) => store.param.stn_list[stnId]);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const stationInfo = useAppSelector(store => store.param.stn_list[stnId]);
 
     const name = stationInfo?.name || ['', ''];
     const num = stationInfo?.num || '00';

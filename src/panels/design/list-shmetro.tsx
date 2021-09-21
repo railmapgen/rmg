@@ -2,8 +2,7 @@ import React, { ChangeEvent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListItem, ListItemIcon, Icon, ListItemText, Divider, Select } from '@material-ui/core';
 import { PanelTypeShmetro } from '../../constants/constants';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../redux';
 import { setPanelType } from '../../redux/param/action';
 
 const DesignListShmetro = () => {
@@ -30,9 +29,9 @@ export default DesignListShmetro;
 
 const PanelTypeLi = () => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const panelType = useSelector((store: RootState) => store.param.info_panel_type);
+    const panelType = useAppSelector(store => store.param.info_panel_type);
 
     return useMemo(() => {
         const handleChange = ({ target: { value } }: ChangeEvent<{ name?: string; value: unknown }>) => {

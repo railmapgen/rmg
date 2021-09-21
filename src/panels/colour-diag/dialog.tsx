@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
 import {
     Button,
     Chip,
@@ -22,8 +21,7 @@ import {
 } from '@material-ui/core';
 import { CustomPanel, PalettePanel } from './theme-items';
 import { InterchangeInfo, MonoColour, Name, Theme } from '../../constants/constants';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppSelector } from '../../redux';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -179,9 +177,9 @@ const RecentChipSet = (props: { onUpdate: Props['onUpdate'] }) => {
     const { t } = useTranslation();
     const classes = useStyles();
 
-    const theme = useSelector((store: RootState) => store.param.theme);
-    const lineName = useSelector((store: RootState) => store.param.line_name);
-    const stationList = useSelector((store: RootState) => store.param.stn_list);
+    const theme = useAppSelector(store => store.param.theme);
+    const lineName = useAppSelector(store => store.param.line_name);
+    const stationList = useAppSelector(store => store.param.stn_list);
 
     const allInfos = useMemo(
         () =>

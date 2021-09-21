@@ -6,8 +6,7 @@ import StationEditDialog from './edit-diag';
 import StationDeleteDialog from './delete-diags';
 import StationFabs from './fabs';
 import AutoNumDialog from './auto-num-diag';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../redux';
 import { RmgStyle } from '../../constants/constants';
 import { reverseStations } from '../../redux/param/action';
 
@@ -26,9 +25,9 @@ const useStyles = makeStyles(() =>
 
 const PanelStations2 = () => {
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
 
     const [stnSelected, setStnSelected] = useState('');
     const [isOpen, setIsOpen] = useState(false);

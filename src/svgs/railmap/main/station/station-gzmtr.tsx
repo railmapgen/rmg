@@ -2,8 +2,7 @@ import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import StationNumberText from '../../../station-num-gzmtr';
 import LineBox from '../line-box-gzmtr';
 import { InterchangeInfo, Name, Services } from '../../../../constants/constants';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../../redux';
+import { useAppSelector } from '../../../../redux';
 
 interface Props {
     stnId: string;
@@ -14,10 +13,10 @@ interface Props {
 const StationGZMTR = (props: Props) => {
     const { stnId, stnState, stnY } = props;
 
-    const theme = useSelector((store: RootState) => store.param.theme);
-    const lineName = useSelector((store: RootState) => store.param.line_name);
-    const lineNumber = useSelector((store: RootState) => store.param.line_num);
-    const stnInfo = useSelector((store: RootState) => store.param.stn_list[stnId]);
+    const theme = useAppSelector(store => store.param.theme);
+    const lineName = useAppSelector(store => store.param.line_name);
+    const lineNumber = useAppSelector(store => store.param.line_num);
+    const stnInfo = useAppSelector(store => store.param.stn_list[stnId]);
 
     const isNameShift = stnInfo.parents.length === 2 || stnInfo.children.length === 2;
     const tickRotation =

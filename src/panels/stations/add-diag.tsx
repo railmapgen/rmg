@@ -20,8 +20,7 @@ import { formatStnName } from '../../utils';
 import { getYShareMTR } from '../../methods';
 import { addStation } from './utils';
 import { ParamContext } from '../../context';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../redux';
 import { StationDict, StationInfo } from '../../constants/constants';
 import { setStationsBulk } from '../../redux/param/action';
 
@@ -99,10 +98,10 @@ export default React.memo(
     function StationAddDialog(props: StationAddDialogProps) {
         const { t } = useTranslation();
         const classes = useStyles();
-        const dispatch = useDispatch();
+        const dispatch = useAppDispatch();
 
-        const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
-        const stnList = useSelector((store: RootState) => store.param.stn_list);
+        const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+        const stnList = useAppSelector(store => store.param.stn_list);
         const { tpo } = useContext(ParamContext);
 
         const allLocs = {

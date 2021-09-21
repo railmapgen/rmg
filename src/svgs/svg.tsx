@@ -1,12 +1,10 @@
-import React, { lazy, memo, useEffect } from 'react';
+import React, { lazy, memo, useCallback, useEffect } from 'react';
 import { CircularProgress, createStyles, makeStyles } from '@material-ui/core';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import ErrorBoundary from '../error-boundary';
-
 import { AllCanvas, canvasConfig, CanvasType, RmgStyle } from '../constants/constants';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectCanvas, setRmgStyle } from '../redux/app/action';
-import { RootState } from '../redux';
+import { useAppDispatch, useAppSelector } from '../redux';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -29,12 +27,12 @@ const useStyles = makeStyles(() =>
 const SVGs = () => {
     const classes = useStyles();
 
-    const canvasScale = useSelector((store: RootState) => store.app.canvasScale);
-    const svgHeight = useSelector((store: RootState) => store.param.svg_height);
-    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
-    const theme = useSelector((store: RootState) => store.param.theme);
+    const canvasScale = useAppSelector(store => store.app.canvasScale);
+    const svgHeight = useAppSelector(store => store.param.svg_height);
+    const svgWidths = useAppSelector(store => store.param.svgWidth);
+    const theme = useAppSelector(store => store.param.theme);
 
-    const sharedProps = React.useCallback(
+    const sharedProps = useCallback(
         (canvas: CanvasType): React.SVGProps<SVGSVGElement> => ({
             id: canvas,
             xmlns: 'http://www.w3.org/2000/svg',
@@ -75,9 +73,9 @@ const StyleSpecificSVGs = memo(
         canvasAvailable: { [canvas in CanvasType]?: JSX.Element };
         svgProps: (canvas: CanvasType) => React.SVGProps<SVGSVGElement>;
     }) => {
-        const dispatch = useDispatch();
+        const dispatch = useAppDispatch();
 
-        const canvasToShow = useSelector((store: RootState) => store.app.canvasToShow);
+        const canvasToShow = useAppSelector(store => store.app.canvasToShow);
 
         dispatch(setRmgStyle(props.style));
 
