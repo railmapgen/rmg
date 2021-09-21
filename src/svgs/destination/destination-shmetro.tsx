@@ -1,5 +1,4 @@
-import React, { memo, useContext, useMemo, forwardRef, useRef, useState, useEffect } from 'react';
-import { ParamContext } from '../../context';
+import React, { memo, useMemo, forwardRef, useRef, useState, useEffect } from 'react';
 import { useAppSelector } from '../../redux';
 
 export default memo(function DestinationSHMetro() {
@@ -21,7 +20,7 @@ const DefsSHMetro = memo(() => (
 ));
 
 const InfoSHMetro = () => {
-    const { routes } = useContext(ParamContext);
+    const { routes } = useAppSelector(store => store.helper);
     const param = useAppSelector(store => store.param);
 
     // for each left valid destinations, get the name from id

@@ -1,10 +1,9 @@
-import React, { useContext, useMemo, memo } from 'react';
-import { ParamContext } from '../../context';
+import React, { useMemo, memo } from 'react';
 import { Name } from '../../constants/constants';
 import { useAppSelector } from '../../redux';
 
 const RunInSHMetro = () => {
-    const { routes } = useContext(ParamContext);
+    const { routes } = useAppSelector(store => store.helper)
     const param = useAppSelector(store => store.param);
 
     // get the height

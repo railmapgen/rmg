@@ -1,5 +1,4 @@
-import React from 'react';
-import { ParamContext } from '../../context';
+import React, { memo, useMemo } from 'react';
 import StripGZMTR from '../strip/strip-gzmtr';
 import MainGZMTR from './main/main-gzmtr';
 import { CanvasType, Note, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
@@ -46,7 +45,7 @@ const RailMapGZMTR = () => {
 
 export default RailMapGZMTR;
 
-const DefsGZMTR = React.memo(() => (
+const DefsGZMTR = memo(() => (
     <defs>
         <path
             id="stn"
@@ -68,13 +67,15 @@ const DefsGZMTR = React.memo(() => (
 ));
 
 const DirectionIndicator = () => {
-    const { routes } = React.useContext(ParamContext);
-    const direction = useAppSelector(store => store.param.direction);
-    const directionIndicatorX = useAppSelector(store => store.param.direction_gz_x);
-    const directionIndicatorY = useAppSelector(store => store.param.direction_gz_y);
-    const currentStationIndex = useAppSelector(store => store.param.current_stn_idx);
+    const { routes } = useAppSelector(store => store.helper);
+    const {
+        direction,
+        direction_gz_x: directionIndicatorX,
+        direction_gz_y: directionIndicatorY,
+        current_stn_idx: currentStationIndex,
+    } = useAppSelector(store => store.param);
 
-    const validDests = React.useMemo(
+    const validDests = useMemo(
         () => [
             ...new Set(
                 routes
