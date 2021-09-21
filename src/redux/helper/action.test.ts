@@ -1,38 +1,42 @@
 import rootReducer, { RootState } from '../index';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { calcTpo, SET_TPO } from './action';
+import { StationDict } from '../../constants/constants';
+import { SET_BRANCHES, SET_DEPS_STR, SET_ROUTES, SET_TPO, triggerHelpersUpdate } from './action';
 
 const realStore = rootReducer.getState();
 
+const mockStationList = {
+    linestart: {
+        parents: [],
+        children: ['test'],
+        branch: { left: [], right: [] },
+    },
+    test: {
+        parents: ['linestart'],
+        children: ['lineend'],
+        branch: { left: [], right: [] },
+    },
+    lineend: {
+        parents: ['test'],
+        children: [],
+        branch: { left: [], right: [] },
+    },
+} as any as StationDict;
+
 describe('Unit tests for helper actions', () => {
-    it('Can calculate tpo for line without branches as expected', () => {
-        const mockBranches = [['linestart', '1', '2', 'lineend']];
+    it('Can initial helpers as expected', () => {
         const mockStore = configureStore<RootState>([thunk])({
             ...realStore,
-            helper: { ...realStore.helper, branches: mockBranches },
+            param: { ...realStore.param, stn_list: mockStationList },
         });
-        mockStore.dispatch(calcTpo() as any);
+        mockStore.dispatch(triggerHelpersUpdate() as any);
 
         const actions = mockStore.getActions();
-        expect(actions).toHaveLength(1);
-        expect(actions).toContainEqual({ type: SET_TPO, tpo: ['1', '2'] });
-    });
-
-    it('Can calculate tpo for line with branches as expected', () => {
-        const mockBranches = [
-            ['linestart', '1', '2', 'lineend'],
-            ['linestart', '3', '2'],
-            ['2', '4', 'lineend'],
-        ];
-        const mockStore = configureStore<RootState>([thunk])({
-            ...realStore,
-            helper: { ...realStore.helper, branches: mockBranches },
-        });
-        mockStore.dispatch(calcTpo() as any);
-
-        const actions = mockStore.getActions();
-        expect(actions).toHaveLength(1);
-        expect(actions).toContainEqual({ type: SET_TPO, tpo: ['1', '3', '2', '4'] });
+        expect(actions).toHaveLength(4);
+        expect(actions.find(action => action.type === SET_DEPS_STR)).toBeDefined();
+        expect(actions.find(action => action.type === SET_ROUTES)).toBeDefined();
+        expect(actions.find(action => action.type === SET_BRANCHES)).toBeDefined();
+        expect(actions.find(action => action.type === SET_TPO)).toBeDefined();
     });
 });

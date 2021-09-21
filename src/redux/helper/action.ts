@@ -1,5 +1,5 @@
 import { AppDispatch, RootState } from '../index';
-import { getBranches, getRoutes } from '../../methods';
+import { getBranches, getRoutes, getTpo } from './graph-theory-util';
 
 export const SET_DEPS_STR = 'SET_DEPS_STR';
 export const SET_BRANCHES = 'SET_BRANCHES';
@@ -74,31 +74,6 @@ const calcRoutes = () => {
     };
 };
 
-/**
- * Calculate topology ordering for all stations by stacking all branches into an 1-dimension array
- */
-export const calcTpo = () => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
-        console.log('Re-calculating topology ordering...');
-        const branches = getState().helper.branches;
-        if (branches.length === 1) {
-            dispatch(setTpo(branches[0].slice(1, -1)));
-        } else {
-            const tpo = branches
-                .reduce(
-                    (acc, cur) => {
-                        // insert the other branch before the rest of the main branch
-                        let idx = acc.indexOf(cur[cur.length - 1]);
-                        return [...acc.slice(0, idx), ...cur.slice(1), ...acc.slice(idx + 1)];
-                    },
-                    ['lineend']
-                )
-                .slice(0, -1);
-            dispatch(setTpo(tpo));
-        }
-    };
-};
-
 export const triggerHelpersUpdate = () => {
     return (dispatch: AppDispatch, getState: () => RootState) => {
         const prevDepsStr = getState().helper.depsStr;
@@ -109,7 +84,8 @@ export const triggerHelpersUpdate = () => {
             const prevBranches = getState().helper.branches;
             const nextBranches = dispatch(calcBranches());
             if (prevBranches.toString() !== nextBranches.toString()) {
-                dispatch(calcTpo());
+                console.log('Re-calculating topology ordering...');
+                dispatch(setTpo(getTpo(nextBranches)));
             }
         }
     };
