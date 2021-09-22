@@ -194,7 +194,7 @@ const InfoElements = () => {
         </>
     ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.svgWidth.indoor, param.svg_height]);
+        [param.svgWidth.indoor, param.svg_height, param.line_name]);
 };
 
 /* Some unused functions to split branches from the main line.
