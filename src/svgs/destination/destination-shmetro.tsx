@@ -1,5 +1,4 @@
-import React, { memo, useContext, useMemo, forwardRef, useRef, useState, useEffect } from 'react';
-import { ParamContext } from '../../context';
+import React, { memo, useMemo, forwardRef, useRef, useState, useEffect } from 'react';
 import { useAppSelector } from '../../redux';
 
 export default memo(function DestinationSHMetro() {
@@ -21,7 +20,7 @@ const DefsSHMetro = memo(() => (
 ));
 
 const InfoSHMetro = () => {
-    const { routes } = useContext(ParamContext);
+    const { routes } = useAppSelector(store => store.helper);
     const param = useAppSelector(store => store.param);
 
     // for each left valid destinations, get the name from id
@@ -136,43 +135,61 @@ const PlatformNum = () => {
     const param = useAppSelector(store => store.param);
 
     // Total width: 325
-    return (
-        <g transform={`translate(${-325 / 2 + 60},150)`}>
-            <circle r={60} fill="none" stroke="black" strokeWidth={2} />
-            <text className="rmg-name__en" dominantBaseline="central" fontSize={120} textAnchor="middle">
-                {param.platform_num}
-            </text>
-            <text className="rmg-name__zh" fontSize={100} dominantBaseline="central" x={65}>
-                站台
-            </text>
-        </g>
+    return useMemo(
+        ()=>(
+            <g transform={`translate(${-325 / 2 + 60},150)`}>
+                <circle r={60} fill="none" stroke="black" strokeWidth={2} />
+                <text className="rmg-name__en" dominantBaseline="central" fontSize={120} textAnchor="middle">
+                    {param.platform_num}
+                </text>
+                <text className="rmg-name__zh" fontSize={100} dominantBaseline="central" x={65}>
+                    站台
+                </text>
+            </g>
+        ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [param.platform_num]
     );
 };
 
 const LineNameBoxText = () => {
-    const param = useAppSelector(store => store.param);
-    const { line_name } = param;
+    const { line_name, direction, svgWidth } = useAppSelector(store => store.param);
 
-    const boxX = param.direction === 'l' ? param.svgWidth.destination - 36 - 132 : 36 + 132;
+    const boxX = direction === 'l' ? svgWidth.destination - 42 : 42;
 
-    // Total width: 264
+    // get the exact station name width so that the
+    // line color rectangle can be the right width.
+    const stnNameEl = useRef<SVGGElement | null>(null);
+    // the original name position
+    const [bBox, setBBox] = React.useState({ width: 0 } as DOMRect);
+    React.useEffect(
+        () => setBBox(stnNameEl.current!.getBBox()),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [...line_name]
+    );
+
+    const rectDx = (direction === 'l' ? -bBox.width : 0) - 6
+    const stnNameEnDx = (direction === 'l' ? -1 : 1) * bBox.width / 2
+
     return useMemo(
         () => (
             <g transform={`translate(${boxX},92)`}>
-                <rect fill="var(--rmg-theme-colour)" x={-132} width={264} height={120} />
-                <g textAnchor="middle" transform="translate(0,68)" fill="var(--rmg-theme-fg)">
-                    <text className="rmg-name__zh" fontSize={68}>
-                        {line_name[0]}
-                    </text>
-                    <text className="rmg-name__en" fontSize={30} dy={42}>
+                <rect fill="var(--rmg-theme-colour)" x={rectDx} width={bBox.width + 10} height={120} />
+                <g textAnchor={direction === 'r' ? 'start' : 'end'} transform="translate(0,68)" fill="var(--rmg-theme-fg)">
+                    <g ref={stnNameEl}>
+                        <text className="rmg-name__zh" fontSize={68}>
+                            {line_name[0]}
+                        </text>
+                    </g>
+                    <text className="rmg-name__en" fontSize={30} textAnchor="middle" x={stnNameEnDx} dy={42}>
                         {line_name[1]}
                     </text>
                 </g>
             </g>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [boxX, ...line_name]
-    );
+        [bBox, boxX, direction, line_name]
+    )
 };
 
 const LineNameBoxNumber = () => {

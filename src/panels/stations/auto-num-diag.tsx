@@ -1,9 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
-import { ParamContext } from '../../context';
 import { updateStationNum } from '../../redux/param/action';
-import { useAppDispatch } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../redux';
 
 interface Props {
     open: boolean;
@@ -14,7 +13,7 @@ const AutoNumDialog = (props: Props) => {
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
-    const { branches } = React.useContext(ParamContext);
+    const { branches } = useAppSelector(store => store.helper);
 
     const handleClick = (action: 'ascend' | 'descend') => {
         let branch0 = branches[0];

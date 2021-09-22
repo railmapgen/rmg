@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-import { ParamContext } from '../../../context';
 import { adjacencyList, criticalPathMethod, getXShareMTR, getStnState } from '../methods/share';
 import { StationsMTR } from '../methods/mtr';
 import StationMTR from './station/station-mtr';
@@ -62,7 +61,7 @@ const getNamePos = (stnId: string, branches: string[][], { isStagger, isFlip }: 
 };
 
 const MainMTR = () => {
-    const { branches, routes, deps } = React.useContext(ParamContext);
+    const { branches, routes, depsStr: deps } = useAppSelector(store => store.helper);
 
     const svgWidths = useAppSelector(store => store.param.svgWidth);
     const yPercentage = useAppSelector(store => store.param.y_pc);

@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import { ParamContext } from '../../../context';
+import React from 'react';
 import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState } from '../methods/share';
 import StationSHMetro from './station/station-shmetro';
 import { Services } from '../../../constants/constants';
@@ -12,7 +11,7 @@ interface servicesPath {
 }
 
 const MainSHMetro = () => {
-    const { routes, branches, deps } = useContext(ParamContext);
+    const { routes, branches, depsStr: deps } = useAppSelector(store => store.helper);
     const param = useAppSelector(store => store.param);
 
     const adjMat = adjacencyList(
@@ -174,7 +173,7 @@ const _linePath = (
     direction: 'l' | 'r',
     services: Services,
     servicesMax: number,
-    e : number = 30,  // extra short line on either end, will be 0 in `indoor`
+    e: number = 30 // extra short line on either end, will be 0 in `indoor`
 ) => {
     var [prevY, prevX] = [] as number[];
     var path: { [key: string]: number[] } = {};

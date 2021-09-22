@@ -1,5 +1,4 @@
-import React, { memo, useContext, useMemo } from 'react';
-import { ParamContext } from '../../context';
+import React, { memo, useMemo } from 'react';
 import { adjacencyList, getXShareMTR, criticalPathMethod, getStnState } from '../railmap/methods/share';
 import StationSHMetro from './station-shmetro';
 import { StationsMTR } from '../railmap/methods/mtr';
@@ -40,7 +39,7 @@ const rightWideFactor = (stnList: StationDict, stnId: string) => {
 }
 
 const IndoorSHMetro = () => {
-    const { routes, branches, deps } = useContext(ParamContext);
+    const { routes, branches, depsStr: deps } = useAppSelector(store => store.helper);
     const param = useAppSelector(store => store.param);
 
     const adjMat = adjacencyList(
@@ -137,7 +136,7 @@ interface StationGroupProps {
 }
 
 const StationGroup = (props: StationGroupProps) => {
-    const { branches } = useContext(ParamContext);
+    const { branches } = useAppSelector(store => store.helper);
     const param = useAppSelector(store => store.param);
 
     return (
@@ -195,7 +194,7 @@ const InfoElements = () => {
         </>
     ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.svgWidth.indoor, param.svg_height]);
+        [param.svgWidth.indoor, param.svg_height, param.line_name]);
 };
 
 /* Some unused functions to split branches from the main line.

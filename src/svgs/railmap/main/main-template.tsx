@@ -1,11 +1,10 @@
-import React, { useContext, useMemo } from 'react';
-import { ParamContext } from '../../../context';
+import React, { useMemo } from 'react';
 import { adjacencyList, criticalPathMethod, getXShareMTR } from '../methods/share';
 import { StationDict } from '../../../constants/constants';
 import { useAppSelector } from '../../../redux';
 
 const MainTemplate = () => {
-    const { branches } = useContext(ParamContext);
+    const { branches } = useAppSelector(store => store.helper);
     const param = useAppSelector(store => store.param);
 
     const adjMat = adjacencyList(param.stn_list, leftWideFactor, rightWideFactor);
