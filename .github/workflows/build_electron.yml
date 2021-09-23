@@ -1,6 +1,9 @@
 name: Build Electron
 
 on:
+  push:
+    tags:
+      - rmg-*
   workflow_run:
     workflows: ["Build 2"]
     branches: [master]
