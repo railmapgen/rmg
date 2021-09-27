@@ -5,14 +5,44 @@ const params = {
     branch_spacing: 45,
     theme: [
         "beijing",
-        "bj1",
-        "#A4343A",
+        "bj7",
+        "#FFC56E",
         "#fff"
     ],
     direction: "r",
     current_stn_idx: "l1mz",
     platform_num: "2",
     stn_list: {
+        6918: {
+            name: [
+                "广渠门外",
+                "Guangqumen Wai"
+            ],
+            secondaryName: false,
+            num: "00",
+            services: [
+                "local"
+            ],
+            parents: [
+                "b5ig"
+            ],
+            children: [
+                "f31l"
+            ],
+            branch: {
+                left: [],
+                right: []
+            },
+            transfer: {
+                info: [
+                    []
+                ],
+                tick_direc: "r",
+                paid_area: true,
+                osi_names: []
+            },
+            facility: ""
+        },
         linestart: {
             parents: [],
             children: [
@@ -43,7 +73,7 @@ const params = {
         },
         lineend: {
             parents: [
-                "eqkp"
+                "gcjy"
             ],
             children: [],
             name: [
@@ -77,8 +107,8 @@ const params = {
                 "iwf6"
             ],
             name: [
-                "苹果园",
-                "Pingguo Yuan"
+                "北京西站",
+                "Beijing West Railway Station"
             ],
             branch: {
                 left: [],
@@ -93,19 +123,11 @@ const params = {
                     [
                         [
                             "beijing",
-                            "bj6",
-                            "#B58500",
+                            "bj9",
+                            "#97D700",
                             "#fff",
-                            "6号线",
-                            "Line 6"
-                        ],
-                        [
-                            "beijing",
-                            "s1l",
-                            "#A45A2A",
-                            "#fff",
-                            "S1线",
-                            "Line S1"
+                            "9号线",
+                            "Line 9"
                         ]
                     ]
                 ]
@@ -118,14 +140,14 @@ const params = {
         },
         iwf6: {
             children: [
-                "vlfi"
+                "ydi5"
             ],
             parents: [
                 "l1mz"
             ],
             name: [
-                "古城",
-                "Gucheng"
+                "湾子",
+                "Wanzi"
             ],
             branch: {
                 left: [],
@@ -146,10 +168,10 @@ const params = {
             facility: "",
             secondaryName: false
         },
-        vlfi: {
+        ydi5: {
             name: [
-                "八角游乐园",
-                "Bajiao Amusement Park"
+                "达官营",
+                "Daguanying"
             ],
             secondaryName: false,
             num: "00",
@@ -160,7 +182,7 @@ const params = {
                 "iwf6"
             ],
             children: [
-                "5ita"
+                "1h0h"
             ],
             branch: {
                 left: [],
@@ -176,10 +198,10 @@ const params = {
             },
             facility: ""
         },
-        '5ita': {
+        '1h0h': {
             name: [
-                "八宝山",
-                "Babaoshan"
+                "广安门内",
+                "Guang'anmen Nei"
             ],
             secondaryName: false,
             num: "00",
@@ -187,10 +209,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "vlfi"
+                "ydi5"
             ],
             children: [
-                "b2ng"
+                "jzfd"
             ],
             branch: {
                 left: [],
@@ -206,10 +228,10 @@ const params = {
             },
             facility: ""
         },
-        b2ng: {
+        jzfd: {
             name: [
-                "玉泉路",
-                "Yuquan Lu"
+                "菜市口",
+                "Caishi Kou"
             ],
             secondaryName: false,
             num: "00",
@@ -217,277 +239,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "5ita"
+                "1h0h"
             ],
             children: [
-                "d628"
-            ],
-            branch: {
-                left: [],
-                right: []
-            },
-            transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
-                paid_area: true,
-                osi_names: []
-            },
-            facility: ""
-        },
-        vuve: {
-            name: [
-                "四惠东",
-                "Sihui Dong(E)"
-            ],
-            secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "lf7i"
-            ],
-            children: [
-                "ay50"
-            ],
-            branch: {
-                left: [],
-                right: []
-            },
-            transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
-                paid_area: true,
-                osi_names: []
-            },
-            facility: ""
-        },
-        d628: {
-            name: [
-                "万寿路",
-                "Wanshou Lu"
-            ],
-            secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "b2ng"
-            ],
-            children: [
-                "pd4i"
-            ],
-            branch: {
-                left: [],
-                right: []
-            },
-            transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
-                paid_area: true,
-                osi_names: []
-            },
-            facility: ""
-        },
-        pd4i: {
-            name: [
-                "公主坟",
-                "Gongzhufen"
-            ],
-            secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "d628"
-            ],
-            children: [
-                "lbjd"
-            ],
-            branch: {
-                left: [],
-                right: []
-            },
-            transfer: {
-                info: [
-                    [
-                        [
-                            "beijing",
-                            "bj10",
-                            "#0092BC",
-                            "#fff",
-                            "10号线",
-                            "Line 10"
-                        ]
-                    ]
-                ],
-                tick_direc: "r",
-                paid_area: true,
-                osi_names: []
-            },
-            facility: ""
-        },
-        lbjd: {
-            name: [
-                "军事博物馆",
-                "Military Museum"
-            ],
-            secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "pd4i"
-            ],
-            children: [
-                "3op8"
-            ],
-            branch: {
-                left: [],
-                right: []
-            },
-            transfer: {
-                info: [
-                    [
-                        [
-                            "beijing",
-                            "bj9",
-                            "#97D700",
-                            "#fff",
-                            "9号线",
-                            "Line 9"
-                        ]
-                    ]
-                ],
-                tick_direc: "r",
-                paid_area: true,
-                osi_names: []
-            },
-            facility: ""
-        },
-        '3op8': {
-            name: [
-                "木樨地",
-                "Muxidi"
-            ],
-            secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "lbjd"
-            ],
-            children: [
-                "zfhq"
-            ],
-            branch: {
-                left: [],
-                right: []
-            },
-            transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
-                paid_area: true,
-                osi_names: []
-            },
-            facility: ""
-        },
-        zfhq: {
-            name: [
-                "南礼士路",
-                "Nanlishi Lu"
-            ],
-            secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "3op8"
-            ],
-            children: [
-                "0v5o"
-            ],
-            branch: {
-                left: [],
-                right: []
-            },
-            transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
-                paid_area: true,
-                osi_names: []
-            },
-            facility: ""
-        },
-        '0v5o': {
-            name: [
-                "复兴门",
-                "Fuxing Men"
-            ],
-            secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "zfhq"
-            ],
-            children: [
-                "fw9b"
-            ],
-            branch: {
-                left: [],
-                right: []
-            },
-            transfer: {
-                info: [
-                    [
-                        [
-                            "beijing",
-                            "bj2",
-                            "#004B87",
-                            "#fff",
-                            "2号线",
-                            "Line 2"
-                        ]
-                    ]
-                ],
-                tick_direc: "r",
-                paid_area: true,
-                osi_names: []
-            },
-            facility: ""
-        },
-        fw9b: {
-            name: [
-                "西单",
-                "Xidan"
-            ],
-            secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "0v5o"
-            ],
-            children: [
-                "7s0j"
+                "5jwb"
             ],
             branch: {
                 left: [],
@@ -512,10 +267,10 @@ const params = {
             },
             facility: ""
         },
-        '7s0j': {
+        '5jwb': {
             name: [
-                "天安门西",
-                "Tian'anmen Xi(W)"
+                "虎坊桥",
+                "Hufangqiao"
             ],
             secondaryName: false,
             num: "00",
@@ -523,10 +278,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "fw9b"
+                "jzfd"
             ],
             children: [
-                "a6rd"
+                "d8t0"
             ],
             branch: {
                 left: [],
@@ -542,10 +297,10 @@ const params = {
             },
             facility: ""
         },
-        a6rd: {
+        d8t0: {
             name: [
-                "天安门东",
-                "Tian'anmen Dong(E)"
+                "珠市口",
+                "Zhushi Kou"
             ],
             secondaryName: false,
             num: "00",
@@ -553,10 +308,49 @@ const params = {
                 "local"
             ],
             parents: [
-                "7s0j"
+                "5jwb"
             ],
             children: [
-                "owpe"
+                "ibpw"
+            ],
+            branch: {
+                left: [],
+                right: []
+            },
+            transfer: {
+                info: [
+                    [
+                        [
+                            "beijing",
+                            "bj8",
+                            "#009B77",
+                            "#fff",
+                            "8号线",
+                            "Line 8"
+                        ]
+                    ]
+                ],
+                tick_direc: "r",
+                paid_area: true,
+                osi_names: []
+            },
+            facility: ""
+        },
+        ibpw: {
+            name: [
+                "桥湾",
+                "Qiaowan"
+            ],
+            secondaryName: false,
+            num: "00",
+            services: [
+                "local"
+            ],
+            parents: [
+                "d8t0"
+            ],
+            children: [
+                "004v"
             ],
             branch: {
                 left: [],
@@ -572,10 +366,10 @@ const params = {
             },
             facility: ""
         },
-        owpe: {
+        '004v': {
             name: [
-                "王府井",
-                "Wangfujing"
+                "磁器口",
+                "Ciqi Kou"
             ],
             secondaryName: false,
             num: "00",
@@ -583,40 +377,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "a6rd"
+                "ibpw"
             ],
             children: [
-                "kehl"
-            ],
-            branch: {
-                left: [],
-                right: []
-            },
-            transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
-                paid_area: true,
-                osi_names: []
-            },
-            facility: ""
-        },
-        kehl: {
-            name: [
-                "东单",
-                "Dongdan"
-            ],
-            secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "owpe"
-            ],
-            children: [
-                "yzrw"
+                "b5ig"
             ],
             branch: {
                 left: [],
@@ -641,10 +405,10 @@ const params = {
             },
             facility: ""
         },
-        yzrw: {
+        b5ig: {
             name: [
-                "建国门",
-                "Jianguo Men"
+                "广渠门内",
+                "Guangqumen Nei"
             ],
             secondaryName: false,
             num: "00",
@@ -652,49 +416,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "kehl"
+                "004v"
             ],
             children: [
-                "f901"
-            ],
-            branch: {
-                left: [],
-                right: []
-            },
-            transfer: {
-                info: [
-                    [
-                        [
-                            "beijing",
-                            "bj2",
-                            "#004B87",
-                            "#fff",
-                            "2号线",
-                            "Line 2"
-                        ]
-                    ]
-                ],
-                tick_direc: "r",
-                paid_area: true,
-                osi_names: []
-            },
-            facility: ""
-        },
-        f901: {
-            name: [
-                "永安里",
-                "Yong'an Li"
-            ],
-            secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "yzrw"
-            ],
-            children: [
-                "v8cv"
+                "6918"
             ],
             branch: {
                 left: [],
@@ -710,10 +435,10 @@ const params = {
             },
             facility: ""
         },
-        v8cv: {
+        f31l: {
             name: [
-                "国贸",
-                "Guomao"
+                "双井",
+                "Shuangjing"
             ],
             secondaryName: false,
             num: "00",
@@ -721,10 +446,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "f901"
+                "6918"
             ],
             children: [
-                "xest"
+                "u7e2"
             ],
             branch: {
                 left: [],
@@ -749,10 +474,10 @@ const params = {
             },
             facility: ""
         },
-        xest: {
+        u7e2: {
             name: [
-                "大望路",
-                "Dawang Lu"
+                "九龙山",
+                "Jiulongshan"
             ],
             secondaryName: false,
             num: "00",
@@ -760,10 +485,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "v8cv"
+                "f31l"
             ],
             children: [
-                "lf7i"
+                "ngcw"
             ],
             branch: {
                 left: [],
@@ -788,10 +513,10 @@ const params = {
             },
             facility: ""
         },
-        lf7i: {
+        ngcw: {
             name: [
-                "四惠",
-                "Sihui"
+                "大郊亭",
+                "Dajiaoting"
             ],
             secondaryName: false,
             num: "00",
@@ -799,10 +524,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "xest"
+                "u7e2"
             ],
             children: [
-                "vuve"
+                "34ps"
             ],
             branch: {
                 left: [],
@@ -818,10 +543,10 @@ const params = {
             },
             facility: ""
         },
-        ay50: {
+        '34ps': {
             name: [
-                "高碑店",
-                "Gaobeidian"
+                "百子湾",
+                "Baiziwan"
             ],
             secondaryName: false,
             num: "00",
@@ -829,10 +554,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "vuve"
+                "ngcw"
             ],
             children: [
-                "g2m7"
+                "vsrh"
             ],
             branch: {
                 left: [],
@@ -848,10 +573,10 @@ const params = {
             },
             facility: ""
         },
-        g2m7: {
+        vsrh: {
             name: [
-                "传媒大学",
-                "Communication\\University of China"
+                "化工",
+                "Huagong"
             ],
             secondaryName: false,
             num: "00",
@@ -859,10 +584,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "ay50"
+                "34ps"
             ],
             children: [
-                "qk3z"
+                "tg0b"
             ],
             branch: {
                 left: [],
@@ -878,10 +603,10 @@ const params = {
             },
             facility: ""
         },
-        qk3z: {
+        tg0b: {
             name: [
-                "双桥",
-                "Shuang Qiao"
+                "南楼梓庄",
+                "Nanlouzi Zhuang"
             ],
             secondaryName: false,
             num: "00",
@@ -889,10 +614,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "g2m7"
+                "vsrh"
             ],
             children: [
-                "b9ib"
+                "gtbx"
             ],
             branch: {
                 left: [],
@@ -908,10 +633,10 @@ const params = {
             },
             facility: ""
         },
-        b9ib: {
+        gtbx: {
             name: [
-                "管庄",
-                "Guaanzhuang"
+                "欢乐谷景区",
+                "Happy Valley"
             ],
             secondaryName: false,
             num: "00",
@@ -919,10 +644,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "qk3z"
+                "tg0b"
             ],
             children: [
-                "431c"
+                "nkjt"
             ],
             branch: {
                 left: [],
@@ -938,10 +663,10 @@ const params = {
             },
             facility: ""
         },
-        '431c': {
+        nkjt: {
             name: [
-                "八里桥",
-                "Bali Qiao"
+                "垡头",
+                "Fatou"
             ],
             secondaryName: false,
             num: "00",
@@ -949,10 +674,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "b9ib"
+                "gtbx"
             ],
             children: [
-                "1s1w"
+                "t7e5"
             ],
             branch: {
                 left: [],
@@ -968,10 +693,10 @@ const params = {
             },
             facility: ""
         },
-        '1s1w': {
+        t7e5: {
             name: [
-                "通州北苑",
-                "Tongzhou Beiyuan"
+                "双合",
+                "Shuanghe"
             ],
             secondaryName: false,
             num: "00",
@@ -979,10 +704,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "431c"
+                "nkjt"
             ],
             children: [
-                "i4pk"
+                "t5yy"
             ],
             branch: {
                 left: [],
@@ -998,10 +723,10 @@ const params = {
             },
             facility: ""
         },
-        i4pk: {
+        t5yy: {
             name: [
-                "果园",
-                "Guoyuan"
+                "焦化厂",
+                "Jiaohua Chang"
             ],
             secondaryName: false,
             num: "00",
@@ -1009,10 +734,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "1s1w"
+                "t7e5"
             ],
             children: [
-                "rfzx"
+                "5gr4"
             ],
             branch: {
                 left: [],
@@ -1028,10 +753,10 @@ const params = {
             },
             facility: ""
         },
-        rfzx: {
+        '5gr4': {
             name: [
-                "九棵树",
-                "Jiukeshu"
+                "黄厂",
+                "Huangchang"
             ],
             secondaryName: false,
             num: "00",
@@ -1039,10 +764,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "i4pk"
+                "t5yy"
             ],
             children: [
-                "yehq"
+                "itww"
             ],
             branch: {
                 left: [],
@@ -1058,10 +783,10 @@ const params = {
             },
             facility: ""
         },
-        yehq: {
+        itww: {
             name: [
-                "梨园",
-                "Liyuan"
+                "郎辛庄",
+                "Langxinzhuang"
             ],
             secondaryName: false,
             num: "00",
@@ -1069,10 +794,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "rfzx"
+                "5gr4"
             ],
             children: [
-                "ofqx"
+                "682f"
             ],
             branch: {
                 left: [],
@@ -1088,10 +813,10 @@ const params = {
             },
             facility: ""
         },
-        ofqx: {
+        '682f': {
             name: [
-                "临河里",
-                "Linheli"
+                "黑庄户",
+                "Heizhuanghu"
             ],
             secondaryName: false,
             num: "00",
@@ -1099,10 +824,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "yehq"
+                "itww"
             ],
             children: [
-                "i623"
+                "ipwb"
             ],
             branch: {
                 left: [],
@@ -1118,10 +843,10 @@ const params = {
             },
             facility: ""
         },
-        i623: {
+        ipwb: {
             name: [
-                "土桥",
-                "Tu Qiao"
+                "万盛西",
+                "Wansheng Xi(W)"
             ],
             secondaryName: false,
             num: "00",
@@ -1129,10 +854,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "ofqx"
+                "682f"
             ],
             children: [
-                "sa6k"
+                "qu5i"
             ],
             branch: {
                 left: [],
@@ -1148,7 +873,97 @@ const params = {
             },
             facility: ""
         },
-        sa6k: {
+        qu5i: {
+            name: [
+                "万盛东",
+                "Wansheng Dong(E)"
+            ],
+            secondaryName: false,
+            num: "00",
+            services: [
+                "local"
+            ],
+            parents: [
+                "ipwb"
+            ],
+            children: [
+                "os8u"
+            ],
+            branch: {
+                left: [],
+                right: []
+            },
+            transfer: {
+                info: [
+                    []
+                ],
+                tick_direc: "r",
+                paid_area: true,
+                osi_names: []
+            },
+            facility: ""
+        },
+        os8u: {
+            name: [
+                "群芳",
+                "Qunfang"
+            ],
+            secondaryName: false,
+            num: "00",
+            services: [
+                "local"
+            ],
+            parents: [
+                "qu5i"
+            ],
+            children: [
+                "9e3f"
+            ],
+            branch: {
+                left: [],
+                right: []
+            },
+            transfer: {
+                info: [
+                    []
+                ],
+                tick_direc: "r",
+                paid_area: true,
+                osi_names: []
+            },
+            facility: ""
+        },
+        '9e3f': {
+            name: [
+                "高楼金",
+                "Gaoloujin"
+            ],
+            secondaryName: false,
+            num: "00",
+            services: [
+                "local"
+            ],
+            parents: [
+                "os8u"
+            ],
+            children: [
+                "3fnb"
+            ],
+            branch: {
+                left: [],
+                right: []
+            },
+            transfer: {
+                info: [
+                    []
+                ],
+                tick_direc: "r",
+                paid_area: true,
+                osi_names: []
+            },
+            facility: ""
+        },
+        '3fnb': {
             name: [
                 "花庄",
                 "Huazhuang"
@@ -1159,10 +974,10 @@ const params = {
                 "local"
             ],
             parents: [
-                "i623"
+                "9e3f"
             ],
             children: [
-                "eqkp"
+                "gcjy"
             ],
             branch: {
                 left: [],
@@ -1173,11 +988,11 @@ const params = {
                     [
                         [
                             "beijing",
-                            "bj7",
-                            "#FFC56E",
+                            "bj1",
+                            "#A4343A",
                             "#fff",
-                            "7号线",
-                            "Line 7"
+                            "1号线/八通线",
+                            "Line 1/Batong Line"
                         ]
                     ]
                 ],
@@ -1187,7 +1002,7 @@ const params = {
             },
             facility: ""
         },
-        eqkp: {
+        gcjy: {
             name: [
                 "环球度假区",
                 "Universal Resort"
@@ -1198,7 +1013,7 @@ const params = {
                 "local"
             ],
             parents: [
-                "sa6k"
+                "3fnb"
             ],
             children: [
                 "lineend"
@@ -1212,11 +1027,11 @@ const params = {
                     [
                         [
                             "beijing",
-                            "bj7",
-                            "#FFC56E",
+                            "bj1",
+                            "#A4343A",
                             "#fff",
-                            "7号线",
-                            "Line 7"
+                            "1号线/八通线",
+                            "Line 1/Batong Line"
                         ]
                     ]
                 ],
@@ -1228,8 +1043,8 @@ const params = {
         }
     },
     line_name: [
-        "1号线",
-        "Line 1"
+        "7号线",
+        "Line 7"
     ],
     psd_num: "1",
     line_num: "TW",
@@ -1243,7 +1058,7 @@ const params = {
     svgWidth: {
         destination: 2000,
         runin: 2000,
-        railmap: 2500,
+        railmap: 2000,
         indoor: 2000
     },
     notesGZMTR: [],
@@ -1251,6 +1066,6 @@ const params = {
         isStagger: true,
         isFlip: false
     }
-};
+}
 
 export default params;

@@ -54,11 +54,11 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
-            filename: 'btl',
+            filename: 'bj7',
             name: {
-                en: 'Batong Line by AnDanJuneUnderline',
-                'zh-Hans': '八通线 来自 AnDanJuneUnderline',
-                'zh-Hant': '八通線 來自 AnDanJuneUnderline',
+                en: 'Line 7 by AnDanJuneUnderline',
+                'zh-Hans': '7号线 来自 AnDanJuneUnderline',
+                'zh-Hant': '7號線 來自 AnDanJuneUnderline',
             },
         },
     ],
