@@ -108,7 +108,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
                 )}
             </g>
 
-            {termianl && param.info_panel_type === 'sh' ? (
+            {termianl && param.info_panel_type !== 'sh2020' ? (
                 <>
                     <path
                         transform="translate(0,220)"
@@ -122,7 +122,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
                         <CurrentText />
                     </g>
                 </>
-            ) : original && param.info_panel_type === 'sh' ? (
+            ) : original && param.info_panel_type !== 'sh2020' ? (
                 <>
                     <path
                         transform="translate(0,220)"
