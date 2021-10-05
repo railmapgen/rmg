@@ -2,7 +2,7 @@ const params = {
     svg_height: 500,
     padding: 2.88,
     y_pc: 40,
-    branch_spacing: 75.2,
+    branch_spacing: 55,
     theme: ['shanghai', 'sh11', '#76232F', '#fff'],
     direction: 'l',
     current_stn_idx: 'pc7q',

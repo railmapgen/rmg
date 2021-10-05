@@ -299,6 +299,22 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
+            filename: 'sh9',
+            name: {
+                en: 'Line 9',
+                'zh-Hans': '9号线',
+                'zh-Hant': '9號線',
+            },
+        },
+        {
+            filename: 'sh10',
+            name: {
+                en: 'Line 10 by Thomastzc',
+                'zh-Hans': '10号线 来自 Thomastzc',
+                'zh-Hant': '10號線 來自 Thomastzc',
+            },
+        },
+        {
             filename: 'sh11',
             name: {
                 en: 'Line 11 by Tianxiu11111',

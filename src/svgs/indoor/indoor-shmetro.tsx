@@ -26,15 +26,15 @@ export const DefsSHMetro = React.memo(() => (
 
 const leftWideFactor = (stnList: StationDict, stnId: string) => {
     let res = 0
-    if (stnList[stnId].parents.length === 2) res += 0.4
-    if (stnList[stnList[stnId].parents[0]].children.length === 2) res += 0.4
+    if (stnList[stnId].parents.length === 2) res += 1
+    if (stnList[stnList[stnId].parents[0]].children.length === 2) res += 1
     return res
 }
 
 const rightWideFactor = (stnList: StationDict, stnId: string) => {
     let res = 0
-    if (stnList[stnId].children.length === 2) res += 0.4
-    if (stnList[stnList[stnId].children[0]].parents.length === 2) res += 0.4
+    if (stnList[stnId].children.length === 2) res += 1
+    if (stnList[stnList[stnId].children[0]].parents.length === 2) res += 1
     return res
 }
 
@@ -77,7 +77,7 @@ const IndoorSHMetro = () => {
         [deps]
     );
     const ys = Object.keys(yShares).reduce(
-        (acc, cur) => ({ ...acc, [cur]: yShares[cur] * param.branch_spacing }),
+        (acc, cur) => ({ ...acc, [cur]: yShares[cur] * param.branch_spacing * 2 }),
         {} as typeof yShares
     );
 
@@ -94,7 +94,7 @@ const IndoorSHMetro = () => {
         lineXs,
         xs,
         ys,
-        param.branch_spacing,
+        param.branch_spacing * 2,
         criticalPath,
         0
     );
