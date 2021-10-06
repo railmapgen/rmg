@@ -394,6 +394,6 @@ const DirectionElements = () => {
             </g>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.direction, param.svgWidth.railmap]
+        [param.direction, param.svgWidth.railmap, param.svg_height]
     );
 };

@@ -153,7 +153,7 @@ const params = {
                 right: [],
             },
             transfer: {
-                info: [[]],
+                info: [[["shanghai", "sh18", "#D6A461", "#000", "18号线", "Line 18"]]],
                 tick_direc: 'r',
                 paid_area: true,
                 osi_names: [],
