@@ -1207,7 +1207,7 @@ const params = {
         "Line 12"
     ],
     psd_num: "",
-    line_num: "2",
+    line_num: "12",
     info_panel_type: "sh",
     direction_gz_x: 2.21,
     direction_gz_y: 12.724668484036409,

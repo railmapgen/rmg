@@ -806,7 +806,7 @@ const params = {
     },
     line_name: ['11号线', 'Line11'],
     psd_num: '1',
-    line_num: 'TW',
+    line_num: '11',
     info_panel_type: 'sh',
     direction_gz_x: 50,
     direction_gz_y: 70,

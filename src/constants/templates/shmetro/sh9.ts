@@ -1256,7 +1256,7 @@ const params = {
         "Line 9"
     ],
     psd_num: "1",
-    line_num: "TW",
+    line_num: "9",
     info_panel_type: "sh",
     direction_gz_x: 50,
     direction_gz_y: 70,

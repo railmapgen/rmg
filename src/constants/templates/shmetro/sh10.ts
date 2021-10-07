@@ -1343,8 +1343,8 @@ const params = {
         "Line10"
     ],
     psd_num: "1",
-    line_num: "TW",
-    info_panel_type: "gz28",
+    line_num: "10",
+    info_panel_type: "sh",
     direction_gz_x: 50,
     direction_gz_y: 70,
     customiseMTRDest: {
