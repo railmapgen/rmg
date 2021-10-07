@@ -339,11 +339,27 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
+            filename: 'sh15',
+            name: {
+                en: 'Line 15 by Thomastzc',
+                'zh-Hans': '15号线 来自 Thomastzc',
+                'zh-Hant': '15號線 來自 Thomastzc',
+            },
+        },
+        {
             filename: 'sh16',
             name: {
                 en: 'Line 16',
                 'zh-Hans': '16号线',
                 'zh-Hant': '16號線',
+            },
+        },
+        {
+            filename: 'sh17',
+            name: {
+                en: 'Line 17 by Thomastzc',
+                'zh-Hans': '17号线 来自 Thomastzc',
+                'zh-Hant': '17號線 來自 Thomastzc',
             },
         },
     ],
