@@ -309,9 +309,9 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
         {
             filename: 'sh10',
             name: {
-                en: 'Line 10 by Thomastzc',
-                'zh-Hans': '10号线 来自 Thomastzc',
-                'zh-Hant': '10號線 來自 Thomastzc',
+                en: 'Line 10',
+                'zh-Hans': '10号线',
+                'zh-Hant': '10號線',
             },
         },
         {
@@ -320,6 +320,22 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
                 en: 'Line 11 by Tianxiu11111',
                 'zh-Hans': '11号线 来自 Tianxiu11111',
                 'zh-Hant': '11號線 來自 Tianxiu11111',
+            },
+        },
+        {
+            filename: 'sh12',
+            name: {
+                en: 'Line 12 by Andy1782010',
+                'zh-Hans': '12号线 来自 Andy1782010',
+                'zh-Hant': '12號線 來自 Andy1782010',
+            },
+        },
+        {
+            filename: 'sh13',
+            name: {
+                en: 'Line 13 by Andy1782010',
+                'zh-Hans': '13号线 来自 Andy1782010',
+                'zh-Hant': '13號線 來自 Andy1782010',
             },
         },
         {
