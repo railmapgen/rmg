@@ -25,6 +25,7 @@ export enum CityCode {
     Paris = 'paris',
     Qingdao = 'qingdao',
     SanFrancisco = 'sanfrancisco',
+    SaoPaulo = 'saopaulo',
     Seoul = 'seoul',
     Shanghai = 'shanghai',
     Shenzhen = 'shenzhen',
@@ -57,6 +58,7 @@ export const cityList: CityEntry[] = [
         country: 'ES',
         name: {
             en: 'Barcelona',
+            es: 'Barcelona',
             'zh-Hans': '巴塞罗那',
             'zh-HK': '巴塞隆拿',
             'zh-TW': '巴塞隆納',
@@ -262,6 +264,16 @@ export const cityList: CityEntry[] = [
             'zh-Hans': '旧金山',
             'zh-HK': '三藩市',
             'zh-TW': '舊金山',
+        },
+    },
+    {
+        id: CityCode.SaoPaulo,
+        country: 'BR',
+        name: {
+            en: 'Sao Paulo',
+            pt: 'São Paulo',
+            'zh-Hans': '圣保罗',
+            'zh-Hant': '聖保羅',
         },
     },
     {
