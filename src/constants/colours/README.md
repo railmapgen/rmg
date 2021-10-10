@@ -2,8 +2,8 @@
 
 This directory contains
 
--   `city_list.json`, a list of cities sorted by their English name in alphabetical order; and
--   `[city].json`, a list of colours used in the city's public transportation system.
+-   `city-config.ts`, a list of cities sorted by their English name in alphabetical order; and
+-   `[city].ts`, a list of colours used in the city's public transportation system.
 
 Please follow the rules below to
 
@@ -11,7 +11,7 @@ Please follow the rules below to
 -   Update colours; or
 -   Add translations for cities or lines.
 
-A typical example of an entry of `city_list.json`:
+A typical example of an entry of `city-config.ts`:
 
 ```JSON
 {
@@ -56,6 +56,7 @@ A typical example of an entry of `guangzhou.json`:
 | Nanjing   | [Template:南京地铁颜色 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/Template:南京地铁颜色)                                                                                                                                                               |
 | Paris     | [Map of the metro, RER, bus and tramway lines                                                                                                                                                                                                                         | RATP](https://www.ratp.fr/en/plans) |
 | Qingdao   | [青岛地铁 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/青岛地铁#识别色)                                                                                                                                                                                  |
+| SaoPaulo  | [申请提交圣保罗颜色](https://github.com/wongchito/RailMapGenerator/issues/142) 
 | Shanghai  | [《上海轨道交通网络近期规划建设线路标志色方案》征求市民意见公告 - 上海地铁](http://www.shmetro.com/node49/201109/con109210.htm) <br> [模块:RailSystems/SHMetro - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/模块:RailSystems/SHMetro)                    |
 | Shenzhen  | [道路交通管理设施设置技术标准 第 5 部分: 交通枢纽客运服务标志（征求意见稿）](http://www.sz.gov.cn/cn/xxgk/zfxxgj/tzgg/201104/P020110425642051308137.pdf) <br> [Template:深圳地铁颜色 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/Template:深圳地铁颜色) |
 | Tianjin   | [Template:天津轨道交通颜色 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/Template:天津轨道交通颜色)                                                                                                                                                       |

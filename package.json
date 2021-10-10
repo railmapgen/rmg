@@ -8,6 +8,7 @@
     "license": "GPL-3.0-only",
     "dependencies": {
         "@material-ui/core": "^4.9.9",
+        "electron-is-dev": "^2.0.0",
         "i18next": "^20.3.2",
         "i18next-browser-languagedetector": "^6.1.2",
         "i18next-xhr-backend": "^3.2.2",
@@ -21,6 +22,8 @@
     },
     "devDependencies": {
         "@types/css-font-loading-module": "^0.0.5",
+        "@types/enzyme": "^3.10.9",
+        "@types/enzyme-adapter-react-16": "^1.0.6",
         "@types/jest": "^26.0.23",
         "@types/node": "^14.17.4",
         "@types/react": "^16.14.10",
@@ -28,6 +31,8 @@
         "@types/react-router-dom": "^5.1.7",
         "@types/redux-mock-store": "^1.0.2",
         "cross-env": "^7.0.3",
+        "electron": "^12.0.17",
+        "electron-builder": "^22.10.5",
         "enzyme": "^3.11.0",
         "enzyme-adapter-react-16": "^1.15.6",
         "eslint-plugin-prettier": "^3.4.0",
@@ -35,14 +40,18 @@
         "react-app-rewired": "^2.1.8",
         "react-scripts": "^4.0.3",
         "redux-mock-store": "^1.5.4",
-        "typescript": "^4.2.4"
+        "typescript": "^4.2.4",
+        "wait-on": "^5.3.0"
     },
     "scripts": {
         "start": "react-scripts start",
         "build": "react-app-rewired build",
         "test": "react-scripts test",
         "test:no-watch": "cross-env CI=true react-scripts test --env=jsdom",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "electron-dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
+        "electron-package": "./node_modules/.bin/electron-builder -c.extraMetadata.main=build/electron.js",
+        "electron-package-win": ".\\node_modules\\.bin\\electron-builder -c.extraMetadata.main=build/electron.js"
     },
     "browserslist": {
         "production": [
@@ -56,5 +65,17 @@
             "last 1 safari version"
         ]
     },
-    "version": "3.9.19"
+    "version": "3.9.33",
+    "main": "public/electron.js",
+    "build": {
+        "publish": [
+            {
+                "provider": "github",
+                "vPrefixedTagName": false
+            }
+        ],
+        "snap": {
+            "publish": "github"
+        }
+    }
 }

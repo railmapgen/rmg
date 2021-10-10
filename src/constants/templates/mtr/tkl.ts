@@ -6,7 +6,7 @@ const params = {
     padding: 18.12097812097812,
     y_pc: 40,
     strip_pc: 90,
-    branch_spacing: 39.86615186615187,
+    branch_spacing: 70,
     theme: ['hongkong', 'tkl', '#a35eb5', '#fff'],
     direction: 'r',
     current_stn_idx: 'jiaf',

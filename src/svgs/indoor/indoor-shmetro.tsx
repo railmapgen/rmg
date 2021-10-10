@@ -1,11 +1,9 @@
-import React, { memo, useContext, useMemo } from 'react';
-import { ParamContext } from '../../context';
+import React, { memo, useMemo } from 'react';
 import { adjacencyList, getXShareMTR, criticalPathMethod, getStnState } from '../railmap/methods/share';
 import StationSHMetro from './station-shmetro';
 import { StationsMTR } from '../railmap/methods/mtr';
 import { StationDict } from "../../constants/constants";
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppSelector } from '../../redux';
 
 export default memo(function IndoorWrapperSHMetro() {
     return (
@@ -28,21 +26,21 @@ export const DefsSHMetro = React.memo(() => (
 
 const leftWideFactor = (stnList: StationDict, stnId: string) => {
     let res = 0
-    if (stnList[stnId].parents.length === 2) res += 0.4
-    if (stnList[stnList[stnId].parents[0]].children.length === 2) res += 0.4
+    if (stnList[stnId].parents.length === 2) res += 1
+    if (stnList[stnList[stnId].parents[0]].children.length === 2) res += 1
     return res
 }
 
 const rightWideFactor = (stnList: StationDict, stnId: string) => {
     let res = 0
-    if (stnList[stnId].children.length === 2) res += 0.4
-    if (stnList[stnList[stnId].children[0]].parents.length === 2) res += 0.4
+    if (stnList[stnId].children.length === 2) res += 1
+    if (stnList[stnList[stnId].children[0]].parents.length === 2) res += 1
     return res
 }
 
 const IndoorSHMetro = () => {
-    const { routes, branches, deps } = useContext(ParamContext);
-    const param = useSelector((store: RootState) => store.param);
+    const { routes, branches, depsStr: deps } = useAppSelector(store => store.helper);
+    const param = useAppSelector(store => store.param);
 
     const adjMat = adjacencyList(
         param.stn_list,
@@ -79,7 +77,7 @@ const IndoorSHMetro = () => {
         [deps]
     );
     const ys = Object.keys(yShares).reduce(
-        (acc, cur) => ({ ...acc, [cur]: yShares[cur] * param.branch_spacing }),
+        (acc, cur) => ({ ...acc, [cur]: yShares[cur] * param.branch_spacing * 2 }),
         {} as typeof yShares
     );
 
@@ -96,7 +94,7 @@ const IndoorSHMetro = () => {
         lineXs,
         xs,
         ys,
-        param.branch_spacing,
+        param.branch_spacing * 2,
         criticalPath,
         0
     );
@@ -138,8 +136,8 @@ interface StationGroupProps {
 }
 
 const StationGroup = (props: StationGroupProps) => {
-    const { branches } = useContext(ParamContext);
-    const param = useSelector((store: RootState) => store.param);
+    const { branches } = useAppSelector(store => store.helper);
+    const param = useAppSelector(store => store.param);
 
     return (
         <g>
@@ -161,7 +159,7 @@ const StationGroup = (props: StationGroupProps) => {
 };
 
 const InfoElements = () => {
-    const param = useSelector((store: RootState) => store.param);
+    const param = useAppSelector(store => store.param);
 
     return React.useMemo(() => (
         <>
@@ -196,7 +194,7 @@ const InfoElements = () => {
         </>
     ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.svgWidth.indoor, param.svg_height]);
+        [param.svgWidth.indoor, param.svg_height, param.line_name]);
 };
 
 /* Some unused functions to split branches from the main line.

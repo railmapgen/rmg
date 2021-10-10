@@ -29,7 +29,7 @@ fi
 
 
 ### BUILD
-mkdir $UAT_REPO_NAME/$RMG_VER/
+mkdir -p $UAT_REPO_NAME/$RMG_VER/
 
 # PRD
 if [ "$BRANCH" = "master" ]
@@ -48,8 +48,7 @@ cp -r build/ $UAT_REPO_NAME/$RMG_VER/UAT/
 ### PUSH TAG AND COMMIT
 if [ "$BRANCH" = "master" ]
 then
-  git push origin HEAD
-  git push origin "${APP_NAME}-${RMG_VER}"
+  git push --atomic origin HEAD "${APP_NAME}-${RMG_VER}"
 fi
 
 

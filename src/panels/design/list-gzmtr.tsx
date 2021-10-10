@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo, ChangeEvent } from 'react';
+import React, { useState, useMemo, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -27,10 +27,8 @@ import {
     Select,
 } from '@material-ui/core';
 
-import { ParamContext } from '../../context';
 import { PanelTypeGZMTR, Note } from '../../constants/constants';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../redux';
 import { addNote, removeNote, setLineNum, setPanelType, setPsdNum, updateNote } from '../../redux/param/action';
 
 const useStyles = makeStyles(theme =>
@@ -43,10 +41,10 @@ const useStyles = makeStyles(theme =>
 
 const DesignListGZMTR = () => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const lineNum = useSelector((store: RootState) => store.param.line_num);
-    const psdNum = useSelector((store: RootState) => store.param.psd_num);
+    const lineNum = useAppSelector(store => store.param.line_num);
+    const psdNum = useAppSelector(store => store.param.psd_num);
 
     const handleLineNumChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
         dispatch(setLineNum(value));
@@ -85,9 +83,9 @@ export default DesignListGZMTR;
 
 const PanelTypeLi = () => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const panelType = useSelector((store: RootState) => store.param.info_panel_type);
+    const panelType = useAppSelector(store => store.param.info_panel_type);
 
     return useMemo(() => {
         const handleChange = ({ target: { value } }: ChangeEvent<{ name?: string; value: unknown }>) => {
@@ -115,9 +113,9 @@ const PanelTypeLi = () => {
 const NotesLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const notes = useSelector((store: RootState) => store.param.notesGZMTR);
+    const notes = useAppSelector(store => store.param.notesGZMTR);
 
     const [isCollapse, setIsCollapse] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -166,9 +164,9 @@ const NotesLi = () => {
 
 const NotesEntry = (props: { idx: number; onEdit: () => void }) => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const notes = useSelector((store: RootState) => store.param.notesGZMTR);
+    const notes = useAppSelector(store => store.param.notesGZMTR);
     const selectedNote = notes[props.idx];
 
     const [toggleEl, setToggleEl] = useState<null | HTMLElement>(null);
@@ -269,9 +267,9 @@ interface AddNoteDialogProps {
 
 const NoteEditDialog = (props: AddNoteDialogProps) => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const notes = useSelector((store: RootState) => store.param.notesGZMTR);
+    const notes = useAppSelector(store => store.param.notesGZMTR);
     const selectedNote = notes[props.idx] || ['', '', 0, 0, false];
 
     const [noteZH, setNoteZH] = useState(selectedNote[0] || '');

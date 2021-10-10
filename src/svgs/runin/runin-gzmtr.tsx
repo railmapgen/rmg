@@ -1,16 +1,15 @@
 import React from 'react';
 import StripGZMTR from '../strip/strip-gzmtr';
 import InfoGZMTR from './info-gzmtr';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppSelector } from '../../redux';
 import { CanvasType, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 
 const RunInGZMTR = () => {
-    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
-    const direction = useSelector((store: RootState) => store.param.direction);
-    const infoPanelType = useSelector((store: RootState) => store.param.info_panel_type);
-    const platformNumber = useSelector((store: RootState) => store.param.platform_num);
-    const psdNumber = useSelector((store: RootState) => store.param.psd_num);
+    const svgWidths = useAppSelector(store => store.param.svgWidth);
+    const direction = useAppSelector(store => store.param.direction);
+    const infoPanelType = useAppSelector(store => store.param.info_panel_type);
+    const platformNumber = useAppSelector(store => store.param.platform_num);
+    const psdNumber = useAppSelector(store => store.param.psd_num);
 
     const otisTransforms = {
         platform: `translate(${direction === ShortDirection.left ? 50 : -50},45)`,
@@ -70,8 +69,8 @@ const PlatformNum = (props: { num: string | false } & React.SVGProps<SVGGElement
 };
 
 const OtisFrame = () => {
-    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
-    const svgHeight = useSelector((store: RootState) => store.param.svg_height);
+    const svgWidths = useAppSelector(store => store.param.svgWidth);
+    const svgHeight = useAppSelector(store => store.param.svg_height);
     return (
         <g id="otis_frame" strokeWidth={3} stroke="black">
             <line y2={svgHeight} transform={`translate(${svgWidths[CanvasType.RunIn] / 2},0)`} />

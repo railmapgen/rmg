@@ -1,14 +1,10 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import AppAppBar from './app-appbar';
 import SVGs from './svgs';
 import Panels from './panels';
-import { getBranches, useTpo, getRoutes } from './methods';
-import { ParamContext } from './context';
 import { createMuiTheme, ThemeProvider, useMediaQuery, LinearProgress } from '@material-ui/core';
-import { StationInfo } from './constants/constants';
-import { useSelector } from 'react-redux';
-import { RootState } from './redux';
+import { useAppSelector } from './redux';
 
 const darkTheme = createMuiTheme({
     palette: {
@@ -86,50 +82,22 @@ export default function App() {
 }
 
 const AppBody = () => {
-    const param = useSelector((store: RootState) => store.param);
+    const param = useAppSelector(store => store.param);
+
     const paramString = JSON.stringify(param);
     useEffect(() => {
         window.rmgStorage.writeFile('rmgParam', paramString).then();
     }, [paramString]);
 
-    const deps = Object.keys(param.stn_list).reduce(
-        (acc, cur) =>
-            acc +
-            cur +
-            (
-                (...k: (keyof StationInfo)[]) =>
-                (o: StationInfo) =>
-                    k.reduce((a, c) => a + JSON.stringify(o[c]), '')
-            )(
-                'parents',
-                'children',
-                'branch'
-            )(param.stn_list[cur]),
-        ''
-    );
-
-    const branches = useMemo(
-        () => getBranches(param.stn_list),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [deps]
-    );
-    const routes = useMemo(
-        () => getRoutes(param.stn_list),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [deps]
-    );
-    const tpo = useTpo(branches);
-
     return (
         <>
-            <ParamContext.Provider value={{ branches, routes, deps, tpo }}>
-                <div style={{ overflowY: 'auto' }}>
-                    <SVGs />
-                </div>
-                <div style={{ flex: 1, overflow: 'hidden' }}>
-                    <Panels />
-                </div>
-            </ParamContext.Provider>
+            <div style={{ overflowY: 'auto' }}>
+                <SVGs />
+            </div>
+            <div style={{ flex: 1, overflow: 'hidden' }}>
+                <Panels />
+            </div>
+
             <canvas style={{ display: 'none' }} />
         </>
     );

@@ -15,8 +15,8 @@ import {
     StationInfo,
     Theme,
 } from '../../constants/constants';
-import { Dispatch } from 'redux';
-import { RootState } from '../index';
+import { AppDispatch, RootState } from '../index';
+import { triggerHelpersUpdate } from '../helper/action';
 
 export const SET_FULL_PARAM = 'SET_FULL_PARAM';
 
@@ -153,8 +153,15 @@ export interface setStationsBulkAction {
     stations: StationDict;
 }
 
-export const setFullParam = (fullParam: RMGParam): setFullParamAction => {
-    return { type: SET_FULL_PARAM, fullParam };
+// export const setFullParam = (fullParam: RMGParam): setFullParamAction => {
+//     return { type: SET_FULL_PARAM, fullParam };
+// };
+
+export const setFullParam = (fullParam: RMGParam) => {
+    return (dispatch: AppDispatch) => {
+        dispatch({ type: SET_FULL_PARAM, fullParam });
+        dispatch(triggerHelpersUpdate());
+    };
 };
 
 export const setSvgHeight = (svgHeight: number): setSvgHeightAction => {
@@ -218,21 +225,21 @@ const setNotes = (notes: Note[]): setNotesAction => {
 };
 
 export const addNote = () => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const notes = getState().param.notesGZMTR;
         dispatch(setNotes(notes.concat([['', '', 0, 0, false]])));
     };
 };
 
 export const updateNote = (index: number, updatedNote: Note) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const notes = getState().param.notesGZMTR;
         dispatch(setNotes(notes.map((originalNote, idx) => (idx === index ? updatedNote : originalNote))));
     };
 };
 
 export const removeNote = (index: number) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const notes = getState().param.notesGZMTR;
         dispatch(setNotes(notes.filter((_, idx) => idx !== index)));
     };
@@ -243,14 +250,14 @@ const setNamePosition = (namePosition: RMGParam['namePosMTR']): setNamePositionA
 };
 
 export const staggerStationNames = (isStagger: boolean) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const namePosition = getState().param.namePosMTR;
         dispatch(setNamePosition({ ...namePosition, isStagger }));
     };
 };
 
 export const flipStationNames = () => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const namePosition = getState().param.namePosMTR;
         dispatch(setNamePosition({ ...namePosition, isFlip: !namePosition.isFlip }));
     };
@@ -263,14 +270,14 @@ const setCustomisedMtrDestination = (
 };
 
 export const toggleLineNameBeforeDestination = (isShow: boolean) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const customisedMtrDestination = getState().param.customiseMTRDest;
         dispatch(setCustomisedMtrDestination({ ...customisedMtrDestination, isLegacy: isShow }));
     };
 };
 
 export const customiseDestinationName = (customisedName: Name | false) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const customisedMtrDestination = getState().param.customiseMTRDest;
         dispatch(setCustomisedMtrDestination({ ...customisedMtrDestination, terminal: customisedName }));
     };
@@ -280,16 +287,30 @@ export const setCurrentStation = (currentStation: string): setCurrentStationActi
     return { type: SET_CURRENT_STATION, currentStation };
 };
 
-const setStation = (stationId: string, station: StationInfo): setStationAction => {
-    return { type: SET_STATION, stationId, station };
+// const setStation = (stationId: string, station: StationInfo): setStationAction => {
+//     return { type: SET_STATION, stationId, station };
+// };
+
+export const setStation = (stationId: string, station: StationInfo) => {
+    return (dispatch: AppDispatch) => {
+        dispatch({ type: SET_STATION, stationId, station });
+        dispatch(triggerHelpersUpdate());
+    };
 };
 
-export const setStationsBulk = (stations: StationDict): setStationsBulkAction => {
-    return { type: SET_STATIONS_BULK, stations };
+// export const setStationsBulk = (stations: StationDict): setStationsBulkAction => {
+//     return { type: SET_STATIONS_BULK, stations };
+// };
+
+export const setStationsBulk = (stations: StationDict) => {
+    return (dispatch: AppDispatch) => {
+        dispatch({ type: SET_STATIONS_BULK, stations });
+        dispatch(triggerHelpersUpdate());
+    };
 };
 
 export const reverseStations = () => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const { stn_list } = getState().param;
         const newStationList = Object.keys(stn_list).reduce(
             (acc, stnId) => ({
@@ -334,21 +355,21 @@ export const reverseStations = () => {
 };
 
 export const updateStationName = (stationId: string, name: Name) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
         dispatch(setStation(stationId, { ...stationInfo, name }));
     };
 };
 
 export const updateStationSecondaryName = (stationId: string, secondaryName: Name | false) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
         dispatch(setStation(stationId, { ...stationInfo, secondaryName }));
     };
 };
 
 export const updateStationNum = (stationId: string, num: string) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
         dispatch(setStation(stationId, { ...stationInfo, num }));
     };
@@ -361,7 +382,7 @@ export const updateStationNum = (stationId: string, num: string) => {
  * @param interchangeInfo
  */
 export const addInterchange = (stationId: string, setIndex: number, interchangeInfo: InterchangeInfo) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
         const newTransferInfo = stationInfo.transfer.info.map(i => i.slice());
@@ -381,7 +402,7 @@ export const addInterchange = (stationId: string, setIndex: number, interchangeI
 };
 
 export const removeInterchange = (stationId: string, setIndex: number, interchangeIndex: number) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
         if (
@@ -404,7 +425,7 @@ export const updateInterchange = (
     interchangeIndex: number,
     interchangeInfo: InterchangeInfo
 ) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
         if (
@@ -430,7 +451,7 @@ export const updateInterchange = (
 };
 
 export const updateStationOsiName = (stationId: string, setIndex: number, osiName: Name) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
         const newOsiNames = stationInfo.transfer.osi_names.map(i => i.slice()) as Name[];
@@ -452,7 +473,7 @@ export const updateStationOsiName = (stationId: string, setIndex: number, osiNam
 };
 
 export const updateStationTickDirection = (stationId: string, tickDirection: ShortDirection) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
         dispatch(
             setStation(stationId, {
@@ -464,7 +485,7 @@ export const updateStationTickDirection = (stationId: string, tickDirection: Sho
 };
 
 export const updateStationPaidArea = (stationId: string, isPaidArea: boolean) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
         dispatch(
             setStation(stationId, {
@@ -476,7 +497,7 @@ export const updateStationPaidArea = (stationId: string, isPaidArea: boolean) =>
 };
 
 export const updateStationBranchType = (stationId: string, direction: Direction, branchStyle: BranchStyle) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
         dispatch(
             setStation(stationId, {
@@ -493,7 +514,7 @@ export type UpdateStationBranchFirstStationArgType = { stnId: string; direction:
 export const updateStationBranchFirstStation = (
     branches: [UpdateStationBranchFirstStationArgType, UpdateStationBranchFirstStationArgType]
 ) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const { stn_list } = getState().param;
         dispatch(
             setStationsBulk({
@@ -524,7 +545,7 @@ export const updateStationBranchFirstStation = (
 };
 
 export const flipStationBranchPosition = (left: string, right: string) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const { stn_list } = getState().param;
         dispatch(
             setStationsBulk({
@@ -537,14 +558,14 @@ export const flipStationBranchPosition = (left: string, right: string) => {
 };
 
 export const updateStationFacility = (stationId: string, facility: Facilities) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
         dispatch(setStation(stationId, { ...stationInfo, facility }));
     };
 };
 
 export const addStationService = (stationId: string, service: Services) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
         if (!stationInfo.services.includes(service)) {
@@ -554,7 +575,7 @@ export const addStationService = (stationId: string, service: Services) => {
 };
 
 export const removeStationService = (stationId: string, service: Services) => {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
         if (stationInfo.services.includes(service)) {

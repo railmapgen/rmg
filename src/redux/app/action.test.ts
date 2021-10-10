@@ -1,6 +1,4 @@
-import rootReducer, { RootState } from '../';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import rootReducer from '../';
 import {
     selectCanvas,
     SET_CANVAS_SCALE,
@@ -13,9 +11,10 @@ import {
     zoomOut,
 } from './action';
 import { CanvasType, LoadingStatus, RmgStyle } from '../../constants/constants';
+import { createMockAppStore } from '../../setupTests';
 
 const realStore = rootReducer.getState();
-const mockStore = configureStore<RootState>([thunk])({ ...realStore });
+const mockStore = createMockAppStore({ ...realStore });
 
 const windowSpy = jest.spyOn(window, 'window', 'get');
 
@@ -51,7 +50,7 @@ describe('Tests for app actions', () => {
     it('Can handle zoom in action correctly', async () => {
         const expectedZoomedInScale = 1.1;
 
-        await mockStore.dispatch(zoomIn() as any);
+        await mockStore.dispatch(zoomIn());
 
         expect(mockEmptyPromise).toBeCalledTimes(1);
         expect(mockEmptyPromise).toBeCalledWith('rmgScale', expectedZoomedInScale.toString());
@@ -76,7 +75,7 @@ describe('Tests for app actions', () => {
     it('Can handle zoom out action correctly', async () => {
         const expectedZoomedInScale = 0.9;
 
-        await mockStore.dispatch(zoomOut() as any);
+        await mockStore.dispatch(zoomOut());
 
         expect(mockEmptyPromise).toBeCalledTimes(1);
         expect(mockEmptyPromise).toBeCalledWith('rmgScale', expectedZoomedInScale.toString());
@@ -89,7 +88,7 @@ describe('Tests for app actions', () => {
     });
 
     it('Can handle select canvas correctly', async () => {
-        await mockStore.dispatch(selectCanvas(CanvasType.RailMap) as any);
+        await mockStore.dispatch(selectCanvas(CanvasType.RailMap));
 
         expect(mockEmptyPromise).toBeCalledTimes(1);
         expect(mockEmptyPromise).toBeCalledWith('rmgCanvas', CanvasType.RailMap);

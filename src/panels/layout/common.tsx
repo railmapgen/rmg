@@ -1,4 +1,4 @@
-import React, { ChangeEvent, memo, useMemo, useState } from 'react';
+import React, { ChangeEvent, memo, useMemo, useState, Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     TextField,
@@ -14,8 +14,7 @@ import {
     Divider,
     InputAdornment,
 } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../redux';
 import { canvasConfig, CanvasType, RmgStyle } from '../../constants/constants';
 import {
     setBranchSpacing,
@@ -42,7 +41,7 @@ const useStyles = makeStyles(theme =>
 );
 
 export default memo(function LayoutCommon() {
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
     return (
         <>
             <SizeLi />
@@ -63,11 +62,11 @@ export default memo(function LayoutCommon() {
 const SizeLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
-    const svgHeight = useSelector((store: RootState) => store.param.svg_height);
-    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const svgHeight = useAppSelector(store => store.param.svg_height);
+    const svgWidths = useAppSelector(store => store.param.svgWidth);
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -85,60 +84,56 @@ const SizeLi = () => {
         }
     };
 
-    return useMemo(
-        () => (
-            <>
-                <ListItem button onClick={() => setIsOpen(prevOpen => !prevOpen)}>
-                    <ListItemIcon>
-                        <Icon>panorama_horizontal</Icon>
-                    </ListItemIcon>
-                    <ListItemText primary={t('layout.size.title')} />
-                    {isOpen ? <Icon color="action">expand_less</Icon> : <Icon color="action">expand_more</Icon>}
-                </ListItem>
-                <Collapse in={isOpen} unmountOnExit>
-                    <List component="div" disablePadding className={classes.nestedList}>
-                        {canvasConfig[rmgStyle].map(canvas => (
-                            <React.Fragment key={canvas}>
-                                <ListItem>
-                                    <ListItemText primary={t('layout.size.width.' + canvas)} />
-                                    <TextField
-                                        value={svgWidths[canvas].toString()}
-                                        onChange={handleSvgWidthChange(canvas)}
-                                        className={classes.textField}
-                                        InputProps={{
-                                            endAdornment: <InputAdornment position="end">px</InputAdornment>,
-                                        }}
-                                    />
-                                </ListItem>
-                                <Divider variant="middle" />
-                            </React.Fragment>
-                        ))}
-                        <ListItem>
-                            <ListItemText primary={t('layout.size.height')} />
-                            <TextField
-                                value={svgHeight.toString()}
-                                onChange={handleSvgHeightChange}
-                                className={classes.textField}
-                                InputProps={{
-                                    endAdornment: <InputAdornment position="end">px</InputAdornment>,
-                                }}
-                            />
-                        </ListItem>
-                    </List>
-                </Collapse>
-            </>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [JSON.stringify(svgWidths), svgHeight, isOpen, classes.nestedList]
+    return (
+        <>
+            <ListItem button onClick={() => setIsOpen(prevOpen => !prevOpen)}>
+                <ListItemIcon>
+                    <Icon>panorama_horizontal</Icon>
+                </ListItemIcon>
+                <ListItemText primary={t('layout.size.title')} />
+                {isOpen ? <Icon color="action">expand_less</Icon> : <Icon color="action">expand_more</Icon>}
+            </ListItem>
+            <Collapse in={isOpen} unmountOnExit>
+                <List component="div" disablePadding className={classes.nestedList}>
+                    {canvasConfig[rmgStyle].map(canvas => (
+                        <Fragment key={canvas + '.width'}>
+                            <ListItem>
+                                <ListItemText primary={t('layout.size.width.' + canvas)} />
+                                <TextField
+                                    defaultValue={svgWidths[canvas].toString()}
+                                    onChange={handleSvgWidthChange(canvas)}
+                                    className={classes.textField}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">px</InputAdornment>,
+                                    }}
+                                />
+                            </ListItem>
+                            <Divider variant="middle" />
+                        </Fragment>
+                    ))}
+                    <ListItem>
+                        <ListItemText primary={t('layout.size.height')} />
+                        <TextField
+                            value={svgHeight.toString()}
+                            onChange={handleSvgHeightChange}
+                            className={classes.textField}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">px</InputAdornment>,
+                            }}
+                        />
+                    </ListItem>
+                </List>
+            </Collapse>
+        </>
     );
 };
 
 const YLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const yPercentage = useSelector((store: RootState) => store.param.y_pc);
+    const yPercentage = useAppSelector(store => store.param.y_pc);
 
     return useMemo(() => {
         const handleSliderChange = (_: ChangeEvent<{}>, value: number | number[]) => {
@@ -170,9 +165,9 @@ const YLi = () => {
 const BranchSpacingLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const branchSpacing = useSelector((store: RootState) => store.param.branch_spacing);
+    const branchSpacing = useAppSelector(store => store.param.branch_spacing);
 
     return useMemo(() => {
         const handleSliderChange = (_: ChangeEvent<{}>, value: number | number[]) => {
@@ -204,9 +199,9 @@ const BranchSpacingLi = () => {
 const PaddingLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const paddingPercentage = useSelector((store: RootState) => store.param.padding);
+    const paddingPercentage = useAppSelector(store => store.param.padding);
 
     return useMemo(() => {
         const handleSliderChange = (_: ChangeEvent<{}>, value: number | number[]) => {

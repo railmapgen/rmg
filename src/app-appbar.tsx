@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     AppBar,
@@ -15,8 +15,7 @@ import {
     useMediaQuery,
 } from '@material-ui/core';
 import { AllCanvas, canvasConfig, CanvasType } from './constants/constants';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from './redux';
+import { useAppDispatch, useAppSelector } from './redux';
 import { selectCanvas, zoomIn, zoomOut } from './redux/app/action';
 
 const useStyles = makeStyles(theme =>
@@ -65,9 +64,9 @@ export default AppAppBar;
 const CanvasToggle = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
 
     const [canvasButtonEl, setCanvasButtonEl] = React.useState<null | HTMLElement>(null);
     const handleClick = (action: CanvasType | typeof AllCanvas) => () => {
@@ -102,7 +101,7 @@ const CanvasToggle = () => {
 const ZoomToggles = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     return React.useMemo(
         () => (

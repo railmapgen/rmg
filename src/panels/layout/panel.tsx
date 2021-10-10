@@ -1,16 +1,13 @@
 import React from 'react';
-
 import { Grid, LinearProgress, List, Paper } from '@material-ui/core';
-
 import LayoutCommon from './common';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppSelector } from '../../redux';
 import { RmgStyle } from '../../constants/constants';
 
 const LayoutGZMTR = React.lazy(() => import(/* webpackChunkName: "panelLayoutGZMTR" */ './gzmtr'));
 
 export default React.memo(function LayoutPanel() {
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
     return (
         <Grid container spacing={3} justify="center" alignItems="flex-start">
             <Grid item xs={12} sm={10} md={7} lg={5}>

@@ -54,11 +54,11 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
-            filename: 'btl',
+            filename: 'bj7',
             name: {
-                en: 'Batong Line by AnDanJuneUnderline',
-                'zh-Hans': '八通线 来自 AnDanJuneUnderline',
-                'zh-Hant': '八通線 來自 AnDanJuneUnderline',
+                en: 'Line 7 by AnDanJuneUnderline',
+                'zh-Hans': '7号线 来自 AnDanJuneUnderline',
+                'zh-Hant': '7號線 來自 AnDanJuneUnderline',
             },
         },
     ],
@@ -299,6 +299,22 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
+            filename: 'sh9',
+            name: {
+                en: 'Line 9',
+                'zh-Hans': '9号线',
+                'zh-Hant': '9號線',
+            },
+        },
+        {
+            filename: 'sh10',
+            name: {
+                en: 'Line 10',
+                'zh-Hans': '10号线',
+                'zh-Hant': '10號線',
+            },
+        },
+        {
             filename: 'sh11',
             name: {
                 en: 'Line 11 by Tianxiu11111',
@@ -307,11 +323,43 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
+            filename: 'sh12',
+            name: {
+                en: 'Line 12 by Andy1782010',
+                'zh-Hans': '12号线 来自 Andy1782010',
+                'zh-Hant': '12號線 來自 Andy1782010',
+            },
+        },
+        {
+            filename: 'sh13',
+            name: {
+                en: 'Line 13 by Andy1782010',
+                'zh-Hans': '13号线 来自 Andy1782010',
+                'zh-Hant': '13號線 來自 Andy1782010',
+            },
+        },
+        {
+            filename: 'sh15',
+            name: {
+                en: 'Line 15 by Thomastzc',
+                'zh-Hans': '15号线 来自 Thomastzc',
+                'zh-Hant': '15號線 來自 Thomastzc',
+            },
+        },
+        {
             filename: 'sh16',
             name: {
                 en: 'Line 16',
                 'zh-Hans': '16号线',
                 'zh-Hant': '16號線',
+            },
+        },
+        {
+            filename: 'sh17',
+            name: {
+                en: 'Line 17 by Thomastzc',
+                'zh-Hans': '17号线 来自 Thomastzc',
+                'zh-Hant': '17號線 來自 Thomastzc',
             },
         },
     ],

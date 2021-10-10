@@ -1,4 +1,4 @@
-import React, { memo, useMemo, ChangeEvent } from 'react';
+import React, { memo, useMemo, ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Divider,
@@ -17,8 +17,7 @@ import {
     Button,
 } from '@material-ui/core';
 import { Name } from '../../constants/constants';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../redux';
 import {
     customiseDestinationName,
     flipStationNames,
@@ -58,9 +57,9 @@ export default memo(function DesignListMTR() {
 const NamePosLi = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const namePosition = useSelector((store: RootState) => store.param.namePosMTR);
+    const namePosition = useAppSelector(store => store.param.namePosMTR);
 
     return useMemo(() => {
         const handleStaggerChange = (_: ChangeEvent, checked: boolean) => {
@@ -101,12 +100,10 @@ const NamePosLi = () => {
 const CustomiseDest = () => {
     const { t } = useTranslation();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const customisedMtrDestination = useSelector((store: RootState) => store.param.customiseMTRDest);
-    const [open, setOpen] = React.useState(
-        customisedMtrDestination.isLegacy || customisedMtrDestination.terminal !== false
-    );
+    const customisedMtrDestination = useAppSelector(store => store.param.customiseMTRDest);
+    const [open, setOpen] = useState(customisedMtrDestination.isLegacy || customisedMtrDestination.terminal !== false);
 
     return useMemo(() => {
         const handleShowNameChange = (_: ChangeEvent, checked: boolean) => {

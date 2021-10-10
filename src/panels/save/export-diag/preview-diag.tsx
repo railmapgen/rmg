@@ -21,10 +21,9 @@ import {
 
 import { test } from './utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux';
+import { useAppSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
 import { setCurrentStation } from '../../../redux/param/action';
-import { ParamContext } from '../../../context';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -77,9 +76,8 @@ export default function PreviewDialog(props: Props) {
     const classes = useStyles();
 
     const reduxDispatch = useDispatch();
-    // const { dispatch } = useContext(ParamContext);
 
-    const rmgStyle = useSelector((store: RootState) => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
 
     const [svgEl, setSvgEl] = useState(document.createElement('svg') as Element as SVGSVGElement);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -131,7 +129,6 @@ export default function PreviewDialog(props: Props) {
             // let scaleFactor = Math.min(MAX_WIDTH / thisSVGWidth, MAX_HEIGHT / thisSVGHeight);
 
             let stnId = 'iwf6'
-            // dispatch({ type: 'SET_CURRENT_STATION', stnId })
             reduxDispatch(setCurrentStation(stnId))
 
             let elem = document.querySelector(`svg#${props.canvas}`)!.cloneNode(true) as SVGSVGElement;

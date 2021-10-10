@@ -410,7 +410,7 @@ const params = {
     },
     line_name: ['5号线', 'Line 5'],
     psd_num: '1',
-    line_num: 'TW',
+    line_num: '5',
     info_panel_type: 'sh',
     direction_gz_x: 50,
     direction_gz_y: 70,

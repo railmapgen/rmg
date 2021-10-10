@@ -1,12 +1,9 @@
-import React from 'react';
-
-import { ParamContext } from '../../context';
+import React, { memo } from 'react';
 import StripMTR from '../strip/strip-mtr';
 import { CanvasType, Name, ShortDirection } from '../../constants/constants';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useAppSelector } from '../../redux';
 
-export default React.memo(function DestinationMTR() {
+export default memo(function DestinationMTR() {
     return (
         <>
             <DefsMTR />
@@ -16,23 +13,23 @@ export default React.memo(function DestinationMTR() {
     );
 });
 
-const DefsMTR = React.memo(() => (
+const DefsMTR = memo(() => (
     <defs>
         <path id="arrow" d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z" fill="var(--rmg-black,#000)" />
     </defs>
 ));
 
 const InfoMTR = () => {
-    const { routes } = React.useContext(ParamContext);
+    const routes = useAppSelector(store => store.helper.routes);
 
-    const svgWidths = useSelector((store: RootState) => store.param.svgWidth);
-    const direction = useSelector((store: RootState) => store.param.direction);
-    const customisedMTRDestination = useSelector((store: RootState) => store.param.customiseMTRDest);
-    const platformNumber = useSelector((store: RootState) => store.param.platform_num);
-    const lineName = useSelector((store: RootState) => store.param.line_name);
+    const svgWidths = useAppSelector(store => store.param.svgWidth);
+    const direction = useAppSelector(store => store.param.direction);
+    const customisedMTRDestination = useAppSelector(store => store.param.customiseMTRDest);
+    const platformNumber = useAppSelector(store => store.param.platform_num);
+    const lineName = useAppSelector(store => store.param.line_name);
 
-    const currentStationIndex = useSelector((store: RootState) => store.param.current_stn_idx);
-    const stationList = useSelector((store: RootState) => store.param.stn_list);
+    const currentStationIndex = useAppSelector(store => store.param.current_stn_idx);
+    const stationList = useAppSelector(store => store.param.stn_list);
 
     let destNames: Name;
     if (customisedMTRDestination.terminal !== false) {

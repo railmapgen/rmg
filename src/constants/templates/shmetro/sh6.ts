@@ -592,7 +592,7 @@ const params = {
     },
     line_name: ['6号线', 'Line6'],
     psd_num: '1',
-    line_num: 'TW',
+    line_num: '6',
     info_panel_type: 'sh',
     direction_gz_x: 50,
     direction_gz_y: 70,

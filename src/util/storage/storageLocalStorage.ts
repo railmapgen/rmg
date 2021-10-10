@@ -1,6 +1,6 @@
 import { FILE_NOT_FOUND } from './storageService';
 
-export default class StorageLocalStorage<StorageService> {
+export default class StorageLocalStorage {
     private currentBusyFilename: false | string;
 
     constructor() {

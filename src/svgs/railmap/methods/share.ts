@@ -273,7 +273,7 @@ export class Stations {
 
         let { dx_a, dx_l } = this.pathTurnParams(branchSpacing);
         let stnDX = dx_a + dx_l / 2;
-        let stnExtraH = ((lineXs[1] - lineXs[0]) / cp.len) * 0.8;
+        let stnExtraH = ((lineXs[1] - lineXs[0]) / cp.len) * 2;
         let stnSpareH = ((lineXs[1] - lineXs[0]) / cp.len - 2 * stnDX) / 2;
         if (stnSpareH + stnExtraH < 0) {
             console.warn(`SVG width too small! ${stnSpareH + stnExtraH}`);
