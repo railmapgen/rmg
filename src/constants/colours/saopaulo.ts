@@ -55,7 +55,6 @@ const SaoPaulo: PaletteEntry[] = [
             [LanguageCode.Portuguese]: 'Linha 6',
         },
         colour: '#F27C00',
-        fg: MonoColour.black,
     },
     {
         id: 'sp7',
