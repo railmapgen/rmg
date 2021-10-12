@@ -206,7 +206,7 @@ const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
             </g>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.osiInfos]
+        [props.osiInfos.toString()]
     )
 }
 
@@ -217,12 +217,12 @@ const OSysIText = (props: { osysiInfos: InterchangeInfo[] }) => {
                 <text className="rmg-name__zh" dy={-5}>
                     {`转乘${props.osysiInfos.map(info => info[4]).join('，')}`}
                 </text>
-                <text className="rmg-name__en" dy={7.5} fontSize="75%">
+                <text className="rmg-name__en" dy={7.5} fontSize={9.6}>
                     {`To ${props.osysiInfos.map(info => info[5]).join(', ')}`}
                 </text>
             </g>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.osysiInfos]
+        [props.osysiInfos.toString()]
     )
 }
