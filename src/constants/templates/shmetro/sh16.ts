@@ -64,7 +64,10 @@ const params = {
                         ['shanghai', 'sh2', '#97D700', '#000', '2号线', 'Line 2'],
                         ['shanghai', 'sh7', '#FF6900', '#000', '7号线', 'Line 7'],
                         ['shanghai', 'sh18', '#D6A461', '#000', '18号线', 'Line 18'],
-                        ['shanghai', 'maglev', '#009090', '#fff', '磁悬浮', 'Maglev'],
+                    ],
+                    [],
+                    [
+                        ["shanghai", "maglev", "#009090", "#fff", "磁浮线", "Maglev Line"],
                     ],
                 ],
             },
@@ -314,7 +317,8 @@ const params = {
     svgWidth: {
         destination: 1000,
         runin: 1000,
-        railmap: 1600,
+        railmap: 2000,
+        indoor: 2000,
     },
     notesGZMTR: [],
     namePosMTR: {
