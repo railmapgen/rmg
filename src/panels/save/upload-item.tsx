@@ -44,7 +44,7 @@ export default function UploadLi() {
         if (action === 'accept') {
             try {
                 await window.rmgStorage.writeFile('rmgParam', JSON.stringify(importedParam));
-                window.location.reload(true);
+                window.location.assign(`./${importedParam.style}`);
             } catch (err) {
                 console.error(err);
             }

@@ -169,6 +169,7 @@ export enum PanelTypeShmetro {
 export interface RMGParam {
     svgWidth: Record<CanvasType, number>;
     svg_height: number;
+    style: RmgStyle;
     /**
      * Vertical position (in percentage) of line.
      */
