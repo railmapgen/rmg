@@ -6,6 +6,7 @@ export enum CompanyCode {
     gzmtr = 'gzmtr',
     mlm = 'mlm',
     mtr = 'mtr',
+    njmetro = 'njmetro',
     shmetro = 'shmetro',
 }
 
@@ -53,6 +54,14 @@ export const companies: CompanyEntry[] = [
             [LanguageCode.English]: 'MTR',
             [LanguageCode.ChineseSimp]: '港铁',
             [LanguageCode.ChineseTrad]: '港鐵',
+        },
+    },
+    {
+        id: CompanyCode.njmetro,
+        name: {
+            [LanguageCode.English]: 'Nanjing Metro',
+            [LanguageCode.ChineseSimp]: '南京地铁',
+            [LanguageCode.ChineseTrad]: '南京地鐵',
         },
     },
     {
