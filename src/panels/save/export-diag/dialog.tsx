@@ -14,7 +14,7 @@ interface Props {
 export default function ExportDialog(props: Props) {
     const { t } = useTranslation();
 
-    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.param.style);
     const canvasToShow = useAppSelector(store => store.app.canvasToShow);
 
     const [previewDialogOpened, setPreviewDialogOpened] = React.useState(false);

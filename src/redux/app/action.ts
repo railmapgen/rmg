@@ -8,11 +8,6 @@ export const SET_CANVAS_SCALE_STATUS = 'SET_CANVAS_SCALE_STATUS';
 export const SET_CANVAS_TO_SHOW = 'SET_CANVAS_TO_SHOW';
 export const SET_CANVAS_TO_SHOW_STATUS = 'SET_CANVAS_TO_SHOW_STATUS';
 
-export interface setRmgStyleAction {
-    type: typeof SET_RMG_STYLE;
-    rmgStyle: RmgStyle;
-}
-
 export interface setCanvasScaleAction {
     type: typeof SET_CANVAS_SCALE;
     canvasScale: number;
@@ -32,10 +27,6 @@ export interface setCanvasToShowStatusAction {
     type: typeof SET_CANVAS_TO_SHOW_STATUS;
     canvasToShowStatus: LoadingStatus;
 }
-
-export const setRmgStyle = (rmgStyle: RmgStyle) => {
-    return { type: SET_RMG_STYLE, rmgStyle } as setRmgStyleAction;
-};
 
 export const setCanvasScale = (canvasScale: number) => {
     return { type: SET_CANVAS_SCALE, canvasScale } as setCanvasScaleAction;

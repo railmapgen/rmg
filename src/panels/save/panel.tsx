@@ -20,7 +20,6 @@ import ExportDialog from './export-diag';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux';
 import { LanguageCode, RmgStyle } from '../../constants/constants';
-import { setRmgStyle } from '../../redux/app/action';
 import { setStyle } from '../../redux/param/action';
 
 const TemplateDialog = React.lazy(() => import(/* webpackChunkName: "panelSaveTemplateDialog" */ './template-diag'));
@@ -46,7 +45,7 @@ const allLangs = {
 const SaveLists = () => {
     const { t, i18n } = useTranslation();
 
-    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.param.style);
     const param = useAppSelector(store => store.param);
 
     const [isTempDialogOpen, setIsTempDialogOpen] = useState(false);
@@ -151,10 +150,7 @@ function StyleDialog(props: StyleDialogProps) {
     const dispatch = useAppDispatch();
 
     const handleClose = (key: RmgStyle) => () => {
-        // Yeah, the following two lines are confusing.
-        // Sorry but style is needed in both app and param.
-        dispatch(setRmgStyle(key));  // set in App
-        dispatch(setStyle(key));  // set in param
+        dispatch(setStyle(key));
         props.onClose(key);
     };
 

@@ -27,7 +27,7 @@ const PanelStations2 = () => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
 
-    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.param.style);
 
     const [stnSelected, setStnSelected] = useState('');
     const [isOpen, setIsOpen] = useState(false);
