@@ -1,5 +1,5 @@
 const params = {
-    style: 'mtr',
+    style: 'shmetro',
     svg_height: 400,
     padding: 8.750201061605276,
     y_pc: 40,

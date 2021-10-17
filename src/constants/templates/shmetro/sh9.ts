@@ -1,4 +1,5 @@
 const params = {
+    style: 'shmetro',
     svg_height: 400,
     padding: 4.5,
     y_pc: 40,
