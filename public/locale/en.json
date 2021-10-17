@@ -224,6 +224,7 @@
                     "airport": "Airport",
                     "hsr": "High Speed Rail",
                     "disney": "Disneyland Resort",
+                    "railway": "National Railway",
                     "none": "None"
                 },
                 "services": {

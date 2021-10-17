@@ -1,5 +1,11 @@
 import React, { useRef, memo } from 'react';
-import { InterchangeInfo, Name, PanelTypeGZMTR, PanelTypeShmetro } from '../../../../constants/constants';
+import {
+    InterchangeInfo,
+    Name,
+    PanelTypeGZMTR,
+    PanelTypeShmetro,
+    Facilities,
+} from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 
 interface Props {
@@ -46,6 +52,7 @@ const StationSHMetro = (props: Props) => {
                     stnState={props.stnState}
                     direction={param.direction}
                     info_panel_type={param.info_panel_type}
+                    facility={stnInfo.facility}
                 />
             </g>
         </>
@@ -60,9 +67,11 @@ interface StationNameGElementProps {
     stnState: -1 | 0 | 1;
     direction: 'l' | 'r';
     info_panel_type: PanelTypeGZMTR | PanelTypeShmetro;
+    facility: Facilities;
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {
+    const { name, infos, stnState, info_panel_type, direction, facility } = props;
     const nameENLn = props.name[1].split('\\').length;
 
     // get the exact station name width so that the
@@ -73,7 +82,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     React.useEffect(
         () => setBBox(stnNameEl.current!.getBBox()),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [...props.name]
+        [...name]
     );
     // the original name position's right x
     const x = bBox.width + 5;
@@ -82,43 +91,56 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     // other wise the bcr will be inaccurate due to the rotation
     // Chito: so, use BBox instead
 
+    // simplify the calculation times
+    const directionPolarity = direction === 'l' ? 1 : -1;
+
+    // main elements icon's dx will change if there is a facility icon or not
+    const mainDx = facility !== Facilities.none ? 30 : 0;
+
     return (
-        <g transform={`translate(${props.direction === 'l' ? 6 : -6},${props.info_panel_type === 'sh2020' ? -20 : -6})rotate(${props.direction === 'l' ? -45 : 45})`}>
-            {props.infos.flat().length > 0 && (
+        <g transform={`translate(${direction === 'l' ? 6 : -6},${info_panel_type === 'sh2020' ? -20 : -6})rotate(${props.direction === 'l' ? -45 : 45})`}>
+            {infos.flat().length > 0 && (
                 <>
                     <line
-                        x1={0}
-                        x2={props.direction === 'l' ? x : -x}
-                        stroke={props.stnState === -1 ? 'gray' : 'black'}
+                        x1={mainDx * directionPolarity}
+                        x2={(mainDx + x) * directionPolarity}
+                        stroke={stnState === -1 ? 'gray' : 'black'}
                         strokeWidth={0.5}
                     />
                     <IntBoxGroup
-                        intInfos={props.infos}
-                        transform={`translate(${x * (props.direction === 'l' ? 1 : -1)},-10.75)`}
-                        direction={props.direction}
+                        intInfos={infos}
+                        transform={`translate(${(mainDx + x) * directionPolarity},-10.75)`}
+                        direction={direction}
                     />
                 </>
             )}
 
+            {facility !== Facilities.none && (
+                <use
+                    xlinkHref={'#' + facility}
+                    x={10 * directionPolarity}
+                    y={-30}
+                />
+            )}
+
             <g
-                textAnchor={props.direction === 'l' ? 'start' : 'end'}
-                transform={`translate(0,${-14.15625 - 2 - 12 * (nameENLn - 1)})`}
+                textAnchor={direction === 'l' ? 'start' : 'end'}
+                transform={`translate(${mainDx * directionPolarity},${-14.15625 - 2 - 12 * (nameENLn - 1)})`}
             >
                 <StationName
                     ref={stnNameEl}
-                    stnName={props.name}
-                    fill={props.stnState === -1 ? 'gray' : props.stnState === 0 ? 'red' : 'black'}
+                    stnName={name}
+                    fill={stnState === -1 ? 'gray' : stnState === 0 ? 'red' : 'black'}
                 />
 
                 {/* deal out-of-station here as it is a y axis element. leave out-of-system in IntBoxGroup*/}
-                {props.infos[1]?.length > 0 && (
+                {infos[1]?.length > 0 && (
                     <g
-                        transform={`translate(${
-                            (x + props.infos.reduce((sum, infos) => sum + infos.length, 0) * 15) *
-                            (props.direction === 'l' ? 1 : -1)
-                        },-22)`}
+                        transform={`translate(${(x + infos.reduce((sum, infos) => sum + infos.length, 0) * 15) *
+                            directionPolarity
+                            },-30)`}
                     >
-                        <OSIText osiInfos={props.infos[1]} />
+                        <OSIText osiInfos={infos[1]} />
                     </g>
                 )}
             </g>

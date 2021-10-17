@@ -223,6 +223,7 @@
                     "airport": "机场",
                     "hsr": "高铁",
                     "disney": "迪士尼",
+                    "railway": "火车站",
                     "none": "无"
                 },
                 "services": {

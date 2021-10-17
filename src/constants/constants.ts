@@ -105,6 +105,7 @@ export enum Facilities {
     airport = 'airport',
     disney = 'disney',
     hsr = 'hsr',
+    railway = 'railway',
     none = '',
 }
 
