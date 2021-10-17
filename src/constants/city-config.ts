@@ -1,12 +1,14 @@
 import { Translation } from './constants';
 
 export enum CityCode {
+    Baku = 'baku',
     Barcelona = 'barcelona',
     Beijing = 'beijing',
     Changsha = 'changsha',
     Chengdu = 'chengdu',
     Chongqing = 'chongqing',
     Dongguan = 'dongguan',
+    Dortmund = 'dortmund',
     Edinburgh = 'edinburgh',
     Foshan = 'foshan',
     Glasgow = 'glasgow',
@@ -15,6 +17,7 @@ export enum CityCode {
     HongKong = 'hongkong',
     Kansai = 'kansai',
     Kaohsiung = 'kaohsiung',
+    Istanbul = 'istanbul',
     London = 'london',
     Macao = 'macao',
     Madrid = 'madrid',
@@ -29,9 +32,11 @@ export enum CityCode {
     Seoul = 'seoul',
     Shanghai = 'shanghai',
     Shenzhen = 'shenzhen',
+    Xiamen = 'xiamen',
     Singapore = 'singapore',
     Stockholm = 'stockholm',
     Taipei = 'taipei',
+    Tehran = 'tehran',
     Tianjin = 'tianjin',
     Tokyo = 'tokyo',
     Toronto = 'toronto',
@@ -53,6 +58,16 @@ interface CityEntry {
 }
 
 export const cityList: CityEntry[] = [
+    {
+        id: CityCode.Baku,
+        country: 'AZ',
+        name: {
+            en: 'Baku',
+            az: 'Bakı',
+            'zh-Hans': '巴库',
+            'zh-Hant': '巴庫',
+        },
+    },
     {
         id: CityCode.Barcelona,
         country: 'ES',
@@ -105,6 +120,16 @@ export const cityList: CityEntry[] = [
             en: 'Dongguan',
             'zh-Hans': '东莞',
             'zh-Hant': '東莞',
+        },
+    },
+    {
+        id: CityCode.Dortmund,
+        country: 'DE',
+        name: {
+            en: 'Dortmund',
+            de: 'Dortmund',
+            'zh-Hans': '多特蒙德',
+            'zh-Hant': '多特蒙德',
         },
     },
     {
@@ -175,6 +200,16 @@ export const cityList: CityEntry[] = [
         name: {
             en: 'Kaohsiung',
             zh: '高雄',
+        },
+    },
+    {
+        id: CityCode.Istanbul,
+        country: 'TR',
+        name: {
+            en: 'Istanbul',
+            tr: 'İstanbul',
+            'zh-Hans': '伊斯坦布尔',
+            'zh-Hant': '伊斯坦布爾',
         },
     },
     {
@@ -303,6 +338,15 @@ export const cityList: CityEntry[] = [
         },
     },
     {
+        id: CityCode.Xiamen,
+        country: 'CN',
+        name: {
+            en: 'Xiamen',
+            'zh-Hans': '厦门',
+            'zh-Hant': '廈門',
+        },
+    },
+    {
         id: CityCode.Singapore,
         country: 'SG',
         name: {
@@ -325,6 +369,16 @@ export const cityList: CityEntry[] = [
         name: {
             en: 'Taipei',
             zh: '台北',
+        },
+    },
+    {
+        id: CityCode.Tehran,
+        country: 'IR',
+        name: {
+            en: 'Tehran',
+            fa: 'تهران‎',
+            'zh-Hans': '德黑兰',
+            'zh-Hant': '德黑蘭',
         },
     },
     {
