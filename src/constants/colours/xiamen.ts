@@ -33,7 +33,7 @@ const Xiamen: PaletteEntry[] = [
         colour: '#2EC6D6',
     },
     {
-        id: 'xm1',
+        id: 'xmb',
         name: {
             [LanguageCode.English]: 'BRT',
             [LanguageCode.ChineseSimp]: '快速公交',

@@ -67,7 +67,7 @@ const Dortmund: PaletteEntry[] = [
         colour: '#8874C7',
     },
     {
-        id: 'du46',
+        id: 'du47',
         name: {
             en: 'U47',
             de: 'U47',

@@ -63,7 +63,7 @@ const Baku: PaletteEntry[] = [
             [LanguageCode.ChineseSimp]: '绿线分离线',
             [LanguageCode.ChineseTrad]: '綠線分離線',
         },
-        colour: '#00AB5D',
+        colour: '#9BCA3B',
     },
 ];
 
