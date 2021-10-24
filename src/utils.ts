@@ -42,7 +42,6 @@ export const updateParam = (param: { [x: string]: any }) => {
     if (!('line_num' in param)) {
         param.line_num = '1';
     }
-    delete param.style;
     if (param.theme.length === 3) {
         param.theme.push('#fff');
     }

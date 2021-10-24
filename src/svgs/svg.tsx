@@ -52,6 +52,8 @@ const SVGs = () => {
         [svgHeight, JSON.stringify(svgWidths), theme, canvasScale]
     );
 
+    const rmgStyle = useAppSelector(store => store.param.style);
+
     return (
         <div className={classes.root}>
             <Switch>
@@ -60,7 +62,7 @@ const SVGs = () => {
                         <StyleSpecificSVGs style={s} canvasAvailable={canvasList[s]} svgProps={sharedProps} />
                     </Route>
                 ))}
-                <Redirect to={'/' + RmgStyle.MTR} />
+                <Redirect to={`/${rmgStyle}`} />
             </Switch>
         </div>
     );
