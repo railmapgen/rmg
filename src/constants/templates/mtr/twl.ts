@@ -1,4 +1,5 @@
 const params = {
+    style: 'mtr',
     svg_height: 300,
     svg_width: 1250,
     svg_dest_width: 1250,
@@ -169,7 +170,6 @@ const params = {
     line_name: ['荃灣綫', 'Tsuen Wan Line'],
     dest_legacy: false,
     char_form: 'trad',
-    style: 'mtr',
 };
 
 export default params;

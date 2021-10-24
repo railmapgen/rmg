@@ -1,5 +1,5 @@
 import { CityCode } from '../../constants/city-config';
-import { MonoColour, PanelTypeGZMTR, RMGParam, ShortDirection } from '../../constants/constants';
+import { MonoColour, PanelTypeGZMTR, RMGParam, ShortDirection, RmgStyle } from '../../constants/constants';
 import {
     SET_BRANCH_SPACING,
     SET_CURRENT_STATION,
@@ -22,6 +22,7 @@ import {
     SET_SVG_WIDTH,
     SET_THEME,
     SET_Y_PERCENTAGE,
+    SET_STYLE,
     setBranchSpacingAction,
     setCurrentStationAction,
     setCustomisedMtrDestinationAction,
@@ -43,6 +44,7 @@ import {
     setSvgWidthAction,
     setThemeAction,
     setYPercentageAction,
+    setStyleAction,
 } from './action';
 
 const initialState: RMGParam = {
@@ -53,6 +55,7 @@ const initialState: RMGParam = {
         indoor: 100,
     },
     svg_height: 100,
+    style: RmgStyle.MTR,
     y_pc: 50,
     padding: 10,
     branch_spacing: 10,
@@ -82,6 +85,7 @@ export default function ParamReducer(
     state = initialState,
     action:
         | setFullParamAction
+        | setStyleAction
         | setSvgHeightAction
         | setSvgWidthAction
         | setYPercentageAction
@@ -106,6 +110,9 @@ export default function ParamReducer(
     switch (action.type) {
         case SET_FULL_PARAM:
             return action.fullParam;
+        case SET_STYLE:
+            state.style = action.style;
+            break;
         case SET_SVG_HEIGHT:
             state.svg_height = action.svgHeight;
             break;

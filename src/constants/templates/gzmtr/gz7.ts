@@ -1,4 +1,5 @@
 const params = {
+    style: 'gzmtr',
     svg_height: 300,
     svg_width: 1000,
     svg_dest_width: 1000,

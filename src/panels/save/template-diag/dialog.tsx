@@ -81,7 +81,9 @@ const NewDialog = (props: TemplateDialogProps) => {
             );
             await window.rmgStorage.writeFile('rmgParam', JSON.stringify(module.default));
             // TODO: electron will fail here, wait for #96
-            window.location.reload(true);
+            window.location.assign(`./${module.default.style}`);
+            // So after #96 is fixed, we first need to dispatch the param
+            // and then <Link> to the module.default.style
         } catch (err) {
             console.error(err);
         }

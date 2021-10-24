@@ -12,7 +12,7 @@ import {
     DialogActions,
     Button,
 } from '@material-ui/core';
-import { RMGParam } from '../../constants/constants';
+import { RMGParam, RmgStyle } from '../../constants/constants';
 
 export default function UploadLi() {
     const { t } = useTranslation();
@@ -44,7 +44,10 @@ export default function UploadLi() {
         if (action === 'accept') {
             try {
                 await window.rmgStorage.writeFile('rmgParam', JSON.stringify(importedParam));
-                window.location.reload(true);
+                // TODO: electron will fail here, wait for #96
+                window.location.assign(`./${importedParam.style || RmgStyle.MTR}`);
+                // So after #96 is fixed, we first need to dispatch the param
+                // and then <Link> to the importedParam.style
             } catch (err) {
                 console.error(err);
             }

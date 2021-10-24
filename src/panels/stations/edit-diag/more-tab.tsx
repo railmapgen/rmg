@@ -17,7 +17,7 @@ import { Facilities, RmgStyle, Services } from '../../../constants/constants';
 import { addStationService, removeStationService, updateStationFacility } from '../../../redux/param/action';
 
 export default memo(function MoreTab(props: { stnId: string }) {
-    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.param.style);
     const rmgStyleServices: { [s in RmgStyle]?: Services[] } = {
         [RmgStyle.GZMTR]: [Services.local, Services.express],
         [RmgStyle.SHMetro]: [Services.local, Services.express, Services.direct],

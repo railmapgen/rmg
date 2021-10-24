@@ -5,12 +5,10 @@ import {
     SET_CANVAS_SCALE_STATUS,
     SET_CANVAS_TO_SHOW,
     SET_CANVAS_TO_SHOW_STATUS,
-    SET_RMG_STYLE,
-    setRmgStyle,
     zoomIn,
     zoomOut,
 } from './action';
-import { CanvasType, LoadingStatus, RmgStyle } from '../../constants/constants';
+import { CanvasType, LoadingStatus } from '../../constants/constants';
 import { createMockAppStore } from '../../setupTests';
 
 const realStore = rootReducer.getState();
@@ -35,16 +33,6 @@ describe('Tests for app actions', () => {
     afterEach(() => {
         mockStore.clearActions();
         jest.clearAllMocks();
-    });
-
-    it('Can set rmgStyle to expected style', () => {
-        mockStore.dispatch(setRmgStyle(RmgStyle.GZMTR));
-
-        const actions = mockStore.getActions();
-        expect(actions).toHaveLength(1);
-        expect(
-            actions.find(action => action.type === SET_RMG_STYLE && action.rmgStyle === RmgStyle.GZMTR)
-        ).toBeDefined();
     });
 
     it('Can handle zoom in action correctly', async () => {

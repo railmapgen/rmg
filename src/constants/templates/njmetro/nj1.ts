@@ -1,4 +1,5 @@
 const params = {
+    style: 'mtr',
     svg_height: 321,
     padding: 2.836743495136327,
     y_pc: 49.6,

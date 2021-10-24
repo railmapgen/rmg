@@ -66,7 +66,7 @@ const CanvasToggle = () => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
 
-    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.param.style);
 
     const [canvasButtonEl, setCanvasButtonEl] = React.useState<null | HTMLElement>(null);
     const handleClick = (action: CanvasType | typeof AllCanvas) => () => {

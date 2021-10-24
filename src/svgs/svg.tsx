@@ -3,7 +3,8 @@ import { CircularProgress, createStyles, makeStyles } from '@material-ui/core';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import ErrorBoundary from '../error-boundary';
 import { AllCanvas, canvasConfig, CanvasType, RmgStyle } from '../constants/constants';
-import { selectCanvas, setRmgStyle } from '../redux/app/action';
+import { selectCanvas } from '../redux/app/action';
+import { setStyle } from '../redux/param/action';
 import { useAppDispatch, useAppSelector } from '../redux';
 
 const useStyles = makeStyles(() =>
@@ -77,7 +78,7 @@ const StyleSpecificSVGs = memo(
 
         const canvasToShow = useAppSelector(store => store.app.canvasToShow);
 
-        dispatch(setRmgStyle(props.style));
+        dispatch(setStyle(props.style));
 
         useEffect(
             () => {

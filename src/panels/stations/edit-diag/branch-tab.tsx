@@ -59,7 +59,7 @@ interface BranchSelectSetProps {
 
 const BranchSelectSet = (props: BranchSelectSetProps) => {
     const { stnId, direction } = props;
-    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.param.style);
     const branchEntry = useAppSelector(store => store.param.stn_list[stnId].branch[direction]);
 
     return React.useMemo(
@@ -136,7 +136,7 @@ const BranchFirstItem = (props: ItemProps) => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
 
-    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.param.style);
     const stnList = useAppSelector(store => store.param.stn_list);
     const stnInfo = stnList[stnId];
     const branchEntry = stnInfo.branch[direction];
