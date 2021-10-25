@@ -40,7 +40,7 @@ Make your own rail map on [GitHub Pages](https://wongchito.github.io/RailMapGene
         <b>Chito Wong</b><br/>
       </a>
       <sub>Project initiator</sub><br/>
-      <sub>MTR & Guangzhou Metro Author</sub><br/>
+      <sub>MTR and Guangzhou Metro Author</sub><br/>
     </td>
     <td align="center" style="border-width:0px">
       <a herf="https://github.com/thekingofcity">
@@ -53,7 +53,7 @@ Make your own rail map on [GitHub Pages](https://wongchito.github.io/RailMapGene
   </tr>
 </table>
 
-## Colors list and line templates contributors
+## Colors palette and line templates contributors
 
 <table>
   <tr>

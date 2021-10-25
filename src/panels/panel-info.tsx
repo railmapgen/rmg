@@ -18,8 +18,6 @@ const useStyles = makeStyles(() =>
             maxWidth: 500,
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
             '& .MuiTypography-root': {
                 margin: '8px 0',
                 textAlign: 'justify',
@@ -28,7 +26,6 @@ const useStyles = makeStyles(() =>
         root: {
             display: 'flex',
             alignItems: 'center',
-            // width: 'fit-content',
             width: '500px',
             margin: '8px 0',
             flexWrap: "wrap",
@@ -45,12 +42,17 @@ const useStyles = makeStyles(() =>
             width: '100%',
             marginLeft: 10,
         },
+        detailGrid: {
+            display: 'grid',
+            gridTemplateColumns: '115px 115px 115px 115px',
+            margin: 6,
+            marginLeft: 20,
+            marginRight: 20,
+        },
         detailColumn: {
             display: 'flex',
-            flexDirection: 'column',
-            flex: 1,
+            flexDirection: 'row',
             flexWrap: "wrap",
-            margin: 6,
         },
         detailRow: {
             display: 'flex',
@@ -110,7 +112,7 @@ export default memo(function PanelInfo() {
             <Card className={classes.root}>
                 <div className={classes.cardHeader}>
                     <Typography component="h5" variant="h5">
-                        Core Contributors
+                        Core contributors
                     </Typography>
                 </div>
                 <div className={classes.detailRow}>
@@ -123,7 +125,7 @@ export default memo(function PanelInfo() {
                             Project initiator
                         </Typography>
                         <Typography variant="subtitle2" color="textSecondary">
-                            MTR &amp; Guangzhou Metro Author
+                            MTR and Guangzhou Metro Author
                         </Typography>
                     </CardContent>
                 </div>
@@ -146,17 +148,23 @@ export default memo(function PanelInfo() {
             <Card className={classes.root}>
                 <div className={classes.cardHeader}>
                     <Typography component="h5" variant="h5">
-                        Color and Line Contributors
+                        Color palette and line templates contributors
                     </Typography>
                 </div>
-                {['linchen1965', 'Andy1782010', 'Thomastzc', 'Tianxiu11111', 'AnDanJuneUnderline'].map(name => (
-                    <div className={classes.detailColumn}>
-                        <CardMedia className={classes.colorAndLineContributorAvatar} image={`https://github.com/${name}.png`} />
-                        <Typography variant="subtitle1" color="textSecondary">
-                            {name}
-                        </Typography>
-                    </div>
-                ))}
+                <div className={classes.detailGrid}>
+                    {['linchen1965', 'Andy1782010', 'Thomastzc', 'AnDanJune\nUnderline', 'Tianxiu11111']
+                    .map(name => (
+                        <div className={classes.detailColumn}>
+                            <CardMedia
+                                className={classes.colorAndLineContributorAvatar}
+                                image={`https://github.com/${name.replaceAll('\n', '')}.png`}
+                            />
+                            <Typography variant="subtitle1" color="textSecondary">
+                                {name}
+                            </Typography>
+                        </div>
+                    ))}
+                </div>
             </Card>
 
             <Typography variant="body2" color="textPrimary">
