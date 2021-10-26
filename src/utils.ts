@@ -206,6 +206,9 @@ export const updateParam = (param: { [x: string]: any }) => {
         }
     });
 
+    // Version 3.9.36
+    param.style = param.style === undefined ? RmgStyle.MTR : param.style
+
     return param;
 };
 
