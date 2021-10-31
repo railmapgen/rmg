@@ -28,7 +28,8 @@ export default function StationDeleteDialog(props: Props & { stnId: string }) {
             } else {
                 if (currentStationIndex === stnId) {
                     let newCurrentId = Object.keys(res).filter(id => !['linestart', 'lineend'].includes(id))[0];
-                    dispatch(setCurrentStation(newCurrentId));
+                    // TODO: remove the empty array
+                    dispatch(setCurrentStation(newCurrentId, []));
                 }
                 dispatch(setStationsBulk(res));
             }

@@ -1,4 +1,4 @@
-export function test(svgEl: SVGSVGElement, scale: number) {
+export function test(svgEl: SVGSVGElement, scale: number, filename: string) {
     let svgW = svgEl.viewBox.baseVal.width;
     let svgH = svgEl.viewBox.baseVal.height;
 
@@ -45,7 +45,7 @@ export function test(svgEl: SVGSVGElement, scale: number) {
     img.onload = () => {
         setTimeout(() => {
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            saveAs(canvas.toDataURL('image/png'), 'rmg.' + new Date().toISOString() + '.png');
+            saveAs(canvas.toDataURL('image/png'), filename);
         }, 2000);
     };
     img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl.outerHTML)));
@@ -56,7 +56,7 @@ function saveAs(uri: string, filename: string) {
 
     if (typeof link.download === 'string') {
         link.href = uri;
-        link.download = filename;
+        link.download = filename + '.png';
         //Firefox requires the link to be in the body
         document.body.appendChild(link);
         //simulate click

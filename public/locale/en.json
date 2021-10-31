@@ -50,6 +50,7 @@
             "scale": "Scale",
             "format": "Format",
             "download": "Download",
+            "downloadAllStations": "Download All Station",
             "terms": {
                 "accept": "I accept the ",
                 "tandc": "Terms and Conditions"
