@@ -4,12 +4,10 @@ import {
     SET_CANVAS_SCALE_STATUS,
     SET_CANVAS_TO_SHOW,
     SET_CANVAS_TO_SHOW_STATUS,
-    SET_RMG_STYLE,
     setCanvasScaleAction,
     setCanvasScaleStatusAction,
     setCanvasToShowAction,
     setCanvasToShowStatusAction,
-    setRmgStyleAction,
 } from './action';
 
 interface AppState {
@@ -31,16 +29,12 @@ const initialState: AppState = {
 export default function AppReducer(
     state = initialState,
     action:
-        | setRmgStyleAction
         | setCanvasScaleAction
         | setCanvasScaleStatusAction
         | setCanvasToShowAction
         | setCanvasToShowStatusAction
 ): AppState {
     switch (action.type) {
-        case SET_RMG_STYLE:
-            state.rmgStyle = action.rmgStyle;
-            break;
         case SET_CANVAS_SCALE:
             state.canvasScale = action.canvasScale;
             break;

@@ -9,6 +9,7 @@ import {
     PanelTypeGZMTR,
     PanelTypeShmetro,
     RMGParam,
+    RmgStyle,
     Services,
     ShortDirection,
     StationDict,
@@ -19,6 +20,9 @@ import { AppDispatch, RootState } from '../index';
 import { triggerHelpersUpdate } from '../helper/action';
 
 export const SET_FULL_PARAM = 'SET_FULL_PARAM';
+
+// file
+export const SET_STYLE = 'SET_STYLE';
 
 // layout
 export const SET_SVG_HEIGHT = 'SET_SVG_HEIGHT';
@@ -49,6 +53,11 @@ export const SET_STATIONS_BULK = 'SET_STATIONS_BULK';
 export interface setFullParamAction {
     type: typeof SET_FULL_PARAM;
     fullParam: RMGParam;
+}
+
+export interface setStyleAction {
+    type: typeof SET_STYLE;
+    style: RmgStyle;
 }
 
 export interface setSvgHeightAction {
@@ -171,6 +180,10 @@ export const setSvgHeight = (svgHeight: number): setSvgHeightAction => {
 
 export const setSvgWidth = (svgWidth: number, canvas: CanvasType): setSvgWidthAction => {
     return { type: SET_SVG_WIDTH, svgWidth, canvas };
+};
+
+export const setStyle = (style: RmgStyle): setStyleAction => {
+    return { type: SET_STYLE, style };
 };
 
 export const setYPercentage = (yPercentage: number): setYPercentageAction => {

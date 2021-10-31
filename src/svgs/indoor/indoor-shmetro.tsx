@@ -16,11 +16,11 @@ export default memo(function IndoorWrapperSHMetro() {
 
 export const DefsSHMetro = React.memo(() => (
     <defs>
-        <circle id="stn_indoor_sh" fill="white" strokeWidth={5} stroke="var(--rmg-theme-colour)"
+        <circle id="stn_indoor_sh" fill="var(--rmg-white)" strokeWidth={5} stroke="var(--rmg-theme-colour)"
             r={8} transform="scale(1.5)" />
-        <path id="int2_indoor_sh" fill="white" strokeWidth={4} d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"
+        <path id="int2_indoor_sh" fill="var(--rmg-white)" strokeWidth={4} d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"
             stroke="black" transform="translate(0, -10)scale(2)" />
-        <path id="int_indoor_arrow_sh" stroke="black" strokeWidth={1} d="M -7.5,0 v -40 h -7.5 l 15,-15 l 15,15 h -7.5 v 40 Z " />
+        <path id="int_indoor_arrow_sh" stroke="var(--rmg-black)" strokeWidth={1} d="M -7.5,0 v -40 h -7.5 l 15,-15 l 15,15 h -7.5 v 40 Z " />
     </defs>
 ));
 

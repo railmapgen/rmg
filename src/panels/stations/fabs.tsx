@@ -31,7 +31,7 @@ interface Props {
 const StationFabs = React.memo(
     (props: Props) => {
         const { t } = useTranslation();
-        const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+        const rmgStyle = useAppSelector(store => store.param.style);
         const classes = useStyles();
         const [fabEl, setFabEl] = React.useState<null | HTMLElement>(null);
 

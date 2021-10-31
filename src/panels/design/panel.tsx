@@ -9,7 +9,7 @@ const DesignGZMTR = React.lazy(() => import(/* webpackChunkName: "panelDesignGZM
 const DesignShmetro = React.lazy(() => import(/* webpackChunkName: "panelDesignShmetro" */ './list-shmetro'));
 
 const DesignPanel = () => {
-    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.param.style);
     return (
         <Grid container spacing={3} justify="center" alignItems="flex-start">
             <Grid item xs={12} sm={10} md={7} lg={5}>

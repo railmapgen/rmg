@@ -77,9 +77,9 @@ export default function PreviewDialog(props: Props) {
 
     const dispatch = useAppDispatch();
 
-    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
     const stn_list = useAppSelector(store => store.param.stn_list);
     const currentStationIndex = useAppSelector(store => store.param.current_stn_idx);
+    const rmgStyle = useAppSelector(store => store.param.style);
 
     const [svgEl, setSvgEl] = useState(document.createElement('svg') as Element as SVGSVGElement);
     const [isLoaded, setIsLoaded] = useState(false);

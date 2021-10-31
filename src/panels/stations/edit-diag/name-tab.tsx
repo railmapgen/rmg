@@ -22,7 +22,7 @@ interface Props {
 }
 
 const NameTab = (props: Props) => {
-    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.param.style);
 
     return (
         <List component="div">
@@ -166,7 +166,7 @@ const NameInput = (props: Props) => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
 
-    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.param.style);
     const { name } = useAppSelector(store => store.param.stn_list[stnId]);
     return (
         <ListItem style={{ flexDirection: 'column' }}>

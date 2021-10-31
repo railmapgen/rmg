@@ -35,7 +35,7 @@ const DesignList = () => {
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
-    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.param.style);
     const lineName = useAppSelector(store => store.param.line_name);
     const theme = useAppSelector(store => store.param.theme);
 

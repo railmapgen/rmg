@@ -1,5 +1,11 @@
 import React, { useRef, memo } from 'react';
-import { InterchangeInfo, Name, PanelTypeGZMTR, PanelTypeShmetro } from '../../../../constants/constants';
+import {
+    InterchangeInfo,
+    Name,
+    PanelTypeGZMTR,
+    PanelTypeShmetro,
+    Facilities,
+} from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 
 interface Props {
@@ -46,6 +52,7 @@ const StationSHMetro = (props: Props) => {
                     stnState={props.stnState}
                     direction={param.direction}
                     info_panel_type={param.info_panel_type}
+                    facility={stnInfo.facility}
                 />
             </g>
         </>
@@ -60,9 +67,11 @@ interface StationNameGElementProps {
     stnState: -1 | 0 | 1;
     direction: 'l' | 'r';
     info_panel_type: PanelTypeGZMTR | PanelTypeShmetro;
+    facility: Facilities;
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {
+    const { name, infos, stnState, info_panel_type, direction, facility } = props;
     const nameENLn = props.name[1].split('\\').length;
 
     // get the exact station name width so that the
@@ -73,7 +82,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     React.useEffect(
         () => setBBox(stnNameEl.current!.getBBox()),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [...props.name]
+        [...name]
     );
     // the original name position's right x
     const x = bBox.width + 5;
@@ -82,42 +91,56 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     // other wise the bcr will be inaccurate due to the rotation
     // Chito: so, use BBox instead
 
+    // simplify the calculation times
+    const directionPolarity = direction === 'l' ? 1 : -1;
+
+    // main elements icon's dx will change if there is a facility icon or not
+    const mainDx = facility !== Facilities.none ? 30 : 0;
+
     return (
-        <g transform={`translate(${props.direction === 'l' ? 6 : -6},${props.info_panel_type === 'sh2020' ? -20 : -6})rotate(${props.direction === 'l' ? -45 : 45})`}>
-            {[...props.infos[0], ...props.infos[1] || []].length > 0 && (
+        <g transform={`translate(${direction === 'l' ? 6 : -6},${info_panel_type === 'sh2020' ? -20 : -6})rotate(${props.direction === 'l' ? -45 : 45})`}>
+            {infos.flat().length > 0 && (
                 <>
                     <line
-                        x1={0}
-                        x2={props.direction === 'l' ? x : -x}
-                        stroke={props.stnState === -1 ? 'gray' : 'black'}
+                        x1={mainDx * directionPolarity}
+                        x2={(mainDx + x) * directionPolarity}
+                        stroke={stnState === -1 ? 'gray' : 'black'}
                         strokeWidth={0.5}
                     />
                     <IntBoxGroup
-                        intInfos={[...props.infos[0], ...props.infos[1] || []]}
-                        transform={`translate(${x * (props.direction === 'l' ? 1 : -1)},-10.75)`}
-                        direction={props.direction}
+                        intInfos={infos}
+                        transform={`translate(${(mainDx + x) * directionPolarity},-10.75)`}
+                        direction={direction}
                     />
                 </>
             )}
 
+            {facility !== Facilities.none && (
+                <use
+                    xlinkHref={'#' + facility}
+                    x={10 * directionPolarity}
+                    y={-30}
+                />
+            )}
+
             <g
-                textAnchor={props.direction === 'l' ? 'start' : 'end'}
-                transform={`translate(0,${-14.15625 - 2 - 12 * (nameENLn - 1)})`}
+                textAnchor={direction === 'l' ? 'start' : 'end'}
+                transform={`translate(${mainDx * directionPolarity},${-14.15625 - 2 - 12 * (nameENLn - 1)})`}
             >
                 <StationName
                     ref={stnNameEl}
-                    stnName={props.name}
-                    fill={props.stnState === -1 ? 'gray' : props.stnState === 0 ? 'red' : 'black'}
+                    stnName={name}
+                    fill={stnState === -1 ? 'gray' : stnState === 0 ? 'red' : 'black'}
                 />
 
-                {props.infos[1]?.length > 0 && (
+                {/* deal out-of-station here as it is a y axis element. leave out-of-system in IntBoxGroup*/}
+                {infos[1]?.length > 0 && (
                     <g
-                        transform={`translate(${
-                            (x + props.infos.reduce((sum, infos) => sum + infos.length, 0) * 15) *
-                            (props.direction === 'l' ? 1 : -1)
-                        },-22)`}
+                        transform={`translate(${(x + infos.reduce((sum, infos) => sum + infos.length, 0) * 15) *
+                            directionPolarity
+                            },-30)`}
                     >
-                        <OSIText osiInfos={props.infos[1]} />
+                        <OSIText osiInfos={infos[1]} />
                     </g>
                 )}
             </g>
@@ -156,14 +179,23 @@ const StationName = React.forwardRef(
     }
 );
 
-const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; direction: 'l' | 'r' } & React.SVGProps<SVGGElement>) => {
+const IntBoxGroup = (props: { intInfos: InterchangeInfo[][]; direction: 'l' | 'r' } & React.SVGProps<SVGGElement>) => {
     const { intInfos, direction, ...others } = props;
 
-    let dx = 0;
+    // also known as non out-of-system transfers
+    const boxInfos = [
+        ...intInfos[0],
+        ...intInfos[1] || [],
+        // some dirty tricks here as shmetro shows maglev icon even it is a out-of-system transfer
+        // and display a maglev icon is much easier in boxInfos than OSysIText
+        ...intInfos[2]?.filter(info => Boolean(info[4].match(/^磁(悬)*浮/))) || []
+    ];
+
+    let dx = 0;  // update in every boxInfos
+
     return (
         <g fontSize={14} textAnchor="middle" {...others}>
-            {(direction === 'l' ? intInfos : [...intInfos].reverse()).map((info, i) => {
-                // start with digit
+            {boxInfos.map((info, i) => {
                 const isLineNumber = Boolean(info[4].match(/^\d.*$/));
                 const isMaglev = Boolean(info[4].match(/^磁(悬)*浮/));
 
@@ -192,13 +224,18 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[]; direction: 'l' | 'r' 
                     );
                 }
 
-                // 20 + 5(margin) for number line
-                // 60 + 5(margin) for letter line
                 if (props.direction === 'l') {
-                    dx += isLineNumber || isMaglev ? 25 : info[4].length * 14 + 12 + 5;
+                    dx += isLineNumber || isMaglev ? 20 + 5 : info[4].length * 14 + 12 + 5;
                 }
                 return el;
             })}
+
+            {[...intInfos[2] || []].length > 0 &&
+                <g
+                    transform={`translate(${dx - (props.direction === 'r' ? 5 : 0)},0)`}
+                    key={boxInfos.length + 1}>
+                    <OSysIText osysiInfos={intInfos[2]} direction={props.direction} />
+                </g>}
         </g>
     );
 };
@@ -260,5 +297,26 @@ const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [lineNames.toString()]
+    );
+};
+
+const OSysIText = (props: { osysiInfos: InterchangeInfo[], direction: 'l' | 'r' }) => {
+    // get the all names from out of system transfers
+    const lineNames = props.osysiInfos.map(info => info[4]).join('，');
+    const lineNamesEn = props.osysiInfos.map(info => info[5]).join(', ');
+
+    return React.useMemo(
+        () => (
+            <g textAnchor={props.direction === 'l' ? 'start' : 'end'} fontSize="50%">
+                <text className="rmg-name__zh" dy={3}>
+                    转乘{lineNames}
+                </text>
+                <text className="rmg-name__en" dy={10} fontSize="75%">
+                    To {lineNamesEn}
+                </text>
+            </g>
+        ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.osysiInfos.toString(), props.direction]
     );
 };

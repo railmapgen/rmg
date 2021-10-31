@@ -17,12 +17,15 @@ import { Facilities, RmgStyle, Services } from '../../../constants/constants';
 import { addStationService, removeStationService, updateStationFacility } from '../../../redux/param/action';
 
 export default memo(function MoreTab(props: { stnId: string }) {
-    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.param.style);
     const rmgStyleServices: { [s in RmgStyle]?: Services[] } = {
         [RmgStyle.GZMTR]: [Services.local, Services.express],
         [RmgStyle.SHMetro]: [Services.local, Services.express, Services.direct],
     };
-    const rmgStyleFacility: RmgStyle[] = [RmgStyle.MTR];
+    const rmgStyleFacility: { [s in RmgStyle]?: Facilities[] } = {
+        [RmgStyle.MTR]: [Facilities.airport, Facilities.disney, Facilities.hsr, Facilities.none],
+        [RmgStyle.SHMetro]: [Facilities.railway, Facilities.airport, Facilities.disney, Facilities.none],
+    }
 
     return (
         <div>
@@ -30,14 +33,16 @@ export default memo(function MoreTab(props: { stnId: string }) {
                 {rmgStyle in rmgStyleServices && (
                     <ServiceLi stnId={props.stnId} providedServices={rmgStyleServices[rmgStyle] as Services[]} />
                 )}
-                {rmgStyleFacility.includes(rmgStyle) && <FacilityLi stnId={props.stnId} />}
+                {rmgStyle in rmgStyleFacility && (
+                    <FacilityLi stnId={props.stnId} providedFacilities={rmgStyleFacility[rmgStyle] as Facilities[]} />
+                )}
             </List>
         </div>
     );
 });
 
-const FacilityLi = (props: { stnId: string }) => {
-    const { stnId } = props;
+const FacilityLi = (props: { stnId: string, providedFacilities: Facilities[] }) => {
+    const { stnId, providedFacilities } = props;
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
@@ -56,7 +61,7 @@ const FacilityLi = (props: { stnId: string }) => {
                         dispatch(updateStationFacility(stnId, value as Facilities));
                     }}
                 >
-                    {Object.values(Facilities).map(f => (
+                    {providedFacilities.map(f => (
                         <option key={f} value={f}>
                             {t('stations.edit.more.facility.' + (f === '' ? 'none' : f))}
                         </option>

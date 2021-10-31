@@ -1,4 +1,5 @@
 const params = {
+    style: 'shmetro',
     svg_height: 400,
     padding: 8.750201061605276,
     y_pc: 40,
@@ -117,11 +118,14 @@ const params = {
             transfer: {
                 info: [
                     [
-                        ['shanghai', 'sh18', '#D6A461', '#000', '18号线', 'Line 18'],
-                        ['shanghai', 'sh16', '#2CD5C4', '#000', '16号线', 'Line 16'],
                         ['shanghai', 'sh2', '#97D700', '#000', '2号线', 'Line 2'],
+                        ['shanghai', 'sh16', '#2CD5C4', '#000', '16号线', 'Line 16'],
+                        ['shanghai', 'sh18', '#D6A461', '#000', '18号线', 'Line 18'],
                     ],
-                    [['shanghai', 'maglev', '#009090', '#fff', '磁浮', 'Maglev']],
+                    [],
+                    [
+                        ["shanghai", "maglev", "#009090", "#fff", "磁浮线", "Maglev Line"],
+                    ],
                 ],
                 tick_direc: 'r',
                 paid_area: true,
@@ -352,8 +356,8 @@ const params = {
             transfer: {
                 info: [
                     [
-                        ['shanghai', 'sh14', '#827A04', '#fff', '14号线', 'Line 14'],
                         ['shanghai', 'sh2', '#97D700', '#000', '2号线', 'Line 2'],
+                        ['shanghai', 'sh14', '#827A04', '#fff', '14号线', 'Line 14'],
                     ],
                 ],
                 tick_direc: 'r',
@@ -414,8 +418,8 @@ const params = {
             transfer: {
                 info: [
                     [
-                        ['shanghai', 'sh4', '#5F259F', '#fff', '4号线', 'Line 4'],
                         ['shanghai', 'sh3', '#FFD100', '#000', '3号线', 'Line 3'],
+                        ['shanghai', 'sh4', '#5F259F', '#fff', '4号线', 'Line 4'],
                     ],
                 ],
                 tick_direc: 'r',

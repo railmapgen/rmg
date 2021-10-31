@@ -3,7 +3,8 @@ import { CircularProgress, createStyles, makeStyles } from '@material-ui/core';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import ErrorBoundary from '../error-boundary';
 import { AllCanvas, canvasConfig, CanvasType, RmgStyle } from '../constants/constants';
-import { selectCanvas, setRmgStyle } from '../redux/app/action';
+import { selectCanvas } from '../redux/app/action';
+import { setStyle } from '../redux/param/action';
 import { useAppDispatch, useAppSelector } from '../redux';
 
 const useStyles = makeStyles(() =>
@@ -51,6 +52,8 @@ const SVGs = () => {
         [svgHeight, JSON.stringify(svgWidths), theme, canvasScale]
     );
 
+    const rmgStyle = useAppSelector(store => store.param.style);
+
     return (
         <div className={classes.root}>
             <Switch>
@@ -59,7 +62,7 @@ const SVGs = () => {
                         <StyleSpecificSVGs style={s} canvasAvailable={canvasList[s]} svgProps={sharedProps} />
                     </Route>
                 ))}
-                <Redirect to={'/' + RmgStyle.MTR} />
+                <Redirect to={`/${rmgStyle}`} />
             </Switch>
         </div>
     );
@@ -77,7 +80,7 @@ const StyleSpecificSVGs = memo(
 
         const canvasToShow = useAppSelector(store => store.app.canvasToShow);
 
-        dispatch(setRmgStyle(props.style));
+        dispatch(setStyle(props.style));
 
         useEffect(
             () => {

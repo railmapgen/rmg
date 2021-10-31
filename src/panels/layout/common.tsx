@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme =>
 );
 
 export default memo(function LayoutCommon() {
-    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.param.style);
     return (
         <>
             <SizeLi />
@@ -64,7 +64,7 @@ const SizeLi = () => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
 
-    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.param.style);
     const svgHeight = useAppSelector(store => store.param.svg_height);
     const svgWidths = useAppSelector(store => store.param.svgWidth);
 

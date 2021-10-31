@@ -1,4 +1,5 @@
 const params = {
+    style: 'shmetro',
     svg_height: 500,
     padding: 3.47,
     y_pc: 68.02,
@@ -414,7 +415,10 @@ const params = {
                         ['shanghai', 'sh7', '#FF6900', '#000', '7号线', 'Line 7'],
                         ['shanghai', 'sh16', '#2CD5C4', '#000', '16号线', 'Line 16'],
                         ['shanghai', 'sh18', '#D6A461', '#000', '18号线', 'Line 18'],
-                        ['shanghai', 'maglev', '#009090', '#fff', '磁悬浮', 'Maglev'],
+                    ],
+                    [],
+                    [
+                        ["shanghai", "maglev", "#009090", "#fff", "磁浮线", "Maglev Line"],
                     ],
                 ],
             },
@@ -624,7 +628,13 @@ const params = {
                 right: [],
             },
             transfer: {
-                info: [[['shanghai', 'maglev', '#009090', '#fff', '磁悬浮', 'Maglev']]],
+                info: [
+                    [],
+                    [],
+                    [
+                        ["shanghai", "maglev", "#009090", "#fff", "磁浮线", "Maglev Line"],
+                    ],
+                ],
                 tick_direc: 'r',
                 paid_area: true,
                 osi_names: [],

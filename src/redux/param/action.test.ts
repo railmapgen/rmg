@@ -14,6 +14,7 @@ import {
     SET_NOTES,
     SET_STATION,
     SET_STATIONS_BULK,
+    SET_STYLE,
     setCustomisedMtrDestinationAction,
     setFullParam,
     setNamePositionAction,
@@ -21,6 +22,7 @@ import {
     setStation,
     setStationAction,
     setStationsBulk,
+    setStyle,
     staggerStationNames,
     toggleLineNameBeforeDestination,
     updateInterchange,
@@ -34,6 +36,7 @@ import {
     Name,
     Note,
     RMGParam,
+    RmgStyle,
     Services,
     StationDict,
     StationInfo,
@@ -84,6 +87,18 @@ const mockStationList = {
 } as any as StationDict;
 
 describe('Tests for param actions', () => {
+    it('Can set rmgStyle to expected style', () => {
+        const mockStore = createMockAppStore({ ...realStore });
+
+        mockStore.dispatch(setStyle(RmgStyle.GZMTR));
+
+        const actions = mockStore.getActions();
+        expect(actions).toHaveLength(1);
+        expect(
+            actions.find(action => action.type === SET_STYLE && action.style === RmgStyle.GZMTR)
+        ).toBeDefined();
+    });
+
     it('Can trigger helpers to update when setting stations', () => {
         let actions: any[];
 

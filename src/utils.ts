@@ -42,7 +42,6 @@ export const updateParam = (param: { [x: string]: any }) => {
     if (!('line_num' in param)) {
         param.line_num = '1';
     }
-    delete param.style;
     if (param.theme.length === 3) {
         param.theme.push('#fff');
     }
@@ -206,6 +205,9 @@ export const updateParam = (param: { [x: string]: any }) => {
             delete param.stn_list[stnId].transfer.type;
         }
     });
+
+    // Version 3.9.36
+    param.style = param.style === undefined ? RmgStyle.MTR : param.style
 
     return param;
 };

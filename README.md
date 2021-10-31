@@ -26,6 +26,70 @@ Make your own rail map on [GitHub Pages](https://wongchito.github.io/RailMapGene
 ![shmetro-16-railmap](docs/imgs/shmetro-16-railmap.png)
 ![shmetro-1-indoor](docs/imgs/shmetro-1-indoor.png)
 
+---
+
+# Contributors
+
+## Core contributors
+
+<table>
+  <tr>
+    <td align="center" style="border-width:0px">
+      <a herf="https://github.com/wongchito">
+        <img src="https://github.com/wongchito.png" width="100px;" alt="" /><br/>
+        <b>Chito Wong</b><br/>
+      </a>
+      <sub>Project initiator</sub><br/>
+      <sub>MTR and Guangzhou Metro Author</sub><br/>
+    </td>
+    <td align="center" style="border-width:0px">
+      <a herf="https://github.com/thekingofcity">
+        <img src="https://github.com/thekingofcity.png" width="100px;" alt="" /><br/>
+        <b>thekingofcity</b><br/>
+      </a>
+      <sub>Shanghai Metro Author</sub><br/>
+      <sub>Electron Maintainer</sub><br/>
+    </td>
+  </tr>
+</table>
+
+## Colors palette and line templates contributors
+
+<table>
+  <tr>
+    <td align="center" style="border-width:0px">
+      <a herf="https://github.com/linchen1965">
+        <img src="https://github.com/linchen1965.png" width="100px;" alt=""><br/>
+        <b>linchen1965</b><br/>
+      </a>
+    </td>
+    <td align="center" style="border-width:0px">
+      <a herf="https://github.com/Andy1782010">
+        <img src="https://github.com/Andy1782010.png" width="100px;" alt=""><br/>
+        <b>Andy1782010</b><br/>
+      </a>
+    </td>
+    <td align="center" style="border-width:0px">
+      <a herf="https://github.com/Thomastzc">
+        <img src="https://github.com/Thomastzc.png" width="100px;" alt=""><br/>
+        <b>Thomastzc</b><br/>
+      </a>
+    </td>
+    <td align="center" style="border-width:0px">
+      <a herf="https://github.com/AnDanJuneUnderline">
+        <img src="https://github.com/AnDanJuneUnderline.png" width="100px;" alt=""><br/>
+        <b>AnDanJuneUnderline</b><br/>
+      </a>
+    </td>
+    <td align="center" style="border-width:0px">
+      <a herf="https://github.com/Tianxiu11111">
+        <img src="https://github.com/Tianxiu11111.png" width="100px;" alt=""><br/>
+        <b>Tianxiu11111</b><br/>
+      </a>
+    </td>
+  </tr>
+</table>
+
 <!-- ## User guide
 
 ### Getting started

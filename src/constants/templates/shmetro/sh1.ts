@@ -1,4 +1,5 @@
 const params = {
+    style: 'shmetro',
     svg_height: 400,
     padding: 8.750201061605276,
     y_pc: 40,
@@ -120,6 +121,10 @@ const params = {
                     [
                         ['shanghai', 'sh3', '#ffd100', '#000', '3号线', 'Line 3'],
                         ['shanghai', 'sh15', '#a4bcc2', '#fff', '15号线', 'Line 15'],
+                    ],
+                    [],
+                    [
+                        ["shanghai", "pjl", "#999999", "#fff", "金山铁路", "Jingshan Railway"],
                     ],
                 ],
             },

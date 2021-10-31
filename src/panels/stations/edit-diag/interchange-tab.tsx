@@ -39,7 +39,7 @@ const StationEditInterchangeTab = (props: { stnId: string }) => {
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
-    const rmgStyle = useAppSelector(store => store.app.rmgStyle);
+    const rmgStyle = useAppSelector(store => store.param.style);
     const theme = useAppSelector(store => store.param.theme);
     const { transfer } = useAppSelector(store => store.param.stn_list[stnId]);
 

@@ -1,4 +1,5 @@
 const params = {
+    style: 'mtr',
     svg_height: 300,
     svg_width: 1050,
     svg_dest_width: 1050,
@@ -155,7 +156,6 @@ const params = {
     line_name: ['路線名', 'Name of Line'],
     dest_legacy: false,
     char_form: 'trad',
-    style: 'mtr',
 };
 
 export default params;

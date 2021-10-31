@@ -18,8 +18,6 @@ const useStyles = makeStyles(() =>
             maxWidth: 500,
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
             '& .MuiTypography-root': {
                 margin: '8px 0',
                 textAlign: 'justify',
@@ -28,17 +26,50 @@ const useStyles = makeStyles(() =>
         root: {
             display: 'flex',
             alignItems: 'center',
-            width: 'fit-content',
+            width: '500px',
             margin: '8px 0',
+            flexWrap: "wrap",
+            flexDirection: 'row',
         },
-        media: {
-            height: 120,
-            width: 120,
+        logo: {
+            height: 100,
+            width: 100,
             margin: 6,
         },
-        detail: {
+        cardHeader: {
             display: 'flex',
-            flexDirection: 'column',
+            flexDirection: 'row',
+            width: '100%',
+            marginLeft: 10,
+        },
+        detailGrid: {
+            display: 'grid',
+            gridTemplateColumns: '115px 115px 115px 115px',
+            margin: 6,
+            marginLeft: 20,
+            marginRight: 20,
+        },
+        detailColumn: {
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: "wrap",
+        },
+        detailRow: {
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'row',
+            flexWrap: "wrap",
+            marginLeft: 20,
+        },
+        coreContributorAvatar: {
+            height: 100,
+            width: 100,
+            margin: 6,
+        },
+        colorAndLineContributorAvatar: {
+            height: 80,
+            width: 80,
+            margin: 6,
         },
         action: {
             justifyContent: 'flex-end',
@@ -56,28 +87,83 @@ export default memo(function PanelInfo() {
     return (
         <div className={classes.panel}>
             <Card className={classes.root}>
-                <CardMedia className={classes.media} image={process.env.PUBLIC_URL + '/logo512.png'} />
-                <div className={classes.detail}>
+                <div className={classes.detailRow}>
+                    <CardMedia className={classes.logo} image={process.env.PUBLIC_URL + '/logo512.png'} />
                     <CardContent>
                         <Typography component="h6" variant="h6">
                             {t('info.title')} {version}
                         </Typography>
+                        <CardActions className={classes.action}>
+                            <Button size="small" color="primary" href="https://github.com/wongchito/RailMapGenerator">
+                                GitHub
+                            </Button>
+                            <Button
+                                size="small"
+                                color="primary"
+                                href="https://github.com/wongchito/RailMapGenerator/issues"
+                            >
+                                {t('info.feedback')}
+                            </Button>
+                        </CardActions>
+                    </CardContent>
+                </div>
+            </Card>
+
+            <Card className={classes.root}>
+                <div className={classes.cardHeader}>
+                    <Typography component="h5" variant="h5">
+                        Core contributors
+                    </Typography>
+                </div>
+                <div className={classes.detailRow}>
+                    <CardMedia className={classes.coreContributorAvatar} image="https://github.com/wongchito.png" />
+                    <CardContent>
+                        <Typography component="h6" variant="h6">
+                            Chito Wong
+                        </Typography>
                         <Typography variant="subtitle2" color="textSecondary">
-                            @wongchito and @thekingofcity
+                            Project initiator
+                        </Typography>
+                        <Typography variant="subtitle2" color="textSecondary">
+                            MTR and Guangzhou Metro Author
                         </Typography>
                     </CardContent>
-                    <CardActions className={classes.action}>
-                        <Button size="small" color="primary" href="https://github.com/wongchito/RailMapGenerator">
-                            GitHub
-                        </Button>
-                        <Button
-                            size="small"
-                            color="primary"
-                            href="https://github.com/wongchito/RailMapGenerator/issues"
-                        >
-                            {t('info.feedback')}
-                        </Button>
-                    </CardActions>
+                </div>
+                <div className={classes.detailRow}>
+                    <CardMedia className={classes.coreContributorAvatar} image="https://github.com/thekingofcity.png" />
+                    <CardContent>
+                        <Typography component="h6" variant="h6">
+                            thekingofcity
+                        </Typography>
+                        <Typography variant="subtitle2" color="textSecondary">
+                            Shanghai Metro Author
+                        </Typography>
+                        <Typography variant="subtitle2" color="textSecondary">
+                            Electron Maintainer
+                        </Typography>
+                    </CardContent>
+                </div>
+            </Card>
+
+            <Card className={classes.root}>
+                <div className={classes.cardHeader}>
+                    <Typography component="h5" variant="h5">
+                        Color palette and line templates contributors
+                    </Typography>
+                </div>
+                <div className={classes.detailGrid}>
+                    {['linchen1965', 'Andy1782010', 'Thomastzc', 'AnDanJune\nUnderline', 'Tianxiu11111']
+                    .map(name => (
+                        <div className={classes.detailColumn}>
+                            <CardMedia
+                                className={classes.colorAndLineContributorAvatar}
+                                image={`https://github.com/${name.replaceAll('\n', '')}.png`}
+                            />
+                            <Typography variant="subtitle1" color="textSecondary">
+                                {name}
+                            </Typography>
+                        </div>
+                    ))}
                 </div>
             </Card>
 

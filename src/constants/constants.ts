@@ -105,6 +105,7 @@ export enum Facilities {
     airport = 'airport',
     disney = 'disney',
     hsr = 'hsr',
+    railway = 'railway',
     none = '',
 }
 
@@ -169,6 +170,7 @@ export enum PanelTypeShmetro {
 export interface RMGParam {
     svgWidth: Record<CanvasType, number>;
     svg_height: number;
+    style: RmgStyle;
     /**
      * Vertical position (in percentage) of line.
      */
@@ -233,22 +235,26 @@ export interface RMGParam {
 export type Note = [...Name, number, number, boolean];
 
 export enum LanguageCode {
+    Azerbaijani = 'az',
     Catalan = 'ca',
-    English = 'en',
-    Spanish = 'es',
-    French = 'fr',
-    Gaelic = 'ga',
-    Japanese = 'ja',
-    Korean = 'ko',
-    Norwegian = 'no',
-    Portuguese = 'pt',
-    Swedish = 'sv',
     Chinese = 'zh',
     ChineseCN = 'zh-CN',
     ChineseSimp = 'zh-Hans',
     ChineseTrad = 'zh-Hant',
     ChineseHK = 'zh-HK',
     ChineseTW = 'zh-TW',
+    English = 'en',
+    French = 'fr',
+    Gaelic = 'ga',
+    German = 'de',
+    Japanese = 'ja',
+    Korean = 'ko',
+    Norwegian = 'no',
+    Spanish = 'es',
+    Persian = 'fa',
+    Portuguese = 'pt',
+    Swedish = 'sv',
+    Turkish = 'tr',
 }
 
 export type Translation = { [l in LanguageCode]?: string };

@@ -249,6 +249,49 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
         },
     ],
 
+    njmetro: [
+        {
+            filename: 'nj1',
+            name: {
+                en: 'Line 1 by linchen1965',
+                'zh-Hans': '1号线 来自 linchen1965',
+                'zh-Hant': '1號線 來自 linchen1965',
+            },
+        },
+        {
+            filename: 'nj2',
+            name: {
+                en: 'Line 2 by linchen1965',
+                'zh-Hans': '2号线 来自 linchen1965',
+                'zh-Hant': '2號線 來自 linchen1965',
+            },
+        },
+        {
+            filename: 'nj3',
+            name: {
+                en: 'Line 3 by linchen1965',
+                'zh-Hans': '3号线 来自 linchen1965',
+                'zh-Hant': '3號線 來自 linchen1965',
+            },
+        },
+        {
+            filename: 'nj4',
+            name: {
+                en: 'Line 4 by linchen1965',
+                'zh-Hans': '4号线 来自 linchen1965',
+                'zh-Hant': '4號線 來自 linchen1965',
+            },
+        },
+        {
+            filename: 'nj10',
+            name: {
+                en: 'Line 10 by linchen1965',
+                'zh-Hans': '10号线 来自 linchen1965',
+                'zh-Hant': '10號線 來自 linchen1965',
+            },
+        },
+    ],
+
     shmetro: [
         {
             filename: 'sh1',
