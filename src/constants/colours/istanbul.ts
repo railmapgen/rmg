@@ -2,7 +2,7 @@ import { PaletteEntry, MonoColour } from '../constants';
 
 /**
  * Wikipedia: https://en.wikipedia.org/wiki/Istanbul_Metro
- * Offical website: https://www.metro.istanbul/
+ * Official website: https://www.metro.istanbul/
 */
 const Istanbul: PaletteEntry[] = [
     {

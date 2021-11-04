@@ -2,7 +2,7 @@ import { PaletteEntry } from '../constants';
 
 /**
  * Wikipedia: https://en.wikipedia.org/wiki/Tehran_Metro
- * Offical website: https://metro.tehran.ir/%D8%AE%D8%AF%D9%85%D8%A7%D8%AA-%D8%A8%D9%87%D8%B1%D9%87-%D8%A8%D8%B1%D8%AF%D8%A7%D8%B1%DB%8C/%D8%B2%D9%85%D8%A7%D9%86%D8%A8%D9%86%D8%AF%DB%8C-%D8%AD%D8%B1%DA%A9%D8%AA-%D9%88-%D9%86%D9%82%D8%B4%D9%87-%D9%87%D8%A7/%D9%86%D9%82%D8%B4%D9%87-%D9%85%D8%AA%D8%B1%D9%88
+ * Official website: https://metro.tehran.ir/%D8%AE%D8%AF%D9%85%D8%A7%D8%AA-%D8%A8%D9%87%D8%B1%D9%87-%D8%A8%D8%B1%D8%AF%D8%A7%D8%B1%DB%8C/%D8%B2%D9%85%D8%A7%D9%86%D8%A8%D9%86%D8%AF%DB%8C-%D8%AD%D8%B1%DA%A9%D8%AA-%D9%88-%D9%86%D9%82%D8%B4%D9%87-%D9%87%D8%A7/%D9%86%D9%82%D8%B4%D9%87-%D9%85%D8%AA%D8%B1%D9%88
 */
 const Tehran: PaletteEntry[] = [
     {

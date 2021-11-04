@@ -2,7 +2,7 @@ import { PaletteEntry, MonoColour } from '../constants';
 
 /**
  * Wikipedia: https://de.wikipedia.org/wiki/Stadtbahn_Dortmund
- * Offical website: https://www.bus-und-bahn.de/download-center
+ * Official website: https://www.bus-und-bahn.de/download-center
 */
 const Dortmund: PaletteEntry[] = [
     {
