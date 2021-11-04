@@ -7,6 +7,7 @@ export enum CityCode {
     Changsha = 'changsha',
     Chengdu = 'chengdu',
     Chongqing = 'chongqing',
+    Delhi = 'delhi',
     Dongguan = 'dongguan',
     Dortmund = 'dortmund',
     Edinburgh = 'edinburgh',
@@ -28,11 +29,11 @@ export enum CityCode {
     Paris = 'paris',
     Qingdao = 'qingdao',
     SanFrancisco = 'sanfrancisco',
+    SanktPeterburg = 'sanktpeterburg',
     SaoPaulo = 'saopaulo',
     Seoul = 'seoul',
     Shanghai = 'shanghai',
     Shenzhen = 'shenzhen',
-    Xiamen = 'xiamen',
     Singapore = 'singapore',
     Stockholm = 'stockholm',
     Taipei = 'taipei',
@@ -41,6 +42,7 @@ export enum CityCode {
     Tokyo = 'tokyo',
     Toronto = 'toronto',
     TyneAndWear = 'tyneandwear',
+    Xiamen = 'xiamen',
     Xian = 'xian',
     Other = 'other',
 }
@@ -111,6 +113,16 @@ export const cityList: CityEntry[] = [
             en: 'Chongqing',
             'zh-Hans': '重庆',
             'zh-Hant': '重慶',
+        },
+    },
+    {
+        id: CityCode.Delhi,
+        country: 'IN',
+        name: {
+            en: 'Delhi',
+            hi: 'दिल्ली',
+            'zh-Hans': '德里',
+            'zh-Hant': '德里',
         },
     },
     {
@@ -299,6 +311,16 @@ export const cityList: CityEntry[] = [
             'zh-Hans': '旧金山',
             'zh-HK': '三藩市',
             'zh-TW': '舊金山',
+        },
+    },
+    {
+        id: CityCode.SanktPeterburg,
+        country: 'RU',
+        name: {
+            en: 'Sankt-Peterburg',
+            ru: 'Санкт-Петербург',
+            'zh-Hans': '圣彼得堡',
+            'zh-Hant': '聖彼得堡',
         },
     },
     {
