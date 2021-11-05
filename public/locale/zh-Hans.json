@@ -248,7 +248,26 @@
     "info": {
         "title": "铁路线路图生成器",
         "notice": "请注意：由于著作权及有关法律限制，铁路线路图生成器使用思源宋体及Vegur，以代替港铁样式线路图所使用之地铁宋及Myriad Pro。如您拥有该字体之授权，可自行于输出之SVG文件内修改相关代码。",
-        "feedback": "反馈问题"
+        "feedback": "反馈问题",
+        "core": {
+            "title": "核心贡献者",
+            "wongchito": {
+                "first": "项目创始人",
+                "second": "香港地铁和广州地铁风格作者"
+            },
+            "thekingofcity": {
+                "first": "上海地铁风格作者",
+                "second": "桌面版维护者"
+            }
+        },
+        "colorAndLine": {
+            "title": "线路调色板和模板贡献者",
+            "note": {
+                "first": "想成为列表中的一员吗？打开",
+                "second": "如何贡献的教程",
+                "third": "并创建一个新的问题吧！"
+            }
+        }
     },
 
     "colour": {

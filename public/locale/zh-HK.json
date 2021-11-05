@@ -249,7 +249,26 @@
     "info": {
         "title": "鐵路路線圖產生器",
         "notice": "請注意：由於著作權及其他法律限制，鐵路路線圖產生器使用思源宋體及Vegur，以代替港鐵樣式路線圖所使用之地鐵宋及Myriad Pro。如閣下擁有該字型之授權，可自行於輸出之SVG檔案內修改相關源代碼。",
-        "feedback": "回報問題"
+        "feedback": "回報問題",
+        "core": {
+            "title": "核心貢獻者",
+            "wongchito": {
+                "first": "項目創始人",
+                "second": "香港地鐵和廣州地鐵風格作者"
+            },
+            "thekingofcity": {
+                "first": "上海地鐵風格作者",
+                "second": "桌面版維護者"
+            }
+        },
+        "colorAndLine": {
+            "title": "線路調色板和模板貢獻者",
+            "note": {
+                "first": "想成爲列表中的一員嗎？打開",
+                "second": "如何貢獻的教程",
+                "third": "並創建一個新的問題吧！"
+            }
+        }
     },
 
     "colour": {

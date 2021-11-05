@@ -249,7 +249,26 @@
     "info": {
         "title": "Rail Map Generator",
         "notice": "Notice: Due to copyright, licensing and other legal restrictions, Rail Map Generator uses Noto Serif CJK and Vegur instead of MTRSung and Myriad Pro respectively for MTR-style maps. If you have obtained the license of either font, please feel free to edit the relevant code chunk of the exported SVG file.",
-        "feedback": "Report Issues"
+        "feedback": "Report Issues",
+        "core": {
+            "title": "Core contributors",
+            "wongchito": {
+                "first": "Project initiator",
+                "second": "MTR and Guangzhou Metro Author"
+            },
+            "thekingofcity": {
+                "first": "Shanghai Metro Author",
+                "second": "Electron Maintainer"
+            }
+        },
+        "colorAndLine": {
+            "title": "Color palette and line templates contributors",
+            "note": {
+                "first": "Want to be on the list? Follow the ",
+                "second": "contribution wiki",
+                "third": " and open an issue today!"
+            }
+        }
     },
 
     "colour": {
