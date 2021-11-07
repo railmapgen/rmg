@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
-import StationNumberText from '../../../station-num-gzmtr';
+import StationNumber from '../../../gzmtr/station-number';
 import LineBox from '../line-box-gzmtr';
 import { InterchangeInfo, Name, Services } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
@@ -52,7 +52,7 @@ const StationGZMTR = (props: Props) => {
             />
             <g>
                 <use xlinkHref="#stn" stroke={stnState === -1 ? '#aaa' : 'var(--rmg-theme-colour)'} />
-                <StationNumberText
+                <StationNumber
                     className={`Name ${stnState === -1 ? 'Pass' : 'Future'}`}
                     lineNum={lineNumber}
                     stnNum={stnInfo.num}
