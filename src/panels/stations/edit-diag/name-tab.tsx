@@ -55,7 +55,7 @@ const useStyles = makeStyles(() =>
             borderLeftWidth: 1,
             borderRadius: '0 32px 32px 0',
             padding: '2px 5px',
-            width: 32,
+            width: 'auto',
             height: 32,
             '& .MuiInputBase-root': {
                 marginTop: 1.7,
@@ -64,6 +64,9 @@ const useStyles = makeStyles(() =>
                 fontSize: '1.5rem',
                 padding: 'unset',
                 textAlign: 'center',
+            },
+            '& input': {
+                width: 50,
             },
         },
         nameInputZH: {
