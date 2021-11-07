@@ -28,7 +28,7 @@ export default function PanelSave() {
     let TranslatedSaveLists = withTranslation()(SaveLists);
 
     return (
-        <Grid container spacing={3} justify="center" alignItems="center">
+        <Grid container spacing={3} justifyContent="center" alignItems="center">
             <Grid item xs={12} sm={8} md={6} lg={4}>
                 <TranslatedSaveLists />
             </Grid>

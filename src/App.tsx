@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import AppAppBar from './app-appbar';
 import Panels from './panels';
-import { createMuiTheme, ThemeProvider, useMediaQuery, LinearProgress } from '@material-ui/core';
+import { createTheme, ThemeProvider, useMediaQuery, LinearProgress } from '@material-ui/core';
 import { useAppSelector } from './redux';
 import SvgRouter from './svgs/svg-router';
 
-const darkTheme = createMuiTheme({
+const darkTheme = createTheme({
     palette: {
         type: 'dark',
         primary: {
@@ -34,7 +34,7 @@ const darkTheme = createMuiTheme({
     },
 });
 
-const lightTheme = createMuiTheme({
+const lightTheme = createTheme({
     palette: {
         primary: {
             light: '#bb86fc',

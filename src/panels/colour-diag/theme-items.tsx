@@ -215,7 +215,7 @@ export const CustomPanel = (props: ColourDialogProps) => {
                         style={{ opacity: 0 }}
                     />
                     <label htmlFor="input-color">
-                        <Tooltip title={t('colour.tooltip')} aria-label="colour picker">
+                        <Tooltip title={t('colour.tooltip') || ''} aria-label="colour picker">
                             <Button
                                 className={classes.button}
                                 style={{
