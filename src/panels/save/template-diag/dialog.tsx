@@ -17,10 +17,12 @@ import {
     useTheme,
     useMediaQuery,
 } from '@material-ui/core';
-import { getTransText2 } from '../../../utils';
+import { getTransText2, updateParam } from '../../../utils';
 import { templateList } from '../../../constants/templates/data';
 import { companies } from '../../../constants/company-config';
-import { LanguageCode } from '../../../constants/constants';
+import { LanguageCode, RMGParam } from '../../../constants/constants';
+// import { useDispatch } from 'react-redux';
+// import { setFullParam } from '../../../redux/param/action';
 
 interface TemplateDialogProps {
     open: boolean;
@@ -67,6 +69,7 @@ const useStyles = makeStyles(theme =>
 const NewDialog = (props: TemplateDialogProps) => {
     const { t, i18n } = useTranslation();
     const classes = useStyles();
+    // const dispatch = useDispatch();
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
@@ -79,9 +82,11 @@ const NewDialog = (props: TemplateDialogProps) => {
             const module = await import(
                 /* webpackChunkName: "templates" */ `../../../constants/templates/${selectedCompany}/${filename}`
             );
-            await window.rmgStorage.writeFile('rmgParam', JSON.stringify(module.default));
+            const updatedParam = updateParam(module.default) as RMGParam;
+            await window.rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
             // TODO: electron will fail here, wait for #96
-            window.location.assign(`./${module.default.style}`);
+            // dispatch(setFullParam(updatedParam));
+            window.location.assign(`./${updatedParam.style}`);
             // So after #96 is fixed, we first need to dispatch the param
             // and then <Link> to the module.default.style
         } catch (err) {

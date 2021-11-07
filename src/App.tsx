@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import AppAppBar from './app-appbar';
-import SVGs from './svgs';
 import Panels from './panels';
 import { createMuiTheme, ThemeProvider, useMediaQuery, LinearProgress } from '@material-ui/core';
 import { useAppSelector } from './redux';
+import SvgRouter from './svgs/svg-router';
 
 const darkTheme = createMuiTheme({
     palette: {
@@ -92,7 +92,7 @@ const AppBody = () => {
     return (
         <>
             <div style={{ overflowY: 'auto' }}>
-                <SVGs />
+                <SvgRouter />
             </div>
             <div style={{ flex: 1, overflow: 'hidden' }}>
                 <Panels />
