@@ -1,6 +1,6 @@
 import React, { SVGProps, useEffect, useRef, useState } from 'react';
 
-const TEXT_MAX_WIDTH = 14;
+const TEXT_MAX_WIDTH = 15;
 
 interface StationNumberProps extends SVGProps<SVGGElement> {
     lineNum: string;

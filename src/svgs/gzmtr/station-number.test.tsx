@@ -23,10 +23,10 @@ describe('Unit tests for StationNumber components', () => {
         expect(numberGroups).toHaveLength(2);
 
         const lineNumScale = getScaleFromTransform(numberGroups.at(0).props()['transform']);
-        expect(lineNumScale).toBe((14 / 20).toString());
+        expect(lineNumScale).toBe((15 / 20).toString());
 
         const stnNumScale = getScaleFromTransform(numberGroups.at(1).props()['transform']);
-        expect(stnNumScale).toBe((14 / 20).toString()); // will apply line num scale
+        expect(stnNumScale).toBe((15 / 20).toString()); // will apply line num scale
     });
 
     it('Can apply different scales as expected', async () => {
@@ -45,6 +45,6 @@ describe('Unit tests for StationNumber components', () => {
         expect(lineNumScale).toBe('1'); // will not be scaled
 
         const stnNumScale = getScaleFromTransform(numberGroups.at(1).props()['transform']);
-        expect(stnNumScale).toBe((14 / 20).toString());
+        expect(stnNumScale).toBe((15 / 20).toString());
     });
 });

@@ -162,7 +162,7 @@ const CustomiseDest = () => {
                             <Grid
                                 container
                                 spacing={1}
-                                justify="center"
+                                justifyContent="center"
                                 alignItems="flex-start"
                                 className={classes.grid}
                             >
