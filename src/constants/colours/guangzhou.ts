@@ -66,6 +66,7 @@ const Guangzhou: PaletteEntry[] = [
             [LanguageCode.ChineseTrad]: '7號線',
         },
         colour: '#97D700',
+        fg: MonoColour.black,
     },
     {
         id: 'gz8',
@@ -201,7 +202,7 @@ const Guangzhou: PaletteEntry[] = [
             [LanguageCode.ChineseSimp]: '22号线',
             [LanguageCode.ChineseTrad]: '22號線',
         },
-        colour: '#A65A29',
+        colour: '#CD5228',
     },
     {
         id: 'gfl',
