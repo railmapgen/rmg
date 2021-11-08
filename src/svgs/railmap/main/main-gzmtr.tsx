@@ -1,9 +1,15 @@
 import React, { useMemo } from 'react';
 import StationGZMTR from './station/station-gzmtr';
-import LineBox from './line-box-gzmtr';
 import { adjacencyList, criticalPathMethod, drawLine, getStnState } from '../methods/share';
-import { CanvasType, InterchangeInfo, ShortDirection, StationDict } from '../../../constants/constants';
+import {
+    CanvasType,
+    ColourHex,
+    MonoColour,
+    ShortDirection,
+    StationDict,
+} from '../../../constants/constants';
 import { useAppSelector } from '../../../redux';
+import LineIcon from '../../gzmtr/line-icon/line-icon';
 
 const wideFactor = (stnList: StationDict, stnId: string) =>
     stnList[stnId].parents.length === 2 || stnList[stnId].children.length === 2 ? 0.25 : 0;
@@ -168,11 +174,11 @@ const MainGZMTR = () => {
                         direction === ShortDirection.right ? `${lineXs[0] - 65}px` : `${lineXs[1] + 65}px`,
                 }}
             >
-                <LineBox
-                    info={
-                        Array(2).concat(['var(--rmg-theme-colour)', 'var(--rmg-theme-fg)'], lineName) as InterchangeInfo
-                    }
-                    stnState={1}
+                <LineIcon
+                    lineName={lineName}
+                    foregroundColour={'var(--rmg-theme-fg)' as MonoColour}
+                    backgroundColour={'var(--rmg-theme-colour)' as ColourHex}
+                    stationState={1}
                 />
             </g>
         </g>

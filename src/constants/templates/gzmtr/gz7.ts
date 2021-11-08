@@ -127,7 +127,12 @@ const params = {
             services: ['local'],
             facility: '',
             transfer: {
-                info: [[['guangzhou', 'gz3', '#ECA154', '#000', '3号线', 'Line 3']]],
+                info: [
+                    [
+                        ['guangzhou', 'gz3', '#ECA154', '#000', '3号线', 'Line 3'],
+                        ['guangzhou', 'gz18', '#0047BA', '#fff', '18号线', 'Line 18'],
+                    ],
+                ],
                 osi_names: [],
                 paid_area: true,
                 tick_direc: 'r',
@@ -249,19 +254,19 @@ const params = {
     psd_num: '10',
     line_num: '7',
     info_panel_type: 'gz1421',
-    direction_gz_x: 23.42,
-    direction_gz_y: 76.99,
+    direction_gz_x: 21.28,
+    direction_gz_y: 79.02,
     customiseMTRDest: { isLegacy: false, terminal: false },
     svgWidth: { destination: 1000, runin: 1000, railmap: 1500, indoor: 1000 },
     notesGZMTR: [
         [
-            '22号线(番禺广场-陈头岗)尚未开通。',
+            '二十二号线(番禺广场-陈头岗)尚未开通。',
             'Line 22 (Panyu Square-Chentougang) is under construction.',
             50,
             71.5,
             true,
         ],
-        ['佛山2号线尚未开通。', 'Line 2 of Foshan Metro is under construction.', 50, 84, true],
+        ['佛 山 二 号 线 尚 未 开 通。', 'Line 2 of Foshan Metro is under construction.', 50, 84, true],
     ],
     namePosMTR: { isStagger: true, isFlip: false },
 };

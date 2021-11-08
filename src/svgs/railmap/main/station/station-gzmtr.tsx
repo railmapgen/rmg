@@ -1,8 +1,8 @@
 import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import StationNumber from '../../../gzmtr/station-number';
-import LineBox from '../line-box-gzmtr';
 import { InterchangeInfo, Name, Services } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
+import LineIcon from '../../../gzmtr/line-icon/line-icon';
 
 interface Props {
     stnId: string;
@@ -234,7 +234,12 @@ const IntBoxs = (props: IntGroupProps & React.SVGProps<SVGGElement>) => {
         <g {...other}>
             {intInfos.map((info, i) => (
                 <g key={i} transform={`translate(0,${i * 28 * (tickRotation === 180 ? -1 : 1)})`}>
-                    <LineBox info={info} stnState={stnState} />
+                    <LineIcon
+                        lineName={[info[4], info[5]]}
+                        foregroundColour={info[3]}
+                        backgroundColour={info[2]}
+                        stationState={stnState}
+                    />
                 </g>
             ))}
         </g>
