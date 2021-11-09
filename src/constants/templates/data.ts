@@ -61,6 +61,38 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
                 'zh-Hant': '7號線 來自 AnDanJuneUnderline',
             },
         },
+        {
+            filename: 'bj9',
+            name: {
+                en: 'Line 9 by AnDanJuneUnderline',
+                'zh-Hans': '9号线 来自 AnDanJuneUnderline',
+                'zh-Hant': '9號線 來自 AnDanJuneUnderline',
+            },
+        },
+        {
+            filename: 'bj13',
+            name: {
+                en: 'Line 13 by AnDanJuneUnderline',
+                'zh-Hans': '13号线 来自 AnDanJuneUnderline',
+                'zh-Hant': '13號線 來自 AnDanJuneUnderline',
+            },
+        },
+        {
+            filename: 'yzl',
+            name: {
+                en: 'Yizhuang Line by AnDanJuneUnderline',
+                'zh-Hans': '亦庄线 来自 AnDanJuneUnderline',
+                'zh-Hant': '亦莊線 來自 AnDanJuneUnderline',
+            },
+        },
+        {
+            filename: 't1l',
+            name: {
+                en: 'Yizhuang T1 Line by AnDanJuneUnderline',
+                'zh-Hans': '亦庄T1线 来自 AnDanJuneUnderline',
+                'zh-Hant': '亦莊T1線 來自 AnDanJuneUnderline',
+            },
+        },
     ],
 
     gzmtr: [
