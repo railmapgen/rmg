@@ -1,8 +1,7 @@
-import { AllCanvas, CanvasType, LoadingStatus, RmgStyle } from '../../constants/constants';
+import { AllCanvas, CanvasType, LoadingStatus } from '../../constants/constants';
 import { Dispatch } from 'redux';
 import { RootState } from '../index';
 
-export const SET_RMG_STYLE = 'SET_RMG_STYLE';
 export const SET_CANVAS_SCALE = 'SET_CANVAS_SCALE';
 export const SET_CANVAS_SCALE_STATUS = 'SET_CANVAS_SCALE_STATUS';
 export const SET_CANVAS_TO_SHOW = 'SET_CANVAS_TO_SHOW';

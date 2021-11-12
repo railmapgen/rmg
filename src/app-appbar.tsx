@@ -77,7 +77,7 @@ const CanvasToggle = () => {
     return React.useMemo(
         () => (
             <>
-                <Tooltip title={t('toggle.tooltip')}>
+                <Tooltip title={t('toggle.tooltip') || ''}>
                     <IconButton onClick={e => setCanvasButtonEl(e.currentTarget)} className={classes.menuButton}>
                         <Icon>photo_library</Icon>
                     </IconButton>
@@ -106,12 +106,12 @@ const ZoomToggles = () => {
     return React.useMemo(
         () => (
             <>
-                <Tooltip title={t('zoom.out')}>
+                <Tooltip title={t('zoom.out') || ''}>
                     <IconButton onClick={() => dispatch(zoomOut())} className={classes.menuButton}>
                         <Icon>zoom_out</Icon>
                     </IconButton>
                 </Tooltip>
-                <Tooltip title={t('zoom.in')}>
+                <Tooltip title={t('zoom.in') || ''}>
                     <IconButton onClick={() => dispatch(zoomIn())} className={classes.menuButton}>
                         <Icon>zoom_in</Icon>
                     </IconButton>

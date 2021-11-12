@@ -42,7 +42,7 @@ const StationFabs = React.memo(
 
         return (
             <>
-                <Tooltip title={t('stations.fabs.tooltip')} aria-label="options">
+                <Tooltip title={t('stations.fabs.tooltip') || ''} aria-label="options">
                     <Fab color="primary" className={classes.fab} onClick={e => setFabEl(e.target as HTMLElement)}>
                         <Icon>more_vert</Icon>
                     </Fab>

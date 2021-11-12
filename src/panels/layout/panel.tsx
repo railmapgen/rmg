@@ -9,7 +9,7 @@ const LayoutGZMTR = React.lazy(() => import(/* webpackChunkName: "panelLayoutGZM
 export default React.memo(function LayoutPanel() {
     const rmgStyle = useAppSelector(store => store.param.style);
     return (
-        <Grid container spacing={3} justify="center" alignItems="flex-start">
+        <Grid container spacing={3} justifyContent="center" alignItems="flex-start">
             <Grid item xs={12} sm={10} md={7} lg={5}>
                 <Paper>
                     <List component="div" disablePadding>

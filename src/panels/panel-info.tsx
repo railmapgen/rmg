@@ -48,6 +48,7 @@ const useStyles = makeStyles(() =>
             margin: 6,
             marginLeft: 20,
             marginRight: 20,
+            marginTop: 20,
         },
         detailColumn: {
             display: 'flex',
@@ -112,7 +113,7 @@ export default memo(function PanelInfo() {
             <Card className={classes.root}>
                 <div className={classes.cardHeader}>
                     <Typography component="h5" variant="h5">
-                        Core contributors
+                        {t('info.core.title')}
                     </Typography>
                 </div>
                 <div className={classes.detailRow}>
@@ -122,10 +123,10 @@ export default memo(function PanelInfo() {
                             Chito Wong
                         </Typography>
                         <Typography variant="subtitle2" color="textSecondary">
-                            Project initiator
+                            {t('info.core.wongchito.first')}
                         </Typography>
                         <Typography variant="subtitle2" color="textSecondary">
-                            MTR and Guangzhou Metro Author
+                            {t('info.core.wongchito.second')}
                         </Typography>
                     </CardContent>
                 </div>
@@ -136,10 +137,10 @@ export default memo(function PanelInfo() {
                             thekingofcity
                         </Typography>
                         <Typography variant="subtitle2" color="textSecondary">
-                            Shanghai Metro Author
+                            {t('info.core.thekingofcity.first')}
                         </Typography>
                         <Typography variant="subtitle2" color="textSecondary">
-                            Electron Maintainer
+                            {t('info.core.thekingofcity.second')}
                         </Typography>
                     </CardContent>
                 </div>
@@ -148,7 +149,7 @@ export default memo(function PanelInfo() {
             <Card className={classes.root}>
                 <div className={classes.cardHeader}>
                     <Typography component="h5" variant="h5">
-                        Color palette and line templates contributors
+                        {t('info.colorAndLine.title')}
                     </Typography>
                 </div>
                 <div className={classes.detailGrid}>
@@ -164,6 +165,16 @@ export default memo(function PanelInfo() {
                             </Typography>
                         </div>
                     ))}
+                </div>
+                <div className={classes.cardHeader}>
+                    <Typography variant="subtitle2" color="textSecondary">
+                        {t('info.colorAndLine.note.first')}
+                        <Typography component="a" variant="subtitle2" color="textSecondary"
+                            href="https://github.com/wongchito/RailMapGenerator/wiki/How-to-add-color-palette-and-line-templates">
+                            {t('info.colorAndLine.note.second')}
+                        </Typography>
+                        {t('info.colorAndLine.note.third')}
+                    </Typography>
                 </div>
             </Card>
 

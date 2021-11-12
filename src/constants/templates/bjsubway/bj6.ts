@@ -28,7 +28,7 @@ const params = {
             transfer: { tick_direc: 'r', paid_area: true, osi_names: [], info: [[]] },
             services: ['local'],
             facility: '',
-            num: '00',
+            num: '35',
             secondaryName: false,
         },
         l1mz: {
@@ -36,7 +36,7 @@ const params = {
             children: ['iwf6'],
             name: ['金安桥', "Jin'an Qiao"],
             branch: { left: [], right: [] },
-            num: '02',
+            num: '01',
             transfer: {
                 tick_direc: 'r',
                 paid_area: true,
@@ -52,7 +52,7 @@ const params = {
             parents: ['l1mz'],
             name: ['苹果园', 'Pingguo Yuan'],
             branch: { left: [], right: [] },
-            num: '01',
+            num: '02',
             transfer: {
                 tick_direc: 'r',
                 paid_area: true,
@@ -71,7 +71,7 @@ const params = {
         dx9v: {
             name: ['杨庄', 'Yangzhuang'],
             secondaryName: false,
-            num: '00',
+            num: '03',
             services: ['local'],
             parents: ['iwf6'],
             children: ['507q'],
@@ -82,7 +82,7 @@ const params = {
         '507q': {
             name: ['西黄村', 'Xihuangcun'],
             secondaryName: false,
-            num: '00',
+            num: '04',
             services: ['local'],
             parents: ['dx9v'],
             children: ['wj16'],
@@ -93,7 +93,7 @@ const params = {
         wj16: {
             name: ['廖公庄', 'Liaogongzhuang'],
             secondaryName: false,
-            num: '00',
+            num: '05',
             services: ['local'],
             parents: ['507q'],
             children: ['639e'],
@@ -104,7 +104,7 @@ const params = {
         '639e': {
             name: ['田村', 'Tiancun'],
             secondaryName: false,
-            num: '00',
+            num: '06',
             services: ['local'],
             parents: ['wj16'],
             children: ['lej6'],
@@ -115,25 +115,20 @@ const params = {
         lej6: {
             name: ['海淀五路居', 'Haidian Wuluju'],
             secondaryName: false,
-            num: '00',
+            num: '07',
             services: ['local'],
             parents: ['639e'],
-            children: ['4c8t'],
+            children: ['5ybv'],
             branch: { left: [], right: [] },
-            transfer: {
-                info: [[['beijing', 'bj10', '#0092BC', '#fff', '10号线', 'Line 10']]],
-                tick_direc: 'r',
-                paid_area: true,
-                osi_names: [],
-            },
+            transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
             facility: '',
         },
         '4c8t': {
             name: ['花园桥', 'Huayuan Qiao'],
             secondaryName: false,
-            num: '00',
+            num: '09',
             services: ['local'],
-            parents: ['lej6'],
+            parents: ['5ybv'],
             children: ['9pyo'],
             branch: { left: [], right: [] },
             transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
@@ -142,7 +137,7 @@ const params = {
         '9pyo': {
             name: ['白石桥南', 'Baishiqiao Nan(S)'],
             secondaryName: false,
-            num: '00',
+            num: '10',
             services: ['local'],
             parents: ['4c8t'],
             children: ['r5kv'],
@@ -158,7 +153,7 @@ const params = {
         r5kv: {
             name: ['车公庄西', 'Chegongzhuang Xi(W)'],
             secondaryName: false,
-            num: '00',
+            num: '11',
             services: ['local'],
             parents: ['9pyo'],
             children: ['uxm9'],
@@ -169,7 +164,7 @@ const params = {
         uxm9: {
             name: ['车公庄', 'Chegongzhuang'],
             secondaryName: false,
-            num: '00',
+            num: '12',
             services: ['local'],
             parents: ['r5kv'],
             children: ['e9rp'],
@@ -185,7 +180,7 @@ const params = {
         e9rp: {
             name: ['平安里', "Ping'an Li"],
             secondaryName: false,
-            num: '00',
+            num: '13',
             services: ['local'],
             parents: ['uxm9'],
             children: ['rtfa'],
@@ -201,7 +196,7 @@ const params = {
         rtfa: {
             name: ['北海北', 'Beihai Bei(N)'],
             secondaryName: false,
-            num: '00',
+            num: '14',
             services: ['local'],
             parents: ['e9rp'],
             children: ['nu0i'],
@@ -212,7 +207,7 @@ const params = {
         nu0i: {
             name: ['南锣鼓巷', 'Nanluogu Xiang'],
             secondaryName: false,
-            num: '00',
+            num: '15',
             services: ['local'],
             parents: ['rtfa'],
             children: ['amk0'],
@@ -228,7 +223,7 @@ const params = {
         amk0: {
             name: ['东四', 'Dongsi'],
             secondaryName: false,
-            num: '00',
+            num: '16',
             services: ['local'],
             parents: ['nu0i'],
             children: ['xzla'],
@@ -244,7 +239,7 @@ const params = {
         xzla: {
             name: ['朝阳门', 'Chaoyang Men'],
             secondaryName: false,
-            num: '00',
+            num: '17',
             services: ['local'],
             parents: ['amk0'],
             children: ['p0k4'],
@@ -260,7 +255,7 @@ const params = {
         p0k4: {
             name: ['东大桥', 'Dongdaqiao'],
             secondaryName: false,
-            num: '00',
+            num: '18',
             services: ['local'],
             parents: ['xzla'],
             children: ['0st5'],
@@ -271,7 +266,7 @@ const params = {
         '0st5': {
             name: ['呼家楼', 'Hujialou'],
             secondaryName: false,
-            num: '00',
+            num: '19',
             services: ['local'],
             parents: ['p0k4'],
             children: ['mx71'],
@@ -287,7 +282,7 @@ const params = {
         mx71: {
             name: ['金台路', 'Jintai Lu'],
             secondaryName: false,
-            num: '00',
+            num: '20',
             services: ['local'],
             parents: ['0st5'],
             children: ['0uia'],
@@ -303,7 +298,7 @@ const params = {
         '0uia': {
             name: ['十里堡', 'Shilipu'],
             secondaryName: false,
-            num: '00',
+            num: '21',
             services: ['local'],
             parents: ['mx71'],
             children: ['d30g'],
@@ -314,7 +309,7 @@ const params = {
         xhx5: {
             name: ['褡裢坡', 'Dalianpo'],
             secondaryName: false,
-            num: '00',
+            num: '23',
             services: ['local'],
             parents: ['d30g'],
             children: ['kzwq'],
@@ -325,7 +320,7 @@ const params = {
         kzwq: {
             name: ['黄渠', 'Huangqu'],
             secondaryName: false,
-            num: '00',
+            num: '24',
             services: ['local'],
             parents: ['xhx5'],
             children: ['4qke'],
@@ -336,7 +331,7 @@ const params = {
         d30g: {
             name: ['青年路', 'Qingnian Lu'],
             secondaryName: false,
-            num: '00',
+            num: '22',
             services: ['local'],
             parents: ['0uia'],
             children: ['xhx5'],
@@ -347,7 +342,7 @@ const params = {
         '4qke': {
             name: ['常营', 'Changying'],
             secondaryName: false,
-            num: '00',
+            num: '25',
             services: ['local'],
             parents: ['kzwq'],
             children: ['ui4w'],
@@ -358,7 +353,7 @@ const params = {
         ui4w: {
             name: ['草房', 'Caofang'],
             secondaryName: false,
-            num: '00',
+            num: '26',
             services: ['local'],
             parents: ['4qke'],
             children: ['exjz'],
@@ -369,7 +364,7 @@ const params = {
         exjz: {
             name: ['物资学院路', 'Wuzi Xueyuan Lu'],
             secondaryName: false,
-            num: '00',
+            num: '27',
             services: ['local'],
             parents: ['ui4w'],
             children: ['g6am'],
@@ -380,7 +375,7 @@ const params = {
         g6am: {
             name: ['通州北关', 'Tongzhou Beiguan'],
             secondaryName: false,
-            num: '00',
+            num: '28',
             services: ['local'],
             parents: ['exjz'],
             children: ['qpv2'],
@@ -391,7 +386,7 @@ const params = {
         qpv2: {
             name: ['通运门', 'Tongyun Men'],
             secondaryName: false,
-            num: '00',
+            num: '29',
             services: ['local'],
             parents: ['g6am'],
             children: ['mtpj'],
@@ -402,7 +397,7 @@ const params = {
         mtpj: {
             name: ['北运河西', 'Beiyunhe Xi(W)'],
             secondaryName: false,
-            num: '00',
+            num: '30',
             services: ['local'],
             parents: ['qpv2'],
             children: ['xh2v'],
@@ -413,7 +408,7 @@ const params = {
         xh2v: {
             name: ['北运河东', 'Beiyunhe Dong(E)'],
             secondaryName: false,
-            num: '00',
+            num: '31',
             services: ['local'],
             parents: ['mtpj'],
             children: ['kwag'],
@@ -424,7 +419,7 @@ const params = {
         kwag: {
             name: ['郝家府', 'Haojia Fu'],
             secondaryName: false,
-            num: '00',
+            num: '32',
             services: ['local'],
             parents: ['xh2v'],
             children: ['kgas'],
@@ -435,7 +430,7 @@ const params = {
         kgas: {
             name: ['东夏园', 'Dongxia Yuan'],
             secondaryName: false,
-            num: '00',
+            num: '33',
             services: ['local'],
             parents: ['kwag'],
             children: ['gua0'],
@@ -446,7 +441,7 @@ const params = {
         gua0: {
             name: ['潞城', 'Lucheng'],
             secondaryName: false,
-            num: '00',
+            num: '34',
             services: ['local'],
             parents: ['kgas'],
             children: ['lineend'],
@@ -454,10 +449,26 @@ const params = {
             transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
             facility: '',
         },
+        '5ybv': {
+            name: ['慈寿寺', 'Cishousi'],
+            secondaryName: false,
+            num: '08',
+            services: ['local'],
+            parents: ['lej6'],
+            children: ['4c8t'],
+            branch: { left: [], right: [] },
+            transfer: {
+                info: [[['beijing', 'bj10', '#0092BC', '#fff', '10号线', 'Line 10']]],
+                tick_direc: 'r',
+                paid_area: true,
+                osi_names: [],
+            },
+            facility: '',
+        },
     },
     line_name: ['6号线', 'Line 6'],
     psd_num: '1',
-    line_num: 'TW',
+    line_num: '6',
     info_panel_type: 'gz28',
     direction_gz_x: 50,
     direction_gz_y: 70,

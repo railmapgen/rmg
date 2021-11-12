@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import StationNumberText from '../station-num-gzmtr';
+import StationNumber from '../gzmtr/station-number';
 import { CanvasType, Name, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 import { useAppSelector } from '../../redux';
 
@@ -154,7 +154,7 @@ const BigStnNum = (props: { lineNum: string; stnNum: string } & React.SVGProps<S
                             className="rmg-stn rmg-stn--future"
                             d="M 0,12.95 V -12.95 H -12.95 a 12.95,12.95 0 0,0 0,25.9 h 25.9 a 12.95,12.95 0 0,0 0,-25.9 H 0 "
                         />
-                        <StationNumberText transform="scale(1.4)" {...{ lineNum, stnNum }} />
+                        <StationNumber transform="scale(1.4)" {...{ lineNum, stnNum }} />
                     </>
                 ),
                 [lineNum, stnNum]

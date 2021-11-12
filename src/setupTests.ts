@@ -1,10 +1,11 @@
-import { configure } from 'enzyme';
+import { configure, ReactWrapper } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import thunk, { ThunkDispatch } from 'redux-thunk';
 import { RootState } from './redux';
 import { AnyAction } from 'redux';
 import createMockStore from 'redux-mock-store';
 import { BranchStyle, StationDict } from './constants/constants';
+import { act } from 'react-dom/test-utils';
 
 configure({ adapter: new Adapter() });
 
@@ -59,3 +60,10 @@ export const mockSimpleStationList: StationDict = {
         branch: { left: [BranchStyle.through, 'stn4'], right: [] },
     },
 } as any;
+
+export const waitForComponentToPaint = async (wrapper: ReactWrapper) => {
+    await act(async () => {
+        await new Promise(resolve => setImmediate(resolve));
+        wrapper.update();
+    });
+};

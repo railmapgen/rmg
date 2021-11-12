@@ -2,7 +2,7 @@ import { LanguageCode, PaletteEntry } from '../constants';
 
 /**
  * Wikipedia: https://en.wikipedia.org/wiki/Xiamen_Metro
- * Offical website: https://www.xmgdjt.com.cn/Modules/ControlHtml/MetroOperation.aspx?SelectedTitle=%E7%AB%99%E7%82%B9%E7%BA%BF%E8%B7%AF
+ * Official website: https://www.xmgdjt.com.cn/Modules/ControlHtml/MetroOperation.aspx?SelectedTitle=%E7%AB%99%E7%82%B9%E7%BA%BF%E8%B7%AF
 */
 const Xiamen: PaletteEntry[] = [
     {
