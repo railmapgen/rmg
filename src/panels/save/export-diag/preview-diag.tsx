@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useContext } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Button,
@@ -20,7 +20,6 @@ import {
 } from '@material-ui/core';
 
 import { test } from './utils';
-import { useDispatch, useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
 import { setCurrentStation } from '../../../redux/param/action';
@@ -47,6 +46,10 @@ const useStyles = makeStyles(theme =>
             display: 'flex',
             flexDirection: 'column',
             minWidth: 250,
+        },
+        contentAction: {
+            display: 'flex',
+            alignSelf: 'end',
         },
         contentRoot: {
             padding: 'unset',
@@ -220,9 +223,9 @@ export default function PreviewDialog(props: Props) {
         })
     }
 
-    // switch between batch and sigle download action
-    const handleClose = (action: 'close' | 'download' | 'downloadAllStation') => () => {
-        if (action === 'download') {
+    // switch between batch and single download action
+    const handleClose = (action: 'close' | 'downloadCurrentStation' | 'downloadAllStation') => () => {
+        if (action === 'downloadCurrentStation') {
             let stn_list_keys = [currentStationIndex];
             downloadSvg(stn_list_keys);
         } else if (action === 'downloadAllStation') {
@@ -325,28 +328,30 @@ export default function PreviewDialog(props: Props) {
                             <TermsDialog open={isTermsDialogOpen} onClose={() => setIsTermsDialogOpen(false)} />
                         </ListItem>
                     </DialogContent>
-                    <DialogActions>
-                        <Button variant="outlined" onClick={handleClose('close')} color="primary" autoFocus>
-                            {t('dialog.cancel')}
-                        </Button>
-                        <Button
-                            variant="contained"
-                            onClick={handleClose('downloadAllStation')}
-                            color="primary"
-                            disabled={!isLoaded || !isAccept}
-                        >
-                            {t('file.preview.downloadAllStations')}
-                        </Button>
-                        <Button
-                            variant="contained"
-                            onClick={handleClose('download')}
-                            color="primary"
-                            disabled={!isLoaded || !isAccept}
-                        >
-                            {t('file.preview.download')}
-                        </Button>
-                    </DialogActions>
                 </div>
+            </div>
+            <div className={classes.contentAction}>
+                <DialogActions>
+                    <Button
+                        variant="contained"
+                        onClick={handleClose('downloadCurrentStation')}
+                        color="primary"
+                        disabled={!isLoaded || !isAccept}
+                    >
+                        {t('file.preview.downloadCurrentStation')}
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={handleClose('downloadAllStation')}
+                        color="primary"
+                        disabled={!isLoaded || !isAccept}
+                    >
+                        {t('file.preview.downloadAllStations')}
+                    </Button>
+                    <Button variant="outlined" onClick={handleClose('close')} color="primary" autoFocus>
+                        {t('dialog.cancel')}
+                    </Button>
+                </DialogActions>
             </div>
         </Dialog>
     );
