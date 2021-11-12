@@ -203,11 +203,8 @@ export default function PreviewDialog(props: Props) {
         dispatch(setCurrentStation(stnId, stn_list_keys)).then((stn_list_keys) => {
             console.log(`update ${stnId} props complete.`);
 
-            // TODO: why double check here?
-            if (stnId === undefined) return;
-
             const elem = cloneSvgNode();
-            const filename = `rmg.${stnId}.${stn_list[stnId].name[0]}.${stn_list[stnId].name[1]}`;
+            const filename = `rmg.${stnId}.${stn_list[stnId].name[0]}.${stn_list[stnId].name[1]}`.replaceAll(' ', '_');
 
             if (format === 'png') {
                 test(elem, scale, filename);
@@ -215,7 +212,7 @@ export default function PreviewDialog(props: Props) {
                 elem.removeAttribute('height');
                 var link = document.createElement('a');
                 link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl.outerHTML)));
-                link.download = filename + '.svg';
+                link.download = `${filename}.svg`;
                 link.click();
             }
 

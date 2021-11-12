@@ -56,7 +56,7 @@ function saveAs(uri: string, filename: string) {
 
     if (typeof link.download === 'string') {
         link.href = uri;
-        link.download = filename + '.png';
+        link.download = `${filename}.png`;
         //Firefox requires the link to be in the body
         document.body.appendChild(link);
         //simulate click
