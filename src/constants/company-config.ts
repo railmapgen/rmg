@@ -8,6 +8,7 @@ export enum CompanyCode {
     mtr = 'mtr',
     njmetro = 'njmetro',
     shmetro = 'shmetro',
+    szmetro = 'szmetro',
 }
 
 interface CompanyEntry {
@@ -70,6 +71,14 @@ export const companies: CompanyEntry[] = [
             [LanguageCode.English]: 'Shanghai Metro',
             [LanguageCode.ChineseSimp]: '上海地铁',
             [LanguageCode.ChineseTrad]: '上海地鐵',
+        },
+    },
+    {
+        id: CompanyCode.szmetro,
+        name: {
+            [LanguageCode.English]: 'Shenzhen Metro',
+            [LanguageCode.ChineseSimp]: '深圳地铁',
+            [LanguageCode.ChineseTrad]: '深圳地鐵',
         },
     },
 ];
