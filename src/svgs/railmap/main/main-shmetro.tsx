@@ -65,20 +65,20 @@ const MainSHMetro = () => {
         [param.current_stn_idx, param.direction, routes.toString()]
     );
 
-    const services = Object.values(Services);
-    const servicesLevel = Object.values(param.stn_list)
+    const servicesAll = Object.values(Services);
+    const servicesPresent = Object.values(param.stn_list)
         .map(stationInfo => stationInfo.services)
-        .flat() // all services
+        .flat()  // all services in all stations
         .reduce(
             (acc, cur) => {
-                acc[services.indexOf(cur)] = true;
+                acc[servicesAll.indexOf(cur)] = true;
                 return acc;
             },
             [false, false, false] as [boolean, boolean, boolean]
-        ) // set the flag in order
-        .map((bool, i) => [services[i], bool] as [Services, boolean]) // zip
-        .filter(s => s[1]) // get the existing service
-        .map(s => s[0]); // maintain the services' order
+        )  // set the flag in order
+        .map((bool, i) => [servicesAll[i], bool] as [Services, boolean])  // zip
+        .filter(s => s[1])  // get the existing service
+        .map(s => s[0]);  // maintain the services' order
 
     const linePaths = drawLine(branches, stnStates);
 
@@ -95,12 +95,12 @@ const MainSHMetro = () => {
     // );
 
     // paths = [{'main':..., 'pass':..., 'service':'local'}, ...}]
-    const paths = servicesLevel.map(services =>
+    const paths = servicesPresent.map(services =>
         (Object.keys(linePaths) as (keyof ReturnType<typeof drawLine>)[]).reduce(
             (acc, cur) => ({
                 ...acc,
                 [cur]: linePaths[cur]
-                    .map(stns => _linePath(stns, cur, xs, ys, param.direction, services, servicesLevel.length))
+                    .map(stns => _linePath(stns, cur, xs, ys, param.direction, services, servicesPresent.length))
                     .filter(path => path !== ''),
                 service: services,
             }),
@@ -113,7 +113,7 @@ const MainSHMetro = () => {
             <Line paths={paths} direction={param.direction} />
             <StationGroup xs={xs} ys={ys} stnStates={stnStates} />
             <ServicesElements
-                servicesLevel={servicesLevel}
+                servicesLevel={servicesPresent}
                 dy={-param.svg_height + 100}
                 direction={param.direction}
                 lineXs={lineXs}
