@@ -153,7 +153,7 @@ export default memo(function PanelInfo() {
                     </Typography>
                 </div>
                 <div className={classes.detailGrid}>
-                    {['linchen1965', 'Andy1782010', 'Thomastzc', 'AnDanJune\nUnderline', 'Tianxiu11111']
+                    {['xiany114514', 'linchen1965', 'Andy1782010', 'Thomastzc', 'AnDanJune\nUnderline', 'Tianxiu11111']
                     .map(name => (
                         <div className={classes.detailColumn}>
                             <CardMedia
