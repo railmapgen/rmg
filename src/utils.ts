@@ -207,7 +207,9 @@ export const updateParam = (param: { [x: string]: any }) => {
     });
 
     // Version 3.9.36
-    param.style = param.style === undefined ? RmgStyle.MTR : param.style
+    // Set unknown and missing style to mtr
+    param.style = (param.style === undefined || !Object.values(RmgStyle).includes(param.style))
+        ? RmgStyle.MTR : param.style;
 
     return param;
 };

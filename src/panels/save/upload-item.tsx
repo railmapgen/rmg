@@ -12,10 +12,16 @@ import {
     DialogActions,
     Button,
 } from '@material-ui/core';
-import { RMGParam, RmgStyle } from '../../constants/constants';
+import { useDispatch } from 'react-redux';
+import { RMGParam, RmgStyle, canvasConfig, AllCanvas } from '../../constants/constants';
+import { useAppSelector } from '../../redux';
+import { selectCanvas } from '../../redux/app/action';
 
 export default function UploadLi() {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
+
+    const { canvasToShow } = useAppSelector(state => state.app);
 
     const [open, setOpen] = React.useState(false);
     const [importedParam, setImportedParam] = React.useState({} as RMGParam);
@@ -44,6 +50,12 @@ export default function UploadLi() {
         if (action === 'accept') {
             try {
                 await window.rmgStorage.writeFile('rmgParam', JSON.stringify(importedParam));
+
+                // reset to AllCanvas if current canvas is not supported in the new style
+                const canvas = canvasConfig[importedParam.style]
+                    .some(c => c === canvasToShow) ? canvasToShow : AllCanvas;
+                dispatch(selectCanvas(canvas));
+    
                 // TODO: electron will fail here, wait for #96
                 window.location.assign(`./${importedParam.style || RmgStyle.MTR}`);
                 // So after #96 is fixed, we first need to dispatch the param
