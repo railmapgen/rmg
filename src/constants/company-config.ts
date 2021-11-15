@@ -24,12 +24,14 @@ export const companies: CompanyEntry[] = [
             [LanguageCode.Chinese]: '基本',
         },
     },
+
+    // Templates with styles supported
     {
-        id: CompanyCode.bjsubway,
+        id: CompanyCode.mtr,
         name: {
-            [LanguageCode.English]: 'Beijing Subway',
-            [LanguageCode.ChineseSimp]: '北京地铁',
-            [LanguageCode.ChineseTrad]: '北京地鐵',
+            [LanguageCode.English]: 'MTR',
+            [LanguageCode.ChineseSimp]: '港铁',
+            [LanguageCode.ChineseTrad]: '港鐵',
         },
     },
     {
@@ -38,6 +40,24 @@ export const companies: CompanyEntry[] = [
             [LanguageCode.English]: 'Guangzhou Metro',
             [LanguageCode.ChineseSimp]: '广州地铁',
             [LanguageCode.ChineseTrad]: '廣州地鐵',
+        },
+    },
+    {
+        id: CompanyCode.shmetro,
+        name: {
+            [LanguageCode.English]: 'Shanghai Metro',
+            [LanguageCode.ChineseSimp]: '上海地铁',
+            [LanguageCode.ChineseTrad]: '上海地鐵',
+        },
+    },
+
+    // Third-party templates
+    {
+        id: CompanyCode.bjsubway,
+        name: {
+            [LanguageCode.English]: 'Beijing Subway',
+            [LanguageCode.ChineseSimp]: '北京地铁',
+            [LanguageCode.ChineseTrad]: '北京地鐵',
         },
     },
     {
@@ -50,27 +70,11 @@ export const companies: CompanyEntry[] = [
         },
     },
     {
-        id: CompanyCode.mtr,
-        name: {
-            [LanguageCode.English]: 'MTR',
-            [LanguageCode.ChineseSimp]: '港铁',
-            [LanguageCode.ChineseTrad]: '港鐵',
-        },
-    },
-    {
         id: CompanyCode.njmetro,
         name: {
             [LanguageCode.English]: 'Nanjing Metro',
             [LanguageCode.ChineseSimp]: '南京地铁',
             [LanguageCode.ChineseTrad]: '南京地鐵',
-        },
-    },
-    {
-        id: CompanyCode.shmetro,
-        name: {
-            [LanguageCode.English]: 'Shanghai Metro',
-            [LanguageCode.ChineseSimp]: '上海地铁',
-            [LanguageCode.ChineseTrad]: '上海地鐵',
         },
     },
     {
