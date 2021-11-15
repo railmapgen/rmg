@@ -236,6 +236,7 @@ export type Note = [...Name, number, number, boolean];
 
 export enum LanguageCode {
     Azerbaijani = 'az',
+    Arabic = 'ar',
     Catalan = 'ca',
     Chinese = 'zh',
     ChineseCN = 'zh-CN',
@@ -250,6 +251,7 @@ export enum LanguageCode {
     Hindi = 'hi',
     Japanese = 'ja',
     Korean = 'ko',
+    Malay = 'ms',
     Norwegian = 'no',
     Spanish = 'es',
     Persian = 'fa',
