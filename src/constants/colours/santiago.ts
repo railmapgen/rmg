@@ -64,7 +64,7 @@ const Santiago: PaletteEntry[] = [
             'zh-Hans': '5号线',
             'zh-Hant': '5號線',
         },
-        colour: '#EE1D23',
+        colour: '#0B9444',
     },
     {
         id: 'stg6',
