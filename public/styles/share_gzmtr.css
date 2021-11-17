@@ -20,14 +20,3 @@ rect#strip_gz {
 .rmg-name__gzmtr--white-fg {
     fill: #fff;
 }
-
-.rmg-stn {
-    fill: #fff;
-    stroke-width: 2;
-}
-.rmg-stn--future {
-    stroke: var(--rmg-theme-colour);
-}
-.rmg-stn__highlight {
-    fill: yellow;
-}

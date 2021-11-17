@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import StationNumber from '../gzmtr/station-number';
+import StationNumber from '../gzmtr/station-icon/station-number';
 import { CanvasType, Name, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 import { useAppSelector } from '../../redux';
 
@@ -145,22 +145,7 @@ const BigSecName = (props: { secName: Name } & React.SVGProps<SVGGElement>) => {
 const BigStnNum = (props: { lineNum: string; stnNum: string } & React.SVGProps<SVGGElement>) => {
     const { lineNum, stnNum, ...others } = props;
 
-    return (
-        <g id="big_stn_num" {...others}>
-            {React.useMemo(
-                () => (
-                    <>
-                        <path
-                            className="rmg-stn rmg-stn--future"
-                            d="M 0,12.95 V -12.95 H -12.95 a 12.95,12.95 0 0,0 0,25.9 h 25.9 a 12.95,12.95 0 0,0 0,-25.9 H 0 "
-                        />
-                        <StationNumber transform="scale(1.4)" {...{ lineNum, stnNum }} />
-                    </>
-                ),
-                [lineNum, stnNum]
-            )}
-        </g>
-    );
+    return <StationNumber id="big_stn_num" lineNum={lineNum} stnNum={stnNum} large {...others} />;
 };
 
 const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
