@@ -44,7 +44,7 @@ const InfoGZMTR = () => {
                     }}
                 />
 
-                <BigStnNum
+                <StationNumber
                     lineNum={lineNumber}
                     stnNum={curStnInfo.num}
                     style={{
@@ -55,7 +55,9 @@ const InfoGZMTR = () => {
                             (curStnInfo.name[1].split('\\').length - 1) * 18 -
                             (curStnInfo.secondaryName ? 58 / 2 : 0)
                         }px`,
+                        transform: 'translate(var(--translate-x, 800px), var(--translate-y, 145px))'
                     }}
+                    large
                 />
             </g>
 
@@ -140,12 +142,6 @@ const BigSecName = (props: { secName: Name } & React.SVGProps<SVGGElement>) => {
             </g>
         </g>
     );
-};
-
-const BigStnNum = (props: { lineNum: string; stnNum: string } & React.SVGProps<SVGGElement>) => {
-    const { lineNum, stnNum, ...others } = props;
-
-    return <StationNumber id="big_stn_num" lineNum={lineNum} stnNum={stnNum} large {...others} />;
 };
 
 const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {

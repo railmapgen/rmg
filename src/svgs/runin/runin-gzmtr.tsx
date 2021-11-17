@@ -3,6 +3,7 @@ import StripGZMTR from '../strip/strip-gzmtr';
 import InfoGZMTR from './info-gzmtr';
 import { useAppSelector } from '../../redux';
 import { CanvasType, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
+import PlatformNumber from '../gzmtr/platform-number';
 
 const RunInGZMTR = () => {
     const svgWidths = useAppSelector(store => store.param.svgWidth);
@@ -23,12 +24,14 @@ const RunInGZMTR = () => {
             />
 
             <g transform={infoPanelType === PanelTypeGZMTR.gz2otis ? otisTransforms.platform : ''}>
-                <PlatformNum
+                <PlatformNumber
                     num={platformNumber}
                     style={{
                         ['--translate-x' as any]: `${
                             direction === ShortDirection.left ? svgWidths[CanvasType.RunIn] - 100 : 100
                         }px`,
+                        ['--translate-y' as any]: 'calc(var(--rmg-svg-height) / 2 - 30px)',
+                        transform: 'translate(var(--translate-x, 100px), var(--translate-y))',
                     }}
                 />
             </g>
@@ -41,32 +44,6 @@ const RunInGZMTR = () => {
 };
 
 export default RunInGZMTR;
-
-const PlatformNum = (props: { num: string | false } & React.SVGProps<SVGGElement>) => {
-    const { num, ...others } = props;
-
-    return (
-        <g id="platform" {...others}>
-            {React.useMemo(
-                () => (
-                    <>
-                        <circle cx={0} cy={0} r={30} fill="var(--rmg-theme-colour)" />
-                        <text className="rmg-name__en" fontSize={38} dy={-9.5}>
-                            {num}
-                        </text>
-                        <text className="rmg-name__zh" fontSize={13} dy={10}>
-                            站台
-                        </text>
-                        <text className="rmg-name__en" fontSize={9} dy={21}>
-                            Platform
-                        </text>
-                    </>
-                ),
-                [num]
-            )}
-        </g>
-    );
-};
 
 const OtisFrame = () => {
     const svgWidths = useAppSelector(store => store.param.svgWidth);

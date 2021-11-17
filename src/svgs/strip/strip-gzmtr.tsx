@@ -1,5 +1,6 @@
 import React from 'react';
-import { MonoColour, PanelTypeGZMTR, PanelTypeShmetro } from '../../constants/constants';
+import { PanelTypeGZMTR, PanelTypeShmetro } from '../../constants/constants';
+import PsdNumber from '../gzmtr/psd-number';
 
 interface Props {
     variant: PanelTypeGZMTR | PanelTypeShmetro;
@@ -98,27 +99,16 @@ const PSD = React.memo(
         })(props.variant);
 
         return (
-            <g
-                textAnchor="middle"
-                fill={isInStrip ? MonoColour.black : 'var(--rmg-theme-fg)'}
+            <PsdNumber
+                num={props.isShowPSD as string}
+                inStrip={isInStrip}
                 style={{
                     ['--psd-dy' as any]: psdDy,
                     transform: 'translate(var(--translate-x), var(--translate-y))',
                     ['--translate-x' as any]: 'calc(var(--rmg-svg-width) / 2 + 80px)',
                     ['--translate-y' as any]: 'calc(var(--rmg-svg-height) - var(--psd-dy, 58px))',
                 }}
-            >
-                <rect height={40} width={40} rx={4} x={-20} fill={isInStrip ? '#fff' : 'var(--rmg-theme-colour)'} />
-                <text className="rmg-name__en" fontSize={20} dy={12}>
-                    {props.isShowPSD}
-                </text>
-                <text className="rmg-name__zh" fontSize={12} dy={26}>
-                    屏蔽门
-                </text>
-                <text className="rmg-name__en" fontSize={6.5} dy={36}>
-                    Screen Door
-                </text>
-            </g>
+            />
         );
     },
     (prevProps, nextProps) => prevProps.variant === nextProps.variant && prevProps.isShowPSD === nextProps.isShowPSD
