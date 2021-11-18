@@ -149,7 +149,11 @@ export default function PreviewDialog(props: Props) {
         [props.canvas]
     );
 
-    // clone and return a svg canvas
+    /**
+     * Clone the svg canvas and adjust its properties like heights and border.
+     * 
+     * @returns The cloned svg canvas
+     */
     const cloneSvgNode = (): SVGSVGElement => {
         let [, thisSVGHeight] = ['--rmg-svg-width', '--rmg-svg-height']
             .map(
@@ -164,7 +168,7 @@ export default function PreviewDialog(props: Props) {
         // let MAX_HEIGHT = window.innerHeight - 64 - 64 - 52 - 8 * 2;
         // let scaleFactor = Math.min(MAX_WIDTH / thisSVGWidth, MAX_HEIGHT / thisSVGHeight);
 
-        let elem = document.querySelector(`svg#${props.canvas}`)!.cloneNode(true) as SVGSVGElement;
+        const elem = document.querySelector(`svg#${props.canvas}`)!.cloneNode(true) as SVGSVGElement;
         // elem.setAttribute('width', (thisSVGWidth * scaleFactor).toString());
         elem.setAttribute('height', (thisSVGHeight * scale).toString());
         elem.style.setProperty('all', 'initial');
@@ -192,14 +196,19 @@ export default function PreviewDialog(props: Props) {
         return elem;
     }
 
-    // a recursive function so that the batch can run in sequence
-    // we need to wait for svg elements updated for A station before we dispatch B station
+    /**
+     * A recursive function that the batch can run in sequence.
+     * We need to wait for svg elements updated for station A before we dispatch the current station to B.
+     * 
+     * @param stn_list_keys Stations that need to be download
+     * @returns Nothing
+     */
     const downloadSvg = (stn_list_keys: string[]) => {
+        // process the stn_list_keys one by one
         const stnId = stn_list_keys.pop();
         if (stnId === undefined) return;
-        dispatch(setCurrentStation(stnId, stn_list_keys)).then((stn_list_keys) => {
-            console.log(`update ${stnId} props complete.`);
 
+        dispatch(setCurrentStation(stnId, stn_list_keys)).then((stn_list_keys) => {
             const elem = cloneSvgNode();
             const filename = `rmg.${stnId}.${stn_list[stnId].name[0]}.${stn_list[stnId].name[1]}`.replaceAll(' ', '_');
 
@@ -213,20 +222,21 @@ export default function PreviewDialog(props: Props) {
                 link.click();
             }
 
+            // trigger download for the remaining stations
             downloadSvg(stn_list_keys);
         })
     }
 
-    // switch between batch and single download action
     const handleClose = (action: 'close' | 'downloadCurrentStation' | 'downloadAllStation') => () => {
         if (action === 'downloadCurrentStation') {
-            let stn_list_keys = [currentStationIndex];
+            const stn_list_keys = [currentStationIndex];
             downloadSvg(stn_list_keys);
         } else if (action === 'downloadAllStation') {
-            let stn_list_keys = Object.keys(stn_list)
+            const stn_list_keys = Object.keys(stn_list)
                 .filter(stnId => !['linestart', 'lineend'].includes(stnId));
             downloadSvg(stn_list_keys);
         }
+
         props.onClose('close');
     };
 
