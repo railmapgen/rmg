@@ -17,11 +17,13 @@ import {
     useTheme,
     useMediaQuery,
 } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
 import { getTransText2, updateParam } from '../../../utils';
 import { templateList } from '../../../constants/templates/data';
 import { companies } from '../../../constants/company-config';
-import { LanguageCode, RMGParam } from '../../../constants/constants';
-// import { useDispatch } from 'react-redux';
+import { LanguageCode, RMGParam, canvasConfig, AllCanvas } from '../../../constants/constants';
+import { selectCanvas } from '../../../redux/app/action';
+import { useAppSelector } from '../../../redux';
 // import { setFullParam } from '../../../redux/param/action';
 
 interface TemplateDialogProps {
@@ -69,7 +71,9 @@ const useStyles = makeStyles(theme =>
 const NewDialog = (props: TemplateDialogProps) => {
     const { t, i18n } = useTranslation();
     const classes = useStyles();
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
+
+    const { canvasToShow } = useAppSelector(state => state.app);
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
@@ -84,6 +88,12 @@ const NewDialog = (props: TemplateDialogProps) => {
             );
             const updatedParam = updateParam(module.default) as RMGParam;
             await window.rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
+
+            // reset to AllCanvas if current canvas is not supported in the new style
+            const canvas = canvasConfig[updatedParam.style]
+                .some(c => c === canvasToShow) ? canvasToShow : AllCanvas;
+            dispatch(selectCanvas(canvas));
+
             // TODO: electron will fail here, wait for #96
             // dispatch(setFullParam(updatedParam));
             window.location.assign(`./${updatedParam.style}`);

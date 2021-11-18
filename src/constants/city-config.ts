@@ -4,6 +4,7 @@ export enum CityCode {
     Baku = 'baku',
     Barcelona = 'barcelona',
     Beijing = 'beijing',
+    Cairo = 'cairo',
     Changsha = 'changsha',
     Chengdu = 'chengdu',
     Chongqing = 'chongqing',
@@ -16,6 +17,7 @@ export enum CityCode {
     Guangzhou = 'guangzhou',
     Hangzhou = 'hangzhou',
     HongKong = 'hongkong',
+    KlangValley = 'klangvalley',
     Kansai = 'kansai',
     Kaohsiung = 'kaohsiung',
     Istanbul = 'istanbul',
@@ -30,6 +32,7 @@ export enum CityCode {
     Qingdao = 'qingdao',
     SanFrancisco = 'sanfrancisco',
     SanktPeterburg = 'sanktpeterburg',
+    Santiago = 'santiago',
     SaoPaulo = 'saopaulo',
     Seoul = 'seoul',
     Shanghai = 'shanghai',
@@ -87,6 +90,16 @@ export const cityList: CityEntry[] = [
         name: {
             en: 'Beijing',
             zh: '北京',
+        },
+    },
+    {
+        id: CityCode.Cairo,
+        country: 'EG',
+        name: {
+            en: 'Cairo (Greater Cairo Area)',
+            ar: 'القاهرة (منطقة القاهرة الكبرى)',
+            'zh-Hans': '开罗（大开罗地区）',
+            'zh-Hant': '開羅（大開羅地區）',
         },
     },
     {
@@ -194,6 +207,16 @@ export const cityList: CityEntry[] = [
         name: {
             en: 'Hong Kong',
             zh: '香港',
+        },
+    },
+    {
+        id: CityCode.KlangValley,
+        country: 'MY',
+        name: {
+            en: 'Greater KL/Klang Valley',
+            ms: 'Greater KL/Klang Valley',
+            'zh-Hans': '大吉隆坡/巴生谷',
+            'zh-Hant': '大吉隆坡/巴生谷',
         },
     },
     {
@@ -317,10 +340,20 @@ export const cityList: CityEntry[] = [
         id: CityCode.SanktPeterburg,
         country: 'RU',
         name: {
-            en: 'Sankt-Peterburg',
+            en: 'Sankt Peterburg',
             ru: 'Санкт-Петербург',
             'zh-Hans': '圣彼得堡',
             'zh-Hant': '聖彼得堡',
+        },
+    },
+    {
+        id: CityCode.Santiago,
+        country: 'CL',
+        name: {
+            en: 'Santiago',
+            es: 'Santiago',
+            'zh-Hans': '圣地亚哥',
+            'zh-Hant': '聖地亞哥 ',
         },
     },
     {

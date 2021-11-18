@@ -438,4 +438,31 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
     ],
+    
+    szmetro: [
+        {
+            filename: 'sz1',
+            name: {
+                en: 'Line 1',
+                'zh-Hans': '1号线',
+                'zh-Hant': '1號線',
+            },
+        },
+        {
+            filename: 'sz3',
+            name: {
+                en: 'Line 3',
+                'zh-Hans': '3号线',
+                'zh-Hant': '3號線',
+            },
+        },
+        {
+            filename: 'sz4',
+            name: {
+                en: 'Line 4',
+                'zh-Hans': '4号线',
+                'zh-Hant': '4號線',
+            },
+        },
+    ],
 };

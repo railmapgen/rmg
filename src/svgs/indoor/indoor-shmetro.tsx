@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import { adjacencyList, getXShareMTR, criticalPathMethod, getStnState } from '../railmap/methods/share';
 import StationSHMetro from './station-shmetro';
 import { StationsMTR } from '../railmap/methods/mtr';
-import { StationDict } from "../../constants/constants";
+import { StationDict, Services } from "../../constants/constants";
 import { useAppSelector } from '../../redux';
 
 export default memo(function IndoorWrapperSHMetro() {
@@ -18,9 +18,12 @@ export const DefsSHMetro = React.memo(() => (
     <defs>
         <circle id="stn_indoor_sh" fill="var(--rmg-white)" strokeWidth={5} stroke="var(--rmg-theme-colour)"
             r={8} transform="scale(1.5)" />
-        <path id="int2_indoor_sh" fill="var(--rmg-white)" strokeWidth={4} d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"
-            stroke="black" transform="translate(0, -10)scale(2)" />
-        <path id="int_indoor_arrow_sh" stroke="var(--rmg-black)" strokeWidth={1} d="M -7.5,0 v -40 h -7.5 l 15,-15 l 15,15 h -7.5 v 40 Z " />
+        <path id="int2_indoor_sh" fill="var(--rmg-white)" stroke="black" transform="translate(0, -10)scale(2)"
+            strokeWidth={4} d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z" />
+        <path id="express_indoor_sh" fill="var(--rmg-white)" stroke="black" transform="translate(0, -10)scale(2)"
+            strokeWidth={4} d="M -5,0 a 5,5 0 1 1 10,0 V25 a 5,5 0 1 1 -10,0Z" />
+        <path id="direct_indoor_sh" fill="var(--rmg-white)" stroke="black" transform="translate(0, -10)scale(2)"
+            strokeWidth={4} d="M -5,0 a 5,5 0 1 1 10,0 V40 a 5,5 0 1 1 -10,0Z" />
     </defs>
 ));
 
@@ -87,6 +90,21 @@ const IndoorSHMetro = () => {
         [param.current_stn_idx, param.direction, routes.toString()]
     );
 
+    const servicesAll = Object.values(Services);
+    const servicesPresent = Object.values(param.stn_list)
+        .map(stationInfo => stationInfo.services)
+        .flat()  // all services in all stations
+        .reduce(
+            (acc, cur) => {
+                acc[servicesAll.indexOf(cur)] = true;
+                return acc;
+            },
+            [false, false, false] as [boolean, boolean, boolean]
+        )  // set the flag in order
+        .map((bool, i) => [servicesAll[i], bool] as [Services, boolean])  // zip
+        .filter(s => s[1])  // get the existing service
+        .map(s => s[0]);  // maintain the services' order
+
     const linePaths = StationsMTR.drawLine(
         branches,
         stnStates,
@@ -102,19 +120,19 @@ const IndoorSHMetro = () => {
     return (
         <>
             <g id="main" transform={`translate(0,${param.svg_height / 2})`}>
-                <Lines paths={linePaths} />
-                <StationGroup xs={xs} ys={ys} xShares={xShares} stnStates={stnStates} />
+                <Lines paths={linePaths} services={servicesPresent} />
+                <StationGroup xs={xs} ys={ys} stnStates={stnStates} services={servicesPresent} />
             </g>
             <InfoElements />
         </>
     );
 }
 
-const Lines = React.memo(
-    (props: { paths: { main: string[]; pass: string[] } }) => {
-        return (
-            <g fill="none" strokeWidth={12}>
-                <g stroke="var(--rmg-theme-colour)">
+const Lines = (props: { paths: { main: string[]; pass: string[] }, services: Services[] }) => {
+    return (
+        <g fill="none" strokeWidth={12} stroke="var(--rmg-theme-colour)">
+            {props.services.map((service, i) => (
+                <g key={`indoor_line_${i}`} transform={`translate(0, ${i * 30})`}>
                     {props.paths.main.map((path, i) => (
                         <path key={i} d={path} />
                     ))}
@@ -122,35 +140,37 @@ const Lines = React.memo(
                         <path key={i} d={path} />
                     ))}
                 </g>
-            </g>
-        );
-    },
-    (prevProps, nextProps) => JSON.stringify(prevProps.paths) === JSON.stringify(nextProps.paths)
-);
+            ))}
+        </g>
+    );
+};
 
 interface StationGroupProps {
     xs: { [stnId: string]: number };
     ys: { [stnId: string]: number };
-    xShares: { [stnId: string]: number };  // Used as stn order
     stnStates: { [stnId: string]: -1 | 0 | 1 };
+    services: Services[];  // determine if all station text should be upward
 }
 
 const StationGroup = (props: StationGroupProps) => {
     const { branches } = useAppSelector(store => store.helper);
     const param = useAppSelector(store => store.param);
+    const {xs, ys, stnStates, services} = props;
 
     return (
         <g>
             {Object.keys(param.stn_list)
                 .filter(stnId => !['linestart', 'lineend'].includes(stnId))
-                .map(stnId => (<g key={stnId} transform={`translate(${props.xs[stnId]},${props.ys[stnId]})`}>
+                .map(stnId => (<g key={stnId} transform={`translate(${xs[stnId]},${ys[stnId]})`}>
                     <StationSHMetro
                         stnId={stnId}
-                        stnState={props.stnStates[stnId]}
+                        stnState={stnStates[stnId]}
                         nameDirection={branches
                             .filter(branch => branch.includes(stnId))
-                            .map(branch => branch.indexOf(stnId) % 2 === 0 ?
-                                'downward' : 'upward')[0] as 'upward' | 'downward'} />
+                            .map(branch => branch.indexOf(stnId) % 2 === 0 || services.length > 1 ?
+                                'downward' : 'upward')[0] as 'upward' | 'downward'}
+                        services={services}
+                    />
                 </g>)
                 )
             }
@@ -177,7 +197,7 @@ const InfoElements = () => {
                 </text>
                 <g transform="translate(-600,215)">
                     <rect x="-5" y="-25" width="100" height="70" fill="none" stroke="black" rx="5"></rect>
-                    <line x1="30" x2="30" y1="-20" y2="40" stroke="black"></line>
+                    <line x1="28" x2="28" y1="-20" y2="40" stroke="black"></line>
                     <text className="rmg-name__zh" dx="3" fontSize="18">图</text>
                     <text className="rmg-name__zh" dx="3" dy="18" fontSize="18">例</text>
                     <text className="rmg-name__en" dy="35" fontSize="8">legend</text>
