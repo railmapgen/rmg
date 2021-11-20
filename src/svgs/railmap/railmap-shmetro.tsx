@@ -56,7 +56,7 @@ const DefsSHMetro = React.memo(() => (
                 transform="translate(-28.9697 0.13398)"
             />
         </g>
-        {/* Special thanks to Wikimedia Commons, https://commons.wikimedia.org/wiki/File:China_Railways.svg */}
+        {/* Special thanks to Wikimedia Commons, see https://commons.wikimedia.org/wiki/File:China_Railways.svg */}
         <g id="railway">
             <circle cx="0" cy="29.33899" r="29.33899" fill="var(--rmg-grey)" transform="translate(0,-2)scale(0.5)" />
             <path
@@ -77,7 +77,7 @@ const DefsSHMetro = React.memo(() => (
             <path d="M0,0L1,1H-1z" fill="var(--rmg-theme-colour)" />
         </marker>
 
-        {/* Contrast filters for lines */}
+        {/* Contrast filters for lines. */}
         <filter id="contrast-direct" filterUnits="userSpaceOnUse">
             <feComponentTransfer>
                 <feFuncR type="linear" slope={0.5} intercept={0.25} />
@@ -91,6 +91,47 @@ const DefsSHMetro = React.memo(() => (
                 <feFuncG type="linear" slope={0.75} intercept={0.125} />
                 <feFuncB type="linear" slope={0.75} intercept={0.125} />
             </feComponentTransfer>
+        </filter>
+
+        <filter id="groupborder" filterUnits="userSpaceOnUse" x="0" y="-300" width="3000" height="500">
+            <feMorphology operator="dilate" in="SourceAlpha" radius="0" result="e1" />
+            <feMorphology operator="dilate" in="SourceAlpha" radius="1" result="e2" />
+            <feComposite in="e1" in2="e2" operator="xor" result="outline" />
+            {/* <feColorMatrix type="matrix" in="outline"
+                values="1 0 0 0 0
+                                    0 1 0 0 0
+                                    0 0 1 0 0
+                                    0 0 0 .3 0" result="outline2" /> */}
+            <feComposite in="outline2" in2="SourceGraphic" operator="over" result="output" />
+        </filter>
+        <filter id="colorreplace" color-interpolation-filters="sRGB"
+            // TODO: remove the absolute value while make the filter works correctly
+            filterUnits="userSpaceOnUse" x="0" y="-1000" width="5000" height="2000">
+            {/* Replace pass gray color with white.
+                https://stackoverflow.com/questions/41639049/replace-one-color-using-svg-filters */}
+            <feComponentTransfer in="SourceGraphic" >
+                <feFuncR type="discrete" tableValues="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" />
+                <feFuncG type="discrete" tableValues="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" />
+                <feFuncB type="discrete" tableValues="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" />
+            </feComponentTransfer>
+            <feColorMatrix type="matrix" values="1 0 0 0 0
+                                                 0 1 0 0 0
+                                                 0 0 1 0 0
+                                                 1 1 1 1 -3" result="selectedColor1" />
+
+            {/* Draw an outline line around the pass line.
+                https://stackoverflow.com/questions/49693471/svg-border-outline-for-group-of-elements
+                Also see #181 why we do not simply outline the pass line element. */}
+            <feMorphology operator="erode" in="selectedColor1" radius="0" result="e1" />
+            <feMorphology operator="erode" in="selectedColor1" radius="1" result="e2" />
+            <feComposite in="e1" in2="e2" operator="xor" result="uncoloredOutline" />
+            {/* As the pass line is colored in white, we need to recolor the outline with black. */}
+            <feFlood flood-color="rgb(0,0,0)" />
+            <feComposite operator="in" in2="uncoloredOutline" result="outline" />
+            {/* Put the outline on the white not gray pass line. */}
+            <feComposite in="outline" in2="selectedColor1" operator="over" result="result" />
+            {/* Put the white pass line with outline on the original line. */}
+            <feComposite in="result" in2="SourceGraphic" operator="over" />
         </filter>
     </defs>
 ));

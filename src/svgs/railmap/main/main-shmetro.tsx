@@ -126,10 +126,16 @@ const MainSHMetro = () => {
 export default MainSHMetro;
 
 const Line = (props: { paths: servicesPath[]; direction: 'l' | 'r' }) => {
+    const { theme } = useAppSelector(store => store.param);
+
     return (
         <>
             {props.paths.map((servicePath, i) => (
-                <g key={`servicePath${i}`} transform={`translate(0,${i * 25})`}>
+                <g key={`servicePath${i}`} transform={`translate(0,${i * 25})`}
+                    // the following line is a special case for pujiang line
+                    // where its pass line color should be white with outline
+                    // surrounding it, see #161 for details.
+                    filter={theme[2] === '#999999' ? 'url(#colorreplace)' : undefined}>
                     <g>
                         {servicePath.pass.map((path, j) => (
                             <path
@@ -155,7 +161,7 @@ const Line = (props: { paths: servicesPath[]; direction: 'l' | 'r' }) => {
                                 markerStart={props.direction === 'l' ? 'url(#arrow_theme_left)' : undefined}
                                 markerEnd={props.direction === 'r' ? 'url(#arrow_theme_right)' : undefined}
                                 strokeLinejoin="round"
-                                filter={i === 2 ? 'url(#contrast-direct)' : i === 1 ? 'url(#contrast-express)' : ''}
+                                filter={i === 2 ? 'url(#contrast-direct)' : i === 1 ? 'url(#contrast-express)' : undefined}
                             />
                         ))}
                     </g>
