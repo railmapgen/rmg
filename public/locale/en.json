@@ -49,6 +49,7 @@
             "border": "Show Border",
             "scale": "Scale",
             "format": "Format",
+            "download": "Download",
             "downloadCurrentStation": "Download This Station",
             "downloadAllStations": "Download All Stations",
             "terms": {

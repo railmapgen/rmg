@@ -48,6 +48,7 @@
             "border": "顯示邊線",
             "scale": "縮放比例",
             "format": "格式",
+            "download": "下載",
             "downloadCurrentStation": "下載當前車站",
             "downloadAllStations": "下載所有車站",
             "terms": {
