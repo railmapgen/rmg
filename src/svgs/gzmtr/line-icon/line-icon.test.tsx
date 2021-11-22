@@ -27,9 +27,9 @@ describe('Unit tests for LineIcon component', () => {
         expect(gEl).toHaveLength(1);
         expect(gEl.props().fill).toBe(MonoColour.white);
 
-        const useEl = wrapper.find('use');
-        expect(useEl).toHaveLength(1);
-        expect(useEl.props().fill).toBe('#aaa');
+        const rectEl = wrapper.find('rect');
+        expect(rectEl).toHaveLength(1);
+        expect(rectEl.props().fill).toBe('#aaa');
     });
 
     it('Can render type 1 line icon as expected', () => {

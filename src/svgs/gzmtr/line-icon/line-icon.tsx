@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { ColourHex, MonoColour, Name } from '../../../constants/constants';
 import LineIconType2 from './line-icon-type2';
+import InterchangeBox from './interchange-box';
 
 export const MAX_WIDTH = 42;
 
@@ -33,7 +34,7 @@ export default memo(
 
         return (
             <g textAnchor="middle" fill={stationState === -1 ? MonoColour.white : foregroundColour}>
-                <use xlinkHref="#intbox" fill={stationState === -1 ? '#aaa' : backgroundColour} />
+                <InterchangeBox fill={stationState === -1 ? '#aaa' : backgroundColour} />
                 {type === 2 ? (
                     <LineIconType2 lineName={lineName} commonPart={commonPart} />
                 ) : (

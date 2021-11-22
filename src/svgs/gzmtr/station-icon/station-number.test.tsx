@@ -19,7 +19,7 @@ describe('Unit tests for StationNumber components', () => {
             </svg>
         );
 
-        const numberGroups = wrapper.find('g > g');
+        const numberGroups = wrapper.find('g > g > g');
         expect(numberGroups).toHaveLength(2);
 
         const lineNumScale = getScaleFromTransform(numberGroups.at(0).props()['transform']);
@@ -38,7 +38,7 @@ describe('Unit tests for StationNumber components', () => {
             </svg>
         );
 
-        const numberGroups = wrapper.find('g > g');
+        const numberGroups = wrapper.find('g > g > g');
         expect(numberGroups).toHaveLength(2);
 
         const lineNumScale = getScaleFromTransform(numberGroups.at(0).props()['transform']);
