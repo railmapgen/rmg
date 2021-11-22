@@ -20,9 +20,8 @@ import {
 } from '@material-ui/core';
 
 import { test } from './utils';
-import { useAppDispatch, useAppSelector } from '../../../redux';
+import { useAppSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
-import { setCurrentStation } from '../../../redux/param/action';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -46,10 +45,6 @@ const useStyles = makeStyles(theme =>
             display: 'flex',
             flexDirection: 'column',
             minWidth: 250,
-        },
-        contentAction: {
-            display: 'flex',
-            alignSelf: 'end',
         },
         contentRoot: {
             padding: 'unset',
@@ -78,10 +73,6 @@ export default function PreviewDialog(props: Props) {
     const { t } = useTranslation();
     const classes = useStyles();
 
-    const dispatch = useAppDispatch();
-
-    const stn_list = useAppSelector(store => store.param.stn_list);
-    const currentStationIndex = useAppSelector(store => store.param.current_stn_idx);
     const rmgStyle = useAppSelector(store => store.param.style);
 
     const [svgEl, setSvgEl] = useState(document.createElement('svg') as Element as SVGSVGElement);
@@ -113,7 +104,6 @@ export default function PreviewDialog(props: Props) {
 
     const contentEl = React.useRef<HTMLDivElement | null>(null);
 
-    // wait for svg canvas and fonts to be fully loaded
     useEffect(
         () => {
             if (props.canvas === '') {
@@ -121,8 +111,43 @@ export default function PreviewDialog(props: Props) {
                 setIsLoaded(false);
                 return;
             }
+            let [, thisSVGHeight] = ['--rmg-svg-width', '--rmg-svg-height']
+                .map(
+                    key =>
+                        (document.querySelector(`svg#${props.canvas}`) as SVGSVGElement).style
+                            .getPropertyValue(key)
+                            .match(/\d+/g)![0]
+                )
+                .map(Number);
 
-            let elem = cloneSvgNode();
+            // let MAX_WIDTH = Math.min(window.innerWidth, 1412) - 64 - 24 * 2;
+            // let MAX_HEIGHT = window.innerHeight - 64 - 64 - 52 - 8 * 2;
+            // let scaleFactor = Math.min(MAX_WIDTH / thisSVGWidth, MAX_HEIGHT / thisSVGHeight);
+
+            let elem = document.querySelector(`svg#${props.canvas}`)!.cloneNode(true) as SVGSVGElement;
+            // elem.setAttribute('width', (thisSVGWidth * scaleFactor).toString());
+            elem.setAttribute('height', (thisSVGHeight * scale).toString());
+            elem.style.setProperty('all', 'initial');
+
+            ['share', props.canvas]
+                .map(tag =>
+                    [
+                        ...(
+                            [...document.querySelectorAll('link')].filter(l => l.id === 'css_' + tag)[0]
+                                ?.sheet as CSSStyleSheet
+                        ).cssRules,
+                    ]
+                        .map(rule => rule.cssText)
+                        .join(' ')
+                )
+                .forEach(txt => {
+                    let s = document.createElement('style');
+                    s.textContent = txt;
+                    elem.prepend(s);
+                });
+
+            elem.querySelector('rect#canvas-border')?.setAttribute('stroke', showBorder ? 'black' : 'none');
+            elem.querySelector('rect#canvas-bg')?.setAttribute('fill', isTransparent ? 'none' : 'white');
 
             if (rmgStyle === RmgStyle.MTR) {
                 import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper').then(async ({ getBase64FontFace }) => {
@@ -149,95 +174,22 @@ export default function PreviewDialog(props: Props) {
         [props.canvas]
     );
 
-    /**
-     * Clone the svg canvas and adjust its properties like heights and border.
-     * 
-     * @returns The cloned svg canvas
-     */
-    const cloneSvgNode = (): SVGSVGElement => {
-        let [, thisSVGHeight] = ['--rmg-svg-width', '--rmg-svg-height']
-            .map(
-                key =>
-                    (document.querySelector(`svg#${props.canvas}`) as SVGSVGElement).style
-                        .getPropertyValue(key)
-                        .match(/\d+/g)![0]
-            )
-            .map(Number);
-
-        // let MAX_WIDTH = Math.min(window.innerWidth, 1412) - 64 - 24 * 2;
-        // let MAX_HEIGHT = window.innerHeight - 64 - 64 - 52 - 8 * 2;
-        // let scaleFactor = Math.min(MAX_WIDTH / thisSVGWidth, MAX_HEIGHT / thisSVGHeight);
-
-        const elem = document.querySelector(`svg#${props.canvas}`)!.cloneNode(true) as SVGSVGElement;
-        // elem.setAttribute('width', (thisSVGWidth * scaleFactor).toString());
-        elem.setAttribute('height', (thisSVGHeight * scale).toString());
-        elem.style.setProperty('all', 'initial');
-
-        ['share', props.canvas]
-            .map(tag =>
-                [
-                    ...(
-                        [...document.querySelectorAll('link')].filter(l => l.id === 'css_' + tag)[0]
-                            ?.sheet as CSSStyleSheet
-                    ).cssRules,
-                ]
-                    .map(rule => rule.cssText)
-                    .join(' ')
-            )
-            .forEach(txt => {
-                let s = document.createElement('style');
-                s.textContent = txt;
-                elem.prepend(s);
-            });
-
-        elem.querySelector('rect#canvas-border')?.setAttribute('stroke', showBorder ? 'black' : 'none');
-        elem.querySelector('rect#canvas-bg')?.setAttribute('fill', isTransparent ? 'none' : 'white');
-
-        return elem;
-    }
-
-    /**
-     * A recursive function that the batch can run in sequence.
-     * We need to wait for svg elements updated for station A before we dispatch the current station to B.
-     * 
-     * @param stn_list_keys Stations that need to be download
-     * @returns Nothing
-     */
-    const downloadSvg = (stn_list_keys: string[]) => {
-        // process the stn_list_keys one by one
-        const stnId = stn_list_keys.pop();
-        if (stnId === undefined) return;
-
-        dispatch(setCurrentStation(stnId, stn_list_keys)).then((stn_list_keys) => {
-            const elem = cloneSvgNode();
-            const filename = `rmg.${stnId}.${stn_list[stnId].name[0]}.${stn_list[stnId].name[1]}`.replaceAll(' ', '_');
-
+    const handleClose = (action: 'close' | 'download') => () => {
+        if (action === 'close') {
+            props.onClose('close');
+        } else {
+            let svgEl = contentEl.current!.querySelector('svg') as SVGSVGElement;
             if (format === 'png') {
-                test(elem, scale, filename);
+                test(svgEl, scale);
             } else if (format === 'svg') {
-                elem.removeAttribute('height');
+                svgEl.removeAttribute('height');
                 var link = document.createElement('a');
                 link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl.outerHTML)));
-                link.download = `${filename}.svg`;
+                link.download = 'rmg.' + new Date().toISOString() + '.svg';
                 link.click();
             }
-
-            // trigger download for the remaining stations
-            downloadSvg(stn_list_keys);
-        })
-    }
-
-    const handleClose = (action: 'close' | 'downloadCurrentStation' | 'downloadAllStation') => () => {
-        if (action === 'downloadCurrentStation') {
-            const stn_list_keys = [currentStationIndex];
-            downloadSvg(stn_list_keys);
-        } else if (action === 'downloadAllStation') {
-            const stn_list_keys = Object.keys(stn_list)
-                .filter(stnId => !['linestart', 'lineend'].includes(stnId));
-            downloadSvg(stn_list_keys);
+            props.onClose('close');
         }
-
-        props.onClose('close');
     };
 
     return (
@@ -332,30 +284,20 @@ export default function PreviewDialog(props: Props) {
                             <TermsDialog open={isTermsDialogOpen} onClose={() => setIsTermsDialogOpen(false)} />
                         </ListItem>
                     </DialogContent>
+                    <DialogActions>
+                        <Button variant="outlined" onClick={handleClose('close')} color="primary" autoFocus>
+                            {t('dialog.cancel')}
+                        </Button>
+                        <Button
+                            variant="contained"
+                            onClick={handleClose('download')}
+                            color="primary"
+                            disabled={!isLoaded || !isAccept}
+                        >
+                            {t('file.preview.download')}
+                        </Button>
+                    </DialogActions>
                 </div>
-            </div>
-            <div className={classes.contentAction}>
-                <DialogActions>
-                    <Button
-                        variant="contained"
-                        onClick={handleClose('downloadCurrentStation')}
-                        color="primary"
-                        disabled={!isLoaded || !isAccept}
-                    >
-                        {t('file.preview.downloadCurrentStation')}
-                    </Button>
-                    <Button
-                        variant="contained"
-                        onClick={handleClose('downloadAllStation')}
-                        color="primary"
-                        disabled={!isLoaded || !isAccept}
-                    >
-                        {t('file.preview.downloadAllStations')}
-                    </Button>
-                    <Button variant="outlined" onClick={handleClose('close')} color="primary" autoFocus>
-                        {t('dialog.cancel')}
-                    </Button>
-                </DialogActions>
             </div>
         </Dialog>
     );
