@@ -1,8 +1,11 @@
-import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import StationNumber from '../../../gzmtr/station-icon/station-number';
 import { InterchangeInfo, Name, Services } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 import LineIcon from '../../../gzmtr/line-icon/line-icon';
+import StationName from '../../../gzmtr/station-name/station-name';
+import StationSecondaryName from '../../../gzmtr/station-name/station-secondary-name';
+import ExpressTag from '../../../gzmtr/station-name/express-tag';
 
 interface Props {
     stnId: string;
@@ -77,30 +80,8 @@ interface StationNameGElementProps {
 const StationNameGElement = (props: StationNameGElementProps) => {
     const nameDY = props.tickRotation === 180 ? 17.5 : -20 - props.name[1].split('\\').length * 14 * Math.cos(-45);
 
-    const stnNameEl = useRef<SVGGElement | null>(null);
     const [bBox, setBBox] = useState({ width: 0 } as DOMRect);
-    useEffect(
-        () => setBBox(stnNameEl.current!.getBBox()),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.name.toString()]
-    );
-
-    const secNameEl = useRef<SVGGElement | null>(null);
     const [secNameBBox, setSecNameBBox] = useState({ x: 0, width: -20 } as SVGRect);
-    useEffect(
-        () => {
-            if (secNameEl.current) {
-                setSecNameBBox(secNameEl.current.getBBox());
-            } else {
-                setSecNameBBox(prevBBox => {
-                    const { x } = prevBBox;
-                    return { x, width: -20 } as SVGRect;
-                });
-            }
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.secondaryName.toString()]
-    );
 
     return (
         <g
@@ -108,28 +89,20 @@ const StationNameGElement = (props: StationNameGElementProps) => {
             className={`Name ${props.stnState === -1 ? 'Pass' : props.stnState === 0 ? 'CurrentGZ' : 'Future'}`}
             transform={`translate(0,${nameDY})rotate(-45)`}
         >
-            <StationName ref={stnNameEl} name={props.name} />
+            <StationName stnName={props.name} onUpdate={setBBox} />
             {props.secondaryName && (
-                <g
+                <StationSecondaryName
+                    stnName={props.secondaryName}
+                    onUpdate={setSecNameBBox}
+                    passed={props.stnState === -1}
                     transform={`translate(${
                         (bBox.width + secNameBBox.width / 2 + 10) * (props.tickRotation === 180 ? -1 : 1)
                     },${2 + 5 * (props.name[1].split('\\').length - 1)})`}
-                    className={`Name ${props.stnState === -1 ? 'Pass' : 'Future'}`}
-                >
-                    <g transform="translate(0,3)" fontSize={18}>
-                        <text textAnchor="end" x={secNameBBox.x - 3} className="rmg-name__zh">
-                            {'('}
-                        </text>
-                        <text textAnchor="start" x={secNameBBox.width + secNameBBox.x + 3} className="rmg-name__zh">
-                            {')'}
-                        </text>
-                    </g>
-                    <StationSecondaryName ref={secNameEl} secName={props.secondaryName} />
-                </g>
+                />
             )}
             {props.isExpress && (
                 <ExpressTag
-                    fill={props.stnState === -1 ? '#aaa' : 'var(--rmg-theme-colour)'}
+                    passed={props.stnState === -1}
                     transform={`translate(${
                         (bBox.width + secNameBBox.width + 20 + 35) * (props.tickRotation === 180 ? -1 : 1)
                     },${2 + 5 * (props.name[1].split('\\').length - 1)})`}
@@ -138,55 +111,6 @@ const StationNameGElement = (props: StationNameGElementProps) => {
         </g>
     );
 };
-
-const StationName = forwardRef((props: { name: Name }, ref: React.Ref<SVGGElement>) =>
-    useMemo(
-        () => (
-            <g ref={ref}>
-                <text className="rmg-name__zh" fontSize={18}>
-                    {props.name[0]}
-                </text>
-                <g fontSize={10.5}>
-                    {props.name[1].split('\\').map((txt, i) => (
-                        <text key={i} className="rmg-name__en" dy={16 + i * 11}>
-                            {txt}
-                        </text>
-                    ))}
-                </g>
-            </g>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.name[0], props.name[1]]
-    )
-);
-
-const StationSecondaryName = forwardRef((props: { secName: Name }, ref: React.Ref<SVGGElement>) =>
-    useMemo(
-        () => (
-            <g ref={ref} textAnchor="middle">
-                <text className="rmg-name__zh" fontSize={13}>
-                    {props.secName[0]}
-                </text>
-                <text dy={10} className="rmg-name__en" fontSize={6.5}>
-                    {props.secName[1]}
-                </text>
-            </g>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.secName.toString()]
-    )
-);
-
-const ExpressTag = React.memo((props: React.SVGProps<SVGGElement>) => (
-    <g textAnchor="middle" {...props}>
-        <text className="rmg-name__zh" fontSize={13}>
-            快车停靠站
-        </text>
-        <text dy={10} className="rmg-name__en" fontSize={6.5}>
-            Express Station
-        </text>
-    </g>
-));
 
 interface IntGroupProps {
     intInfos: InterchangeInfo[];
