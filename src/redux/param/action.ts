@@ -149,6 +149,7 @@ export interface setCustomisedMtrDestinationAction {
 export interface setCurrentStationAction {
     type: typeof SET_CURRENT_STATION;
     currentStation: string;
+    stn_list_keys: string[];
 }
 
 export interface setStationAction {
@@ -296,8 +297,18 @@ export const customiseDestinationName = (customisedName: Name | false) => {
     };
 };
 
-export const setCurrentStation = (currentStation: string): setCurrentStationAction => {
-    return { type: SET_CURRENT_STATION, currentStation };
+/**
+ * Set the current station from `currentStation`.
+ * @param currentStation The station id which we want to set.
+ * @param stn_list_keys An array returned without modification. (Only used in `downloadSvg`)
+ * @returns A promise that contains exactly the stn_list_keys array from parameter. Use promise so
+ *  that we can do something after svg elements are completely updated in `downloadSvg` of `PreviewDialog`.
+ */
+export const setCurrentStation = (currentStation: string, stn_list_keys: string[] = []) => {
+    return (dispatch: AppDispatch) => {
+        dispatch({ type: SET_CURRENT_STATION, currentStation });
+        return Promise.resolve(stn_list_keys);
+    };
 };
 
 // const setStation = (stationId: string, station: StationInfo): setStationAction => {

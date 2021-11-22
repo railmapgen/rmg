@@ -179,13 +179,14 @@ export default function PreviewDialog(props: Props) {
             props.onClose('close');
         } else {
             let svgEl = contentEl.current!.querySelector('svg') as SVGSVGElement;
+            const filename = `rmg.${new Date().toISOString()}`;
             if (format === 'png') {
-                test(svgEl, scale);
+                test(svgEl, scale, filename);
             } else if (format === 'svg') {
                 svgEl.removeAttribute('height');
                 var link = document.createElement('a');
                 link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl.outerHTML)));
-                link.download = 'rmg.' + new Date().toISOString() + '.svg';
+                link.download = filename + '.svg';
                 link.click();
             }
             props.onClose('close');
