@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import StationNumber from '../../../gzmtr/station-icon/station-number';
-import { InterchangeInfo, Name, Services } from '../../../../constants/constants';
+import { InterchangeInfo, Services } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 import LineIcon from '../../../gzmtr/line-icon/line-icon';
-import StationName from '../../../gzmtr/station-name/station-name';
-import StationSecondaryName from '../../../gzmtr/station-name/station-secondary-name';
-import ExpressTag from '../../../gzmtr/station-name/express-tag';
+import StationNameWrapper from '../../../gzmtr/station-name/station-name-wrapper';
 
 interface Props {
     stnId: string;
@@ -55,12 +53,12 @@ const StationGZMTR = (props: Props) => {
             />
             <StationNumber lineNum={lineNumber} stnNum={stnInfo.num} passed={stnState === -1} />
             <g transform={`translate(${-nameDX},0)`}>
-                <StationNameGElement
-                    name={stnInfo.name}
-                    secondaryName={stnInfo.secondaryName}
-                    stnState={stnState}
-                    tickRotation={tickRotation}
-                    isExpress={stnInfo.services.includes(Services.express)}
+                <StationNameWrapper
+                    primaryName={stnInfo.name}
+                    secondaryName={stnInfo.secondaryName || undefined}
+                    stationState={stnState}
+                    flipped={tickRotation === 180}
+                    express={stnInfo.services.includes(Services.express)}
                 />
             </g>
         </>
@@ -68,49 +66,6 @@ const StationGZMTR = (props: Props) => {
 };
 
 export default StationGZMTR;
-
-interface StationNameGElementProps {
-    name: Name;
-    secondaryName: false | Name;
-    stnState: -1 | 0 | 1;
-    tickRotation: 0 | 180;
-    isExpress: boolean;
-}
-
-const StationNameGElement = (props: StationNameGElementProps) => {
-    const nameDY = props.tickRotation === 180 ? 17.5 : -20 - props.name[1].split('\\').length * 14 * Math.cos(-45);
-
-    const [bBox, setBBox] = useState({ width: 0 } as DOMRect);
-    const [secNameBBox, setSecNameBBox] = useState({ x: 0, width: -20 } as SVGRect);
-
-    return (
-        <g
-            textAnchor={props.tickRotation === 180 ? 'end' : 'start'}
-            className={`Name ${props.stnState === -1 ? 'Pass' : props.stnState === 0 ? 'CurrentGZ' : 'Future'}`}
-            transform={`translate(0,${nameDY})rotate(-45)`}
-        >
-            <StationName stnName={props.name} onUpdate={setBBox} />
-            {props.secondaryName && (
-                <StationSecondaryName
-                    stnName={props.secondaryName}
-                    onUpdate={setSecNameBBox}
-                    passed={props.stnState === -1}
-                    transform={`translate(${
-                        (bBox.width + secNameBBox.width / 2 + 10) * (props.tickRotation === 180 ? -1 : 1)
-                    },${2 + 5 * (props.name[1].split('\\').length - 1)})`}
-                />
-            )}
-            {props.isExpress && (
-                <ExpressTag
-                    passed={props.stnState === -1}
-                    transform={`translate(${
-                        (bBox.width + secNameBBox.width + 20 + 35) * (props.tickRotation === 180 ? -1 : 1)
-                    },${2 + 5 * (props.name[1].split('\\').length - 1)})`}
-                />
-            )}
-        </g>
-    );
-};
 
 interface IntGroupProps {
     intInfos: InterchangeInfo[];
@@ -155,7 +110,7 @@ const IntBoxs = (props: IntGroupProps & React.SVGProps<SVGGElement>) => {
                         lineName={[info[4], info[5]]}
                         foregroundColour={info[3]}
                         backgroundColour={info[2]}
-                        stationState={stnState}
+                        passed={stnState === -1}
                     />
                 </g>
             ))}

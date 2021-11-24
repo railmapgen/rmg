@@ -178,7 +178,6 @@ const MainGZMTR = () => {
                     lineName={lineName}
                     foregroundColour={'var(--rmg-theme-fg)' as MonoColour}
                     backgroundColour={'var(--rmg-theme-colour)' as ColourHex}
-                    stationState={1}
                 />
             </g>
         </g>

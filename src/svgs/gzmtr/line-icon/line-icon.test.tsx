@@ -18,7 +18,7 @@ describe('Unit tests for LineIcon component', () => {
                     lineName={['18号线', 'Line 18']}
                     foregroundColour={MonoColour.black}
                     backgroundColour="#000000"
-                    stationState={-1}
+                    passed
                 />
             </svg>
         );
@@ -39,7 +39,6 @@ describe('Unit tests for LineIcon component', () => {
                     lineName={['18号线', 'Line 18']}
                     foregroundColour={MonoColour.white}
                     backgroundColour="#000000"
-                    stationState={1}
                 />
             </svg>
         );
@@ -64,7 +63,6 @@ describe('Unit tests for LineIcon component', () => {
                     lineName={['APM线', 'APM Line']}
                     foregroundColour={MonoColour.white}
                     backgroundColour="#000000"
-                    stationState={1}
                 />
             </svg>
         );
@@ -89,7 +87,6 @@ describe('Unit tests for LineIcon component', () => {
                     lineName={['佛山2号线', 'Foshan Line 2']}
                     foregroundColour={MonoColour.white}
                     backgroundColour="#000000"
-                    stationState={1}
                 />
             </svg>
         );
