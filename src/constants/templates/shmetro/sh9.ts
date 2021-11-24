@@ -17,7 +17,7 @@ const params = {
         3571: {
             name: [
                 "佘山",
-                "SheShan"
+                "Sheshan"
             ],
             secondaryName: false,
             num: "00",
@@ -597,7 +597,7 @@ const params = {
         y1v4: {
             name: [
                 "漕河泾开发区",
-                "Caohejing High-Tech Park"
+                "Caohejing Hi-Tech Park"
             ],
             secondaryName: false,
             num: "00",
@@ -777,7 +777,7 @@ const params = {
         hzdb: {
             name: [
                 "泗泾",
-                "Sijin"
+                "Sijing"
             ],
             secondaryName: false,
             num: "00",
@@ -1125,7 +1125,7 @@ const params = {
         '7lb8': {
             name: [
                 "金海路",
-                "Jinhai Lu"
+                "Jinhai Road"
             ],
             secondaryName: false,
             num: "00",
