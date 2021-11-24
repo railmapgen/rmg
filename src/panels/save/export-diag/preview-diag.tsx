@@ -152,10 +152,10 @@ export default function PreviewDialog(props: Props) {
             if (rmgStyle === RmgStyle.MTR) {
                 import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper').then(async ({ getBase64FontFace }) => {
                     try {
-                        // const uris = await getBase64FontFace(elem);
-                        // const s = document.createElement('style');
-                        // s.textContent = uris.join('\n');
-                        // elem.prepend(s);
+                        const uris = await getBase64FontFace(elem);
+                        const s = document.createElement('style');
+                        s.textContent = uris.join('\n');
+                        elem.prepend(s);
                     } catch (err) {
                         alert('Failed to fonts. Fonts in the exported PNG will be missing.');
                         console.error(err);

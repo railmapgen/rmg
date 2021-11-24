@@ -1,6 +1,3 @@
-// This helper util is not in used at the moment.
-// It may be reused when we allow users to select full set of fonts or web font chunks for exported SVG.
-
 /**
  * Helper function for filtering out the `CSSFontFaceRule` which renders the input character by matching character form and unicode range.
  * @param char string with one Chinese character
