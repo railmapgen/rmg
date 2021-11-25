@@ -1,8 +1,9 @@
-import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
-import StationNumber from '../../../gzmtr/station-number';
-import { InterchangeInfo, Name, Services } from '../../../../constants/constants';
+import React from 'react';
+import StationNumber from '../../../gzmtr/station-icon/station-number';
+import { InterchangeInfo, Services } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 import LineIcon from '../../../gzmtr/line-icon/line-icon';
+import StationNameWrapper from '../../../gzmtr/station-name/station-name-wrapper';
 
 interface Props {
     stnId: string;
@@ -50,21 +51,14 @@ const StationGZMTR = (props: Props) => {
                 stnState={stnState}
                 tickRotation={tickRotation}
             />
-            <g>
-                <use xlinkHref="#stn" stroke={stnState === -1 ? '#aaa' : 'var(--rmg-theme-colour)'} />
-                <StationNumber
-                    className={`Name ${stnState === -1 ? 'Pass' : 'Future'}`}
-                    lineNum={lineNumber}
-                    stnNum={stnInfo.num}
-                />
-            </g>
+            <StationNumber lineNum={lineNumber} stnNum={stnInfo.num} passed={stnState === -1} />
             <g transform={`translate(${-nameDX},0)`}>
-                <StationNameGElement
-                    name={stnInfo.name}
-                    secondaryName={stnInfo.secondaryName}
-                    stnState={stnState}
-                    tickRotation={tickRotation}
-                    isExpress={stnInfo.services.includes(Services.express)}
+                <StationNameWrapper
+                    primaryName={stnInfo.name}
+                    secondaryName={stnInfo.secondaryName || undefined}
+                    stationState={stnState}
+                    flipped={tickRotation === 180}
+                    express={stnInfo.services.includes(Services.express)}
                 />
             </g>
         </>
@@ -72,128 +66,6 @@ const StationGZMTR = (props: Props) => {
 };
 
 export default StationGZMTR;
-
-interface StationNameGElementProps {
-    name: Name;
-    secondaryName: false | Name;
-    stnState: -1 | 0 | 1;
-    tickRotation: 0 | 180;
-    isExpress: boolean;
-}
-
-const StationNameGElement = (props: StationNameGElementProps) => {
-    const nameDY = props.tickRotation === 180 ? 17.5 : -20 - props.name[1].split('\\').length * 14 * Math.cos(-45);
-
-    const stnNameEl = useRef<SVGGElement | null>(null);
-    const [bBox, setBBox] = useState({ width: 0 } as DOMRect);
-    useEffect(
-        () => setBBox(stnNameEl.current!.getBBox()),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.name.toString()]
-    );
-
-    const secNameEl = useRef<SVGGElement | null>(null);
-    const [secNameBBox, setSecNameBBox] = useState({ x: 0, width: -20 } as SVGRect);
-    useEffect(
-        () => {
-            if (secNameEl.current) {
-                setSecNameBBox(secNameEl.current.getBBox());
-            } else {
-                setSecNameBBox(prevBBox => {
-                    const { x } = prevBBox;
-                    return { x, width: -20 } as SVGRect;
-                });
-            }
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.secondaryName.toString()]
-    );
-
-    return (
-        <g
-            textAnchor={props.tickRotation === 180 ? 'end' : 'start'}
-            className={`Name ${props.stnState === -1 ? 'Pass' : props.stnState === 0 ? 'CurrentGZ' : 'Future'}`}
-            transform={`translate(0,${nameDY})rotate(-45)`}
-        >
-            <StationName ref={stnNameEl} name={props.name} />
-            {props.secondaryName && (
-                <g
-                    transform={`translate(${
-                        (bBox.width + secNameBBox.width / 2 + 10) * (props.tickRotation === 180 ? -1 : 1)
-                    },${2 + 5 * (props.name[1].split('\\').length - 1)})`}
-                    className={`Name ${props.stnState === -1 ? 'Pass' : 'Future'}`}
-                >
-                    <g transform="translate(0,3)" fontSize={18}>
-                        <text textAnchor="end" x={secNameBBox.x - 3} className="rmg-name__zh">
-                            {'('}
-                        </text>
-                        <text textAnchor="start" x={secNameBBox.width + secNameBBox.x + 3} className="rmg-name__zh">
-                            {')'}
-                        </text>
-                    </g>
-                    <StationSecondaryName ref={secNameEl} secName={props.secondaryName} />
-                </g>
-            )}
-            {props.isExpress && (
-                <ExpressTag
-                    fill={props.stnState === -1 ? '#aaa' : 'var(--rmg-theme-colour)'}
-                    transform={`translate(${
-                        (bBox.width + secNameBBox.width + 20 + 35) * (props.tickRotation === 180 ? -1 : 1)
-                    },${2 + 5 * (props.name[1].split('\\').length - 1)})`}
-                />
-            )}
-        </g>
-    );
-};
-
-const StationName = forwardRef((props: { name: Name }, ref: React.Ref<SVGGElement>) =>
-    useMemo(
-        () => (
-            <g ref={ref}>
-                <text className="rmg-name__zh" fontSize={18}>
-                    {props.name[0]}
-                </text>
-                <g fontSize={10.5}>
-                    {props.name[1].split('\\').map((txt, i) => (
-                        <text key={i} className="rmg-name__en" dy={16 + i * 11}>
-                            {txt}
-                        </text>
-                    ))}
-                </g>
-            </g>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.name[0], props.name[1]]
-    )
-);
-
-const StationSecondaryName = forwardRef((props: { secName: Name }, ref: React.Ref<SVGGElement>) =>
-    useMemo(
-        () => (
-            <g ref={ref} textAnchor="middle">
-                <text className="rmg-name__zh" fontSize={13}>
-                    {props.secName[0]}
-                </text>
-                <text dy={10} className="rmg-name__en" fontSize={6.5}>
-                    {props.secName[1]}
-                </text>
-            </g>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.secName.toString()]
-    )
-);
-
-const ExpressTag = React.memo((props: React.SVGProps<SVGGElement>) => (
-    <g textAnchor="middle" {...props}>
-        <text className="rmg-name__zh" fontSize={13}>
-            快车停靠站
-        </text>
-        <text dy={10} className="rmg-name__en" fontSize={6.5}>
-            Express Station
-        </text>
-    </g>
-));
 
 interface IntGroupProps {
     intInfos: InterchangeInfo[];
@@ -238,7 +110,7 @@ const IntBoxs = (props: IntGroupProps & React.SVGProps<SVGGElement>) => {
                         lineName={[info[4], info[5]]}
                         foregroundColour={info[3]}
                         backgroundColour={info[2]}
-                        stationState={stnState}
+                        passed={stnState === -1}
                     />
                 </g>
             ))}

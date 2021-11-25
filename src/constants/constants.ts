@@ -285,3 +285,9 @@ export interface PaletteEntry {
      */
     pantone?: string;
 }
+
+export enum StationState {
+    PASSED = -1,
+    CURRENT = 0,
+    FUTURE = 1,
+}

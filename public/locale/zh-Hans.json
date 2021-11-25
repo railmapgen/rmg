@@ -48,6 +48,7 @@
             "border": "显示边框",
             "scale": "缩放比例",
             "format": "格式",
+            "download": "下载",
             "downloadCurrentStation": "下载当前车站",
             "downloadAllStations": "下载所有车站",
             "terms": {

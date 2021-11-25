@@ -77,7 +77,6 @@ interface Props {
 export default function PreviewDialog(props: Props) {
     const { t } = useTranslation();
     const classes = useStyles();
-
     const dispatch = useAppDispatch();
 
     const stn_list = useAppSelector(store => store.param.stn_list);
@@ -241,6 +240,8 @@ export default function PreviewDialog(props: Props) {
 
                 // TODO: remove this line, they are used to determine the sequence of load fonts and download process
                 console.log('Trigger the download process.')
+
+                // TODO: border, transparent, and scale are not respected by now
 
                 // append svg to the document so the bbox and fonts will be loaded correctly
                 document.body.appendChild(elem);

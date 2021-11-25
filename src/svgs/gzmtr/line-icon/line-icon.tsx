@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { ColourHex, MonoColour, Name } from '../../../constants/constants';
 import LineIconType2 from './line-icon-type2';
+import InterchangeBox from './interchange-box';
 
 export const MAX_WIDTH = 42;
 
@@ -8,12 +9,12 @@ interface LineIconProps {
     lineName: Name;
     foregroundColour: MonoColour;
     backgroundColour: ColourHex;
-    stationState: -1 | 0 | 1;
+    passed?: boolean;
 }
 
 export default memo(
     function LineIcon(props: LineIconProps) {
-        const { lineName, foregroundColour, backgroundColour, stationState } = props;
+        const { lineName, foregroundColour, backgroundColour, passed } = props;
 
         const [type, commonPart] = getType(lineName);
 
@@ -32,8 +33,8 @@ export default memo(
         const nameEnScale = MAX_WIDTH / Math.max(MAX_WIDTH, nameEnBBox.width);
 
         return (
-            <g textAnchor="middle" fill={stationState === -1 ? MonoColour.white : foregroundColour}>
-                <use xlinkHref="#intbox" fill={stationState === -1 ? '#aaa' : backgroundColour} />
+            <g textAnchor="middle" fill={passed ? MonoColour.white : foregroundColour}>
+                <InterchangeBox fill={passed ? '#aaa' : backgroundColour} />
                 {type === 2 ? (
                     <LineIconType2 lineName={lineName} commonPart={commonPart} />
                 ) : (
@@ -74,7 +75,7 @@ export default memo(
         prevProps.lineName.toString() === nextProps.lineName.toString() &&
         prevProps.foregroundColour === nextProps.foregroundColour &&
         prevProps.backgroundColour === nextProps.backgroundColour &&
-        prevProps.stationState === nextProps.stationState
+        prevProps.passed === nextProps.passed
 );
 
 /**

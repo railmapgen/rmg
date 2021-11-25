@@ -49,18 +49,3 @@ g#run_in_gzmtr use#arrow {
     transform: translate(var(--translate-x, 300px), var(--translate-y)) scale(0.25) rotate(var(--rotate, 0deg));
     --translate-y: calc(var(--rmg-svg-height) / 2 - 30px);
 }
-
-g#platform {
-    text-anchor: middle;
-    fill: var(--rmg-theme-fg);
-    transform: translate(var(--translate-x, 100px), var(--translate-y));
-    --translate-y: calc(var(--rmg-svg-height) / 2 - 30px);
-}
-
-/* g#platform circle {
-    fill: var(--rmg-theme-colour);
-} */
-
-g#big_stn_num {
-    transform: translate(var(--translate-x, 800px), var(--translate-y, 145px));
-}
