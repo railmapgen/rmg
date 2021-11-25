@@ -85,6 +85,8 @@ export default function PreviewDialog(props: Props) {
     const rmgStyle = useAppSelector(store => store.param.style);
 
     const [svgEl, setSvgEl] = useState(document.createElement('svg') as Element as SVGSVGElement);
+    // TODO: cache fonts here? Will s sometimes disappear after `dispatch` which close the dialog?
+    const [s, setS] = useState(document.createElement('style') as Element as HTMLStyleElement);
     const [isLoaded, setIsLoaded] = useState(false);
 
     const [showBorder, setShowBorder] = useState(false);
@@ -130,6 +132,8 @@ export default function PreviewDialog(props: Props) {
                         const uris = await getBase64FontFace(elem);
                         const s = document.createElement('style');
                         s.textContent = uris.join('\n');
+                        // TODO: cache fonts here?
+                        setS(s);
                         elem.prepend(s);
                     } catch (err) {
                         alert('Failed to fonts. Fonts in the exported PNG will be missing.');
@@ -208,23 +212,56 @@ export default function PreviewDialog(props: Props) {
         const stnId = stn_list_keys.pop();
         if (stnId === undefined) return;
 
-        dispatch(setCurrentStation(stnId, stn_list_keys)).then((stn_list_keys) => {
-            const elem = cloneSvgNode();
-            const filename = `rmg.${stnId}.${stn_list[stnId].name[0]}.${stn_list[stnId].name[1]}`.replaceAll(' ', '_');
+        dispatch(setCurrentStation(stnId, stn_list_keys))
+            .then(async (stn_list_keys: string[]) => {
+                const elem = cloneSvgNode();
 
-            if (format === 'png') {
-                test(elem, scale, filename);
-            } else if (format === 'svg') {
-                elem.removeAttribute('height');
-                var link = document.createElement('a');
-                link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl.outerHTML)));
-                link.download = `${filename}.svg`;
-                link.click();
-            }
+                if (rmgStyle === RmgStyle.MTR) {
+                    // TODO: duplicate code here and useEffect, request internet for the same font multiple times, could be solved by cache s?
+                    const s = await import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper')
+                        .then(async ({ getBase64FontFace }): Promise<HTMLStyleElement> => {
+                            // TODO: duplicate code here and useEffect
+                            const s = document.createElement('style');
+                            try {
+                                const uris = await getBase64FontFace(elem);
+                                s.textContent = uris.join('\n');
+                            } catch (err) {
+                                alert('Failed to load fonts. Fonts in the exported PNG will be missing.');
+                                console.error(err);
+                            } finally {
+                                await document.fonts.ready;
+                                // TODO: remove this line, they are used to determine the sequence of load fonts and download process
+                                console.log('Pass load fonts process.')
+                                return Promise.resolve(s);
+                            }
+                        });
+                    // TODO: s could also be retrieved from cache, so the entire code above is useless, and so the promise and async
+                    elem.prepend(s);
+                }
 
-            // trigger download for the remaining stations
-            downloadSvg(stn_list_keys);
-        })
+                // TODO: remove this line, they are used to determine the sequence of load fonts and download process
+                console.log('Trigger the download process.')
+
+                // append svg to the document so the bbox and fonts will be loaded correctly
+                document.body.appendChild(elem);
+
+                const filename = `rmg.${stnId}.${stn_list[stnId].name[0]}.${stn_list[stnId].name[1]}`.replaceAll(' ', '_');
+                if (format === 'png') {
+                    test(elem, scale, filename);
+                } else if (format === 'svg') {
+                    elem.removeAttribute('height');
+                    var link = document.createElement('a');
+                    link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(elem.outerHTML)));
+                    link.download = `${filename}.svg`;
+                    link.click();
+                }
+
+                // don't forget to release it after use
+                document.body.removeChild(elem)
+
+                // trigger download for the remaining stations
+                downloadSvg(stn_list_keys);
+            })
     }
 
     const handleClose = (action: 'close' | 'downloadCurrentStation' | 'downloadAllStation') => () => {
