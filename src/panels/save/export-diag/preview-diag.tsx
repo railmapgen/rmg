@@ -84,8 +84,6 @@ export default function PreviewDialog(props: Props) {
     const rmgStyle = useAppSelector(store => store.param.style);
 
     const [svgEl, setSvgEl] = useState(document.createElement('svg') as Element as SVGSVGElement);
-    // TODO: cache fonts here? Will s sometimes disappear after `dispatch` which close the dialog?
-    const [s, setS] = useState(document.createElement('style') as Element as HTMLStyleElement);
     const [isLoaded, setIsLoaded] = useState(false);
 
     const [showBorder, setShowBorder] = useState(false);
@@ -131,8 +129,6 @@ export default function PreviewDialog(props: Props) {
                         const uris = await getBase64FontFace(elem);
                         const s = document.createElement('style');
                         s.textContent = uris.join('\n');
-                        // TODO: cache fonts here?
-                        setS(s);
                         elem.prepend(s);
                     } catch (err) {
                         alert('Failed to fonts. Fonts in the exported PNG will be missing.');
@@ -216,10 +212,10 @@ export default function PreviewDialog(props: Props) {
                 const elem = cloneSvgNode();
 
                 if (rmgStyle === RmgStyle.MTR) {
-                    // TODO: duplicate code here and useEffect, request internet for the same font multiple times, could be solved by cache s?
+                    // there are multiple network requests on fonts, but that's how mtr-helper is implemeneted
+                    // this can't be in cloneSvgNode either as setSvgEl is used in preview but not here
                     const s = await import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper')
                         .then(async ({ getBase64FontFace }): Promise<HTMLStyleElement> => {
-                            // TODO: duplicate code here and useEffect
                             const s = document.createElement('style');
                             try {
                                 const uris = await getBase64FontFace(elem);
@@ -229,21 +225,13 @@ export default function PreviewDialog(props: Props) {
                                 console.error(err);
                             } finally {
                                 await document.fonts.ready;
-                                // TODO: remove this line, they are used to determine the sequence of load fonts and download process
-                                console.log('Pass load fonts process.')
                                 return Promise.resolve(s);
                             }
                         });
-                    // TODO: s could also be retrieved from cache, so the entire code above is useless, and so the promise and async
                     elem.prepend(s);
                 }
 
-                // TODO: remove this line, they are used to determine the sequence of load fonts and download process
-                console.log('Trigger the download process.')
-
-                // TODO: border, transparent, and scale are not respected by now
-
-                // append svg to the document so the bbox and fonts will be loaded correctly
+                // append svg to the document so the bbox will be loaded correctly (but not for gzmtr)
                 document.body.appendChild(elem);
 
                 const filename = `rmg.${stnId}.${stn_list[stnId].name[0]}.${stn_list[stnId].name[1]}`.replaceAll(' ', '_');
