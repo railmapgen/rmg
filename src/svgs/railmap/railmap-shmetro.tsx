@@ -104,7 +104,7 @@ const DefsSHMetro = React.memo(() => (
                                     0 0 0 .3 0" result="outline2" /> */}
             <feComposite in="outline2" in2="SourceGraphic" operator="over" result="output" />
         </filter>
-        <filter id="colorreplace" color-interpolation-filters="sRGB"
+        <filter id="colorreplace" colorInterpolationFilters="sRGB"
             // TODO: remove the absolute value while make the filter works correctly
             filterUnits="userSpaceOnUse" x="0" y="-1000" width="5000" height="2000">
             {/* Replace pass gray color with white.
@@ -126,7 +126,7 @@ const DefsSHMetro = React.memo(() => (
             <feMorphology operator="erode" in="selectedColor1" radius="1" result="e2" />
             <feComposite in="e1" in2="e2" operator="xor" result="uncoloredOutline" />
             {/* As the pass line is colored in white, we need to recolor the outline with black. */}
-            <feFlood flood-color="rgb(0,0,0)" />
+            <feFlood floodColor="rgb(0,0,0)" />
             <feComposite operator="in" in2="uncoloredOutline" result="outline" />
             {/* Put the outline on the white not gray pass line. */}
             <feComposite in="outline" in2="selectedColor1" operator="over" result="result" />
