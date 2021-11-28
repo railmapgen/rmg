@@ -152,7 +152,7 @@ export default function PreviewDialog(props: Props) {
 
     /**
      * Clone the svg canvas and adjust its properties like heights and border.
-     * 
+     *
      * @returns The cloned svg canvas
      */
     const cloneSvgNode = (): SVGSVGElement => {
@@ -195,17 +195,17 @@ export default function PreviewDialog(props: Props) {
         elem.querySelector('rect#canvas-bg')?.setAttribute('fill', isTransparent ? 'none' : 'white');
 
         return elem;
-    }
+    };
 
     /**
      * Download svg here.
-     * 
+     *
      * @param stn_list_keys Stations that need to be download
      * @returns Nothing
      */
     const downloadSvg = async (stn_list_keys: string[]) => {
-        const stn_list_copy = stn_list;  // copy so it won't be missing after dispatch
-        const line_name_copy = line_name;  // copy so it won't be missing after dispatch
+        const stn_list_copy = stn_list; // copy so it won't be missing after dispatch
+        const line_name_copy = line_name; // copy so it won't be missing after dispatch
         const zip = new JSZip();
 
         for (const stnId of stn_list_keys) {
@@ -230,7 +230,8 @@ export default function PreviewDialog(props: Props) {
                             await document.fonts.ready;
                             return Promise.resolve(s);
                         }
-                    });
+                    }
+                );
                 elem.prepend(s);
             }
 
@@ -270,7 +271,7 @@ export default function PreviewDialog(props: Props) {
             const filename = `rmg.${line_name_copy[0]}.${line_name_copy[1]}.zip`.replaceAll(' ', '_');
             saveAs(URL.createObjectURL(zipData), filename);
         }
-    }
+    };
 
     const handleClose = (action: 'close' | 'downloadCurrentStation' | 'downloadAllStation') => () => {
         if (action === 'downloadCurrentStation') {
@@ -393,7 +394,7 @@ export default function PreviewDialog(props: Props) {
                         variant="contained"
                         onClick={handleClose('downloadAllStation')}
                         color="primary"
-                        disabled={!isLoaded || !isAccept}
+                        disabled={!isLoaded || !isAccept || rmgStyle === RmgStyle.GZMTR}
                     >
                         {t('file.preview.downloadAllStations')}
                     </Button>
