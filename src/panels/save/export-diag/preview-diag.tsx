@@ -196,61 +196,56 @@ export default function PreviewDialog(props: Props) {
     }
 
     /**
-     * A recursive function that the batch can run in sequence.
-     * We need to wait for svg elements updated for station A before we dispatch the current station to B.
+     * Download svg here.
      * 
      * @param stn_list_keys Stations that need to be download
      * @returns Nothing
      */
-    const downloadSvg = (stn_list_keys: string[]) => {
-        // process the stn_list_keys one by one
-        const stnId = stn_list_keys.pop();
-        if (stnId === undefined) return;
+    const downloadSvg = async (stn_list_keys: string[]) => {
+        const stn_list_copy = stn_list;  // copy so it won't be missing after dispatch
+        for (const stnId of stn_list_keys) {
+            // wait for svg elements updated for station A before we dispatch the current station to B.
+            await dispatch(setCurrentStation(stnId));
 
-        dispatch(setCurrentStation(stnId, stn_list_keys))
-            .then(async (stn_list_keys: string[]) => {
-                const elem = cloneSvgNode();
+            const elem = cloneSvgNode();
 
-                if (rmgStyle === RmgStyle.MTR) {
-                    // there are multiple network requests on fonts, but that's how mtr-helper is implemeneted
-                    // this can't be in cloneSvgNode either as setSvgEl is used in preview but not here
-                    const s = await import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper')
-                        .then(async ({ getBase64FontFace }): Promise<HTMLStyleElement> => {
-                            const s = document.createElement('style');
-                            try {
-                                const uris = await getBase64FontFace(elem);
-                                s.textContent = uris.join('\n');
-                            } catch (err) {
-                                alert('Failed to load fonts. Fonts in the exported PNG will be missing.');
-                                console.error(err);
-                            } finally {
-                                await document.fonts.ready;
-                                return Promise.resolve(s);
-                            }
-                        });
-                    elem.prepend(s);
-                }
+            if (rmgStyle === RmgStyle.MTR) {
+                // there are multiple network requests on fonts, but that's how mtr-helper is implemeneted
+                // this can't be in cloneSvgNode either as setSvgEl is used in preview but not here
+                const s = await import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper')
+                    .then(async ({ getBase64FontFace }): Promise<HTMLStyleElement> => {
+                        const s = document.createElement('style');
+                        try {
+                            const uris = await getBase64FontFace(elem);
+                            s.textContent = uris.join('\n');
+                        } catch (err) {
+                            alert('Failed to load fonts. Fonts in the exported PNG will be missing.');
+                            console.error(err);
+                        } finally {
+                            await document.fonts.ready;
+                            return Promise.resolve(s);
+                        }
+                    });
+                elem.prepend(s);
+            }
 
-                // append svg to the document so the bbox will be loaded correctly (but not for gzmtr)
-                document.body.appendChild(elem);
+            // append svg to the document so the bbox will be loaded correctly (but not for gzmtr)
+            document.body.appendChild(elem);
 
-                const filename = `rmg.${stnId}.${stn_list[stnId].name[0]}.${stn_list[stnId].name[1]}`.replaceAll(' ', '_');
-                if (format === 'png') {
-                    test(elem, scale, filename);
-                } else if (format === 'svg') {
-                    elem.removeAttribute('height');
-                    var link = document.createElement('a');
-                    link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(elem.outerHTML)));
-                    link.download = `${filename}.svg`;
-                    link.click();
-                }
+            const filename = `rmg.${stnId}.${stn_list_copy[stnId].name[0]}.${stn_list_copy[stnId].name[1]}`.replaceAll(' ', '_');
+            if (format === 'png') {
+                test(elem, scale, filename);
+            } else if (format === 'svg') {
+                elem.removeAttribute('height');
+                var link = document.createElement('a');
+                link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(elem.outerHTML)));
+                link.download = `${filename}.svg`;
+                link.click();
+            }
 
-                // don't forget to release it after use
-                document.body.removeChild(elem)
-
-                // trigger download for the remaining stations
-                downloadSvg(stn_list_keys);
-            })
+            // don't forget to release it after use
+            document.body.removeChild(elem);
+        }
     }
 
     const handleClose = (action: 'close' | 'downloadCurrentStation' | 'downloadAllStation') => () => {
