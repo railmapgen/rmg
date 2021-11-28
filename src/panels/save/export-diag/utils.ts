@@ -1,4 +1,4 @@
-export function test(svgEl: SVGSVGElement, scale: number, filename: string) {
+export async function test(svgEl: SVGSVGElement, scale: number, filename: string): Promise<string> {
     let svgW = svgEl.viewBox.baseVal.width;
     let svgH = svgEl.viewBox.baseVal.height;
 
@@ -41,22 +41,24 @@ export function test(svgEl: SVGSVGElement, scale: number, filename: string) {
         // el.removeAttribute('class');
     });
 
-    var img = new Image();
-    img.onload = () => {
-        setTimeout(() => {
+    // https://stackoverflow.com/questions/46399223/async-await-in-image-loading/52851789
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = async () => {
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            saveAs(canvas.toDataURL('image/png'), filename);
-        }, 2000);
-    };
-    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl.outerHTML)));
+            return resolve(canvas.toDataURL('image/png'))
+        }
+        img.onerror = reject;
+        img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl.outerHTML)));
+    })
 }
 
-function saveAs(uri: string, filename: string) {
+export function saveAs(uri: string, filename: string) {
     var link = document.createElement('a');
 
     if (typeof link.download === 'string') {
         link.href = uri;
-        link.download = `${filename}.png`;
+        link.download = filename;
         //Firefox requires the link to be in the body
         document.body.appendChild(link);
         //simulate click

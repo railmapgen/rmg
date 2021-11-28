@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import JSZip from 'jszip';
 import {
     Button,
     Checkbox,
@@ -19,7 +20,7 @@ import {
     Typography,
 } from '@material-ui/core';
 
-import { test } from './utils';
+import { test, saveAs } from './utils';
 import { useAppDispatch, useAppSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
 import { setCurrentStation } from '../../../redux/param/action';
@@ -80,6 +81,7 @@ export default function PreviewDialog(props: Props) {
     const dispatch = useAppDispatch();
 
     const stn_list = useAppSelector(store => store.param.stn_list);
+    const line_name = useAppSelector(store => store.param.line_name);
     const currentStationIndex = useAppSelector(store => store.param.current_stn_idx);
     const rmgStyle = useAppSelector(store => store.param.style);
 
@@ -203,6 +205,9 @@ export default function PreviewDialog(props: Props) {
      */
     const downloadSvg = async (stn_list_keys: string[]) => {
         const stn_list_copy = stn_list;  // copy so it won't be missing after dispatch
+        const line_name_copy = line_name;  // copy so it won't be missing after dispatch
+        const zip = new JSZip();
+
         for (const stnId of stn_list_keys) {
             // wait for svg elements updated for station A before we dispatch the current station to B.
             await dispatch(setCurrentStation(stnId));
@@ -229,22 +234,39 @@ export default function PreviewDialog(props: Props) {
                 elem.prepend(s);
             }
 
-            // append svg to the document so the bbox will be loaded correctly (but not for gzmtr)
+            // append svg to the document so the bbox will be loaded correctly
+            // (but not for gzmtr and have no idea why)
             document.body.appendChild(elem);
 
             const filename = `rmg.${stnId}.${stn_list_copy[stnId].name[0]}.${stn_list_copy[stnId].name[1]}`.replaceAll(' ', '_');
             if (format === 'png') {
-                test(elem, scale, filename);
+                const data = await test(elem, scale, filename);
+
+                if (stn_list_keys.length > 1) {
+                    zip.file(`${filename}.png`, data.split('base64,')[1], { base64: true });
+                } else {
+                    saveAs(data, `${filename}.png`);
+                }
             } else if (format === 'svg') {
                 elem.removeAttribute('height');
-                var link = document.createElement('a');
-                link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(elem.outerHTML)));
-                link.download = `${filename}.svg`;
-                link.click();
+                const data = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(elem.outerHTML)));
+
+                if (stn_list_keys.length > 1) {
+                    zip.file(`${filename}.svg`, data.split('base64,')[1], { base64: true });
+                } else {
+                    saveAs(data, `${filename}.svg`);
+                }
             }
 
             // don't forget to release it after use
             document.body.removeChild(elem);
+        }
+
+        // generate the zip for batch download
+        if (stn_list_keys.length > 1) {
+            const zipData = await zip.generateAsync({ type: 'blob' });
+            const filename = `rmg.${line_name_copy[0]}.${line_name_copy[1]}.zip`.replaceAll(' ', '_');
+            saveAs(URL.createObjectURL(zipData), filename);
         }
     }
 
