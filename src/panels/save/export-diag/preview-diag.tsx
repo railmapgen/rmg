@@ -150,9 +150,9 @@ export default function PreviewDialog(props: Props) {
             elem.querySelector('rect#canvas-bg')?.setAttribute('fill', isTransparent ? 'none' : 'white');
 
             if (rmgStyle === RmgStyle.MTR) {
-                import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper').then(async ({ getBase64FontFace }) => {
+                import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper').then(async ({ getBase64FontFace, getBase64FontFace2 }) => {
                     try {
-                        const uris = await getBase64FontFace(elem);
+                        const uris = await getBase64FontFace2(elem);
                         const s = document.createElement('style');
                         s.textContent = uris.join('\n');
                         elem.prepend(s);
