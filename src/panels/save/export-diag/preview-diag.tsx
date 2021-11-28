@@ -243,6 +243,8 @@ export default function PreviewDialog(props: Props) {
                 const data = await test(elem, scale, filename);
 
                 if (stn_list_keys.length > 1) {
+                    // batch download and split base64 for this
+                    // https://stackoverflow.com/questions/31305485/export-resized-image-in-canvas-to-new-jszip-package
                     zip.file(`${filename}.png`, data.split('base64,')[1], { base64: true });
                 } else {
                     saveAs(data, `${filename}.png`);
