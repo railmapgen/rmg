@@ -4,7 +4,7 @@ RANGES=('U+4E00-4FFF' 'U+5000-57FF' 'U+5800-5FFF' 'U+6000-67FF' 'U+6800-6FFF' 'U
 CODES=('4E' '50' '58' '60' '68' '70' '78' '80' '88' '90' '98')
 
 function generate_css() {
-  cat >>../public/styles/genyomin.css <<EOF
+  cat >>../public/styles/fonts_mtr.css <<EOF
 @font-face {
     font-family: 'GenYoMin TW';
     font-style: normal;
@@ -17,8 +17,8 @@ EOF
 }
 
 # clear css file
-cat >../public/styles/genyomin.css <<EOF
-EOF
+#cat >../public/styles/fonts_mtr.css <<EOF
+#EOF
 
 for ((i = 1; i <= $#RANGES; i++)); do
   SUBSET_NAME="GenYoMin-TW-SB.${CODES[i]}.woff2"

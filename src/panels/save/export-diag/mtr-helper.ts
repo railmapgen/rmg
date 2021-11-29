@@ -10,28 +10,48 @@ const readBlobAsDataURL = (blob: Blob): Promise<string> => {
     });
 };
 
+const matchCssRuleByFontFace = (rules: CSSFontFaceRule[], font: FontFace): CSSFontFaceRule | undefined => {
+    return rules.find(rule => {
+        const cssStyle = rule.style as any;
+        return (
+            cssStyle.fontFamily.replace(/^"(.+)"$/, '$1') === font.family && cssStyle.unicodeRange === font.unicodeRange
+        );
+    });
+};
+
+const getDistinctCssRules = (rules: (CSSFontFaceRule | undefined)[]): CSSFontFaceRule[] => {
+    return rules.reduce<CSSFontFaceRule[]>((acc, cur) => {
+        if (cur) {
+            const existence = acc.find(rule => {
+                const ruleStyle = rule.style as any;
+                const curStyle = cur.style as any;
+                return ruleStyle.fontFamily === curStyle.fontFamily && ruleStyle.unicodeRange === curStyle.unicodeRange;
+            });
+            return existence ? acc : acc.concat(cur);
+        } else {
+            return acc;
+        }
+    }, []);
+};
+
 export const getBase64FontFace = async (svgEl: SVGSVGElement): Promise<string[]> => {
     const uniqueCharacters = Array.from(
         new Set(
-            [...(svgEl.querySelectorAll('.rmg-name__zh') as NodeListOf<SVGTextElement | SVGTSpanElement>)]
+            [...svgEl.querySelectorAll<SVGElement>('.rmg-name__zh')]
                 .map(el => el.innerHTML)
                 .join('')
-                .replace(/[\d\w\s]/g, '')
+                .replace(/[\s]/g, '')
         )
     ).join('');
 
-    const fontFaceList = await document.fonts.load('80px GenYoMin TW', uniqueCharacters);
-    const unicodeRanges = fontFaceList.map(fontFace => fontFace.unicodeRange); // no duplicated ranges
-
-    const filteredCssRules = (
-        Array.from(
-            (document.querySelector<HTMLLinkElement>('link#css_share')!.sheet!.cssRules[0] as CSSImportRule).styleSheet
-                .cssRules
-        ) as CSSFontFaceRule[]
-    ).filter(cssRule => unicodeRanges.includes((cssRule.style as any).unicodeRange));
+    const fontFaceList = await document.fonts.load('80px GenYoMin TW, Vegur', uniqueCharacters);
+    const cssRules = Array.from(
+        (document.querySelector<HTMLLinkElement>('link#css_share')!.sheet!.cssRules[0] as CSSImportRule).styleSheet
+            .cssRules
+    ) as CSSFontFaceRule[];
 
     return await Promise.all(
-        filteredCssRules.map(async cssRule => {
+        getDistinctCssRules(fontFaceList.map(font => matchCssRuleByFontFace(cssRules, font))).map(async cssRule => {
             try {
                 const url =
                     process.env.PUBLIC_URL + '/styles/' + (cssRule.style as any).src.match(/^url\("([\S*]+)"\)/)?.[1];

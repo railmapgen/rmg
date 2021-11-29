@@ -1,4 +1,10 @@
 @font-face {
+    font-family: 'Vegur';
+    src: url('../cdn/Vegur-Regular.otf') format('opentype');
+    unicode-range: U+0-10FFFF;
+}
+
+@font-face {
     font-family: 'GenYoMin TW';
     font-style: normal;
     font-weight: 600;
