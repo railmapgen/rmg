@@ -215,7 +215,7 @@ export default function PreviewDialog(props: Props) {
             const elem = cloneSvgNode();
 
             if (rmgStyle === RmgStyle.MTR) {
-                // there are multiple network requests on fonts, but that's how mtr-helper is implemeneted
+                // there are multiple network requests on fonts, but that's how mtr-helper is implemented
                 // this can't be in cloneSvgNode either as setSvgEl is used in preview but not here
                 const s = await import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper')
                     .then(async ({ getBase64FontFace }): Promise<HTMLStyleElement> => {
@@ -241,7 +241,7 @@ export default function PreviewDialog(props: Props) {
 
             const filename = `rmg.${stnId}.${stn_list_copy[stnId].name[0]}.${stn_list_copy[stnId].name[1]}`.replaceAll(' ', '_');
             if (format === 'png') {
-                const data = await test(elem, scale, filename);
+                const data = await test(elem, scale);
 
                 if (stn_list_keys.length > 1) {
                     // batch download and split base64 for this
