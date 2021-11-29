@@ -204,8 +204,6 @@ export default function PreviewDialog(props: Props) {
      * @returns Nothing
      */
     const downloadSvg = async (stn_list_keys: string[]) => {
-        const stn_list_copy = stn_list; // copy so it won't be missing after dispatch
-        const line_name_copy = line_name; // copy so it won't be missing after dispatch
         const zip = new JSZip();
 
         for (const stnId of stn_list_keys) {
@@ -239,7 +237,7 @@ export default function PreviewDialog(props: Props) {
             // (but not for gzmtr and have no idea why)
             document.body.appendChild(elem);
 
-            const filename = `rmg.${stnId}.${stn_list_copy[stnId].name[0]}.${stn_list_copy[stnId].name[1]}`.replaceAll(' ', '_');
+            const filename = `rmg.${stnId}.${stn_list[stnId].name[0]}.${stn_list[stnId].name[1]}`.replaceAll(' ', '_');
             if (format === 'png') {
                 const data = await test(elem, scale);
 
@@ -268,9 +266,12 @@ export default function PreviewDialog(props: Props) {
         // generate the zip for batch download
         if (stn_list_keys.length > 1) {
             const zipData = await zip.generateAsync({ type: 'blob' });
-            const filename = `rmg.${line_name_copy[0]}.${line_name_copy[1]}.zip`.replaceAll(' ', '_');
+            const filename = `rmg.${line_name[0]}.${line_name[1]}.zip`.replaceAll(' ', '_');
             saveAs(URL.createObjectURL(zipData), filename);
         }
+
+        // revert to original station
+        await dispatch(setCurrentStation(currentStationIndex));
     };
 
     const handleClose = (action: 'close' | 'downloadCurrentStation' | 'downloadAllStation') => () => {
