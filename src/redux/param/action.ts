@@ -300,20 +300,14 @@ export const customiseDestinationName = (customisedName: Name | false) => {
 /**
  * Set the current station from `currentStation`.
  * @param currentStation The station id which we want to set.
- * @param stn_list_keys An array returned without modification. (Only used in `downloadSvg`)
- * @returns A promise that contains exactly the stn_list_keys array from parameter. Use promise so
- *  that we can do something after svg elements are completely updated in `downloadSvg` of `PreviewDialog`.
+ * @returns A promise that we can do something after svg elements are completely updated in `downloadSvg` of `PreviewDialog`.
  */
-export const setCurrentStation = (currentStation: string, stn_list_keys: string[] = []) => {
+export const setCurrentStation = (currentStation: string) => {
     return (dispatch: AppDispatch) => {
         dispatch({ type: SET_CURRENT_STATION, currentStation });
-        return Promise.resolve(stn_list_keys);
+        return Promise.resolve();
     };
 };
-
-// const setStation = (stationId: string, station: StationInfo): setStationAction => {
-//     return { type: SET_STATION, stationId, station };
-// };
 
 export const setStation = (stationId: string, station: StationInfo) => {
     return (dispatch: AppDispatch) => {
