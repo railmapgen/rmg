@@ -4,11 +4,6 @@ on:
   push:
     tags:
       - rmg-*
-  workflow_run:
-    workflows: ["Build 2"]
-    branches: [master]
-    types:
-      - completed
 
 jobs:
   release:
