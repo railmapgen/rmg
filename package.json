@@ -22,7 +22,6 @@
         "redux-thunk": "^2.3.0"
     },
     "devDependencies": {
-        "@types/css-font-loading-module": "^0.0.5",
         "@types/enzyme": "^3.10.9",
         "@types/enzyme-adapter-react-16": "^1.0.6",
         "@types/jest": "^26.0.23",

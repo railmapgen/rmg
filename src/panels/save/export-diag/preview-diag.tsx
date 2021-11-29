@@ -123,28 +123,10 @@ export default function PreviewDialog(props: Props) {
                 return;
             }
 
-            let elem = cloneSvgNode();
-
-            if (rmgStyle === RmgStyle.MTR) {
-                import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper').then(async ({ getBase64FontFace, getBase64FontFace2 }) => {
-                    try {
-                        const uris = await getBase64FontFace2(elem);
-                        const s = document.createElement('style');
-                        s.textContent = uris.join('\n');
-                        elem.prepend(s);
-                    } catch (err) {
-                        alert('Failed to fonts. Fonts in the exported PNG will be missing.');
-                        console.error(err);
-                    } finally {
-                        setSvgEl(elem);
-                        await document.fonts.ready;
-                        setIsLoaded(true);
-                    }
-                });
-            } else {
+            cloneSvgNode().then(elem => {
                 setSvgEl(elem);
                 setIsLoaded(true);
-            }
+            });
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.canvas]
@@ -155,7 +137,7 @@ export default function PreviewDialog(props: Props) {
      *
      * @returns The cloned svg canvas
      */
-    const cloneSvgNode = (): SVGSVGElement => {
+    const cloneSvgNode = async (): Promise<SVGSVGElement> => {
         let [, thisSVGHeight] = ['--rmg-svg-width', '--rmg-svg-height']
             .map(
                 key =>
@@ -194,6 +176,19 @@ export default function PreviewDialog(props: Props) {
         elem.querySelector('rect#canvas-border')?.setAttribute('stroke', showBorder ? 'black' : 'none');
         elem.querySelector('rect#canvas-bg')?.setAttribute('fill', isTransparent ? 'none' : 'white');
 
+        if (rmgStyle === RmgStyle.MTR) {
+            try {
+                const { getBase64FontFace } = await import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper');
+                const uris = await getBase64FontFace(elem);
+                const s = document.createElement('style');
+                s.textContent = uris.join('\n');
+                elem.prepend(s);
+            } catch (err) {
+                alert('Failed to fonts. Fonts in the exported PNG will be missing.');
+                console.error(err);
+            }
+        }
+
         return elem;
     };
 
@@ -210,28 +205,7 @@ export default function PreviewDialog(props: Props) {
             // wait for svg elements updated for station A before we dispatch the current station to B.
             await dispatch(setCurrentStation(stnId));
 
-            const elem = cloneSvgNode();
-
-            if (rmgStyle === RmgStyle.MTR) {
-                // there are multiple network requests on fonts, but that's how mtr-helper is implemented
-                // this can't be in cloneSvgNode either as setSvgEl is used in preview but not here
-                const s = await import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper')
-                    .then(async ({ getBase64FontFace }): Promise<HTMLStyleElement> => {
-                        const s = document.createElement('style');
-                        try {
-                            const uris = await getBase64FontFace(elem);
-                            s.textContent = uris.join('\n');
-                        } catch (err) {
-                            alert('Failed to load fonts. Fonts in the exported PNG will be missing.');
-                            console.error(err);
-                        } finally {
-                            await document.fonts.ready;
-                            return Promise.resolve(s);
-                        }
-                    }
-                );
-                elem.prepend(s);
-            }
+            const elem = await cloneSvgNode();
 
             // append svg to the document so the bbox will be loaded correctly
             // (but not for gzmtr and have no idea why)
@@ -279,8 +253,7 @@ export default function PreviewDialog(props: Props) {
             const stn_list_keys = [currentStationIndex];
             downloadSvg(stn_list_keys);
         } else if (action === 'downloadAllStation') {
-            const stn_list_keys = Object.keys(stn_list)
-                .filter(stnId => !['linestart', 'lineend'].includes(stnId));
+            const stn_list_keys = Object.keys(stn_list).filter(stnId => !['linestart', 'lineend'].includes(stnId));
             downloadSvg(stn_list_keys);
         }
 
