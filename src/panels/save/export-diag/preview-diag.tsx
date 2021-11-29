@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import JSZip from 'jszip';
 import {
     Button,
     Checkbox,
@@ -19,9 +20,10 @@ import {
     Typography,
 } from '@material-ui/core';
 
-import { test } from './utils';
-import { useAppSelector } from '../../../redux';
+import { test, saveAs } from './utils';
+import { useAppDispatch, useAppSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
+import { setCurrentStation } from '../../../redux/param/action';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -45,6 +47,10 @@ const useStyles = makeStyles(theme =>
             display: 'flex',
             flexDirection: 'column',
             minWidth: 250,
+        },
+        contentAction: {
+            display: 'flex',
+            alignSelf: 'end',
         },
         contentRoot: {
             padding: 'unset',
@@ -72,7 +78,11 @@ interface Props {
 export default function PreviewDialog(props: Props) {
     const { t } = useTranslation();
     const classes = useStyles();
+    const dispatch = useAppDispatch();
 
+    const stn_list = useAppSelector(store => store.param.stn_list);
+    const line_name = useAppSelector(store => store.param.line_name);
+    const currentStationIndex = useAppSelector(store => store.param.current_stn_idx);
     const rmgStyle = useAppSelector(store => store.param.style);
 
     const [svgEl, setSvgEl] = useState(document.createElement('svg') as Element as SVGSVGElement);
@@ -104,6 +114,7 @@ export default function PreviewDialog(props: Props) {
 
     const contentEl = React.useRef<HTMLDivElement | null>(null);
 
+    // wait for svg canvas and fonts to be fully loaded
     useEffect(
         () => {
             if (props.canvas === '') {
@@ -111,43 +122,8 @@ export default function PreviewDialog(props: Props) {
                 setIsLoaded(false);
                 return;
             }
-            let [, thisSVGHeight] = ['--rmg-svg-width', '--rmg-svg-height']
-                .map(
-                    key =>
-                        (document.querySelector(`svg#${props.canvas}`) as SVGSVGElement).style
-                            .getPropertyValue(key)
-                            .match(/\d+/g)![0]
-                )
-                .map(Number);
 
-            // let MAX_WIDTH = Math.min(window.innerWidth, 1412) - 64 - 24 * 2;
-            // let MAX_HEIGHT = window.innerHeight - 64 - 64 - 52 - 8 * 2;
-            // let scaleFactor = Math.min(MAX_WIDTH / thisSVGWidth, MAX_HEIGHT / thisSVGHeight);
-
-            let elem = document.querySelector(`svg#${props.canvas}`)!.cloneNode(true) as SVGSVGElement;
-            // elem.setAttribute('width', (thisSVGWidth * scaleFactor).toString());
-            elem.setAttribute('height', (thisSVGHeight * scale).toString());
-            elem.style.setProperty('all', 'initial');
-
-            ['share', props.canvas]
-                .map(tag =>
-                    [
-                        ...(
-                            [...document.querySelectorAll('link')].filter(l => l.id === 'css_' + tag)[0]
-                                ?.sheet as CSSStyleSheet
-                        ).cssRules,
-                    ]
-                        .map(rule => rule.cssText)
-                        .join(' ')
-                )
-                .forEach(txt => {
-                    let s = document.createElement('style');
-                    s.textContent = txt;
-                    elem.prepend(s);
-                });
-
-            elem.querySelector('rect#canvas-border')?.setAttribute('stroke', showBorder ? 'black' : 'none');
-            elem.querySelector('rect#canvas-bg')?.setAttribute('fill', isTransparent ? 'none' : 'white');
+            let elem = cloneSvgNode();
 
             if (rmgStyle === RmgStyle.MTR) {
                 import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper').then(async ({ getBase64FontFace }) => {
@@ -174,23 +150,141 @@ export default function PreviewDialog(props: Props) {
         [props.canvas]
     );
 
-    const handleClose = (action: 'close' | 'download') => () => {
-        if (action === 'close') {
-            props.onClose('close');
-        } else {
-            let svgEl = contentEl.current!.querySelector('svg') as SVGSVGElement;
-            const filename = `rmg.${new Date().toISOString()}`;
-            if (format === 'png') {
-                test(svgEl, scale, filename);
-            } else if (format === 'svg') {
-                svgEl.removeAttribute('height');
-                var link = document.createElement('a');
-                link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl.outerHTML)));
-                link.download = filename + '.svg';
-                link.click();
+    /**
+     * Clone the svg canvas and adjust its properties like heights and border.
+     *
+     * @returns The cloned svg canvas
+     */
+    const cloneSvgNode = (): SVGSVGElement => {
+        let [, thisSVGHeight] = ['--rmg-svg-width', '--rmg-svg-height']
+            .map(
+                key =>
+                    (document.querySelector(`svg#${props.canvas}`) as SVGSVGElement).style
+                        .getPropertyValue(key)
+                        .match(/\d+/g)![0]
+            )
+            .map(Number);
+
+        // let MAX_WIDTH = Math.min(window.innerWidth, 1412) - 64 - 24 * 2;
+        // let MAX_HEIGHT = window.innerHeight - 64 - 64 - 52 - 8 * 2;
+        // let scaleFactor = Math.min(MAX_WIDTH / thisSVGWidth, MAX_HEIGHT / thisSVGHeight);
+
+        const elem = document.querySelector(`svg#${props.canvas}`)!.cloneNode(true) as SVGSVGElement;
+        // elem.setAttribute('width', (thisSVGWidth * scaleFactor).toString());
+        elem.setAttribute('height', (thisSVGHeight * scale).toString());
+        elem.style.setProperty('all', 'initial');
+
+        ['share', props.canvas]
+            .map(tag =>
+                [
+                    ...(
+                        [...document.querySelectorAll('link')].filter(l => l.id === 'css_' + tag)[0]
+                            ?.sheet as CSSStyleSheet
+                    ).cssRules,
+                ]
+                    .map(rule => rule.cssText)
+                    .join(' ')
+            )
+            .forEach(txt => {
+                let s = document.createElement('style');
+                s.textContent = txt;
+                elem.prepend(s);
+            });
+
+        elem.querySelector('rect#canvas-border')?.setAttribute('stroke', showBorder ? 'black' : 'none');
+        elem.querySelector('rect#canvas-bg')?.setAttribute('fill', isTransparent ? 'none' : 'white');
+
+        return elem;
+    };
+
+    /**
+     * Download svg here.
+     *
+     * @param stn_list_keys Stations that need to be download
+     * @returns Nothing
+     */
+    const downloadSvg = async (stn_list_keys: string[]) => {
+        const zip = new JSZip();
+
+        for (const stnId of stn_list_keys) {
+            // wait for svg elements updated for station A before we dispatch the current station to B.
+            await dispatch(setCurrentStation(stnId));
+
+            const elem = cloneSvgNode();
+
+            if (rmgStyle === RmgStyle.MTR) {
+                // there are multiple network requests on fonts, but that's how mtr-helper is implemented
+                // this can't be in cloneSvgNode either as setSvgEl is used in preview but not here
+                const s = await import(/* webpackChunkName: "panelPreviewMTR" */ './mtr-helper')
+                    .then(async ({ getBase64FontFace }): Promise<HTMLStyleElement> => {
+                        const s = document.createElement('style');
+                        try {
+                            const uris = await getBase64FontFace(elem);
+                            s.textContent = uris.join('\n');
+                        } catch (err) {
+                            alert('Failed to load fonts. Fonts in the exported PNG will be missing.');
+                            console.error(err);
+                        } finally {
+                            await document.fonts.ready;
+                            return Promise.resolve(s);
+                        }
+                    }
+                );
+                elem.prepend(s);
             }
-            props.onClose('close');
+
+            // append svg to the document so the bbox will be loaded correctly
+            // (but not for gzmtr and have no idea why)
+            document.body.appendChild(elem);
+
+            const filename = `rmg.${stnId}.${stn_list[stnId].name[0]}.${stn_list[stnId].name[1]}`.replaceAll(' ', '_');
+            if (format === 'png') {
+                const data = await test(elem, scale);
+
+                if (stn_list_keys.length > 1) {
+                    // batch download and split base64 for this
+                    // https://stackoverflow.com/questions/31305485/export-resized-image-in-canvas-to-new-jszip-package
+                    zip.file(`${filename}.png`, data.split('base64,')[1], { base64: true });
+                } else {
+                    saveAs(data, `${filename}.png`);
+                }
+            } else if (format === 'svg') {
+                elem.removeAttribute('height');
+                const data = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(elem.outerHTML)));
+
+                if (stn_list_keys.length > 1) {
+                    zip.file(`${filename}.svg`, data.split('base64,')[1], { base64: true });
+                } else {
+                    saveAs(data, `${filename}.svg`);
+                }
+            }
+
+            // don't forget to release it after use
+            document.body.removeChild(elem);
         }
+
+        // generate the zip for batch download
+        if (stn_list_keys.length > 1) {
+            const zipData = await zip.generateAsync({ type: 'blob' });
+            const filename = `rmg.${line_name[0]}.${line_name[1]}.zip`.replaceAll(' ', '_');
+            saveAs(URL.createObjectURL(zipData), filename);
+        }
+
+        // revert to original station
+        await dispatch(setCurrentStation(currentStationIndex));
+    };
+
+    const handleClose = (action: 'close' | 'downloadCurrentStation' | 'downloadAllStation') => () => {
+        if (action === 'downloadCurrentStation') {
+            const stn_list_keys = [currentStationIndex];
+            downloadSvg(stn_list_keys);
+        } else if (action === 'downloadAllStation') {
+            const stn_list_keys = Object.keys(stn_list)
+                .filter(stnId => !['linestart', 'lineend'].includes(stnId));
+            downloadSvg(stn_list_keys);
+        }
+
+        props.onClose('close');
     };
 
     return (
@@ -285,20 +379,30 @@ export default function PreviewDialog(props: Props) {
                             <TermsDialog open={isTermsDialogOpen} onClose={() => setIsTermsDialogOpen(false)} />
                         </ListItem>
                     </DialogContent>
-                    <DialogActions>
-                        <Button variant="outlined" onClick={handleClose('close')} color="primary" autoFocus>
-                            {t('dialog.cancel')}
-                        </Button>
-                        <Button
-                            variant="contained"
-                            onClick={handleClose('download')}
-                            color="primary"
-                            disabled={!isLoaded || !isAccept}
-                        >
-                            {t('file.preview.download')}
-                        </Button>
-                    </DialogActions>
                 </div>
+            </div>
+            <div className={classes.contentAction}>
+                <DialogActions>
+                    <Button
+                        variant="contained"
+                        onClick={handleClose('downloadCurrentStation')}
+                        color="primary"
+                        disabled={!isLoaded || !isAccept}
+                    >
+                        {t('file.preview.downloadCurrentStation')}
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={handleClose('downloadAllStation')}
+                        color="primary"
+                        disabled={!isLoaded || !isAccept || rmgStyle === RmgStyle.GZMTR}
+                    >
+                        {t('file.preview.downloadAllStations')}
+                    </Button>
+                    <Button variant="outlined" onClick={handleClose('close')} color="primary" autoFocus>
+                        {t('dialog.cancel')}
+                    </Button>
+                </DialogActions>
             </div>
         </Dialog>
     );
