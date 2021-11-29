@@ -437,10 +437,10 @@ const TermsDialog = (props: { open: boolean; onClose: () => void }) => {
                             <Typography
                                 component="a"
                                 color="primary"
-                                href="https://www.google.com/get/noto/help/cjk/"
+                                href="https://github.com/ButTaiwan/genyo-font"
                                 target="_blank"
                             >
-                                Google Inc.
+                                ButTaiwan
                             </Typography>{' '}
                             while all others fonts are rendered from local files. You shall grant appropriate permit or
                             license from the manufacturers before using the downloaded image for commercial purposes.
@@ -451,7 +451,7 @@ const TermsDialog = (props: { open: boolean; onClose: () => void }) => {
                     </Typography>
                     <Typography component="p">本條款及細則暫只提供英文版，敬請原諒。</Typography>
                     <Typography component="p" variant="body2">
-                        Last modified: 6 Apr 2020, 12:39 UTC
+                        Last modified: 30 Nov 2021, 18:30 UTC
                     </Typography>
                 </DialogContent>
                 <DialogActions>
