@@ -19,25 +19,13 @@ const matchCssRuleByFontFace = (rules: CSSFontFaceRule[], font: FontFace): CSSFo
     });
 };
 
-const getDistinctCssRules = (rules: (CSSFontFaceRule | undefined)[]): CSSFontFaceRule[] => {
-    return rules.reduce<CSSFontFaceRule[]>((acc, cur) => {
-        if (cur) {
-            const existence = acc.find(rule => {
-                const ruleStyle = rule.style as any;
-                const curStyle = cur.style as any;
-                return ruleStyle.fontFamily === curStyle.fontFamily && ruleStyle.unicodeRange === curStyle.unicodeRange;
-            });
-            return existence ? acc : acc.concat(cur);
-        } else {
-            return acc;
-        }
-    }, []);
-};
-
 export const getBase64FontFace = async (svgEl: SVGSVGElement): Promise<string[]> => {
     const uniqueCharacters = Array.from(
         new Set(
-            [...svgEl.querySelectorAll<SVGElement>('.rmg-name__zh')]
+            [
+                ...svgEl.querySelectorAll<SVGElement>('.rmg-name__zh'),
+                ...svgEl.querySelectorAll<SVGElement>('.rmg-name__en'),
+            ]
                 .map(el => el.innerHTML)
                 .join('')
                 .replace(/[\s]/g, '')
@@ -49,12 +37,32 @@ export const getBase64FontFace = async (svgEl: SVGSVGElement): Promise<string[]>
         (document.querySelector<HTMLLinkElement>('link#css_share')!.sheet!.cssRules[0] as CSSImportRule).styleSheet
             .cssRules
     ) as CSSFontFaceRule[];
+    const distinctCssRules = fontFaceList.reduce<CSSFontFaceRule[]>((acc, cur) => {
+        const matchedRule = matchCssRuleByFontFace(cssRules, cur);
+        if (matchedRule) {
+            const existence = acc.find(rule => {
+                const ruleStyle = rule.style as any;
+                const matchedStyle = matchedRule.style as any;
+                return (
+                    ruleStyle.fontFamily === matchedStyle.fontFamily &&
+                    ruleStyle.unicodeRange === matchedStyle.unicodeRange
+                );
+            });
+            return existence ? acc : acc.concat(matchedRule);
+        } else {
+            return acc;
+        }
+    }, []);
 
     return await Promise.all(
-        getDistinctCssRules(fontFaceList.map(font => matchCssRuleByFontFace(cssRules, font))).map(async cssRule => {
+        distinctCssRules.map(async cssRule => {
             try {
-                const url =
-                    process.env.PUBLIC_URL + '/styles/' + (cssRule.style as any).src.match(/^url\("([\S*]+)"\)/)?.[1];
+                const ruleStyleSrc = (cssRule.style as any).src;
+                const isSafari = navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome');
+                const url = isSafari
+                    ? ruleStyleSrc.replace(/^url\(([\S]+)\).*$/, '$1')
+                    : process.env.PUBLIC_URL + '/styles/' + ruleStyleSrc.match(/^url\("([\S*]+)"\)/)?.[1];
+
                 const fontResp = await fetch(url);
                 const fontDataUri = await readBlobAsDataURL(await fontResp.blob());
                 return cssRule.cssText.replace(/src:[ \w('",\-:/.)]+;/g, `src: url('${fontDataUri}'); `);

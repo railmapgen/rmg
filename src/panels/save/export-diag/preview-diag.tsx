@@ -214,6 +214,14 @@ export default function PreviewDialog(props: Props) {
             const filename = `rmg.${stnId}.${stn_list[stnId].name[0]}.${stn_list[stnId].name[1]}`.replaceAll(' ', '_');
             if (format === 'png') {
                 const data = await test(elem, scale);
+                if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')){
+                    await new Promise<void>(resolve => {
+                        setTimeout(() => {
+                            console.log('Sleep 1 second for Safari');
+                            resolve();
+                        }, 1000);
+                    });
+                }
 
                 if (stn_list_keys.length > 1) {
                     // batch download and split base64 for this
