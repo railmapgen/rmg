@@ -1,7 +1,7 @@
-import React, { memo, SVGProps, useEffect, useRef } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import { Direction, Name } from '../../../constants/constants';
 
-interface StationNameProps extends SVGProps<SVGGElement> {
+interface StationNameProps {
     stnName: Name;
     onUpdate?: (bBox: SVGRect) => void;
     align?: Direction;
@@ -9,7 +9,7 @@ interface StationNameProps extends SVGProps<SVGGElement> {
 
 export default memo(
     function StationName(props: StationNameProps) {
-        const { stnName, onUpdate, align, ...others } = props;
+        const { stnName, onUpdate, align } = props;
 
         const nameEl = useRef<SVGGElement>(null);
 
@@ -31,7 +31,7 @@ export default memo(
         const getDy = (index: number) => 17 + 11 * index;
 
         return (
-            <g ref={nameEl} textAnchor={getTextAnchor(align)} {...others}>
+            <g ref={nameEl} textAnchor={getTextAnchor(align)}>
                 <text className="rmg-name__zh rmg-name__mtr--station">{stnName[0]}</text>
 
                 {stnName[1].split('\\').map((txt, i) => (

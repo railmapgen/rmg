@@ -88,10 +88,7 @@ const useStyles = makeStyles(() =>
                 fontFamily: [
                     'Myriad Pro',
                     'Vegur',
-                    'Noto Serif KR',
-                    'Noto Serif JP',
-                    'Noto Serif TC',
-                    'Noto Serif SC',
+                    'GenYoMin TW',
                     'HiraMinProN-W6',
                     'serif',
                 ].join(),
