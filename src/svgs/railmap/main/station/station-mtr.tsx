@@ -1,13 +1,13 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo } from 'react';
 import {
     Direction,
-    Facilities,
     InterchangeInfo,
     Name,
     ShortDirection,
     StationTransfer,
 } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
+import StationNameWrapper from '../../../mtr/station-name/station-name-wrapper';
 
 interface Props {
     stnId: string;
@@ -178,146 +178,25 @@ const StationMTR = (props: Props) => {
                     `scale(${stnInfo.children[0] === 'lineend' ? 1 : -1},${namePos ? -1 : 1})`
                 }
             />
-            <g transform={`translate(0,${branchDy})`}>
-                <StationNameGElement
-                    name={stnInfo.name}
-                    namePos={namePos}
-                    stnState={stnState}
-                    facility={stnInfo.facility}
-                    nameDX={stnIcon === 'osi22' ? (stnInfo.transfer.tick_direc === 'l' ? 3 : -3) : undefined}
-                />
-            </g>
+            <StationNameWrapper
+                stationName={stnInfo.name}
+                stationState={stnState}
+                facility={stnInfo.facility}
+                lower={namePos}
+                align={
+                    stnIcon === 'osi22'
+                        ? stnInfo.transfer.tick_direc === ShortDirection.left
+                            ? Direction.left
+                            : Direction.right
+                        : undefined
+                }
+                transform={`translate(0,${branchDy})`}
+            />
         </>
     );
 };
 
 export default StationMTR;
-
-interface StationNameGElementProps {
-    name: Name;
-    namePos: boolean;
-    stnState: -1 | 0 | 1;
-    nameDX?: number;
-    facility: Facilities;
-}
-
-const StationNameGElement = (props: StationNameGElementProps) => {
-    const { name, namePos, stnState, nameDX, facility } = props;
-    /**
-     * Top (in pixels) of station's Chinese name.
-     */
-    const NAME_ZH_TOP = -10.8125;
-    /**
-     * Height (in pixels) of station's Chinese name.
-     */
-    // const NAME_ZH_HEIGHT = 21.625;
-    /**
-     * Top (in pixels) of station's English name (1 line).
-     */
-    const NAME_EN_TOP = -8;
-    /**
-     * Height (in pixels) of station's English name (1 line).
-     */
-    const NAME_EN_HEIGHT = 13.21875;
-    /**
-     * Difference of `y`s of station's Chinese name and English name (1 line). (This number should used as the `dy` of the English `text` element after Chinese `text` elements. )
-     */
-    const NAME_ZH_EN_GAP = 17;
-    /**
-     * Height (in pixels) from the top of station's Chinese name to the bottom of English name (1 line).
-     */
-    const NAME_FULL_HEIGHT = -NAME_ZH_TOP + NAME_ZH_EN_GAP + NAME_EN_HEIGHT + NAME_EN_TOP;
-    /**
-     * Height (in pixels) of the gap between the centre of the line and the top of station's Chinese name.
-     */
-    const STN_NAME_LINE_GAP = 14;
-
-    const stnNameEl = useRef<SVGGElement | null>(null);
-    const [bBox, setBBox] = useState({ width: 0, x: 0 } as DOMRect);
-    useEffect(
-        () => {
-            document.fonts.ready.then(() => {
-                if (stnNameEl.current) {
-                    setBBox(stnNameEl.current.getBBox())
-                }
-            });
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [stnState, name.toString()]
-    );
-
-    const dy = namePos
-        ? STN_NAME_LINE_GAP - NAME_ZH_TOP
-        : -STN_NAME_LINE_GAP - NAME_ZH_TOP - NAME_FULL_HEIGHT - (name[1].split('\\').length - 1) * 11;
-
-    const textAnchor = !nameDX ? 'middle' : nameDX > 0 ? 'start' : 'end';
-    const osi22DY = !nameDX ? 0 : namePos ? 10 : -10;
-
-    const facilityX = !nameDX
-        ? -(bBox.width + 3) / 2
-        : nameDX > 0
-        ? nameDX + (NAME_FULL_HEIGHT + 2) / 2
-        : -(NAME_FULL_HEIGHT + 2) / 2 - bBox.width + nameDX;
-    const facilityNameDX =
-        facility === Facilities.none
-            ? 0
-            : !nameDX
-            ? (NAME_FULL_HEIGHT + 2 + 3) / 2
-            : nameDX < 0
-            ? 0
-            : NAME_FULL_HEIGHT + 2 + 3 + nameDX;
-
-    return (
-        <g
-            textAnchor={textAnchor}
-            transform={`translate(0,${dy + osi22DY})`}
-            className={`Name ${stnState === -1 ? 'Pass' : stnState === 0 ? 'Current' : 'Future'}`}
-        >
-            {stnState === 0 && (
-                <rect
-                    x={bBox.x - 3 + (facilityNameDX === 0 ? 0 : facilityNameDX - 3 - NAME_FULL_HEIGHT)}
-                    y={NAME_ZH_TOP - 1}
-                    width={bBox.width + 6 + (facilityNameDX === 0 ? 0 : 3 + NAME_FULL_HEIGHT)}
-                    height={NAME_FULL_HEIGHT + (name[1].split('\\').length - 1) * 11 + 2}
-                    fill="var(--rmg-black)"
-                />
-            )}
-            {facility !== Facilities.none && (
-                <use
-                    xlinkHref={'#' + facility}
-                    fill={stnState === -1 ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
-                    x={facilityX}
-                    y={NAME_ZH_TOP - 1 + (name[1].split('\\').length - 1) * 5.5}
-                />
-            )}
-            <g ref={stnNameEl} transform={`translate(${facilityNameDX},0)`}>
-                <StationName name={name} nameGap={NAME_ZH_EN_GAP} />
-            </g>
-        </g>
-    );
-};
-
-interface StationNameProps {
-    name: Name;
-    nameGap: number;
-}
-
-const StationName = React.memo(
-    (props: StationNameProps) => {
-        return (
-            <>
-                <text className="rmg-name__zh rmg-name__mtr--station">{props.name[0]}</text>
-                {props.name[1].split('\\').map((txt, i) => (
-                    <text key={i} className="rmg-name__en rmg-name__mtr--station" dy={props.nameGap + i * 11}>
-                        {txt}
-                    </text>
-                ))}
-            </>
-        );
-    },
-    (prevProps, nextProps) =>
-        prevProps.name.toString() === nextProps.name.toString() && prevProps.nameGap === nextProps.nameGap
-);
 
 interface IntTickGroupProps {
     variant: string;

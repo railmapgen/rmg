@@ -22,7 +22,7 @@ export default function SvgWrapper(props: SvgWrapperProps) {
         return () => {
             (document.getElementById('css_' + type) as HTMLLinkElement).href = '';
         };
-    }, []);
+    }, [style]);
 
     return (
         <svg

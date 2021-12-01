@@ -30,7 +30,7 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
     };
 
     const primaryNameEnRows = primaryName[1].split('\\').length;
-    const translates = {
+    const transforms = {
         g: {
             x: 0,
             y: flipped ? 17.5 : -20 - primaryNameEnRows * 14 * Math.cos(-45),
@@ -49,7 +49,7 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
         <g
             textAnchor={flipped ? 'end' : 'start'}
             fill={getFill(stationState)}
-            transform={`translate(${translates.g.x},${translates.g.y})rotate(-45)`}
+            transform={`translate(${transforms.g.x},${transforms.g.y})rotate(-45)`}
         >
             <StationName stnName={primaryName} onUpdate={setPrimaryBBox} />
 
@@ -58,14 +58,14 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
                     stnName={secondaryName}
                     onUpdate={setSecondaryBBox}
                     passed={stationState === StationState.PASSED}
-                    transform={`translate(${translates.StationSecondaryName.x},${translates.StationSecondaryName.y})`}
+                    transform={`translate(${transforms.StationSecondaryName.x},${transforms.StationSecondaryName.y})`}
                 />
             )}
 
             {express && (
                 <ExpressTag
                     passed={stationState === StationState.PASSED}
-                    transform={`translate(${translates.ExpressTag.x},${translates.ExpressTag.y})`}
+                    transform={`translate(${transforms.ExpressTag.x},${transforms.ExpressTag.y})`}
                 />
             )}
         </g>

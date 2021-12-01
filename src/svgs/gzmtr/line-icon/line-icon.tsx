@@ -48,10 +48,10 @@ export default memo(
                         >
                             {type === 1 ? (
                                 <>
-                                    <tspan fontSize={16} dy={0.7}>
+                                    <tspan fontSize={16} dy={0.7} className="rmg-name__zh">
                                         {commonPart}
                                     </tspan>
-                                    <tspan dy={-0.7}>{lineName[0].slice(commonPart.length)}</tspan>
+                                    <tspan dy={-0.7} className="rmg-name__zh">{lineName[0].slice(commonPart.length)}</tspan>
                                 </>
                             ) : (
                                 lineName[0]
@@ -102,6 +102,10 @@ const getYByType = (type: ReturnType<typeof getType>[0], field: 'zh' | 'en', sca
         case 2:
             return 0;
         case 3:
-            return (field === 'zh' ? 8 : 19.5) * (1 + 1 - scale);
+            if (field === 'zh') {
+                return 8 * (2 - scale);
+            } else {
+                return 19.5 + 19.5 * (19.5 / 8) * (1 - scale) - (scale === 1 ? 0 : 5.5);
+            }
     }
 };
