@@ -14,6 +14,7 @@ import { Provider } from 'react-redux';
 import { setCanvasScale, setCanvasToShow } from './redux/app/action';
 import { setFullParam } from './redux/param/action';
 import autoSaveScheduler from './util/auto-save-scheduler';
+import { unmountComponentAtNode } from 'react-dom';
 
 declare global {
     interface Window {
@@ -47,6 +48,12 @@ const renderApp = () => {
         // </React.StrictMode>,
         document.getElementById('root')
     );
+};
+
+export const reRenderApp = (param: any) => {
+    unmountComponentAtNode(document.getElementById('root') as any);
+    store.dispatch(setFullParam(param));
+    renderApp();
 };
 
 getRmgStorage()

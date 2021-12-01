@@ -1,7 +1,13 @@
 import React, { useMemo } from 'react';
 import StationGZMTR from './station/station-gzmtr';
 import { adjacencyList, criticalPathMethod, drawLine, getStnState } from '../methods/share';
-import { CanvasType, ColourHex, MonoColour, ShortDirection, StationDict } from '../../../constants/constants';
+import {
+    CanvasType,
+    ColourHex,
+    MonoColour,
+    ShortDirection,
+    StationDict,
+} from '../../../constants/constants';
 import { useAppSelector } from '../../../redux';
 import LineIcon from '../../gzmtr/line-icon/line-icon';
 
@@ -15,7 +21,6 @@ const getXShare = (stnId: string, adjMat: ReturnType<typeof adjacencyList>, bran
     } else {
         // must has 1 parent and 1 child only
         let branchOfStn = branches.filter(branch => branch.includes(stnId))[0];
-        if (!branchOfStn) return 0;
         let partSource = stnId;
         while (!criticalPath.nodes.includes(partSource)) {
             partSource = branchOfStn[branchOfStn.indexOf(partSource) - 1];
@@ -125,11 +130,7 @@ const MainGZMTR = () => {
                     return { ...acc, [cur]: 0 };
                 } else {
                     let branchOfStn = branches.slice(1).filter(branch => branch.includes(cur))[0];
-                    if (branchOfStn) {
-                        return { ...acc, [cur]: stationList[branchOfStn[0]].children.indexOf(branchOfStn[1]) ? -2 : 2 };
-                    } else {
-                        return { ...acc, [cur]: 0 };
-                    }
+                    return { ...acc, [cur]: stationList[branchOfStn[0]].children.indexOf(branchOfStn[1]) ? -2 : 2 };
                 }
             }, {} as { [stnId: string]: number });
         },

@@ -24,8 +24,8 @@ import { companies } from '../../../constants/company-config';
 import { LanguageCode, RMGParam, canvasConfig, AllCanvas } from '../../../constants/constants';
 import { selectCanvas } from '../../../redux/app/action';
 import { useAppSelector } from '../../../redux';
-import { setFullParam, setStyle } from '../../../redux/param/action';
 import { useHistory } from 'react-router-dom';
+import { reRenderApp } from '../../../index';
 
 interface TemplateDialogProps {
     open: boolean;
@@ -92,13 +92,11 @@ const NewDialog = (props: TemplateDialogProps) => {
             await window.rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
 
             history.push('/' + updatedParam.style);
-            dispatch(setStyle(updatedParam.style));
 
             // reset to AllCanvas if current canvas is not supported in the new style
-            const canvas = canvasConfig[updatedParam.style]
-                .some(c => c === canvasToShow) ? canvasToShow : AllCanvas;
+            const canvas = canvasConfig[updatedParam.style].some(c => c === canvasToShow) ? canvasToShow : AllCanvas;
             dispatch(selectCanvas(canvas));
-            dispatch(setFullParam(updatedParam));
+            reRenderApp(updatedParam);
         } catch (err) {
             console.error(err);
         }
