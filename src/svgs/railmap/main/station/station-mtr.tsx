@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
     Direction,
     Facilities,
@@ -8,6 +8,8 @@ import {
     StationTransfer,
 } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
+import StationName from '../../../mtr/station-name/station-name';
+import StationNameWrapper from '../../../mtr/station-name/station-name-wrapper';
 
 interface Props {
     stnId: string;
@@ -178,6 +180,7 @@ const StationMTR = (props: Props) => {
                     `scale(${stnInfo.children[0] === 'lineend' ? 1 : -1},${namePos ? -1 : 1})`
                 }
             />
+            <StationNameWrapper stationName={stnInfo.name} stationState={stnState} />
             <g transform={`translate(0,${branchDy})`}>
                 <StationNameGElement
                     name={stnInfo.name}
@@ -232,21 +235,13 @@ const StationNameGElement = (props: StationNameGElementProps) => {
      */
     const STN_NAME_LINE_GAP = 14;
 
-    const stnNameEl = useRef<SVGGElement | null>(null);
     const [bBox, setBBox] = useState({ width: 0, x: 0 } as DOMRect);
-    useEffect(
-        () => {
-            document.fonts.ready.then(() => setBBox(stnNameEl.current!.getBBox()));
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [stnState, name.toString()]
-    );
 
     const dy = namePos
         ? STN_NAME_LINE_GAP - NAME_ZH_TOP
         : -STN_NAME_LINE_GAP - NAME_ZH_TOP - NAME_FULL_HEIGHT - (name[1].split('\\').length - 1) * 11;
 
-    const textAnchor = !nameDX ? 'middle' : nameDX > 0 ? 'start' : 'end';
+    const align = !nameDX ? undefined : nameDX > 0 ? Direction.left : Direction.right;
     const osi22DY = !nameDX ? 0 : namePos ? 10 : -10;
 
     const facilityX = !nameDX
@@ -265,7 +260,6 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
     return (
         <g
-            textAnchor={textAnchor}
             transform={`translate(0,${dy + osi22DY})`}
             className={`Name ${stnState === -1 ? 'Pass' : stnState === 0 ? 'Current' : 'Future'}`}
         >
@@ -286,34 +280,11 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                     y={NAME_ZH_TOP - 1 + (name[1].split('\\').length - 1) * 5.5}
                 />
             )}
-            <g ref={stnNameEl} transform={`translate(${facilityNameDX},0)`}>
-                <StationName name={name} nameGap={NAME_ZH_EN_GAP} />
-            </g>
+
+            <StationName stnName={name} onUpdate={setBBox} transform={`translate(${facilityNameDX},0)`} align={align} />
         </g>
     );
 };
-
-interface StationNameProps {
-    name: Name;
-    nameGap: number;
-}
-
-const StationName = React.memo(
-    (props: StationNameProps) => {
-        return (
-            <>
-                <text className="rmg-name__zh rmg-name__mtr--station">{props.name[0]}</text>
-                {props.name[1].split('\\').map((txt, i) => (
-                    <text key={i} className="rmg-name__en rmg-name__mtr--station" dy={props.nameGap + i * 11}>
-                        {txt}
-                    </text>
-                ))}
-            </>
-        );
-    },
-    (prevProps, nextProps) =>
-        prevProps.name.toString() === nextProps.name.toString() && prevProps.nameGap === nextProps.nameGap
-);
 
 interface IntTickGroupProps {
     variant: string;
