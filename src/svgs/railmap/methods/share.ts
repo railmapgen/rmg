@@ -60,11 +60,11 @@ export const getXShareMTR = (stnId: string, adjMat: ReturnType<typeof adjacencyL
 
         let partSource = stnId;
         while (!criticalPath.nodes.includes(partSource)) {
-            partSource = branchOfStn[branchOfStn.indexOf(partSource) - 1];
+            partSource = branchOfStn?.[branchOfStn.indexOf(partSource) - 1];
         }
         let partSink = stnId;
         while (!criticalPath.nodes.includes(partSink)) {
-            partSink = branchOfStn[branchOfStn.indexOf(partSink) + 1];
+            partSink = branchOfStn?.[branchOfStn.indexOf(partSink) + 1];
         }
 
         let leftOpenJaw = partSource === 'linestart';

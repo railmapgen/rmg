@@ -236,7 +236,11 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     const [bBox, setBBox] = useState({ width: 0, x: 0 } as DOMRect);
     useEffect(
         () => {
-            document.fonts.ready.then(() => setBBox(stnNameEl.current!.getBBox()));
+            document.fonts.ready.then(() => {
+                if (stnNameEl.current) {
+                    setBBox(stnNameEl.current.getBBox())
+                }
+            });
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [stnState, name.toString()]

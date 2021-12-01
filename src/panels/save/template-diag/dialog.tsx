@@ -24,6 +24,8 @@ import { companies } from '../../../constants/company-config';
 import { LanguageCode, RMGParam, canvasConfig, AllCanvas } from '../../../constants/constants';
 import { selectCanvas } from '../../../redux/app/action';
 import { useAppSelector } from '../../../redux';
+import { setFullParam, setStyle } from '../../../redux/param/action';
+import { useHistory } from 'react-router-dom';
 // import { setFullParam } from '../../../redux/param/action';
 
 interface TemplateDialogProps {
@@ -72,6 +74,7 @@ const NewDialog = (props: TemplateDialogProps) => {
     const { t, i18n } = useTranslation();
     const classes = useStyles();
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const { canvasToShow } = useAppSelector(state => state.app);
 
@@ -89,14 +92,17 @@ const NewDialog = (props: TemplateDialogProps) => {
             const updatedParam = updateParam(module.default) as RMGParam;
             await window.rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
 
+            history.push('/' + updatedParam.style);
+            dispatch(setStyle(updatedParam.style));
+
             // reset to AllCanvas if current canvas is not supported in the new style
             const canvas = canvasConfig[updatedParam.style]
                 .some(c => c === canvasToShow) ? canvasToShow : AllCanvas;
             dispatch(selectCanvas(canvas));
 
             // TODO: electron will fail here, wait for #96
-            // dispatch(setFullParam(updatedParam));
-            window.location.assign(`./${updatedParam.style}`);
+            dispatch(setFullParam(updatedParam));
+            // window.location.assign(`./${updatedParam.style}`);
             // So after #96 is fixed, we first need to dispatch the param
             // and then <Link> to the module.default.style
         } catch (err) {
