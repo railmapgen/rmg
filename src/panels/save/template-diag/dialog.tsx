@@ -26,7 +26,6 @@ import { selectCanvas } from '../../../redux/app/action';
 import { useAppSelector } from '../../../redux';
 import { setFullParam, setStyle } from '../../../redux/param/action';
 import { useHistory } from 'react-router-dom';
-// import { setFullParam } from '../../../redux/param/action';
 
 interface TemplateDialogProps {
     open: boolean;
@@ -99,12 +98,7 @@ const NewDialog = (props: TemplateDialogProps) => {
             const canvas = canvasConfig[updatedParam.style]
                 .some(c => c === canvasToShow) ? canvasToShow : AllCanvas;
             dispatch(selectCanvas(canvas));
-
-            // TODO: electron will fail here, wait for #96
             dispatch(setFullParam(updatedParam));
-            // window.location.assign(`./${updatedParam.style}`);
-            // So after #96 is fixed, we first need to dispatch the param
-            // and then <Link> to the module.default.style
         } catch (err) {
             console.error(err);
         }
