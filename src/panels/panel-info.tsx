@@ -154,7 +154,7 @@ export default memo(function PanelInfo() {
                 </div>
                 <div className={classes.detailGrid}>
                     {[
-                        'GrassRabbit1410',
+                        'GrassRabbit\n1410',
                         'xiany114514',
                         'linchen1965',
                         'Andy1782010',
