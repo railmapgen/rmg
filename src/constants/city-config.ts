@@ -45,6 +45,7 @@ export enum CityCode {
     Tokyo = 'tokyo',
     Toronto = 'toronto',
     TyneAndWear = 'tyneandwear',
+    Wuxi = 'wuxi',
     Xiamen = 'xiamen',
     Xian = 'xian',
     Other = 'other',
@@ -393,15 +394,6 @@ export const cityList: CityEntry[] = [
         },
     },
     {
-        id: CityCode.Xiamen,
-        country: 'CN',
-        name: {
-            en: 'Xiamen',
-            'zh-Hans': '厦门',
-            'zh-Hant': '廈門',
-        },
-    },
-    {
         id: CityCode.Singapore,
         country: 'SG',
         name: {
@@ -471,6 +463,25 @@ export const cityList: CityEntry[] = [
             'zh-Hans': '泰恩-威尔',
             'zh-HK': '泰威',
             'zh-TW': '泰恩-威爾',
+        },
+    },
+    {
+        id: CityCode.Wuxi,
+        country: 'CN',
+        name:
+        {
+             en: 'Wuxi',
+             'zh-Hans': '无锡',
+             'zh-Hant': '無錫',
+        },
+    },
+    {
+        id: CityCode.Xiamen,
+        country: 'CN',
+        name: {
+            en: 'Xiamen',
+            'zh-Hans': '厦门',
+            'zh-Hant': '廈門',
         },
     },
     {
