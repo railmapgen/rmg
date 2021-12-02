@@ -28,7 +28,7 @@ const useStyles = makeStyles(() =>
             alignItems: 'center',
             width: '500px',
             margin: '8px 0',
-            flexWrap: "wrap",
+            flexWrap: 'wrap',
             flexDirection: 'row',
         },
         logo: {
@@ -53,13 +53,13 @@ const useStyles = makeStyles(() =>
         detailColumn: {
             display: 'flex',
             flexDirection: 'row',
-            flexWrap: "wrap",
+            flexWrap: 'wrap',
         },
         detailRow: {
             display: 'flex',
             alignItems: 'center',
             flexDirection: 'row',
-            flexWrap: "wrap",
+            flexWrap: 'wrap',
             marginLeft: 20,
         },
         coreContributorAvatar: {
@@ -153,8 +153,15 @@ export default memo(function PanelInfo() {
                     </Typography>
                 </div>
                 <div className={classes.detailGrid}>
-                    {['xiany114514', 'linchen1965', 'Andy1782010', 'Thomastzc', 'AnDanJune\nUnderline', 'Tianxiu11111']
-                    .map(name => (
+                    {[
+                        'GrassRabbit1410',
+                        'xiany114514',
+                        'linchen1965',
+                        'Andy1782010',
+                        'Thomastzc',
+                        'AnDanJune\nUnderline',
+                        'Tianxiu11111',
+                    ].map(name => (
                         <div className={classes.detailColumn}>
                             <CardMedia
                                 className={classes.colorAndLineContributorAvatar}
