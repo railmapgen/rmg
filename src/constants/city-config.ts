@@ -16,6 +16,7 @@ export enum CityCode {
     Glasgow = 'glasgow',
     Guangzhou = 'guangzhou',
     Hangzhou = 'hangzhou',
+    Harbin = 'harbin',
     HongKong = 'hongkong',
     KlangValley = 'klangvalley',
     Kansai = 'kansai',
@@ -200,6 +201,15 @@ export const cityList: CityEntry[] = [
         name: {
             en: 'Hangzhou',
             zh: '杭州',
+        },
+    },
+    {
+        id: CityCode.Harbin,
+        country: 'CN',
+        name: {
+            en: 'Harbin',
+            'zh-Hans': '哈尔滨',
+            'zh-Hant': '哈爾濱',
         },
     },
     {
