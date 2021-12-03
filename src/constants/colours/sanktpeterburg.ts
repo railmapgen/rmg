@@ -2,8 +2,8 @@ import { PaletteEntry } from '../constants';
 
 /**
  * Wikipedia: http://en.wikipedia.org/wiki/Saint_Petersburg_Metro
- * Offical website: http://www.metro.spb.ru/
-*/
+ * Official website: http://www.metro.spb.ru/
+ */
 const SanktPeterburg: PaletteEntry[] = [
     {
         id: 'spg1',

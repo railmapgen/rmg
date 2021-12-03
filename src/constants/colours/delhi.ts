@@ -2,8 +2,8 @@ import { PaletteEntry } from '../constants';
 
 /**
  * Wikipedia: https://en.wikipedia.org/wiki/Delhi_Metro
- * Offical website: http://www.delhimetrorail.com/
-*/
+ * Official website: http://www.delhimetrorail.com/
+ */
 const Delhi: PaletteEntry[] = [
     {
         id: 'dl1',

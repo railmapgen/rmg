@@ -2,8 +2,8 @@ import { PaletteEntry, MonoColour } from '../constants';
 
 /**
  * Wikipedia: https://en.wikipedia.org/wiki/Santiago_Metro
- * Offical website: https://www.metro.cl/
-*/
+ * Official website: https://www.metro.cl/
+ */
 const Santiago: PaletteEntry[] = [
     {
         id: 'stg1',

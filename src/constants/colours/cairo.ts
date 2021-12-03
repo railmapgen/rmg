@@ -2,8 +2,8 @@ import { PaletteEntry } from '../constants';
 
 /**
  * Wikipedia: https://en.wikipedia.org/wiki/Cairo_Metro
- * Offical website: https://cairometro.gov.eg/ar
-*/
+ * Official website: https://cairometro.gov.eg/ar
+ */
 const Cairo: PaletteEntry[] = [
     {
         id: 'cr1',

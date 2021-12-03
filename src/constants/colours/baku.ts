@@ -3,7 +3,7 @@ import { LanguageCode, PaletteEntry } from '../constants';
 /**
  * Wikipedia: https://en.wikipedia.org/wiki/Baku_Metro
  * Official website: http://www.metro.gov.az/en/about/downloads
-*/
+ */
 const Baku: PaletteEntry[] = [
     {
         id: 'red',

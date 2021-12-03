@@ -2,8 +2,8 @@ import { PaletteEntry } from '../constants';
 
 /**
  * Wikipedia: https://en.wikipedia.org/wiki/Klang_Valley_Integrated_Transit_System
- * Offical website: https://myrapid.com.my/ms/
-*/
+ * Official website: https://myrapid.com.my/ms/
+ */
 const KlangValley: PaletteEntry[] = [
     {
         id: 'kl1',

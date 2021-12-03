@@ -3,7 +3,7 @@ import { PaletteEntry } from '../constants';
 /**
  * Wikipedia: https://en.wikipedia.org/wiki/Wuxi_Metro
  * Official website: http://www.wxmetro.net/
-*/
+ */
 const Wuxi: PaletteEntry[] = [
     {
         id: 'wx1',
