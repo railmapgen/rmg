@@ -6,7 +6,7 @@ import App from './App';
 import { updateParam } from './utils';
 import * as serviceWorker from './serviceWorker';
 
-import { AllCanvas, CanvasType } from './constants/constants';
+import { AllCanvas, CanvasType, RMGParam } from './constants/constants';
 import StorageService from './util/storage/storageService';
 import getRmgStorage from './util/storage';
 import store from './redux';
@@ -14,7 +14,6 @@ import { Provider } from 'react-redux';
 import { setCanvasScale, setCanvasToShow } from './redux/app/action';
 import { setFullParam } from './redux/param/action';
 import autoSaveScheduler from './util/auto-save-scheduler';
-import { unmountComponentAtNode } from 'react-dom';
 
 declare global {
     interface Window {
@@ -50,8 +49,9 @@ const renderApp = () => {
     );
 };
 
-export const reRenderApp = (param: any) => {
-    unmountComponentAtNode(document.getElementById('root') as any);
+export const reRenderApp = (param: RMGParam) => {
+    ReactDOM.unmountComponentAtNode(document.getElementById('root')!);
+    window.history.pushState({}, '', process.env.PUBLIC_URL + '/' + param.style);
     store.dispatch(setFullParam(param));
     renderApp();
 };
