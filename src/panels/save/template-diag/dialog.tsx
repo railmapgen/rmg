@@ -24,7 +24,7 @@ import { companies } from '../../../constants/company-config';
 import { LanguageCode, RMGParam, canvasConfig, AllCanvas } from '../../../constants/constants';
 import { selectCanvas } from '../../../redux/app/action';
 import { useAppSelector } from '../../../redux';
-// import { setFullParam } from '../../../redux/param/action';
+import { reRenderApp } from '../../../index';
 
 interface TemplateDialogProps {
     open: boolean;
@@ -90,15 +90,9 @@ const NewDialog = (props: TemplateDialogProps) => {
             await window.rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
 
             // reset to AllCanvas if current canvas is not supported in the new style
-            const canvas = canvasConfig[updatedParam.style]
-                .some(c => c === canvasToShow) ? canvasToShow : AllCanvas;
+            const canvas = canvasConfig[updatedParam.style].some(c => c === canvasToShow) ? canvasToShow : AllCanvas;
             dispatch(selectCanvas(canvas));
-
-            // TODO: electron will fail here, wait for #96
-            // dispatch(setFullParam(updatedParam));
-            window.location.assign(`./${updatedParam.style}`);
-            // So after #96 is fixed, we first need to dispatch the param
-            // and then <Link> to the module.default.style
+            reRenderApp(updatedParam);
         } catch (err) {
             console.error(err);
         }

@@ -22,7 +22,7 @@ const useStyles = makeStyles(() =>
                 border: '1px solid black',
             },
         },
-    }),
+    })
 );
 
 export default function SvgRouter() {
@@ -41,7 +41,7 @@ export default function SvgRouter() {
             dispatch(setStyle(nextStyle));
         } else {
             // push route to match param's style
-            history.push('/' + rmgStyle)
+            history.push('/' + rmgStyle);
         }
     }
 
@@ -50,14 +50,15 @@ export default function SvgRouter() {
             process.env.PUBLIC_URL + `/styles/share_${rmgStyle}.css`;
     }, [rmgStyle]);
 
-    const filteredCanvas = (Object.keys(canvasList[rmgStyle]) as CanvasType[])
-        .filter(canvas => (canvasToShow === 'all' ? true : canvasToShow === canvas));
+    const filteredCanvas = (Object.keys(canvasList[rmgStyle]) as CanvasType[]).filter(canvas =>
+        canvasToShow === 'all' ? true : canvasToShow === canvas
+    );
 
     return (
         <div className={classes.root}>
             {filteredCanvas.map(canvas => (
                 <SvgWrapper
-                    key={canvas}
+                    key={canvas + rmgStyle}
                     type={canvas}
                     style={rmgStyle}
                     svgWidth={svgWidths[canvas]}
@@ -81,7 +82,7 @@ const DestinationMTR = lazy(() => import(/* webpackChunkName: "destinationMTR" *
 const RailMapMTR = lazy(() => import(/* webpackChunkName: "railmapMTR" */ './railmap/railmap-mtr'));
 
 const DestinationSHMetro = lazy(
-    () => import(/* webpackChunkName: "destinationSHMetro" */ './destination/destination-shmetro'),
+    () => import(/* webpackChunkName: "destinationSHMetro" */ './destination/destination-shmetro')
 );
 const RunInSHMetro = lazy(() => import(/* webpackChunkName: "runinSHMetro" */ './runin/runin-shmetro'));
 const RailMapSHMetro = lazy(() => import(/* webpackChunkName: "railmapSHMetro" */ './railmap/railmap-shmetro'));

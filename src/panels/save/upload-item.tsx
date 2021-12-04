@@ -13,9 +13,11 @@ import {
     Button,
 } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
-import { RMGParam, RmgStyle, canvasConfig, AllCanvas } from '../../constants/constants';
+import { RMGParam, canvasConfig, AllCanvas } from '../../constants/constants';
 import { useAppSelector } from '../../redux';
 import { selectCanvas } from '../../redux/app/action';
+import { updateParam } from '../../utils';
+import { reRenderApp } from '../../index';
 
 export default function UploadLi() {
     const { t } = useTranslation();
@@ -49,17 +51,15 @@ export default function UploadLi() {
         }
         if (action === 'accept') {
             try {
-                await window.rmgStorage.writeFile('rmgParam', JSON.stringify(importedParam));
+                const updatedParam = updateParam(importedParam) as RMGParam;
+                await window.rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
 
                 // reset to AllCanvas if current canvas is not supported in the new style
-                const canvas = canvasConfig[importedParam.style]
-                    .some(c => c === canvasToShow) ? canvasToShow : AllCanvas;
+                const canvas = canvasConfig[importedParam.style].some(c => c === canvasToShow)
+                    ? canvasToShow
+                    : AllCanvas;
                 dispatch(selectCanvas(canvas));
-    
-                // TODO: electron will fail here, wait for #96
-                window.location.assign(`./${importedParam.style || RmgStyle.MTR}`);
-                // So after #96 is fixed, we first need to dispatch the param
-                // and then <Link> to the importedParam.style
+                reRenderApp(updatedParam);
             } catch (err) {
                 console.error(err);
             }

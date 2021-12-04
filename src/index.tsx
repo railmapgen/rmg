@@ -6,7 +6,7 @@ import App from './App';
 import { updateParam } from './utils';
 import * as serviceWorker from './serviceWorker';
 
-import { AllCanvas, CanvasType } from './constants/constants';
+import { AllCanvas, CanvasType, RMGParam } from './constants/constants';
 import StorageService from './util/storage/storageService';
 import getRmgStorage from './util/storage';
 import store from './redux';
@@ -47,6 +47,13 @@ const renderApp = () => {
         // </React.StrictMode>,
         document.getElementById('root')
     );
+};
+
+export const reRenderApp = (param: RMGParam) => {
+    ReactDOM.unmountComponentAtNode(document.getElementById('root')!);
+    window.history.pushState({}, '', process.env.PUBLIC_URL + '/' + param.style);
+    store.dispatch(setFullParam(param));
+    renderApp();
 };
 
 getRmgStorage()
