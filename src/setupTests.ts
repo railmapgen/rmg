@@ -1,5 +1,5 @@
 import { configure, ReactWrapper } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import thunk, { ThunkDispatch } from 'redux-thunk';
 import { RootState } from './redux';
 import { AnyAction } from 'redux';

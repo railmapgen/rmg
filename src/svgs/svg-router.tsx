@@ -5,7 +5,7 @@ import { useAppSelector } from '../redux';
 import SvgWrapper from './svg-wrapper';
 import { useDispatch } from 'react-redux';
 import { setStyle } from '../redux/param/action';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -28,7 +28,7 @@ const useStyles = makeStyles(() =>
 export default function SvgRouter() {
     const classes = useStyles();
     const location = useLocation();
-    const history = useHistory();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const { canvasToShow, canvasScale } = useAppSelector(state => state.app);
@@ -41,7 +41,7 @@ export default function SvgRouter() {
             dispatch(setStyle(nextStyle));
         } else {
             // push route to match param's style
-            history.push('/' + rmgStyle);
+            navigate('/' + rmgStyle);
         }
     }
 
