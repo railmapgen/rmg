@@ -54,7 +54,7 @@ export enum CityCode {
     Other = 'other',
 }
 
-interface CityEntry {
+export interface CityEntry {
     id: CityCode;
     /**
      * ISO 3166-1 alpha-2 country code. (For cities in Britain, append BS 6879 subdivision code. )

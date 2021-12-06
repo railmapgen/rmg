@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './index.css';
-import './i18n';
+import i18n from './i18n/config';
 import App from './App';
 import { updateParam } from './utils';
 import * as serviceWorker from './serviceWorker';
@@ -106,6 +106,9 @@ getRmgStorage()
         }
 
         window.rmgStore = store;
+    })
+    .then(() => {
+        let config = i18n;
     })
     .then(() => {
         renderApp();

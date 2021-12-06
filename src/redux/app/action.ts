@@ -1,4 +1,4 @@
-import { AllCanvas, CanvasType, LoadingStatus } from '../../constants/constants';
+import { AllCanvas, CanvasType, LoadingStatus, SidePanelMode } from '../../constants/constants';
 import { Dispatch } from 'redux';
 import { RootState } from '../index';
 
@@ -6,6 +6,8 @@ export const SET_CANVAS_SCALE = 'SET_CANVAS_SCALE';
 export const SET_CANVAS_SCALE_STATUS = 'SET_CANVAS_SCALE_STATUS';
 export const SET_CANVAS_TO_SHOW = 'SET_CANVAS_TO_SHOW';
 export const SET_CANVAS_TO_SHOW_STATUS = 'SET_CANVAS_TO_SHOW_STATUS';
+export const SET_SIDE_PANEL_MODE = 'SET_SIDE_PANEL_MODE';
+export const SET_SELECTED_STATION = 'SET_SELECTED_STATION';
 
 export interface setCanvasScaleAction {
     type: typeof SET_CANVAS_SCALE;
@@ -25,6 +27,16 @@ export interface setCanvasToShowAction {
 export interface setCanvasToShowStatusAction {
     type: typeof SET_CANVAS_TO_SHOW_STATUS;
     canvasToShowStatus: LoadingStatus;
+}
+
+export interface setSidePanelModeAction {
+    type: typeof SET_SIDE_PANEL_MODE;
+    sidePanelMode: SidePanelMode;
+}
+
+export interface setSelectedStationAction {
+    type: typeof SET_SELECTED_STATION;
+    selectedStation: string;
 }
 
 export const setCanvasScale = (canvasScale: number) => {
@@ -86,4 +98,12 @@ export const selectCanvas = (canvas: CanvasType | typeof AllCanvas) => {
             dispatch(setCanvasToShowStatus(LoadingStatus.failed));
         }
     };
+};
+
+export const setSidePanelMode = (sidePanelMode: SidePanelMode): setSidePanelModeAction => {
+    return { type: SET_SIDE_PANEL_MODE, sidePanelMode };
+};
+
+export const setSelectedStation = (selectedStation: string): setSelectedStationAction => {
+    return { type: SET_SELECTED_STATION, selectedStation };
 };

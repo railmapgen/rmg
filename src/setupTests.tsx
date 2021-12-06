@@ -6,6 +6,11 @@ import { AnyAction } from 'redux';
 import createMockStore from 'redux-mock-store';
 import { BranchStyle, StationDict } from './constants/constants';
 import { act } from 'react-dom/test-utils';
+import i18n from './i18n/config';
+import { I18nextProvider } from 'react-i18next';
+import React, { ReactNode } from 'react';
+import { Provider } from 'react-redux';
+import rootReducer from './redux/index';
 
 configure({ adapter: new Adapter() });
 
@@ -66,4 +71,18 @@ export const waitForComponentToPaint = async (wrapper: ReactWrapper) => {
         await new Promise(resolve => setInterval(resolve, 0));
         wrapper.update();
     });
+};
+
+interface TestingProviderProps {
+    children?: ReactNode;
+}
+
+export const TestingProvider = (props: TestingProviderProps) => {
+    const { children } = props;
+
+    return (
+        <I18nextProvider i18n={i18n}>
+            <Provider store={createMockAppStore({ ...rootReducer.getState() })}>{children}</Provider>
+        </I18nextProvider>
+    );
 };

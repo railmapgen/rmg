@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import React, { StrictMode, useEffect } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AppAppBar from './app-appbar';
 import Panels from './panels';
 import { createTheme, ThemeProvider, useMediaQuery, LinearProgress } from '@material-ui/core';
 import { useAppSelector } from './redux';
 import SvgRouter from './svgs/svg-router';
+import AppRoot from './components/app-root';
+import { ChakraProvider } from '@chakra-ui/react';
+import chakraTheme from './theme/theme';
 
 const darkTheme = createTheme({
     palette: {
@@ -71,12 +74,29 @@ export default function App() {
 
     return (
         <BrowserRouter basename={process.env.PUBLIC_URL}>
-            <ThemeProvider theme={theme}>
-                <React.Suspense fallback={<LinearProgress />}>
-                    <AppAppBar />
-                </React.Suspense>
-                <AppBody />
-            </ThemeProvider>
+            <Routes>
+                <Route
+                    path="/v5/*"
+                    element={
+                        <ChakraProvider theme={chakraTheme}>
+                            <StrictMode>
+                                <AppRoot />
+                            </StrictMode>
+                        </ChakraProvider>
+                    }
+                />
+                <Route
+                    path="*"
+                    element={
+                        <ThemeProvider theme={theme}>
+                            <React.Suspense fallback={<LinearProgress />}>
+                                <AppAppBar />
+                            </React.Suspense>
+                            <AppBody />
+                        </ThemeProvider>
+                    }
+                />
+            </Routes>
         </BrowserRouter>
     );
 }

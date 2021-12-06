@@ -34,14 +34,14 @@ export default function SvgRouter() {
     const { canvasToShow, canvasScale } = useAppSelector(state => state.app);
     const { svgWidth: svgWidths, svg_height: svgHeight, style: rmgStyle, theme } = useAppSelector(state => state.param);
 
-    if (location.pathname !== '/' + rmgStyle) {
-        const nextStyle = location.pathname.slice(1) as RmgStyle;
+    if (location.pathname !== '/' + rmgStyle && location.pathname !== '/v5/' + rmgStyle) {
+        const nextStyle = location.pathname.split('/').slice(-1)[0] as RmgStyle;
         if (Object.values(RmgStyle).includes(nextStyle)) {
             // set style in param
             dispatch(setStyle(nextStyle));
         } else {
             // push route to match param's style
-            navigate('/' + rmgStyle);
+            navigate(rmgStyle);
         }
     }
 

@@ -582,6 +582,14 @@ export const updateStationFacility = (stationId: string, facility: Facilities) =
     };
 };
 
+export const updateStationServices = (stationId: string, services: Services[]) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+
+        dispatch(setStation(stationId, { ...stationInfo, services }));
+    };
+};
+
 export const addStationService = (stationId: string, service: Services) => {
     return (dispatch: AppDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];

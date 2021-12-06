@@ -1,0 +1,64 @@
+{
+    "WindowHeader": {
+        "heading": "Rail Map Generator"
+    },
+
+    "CanvasButtonGroup": {
+        "label": "Canvas to show",
+        "all": "All",
+        "destination": "Destination",
+        "runin": "Running-in",
+        "railmap": "Rail map",
+        "indoor": "Indoor"
+    },
+
+    "HeaderActions": {
+        "upload": "Upload",
+        "editStyle": "Edit style"
+    },
+
+    "DownloadActions": {
+        "downloads": "Downloads",
+        "configFile": "Configuration file",
+        "images": "Images"
+    },
+
+    "StationDataTable": {
+        "zhName": "Chinese name",
+        "enName": "English name",
+        "interchange": "Interchange",
+        "actions": "Actions"
+    },
+
+    "StyleSidePanel": {
+        "canvasHeight": "Canvas height",
+        "destinationWidth": "Destination width",
+        "runinWidth": "Running-in width",
+        "railmapWidth": "Rail map width",
+        "indoorWidth": "Indoor width",
+        "verticalPosition": "Vertical position",
+        "branchSpacing": "Branch spacing",
+        "padding": "Rail map padding"
+    },
+
+    "ColourModal": {
+        "title": "Select a colour",
+        "example": "Example",
+        "palette": "From palette",
+        "custom": "Customise",
+        "city": "City theme",
+        "line": "Line theme",
+        "bg": "Background colour",
+        "fg": "Foreground colour",
+        "white":"White",
+        "black": "Black",
+        "submit": "Submit"
+    },
+
+    "InterchangeCard": {
+        "noInterchanges": "No interchanges",
+        "colour": "Colour",
+        "zhName": "Chinese name",
+        "enName": "English name"
+    }
+}

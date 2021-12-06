@@ -28,6 +28,12 @@ export const canvasConfig: { [s in RmgStyle]: CanvasType[] } = {
     [RmgStyle.SHMetro]: [CanvasType.Destination, CanvasType.RunIn, CanvasType.RailMap, CanvasType.Indoor],
 };
 
+export enum SidePanelMode {
+    CLOSE = 'CLOSE',
+    STATION = 'STATION',
+    STYLE = 'STYLE'
+}
+
 /**
  * @property {string} 0 - Chinese characters
  * @property {string} 1 - Latin characters
