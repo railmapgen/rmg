@@ -9,9 +9,9 @@ const Wuxi: PaletteEntry[] = [
         id: 'wx1',
         name:
         {
-             en: 'Line 1',
-             'zh-Hans': '1号线',
-             'zh-Hant': '1號線',
+            en: 'Line 1',
+            'zh-Hans': '1号线',
+            'zh-Hant': '1號線',
         },
         colour: '#EE2737',
     },
@@ -19,9 +19,9 @@ const Wuxi: PaletteEntry[] = [
         id: 'wx2',
         name:
         {
-             en: 'Line 2',
-             'zh-Hans': '2号线',
-             'zh-Hant': '2號線',
+            en: 'Line 2',
+            'zh-Hans': '2号线',
+            'zh-Hant': '2號線',
         },
         colour: '#00B140',
     },
@@ -29,9 +29,9 @@ const Wuxi: PaletteEntry[] = [
         id: 'wx3',
         name:
         {
-             en: 'Line 3',
-             'zh-Hans': '3号线',
-             'zh-Hant': '3號線',
+            en: 'Line 3',
+            'zh-Hans': '3号线',
+            'zh-Hant': '3號線',
         },
         colour: '#00A9E0',
     },
@@ -39,9 +39,9 @@ const Wuxi: PaletteEntry[] = [
         id: 'wx4',
         name:
         {
-             en: 'Line 4',
-             'zh-Hans': '4号线',
-             'zh-Hant': '4號線',
+            en: 'Line 4',
+            'zh-Hans': '4号线',
+            'zh-Hant': '4號線',
         },
         colour: '#93328E',
     },
@@ -49,9 +49,9 @@ const Wuxi: PaletteEntry[] = [
         id: 'wx5',
         name:
         {
-             en: 'Line 5',
-             'zh-Hans': '5号线',
-             'zh-Hant': '5號線',
+            en: 'Line 5',
+            'zh-Hans': '5号线',
+            'zh-Hant': '5號線',
         },
         colour: '#FFB81C',
     },

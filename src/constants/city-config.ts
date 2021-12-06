@@ -8,6 +8,7 @@ export enum CityCode {
     Changsha = 'changsha',
     Chengdu = 'chengdu',
     Chongqing = 'chongqing',
+    Dalian = 'dalian',
     Delhi = 'delhi',
     Dongguan = 'dongguan',
     Dortmund = 'dortmund',
@@ -40,6 +41,7 @@ export enum CityCode {
     Shenzhen = 'shenzhen',
     Singapore = 'singapore',
     Stockholm = 'stockholm',
+    Suzhou = 'suzhou',
     Taipei = 'taipei',
     Tehran = 'tehran',
     Tianjin = 'tianjin',
@@ -128,6 +130,15 @@ export const cityList: CityEntry[] = [
             en: 'Chongqing',
             'zh-Hans': '重庆',
             'zh-Hant': '重慶',
+        },
+    },
+    {
+        id: CityCode.Dalian,
+        country: 'CN',
+        name: {
+            en: 'Dalian',
+            'zh-Hans': '大连',
+            'zh-Hant': '大連',
         },
     },
     {
@@ -418,6 +429,15 @@ export const cityList: CityEntry[] = [
             en: 'Stockholm',
             'zh-Hans': '斯德哥尔摩',
             'zh-Hant': '斯德哥爾摩',
+        },
+    },
+    {
+        id: CityCode.Suzhou,
+        country: 'CN',
+        name: {
+            en: 'Suzhou',
+            'zh-Hans': '苏州',
+            'zh-Hant': '蘇州',
         },
     },
     {
