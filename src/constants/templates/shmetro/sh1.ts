@@ -387,7 +387,7 @@ const params = {
             facility: '',
         },
         wbtv: {
-            name: ['黄陂南路', 'South Huangpi Road'],
+            name: ['黄陂南路', 'Site of the First CPC National\\Congress · South Huangpi Road'],
             secondaryName: false,
             num: '00',
             services: ['local'],
