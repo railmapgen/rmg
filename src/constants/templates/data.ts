@@ -336,9 +336,9 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
         {
             filename: 'sh2',
             name: {
-                en: 'Line 2 by Tianxiu11111',
-                'zh-Hans': '2号线 来自 Tianxiu11111',
-                'zh-Hant': '2號線 來自 Tianxiu11111',
+                en: 'Line 2',
+                'zh-Hans': '2号线',
+                'zh-Hant': '2號線',
             },
         },
         {
