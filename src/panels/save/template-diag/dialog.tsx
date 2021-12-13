@@ -48,6 +48,7 @@ const useStyles = makeStyles(theme =>
         },
         tab: {
             minWidth: 0,
+            textAlign: 'left',
             '& .MuiTab-wrapper': {
                 flexDirection: 'row',
             },

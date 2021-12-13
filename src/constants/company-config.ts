@@ -4,6 +4,7 @@ export enum CompanyCode {
     basic = 'basic',
     bjsubway = 'bjsubway',
     gzmtr = 'gzmtr',
+    kvtransit = 'kvtransit',
     mlm = 'mlm',
     mtr = 'mtr',
     njmetro = 'njmetro',
@@ -58,6 +59,14 @@ export const companies: CompanyEntry[] = [
             [LanguageCode.English]: 'Beijing Subway',
             [LanguageCode.ChineseSimp]: '北京地铁',
             [LanguageCode.ChineseTrad]: '北京地鐵',
+        },
+    },
+    {
+        id: CompanyCode.kvtransit,
+        name: {
+            [LanguageCode.English]: 'Klang Valley Integrated Transit System',
+            [LanguageCode.ChineseSimp]: '巴生谷综合运输系统',
+            [LanguageCode.ChineseTrad]: '巴生谷綜合運輸系統',
         },
     },
     {

@@ -194,6 +194,54 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
         },
     ],
 
+    kvtransit: [
+        {
+            filename: 'klMonorail',
+            name: {
+                en: 'KL Monorail',
+                ms: 'KL Monorail',
+                'zh-Hans': '吉隆坡单轨',
+                'zh-Hant': '吉隆坡單軌',
+            },
+        },
+        {
+            filename: 'lrtAmpang',
+            name: {
+                en: 'Ampang Line',
+                ms: 'Laluan Ampang',
+                'zh-Hans': '安邦线',
+                'zh-Hant': '安邦線',
+            },
+        },
+        {
+            filename: 'lrtKelanaJaya',
+            name: {
+                en: 'Kelana Jaya Line',
+                ms: 'Laluan Kelana Jaya',
+                'zh-Hans': '格拉那再也线',
+                'zh-Hant': '格拉那再也線',
+            },
+        },
+        {
+            filename: 'lrtSriPataling',
+            name: {
+                en: 'Sri Pataling Line',
+                ms: 'Laluan Sri Pataling',
+                'zh-Hans': '大城堡线',
+                'zh-Hant': '大城堡線',
+            },
+        },
+        {
+            filename: 'mrtKajang',
+            name: {
+                en: 'Kajang Line',
+                ms: 'Laluan Kajang',
+                'zh-Hans': '加影线',
+                'zh-Hant': '加影線',
+            },
+        },
+    ],
+
     mlm: [
         {
             filename: 'taipa',
