@@ -161,6 +161,7 @@ export default memo(function PanelInfo() {
                         'Andy1782010',
                         'Thomastzc',
                         'Tianxiu11111',
+                        'Dingdong2334'
                     ].map(name => (
                         <div className={classes.detailColumn}>
                             <CardMedia
