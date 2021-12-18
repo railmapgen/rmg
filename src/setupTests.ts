@@ -63,7 +63,7 @@ export const mockSimpleStationList: StationDict = {
 
 export const waitForComponentToPaint = async (wrapper: ReactWrapper) => {
     await act(async () => {
-        await new Promise(resolve => setImmediate(resolve));
+        await new Promise(resolve => setInterval(resolve, 0));
         wrapper.update();
     });
 };
