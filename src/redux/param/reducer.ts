@@ -117,7 +117,7 @@ export default function ParamReducer(
             state.svg_height = action.svgHeight;
             break;
         case SET_SVG_WIDTH:
-            state.svgWidth[action.canvas] = action.svgWidth;
+            state.svgWidth = { ...state.svgWidth, [action.canvas]: action.svgWidth };
             break;
         case SET_Y_PERCENTAGE:
             state.y_pc = action.yPercentage;
@@ -168,7 +168,7 @@ export default function ParamReducer(
             state.current_stn_idx = action.currentStation;
             break;
         case SET_STATION:
-            state.stn_list[action.stationId] = action.station;
+            state.stn_list = { ...state.stn_list, [action.stationId]: action.station };
             break;
         case SET_STATIONS_BULK:
             state.stn_list = action.stations;
