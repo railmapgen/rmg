@@ -10,7 +10,7 @@ import {
     CardActions,
     Button,
 } from '@material-ui/core';
-import { version } from '../../package.json';
+import packageJson from '../../package.json';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -92,7 +92,7 @@ export default memo(function PanelInfo() {
                     <CardMedia className={classes.logo} image={process.env.PUBLIC_URL + '/logo512.png'} />
                     <CardContent>
                         <Typography component="h6" variant="h6">
-                            {t('info.title')} {version}
+                            {t('info.title')} {packageJson.version}
                         </Typography>
                         <CardActions className={classes.action}>
                             <Button size="small" color="primary" href="https://github.com/wongchito/RailMapGenerator">
