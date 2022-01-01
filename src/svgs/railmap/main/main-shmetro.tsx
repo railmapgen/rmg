@@ -68,17 +68,17 @@ const MainSHMetro = () => {
     const servicesAll = Object.values(Services);
     const servicesPresent = Object.values(param.stn_list)
         .map(stationInfo => stationInfo.services)
-        .flat()  // all services in all stations
+        .flat() // all services in all stations
         .reduce(
             (acc, cur) => {
                 acc[servicesAll.indexOf(cur)] = true;
                 return acc;
             },
             [false, false, false] as [boolean, boolean, boolean]
-        )  // set the flag in order
-        .map((bool, i) => [servicesAll[i], bool] as [Services, boolean])  // zip
-        .filter(s => s[1])  // get the existing service
-        .map(s => s[0]);  // maintain the services' order
+        ) // set the flag in order
+        .map((bool, i) => [servicesAll[i], bool] as [Services, boolean]) // zip
+        .filter(s => s[1]) // get the existing service
+        .map(s => s[0]); // maintain the services' order
 
     const linePaths = drawLine(branches, stnStates);
 
@@ -131,11 +131,14 @@ const Line = (props: { paths: servicesPath[]; direction: 'l' | 'r' }) => {
     return (
         <>
             {props.paths.map((servicePath, i) => (
-                <g key={`servicePath${i}`} transform={`translate(0,${i * 25})`}
+                <g
+                    key={`servicePath${i}`}
+                    transform={`translate(0,${i * 25})`}
                     // the following line is a special case for pujiang line
                     // where its pass line color should be white with outline
                     // surrounding it, see #161 for details.
-                    filter={theme[2] === '#999999' ? 'url(#colorreplace)' : undefined}>
+                    filter={theme[2] === '#999999' ? 'url(#colorreplace)' : undefined}
+                >
                     <g>
                         {servicePath.pass.map((path, j) => (
                             <path
@@ -321,6 +324,7 @@ const StationGroup = (props: StationGroupProps) => {
         <g>
             {Object.keys(param.stn_list)
                 .filter(stnId => !['linestart', 'lineend'].includes(stnId))
+                .filter(stnId => param.stn_list[stnId].services.length !== 0)
                 .map(stnId => (
                     <g key={stnId} transform={`translate(${props.xs[stnId]},${props.ys[stnId]})`}>
                         <StationSHMetro stnId={stnId} stnState={props.stnStates[stnId]} />

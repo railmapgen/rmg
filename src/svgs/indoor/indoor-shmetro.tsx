@@ -161,6 +161,7 @@ const StationGroup = (props: StationGroupProps) => {
         <g>
             {Object.keys(param.stn_list)
                 .filter(stnId => !['linestart', 'lineend'].includes(stnId))
+                .filter(stnId => param.stn_list[stnId].services.length !== 0)
                 .map(stnId => (<g key={stnId} transform={`translate(${xs[stnId]},${ys[stnId]})`}>
                     <StationSHMetro
                         stnId={stnId}
@@ -188,7 +189,7 @@ const InfoElements = () => {
                     轨道交通{param.line_name[0]}运营线路示意图
                 </text>
             </g>
-            <g transform={`translate(${param.svgWidth.indoor / 2},${param.svg_height - 300})`}>
+            <g transform={`translate(${param.svgWidth.indoor / 2},${param.svg_height - 270})`}>
                 <text textAnchor="middle" fontSize="18" className="rmg-name__zh" dx="-30" dy="230">
                     友情提示：请留意您需要换乘线路的首末班时间，以免耽误您的出行，末班车进站前三分钟停售该末班车车票。
                 </text>

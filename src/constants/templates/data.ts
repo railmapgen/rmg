@@ -478,6 +478,14 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
+            filename: 'sh14',
+            name: {
+                en: 'Line 14',
+                'zh-Hans': '14号线',
+                'zh-Hant': '14號線',
+            },
+        },
+        {
             filename: 'sh15',
             name: {
                 en: 'Line 15 by Thomastzc',
