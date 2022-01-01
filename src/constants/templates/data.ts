@@ -501,6 +501,14 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
                 'zh-Hant': '17號線 來自 Thomastzc',
             },
         },
+        {
+            filename: 'sh18',
+            name: {
+                en: 'Line 18 by Tianxiu11111',
+                'zh-Hans': '18号线 来自 Tianxiu11111',
+                'zh-Hant': '18號線 來自 Tianxiu11111',
+            },
+        },
     ],
     
     szmetro: [
