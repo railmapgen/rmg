@@ -48,12 +48,7 @@ const param = {
             name: ['云顺路', 'Yunshun Road'],
             branch: { left: [], right: [] },
             num: '01',
-            transfer: {
-                tick_direc: 'r',
-                paid_area: true,
-                osi_names: [],
-                info: [[['shanghai', 'sh5', '#ac4fc6', '#fff', '5号线', 'Line 5']]],
-            },
+            transfer: { tick_direc: 'r', paid_area: true, osi_names: [], info: [[]] },
             services: ['local'],
             facility: '',
             secondaryName: false,
