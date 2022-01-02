@@ -93,18 +93,7 @@ const DefsSHMetro = React.memo(() => (
             </feComponentTransfer>
         </filter>
 
-        <filter id="groupborder" filterUnits="userSpaceOnUse" x="0" y="-300" width="3000" height="500">
-            <feMorphology operator="dilate" in="SourceAlpha" radius="0" result="e1" />
-            <feMorphology operator="dilate" in="SourceAlpha" radius="1" result="e2" />
-            <feComposite in="e1" in2="e2" operator="xor" result="outline" />
-            {/* <feColorMatrix type="matrix" in="outline"
-                values="1 0 0 0 0
-                                    0 1 0 0 0
-                                    0 0 1 0 0
-                                    0 0 0 .3 0" result="outline2" /> */}
-            <feComposite in="outline2" in2="SourceGraphic" operator="over" result="output" />
-        </filter>
-        <filter id="colorreplace" colorInterpolationFilters="sRGB"
+        <filter id="pujiang_outline_railmap" colorInterpolationFilters="sRGB"
             // TODO: remove the absolute value while make the filter works correctly
             filterUnits="userSpaceOnUse" x="0" y="-1000" width="5000" height="2000">
             {/* Replace pass gray color with white.

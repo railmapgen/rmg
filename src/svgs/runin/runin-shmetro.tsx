@@ -56,6 +56,20 @@ const DefsSHMetro = memo(() => (
         <marker id="slope" viewBox="-1.5 0 3 1.5" refY={0.5}>
             <path d="M0,0L1,1H-1z" fill="var(--rmg-theme-colour)" />
         </marker>
+
+        {/* Outline filter of white pass color in Pujiang Line */}
+        <filter id="pujiang_outline_runin" colorInterpolationFilters="sRGB"
+            // TODO: remove the absolute value while make the filter works correctly
+            filterUnits="userSpaceOnUse" x="0" y="-1000" width="5000" height="2000">
+            <feMorphology operator="erode" in="SourceAlpha"
+                radius="0" result="e1" />
+            <feMorphology operator="erode" in="SourceAlpha"
+                radius="1" result="e2" />
+            <feComposite in="e1" in2="e2" operator="xor"
+                result="outline" />
+            <feComposite in="outline" in2="SourceGraphic"
+                operator="over" result="output" />
+        </filter>
     </defs>
 ));
 
@@ -95,27 +109,32 @@ const GeneralStation = (props: RunInGeneralProps) => {
                     />
                 )}
                 {props.prevStnIds.length > 1 && (
-                    <path
-                        stroke="gray"
-                        d={
-                            param.direction === 'l'
-                                ? `M${(param.svgWidth.runin / 3) * 2},125 L${(param.svgWidth.runin / 6) * 5},${prevBranchLineDy} H${
-                                      param.svgWidth.runin - 24
-                                  }`
-                                : `M${param.svgWidth.runin / 3},125 L${param.svgWidth.runin / 6},${prevBranchLineDy} H24`
-                        }
-                    />
+                    <g
+                        filter={param.theme[2] === '#999999' ? 'url(#pujiang_outline_railmap)' : undefined}>
+                        <path
+                            stroke="var(--rmg-grey)"
+                            d={
+                                param.direction === 'l'
+                                    ? `M${(param.svgWidth.runin / 3) * 2},125 L${(param.svgWidth.runin / 6) * 5},${prevBranchLineDy} H${param.svgWidth.runin - 24
+                                    }`
+                                    : `M${param.svgWidth.runin / 3},125 L${param.svgWidth.runin / 6},${prevBranchLineDy} H24`
+                            }
+                        />
+                    </g>
                 )}
             </g>
 
             {termianl && param.info_panel_type !== 'sh2020' ? (
                 <>
-                    <path
-                        transform="translate(0,220)"
-                        stroke="gray"
-                        strokeWidth={12}
-                        d={`M24,16 H ${param.svgWidth.runin - 24}`}
-                    />
+                    <g
+                        filter={param.theme[2] === '#999999' ? 'url(#pujiang_outline_railmap)' : undefined}>
+                        <path
+                            transform="translate(0,220)"
+                            stroke="var(--rmg-grey)"
+                            strokeWidth={12}
+                            d={`M24,16 H ${param.svgWidth.runin - 24}`}
+                        />
+                    </g>
 
                     <g transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},160)`}
                         textAnchor={param.direction === 'l' ? 'start' : 'end'} >
@@ -149,10 +168,13 @@ const GeneralStation = (props: RunInGeneralProps) => {
                             d={`M ${middle},16 H ${param.direction === 'l' ? 36 : param.svgWidth.runin - 36}`}
                             markerEnd="url(#slope)"
                         />
-                        <path
-                            stroke="gray"
-                            d={`M ${middle},16 H ${param.direction === 'l' ? param.svgWidth.runin - 24 : 24} `}
-                        />
+                        <g
+                            filter={param.theme[2] === '#999999' ? 'url(#pujiang_outline_railmap)' : undefined}>
+                            <path
+                                stroke="var(--rmg-grey)"
+                                d={`M ${middle},16 H ${param.direction === 'l' ? param.svgWidth.runin - 24 : 24} `}
+                            />
+                        </g>
                     </g>
 
                     <g transform={`translate(${middle},160)`} textAnchor="middle">

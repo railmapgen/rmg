@@ -137,7 +137,7 @@ const Line = (props: { paths: servicesPath[]; direction: 'l' | 'r' }) => {
                     // the following line is a special case for pujiang line
                     // where its pass line color should be white with outline
                     // surrounding it, see #161 for details.
-                    filter={theme[2] === '#999999' ? 'url(#colorreplace)' : undefined}
+                    filter={theme[2] === '#999999' ? 'url(#pujiang_outline_railmap)' : undefined}
                 >
                     <g>
                         {servicePath.pass.map((path, j) => (
