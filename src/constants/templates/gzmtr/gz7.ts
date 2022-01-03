@@ -61,7 +61,7 @@ const params = {
                     [
                         ['guangzhou', 'gz2', '#00629B', '#fff', '2号线', 'Line 2'],
                         ['guangzhou', 'gz22', '#CD5228', '#fff', '22号线', 'Line 22'],
-                        ['other', 'other', '#666666', '#fff', '佛山2号线', 'Foshan Line 2'],
+                        ['foshan', 'fs2', '#DD0027', '#fff', '佛山2号线', 'Foshan Line 2'],
                     ],
                 ],
             },
@@ -263,10 +263,9 @@ const params = {
             '二十二号线(番禺广场-陈头岗)尚未开通。',
             'Line 22 (Panyu Square-Chentougang) is under construction.',
             50,
-            71.5,
+            79.5,
             true,
         ],
-        ['佛 山 二 号 线 尚 未 开 通。', 'Line 2 of Foshan Metro is under construction.', 50, 84, true],
     ],
     namePosMTR: { isStagger: true, isFlip: false },
 };
