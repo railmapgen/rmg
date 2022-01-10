@@ -518,7 +518,127 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
     ],
-    
+
+    saopaulometro: [
+        {
+            filename: 'sp1',
+            name: {
+                en: 'Line 1',
+                pt: 'Linha 1',
+                'zh-Hans': '1号线',
+                'zh-Hant': '1號線',
+            },
+        },
+        {
+            filename: 'sp2',
+            name: {
+                en: 'Line 2',
+                pt: 'Linha 2',
+                'zh-Hans': '2号线',
+                'zh-Hant': '2號線',
+            },
+        },
+        {
+            filename: 'sp3',
+            name: {
+                en: 'Line 3',
+                pt: 'Linha 3',
+                'zh-Hans': '3号线',
+                'zh-Hant': '3號線',
+            },
+        },
+        {
+            filename: 'sp4',
+            name: {
+                en: 'Line 4',
+                pt: 'Linha 4',
+                'zh-Hans': '4号线',
+                'zh-Hant': '4號線',
+            },
+        },
+        {
+            filename: 'sp5',
+            name: {
+                en: 'Line 5',
+                pt: 'Linha 5',
+                'zh-Hans': '5号线',
+                'zh-Hant': '5號線',
+            },
+        },
+        {
+            filename: 'sp7',
+            name: {
+                en: 'Line 7',
+                pt: 'Linha 7',
+                'zh-Hans': '7号线',
+                'zh-Hant': '7號線',
+            },
+        },
+        {
+            filename: 'sp8',
+            name: {
+                en: 'Line 8',
+                pt: 'Linha 8',
+                'zh-Hans': '8号线',
+                'zh-Hant': '8號線',
+            },
+        },
+        {
+            filename: 'sp9',
+            name: {
+                en: 'Line 9',
+                pt: 'Linha 9',
+                'zh-Hans': '9号线',
+                'zh-Hant': '9號線',
+            },
+        },
+        {
+            filename: 'sp10',
+            name: {
+                en: 'Line 10',
+                pt: 'Linha 10',
+                'zh-Hans': '10号线',
+                'zh-Hant': '10號線',
+            },
+        },
+        {
+            filename: 'sp11',
+            name: {
+                en: 'Line 11',
+                pt: 'Linha 11',
+                'zh-Hans': '11号线',
+                'zh-Hant': '11號線',
+            },
+        },
+        {
+            filename: 'sp12',
+            name: {
+                en: 'Line 12',
+                pt: 'Linha 12',
+                'zh-Hans': '12号线',
+                'zh-Hant': '12號線',
+            },
+        },
+        {
+            filename: 'sp13',
+            name: {
+                en: 'Line 13',
+                pt: 'Linha 13',
+                'zh-Hans': '13号线',
+                'zh-Hant': '13號線',
+            },
+        },
+        {
+            filename: 'sp15',
+            name: {
+                en: 'Line 15',
+                pt: 'Linha 15',
+                'zh-Hans': '15号线',
+                'zh-Hant': '15號線',
+            },
+        },
+    ],
+
     szmetro: [
         {
             filename: 'sz1',
