@@ -44,7 +44,7 @@ const Nanjing: PaletteEntry[] = [
             [LanguageCode.ChineseSimp]: '5号线',
             [LanguageCode.ChineseTrad]: '5號線',
         },
-        colour: '#8DB9CA',
+        colour: '#FDDA24',
     },
     {
         id: 'nj6',
@@ -53,7 +53,7 @@ const Nanjing: PaletteEntry[] = [
             [LanguageCode.ChineseSimp]: '6号线',
             [LanguageCode.ChineseTrad]: '6號線',
         },
-        colour: '#FC9BB3',
+        colour: '#4BBBB4',
     },
     {
         id: 'nj7',
@@ -62,7 +62,7 @@ const Nanjing: PaletteEntry[] = [
             [LanguageCode.ChineseSimp]: '7号线',
             [LanguageCode.ChineseTrad]: '7號線',
         },
-        colour: '#97D700',
+        colour: '#4A7729',
     },
     {
         id: 'nj9',
@@ -125,7 +125,7 @@ const Nanjing: PaletteEntry[] = [
             [LanguageCode.ChineseSimp]: 'S6号线/宁句城际',
             [LanguageCode.ChineseTrad]: 'S6號線/寧句城際',
         },
-        colour: '#004A88',
+        colour: '#C98BDB',
     },
     {
         id: 's7',
