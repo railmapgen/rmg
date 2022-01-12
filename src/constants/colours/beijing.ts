@@ -83,6 +83,15 @@ const Beijing: PaletteEntry[] = [
         colour: '#0092BC',
     },
     {
+        id: 'bj11',
+        name: {
+            [LanguageCode.English]: 'Line 11',
+            [LanguageCode.ChineseSimp]: '11号线',
+            [LanguageCode.ChineseTrad]: '11號線',
+        },
+        colour: '#ED796B',
+    },
+    {
         id: 'bj13',
         name: {
             [LanguageCode.English]: 'Line 13',
@@ -117,6 +126,24 @@ const Beijing: PaletteEntry[] = [
             [LanguageCode.ChineseTrad]: '16號線',
         },
         colour: '#6BA539',
+    },
+    {
+        id: 'bj17',
+        name: {
+            [LanguageCode.English]: 'Line 17',
+            [LanguageCode.ChineseSimp]: '17号线',
+            [LanguageCode.ChineseTrad]: '17號線',
+        },
+        colour: '#00A9A9',
+    },
+    {
+        id: 'bj19',
+        name: {
+            [LanguageCode.English]: 'Line 19',
+            [LanguageCode.ChineseSimp]: '19号线',
+            [LanguageCode.ChineseTrad]: '19號線',
+        },
+        colour: '#D6ABC1',
     },
     {
         id: 'yfl',
