@@ -25,7 +25,7 @@ export default memo(function MoreTab(props: { stnId: string }) {
     const rmgStyleFacility: { [s in RmgStyle]?: Facilities[] } = {
         [RmgStyle.MTR]: [Facilities.airport, Facilities.disney, Facilities.hsr, Facilities.none],
         [RmgStyle.SHMetro]: [Facilities.railway, Facilities.airport, Facilities.disney, Facilities.none],
-    }
+    };
 
     return (
         <div>
@@ -41,7 +41,7 @@ export default memo(function MoreTab(props: { stnId: string }) {
     );
 });
 
-const FacilityLi = (props: { stnId: string, providedFacilities: Facilities[] }) => {
+const FacilityLi = (props: { stnId: string; providedFacilities: Facilities[] }) => {
     const { stnId, providedFacilities } = props;
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
@@ -77,12 +77,15 @@ const ServiceLi = (props: { stnId: string; providedServices: Services[] }) => {
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
+    const rmgStyle = useAppSelector(store => store.param.style);
     const { services } = useAppSelector(store => store.param.stn_list[stnId]);
 
     const handleChange =
         (service: Services) =>
         ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
-            if (service === Services.local) return; // cannot remove local service
+            // only shmetro can remove local service
+            if (service === Services.local && rmgStyle !== RmgStyle.SHMetro) return;
+
             if (checked) {
                 dispatch(addStationService(props.stnId, service));
             } else {
@@ -105,7 +108,7 @@ const ServiceLi = (props: { stnId: string; providedServices: Services[] }) => {
                                         checked={services.includes(s)}
                                         value={s}
                                         onChange={handleChange(s)}
-                                        disabled={s === Services.local}
+                                        disabled={s === Services.local && rmgStyle !== RmgStyle.SHMetro}
                                     />
                                 }
                                 label={t('stations.edit.more.services.' + s)}
