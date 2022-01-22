@@ -665,4 +665,47 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
     ],
+
+    zzmetro: [
+        {
+            filename: 'zz1',
+            name: {
+                en: 'Line 1',
+                'zh-Hans': '1号线',
+                'zh-Hant': '1號線',
+            },
+        },
+        {
+            filename: 'zz3',
+            name: {
+                en: 'Line 3',
+                'zh-Hans': '3号线',
+                'zh-Hant': '3號線',
+            },
+        },
+        {
+            filename: 'zz4',
+            name: {
+                en: 'Line 4',
+                'zh-Hans': '4号线',
+                'zh-Hant': '4號線',
+            },
+        },
+        {
+            filename: 'zz6',
+            name: {
+                en: 'Line 6',
+                'zh-Hans': '6号线',
+                'zh-Hant': '6號線',
+            },
+        },
+        {
+            filename: 'zz14',
+            name: {
+                en: 'Line 14',
+                'zh-Hans': '14号线',
+                'zh-Hant': '14號線',
+            },
+        },
+    ],
 };
