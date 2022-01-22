@@ -8,6 +8,7 @@
     "license": "GPL-3.0-only",
     "dependencies": {
         "@material-ui/core": "^4.12.3",
+        "@railmapgen/rmg-palette-resources": "latest",
         "electron-is-dev": "^2.0.0",
         "i18next": "^21.5.4",
         "i18next-browser-languagedetector": "^6.1.2",
@@ -75,5 +76,8 @@
         "snap": {
             "publish": "github"
         }
+    },
+    "jest": {
+        "transformIgnorePatterns": ["/node_modules/(?!(@railmapgen/.*))"]
     }
 }

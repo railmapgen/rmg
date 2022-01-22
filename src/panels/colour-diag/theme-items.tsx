@@ -14,7 +14,7 @@ import {
     Tooltip,
 } from '@material-ui/core';
 import { getTransText2 } from '../../utils';
-import { CityCode, cityList } from '../../constants/city-config';
+import { CityCode, cityList } from '@railmapgen/rmg-palette-resources';
 import { ColourHex, LanguageCode, MonoColour, PaletteEntry, Theme } from '../../constants/constants';
 
 const useStyles = makeStyles(() =>
@@ -53,11 +53,9 @@ const useStyles = makeStyles(() =>
 const useLineList = (theme: Theme) => {
     const [list, setList] = React.useState([] as PaletteEntry[]);
 
-    const listPromise = theme[0]
-        ? import(/* webpackChunkName: "colours" */ `../../constants/colours/${theme[0]}`).then(
-              module => module.default as PaletteEntry[]
-          )
-        : Promise.resolve([] as PaletteEntry[]);
+    const listPromise = import(/* webpackChunkName: "palette" */ `@railmapgen/rmg-palette-resources/palettes/${theme[0]}.js`)
+        .then(module => module.default as PaletteEntry[])
+        .catch(() => [] as PaletteEntry[]);
 
     useEffect(
         () => {
