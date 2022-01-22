@@ -4,7 +4,7 @@ import { createMockAppStore, TestingProvider } from '../../../../setupTests';
 import InterchangeSection from './interchange-section';
 import { mount } from 'enzyme';
 import { MonoColour, StationInfo, StationTransfer } from '../../../../constants/constants';
-import { CityCode } from '../../../../constants/city-config';
+import { CityCode } from '@railmapgen/rmg-palette-resources';
 import * as helperActions from '../../../../redux/helper/action';
 import { SET_STATION } from '../../../../redux/param/action';
 
@@ -21,6 +21,7 @@ describe('Unit tests for InterchangeSection component', () => {
                     'test-station': {
                         transfer: {
                             info: [[], [], []],
+                            osi_names: [],
                         } as any as StationTransfer,
                     } as any as StationInfo,
                 },
@@ -50,11 +51,12 @@ describe('Unit tests for InterchangeSection component', () => {
             app: { ...realStore.app, selectedStation: 'test-station' },
             param: {
                 ...realStore.param,
-                theme: [CityCode.HongKong, 'twl', '#E2231A', MonoColour.white],
+                theme: [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white],
                 stn_list: {
                     'test-station': {
                         transfer: {
                             info: [[], []],
+                            osi_names: [],
                         } as any as StationTransfer,
                     } as any as StationInfo,
                 },

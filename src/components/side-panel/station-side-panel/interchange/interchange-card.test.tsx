@@ -2,12 +2,12 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import InterchangeCard from './interchange-card';
 import { InterchangeInfo, MonoColour } from '../../../../constants/constants';
-import { CityCode } from '../../../../constants/city-config';
+import { CityCode } from '@railmapgen/rmg-palette-resources';
 import { act } from 'react-dom/test-utils';
 import { TestingProvider } from '../../../../setupTests';
 
 const mockInterchangeInfo1: InterchangeInfo = [
-    CityCode.HongKong,
+    CityCode.Hongkong,
     'tcl',
     '#F38B00',
     MonoColour.white,
@@ -15,7 +15,7 @@ const mockInterchangeInfo1: InterchangeInfo = [
     'Tung Chung Line',
 ];
 const mockInterchangeInfo2: InterchangeInfo = [
-    CityCode.HongKong,
+    CityCode.Hongkong,
     'ael',
     '#007078',
     MonoColour.white,

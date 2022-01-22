@@ -3,7 +3,7 @@ import CityPicker from './city-picker';
 import { mount } from 'enzyme';
 import { useTranslation } from 'react-i18next';
 
-jest.mock('../../constants/city-config', () => ({
+jest.mock('@railmapgen/rmg-palette-resources', () => ({
     __esModule: true,
     cityList: [
         {

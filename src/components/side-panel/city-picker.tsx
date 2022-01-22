@@ -1,6 +1,6 @@
 import React from 'react';
 import RmgAutoComplete from '../common/rmg-auto-complete';
-import { CityCode, CityEntry, cityList } from '../../constants/city-config';
+import { CityCode, CityEntry, cityList } from '@railmapgen/rmg-palette-resources';
 import { LanguageCode } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { Image } from '@chakra-ui/react';
