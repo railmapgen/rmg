@@ -53,7 +53,9 @@ const useStyles = makeStyles(() =>
 const useLineList = (theme: Theme) => {
     const [list, setList] = React.useState([] as PaletteEntry[]);
 
-    const listPromise = import(/* webpackChunkName: "palette" */ `@railmapgen/rmg-palette-resources/palettes/${theme[0]}.js`)
+    const listPromise = import(
+        /* webpackChunkName: "palette" */ `@railmapgen/rmg-palette-resources/palettes/${theme[0]}.js`
+    )
         .then(module => module.default as PaletteEntry[])
         .catch(() => [] as PaletteEntry[]);
 
@@ -262,7 +264,7 @@ const CitySelectItem = (props: { value: string; onChange: (event: React.ChangeEv
             cityList.map(c => (
                 <MenuItem key={c.id} value={c.id}>
                     <span className={classes.cityItem}>
-                        <CountryFlag code={c.country} />
+                        <CountryFlag code={c.country} emoji={c.flagEmoji} svg={c.flagSvg} />
                         <span>{getTransText2(c.name, i18n.languages as LanguageCode[])}</span>
                     </span>
                 </MenuItem>
@@ -292,42 +294,28 @@ const useEmojiStyles = makeStyles(() =>
 /**
  * Convert ISO 3166 alpha-2 country code (followed by BS 6879 UK subdivision code, if applicable) to flag Emoji. For Windows platform, an `img` element with image source from OpenMoji is returned.
  */
-function CountryFlag(props: { code: string }) {
+function CountryFlag(props: { code: string; emoji?: string; svg?: string }) {
     const { i18n } = useTranslation();
     const classes = useEmojiStyles();
 
-    let codePoints = [] as string[];
+    const [svgUrl, setSvgUrl] = useState<string>();
 
-    if (props.code.length === 2) {
-        codePoints = props.code
-            .toUpperCase()
-            .split('')
-            .map(char => ((char.codePointAt(0) || 0) + 127397).toString(16).toUpperCase());
-    } else {
-        codePoints = ['1F3F4'].concat(
-            props.code
-                .toUpperCase()
-                .split('')
-                .map(char => ((char.codePointAt(0) || 0) + 917536).toString(16).toUpperCase()),
-            'E007F'
-        );
-    }
+    useEffect(() => {
+        if (props.svg) {
+            import('@railmapgen/rmg-palette-resources/flags/' + props.svg).then(module => module.default).then(setSvgUrl);
+        }
+    }, []);
 
     // special case for simplified Chinese
     if (
         [LanguageCode.ChineseCN, LanguageCode.ChineseSimp].includes(i18n.language as LanguageCode) &&
         props.code === 'TW'
-    )
-        codePoints = ['1F3F4'];
-
-    return navigator.platform.indexOf('Win32') !== -1 || navigator.platform.indexOf('Win64') !== -1 ? (
-        <img
-            src={process.env.PUBLIC_URL + `/images/flags/${codePoints.join('-')}.svg`}
-            className={classes.img}
-            alt={`Flag of ${props.code}`}
-        />
-    ) : (
-        // <img src={process.env.PUBLIC_URL + `/images/flags/${codePoints.join('-')}.svg`} className={classes.img} />
-        <span>{String.fromCodePoint(...codePoints.map(cp => parseInt(cp, 16)))}</span>
-    );
+    ) {
+        return <span>🏴&nbsp;</span>;
+    } else if (navigator.platform.indexOf('Win32') !== -1 || navigator.platform.indexOf('Win64') !== -1) {
+        return <img src={svgUrl} className={classes.img} alt={`Flag of ${props.code}`} />;
+    } else {
+        // return <img src={svgUrl} className={classes.img} alt={`Flag of ${props.code}`} />;
+        return <span>{props.emoji}&nbsp;</span>;
+    }
 }
