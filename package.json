@@ -69,7 +69,7 @@
             "last 1 safari version"
         ]
     },
-    "version": "5.0.0-0",
+    "version": "5.0.0-1",
     "main": "public/electron.js",
     "build": {
         "publish": [
@@ -83,6 +83,8 @@
         }
     },
     "jest": {
-        "transformIgnorePatterns": ["/node_modules/(?!(@railmapgen/.*))"]
+        "transformIgnorePatterns": [
+            "/node_modules/(?!(@railmapgen/.*))"
+        ]
     }
 }
