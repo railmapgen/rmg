@@ -2,11 +2,15 @@ import React from 'react';
 import { Flex, Heading, Badge, Menu, MenuButton, MenuItem, MenuList, IconButton } from '@chakra-ui/react';
 import { Environments, getEnvironment, getVersion } from '../util/config';
 import { useTranslation } from 'react-i18next';
-import { MdTranslate } from 'react-icons/md';
-import { LanguageCode } from '../constants/constants';
+import { MdLocationCity, MdTranslate } from 'react-icons/md';
+import { LanguageCode, RmgStyle } from '../constants/constants';
+import { useDispatch } from 'react-redux';
+import { setStyle } from '../redux/param/action';
+import { Link } from 'react-router-dom';
 
 export default function WindowHeader() {
     const { t, i18n } = useTranslation();
+    const dispatch = useDispatch();
 
     const environment = getEnvironment();
     const getBadgeColour = (env: Environments) => {
@@ -28,6 +32,19 @@ export default function WindowHeader() {
                     {environment === Environments.PRD ? getVersion() : environment}
                 </Badge>
             </Heading>
+
+            <Menu>
+                <MenuButton as={IconButton} icon={<MdLocationCity />} variant="ghost" size="xs" />
+                <MenuList>
+                    {Object.values(RmgStyle).map(style => (
+                        <Link key={style} to={'/v5/' + style}>
+                            <MenuItem onClick={() => dispatch(setStyle(style))}>
+                                {style}
+                            </MenuItem>
+                        </Link>
+                    ))}
+                </MenuList>
+            </Menu>
 
             <Menu>
                 <MenuButton as={IconButton} icon={<MdTranslate />} variant="ghost" size="xs" />
