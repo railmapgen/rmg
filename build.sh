@@ -14,7 +14,7 @@ BRANCH=$(git branch | grep \* | cut -d ' ' -f2 | tr '/' '.')
 UAT_REPO_NAME=uat-rail-map-generator
 
 ### BUMP VERSION
-if [ "$BRANCH" = "v5/main" ]
+if [ "$BRANCH" = "v5.main" ]
 then
   # build with a normal version
   npm version prerelease -m "${APP_NAME}-%s release" --force || { echo "Release Error"; exit 1; }
@@ -32,7 +32,7 @@ fi
 mkdir -p $UAT_REPO_NAME/$RMG_VER/
 
 # PRD
-if [ "$BRANCH" = "v5/main" ]
+if [ "$BRANCH" = "v5.main" ]
 then
   CI='' npm run build
   cp -r build/ $UAT_REPO_NAME/$RMG_VER/PRD/
@@ -46,7 +46,7 @@ cp -r build/ $UAT_REPO_NAME/$RMG_VER/UAT/
 
 
 ### PUSH TAG AND COMMIT
-if [ "$BRANCH" = "v5/main" ]
+if [ "$BRANCH" = "v5.main" ]
 then
   git push --atomic origin HEAD "${APP_NAME}-${RMG_VER}"
 fi
