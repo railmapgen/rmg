@@ -1,7 +1,8 @@
 import React from 'react';
 import CityPicker from './city-picker';
-import { mount } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import { useTranslation } from 'react-i18next';
+import { act } from 'react-dom/test-utils';
 
 jest.mock('@railmapgen/rmg-palette-resources', () => ({
     __esModule: true,
@@ -14,6 +15,8 @@ jest.mock('@railmapgen/rmg-palette-resources', () => ({
                 'zh-Hans': '爱丁堡',
                 'zh-Hant': '愛丁堡',
             },
+            flagEmoji: '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+            flagSvg: '1F3F4-E0067-E0062-E0073-E0063-E0074-E007F.svg',
         },
         {
             id: 'hongkong',
@@ -22,6 +25,8 @@ jest.mock('@railmapgen/rmg-palette-resources', () => ({
                 en: 'Hong Kong',
                 zh: '香港',
             },
+            flagEmoji: '🇭🇰',
+            flagSvg: '1F1ED-1F1F0.svg',
         },
         {
             id: 'taipei',
@@ -30,6 +35,8 @@ jest.mock('@railmapgen/rmg-palette-resources', () => ({
                 en: 'Taipei',
                 zh: '台北',
             },
+            flagEmoji: '🇹🇼',
+            flagSvg: '1F1F9-1F1FC.svg',
         },
     ],
 }));
@@ -64,24 +71,28 @@ describe('Unit tests for CityPicker component', () => {
 
         expect(menuItems.at(0).text()).toContain('🏴󠁧󠁢󠁳󠁣󠁴󠁿'); // GBSCT
         expect(menuItems.at(1).text()).toContain('🇭🇰'); // HK
-        expect(menuItems.at(2).text()).toContain('🏴'); // TW to be hidden
+        expect(menuItems.at(2).text()).toContain('🏴'); // TW to be censored
 
         expect(menuItems.at(0).text()).toContain('爱丁堡'); // read zh-Hans field
         expect(menuItems.at(1).text()).toContain('香港'); // read zh field
         expect(menuItems.at(2).text()).toContain('台北'); // read zh field
     });
 
-    it('Can render OpenMoji SVG-format emoji for Windows users as expected', () => {
+    it('Can render OpenMoji SVG-format emoji for Windows users as expected', async () => {
         const platformGetter = jest.spyOn(window.navigator, 'platform', 'get');
         platformGetter.mockReturnValue('Win64');
 
-        const wrapper = mount(<CityPicker />);
+        let wrapper: ReactWrapper;
+        await act(async () => {
+            wrapper = mount(<CityPicker />);
+        });
 
-        const flagImg = wrapper.find('button img');
-        expect(flagImg).toHaveLength(3);
-        expect(flagImg.at(0).props().src).toContain('.svg');
-        expect(flagImg.at(1).props().src).toContain('.svg');
-        expect(flagImg.at(2).props().src).toContain('.svg');
+        // FIXME: how do i get rid of this typecheck error
+        // @ts-ignore
+        const menuItems = wrapper.find('button');
+        expect(menuItems).toHaveLength(3);
+        expect(menuItems.find('FlagSvgEmoji')).toHaveLength(2); // flag svg to be displayed for 2 of the cities
+        expect(menuItems.find('span').text()).toContain('🏴'); // TW to be censored
     });
 
     it('Can mount component with default city code as expected', () => {
