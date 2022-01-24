@@ -58,6 +58,12 @@ Make your own rail map on [GitHub Pages](https://wongchito.github.io/RailMapGene
 <table>
   <tr>
     <td align="center" style="border-width:0px">
+      <a herf="https://github.com/52PD">
+        <img src="https://github.com/52PD.png" width="100px;" alt=""><br/>
+        <b>52PD</b><br/>
+      </a>
+    </td>
+    <td align="center" style="border-width:0px">
       <a herf="https://github.com/linchen1965">
         <img src="https://github.com/linchen1965.png" width="100px;" alt=""><br/>
         <b>linchen1965</b><br/>
