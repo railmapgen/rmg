@@ -14,8 +14,8 @@ export const removeStation = (stationId: string) => {
             console.log('removeStation():: failed as only 2 stations remaining');
             return false;
         } else if (parents.length === 2 && children.length === 2) {
-            // Todo: rewrite, join two branches rather than reject
-            console.log('removeStation():: failed as branches on both side cannot be combined');
+            // Todo: rewrite, join two branches rather than reject?
+            console.log('removeStation():: failed as branches on both sides cannot be combined');
             return false;
         }
 
@@ -24,7 +24,7 @@ export const removeStation = (stationId: string) => {
             id => ![stationId, 'linestart', 'lineend'].includes(id) && getYShareMTR(id, stationList) === 0
         );
         if (!isNotLastMainBranchStn) {
-            console.log('removeStation():: failed as selected station is the last station on main branch');
+            console.log('removeStation():: failed as selected station is the only station without siblings');
             return false;
         }
 
@@ -75,9 +75,10 @@ export const removeStation = (stationId: string) => {
             };
         } else {
             /**
-             * stn1 - stn2 - stn3
-             *      \  ^
-             *        stn4
+             * stn1 - stn2
+             *      \
+             *        stn3 - stn4
+             *         ^
              */
 
             // parents have length 1
