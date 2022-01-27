@@ -1,5 +1,11 @@
 import { CityCode } from './city-config';
 
+/**
+ * At least one key should exists in Partial
+ * https://stackoverflow.com/questions/48230773/how-to-create-a-partial-like-that-requires-a-single-property-to-be-set
+ */
+export type AtLeastOneOfPartial<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
+
 export enum LoadingStatus {
     init = 'init',
     loading = 'loading',
@@ -31,7 +37,7 @@ export const canvasConfig: { [s in RmgStyle]: CanvasType[] } = {
 export enum SidePanelMode {
     CLOSE = 'CLOSE',
     STATION = 'STATION',
-    STYLE = 'STYLE'
+    STYLE = 'STYLE',
 }
 
 /**
@@ -78,6 +84,18 @@ export type ColourHex = `#${string}`;
  */
 export type Theme = [CityCode, string, ColourHex, MonoColour];
 
+export enum Services {
+    local = 'local',
+    express = 'express',
+    direct = 'direct',
+}
+
+export interface CoLineInfo {
+    from: string;
+    to: string;
+    colors: Theme[];
+}
+
 export type InterchangeInfo = [...Theme, ...Name];
 
 export interface StationTransfer {
@@ -99,12 +117,6 @@ export interface StationTransfer {
      * @property remaining - arrays of out-of-station interchange info (from the nearest to the furthest station)
      */
     info: InterchangeInfo[][];
-}
-
-export enum Services {
-    local = 'local',
-    express = 'express',
-    direct = 'direct',
 }
 
 export enum Facilities {

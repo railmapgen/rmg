@@ -13,7 +13,7 @@ export default RailMapSHMetro;
 
 const DefsSHMetro = React.memo(() => (
     <defs>
-        <circle id="stn_sh" fill="var(--rmg-white)" strokeWidth={2} r={5} />
+        <circle id="stn_sh" fill="var(--rmg-white)" strokeWidth={0} r={5} />
         <path id="int2_sh" fill="var(--rmg-white)" strokeWidth={2} d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z" />
         <path id="express_sh" fill="var(--rmg-white)" strokeWidth={2} d="M -5,0 a 5,5 0 1 1 10,0 V25 a 5,5 0 1 1 -10,0Z" />
         <path id="direct_sh" fill="var(--rmg-white)" strokeWidth={2} d="M -5,0 a 5,5 0 1 1 10,0 V50 a 5,5 0 1 1 -10,0Z" />

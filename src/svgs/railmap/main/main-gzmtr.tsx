@@ -1,13 +1,7 @@
 import React, { useMemo } from 'react';
 import StationGZMTR from './station/station-gzmtr';
 import { adjacencyList, criticalPathMethod, drawLine, getStnState } from '../methods/share';
-import {
-    CanvasType,
-    ColourHex,
-    MonoColour,
-    ShortDirection,
-    StationDict,
-} from '../../../constants/constants';
+import { CanvasType, ColourHex, MonoColour, ShortDirection, StationDict } from '../../../constants/constants';
 import { useAppSelector } from '../../../redux';
 import LineIcon from '../../gzmtr/line-icon/line-icon';
 
@@ -148,7 +142,17 @@ const MainGZMTR = () => {
         [currentStationIndex, direction, routes.toString()]
     );
 
-    const linePaths = drawLine(branches, stnStates);
+    const linePaths = branches
+        .map(branch => drawLine(branch, stnStates))
+        .reduce(
+            (acc, cur) => {
+                acc.main.push(cur.main);
+                acc.pass.push(cur.pass);
+                return acc;
+            },
+            { main: [], pass: [] } as { main: string[][]; pass: string[][] }
+        );
+
     const paths = (Object.keys(linePaths) as (keyof ReturnType<typeof drawLine>)[]).reduce(
         (acc, cur) => ({
             ...acc,

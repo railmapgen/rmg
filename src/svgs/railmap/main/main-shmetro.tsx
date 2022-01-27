@@ -1,14 +1,18 @@
 import React from 'react';
 import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState } from '../methods/share';
 import StationSHMetro from './station/station-shmetro';
-import { Services } from '../../../constants/constants';
+import ColineSHMetro from './coline/coline-shmetro';
+import { AtLeastOneOfPartial, Services, StationDict } from '../../../constants/constants';
 import { useAppSelector } from '../../../redux';
+import assert from 'assert';
 
 interface servicesPath {
     main: string[];
     pass: string[];
     service: Services;
 }
+
+type Paths = AtLeastOneOfPartial<Record<Services, servicesPath>>;
 
 const MainSHMetro = () => {
     const { routes, branches, depsStr: deps } = useAppSelector(store => store.helper);
@@ -80,37 +84,52 @@ const MainSHMetro = () => {
         .filter(s => s[1]) // get the existing service
         .map(s => s[0]); // maintain the services' order
 
-    const linePaths = drawLine(branches, stnStates);
+    // console.log(branches, stnStates);
+    const linePaths = branches
+        .map(branch => drawLine(branch, stnStates))
+        .reduce(
+            (acc, cur) => {
+                acc.main.push(cur.main);
+                acc.pass.push(cur.pass);
+                return acc;
+            },
+            { main: [], pass: [] } as { main: string[][]; pass: string[][] }
+        );
 
-    // paths = {'local':{'main':..., 'pass':...}, 'express':...}
-    // const paths = servicesLevel.reduce((allServicesPath, services) => ({
-    //         ...allServicesPath,
-    //         [services]: (Object.keys(linePaths) as (keyof ReturnType<typeof drawLine>)[]).reduce(
-    //             (acc, cur) => ({
-    //                 ...acc,
-    //                 [cur]: linePaths[cur].map(stns => _linePath(stns, cur, xs, ys, param.direction, services)).filter(path => path !== ''),
-    //             }),
-    //             {} as { [key in keyof ReturnType<typeof drawLine>]: string[] })
-    //     }), {} as {[services in Services]: { main: string[]; pass: string[] }}
-    // );
-
-    // paths = [{'main':..., 'pass':..., 'service':'local'}, ...}]
-    const paths = servicesPresent.map(services =>
-        (Object.keys(linePaths) as (keyof ReturnType<typeof drawLine>)[]).reduce(
-            (acc, cur) => ({
-                ...acc,
-                [cur]: linePaths[cur]
-                    .map(stns => _linePath(stns, cur, xs, ys, param.direction, services, servicesPresent.length))
-                    .filter(path => path !== ''),
-                service: services,
-            }),
-            {} as servicesPath
-        )
+    // console.log(linePaths);
+    console.log(param.stn_list);
+    const paths = servicesPresent.reduce(
+        (acc, service) => ({
+            ...acc,
+            [service]: (Object.keys(linePaths) as (keyof ReturnType<typeof drawLine>)[]).reduce(
+                (acc, cur) => ({
+                    ...acc,
+                    [cur]: linePaths[cur]
+                        .map(stns =>
+                            _linePath(
+                                stns,
+                                cur,
+                                xs,
+                                ys,
+                                param.direction,
+                                service,
+                                servicesPresent.length,
+                                param.stn_list
+                            )
+                        )
+                        .filter(path => path !== ''),
+                }),
+                {} as servicesPath
+            ),
+        }),
+        {} as Paths
     );
 
+    console.log(paths);
     return (
         <g id="main" transform={`translate(0,${param.svg_height - 63})`}>
             <Line paths={paths} direction={param.direction} />
+            <ColineSHMetro xs={xs} ys={ys} servicesPresent={servicesPresent} stnStates={stnStates} />
             <StationGroup xs={xs} ys={ys} stnStates={stnStates} />
             <ServicesElements
                 servicesLevel={servicesPresent}
@@ -125,12 +144,13 @@ const MainSHMetro = () => {
 
 export default MainSHMetro;
 
-const Line = (props: { paths: servicesPath[]; direction: 'l' | 'r' }) => {
+const Line = (props: { paths: Paths; direction: 'l' | 'r' }) => {
     const { theme } = useAppSelector(store => store.param);
+    const { paths, direction } = props;
 
     return (
         <>
-            {props.paths.map((servicePath, i) => (
+            {(Object.keys(paths) as Services[]).map((service, i) => (
                 <g
                     key={`servicePath${i}`}
                     transform={`translate(0,${i * 25})`}
@@ -140,7 +160,7 @@ const Line = (props: { paths: servicesPath[]; direction: 'l' | 'r' }) => {
                     filter={theme[2] === '#999999' ? 'url(#pujiang_outline_railmap)' : undefined}
                 >
                     <g>
-                        {servicePath.pass.map((path, j) => (
+                        {paths[service]?.pass.map((path, j) => (
                             <path
                                 key={j}
                                 stroke="gray"
@@ -154,17 +174,17 @@ const Line = (props: { paths: servicesPath[]; direction: 'l' | 'r' }) => {
                         ))}
                     </g>
                     <g>
-                        {servicePath.main.map((path, j) => (
+                        {paths[service]?.main.map((path, j) => (
                             <path
                                 key={j}
                                 stroke="var(--rmg-theme-colour)"
                                 strokeWidth={12}
                                 fill="none"
                                 d={path}
-                                markerStart={props.direction === 'l' ? 'url(#arrow_theme_left)' : undefined}
-                                markerEnd={props.direction === 'r' ? 'url(#arrow_theme_right)' : undefined}
+                                markerStart={direction === 'l' ? 'url(#arrow_theme_left)' : undefined}
+                                markerEnd={direction === 'r' ? 'url(#arrow_theme_right)' : undefined}
                                 strokeLinejoin="round"
-                                filter={i === 2 ? 'url(#contrast-direct)' : i === 1 ? 'url(#contrast-express)' : undefined}
+                                filter={service === Services.local ? undefined : `url(#contrast-${service})`}
                             />
                         ))}
                     </g>
@@ -174,7 +194,7 @@ const Line = (props: { paths: servicesPath[]; direction: 'l' | 'r' }) => {
     );
 };
 
-const _linePath = (
+export const _linePath = (
     stnIds: string[],
     type: 'main' | 'pass',
     xs: { [stnId: string]: number },
@@ -182,7 +202,8 @@ const _linePath = (
     direction: 'l' | 'r',
     services: Services,
     servicesMax: number,
-    e: number = 30 // extra short line on either end, will be 0 in `indoor`
+    stn_list: StationDict, // only used to determine startFromTerminal or endAtTerminal
+    e: number = 30, // extra short line on either end
 ) => {
     var [prevY, prevX] = [] as number[];
     var path: { [key: string]: number[] } = {};
@@ -191,8 +212,20 @@ const _linePath = (
         local: 0,
         express: 20,
         direct: 40,
-    }[services]; // Todo: enum Services could be a better idea?
+    }[services]; // TODO: enum Services could be a better idea?
     const servicesPassDelta = servicesMax > 1 ? 50 : 0;
+
+    // check if path starts from or ends at the terminal
+    // and change e to 0 if it matches
+    let startFromTerminal = false, endAtTerminal = false;
+    if (stnIds.length > 0) {
+        if (stn_list[stnIds.at(-1) || 0].children.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
+            endAtTerminal = true;
+        } else if (stn_list[stnIds.at(0) || 0].parents.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
+            startFromTerminal = true;
+        }
+        e = startFromTerminal || endAtTerminal ? e : 0;
+    }
 
     stnIds.forEach(stnId => {
         var x = xs[stnId];
