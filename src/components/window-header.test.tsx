@@ -4,11 +4,17 @@ import WindowHeader from './window-header';
 import * as config from '../util/config';
 import { Environments } from '../util/config';
 import { TestingProvider } from '../setupTests';
+import { MemoryRouter } from 'react-router-dom';
 
 describe('Unit tests for WindowHeader component', () => {
     it('Can show DEV badge as expected', () => {
         jest.spyOn(config, 'getEnvironment').mockReturnValue(Environments.DEV);
-        const wrapper = mount(<WindowHeader />, { wrappingComponent: TestingProvider });
+        const wrapper = mount(
+            <MemoryRouter>
+                <WindowHeader />
+            </MemoryRouter>,
+            { wrappingComponent: TestingProvider }
+        );
 
         const badge = wrapper.find('Badge') as ReactWrapper<any>;
         expect(badge.text()).toBe('DEV');
@@ -17,7 +23,12 @@ describe('Unit tests for WindowHeader component', () => {
 
     it('Can show UAT badge as expected', () => {
         jest.spyOn(config, 'getEnvironment').mockReturnValue(Environments.UAT);
-        const wrapper = mount(<WindowHeader />, { wrappingComponent: TestingProvider });
+        const wrapper = mount(
+            <MemoryRouter>
+                <WindowHeader />
+            </MemoryRouter>,
+            { wrappingComponent: TestingProvider }
+        );
 
         const badge = wrapper.find('Badge') as ReactWrapper<any>;
         expect(badge.text()).toBe('UAT');
@@ -27,7 +38,12 @@ describe('Unit tests for WindowHeader component', () => {
     it('Can show PRD badge with version as expected', () => {
         jest.spyOn(config, 'getEnvironment').mockReturnValue(Environments.PRD);
         jest.spyOn(config, 'getVersion').mockReturnValue('1.2.3');
-        const wrapper = mount(<WindowHeader />, { wrappingComponent: TestingProvider });
+        const wrapper = mount(
+            <MemoryRouter>
+                <WindowHeader />
+            </MemoryRouter>,
+            { wrappingComponent: TestingProvider }
+        );
 
         const badge = wrapper.find('Badge') as ReactWrapper<any>;
         expect(badge.text()).toBe('1.2.3');

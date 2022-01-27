@@ -1,4 +1,4 @@
-import { CityCode } from './city-config';
+import { CityCode } from '@railmapgen/rmg-palette-resources';
 
 /**
  * At least one key should exists in Partial

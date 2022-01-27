@@ -1,10 +1,10 @@
 import React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import ColourPicker from './colour-picker';
-import { CityCode } from '../../constants/city-config';
+import { CityCode } from '@railmapgen/rmg-palette-resources';
 import { act } from 'react-dom/test-utils';
 
-jest.doMock('../../constants/colours/hongkong', () => ({
+jest.doMock('@railmapgen/rmg-palette-resources/palettes/hongkong.js', () => ({
     __esModule: true,
     default: [
         {
@@ -27,7 +27,7 @@ jest.doMock('../../constants/colours/hongkong', () => ({
     ],
 }));
 
-jest.doMock('../../constants/colours/guangzhou', () => ({
+jest.doMock('@railmapgen/rmg-palette-resources/palettes/guangzhou.js', () => ({
     __esModule: true,
     default: [
         {
@@ -63,7 +63,7 @@ describe('Unit tests for ColourPicker component', () => {
 
     it('Mount ColourPicker component', async () => {
         await act(async () => {
-            wrapper = await mount(<ColourPicker city={CityCode.HongKong} {...mockCallbacks} />);
+            wrapper = await mount(<ColourPicker city={CityCode.Hongkong} {...mockCallbacks} />);
         });
         wrapper.update();
     });

@@ -18,7 +18,7 @@ import React, { useEffect, useState } from 'react';
 import { ColourHex, MonoColour, Theme } from '../../constants/constants';
 import CityPicker from '../side-panel/city-picker';
 import ColourPicker from '../side-panel/colour-picker';
-import { CityCode } from '../../constants/city-config';
+import { CityCode } from '@railmapgen/rmg-palette-resources';
 import EditableStack, { EditableField } from '../side-panel/editable-stack';
 import RmgLineBadge from '../common/rmg-line-badge';
 import { useTranslation } from 'react-i18next';

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ColourHex, LanguageCode, MonoColour, PaletteEntry } from '../../constants/constants';
 import RmgAutoComplete from '../common/rmg-auto-complete';
-import { CityCode } from '../../constants/city-config';
+import { CityCode } from '@railmapgen/rmg-palette-resources';
 import RmgLineBadge from '../common/rmg-line-badge';
 import { useTranslation } from 'react-i18next';
 
@@ -9,7 +9,7 @@ const usePalette = (cityCode?: CityCode) => {
     const [paletteList, setPaletteList] = useState<PaletteEntry[]>([]);
 
     useEffect(() => {
-        import(/* webpackChunkName: "colours" */ `../../constants/colours/${cityCode}`)
+        import(/* webpackChunkName: "palettes" */ `@railmapgen/rmg-palette-resources/palettes/${cityCode}.js`)
             .then(module => setPaletteList(module.default))
             .catch(() => setPaletteList([]));
     }, [cityCode]);

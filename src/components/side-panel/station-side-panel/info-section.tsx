@@ -10,10 +10,17 @@ export default function InfoSection() {
     const dispatch = useDispatch();
 
     const selectedStation = useAppSelector(state => state.app.selectedStation);
-    const rmgStyle = useAppSelector(state => state.param.style);
     const { num, name, secondaryName } = useAppSelector(state => state.param.stn_list[selectedStation]);
 
-    const basicFields: EditableField[] = [
+    const fields: EditableField[] = [
+        {
+            type: 'input',
+            label: 'Station number',
+            value: num,
+            placeholder: '01',
+            onChange: (value: string) => dispatch(updateStationNum(selectedStation, value)),
+            enabledStyles: [RmgStyle.GZMTR],
+        },
         {
             type: 'input',
             label: 'Chinese name',
@@ -28,17 +35,6 @@ export default function InfoSection() {
             placeholder: 'Metro Station',
             onChange: (value: string) => dispatch(updateStationName(selectedStation, [name[0], value])),
         },
-    ];
-
-    const gzmtrFields: EditableField[] = [
-        {
-            type: 'input',
-            label: 'Station number',
-            value: num,
-            placeholder: '01',
-            onChange: (value: string) => dispatch(updateStationNum(selectedStation, value)),
-        },
-        ...basicFields,
         {
             type: 'input',
             label: 'Chinese secondary',
@@ -46,6 +42,7 @@ export default function InfoSection() {
             placeholder: '1號客運大樓',
             onChange: (value: string) =>
                 dispatch(updateStationSecondaryName(selectedStation, [value, secondaryName ? secondaryName[1] : ''])),
+            enabledStyles: [RmgStyle.GZMTR],
         },
         {
             type: 'input',
@@ -54,21 +51,13 @@ export default function InfoSection() {
             placeholder: 'Terminal 1',
             onChange: (value: string) =>
                 dispatch(updateStationSecondaryName(selectedStation, [secondaryName ? secondaryName[0] : '', value])),
+            enabledStyles: [RmgStyle.GZMTR],
         },
     ];
 
-    const getFields = (style: RmgStyle) => {
-        switch (style) {
-            case RmgStyle.GZMTR:
-                return gzmtrFields;
-            default:
-                return basicFields;
-        }
-    };
-
     return (
         <Box>
-            <EditableStack fields={getFields(rmgStyle)} />
+            <EditableStack fields={fields} />
         </Box>
     );
 }

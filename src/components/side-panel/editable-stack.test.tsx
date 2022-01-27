@@ -1,6 +1,7 @@
 import React from 'react';
 import EditableStack, { EditableField } from './editable-stack';
 import { mount } from 'enzyme';
+import { TestingProvider } from '../../setupTests';
 
 const mockInputField: EditableField = {
     type: 'input',
@@ -21,7 +22,7 @@ const mockSliderField: EditableField = {
 
 describe('Unit tests for EditableStack component', () => {
     it('Can render input field as expected', () => {
-        const wrapper = mount(<EditableStack fields={[mockInputField]} />);
+        const wrapper = mount(<EditableStack fields={[mockInputField]} />, { wrappingComponent: TestingProvider });
 
         const label = wrapper.find('label');
         expect(label.text()).toBe('Mock input');
@@ -35,7 +36,7 @@ describe('Unit tests for EditableStack component', () => {
     });
 
     it('Can render slider field as expected', () => {
-        const wrapper = mount(<EditableStack fields={[mockSliderField]} />);
+        const wrapper = mount(<EditableStack fields={[mockSliderField]} />, { wrappingComponent: TestingProvider });
 
         const label = wrapper.find('label');
         expect(label.text()).toBe('Mock slider');

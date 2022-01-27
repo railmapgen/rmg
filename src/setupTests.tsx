@@ -2,7 +2,7 @@ import { configure, ReactWrapper } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import thunk, { ThunkDispatch } from 'redux-thunk';
 import { RootState } from './redux';
-import { AnyAction } from 'redux';
+import { AnyAction, Store } from 'redux';
 import createMockStore from 'redux-mock-store';
 import { BranchStyle, StationDict } from './constants/constants';
 import { act } from 'react-dom/test-utils';
@@ -74,15 +74,16 @@ export const waitForComponentToPaint = async (wrapper: ReactWrapper) => {
 };
 
 interface TestingProviderProps {
+    store?: Store;
     children?: ReactNode;
 }
 
 export const TestingProvider = (props: TestingProviderProps) => {
-    const { children } = props;
+    const { store, children } = props;
 
     return (
         <I18nextProvider i18n={i18n}>
-            <Provider store={createMockAppStore({ ...rootReducer.getState() })}>{children}</Provider>
+            <Provider store={store || createMockAppStore({ ...rootReducer.getState() })}>{children}</Provider>
         </I18nextProvider>
     );
 };

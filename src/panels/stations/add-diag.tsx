@@ -18,10 +18,9 @@ import {
 } from '@material-ui/core';
 import { formatStnName } from '../../utils';
 import { getYShareMTR } from '../../methods';
-import { addStation } from './utils';
 import { useAppDispatch, useAppSelector } from '../../redux';
 import { StationDict, StationInfo } from '../../constants/constants';
-import { setStationsBulk } from '../../redux/param/action';
+import { addStation } from '../../redux/param/add-station-action';
 
 const newBranchPossibleEnd = (prep: 'before' | 'after', pivot: string, stnList: StationDict) => {
     let res: string[] = [];
@@ -156,14 +155,7 @@ export default React.memo(
             if (action === 'close') {
                 props.onClose('close');
             } else {
-                let [newId, res] = addStation(
-                    prep as 'before' | 'after',
-                    pivot,
-                    loc as 'centre' | 'upper' | 'lower' | 'newupper' | 'newlower',
-                    end as string,
-                    stnList
-                );
-                dispatch(setStationsBulk(res));
+                const newId = dispatch(addStation(prep, pivot, loc as any, end));
                 props.onClose(newId);
             }
         };
