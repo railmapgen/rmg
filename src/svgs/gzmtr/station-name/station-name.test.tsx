@@ -22,6 +22,6 @@ describe('Unit tests for StationName component', () => {
         );
 
         expect(onUpdate).toBeCalledTimes(1);
-        expect(onUpdate).toBeCalledWith(mockBBox)
+        expect(onUpdate).toBeCalledWith(mockBBox);
     });
 });

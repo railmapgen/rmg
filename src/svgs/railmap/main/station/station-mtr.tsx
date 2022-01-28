@@ -1,11 +1,5 @@
 import React, { useMemo } from 'react';
-import {
-    Direction,
-    InterchangeInfo,
-    Name,
-    ShortDirection,
-    StationTransfer,
-} from '../../../../constants/constants';
+import { Direction, InterchangeInfo, Name, ShortDirection, StationTransfer } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 import StationNameWrapper from '../../../mtr/station-name/station-name-wrapper';
 

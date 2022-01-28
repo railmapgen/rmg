@@ -28,11 +28,7 @@ const initialState: AppState = {
 
 export default function AppReducer(
     state = initialState,
-    action:
-        | setCanvasScaleAction
-        | setCanvasScaleStatusAction
-        | setCanvasToShowAction
-        | setCanvasToShowStatusAction
+    action: setCanvasScaleAction | setCanvasScaleStatusAction | setCanvasToShowAction | setCanvasToShowStatusAction
 ): AppState {
     switch (action.type) {
         case SET_CANVAS_SCALE:

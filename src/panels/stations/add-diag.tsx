@@ -100,7 +100,7 @@ export default React.memo(
 
         const rmgStyle = useAppSelector(store => store.param.style);
         const stnList = useAppSelector(store => store.param.stn_list);
-        const { tpo } = useAppSelector(store => store.helper)
+        const { tpo } = useAppSelector(store => store.helper);
 
         const allLocs = {
             centre: t('stations.add.centre'),
