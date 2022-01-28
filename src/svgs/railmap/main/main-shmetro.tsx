@@ -129,8 +129,8 @@ const MainSHMetro = () => {
     return (
         <g id="main" transform={`translate(0,${param.svg_height - 63})`}>
             <Line paths={paths} direction={param.direction} />
-            <ColineSHMetro xs={xs} ys={ys} servicesPresent={servicesPresent} stnStates={stnStates} />
             <StationGroup xs={xs} ys={ys} stnStates={stnStates} />
+            <ColineSHMetro xs={xs} ys={ys} servicesPresent={servicesPresent} stnStates={stnStates} />
             <ServicesElements
                 servicesLevel={servicesPresent}
                 dy={-param.svg_height + 100}
@@ -224,7 +224,7 @@ export const _linePath = (
         } else if (stn_list[stnIds.at(0) || 0].parents.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
             startFromTerminal = true;
         }
-        e = startFromTerminal || endAtTerminal ? e : 0;
+        e = startFromTerminal || endAtTerminal ? e : e;
     }
 
     stnIds.forEach(stnId => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState } from '../../methods/share';
 import { AtLeastOneOfPartial, Services, CoLineInfo, MonoColour, Theme } from '../../../../constants/constants';
-import { CityCode } from '../../../../constants/city-config';
+import { CityCode } from '@railmapgen/rmg-palette-resources';
 import { useAppSelector } from '../../../../redux';
 import { _linePath } from '../main-shmetro';
 
@@ -48,20 +48,21 @@ const ColineSHMetro = (props: Props) => {
 
     const coLineInfo: CoLineInfo[] = [
         {
-            from: 'vzv2',
+            from: 'l1mz',
             to: 'iwf6',
             colors: [
                 [CityCode.Shanghai, 'sh3', '#FFD100', MonoColour.black],
                 [CityCode.Shanghai, 'sh4', '#5F259F', MonoColour.white],
             ],
         },
-        {
-            from: 'iwf6',
-            to: 'h2tm',
-            colors: [[CityCode.Shanghai, 'sh4', '#5F259F', MonoColour.white]],
-        },
+        // {
+        //     from: 'iwf6',
+        //     to: 'h2tm',
+        //     colors: [[CityCode.Shanghai, 'sh4', '#5F259F', MonoColour.white]],
+        // },
     ];
 
+    // coline color and its station ids
     const colineStns = coLineInfo
         .map(coLine => {
             const involvedBranches = branches.filter(
@@ -117,6 +118,7 @@ const ColineSHMetro = (props: Props) => {
             },
             { main: [], pass: [] } as ColineLinePath
         );
+    console.log(colineStns);
 
     // const colineStnsBak = {
     //     main: [
@@ -174,11 +176,34 @@ const ColineSHMetro = (props: Props) => {
         }),
         {} as ColinePath
     );
+    // console.log(colinePaths);
 
-    console.log(colinePaths);
+    // data to draw the station elements
+    const colineStations = {
+        main: colineStns.main
+            .map(stns =>
+                stns.linePath.map(stnId => ({ curStn: stnId, x: xs[stnId], y: ys[stnId], color: stns.colors[1] }))
+            )
+            .flat(),
+        pass: colineStns.pass
+            .map(stns =>
+                stns.linePath.map(stnId => ({ curStn: stnId, x: xs[stnId], y: ys[stnId], color: stns.colors[1] }))
+            )
+            .flat(),
+    };
+    console.log(colineStations);
+
     return (
-        <g id="coline">
+        <g id="coline" transform="translate(0,15)">
             <CoLine paths={colinePaths} direction={direction} />
+            {[...colineStations.main, ...colineStations.pass].map(colineStation => {
+                const { curStn, x, y, color } = colineStation;
+                return (
+                    <g key={curStn} transform={`translate(${x},${y})`}>
+                        <use xlinkHref={`#stn_sh_2020`} fill={stnStates[curStn] === 0 ? 'red' : color[2]} />
+                    </g>
+                );
+            })}
         </g>
     );
 };
@@ -221,7 +246,7 @@ const CoLine = (props: { paths: ColinePath; direction: 'l' | 'r' }) => {
                                     </linearGradient>
                                 )}
 
-                                {direction === 'l' && (
+                                {/* {direction === 'l' && (
                                     <marker
                                         id={`arrow_left_${j}_${colinePath.colors.map(c => c[2]).join('_')}`}
                                         refY={0.5}
@@ -251,24 +276,39 @@ const CoLine = (props: { paths: ColinePath; direction: 'l' | 'r' }) => {
                                             }
                                         />
                                     </marker>
-                                )}
+                                )} */}
 
                                 <path
                                     key={j}
-                                    stroke={colinePath.colors.length > 1 ? `url(#grad${j})` : colinePath.colors[0][2]}
+                                    // stroke={colinePath.colors.length > 1 ? `url(#grad${j})` : colinePath.colors[0][2]}
+                                    stroke={colinePath.colors[1][2]}
                                     strokeWidth={12}
                                     fill="none"
                                     d={colinePath.path}
-                                    markerStart={
-                                        direction === 'l'
-                                            ? `url(#arrow_left_${j}_${colinePath.colors.map(c => c[2]).join('_')})`
-                                            : undefined
-                                    }
-                                    markerEnd={
-                                        direction === 'r'
-                                            ? `url(#arrow_right_${j}_${colinePath.colors.map(c => c[2]).join('_')})`
-                                            : undefined
-                                    }
+                                    // markerStart={
+                                    //     direction === 'l'
+                                    //         ? `url(#arrow_left_${j}_${colinePath.colors.map(c => c[2]).join('_')})`
+                                    //         : undefined
+                                    // }
+                                    // markerEnd={
+                                    //     direction === 'r'
+                                    //         ? `url(#arrow_right_${j}_${colinePath.colors.map(c => c[2]).join('_')})`
+                                    //         : undefined
+                                    // }
+                                    strokeLinejoin="round"
+                                    filter={service === Services.local ? undefined : `url(#contrast-${service})`}
+                                />
+                            </React.Fragment>
+                        ))}
+
+                        {paths[service]?.pass.map((colinePath, j) => (
+                            <React.Fragment key={j}>
+                                <path
+                                    key={j}
+                                    stroke={colinePath.colors[1][2]}
+                                    strokeWidth={12}
+                                    fill="none"
+                                    d={colinePath.path}
                                     strokeLinejoin="round"
                                     filter={service === Services.local ? undefined : `url(#contrast-${service})`}
                                 />
@@ -279,43 +319,4 @@ const CoLine = (props: { paths: ColinePath; direction: 'l' | 'r' }) => {
             ))}
         </>
     );
-};
-
-const drawLineWithColine = (
-    branchWithColine: {
-        linePath: string[];
-        colors: Theme[];
-    },
-    stnStates: { [stnId: string]: -1 | 0 | 1 }
-) => {
-    const branch = branchWithColine.linePath.filter(stnId => !['linestart', 'lineend'].includes(stnId));
-    var lineMainStns = branch.filter(stnId => stnStates[stnId] >= 0);
-    var linePassStns = branch.filter(stnId => stnStates[stnId] <= 0);
-
-    if (lineMainStns.length === 1) {
-        linePassStns = branch;
-    }
-
-    if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length === 0 && lineMainStns.length) {
-        // if two set disjoint
-        if (linePassStns[0] === branch[0]) {
-            // -1 -1 1 1
-            linePassStns.push(lineMainStns[0]);
-        } else if (
-            lineMainStns[0] === branch[0] &&
-            lineMainStns[lineMainStns.length - 1] === branch[branch.length - 1] &&
-            linePassStns.length
-        ) {
-            linePassStns = branch;
-            lineMainStns = [];
-        } else {
-            // 1 1 -1 -1
-            linePassStns.unshift(lineMainStns[lineMainStns.length - 1]);
-        }
-    }
-
-    return {
-        main: [{ linePath: lineMainStns, colors: branchWithColine.colors }],
-        pass: [{ linePath: linePassStns, colors: branchWithColine.colors }],
-    };
 };

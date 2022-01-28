@@ -17,9 +17,9 @@ const DefsSHMetro = React.memo(() => (
         <path id="int2_sh" fill="var(--rmg-white)" strokeWidth={2} d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z" />
         <path id="express_sh" fill="var(--rmg-white)" strokeWidth={2} d="M -5,0 a 5,5 0 1 1 10,0 V25 a 5,5 0 1 1 -10,0Z" />
         <path id="direct_sh" fill="var(--rmg-white)" strokeWidth={2} d="M -5,0 a 5,5 0 1 1 10,0 V50 a 5,5 0 1 1 -10,0Z" />
-        <rect id="stn_sh_2020" stroke="none" height={24} width={10} y={-18} />
-        <rect id="stn_sh_2020_express" stroke="none" height={49} width={10} y={-18} />
-        <rect id="stn_sh_2020_direct" stroke="none" height={74} width={10} y={-18} />
+        <rect id="stn_sh_2020" stroke="none" height={24} width={12} x={-6} y={-18} />
+        <rect id="stn_sh_2020_express" stroke="none" height={49} width={12} x={-6} y={-18} />
+        <rect id="stn_sh_2020_direct" stroke="none" height={74} width={12} x={-6} y={-18} />
 
         <rect id="intbox_number" height={22} width={20} y={-11} />
 
