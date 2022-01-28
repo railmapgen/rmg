@@ -134,6 +134,7 @@
             "sh": "Default",
             "sh2020": "2020 (Beta)"
         },
+        "stationNumber":"Station Number",
         "autoNum": {
             "button": "Station Auto-numbering",
             "title": "Warning",
@@ -261,6 +262,10 @@
             "thekingofcity": {
                 "first": "Shanghai Metro Author",
                 "second": "Electron Maintainer"
+            },
+            "xhg78999": {
+                "first": "Do some features in Shanghai Metro",
+                "second": "Line templates validater"
             }
         },
         "colorAndLine": {

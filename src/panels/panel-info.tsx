@@ -144,6 +144,20 @@ export default memo(function PanelInfo() {
                         </Typography>
                     </CardContent>
                 </div>
+                <div className={classes.detailRow}>
+                    <CardMedia className={classes.coreContributorAvatar} image="https://github.com/XHG78999.png" />
+                    <CardContent>
+                        <Typography component="h6" variant="h6">
+                            XHG78999
+                        </Typography>
+                        <Typography variant="subtitle2" color="textSecondary">
+                            {t('info.core.xhg78999.first')}
+                        </Typography>
+                        <Typography variant="subtitle2" color="textSecondary">
+                            {t('info.core.xhg78999.second')}
+                        </Typography>
+                    </CardContent>
+                </div>
             </Card>
 
             <Card className={classes.root}>

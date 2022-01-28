@@ -134,6 +134,7 @@
             "sh": "默認樣式",
             "sh2020": "2020年新樣式(測試版)"
         },
+        "stationNumber":"車站號",
         "autoNum": {
             "button": "車站自動編碼",
             "title": "警告",
@@ -261,6 +262,10 @@
             "thekingofcity": {
                 "first": "上海地鐵風格作者",
                 "second": "桌面版維護者"
+            },
+            "xhg78999": {
+                "first": "為上海地鐵風格製作部分功能",
+                "second": "查驗線路模板"
             }
         },
         "colorAndLine": {

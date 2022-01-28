@@ -189,6 +189,10 @@ export interface RMGParam {
     line_name: Name;
     current_stn_idx: keyof StationDict;
     /**
+     * Station number switch in shmetro
+     */
+    stn_number: boolean,
+    /**
      * Key-value pairs of the information of each station.
      */
     stn_list: StationDict;

@@ -23,10 +23,11 @@ interface Props {
 
 const NameTab = (props: Props) => {
     const rmgStyle = useAppSelector(store => store.param.style);
+    const stn_number = useAppSelector(store => store.param.stn_number);
 
     return (
         <List component="div">
-            {rmgStyle === RmgStyle.GZMTR && <NumInput {...props} />}
+            {rmgStyle === RmgStyle.GZMTR || (rmgStyle === RmgStyle.SHMetro && stn_number) && <NumInput {...props} />}
             <NameInput {...props} />
             {rmgStyle === RmgStyle.GZMTR && <SecondaryNameInput {...props} />}
         </List>

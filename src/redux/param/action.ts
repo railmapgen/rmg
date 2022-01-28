@@ -41,6 +41,7 @@ export const SET_PLATFORM = 'SET_PLATFORM';
 export const SET_LINE_NUM = 'SET_LINE_NUM';
 export const SET_PSD_NUM = 'SET_PSD_NUM';
 export const SET_PANEL_TYPE = 'SET_PANEL_TYPE';
+export const SET_STN_NUMBER = 'SET_STN_NUMBER';
 export const SET_NOTES = 'SET_NOTES';
 export const SET_NAME_POSITION = 'SET_NAME_POSITION';
 export const SET_CUSTOMISED_MTR_DESTINATION = 'SET_CUSTOMISED_MTR_DESTINATION';
@@ -129,6 +130,11 @@ export interface setPsdNumAction {
 export interface setPanelTypeAction {
     type: typeof SET_PANEL_TYPE;
     panelType: PanelTypeGZMTR | PanelTypeShmetro;
+}
+
+export interface setStationNumberOpenAction {
+    type: typeof SET_STN_NUMBER;
+    stn_number: RMGParam['stn_number'];
 }
 
 export interface setNotesAction {
@@ -232,6 +238,10 @@ export const setPsdNum = (psdNum: string): setPsdNumAction => {
 
 export const setPanelType = (panelType: PanelTypeShmetro | PanelTypeGZMTR): setPanelTypeAction => {
     return { type: SET_PANEL_TYPE, panelType };
+};
+
+export const setStationNumberOpen = (stn_number:boolean): setStationNumberOpenAction => {
+    return { type: SET_STN_NUMBER, stn_number };
 };
 
 const setNotes = (notes: Note[]): setNotesAction => {
