@@ -302,7 +302,9 @@ function CountryFlag(props: { code: string; emoji?: string; svg?: string }) {
 
     useEffect(() => {
         if (props.svg) {
-            import('@railmapgen/rmg-palette-resources/flags/' + props.svg).then(module => module.default).then(setSvgUrl);
+            import('@railmapgen/rmg-palette-resources/flags/' + props.svg)
+                .then(module => module.default)
+                .then(setSvgUrl);
         }
     }, []);
 

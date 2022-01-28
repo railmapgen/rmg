@@ -1,13 +1,7 @@
 import React, { useMemo } from 'react';
 import StationGZMTR from './station/station-gzmtr';
 import { adjacencyList, criticalPathMethod, drawLine, getStnState } from '../methods/share';
-import {
-    CanvasType,
-    ColourHex,
-    MonoColour,
-    ShortDirection,
-    StationDict,
-} from '../../../constants/constants';
+import { CanvasType, ColourHex, MonoColour, ShortDirection, StationDict } from '../../../constants/constants';
 import { useAppSelector } from '../../../redux';
 import LineIcon from '../../gzmtr/line-icon/line-icon';
 

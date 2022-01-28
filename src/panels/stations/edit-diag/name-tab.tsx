@@ -85,13 +85,7 @@ const useStyles = makeStyles(() =>
         },
         'nameInputZH-mtr': {
             '& .MuiInputBase-input': {
-                fontFamily: [
-                    'Myriad Pro',
-                    'Vegur',
-                    'GenYoMin TW',
-                    'HiraMinProN-W6',
-                    'serif',
-                ].join(),
+                fontFamily: ['Myriad Pro', 'Vegur', 'GenYoMin TW', 'HiraMinProN-W6', 'serif'].join(),
             },
         },
         'nameInputEN-mtr': {

@@ -52,6 +52,7 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "test:no-watch": "cross-env CI=true react-scripts test --env=jsdom",
+        "lint": "eslint src",
         "eject": "react-scripts eject",
         "electron-dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
         "electron-package": "./node_modules/.bin/electron-builder -c.extraMetadata.main=build/electron.js",

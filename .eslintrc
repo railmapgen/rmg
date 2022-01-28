@@ -7,6 +7,12 @@
         "prettier"
     ],
     "rules": {
+        "prettier/prettier": [
+            "warn",
+            {
+                "endOfLine": "auto"
+            }
+        ],
         "react-hooks/exhaustive-deps": "off"
     }
 }

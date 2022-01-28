@@ -94,9 +94,7 @@ describe('Tests for param actions', () => {
 
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(1);
-        expect(
-            actions.find(action => action.type === SET_STYLE && action.style === RmgStyle.GZMTR)
-        ).toBeDefined();
+        expect(actions.find(action => action.type === SET_STYLE && action.style === RmgStyle.GZMTR)).toBeDefined();
     });
 
     it('Can trigger helpers to update when setting stations', () => {

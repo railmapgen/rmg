@@ -67,9 +67,7 @@ const params = {
                         ['shanghai', 'sh18', '#D6A461', '#000', '18号线', 'Line 18'],
                     ],
                     [],
-                    [
-                        ["shanghai", "maglev", "#009090", "#fff", "磁浮线", "Maglev Line"],
-                    ],
+                    [['shanghai', 'maglev', '#009090', '#fff', '磁浮线', 'Maglev Line']],
                 ],
             },
             services: ['local', 'express', 'direct'],
