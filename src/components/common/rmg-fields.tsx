@@ -1,6 +1,6 @@
 import React, { Fragment, ReactNode } from 'react';
-import RmgLabel from '../common/rmg-label';
-import RmgDebouncedInput from '../common/rmg-debounced-input';
+import RmgLabel from './rmg-label';
+import RmgDebouncedInput from './rmg-debounced-input';
 import { Flex, InputProps, Select, Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/react';
 import { RmgStyle } from '../../constants/constants';
 import { useAppSelector } from '../../redux';
@@ -33,18 +33,18 @@ type customField = {
     component: ReactNode;
 };
 
-export type EditableField = (inputField | sliderField | selectField | customField) & {
+export type RmgFieldsFields = (inputField | sliderField | selectField | customField) & {
     label: string;
     minW?: `${number}px` | number;
     enabledStyles?: RmgStyle[];
 };
 
 interface EditableStackProps {
-    fields: EditableField[];
+    fields: RmgFieldsFields[];
     noLabel?: boolean;
 }
 
-export default function EditableStack(props: EditableStackProps) {
+export default function RmgFields(props: EditableStackProps) {
     const { fields, noLabel } = props;
 
     const style = useAppSelector(state => state.param.style);

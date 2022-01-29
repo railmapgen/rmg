@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import SvgRouter from '../svgs/svg-router';
 import SidePanel from './side-panel/side-panel';
 import PageHeader from './page-header/page-header';
@@ -15,6 +15,12 @@ export default function AppRoot() {
     const dispatch = useDispatch();
 
     const globalAlert = useAppSelector(state => state.app.globalAlert);
+    const param = useAppSelector(state => state.param);
+    const paramString = JSON.stringify(param);
+
+    useEffect(() => {
+        window.rmgStorage.writeFile('rmgParam', paramString).then();
+    }, [paramString]);
 
     return (
         <Flex direction="column" height="100%" overflow="hidden">

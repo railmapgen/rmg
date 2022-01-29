@@ -19,7 +19,7 @@ export default function StationSidePanel() {
     ];
 
     return (
-        <Accordion allowMultiple allowToggle>
+        <Accordion allowMultiple allowToggle overflowY="auto">
             {sidePanelFields.map((field, i) => (
                 <AccordionItem key={i}>
                     <h2>

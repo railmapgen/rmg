@@ -1,9 +1,9 @@
 import React from 'react';
-import EditableStack, { EditableField } from './editable-stack';
+import RmgFields, { RmgFieldsFields } from './rmg-fields';
 import { mount } from 'enzyme';
 import { TestingProvider } from '../../setupTests';
 
-const mockInputField: EditableField = {
+const mockInputField: RmgFieldsFields = {
     type: 'input',
     label: 'Mock input',
     value: 'mock value',
@@ -11,7 +11,7 @@ const mockInputField: EditableField = {
     onChange: jest.fn(),
 };
 
-const mockSliderField: EditableField = {
+const mockSliderField: RmgFieldsFields = {
     type: 'slider',
     label: 'Mock slider',
     value: 40,
@@ -20,9 +20,9 @@ const mockSliderField: EditableField = {
     onChange: jest.fn(),
 };
 
-describe('Unit tests for EditableStack component', () => {
+describe('Unit tests for RmgFields component', () => {
     it('Can render input field as expected', () => {
-        const wrapper = mount(<EditableStack fields={[mockInputField]} />, { wrappingComponent: TestingProvider });
+        const wrapper = mount(<RmgFields fields={[mockInputField]} />, { wrappingComponent: TestingProvider });
 
         const label = wrapper.find('label');
         expect(label.text()).toBe('Mock input');
@@ -36,7 +36,7 @@ describe('Unit tests for EditableStack component', () => {
     });
 
     it('Can render slider field as expected', () => {
-        const wrapper = mount(<EditableStack fields={[mockSliderField]} />, { wrappingComponent: TestingProvider });
+        const wrapper = mount(<RmgFields fields={[mockSliderField]} />, { wrappingComponent: TestingProvider });
 
         const label = wrapper.find('label');
         expect(label.text()).toBe('Mock slider');

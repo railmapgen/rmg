@@ -4,7 +4,7 @@ import { updateStationName, updateStationNum, updateStationSecondaryName } from 
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
-import EditableStack, { EditableField } from '../editable-stack';
+import RmgFields, { RmgFieldsFields } from '../../common/rmg-fields';
 
 export default function InfoSection() {
     const dispatch = useDispatch();
@@ -12,7 +12,7 @@ export default function InfoSection() {
     const selectedStation = useAppSelector(state => state.app.selectedStation);
     const { num, name, secondaryName } = useAppSelector(state => state.param.stn_list[selectedStation]);
 
-    const fields: EditableField[] = [
+    const fields: RmgFieldsFields[] = [
         {
             type: 'input',
             label: 'Station number',
@@ -57,7 +57,7 @@ export default function InfoSection() {
 
     return (
         <Box>
-            <EditableStack fields={fields} />
+            <RmgFields fields={fields} />
         </Box>
     );
 }
