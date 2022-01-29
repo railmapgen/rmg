@@ -1,6 +1,7 @@
 import { AllCanvas, CanvasType, LoadingStatus, SidePanelMode } from '../../constants/constants';
 import { Dispatch } from 'redux';
 import { RootState } from '../index';
+import { AlertProps } from '@chakra-ui/react';
 
 export const SET_CANVAS_SCALE = 'SET_CANVAS_SCALE';
 export const SET_CANVAS_SCALE_STATUS = 'SET_CANVAS_SCALE_STATUS';
@@ -8,6 +9,7 @@ export const SET_CANVAS_TO_SHOW = 'SET_CANVAS_TO_SHOW';
 export const SET_CANVAS_TO_SHOW_STATUS = 'SET_CANVAS_TO_SHOW_STATUS';
 export const SET_SIDE_PANEL_MODE = 'SET_SIDE_PANEL_MODE';
 export const SET_SELECTED_STATION = 'SET_SELECTED_STATION';
+export const SET_GLOBAL_ALERT = 'SET_GLOBAL_ALERT';
 
 export interface setCanvasScaleAction {
     type: typeof SET_CANVAS_SCALE;
@@ -37,6 +39,11 @@ export interface setSidePanelModeAction {
 export interface setSelectedStationAction {
     type: typeof SET_SELECTED_STATION;
     selectedStation: string;
+}
+
+export interface setGlobalAlertAction {
+    type: typeof SET_GLOBAL_ALERT;
+    globalAlert?: { status: AlertProps['status']; message: string };
 }
 
 export const setCanvasScale = (canvasScale: number) => {
@@ -106,4 +113,11 @@ export const setSidePanelMode = (sidePanelMode: SidePanelMode): setSidePanelMode
 
 export const setSelectedStation = (selectedStation: string): setSelectedStationAction => {
     return { type: SET_SELECTED_STATION, selectedStation };
+};
+
+export const setGlobalAlert = (globalAlert?: {
+    status: AlertProps['status'];
+    message: string;
+}): setGlobalAlertAction => {
+    return { type: SET_GLOBAL_ALERT, globalAlert };
 };

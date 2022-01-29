@@ -13,7 +13,6 @@
     },
 
     "HeaderActions": {
-        "upload": "Upload",
         "editStyle": "Edit style"
     },
 
@@ -21,6 +20,16 @@
         "downloads": "Downloads",
         "configFile": "Configuration file",
         "images": "Images"
+    },
+
+    "OpenActions": {
+        "openFrom": "Open from",
+        "upload": "Upload configuration file",
+        "templates": "Templates"
+    },
+
+    "TemplateModal": {
+        "title": "Select a template"
     },
 
     "StationDataTable": {

@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { SidePanelMode } from '../../constants/constants';
 import { setSidePanelMode } from '../../redux/app/action';
 import { useTranslation } from 'react-i18next';
+import OpenActions from './open-actions';
 
 export default function HeaderActions() {
     const { t } = useTranslation();
@@ -14,9 +15,9 @@ export default function HeaderActions() {
     return (
         <HStack ml="auto">
             <DownloadActions />
-            <Button variant="ghost" size="sm">
-                {t('HeaderActions.upload')}
-            </Button>
+
+            <OpenActions />
+
             <Button
                 variant="solid"
                 size="sm"
