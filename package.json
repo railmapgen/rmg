@@ -8,6 +8,7 @@
     "license": "GPL-3.0-only",
     "dependencies": {
         "@material-ui/core": "^4.12.3",
+        "@railmapgen/rmg-palette-resources": "^0.2.1",
         "electron-is-dev": "^2.0.0",
         "i18next": "^21.5.4",
         "i18next-browser-languagedetector": "^6.1.2",
@@ -46,6 +47,8 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "test:no-watch": "cross-env CI=true react-scripts test --env=jsdom",
+        "lint": "eslint ./src",
+        "lint:dev": "eslint -c ./.eslintrc.dev.json ./src",
         "eject": "react-scripts eject",
         "electron-dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
         "electron-package": "./node_modules/.bin/electron-builder -c.extraMetadata.main=build/electron.js",
@@ -63,7 +66,7 @@
             "last 1 safari version"
         ]
     },
-    "version": "3.11.5",
+    "version": "3.11.7",
     "main": "public/electron.js",
     "build": {
         "publish": [
@@ -75,5 +78,10 @@
         "snap": {
             "publish": "github"
         }
+    },
+    "jest": {
+        "transformIgnorePatterns": [
+            "/node_modules/(?!(@railmapgen/.*))"
+        ]
     }
 }

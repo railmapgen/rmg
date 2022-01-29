@@ -41,7 +41,7 @@ import {
     StationDict,
     StationInfo,
 } from '../../constants/constants';
-import { CityCode } from '../../constants/city-config';
+import { CityCode } from '@railmapgen/rmg-palette-resources';
 import { SET_DEPS_STR } from '../helper/action';
 import { createMockAppStore, mockSimpleStationList } from '../../setupTests';
 
@@ -51,7 +51,7 @@ const mockNote1: Note = ['Note 1 ZH', 'Note 1 EN', 10, 10, true];
 const mockNote2: Note = ['Note 2 ZH', 'Note 2 EN', 20, 20, false];
 const mockUpdatedNote: Note = ['Note 2 ZH Updated', 'Note 2 EN', 25, 25, false];
 const mockInterchange1: InterchangeInfo = [
-    CityCode.HongKong,
+    CityCode.Hongkong,
     'twl',
     '#000000',
     MonoColour.white,
@@ -94,9 +94,7 @@ describe('Tests for param actions', () => {
 
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(1);
-        expect(
-            actions.find(action => action.type === SET_STYLE && action.style === RmgStyle.GZMTR)
-        ).toBeDefined();
+        expect(actions.find(action => action.type === SET_STYLE && action.style === RmgStyle.GZMTR)).toBeDefined();
     });
 
     it('Can trigger helpers to update when setting stations', () => {

@@ -4,504 +4,323 @@ const params = {
     padding: 13,
     y_pc: 40,
     branch_spacing: 45,
-    theme: [
-        "shanghai",
-        "sh17",
-        "#C09C83",
-        "#fff"
-    ],
-    direction: "l",
-    current_stn_idx: "l1mz",
+    theme: ['shanghai', 'sh17', '#C09C83', '#fff'],
+    direction: 'l',
+    current_stn_idx: 'l1mz',
     platform_num: false,
     stn_list: {
         linestart: {
             parents: [],
-            children: [
-                "iwf6"
-            ],
-            name: [
-                "路綫右端",
-                "RIGHT END"
-            ],
+            children: ['iwf6'],
+            name: ['路綫右端', 'RIGHT END'],
             branch: {
                 left: [],
-                right: []
+                right: [],
             },
             transfer: {
-                tick_direc: "r",
+                tick_direc: 'r',
                 paid_area: true,
                 osi_names: [],
-                info: [
-                    []
-                ]
+                info: [[]],
             },
-            services: [
-                "local"
-            ],
-            facility: "",
-            num: "00",
-            secondaryName: false
+            services: ['local'],
+            facility: '',
+            num: '00',
+            secondaryName: false,
         },
         lineend: {
-            parents: [
-                "l1mz"
-            ],
+            parents: ['l1mz'],
             children: [],
-            name: [
-                "路綫左端",
-                "LEFT END"
-            ],
+            name: ['路綫左端', 'LEFT END'],
             branch: {
                 left: [],
-                right: []
+                right: [],
             },
             transfer: {
-                tick_direc: "r",
+                tick_direc: 'r',
                 paid_area: true,
                 osi_names: [],
-                info: [
-                    []
-                ]
+                info: [[]],
             },
-            services: [
-                "local"
-            ],
-            facility: "",
-            num: "00",
-            secondaryName: false
+            services: ['local'],
+            facility: '',
+            num: '00',
+            secondaryName: false,
         },
         l1mz: {
-            parents: [
-                "dmjl"
-            ],
-            children: [
-                "lineend"
-            ],
-            name: [
-                "虹桥火车站",
-                "Hongqiao Railway Station"
-            ],
+            parents: ['dmjl'],
+            children: ['lineend'],
+            name: ['虹桥火车站', 'Hongqiao Railway Station'],
             branch: {
                 left: [],
-                right: []
+                right: [],
             },
-            num: "02",
+            num: '02',
             transfer: {
-                tick_direc: "r",
+                tick_direc: 'r',
                 paid_area: true,
                 osi_names: [],
                 info: [
                     [
-                        [
-                            "shanghai",
-                            "sh2",
-                            "#97D700",
-                            "#000",
-                            "2号线",
-                            "Line 2"
-                        ],
-                        [
-                            "shanghai",
-                            "sh10",
-                            "#C1A7E2",
-                            "#000",
-                            "10号线",
-                            "Line 10"
-                        ]
-                    ]
-                ]
+                        ['shanghai', 'sh2', '#97D700', '#000', '2号线', 'Line 2'],
+                        ['shanghai', 'sh10', '#C1A7E2', '#000', '10号线', 'Line 10'],
+                    ],
+                ],
             },
-            services: [
-                "local"
-            ],
-            facility: "",
-            secondaryName: false
+            services: ['local'],
+            facility: '',
+            secondaryName: false,
         },
         iwf6: {
-            children: [
-                "eelz"
-            ],
-            parents: [
-                "linestart"
-            ],
-            name: [
-                "东方绿洲",
-                "Oriental Land"
-            ],
+            children: ['eelz'],
+            parents: ['linestart'],
+            name: ['东方绿洲', 'Oriental Land'],
             branch: {
                 left: [],
-                right: []
+                right: [],
             },
-            num: "01",
+            num: '01',
             transfer: {
-                tick_direc: "r",
+                tick_direc: 'r',
                 paid_area: true,
                 osi_names: [],
-                info: [
-                    []
-                ]
+                info: [[]],
             },
-            services: [
-                "local"
-            ],
-            facility: "",
-            secondaryName: false
+            services: ['local'],
+            facility: '',
+            secondaryName: false,
         },
         eelz: {
-            name: [
-                "朱家角",
-                "Zhujiajiao"
-            ],
+            name: ['朱家角', 'Zhujiajiao'],
             secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "iwf6"
-            ],
-            children: [
-                "s15s"
-            ],
+            num: '00',
+            services: ['local'],
+            parents: ['iwf6'],
+            children: ['s15s'],
             branch: {
                 left: [],
-                right: []
+                right: [],
             },
             transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
+                info: [[]],
+                tick_direc: 'r',
                 paid_area: true,
-                osi_names: []
+                osi_names: [],
             },
-            facility: ""
+            facility: '',
         },
         s15s: {
-            name: [
-                "淀山湖大道",
-                "Dianshanhu Avenue"
-            ],
+            name: ['淀山湖大道', 'Dianshanhu Avenue'],
             secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "eelz"
-            ],
-            children: [
-                "g2gh"
-            ],
+            num: '00',
+            services: ['local'],
+            parents: ['eelz'],
+            children: ['g2gh'],
             branch: {
                 left: [],
-                right: []
+                right: [],
             },
             transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
+                info: [[]],
+                tick_direc: 'r',
                 paid_area: true,
-                osi_names: []
+                osi_names: [],
             },
-            facility: ""
+            facility: '',
         },
         g2gh: {
-            name: [
-                "曹盈路",
-                "Caoying Road"
-            ],
+            name: ['曹盈路', 'Caoying Road'],
             secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "s15s"
-            ],
-            children: [
-                "4t0p"
-            ],
+            num: '00',
+            services: ['local'],
+            parents: ['s15s'],
+            children: ['4t0p'],
             branch: {
                 left: [],
-                right: []
+                right: [],
             },
             transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
+                info: [[]],
+                tick_direc: 'r',
                 paid_area: true,
-                osi_names: []
+                osi_names: [],
             },
-            facility: ""
+            facility: '',
         },
         '4t0p': {
-            name: [
-                "青浦新城",
-                "Qingpu Xincheng"
-            ],
+            name: ['青浦新城', 'Qingpu Xincheng'],
             secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "g2gh"
-            ],
-            children: [
-                "lcg3"
-            ],
+            num: '00',
+            services: ['local'],
+            parents: ['g2gh'],
+            children: ['lcg3'],
             branch: {
                 left: [],
-                right: []
+                right: [],
             },
             transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
+                info: [[]],
+                tick_direc: 'r',
                 paid_area: true,
-                osi_names: []
+                osi_names: [],
             },
-            facility: ""
+            facility: '',
         },
         lcg3: {
-            name: [
-                "汇金路",
-                "Huijin Road"
-            ],
+            name: ['汇金路', 'Huijin Road'],
             secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "4t0p"
-            ],
-            children: [
-                "v3sa"
-            ],
+            num: '00',
+            services: ['local'],
+            parents: ['4t0p'],
+            children: ['v3sa'],
             branch: {
                 left: [],
-                right: []
+                right: [],
             },
             transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
+                info: [[]],
+                tick_direc: 'r',
                 paid_area: true,
-                osi_names: []
+                osi_names: [],
             },
-            facility: ""
+            facility: '',
         },
         v3sa: {
-            name: [
-                "赵巷",
-                "Zhaoxiang"
-            ],
+            name: ['赵巷', 'Zhaoxiang'],
             secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "lcg3"
-            ],
-            children: [
-                "f0yz"
-            ],
+            num: '00',
+            services: ['local'],
+            parents: ['lcg3'],
+            children: ['f0yz'],
             branch: {
                 left: [],
-                right: []
+                right: [],
             },
             transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
+                info: [[]],
+                tick_direc: 'r',
                 paid_area: true,
-                osi_names: []
+                osi_names: [],
             },
-            facility: ""
+            facility: '',
         },
         f0yz: {
-            name: [
-                "嘉松中路",
-                "Middle Jiasong Road"
-            ],
+            name: ['嘉松中路', 'Middle Jiasong Road'],
             secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "v3sa"
-            ],
-            children: [
-                "kzgx"
-            ],
+            num: '00',
+            services: ['local'],
+            parents: ['v3sa'],
+            children: ['kzgx'],
             branch: {
                 left: [],
-                right: []
+                right: [],
             },
             transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
+                info: [[]],
+                tick_direc: 'r',
                 paid_area: true,
-                osi_names: []
+                osi_names: [],
             },
-            facility: ""
+            facility: '',
         },
         kzgx: {
-            name: [
-                "徐泾北城",
-                "Xujingbeicheng"
-            ],
+            name: ['徐泾北城', 'Xujingbeicheng'],
             secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "f0yz"
-            ],
-            children: [
-                "9i3j"
-            ],
+            num: '00',
+            services: ['local'],
+            parents: ['f0yz'],
+            children: ['9i3j'],
             branch: {
                 left: [],
-                right: []
+                right: [],
             },
             transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
+                info: [[]],
+                tick_direc: 'r',
                 paid_area: true,
-                osi_names: []
+                osi_names: [],
             },
-            facility: ""
+            facility: '',
         },
         '9i3j': {
-            name: [
-                "徐盈路",
-                "Xuying Road"
-            ],
+            name: ['徐盈路', 'Xuying Road'],
             secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "kzgx"
-            ],
-            children: [
-                "8mb1"
-            ],
+            num: '00',
+            services: ['local'],
+            parents: ['kzgx'],
+            children: ['8mb1'],
             branch: {
                 left: [],
-                right: []
+                right: [],
             },
             transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
+                info: [[]],
+                tick_direc: 'r',
                 paid_area: true,
-                osi_names: []
+                osi_names: [],
             },
-            facility: ""
+            facility: '',
         },
         '8mb1': {
-            name: [
-                "蟠龙路",
-                "Panlong Road"
-            ],
+            name: ['蟠龙路', 'Panlong Road'],
             secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "9i3j"
-            ],
-            children: [
-                "dmjl"
-            ],
+            num: '00',
+            services: ['local'],
+            parents: ['9i3j'],
+            children: ['dmjl'],
             branch: {
                 left: [],
-                right: []
+                right: [],
             },
             transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
+                info: [[]],
+                tick_direc: 'r',
                 paid_area: true,
-                osi_names: []
+                osi_names: [],
             },
-            facility: ""
+            facility: '',
         },
         dmjl: {
-            name: [
-                "诸光路",
-                "Zhuguang Road"
-            ],
+            name: ['诸光路', 'Zhuguang Road'],
             secondaryName: false,
-            num: "00",
-            services: [
-                "local"
-            ],
-            parents: [
-                "8mb1"
-            ],
-            children: [
-                "l1mz"
-            ],
+            num: '00',
+            services: ['local'],
+            parents: ['8mb1'],
+            children: ['l1mz'],
             branch: {
                 left: [],
-                right: []
+                right: [],
             },
             transfer: {
-                info: [
-                    []
-                ],
-                tick_direc: "r",
+                info: [[]],
+                tick_direc: 'r',
                 paid_area: true,
-                osi_names: []
+                osi_names: [],
             },
-            facility: ""
-        }
+            facility: '',
+        },
     },
-    line_name: [
-        "17号线",
-        "Line17"
-    ],
-    psd_num: "1",
-    line_num: "17",
-    info_panel_type: "sh",
+    line_name: ['17号线', 'Line17'],
+    psd_num: '1',
+    line_num: '17',
+    info_panel_type: 'sh',
     direction_gz_x: 50,
     direction_gz_y: 70,
     customiseMTRDest: {
         isLegacy: false,
-        terminal: false
+        terminal: false,
     },
     svgWidth: {
         destination: 1500,
         runin: 1500,
         railmap: 1500,
-        indoor: 2500
+        indoor: 2500,
     },
     notesGZMTR: [],
     namePosMTR: {
         isStagger: true,
-        isFlip: false
-    }
-}
+        isFlip: false,
+    },
+};
 
 export default params;

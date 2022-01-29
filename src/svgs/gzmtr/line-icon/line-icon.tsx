@@ -51,7 +51,9 @@ export default memo(
                                     <tspan fontSize={16} dy={0.7} className="rmg-name__zh">
                                         {commonPart}
                                     </tspan>
-                                    <tspan dy={-0.7} className="rmg-name__zh">{lineName[0].slice(commonPart.length)}</tspan>
+                                    <tspan dy={-0.7} className="rmg-name__zh">
+                                        {lineName[0].slice(commonPart.length)}
+                                    </tspan>
                                 </>
                             ) : (
                                 lineName[0]

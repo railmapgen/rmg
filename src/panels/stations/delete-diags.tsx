@@ -1,9 +1,9 @@
 import React, { useState, memo } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
-import { removeStation } from './utils';
-import { setCurrentStation, setStationsBulk } from '../../redux/param/action';
+import { setCurrentStation } from '../../redux/param/action';
 import { useAppDispatch, useAppSelector } from '../../redux';
+import { removeStation } from '../../redux/param/remove-station-action';
 
 interface Props {
     open: boolean;
@@ -22,15 +22,14 @@ export default function StationDeleteDialog(props: Props & { stnId: string }) {
 
     const handleClick = (action: 'close' | 'accept') => () => {
         if (action === 'accept') {
-            let res = removeStation(stnId, stnList);
-            if (res === false) {
+            let res = dispatch(removeStation(stnId));
+            if (!res) {
                 setIsError(true);
             } else {
                 if (currentStationIndex === stnId) {
-                    let newCurrentId = Object.keys(res).filter(id => !['linestart', 'lineend'].includes(id))[0];
+                    let newCurrentId = Object.keys(stnList).filter(id => !['linestart', 'lineend'].includes(id))[0];
                     dispatch(setCurrentStation(newCurrentId));
                 }
-                dispatch(setStationsBulk(res));
             }
         }
         onClose();
