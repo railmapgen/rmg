@@ -2,19 +2,19 @@ import React from 'react';
 import { mount } from 'enzyme';
 import DataTable, { DataTableDataType, DataTableFieldType } from './data-table';
 
+const mockData: DataTableDataType[] = [{ id: '001', field1: 'Value 1' }];
+
 describe('Unit tests for DataTable component', () => {
     it('Can display column header and cell value as expected', () => {
-        const data: DataTableDataType[] = [{ id: '001', field1: 'Value 1', isSelected: false }];
         const fields: DataTableFieldType<DataTableDataType>[] = [{ label: 'Field 1', key: 'field1' }];
 
-        const wrapper = mount(<DataTable data={data} fields={fields} />);
+        const wrapper = mount(<DataTable data={mockData} fields={fields} />);
 
         expect(wrapper.find('th').text()).toBe('Field 1');
         expect(wrapper.find('td').text()).toBe('Value 1');
     });
 
     it('Can display customised component in cell as expected', () => {
-        const data: DataTableDataType[] = [{ id: '001', field1: 'Value 1', isSelected: false }];
         const fields: DataTableFieldType<DataTableDataType>[] = [
             {
                 label: 'Field 1',
@@ -22,8 +22,17 @@ describe('Unit tests for DataTable component', () => {
             },
         ];
 
-        const wrapper = mount(<DataTable data={data} fields={fields} />);
+        const wrapper = mount(<DataTable data={mockData} fields={fields} />);
 
         expect(wrapper.find('button').text()).toBe('Value 1');
+    });
+
+    it('Can hide column if defined as hidden', () => {
+        const fields: DataTableFieldType<DataTableDataType>[] = [{ label: 'Field 1', key: 'field1', hidden: true }];
+
+        const wrapper = mount(<DataTable data={mockData} fields={fields} />);
+
+        expect(wrapper.find('thead tr').isEmptyRender()).toBeTruthy();
+        expect(wrapper.find('tbody tr').isEmptyRender()).toBeTruthy();
     });
 });

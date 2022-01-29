@@ -53,7 +53,7 @@ export default function LayoutSection() {
             min: 0,
             max: 100,
             onChange: val => dispatch(setYPercentage(val)),
-            enabledStyles: [RmgStyle.MTR, RmgStyle.GZMTR],
+            hidden: ![RmgStyle.MTR, RmgStyle.GZMTR].includes(rmgStyle),
         },
         {
             type: 'slider',
@@ -81,7 +81,7 @@ export default function LayoutSection() {
             min: 0,
             max: 100,
             onChange: val => dispatch(setDirectionIndicatorX(val)),
-            enabledStyles: [RmgStyle.GZMTR],
+            hidden: ![RmgStyle.GZMTR].includes(rmgStyle),
         },
         {
             type: 'slider',
@@ -90,7 +90,7 @@ export default function LayoutSection() {
             min: 0,
             max: 100,
             onChange: val => dispatch(setDirectionIndicatorY(val)),
-            enabledStyles: [RmgStyle.GZMTR],
+            hidden: ![RmgStyle.GZMTR].includes(rmgStyle),
         },
     ];
 

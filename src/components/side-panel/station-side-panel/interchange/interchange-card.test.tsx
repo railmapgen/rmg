@@ -81,7 +81,7 @@ describe('Unit tests for InterchangeCard component', () => {
         const wrapper = shallow(<InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />, {
             wrappingComponent: TestingProvider,
         });
-        console.log(wrapper.debug());
+        // console.log(wrapper.debug());
         wrapper.find('ColourModal').simulate('update', ['hongkong', 'eal', '#61B4E4', '#fff']);
 
         expect(mockCallbacks.onUpdate).toBeCalledTimes(1);

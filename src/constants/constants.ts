@@ -31,7 +31,7 @@ export const canvasConfig: { [s in RmgStyle]: CanvasType[] } = {
 export enum SidePanelMode {
     CLOSE = 'CLOSE',
     STATION = 'STATION',
-    STYLE = 'STYLE'
+    STYLE = 'STYLE',
 }
 
 /**

@@ -3,11 +3,11 @@ import { Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { MdExpandMore, MdInsertDriveFile, MdUpload } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { updateParam } from '../../utils';
-import {  readFileAsText } from '../../util/utils';
+import { readFileAsText } from '../../util/utils';
 import UploadConfirmModal from '../modal/upload-confirm-modal';
 import { useDispatch } from 'react-redux';
-import {  setGlobalAlert } from '../../redux/app/action';
-import {  RMGParam } from '../../constants/constants';
+import { setGlobalAlert } from '../../redux/app/action';
+import { RMGParam } from '../../constants/constants';
 import TemplateModal from '../modal/template-modal';
 import { openFromNewParam } from '../../redux/param/open-new-action';
 

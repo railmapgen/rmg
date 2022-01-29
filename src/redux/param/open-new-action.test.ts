@@ -13,7 +13,7 @@ const mockStore = createMockAppStore(realStore);
 // TODO: add unit test
 describe('Unit tests for OpenNewAction', () => {
     it('Dummy test', () => {
-        expect(1+1).toBe(2)
+        expect(1 + 1).toBe(2);
         // // save uploaded param and canvas to show to local storage
         // expect(window.rmgStorage.writeFile).toBeCalledTimes(2);
         // expect(window.rmgStorage.writeFile).toBeCalledWith('rmgParam', expect.any(String));
@@ -25,5 +25,5 @@ describe('Unit tests for OpenNewAction', () => {
         //
         // // rerender app
         // expect(reRenderApp).toBeCalledTimes(1);
-    })
-})
+    });
+});
