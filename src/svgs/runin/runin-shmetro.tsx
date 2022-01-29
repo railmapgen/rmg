@@ -3,7 +3,7 @@ import { Name } from '../../constants/constants';
 import { useAppSelector } from '../../redux';
 
 const RunInSHMetro = () => {
-    const { routes } = useAppSelector(store => store.helper)
+    const { routes } = useAppSelector(store => store.helper);
     const param = useAppSelector(store => store.param);
 
     // get the height
@@ -58,17 +58,20 @@ const DefsSHMetro = memo(() => (
         </marker>
 
         {/* Outline filter of white pass color in Pujiang Line */}
-        <filter id="pujiang_outline_runin" colorInterpolationFilters="sRGB"
+        <filter
+            id="pujiang_outline_runin"
+            colorInterpolationFilters="sRGB"
             // TODO: remove the absolute value while make the filter works correctly
-            filterUnits="userSpaceOnUse" x="0" y="-1000" width="5000" height="2000">
-            <feMorphology operator="erode" in="SourceAlpha"
-                radius="0" result="e1" />
-            <feMorphology operator="erode" in="SourceAlpha"
-                radius="1" result="e2" />
-            <feComposite in="e1" in2="e2" operator="xor"
-                result="outline" />
-            <feComposite in="outline" in2="SourceGraphic"
-                operator="over" result="output" />
+            filterUnits="userSpaceOnUse"
+            x="0"
+            y="-1000"
+            width="5000"
+            height="2000"
+        >
+            <feMorphology operator="erode" in="SourceAlpha" radius="0" result="e1" />
+            <feMorphology operator="erode" in="SourceAlpha" radius="1" result="e2" />
+            <feComposite in="e1" in2="e2" operator="xor" result="outline" />
+            <feComposite in="outline" in2="SourceGraphic" operator="over" result="output" />
         </filter>
     </defs>
 ));
@@ -86,11 +89,15 @@ const GeneralStation = (props: RunInGeneralProps) => {
     const original = props.prevStnIds.length === 1 && ['linestart', 'lineend'].includes(props.prevStnIds[0]);
 
     const nextNames = props.nextStnIds.map(stnId => param.stn_list[stnId].name);
-    const nextBranchLineDy = (props.nextStnIds.length > 1 ? (nextNames[0][0].split('\\').length - 1) * -50 +
-                                                       (nextNames[0][1].split('\\').length - 1) * -30 : 0) + 10
+    const nextBranchLineDy =
+        (props.nextStnIds.length > 1
+            ? (nextNames[0][0].split('\\').length - 1) * -50 + (nextNames[0][1].split('\\').length - 1) * -30
+            : 0) + 10;
     const prevNames = props.prevStnIds.map(stnId => param.stn_list[stnId].name);
-    const prevBranchLineDy = (props.prevStnIds.length > 1 ? (prevNames[0][0].split('\\').length - 1) * -50 +
-                                                        (prevNames[0][1].split('\\').length - 1) * -30 : 0) + 10
+    const prevBranchLineDy =
+        (props.prevStnIds.length > 1
+            ? (prevNames[0][0].split('\\').length - 1) * -50 + (prevNames[0][1].split('\\').length - 1) * -30
+            : 0) + 10;
 
     return (
         <>
@@ -100,24 +107,28 @@ const GeneralStation = (props: RunInGeneralProps) => {
                         stroke="var(--rmg-theme-colour)"
                         d={
                             param.direction === 'l'
-                                ? `M${param.svgWidth.runin / 3},125 L${param.svgWidth.runin / 6},${nextBranchLineDy} H36`
-                                : `M${(param.svgWidth.runin / 3) * 2},125 L${(param.svgWidth.runin / 6) * 5},${nextBranchLineDy} H${
-                                      param.svgWidth.runin - 36
-                                  }`
+                                ? `M${param.svgWidth.runin / 3},125 L${
+                                      param.svgWidth.runin / 6
+                                  },${nextBranchLineDy} H36`
+                                : `M${(param.svgWidth.runin / 3) * 2},125 L${
+                                      (param.svgWidth.runin / 6) * 5
+                                  },${nextBranchLineDy} H${param.svgWidth.runin - 36}`
                         }
                         markerEnd="url(#slope)"
                     />
                 )}
                 {props.prevStnIds.length > 1 && (
-                    <g
-                        filter={param.theme[2] === '#999999' ? 'url(#pujiang_outline_railmap)' : undefined}>
+                    <g filter={param.theme[2] === '#999999' ? 'url(#pujiang_outline_railmap)' : undefined}>
                         <path
                             stroke="var(--rmg-grey)"
                             d={
                                 param.direction === 'l'
-                                    ? `M${(param.svgWidth.runin / 3) * 2},125 L${(param.svgWidth.runin / 6) * 5},${prevBranchLineDy} H${param.svgWidth.runin - 24
-                                    }`
-                                    : `M${param.svgWidth.runin / 3},125 L${param.svgWidth.runin / 6},${prevBranchLineDy} H24`
+                                    ? `M${(param.svgWidth.runin / 3) * 2},125 L${
+                                          (param.svgWidth.runin / 6) * 5
+                                      },${prevBranchLineDy} H${param.svgWidth.runin - 24}`
+                                    : `M${param.svgWidth.runin / 3},125 L${
+                                          param.svgWidth.runin / 6
+                                      },${prevBranchLineDy} H24`
                             }
                         />
                     </g>
@@ -126,8 +137,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
 
             {termianl && param.info_panel_type !== 'sh2020' ? (
                 <>
-                    <g
-                        filter={param.theme[2] === '#999999' ? 'url(#pujiang_outline_railmap)' : undefined}>
+                    <g filter={param.theme[2] === '#999999' ? 'url(#pujiang_outline_railmap)' : undefined}>
                         <path
                             transform="translate(0,220)"
                             stroke="var(--rmg-grey)"
@@ -136,8 +146,10 @@ const GeneralStation = (props: RunInGeneralProps) => {
                         />
                     </g>
 
-                    <g transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},160)`}
-                        textAnchor={param.direction === 'l' ? 'start' : 'end'} >
+                    <g
+                        transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},160)`}
+                        textAnchor={param.direction === 'l' ? 'start' : 'end'}
+                    >
                         <CurrentText />
                     </g>
                 </>
@@ -155,8 +167,10 @@ const GeneralStation = (props: RunInGeneralProps) => {
                         markerEnd="url(#slope)"
                     />
 
-                    <g transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},160)`}
-                        textAnchor={param.direction === 'l' ? 'end' : 'start'} >
+                    <g
+                        transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},160)`}
+                        textAnchor={param.direction === 'l' ? 'end' : 'start'}
+                    >
                         <CurrentText />
                     </g>
                 </>
@@ -168,8 +182,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
                             d={`M ${middle},16 H ${param.direction === 'l' ? 36 : param.svgWidth.runin - 36}`}
                             markerEnd="url(#slope)"
                         />
-                        <g
-                            filter={param.theme[2] === '#999999' ? 'url(#pujiang_outline_railmap)' : undefined}>
+                        <g filter={param.theme[2] === '#999999' ? 'url(#pujiang_outline_railmap)' : undefined}>
                             <path
                                 stroke="var(--rmg-grey)"
                                 d={`M ${middle},16 H ${param.direction === 'l' ? param.svgWidth.runin - 24 : 24} `}
@@ -183,8 +196,8 @@ const GeneralStation = (props: RunInGeneralProps) => {
                 </>
             )}
 
-            {(original || !termianl) && (<NextStn stnIds={props.nextStnIds} />)}
-            {(termianl || !original) && (<PrevStn stnIds={props.prevStnIds} />)}
+            {(original || !termianl) && <NextStn stnIds={props.nextStnIds} />}
+            {(termianl || !original) && <PrevStn stnIds={props.prevStnIds} />}
         </>
     );
 };
@@ -215,15 +228,23 @@ const NextText = (props: { nextName: Name } & React.SVGProps<SVGGElement>) => {
             {useMemo(
                 () => (
                     <>
-                        {nextName[0].split('\\').map((name, i, array)=>(
-                            <text className="rmg-name__zh" fontSize={48} key={name}
-                                dy={(array.length - 1 - i) * -50 - (nextName[1].split('\\').length - 1) * 30}>
+                        {nextName[0].split('\\').map((name, i, array) => (
+                            <text
+                                className="rmg-name__zh"
+                                fontSize={48}
+                                key={name}
+                                dy={(array.length - 1 - i) * -50 - (nextName[1].split('\\').length - 1) * 30}
+                            >
                                 {name}
                             </text>
                         ))}
-                        {nextName[1].split('\\').map((name, i, array)=>(
-                            <text className="rmg-name__en" fontSize={24} key={name}
-                                dy={28 + (array.length - 1 - i) * -30}>
+                        {nextName[1].split('\\').map((name, i, array) => (
+                            <text
+                                className="rmg-name__en"
+                                fontSize={24}
+                                key={name}
+                                dy={28 + (array.length - 1 - i) * -30}
+                            >
                                 {name}
                             </text>
                         ))}
@@ -239,11 +260,14 @@ const NextText = (props: { nextName: Name } & React.SVGProps<SVGGElement>) => {
 const PrevStn = (props: { stnIds: string[] }) => {
     const param = useAppSelector(store => store.param);
     const nextNames = props.stnIds.map(stnId => param.stn_list[stnId].name);
-    const prevHintDy = (props.stnIds.length > 1 ? 15 : 125) +
+    const prevHintDy =
+        (props.stnIds.length > 1 ? 15 : 125) +
         nextNames.map(name => name[0].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -50 +
-        nextNames.map(name => name[1].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -30
-    const nextBranchTextDy = (props.stnIds.length > 1 ? (nextNames[0][0].split('\\').length - 1) * -50 +
-        (nextNames[0][1].split('\\').length - 1) * -30 : 0) + 70
+        nextNames.map(name => name[1].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -30;
+    const nextBranchTextDy =
+        (props.stnIds.length > 1
+            ? (nextNames[0][0].split('\\').length - 1) * -50 + (nextNames[0][1].split('\\').length - 1) * -30
+            : 0) + 70;
 
     return (
         <g
@@ -270,11 +294,14 @@ const PrevStn = (props: { stnIds: string[] }) => {
 const NextStn = (props: { stnIds: string[] }) => {
     const param = useAppSelector(store => store.param);
     const nextNames = props.stnIds.map(stnId => param.stn_list[stnId].name);
-    const nextHintDy = (props.stnIds.length > 1 ? 15 : 125) +
+    const nextHintDy =
+        (props.stnIds.length > 1 ? 15 : 125) +
         nextNames.map(name => name[0].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -50 +
-        nextNames.map(name => name[1].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -30
-    const nextBranchTextDy = (props.stnIds.length > 1 ? (nextNames[0][0].split('\\').length - 1) * -50 +
-                                                       (nextNames[0][1].split('\\').length - 1) * -30 : 0) + 70
+        nextNames.map(name => name[1].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -30;
+    const nextBranchTextDy =
+        (props.stnIds.length > 1
+            ? (nextNames[0][0].split('\\').length - 1) * -50 + (nextNames[0][1].split('\\').length - 1) * -30
+            : 0) + 70;
 
     return (
         <g
@@ -283,7 +310,10 @@ const NextStn = (props: { stnIds: string[] }) => {
         >
             <NextText nextName={param.stn_list[props.stnIds[0]].name} transform="translate(0,183)" />
             {props.stnIds.length > 1 && (
-                <NextText nextName={param.stn_list[props.stnIds[1]].name} transform={`translate(0,${nextBranchTextDy})`}/>
+                <NextText
+                    nextName={param.stn_list[props.stnIds[1]].name}
+                    transform={`translate(0,${nextBranchTextDy})`}
+                />
             )}
             <g transform={`translate(0, ${nextHintDy})`}>
                 <text className="rmg-name__zh" fontSize={22}>

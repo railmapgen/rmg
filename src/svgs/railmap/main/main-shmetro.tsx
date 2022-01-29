@@ -164,7 +164,9 @@ const Line = (props: { paths: servicesPath[]; direction: 'l' | 'r' }) => {
                                 markerStart={props.direction === 'l' ? 'url(#arrow_theme_left)' : undefined}
                                 markerEnd={props.direction === 'r' ? 'url(#arrow_theme_right)' : undefined}
                                 strokeLinejoin="round"
-                                filter={i === 2 ? 'url(#contrast-direct)' : i === 1 ? 'url(#contrast-express)' : undefined}
+                                filter={
+                                    i === 2 ? 'url(#contrast-direct)' : i === 1 ? 'url(#contrast-express)' : undefined
+                                }
                             />
                         ))}
                     </g>
