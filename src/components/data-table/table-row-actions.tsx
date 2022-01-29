@@ -30,12 +30,7 @@ export default function TableRowActions(props: TableRowActionsProps) {
                 onClick={() => dispatch(setCurrentStation(stationId))}
                 icon={<MdLocationPin />}
             />
-            <IconButton
-                size="xs"
-                aria-label="Edit this station"
-                onClick={handleEdit}
-                icon={<MdEdit />}
-            />
+            <IconButton size="xs" aria-label="Edit this station" onClick={handleEdit} icon={<MdEdit />} />
             <IconButton size="xs" aria-label="Delete this station" onClick={handleDelete} icon={<MdDelete />} />
         </HStack>
     );

@@ -1,4 +1,5 @@
 {
+    "root": true,
     "extends": [
         "react-app",
         "react-app/jest"
@@ -7,6 +8,12 @@
         "prettier"
     ],
     "rules": {
+        "prettier/prettier": [
+            "warn",
+            {
+                "endOfLine": "auto"
+            }
+        ],
         "react-hooks/exhaustive-deps": "off"
     }
 }

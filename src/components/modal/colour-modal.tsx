@@ -19,7 +19,7 @@ import { ColourHex, MonoColour, Theme } from '../../constants/constants';
 import CityPicker from '../side-panel/city-picker';
 import ColourPicker from '../side-panel/colour-picker';
 import { CityCode } from '@railmapgen/rmg-palette-resources';
-import EditableStack, { EditableField } from '../side-panel/editable-stack';
+import RmgFields, { RmgFieldsFields } from '../common/rmg-fields';
 import RmgLineBadge from '../common/rmg-line-badge';
 import { useTranslation } from 'react-i18next';
 
@@ -49,7 +49,7 @@ export default function ColourModal(props: ColourModalProps) {
         }
     }, [isOpen, defaultTheme?.toString()]);
 
-    const paletteFields: EditableField[] = [
+    const paletteFields: RmgFieldsFields[] = [
         {
             type: 'custom',
             label: t('ColourModal.city'),
@@ -82,7 +82,7 @@ export default function ColourModal(props: ColourModalProps) {
         },
     ];
 
-    const customFields: EditableField[] = [
+    const customFields: RmgFieldsFields[] = [
         {
             type: 'input',
             label: t('ColourModal.bg'),
@@ -144,10 +144,10 @@ export default function ColourModal(props: ColourModalProps) {
 
                             <TabPanels>
                                 <TabPanel>
-                                    <EditableStack fields={paletteFields} />
+                                    <RmgFields fields={paletteFields} />
                                 </TabPanel>
                                 <TabPanel>
-                                    <EditableStack fields={customFields} />
+                                    <RmgFields fields={customFields} />
                                 </TabPanel>
                             </TabPanels>
                         </Tabs>

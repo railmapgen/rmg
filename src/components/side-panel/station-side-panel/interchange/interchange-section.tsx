@@ -11,7 +11,7 @@ import {
 } from '../../../../redux/param/action';
 import { InterchangeInfo, MonoColour } from '../../../../constants/constants';
 import { MdAdd } from 'react-icons/md';
-import EditableStack, { EditableField } from '../../editable-stack';
+import RmgFields, { RmgFieldsFields } from '../../../common/rmg-fields';
 
 export default function InterchangeSection() {
     const dispatch = useDispatch();
@@ -20,7 +20,7 @@ export default function InterchangeSection() {
     const theme = useAppSelector(state => state.param.theme);
     const { transfer } = useAppSelector(state => state.param.stn_list[selectedStation]);
 
-    const getOSINameFields = (setIndex: number): EditableField[] => [
+    const getOSINameFields = (setIndex: number): RmgFieldsFields[] => [
         {
             type: 'input',
             label: 'Station Chinese name',
@@ -67,7 +67,7 @@ export default function InterchangeSection() {
                             : 'Out-of-system interchange'}
                     </Heading>
 
-                    {i !== 0 && <EditableStack fields={getOSINameFields(i - 1)} />}
+                    {i !== 0 && <RmgFields fields={getOSINameFields(i - 1)} />}
 
                     <InterchangeCard
                         interchangeList={infoList}

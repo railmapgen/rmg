@@ -2,10 +2,10 @@ import React from 'react';
 import { useAppSelector } from '../../redux';
 import { setSidePanelMode } from '../../redux/app/action';
 import { useDispatch } from 'react-redux';
-import { Alert, AlertIcon, Box, CloseButton, Flex } from '@chakra-ui/react';
+import { Alert, AlertIcon, CloseButton, Flex } from '@chakra-ui/react';
 import { SidePanelMode } from '../../constants/constants';
 import StationSidePanel from './station-side-panel/station-side-panel';
-import StyleSidePanel from './style-side-panel';
+import StyleSidePanel from './style-side-panel/style-side-panel';
 
 const SIDE_PANEL_WIDTH = 400;
 
@@ -31,8 +31,8 @@ export default function SidePanel() {
             direction="column"
             transition="0.3s"
         >
-            <Box w={SIDE_PANEL_WIDTH}>
-                <Alert status="info" variant="solid" size="xs" pl={3} pr={1} pb={0} pt={0}>
+            <Flex direction="column" w={SIDE_PANEL_WIDTH} h="100%">
+                <Alert status="info" variant="solid" size="xs" flexShrink={0} pl={3} pr={1} pb={0} pt={0}>
                     <AlertIcon />
                     {sidePanelMode === SidePanelMode.STATION ? name[0] + ' - ' + name[1] : 'Edit style'}
                     <CloseButton ml="auto" onClick={handleClose} />
@@ -40,7 +40,7 @@ export default function SidePanel() {
 
                 {sidePanelMode === SidePanelMode.STATION && <StationSidePanel />}
                 {sidePanelMode === SidePanelMode.STYLE && <StyleSidePanel />}
-            </Box>
+            </Flex>
         </Flex>
     );
 }

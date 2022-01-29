@@ -2,11 +2,12 @@ import React from 'react';
 import { Flex, Heading, Badge, Menu, MenuButton, MenuItem, MenuList, IconButton } from '@chakra-ui/react';
 import { Environments, getEnvironment, getVersion } from '../util/config';
 import { useTranslation } from 'react-i18next';
-import { MdLocationCity, MdTranslate } from 'react-icons/md';
+import { MdLocationCity, MdTranslate, MdZoomOut } from 'react-icons/md';
 import { LanguageCode, RmgStyle } from '../constants/constants';
 import { useDispatch } from 'react-redux';
 import { setStyle } from '../redux/param/action';
 import { Link } from 'react-router-dom';
+import { zoomIn, zoomOut } from '../redux/app/action';
 
 export default function WindowHeader() {
     const { t, i18n } = useTranslation();
@@ -33,14 +34,27 @@ export default function WindowHeader() {
                 </Badge>
             </Heading>
 
+            <IconButton
+                size="xs"
+                variant="ghost"
+                aria-label="Zoom out"
+                icon={<MdZoomOut />}
+                onClick={() => dispatch(zoomOut())}
+            />
+            <IconButton
+                size="xs"
+                variant="ghost"
+                aria-label="Zoom in"
+                icon={<MdZoomOut />}
+                onClick={() => dispatch(zoomIn())}
+            />
+
             <Menu>
                 <MenuButton as={IconButton} icon={<MdLocationCity />} variant="ghost" size="xs" />
                 <MenuList>
                     {Object.values(RmgStyle).map(style => (
                         <Link key={style} to={'/v5/' + style}>
-                            <MenuItem onClick={() => dispatch(setStyle(style))}>
-                                {style}
-                            </MenuItem>
+                            <MenuItem onClick={() => dispatch(setStyle(style))}>{style}</MenuItem>
                         </Link>
                     ))}
                 </MenuList>

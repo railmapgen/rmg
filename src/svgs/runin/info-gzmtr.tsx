@@ -55,7 +55,7 @@ const InfoGZMTR = () => {
                             (curStnInfo.name[1].split('\\').length - 1) * 18 -
                             (curStnInfo.secondaryName ? 58 / 2 : 0)
                         }px`,
-                        transform: 'translate(var(--translate-x, 800px), var(--translate-y, 145px))'
+                        transform: 'translate(var(--translate-x, 800px), var(--translate-y, 145px))',
                     }}
                     large
                 />

@@ -136,7 +136,7 @@ const PlatformNum = () => {
 
     // Total width: 325
     return useMemo(
-        ()=>(
+        () => (
             <g transform={`translate(${-325 / 2 + 60},150)`}>
                 <circle r={60} fill="none" stroke="black" strokeWidth={2} />
                 <text className="rmg-name__en" dominantBaseline="central" fontSize={120} textAnchor="middle">
@@ -168,14 +168,18 @@ const LineNameBoxText = () => {
         [...line_name]
     );
 
-    const rectDx = (direction === 'l' ? -bBox.width : 0) - 6
-    const stnNameEnDx = (direction === 'l' ? -1 : 1) * bBox.width / 2
+    const rectDx = (direction === 'l' ? -bBox.width : 0) - 6;
+    const stnNameEnDx = ((direction === 'l' ? -1 : 1) * bBox.width) / 2;
 
     return useMemo(
         () => (
             <g transform={`translate(${boxX},92)`}>
                 <rect fill="var(--rmg-theme-colour)" x={rectDx} width={bBox.width + 10} height={120} />
-                <g textAnchor={direction === 'r' ? 'start' : 'end'} transform="translate(0,68)" fill="var(--rmg-theme-fg)">
+                <g
+                    textAnchor={direction === 'r' ? 'start' : 'end'}
+                    transform="translate(0,68)"
+                    fill="var(--rmg-theme-fg)"
+                >
                     <g ref={stnNameEl}>
                         <text className="rmg-name__zh" fontSize={68}>
                             {line_name[0]}
@@ -189,7 +193,7 @@ const LineNameBoxText = () => {
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [bBox, boxX, direction, line_name]
-    )
+    );
 };
 
 const LineNameBoxNumber = () => {

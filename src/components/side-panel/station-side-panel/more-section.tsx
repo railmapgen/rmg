@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import React from 'react';
-import EditableStack, { EditableField } from '../editable-stack';
+import RmgFields, { RmgFieldsFields } from '../../common/rmg-fields';
 import RmgButtonGroup from '../../common/rmg-button-group';
 import { useAppSelector } from '../../../redux';
 import { Services } from '../../../constants/constants';
@@ -21,7 +21,7 @@ export default function MoreSection() {
         };
     });
 
-    const fields: EditableField[] = [
+    const fields: RmgFieldsFields[] = [
         {
             type: 'custom',
             label: 'Train services',
@@ -38,7 +38,7 @@ export default function MoreSection() {
 
     return (
         <Box>
-            <EditableStack fields={fields} />
+            <RmgFields fields={fields} />
         </Box>
     );
 }

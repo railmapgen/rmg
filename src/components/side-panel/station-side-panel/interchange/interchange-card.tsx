@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, HStack, IconButton, Text, useColorModeValue } from '@chakra-ui/react';
 import { InterchangeInfo, MonoColour, Theme } from '../../../../constants/constants';
-import EditableStack, { EditableField } from '../../editable-stack';
+import RmgFields, { RmgFieldsFields } from '../../../common/rmg-fields';
 import { MdAdd, MdCircle, MdContentCopy, MdDelete } from 'react-icons/md';
 import RmgLabel from '../../../common/rmg-label';
 import ColourModal from '../../../modal/colour-modal';
@@ -28,7 +28,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
 
     const cardBg = useColorModeValue('gray.50', 'gray.700');
 
-    const interchangeFields: EditableField[][] = interchangeList.map((it, i) => [
+    const interchangeFields: RmgFieldsFields[][] = interchangeList.map((it, i) => [
         {
             type: 'input',
             label: t('InterchangeCard.zhName'),
@@ -81,7 +81,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
                         />
                     </RmgLabel>
 
-                    <EditableStack fields={interchangeFields[i]} noLabel={i !== 0} />
+                    <RmgFields fields={interchangeFields[i]} noLabel={i !== 0} />
 
                     {i === interchangeFields.length - 1 ? (
                         <IconButton
