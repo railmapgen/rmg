@@ -178,29 +178,50 @@ const ColineSHMetro = (props: Props) => {
     );
     // console.log(colinePaths);
 
-    // data to draw the station elements
-    const colineStations = {
-        main: colineStns.main
-            .map(stns =>
-                stns.linePath.map(stnId => ({ curStn: stnId, x: xs[stnId], y: ys[stnId], color: stns.colors[1] }))
-            )
-            .flat(),
-        pass: colineStns.pass
-            .map(stns =>
-                stns.linePath.map(stnId => ({ curStn: stnId, x: xs[stnId], y: ys[stnId], color: stns.colors[1] }))
-            )
-            .flat(),
-    };
+    // Data to draw the station elements.
+    const colineStations = [...colineStns.main, ...colineStns.pass]
+        // Merge main and pass station together to minimize the code duplication
+        // and its state can obtained by stnStates.
+        .map(stns =>
+            stns.linePath.map(stnId => ({
+                curStn: stnId,
+                x: xs[stnId],
+                y: ys[stnId],
+                color: stns.colors[1],
+            }))
+        )
+        .flat()
+        .reduce(
+            // remove current station as it appears in both main and pass
+            (acc, cur) => (acc.find(x => x.curStn === cur.curStn) ? acc : acc.concat(cur)),
+            [] as {
+                curStn: string;
+                x: number;
+                y: number;
+                color: Theme;
+            }[]
+        );
     console.log(colineStations);
 
+    const lineWidth = 12;
+    const colineGap = 3;
     return (
-        <g id="coline" transform="translate(0,15)">
+        <g id="coline" transform={`translate(0,${lineWidth + colineGap})`}>
             <CoLine paths={colinePaths} direction={direction} />
-            {[...colineStations.main, ...colineStations.pass].map(colineStation => {
+            {colineStations.map(colineStation => {
                 const { curStn, x, y, color } = colineStation;
+                const height = (stnStates[curStn] === -1 ? 0 : lineWidth) + colineGap;
+                const dy = (stnStates[curStn] === -1 ? 0 : -lineWidth) - colineGap - lineWidth / 2;
                 return (
                     <g key={curStn} transform={`translate(${x},${y})`}>
-                        <use xlinkHref={`#stn_sh_2020`} fill={stnStates[curStn] === 0 ? 'red' : color[2]} />
+                        <rect
+                            stroke="none"
+                            height={height}
+                            width={12}
+                            x={-6}
+                            y={dy}
+                            fill={stnStates[curStn] === -1 ? 'var(--rmg-grey)' : color[2]}
+                        />
                     </g>
                 );
             })}
