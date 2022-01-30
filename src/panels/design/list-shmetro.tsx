@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Switch, ListItem, ListItemIcon, Icon, ListItemText, Divider, Select, makeStyles, createStyles, ListItemSecondaryAction, Collapse, List, TextField } from '@material-ui/core';
 import { PanelTypeShmetro } from '../../constants/constants';
 import { useAppDispatch, useAppSelector } from '../../redux';
-import { setPanelType, setLineNum, setStationNumberOpen } from '../../redux/param/action';
+import { setPanelType, setLineNum, setShowStationNumber } from '../../redux/param/action';
 
 const DesignListShmetro = () => {
     return (
@@ -43,15 +43,15 @@ const StationNumberSHMetroLi = () => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
 
-    const station_number = useAppSelector(store => store.param.stn_number);
+    const station_number = useAppSelector(store => store.param.showStationNumber);
     const line_number = useAppSelector(store => store.param.line_num);
 
     return useMemo(() => {
         const handleSwitch = (_: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
             if (checked) {
-                dispatch(setStationNumberOpen(true));
+                dispatch(setShowStationNumber(true));
             } else {
-                dispatch(setStationNumberOpen(false));
+                dispatch(setShowStationNumber(false));
             }
         };
 
@@ -79,7 +79,7 @@ const StationNumberSHMetroLi = () => {
                 </Collapse>
             </>
         );
-    }, [line_number, station_number, t]);
+    }, [line_number, station_number]);
 };
 
 const PanelTypeLi = () => {

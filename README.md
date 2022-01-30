@@ -50,14 +50,6 @@ Make your own rail map on [GitHub Pages](https://wongchito.github.io/RailMapGene
       <sub>Shanghai Metro Author</sub><br/>
       <sub>Electron Maintainer</sub><br/>
     </td>
-    <td align="center" style="border-width:0px">
-      <a herf="https://github.com/XHG78999">
-        <img src="https://github.com/XHG78999.png" width="100px;" alt="" /><br/>
-        <b>XHG78999</b><br/>
-      </a>
-      <sub>Do some features in Shanghai Metro</sub><br/>
-      <sub>Line templates Validater</sub><br/>
-    </td>
   </tr>
 </table>
 

@@ -76,7 +76,7 @@ const StationEntry = (props: { stnId: string; isSelected: boolean; onAction: (ac
 
     const rmgStyle = useAppSelector(store => store.param.style);
     const stationInfo = useAppSelector(store => store.param.stn_list[stnId]);
-    const stn_number = useAppSelector(store => store.param.stn_number);
+    const stn_number = useAppSelector(store => store.param.showStationNumber);
 
     const name = stationInfo?.name || ['', ''];
     const num = stationInfo?.num || '00';

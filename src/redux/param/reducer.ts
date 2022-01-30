@@ -23,7 +23,7 @@ import {
     SET_THEME,
     SET_Y_PERCENTAGE,
     SET_STYLE,
-    SET_STN_NUMBER,
+    SET_SHOW_STATION_NUMBER,
     setBranchSpacingAction,
     setCurrentStationAction,
     setCustomisedMtrDestinationAction,
@@ -46,7 +46,7 @@ import {
     setThemeAction,
     setYPercentageAction,
     setStyleAction,
-    setStationNumberOpenAction,
+    setShowStationNumberAction,
 } from './action';
 
 const initialState: RMGParam = {
@@ -66,7 +66,7 @@ const initialState: RMGParam = {
     theme: [CityCode.HongKong, 'twl', '#E2231A', MonoColour.white],
     line_name: ['線', 'line'],
     current_stn_idx: '',
-    stn_number:false,
+    showStationNumber:false,
     stn_list: {},
     namePosMTR: {
         isStagger: true,
@@ -109,7 +109,7 @@ export default function ParamReducer(
         | setCurrentStationAction
         | setStationAction
         | setStationsBulkAction
-        | setStationNumberOpenAction
+        | setShowStationNumberAction
 ) {
     switch (action.type) {
         case SET_FULL_PARAM:
@@ -177,8 +177,8 @@ export default function ParamReducer(
         case SET_STATIONS_BULK:
             state.stn_list = action.stations;
             break;
-        case SET_STN_NUMBER:
-            state.stn_number=action.stn_number;
+        case SET_SHOW_STATION_NUMBER:
+            state.showStationNumber=action.showStationNumber;
             break;
         default:
             break;
