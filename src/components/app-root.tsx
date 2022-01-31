@@ -40,7 +40,7 @@ export default function AppRoot() {
                         <Box>
                             <SvgRouter />
                         </Box>
-                        <Box flex={1} overflowY="auto" p={2}>
+                        <Box flex={1} overflowY="auto">
                             <StationDataTable />
                         </Box>
                     </Flex>

@@ -1,5 +1,34 @@
 import React, { Fragment, ReactElement } from 'react';
-import { Table, Thead, Tbody, Tr, Th, Td, useColorMode } from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Th, Td, useColorMode, SystemStyleObject } from '@chakra-ui/react';
+
+const trStyle: SystemStyleObject = {
+    'td, th': {
+        borderRight: '1px solid',
+        borderColor: 'blackAlpha.200',
+        backgroundColor: 'gray.50',
+        whiteSpace: 'nowrap',
+    },
+
+    'td:first-child, th:first-child': {
+        position: 'sticky',
+        left: 0,
+        zIndex: 1,
+    },
+
+    'td:last-child, th: last-child': {
+        borderRight: 'none',
+        position: 'sticky',
+        right: 0,
+        zIndex: 1,
+    },
+};
+
+const trStyleDarkMode = {
+    'td, th': {
+        borderColor: 'whiteAlpha.700',
+        backgroundColor: 'gray.700',
+    },
+};
 
 type valueField<T> = {
     key: keyof T;
@@ -34,9 +63,9 @@ export default function DataTable<T extends DataTableDataType>(props: StationDis
     }));
 
     return (
-        <Table size="sm" colorScheme={colorMode === 'dark' ? 'whiteAlpha' : 'blackAlpha'}>
-            <Thead>
-                <Tr position="sticky" top={0}>
+        <Table size="sm">
+            <Thead position="sticky" top={0} zIndex={10}>
+                <Tr sx={{ ...trStyle, ...(colorMode === 'dark' ? trStyleDarkMode : {}) }}>
                     {fields.map((field, i) =>
                         field.hidden ? (
                             <Fragment key={i} />
@@ -50,7 +79,7 @@ export default function DataTable<T extends DataTableDataType>(props: StationDis
             </Thead>
             <Tbody>
                 {pageData.map(item => (
-                    <Tr key={item.data.id}>
+                    <Tr key={item.data.id} sx={{ ...trStyle, ...(colorMode === 'dark' ? trStyleDarkMode : {}) }}>
                         {fields.map((field, i) =>
                             field.hidden ? (
                                 <Fragment key={i} />
