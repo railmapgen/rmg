@@ -137,7 +137,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
                     <g transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},120)`}
                         textAnchor={param.direction === 'l' ? 'start' : 'end'} >
                         <CurrentText />
-                        <StationNumber xpos={140} ypos={115} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={3}/>
+                        <StationNumber xpos={140} ypos={115} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={3} />
                     </g>
                 </>
             ) : original && param.info_panel_type !== 'sh2020' ? (
@@ -157,7 +157,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
                     <g transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},120)`}
                         textAnchor={param.direction === 'l' ? 'end' : 'start'} >
                         <CurrentText />
-                        <StationNumber xpos={param.direction === 'l' ?-120:120} ypos={115} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={1}/>
+                        <StationNumber xpos={param.direction === 'l' ? -120 : 120} ypos={115} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={1} />
                     </g>
                 </>
             ) : (
@@ -179,7 +179,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
 
                     <g transform={`translate(${middle},120)`} textAnchor="middle">
                         <CurrentText />
-                        <StationNumber xpos={0} ypos={120} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={1}/>
+                        <StationNumber xpos={0} ypos={120} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={1} />
                     </g>
                 </>
             )}
@@ -473,11 +473,11 @@ const NextStn = (props: { stnIds: string[] }) => {
             transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},0)`}
         >
             <NextText nextName={param.stn_list[props.stnIds[0]].name} transform="translate(0,160)" />
-            <StationNumber xpos={param.direction === 'l' ? 80 : -80} ypos={235} lineName={param.line_num} stationNumber={nextNumbers[0]} type_={2}/>
+            <StationNumber xpos={param.direction === 'l' ? 80 : -80} ypos={235} lineName={param.line_num} stationNumber={nextNumbers[0]} type_={2} />
             ({props.stnIds.length > 1 && (
                 <>
                     <NextText nextName={param.stn_list[props.stnIds[1]].name} transform={`translate(0,${nextBranchTextDy - 63})`} />
-                    <StationNumber xpos={param.direction === 'l' ? 80 : -80} ypos={nextBranchTextDy + 10} lineName={param.line_num} stationNumber={nextNumbers[1]} type_={2}/>
+                    <StationNumber xpos={param.direction === 'l' ? 80 : -80} ypos={nextBranchTextDy + 10} lineName={param.line_num} stationNumber={nextNumbers[1]} type_={2} />
                 </>
             )}
             <g transform={`translate(0, ${props.stnIds.length > 1 ? nextHintDy - 60 : nextHintDy - 20})`}>
