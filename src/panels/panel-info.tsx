@@ -154,14 +154,16 @@ export default memo(function PanelInfo() {
                 </div>
                 <div className={classes.detailGrid}>
                     {[
+                        '52PD',
+                        'linchen1965',
+                        'C1P918R',
                         'AnDanJune\nUnderline',
                         'GrassRabbit\n1410',
                         'xiany114514',
-                        'linchen1965',
                         'Andy1782010',
                         'Thomastzc',
                         'Tianxiu11111',
-                        'Dingdong2334'
+                        'Dingdong2334',
                     ].map(name => (
                         <div className={classes.detailColumn}>
                             <CardMedia
@@ -177,8 +179,12 @@ export default memo(function PanelInfo() {
                 <div className={classes.cardHeader}>
                     <Typography variant="subtitle2" color="textSecondary">
                         {t('info.colorAndLine.note.first')}
-                        <Typography component="a" variant="subtitle2" color="textSecondary"
-                            href="https://github.com/wongchito/RailMapGenerator/wiki/How-to-add-color-palette-and-line-templates">
+                        <Typography
+                            component="a"
+                            variant="subtitle2"
+                            color="textSecondary"
+                            href="https://github.com/wongchito/RailMapGenerator/wiki/How-to-add-color-palette-and-line-templates"
+                        >
                             {t('info.colorAndLine.note.second')}
                         </Typography>
                         {t('info.colorAndLine.note.third')}

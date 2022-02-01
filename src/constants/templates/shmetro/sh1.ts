@@ -123,9 +123,7 @@ const params = {
                         ['shanghai', 'sh15', '#a4bcc2', '#fff', '15号线', 'Line 15'],
                     ],
                     [],
-                    [
-                        ["shanghai", "pjl", "#999999", "#fff", "金山铁路", "Jingshan Railway"],
-                    ],
+                    [['shanghai', 'pjl', '#999999', '#fff', '金山铁路', 'Jingshan Railway']],
                 ],
             },
             services: ['local'],

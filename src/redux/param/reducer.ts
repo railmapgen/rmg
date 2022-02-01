@@ -1,4 +1,4 @@
-import { CityCode } from '../../constants/city-config';
+import { CityCode } from '@railmapgen/rmg-palette-resources';
 import { MonoColour, PanelTypeGZMTR, RMGParam, ShortDirection, RmgStyle } from '../../constants/constants';
 import {
     SET_BRANCH_SPACING,
@@ -63,7 +63,7 @@ const initialState: RMGParam = {
     branch_spacing: 10,
     direction: ShortDirection.left,
     platform_num: '1',
-    theme: [CityCode.HongKong, 'twl', '#E2231A', MonoColour.white],
+    theme: [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white],
     line_name: ['線', 'line'],
     current_stn_idx: '',
     showStationNumber:false,

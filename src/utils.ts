@@ -208,8 +208,8 @@ export const updateParam = (param: { [x: string]: any }) => {
 
     // Version 3.9.36
     // Set unknown and missing style to mtr
-    param.style = (param.style === undefined || !Object.values(RmgStyle).includes(param.style))
-        ? RmgStyle.MTR : param.style;
+    param.style =
+        param.style === undefined || !Object.values(RmgStyle).includes(param.style) ? RmgStyle.MTR : param.style;
 
     // Version 3.11.37
     // Station number for shmetro

@@ -4,6 +4,7 @@ export enum CompanyCode {
     basic = 'basic',
     bjsubway = 'bjsubway',
     gzmtr = 'gzmtr',
+    kmrailtransit = 'kmrailtransit',
     kvtransit = 'kvtransit',
     mlm = 'mlm',
     mtr = 'mtr',
@@ -11,6 +12,7 @@ export enum CompanyCode {
     shmetro = 'shmetro',
     saopaulometro = 'saopaulometro',
     szmetro = 'szmetro',
+    zzmetro = 'zzmetro',
 }
 
 interface CompanyEntry {
@@ -63,6 +65,14 @@ export const companies: CompanyEntry[] = [
         },
     },
     {
+        id: CompanyCode.kmrailtransit,
+        name: {
+            en: 'Kunming Metro',
+            'zh-Hans': '昆明地铁',
+            'zh-Hant': '昆明地鐵',
+        },
+    },
+    {
         id: CompanyCode.kvtransit,
         name: {
             [LanguageCode.English]: 'Klang Valley Integrated Transit System',
@@ -102,6 +112,14 @@ export const companies: CompanyEntry[] = [
             [LanguageCode.English]: 'Shenzhen Metro',
             [LanguageCode.ChineseSimp]: '深圳地铁',
             [LanguageCode.ChineseTrad]: '深圳地鐵',
+        },
+    },
+    {
+        id: CompanyCode.zzmetro,
+        name: {
+            [LanguageCode.English]: 'Zhenzhou Metro',
+            [LanguageCode.ChineseSimp]: '郑州地铁',
+            [LanguageCode.ChineseTrad]: '鄭州地鐵',
         },
     },
 ];
