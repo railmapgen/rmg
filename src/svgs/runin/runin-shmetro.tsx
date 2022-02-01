@@ -91,7 +91,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
     const prevNames = props.prevStnIds.map(stnId => param.stn_list[stnId].name);
     const prevBranchLineDy = (props.prevStnIds.length > 1 ? (prevNames[0][0].split('\\').length - 1) * -50 +
         (prevNames[0][1].split('\\').length - 1) * -30 : 0) + 10
-    return (param.showStationNumber === undefined ? false : param.showStationNumber) ? (
+    return (
         <>
             <g transform="translate(0,110)" strokeWidth={12} fill="none">
                 {props.nextStnIds.length > 1 && (
@@ -137,7 +137,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
                     <g transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},120)`}
                         textAnchor={param.direction === 'l' ? 'start' : 'end'} >
                         <CurrentText />
-                        <StationNumber xpos={140} ypos={115} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={3} />
+                        {param.showStationNumber && <StationNumber xpos={140} ypos={115} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={3} />}
                     </g>
                 </>
             ) : original && param.info_panel_type !== 'sh2020' ? (
@@ -157,7 +157,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
                     <g transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},120)`}
                         textAnchor={param.direction === 'l' ? 'end' : 'start'} >
                         <CurrentText />
-                        <StationNumber xpos={param.direction === 'l' ? -120 : 120} ypos={115} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={1} />
+                        {param.showStationNumber && <StationNumber xpos={param.direction === 'l' ? -120 : 120} ypos={115} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={1} />}
                     </g>
                 </>
             ) : (
@@ -179,100 +179,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
 
                     <g transform={`translate(${middle},120)`} textAnchor="middle">
                         <CurrentText />
-                        <StationNumber xpos={0} ypos={120} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={1} />
-                    </g>
-                </>
-            )}
-
-            {(original || !termianl) && (<NextStn stnIds={props.nextStnIds} />)}
-            {(termianl || !original) && (<PrevStn stnIds={props.prevStnIds} />)}
-        </>
-    ) : (
-        <>
-            <g transform="translate(0,110)" strokeWidth={12} fill="none">
-                {props.nextStnIds.length > 1 && (
-                    <path
-                        stroke="var(--rmg-theme-colour)"
-                        d={
-                            param.direction === 'l'
-                                ? `M${param.svgWidth.runin / 3},125 L${param.svgWidth.runin / 6},${nextBranchLineDy} H36`
-                                : `M${(param.svgWidth.runin / 3) * 2},125 L${(param.svgWidth.runin / 6) * 5},${nextBranchLineDy} H${param.svgWidth.runin - 36
-                                }`
-                        }
-                        markerEnd="url(#slope)"
-                    />
-                )}
-                {props.prevStnIds.length > 1 && (
-                    <g
-                        filter={param.theme[2] === '#999999' ? 'url(#pujiang_outline_railmap)' : undefined}>
-                        <path
-                            stroke="var(--rmg-grey)"
-                            d={
-                                param.direction === 'l'
-                                    ? `M${(param.svgWidth.runin / 3) * 2},125 L${(param.svgWidth.runin / 6) * 5},${prevBranchLineDy} H${param.svgWidth.runin - 24
-                                    }`
-                                    : `M${param.svgWidth.runin / 3},125 L${param.svgWidth.runin / 6},${prevBranchLineDy} H24`
-                            }
-                        />
-                    </g>
-                )}
-            </g>
-
-            {termianl && param.info_panel_type !== 'sh2020' ? (
-                <>
-                    <g
-                        filter={param.theme[2] === '#999999' ? 'url(#pujiang_outline_railmap)' : undefined}>
-                        <path
-                            transform="translate(0,220)"
-                            stroke="var(--rmg-grey)"
-                            strokeWidth={12}
-                            d={`M24,16 H ${param.svgWidth.runin - 24}`}
-                        />
-                    </g>
-
-                    <g transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},160)`}
-                        textAnchor={param.direction === 'l' ? 'start' : 'end'} >
-                        <CurrentText />
-                    </g>
-                </>
-            ) : original && param.info_panel_type !== 'sh2020' ? (
-                <>
-                    <path
-                        transform="translate(0,220)"
-                        stroke="var(--rmg-theme-colour)"
-                        strokeWidth={12}
-                        d={
-                            param.direction === 'l'
-                                ? `M ${param.svgWidth.runin - 24},16 H 36`
-                                : `M24,16 H ${param.svgWidth.runin - 36}`
-                        }
-                        markerEnd="url(#slope)"
-                    />
-
-                    <g transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},160)`}
-                        textAnchor={param.direction === 'l' ? 'end' : 'start'} >
-                        <CurrentText />
-                    </g>
-                </>
-            ) : (
-                <>
-                    <g transform="translate(0,220)" strokeWidth={12}>
-                        <path
-                            stroke="var(--rmg-theme-colour)"
-                            d={`M ${middle},16 H ${param.direction === 'l' ? 36 : param.svgWidth.runin - 36}`}
-                            markerEnd="url(#slope)"
-                        />
-                        <g
-                            filter={param.theme[2] === '#999999' ? 'url(#pujiang_outline_railmap)' : undefined}>
-                            <path
-                                stroke="var(--rmg-grey)"
-                                d={`M ${middle},16 H ${param.direction === 'l' ? param.svgWidth.runin - 24 : 24} `}
-                            />
-                        </g>
-                    </g>
-
-                    <g transform={`translate(${middle},160)`} textAnchor="middle">
-                        <CurrentText />
+                        {param.showStationNumber && <StationNumber xpos={0} ypos={120} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={1} />}
                     </g>
                 </>
             )}
@@ -412,18 +319,18 @@ const PrevStn = (props: { stnIds: string[] }) => {
     const nextBranchTextDy = (props.stnIds.length > 1 ? (nextNames[0][0].split('\\').length - 1) * -50 +
         (nextNames[0][1].split('\\').length - 1) * -30 : 0) + 70
 
-    return (param.showStationNumber === undefined ? false : param.showStationNumber) ? (
+    return (
         <g
             fill="gray"
             textAnchor={param.direction === 'l' ? 'end' : 'start'}
             transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},0)`}
         >
             <NextText nextName={nextNames[0]} transform="translate(0,160)" />
-            <StationNumber xpos={param.direction === 'l' ? -80 : 80} ypos={235} lineName={param.line_num} stationNumber={nextNumbers[0]} type_={0} />
+            {param.showStationNumber && <StationNumber xpos={param.direction === 'l' ? -80 : 80} ypos={235} lineName={param.line_num} stationNumber={nextNumbers[0]} type_={0} />}
             {props.stnIds.length > 1 && (
                 <>
                     <NextText nextName={nextNames[1]} transform={`translate(0,${nextBranchTextDy - 63})`} />
-                    <StationNumber xpos={param.direction === 'l' ? -80 : 80} ypos={nextBranchTextDy + 10} lineName={param.line_num} stationNumber={nextNumbers[1]} type_={0} />
+                    {param.showStationNumber && <StationNumber xpos={param.direction === 'l' ? -80 : 80} ypos={235} lineName={param.line_num} stationNumber={nextNumbers[1]} type_={0} />}
                 </>
             )}
             <g transform={`translate(0, ${props.stnIds.length > 1 ? prevHintDy - 60 : prevHintDy - 20})`}>
@@ -435,26 +342,7 @@ const PrevStn = (props: { stnIds: string[] }) => {
                 </text>
             </g>
         </g>
-    ) : (
-        <g
-            fill="gray"
-            textAnchor={param.direction === 'l' ? 'end' : 'start'}
-            transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},0)`}
-        >
-            <NextText nextName={nextNames[0]} transform="translate(0,183)" />
-            {props.stnIds.length > 1 && (
-                <NextText nextName={nextNames[1]} transform={`translate(0,${nextBranchTextDy})`} />
-            )}
-            <g transform={`translate(0, ${prevHintDy})`}>
-                <text className="rmg-name__zh" fontSize={22}>
-                    上一站
-                </text>
-                <text className="rmg-name__en" fontSize={12} dx={param.direction === 'l' ? -70 : 70}>
-                    Past Stop
-                </text>
-            </g>
-        </g>
-    );
+    )
 };
 
 const NextStn = (props: { stnIds: string[] }) => {
@@ -467,38 +355,20 @@ const NextStn = (props: { stnIds: string[] }) => {
     const nextBranchTextDy = (props.stnIds.length > 1 ? (nextNames[0][0].split('\\').length - 1) * -50 +
         (nextNames[0][1].split('\\').length - 1) * -30 : 0) + 70
 
-    return (param.showStationNumber === undefined ? false : param.showStationNumber) ? (
+    return (
         <g
             textAnchor={param.direction === 'l' ? 'start' : 'end'}
             transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},0)`}
         >
             <NextText nextName={param.stn_list[props.stnIds[0]].name} transform="translate(0,160)" />
-            <StationNumber xpos={param.direction === 'l' ? 80 : -80} ypos={235} lineName={param.line_num} stationNumber={nextNumbers[0]} type_={2} />
+            {param.showStationNumber && <StationNumber xpos={param.direction === 'l' ? 80 : -80} ypos={235} lineName={param.line_num} stationNumber={nextNumbers[0]} type_={2} />}
             ({props.stnIds.length > 1 && (
                 <>
                     <NextText nextName={param.stn_list[props.stnIds[1]].name} transform={`translate(0,${nextBranchTextDy - 63})`} />
-                    <StationNumber xpos={param.direction === 'l' ? 80 : -80} ypos={nextBranchTextDy + 10} lineName={param.line_num} stationNumber={nextNumbers[1]} type_={2} />
+                    {param.showStationNumber && <StationNumber xpos={param.direction === 'l' ? 80 : -80} ypos={235} lineName={param.line_num} stationNumber={nextNumbers[1]} type_={2} />}
                 </>
             )}
             <g transform={`translate(0, ${props.stnIds.length > 1 ? nextHintDy - 60 : nextHintDy - 20})`}>
-                <text className="rmg-name__zh" fontSize={22}>
-                    下一站
-                </text>
-                <text className="rmg-name__en" fontSize={12} dx={param.direction === 'l' ? 70 : -70}>
-                    Next Stop
-                </text>
-            </g>
-        </g>
-    ) : (
-        <g
-            textAnchor={param.direction === 'l' ? 'start' : 'end'}
-            transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},0)`}
-        >
-            <NextText nextName={param.stn_list[props.stnIds[0]].name} transform="translate(0,183)" />
-            {props.stnIds.length > 1 && (
-                <NextText nextName={param.stn_list[props.stnIds[1]].name} transform={`translate(0,${nextBranchTextDy})`} />
-            )}
-            <g transform={`translate(0, ${nextHintDy})`}>
                 <text className="rmg-name__zh" fontSize={22}>
                     下一站
                 </text>
