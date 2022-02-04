@@ -10,6 +10,7 @@ export default function InfoSection() {
     const dispatch = useDispatch();
 
     const selectedStation = useAppSelector(state => state.app.selectedStation);
+    const style = useAppSelector(state => state.param.style);
     const { num, name, secondaryName } = useAppSelector(state => state.param.stn_list[selectedStation]);
 
     const fields: RmgFieldsFields[] = [
@@ -19,7 +20,7 @@ export default function InfoSection() {
             value: num,
             placeholder: '01',
             onChange: (value: string) => dispatch(updateStationNum(selectedStation, value)),
-            enabledStyles: [RmgStyle.GZMTR],
+            hidden: ![RmgStyle.GZMTR].includes(style),
         },
         {
             type: 'input',
@@ -42,7 +43,7 @@ export default function InfoSection() {
             placeholder: '1號客運大樓',
             onChange: (value: string) =>
                 dispatch(updateStationSecondaryName(selectedStation, [value, secondaryName ? secondaryName[1] : ''])),
-            enabledStyles: [RmgStyle.GZMTR],
+            hidden: ![RmgStyle.GZMTR].includes(style),
         },
         {
             type: 'input',
@@ -51,7 +52,7 @@ export default function InfoSection() {
             placeholder: 'Terminal 1',
             onChange: (value: string) =>
                 dispatch(updateStationSecondaryName(selectedStation, [secondaryName ? secondaryName[0] : '', value])),
-            enabledStyles: [RmgStyle.GZMTR],
+            hidden: ![RmgStyle.GZMTR].includes(style),
         },
     ];
 

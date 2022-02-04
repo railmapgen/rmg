@@ -2,8 +2,6 @@ import React, { Fragment, ReactNode } from 'react';
 import RmgLabel from './rmg-label';
 import RmgDebouncedInput from './rmg-debounced-input';
 import { Flex, InputProps, Select, Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/react';
-import { RmgStyle } from '../../constants/constants';
-import { useAppSelector } from '../../redux';
 
 type inputField = {
     type: 'input';
@@ -36,23 +34,21 @@ type customField = {
 export type RmgFieldsFields = (inputField | sliderField | selectField | customField) & {
     label: string;
     minW?: `${number}px` | number;
-    enabledStyles?: RmgStyle[];
+    hidden?: boolean;
 };
 
-interface EditableStackProps {
+interface RmgFieldsProps {
     fields: RmgFieldsFields[];
     noLabel?: boolean;
 }
 
-export default function RmgFields(props: EditableStackProps) {
+export default function RmgFields(props: RmgFieldsProps) {
     const { fields, noLabel } = props;
-
-    const style = useAppSelector(state => state.param.style);
 
     return (
         <Flex wrap="wrap">
             {fields.map((field, i) => {
-                if (field.enabledStyles && !field.enabledStyles.includes(style)) {
+                if (field.hidden) {
                     return <Fragment key={i} />;
                 }
                 return (

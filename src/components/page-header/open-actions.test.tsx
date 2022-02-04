@@ -34,8 +34,6 @@ describe('Unit tests for OpenActions component', () => {
         await wrapper.find('input[type="file"]').simulate('change', { target: { files: [mockUploadedFile] } });
         wrapper.update();
 
-        console.log(wrapper.debug());
-
         // FIXME: why file is not loaded
         // modal open
         // expect(document.querySelectorAll('.chakra-portal')).toHaveLength(1);

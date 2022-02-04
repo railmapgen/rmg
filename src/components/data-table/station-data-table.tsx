@@ -2,7 +2,7 @@ import React from 'react';
 import { useAppSelector } from '../../redux';
 import DataTable, { DataTableFieldType } from './data-table';
 import TableRowActions from './table-row-actions';
-import { StationInfo } from '../../constants/constants';
+import { RmgStyle, StationInfo } from '../../constants/constants';
 import { HStack, Kbd } from '@chakra-ui/react';
 import RmgLineBadge from '../common/rmg-line-badge';
 import { useTranslation } from 'react-i18next';
@@ -10,16 +10,13 @@ import { useTranslation } from 'react-i18next';
 export default function StationDataTable() {
     const { t } = useTranslation();
 
-    const stationList = useAppSelector(state => state.param.stn_list);
+    const { style, stn_list: stationList } = useAppSelector(state => state.param);
+    const tpo = useAppSelector(state => state.helper.tpo);
 
-    const data: Array<StationInfo & { id: string }> = Object.entries(stationList)
-        .filter(([id]) => !['linestart', 'lineend'].includes(id))
-        .map(([id, station]) => ({
-            ...station,
-            id,
-        }));
+    const data: Array<StationInfo & { id: string }> = tpo.map(id => ({ ...stationList[id], id }));
 
     const fields: DataTableFieldType<StationInfo & { id: string }>[] = [
+        { label: 'num', key: 'num', hidden: ![RmgStyle.GZMTR].includes(style) },
         { label: t('StationDataTable.zhName'), displayHandler: item => item.name[0] },
         {
             label: t('StationDataTable.enName'),

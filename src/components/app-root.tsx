@@ -28,7 +28,7 @@ export default function AppRoot() {
             <Flex direction="column" flex={1} overflow="hidden">
                 <PageHeader />
                 <Flex flex={1} overflow="hidden">
-                    <Flex as="section" direction="column" flex={1} ml={1} mr={1} overflow="hidden">
+                    <Flex as="section" direction="column" flex={1} ml={1} mr={1} overflow="hidden" bg={tableBg}>
                         {globalAlert && (
                             <Alert status={globalAlert.status} variant="solid" size="xs" pl={3} pr={1} pb={0} pt={0}>
                                 <AlertIcon />
@@ -40,7 +40,7 @@ export default function AppRoot() {
                         <Box>
                             <SvgRouter />
                         </Box>
-                        <Box flex={1} overflowY="auto" bg={tableBg}>
+                        <Box flex={1} overflowY="auto">
                             <StationDataTable />
                         </Box>
                     </Flex>

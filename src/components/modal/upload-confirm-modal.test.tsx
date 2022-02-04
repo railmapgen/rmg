@@ -3,8 +3,6 @@ import { mount } from 'enzyme';
 import UploadConfirmModal from './upload-confirm-modal';
 import { createMockAppStore, TestingProvider } from '../../setupTests';
 import rootReducer from '../../redux';
-import { SET_CANVAS_TO_SHOW } from '../../redux/app/action';
-import { reRenderApp } from '../../index';
 
 jest.mock('../../index', () => ({
     reRenderApp: jest.fn(),
