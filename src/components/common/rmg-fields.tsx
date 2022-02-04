@@ -31,14 +31,14 @@ type customField = {
     component: ReactNode;
 };
 
-export type RmgFieldsFields = (inputField | sliderField | selectField | customField) & {
+export type RmgFieldsField = (inputField | sliderField | selectField | customField) & {
     label: string;
     minW?: `${number}px` | number;
     hidden?: boolean;
 };
 
 interface RmgFieldsProps {
-    fields: RmgFieldsFields[];
+    fields: RmgFieldsField[];
     noLabel?: boolean;
 }
 
