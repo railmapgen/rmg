@@ -90,10 +90,11 @@ export enum Services {
     direct = 'direct',
 }
 
-export interface CoLineInfo {
+export interface ColineInfo {
     from: string;
     to: string;
     colors: Theme[];
+    display: boolean;
 }
 
 export type InterchangeInfo = [...Theme, ...Name];
@@ -240,6 +241,7 @@ export interface RMGParam {
     notesGZMTR: Note[];
     direction_gz_x: number;
     direction_gz_y: number;
+    coline: ColineInfo[];
 }
 
 /**

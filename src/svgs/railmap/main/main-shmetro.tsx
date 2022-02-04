@@ -4,7 +4,6 @@ import StationSHMetro from './station/station-shmetro';
 import ColineSHMetro from './coline/coline-shmetro';
 import { AtLeastOneOfPartial, Services, StationDict } from '../../../constants/constants';
 import { useAppSelector } from '../../../redux';
-import assert from 'assert';
 
 interface servicesPath {
     main: string[];
@@ -17,6 +16,7 @@ type Paths = AtLeastOneOfPartial<Record<Services, servicesPath>>;
 const MainSHMetro = () => {
     const { routes, branches, depsStr: deps } = useAppSelector(store => store.helper);
     const param = useAppSelector(store => store.param);
+    const { stn_list, branch_spacing, coline, info_panel_type, direction } = useAppSelector(store => store.param);
 
     const adjMat = adjacencyList(
         param.stn_list,
@@ -47,19 +47,43 @@ const MainSHMetro = () => {
         {} as typeof xShares
     );
 
+    // const yShares = React.useMemo(
+    //     () => {
+    //         console.log('computing y shares');
+    //         return Object.keys(param.stn_list).reduce(
+    //             (acc, cur) => ({ ...acc, [cur]: branches[0].includes(cur) ? 0 : 3 }),
+    //             {} as { [stnId: string]: number }
+    //         );
+    //     },
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    //     [deps]
+    // );
     const yShares = React.useMemo(
         () => {
             console.log('computing y shares');
-            return Object.keys(param.stn_list).reduce(
-                (acc, cur) => ({ ...acc, [cur]: branches[0].includes(cur) ? 0 : 3 }),
-                {} as { [stnId: string]: number }
-            );
+            return Object.keys(stn_list).reduce((acc, cur) => {
+                if (branches[0].includes(cur)) {
+                    return { ...acc, [cur]: 0 };
+                } else {
+                    const branchOfStn = branches.slice(1).filter(branch => branch.includes(cur))[0];
+                    return { ...acc, [cur]: stn_list[branchOfStn[0]].children.indexOf(branchOfStn[1]) ? -3 : 3 };
+                }
+            }, {} as { [stnId: string]: number });
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [deps]
     );
-    const ys = Object.keys(yShares).reduce(
-        (acc, cur) => ({ ...acc, [cur]: -yShares[cur] * param.branch_spacing }),
+    const allYs = Object.keys(yShares).reduce(
+        (acc, cur) => ({ ...acc, [cur]: -yShares[cur] * branch_spacing }),
+        {} as typeof yShares
+    );
+
+    // filter out all negative yShares to draw the traditional railmap w/o coline and its branches
+    const lineYShares = Object.entries(yShares)
+        .filter(([k, v]) => v >= 0)
+        .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {} as typeof yShares);
+    const lineYs = Object.keys(lineYShares).reduce(
+        (acc, cur) => ({ ...acc, [cur]: -lineYShares[cur] * branch_spacing }),
         {} as typeof yShares
     );
 
@@ -83,8 +107,8 @@ const MainSHMetro = () => {
         .map((bool, i) => [servicesAll[i], bool] as [Services, boolean]) // zip
         .filter(s => s[1]) // get the existing service
         .map(s => s[0]); // maintain the services' order
-
     // console.log(branches, stnStates);
+
     const linePaths = branches
         .map(branch => drawLine(branch, stnStates))
         .reduce(
@@ -95,9 +119,8 @@ const MainSHMetro = () => {
             },
             { main: [], pass: [] } as { main: string[][]; pass: string[][] }
         );
+    console.log(linePaths);
 
-    // console.log(linePaths);
-    console.log(param.stn_list);
     const paths = servicesPresent.reduce(
         (acc, service) => ({
             ...acc,
@@ -110,11 +133,12 @@ const MainSHMetro = () => {
                                 stns,
                                 cur,
                                 xs,
-                                ys,
-                                param.direction,
+                                lineYs,
+                                direction,
                                 service,
                                 servicesPresent.length,
-                                param.stn_list
+                                stn_list,
+                                // info_panel_type === 'sh2020' ? 'rightangle' : 'diagonal'
                             )
                         )
                         .filter(path => path !== ''),
@@ -124,13 +148,20 @@ const MainSHMetro = () => {
         }),
         {} as Paths
     );
-
     console.log(paths);
+
     return (
-        <g id="main" transform={`translate(0,${param.svg_height - 63})`}>
+        <g id="main" transform={`translate(0,${param.svg_height - 163})`}>
             <Line paths={paths} direction={param.direction} />
-            <StationGroup xs={xs} ys={ys} stnStates={stnStates} />
-            <ColineSHMetro xs={xs} ys={ys} servicesPresent={servicesPresent} stnStates={stnStates} />
+            <StationGroup
+                stnIds={Object.keys(lineYShares)
+                    .filter(stnId => !['linestart', 'lineend'].includes(stnId))
+                    .filter(stnId => stn_list[stnId].services.length !== 0)}
+                xs={xs}
+                ys={lineYs}
+                stnStates={stnStates}
+            />
+            {coline?.length > 0 && <ColineSHMetro xs={xs} servicesPresent={servicesPresent} stnStates={stnStates} />}
             <ServicesElements
                 servicesLevel={servicesPresent}
                 dy={-param.svg_height + 100}
@@ -163,7 +194,7 @@ const Line = (props: { paths: Paths; direction: 'l' | 'r' }) => {
                         {paths[service]?.pass.map((path, j) => (
                             <path
                                 key={j}
-                                stroke="gray"
+                                stroke="var(--rmg-grey)"
                                 strokeWidth={12}
                                 fill="none"
                                 d={path}
@@ -203,7 +234,7 @@ export const _linePath = (
     services: Services,
     servicesMax: number,
     stn_list: StationDict, // only used to determine startFromTerminal or endAtTerminal
-    e: number = 30, // extra short line on either end
+    bend: 'rightangle' | 'diagonal' = 'rightangle'
 ) => {
     var [prevY, prevX] = [] as number[];
     var path: { [key: string]: number[] } = {};
@@ -215,16 +246,21 @@ export const _linePath = (
     }[services]; // TODO: enum Services could be a better idea?
     const servicesPassDelta = servicesMax > 1 ? 50 : 0;
 
+    // extra short line on either end
+    // diagonal also use e to make soft line
+    let e = 30;
+
     // check if path starts from or ends at the terminal
     // and change e to 0 if it matches
-    let startFromTerminal = false, endAtTerminal = false;
+    let startFromTerminal = false,
+        endAtTerminal = false;
     if (stnIds.length > 0) {
         if (stn_list[stnIds.at(-1) || 0].children.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
             endAtTerminal = true;
         } else if (stn_list[stnIds.at(0) || 0].parents.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
             startFromTerminal = true;
         }
-        e = startFromTerminal || endAtTerminal ? e : e;
+        e = startFromTerminal || endAtTerminal ? e : 0;
     }
 
     stnIds.forEach(stnId => {
@@ -298,27 +334,37 @@ export const _linePath = (
         // main line bifurcate here to become the branch line
         // and path return here are only branch line
         // keys in path: start, bifurcate, end
+        // TODO: make diagonal available to `sh`
 
-        // Todo: disable lower branch
         let [x, y] = path['start'];
-        // let xb = path['bifurcate'][0];
+        let xb = path['bifurcate'][0];
         let [xm, ym] = path['end'];
         if (type === 'main') {
             if (direction === 'l') {
                 if (ym > y) {
                     // main line, left direction, center to upper
-                    return `M ${x - e},${y} H ${xm} V ${ym}`;
+                    if (bend === 'rightangle') return `M ${x - e},${y} H ${xm} V ${ym}`;
+                    // center to upper/rightangle, lower to center/diagonal
+                    else return `M ${x - e},${y} H ${xb + e} L ${xm - e},${ym} H ${xm}`;
                 } else {
+                    // wrong marker
                     // main line, left direction, upper to center
-                    return `M ${x},${y} V ${ym} H ${xm}`; // wrong marker
+                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm}`;
+                    // upper to center/rightangle, center to lower/diagonal
+                    else return `M ${x - e},${y} H ${xb + e} L ${xm - e},${ym} H ${xm}`;
                 }
             } else {
                 if (ym > y) {
+                    // wrong marker
                     // main line, right direction, upper to center
-                    return `M ${x},${y} H ${xm} V ${ym}`; // wrong marker
+                    if (bend === 'rightangle') return `M ${x},${y} H ${xm} V ${ym}`;
+                    // upper to center/rightangle, center to lower/diagonal
+                    else return `M ${x},${y} H ${x + e} L ${xb - e},${ym} H ${xm + e}`;
                 } else {
                     // main line, right direction, center to upper
-                    return `M ${x},${y} V ${ym} H ${xm + e}`;
+                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e}`;
+                    // center to upper/rightangle, lower to center/diagonal
+                    else return `M ${x - e},${y} H ${xb + e} L ${xm - e},${ym} H ${xm}`;
                 }
             }
         } else {
@@ -326,43 +372,49 @@ export const _linePath = (
             if (direction === 'l') {
                 if (ym > y) {
                     // pass line, left direction, center to upper
-                    return `M ${x - e},${y} H ${xm} V ${ym}`;
+                    if (bend === 'rightangle') return `M ${x - e},${y} H ${xm} V ${ym}`;
+                    // center to upper/rightangle, lower to center/diagonal
+                    else return `M ${x},${y} H ${x + e} L ${xb - e},${ym} H ${xm + e}`;
                 } else {
                     // pass line, left direction, upper to center
-                    return `M ${x},${y} V ${ym} H ${xm + e}`;
+                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e}`;
+                    // upper to center/rightangle, center to lower/diagonal
+                    else return `M ${x - e},${y} H ${xb + e} L ${xm - e},${ym} H ${xm}`;
                 }
             } else {
                 if (ym > y) {
                     // pass line, right direction, upper to center
-                    return `M ${x - e},${y} H ${xm} V ${ym}`;
+                    if (bend === 'rightangle') return `M ${x - e},${y} H ${xm} V ${ym}`;
+                    // upper to center/rightangle, center to lower/diagonal
+                    return `M ${x},${y} H ${x + e} L ${xb - e},${ym} H ${xm + e}`;
                 } else {
                     // pass line, right direction, center to upper
-                    return `M ${x},${y} V ${ym} H ${xm + e}`;
+                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e}`;
+                    // center to upper/rightangle, lower to center/diagonal
+                    return `M ${x - e},${y} H ${xb + e} L ${xm - e},${ym} H ${xm}`;
                 }
             }
         }
     }
 };
 
-interface StationGroupProps {
+export interface StationGroupProps {
+    stnIds: string[];
     xs: { [stnId: string]: number };
     ys: { [stnId: string]: number };
     stnStates: { [stnId: string]: -1 | 0 | 1 };
 }
 
 const StationGroup = (props: StationGroupProps) => {
-    const param = useAppSelector(store => store.param);
+    const { xs, ys, stnStates, stnIds } = props;
 
     return (
         <g>
-            {Object.keys(param.stn_list)
-                .filter(stnId => !['linestart', 'lineend'].includes(stnId))
-                .filter(stnId => param.stn_list[stnId].services.length !== 0)
-                .map(stnId => (
-                    <g key={stnId} transform={`translate(${props.xs[stnId]},${props.ys[stnId]})`}>
-                        <StationSHMetro stnId={stnId} stnState={props.stnStates[stnId]} />
-                    </g>
-                ))}
+            {stnIds.map(stnId => (
+                <g key={stnId} transform={`translate(${xs[stnId]},${ys[stnId]})`}>
+                    <StationSHMetro stnId={stnId} stnState={stnStates[stnId]} />
+                </g>
+            ))}
         </g>
     );
 };

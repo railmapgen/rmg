@@ -21,7 +21,7 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
         {
             filename: 'sh3',
             name: {
-                en: 'CoLine',
+                en: 'Coline',
                 'zh-Hans': '共线',
                 'zh-Hant': '共綫',
             },

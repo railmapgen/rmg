@@ -79,6 +79,7 @@ const initialState: RMGParam = {
     notesGZMTR: [],
     direction_gz_x: 0,
     direction_gz_y: 0,
+    coline: [],
 };
 
 export default function ParamReducer(

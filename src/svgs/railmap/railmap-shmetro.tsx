@@ -25,6 +25,8 @@ const DefsSHMetro = React.memo(() => (
         <rect id="stn_sh_2020_express" stroke="none" height={49} width={12} x={-6} y={-18} />
         <rect id="stn_sh_2020_direct" stroke="none" height={74} width={12} x={-6} y={-18} />
 
+        <rect id="intbox_number" height={22} width={20} y={-11} />
+
         <g id="airport" transform="scale(0.5)">
             <circle cx="0" cy="29.33899" r="29.33899" fill="var(--rmg-grey)" />
             <path
