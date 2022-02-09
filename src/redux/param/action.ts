@@ -1,6 +1,7 @@
 import {
     BranchStyle,
     CanvasType,
+    ColineInfo,
     Direction,
     Facilities,
     InterchangeInfo,
@@ -49,6 +50,9 @@ export const SET_CUSTOMISED_MTR_DESTINATION = 'SET_CUSTOMISED_MTR_DESTINATION';
 export const SET_CURRENT_STATION = 'SET_CURRENT_STATION';
 export const SET_STATION = 'SET_STATION';
 export const SET_STATIONS_BULK = 'SET_STATIONS_BULK';
+
+// coline
+export const SET_COLINE_BULK = 'SET_COLINE_BULK';
 
 export interface setFullParamAction {
     type: typeof SET_FULL_PARAM;
@@ -161,6 +165,11 @@ export interface setStationAction {
 export interface setStationsBulkAction {
     type: typeof SET_STATIONS_BULK;
     stations: StationDict;
+}
+
+export interface setColineBulkAction {
+    type: typeof SET_COLINE_BULK;
+    coline: ColineInfo[];
 }
 
 // export const setFullParam = (fullParam: RMGParam): setFullParamAction => {
@@ -324,6 +333,12 @@ export const setStationsBulk = (stations: StationDict) => {
     return (dispatch: AppDispatch) => {
         dispatch({ type: SET_STATIONS_BULK, stations });
         dispatch(triggerHelpersUpdate());
+    };
+};
+
+export const setColineBulk = (coline: ColineInfo[]) => {
+    return (dispatch: AppDispatch) => {
+        dispatch({ type: SET_COLINE_BULK, coline });
     };
 };
 
@@ -611,6 +626,53 @@ export const removeStationService = (stationId: string, service: Services) => {
                     services: stationInfo.services.filter(s => s !== service),
                 })
             );
+        }
+    };
+};
+
+/**
+ *
+ * @param colineIndex
+ * @param interchangeInfo
+ */
+export const addColineColor = (colineIndex: number, interchangeInfo: InterchangeInfo) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const colineInfo = getState().param.coline;
+
+        colineInfo[colineIndex].colors = [...colineInfo[colineIndex].colors, interchangeInfo];
+
+        dispatch(setColineBulk(colineInfo));
+    };
+};
+
+export const removeColineColor = (colineIndex: number, interchangeIndex: number) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const colineInfo = getState().param.coline;
+
+        if (colineInfo.length > colineIndex && colineInfo[colineIndex].colors.length > interchangeIndex) {
+            colineInfo[colineIndex].colors = colineInfo[colineIndex].colors.filter(
+                (_, intIdx) => intIdx !== interchangeIndex
+            );
+
+            dispatch(setColineBulk(colineInfo));
+        }
+    };
+};
+
+export const updateColineColor = (colineIndex: number, interchangeIndex: number, interchangeInfo: InterchangeInfo) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const colineInfo = getState().param.coline;
+
+        if (colineInfo.length > colineIndex && colineInfo[colineIndex].colors.length > interchangeIndex) {
+            colineInfo[colineIndex].colors = colineInfo[colineIndex].colors.map((int, intIdx) =>
+                intIdx === interchangeIndex
+                    ? ([0, 1, 2, 3, 4, 5].map(i =>
+                          interchangeInfo[i] === undefined ? int[i] : interchangeInfo[i]
+                      ) as InterchangeInfo)
+                    : int
+            );
+
+            dispatch(setColineBulk(colineInfo));
         }
     };
 };

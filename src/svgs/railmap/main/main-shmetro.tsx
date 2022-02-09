@@ -16,7 +16,7 @@ type Paths = AtLeastOneOfPartial<Record<Services, servicesPath>>;
 const MainSHMetro = () => {
     const { routes, branches, depsStr: deps } = useAppSelector(store => store.helper);
     const param = useAppSelector(store => store.param);
-    const { stn_list, branch_spacing, coline, info_panel_type, direction } = useAppSelector(store => store.param);
+    const { stn_list, branch_spacing, coline, direction } = useAppSelector(store => store.param);
 
     const adjMat = adjacencyList(
         param.stn_list,
@@ -72,10 +72,6 @@ const MainSHMetro = () => {
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [deps]
-    );
-    const allYs = Object.keys(yShares).reduce(
-        (acc, cur) => ({ ...acc, [cur]: -yShares[cur] * branch_spacing }),
-        {} as typeof yShares
     );
 
     // filter out all negative yShares to draw the traditional railmap w/o coline and its branches

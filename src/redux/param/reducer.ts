@@ -23,6 +23,7 @@ import {
     SET_THEME,
     SET_Y_PERCENTAGE,
     SET_STYLE,
+    SET_COLINE_BULK,
     setBranchSpacingAction,
     setCurrentStationAction,
     setCustomisedMtrDestinationAction,
@@ -45,6 +46,7 @@ import {
     setThemeAction,
     setYPercentageAction,
     setStyleAction,
+    setColineBulkAction,
 } from './action';
 
 const initialState: RMGParam = {
@@ -107,6 +109,7 @@ export default function ParamReducer(
         | setCurrentStationAction
         | setStationAction
         | setStationsBulkAction
+        | setColineBulkAction
 ) {
     switch (action.type) {
         case SET_FULL_PARAM:
@@ -173,6 +176,9 @@ export default function ParamReducer(
             break;
         case SET_STATIONS_BULK:
             state.stn_list = action.stations;
+            break;
+        case SET_COLINE_BULK:
+            state.coline = action.coline;
             break;
         default:
             break;

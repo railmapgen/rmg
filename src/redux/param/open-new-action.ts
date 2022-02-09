@@ -9,7 +9,7 @@ export const openFromNewParam = (param: Record<string, any>) => {
         const updatedParam = updateParam(param) as RMGParam;
         await window.rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
 
-        // reset to AllCanvas if current canvas is not supported in the new style
+        // reset to AllCanvas if the current canvas is not supported in the new style
         const canvasToShow = getState().app.canvasToShow;
         const canvas = canvasConfig[updatedParam.style].some(c => c === canvasToShow) ? canvasToShow : AllCanvas;
         await dispatch(selectCanvas(canvas));

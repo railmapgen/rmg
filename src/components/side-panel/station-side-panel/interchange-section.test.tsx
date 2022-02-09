@@ -1,12 +1,12 @@
 import React from 'react';
-import rootReducer from '../../../../redux';
-import { createMockAppStore, TestingProvider } from '../../../../setupTests';
+import rootReducer from '../../../redux';
+import { createMockAppStore, TestingProvider } from '../../../setupTests';
 import InterchangeSection from './interchange-section';
 import { mount } from 'enzyme';
-import { MonoColour, StationInfo, StationTransfer } from '../../../../constants/constants';
+import { MonoColour, StationInfo, StationTransfer } from '../../../constants/constants';
 import { CityCode } from '@railmapgen/rmg-palette-resources';
-import * as helperActions from '../../../../redux/helper/action';
-import { SET_STATION } from '../../../../redux/param/action';
+import * as helperActions from '../../../redux/helper/action';
+import { SET_STATION } from '../../../redux/param/action';
 
 const realStore = rootReducer.getState();
 

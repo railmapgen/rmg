@@ -1,21 +1,17 @@
 import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box } from '@chakra-ui/react';
 import React, { ReactNode } from 'react';
 import InfoSection from './info-section';
-import InterchangeSection from './interchange-section';
-import MoreSection from './more-section';
-import BranchSection from './branch-section';
+import ColineSection from './coline-section';
 
 type SidePanelSection = {
     title: string;
     children: ReactNode;
 };
 
-export default function StationSidePanel() {
+export default function ColineSidePanel() {
     const sidePanelFields: SidePanelSection[] = [
         { title: 'Basic info', children: <InfoSection /> },
-        { title: 'Interchange', children: <InterchangeSection /> },
-        { title: 'Branch', children: <BranchSection /> },
-        { title: 'More', children: <MoreSection /> },
+        { title: 'Share track with', children: <ColineSection /> },
     ];
 
     return (

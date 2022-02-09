@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Box, HStack, IconButton, Text, useColorModeValue } from '@chakra-ui/react';
-import { InterchangeInfo, MonoColour, Theme } from '../../../../constants/constants';
-import RmgFields, { RmgFieldsFields } from '../../../common/rmg-fields';
+import { InterchangeInfo, MonoColour, Theme } from '../../../constants/constants';
+import RmgFields, { RmgFieldsFields } from '../../common/rmg-fields';
 import { MdAdd, MdCircle, MdContentCopy, MdDelete } from 'react-icons/md';
-import RmgLabel from '../../../common/rmg-label';
-import ColourModal from '../../../modal/colour-modal';
-import ColourUtil from '../../../../theme/colour-util';
+import RmgLabel from '../../common/rmg-label';
+import ColourModal from '../../modal/colour-modal';
+import ColourUtil from '../../../theme/colour-util';
 import { useTranslation } from 'react-i18next';
-import { useAppSelector } from '../../../../redux';
+import { useAppSelector } from '../../../redux';
 
 interface InterchangeCardProps {
     interchangeList: InterchangeInfo[];
@@ -83,7 +83,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
 
                     <RmgFields fields={interchangeFields[i]} noLabel={i !== 0} />
 
-                    {i === interchangeFields.length - 1 ? (
+                    {onAdd && i === interchangeFields.length - 1 ? (
                         <IconButton
                             size="sm"
                             variant="ghost"
@@ -95,13 +95,15 @@ export default function InterchangeCard(props: InterchangeCardProps) {
                         <Box minW={8} />
                     )}
 
-                    <IconButton
-                        size="sm"
-                        variant="ghost"
-                        aria-label="Delete interchange"
-                        onClick={() => onDelete?.(i)}
-                        icon={<MdDelete />}
-                    />
+                    {onDelete && (
+                        <IconButton
+                            size="sm"
+                            variant="ghost"
+                            aria-label="Delete interchange"
+                            onClick={() => onDelete?.(i)}
+                            icon={<MdDelete />}
+                        />
+                    )}
                 </HStack>
             ))}
 

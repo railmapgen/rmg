@@ -38,6 +38,7 @@ export enum SidePanelMode {
     CLOSE = 'CLOSE',
     STATION = 'STATION',
     STYLE = 'STYLE',
+    COLINE = 'COLINE',
 }
 
 /**
@@ -93,7 +94,7 @@ export enum Services {
 export interface ColineInfo {
     from: string;
     to: string;
-    colors: Theme[];
+    colors: InterchangeInfo[];
     display: boolean;
 }
 

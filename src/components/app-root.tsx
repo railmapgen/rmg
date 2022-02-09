@@ -3,6 +3,7 @@ import SvgRouter from '../svgs/svg-router';
 import SidePanel from './side-panel/side-panel';
 import PageHeader from './page-header/page-header';
 import StationDataTable from './data-table/station-data-table';
+import ColineDataTable from './data-table/coline-data-table';
 import WindowHeader from './window-header';
 import { Alert, AlertIcon, Box, CloseButton, Flex, useColorModeValue } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
@@ -42,6 +43,7 @@ export default function AppRoot() {
                         </Box>
                         <Box flex={1} overflowY="auto">
                             <StationDataTable />
+                            <ColineDataTable />
                         </Box>
                     </Flex>
 

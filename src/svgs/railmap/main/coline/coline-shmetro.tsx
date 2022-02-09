@@ -1,7 +1,7 @@
 import React from 'react';
-import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState } from '../../methods/share';
-import { calculateColineStations, calculateColine, ColineLinePath } from '../../methods/shmetro-coline';
-import { AtLeastOneOfPartial, Services, ColineInfo, Theme } from '../../../../constants/constants';
+import { drawLine } from '../../methods/share';
+import { calculateColineStations, calculateColine } from '../../methods/shmetro-coline';
+import { AtLeastOneOfPartial, Services, InterchangeInfo } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 import { _linePath, StationGroupProps } from '../main-shmetro';
 import StationSHMetro from '../station/station-shmetro';
@@ -15,17 +15,17 @@ interface Props {
 interface ColineServicesPath {
     main: {
         path: string;
-        colors: Theme[];
+        colors: InterchangeInfo[];
     }[];
     pass: {
         path: string;
-        colors: Theme[];
+        colors: InterchangeInfo[];
     }[];
     service: Services;
 }
 
 type ColinePath = AtLeastOneOfPartial<Record<Services, ColineServicesPath>>;
-const defaultTheme = ['shanghai', 'sh4', '#5F259F', '#fff'] as Theme;
+const defaultTheme = ['shanghai', 'sh4', '#5F259F', '#fff', '4号线', 'Line 4'] as InterchangeInfo;
 
 export const ColineSHMetro = (props: Props) => {
     const { xs, servicesPresent, stnStates } = props;
@@ -303,7 +303,7 @@ const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
                 curStn: string;
                 x: number;
                 y: number;
-                color: Theme;
+                color: InterchangeInfo;
             }[]
         )
         // only take the coline stations in the first branch(general main line)
@@ -344,10 +344,7 @@ const ColineStationGroup = (props: StationGroupProps) => {
 
     // get colors of stations in coline branches, they use different
     // colors than var(--rmg-theme-colour)
-    const colines = React.useMemo(
-        () => calculateColineStations(coline, branches),
-        [JSON.stringify(coline), branches.toString()]
-    );
+    const colines = React.useMemo(() => calculateColineStations(coline, branches), [JSON.stringify(coline), deps]);
     const colors = stnIds.reduce(
         (acc, stnId) => ({
             ...acc,
@@ -359,14 +356,14 @@ const ColineStationGroup = (props: StationGroupProps) => {
                     // TODO: remove default and support multiple colines
                     .at(0) ?? defaultTheme,
         }),
-        {} as { [stnId: string]: Theme }
+        {} as { [stnId: string]: InterchangeInfo }
     );
 
     return (
         <g>
             {stnIds.map(stnId => (
                 <g key={stnId} transform={`translate(${xs[stnId]},${ys[stnId]})`}>
-                    <StationSHMetro stnId={stnId} stnState={stnStates[stnId]} color={colors[stnId]} />
+                    <StationSHMetro stnId={stnId} stnState={stnStates[stnId]} color={colors[stnId][2]} />
                 </g>
             ))}
         </g>

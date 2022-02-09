@@ -39,6 +39,13 @@
         "actions": "Actions"
     },
 
+    "ColineDataTable": {
+        "from": "From",
+        "to": "To",
+        "colors": "Share track with",
+        "actions": "Actions"
+    },
+
     "StyleSidePanel": {
         "canvasHeight": "Canvas height",
         "destinationWidth": "Destination width",

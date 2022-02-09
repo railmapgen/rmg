@@ -1,14 +1,14 @@
-import { Theme, ColineInfo } from '../../../constants/constants';
+import { ColineInfo, InterchangeInfo } from '../../../constants/constants';
 import { drawLine } from './share';
 
 export interface ColineLinePath {
     main: {
         linePath: string[];
-        colors: Theme[];
+        colors: InterchangeInfo[];
     }[];
     pass: {
         linePath: string[];
-        colors: Theme[];
+        colors: InterchangeInfo[];
     }[];
 }
 
