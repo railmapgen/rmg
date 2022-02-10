@@ -11,7 +11,7 @@ import {
 } from '../../../redux/param/action';
 import { InterchangeInfo, MonoColour } from '../../../constants/constants';
 import { MdAdd } from 'react-icons/md';
-import RmgFields, { RmgFieldsFields } from '../../common/rmg-fields';
+import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
 
 export default function InterchangeSection() {
     const dispatch = useDispatch();
@@ -20,7 +20,7 @@ export default function InterchangeSection() {
     const theme = useAppSelector(state => state.param.theme);
     const { transfer } = useAppSelector(state => state.param.stn_list[selectedStation]);
 
-    const getOSINameFields = (setIndex: number): RmgFieldsFields[] => [
+    const getOSINameFields = (setIndex: number): RmgFieldsField[] => [
         {
             type: 'input',
             label: 'Station Chinese name',

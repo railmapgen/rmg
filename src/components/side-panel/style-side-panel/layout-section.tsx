@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Heading } from '@chakra-ui/react';
-import RmgFields, { RmgFieldsFields } from '../../common/rmg-fields';
+import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux';
@@ -30,8 +30,8 @@ export default function LayoutSection() {
         direction_gz_y,
     } = useAppSelector(state => state.param);
 
-    const svgSizeFields: RmgFieldsFields[] = [
-        ...canvasConfig[rmgStyle].map<RmgFieldsFields>(canvas => ({
+    const svgSizeFields: RmgFieldsField[] = [
+        ...canvasConfig[rmgStyle].map<RmgFieldsField>(canvas => ({
             type: 'input',
             label: t(`StyleSidePanel.${canvas}Width`),
             value: svgWidth[canvas].toString(),
@@ -45,7 +45,7 @@ export default function LayoutSection() {
         },
     ];
 
-    const componentPositionFields: RmgFieldsFields[] = [
+    const componentPositionFields: RmgFieldsField[] = [
         {
             type: 'slider',
             label: t('StyleSidePanel.verticalPosition'),
@@ -73,7 +73,7 @@ export default function LayoutSection() {
         },
     ];
 
-    const directionPositionFields: RmgFieldsFields[] = [
+    const directionPositionFields: RmgFieldsField[] = [
         {
             type: 'slider',
             label: 'Direction horizontal position',

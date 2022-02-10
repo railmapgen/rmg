@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Box, HStack, IconButton, Text, useColorModeValue } from '@chakra-ui/react';
 import { InterchangeInfo, MonoColour, Theme } from '../../../constants/constants';
-import RmgFields, { RmgFieldsFields } from '../../common/rmg-fields';
-import { MdAdd, MdCircle, MdContentCopy, MdDelete } from 'react-icons/md';
+import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
+import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
 import RmgLabel from '../../common/rmg-label';
-import ColourModal from '../../modal/colour-modal';
-import ColourUtil from '../../../theme/colour-util';
+import ColourModal from '../../modal/colour-modal/colour-modal';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '../../../redux';
+import ThemeButton from '../theme-button';
 
 interface InterchangeCardProps {
     interchangeList: InterchangeInfo[];
@@ -28,7 +28,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
 
     const cardBg = useColorModeValue('gray.50', 'gray.700');
 
-    const interchangeFields: RmgFieldsFields[][] = interchangeList.map((it, i) => [
+    const interchangeFields: RmgFieldsField[][] = interchangeList.map((it, i) => [
         {
             type: 'input',
             label: t('InterchangeCard.zhName'),
@@ -66,14 +66,8 @@ export default function InterchangeCard(props: InterchangeCardProps) {
             {interchangeList.map((it, i) => (
                 <HStack key={i} spacing={0.5}>
                     <RmgLabel label={t('InterchangeCard.colour')} minW="40px" noLabel={i !== 0}>
-                        <IconButton
-                            size="xs"
-                            aria-label={t('InterchangeCard.colour')}
-                            mt="0.45px"
-                            color={it[3]}
-                            bg={it[2]}
-                            _hover={{ bg: ColourUtil.fade(it[2], 0.7) }}
-                            icon={<MdCircle />}
+                        <ThemeButton
+                            theme={[it[0], it[1], it[2], it[3]]}
                             onClick={() => {
                                 setIsModalOpen(true);
                                 setSelectedIndex(i);

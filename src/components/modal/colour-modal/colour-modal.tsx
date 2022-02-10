@@ -15,12 +15,12 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { ColourHex, MonoColour, Theme } from '../../constants/constants';
-import CityPicker from '../side-panel/city-picker';
-import ColourPicker from '../side-panel/colour-picker';
+import { ColourHex, MonoColour, Theme } from '../../../constants/constants';
+import CityPicker from './city-picker';
+import ColourPicker from './colour-picker';
 import { CityCode } from '@railmapgen/rmg-palette-resources';
-import RmgFields, { RmgFieldsFields } from '../common/rmg-fields';
-import RmgLineBadge from '../common/rmg-line-badge';
+import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
+import RmgLineBadge from '../../common/rmg-line-badge';
 import { useTranslation } from 'react-i18next';
 
 interface ColourModalProps {
@@ -49,7 +49,7 @@ export default function ColourModal(props: ColourModalProps) {
         }
     }, [isOpen, defaultTheme?.toString()]);
 
-    const paletteFields: RmgFieldsFields[] = [
+    const paletteFields: RmgFieldsField[] = [
         {
             type: 'custom',
             label: t('ColourModal.city'),
@@ -82,7 +82,7 @@ export default function ColourModal(props: ColourModalProps) {
         },
     ];
 
-    const customFields: RmgFieldsFields[] = [
+    const customFields: RmgFieldsField[] = [
         {
             type: 'input',
             label: t('ColourModal.bg'),

@@ -2,7 +2,7 @@ import React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import ColourModal from './colour-modal';
 import { act } from 'react-dom/test-utils';
-import { TestingProvider } from '../../setupTests';
+import { TestingProvider } from '../../../setupTests';
 
 const mockCallbacks = {
     onClose: jest.fn(),

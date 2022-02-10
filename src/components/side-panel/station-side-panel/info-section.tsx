@@ -4,7 +4,7 @@ import { updateStationName, updateStationNum, updateStationSecondaryName } from 
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
-import RmgFields, { RmgFieldsFields } from '../../common/rmg-fields';
+import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
 
 export default function InfoSection() {
     const dispatch = useDispatch();
@@ -13,7 +13,7 @@ export default function InfoSection() {
     const style = useAppSelector(state => state.param.style);
     const { num, name, secondaryName } = useAppSelector(state => state.param.stn_list[selectedStation]);
 
-    const fields: RmgFieldsFields[] = [
+    const fields: RmgFieldsField[] = [
         {
             type: 'input',
             label: 'Station number',

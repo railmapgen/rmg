@@ -1,9 +1,9 @@
 import React from 'react';
-import RmgFields, { RmgFieldsFields } from './rmg-fields';
+import RmgFields, { RmgFieldsField } from './rmg-fields';
 import { mount } from 'enzyme';
 import { TestingProvider } from '../../setupTests';
 
-const mockInputField: RmgFieldsFields = {
+const mockInputField: RmgFieldsField = {
     type: 'input',
     label: 'Mock input',
     value: 'mock value',
@@ -11,7 +11,7 @@ const mockInputField: RmgFieldsFields = {
     onChange: jest.fn(),
 };
 
-const mockSliderField: RmgFieldsFields = {
+const mockSliderField: RmgFieldsField = {
     type: 'slider',
     label: 'Mock slider',
     value: 40,

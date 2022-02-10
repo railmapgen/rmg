@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import React from 'react';
-import RmgFields, { RmgFieldsFields } from '../../common/rmg-fields';
+import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
 import RmgButtonGroup from '../../common/rmg-button-group';
 import { useAppSelector } from '../../../redux';
 import { Facilities, RmgStyle, Services } from '../../../constants/constants';
@@ -36,7 +36,7 @@ export default function MoreSection() {
         [Facilities.disney]: 'Disneyland resort',
     };
 
-    const fields: RmgFieldsFields[] = [
+    const fields: RmgFieldsField[] = [
         {
             type: 'custom',
             label: 'Train services',

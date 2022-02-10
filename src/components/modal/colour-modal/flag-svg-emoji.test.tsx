@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import FlagSvgEmoji from './flag-svg-emoji';
-import { waitForComponentToPaint } from '../../setupTests';
+import { waitForComponentToPaint } from '../../../setupTests';
 
 jest.doMock('@railmapgen/rmg-palette-resources/flags/1F1ED-1F1F0.svg', () => ({
     __esModule: true,

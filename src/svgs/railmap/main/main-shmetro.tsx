@@ -133,7 +133,7 @@ const MainSHMetro = () => {
                                 direction,
                                 service,
                                 servicesPresent.length,
-                                stn_list,
+                                stn_list
                                 // info_panel_type === 'sh2020' ? 'rightangle' : 'diagonal'
                             )
                         )

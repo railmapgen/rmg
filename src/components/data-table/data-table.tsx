@@ -1,34 +1,5 @@
 import React, { Fragment, ReactElement } from 'react';
-import { Table, Thead, Tbody, Tr, Th, Td, useColorMode, SystemStyleObject } from '@chakra-ui/react';
-
-const trStyle: SystemStyleObject = {
-    'td, th': {
-        borderRight: '1px solid',
-        borderColor: 'blackAlpha.200',
-        backgroundColor: 'gray.50',
-        whiteSpace: 'nowrap',
-    },
-
-    'td:first-child, th:first-child': {
-        position: 'sticky',
-        left: 0,
-        zIndex: 1,
-    },
-
-    'td:last-child, th: last-child': {
-        borderRight: 'none',
-        position: 'sticky',
-        right: 0,
-        zIndex: 1,
-    },
-};
-
-const trStyleDarkMode = {
-    'td, th': {
-        borderColor: 'whiteAlpha.700',
-        backgroundColor: 'gray.700',
-    },
-};
+import { Table, Thead, Tbody, Tr, Th, Td, useStyleConfig } from '@chakra-ui/react';
 
 type valueField<T> = {
     key: keyof T;
@@ -49,7 +20,7 @@ interface StationDisplayDataProps<T> {
 export default function DataTable<T extends DataTableDataType>(props: StationDisplayDataProps<T>) {
     const { data, fields } = props;
 
-    const { colorMode } = useColorMode();
+    const styles = useStyleConfig('RmgDataTable');
 
     const pageData = data.map(d => ({
         data: d,
@@ -63,9 +34,9 @@ export default function DataTable<T extends DataTableDataType>(props: StationDis
     }));
 
     return (
-        <Table size="sm">
-            <Thead position="sticky" top={0} zIndex={10}>
-                <Tr sx={{ ...trStyle, ...(colorMode === 'dark' ? trStyleDarkMode : {}) }}>
+        <Table size="sm" sx={styles}>
+            <Thead>
+                <Tr>
                     {fields.map((field, i) =>
                         field.hidden ? (
                             <Fragment key={i} />
@@ -79,7 +50,7 @@ export default function DataTable<T extends DataTableDataType>(props: StationDis
             </Thead>
             <Tbody>
                 {pageData.map(item => (
-                    <Tr key={item.data.id} sx={{ ...trStyle, ...(colorMode === 'dark' ? trStyleDarkMode : {}) }}>
+                    <Tr key={item.data.id}>
                         {fields.map((field, i) =>
                             field.hidden ? (
                                 <Fragment key={i} />
