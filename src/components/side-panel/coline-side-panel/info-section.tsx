@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux';
-import RmgFields, { RmgFieldsFields } from '../../common/rmg-fields';
+import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
 import {
     getPossibleStnIdsFromMainLine,
     getPossibleStnIdsFromBranchLine,
@@ -43,7 +43,7 @@ export default function InfoSection() {
     const displayName = (val: [string, string]) =>
         `${stnList[val[0]].name[0]},${stnList[val[0]].name[1]}⟸⟹${stnList[val[1]].name[0]},${stnList[val[1]].name[1]}`;
 
-    const fields: RmgFieldsFields[] = [
+    const fields: RmgFieldsField[] = [
         {
             type: 'select',
             label: 'Route',
