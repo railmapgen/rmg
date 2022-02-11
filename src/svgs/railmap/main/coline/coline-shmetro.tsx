@@ -1,7 +1,7 @@
 import React from 'react';
-import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState } from '../../methods/share';
-import { calculateColineStations, calculateColine, ColineLinePath } from '../../methods/shmetro-coline';
-import { AtLeastOneOfPartial, Services, ColineInfo, Theme } from '../../../../constants/constants';
+import { drawLine } from '../../methods/share';
+import { calculateColineStations, calculateColine } from '../../methods/shmetro-coline';
+import { AtLeastOneOfPartial, Services, Theme } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 import { _linePath, StationGroupProps } from '../main-shmetro';
 import StationSHMetro from '../station/station-shmetro';
