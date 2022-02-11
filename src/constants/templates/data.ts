@@ -18,6 +18,14 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
                 'zh-Hant': '預設',
             },
         },
+        {
+            filename: 'sh3',
+            name: {
+                en: 'Coline',
+                'zh-Hans': '共线',
+                'zh-Hant': '共綫',
+            },
+        },
     ],
 
     bjsubway: [

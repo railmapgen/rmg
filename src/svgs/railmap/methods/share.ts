@@ -395,38 +395,35 @@ export class Stations {
     }
 }
 
-export const drawLine = (branches: string[][], stnStates: { [stnId: string]: -1 | 0 | 1 }) => {
-    let linePaths = { main: [] as string[][], pass: [] as string[][] };
-    branches.forEach(branch => {
-        branch = branch.filter(stnId => !['linestart', 'lineend'].includes(stnId));
-        var lineMainStns = branch.filter(stnId => stnStates[stnId] >= 0);
-        var linePassStns = branch.filter(stnId => stnStates[stnId] <= 0);
+export const drawLine = (branch: string[], stnStates: { [stnId: string]: -1 | 0 | 1 }) => {
+    branch = branch.filter(stnId => !['linestart', 'lineend'].includes(stnId));
+    let lineMainStns = branch.filter(stnId => stnStates[stnId] >= 0);
+    let linePassStns = branch.filter(stnId => stnStates[stnId] <= 0);
 
-        if (lineMainStns.length === 1) {
+    if (lineMainStns.length === 1) {
+        linePassStns = branch;
+    }
+
+    if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length === 0 && lineMainStns.length) {
+        // if two set disjoint
+        if (linePassStns[0] === branch[0]) {
+            // -1 -1 1 1
+            linePassStns.push(lineMainStns[0]);
+        } else if (
+            lineMainStns[0] === branch[0] &&
+            lineMainStns[lineMainStns.length - 1] === branch[branch.length - 1] &&
+            linePassStns.length
+        ) {
             linePassStns = branch;
+            lineMainStns = [];
+        } else {
+            // 1 1 -1 -1
+            linePassStns.unshift(lineMainStns[lineMainStns.length - 1]);
         }
+    }
 
-        if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length === 0 && lineMainStns.length) {
-            // if two set disjoint
-            if (linePassStns[0] === branch[0]) {
-                // -1 -1 1 1
-                linePassStns.push(lineMainStns[0]);
-            } else if (
-                lineMainStns[0] === branch[0] &&
-                lineMainStns[lineMainStns.length - 1] === branch[branch.length - 1] &&
-                linePassStns.length
-            ) {
-                linePassStns = branch;
-                lineMainStns = [];
-            } else {
-                // 1 1 -1 -1
-                linePassStns.unshift(lineMainStns[lineMainStns.length - 1]);
-            }
-        }
-
-        linePaths.main.push(lineMainStns);
-        linePaths.pass.push(linePassStns);
-    });
-
-    return linePaths;
+    return {
+        main: lineMainStns,
+        pass: linePassStns,
+    };
 };
