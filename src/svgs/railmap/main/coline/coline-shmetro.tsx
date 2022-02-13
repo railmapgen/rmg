@@ -1,7 +1,7 @@
 import React from 'react';
 import { drawLine } from '../../methods/share';
 import { calculateColineStations, calculateColine } from '../../methods/shmetro-coline';
-import { AtLeastOneOfPartial, Services, InterchangeInfo } from '../../../../constants/constants';
+import { AtLeastOneOfPartial, Services, InterchangeInfo, PanelTypeGZMTR, PanelTypeShmetro } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 import { _linePath, StationGroupProps } from '../main-shmetro';
 import StationSHMetro from '../station/station-shmetro';
@@ -30,7 +30,13 @@ const defaultTheme = ['shanghai', 'sh4', '#5F259F', '#fff', '4号线', 'Line 4']
 export const ColineSHMetro = (props: Props) => {
     const { xs, servicesPresent, stnStates } = props;
 
-    const { direction, stn_list, branch_spacing, coline: colineInfo } = useAppSelector(store => store.param);
+    const {
+        direction,
+        stn_list,
+        branch_spacing,
+        info_panel_type,
+        coline: colineInfo,
+    } = useAppSelector(store => store.param);
     const { branches, depsStr: deps } = useAppSelector(store => store.helper);
 
     const yShares = React.useMemo(
@@ -123,11 +129,11 @@ export const ColineSHMetro = (props: Props) => {
     );
     // console.log(colinePaths);
 
-    const lineWidth = 12;
-    const colineGap = 3;
+    const LINE_WIDTH = 12;
+    const COLINE_GAP = info_panel_type === 'sh2020' ? 3 : 0;
     return (
         <>
-            <g id="coline" transform={`translate(0,${lineWidth + colineGap})`}>
+            <g id="coline" transform={`translate(0,${LINE_WIDTH + COLINE_GAP})`}>
                 <CoLine paths={colinePaths} direction={direction} />
                 <ColineStationInMainLine
                     colineStns={colineStns}
@@ -135,8 +141,9 @@ export const ColineSHMetro = (props: Props) => {
                     xs={xs}
                     ys={colineYs}
                     stnStates={stnStates}
-                    lineWidth={lineWidth}
-                    colineGap={colineGap}
+                    lineWidth={LINE_WIDTH}
+                    colineGap={COLINE_GAP}
+                    info_panel_type={info_panel_type}
                 />
                 <ColineStationGroup
                     stnIds={Object.entries(yShares)
@@ -272,6 +279,7 @@ interface ColineStationInMainLineProps {
     xs: { [stnId: string]: number };
     ys: { [stnId: string]: number };
     stnStates: { [stnId: string]: -1 | 0 | 1 };
+    info_panel_type: PanelTypeGZMTR | PanelTypeShmetro;
     lineWidth: number;
     colineGap: number;
 }
@@ -280,7 +288,16 @@ interface ColineStationInMainLineProps {
  * A small rect overlay on the main branch where coline is present.
  */
 const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
-    const { colineStns, branches, xs, ys, stnStates, lineWidth, colineGap } = props;
+    const {
+        colineStns,
+        branches,
+        xs,
+        ys,
+        stnStates,
+        info_panel_type,
+        lineWidth: LINE_WIDTH,
+        colineGap: COLINE_GAP,
+    } = props;
 
     // data to draw the station elements.
     const colineStations = [...colineStns.main, ...colineStns.pass]
@@ -312,25 +329,33 @@ const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
     console.log(colineStations);
 
     return (
-        <>
+        <g id="stations_in_mainline">
             {colineStations.map(colineStation => {
                 const { curStn, x, y, color } = colineStation;
-                const height = (stnStates[curStn] === -1 ? 0 : lineWidth) + colineGap + lineWidth;
-                const dy = (stnStates[curStn] === -1 ? 0 : -lineWidth) - colineGap - lineWidth / 2;
+                const height = (stnStates[curStn] === -1 ? 0 : LINE_WIDTH) + COLINE_GAP + LINE_WIDTH;
+                const dy = (stnStates[curStn] === -1 ? 0 : -LINE_WIDTH) - COLINE_GAP - LINE_WIDTH / 2;
                 return (
                     <g key={curStn} transform={`translate(${x},${y})`}>
-                        <rect
-                            stroke="none"
-                            height={height}
-                            width={12}
-                            x={-6}
-                            y={dy}
-                            fill={stnStates[curStn] === -1 ? 'var(--rmg-grey)' : color[2]}
-                        />
+                        {info_panel_type === 'sh2020' ? (
+                            <rect
+                                stroke="none"
+                                height={height}
+                                width={12}
+                                x={-6}
+                                y={dy}
+                                fill={stnStates[curStn] === -1 ? 'var(--rmg-grey)' : color[2]}
+                            />
+                        ) : (
+                            <use
+                                xlinkHref="#int2_sh"
+                                stroke="var(--rmg-theme-colour)"
+                                transform={`translate(0,${-LINE_WIDTH})`}
+                            />
+                        )}
                     </g>
                 );
             })}
-        </>
+        </g>
     );
 };
 
@@ -359,7 +384,7 @@ const ColineStationGroup = (props: StationGroupProps) => {
     );
 
     return (
-        <g>
+        <g id="stations_in_coline">
             {stnIds.map(stnId => (
                 <g key={stnId} transform={`translate(${xs[stnId]},${ys[stnId]})`}>
                     <StationSHMetro stnId={stnId} stnState={stnStates[stnId]} color={colors[stnId][2]} />
