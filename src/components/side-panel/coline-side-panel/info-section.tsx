@@ -13,7 +13,7 @@ import { setGlobalAlert } from '../../../redux/app/action';
 export default function InfoSection() {
     const dispatch = useDispatch();
 
-    // TODO: update coline info section when selectedColine changed, should be, but not working now
+    // TODO-coline: update coline info section when selectedColine changed, should be, but not working now
     const selectedColine = useAppSelector(state => state.app.selectedColine);
     const { stn_list: stnList } = useAppSelector(state => state.param);
     // FIXME: return emepty component if there is no coline
@@ -25,10 +25,10 @@ export default function InfoSection() {
     // @ts-ignore
     const cartesian = (...a: string[][]): string[][] => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
 
-    const possibleStnIdsFromMainLine = getPossibleStnIdsFromMainLine(branches);
+    const possibleStnIdsFromMainLine = getPossibleStnIdsFromMainLine(branches, stnList);
     const possibleStnIdsCombination = [
         ...cartesian(possibleStnIdsFromMainLine, possibleStnIdsFromMainLine),
-        ...getPossibleStnIdsFromBranchLine(branches),
+        ...getPossibleStnIdsFromBranchLine(branches, stnList),
     ].filter(val => val[0] !== val[1]) as [string, string][];
 
     const handleChange = (value: string) => {

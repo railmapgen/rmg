@@ -243,11 +243,9 @@ export const _linePath = (
     const servicesPassDelta = servicesMax > 1 ? 50 : 0;
 
     // extra short line on either end
-    // diagonal also use e to make soft line
-    let e = 30;
-
+    let e1 = 30;
     // check if path starts from or ends at the terminal
-    // and change e to 0 if it matches
+    // and change e1 to 0 if it matches
     let startFromTerminal = false,
         endAtTerminal = false;
     if (stnIds.length > 0) {
@@ -256,8 +254,11 @@ export const _linePath = (
         } else if (stn_list[stnIds.at(0) || 0].parents.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
             startFromTerminal = true;
         }
-        e = startFromTerminal || endAtTerminal ? e : 0;
+        e1 = startFromTerminal || endAtTerminal ? e1 : 0;
     }
+
+    // diagonal use e2 to make soft line
+    const e2 = 30;
 
     stnIds.forEach(stnId => {
         var x = xs[stnId];
@@ -294,17 +295,17 @@ export const _linePath = (
         if (type === 'main') {
             // current at terminal(end) station, draw the litte main line
             if (direction === 'l') {
-                return `M ${x - e - servicesDelta},${y} H ${x}`;
+                return `M ${x - e1 - servicesDelta},${y} H ${x}`;
             } else {
-                return `M ${x},${y} H ${x + e + servicesDelta}`;
+                return `M ${x},${y} H ${x + e1 + servicesDelta}`;
             }
         } else {
             // type === 'pass'
             // current at terminal(start) station, draw the litte pass line
             if (direction === 'l') {
-                return `M ${x},${y} L ${x + e + servicesPassDelta},${y}`;
+                return `M ${x},${y} L ${x + e1 + servicesPassDelta},${y}`;
             } else {
-                return `M ${x - e - servicesPassDelta},${y} L ${x},${y}`;
+                return `M ${x - e1 - servicesPassDelta},${y} L ${x},${y}`;
             }
         }
     } else if (!path.hasOwnProperty('bifurcate')) {
@@ -314,16 +315,16 @@ export const _linePath = (
             h = path['end'][0];
         if (type === 'main') {
             if (direction === 'l') {
-                return `M ${x - e - servicesDelta},${y} H ${h}`;
+                return `M ${x - e1 - servicesDelta},${y} H ${h}`;
             } else {
-                return `M ${x},${y} H ${h + e + servicesDelta}`;
+                return `M ${x},${y} H ${h + e1 + servicesDelta}`;
             }
         } else {
             // type === 'pass'
             if (direction === 'l') {
-                return `M ${x - e},${y} H ${h + e + servicesPassDelta}`;
+                return `M ${x - e1},${y} H ${h + e1 + servicesPassDelta}`;
             } else {
-                return `M ${x - e - servicesPassDelta},${y} H ${h + e}`;
+                return `M ${x - e1 - servicesPassDelta},${y} H ${h + e1}`;
             }
         }
     } else {
@@ -338,16 +339,17 @@ export const _linePath = (
         if (type === 'main') {
             if (direction === 'l') {
                 if (ym > y) {
+                    console.log(path);
                     // main line, left direction, center to upper
-                    if (bend === 'rightangle') return `M ${x - e},${y} H ${xm} V ${ym}`;
+                    if (bend === 'rightangle') return `M ${x - e1},${y} H ${xm} V ${ym}`;
                     // center to upper/rightangle, lower to center/diagonal
-                    else return `M ${x - e},${y} H ${xb + e} L ${xm - e},${ym} H ${xm}`;
+                    else return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm}`;
                 } else {
                     // wrong marker
                     // main line, left direction, upper to center
                     if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm}`;
                     // upper to center/rightangle, center to lower/diagonal
-                    else return `M ${x - e},${y} H ${xb + e} L ${xm - e},${ym} H ${xm}`;
+                    else return `M ${x - e1},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
                 }
             } else {
                 if (ym > y) {
@@ -355,12 +357,12 @@ export const _linePath = (
                     // main line, right direction, upper to center
                     if (bend === 'rightangle') return `M ${x},${y} H ${xm} V ${ym}`;
                     // upper to center/rightangle, center to lower/diagonal
-                    else return `M ${x},${y} H ${x + e} L ${xb - e},${ym} H ${xm + e}`;
+                    else return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm + e1}`;
                 } else {
                     // main line, right direction, center to upper
-                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e}`;
+                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e1}`;
                     // center to upper/rightangle, lower to center/diagonal
-                    else return `M ${x - e},${y} H ${xb + e} L ${xm - e},${ym} H ${xm}`;
+                    else return `M ${x},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
                 }
             }
         } else {
@@ -368,26 +370,26 @@ export const _linePath = (
             if (direction === 'l') {
                 if (ym > y) {
                     // pass line, left direction, center to upper
-                    if (bend === 'rightangle') return `M ${x - e},${y} H ${xm} V ${ym}`;
+                    if (bend === 'rightangle') return `M ${x - e1},${y} H ${xm} V ${ym}`;
                     // center to upper/rightangle, lower to center/diagonal
-                    else return `M ${x},${y} H ${x + e} L ${xb - e},${ym} H ${xm + e}`;
+                    else return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm + e1}`;
                 } else {
                     // pass line, left direction, upper to center
-                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e}`;
+                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e1}`;
                     // upper to center/rightangle, center to lower/diagonal
-                    else return `M ${x - e},${y} H ${xb + e} L ${xm - e},${ym} H ${xm}`;
+                    else return `M ${x - e1},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
                 }
             } else {
                 if (ym > y) {
                     // pass line, right direction, upper to center
-                    if (bend === 'rightangle') return `M ${x - e},${y} H ${xm} V ${ym}`;
+                    if (bend === 'rightangle') return `M ${x - e1},${y} H ${xm} V ${ym}`;
                     // upper to center/rightangle, center to lower/diagonal
-                    return `M ${x},${y} H ${x + e} L ${xb - e},${ym} H ${xm + e}`;
+                    return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm + e1}`;
                 } else {
                     // pass line, right direction, center to upper
-                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e}`;
+                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e1}`;
                     // center to upper/rightangle, lower to center/diagonal
-                    return `M ${x - e},${y} H ${xb + e} L ${xm - e},${ym} H ${xm}`;
+                    return `M ${x - e1},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
                 }
             }
         }

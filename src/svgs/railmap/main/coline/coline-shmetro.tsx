@@ -291,7 +291,7 @@ const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
                 curStn: stnId,
                 x: xs[stnId],
                 y: ys[stnId],
-                // TODO: fix this undefined error
+                // TODO-coline: fix this undefined error
                 color: stns.colors.at(-1) ?? defaultTheme,
             }))
         )
@@ -342,18 +342,17 @@ const ColineStationGroup = (props: StationGroupProps) => {
     const { branches, depsStr: deps } = useAppSelector(store => store.helper);
     const { coline } = useAppSelector(store => store.param);
 
-    // get colors of stations in coline branches, they use different
-    // colors than var(--rmg-theme-colour)
+    // get colors of stations in coline branches, they use different colors than var(--rmg-theme-colour)
     const colines = React.useMemo(() => calculateColineStations(coline, branches), [JSON.stringify(coline), deps]);
     const colors = stnIds.reduce(
         (acc, stnId) => ({
             ...acc,
             [stnId]:
                 colines
-                    .filter(coline => coline.linePath.includes('syq7'))
+                    .filter(coline => coline.linePath.includes(stnId))
                     .map(coline => coline.colors)
                     .flat()
-                    // TODO: remove default and support multiple colines
+                    // TODO-coline: remove default and support multiple colines
                     .at(0) ?? defaultTheme,
         }),
         {} as { [stnId: string]: InterchangeInfo }

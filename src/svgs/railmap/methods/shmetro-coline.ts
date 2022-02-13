@@ -12,7 +12,9 @@ export interface ColineLinePath {
     }[];
 }
 
-// return all stations from ColineInfo's `from` and `to` with coline color preserved
+/**
+ * Return all stations from ColineInfo's `from` and `to` with coline color preserved.
+ */
 export const calculateColineStations = (colineInfo: ColineInfo[], branches: string[][]) =>
     colineInfo
         .map(coLine => {
@@ -35,7 +37,9 @@ export const calculateColineStations = (colineInfo: ColineInfo[], branches: stri
         })
         .filter(branchWithColine => branchWithColine.linePath.length !== 0);
 
-// return coline segements with stations in main/pass order
+/**
+ * Return coline segements with stations in main/pass order.
+ */
 export const calculateColine = (
     branchWithColine: ReturnType<typeof calculateColineStations>,
     stnStates: {

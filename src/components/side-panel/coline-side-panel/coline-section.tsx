@@ -23,7 +23,7 @@ export default function ColineSection() {
         dispatch(updateColineColor(selectedColine, i, info));
     };
 
-    // TODO: support mutiple coline color in one segement
+    // TODO-coline: support mutiple coline color in one segement
     return (
         <InterchangeCard
             interchangeList={coline.at(selectedColine)!.colors}

@@ -211,6 +211,7 @@ export const updateParam = (param: { [x: string]: any }) => {
     param.style =
         param.style === undefined || !Object.values(RmgStyle).includes(param.style) ? RmgStyle.MTR : param.style;
 
+    param.coline = param.coline ?? [];
     // FIXME: remove this test purpose param
     // param.coline = [
     //     {
