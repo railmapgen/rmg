@@ -1,7 +1,7 @@
 import { AppDispatch, RootState } from '../index';
-import { InterchangeInfo } from '../../constants/constants';
+import { InterchangeInfo, SidePanelMode } from '../../constants/constants';
 import { setColineBulk } from './action';
-import { setSelectedColine } from '../app/action';
+import { setSelectedColine, setSidePanelMode } from '../app/action';
 
 export const getPossibleStnIdsFromMainLine = (branches: string[][]) => [
     branches[0][1], // skip linestart
@@ -89,8 +89,60 @@ export const removeColine = (colineIndex: number) => {
         if (colineInfo.length > colineIndex) {
             dispatch(setColineBulk(colineInfo.filter((_, idx) => colineIndex !== idx)));
 
-            // reset to 0 to make index is always valid
-            dispatch(setSelectedColine(0));
+            if (getState().app.selectedColine === colineIndex) {
+                if (colineInfo.length === 0) {
+                    dispatch(setSidePanelMode(SidePanelMode.CLOSE));
+                } else {
+                    dispatch(setSelectedColine(0));
+                }
+            }
+        }
+    };
+};
+
+/**
+ *
+ * @param colineIndex
+ * @param interchangeInfo
+ */
+export const addColineColor = (colineIndex: number, interchangeInfo: InterchangeInfo) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const colineInfo = getState().param.coline;
+
+        colineInfo[colineIndex].colors = [...colineInfo[colineIndex].colors, interchangeInfo];
+
+        dispatch(setColineBulk(colineInfo));
+    };
+};
+
+export const removeColineColor = (colineIndex: number, interchangeIndex: number) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const colineInfo = getState().param.coline;
+
+        if (colineInfo.length > colineIndex && colineInfo[colineIndex].colors.length > interchangeIndex) {
+            colineInfo[colineIndex].colors = colineInfo[colineIndex].colors.filter(
+                (_, colineIdx) => colineIdx !== interchangeIndex
+            );
+
+            dispatch(setColineBulk(colineInfo));
+        }
+    };
+};
+
+export const updateColineColor = (colineIndex: number, interchangeIndex: number, interchangeInfo: InterchangeInfo) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const colineInfo = getState().param.coline;
+
+        if (colineInfo.length > colineIndex && colineInfo[colineIndex].colors.length > interchangeIndex) {
+            colineInfo[colineIndex].colors = colineInfo[colineIndex].colors.map((int, colineIdx) =>
+                colineIdx === interchangeIndex
+                    ? ([0, 1, 2, 3, 4, 5].map(i =>
+                          interchangeInfo[i] === undefined ? int[i] : interchangeInfo[i]
+                      ) as InterchangeInfo)
+                    : int
+            );
+
+            dispatch(setColineBulk(colineInfo));
         }
     };
 };

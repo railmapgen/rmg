@@ -27,7 +27,7 @@ interface AppState {
     canvasToShowStatus: LoadingStatus;
     sidePanelMode: SidePanelMode;
     selectedStation: string;
-    selectedColine: number;
+    selectedColine?: number;
     globalAlert?: {
         status: AlertProps['status'];
         message: string;
@@ -42,7 +42,7 @@ const initialState: AppState = {
     canvasToShowStatus: LoadingStatus.init,
     sidePanelMode: SidePanelMode.CLOSE,
     selectedStation: 'linestart',
-    selectedColine: 0,
+    selectedColine: undefined,
 };
 
 export default function AppReducer(

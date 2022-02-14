@@ -15,10 +15,11 @@ export default function InfoSection() {
 
     // TODO: update coline info section when selectedColine changed, should be, but not working now
     const selectedColine = useAppSelector(state => state.app.selectedColine);
-    const { stn_list: stnList } = useAppSelector(state => state.param);
-    // FIXME: return emepty component if there is no coline
-    const { from, to } = useAppSelector(state => state.param.coline.at(selectedColine))!;
+    const { stn_list: stnList, coline } = useAppSelector(state => state.param);
     const { branches } = useAppSelector(state => state.helper);
+
+    // return empty when selectedColine is invalid
+    if (selectedColine === undefined || selectedColine >= coline.length) return <></>;
 
     // https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
     // I have no idea why this will complain and the func should be in (...a: string[][]) => string[][]
@@ -47,7 +48,7 @@ export default function InfoSection() {
         {
             type: 'select',
             label: 'Route',
-            value: value([from, to]),
+            value: value([coline.at(selectedColine)!.from, coline.at(selectedColine)!.to]),
             options: possibleStnIdsCombination.reduce(
                 (acc, cur) => ({ ...acc, [value(cur)]: displayName(cur) }),
                 {} as { [stnId: string]: string }

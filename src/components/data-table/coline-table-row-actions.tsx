@@ -21,7 +21,11 @@ export default function ColineTableRowActions(props: ColineTableRowActionsProps)
     const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 
     const handleAdd = () => {
-        dispatch(addColine(curColine.from, curColine.to, curColine.colors));
+        try {
+            dispatch(addColine(curColine.from, curColine.to, curColine.colors));
+        } catch {
+            dispatch(setGlobalAlert({ status: 'error', message: 'Unable to add this coline segment.' }));
+        }
     };
 
     const handleEdit = () => {
@@ -32,12 +36,6 @@ export default function ColineTableRowActions(props: ColineTableRowActionsProps)
     const handleDelete = () => {
         dispatch(removeColine(colineIndex));
         setIsRemoveModalOpen(false);
-
-        try {
-        } catch {
-            dispatch(setGlobalAlert({ status: 'error', message: 'Unable to add this coline segment.' }));
-        } finally {
-        }
     };
 
     return (
