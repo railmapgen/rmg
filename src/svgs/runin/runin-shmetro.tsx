@@ -82,7 +82,7 @@ interface RunInGeneralProps {
 
 const GeneralStation = (props: RunInGeneralProps) => {
     const { prevStnIds, nextStnIds } = props;
-    const { info_panel_type, theme, svgWidth, stn_list, direction, coline } = useAppSelector(store => store.param);
+    const { info_panel_type, svgWidth, stn_list } = useAppSelector(store => store.param);
 
     const middle = svgWidth.runin / 2;
     const terminal = nextStnIds.length === 1 && ['linestart', 'lineend'].includes(nextStnIds[0]);
@@ -220,7 +220,6 @@ const Line = (props: RunInGeneralProps) => {
                   .length > 0
             ? 'multiple'
             : 'single';
-    console.log(nextColineMode);
 
     const nextColineColorFrom = isEnd(nextStnIds) ? prevStnIds : nextStnIds;
     const nextColineColor =

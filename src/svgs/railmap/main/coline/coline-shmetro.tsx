@@ -1,7 +1,13 @@
 import React from 'react';
 import { drawLine } from '../../methods/share';
 import { calculateColineStations, calculateColine } from '../../methods/shmetro-coline';
-import { AtLeastOneOfPartial, Services, InterchangeInfo, PanelTypeGZMTR, PanelTypeShmetro } from '../../../../constants/constants';
+import {
+    AtLeastOneOfPartial,
+    Services,
+    InterchangeInfo,
+    PanelTypeGZMTR,
+    PanelTypeShmetro,
+} from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 import { _linePath, StationGroupProps } from '../main-shmetro';
 import StationSHMetro from '../station/station-shmetro';
