@@ -306,7 +306,7 @@ const Line = (props: RunInGeneralProps) => {
             </g>
         </g>
     );
-};;
+};
 
 interface RunInBranchLineProps {
     prevStnIds: string[];
