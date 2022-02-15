@@ -10,6 +10,20 @@ import {
 } from '../../../redux/param/coline-action';
 import { setGlobalAlert } from '../../../redux/app/action';
 
+// Cartesian product of multiple arrays in JavaScript
+// https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
+// Equivalent typescript version
+// https://gist.github.com/ssippe/1f92625532eef28be6974f898efb23ef?permalink_comment_id=3364149#gistcomment-3364149
+function cartesian<T>(...allEntries: T[][]): T[][] {
+    return allEntries.reduce<T[][]>(
+        (results, entries) =>
+            results
+                .map(result => entries.map(entry => result.concat([entry])))
+                .reduce((subResults, result) => subResults.concat(result), []),
+        [[]]
+    );
+}
+
 export default function InfoSection() {
     const dispatch = useDispatch();
 
@@ -21,10 +35,9 @@ export default function InfoSection() {
     // return empty when selectedColine is invalid
     if (selectedColine === undefined || selectedColine >= coline.length) return <></>;
 
-    // https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
     // I have no idea why this will complain and the func should be in (...a: string[][]) => string[][]
     // @ts-ignore
-    const cartesian = (...a: string[][]): string[][] => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
+    // const cartesian = (...a: string[][]): string[][] => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
 
     const possibleStnIdsFromMainLine = getPossibleStnIdsFromMainLine(branches);
     const possibleStnIdsCombination = [
