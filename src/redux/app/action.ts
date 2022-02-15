@@ -9,6 +9,7 @@ export const SET_CANVAS_TO_SHOW = 'SET_CANVAS_TO_SHOW';
 export const SET_CANVAS_TO_SHOW_STATUS = 'SET_CANVAS_TO_SHOW_STATUS';
 export const SET_SIDE_PANEL_MODE = 'SET_SIDE_PANEL_MODE';
 export const SET_SELECTED_STATION = 'SET_SELECTED_STATION';
+export const SET_SELECTED_COLINE = 'SET_SELECTED_COLINE';
 export const SET_GLOBAL_ALERT = 'SET_GLOBAL_ALERT';
 
 export interface setCanvasScaleAction {
@@ -39,6 +40,11 @@ export interface setSidePanelModeAction {
 export interface setSelectedStationAction {
     type: typeof SET_SELECTED_STATION;
     selectedStation: string;
+}
+
+export interface setSelectedColineAction {
+    type: typeof SET_SELECTED_COLINE;
+    selectedColine: number;
 }
 
 export interface setGlobalAlertAction {
@@ -113,6 +119,10 @@ export const setSidePanelMode = (sidePanelMode: SidePanelMode): setSidePanelMode
 
 export const setSelectedStation = (selectedStation: string): setSelectedStationAction => {
     return { type: SET_SELECTED_STATION, selectedStation };
+};
+
+export const setSelectedColine = (selectedColine: number): setSelectedColineAction => {
+    return { type: SET_SELECTED_COLINE, selectedColine };
 };
 
 export const setGlobalAlert = (globalAlert?: {

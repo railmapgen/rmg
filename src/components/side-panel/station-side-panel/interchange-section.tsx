@@ -1,17 +1,17 @@
 import React, { Fragment } from 'react';
 import { Button, Heading, VStack } from '@chakra-ui/react';
-import { useAppSelector } from '../../../../redux';
-import InterchangeCard from './interchange-card';
+import { useAppSelector } from '../../../redux';
+import InterchangeCard from '../interchange/interchange-card';
 import { useDispatch } from 'react-redux';
 import {
     addInterchange,
     removeInterchange,
     updateInterchange,
     updateStationOsiName,
-} from '../../../../redux/param/action';
-import { InterchangeInfo, MonoColour } from '../../../../constants/constants';
+} from '../../../redux/param/action';
+import { InterchangeInfo, MonoColour } from '../../../constants/constants';
 import { MdAdd } from 'react-icons/md';
-import RmgFields, { RmgFieldsField } from '../../../common/rmg-fields';
+import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
 
 export default function InterchangeSection() {
     const dispatch = useDispatch();

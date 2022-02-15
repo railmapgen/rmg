@@ -5,14 +5,14 @@ import {
     PanelTypeGZMTR,
     PanelTypeShmetro,
     Facilities,
-    Theme,
+    ColourHex,
 } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 
 interface Props {
     stnId: string;
     stnState: -1 | 0 | 1;
-    color?: Theme; // control the station color if coline is in effect
+    color?: ColourHex; // control the station color if coline is in effect
 }
 
 const StationSHMetro = (props: Props) => {
@@ -31,7 +31,7 @@ const StationSHMetro = (props: Props) => {
         if (stnInfo.services.length === 3) stationIconStyle = 'stn_sh_2020_direct';
         else if (stnInfo.services.length === 2) stationIconStyle = 'stn_sh_2020_express';
         else stationIconStyle = 'stn_sh_2020';
-        stationIconColor.fill = stnState === -1 ? 'gray' : color ? color[2] : 'var(--rmg-theme-colour)';
+        stationIconColor.fill = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
     } else {
         // param.info_panel_type === 'sh' or others (from other styles)
         if (stnInfo.services.length === 3) stationIconStyle = 'direct_sh';
@@ -39,7 +39,7 @@ const StationSHMetro = (props: Props) => {
         else if ([...stnInfo.transfer.info[0], ...(stnInfo.transfer.info[1] || [])].length > 0)
             stationIconStyle = 'int2_sh';
         else stationIconStyle = 'stn_sh';
-        stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color[2] : 'var(--rmg-theme-colour)';
+        stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
     }
 
     return (

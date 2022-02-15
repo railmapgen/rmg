@@ -1,21 +1,31 @@
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box } from '@chakra-ui/react';
 import React, { ReactNode } from 'react';
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box } from '@chakra-ui/react';
+import { useDispatch } from 'react-redux';
+import { useAppSelector } from '../../../redux';
 import InfoSection from './info-section';
-import InterchangeSection from './interchange-section';
-import MoreSection from './more-section';
-import BranchSection from './branch-section';
+import ColineSection from './coline-section';
+import { SidePanelMode } from '../../../constants/constants';
+import { setSidePanelMode } from '../../../redux/app/action';
 
 type SidePanelSection = {
     title: string;
     children: ReactNode;
 };
 
-export default function StationSidePanel() {
+export default function ColineSidePanel() {
+    const dispatch = useDispatch();
+    const selectedColine = useAppSelector(state => state.app.selectedColine);
+    const { coline } = useAppSelector(state => state.param);
+
+    // close the side panel when selectedColine is invalid
+    if (selectedColine === undefined || selectedColine >= coline.length) {
+        dispatch(setSidePanelMode(SidePanelMode.CLOSE));
+        return <></>;
+    }
+
     const sidePanelFields: SidePanelSection[] = [
         { title: 'Basic info', children: <InfoSection /> },
-        { title: 'Interchange', children: <InterchangeSection /> },
-        { title: 'Branch', children: <BranchSection /> },
-        { title: 'More', children: <MoreSection /> },
+        { title: 'Share track with', children: <ColineSection /> },
     ];
 
     return (

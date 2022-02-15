@@ -142,9 +142,24 @@ const param = {
     notesGZMTR: [],
     namePosMTR: { isStagger: true, isFlip: false },
     coline: [
-        { from: 'l1mz', to: 'iwf6', colors: [['shanghai', 'sh4', '#5F259F', '#fff']], display: true },
-        { from: 'iwf6', to: 'fcqo', colors: [['shanghai', 'sh4', '#5F259F', '#fff']], display: true },
-        { from: 's9tt', to: 'l1mz', colors: [['shanghai', 'sh4', '#5F259F', '#fff']], display: true },
+        {
+            from: 'l1mz',
+            to: 'iwf6',
+            colors: [['shanghai', 'sh4', '#5F259F', '#fff', '4号线', 'Line 4']],
+            display: true,
+        },
+        {
+            from: 'iwf6',
+            to: 'fcqo',
+            colors: [['shanghai', 'sh4', '#5F259F', '#fff', '4号线', 'Line 4']],
+            display: true,
+        },
+        {
+            from: 's9tt',
+            to: 'l1mz',
+            colors: [['shanghai', 'sh4', '#5F259F', '#fff', '4号线', 'Line 4']],
+            display: true,
+        },
     ],
 };
 

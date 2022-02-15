@@ -6,6 +6,7 @@ import {
     SET_CANVAS_TO_SHOW_STATUS,
     SET_GLOBAL_ALERT,
     SET_SELECTED_STATION,
+    SET_SELECTED_COLINE,
     SET_SIDE_PANEL_MODE,
     setCanvasScaleAction,
     setCanvasScaleStatusAction,
@@ -13,6 +14,7 @@ import {
     setCanvasToShowStatusAction,
     setGlobalAlertAction,
     setSelectedStationAction,
+    setSelectedColineAction,
     setSidePanelModeAction,
 } from './action';
 import { AlertProps } from '@chakra-ui/react';
@@ -25,6 +27,7 @@ interface AppState {
     canvasToShowStatus: LoadingStatus;
     sidePanelMode: SidePanelMode;
     selectedStation: string;
+    selectedColine?: number;
     globalAlert?: {
         status: AlertProps['status'];
         message: string;
@@ -39,6 +42,7 @@ const initialState: AppState = {
     canvasToShowStatus: LoadingStatus.init,
     sidePanelMode: SidePanelMode.CLOSE,
     selectedStation: 'linestart',
+    selectedColine: undefined,
 };
 
 export default function AppReducer(
@@ -50,6 +54,7 @@ export default function AppReducer(
         | setCanvasToShowStatusAction
         | setSidePanelModeAction
         | setSelectedStationAction
+        | setSelectedColineAction
         | setGlobalAlertAction
 ): AppState {
     switch (action.type) {
@@ -70,6 +75,9 @@ export default function AppReducer(
             break;
         case SET_SELECTED_STATION:
             state.selectedStation = action.selectedStation;
+            break;
+        case SET_SELECTED_COLINE:
+            state.selectedColine = action.selectedColine;
             break;
         case SET_GLOBAL_ALERT:
             state.globalAlert = action.globalAlert;

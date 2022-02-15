@@ -1,6 +1,7 @@
 import {
     BranchStyle,
     CanvasType,
+    ColineInfo,
     Direction,
     Facilities,
     InterchangeInfo,
@@ -49,6 +50,9 @@ export const SET_CUSTOMISED_MTR_DESTINATION = 'SET_CUSTOMISED_MTR_DESTINATION';
 export const SET_CURRENT_STATION = 'SET_CURRENT_STATION';
 export const SET_STATION = 'SET_STATION';
 export const SET_STATIONS_BULK = 'SET_STATIONS_BULK';
+
+// coline
+export const SET_COLINE_BULK = 'SET_COLINE_BULK';
 
 export interface setFullParamAction {
     type: typeof SET_FULL_PARAM;
@@ -161,6 +165,11 @@ export interface setStationAction {
 export interface setStationsBulkAction {
     type: typeof SET_STATIONS_BULK;
     stations: StationDict;
+}
+
+export interface setColineBulkAction {
+    type: typeof SET_COLINE_BULK;
+    coline: ColineInfo[];
 }
 
 // export const setFullParam = (fullParam: RMGParam): setFullParamAction => {
@@ -324,6 +333,12 @@ export const setStationsBulk = (stations: StationDict) => {
     return (dispatch: AppDispatch) => {
         dispatch({ type: SET_STATIONS_BULK, stations });
         dispatch(triggerHelpersUpdate());
+    };
+};
+
+export const setColineBulk = (coline: ColineInfo[]) => {
+    return (dispatch: AppDispatch) => {
+        dispatch({ type: SET_COLINE_BULK, coline });
     };
 };
 

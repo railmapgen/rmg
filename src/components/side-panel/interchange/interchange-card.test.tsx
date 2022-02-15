@@ -1,10 +1,10 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 import InterchangeCard from './interchange-card';
-import { InterchangeInfo, MonoColour } from '../../../../constants/constants';
+import { InterchangeInfo, MonoColour } from '../../../constants/constants';
 import { CityCode } from '@railmapgen/rmg-palette-resources';
 import { act } from 'react-dom/test-utils';
-import { TestingProvider } from '../../../../setupTests';
+import { TestingProvider } from '../../../setupTests';
 
 const mockInterchangeInfo1: InterchangeInfo = [
     CityCode.Hongkong,

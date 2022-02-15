@@ -6,6 +6,7 @@ import { Alert, AlertIcon, CloseButton, Flex } from '@chakra-ui/react';
 import { SidePanelMode } from '../../constants/constants';
 import StationSidePanel from './station-side-panel/station-side-panel';
 import StyleSidePanel from './style-side-panel/style-side-panel';
+import ColineSidePanel from './coline-side-panel/coline-side-panel';
 
 const SIDE_PANEL_WIDTH = 400;
 
@@ -14,6 +15,13 @@ export default function SidePanel() {
 
     const { sidePanelMode, selectedStation } = useAppSelector(state => state.app);
     const { name } = useAppSelector(state => state.param.stn_list[selectedStation]);
+
+    const mode: { [key in SidePanelMode]: { name: string; component?: JSX.Element } } = {
+        [SidePanelMode.STATION]: { name: name[0] + ' - ' + name[1], component: <StationSidePanel /> },
+        [SidePanelMode.STYLE]: { name: 'Edit style', component: <StyleSidePanel /> },
+        [SidePanelMode.COLINE]: { name: 'Edit sharing track', component: <ColineSidePanel /> },
+        [SidePanelMode.CLOSE]: { name: 'Close', component: undefined },
+    };
 
     const handleClose = () => {
         dispatch(setSidePanelMode(SidePanelMode.CLOSE));
@@ -34,12 +42,11 @@ export default function SidePanel() {
             <Flex direction="column" w={SIDE_PANEL_WIDTH} h="100%">
                 <Alert status="info" variant="solid" size="xs" flexShrink={0} pl={3} pr={1} pb={0} pt={0}>
                     <AlertIcon />
-                    {sidePanelMode === SidePanelMode.STATION ? name[0] + ' - ' + name[1] : 'Edit style'}
+                    {mode[sidePanelMode].name}
                     <CloseButton ml="auto" onClick={handleClose} />
                 </Alert>
 
-                {sidePanelMode === SidePanelMode.STATION && <StationSidePanel />}
-                {sidePanelMode === SidePanelMode.STYLE && <StyleSidePanel />}
+                {mode[sidePanelMode]?.component}
             </Flex>
         </Flex>
     );
