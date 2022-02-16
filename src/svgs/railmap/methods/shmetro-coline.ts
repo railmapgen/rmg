@@ -23,7 +23,7 @@ export const calculateColineStations = (colineInfo: ColineInfo[], branches: stri
             );
 
             // the current coLineInfo fall on two separate branches,
-            // which should not be possible
+            // which should not be possible in current design.
             if (involvedBranches.length !== 1) return { linePath: [], colors: coLine.colors };
 
             const branch = involvedBranches.flat();
@@ -38,7 +38,7 @@ export const calculateColineStations = (colineInfo: ColineInfo[], branches: stri
         .filter(branchWithColine => branchWithColine.linePath.length !== 0);
 
 /**
- * Return coline segements with stations in main/pass order.
+ * Return coline segments with stations in main/pass order.
  */
 export const calculateColine = (
     branchWithColine: ReturnType<typeof calculateColineStations>,

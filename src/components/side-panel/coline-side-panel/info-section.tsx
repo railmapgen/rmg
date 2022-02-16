@@ -35,10 +35,6 @@ export default function InfoSection() {
     // return empty when selectedColine is invalid
     if (selectedColine === undefined || selectedColine >= coline.length) return <></>;
 
-    // I have no idea why this will complain and the func should be in (...a: string[][]) => string[][]
-    // @ts-ignore
-    // const cartesian = (...a: string[][]): string[][] => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
-
     const possibleStnIdsFromMainLine = getPossibleStnIdsFromMainLine(branches, stnList);
     const possibleStnIdsCombination = [
         ...cartesian(possibleStnIdsFromMainLine, possibleStnIdsFromMainLine),

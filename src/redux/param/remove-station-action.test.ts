@@ -1,15 +1,7 @@
 import { removeStation } from './remove-station-action';
-import rootReducer from '../index';
-import { createMockAppStore } from '../../setupTests';
+import { createMockStoreWithMockStations } from '../../setupTests';
 import { BranchStyle, StationDict } from '../../constants/constants';
 import { SET_STATIONS_BULK } from './action';
-
-const realStore = rootReducer.getState();
-const createMockStoreWithMockStations = (stationList: StationDict) =>
-    createMockAppStore({
-        ...realStore,
-        param: { ...realStore.param, stn_list: stationList },
-    });
 
 describe('Unit tests for removeStation action', () => {
     it('Can reject if there are only 2 stations remaining', () => {

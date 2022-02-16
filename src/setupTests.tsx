@@ -17,6 +17,13 @@ configure({ adapter: new Adapter() });
 type DispatchExts = ThunkDispatch<RootState, void, AnyAction>;
 export const createMockAppStore = createMockStore<RootState, DispatchExts>([thunk]);
 
+const realStore = rootReducer.getState();
+export const createMockStoreWithMockStations = (stationList: StationDict) =>
+    createMockAppStore({
+        ...realStore,
+        param: { ...realStore.param, stn_list: stationList },
+    });
+
 /**
  * Before reversing:
  * stn0 - stn1 - stn2 (main)
