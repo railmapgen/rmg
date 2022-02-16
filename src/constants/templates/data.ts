@@ -111,6 +111,17 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
         },
     ],
 
+    fmetro: [
+        {
+            filename: 'fs2',
+            name: {
+                en: 'Line 2 by Dingdong2334',
+                'zh-Hans': '2号线 来自 Dingdong2334',
+                'zh-Hant': '2號線 來自 Dingdong2334',
+            },
+        },
+    ],
+
     gzmtr: [
         {
             filename: 'gz1',
@@ -222,6 +233,14 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
                 en: 'Guangfo Line',
                 'zh-Hans': '广佛线',
                 'zh-Hant': '廣佛線',
+            },
+        },
+        {
+            filename: 'apm',
+            name: {
+                en: 'APM Line by Dingdong2334',
+                'zh-Hans': 'APM线 来自 Dingdong2334',
+                'zh-Hant': 'APM線 來自 Dingdong2334',
             },
         },
         {
