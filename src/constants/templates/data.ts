@@ -281,49 +281,49 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
         {
             filename: 'km1',
             name: {
-                en: 'Line 1',
-                'zh-Hans': '1号线',
-                'zh-Hant': '1號線',
+                en: 'Line 1 by 52PD',
+                'zh-Hans': '1号线 来自 52PD',
+                'zh-Hant': '1號線 來自 52PD',
             },
         },
         {
             filename: 'km2',
             name: {
-                en: 'Line 2',
-                'zh-Hans': '2号线',
-                'zh-Hant': '2號線',
+                en: 'Line 2 by 52PD',
+                'zh-Hans': '2号线 来自 52PD',
+                'zh-Hant': '2號線 來自 52PD',
             },
         },
         {
             filename: 'km3',
             name: {
-                en: 'Line 3',
-                'zh-Hans': '3号线',
-                'zh-Hant': '3號線',
+                en: 'Line 3 by 52PD',
+                'zh-Hans': '3号线 来自 52PD',
+                'zh-Hant': '3號線 來自 52PD',
             },
         },
         {
             filename: 'km4',
             name: {
-                en: 'Line 4',
-                'zh-Hans': '4号线',
-                'zh-Hant': '4號線',
+                en: 'Line 4 by 52PD',
+                'zh-Hans': '4号线 来自 52PD',
+                'zh-Hant': '4號線 來自 52PD',
             },
         },
         {
             filename: 'km5',
             name: {
-                en: 'Line 5',
-                'zh-Hans': '5号线',
-                'zh-Hant': '5號線',
+                en: 'Line 5 by 52PD',
+                'zh-Hans': '5号线 来自 52PD',
+                'zh-Hant': '5號線 來自 52PD',
             },
         },
         {
             filename: 'km6',
             name: {
-                en: 'Line 6',
-                'zh-Hans': '6号线',
-                'zh-Hant': '6號線',
+                en: 'Line 6 by 52PD',
+                'zh-Hans': '6号线 来自 52PD',
+                'zh-Hant': '6號線 來自 52PD',
             },
         },
     ],
