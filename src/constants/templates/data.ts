@@ -78,6 +78,14 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
+            filename: 'bj14',
+            name: {
+                en: 'Line 14 by Jay20081229',
+                'zh-Hans': '14号线 来自 Jay20081229',
+                'zh-Hant': '14號線 來自 Jay20081229',
+            },
+        },
+        {
             filename: 'yzl',
             name: {
                 en: 'Yizhuang Line by AnDanJuneUnderline',
