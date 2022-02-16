@@ -216,6 +216,14 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
                 'zh-Hant': '廣佛線',
             },
         },
+        {
+            filename: 'thz1',
+            name: {
+                en: 'Haizhu Tram',
+                'zh-Hans': '海珠有轨1号线 来自 clearng-kly',
+                'zh-Hant': '海珠有軌1號線 來自 clearng-kly',
+            },
+        },
     ],
 
     kmrailtransit: [
