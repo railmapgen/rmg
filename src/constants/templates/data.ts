@@ -112,6 +112,22 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
                 'zh-Hant': '2號線 來自 Dingdong2334',
             },
         },
+        {
+            filename: 'tnh1',
+            name: {
+                en: 'Nanhai Tram Line 1 by clearng-kly',
+                'zh-Hans': '南海有轨1号线 来自 clearng-kly',
+                'zh-Hant': '南海有軌1號線 來自 clearng-kly',
+            },
+        },
+        {
+            filename: 'tgm1',
+            name: {
+                en: 'Gaoming Tram by clearng-kly',
+                'zh-Hans': '高明有轨电车 来自 clearng-kly',
+                'zh-Hant': '高明有軌電車 來自 clearng-kly',
+            },
+        },
     ],
 
     gzmtr: [
