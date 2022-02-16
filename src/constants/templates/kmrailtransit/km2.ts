@@ -1,28 +1,20 @@
 const params = {
-    style: 'mtr',
-    svg_height: 450,
+    style: 'gzmtr',
+    svg_height: 300,
     padding: 7,
     y_pc: 40,
-    branch_spacing: 39,
-    theme: ['other', 'other', '#235A99', '#fff'],
+    branch_spacing: 60,
+    theme: ['kunming', 'km2', '#235A99', '#fff'],
     direction: 'l',
-    current_stn_idx: 'q29r',
+    current_stn_idx: 'l1mz',
     platform_num: '2',
     stn_list: {
         linestart: {
             parents: [],
             children: ['iwf6'],
             name: ['路綫右端', 'RIGHT END'],
-            branch: {
-                left: [],
-                right: [],
-            },
-            transfer: {
-                tick_direc: 'r',
-                paid_area: true,
-                osi_names: [],
-                info: [[]],
-            },
+            branch: { left: [], right: [] },
+            transfer: { tick_direc: 'r', paid_area: true, osi_names: [], info: [[]] },
             services: ['local'],
             facility: '',
             num: '15',
@@ -32,16 +24,8 @@ const params = {
             parents: ['l1mz'],
             children: [],
             name: ['路綫左端', 'LEFT END'],
-            branch: {
-                left: [],
-                right: [],
-            },
-            transfer: {
-                tick_direc: 'r',
-                paid_area: true,
-                osi_names: [],
-                info: [[]],
-            },
+            branch: { left: [], right: [] },
+            transfer: { tick_direc: 'r', paid_area: true, osi_names: [], info: [[]] },
             services: ['local'],
             facility: '',
             num: '00',
@@ -50,18 +34,10 @@ const params = {
         l1mz: {
             parents: ['vj9w'],
             children: ['lineend'],
-            name: ['北部汽车站', 'North Bus Station'],
-            branch: {
-                left: [],
-                right: [],
-            },
+            name: ['北部汽车站', 'North Coach Station'],
+            branch: { left: [], right: [] },
             num: '01',
-            transfer: {
-                tick_direc: 'r',
-                paid_area: true,
-                osi_names: [],
-                info: [[]],
-            },
+            transfer: { tick_direc: 'r', paid_area: true, osi_names: [], info: [[]] },
             services: ['local'],
             facility: '',
             secondaryName: false,
@@ -69,39 +45,28 @@ const params = {
         iwf6: {
             children: ['8idn'],
             parents: ['linestart'],
-            name: ['环城南路', 'South Ring Rd'],
-            branch: {
-                left: [],
-                right: [],
-            },
+            name: ['环城南路', 'South Ring Rd.'],
+            branch: { left: [], right: [] },
             num: '14',
             transfer: {
                 tick_direc: 'r',
                 paid_area: true,
                 osi_names: [],
-                info: [[['other', 'other', '#BF3334', '#fff', '1号线', 'Line 1']]],
+                info: [[['kunming', 'km1', '#BF3334', '#fff', '1号线', 'Line 1']]],
             },
             services: ['local'],
             facility: '',
             secondaryName: false,
         },
         vj9w: {
-            name: ['龙头街', 'Longtou St'],
+            name: ['龙头街', 'Longtou St.'],
             secondaryName: false,
             num: '02',
             services: ['local'],
             parents: ['zbkt'],
             children: ['l1mz'],
-            branch: {
-                left: [],
-                right: [],
-            },
-            transfer: {
-                info: [[]],
-                tick_direc: 'r',
-                paid_area: true,
-                osi_names: [],
-            },
+            branch: { left: [], right: [] },
+            transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
             facility: '',
         },
         zbkt: {
@@ -111,16 +76,8 @@ const params = {
             services: ['local'],
             parents: ['wnkz'],
             children: ['vj9w'],
-            branch: {
-                left: [],
-                right: [],
-            },
-            transfer: {
-                info: [[]],
-                tick_direc: 'r',
-                paid_area: true,
-                osi_names: [],
-            },
+            branch: { left: [], right: [] },
+            transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
             facility: '',
         },
         wnkz: {
@@ -130,16 +87,8 @@ const params = {
             services: ['local'],
             parents: ['mick'],
             children: ['zbkt'],
-            branch: {
-                left: [],
-                right: [],
-            },
-            transfer: {
-                info: [[]],
-                tick_direc: 'r',
-                paid_area: true,
-                osi_names: [],
-            },
+            branch: { left: [], right: [] },
+            transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
             facility: '',
         },
         mick: {
@@ -149,16 +98,8 @@ const params = {
             services: ['local'],
             parents: ['edjq'],
             children: ['wnkz'],
-            branch: {
-                left: [],
-                right: [],
-            },
-            transfer: {
-                info: [[]],
-                tick_direc: 'r',
-                paid_area: true,
-                osi_names: [],
-            },
+            branch: { left: [], right: [] },
+            transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
             facility: '',
         },
         edjq: {
@@ -168,16 +109,8 @@ const params = {
             services: ['local'],
             parents: ['q29r'],
             children: ['mick'],
-            branch: {
-                left: [],
-                right: [],
-            },
-            transfer: {
-                info: [[]],
-                tick_direc: 'r',
-                paid_area: true,
-                osi_names: [],
-            },
+            branch: { left: [], right: [] },
+            transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
             facility: '',
         },
         q29r: {
@@ -187,35 +120,19 @@ const params = {
             services: ['local'],
             parents: ['gdsw'],
             children: ['edjq'],
-            branch: {
-                left: [],
-                right: [],
-            },
-            transfer: {
-                info: [[]],
-                tick_direc: 'r',
-                paid_area: true,
-                osi_names: [],
-            },
+            branch: { left: [], right: [] },
+            transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
             facility: '',
         },
         gdsw: {
-            name: ['白云路', 'Baiyun Rd'],
+            name: ['白云路', 'Baiyun Rd.'],
             secondaryName: false,
             num: '08',
             services: ['local'],
             parents: ['3l2q'],
             children: ['q29r'],
-            branch: {
-                left: [],
-                right: [],
-            },
-            transfer: {
-                info: [[]],
-                tick_direc: 'r',
-                paid_area: true,
-                osi_names: [],
-            },
+            branch: { left: [], right: [] },
+            transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
             facility: '',
         },
         '3l2q': {
@@ -225,15 +142,12 @@ const params = {
             services: ['local'],
             parents: ['j2a9'],
             children: ['gdsw'],
-            branch: {
-                left: [],
-                right: [],
-            },
+            branch: { left: [], right: [] },
             transfer: {
                 info: [
                     [
-                        ['other', 'other', '#EE7C30', '#fff', '4号线', 'Line 4'],
-                        ['other', 'other', '#2AA844', '#fff', '5号线', 'Line 5'],
+                        ['kunming', 'km4', '#EE7C30', '#fff', '4号线', 'Line 4'],
+                        ['kunming', 'km5', '#2AA844', '#fff', '5号线', 'Line 5'],
                     ],
                 ],
                 tick_direc: 'r',
@@ -249,16 +163,8 @@ const params = {
             services: ['local'],
             parents: ['n3xx'],
             children: ['3l2q'],
-            branch: {
-                left: [],
-                right: [],
-            },
-            transfer: {
-                info: [[]],
-                tick_direc: 'r',
-                paid_area: true,
-                osi_names: [],
-            },
+            branch: { left: [], right: [] },
+            transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
             facility: '',
         },
         n3xx: {
@@ -268,16 +174,8 @@ const params = {
             services: ['local'],
             parents: ['svuy'],
             children: ['j2a9'],
-            branch: {
-                left: [],
-                right: [],
-            },
-            transfer: {
-                info: [[]],
-                tick_direc: 'r',
-                paid_area: true,
-                osi_names: [],
-            },
+            branch: { left: [], right: [] },
+            transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
             facility: '',
         },
         svuy: {
@@ -287,12 +185,9 @@ const params = {
             services: ['local'],
             parents: ['8idn'],
             children: ['n3xx'],
-            branch: {
-                left: [],
-                right: [],
-            },
+            branch: { left: [], right: [] },
             transfer: {
-                info: [[['other', 'other', '#D02E81', '#fff', '3号线', 'Line 3']]],
+                info: [[['kunming', 'km3', '#D02E81', '#fff', '3号线', 'Line 3']]],
                 tick_direc: 'r',
                 paid_area: true,
                 osi_names: [],
@@ -306,12 +201,9 @@ const params = {
             services: ['local'],
             parents: ['iwf6'],
             children: ['svuy'],
-            branch: {
-                left: [],
-                right: [],
-            },
+            branch: { left: [], right: [] },
             transfer: {
-                info: [[['other', 'other', '#3D89A8', '#fff', '6号线', 'Line 6']]],
+                info: [[['kunming', 'km6', '#3D89A8', '#fff', '6号线', 'Line 6']]],
                 tick_direc: 'r',
                 paid_area: true,
                 osi_names: [],
@@ -329,25 +221,17 @@ const params = {
         isLegacy: false,
         terminal: ['昆明南火车站/大学城南', 'Kunming South Railway Station/University Town South'],
     },
-    svgWidth: {
-        destination: 2000,
-        runin: 2000,
-        railmap: 2500,
-        indoor: 2500,
-    },
+    svgWidth: { destination: 1420, runin: 1130, railmap: 1420, indoor: 1420 },
     notesGZMTR: [
         [
             '2号线现与1号线在环城南路站贯通运行。',
-            'Line 2 now can run through with Line 1 at South Ring Rd Station.',
-            6,
+            'Line 2 now run through with Line 1 at South Ring Rd Station.',
+            5.5,
             65,
             true,
         ],
     ],
-    namePosMTR: {
-        isStagger: true,
-        isFlip: false,
-    },
+    namePosMTR: { isStagger: true, isFlip: false },
 };
 
 export default params;
