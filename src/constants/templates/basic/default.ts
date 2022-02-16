@@ -7,7 +7,7 @@ const params = {
     padding: 5,
     y_pc: 40,
     strip_pc: 90,
-    branch_spacing: 44.44444444444444,
+    branch_spacing: 45,
     theme: ['guangzhou', 'gz3', '#ECA154'],
     direction: 'r',
     current_stn_idx: 'a4',
