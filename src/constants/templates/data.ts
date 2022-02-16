@@ -227,9 +227,17 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
         {
             filename: 'thz1',
             name: {
-                en: 'Haizhu Tram',
+                en: 'Haizhu Tram Line 1',
                 'zh-Hans': '海珠有轨1号线 来自 clearng-kly',
                 'zh-Hant': '海珠有軌1號線 來自 clearng-kly',
+            },
+        },
+        {
+            filename: 'thp1',
+            name: {
+                en: 'Huangpu Tram Line 1',
+                'zh-Hans': '黄埔有轨1号线 来自 clearng-kly',
+                'zh-Hant': '黃埔有軌1號線 來自 clearng-kly',
             },
         },
     ],
