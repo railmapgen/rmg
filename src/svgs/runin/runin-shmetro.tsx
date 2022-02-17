@@ -383,6 +383,7 @@ const BranchLine = (props: RunInBranchLineProps) => {
                         stns.linePath.includes(current_stn_idx) &&
                         nextStnIds.some(stnId => stns.linePath.includes(stnId))
                 )
+                // TODO-coline: known undefined issues when coline is removed when station is removed via removeInvalidColineOnRemove
                 .at(0)!
                 .colors.at(0)![2];
         }

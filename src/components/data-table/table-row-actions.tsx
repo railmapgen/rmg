@@ -7,6 +7,7 @@ import { SidePanelMode } from '../../constants/constants';
 import { MdDelete, MdEdit, MdLocationPin } from 'react-icons/md';
 import RemoveConfirmModal from '../modal/remove-confirm-modal';
 import { removeStation } from '../../redux/param/remove-station-action';
+import { removeInvalidColineOnRemove } from '../../redux/param/coline-action';
 
 interface TableRowActionsProps {
     stationId: string;
@@ -25,6 +26,7 @@ export default function TableRowActions(props: TableRowActionsProps) {
     };
 
     const handleDelete = () => {
+        dispatch(removeInvalidColineOnRemove(stationId));
         const result = dispatch(removeStation(stationId));
         setIsRemoveModalOpen(false);
 

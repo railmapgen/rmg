@@ -1,5 +1,5 @@
 import { AppDispatch, RootState } from '../index';
-import { InterchangeInfo, SidePanelMode, StationDict } from '../../constants/constants';
+import { ColineInfo, InterchangeInfo, SidePanelMode, StationDict } from '../../constants/constants';
 import { setColineBulk } from './action';
 import { setSelectedColine, setSidePanelMode } from '../app/action';
 
@@ -64,6 +64,63 @@ export const checkColineValidity = (branches: string[][], from: string, to: stri
     if (colineInMainLine.length !== 2 && colineInBranches.length !== 1) {
         throw new Error('addColine():: failed');
     }
+};
+
+/**
+ * TODO-coline: test this when coline could be added via UI.
+ * Remove related coline when the newStnId is on the coline branch/segment.
+ */
+export const removeInvalidColineOnAdd = (newStnId: string) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const colineInfo = getState().param.coline;
+        const branches = getState().helper.branches;
+
+        if (colineInfo.length === 0) return;
+
+        const newColineInfo = colineInfo.filter(co => {
+            const involvedBranches = branches.filter(
+                branch => branch.includes(co.from) && branch.includes(co.to) && branch.includes(newStnId)
+            );
+
+            // deleteStnId does not fall on this coline, preserve it
+            if (involvedBranches.length === 0) return true;
+            // that's an invalid coline
+            if (involvedBranches.length > 1) return false;
+
+            return !involvedBranches[0].includes(newStnId);
+        });
+
+        dispatch(setColineBulk(newColineInfo));
+    };
+};
+
+/**
+ * Remove related coline when the deleteStn is on the coline branch/segment.
+ */
+export const removeInvalidColineOnRemove = (deleteStnId: string) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const colineInfo = getState().param.coline;
+        const branches = getState().helper.branches;
+
+        if (colineInfo.length === 0) return;
+
+        const newColineInfo = colineInfo.filter(co => {
+            const involvedBranches = branches.filter(
+                branch => branch.includes(co.from) && branch.includes(co.to) && branch.includes(deleteStnId)
+            );
+            console.log(deleteStnId, co.from, co.to, involvedBranches, branches)
+
+            // deleteStnId does not fall on this coline, preserve it
+            if (involvedBranches.length === 0) return true;
+            // that's an invalid coline
+            if (involvedBranches.length > 1) return false;
+            return !involvedBranches[0].includes(deleteStnId);
+        });
+
+        console.log(colineInfo.length, newColineInfo.length);
+
+        dispatch(setColineBulk(newColineInfo));
+    };
 };
 
 export const addColine = (from: string, to: string, colors: InterchangeInfo[], display: boolean = true) => {
