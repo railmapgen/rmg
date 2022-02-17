@@ -1,13 +1,7 @@
 import React from 'react';
 import { drawLine } from '../../methods/share';
 import { calculateColineStations, calculateColine } from '../../methods/shmetro-coline';
-import {
-    AtLeastOneOfPartial,
-    Services,
-    InterchangeInfo,
-    PanelTypeGZMTR,
-    PanelTypeShmetro,
-} from '../../../../constants/constants';
+import { AtLeastOneOfPartial, Services, InterchangeInfo } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 import { _linePath, StationGroupProps } from '../main-shmetro';
 import StationSHMetro from '../station/station-shmetro';
@@ -123,7 +117,6 @@ export const ColineSHMetro = (props: Props) => {
                     stnStates={stnStates}
                     lineWidth={LINE_WIDTH}
                     colineGap={COLINE_GAP}
-                    info_panel_type={info_panel_type}
                 />
                 <ColineStationGroup
                     stnIds={Object.entries(yShares)
@@ -260,7 +253,6 @@ interface ColineStationInMainLineProps {
     xs: { [stnId: string]: number };
     ys: { [stnId: string]: number };
     stnStates: { [stnId: string]: -1 | 0 | 1 };
-    info_panel_type: PanelTypeGZMTR | PanelTypeShmetro;
     lineWidth: number;
     colineGap: number;
 }
@@ -269,16 +261,8 @@ interface ColineStationInMainLineProps {
  * A small rect overlay on the main branch where coline is present.
  */
 const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
-    const {
-        colineStns,
-        branches,
-        xs,
-        ys,
-        stnStates,
-        info_panel_type,
-        lineWidth: LINE_WIDTH,
-        colineGap: COLINE_GAP,
-    } = props;
+    const { colineStns, branches, xs, ys, stnStates, lineWidth: LINE_WIDTH, colineGap: COLINE_GAP } = props;
+    const { line_name, theme, info_panel_type } = useAppSelector(store => store.param);
 
     // data to draw the station elements.
     const colineStations = [...colineStns.main, ...colineStns.pass]
@@ -289,8 +273,7 @@ const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
                 curStn: stnId,
                 x: xs[stnId],
                 y: ys[stnId],
-                // TODO-coline: fix this undefined error
-                color: stns.colors.at(-1) ?? defaultTheme,
+                color: stns.colors.at(-1) ?? [...theme, ...line_name],
             }))
         )
         .flat()
@@ -346,20 +329,19 @@ const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
 const ColineStationGroup = (props: StationGroupProps) => {
     const { xs, ys, stnStates, stnIds } = props;
     const { branches, depsStr: deps } = useAppSelector(store => store.helper);
-    const { coline } = useAppSelector(store => store.param);
+    const { line_name, theme, coline } = useAppSelector(store => store.param);
 
     // get colors of stations in coline branches, they use different colors than var(--rmg-theme-colour)
     const colines = React.useMemo(() => calculateColineStations(coline, branches), [JSON.stringify(coline), deps]);
     const colors = stnIds.reduce(
         (acc, stnId) => ({
             ...acc,
-            [stnId]:
-                colines
-                    .filter(coline => coline.linePath.includes(stnId))
-                    .map(coline => coline.colors)
-                    .flat()
-                    // TODO-coline: remove default and support multiple colines
-                    .at(0) ?? defaultTheme,
+            [stnId]: colines
+                .filter(coline => coline.linePath.includes(stnId))
+                .map(coline => coline.colors)
+                .flat()
+                // TODO-coline: support multiple colines
+                .at(0) ?? [...theme, ...line_name],
         }),
         {} as { [stnId: string]: InterchangeInfo }
     );
