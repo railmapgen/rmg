@@ -74,36 +74,6 @@ export const ColineSHMetro = (props: Props) => {
         () => calculateColine(calculateColineStations(colineInfo, branches), stnStates),
         [JSON.stringify(colineInfo), JSON.stringify(branches), JSON.stringify(stnStates)]
     );
-    console.log(colineStns);
-
-    // const colineStnsBak = {
-    //     main: [
-    //         {
-    //             linePath: ['ll8u', 'iwf6'],
-    //             colors: [
-    //                 [CityCode.Shanghai, 'sh3', '#FFD100', MonoColour.black],
-    //                 [CityCode.Shanghai, 'sh4', '#5F259F', MonoColour.white],
-    //             ],
-    //         },
-    //         {
-    //             linePath: ['iwf6', 'h2tm'],
-    //             colors: [[CityCode.Shanghai, 'sh4', '#5F259F', MonoColour.white]],
-    //         },
-    //     ],
-    //     pass: [
-    //         {
-    //             linePath: ['l1mz', 'll8u'],
-    //             colors: [
-    //                 [CityCode.Shanghai, 'sh3', '#FFD100', MonoColour.black],
-    //                 [CityCode.Shanghai, 'sh4', '#5F259F', MonoColour.white],
-    //             ],
-    //         },
-    //         {
-    //             linePath: ['tl2a', 'l1mz'],
-    //             colors: [[CityCode.Shanghai, 'sh4', '#5F259F', MonoColour.white]],
-    //         },
-    //     ],
-    // };
 
     const colinePaths = servicesPresent.reduce(
         (acc, service) => ({
@@ -133,7 +103,11 @@ export const ColineSHMetro = (props: Props) => {
         }),
         {} as ColinePath
     );
-    // console.log(colinePaths);
+
+    // only display coline stations when coline in effect
+    const colineStations = calculateColineStations(colineInfo, branches)
+        .map(co => co.linePath)
+        .flat();
 
     const LINE_WIDTH = 12;
     const COLINE_GAP = info_panel_type === 'sh2020' ? 3 : 0;
@@ -156,7 +130,8 @@ export const ColineSHMetro = (props: Props) => {
                         .filter(([k, v]) => v < 0)
                         .reduce((acc, [k, v]) => [...acc, k], [] as string[])
                         .filter(stnId => !['linestart', 'lineend'].includes(stnId))
-                        .filter(stnId => stn_list[stnId].services.length !== 0)}
+                        .filter(stnId => stn_list[stnId].services.length !== 0)
+                        .filter(stnId => colineStations.includes(stnId))}
                     xs={xs}
                     ys={colineYs}
                     stnStates={stnStates}
