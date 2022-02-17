@@ -86,6 +86,14 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
+            filename: 'bj14',
+            name: {
+                en: 'Line 14 by Jay20081229',
+                'zh-Hans': '14号线 来自 Jay20081229',
+                'zh-Hant': '14號線 來自 Jay20081229',
+            },
+        },
+        {
             filename: 'yzl',
             name: {
                 en: 'Yizhuang Line by AnDanJuneUnderline',
@@ -99,6 +107,33 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
                 en: 'Yizhuang T1 Line by AnDanJuneUnderline',
                 'zh-Hans': '亦庄T1线 来自 AnDanJuneUnderline',
                 'zh-Hant': '亦莊T1線 來自 AnDanJuneUnderline',
+            },
+        },
+    ],
+
+    fmetro: [
+        {
+            filename: 'fs2',
+            name: {
+                en: 'Line 2 by Dingdong2334',
+                'zh-Hans': '2号线 来自 Dingdong2334',
+                'zh-Hant': '2號線 來自 Dingdong2334',
+            },
+        },
+        {
+            filename: 'tnh1',
+            name: {
+                en: 'Nanhai Tram Line 1 by clearng-kly',
+                'zh-Hans': '南海有轨1号线 来自 clearng-kly',
+                'zh-Hant': '南海有軌1號線 來自 clearng-kly',
+            },
+        },
+        {
+            filename: 'tgm1',
+            name: {
+                en: 'Gaoming Tram by clearng-kly',
+                'zh-Hans': '高明有轨电车 来自 clearng-kly',
+                'zh-Hant': '高明有軌電車 來自 clearng-kly',
             },
         },
     ],
@@ -216,55 +251,79 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
                 'zh-Hant': '廣佛線',
             },
         },
+        {
+            filename: 'apm',
+            name: {
+                en: 'APM Line by Dingdong2334',
+                'zh-Hans': 'APM线 来自 Dingdong2334',
+                'zh-Hant': 'APM線 來自 Dingdong2334',
+            },
+        },
+        {
+            filename: 'thz1',
+            name: {
+                en: 'Haizhu Tram Line 1',
+                'zh-Hans': '海珠有轨1号线 来自 clearng-kly',
+                'zh-Hant': '海珠有軌1號線 來自 clearng-kly',
+            },
+        },
+        {
+            filename: 'thp1',
+            name: {
+                en: 'Huangpu Tram Line 1',
+                'zh-Hans': '黄埔有轨1号线 来自 clearng-kly',
+                'zh-Hant': '黃埔有軌1號線 來自 clearng-kly',
+            },
+        },
     ],
 
     kmrailtransit: [
         {
             filename: 'km1',
             name: {
-                en: 'Line 1',
-                'zh-Hans': '1号线',
-                'zh-Hant': '1號線',
+                en: 'Line 1 by 52PD',
+                'zh-Hans': '1号线 来自 52PD',
+                'zh-Hant': '1號線 來自 52PD',
             },
         },
         {
             filename: 'km2',
             name: {
-                en: 'Line 2',
-                'zh-Hans': '2号线',
-                'zh-Hant': '2號線',
+                en: 'Line 2 by 52PD',
+                'zh-Hans': '2号线 来自 52PD',
+                'zh-Hant': '2號線 來自 52PD',
             },
         },
         {
             filename: 'km3',
             name: {
-                en: 'Line 3',
-                'zh-Hans': '3号线',
-                'zh-Hant': '3號線',
+                en: 'Line 3 by 52PD',
+                'zh-Hans': '3号线 来自 52PD',
+                'zh-Hant': '3號線 來自 52PD',
             },
         },
         {
             filename: 'km4',
             name: {
-                en: 'Line 4',
-                'zh-Hans': '4号线',
-                'zh-Hant': '4號線',
+                en: 'Line 4 by 52PD',
+                'zh-Hans': '4号线 来自 52PD',
+                'zh-Hant': '4號線 來自 52PD',
             },
         },
         {
             filename: 'km5',
             name: {
-                en: 'Line 5',
-                'zh-Hans': '5号线',
-                'zh-Hant': '5號線',
+                en: 'Line 5 by 52PD',
+                'zh-Hans': '5号线 来自 52PD',
+                'zh-Hant': '5號線 來自 52PD',
             },
         },
         {
             filename: 'km6',
             name: {
-                en: 'Line 6',
-                'zh-Hans': '6号线',
-                'zh-Hant': '6號線',
+                en: 'Line 6 by 52PD',
+                'zh-Hans': '6号线 来自 52PD',
+                'zh-Hant': '6號線 來自 52PD',
             },
         },
     ],

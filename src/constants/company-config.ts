@@ -3,6 +3,7 @@ import { LanguageCode, Translation } from './constants';
 export enum CompanyCode {
     basic = 'basic',
     bjsubway = 'bjsubway',
+    fmetro = 'fmetro',
     gzmtr = 'gzmtr',
     kmrailtransit = 'kmrailtransit',
     kvtransit = 'kvtransit',
@@ -62,6 +63,14 @@ export const companies: CompanyEntry[] = [
             [LanguageCode.English]: 'Beijing Subway',
             [LanguageCode.ChineseSimp]: '北京地铁',
             [LanguageCode.ChineseTrad]: '北京地鐵',
+        },
+    },
+    {
+        id: CompanyCode.fmetro,
+        name: {
+            en: 'Foshan Metro',
+            'zh-Hans': '佛山地铁',
+            'zh-Hant': '佛山地鐵',
         },
     },
     {

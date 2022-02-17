@@ -154,6 +154,9 @@ export default memo(function PanelInfo() {
                 </div>
                 <div className={classes.detailGrid}>
                     {[
+                        'clearng-kly',
+                        'Dingdong2334',
+                        'Jay20081229',
                         '52PD',
                         'linchen1965',
                         'C1P918R',
@@ -163,7 +166,6 @@ export default memo(function PanelInfo() {
                         'Andy1782010',
                         'Thomastzc',
                         'Tianxiu11111',
-                        'Dingdong2334',
                     ].map(name => (
                         <div className={classes.detailColumn}>
                             <CardMedia
