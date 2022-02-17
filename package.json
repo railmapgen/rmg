@@ -41,6 +41,7 @@
         "electron-builder": "^22.10.5",
         "enzyme": "^3.11.0",
         "eslint-plugin-prettier": "^4.0.0",
+        "jest": "^27.5.1",
         "prettier": "^2.5.0",
         "react-scripts": "^5.0.0",
         "redux-mock-store": "^1.5.4",
