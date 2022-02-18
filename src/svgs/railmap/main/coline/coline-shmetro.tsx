@@ -33,6 +33,7 @@ export const ColineSHMetro = (props: Props) => {
     const {
         direction,
         stn_list,
+        current_stn_idx,
         branch_spacing,
         info_panel_type,
         coline: colineInfo,
@@ -63,10 +64,17 @@ export const ColineSHMetro = (props: Props) => {
         {} as typeof yShares
     );
 
-    // coline color and all stations in the coline segements
+    // coline color and all stations in the coline segments
     const colineStns = React.useMemo(
-        () => calculateColine(calculateColineStations(colineInfo, branches), stnStates),
-        [JSON.stringify(colineInfo), JSON.stringify(branches), JSON.stringify(stnStates)]
+        () =>
+            calculateColine(
+                calculateColineStations(
+                    colineInfo.filter(co => co.display),
+                    branches
+                ),
+                stnStates
+            ),
+        [JSON.stringify(colineInfo), current_stn_idx, direction, deps]
     );
 
     const colinePaths = servicesPresent.reduce(
@@ -99,7 +107,10 @@ export const ColineSHMetro = (props: Props) => {
     );
 
     // only display coline stations when coline in effect
-    const colineStations = calculateColineStations(colineInfo, branches)
+    const colineStations = calculateColineStations(
+        colineInfo.filter(co => co.display),
+        branches
+    )
         .map(co => co.linePath)
         .flat();
 

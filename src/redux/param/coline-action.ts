@@ -135,7 +135,7 @@ export const addColine = (from: string, to: string, colors: InterchangeInfo[], d
     };
 };
 
-export const updateColine = (colineIndex: number, from: string, to: string) => {
+export const updateColine = (colineIndex: number, from: string, to: string, display = true) => {
     return (dispatch: AppDispatch, getState: () => RootState) => {
         const colineInfo = getState().param.coline;
         const stnList = getState().param.stn_list;
@@ -145,7 +145,7 @@ export const updateColine = (colineIndex: number, from: string, to: string) => {
             checkColineValidity(branches, from, to, stnList);
 
             const newColineInfo = colineInfo.map((set, setIdx) =>
-                setIdx === colineIndex ? { from: from, to: to, colors: set.colors, display: set.display } : set
+                setIdx === colineIndex ? { from: from, to: to, colors: set.colors, display: display } : set
             );
             dispatch(setColineBulk(newColineInfo));
         }
@@ -217,10 +217,11 @@ export const updateColineColor = (colineIndex: number, interchangeIndex: number,
     };
 };
 
-// FIXME: remove this debug proxy
-declare const window: any;
-window.addColine = addColine;
-window.removeColine = removeColine;
+// DEBUG PROXY
+// declare const window: any;
+// window.addColine = addColine;
+// window.updateColine = updateColine;
+// window.removeColine = removeColine;
 // window.rmgStore.dispatch(window.removeColine(2))
 // let t = ['shanghai', 'sh4', '#5F259F', '#fff', '4号线', 'Line 4']
 // window.rmgStore.dispatch(window.addColine('s9tt', 'l1mz', [t]))
