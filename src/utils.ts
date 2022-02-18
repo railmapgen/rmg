@@ -213,7 +213,7 @@ export const updateParam = (param: { [x: string]: any }) => {
 
     // Version 3.11.37
     // Station number for shmetro
-    param.stn_number = (param.stn_number === undefined) ? false : param.stn_number;
+    param.showStationNumber = (param.showStationNumber === undefined) ? false : param.showStationNumber;
 
     return param;
 };

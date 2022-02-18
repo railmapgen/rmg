@@ -99,8 +99,8 @@ const GeneralStation = (props: RunInGeneralProps) => {
                         stroke="var(--rmg-theme-colour)"
                         d={
                             param.direction === 'l'
-                                ? `M${param.svgWidth.runin / 3},125 L${param.svgWidth.runin / 6 + 20},${nextBranchLineDy - 40} H36`
-                                : `M${(param.svgWidth.runin / 3) * 2},125 L${(param.svgWidth.runin / 6) * 5 + 20},${nextBranchLineDy - 40} H${param.svgWidth.runin - 36
+                                ? `M${param.svgWidth.runin / 3},125 L${param.showStationNumber?param.svgWidth.runin / 6 + 20:param.svgWidth.runin / 6},${param.showStationNumber?nextBranchLineDy - 40:nextBranchLineDy} H${param.showStationNumber?32:36}`
+                                : `M${(param.svgWidth.runin / 3) * 2},125 L${param.showStationNumber?(param.svgWidth.runin / 6) * 5 + 20:(param.svgWidth.runin / 6) * 5 + 40},${param.showStationNumber?nextBranchLineDy - 40:nextBranchLineDy} H${param.svgWidth.runin - 36
                                 }`
                         }
                         markerEnd="url(#slope)"
@@ -113,9 +113,9 @@ const GeneralStation = (props: RunInGeneralProps) => {
                             stroke="var(--rmg-grey)"
                             d={
                                 param.direction === 'l'
-                                    ? `M${(param.svgWidth.runin / 3) * 2},125 L${(param.svgWidth.runin / 6) * 5},${prevBranchLineDy - 40} H${param.svgWidth.runin - 24
+                                    ? `M${(param.svgWidth.runin / 3) * 2},125 L${param.showStationNumber?param.svgWidth.runin / 6*5 + 20:param.svgWidth.runin / 6*5},${param.showStationNumber?prevBranchLineDy - 40:prevBranchLineDy} H${param.svgWidth.runin - 24
                                     }`
-                                    : `M${param.svgWidth.runin / 3},125 L${param.svgWidth.runin / 6},${prevBranchLineDy - 40} H24`
+                                    : `M${param.svgWidth.runin / 3},125 L${param.showStationNumber?param.svgWidth.runin / 6 + 20:param.svgWidth.runin / 6},${param.showStationNumber?prevBranchLineDy - 40:prevBranchLineDy} H${param.showStationNumber?32:24}`
                             }
                         />
                     </g>
@@ -134,10 +134,10 @@ const GeneralStation = (props: RunInGeneralProps) => {
                         />
                     </g>
 
-                    <g transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},120)`}
+                    <g transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},${param.showStationNumber?120:160})`}
                         textAnchor={param.direction === 'l' ? 'start' : 'end'} >
                         <CurrentText />
-                        {param.showStationNumber && <StationNumber xpos={140} ypos={115} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={3} />}
+                        {(param.showStationNumber || false) && <StationNumber xpos={140} ypos={115} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={3} />}
                     </g>
                 </>
             ) : original && param.info_panel_type !== 'sh2020' ? (
@@ -154,10 +154,10 @@ const GeneralStation = (props: RunInGeneralProps) => {
                         markerEnd="url(#slope)"
                     />
 
-                    <g transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},120)`}
+                    <g transform={`translate(${param.direction === 'l' ? 36:param.svgWidth.runin - 36 },${param.showStationNumber?120:160})`}
                         textAnchor={param.direction === 'l' ? 'end' : 'start'} >
                         <CurrentText />
-                        {param.showStationNumber && <StationNumber xpos={param.direction === 'l' ? -120 : 120} ypos={115} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={1} />}
+                        {(param.showStationNumber || false) && <StationNumber xpos={param.direction === 'l' ? -120 : 120} ypos={115} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={1} />}
                     </g>
                 </>
             ) : (
@@ -177,9 +177,9 @@ const GeneralStation = (props: RunInGeneralProps) => {
                         </g>
                     </g>
 
-                    <g transform={`translate(${middle},120)`} textAnchor="middle">
+                    <g transform={`translate(${middle},${param.showStationNumber?120:160})`} textAnchor="middle">
                         <CurrentText />
-                        {param.showStationNumber && <StationNumber xpos={0} ypos={120} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={1} />}
+                        {(param.showStationNumber || false) && <StationNumber xpos={0} ypos={120} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={1} />}
                     </g>
                 </>
             )}
@@ -325,15 +325,15 @@ const PrevStn = (props: { stnIds: string[] }) => {
             textAnchor={param.direction === 'l' ? 'end' : 'start'}
             transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},0)`}
         >
-            <NextText nextName={nextNames[0]} transform="translate(0,160)" />
-            {param.showStationNumber && <StationNumber xpos={param.direction === 'l' ? -80 : 80} ypos={235} lineName={param.line_num} stationNumber={nextNumbers[0]} type_={0} />}
+            <NextText nextName={nextNames[0]} transform={`translate(0,${param.showStationNumber?160:183})`} />
+            {(param.showStationNumber || false) && <StationNumber xpos={param.direction === 'l' ? -80 : 80} ypos={235} lineName={param.line_num} stationNumber={nextNumbers[0]} type_={0} />}
             {props.stnIds.length > 1 && (
                 <>
-                    <NextText nextName={nextNames[1]} transform={`translate(0,${nextBranchTextDy - 63})`} />
-                    {param.showStationNumber && <StationNumber xpos={param.direction === 'l' ? -80 : 80} ypos={235} lineName={param.line_num} stationNumber={nextNumbers[1]} type_={0} />}
+                    <NextText nextName={nextNames[1]} transform={`translate(0,${param.showStationNumber?nextBranchTextDy - 63:nextBranchTextDy})`} />
+                    {(param.showStationNumber || false) && <StationNumber xpos={param.direction === 'l' ? -80 : 80} ypos={nextBranchTextDy + 10} lineName={param.line_num} stationNumber={nextNumbers[1]} type_={0} />}
                 </>
             )}
-            <g transform={`translate(0, ${props.stnIds.length > 1 ? prevHintDy - 60 : prevHintDy - 20})`}>
+            <g transform={`translate(0, ${props.stnIds.length > 1 ? (param.showStationNumber?prevHintDy - 60:prevHintDy) : (param.showStationNumber?prevHintDy - 20:prevHintDy)})`}>
                 <text className="rmg-name__zh" fontSize={22}>
                     上一站
                 </text>
@@ -360,15 +360,15 @@ const NextStn = (props: { stnIds: string[] }) => {
             textAnchor={param.direction === 'l' ? 'start' : 'end'}
             transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},0)`}
         >
-            <NextText nextName={param.stn_list[props.stnIds[0]].name} transform="translate(0,160)" />
-            {param.showStationNumber && <StationNumber xpos={param.direction === 'l' ? 80 : -80} ypos={235} lineName={param.line_num} stationNumber={nextNumbers[0]} type_={2} />}
+            <NextText nextName={param.stn_list[props.stnIds[0]].name} transform={`translate(0,${param.showStationNumber?160:183})`} />
+            {(param.showStationNumber || false) && <StationNumber xpos={param.direction === 'l' ? 80 : -80} ypos={235} lineName={param.line_num} stationNumber={nextNumbers[0]} type_={2} />}
             ({props.stnIds.length > 1 && (
                 <>
-                    <NextText nextName={param.stn_list[props.stnIds[1]].name} transform={`translate(0,${nextBranchTextDy - 63})`} />
-                    {param.showStationNumber && <StationNumber xpos={param.direction === 'l' ? 80 : -80} ypos={235} lineName={param.line_num} stationNumber={nextNumbers[1]} type_={2} />}
+                    <NextText nextName={param.stn_list[props.stnIds[1]].name} transform={`translate(0,${param.showStationNumber?nextBranchTextDy - 63:nextBranchTextDy})`} />
+                    {(param.showStationNumber || false) && <StationNumber xpos={param.direction === 'l' ? 80 : -80} ypos={nextBranchTextDy + 10} lineName={param.line_num} stationNumber={nextNumbers[1]} type_={2} />}
                 </>
             )}
-            <g transform={`translate(0, ${props.stnIds.length > 1 ? nextHintDy - 60 : nextHintDy - 20})`}>
+            <g transform={`translate(0, ${props.stnIds.length > 1 ? (param.showStationNumber?nextHintDy - 60:nextHintDy) : (param.showStationNumber?nextHintDy - 20:nextHintDy)})`}>
                 <text className="rmg-name__zh" fontSize={22}>
                     下一站
                 </text>
