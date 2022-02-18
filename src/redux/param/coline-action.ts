@@ -108,7 +108,6 @@ export const removeInvalidColineOnRemove = (deleteStnId: string) => {
             const involvedBranches = branches.filter(
                 branch => branch.includes(co.from) && branch.includes(co.to) && branch.includes(deleteStnId)
             );
-            console.log(deleteStnId, co.from, co.to, involvedBranches, branches)
 
             // deleteStnId does not fall on this coline, preserve it
             if (involvedBranches.length === 0) return true;
