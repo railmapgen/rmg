@@ -3,7 +3,7 @@ import { useTranslation, Trans } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
 import { setCurrentStation } from '../../redux/param/action';
 import { useAppDispatch, useAppSelector } from '../../redux';
-import { removeStation } from '../../redux/param/remove-station-action';
+import { checkStationCouldBeRemoved, removeStation } from '../../redux/param/remove-station-action';
 
 interface Props {
     open: boolean;
@@ -22,14 +22,14 @@ export default function StationDeleteDialog(props: Props & { stnId: string }) {
 
     const handleClick = (action: 'close' | 'accept') => () => {
         if (action === 'accept') {
-            let res = dispatch(removeStation(stnId));
-            if (!res) {
-                setIsError(true);
-            } else {
+            if (checkStationCouldBeRemoved(stnId, stnList)) {
+                dispatch(removeStation(stnId));
                 if (currentStationIndex === stnId) {
                     let newCurrentId = Object.keys(stnList).filter(id => !['linestart', 'lineend'].includes(id))[0];
                     dispatch(setCurrentStation(newCurrentId));
                 }
+            } else {
+                setIsError(true);
             }
         }
         onClose();

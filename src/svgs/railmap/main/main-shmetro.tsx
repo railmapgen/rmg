@@ -238,9 +238,9 @@ export const _linePath = (
     let e1 = 30;
     // check if path starts from or ends at the terminal
     // and change e1 to 0 if it matches
-    let startFromTerminal = false,
-        endAtTerminal = false;
     if (stnIds.length > 0) {
+        let startFromTerminal = false,
+            endAtTerminal = false;
         if (stn_list[stnIds.at(-1) || 0].children.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
             endAtTerminal = true;
         } else if (stn_list[stnIds.at(0) || 0].parents.some(stnId => ['linestart', 'lineend'].includes(stnId))) {

@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { setCurrentStation } from '../../redux/param/action';
-import { setGlobalAlert, setSelectedStation, setSidePanelMode } from '../../redux/app/action';
 import { useDispatch } from 'react-redux';
 import { HStack, IconButton } from '@chakra-ui/react';
+import { useAppSelector } from '../../redux';
+import { setCurrentStation } from '../../redux/param/action';
+import { setGlobalAlert, setSelectedStation, setSidePanelMode } from '../../redux/app/action';
 import { SidePanelMode } from '../../constants/constants';
 import { MdDelete, MdEdit, MdLocationPin } from 'react-icons/md';
 import RemoveConfirmModal from '../modal/remove-confirm-modal';
-import { removeStation } from '../../redux/param/remove-station-action';
-import { removeInvalidColineOnRemove } from '../../redux/param/coline-action';
+import { checkStationCouldBeRemoved, removeStation } from '../../redux/param/remove-station-action';
+import { removeInvalidColineOnRemoveStation } from '../../redux/param/coline-action';
 
 interface TableRowActionsProps {
     stationId: string;
@@ -17,6 +18,7 @@ export default function TableRowActions(props: TableRowActionsProps) {
     const { stationId } = props;
 
     const dispatch = useDispatch();
+    const { stn_list: stnList } = useAppSelector(state => state.param);
 
     const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 
@@ -26,11 +28,11 @@ export default function TableRowActions(props: TableRowActionsProps) {
     };
 
     const handleDelete = () => {
-        dispatch(removeInvalidColineOnRemove(stationId));
-        const result = dispatch(removeStation(stationId));
-        setIsRemoveModalOpen(false);
-
-        if (!result) {
+        if (checkStationCouldBeRemoved(stationId, stnList)) {
+            dispatch(removeInvalidColineOnRemoveStation(stationId));
+            dispatch(removeStation(stationId));
+            setIsRemoveModalOpen(false);
+        } else {
             dispatch(setGlobalAlert({ status: 'error', message: 'Unable to remove this station.' }));
         }
     };
