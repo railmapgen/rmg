@@ -2,21 +2,46 @@ import React from 'react';
 import { useAppSelector } from '../../redux';
 import DataTable, { DataTableFieldType } from './data-table';
 import ColineTableRowActions from './coline-table-row-actions';
-import { ColineInfo } from '../../constants/constants';
-import { HStack } from '@chakra-ui/react';
+import { InterchangeInfo, Name } from '../../constants/constants';
+import { HStack, Kbd } from '@chakra-ui/react';
 import RmgLineBadge from '../common/rmg-line-badge';
 import { useTranslation } from 'react-i18next';
+
+type ColineDataTableFieldType = { id: string; from: Name; to: Name; colors: InterchangeInfo[] };
 
 export default function ColineDataTable() {
     const { t } = useTranslation();
 
-    const { coline } = useAppSelector(state => state.param);
+    const { stn_list: stnList, coline } = useAppSelector(state => state.param);
 
-    const data: Array<ColineInfo & { id: string }> = coline.map((co, i) => ({ ...co, id: i.toString() }));
+    const data: Array<ColineDataTableFieldType> = coline.map((co, i) => ({
+        id: i.toString(),
+        from: stnList[co.from].name,
+        to: stnList[co.to].name,
+        colors: co.colors,
+    }));
 
-    const fields: DataTableFieldType<ColineInfo & { id: string }>[] = [
-        { label: t('ColineDataTable.from'), displayHandler: item => item.from },
-        { label: t('ColineDataTable.to'), displayHandler: item => item.to },
+    const nameDisplayHandler = (str: string, i: number) => (i ? [<Kbd key={i}>⏎</Kbd>, str] : str);
+
+    const fields: DataTableFieldType<ColineDataTableFieldType>[] = [
+        {
+            label: t('ColineDataTable.from'),
+            displayHandler: item => (
+                <span>
+                    {item.from[0].split('\\').map(nameDisplayHandler)}{' '}
+                    {item.from[1].split('\\').map(nameDisplayHandler)}
+                </span>
+            ),
+        },
+        {
+            label: t('ColineDataTable.to'),
+            displayHandler: item => (
+                <span>
+                    {item.from[0].split('\\').map(nameDisplayHandler)}{' '}
+                    {item.from[1].split('\\').map(nameDisplayHandler)}
+                </span>
+            ),
+        },
         {
             label: t('ColineDataTable.colors'),
             displayHandler: item => (

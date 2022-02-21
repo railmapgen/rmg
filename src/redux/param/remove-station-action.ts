@@ -3,30 +3,39 @@ import { getYShareMTR } from '../../methods';
 import { StationDict } from '../../constants/constants';
 import { setStationsBulk } from './action';
 
+/**
+ * Return false when current algo can not handle this kind of station removal.
+ * MUST BE CALLED AND CHECKED BEFORE removeStation!!!
+ */
+export const checkStationCouldBeRemoved = (stnId: string, stnList: StationDict) => {
+    const { parents, children } = stnList[stnId];
+
+    if (Object.keys(stnList).length === 4) {
+        console.log('removeStation():: failed as only 2 stations remaining');
+        return false;
+    } else if (parents.length === 2 && children.length === 2) {
+        // Todo: rewrite, join two branches rather than reject?
+        console.log('removeStation():: failed as branches on both sides cannot be combined');
+        return false;
+    }
+
+    // reject if station is the last one on main branch
+    const isNotLastMainBranchStn = Object.keys(stnList).some(
+        id => ![stnId, 'linestart', 'lineend'].includes(id) && getYShareMTR(id, stnList) === 0
+    );
+    if (!isNotLastMainBranchStn) {
+        console.log('removeStation():: failed as selected station is the only station without siblings');
+        return false;
+    }
+
+    return true;
+};
+
 export const removeStation = (stationId: string) => {
-    // return is successfully removed station
-    return (dispatch: AppDispatch, getState: () => RootState): boolean => {
+    // checkStationCouldBeRemoved BEFORE removeStation!!!
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const stationList = getState().param.stn_list;
-
         const { parents, children } = stationList[stationId];
-
-        if (Object.keys(stationList).length === 4) {
-            console.log('removeStation():: failed as only 2 stations remaining');
-            return false;
-        } else if (parents.length === 2 && children.length === 2) {
-            // Todo: rewrite, join two branches rather than reject?
-            console.log('removeStation():: failed as branches on both sides cannot be combined');
-            return false;
-        }
-
-        // reject if station is the last one on main branch
-        const isNotLastMainBranchStn = Object.keys(stationList).some(
-            id => ![stationId, 'linestart', 'lineend'].includes(id) && getYShareMTR(id, stationList) === 0
-        );
-        if (!isNotLastMainBranchStn) {
-            console.log('removeStation():: failed as selected station is the only station without siblings');
-            return false;
-        }
 
         let newStnList = JSON.parse(JSON.stringify(stationList)) as StationDict;
 
@@ -114,7 +123,5 @@ export const removeStation = (stationId: string) => {
 
         delete newStnList[stationId];
         dispatch(setStationsBulk(newStnList));
-
-        return true;
     };
 };

@@ -19,9 +19,9 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
-            filename: 'sh3',
+            filename: 'coline',
             name: {
-                en: 'Coline',
+                en: 'Track Share',
                 'zh-Hans': '共线',
                 'zh-Hant': '共綫',
             },
@@ -521,6 +521,14 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
                 en: 'Line 2',
                 'zh-Hans': '2号线',
                 'zh-Hant': '2號線',
+            },
+        },
+        {
+            filename: 'sh3',
+            name: {
+                en: 'Line 3',
+                'zh-Hans': '3号线',
+                'zh-Hant': '3號線',
             },
         },
         {

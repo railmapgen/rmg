@@ -103,7 +103,6 @@ const MainSHMetro = () => {
         .map((bool, i) => [servicesAll[i], bool] as [Services, boolean]) // zip
         .filter(s => s[1]) // get the existing service
         .map(s => s[0]); // maintain the services' order
-    // console.log(branches, stnStates);
 
     const linePaths = branches
         .map(branch => drawLine(branch, stnStates))
@@ -115,7 +114,6 @@ const MainSHMetro = () => {
             },
             { main: [], pass: [] } as { main: string[][]; pass: string[][] }
         );
-    console.log(linePaths);
 
     const paths = servicesPresent.reduce(
         (acc, service) => ({
@@ -144,10 +142,9 @@ const MainSHMetro = () => {
         }),
         {} as Paths
     );
-    console.log(paths);
 
     return (
-        <g id="main" transform={`translate(0,${param.svg_height - 163})`}>
+        <g id="main" transform={`translate(0,${param.svg_height * (coline?.length > 0 ? 0.5 : 0.7 + 0.1)})`}>
             <Line paths={paths} direction={param.direction} />
             <StationGroup
                 stnIds={Object.keys(lineYShares)
@@ -158,12 +155,7 @@ const MainSHMetro = () => {
                 stnStates={stnStates}
             />
             {coline?.length > 0 && <ColineSHMetro xs={xs} servicesPresent={servicesPresent} stnStates={stnStates} />}
-            <ServicesElements
-                servicesLevel={servicesPresent}
-                dy={-param.svg_height + 100}
-                direction={param.direction}
-                lineXs={lineXs}
-            />
+            <ServicesElements servicesLevel={servicesPresent} lineXs={lineXs} />
             <DirectionElements />
         </g>
     );
@@ -246,9 +238,9 @@ export const _linePath = (
     let e1 = 30;
     // check if path starts from or ends at the terminal
     // and change e1 to 0 if it matches
-    let startFromTerminal = false,
-        endAtTerminal = false;
     if (stnIds.length > 0) {
+        let startFromTerminal = false,
+            endAtTerminal = false;
         if (stn_list[stnIds.at(-1) || 0].children.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
             endAtTerminal = true;
         } else if (stn_list[stnIds.at(0) || 0].parents.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
@@ -417,8 +409,9 @@ const StationGroup = (props: StationGroupProps) => {
     );
 };
 
-const ServicesElements = (props: { servicesLevel: Services[]; direction: 'l' | 'r'; dy: number; lineXs: number[] }) => {
-    const param = useAppSelector(store => store.param);
+const ServicesElements = (props: { servicesLevel: Services[]; lineXs: number[] }) => {
+    const { svg_height, direction, svgWidth } = useAppSelector(store => store.param);
+    const dy = -svg_height * (0.5 + 0.1);
 
     if (props.servicesLevel.length === 1) return <></>;
 
@@ -432,7 +425,7 @@ const ServicesElements = (props: { servicesLevel: Services[]; direction: 'l' | '
     );
 
     // let dx = props.direction === 'r' ? 5 : param.svgWidth.railmap - 55;
-    const labelX = props.direction === 'r' ? props.lineXs[0] - 42 : props.lineXs[1] + 42;
+    const labelX = direction === 'r' ? props.lineXs[0] - 42 : props.lineXs[1] + 42;
 
     let dx_hint = props.servicesLevel.length === 2 ? 350 : 500;
 
@@ -444,7 +437,7 @@ const ServicesElements = (props: { servicesLevel: Services[]; direction: 'l' | '
                     <text className="rmg-name__zh" fontSize={9} y={3} textAnchor="middle">{`${service}运行线`}</text>
                 </g>
             ))}
-            <g transform={`translate(${props.direction === 'r' ? 30 : param.svgWidth.railmap - dx_hint},${props.dy})`}>
+            <g transform={`translate(${direction === 'r' ? 30 : svgWidth.railmap - dx_hint},${dy})`}>
                 <text className="rmg-name__zh">图例：</text>
                 {servicesLevel.map((serviceLevel, i) => (
                     <g key={`serviceLevel${i}`} transform={`translate(${i * 150 + 50},0)`}>
@@ -467,26 +460,26 @@ const ServicesElements = (props: { servicesLevel: Services[]; direction: 'l' | '
 };
 
 const DirectionElements = () => {
-    const param = useAppSelector(store => store.param);
+    const { direction, svgWidth, svg_height, coline } = useAppSelector(store => store.param);
 
     return React.useMemo(
         () => (
             <g
-                transform={`translate(${param.direction === 'l' ? 50 : param.svgWidth.railmap - 150},${
-                    -param.svg_height + 100
+                transform={`translate(${direction === 'l' ? 50 : svgWidth.railmap - 150},${
+                    -svg_height * (coline?.length > 0 ? 0.3 : 0.5 + 0.1)
                 })`}
             >
                 <text className="rmg-name__zh">列车前进方向</text>
                 <path
                     d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
                     fill="var(--rmg-theme-colour)"
-                    transform={`translate(${param.direction === 'l' ? -30 : 125},-5)rotate(${
-                        param.direction === 'l' ? 0 : 180
+                    transform={`translate(${direction === 'l' ? -30 : 125},-5)rotate(${
+                        direction === 'l' ? 0 : 180
                     })scale(0.15)`}
                 />
             </g>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.direction, param.svgWidth.railmap, param.svg_height]
+        [direction, svgWidth.railmap, svg_height]
     );
 };
