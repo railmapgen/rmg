@@ -53,7 +53,7 @@ export default function WindowHeader() {
                 <MenuButton as={IconButton} icon={<MdLocationCity />} variant="ghost" size="xs" />
                 <MenuList>
                     {Object.values(RmgStyle).map(style => (
-                        <Link key={style} to={'/v5/' + style}>
+                        <Link key={style} to={style}>
                             <MenuItem onClick={() => dispatch(setStyle(style))}>{style}</MenuItem>
                         </Link>
                     ))}

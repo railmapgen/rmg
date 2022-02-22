@@ -76,17 +76,7 @@ export default function App() {
         <BrowserRouter basename={process.env.PUBLIC_URL}>
             <Routes>
                 <Route
-                    path="/v5/*"
-                    element={
-                        <ChakraProvider theme={chakraTheme}>
-                            <StrictMode>
-                                <AppRoot />
-                            </StrictMode>
-                        </ChakraProvider>
-                    }
-                />
-                <Route
-                    path="*"
+                    path="/v3/*"
                     element={
                         <ThemeProvider theme={theme}>
                             <React.Suspense fallback={<LinearProgress />}>
@@ -94,6 +84,16 @@ export default function App() {
                             </React.Suspense>
                             <AppBody />
                         </ThemeProvider>
+                    }
+                />
+                <Route
+                    path="*"
+                    element={
+                        <ChakraProvider theme={chakraTheme}>
+                            <StrictMode>
+                                <AppRoot />
+                            </StrictMode>
+                        </ChakraProvider>
                     }
                 />
             </Routes>

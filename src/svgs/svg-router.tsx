@@ -34,7 +34,7 @@ export default function SvgRouter() {
     const { canvasToShow, canvasScale } = useAppSelector(state => state.app);
     const { svgWidth: svgWidths, svg_height: svgHeight, style: rmgStyle, theme } = useAppSelector(state => state.param);
 
-    if (location.pathname !== '/' + rmgStyle && location.pathname !== '/v5/' + rmgStyle) {
+    if (location.pathname !== '/' + rmgStyle && location.pathname !== '/v3/' + rmgStyle) {
         const nextStyle = location.pathname.split('/').slice(-1)[0] as RmgStyle;
         if (Object.values(RmgStyle).includes(nextStyle)) {
             // set style in param
