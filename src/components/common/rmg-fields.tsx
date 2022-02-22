@@ -7,7 +7,7 @@ type inputField = {
     type: 'input';
     value: string;
     placeholder?: string;
-    onChange?: (val: string) => void;
+    onChange?: (value: string) => void;
     variant?: InputProps['type'];
 };
 
@@ -16,14 +16,14 @@ type sliderField = {
     value: number;
     min: number;
     max: number;
-    onChange?: (val: number) => void;
+    onChange?: (value: number) => void;
 };
 
 type selectField = {
     type: 'select';
     value?: string;
-    options: Record<string, string>;
-    onChange?: (val: string) => void;
+    options: Record<string, string>; // { value: displayText }
+    onChange?: (value: string) => void;
 };
 
 type customField = {
@@ -33,7 +33,7 @@ type customField = {
 
 export type RmgFieldsField = (inputField | sliderField | selectField | customField) & {
     label: string;
-    minW?: `${number}px` | number;
+    minW?: `${number}px` | number | 'full';
     hidden?: boolean;
 };
 
@@ -52,7 +52,15 @@ export default function RmgFields(props: RmgFieldsProps) {
                     return <Fragment key={i} />;
                 }
                 return (
-                    <RmgLabel key={i} label={field.label} flex={1} minW={field.minW || 100} noLabel={noLabel}>
+                    <RmgLabel
+                        key={i}
+                        label={field.label}
+                        flex={1}
+                        minW={field.minW === 'full' ? undefined : field.minW || 100}
+                        w={field.minW === 'full' ? '100%' : undefined}
+                        flexBasis={field.minW === 'full' ? '100%' : undefined}
+                        noLabel={noLabel}
+                    >
                         {(field => {
                             switch (field.type) {
                                 case 'input':

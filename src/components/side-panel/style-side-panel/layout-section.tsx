@@ -95,7 +95,7 @@ export default function LayoutSection() {
     ];
 
     return (
-        <Box>
+        <Box p={1}>
             <Heading as="h5" size="sm">
                 Layout
             </Heading>

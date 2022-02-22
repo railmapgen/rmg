@@ -23,13 +23,13 @@ type RmgButtonGroupMultiSelectProps<T> = {
 
 type RmgButtonGroupProps<T> = RmgButtonGroupSingleSelectProps<T> | RmgButtonGroupMultiSelectProps<T>;
 
-export default function RmgButtonGroup<T extends string>(props: RmgButtonGroupProps<T>) {
+export default function RmgButtonGroup<T extends string | boolean>(props: RmgButtonGroupProps<T>) {
     const { selections, defaultValue, onChange, multiSelect } = props;
 
     const [value, setValue] = useState(defaultValue);
 
     useEffect(() => {
-        defaultValue && setValue(defaultValue);
+        defaultValue.toString() && setValue(defaultValue);
     }, [defaultValue.toString()]);
 
     const handleToggle = (val: T) => {
@@ -49,15 +49,14 @@ export default function RmgButtonGroup<T extends string>(props: RmgButtonGroupPr
         <ButtonGroup size="xs" isAttached colorScheme="teal" variant="outline">
             {selections.map((selection, i) => {
                 const isSelected =
-                    (typeof value === 'object' && value.includes(selection.value)) ||
-                    (typeof value === 'string' && value === selection.value);
+                    (typeof value === 'object' && value.includes(selection.value)) || value === selection.value;
 
                 // TODO: fix overlapped/missing border
                 const mr = i !== selections.length - 1 && !isSelected ? '-px' : undefined;
 
                 return (
                     <Button
-                        key={selection.value}
+                        key={selection.value.toString()}
                         variant={isSelected ? 'solid' : 'outline'}
                         mr={mr}
                         isDisabled={selection.disabled}
@@ -70,3 +69,23 @@ export default function RmgButtonGroup<T extends string>(props: RmgButtonGroupPr
         </ButtonGroup>
     );
 }
+
+interface RmgBooleanButtonGroupProps {
+    defaultValue: boolean;
+    onChange?: (value: boolean) => void;
+}
+
+export const RmgBooleanButtonGroup = (props: RmgBooleanButtonGroupProps) => {
+    const selections = [
+        {
+            label: 'Yes',
+            value: true,
+        },
+        {
+            label: 'No',
+            value: false,
+        },
+    ];
+
+    return <RmgButtonGroup selections={selections} {...props} />;
+};
