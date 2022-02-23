@@ -56,10 +56,14 @@ export default function InterchangeSection() {
     };
 
     return (
-        <VStack align="flex-start">
+        <VStack align="flex-start" p={1}>
+            <Heading as="h5" size="sm">
+                Interchange
+            </Heading>
+
             {transfer.info.map((infoList, i) => (
                 <Fragment key={i}>
-                    <Heading as="h5" size="sm">
+                    <Heading as="h6" size="xs">
                         {i === 0
                             ? 'Within-station interchange'
                             : i === 1

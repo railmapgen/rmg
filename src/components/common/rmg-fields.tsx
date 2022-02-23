@@ -2,6 +2,7 @@ import React, { Fragment, ReactNode } from 'react';
 import RmgLabel from './rmg-label';
 import RmgDebouncedInput from './rmg-debounced-input';
 import { Flex, InputProps, Select, Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/react';
+import RmgDebouncedTextarea from './rmg-debounced-textarea';
 
 type inputField = {
     type: 'input';
@@ -9,6 +10,13 @@ type inputField = {
     placeholder?: string;
     onChange?: (value: string) => void;
     variant?: InputProps['type'];
+};
+
+type textareaField = {
+    type: 'textarea';
+    value: string;
+    placeholder?: string;
+    onChange?: (value: string) => void;
 };
 
 type sliderField = {
@@ -31,7 +39,7 @@ type customField = {
     component: ReactNode;
 };
 
-export type RmgFieldsField = (inputField | sliderField | selectField | customField) & {
+export type RmgFieldsField = (inputField | textareaField | sliderField | selectField | customField) & {
     label: string;
     minW?: `${number}px` | number | 'full';
     hidden?: boolean;
@@ -69,6 +77,14 @@ export default function RmgFields(props: RmgFieldsProps) {
                                             placeholder={field.placeholder}
                                             defaultValue={field.value}
                                             type={field.variant}
+                                            onDebouncedChange={field.onChange}
+                                        />
+                                    );
+                                case 'textarea':
+                                    return (
+                                        <RmgDebouncedTextarea
+                                            placeholder={field.placeholder}
+                                            defaultValue={field.value}
                                             onDebouncedChange={field.onChange}
                                         />
                                     );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, Heading } from '@chakra-ui/react';
 import { updateStationName, updateStationNum, updateStationSecondaryName } from '../../../redux/param/action';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux';
@@ -57,7 +57,11 @@ export default function InfoSection() {
     ];
 
     return (
-        <Box>
+        <Box p={1}>
+            <Heading as="h5" size="sm">
+                Basic info
+            </Heading>
+
             <RmgFields fields={fields} />
         </Box>
     );

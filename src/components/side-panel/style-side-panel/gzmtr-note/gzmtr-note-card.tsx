@@ -18,18 +18,16 @@ export default function GZMTRNoteCard(props: GZMTRNoteCardProps) {
 
     const fields1: RmgFieldsField[] = [
         {
-            type: 'input',
+            type: 'textarea',
             label: 'Chinese note',
             value: note[0],
             onChange: value => onUpdate?.([value, note[1], note[2], note[3], note[4]]),
-            minW: 'full',
         },
         {
-            type: 'input',
+            type: 'textarea',
             label: 'English note',
             value: note[1],
             onChange: value => onUpdate?.([note[0], value, note[2], note[3], note[4]]),
-            minW: 'full',
         },
     ];
 

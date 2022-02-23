@@ -33,7 +33,7 @@ describe('Unit tests for InterchangeSection component', () => {
             wrappingComponentProps: { store: mockStore },
         });
 
-        const headings = wrapper.find('h5');
+        const headings = wrapper.find('h6');
         expect(headings).toHaveLength(3);
         expect(headings.at(0).text()).toBe('Within-station interchange');
         expect(headings.at(1).text()).toBe('Out-of-station interchange');

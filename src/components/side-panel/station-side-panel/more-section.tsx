@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Heading } from '@chakra-ui/react';
 import React from 'react';
 import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
 import RmgButtonGroup from '../../common/rmg-button-group';
@@ -61,7 +61,11 @@ export default function MoreSection() {
     ];
 
     return (
-        <Box>
+        <Box p={1}>
+            <Heading as="h5" size="sm">
+                More
+            </Heading>
+
             <RmgFields fields={fields} />
         </Box>
     );
