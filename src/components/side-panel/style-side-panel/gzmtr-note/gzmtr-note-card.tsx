@@ -1,9 +1,10 @@
 import React from 'react';
-import { Box, HStack, IconButton, useColorModeValue } from '@chakra-ui/react';
+import { HStack, IconButton } from '@chakra-ui/react';
 import { Note } from '../../../../constants/constants';
 import RmgFields, { RmgFieldsField } from '../../../common/rmg-fields';
 import { RmgBooleanButtonGroup } from '../../../common/rmg-button-group';
 import { MdDelete } from 'react-icons/md';
+import RmgCard from '../../../common/rmg-card';
 
 interface GZMTRNoteCardProps {
     note: Note;
@@ -13,8 +14,6 @@ interface GZMTRNoteCardProps {
 
 export default function GZMTRNoteCard(props: GZMTRNoteCardProps) {
     const { note, onUpdate, onDelete } = props;
-
-    const cardBg = useColorModeValue('gray.50', 'gray.700');
 
     const fields1: RmgFieldsField[] = [
         {
@@ -61,7 +60,7 @@ export default function GZMTRNoteCard(props: GZMTRNoteCardProps) {
     ];
 
     return (
-        <Box bg={cardBg} boxShadow="lg" p={1} my={1} w="100%">
+        <RmgCard direction="column">
             <RmgFields fields={fields1} />
             <HStack spacing={0.5}>
                 <RmgFields fields={fields2} />
@@ -74,6 +73,6 @@ export default function GZMTRNoteCard(props: GZMTRNoteCardProps) {
                     icon={<MdDelete />}
                 />
             </HStack>
-        </Box>
+        </RmgCard>
     );
 }

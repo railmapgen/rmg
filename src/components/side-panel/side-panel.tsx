@@ -14,10 +14,10 @@ export default function SidePanel() {
     const dispatch = useDispatch();
 
     const { sidePanelMode, selectedStation } = useAppSelector(state => state.app);
-    const { name } = useAppSelector(state => state.param.stn_list[selectedStation]);
+    const name = useAppSelector(state => state.param.stn_list[selectedStation]?.name);
 
     const mode: { [key in SidePanelMode]: { name: string; component?: JSX.Element } } = {
-        [SidePanelMode.STATION]: { name: name[0] + ' - ' + name[1], component: <StationSidePanel /> },
+        [SidePanelMode.STATION]: { name: name?.[0] + ' - ' + name?.[1], component: <StationSidePanel /> },
         [SidePanelMode.STYLE]: { name: 'Edit style', component: <StyleSidePanel /> },
         [SidePanelMode.COLINE]: { name: 'Edit sharing track', component: <ColineSidePanel /> },
         [SidePanelMode.CLOSE]: { name: 'Close', component: undefined },

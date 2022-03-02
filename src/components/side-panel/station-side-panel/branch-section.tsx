@@ -1,20 +1,38 @@
-import { Box, Heading } from '@chakra-ui/react';
+import { Box, Heading, Text } from '@chakra-ui/react';
 import React from 'react';
 import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
 import { BranchStyle, Direction } from '../../../constants/constants';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux';
-import { updateStationBranchType } from '../../../redux/param/action';
+import {
+    flipStationBranchPosition,
+    updateStationBranchFirstStation,
+    updateStationBranchType,
+} from '../../../redux/param/action';
+import RmgCard from '../../common/rmg-card';
 
 export default function BranchSection() {
     const dispatch = useDispatch();
 
     const selectedStation = useAppSelector(state => state.app.selectedStation);
-    const { parents, children, branch } = useAppSelector(state => state.param.stn_list[selectedStation]);
+    const stationList = useAppSelector(state => state.param.stn_list);
+    const { parents, children, branch } = stationList[selectedStation];
 
     const branchOptions = {
         [BranchStyle.through]: 'Through',
         [BranchStyle.nonThrough]: 'Non-through',
+    };
+
+    const getFirstStationOptions = (direction: Direction) => {
+        return (direction === Direction.left ? parents : children).reduce<Record<string, string>>(
+            (acc, cur) => ({ ...acc, [cur]: stationList[cur].name.join(' ') }),
+            {}
+        );
+    };
+
+    const positionOptions = {
+        upper: 'Upper',
+        lower: 'Lower',
     };
 
     const getFields = (direction: Direction): RmgFieldsField[] => {
@@ -31,11 +49,19 @@ export default function BranchSection() {
                 {
                     type: 'select',
                     label: 'First station',
-                    options: (direction === Direction.left ? parents : children).reduce<Record<string, string>>(
-                        (acc, cur) => ({ ...acc, [cur]: cur }),
-                        {}
-                    ),
+                    options: getFirstStationOptions(direction),
                     value: branch[direction][1],
+                    onChange: value => dispatch(updateStationBranchFirstStation(selectedStation, direction, value)),
+                },
+                {
+                    type: 'select',
+                    label: 'Position',
+                    options: positionOptions,
+                    value:
+                        (direction === Direction.left ? parents : children).indexOf(branch[direction][1]!) === 0
+                            ? 'upper'
+                            : 'lower',
+                    onChange: () => dispatch(flipStationBranchPosition(selectedStation, direction)),
                 },
             ];
         } else {
@@ -53,13 +79,29 @@ export default function BranchSection() {
                 Branch on the left
             </Heading>
 
-            {parents.length === 2 ? <RmgFields fields={getFields(Direction.left)} /> : 'No branches found'}
+            <RmgCard direction="column">
+                {parents.length === 2 ? (
+                    <RmgFields fields={getFields(Direction.left)} />
+                ) : (
+                    <Text as="i" flex={1} align="center" fontSize="md" colorScheme="gray">
+                        No branches found
+                    </Text>
+                )}
+            </RmgCard>
 
             <Heading as="h6" size="xs">
                 Branch on the right
             </Heading>
 
-            {children.length === 2 ? <RmgFields fields={getFields(Direction.right)} /> : 'No branches found'}
+            <RmgCard direction="column">
+                {children.length === 2 ? (
+                    <RmgFields fields={getFields(Direction.right)} />
+                ) : (
+                    <Text as="i" flex={1} align="center" fontSize="md" colorScheme="gray">
+                        No branches found
+                    </Text>
+                )}
+            </RmgCard>
         </Box>
     );
 }

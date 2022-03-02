@@ -541,11 +541,54 @@ export const updateStationBranchType = (stationId: string, direction: Direction,
     };
 };
 
-export type UpdateStationBranchFirstStationArgType = { stnId: string; direction: Direction; first: string };
+// TODO: replace with branch swapping in future change
+export const updateStationBranchFirstStation = (stationId: string, direction: Direction, firstId: string) => {
+    // update both end of the branch
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const branches = getState().helper.branches;
 
-// FIXME
-export const updateStationBranchFirstStation = (
-    branches: [UpdateStationBranchFirstStationArgType, UpdateStationBranchFirstStationArgType]
+        const arg = { stnId: stationId, direction, first: firstId };
+
+        if (direction === Direction.left) {
+            const branchStartId = branches.slice(1).find(branch => branch.slice(-1)[0] === stationId)![0];
+            const branchStartFirstId = branches[0][branches[0].indexOf(branchStartId) + 1];
+            dispatch(
+                updateStationBranchFirstStationLegacy([
+                    arg,
+                    {
+                        stnId: branchStartId,
+                        direction: Direction.right,
+                        first: branchStartFirstId,
+                    },
+                ])
+            );
+        } else {
+            const branchEndId = branches
+                .slice(1)
+                .find(branch => branch[0] === stationId)!
+                .slice(-1)[0];
+            const branchEndFirstId = branches[0][branches[0].indexOf(branchEndId) - 1];
+            dispatch(
+                updateStationBranchFirstStationLegacy([
+                    arg,
+                    {
+                        stnId: branchEndId,
+                        direction: Direction.left,
+                        first: branchEndFirstId,
+                    },
+                ])
+            );
+        }
+    };
+};
+
+export type UpdateStationBranchFirstStationLegacyArgType = { stnId: string; direction: Direction; first: string };
+
+/**
+ * @deprecated For V3 legacy support
+ */
+export const updateStationBranchFirstStationLegacy = (
+    branches: [UpdateStationBranchFirstStationLegacyArgType, UpdateStationBranchFirstStationLegacyArgType]
 ) => {
     return (dispatch: AppDispatch, getState: () => RootState) => {
         const { stn_list } = getState().param;
@@ -577,7 +620,28 @@ export const updateStationBranchFirstStation = (
     };
 };
 
-export const flipStationBranchPosition = (left: string, right: string) => {
+export const flipStationBranchPosition = (stationId: string, direction: Direction) => {
+    // flip both end of the branch
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const branches = getState().helper.branches;
+
+        if (direction === Direction.left) {
+            const branchStartId = branches.slice(1).find(branch => branch.slice(-1)[0] === stationId)![0];
+            dispatch(flipStationBranchPositionLegacy(stationId, branchStartId));
+        } else {
+            const branchEndId = branches
+                .slice(1)
+                .find(branch => branch[0] === stationId)!
+                .slice(-1)[0];
+            dispatch(flipStationBranchPositionLegacy(branchEndId, stationId));
+        }
+    };
+};
+
+/**
+ * @deprecated For V3 legacy support
+ */
+export const flipStationBranchPositionLegacy = (left: string, right: string) => {
     return (dispatch: AppDispatch, getState: () => RootState) => {
         const { stn_list } = getState().param;
         dispatch(

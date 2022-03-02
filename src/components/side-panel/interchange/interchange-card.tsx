@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, HStack, IconButton, Text, useColorModeValue } from '@chakra-ui/react';
+import { Box, HStack, IconButton, Text } from '@chakra-ui/react';
 import { InterchangeInfo, MonoColour, Theme } from '../../../constants/constants';
 import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
 import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
@@ -8,6 +8,7 @@ import ColourModal from '../../modal/colour-modal/colour-modal';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '../../../redux';
 import ThemeButton from '../theme-button';
+import RmgCard from '../../common/rmg-card';
 
 interface InterchangeCardProps {
     interchangeList: InterchangeInfo[];
@@ -25,8 +26,6 @@ export default function InterchangeCard(props: InterchangeCardProps) {
     const [selectedIndex, setSelectedIndex] = useState(0);
 
     const theme = useAppSelector(state => state.param.theme);
-
-    const cardBg = useColorModeValue('gray.50', 'gray.700');
 
     const interchangeFields: RmgFieldsField[][] = interchangeList.map((it, i) => [
         {
@@ -46,7 +45,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
     ]);
 
     return (
-        <Box bg={cardBg} boxShadow="lg" p={1} w="100%">
+        <RmgCard direction="column">
             {interchangeList.length === 0 && (
                 <HStack spacing={0.5}>
                     <Text as="i" flex={1} align="center" fontSize="md" colorScheme="gray">
@@ -113,6 +112,6 @@ export default function InterchangeCard(props: InterchangeCardProps) {
                     ])
                 }
             />
-        </Box>
+        </RmgCard>
     );
 }

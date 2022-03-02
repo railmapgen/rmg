@@ -15,9 +15,9 @@ import { formatStnName } from '../../../utils';
 import { useAppDispatch, useAppSelector } from '../../../redux';
 import { BranchStyle, Direction, RmgStyle } from '../../../constants/constants';
 import {
-    flipStationBranchPosition,
-    updateStationBranchFirstStation,
-    UpdateStationBranchFirstStationArgType,
+    flipStationBranchPositionLegacy,
+    updateStationBranchFirstStationLegacy,
+    UpdateStationBranchFirstStationLegacyArgType,
     updateStationBranchType,
 } from '../../../redux/param/action';
 
@@ -161,7 +161,10 @@ const BranchFirstItem = (props: ItemProps) => {
                 }
                 branchEndFirst = stnList[branchEndId].children[neighbours.indexOf(branchFirst)];
             }
-            const branchesArg: [UpdateStationBranchFirstStationArgType, UpdateStationBranchFirstStationArgType] = [
+            const branchesArg: [
+                UpdateStationBranchFirstStationLegacyArgType,
+                UpdateStationBranchFirstStationLegacyArgType
+            ] = [
                 { stnId, direction, first: branchFirst },
                 {
                     stnId: branchEndId,
@@ -169,7 +172,7 @@ const BranchFirstItem = (props: ItemProps) => {
                     first: branchEndFirst,
                 },
             ];
-            dispatch(updateStationBranchFirstStation(branchesArg));
+            dispatch(updateStationBranchFirstStationLegacy(branchesArg));
         }
     };
 
@@ -221,12 +224,12 @@ const BranchPosItem = (props: ItemProps) => {
                 while (stnList[branchEndId].parents.length === 1) {
                     branchEndId = stnList[branchEndId].children[0];
                 }
-                dispatch(flipStationBranchPosition(branchEndId, stnId));
+                dispatch(flipStationBranchPositionLegacy(branchEndId, stnId));
             } else {
                 while (stnList[branchEndId].children.length === 1) {
                     branchEndId = stnList[branchEndId].parents[0];
                 }
-                dispatch(flipStationBranchPosition(stnId, branchEndId));
+                dispatch(flipStationBranchPositionLegacy(stnId, branchEndId));
             }
         }
     };
