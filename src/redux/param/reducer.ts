@@ -82,6 +82,7 @@ const initialState: RMGParam = {
     direction_gz_x: 0,
     direction_gz_y: 0,
     coline: [],
+    loop: false,
 };
 
 export default function ParamReducer(

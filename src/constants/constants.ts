@@ -243,6 +243,7 @@ export interface RMGParam {
     direction_gz_x: number;
     direction_gz_y: number;
     coline: ColineInfo[];
+    loop: false;
 }
 
 /**
