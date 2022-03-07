@@ -156,7 +156,6 @@ const MainSHMetro = () => {
             />
             {coline?.length > 0 && <ColineSHMetro xs={xs} servicesPresent={servicesPresent} stnStates={stnStates} />}
             <ServicesElements servicesLevel={servicesPresent} lineXs={lineXs} />
-            <DirectionElements />
         </g>
     );
 };
@@ -459,14 +458,14 @@ const ServicesElements = (props: { servicesLevel: Services[]; lineXs: number[] }
     );
 };
 
-const DirectionElements = () => {
-    const { direction, svgWidth, svg_height, coline } = useAppSelector(store => store.param);
+export const DirectionElements = () => {
+    const { direction, svgWidth, svg_height, loop } = useAppSelector(store => store.param);
 
     return React.useMemo(
         () => (
             <g
                 transform={`translate(${direction === 'l' ? 50 : svgWidth.railmap - 150},${
-                    -svg_height * (coline?.length > 0 ? 0.3 : 0.5 + 0.1)
+                    loop ? svg_height - 30 : 50
                 })`}
             >
                 <text className="rmg-name__zh">列车前进方向</text>

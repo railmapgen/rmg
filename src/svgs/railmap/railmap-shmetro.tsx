@@ -1,5 +1,5 @@
 import * as React from 'react';
-import MainSHMetro from './main/main-shmetro';
+import MainSHMetro, { DirectionElements } from './main/main-shmetro';
 import LoopSHMetro from './main/loop-shmetro';
 import { useAppSelector } from '../../redux';
 
@@ -10,6 +10,7 @@ const RailMapSHMetro = React.memo(() => {
             <DefsSHMetro />
 
             {loop ? <LoopSHMetro bank_angle={true} /> : <MainSHMetro />}
+            <DirectionElements />
         </>
     );
 });

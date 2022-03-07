@@ -12,6 +12,7 @@ export default memo(function IndoorWrapperSHMetro() {
         <>
             <DefsSHMetro />
             {loop ? <LoopSHMetro bank_angle={false} /> : <IndoorSHMetro />}
+            <InfoElements />
         </>
     );
 });
@@ -140,13 +141,10 @@ const IndoorSHMetro = () => {
     );
 
     return (
-        <>
-            <g id="main" transform={`translate(0,${param.svg_height / 2})`}>
-                <Lines paths={linePaths} services={servicesPresent} />
-                <StationGroup xs={xs} ys={ys} services={servicesPresent} />
-            </g>
-            <InfoElements />
-        </>
+        <g id="main" transform={`translate(0,${param.svg_height / 2})`}>
+            <Lines paths={linePaths} services={servicesPresent} />
+            <StationGroup xs={xs} ys={ys} services={servicesPresent} />
+        </g>
     );
 };
 
