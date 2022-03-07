@@ -4,12 +4,14 @@ import { NameDirection, StationSHMetro as StationSHMetroIndoor } from '../../ind
 import { AtLeastOneOfPartial, Services, StationDict } from '../../../constants/constants';
 import { useAppSelector } from '../../../redux';
 
-// Each array should be consecutive, and when combined in top -> right -> bottom -> left order,
-// it will also be consecutive. right, bottom, and left length can be 0.
-// It also assumes parameters will follow these rules:
+// Split the loopline into four sides according to left_and_right_factor and bottom_factor.
+// It assumes parameters will follow these rules:
 //     1. loopline.length > bottom_factor + left_and_right_factor * 2
 //     2. bottom_factor >= 0
 //     3. left_and_right_factor >= 0
+//     4. left_and_right_factor + bottom_factor > 0
+// Each array returned should be consecutive, and when combined in top -> right -> bottom -> left order,
+// it will also be consecutive. Note that the length of right, bottom, and left can be 0.
 const split_loop_stns = (
     loopline: string[],
     current_stn_id: string,
@@ -32,7 +34,7 @@ const split_loop_stns = (
     };
 };
 
-// Return the xshares and yshares of the stations. Values sit between -1 and 1.
+// Return the xshares and yshares of the loop stations. Values sit between -1 and 1.
 const get_xshares_yshares_of_loop = (loopline: string[], loop_stns: ReturnType<typeof split_loop_stns>) => {
     const x_shares = Object.fromEntries(loopline.map(stn_id => [stn_id, -1]));
     const y_shares = Object.fromEntries(loopline.map(stn_id => [stn_id, -1]));
@@ -40,7 +42,7 @@ const get_xshares_yshares_of_loop = (loopline: string[], loop_stns: ReturnType<t
     const [Y_TOP, Y_BOTTOM, X_LEFT, X_RIGHT] = [-1, 1, -1, 1];
 
     // make sure first and last station do not position at the corner
-    const e = 0.2; // e should be smaller than 1
+    const e = 0.1; // e should be smaller than 1
 
     loop_stns.top.forEach((stn_id, i) => {
         x_shares[stn_id] = -(1 - e) + ((2 - 2 * e) / loop_stns.top.length) * i + (1 - e) / loop_stns.top.length;
@@ -67,9 +69,8 @@ const get_xshares_yshares_of_loop = (loopline: string[], loop_stns: ReturnType<t
 
 const LoopSHMetro = (props: { bank_angle: boolean }) => {
     const { bank_angle } = props;
-    const { routes, branches, depsStr: deps } = useAppSelector(store => store.helper);
+    const { branches, depsStr: deps } = useAppSelector(store => store.helper);
     const {
-        stn_list,
         current_stn_idx: current_stn_id,
         svgWidth: svg_width,
         svg_height,
@@ -103,7 +104,7 @@ const LoopSHMetro = (props: { bank_angle: boolean }) => {
         }),
         {} as typeof x_shares
     );
-    const line_ys = [175, svg_height - 75 - (bank_angle ? 0 : 100)];
+    const line_ys = [175, svg_height - 75 - (bank_angle ? 0 : 100)] as [number, number];
     const ys = Object.keys(x_shares).reduce(
         (acc, cur) => ({
             ...acc,
@@ -122,7 +123,7 @@ const LoopSHMetro = (props: { bank_angle: boolean }) => {
     });
     console.log(xs, ys);
 
-    const path = _linePath(loop_stns, xs, ys, bank);
+    const path = _linePath(loop_stns, xs, ys, bank, line_ys);
     console.log(path);
 
     return (
@@ -141,32 +142,55 @@ export const _linePath = (
     loop_stns: ReturnType<typeof split_loop_stns>,
     xs: { [stn_id: string]: number },
     ys: { [stn_id: string]: number },
-    bank: -1 | 0 | 1
+    bank: -1 | 0 | 1,
+    line_ys: [number, number] // get Y_BOTTOM when no stations at bottom
 ) => {
-    const [Y_TOP, Y_BOTTOM] = [Math.min(...Object.values(ys)), Math.max(...Object.values(ys))];
+    const [Y_TOP, Y_BOTTOM] = line_ys;
 
-    const corner = (prev_x: number, prev_y: number, x: number, y: number): [number, number] => {
-        if (prev_x < x && prev_y < y) return [x + (y - Y_TOP) * bank, prev_y];
-        else if (prev_x > x && prev_y < y) return [prev_x - (Y_BOTTOM - prev_y) * bank, y];
-        else if (prev_x > x && prev_y > y) return [x - (Y_BOTTOM - y) * bank, prev_y];
-        else return [prev_x + (prev_y - Y_TOP) * bank, y];
+    // calculate the corner point when two sides needs to be joined
+    const corner = (
+        prev_x: number,
+        prev_y: number,
+        x: number,
+        y: number,
+        side: keyof ReturnType<typeof split_loop_stns>
+    ): [number, number] => {
+        return {
+            right: [x + (y - Y_TOP) * bank, prev_y] as [number, number],
+            bottom: [prev_x - (Y_BOTTOM - prev_y) * bank, y] as [number, number],
+            left: [x - (Y_BOTTOM - y) * bank, prev_y] as [number, number],
+            top: [prev_x + (prev_y - Y_TOP) * bank, y] as [number, number],
+        }[side];
     };
 
     const stn_pos = [] as [number, number][];
     loop_stns.top.forEach(stn_id => {
         stn_pos.push([xs[stn_id], ys[stn_id]]);
     });
-    (['right', 'bottom', 'left'] as (keyof ReturnType<typeof split_loop_stns>)[]).forEach(side => {
+    (['right', 'bottom', 'left'] as Exclude<keyof ReturnType<typeof split_loop_stns>, 'top'>[]).forEach(side => {
         if (loop_stns[side].length > 0) {
             stn_pos.push(
-                corner(stn_pos.at(-1)![0], stn_pos.at(-1)![1], xs[loop_stns[side][0]], ys[loop_stns[side][0]])
+                corner(stn_pos.at(-1)![0], stn_pos.at(-1)![1], xs[loop_stns[side][0]], ys[loop_stns[side][0]], side)
             );
             loop_stns[side].forEach(stn_id => {
                 stn_pos.push([xs[stn_id], ys[stn_id]]);
             });
+        } else {
+            // simulate a fake station on the side
+            // this station in fact lays on the previous side with an extra_e dx
+            const extra_e = 100;
+            const extra = {
+                right: [stn_pos.at(-1)![0] + extra_e, stn_pos.at(-1)![1]] as [number, number],
+                bottom: [
+                    stn_pos.at(-1)![0] + (Y_BOTTOM - stn_pos.at(-1)![1]) * -bank,
+                    stn_pos.at(-1)![1] + (Y_BOTTOM - stn_pos.at(-1)![1]),
+                ] as [number, number],
+                left: [stn_pos.at(-1)![0] - extra_e, stn_pos.at(-1)![1]] as [number, number],
+            };
+            stn_pos.push(extra[side]);
         }
     });
-    stn_pos.push(corner(stn_pos.at(-1)![0], stn_pos.at(-1)![1], xs[loop_stns.top[0]], ys[loop_stns.top[0]]));
+    stn_pos.push(corner(stn_pos.at(-1)![0], stn_pos.at(-1)![1], xs[loop_stns.top[0]], ys[loop_stns.top[0]], 'top'));
 
     const path = stn_pos
         .slice(1)
