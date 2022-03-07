@@ -218,6 +218,12 @@ const LoopStationGroup = (props: {
         left: -1,
         right: 1,
     };
+    const railmap_direction: Record<LoopSide, 'l' | 'r' | undefined> = {
+        left: 'r',
+        right: 'l',
+        top: undefined,
+        bottom: undefined,
+    };
     const indoor_name_direction = (side: LoopSide, i: number) =>
         ({
             top: i % 2 === 0 ? 'upward' : 'downward',
@@ -231,7 +237,12 @@ const LoopStationGroup = (props: {
                 ? Object.entries(loop_stns).map(([side, stn_ids]) =>
                       stn_ids.map(stn_id => (
                           <g key={stn_id} transform={`translate(${xs[stn_id]},${ys[stn_id]})`}>
-                              <StationSHMetro stnId={stn_id} stnState={1} bank={railmap_bank[side as LoopSide]} />
+                              <StationSHMetro
+                                  stnId={stn_id}
+                                  stnState={1}
+                                  bank={railmap_bank[side as LoopSide]}
+                                  direction={railmap_direction[side as LoopSide]}
+                              />
                           </g>
                       ))
                   )

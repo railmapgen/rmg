@@ -7,12 +7,14 @@ interface Props {
     stnState: -1 | 0 | 1;
     color?: ColourHex; // Control the station color if coline is in effect.
     bank?: -1 | 0 | 1; // Loopline requires station element to be horizontal. Default to 0 (no bank to other side).
+    direction?: 'l' | 'r'; // Loopline requires station element to change direction. Default to current param.
 }
 
 const StationSHMetro = (props: Props) => {
-    const { stnId, stnState, color, bank: bank_ } = props;
-    const { direction, info_panel_type, stn_list } = useAppSelector(store => store.param);
+    const { stnId, stnState, color, bank: bank_, direction: direction_override } = props;
+    const { direction: direction_param, info_panel_type, stn_list } = useAppSelector(store => store.param);
     const stnInfo = stn_list[stnId];
+    const direction = direction_override ?? direction_param;
 
     // shift station name if the line bifurcate here
     const branchNameDX =
@@ -37,7 +39,7 @@ const StationSHMetro = (props: Props) => {
     }
 
     const bank = bank_ ?? 0;
-    const dx = (direction === 'l' ? 6 : -6) + branchNameDX + (bank ? (bank - 0.67) * 75 : 0);
+    const dx = (direction === 'l' ? 6 : -6) + branchNameDX + bank * 30;
     const dy = (info_panel_type === 'sh2020' ? -20 : -6) + Math.abs(bank) * 10;
     const dr = bank ? 0 : direction === 'l' ? -45 : 45;
     return (
