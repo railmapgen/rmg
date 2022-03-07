@@ -1,7 +1,7 @@
 import React from 'react';
 import StationSHMetro from './station/station-shmetro';
 import { NameDirection, StationSHMetro as StationSHMetroIndoor } from '../../indoor/station-shmetro';
-import { AtLeastOneOfPartial, Services, StationDict } from '../../../constants/constants';
+import { Services } from '../../../constants/constants';
 import { useAppSelector } from '../../../redux';
 
 // Split the loopline into four sides according to left_and_right_factor and bottom_factor.
@@ -34,8 +34,10 @@ const split_loop_stns = (
     };
 };
 
+type LoopStns = ReturnType<typeof split_loop_stns>;
+
 // Return the xshares and yshares of the loop stations. Values sit between -1 and 1.
-const get_xshares_yshares_of_loop = (loopline: string[], loop_stns: ReturnType<typeof split_loop_stns>) => {
+const get_xshares_yshares_of_loop = (loopline: string[], loop_stns: LoopStns) => {
     const x_shares = Object.fromEntries(loopline.map(stn_id => [stn_id, -1]));
     const y_shares = Object.fromEntries(loopline.map(stn_id => [stn_id, -1]));
 
@@ -139,7 +141,7 @@ const LoopSHMetro = (props: { bank_angle: boolean }) => {
 export default LoopSHMetro;
 
 export const _linePath = (
-    loop_stns: ReturnType<typeof split_loop_stns>,
+    loop_stns: LoopStns,
     xs: { [stn_id: string]: number },
     ys: { [stn_id: string]: number },
     bank: -1 | 0 | 1,
@@ -148,13 +150,7 @@ export const _linePath = (
     const [Y_TOP, Y_BOTTOM] = line_ys;
 
     // calculate the corner point when two sides needs to be joined
-    const corner = (
-        prev_x: number,
-        prev_y: number,
-        x: number,
-        y: number,
-        side: keyof ReturnType<typeof split_loop_stns>
-    ): [number, number] => {
+    const corner = (prev_x: number, prev_y: number, x: number, y: number, side: keyof LoopStns): [number, number] => {
         return {
             right: [x + (y - Y_TOP) * bank, prev_y] as [number, number],
             bottom: [prev_x - (Y_BOTTOM - prev_y) * bank, y] as [number, number],
@@ -167,7 +163,7 @@ export const _linePath = (
     loop_stns.top.forEach(stn_id => {
         stn_pos.push([xs[stn_id], ys[stn_id]]);
     });
-    (['right', 'bottom', 'left'] as Exclude<keyof ReturnType<typeof split_loop_stns>, 'top'>[]).forEach(side => {
+    (['right', 'bottom', 'left'] as Exclude<keyof LoopStns, 'top'>[]).forEach(side => {
         if (loop_stns[side].length > 0) {
             stn_pos.push(
                 corner(stn_pos.at(-1)![0], stn_pos.at(-1)![1], xs[loop_stns[side][0]], ys[loop_stns[side][0]], side)
@@ -201,7 +197,7 @@ export const _linePath = (
 
 const LoopStationGroup = (props: {
     bank_angle: boolean;
-    loop_stns: ReturnType<typeof split_loop_stns>;
+    loop_stns: LoopStns;
     xs: {
         [k: string]: number;
     };
@@ -210,21 +206,20 @@ const LoopStationGroup = (props: {
     };
 }) => {
     const { bank_angle, loop_stns, xs, ys } = props;
-    type LoopSide = keyof ReturnType<typeof split_loop_stns>;
 
-    const railmap_bank: Record<LoopSide, -1 | 0 | 1> = {
+    const railmap_bank: Record<keyof LoopStns, -1 | 0 | 1> = {
         top: 0,
         bottom: 0,
         left: -1,
         right: 1,
     };
-    const railmap_direction: Record<LoopSide, 'l' | 'r' | undefined> = {
+    const railmap_direction: Record<keyof LoopStns, 'l' | 'r' | undefined> = {
         left: 'r',
         right: 'l',
         top: undefined,
         bottom: undefined,
     };
-    const indoor_name_direction = (side: LoopSide, i: number) =>
+    const indoor_name_direction = (side: keyof LoopStns, i: number) =>
         ({
             top: i % 2 === 0 ? 'upward' : 'downward',
             bottom: i % 2 === 0 ? 'upward' : 'downward',
@@ -240,8 +235,8 @@ const LoopStationGroup = (props: {
                               <StationSHMetro
                                   stnId={stn_id}
                                   stnState={1}
-                                  bank={railmap_bank[side as LoopSide]}
-                                  direction={railmap_direction[side as LoopSide]}
+                                  bank={railmap_bank[side as keyof LoopStns]}
+                                  direction={railmap_direction[side as keyof LoopStns]}
                               />
                           </g>
                       ))
@@ -251,7 +246,7 @@ const LoopStationGroup = (props: {
                           <g key={stn_id} transform={`translate(${xs[stn_id]},${ys[stn_id]})`}>
                               <StationSHMetroIndoor
                                   stnId={stn_id}
-                                  nameDirection={indoor_name_direction(side as LoopSide, i)}
+                                  nameDirection={indoor_name_direction(side as keyof LoopStns, i)}
                                   services={[Services.local]}
                               />
                           </g>
