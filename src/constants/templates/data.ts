@@ -62,11 +62,27 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
+            filename: 'bj8',
+            name: {
+                en: 'Line 8 by Jay20081229',
+                'zh-Hans': '8号线 来自 Jay20081229',
+                'zh-Hant': '8號線 來自 Jay20081229',
+            },
+        },
+        {
             filename: 'bj9',
             name: {
                 en: 'Line 9 by AnDanJuneUnderline',
                 'zh-Hans': '9号线 来自 AnDanJuneUnderline',
                 'zh-Hant': '9號線 來自 AnDanJuneUnderline',
+            },
+        },
+        {
+            filename: 'bj11',
+            name: {
+                en: 'Line 11 by Jay20081229',
+                'zh-Hans': '11号线 来自 Jay20081229',
+                'zh-Hant': '11號線 來自 Jay20081229',
             },
         },
         {
