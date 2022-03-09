@@ -19,6 +19,7 @@ const param = {
             num: '00',
             facility: '',
             secondaryName: false,
+            loop_pivot: false,
         },
         lineend: {
             parents: ['qzjx'],
@@ -30,6 +31,7 @@ const param = {
             num: '00',
             facility: '',
             secondaryName: false,
+            loop_pivot: false,
         },
         jsat: {
             parents: ['srpy'],
@@ -46,6 +48,7 @@ const param = {
             services: ['local'],
             facility: '',
             secondaryName: false,
+            loop_pivot: false,
         },
         srpy: {
             parents: ['x9gu'],
@@ -69,6 +72,7 @@ const param = {
             services: ['local'],
             facility: '',
             secondaryName: false,
+            loop_pivot: true,
         },
         x9gu: {
             parents: ['k9k5'],
@@ -90,6 +94,7 @@ const param = {
             services: ['local'],
             facility: '',
             secondaryName: false,
+            loop_pivot: false,
         },
         k9k5: {
             parents: ['j2kn'],
@@ -112,6 +117,7 @@ const param = {
             },
             facility: '',
             secondaryName: false,
+            loop_pivot: false,
         },
         j2kn: {
             parents: ['lcgp'],
@@ -133,6 +139,7 @@ const param = {
             },
             facility: '',
             secondaryName: false,
+            loop_pivot: false,
         },
         kaxg: {
             parents: ['7x7k'],
@@ -144,6 +151,7 @@ const param = {
             transfer: { tick_direc: 'r', paid_area: true, osi_names: [], info: [[]] },
             facility: '',
             secondaryName: false,
+            loop_pivot: false,
         },
         sd6y: {
             parents: ['1fdr'],
@@ -160,6 +168,7 @@ const param = {
             },
             facility: '',
             secondaryName: false,
+            loop_pivot: false,
         },
         '9cyo': {
             parents: ['linestart'],
@@ -181,6 +190,7 @@ const param = {
             },
             facility: '',
             secondaryName: false,
+            loop_pivot: false,
         },
         hhar: {
             children: ['qgae'],
@@ -192,6 +202,7 @@ const param = {
             transfer: { tick_direc: 'r', paid_area: true, osi_names: [], info: [[]] },
             facility: '',
             secondaryName: false,
+            loop_pivot: false,
         },
         jjh7: {
             children: ['h3vs'],
@@ -208,6 +219,7 @@ const param = {
             },
             facility: '',
             secondaryName: false,
+            loop_pivot: false,
         },
         '7x7k': {
             children: ['kaxg'],
@@ -224,6 +236,7 @@ const param = {
             },
             facility: '',
             secondaryName: false,
+            loop_pivot: false,
         },
         qnbj: {
             name: ['杨树浦路', 'Yangshupu Road'],
@@ -235,6 +248,7 @@ const param = {
             branch: { left: [], right: [] },
             transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
             facility: '',
+            loop_pivot: false,
         },
         '1fdr': {
             name: ['世纪大道', 'Century Avenue'],
@@ -257,6 +271,7 @@ const param = {
                 osi_names: [],
             },
             facility: '',
+            loop_pivot: true,
         },
         lcgp: {
             name: ['中潭路', 'Zhongtan Road'],
@@ -273,6 +288,7 @@ const param = {
                 osi_names: [],
             },
             facility: '',
+            loop_pivot: false,
         },
         wbtv: {
             name: ['海伦路站', 'Hailun Road'],
@@ -289,6 +305,7 @@ const param = {
                 osi_names: [],
             },
             facility: '',
+            loop_pivot: false,
         },
         wai3: {
             name: ['浦电路', 'Pudian Road'],
@@ -300,6 +317,7 @@ const param = {
             branch: { left: [], right: [] },
             transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
             facility: '',
+            loop_pivot: false,
         },
         naz0: {
             name: ['蓝村路', 'Lancun Road'],
@@ -316,6 +334,7 @@ const param = {
                 osi_names: [],
             },
             facility: '',
+            loop_pivot: false,
         },
         y6id: {
             name: ['塘桥', 'Tangqiao'],
@@ -327,6 +346,7 @@ const param = {
             branch: { left: [], right: [] },
             transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
             facility: '',
+            loop_pivot: false,
         },
         exax: {
             name: ['东安路站', "Dong'an Road"],
@@ -343,6 +363,7 @@ const param = {
                 osi_names: [],
             },
             facility: '',
+            loop_pivot: false,
         },
         qzjx: {
             name: ['虹桥路', 'Hongqiao Road'],
@@ -364,6 +385,7 @@ const param = {
                 osi_names: [],
             },
             facility: '',
+            loop_pivot: false,
         },
         '8hte': {
             name: ['上海体育馆', 'Shanghai Indoor Stadium'],
@@ -380,6 +402,7 @@ const param = {
                 osi_names: [],
             },
             facility: '',
+            loop_pivot: true,
         },
         yrlx: {
             name: ['上海体育场', 'Shanghai Stadium'],
@@ -391,6 +414,7 @@ const param = {
             branch: { left: [], right: [] },
             transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
             facility: '',
+            loop_pivot: false,
         },
         nhrh: {
             name: ['大木桥路', 'Damuqiao Road'],
@@ -407,6 +431,7 @@ const param = {
                 osi_names: [],
             },
             facility: '',
+            loop_pivot: false,
         },
         qgae: {
             name: ['西藏南路', 'South Xizang Road'],
@@ -423,6 +448,7 @@ const param = {
                 osi_names: [],
             },
             facility: '',
+            loop_pivot: true,
         },
         ekdv: {
             name: ['南浦大桥', 'Nanpu Bridge'],
@@ -434,6 +460,7 @@ const param = {
             branch: { left: [], right: [] },
             transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
             facility: '',
+            loop_pivot: false,
         },
         h3vs: {
             name: ['上海火车站', 'Shanghai Railway Station'],
@@ -453,6 +480,7 @@ const param = {
                 osi_names: [],
             },
             facility: '',
+            loop_pivot: true,
         },
     },
     line_name: ['4号线', 'Line 4'],
@@ -467,6 +495,7 @@ const param = {
     namePosMTR: { isStagger: true, isFlip: false },
     coline: [],
     loop: true,
+    loop_info: { bank: true, left_and_right_factor: 2, bottom_factor: 12 },
 };
 
 export default param;

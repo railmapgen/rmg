@@ -24,6 +24,10 @@ import {
     SET_Y_PERCENTAGE,
     SET_STYLE,
     SET_COLINE_BULK,
+    SET_LOOP,
+    SET_LOOP_BANK,
+    SET_LOOP_LEFT_AND_RIGHT_FACTOR,
+    SET_LOOP_BOTTOM_FACTOR,
     setBranchSpacingAction,
     setCurrentStationAction,
     setCustomisedMtrDestinationAction,
@@ -47,6 +51,10 @@ import {
     setYPercentageAction,
     setStyleAction,
     setColineBulkAction,
+    setLoopAction,
+    setLoopBankAction,
+    setLoopLeftAndRightFactorAction,
+    setLoopBottomFactorAction,
 } from './action';
 
 const initialState: RMGParam = {
@@ -83,6 +91,11 @@ const initialState: RMGParam = {
     direction_gz_y: 0,
     coline: [],
     loop: false,
+    loop_info: {
+        bank: true,
+        left_and_right_factor: 1,
+        bottom_factor: 1,
+    },
 };
 
 export default function ParamReducer(
@@ -111,6 +124,10 @@ export default function ParamReducer(
         | setStationAction
         | setStationsBulkAction
         | setColineBulkAction
+        | setLoopAction
+        | setLoopBankAction
+        | setLoopLeftAndRightFactorAction
+        | setLoopBottomFactorAction
 ) {
     switch (action.type) {
         case SET_FULL_PARAM:
@@ -180,6 +197,18 @@ export default function ParamReducer(
             break;
         case SET_COLINE_BULK:
             state.coline = action.coline;
+            break;
+        case SET_LOOP:
+            state.loop = action.loop;
+            break;
+        case SET_LOOP_BANK:
+            state.loop_info = { ...state.loop_info, bank: action.loop_bank };
+            break;
+        case SET_LOOP_LEFT_AND_RIGHT_FACTOR:
+            state.loop_info = { ...state.loop_info, left_and_right_factor: action.loop_left_and_right_factor };
+            break;
+        case SET_LOOP_BOTTOM_FACTOR:
+            state.loop_info = { ...state.loop_info, bottom_factor: action.loop_bottom_factor };
             break;
         default:
             break;

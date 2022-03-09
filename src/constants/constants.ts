@@ -160,9 +160,13 @@ export interface StationInfo {
      */
     services: Services[];
     /**
-     * Facility near the station
+     * Facility near the station.
      */
     facility: Facilities;
+    /**
+     * Is a pivot station in the loop.
+     */
+    loop_pivot: boolean;
 }
 
 export type StationDict = Record<string, StationInfo>;
@@ -243,7 +247,23 @@ export interface RMGParam {
     direction_gz_x: number;
     direction_gz_y: number;
     coline: ColineInfo[];
-    loop: false;
+    loop: boolean;
+    loop_info: {
+        /**
+         * Bank the close rectangular path or not.
+         */
+        bank: boolean;
+        /**
+         * Station size on the left and right side. Integer only, will be `Math.floor`ed.
+         * Also, these factors are subject to several rules, see loop-shmetro for more info.
+         */
+        left_and_right_factor: number;
+        /**
+         * Station size on the bottom side. Integer only, will be `Math.floor`ed.
+         * Also, these factors are subject to several rules, see loop-shmetro for more info.
+         */
+        bottom_factor: number;
+    };
 }
 
 /**

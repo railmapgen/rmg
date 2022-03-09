@@ -71,21 +71,20 @@ const get_xshares_yshares_of_loop = (loopline: string[], loop_stns: LoopStns) =>
 
 const LoopSHMetro = (props: { bank_angle: boolean }) => {
     const { bank_angle } = props;
-    const { branches, depsStr: deps } = useAppSelector(store => store.helper);
+    const { branches } = useAppSelector(store => store.helper);
     const {
         current_stn_idx: current_stn_id,
         svgWidth: svg_width,
         svg_height,
         padding,
         direction,
+        loop_info,
     } = useAppSelector(store => store.param);
+    const { left_and_right_factor, bottom_factor } = loop_info;
 
     const loopline = branches[0].filter(stn_id => !['linestart', 'lineend'].includes(stn_id));
-    const left_and_right_factor = 2;
-    const bottom_factor = 10;
 
     const loop_stns = split_loop_stns(loopline, current_stn_id, bottom_factor, left_and_right_factor);
-    console.log(loop_stns);
 
     const { x_shares, y_shares } = get_xshares_yshares_of_loop(loopline, loop_stns);
     loopline.forEach(stn_id => {
@@ -93,7 +92,6 @@ const LoopSHMetro = (props: { bank_angle: boolean }) => {
         x_shares[stn_id] = (x_shares[stn_id] + 1) / 2;
         y_shares[stn_id] = (y_shares[stn_id] + 1) / 2;
     });
-    console.log(x_shares, y_shares);
 
     const line_xs = [
         (svg_width.railmap * padding) / 100 + (bank_angle ? 0 : 50),
@@ -123,10 +121,8 @@ const LoopSHMetro = (props: { bank_angle: boolean }) => {
     loop_stns.bottom.forEach(stn_id => {
         xs[stn_id] -= (line_ys[1] - line_ys[0]) * bank;
     });
-    console.log(xs, ys);
 
     const path = _linePath(loop_stns, xs, ys, bank, line_ys);
-    console.log(path);
 
     return (
         <>
