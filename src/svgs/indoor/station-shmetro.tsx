@@ -2,14 +2,15 @@ import React from 'react';
 import { InterchangeInfo, Name, Services } from '../../constants/constants';
 import { useAppSelector } from '../../redux';
 
+export type NameDirection = 'upward' | 'downward' | 'left' | 'right';
+
 interface Props {
     stnId: string;
-    stnState: -1 | 0 | 1;
-    nameDirection: 'upward' | 'downward';
+    nameDirection: NameDirection;
     services: Services[];
 }
 
-const StationSHMetro = (props: Props) => {
+export const StationSHMetro = (props: Props) => {
     const param = useAppSelector(store => store.param);
     const stnInfo = param.stn_list[props.stnId];
 
@@ -25,8 +26,6 @@ const StationSHMetro = (props: Props) => {
             <StationNameGElement
                 name={stnInfo.name}
                 infos={stnInfo.transfer.info}
-                stnState={props.stnState}
-                direction={param.direction}
                 nameDirection={props.nameDirection}
                 services={props.services}
             />
@@ -46,58 +45,69 @@ export default StationSHMetro;
 interface StationNameGElementProps {
     name: Name;
     infos: InterchangeInfo[][];
-    stnState: -1 | 0 | 1;
-    direction: 'l' | 'r';
-    nameDirection: 'upward' | 'downward';
+    nameDirection: NameDirection;
     services: Services[];
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {
+    const { name, infos, nameDirection, services } = props;
+    const dy = { upward: 60, downward: -30, left: 0, right: 0 }[nameDirection];
     return (
-        <g transform={`translate(0,${props.nameDirection === 'upward' ? 60 : -30})`}>
-            <line
-                x1={-30}
-                x2={30}
-                y1={props.nameDirection === 'upward' ? -23 : -10}
-                y2={props.nameDirection === 'upward' ? -23 : -10}
-                stroke="black"
-            />
-            <line
-                y1={props.nameDirection === 'upward' ? -23 : -10}
-                y2={props.nameDirection === 'upward' ? -23 - 25 : 20}
-                stroke="black"
-            />
-
-            {[...props.infos[0], ...(props.infos[1] || [])].length > 0 && (
-                <IntBoxGroup
-                    intInfos={[...props.infos[0], ...(props.infos[1] || [])]}
-                    arrowDirection={props.nameDirection}
-                    services={props.services}
+        <g transform={`translate(0,${dy})`}>
+            {nameDirection === 'upward' || nameDirection === 'downward' ? (
+                <>
+                    <line
+                        x1={-30}
+                        x2={30}
+                        y1={nameDirection === 'upward' ? -23 : -10}
+                        y2={nameDirection === 'upward' ? -23 : -10}
+                        stroke="black"
+                    />
+                    <line
+                        y1={nameDirection === 'upward' ? -23 : -10}
+                        y2={nameDirection === 'upward' ? -23 - 25 : 20}
+                        stroke="black"
+                    />
+                </>
+            ) : (
+                <line
+                    x1={nameDirection === 'left' ? -100 : 15}
+                    x2={nameDirection === 'left' ? -15 : 100}
+                    y1={0}
+                    y2={0}
+                    stroke="black"
                 />
             )}
 
-            <StationName stnName={props.name} nameDirection={props.nameDirection} fill="black" />
+            {[...infos[0], ...(infos[1] || [])].length > 0 && (
+                <IntBoxGroup
+                    intInfos={[...infos[0], ...(infos[1] || [])]}
+                    arrowDirection={nameDirection}
+                    services={services}
+                />
+            )}
 
-            {props.infos[1]?.length > 0 && (
-                <g transform={`translate(0,${props.nameDirection === 'upward' ? -185 : 150})`}>
-                    <OSIText osiInfos={props.infos[1]} />
+            <StationName stnName={name} nameDirection={nameDirection} fill="black" />
+
+            {infos[1]?.length > 0 && (
+                <g transform={`translate(0,${nameDirection === 'upward' ? -185 : 150})`}>
+                    <OSIText osiInfos={infos[1]} />
                 </g>
             )}
 
-            {props.infos[2]?.length > 0 && (
+            {infos[2]?.length > 0 && (
                 <g
                     transform={`translate(0,${
-                        props.nameDirection === 'upward'
-                            ? props.infos[1]?.length
+                        nameDirection === 'upward'
+                            ? infos[1]?.length
                                 ? -210
-                                : props.infos[0].length
+                                : infos[0].length
                                 ? -180
                                 : -100
-                            : (props.infos[1]?.length ? 190 : props.infos[0].length ? 160 : 75) +
-                              (props.services.length === 3 ? 40 : 0)
+                            : (infos[1]?.length ? 190 : infos[0].length ? 160 : 75) + (services.length === 3 ? 40 : 0)
                     })`}
                 >
-                    <OSysIText osysiInfos={props.infos[2]} />
+                    <OSysIText osysiInfos={infos[2]} />
                 </g>
             )}
         </g>
@@ -106,20 +116,18 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
 const StationName = React.forwardRef(
     (
-        props: { stnName: Name; nameDirection: 'upward' | 'downward' } & React.SVGProps<SVGGElement>,
+        props: { stnName: Name; nameDirection: NameDirection } & React.SVGProps<SVGGElement>,
         ref: React.Ref<SVGGElement>
     ) => {
         const { stnName, nameDirection, ...others } = props;
         const name = stnName[0].split('\\');
         const nameENLn = stnName[1].split('\\').length;
+        // TODO: set text-anchor on left and right
+        const dx = { upward: 0, downward: 0, left: -75, right: 75 }[nameDirection];
+        const dy = { upward: -2, downward: -30 - 12 * (nameENLn - 1), left: -15, right: -15 }[nameDirection];
 
         return (
-            <g
-                ref={ref}
-                {...others}
-                textAnchor="middle"
-                transform={`translate(0,${nameDirection === 'upward' ? -2 : -30 - 12 * (nameENLn - 1)})`}
-            >
+            <g ref={ref} {...others} textAnchor="middle" transform={`translate(${dx},${dy})`}>
                 {React.useMemo(
                     () => (
                         <>
@@ -158,7 +166,7 @@ const StationName = React.forwardRef(
 
 interface IntBoxGroupProps {
     intInfos: InterchangeInfo[];
-    arrowDirection: 'upward' | 'downward';
+    arrowDirection: NameDirection;
     services: Services[];
 }
 
@@ -242,12 +250,12 @@ const IntBoxGroup = (props: IntBoxGroupProps & React.SVGProps<SVGGElement>) => {
 
                     {/* a range inplementation [0, 1, 2 ... intInfos.length - 1] */}
                     {/* {[...Array(intInfos.length - 1).keys()].map(i => (<line
-                x1={-7.5 + (15 / intInfos.length) * (i + 1)}
-                x2={-7.5 + (15 / intInfos.length) * (i + 1)}
-                y1="-74"
-                y2={-104 - 7.5 - 7.5 / (intInfos.length - 1) * (i+1)}
-                stroke="black"
-            />))} */}
+                        x1={-7.5 + (15 / intInfos.length) * (i + 1)}
+                        x2={-7.5 + (15 / intInfos.length) * (i + 1)}
+                        y1="-74"
+                        y2={-104 - 7.5 - 7.5 / (intInfos.length - 1) * (i+1)}
+                        stroke="black"
+                    />))} */}
                 </>
             )}
 

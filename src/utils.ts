@@ -211,31 +211,9 @@ export const updateParam = (param: { [x: string]: any }) => {
     param.style =
         param.style === undefined || !Object.values(RmgStyle).includes(param.style) ? RmgStyle.MTR : param.style;
 
+    // Version 5.0
     param.coline = param.coline ?? [];
-    // FIXME: remove this test purpose param
-    // param.coline = [
-    //     {
-    //         from: 'l1mz',
-    //         to: 'iwf6',
-    //         colors: [
-    //             // ['shanghai', 'sh3', '#FFD100', '#fff'],
-    //             ['shanghai', 'sh4', '#5F259F', '#fff', '4号线', 'Line 4'],
-    //         ],
-    //         display: true,
-    //     },
-    //     {
-    //         from: 'iwf6',
-    //         to: 'fcqo',
-    //         colors: [['shanghai', 'sh4', '#5F259F', '#fff', '4号线', 'Line 4']],
-    //         display: true,
-    //     },
-    //     {
-    //         from: 's9tt',
-    //         to: 'l1mz',
-    //         colors: [['shanghai', 'sh4', '#5F259F', '#fff', '4号线', 'Line 4']],
-    //         display: true,
-    //     },
-    // ];
+    param.loop = param.loop ?? false;
 
     return param;
 };

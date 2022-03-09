@@ -1,33 +1,29 @@
 import React, { useRef, memo } from 'react';
-import {
-    InterchangeInfo,
-    Name,
-    PanelTypeGZMTR,
-    PanelTypeShmetro,
-    Facilities,
-    ColourHex,
-} from '../../../../constants/constants';
+import { InterchangeInfo, Name, Facilities, ColourHex } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 
 interface Props {
     stnId: string;
     stnState: -1 | 0 | 1;
-    color?: ColourHex; // control the station color if coline is in effect
+    color?: ColourHex; // Control the station color if coline is in effect.
+    bank?: -1 | 0 | 1; // Loopline requires station element to be horizontal. Default to 0 (no bank to other side).
+    direction?: 'l' | 'r'; // Loopline requires station element to change direction. Default to current param.
 }
 
 const StationSHMetro = (props: Props) => {
-    const { stnId, stnState, color } = props;
-    const param = useAppSelector(store => store.param);
-    const stnInfo = param.stn_list[stnId];
+    const { stnId, stnState, color, bank: bank_, direction: direction_override } = props;
+    const { direction: direction_param, info_panel_type, stn_list } = useAppSelector(store => store.param);
+    const stnInfo = stn_list[stnId];
+    const direction = direction_override ?? direction_param;
 
     // shift station name if the line bifurcate here
     const branchNameDX =
         ([...stnInfo.branch.left, ...stnInfo.branch.right].length ? 8 + 12 * stnInfo.name[1].split('\\').length : 0) *
-        (param.direction === 'r' ? -1 : 1);
+        (direction === 'r' ? -1 : 1);
 
     let stationIconStyle = '';
     let stationIconColor: { [pos: string]: string } = {};
-    if (param.info_panel_type === 'sh2020') {
+    if (info_panel_type === 'sh2020') {
         if (stnInfo.services.length === 3) stationIconStyle = 'stn_sh_2020_direct';
         else if (stnInfo.services.length === 2) stationIconStyle = 'stn_sh_2020_express';
         else stationIconStyle = 'stn_sh_2020';
@@ -42,19 +38,24 @@ const StationSHMetro = (props: Props) => {
         stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
     }
 
+    const bank = bank_ ?? 0;
+    const dx = (direction === 'l' ? 6 : -6) + branchNameDX + bank * 30;
+    const dy = (info_panel_type === 'sh2020' ? -20 : -6) + Math.abs(bank) * 10;
+    const dr = bank ? 0 : direction === 'l' ? -45 : 45;
     return (
         <>
             <use
                 xlinkHref={`#${stationIconStyle}`}
                 {...stationIconColor} // different styles use either `fill` or `stroke`
+                // sh and sh2020 have different headings of int_sh, so -1 | 1 is multiplied
+                transform={`rotate(${bank * 90 * (info_panel_type === 'sh2020' ? 1 : -1)})`}
             />
-            <g transform={`translate(${branchNameDX},0)`}>
+            <g transform={`translate(${dx},${dy})rotate(${dr})`}>
                 <StationNameGElement
                     name={stnInfo.name}
                     infos={stnInfo.transfer.info}
                     stnState={stnState}
-                    direction={param.direction}
-                    info_panel_type={param.info_panel_type}
+                    direction={direction}
                     facility={stnInfo.facility}
                 />
             </g>
@@ -69,12 +70,11 @@ interface StationNameGElementProps {
     infos: InterchangeInfo[][];
     stnState: -1 | 0 | 1;
     direction: 'l' | 'r';
-    info_panel_type: PanelTypeGZMTR | PanelTypeShmetro;
     facility: Facilities;
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {
-    const { name, infos, stnState, info_panel_type, direction, facility } = props;
+    const { name, infos, stnState, direction, facility } = props;
     const nameENLn = props.name[1].split('\\').length;
 
     // get the exact station name width so that the
@@ -101,11 +101,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     const mainDx = facility !== Facilities.none ? 30 : 0;
 
     return (
-        <g
-            transform={`translate(${direction === 'l' ? 6 : -6},${info_panel_type === 'sh2020' ? -20 : -6})rotate(${
-                props.direction === 'l' ? -45 : 45
-            })`}
-        >
+        <>
             {infos.flat().length > 0 && (
                 <>
                     <line
@@ -145,7 +141,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                     </g>
                 )}
             </g>
-        </g>
+        </>
     );
 };
 

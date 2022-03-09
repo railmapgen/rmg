@@ -4,12 +4,15 @@ import StationSHMetro from './station-shmetro';
 import { StationsMTR } from '../railmap/methods/mtr';
 import { StationDict, Services } from '../../constants/constants';
 import { useAppSelector } from '../../redux';
+import LoopSHMetro from '../railmap/main/loop-shmetro';
 
 export default memo(function IndoorWrapperSHMetro() {
+    const { loop } = useAppSelector(store => store.param);
     return (
         <>
             <DefsSHMetro />
-            <IndoorSHMetro />
+            {loop ? <LoopSHMetro bank_angle={false} /> : <IndoorSHMetro />}
+            <InfoElements />
         </>
     );
 });
@@ -138,13 +141,10 @@ const IndoorSHMetro = () => {
     );
 
     return (
-        <>
-            <g id="main" transform={`translate(0,${param.svg_height / 2})`}>
-                <Lines paths={linePaths} services={servicesPresent} />
-                <StationGroup xs={xs} ys={ys} stnStates={stnStates} services={servicesPresent} />
-            </g>
-            <InfoElements />
-        </>
+        <g id="main" transform={`translate(0,${param.svg_height / 2})`}>
+            <Lines paths={linePaths} services={servicesPresent} />
+            <StationGroup xs={xs} ys={ys} services={servicesPresent} />
+        </g>
     );
 };
 
@@ -168,14 +168,13 @@ const Lines = (props: { paths: { main: string[]; pass: string[] }; services: Ser
 interface StationGroupProps {
     xs: { [stnId: string]: number };
     ys: { [stnId: string]: number };
-    stnStates: { [stnId: string]: -1 | 0 | 1 };
     services: Services[]; // determine if all station text should be upward
 }
 
 const StationGroup = (props: StationGroupProps) => {
     const { branches } = useAppSelector(store => store.helper);
     const param = useAppSelector(store => store.param);
-    const { xs, ys, stnStates, services } = props;
+    const { xs, ys, services } = props;
 
     return (
         <g>
@@ -186,7 +185,6 @@ const StationGroup = (props: StationGroupProps) => {
                     <g key={stnId} transform={`translate(${xs[stnId]},${ys[stnId]})`}>
                         <StationSHMetro
                             stnId={stnId}
-                            stnState={stnStates[stnId]}
                             nameDirection={
                                 branches
                                     .filter(branch => branch.includes(stnId))

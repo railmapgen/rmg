@@ -26,6 +26,14 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
                 'zh-Hant': '共綫',
             },
         },
+        {
+            filename: 'loop',
+            name: {
+                en: 'Loop Line',
+                'zh-Hans': '环线',
+                'zh-Hant': '環綫',
+            },
+        },
     ],
 
     bjsubway: [
@@ -529,6 +537,14 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
                 en: 'Line 3',
                 'zh-Hans': '3号线',
                 'zh-Hant': '3號線',
+            },
+        },
+        {
+            filename: 'sh4',
+            name: {
+                en: 'Line 4',
+                'zh-Hans': '4号线',
+                'zh-Hant': '4號線',
             },
         },
         {
