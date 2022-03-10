@@ -46,6 +46,7 @@ type selectField = {
 type checkboxField = {
     type: 'checkbox';
     checked: boolean;
+    disabled?: boolean;
     onChange?: (value: boolean) => void;
 };
 
@@ -140,6 +141,7 @@ export default function RmgFields(props: RmgFieldsProps) {
                                             size="sm"
                                             h={6}
                                             defaultChecked={field.checked}
+                                            isDisabled={field.disabled}
                                             onChange={({ target: { checked } }) => field.onChange?.(checked)}
                                         />
                                     );

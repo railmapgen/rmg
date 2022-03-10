@@ -17,6 +17,7 @@ export default function LoopSection() {
             type: 'checkbox',
             label: 'Treat this line as a loop line',
             checked: loop,
+            disabled: branches.length > 1,
             onChange: val => dispatch(setLoop(val)),
         },
         {
