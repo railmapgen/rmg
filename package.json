@@ -11,7 +11,7 @@
         "@emotion/react": "^11.7.1",
         "@emotion/styled": "^11.6.0",
         "@material-ui/core": "^4.12.3",
-        "@railmapgen/rmg-palette-resources": "^0.2.7",
+        "@railmapgen/rmg-palette-resources": "^0.2.8",
         "electron-is-dev": "^2.0.0",
         "framer-motion": "^5.6.0",
         "i18next": "^21.5.4",
@@ -73,7 +73,7 @@
             "last 1 safari version"
         ]
     },
-    "version": "5.0.0-4",
+    "version": "5.0.0-5",
     "main": "public/electron.js",
     "build": {
         "publish": [
