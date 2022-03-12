@@ -22,12 +22,6 @@ jobs:
       - name: Clone UAT repo
         run: git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.UAT_REPO_NAME }}.git
 
-      - name: Bump resources version
-        run: |
-          npm i -g npm-check-updates
-          ncu -f "/@railmapgen\/rmg-(?\!components).*/" -t patch -u
-          npm install
-
       - name: Build
         run: |
           chmod +x ./scripts/build.sh

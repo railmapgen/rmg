@@ -1,6 +1,11 @@
 #!/bin/bash
 set -eux
 
+# bump resources version
+npm i -g npm-check-updates
+ncu -f "/@railmapgen\/rmg-(?\!components).*/" -t patch -u
+npm install
+
 # run tests
 npm run test:no-watch
 
