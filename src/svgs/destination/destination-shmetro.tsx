@@ -1,5 +1,6 @@
 import React, { memo, useMemo, forwardRef, useRef, useState, useEffect } from 'react';
 import { useAppSelector } from '../../redux';
+import { Name } from '../../constants/constants';
 
 export default memo(function DestinationSHMetro() {
     return (
@@ -20,34 +21,73 @@ const DefsSHMetro = memo(() => (
 ));
 
 const InfoSHMetro = () => {
-    const { routes } = useAppSelector(store => store.helper);
-    const param = useAppSelector(store => store.param);
+    const { routes, branches } = useAppSelector(store => store.helper);
+    const {
+        line_name,
+        current_stn_idx: current_stn_id,
+        direction,
+        stn_list,
+        platform_num,
+        info_panel_type,
+        svgWidth,
+        svg_height,
+        loop,
+    } = useAppSelector(store => store.param);
 
-    // for each left valid destinations, get the name from id
-    const validDests = [
-        ...new Set(
-            routes
-                .filter(route => route.includes(param.current_stn_idx))
-                .map(route => {
-                    let res = route.filter(stnId => !['linestart', 'lineend'].includes(stnId));
-                    return param.direction === 'l' ? res[0] : res.reverse()[0];
-                })
-        ),
-    ];
-    const destNames: string[][] = [
-        validDests.map(id => param.stn_list[id].name[0]),
-        validDests.map(id => param.stn_list[id].name[1]),
-    ];
+    const validDests = !loop
+        ? [
+              // get valid destination of each branch
+              ...new Set(
+                  routes
+                      .filter(route => route.includes(current_stn_id))
+                      .map(route => {
+                          let res = route.filter(stn_id => !['linestart', 'lineend'].includes(stn_id));
+                          return direction === 'l' ? res[0] : res.reverse()[0];
+                      })
+              ),
+          ]
+        : (() => {
+              // get pivot stations from the loop line
+              const loop_line = branches[0].filter(stn_id => !['linestart', 'lineend'].includes(stn_id));
+              const non_undefined_loop_line = [
+                  ...(direction === 'l' ? loop_line : loop_line.reverse()),
+                  ...(direction === 'l' ? loop_line : loop_line.reverse()),
+                  ...(direction === 'l' ? loop_line : loop_line.reverse()),
+              ];
+              const current_stn_idx = non_undefined_loop_line.findIndex(stn_id => current_stn_id === stn_id);
+              return non_undefined_loop_line
+                  .slice(current_stn_idx + 1)
+                  .filter(stn_id => stn_list[stn_id].loop_pivot)
+                  .slice(undefined, 2)
+                  .reverse();
+          })();
+    // get the name from stn_id[]
+    const destNames: Name[] = loop
+        ? // loop line will always be two lines
+          validDests.map(id => stn_list[id].name.map(s => s.replace('\\', ' ')) as Name)
+        : info_panel_type === 'sh2020'
+        ? // `sh2020` type will always be two lines
+          validDests.map(id => stn_list[id].name.map(s => s.replace('\\', ' ')) as Name)
+        : [
+              // only one line in `sh` type
+              [
+                  validDests.map(id => stn_list[id].name[0]).join('，'),
+                  validDests
+                      .map(id => stn_list[id].name[1])
+                      .join(', ')
+                      .replace('\\', ' '),
+              ],
+          ];
 
     const terminalEl = useRef<SVGGElement | null>(null);
     const [terminalBBox, setTerminalBBox] = useState({ width: 0 } as SVGRect);
     useEffect(
         () => setTerminalBBox(terminalEl.current!.getBBox()),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [...destNames.flat()]
+        [JSON.stringify(destNames), JSON.stringify(current_stn_id)]
     );
 
-    const [middle, MARGIN, PADDING, LINEBOX_WIDTH, PLATFORM_WIDTH] = [param.svgWidth.destination / 2, 10, 36, 264, 325];
+    const [middle, MARGIN, PADDING, LINEBOX_WIDTH, PLATFORM_WIDTH] = [svgWidth.destination / 2, 10, 36, 264, 325];
     // Alignment Priority:
     // 1. Centre of canvas
     // 2. Centre of remaining
@@ -55,30 +95,30 @@ const InfoSHMetro = () => {
         middle - MARGIN - PADDING - terminalBBox.width >= PLATFORM_WIDTH / 2 &&
         middle - MARGIN - PADDING - LINEBOX_WIDTH >= PLATFORM_WIDTH / 2
             ? middle
-            : param.direction === 'l'
-            ? (param.svgWidth.destination + terminalBBox.width - LINEBOX_WIDTH) / 2
-            : (param.svgWidth.destination - terminalBBox.width + LINEBOX_WIDTH) / 2;
+            : direction === 'l'
+            ? (svgWidth.destination + terminalBBox.width - LINEBOX_WIDTH) / 2
+            : (svgWidth.destination - terminalBBox.width + LINEBOX_WIDTH) / 2;
 
     // the platform screen doors flash light
     // #20
     // $('g#station_info_shmetro > rect').attr({ transform: `translate(${this._svgDestWidth / 2},${250 + dh})` })
 
     return (
-        <g transform={`translate(0,${param.svg_height - 300})`}>
+        <g transform={`translate(0,${svg_height - 300})`}>
             <path
                 stroke="var(--rmg-theme-colour)"
                 strokeWidth={12}
                 d={
-                    param.direction === 'l'
-                        ? `M${param.svgWidth.destination - 24},16 H 36`
-                        : `M24,16 H ${param.svgWidth.destination - 36}`
+                    direction === 'l'
+                        ? `M${svgWidth.destination - 24},16 H 36`
+                        : `M24,16 H ${svgWidth.destination - 36}`
                 }
                 transform="translate(0,220)"
                 markerEnd="url(#slope)"
             />
 
             <Terminal ref={terminalEl} destNames={destNames} />
-            {param.platform_num !== false && (
+            {platform_num !== false && (
                 <g transform={`translate(${platformX},0)`}>
                     <PlatformNum />
                 </g>
@@ -86,47 +126,40 @@ const InfoSHMetro = () => {
             {/* <!-- Todo: fix this absolute position --> */}
             {/* Todo: fix svgWidth.destination*0.8, this has only been tested on 1000 width */}
 
-            {param.line_name[0].match(/^[\w\d]+/) ? <LineNameBoxNumber /> : <LineNameBoxText />}
+            {line_name[0].match(/^[\w\d]+/) ? <LineNameBoxNumber /> : <LineNameBoxText />}
         </g>
     );
 };
 
-const Terminal = forwardRef((props: { destNames: string[][] }, ref: React.Ref<SVGGElement>) => {
-    const param = useAppSelector(store => store.param);
+const Terminal = forwardRef((props: { destNames: Name[] }, ref: React.Ref<SVGGElement>) => {
+    const { destNames } = props;
+    const { direction, svgWidth } = useAppSelector(store => store.param);
 
     return (
-        <g ref={ref} transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.destination - 36},145)`}>
-            {useMemo(
-                () => (
-                    <>
-                        {/* translate is not a generalized implementation, only dest length of 1 and 2 are supported */}
-                        <g transform={`translate(0,${props.destNames[0].length === 2 ? -20 : 20})`}>
-                            <path
-                                d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
-                                fill="black"
-                                transform={`rotate(${param.direction === 'l' ? 0 : 180})scale(0.8)`}
-                            />
-                        </g>
-                        <g
-                            textAnchor={param.direction === 'l' ? 'start' : 'end'}
-                            transform={`translate(${param.direction === 'l' ? 128 + 20 : -128 - 20},25)`}
-                        >
-                            {props.destNames[0].map((name, i) => (
-                                <text className="rmg-name__zh" fontSize={70} dy={i * -100 + 7} key={i}>
-                                    {'往' + name}
-                                </text>
-                            ))}
-                            {props.destNames[1].map((name, i) => (
-                                <text className="rmg-name__en" fontSize={25} dy={i * -100 + 40} key={i}>
-                                    {'To ' + name}
-                                </text>
-                            ))}
-                        </g>
-                    </>
-                ),
-                // eslint-disable-next-line react-hooks/exhaustive-deps
-                [param.direction, ...props.destNames.flat()]
-            )}
+        <g ref={ref} transform={`translate(${direction === 'l' ? 36 : svgWidth.destination - 36},145)`}>
+            {/* this is not a generalized implementation, only dest length of 1 and 2 are supported */}
+            <g transform={`translate(0,${destNames.length === 2 ? -20 : 20})`}>
+                <path
+                    d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
+                    fill="black"
+                    transform={`rotate(${direction === 'l' ? 0 : 180})scale(0.8)`}
+                />
+            </g>
+            <g
+                textAnchor={direction === 'l' ? 'start' : 'end'}
+                transform={`translate(${direction === 'l' ? 128 + 20 : -128 - 20},25)`}
+            >
+                {destNames.map((name, i) => (
+                    <React.Fragment key={i}>
+                        <text className="rmg-name__zh" fontSize={70} dy={i * -100 + 7} key={`zh${i}`}>
+                            {'往' + name[0]}
+                        </text>
+                        <text className="rmg-name__en" fontSize={25} dy={i * -100 + 40} key={`en${i}`}>
+                            {'To ' + name[1]}
+                        </text>
+                    </React.Fragment>
+                ))}
+            </g>
         </g>
     );
 });
