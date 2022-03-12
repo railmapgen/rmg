@@ -1,6 +1,7 @@
 {
     "title": "Rail Map Generator",
     "titleUAT": "RMG UAT",
+    "banner": "Try RMG V5 (beta version) here!",
 
     "toggle": {
         "tooltip": "Switch Canvas",
