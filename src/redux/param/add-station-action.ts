@@ -37,6 +37,7 @@ export const addStation = (
                 osi_names: [],
             },
             facility: Facilities.none,
+            loop_pivot: false,
         };
 
         let newStnList = JSON.parse(JSON.stringify(stationList)) as StationDict;

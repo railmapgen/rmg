@@ -2,6 +2,7 @@ import { Divider, Flex } from '@chakra-ui/react';
 import React from 'react';
 import LayoutSection from './layout-section';
 import DesignSection from './design-section';
+import LoopSection from './loop-section';
 
 export default function StyleSidePanel() {
     return (
@@ -11,6 +12,10 @@ export default function StyleSidePanel() {
             <Divider />
 
             <DesignSection />
+
+            <Divider />
+
+            <LoopSection />
         </Flex>
     );
 }

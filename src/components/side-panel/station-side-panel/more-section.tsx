@@ -5,14 +5,14 @@ import RmgButtonGroup from '../../common/rmg-button-group';
 import { useAppSelector } from '../../../redux';
 import { Facilities, RmgStyle, Services } from '../../../constants/constants';
 import { useDispatch } from 'react-redux';
-import { updateStationFacility, updateStationServices } from '../../../redux/param/action';
+import { updateStationFacility, updateStationLoopPivot, updateStationServices } from '../../../redux/param/action';
 
 export default function MoreSection() {
     const dispatch = useDispatch();
 
     const selectedStation = useAppSelector(state => state.app.selectedStation);
     const style = useAppSelector(state => state.param.style);
-    const { services, facility } = useAppSelector(state => state.param.stn_list[selectedStation]);
+    const { services, facility, loop_pivot } = useAppSelector(state => state.param.stn_list[selectedStation]);
 
     const serviceSelections = Object.values(Services).map(service => {
         return {
@@ -59,6 +59,14 @@ export default function MoreSection() {
             hidden: ![RmgStyle.MTR, RmgStyle.SHMetro].includes(style),
         },
     ];
+    const loopFields: RmgFieldsField[] = [
+        {
+            type: 'checkbox',
+            label: 'Pivot station of a loop line',
+            checked: loop_pivot,
+            onChange: value => dispatch(updateStationLoopPivot(selectedStation, value)),
+        },
+    ];
 
     return (
         <Box p={1}>
@@ -67,6 +75,7 @@ export default function MoreSection() {
             </Heading>
 
             <RmgFields fields={fields} />
+            <RmgFields fields={loopFields} />
         </Box>
     );
 }

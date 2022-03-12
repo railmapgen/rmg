@@ -1,7 +1,16 @@
 import React, { Fragment, ReactNode } from 'react';
 import RmgLabel from './rmg-label';
 import RmgDebouncedInput from './rmg-debounced-input';
-import { Flex, InputProps, Select, Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/react';
+import {
+    Flex,
+    InputProps,
+    Select,
+    Slider,
+    SliderFilledTrack,
+    SliderThumb,
+    SliderTrack,
+    Checkbox,
+} from '@chakra-ui/react';
 import RmgDebouncedTextarea from './rmg-debounced-textarea';
 
 type inputField = {
@@ -34,12 +43,19 @@ type selectField = {
     onChange?: (value: string) => void;
 };
 
+type checkboxField = {
+    type: 'checkbox';
+    checked: boolean;
+    disabled?: boolean;
+    onChange?: (value: boolean) => void;
+};
+
 type customField = {
     type: 'custom';
     component: ReactNode;
 };
 
-export type RmgFieldsField = (inputField | textareaField | sliderField | selectField | customField) & {
+export type RmgFieldsField = (inputField | textareaField | sliderField | selectField | checkboxField | customField) & {
     label: string;
     minW?: `${number}px` | number | 'full';
     hidden?: boolean;
@@ -117,6 +133,17 @@ export default function RmgFields(props: RmgFieldsProps) {
                                                 </option>
                                             ))}
                                         </Select>
+                                    );
+                                case 'checkbox':
+                                    return (
+                                        <Checkbox
+                                            variant="flushed"
+                                            size="sm"
+                                            h={6}
+                                            defaultChecked={field.checked}
+                                            isDisabled={field.disabled}
+                                            onChange={({ target: { checked } }) => field.onChange?.(checked)}
+                                        />
                                     );
                                 case 'custom':
                                     return field.component;

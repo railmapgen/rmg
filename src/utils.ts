@@ -214,6 +214,23 @@ export const updateParam = (param: { [x: string]: any }) => {
     // Version 5.0
     param.coline = param.coline ?? [];
     param.loop = param.loop ?? false;
+    param.loop_info =
+        param.loop_info === undefined
+            ? { bank: true, left_and_right_factor: 1, bottom_factor: 1 }
+            : {
+                  bank: param.loop_info.bank,
+                  left_and_right_factor:
+                      Math.floor(param.loop_info.left_and_right_factor) >= 1
+                          ? Math.floor(param.loop_info.left_and_right_factor)
+                          : 1,
+                  bottom_factor:
+                      Math.floor(param.loop_info.bottom_factor) >= 1 ? Math.floor(param.loop_info.bottom_factor) : 1,
+              };
+    for (let [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
+        if (!('loop_pivot' in stnInfo)) {
+            param.stn_list[stnId].loop_pivot = false;
+        }
+    }
 
     return param;
 };

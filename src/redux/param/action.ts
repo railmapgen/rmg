@@ -45,6 +45,10 @@ export const SET_PANEL_TYPE = 'SET_PANEL_TYPE';
 export const SET_NOTES = 'SET_NOTES';
 export const SET_NAME_POSITION = 'SET_NAME_POSITION';
 export const SET_CUSTOMISED_MTR_DESTINATION = 'SET_CUSTOMISED_MTR_DESTINATION';
+export const SET_LOOP = 'SET_LOOP';
+export const SET_LOOP_BANK = 'SET_LOOP_BANK';
+export const SET_LOOP_LEFT_AND_RIGHT_FACTOR = 'SET_LOOP_LEFT_AND_RIGHT_FACTOR';
+export const SET_LOOP_BOTTOM_FACTOR = 'SET_LOOP_BOTTOM_FACTOR';
 
 // stations
 export const SET_CURRENT_STATION = 'SET_CURRENT_STATION';
@@ -148,6 +152,26 @@ export interface setNamePositionAction {
 export interface setCustomisedMtrDestinationAction {
     type: typeof SET_CUSTOMISED_MTR_DESTINATION;
     customisedMtrDestination: RMGParam['customiseMTRDest'];
+}
+
+export interface setLoopAction {
+    type: typeof SET_LOOP;
+    loop: RMGParam['loop'];
+}
+
+export interface setLoopBankAction {
+    type: typeof SET_LOOP_BANK;
+    loop_bank: RMGParam['loop_info']['bank'];
+}
+
+export interface setLoopLeftAndRightFactorAction {
+    type: typeof SET_LOOP_LEFT_AND_RIGHT_FACTOR;
+    loop_left_and_right_factor: RMGParam['loop_info']['left_and_right_factor'];
+}
+
+export interface setLoopBottomFactorAction {
+    type: typeof SET_LOOP_BOTTOM_FACTOR;
+    loop_bottom_factor: RMGParam['loop_info']['bottom_factor'];
 }
 
 export interface setCurrentStationAction {
@@ -290,6 +314,26 @@ const setCustomisedMtrDestination = (
     customisedMtrDestination: RMGParam['customiseMTRDest']
 ): setCustomisedMtrDestinationAction => {
     return { type: SET_CUSTOMISED_MTR_DESTINATION, customisedMtrDestination };
+};
+
+export const setLoop = (loop: RMGParam['loop']): setLoopAction => {
+    return { type: SET_LOOP, loop };
+};
+
+export const setLoopBank = (loop_bank: RMGParam['loop_info']['bank']): setLoopBankAction => {
+    return { type: SET_LOOP_BANK, loop_bank };
+};
+
+export const setLoopLeftAndRightFactor = (
+    loop_left_and_right_factor: RMGParam['loop_info']['left_and_right_factor']
+): setLoopLeftAndRightFactorAction => {
+    return { type: SET_LOOP_LEFT_AND_RIGHT_FACTOR, loop_left_and_right_factor };
+};
+
+export const setLoopBottomFactor = (
+    loop_bottom_factor: RMGParam['loop_info']['bottom_factor']
+): setLoopBottomFactorAction => {
+    return { type: SET_LOOP_BOTTOM_FACTOR, loop_bottom_factor };
 };
 
 export const toggleLineNameBeforeDestination = (isShow: boolean) => {
@@ -691,5 +735,13 @@ export const removeStationService = (stationId: string, service: Services) => {
                 })
             );
         }
+    };
+};
+
+export const updateStationLoopPivot = (stationId: string, loop_pivot: boolean) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+
+        dispatch(setStation(stationId, { ...stationInfo, loop_pivot }));
     };
 };
