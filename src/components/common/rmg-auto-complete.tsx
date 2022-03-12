@@ -8,8 +8,8 @@ import {
     PopoverContent,
     useOutsideClick,
 } from '@chakra-ui/react';
+import { RmgDebouncedInput } from '@railmapgen/rmg-components';
 import React, { ReactElement, useEffect, useRef, useState } from 'react';
-import RmgDebouncedInput from './rmg-debounced-input';
 
 interface RmgAutoCompleteProps<T> {
     data: T[];

@@ -4,7 +4,7 @@ import { updateStationName, updateStationNum, updateStationSecondaryName } from 
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
-import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
+import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 
 export default function InfoSection() {
     const dispatch = useDispatch();

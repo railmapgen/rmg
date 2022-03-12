@@ -7,7 +7,7 @@ import { useAppSelector } from './redux';
 import SvgRouter from './svgs/svg-router';
 import AppRoot from './components/app-root';
 import { ChakraProvider } from '@chakra-ui/react';
-import chakraTheme from './theme/theme';
+import { rmgChakraTheme } from '@railmapgen/rmg-components';
 
 const darkTheme = createTheme({
     palette: {
@@ -89,7 +89,7 @@ export default function App() {
                 <Route
                     path="*"
                     element={
-                        <ChakraProvider theme={chakraTheme}>
+                        <ChakraProvider theme={rmgChakraTheme}>
                             <StrictMode>
                                 <AppRoot />
                             </StrictMode>

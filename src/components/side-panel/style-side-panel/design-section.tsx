@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Heading, HStack } from '@chakra-ui/react';
-import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
 import { useAppSelector } from '../../../redux';
 import ThemeButton from '../theme-button';
-import RmgLabel from '../../common/rmg-label';
 import ColourModal from '../../modal/colour-modal/colour-modal';
 import { useDispatch } from 'react-redux';
 import {
@@ -23,6 +21,7 @@ import RmgButtonGroup, { RmgBooleanButtonGroup } from '../../common/rmg-button-g
 import { PanelTypeGZMTR, PanelTypeShmetro, RmgStyle, ShortDirection } from '../../../constants/constants';
 import { MdSwapVert } from 'react-icons/md';
 import GZMTRNoteSection from './gzmtr-note/gzmtr-note-section';
+import { RmgFields, RmgFieldsField, RmgLabel } from '@railmapgen/rmg-components';
 
 export default function DesignSection() {
     const dispatch = useDispatch();

@@ -2,13 +2,13 @@ import React from 'react';
 import { Box } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux';
-import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
 import {
     getPossibleStnIdsFromMainLine,
     getPossibleStnIdsFromBranchLine,
     updateColine,
 } from '../../../redux/param/coline-action';
 import { setGlobalAlert } from '../../../redux/app/action';
+import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 
 // Cartesian product of multiple arrays in JavaScript
 // https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript

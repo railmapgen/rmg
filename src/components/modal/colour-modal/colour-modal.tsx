@@ -19,9 +19,8 @@ import { ColourHex, MonoColour, Theme } from '../../../constants/constants';
 import CityPicker from './city-picker';
 import ColourPicker from './colour-picker';
 import { CityCode } from '@railmapgen/rmg-palette-resources';
-import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
-import RmgLineBadge from '../../common/rmg-line-badge';
 import { useTranslation } from 'react-i18next';
+import { RmgFields, RmgFieldsField, RmgLineBadge } from '@railmapgen/rmg-components';
 
 interface ColourModalProps {
     isOpen: boolean;

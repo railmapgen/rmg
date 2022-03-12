@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box, Heading } from '@chakra-ui/react';
-import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
+import { Box, Checkbox, Heading } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux';
 import { setLoop, setLoopBank, setLoopLeftAndRightFactor, setLoopBottomFactor } from '../../../redux/param/action';
+import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 
 export default function LoopSection() {
     const dispatch = useDispatch();
@@ -14,18 +14,32 @@ export default function LoopSection() {
 
     const loopFields: RmgFieldsField[] = [
         {
-            type: 'checkbox',
+            type: 'custom',
             label: 'Treat this line as a loop line',
-            checked: loop,
-            disabled: branches.length > 1,
-            onChange: val => dispatch(setLoop(val)),
+            component: (
+                <Checkbox
+                    variant="flushed"
+                    size="sm"
+                    h={6}
+                    defaultChecked={loop}
+                    isDisabled={branches.length > 1}
+                    onChange={({ target: { checked } }) => dispatch(setLoop(checked))}
+                />
+            ),
         },
         {
-            type: 'checkbox',
+            type: 'custom',
             label: 'Bank the closed rectangular path in railmap',
-            checked: bank,
-            onChange: val => dispatch(setLoopBank(val)),
-            hidden: true,
+            component: (
+                <Checkbox
+                    variant="flushed"
+                    size="sm"
+                    h={6}
+                    defaultChecked={bank}
+                    isDisabled={true}
+                    onChange={({ target: { checked } }) => dispatch(setLoopBank(checked))}
+                />
+            ),
         },
     ];
 

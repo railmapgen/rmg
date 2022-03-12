@@ -1,6 +1,5 @@
 import { Box, Heading, Text } from '@chakra-ui/react';
 import React from 'react';
-import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
 import { BranchStyle, Direction } from '../../../constants/constants';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux';
@@ -9,7 +8,7 @@ import {
     updateStationBranchFirstStation,
     updateStationBranchType,
 } from '../../../redux/param/action';
-import RmgCard from '../../common/rmg-card';
+import { RmgCard, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 
 export default function BranchSection() {
     const dispatch = useDispatch();

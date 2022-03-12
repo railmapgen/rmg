@@ -11,7 +11,7 @@ import {
 } from '../../../redux/param/action';
 import { InterchangeInfo, MonoColour } from '../../../constants/constants';
 import { MdAdd } from 'react-icons/md';
-import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
+import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 
 export default function InterchangeSection() {
     const dispatch = useDispatch();

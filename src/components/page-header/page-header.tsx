@@ -4,10 +4,10 @@ import HeaderActions from './header-actions';
 import RmgButtonGroup from '../common/rmg-button-group';
 import { selectCanvas } from '../../redux/app/action';
 import { AllCanvas, canvasConfig, CanvasType } from '../../constants/constants';
-import RmgLabel from '../common/rmg-label';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../redux';
+import { RmgLabel } from '@railmapgen/rmg-components';
 
 export default function PageHeader() {
     const { t } = useTranslation();

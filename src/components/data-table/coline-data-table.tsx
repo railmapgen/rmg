@@ -1,11 +1,10 @@
 import React from 'react';
 import { useAppSelector } from '../../redux';
-import DataTable, { DataTableFieldType } from './data-table';
 import ColineTableRowActions from './coline-table-row-actions';
 import { InterchangeInfo, Name } from '../../constants/constants';
 import { HStack, Kbd } from '@chakra-ui/react';
-import RmgLineBadge from '../common/rmg-line-badge';
 import { useTranslation } from 'react-i18next';
+import { RmgDataTable, RmgDataTableFieldType, RmgLineBadge } from '@railmapgen/rmg-components';
 
 type ColineDataTableFieldType = { id: string; from: Name; to: Name; colors: InterchangeInfo[] };
 
@@ -23,7 +22,7 @@ export default function ColineDataTable() {
 
     const nameDisplayHandler = (str: string, i: number) => (i ? [<Kbd key={i}>⏎</Kbd>, str] : str);
 
-    const fields: DataTableFieldType<ColineDataTableFieldType>[] = [
+    const fields: RmgDataTableFieldType<ColineDataTableFieldType>[] = [
         {
             label: t('ColineDataTable.from'),
             displayHandler: item => (
@@ -58,5 +57,5 @@ export default function ColineDataTable() {
         },
     ];
 
-    return <DataTable data={data} fields={fields} />;
+    return <RmgDataTable data={data} fields={fields} />;
 }

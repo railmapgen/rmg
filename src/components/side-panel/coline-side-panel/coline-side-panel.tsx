@@ -33,7 +33,7 @@ export default function ColineSidePanel() {
             {sidePanelFields.map((field, i) => (
                 <AccordionItem key={i}>
                     <h2>
-                        <AccordionButton size="xs">
+                        <AccordionButton>
                             <Box flex="1" textAlign="left">
                                 {field.title}
                             </Box>

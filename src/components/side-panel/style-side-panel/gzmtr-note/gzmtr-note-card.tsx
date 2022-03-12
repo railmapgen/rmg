@@ -1,10 +1,9 @@
 import React from 'react';
 import { HStack, IconButton } from '@chakra-ui/react';
 import { Note } from '../../../../constants/constants';
-import RmgFields, { RmgFieldsField } from '../../../common/rmg-fields';
 import { RmgBooleanButtonGroup } from '../../../common/rmg-button-group';
 import { MdDelete } from 'react-icons/md';
-import RmgCard from '../../../common/rmg-card';
+import { RmgCard, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 
 interface GZMTRNoteCardProps {
     note: Note;

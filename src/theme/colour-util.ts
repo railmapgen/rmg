@@ -1,5 +1,5 @@
-import theme from './theme';
 import { ColourHex } from '../constants/constants';
+import { rmgChakraTheme } from '@railmapgen/rmg-components';
 
 export default class ColourUtil {
     private static hexToRgb(hex: ColourHex): [number, number, number] {
@@ -18,7 +18,7 @@ export default class ColourUtil {
 }
 
 export const findNearestColour = (hex: ColourHex): string => {
-    const colourDb: Record<string, Record<string, ColourHex> | ColourHex> = theme.colors;
+    const colourDb: Record<string, Record<string, ColourHex> | ColourHex> = rmgChakraTheme.colors;
 
     const [nearestColour] = Object.entries(colourDb).reduce(
         (acc, cur) => {

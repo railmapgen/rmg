@@ -1,11 +1,10 @@
 import React from 'react';
 import { useAppSelector } from '../../redux';
-import DataTable, { DataTableFieldType } from './data-table';
 import TableRowActions from './table-row-actions';
 import { RmgStyle, StationInfo } from '../../constants/constants';
 import { HStack, Kbd } from '@chakra-ui/react';
-import RmgLineBadge from '../common/rmg-line-badge';
 import { useTranslation } from 'react-i18next';
+import { RmgDataTable, RmgDataTableFieldType, RmgLineBadge } from '@railmapgen/rmg-components';
 
 export default function StationDataTable() {
     const { t } = useTranslation();
@@ -15,7 +14,7 @@ export default function StationDataTable() {
 
     const data: Array<StationInfo & { id: string }> = tpo.map(id => ({ ...stationList[id], id }));
 
-    const fields: DataTableFieldType<StationInfo & { id: string }>[] = [
+    const fields: RmgDataTableFieldType<StationInfo & { id: string }>[] = [
         { label: 'num', key: 'num', hidden: ![RmgStyle.GZMTR].includes(style) },
         { label: t('StationDataTable.zhName'), displayHandler: item => item.name[0] },
         {
@@ -40,5 +39,5 @@ export default function StationDataTable() {
         },
     ];
 
-    return <DataTable data={data} fields={fields} />;
+    return <RmgDataTable data={data} fields={fields} />;
 }

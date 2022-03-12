@@ -9,7 +9,7 @@ import {
     Button,
 } from '@chakra-ui/react';
 import { MonoColour, RMGParam } from '../../constants/constants';
-import RmgLineBadge from '../common/rmg-line-badge';
+import { RmgLineBadge } from '@railmapgen/rmg-components';
 
 interface UploadConfirmModalProps {
     isOpen: boolean;

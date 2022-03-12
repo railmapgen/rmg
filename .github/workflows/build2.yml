@@ -25,7 +25,7 @@ jobs:
       - name: Bump resources version
         run: |
           npm i -g npm-check-updates
-          ncu -f /@railmapgen/ -t patch -u
+          ncu -f "/@railmapgen\/rmg-(?\!components).*/" -t patch -u
           npm install
 
       - name: Build

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Heading } from '@chakra-ui/react';
-import RmgFields, { RmgFieldsField } from '../../common/rmg-fields';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux';
@@ -14,6 +13,7 @@ import {
     setSvgWidth,
     setYPercentage,
 } from '../../../redux/param/action';
+import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 
 export default function LayoutSection() {
     const { t } = useTranslation();
