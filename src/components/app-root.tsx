@@ -2,17 +2,14 @@ import React, { useEffect } from 'react';
 import SvgRouter from '../svgs/svg-router';
 import SidePanel from './side-panel/side-panel';
 import PageHeader from './page-header/page-header';
-import StationDataTable from './data-table/station-data-table';
-import ColineDataTable from './data-table/coline-data-table';
 import WindowHeader from './window-header';
-import { Alert, AlertIcon, Box, CloseButton, Flex, useColorModeValue } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, CloseButton, Flex } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../redux';
 import { setGlobalAlert } from '../redux/app/action';
+import DataTables from './data-table/data-tables';
 
 export default function AppRoot() {
-    const tableBg = useColorModeValue('gray.50', 'gray.700');
-
     const dispatch = useDispatch();
 
     const globalAlert = useAppSelector(state => state.app.globalAlert);
@@ -29,7 +26,7 @@ export default function AppRoot() {
             <Flex direction="column" flex={1} overflow="hidden">
                 <PageHeader />
                 <Flex flex={1} overflow="hidden">
-                    <Flex as="section" direction="column" flex={1} ml={1} mr={1} overflow="hidden" bg={tableBg}>
+                    <Flex as="section" direction="column" flex={1} ml={1} mr={1} overflow="hidden">
                         {globalAlert && (
                             <Alert status={globalAlert.status} variant="solid" size="xs" pl={3} pr={1} pb={0} pt={0}>
                                 <AlertIcon />
@@ -41,10 +38,7 @@ export default function AppRoot() {
                         <Box>
                             <SvgRouter />
                         </Box>
-                        <Box flex={1} overflowY="auto">
-                            <StationDataTable />
-                            <ColineDataTable />
-                        </Box>
+                        <DataTables />
                     </Flex>
 
                     <SidePanel />

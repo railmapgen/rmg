@@ -6,13 +6,17 @@ import { HStack, Kbd } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { RmgDataTable, RmgDataTableFieldType, RmgLineBadge } from '@railmapgen/rmg-components';
 
-export default function StationDataTable() {
+interface StationDataTableProps {
+    stationIds: string[];
+}
+
+export default function StationDataTable(props: StationDataTableProps) {
+    const { stationIds } = props;
     const { t } = useTranslation();
 
     const { style, stn_list: stationList } = useAppSelector(state => state.param);
-    const tpo = useAppSelector(state => state.helper.tpo);
 
-    const data: Array<StationInfo & { id: string }> = tpo.map(id => ({ ...stationList[id], id }));
+    const data: Array<StationInfo & { id: string }> = stationIds.map(id => ({ ...stationList[id], id }));
 
     const fields: RmgDataTableFieldType<StationInfo & { id: string }>[] = [
         { label: 'num', key: 'num', hidden: ![RmgStyle.GZMTR].includes(style) },
