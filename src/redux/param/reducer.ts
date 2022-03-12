@@ -25,9 +25,7 @@ import {
     SET_STYLE,
     SET_COLINE_BULK,
     SET_LOOP,
-    SET_LOOP_BANK,
-    SET_LOOP_LEFT_AND_RIGHT_FACTOR,
-    SET_LOOP_BOTTOM_FACTOR,
+    SET_LOOP_INFO,
     setBranchSpacingAction,
     setCurrentStationAction,
     setCustomisedMtrDestinationAction,
@@ -52,9 +50,7 @@ import {
     setStyleAction,
     setColineBulkAction,
     setLoopAction,
-    setLoopBankAction,
-    setLoopLeftAndRightFactorAction,
-    setLoopBottomFactorAction,
+    setLoopInfoAction,
 } from './action';
 
 const initialState: RMGParam = {
@@ -125,9 +121,7 @@ export default function ParamReducer(
         | setStationsBulkAction
         | setColineBulkAction
         | setLoopAction
-        | setLoopBankAction
-        | setLoopLeftAndRightFactorAction
-        | setLoopBottomFactorAction
+        | setLoopInfoAction
 ) {
     switch (action.type) {
         case SET_FULL_PARAM:
@@ -201,14 +195,8 @@ export default function ParamReducer(
         case SET_LOOP:
             state.loop = action.loop;
             break;
-        case SET_LOOP_BANK:
-            state.loop_info = { ...state.loop_info, bank: action.loop_bank };
-            break;
-        case SET_LOOP_LEFT_AND_RIGHT_FACTOR:
-            state.loop_info = { ...state.loop_info, left_and_right_factor: action.loop_left_and_right_factor };
-            break;
-        case SET_LOOP_BOTTOM_FACTOR:
-            state.loop_info = { ...state.loop_info, bottom_factor: action.loop_bottom_factor };
+        case SET_LOOP_INFO:
+            state.loop_info = action.loop_info;
             break;
         default:
             break;

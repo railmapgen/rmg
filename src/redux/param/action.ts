@@ -46,9 +46,7 @@ export const SET_NOTES = 'SET_NOTES';
 export const SET_NAME_POSITION = 'SET_NAME_POSITION';
 export const SET_CUSTOMISED_MTR_DESTINATION = 'SET_CUSTOMISED_MTR_DESTINATION';
 export const SET_LOOP = 'SET_LOOP';
-export const SET_LOOP_BANK = 'SET_LOOP_BANK';
-export const SET_LOOP_LEFT_AND_RIGHT_FACTOR = 'SET_LOOP_LEFT_AND_RIGHT_FACTOR';
-export const SET_LOOP_BOTTOM_FACTOR = 'SET_LOOP_BOTTOM_FACTOR';
+export const SET_LOOP_INFO = 'SET_LOOP_INFO';
 
 // stations
 export const SET_CURRENT_STATION = 'SET_CURRENT_STATION';
@@ -159,19 +157,9 @@ export interface setLoopAction {
     loop: RMGParam['loop'];
 }
 
-export interface setLoopBankAction {
-    type: typeof SET_LOOP_BANK;
-    loop_bank: RMGParam['loop_info']['bank'];
-}
-
-export interface setLoopLeftAndRightFactorAction {
-    type: typeof SET_LOOP_LEFT_AND_RIGHT_FACTOR;
-    loop_left_and_right_factor: RMGParam['loop_info']['left_and_right_factor'];
-}
-
-export interface setLoopBottomFactorAction {
-    type: typeof SET_LOOP_BOTTOM_FACTOR;
-    loop_bottom_factor: RMGParam['loop_info']['bottom_factor'];
+export interface setLoopInfoAction {
+    type: typeof SET_LOOP_INFO;
+    loop_info: RMGParam['loop_info'];
 }
 
 export interface setCurrentStationAction {
@@ -316,24 +304,37 @@ const setCustomisedMtrDestination = (
     return { type: SET_CUSTOMISED_MTR_DESTINATION, customisedMtrDestination };
 };
 
-export const setLoop = (loop: RMGParam['loop']): setLoopAction => {
-    return { type: SET_LOOP, loop };
+export const setLoop = (loop: RMGParam['loop']) => {
+    return (dispatch: AppDispatch) => {
+        // reset these factors to a non-breaking state as split_loop_stns might fail in the blank template
+        dispatch(setLoopInfo({ bank: true, left_and_right_factor: 0, bottom_factor: 1 }));
+        dispatch({ type: SET_LOOP, loop });
+    };
 };
 
-export const setLoopBank = (loop_bank: RMGParam['loop_info']['bank']): setLoopBankAction => {
-    return { type: SET_LOOP_BANK, loop_bank };
+const setLoopInfo = (loop_info: RMGParam['loop_info']): setLoopInfoAction => {
+    return { type: SET_LOOP_INFO, loop_info };
 };
 
-export const setLoopLeftAndRightFactor = (
-    loop_left_and_right_factor: RMGParam['loop_info']['left_and_right_factor']
-): setLoopLeftAndRightFactorAction => {
-    return { type: SET_LOOP_LEFT_AND_RIGHT_FACTOR, loop_left_and_right_factor };
+export const setLoopBank = (bank: RMGParam['loop_info']['bank']) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const loop_info = getState().param.loop_info;
+        dispatch(setLoopInfo({ ...loop_info, bank: bank }));
+    };
 };
 
-export const setLoopBottomFactor = (
-    loop_bottom_factor: RMGParam['loop_info']['bottom_factor']
-): setLoopBottomFactorAction => {
-    return { type: SET_LOOP_BOTTOM_FACTOR, loop_bottom_factor };
+export const setLoopLeftAndRightFactor = (left_and_right_factor: RMGParam['loop_info']['left_and_right_factor']) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const loop_info = getState().param.loop_info;
+        dispatch(setLoopInfo({ ...loop_info, left_and_right_factor: left_and_right_factor }));
+    };
+};
+
+export const setLoopBottomFactor = (bottom_factor: RMGParam['loop_info']['bottom_factor']) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const loop_info = getState().param.loop_info;
+        dispatch(setLoopInfo({ ...loop_info, bottom_factor: bottom_factor }));
+    };
 };
 
 export const toggleLineNameBeforeDestination = (isShow: boolean) => {
