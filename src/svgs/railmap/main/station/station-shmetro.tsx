@@ -40,7 +40,7 @@ const StationSHMetro = (props: Props) => {
 
     const bank = bank_ ?? 0;
     const dx = (direction === 'l' ? 6 : -6) + branchNameDX + bank * 30;
-    const dy = (info_panel_type === 'sh2020' ? -20 : -6) + Math.abs(bank) * 10;
+    const dy = (info_panel_type === 'sh2020' ? -20 : -6) + Math.abs(bank) * (info_panel_type === 'sh2020' ? 30 : 10);
     const dr = bank ? 0 : direction === 'l' ? -45 : 45;
     return (
         <>
@@ -48,7 +48,10 @@ const StationSHMetro = (props: Props) => {
                 xlinkHref={`#${stationIconStyle}`}
                 {...stationIconColor} // different styles use either `fill` or `stroke`
                 // sh and sh2020 have different headings of int_sh, so -1 | 1 is multiplied
-                transform={`rotate(${bank * 90 * (info_panel_type === 'sh2020' ? 1 : -1)})`}
+                transform={
+                    `translate(${bank * (info_panel_type === 'sh2020' ? 10 : 0)},0)` +
+                    `rotate(${bank * 90 * (info_panel_type === 'sh2020' ? 1 : -1)})`
+                }
             />
             <g transform={`translate(${dx},${dy})rotate(${dr})`}>
                 <StationNameGElement

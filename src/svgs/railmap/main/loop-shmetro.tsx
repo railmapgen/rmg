@@ -29,9 +29,10 @@ const LoopSHMetro = (props: { bank_angle: boolean }) => {
         y_shares[stn_id] = (y_shares[stn_id] + 1) / 2;
     });
 
+    const width = bank_angle ? svg_width.railmap : svg_width.indoor;
     const line_xs = [
-        (svg_width.railmap * padding) / 100 + (bank_angle ? 0 : 50),
-        svg_width.railmap * (1 - padding / 100) - (bank_angle ? 0 : 50),
+        (width * padding) / 100 + (bank_angle ? 50 : 0),
+        width * (1 - padding / 100) - (bank_angle ? 50 : 0),
     ];
     const xs = Object.keys(x_shares).reduce(
         (acc, cur) => ({
@@ -40,7 +41,7 @@ const LoopSHMetro = (props: { bank_angle: boolean }) => {
         }),
         {} as typeof x_shares
     );
-    const line_ys = [175, svg_height - 75 - (bank_angle ? 0 : 100)] as [number, number];
+    const line_ys = [175, svg_height - 75 - (bank_angle ? 0 : 125)] as [number, number];
     const ys = Object.keys(x_shares).reduce(
         (acc, cur) => ({
             ...acc,

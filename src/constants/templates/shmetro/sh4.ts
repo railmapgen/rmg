@@ -1,12 +1,12 @@
 const param = {
     style: 'shmetro',
-    svg_height: 550,
+    svg_height: 625,
     padding: 8.750201061605276,
     y_pc: 40,
     branch_spacing: 45,
     theme: ['shanghai', 'sh4', '#5F259F', '#fff'],
     direction: 'l',
-    current_stn_idx: 'naz0',
+    current_stn_idx: 'y6id',
     platform_num: false,
     stn_list: {
         linestart: {
@@ -490,12 +490,12 @@ const param = {
     direction_gz_x: 50,
     direction_gz_y: 70,
     customiseMTRDest: { isLegacy: false, terminal: false },
-    svgWidth: { destination: 1600, runin: 1200, railmap: 2600, indoor: 2600 },
+    svgWidth: { destination: 1600, runin: 1200, railmap: 2400, indoor: 2600 },
     notesGZMTR: [],
     namePosMTR: { isStagger: true, isFlip: false },
     coline: [],
     loop: true,
-    loop_info: { bank: true, left_and_right_factor: 2, bottom_factor: 12 },
+    loop_info: { bank: true, left_and_right_factor: 1, bottom_factor: 12 },
 };
 
 export default param;
