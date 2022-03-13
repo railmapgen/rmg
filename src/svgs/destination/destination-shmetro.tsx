@@ -1,6 +1,7 @@
 import React, { memo, useMemo, forwardRef, useRef, useState, useEffect } from 'react';
 import { useAppSelector } from '../../redux';
-import { Name } from '../../constants/constants';
+import { Name, ShortDirection } from '../../constants/constants';
+import { get_pivot_stations } from '../railmap/methods/shmetro-loop';
 
 export default memo(function DestinationSHMetro() {
     return (
@@ -34,34 +35,23 @@ const InfoSHMetro = () => {
         loop,
     } = useAppSelector(store => store.param);
 
+    // get valid destination of each branch
+    const get_valid_destinations = (routes: string[][], direction: ShortDirection, current_stn_id: string) => [
+        ...new Set(
+            routes
+                .filter(route => route.includes(current_stn_id))
+                .map(route => {
+                    const res = route.filter(stn_id => !['linestart', 'lineend'].includes(stn_id));
+                    return direction === 'l' ? res[0] : res.reverse()[0];
+                })
+        ),
+    ];
+
+    // get destination id(s)
     const validDests = !loop
-        ? [
-              // get valid destination of each branch
-              ...new Set(
-                  routes
-                      .filter(route => route.includes(current_stn_id))
-                      .map(route => {
-                          let res = route.filter(stn_id => !['linestart', 'lineend'].includes(stn_id));
-                          return direction === 'l' ? res[0] : res.reverse()[0];
-                      })
-              ),
-          ]
-        : (() => {
-              // get pivot stations from the loop line
-              const loop_line = branches[0].filter(stn_id => !['linestart', 'lineend'].includes(stn_id));
-              const non_undefined_loop_line = [
-                  ...(direction === 'l' ? loop_line : loop_line.reverse()),
-                  ...(direction === 'l' ? loop_line : loop_line.reverse()),
-                  ...(direction === 'l' ? loop_line : loop_line.reverse()),
-              ];
-              const current_stn_idx = non_undefined_loop_line.findIndex(stn_id => current_stn_id === stn_id);
-              return non_undefined_loop_line
-                  .slice(current_stn_idx + 1)
-                  .filter(stn_id => stn_list[stn_id].loop_pivot)
-                  .slice(undefined, 2)
-                  .reverse();
-          })();
-    // get the name from stn_id[]
+        ? get_valid_destinations(routes, direction, current_stn_id)
+        : get_pivot_stations(branches, direction, stn_list, current_stn_id);
+    // get the name from the destination id(s)
     const destNames: Name[] = loop
         ? // loop line will always be two lines
           validDests.map(id => stn_list[id].name.map(s => s.replace('\\', ' ')) as Name)
