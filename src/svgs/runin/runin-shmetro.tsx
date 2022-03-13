@@ -7,34 +7,46 @@ import { calculateColineStations } from '../railmap/methods/shmetro-coline';
 const LINE_WIDTH = 12;
 
 const RunInSHMetro = () => {
-    const { routes } = useAppSelector(store => store.helper);
+    const { branches, routes, depsStr: deps } = useAppSelector(store => store.helper);
     const param = useAppSelector(store => store.param);
 
     // get the height
     const dh = param.svg_height - 300;
 
     const prevStnIds = useMemo(
-        () =>
-            routes
+        () => {
+            let prevStnIds = routes
                 .filter(route => route.includes(param.current_stn_idx))
                 .map(route => route[route.indexOf(param.current_stn_idx) + (param.direction === 'l' ? 1 : -1)])
                 // .flat()
                 // remove duplicate
-                .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]),
+                .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]);
+            if (param.loop && prevStnIds.length === 1 && ['linestart', 'lineend'].includes(prevStnIds[0])) {
+                // if it is a loop and it is the first station of that direction, get the station from the other end
+                prevStnIds = [branches[0][branches[0].length - 2]];
+            }
+            return prevStnIds;
+        },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [routes.toString(), param.current_stn_idx, param.direction]
+        [deps, param.current_stn_idx, param.direction, param.loop]
     );
 
     const nextStnIds = useMemo(
-        () =>
-            routes
+        () => {
+            let nextStnIds = routes
                 .filter(route => route.includes(param.current_stn_idx))
                 .map(route => route[route.indexOf(param.current_stn_idx) + (param.direction === 'l' ? -1 : 1)])
                 // .flat()
                 // remove duplicate
-                .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]),
+                .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]);
+            if (param.loop && nextStnIds.length === 1 && ['linestart', 'lineend'].includes(nextStnIds[0])) {
+                // if it is a loop and it is the last station of that direction, get the station from the other end
+                nextStnIds = [branches[0][1]];
+            }
+            return nextStnIds;
+        },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [routes.toString(), param.current_stn_idx, param.direction]
+        [deps, param.current_stn_idx, param.direction, param.loop]
     );
 
     return (
