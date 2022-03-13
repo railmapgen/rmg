@@ -88,15 +88,11 @@ export const get_pivot_stations = (
     current_stn_id: string
 ) => {
     const loop_line = branches[0].filter(stn_id => !['linestart', 'lineend'].includes(stn_id));
-    const non_undefined_loop_line = [
-        ...(direction === 'l' ? loop_line : loop_line.reverse()),
-        ...(direction === 'l' ? loop_line : loop_line.reverse()),
-        ...(direction === 'l' ? loop_line : loop_line.reverse()),
-    ];
-    const current_stn_idx = non_undefined_loop_line.findIndex(stn_id => current_stn_id === stn_id);
+    const _ = [...loop_line, ...loop_line, ...loop_line];
+    const non_undefined_loop_line = direction === 'r' ? _ : _.reverse();
+    const current_stn_idx = non_undefined_loop_line.findIndex(stn_id => current_stn_id === stn_id) + loop_line.length;
     return non_undefined_loop_line
         .slice(current_stn_idx + 1)
         .filter(stn_id => stn_list[stn_id].loop_pivot)
-        .slice(undefined, 2)
-        .reverse();
+        .slice(undefined, 2);
 };
