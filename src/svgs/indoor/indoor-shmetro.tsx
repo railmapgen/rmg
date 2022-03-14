@@ -4,7 +4,7 @@ import StationSHMetro from './station-shmetro';
 import { StationsMTR } from '../railmap/methods/mtr';
 import { StationDict, Services } from '../../constants/constants';
 import { useAppSelector } from '../../redux';
-import LoopSHMetro from '../railmap/main/loop-shmetro';
+import LoopSHMetro from '../railmap/main/loop/loop-shmetro';
 
 export default memo(function IndoorWrapperSHMetro() {
     const { loop } = useAppSelector(store => store.param);

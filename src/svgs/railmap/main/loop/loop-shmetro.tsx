@@ -1,9 +1,9 @@
 import React from 'react';
-import StationSHMetro from './station/station-shmetro';
-import { NameDirection, StationSHMetro as StationSHMetroIndoor } from '../../indoor/station-shmetro';
-import { Services } from '../../../constants/constants';
-import { useAppSelector } from '../../../redux';
-import { split_loop_stns, LoopStns, get_xshares_yshares_of_loop } from '../methods/shmetro-loop';
+import StationSHMetro from '../station/station-shmetro';
+import { NameDirection, StationSHMetro as StationSHMetroIndoor } from '../../../indoor/station-shmetro';
+import { Services } from '../../../../constants/constants';
+import { useAppSelector } from '../../../../redux';
+import { split_loop_stns, LoopStns, get_xshares_yshares_of_loop } from '../../methods/shmetro-loop';
 
 const LoopSHMetro = (props: { bank_angle: boolean }) => {
     const { bank_angle } = props;

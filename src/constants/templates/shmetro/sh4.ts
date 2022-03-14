@@ -486,7 +486,7 @@ const param = {
     line_name: ['4号线', 'Line 4'],
     psd_num: '1',
     line_num: '01',
-    info_panel_type: 'sh',
+    info_panel_type: 'sh2020',
     direction_gz_x: 50,
     direction_gz_y: 70,
     customiseMTRDest: { isLegacy: false, terminal: false },

@@ -40,7 +40,7 @@ const StationSHMetro = (props: Props) => {
 
     const bank = bank_ ?? 0;
     const dx = (direction === 'l' ? 6 : -6) + branchNameDX + bank * 30;
-    const dy = (info_panel_type === 'sh2020' ? -20 : -6) + Math.abs(bank) * (info_panel_type === 'sh2020' ? 30 : 10);
+    const dy = (info_panel_type === 'sh2020' ? -20 : -6) + Math.abs(bank) * (info_panel_type === 'sh2020' ? 25 : 11);
     const dr = bank ? 0 : direction === 'l' ? -45 : 45;
     return (
         <>
@@ -49,7 +49,7 @@ const StationSHMetro = (props: Props) => {
                 {...stationIconColor} // different styles use either `fill` or `stroke`
                 // sh and sh2020 have different headings of int_sh, so -1 | 1 is multiplied
                 transform={
-                    `translate(${bank * (info_panel_type === 'sh2020' ? 10 : 0)},0)` +
+                    `translate(${bank * (info_panel_type === 'sh2020' ? 5 : 0)},0)` +
                     `rotate(${bank * 90 * (info_panel_type === 'sh2020' ? 1 : -1)})`
                 }
             />
@@ -60,6 +60,7 @@ const StationSHMetro = (props: Props) => {
                     stnState={stnState}
                     direction={direction}
                     facility={stnInfo.facility}
+                    bank={bank}
                 />
             </g>
         </>
@@ -74,10 +75,11 @@ interface StationNameGElementProps {
     stnState: -1 | 0 | 1;
     direction: 'l' | 'r';
     facility: Facilities;
+    bank: -1 | 0 | 1;
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {
-    const { name, infos, stnState, direction, facility } = props;
+    const { name, infos, stnState, direction, facility, bank } = props;
     const nameENLn = props.name[1].split('\\').length;
 
     // get the exact station name width so that the
@@ -103,12 +105,15 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     // main elements icon's dx will change if there is a facility icon or not
     const mainDx = facility !== Facilities.none ? 30 : 0;
 
+    // interchange will have a line under the name, and should be stretched when placed horizontal in loop
+    const lineDx = bank ? -12 : 0;
+
     return (
         <>
             {infos.flat().length > 0 && (
                 <>
                     <line
-                        x1={mainDx * directionPolarity}
+                        x1={(lineDx + mainDx) * directionPolarity}
                         x2={(mainDx + x) * directionPolarity}
                         stroke={stnState === -1 ? 'gray' : 'black'}
                         strokeWidth={0.5}
