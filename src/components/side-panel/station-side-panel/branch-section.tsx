@@ -50,7 +50,8 @@ export default function BranchSection() {
                     label: 'First station',
                     options: getFirstStationOptions(direction),
                     value: branch[direction][1],
-                    onChange: value => dispatch(updateStationBranchFirstStation(selectedStation, direction, value)),
+                    onChange: value =>
+                        dispatch(updateStationBranchFirstStation(selectedStation, direction, value as string)),
                 },
                 {
                     type: 'select',

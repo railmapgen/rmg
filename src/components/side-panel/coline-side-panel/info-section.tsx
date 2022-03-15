@@ -62,7 +62,7 @@ export default function InfoSection() {
                 (acc, cur) => ({ ...acc, [value(cur)]: displayName(cur) }),
                 {} as { [stnId: string]: string }
             ),
-            onChange: handleChange,
+            onChange: value => handleChange(value as string),
         },
     ];
 
