@@ -95,7 +95,7 @@ const StationEntry = (props: { stnId: string; isSelected: boolean; onAction: (ac
 
     return (
         <ListItem className={isSelected ? classes.selectedItem : ''}>
-            {rmgStyle === RmgStyle.GZMTR || (rmgStyle === RmgStyle.SHMetro && stn_number) && <Typography className={classes.listItemNum}>{num}</Typography>}
+            {(rmgStyle === RmgStyle.GZMTR || (rmgStyle === RmgStyle.SHMetro && stn_number)) && <Typography className={classes.listItemNum}>{num}</Typography>}
             <ListItemText primary={name[0]} secondary={name[1].replace('\\', ' ')} className={classes.listItemText} />
             <ListItemSecondaryAction>
                 <IconButton size="small" onClick={e => setToggleEl(e.currentTarget)}>

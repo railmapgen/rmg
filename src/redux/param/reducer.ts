@@ -67,6 +67,7 @@ const initialState: RMGParam = {
     line_name: ['線', 'line'],
     current_stn_idx: '',
     showStationNumber:false,
+    showStationNumberRailmap:true,
     stn_list: {},
     namePosMTR: {
         isStagger: true,
