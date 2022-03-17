@@ -4,7 +4,29 @@ import { BranchStyle, Facilities, Services, ShortDirection, StationDict, Station
 import { getYShareMTR } from '../../methods';
 import { setStationsBulk } from './action';
 
-export const addStation = (
+const getStationTemplate = (id: string): StationInfo => ({
+    name: ['未命名 ' + id, 'Unnamed ' + id],
+    secondaryName: false,
+    num: '00',
+    services: [Services.local],
+    parents: [],
+    children: [],
+    branch: { left: [], right: [] },
+    transfer: {
+        info: [[]],
+        // type: 'none',
+        tick_direc: ShortDirection.right,
+        paid_area: true,
+        osi_names: [],
+    },
+    facility: Facilities.none,
+    loop_pivot: false,
+});
+
+/**
+ * @deprecated For V3 legacy support
+ */
+export const addStationLegacy = (
     prep: 'before' | 'after',
     pivotStationId: string,
     loc: 'centre' | 'upper' | 'lower' | 'newupper' | 'newlower',
@@ -240,5 +262,55 @@ export const addStation = (
             })
         );
         return newId;
+    };
+};
+
+export const addStation = (where: `${number}` | 'new', from: string, to: string) => {
+    return (dispatch: AppDispatch, getState: () => RootState): boolean => {
+        const stationList = getState().param.stn_list;
+
+        // get new id
+        let newId = getRandomId();
+        while (Object.keys(stationList).includes(newId)) {
+            newId = getRandomId();
+        }
+        const newStationInfo = getStationTemplate(newId);
+
+        if (where !== 'new') {
+            const nextStationList = {
+                ...stationList,
+                [from]: {
+                    ...stationList[from],
+                    children: stationList[from].children.map(id => (id === to ? newId : id)),
+                    branch: {
+                        left: stationList[from].branch.left,
+                        right:
+                            stationList[from].branch.right.length && stationList[to].branch.right[1] === to
+                                ? ([stationList[from].branch.right[0], newId] as [BranchStyle, string])
+                                : stationList[from].branch.right,
+                    },
+                },
+                [to]: {
+                    ...stationList[to],
+                    parents: stationList[to].parents.map(id => (id === from ? newId : id)),
+                    branch: {
+                        right: stationList[to].branch.right,
+                        left:
+                            stationList[to].branch.left.length && stationList[to].branch.left[1] === from
+                                ? ([stationList[to].branch.left[0], newId] as [BranchStyle, string])
+                                : stationList[to].branch.left,
+                    },
+                },
+                [newId]: {
+                    ...newStationInfo,
+                    parents: [from],
+                    children: [to],
+                },
+            };
+            dispatch(setStationsBulk(nextStationList));
+            return true;
+        } else {
+            return false;
+        }
     };
 };

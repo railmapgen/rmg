@@ -20,7 +20,7 @@ import { formatStnName } from '../../utils';
 import { getYShareMTR } from '../../methods';
 import { useAppDispatch, useAppSelector } from '../../redux';
 import { StationDict, StationInfo } from '../../constants/constants';
-import { addStation } from '../../redux/param/add-station-action';
+import { addStationLegacy } from '../../redux/param/add-station-action';
 
 const newBranchPossibleEnd = (prep: 'before' | 'after', pivot: string, stnList: StationDict) => {
     let res: string[] = [];
@@ -155,7 +155,7 @@ export default React.memo(
             if (action === 'close') {
                 props.onClose('close');
             } else {
-                const newId = dispatch(addStation(prep, pivot, loc as any, end));
+                const newId = dispatch(addStationLegacy(prep, pivot, loc as any, end));
                 props.onClose(newId);
             }
         };
