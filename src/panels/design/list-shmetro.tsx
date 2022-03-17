@@ -44,6 +44,7 @@ const StationNumberSHMetroLi = () => {
     const dispatch = useAppDispatch();
 
     const station_number = useAppSelector(store => store.param.showStationNumber);
+    const station_number_railmap = useAppSelector(store => store.param.showStationNumberRailmap);
     const line_number = useAppSelector(store => store.param.line_num);
 
     return useMemo(() => {
@@ -52,6 +53,14 @@ const StationNumberSHMetroLi = () => {
                 dispatch(setShowStationNumber(true));
             } else {
                 dispatch(setShowStationNumber(false));
+            }
+        };
+
+        const handleSwitchSecondary = (_: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+            if (checked) {
+                dispatch(function(){});
+            } else {
+                dispatch(function(){});
             }
         };
 
@@ -72,6 +81,12 @@ const StationNumberSHMetroLi = () => {
                 </ListItem>
                 <Collapse in={station_number !== false} unmountOnExit>
                     <List component="div" disablePadding className={classes.nestedList}>
+                        <ListItem>
+                            <ListItemText primary={t('design.stationNumberRailmap')} />
+                            <ListItemSecondaryAction>
+                                <Switch color="primary" checked={station_number_railmap !== false} onChange={handleSwitchSecondary} />
+                            </ListItemSecondaryAction>
+                        </ListItem>
                         <ListItem>
                             <TextField placeholder={t('design.lineNum')} defaultValue={line_number} onChange={handleChange} />
                         </ListItem>
