@@ -42,7 +42,7 @@ const StationSHMetro = (props: Props) => {
     return (
         <>
             {
-                (!param.showStationNumberRailmap)?
+                (!(param.showStationNumberRailmap&&param.showStationNumber))?
                     <use
                         xlinkHref={`#${stationIconStyle}`}
                         {...stationIconColor} // different styles use either `fill` or `stroke`

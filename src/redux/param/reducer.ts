@@ -47,6 +47,8 @@ import {
     setYPercentageAction,
     setStyleAction,
     setShowStationNumberAction,
+    setShowStationNumberRailmapAction,
+    SET_SHOW_STATION_NUMBER_RAILMAP,
 } from './action';
 
 const initialState: RMGParam = {
@@ -111,6 +113,7 @@ export default function ParamReducer(
         | setStationAction
         | setStationsBulkAction
         | setShowStationNumberAction
+        | setShowStationNumberRailmapAction
 ) {
     switch (action.type) {
         case SET_FULL_PARAM:
@@ -180,6 +183,9 @@ export default function ParamReducer(
             break;
         case SET_SHOW_STATION_NUMBER:
             state.showStationNumber=action.showStationNumber;
+            break;
+        case SET_SHOW_STATION_NUMBER_RAILMAP:
+            state.showStationNumberRailmap=action.showStationNumberRailmap;
             break;
         default:
             break;

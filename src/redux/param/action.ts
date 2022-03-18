@@ -42,6 +42,7 @@ export const SET_LINE_NUM = 'SET_LINE_NUM';
 export const SET_PSD_NUM = 'SET_PSD_NUM';
 export const SET_PANEL_TYPE = 'SET_PANEL_TYPE';
 export const SET_SHOW_STATION_NUMBER = 'SET_SHOW_STATION_NUMBER';
+export const SET_SHOW_STATION_NUMBER_RAILMAP = 'SET_SHOW_STATION_NUMBER_RAILMAP';
 export const SET_NOTES = 'SET_NOTES';
 export const SET_NAME_POSITION = 'SET_NAME_POSITION';
 export const SET_CUSTOMISED_MTR_DESTINATION = 'SET_CUSTOMISED_MTR_DESTINATION';
@@ -135,6 +136,11 @@ export interface setPanelTypeAction {
 export interface setShowStationNumberAction {
     type: typeof SET_SHOW_STATION_NUMBER;
     showStationNumber: RMGParam['showStationNumber'];
+}
+
+export interface setShowStationNumberRailmapAction {
+    type: typeof SET_SHOW_STATION_NUMBER_RAILMAP;
+    showStationNumberRailmap: RMGParam['showStationNumberRailmap'];
 }
 
 export interface setNotesAction {
@@ -242,6 +248,10 @@ export const setPanelType = (panelType: PanelTypeShmetro | PanelTypeGZMTR): setP
 
 export const setShowStationNumber = (showStationNumber:boolean): setShowStationNumberAction => {
     return { type: SET_SHOW_STATION_NUMBER, showStationNumber };
+};
+
+export const setShowStationNumberRailmap = (showStationNumberRailmap:boolean): setShowStationNumberRailmapAction => {
+    return { type: SET_SHOW_STATION_NUMBER_RAILMAP, showStationNumberRailmap };
 };
 
 const setNotes = (notes: Note[]): setNotesAction => {

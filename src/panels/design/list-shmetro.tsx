@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Switch, ListItem, ListItemIcon, Icon, ListItemText, Divider, Select, makeStyles, createStyles, ListItemSecondaryAction, Collapse, List, TextField } from '@material-ui/core';
 import { PanelTypeShmetro } from '../../constants/constants';
 import { useAppDispatch, useAppSelector } from '../../redux';
-import { setPanelType, setLineNum, setShowStationNumber } from '../../redux/param/action';
+import { setPanelType, setLineNum, setShowStationNumber, setShowStationNumberRailmap } from '../../redux/param/action';
 
 const DesignListShmetro = () => {
     return (
@@ -58,9 +58,9 @@ const StationNumberSHMetroLi = () => {
 
         const handleSwitchSecondary = (_: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
             if (checked) {
-                dispatch(function(){});
+                dispatch(setShowStationNumberRailmap(true));
             } else {
-                dispatch(function(){});
+                dispatch(setShowStationNumberRailmap(false));
             }
         };
 
@@ -94,7 +94,7 @@ const StationNumberSHMetroLi = () => {
                 </Collapse>
             </>
         );
-    }, [line_number, station_number]);
+    }, [line_number, station_number, station_number_railmap]);
 };
 
 const PanelTypeLi = () => {
