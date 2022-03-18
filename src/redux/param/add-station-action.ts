@@ -265,7 +265,7 @@ export const addStationLegacy = (
     };
 };
 
-export const addStation = (where: `${number}` | 'new', from: string, to: string) => {
+export const addStation = (where: `${number}` | 'new', from: string, to: string, position?: 'up' | 'down') => {
     return (dispatch: AppDispatch, getState: () => RootState): boolean => {
         const stationList = getState().param.stn_list;
 
@@ -294,11 +294,11 @@ export const addStation = (where: `${number}` | 'new', from: string, to: string)
                     ...stationList[to],
                     parents: stationList[to].parents.map(id => (id === from ? newId : id)),
                     branch: {
-                        right: stationList[to].branch.right,
                         left:
                             stationList[to].branch.left.length && stationList[to].branch.left[1] === from
                                 ? ([stationList[to].branch.left[0], newId] as [BranchStyle, string])
                                 : stationList[to].branch.left,
+                        right: stationList[to].branch.right,
                     },
                 },
                 [newId]: {
@@ -310,7 +310,40 @@ export const addStation = (where: `${number}` | 'new', from: string, to: string)
             dispatch(setStationsBulk(nextStationList));
             return true;
         } else {
-            return false;
+            if (!position) {
+                return false;
+            }
+
+            const nextStationList = {
+                ...stationList,
+                [from]: {
+                    ...stationList[from],
+                    children:
+                        position === 'up'
+                            ? [newId, stationList[from].children[0]]
+                            : [stationList[from].children[0], newId],
+                    branch: {
+                        left: stationList[from].branch.left,
+                        right: [BranchStyle.through, newId] as [BranchStyle, string],
+                    },
+                },
+                [to]: {
+                    ...stationList[to],
+                    parents:
+                        position === 'up' ? [newId, stationList[to].parents[0]] : [stationList[to].parents[0], newId],
+                    branch: {
+                        left: [BranchStyle.through, newId] as [BranchStyle, string],
+                        right: stationList[to].branch.right,
+                    },
+                },
+                [newId]: {
+                    ...newStationInfo,
+                    parents: [from],
+                    children: [to],
+                },
+            };
+            dispatch(setStationsBulk(nextStationList));
+            return true;
         }
     };
 };
