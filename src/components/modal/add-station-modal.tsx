@@ -10,9 +10,8 @@ import {
     ModalOverlay,
 } from '@chakra-ui/react';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
-import { useAppSelector } from '../../redux';
-import { useDispatch } from 'react-redux';
-import { addStation } from '../../redux/param/add-station-action';
+import { useAppDispatch, useAppSelector } from '../../redux';
+import { addStation, getNewBranchAllowedEnds, verifyNewBranchEnds } from '../../redux/param/add-station-action';
 
 interface AddStationModalProps {
     isOpen: boolean;
@@ -21,11 +20,12 @@ interface AddStationModalProps {
 
 export default function AddStationModal(props: AddStationModalProps) {
     const { isOpen, onClose } = props;
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const [where, setWhere] = useState<`${number}` | 'new'>('0');
     const [from, setFrom] = useState('');
     const [to, setTo] = useState('');
+    const [position, setPosition] = useState<'upper' | 'lower'>('upper');
 
     const [fromError, setFromError] = useState(false);
     const [toError, setToError] = useState(false);
@@ -37,20 +37,40 @@ export default function AddStationModal(props: AddStationModalProps) {
 
     useEffect(() => {
         setFromError(false);
-        if (from && to && selectedBranch) {
-            setToError(selectedBranch.indexOf(to) - selectedBranch.indexOf(from) !== 1);
+        if (from && to) {
+            if (selectedBranch.length) {
+                setToError(selectedBranch.indexOf(to) - selectedBranch.indexOf(from) !== 1);
+            } else {
+                const newBranchEndsVerification = dispatch(verifyNewBranchEnds(from, to));
+                if (newBranchEndsVerification) {
+                    console.log(newBranchEndsVerification);
+                    setToError(true);
+                } else {
+                    setToError(false);
+                }
+            }
         }
     }, [from]);
 
     useEffect(() => {
         setToError(false);
-        if (from && to && selectedBranch) {
-            setFromError(selectedBranch.indexOf(to) - selectedBranch.indexOf(from) !== 1);
+        if (from && to) {
+            if (selectedBranch.length) {
+                setFromError(selectedBranch.indexOf(to) - selectedBranch.indexOf(from) !== 1);
+            } else {
+                const newBranchEndsVerification = dispatch(verifyNewBranchEnds(from, to));
+                if (newBranchEndsVerification) {
+                    console.log(newBranchEndsVerification);
+                    setFromError(true);
+                } else {
+                    setFromError(false);
+                }
+            }
         }
     }, [to]);
 
     useEffect(() => {
-        if (from && to && selectedBranch) {
+        if (from && to && selectedBranch.length) {
             const isError = selectedBranch.indexOf(to) - selectedBranch.indexOf(from) !== 1;
             setFromError(isError);
             setToError(isError);
@@ -66,6 +86,8 @@ export default function AddStationModal(props: AddStationModalProps) {
             { '': 'Please select...' }
         );
     };
+
+    const newBranchEndStationOptions = getStationOptions(dispatch(getNewBranchAllowedEnds()));
 
     const fields: RmgFieldsField[] = [
         {
@@ -88,7 +110,7 @@ export default function AddStationModal(props: AddStationModalProps) {
             type: 'select',
             label: 'From',
             value: from,
-            options: where === 'new' ? {} : getStationOptions(selectedBranch),
+            options: where === 'new' ? newBranchEndStationOptions : getStationOptions(selectedBranch),
             disabledOptions: [''],
             onChange: value => setFrom(value as string),
             isInvalid: fromError,
@@ -97,15 +119,35 @@ export default function AddStationModal(props: AddStationModalProps) {
             type: 'select',
             label: 'To',
             value: to,
-            options: where === 'new' ? {} : getStationOptions(selectedBranch),
+            options: where === 'new' ? newBranchEndStationOptions : getStationOptions(selectedBranch),
             disabledOptions: [''],
             onChange: value => setTo(value as string),
             isInvalid: toError,
         },
+        {
+            type: 'select',
+            label: 'Position',
+            value: position,
+            options: {
+                upper: 'Upper',
+                lower: 'Lower',
+            },
+            onChange: value => setPosition(value as 'upper' | 'lower'),
+            hidden: where !== 'new',
+        },
     ];
 
     const handleSubmit = () => {
-        dispatch(addStation(where, from, to));
+        let result: boolean;
+        if (where !== 'new') {
+            result = dispatch(addStation(where, from, to));
+        } else {
+            result = dispatch(addStation(where, from, to, position));
+        }
+
+        if (result) {
+            onClose();
+        }
     };
 
     return (

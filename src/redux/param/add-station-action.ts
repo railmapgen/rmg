@@ -265,7 +265,7 @@ export const addStationLegacy = (
     };
 };
 
-export const addStation = (where: `${number}` | 'new', from: string, to: string, position?: 'up' | 'down') => {
+export const addStation = (where: `${number}` | 'new', from: string, to: string, position?: 'upper' | 'lower') => {
     return (dispatch: AppDispatch, getState: () => RootState): boolean => {
         const stationList = getState().param.stn_list;
 
@@ -319,7 +319,7 @@ export const addStation = (where: `${number}` | 'new', from: string, to: string,
                 [from]: {
                     ...stationList[from],
                     children:
-                        position === 'up'
+                        position === 'upper'
                             ? [newId, stationList[from].children[0]]
                             : [stationList[from].children[0], newId],
                     branch: {
@@ -330,7 +330,9 @@ export const addStation = (where: `${number}` | 'new', from: string, to: string,
                 [to]: {
                     ...stationList[to],
                     parents:
-                        position === 'up' ? [newId, stationList[to].parents[0]] : [stationList[to].parents[0], newId],
+                        position === 'upper'
+                            ? [newId, stationList[to].parents[0]]
+                            : [stationList[to].parents[0], newId],
                     branch: {
                         left: [BranchStyle.through, newId] as [BranchStyle, string],
                         right: stationList[to].branch.right,
@@ -345,5 +347,69 @@ export const addStation = (where: `${number}` | 'new', from: string, to: string,
             dispatch(setStationsBulk(nextStationList));
             return true;
         }
+    };
+};
+
+export const getNewBranchAllowedEnds = () => {
+    return (dispatch: AppDispatch, getState: () => RootState): string[] => {
+        const stationList = getState().param.stn_list;
+        const branches = getState().helper.branches;
+
+        return branches[0].filter(id => {
+            const isTwoSidedBranchOut = stationList[id].parents.length + stationList[id].children.length === 4;
+            const isYShare0 = getYShareMTR(id, stationList) === 0;
+
+            return !isTwoSidedBranchOut && isYShare0;
+        });
+    };
+};
+
+export const verifyNewBranchEnds = (from: string, to: string) => {
+    return (dispatch: AppDispatch, getState: () => RootState): string => {
+        const stationList = getState().param.stn_list;
+        const branches = getState().helper.branches;
+
+        // should be included in main line
+        if (!branches[0].includes(from) || !branches[0].includes(to)) {
+            return 'Branch should end at main line';
+        }
+
+        // from should come before to
+        if (branches[0].indexOf(from) > branches[0].indexOf(to)) {
+            return 'Not in correct ordering';
+        }
+
+        // should not be open jaw from the first station
+        if (from === 'linestart' && branches[0].indexOf(to) === 1) {
+            return 'Branch should not be open jaw from the first station';
+        }
+
+        // should not be open jaw from the last station
+        if (to === 'lineend' && branches[0].indexOf(from) === branches[0].length - 2) {
+            return 'Branch should not be open jaw from the last station';
+        }
+
+        // from has one child, to has one parent
+        if (stationList[from].children.length > 1 || stationList[to].parents.length > 1) {
+            return 'Branch already exist';
+        }
+
+        // end station won't be a middle station of any branch except main line
+        const isExistBranchIncludesEndStation = branches
+            .slice(1)
+            .some(branch => branch.slice(1, -1).includes(from) || branch.slice(1, -1).includes(to));
+        if (isExistBranchIncludesEndStation) {
+            return 'Cannot branch out from existing branch';
+        }
+
+        // stations between both ends should be stations which isn't branching out
+        const isStationsBetweenNotBranchOut = branches[0]
+            .slice(branches[0].indexOf(from) + 1, branches[0].indexOf(to))
+            .every(id => stationList[id].parents.length === 1 && stationList[id].children.length === 1);
+        if (!isStationsBetweenNotBranchOut) {
+            return 'One or more stations between both ends are branching out';
+        }
+
+        return '';
     };
 };

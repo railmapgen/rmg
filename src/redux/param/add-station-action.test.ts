@@ -1,4 +1,4 @@
-import { addStation } from './add-station-action';
+import { addStation, getNewBranchAllowedEnds, verifyNewBranchEnds } from './add-station-action';
 import { BranchStyle, StationDict } from '../../constants/constants';
 import { getBranches } from '../helper/graph-theory-util';
 import { createMockAppStore } from '../../setupTests';
@@ -117,7 +117,7 @@ describe('Unit tests for addStation action', () => {
          *        /
          *   stn5
          */
-        const result = mockStore.dispatch(addStation('new', 'stn2', 'lineend', 'up'));
+        const result = mockStore.dispatch(addStation('new', 'stn2', 'lineend', 'upper'));
         expect(result).toBeTruthy();
 
         const actions = mockStore.getActions();
@@ -130,5 +130,25 @@ describe('Unit tests for addStation action', () => {
         expect(newStationList.lineend.branch.left[1]).toEqual('testId');
         expect(newStationList.testId.parents).toEqual(['stn2']);
         expect(newStationList.testId.children).toEqual(['lineend']);
+    });
+
+    it('Can find allowed ends for new branch as expected', () => {
+        /**
+         * stn1 - stn2 - stn3 - stn4
+         *        /
+         *   stn5
+         */
+        const allowEnds = mockStore.dispatch(getNewBranchAllowedEnds());
+        expect(allowEnds).toEqual(['linestart', 'stn2', 'stn3', 'stn4', 'lineend']);
+    });
+
+    it('Can reject incorrect ordering for new branch', () => {
+        const result = mockStore.dispatch(verifyNewBranchEnds('stn4', 'stn2'));
+        expect(result).toContain('ordering');
+    });
+
+    it('Can reject open jaw from last station', () => {
+        const result = mockStore.dispatch(verifyNewBranchEnds('stn4', 'lineend'));
+        expect(result).toContain('open jaw');
     });
 });
