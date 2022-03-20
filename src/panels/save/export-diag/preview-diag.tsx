@@ -19,11 +19,11 @@ import {
     Switch,
     Typography,
 } from '@material-ui/core';
-
-import { test, saveAs } from './utils';
 import { useAppDispatch, useAppSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
 import { setCurrentStation } from '../../../redux/param/action';
+import { test } from '../../../util/export-utils';
+import { downloadAs, downloadBlobAs } from '../../../util/utils';
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -213,7 +213,7 @@ export default function PreviewDialog(props: Props) {
 
             const filename = `rmg.${stnId}.${stn_list[stnId].name[0]}.${stn_list[stnId].name[1]}`.replaceAll(' ', '_');
             if (format === 'png') {
-                const data = await test(elem, scale);
+                const blob = await test(elem, scale);
                 if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
                     await new Promise<void>(resolve => {
                         setTimeout(() => {
@@ -226,9 +226,9 @@ export default function PreviewDialog(props: Props) {
                 if (stn_list_keys.length > 1) {
                     // batch download and split base64 for this
                     // https://stackoverflow.com/questions/31305485/export-resized-image-in-canvas-to-new-jszip-package
-                    zip.file(`${filename}.png`, data.split('base64,')[1], { base64: true });
+                    zip.file(`${filename}.png`, blob);
                 } else {
-                    saveAs(data, `${filename}.png`);
+                    downloadBlobAs(`${filename}.png`, blob);
                 }
             } else if (format === 'svg') {
                 elem.removeAttribute('height');
@@ -237,7 +237,7 @@ export default function PreviewDialog(props: Props) {
                 if (stn_list_keys.length > 1) {
                     zip.file(`${filename}.svg`, data.split('base64,')[1], { base64: true });
                 } else {
-                    saveAs(data, `${filename}.svg`);
+                    downloadAs(`${filename}.svg`, 'image/svg+xml', elem.outerHTML);
                 }
             }
 
@@ -249,7 +249,7 @@ export default function PreviewDialog(props: Props) {
         if (stn_list_keys.length > 1) {
             const zipData = await zip.generateAsync({ type: 'blob' });
             const filename = `rmg.${line_name[0]}.${line_name[1]}.zip`.replaceAll(' ', '_');
-            saveAs(URL.createObjectURL(zipData), filename);
+            downloadBlobAs(filename, zipData);
         }
 
         // revert to original station

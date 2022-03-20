@@ -44,6 +44,8 @@ export default function AppRoot() {
                     <SidePanel />
                 </Flex>
             </Flex>
+
+            <canvas style={{ display: 'none' }} />
         </Flex>
     );
 }
