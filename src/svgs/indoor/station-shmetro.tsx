@@ -88,13 +88,22 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                     />
                 </>
             ) : (
-                <line
-                    x1={nameDirection === 'left' ? -100 : 15}
-                    x2={nameDirection === 'left' ? -15 : 100}
-                    y1={0}
-                    y2={0}
-                    stroke="black"
-                />
+                <>
+                    <line
+                        x1={nameDirection === 'left' ? -50 : 15}
+                        x2={nameDirection === 'left' ? -15 : 50}
+                        y1={0}
+                        y2={0}
+                        stroke="black"
+                    />
+                    <line
+                        x1={nameDirection === 'left' ? -50 : 50}
+                        x2={nameDirection === 'left' ? -50 : 50}
+                        y1={-30}
+                        y2={30}
+                        stroke="black"
+                    />
+                </>
             )}
 
             {[...infos[0], ...(infos[1] || [])].length > 0 && (
@@ -130,12 +139,17 @@ const StationName = React.forwardRef(
         const { stnName, nameDirection, ...others } = props;
         const name = stnName[0].split('\\');
         const nameENLn = stnName[1].split('\\').length;
-        // TODO: set text-anchor on left and right
-        const dx = { upward: 0, downward: 0, left: -75, right: 75 }[nameDirection];
-        const dy = { upward: -2, downward: -30 - 12 * (nameENLn - 1), left: -15, right: -15 }[nameDirection];
+        const dx = { upward: 0, downward: 0, left: -60, right: 60 }[nameDirection];
+        const dy = {
+            upward: -2,
+            downward: -30 - 12 * (nameENLn - 1),
+            left: -10 * (nameENLn - 1),
+            right: -10 * (nameENLn - 1),
+        }[nameDirection];
+        const anchor = { upward: 'middle', downward: 'middle', left: 'end', right: 'start' }[nameDirection];
 
         return (
-            <g ref={ref} {...others} textAnchor="middle" transform={`translate(${dx},${dy})`}>
+            <g ref={ref} {...others} textAnchor={anchor} transform={`translate(${dx},${dy})`}>
                 {React.useMemo(
                     () => (
                         <>

@@ -1,7 +1,7 @@
 const params = {
     style: 'shmetro',
     svg_height: 400,
-    padding: 8.750201061605276,
+    padding: 3,
     y_pc: 40,
     branch_spacing: 45,
     theme: ['shanghai', 'sh1', '#e4002b', '#fff'],
@@ -385,7 +385,7 @@ const params = {
             facility: '',
         },
         wbtv: {
-            name: ['黄陂南路', 'Site of the First CPC National\\Congress · South Huangpi Road'],
+            name: ['一大会址·黄陂南路', 'Site of the First CPC National\\Congress · South Huangpi Road'],
             secondaryName: false,
             num: '00',
             services: ['local'],
@@ -627,7 +627,7 @@ const params = {
         destination: 1600,
         runin: 1200,
         railmap: 2000,
-        indoor: 2500,
+        indoor: 3500,
     },
     notesGZMTR: [],
     namePosMTR: {
