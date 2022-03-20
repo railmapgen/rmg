@@ -1,6 +1,6 @@
 import React from 'react';
 import RmgAutoComplete from '../../common/rmg-auto-complete';
-import { CityCode, CityEntry, cityList } from '@railmapgen/rmg-palette-resources';
+import { CityCode, CityEntry, cityList, countryList } from '@railmapgen/rmg-palette-resources';
 import { LanguageCode } from '../../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import FlagSvgEmoji from './flag-svg-emoji';
@@ -30,15 +30,17 @@ export default function CityPicker(props: CityPickerProps) {
         // const isWindowsClient = true; // uncomment this line for Windows testing
 
         const name = i18n.languages.map(lng => item.name[lng as LanguageCode]).find(name => name !== undefined);
+        const flagSvg = countryList.find(country => country.id === item.country)?.flagSvg;
+        const flagEmoji = countryList.find(country => country.id === item.country)?.flagEmoji;
 
         return (
             <>
                 {isCensorTWFlag ? (
                     <span>🏴&nbsp;</span>
                 ) : isWindowsClient ? (
-                    <FlagSvgEmoji countryCode={item.country} svgFilename={item.flagSvg} />
+                    <FlagSvgEmoji countryCode={item.country} svgFilename={flagSvg} />
                 ) : (
-                    <span>{item.flagEmoji}&nbsp;</span>
+                    <span>{flagEmoji}&nbsp;</span>
                 )}
                 {name}
             </>
