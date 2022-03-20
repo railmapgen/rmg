@@ -14,7 +14,7 @@ import {
     Tooltip,
 } from '@material-ui/core';
 import { getTransText2 } from '../../utils';
-import { CityCode, cityList } from '@railmapgen/rmg-palette-resources';
+import { CityCode, cityList, countryList } from '@railmapgen/rmg-palette-resources';
 import { ColourHex, LanguageCode, MonoColour, PaletteEntry, Theme } from '../../constants/constants';
 
 const useStyles = makeStyles(() =>
@@ -264,7 +264,7 @@ const CitySelectItem = (props: { value: string; onChange: (event: React.ChangeEv
             cityList.map(c => (
                 <MenuItem key={c.id} value={c.id}>
                     <span className={classes.cityItem}>
-                        <CountryFlag code={c.country} emoji={c.flagEmoji} svg={c.flagSvg} />
+                        <CountryFlag code={c.country} />
                         <span>{getTransText2(c.name, i18n.languages as LanguageCode[])}</span>
                     </span>
                 </MenuItem>
@@ -294,17 +294,16 @@ const useEmojiStyles = makeStyles(() =>
 /**
  * Convert ISO 3166 alpha-2 country code (followed by BS 6879 UK subdivision code, if applicable) to flag Emoji. For Windows platform, an `img` element with image source from OpenMoji is returned.
  */
-function CountryFlag(props: { code: string; emoji?: string; svg?: string }) {
+function CountryFlag(props: { code: string }) {
     const { i18n } = useTranslation();
     const classes = useEmojiStyles();
 
     const [svgUrl, setSvgUrl] = useState<string>();
-
+    const svg = countryList.find(country => country.id === props.code)?.flagSvg;
+    const emoji = countryList.find(country => country.id === props.code)?.flagEmoji;
     useEffect(() => {
-        if (props.svg) {
-            import('@railmapgen/rmg-palette-resources/flags/' + props.svg)
-                .then(module => module.default)
-                .then(setSvgUrl);
+        if (svg) {
+            import('@railmapgen/rmg-palette-resources/flags/' + svg).then(module => module.default).then(setSvgUrl);
         }
     }, []);
 
@@ -318,6 +317,6 @@ function CountryFlag(props: { code: string; emoji?: string; svg?: string }) {
         return <img src={svgUrl} className={classes.img} alt={`Flag of ${props.code}`} />;
     } else {
         // return <img src={svgUrl} className={classes.img} alt={`Flag of ${props.code}`} />;
-        return <span>{props.emoji}&nbsp;</span>;
+        return <span>{emoji}&nbsp;</span>;
     }
 }

@@ -15,8 +15,6 @@ jest.mock('@railmapgen/rmg-palette-resources', () => ({
                 'zh-Hans': '爱丁堡',
                 'zh-Hant': '愛丁堡',
             },
-            flagEmoji: '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
-            flagSvg: '1F3F4-E0067-E0062-E0073-E0063-E0074-E007F.svg',
         },
         {
             id: 'hongkong',
@@ -25,8 +23,6 @@ jest.mock('@railmapgen/rmg-palette-resources', () => ({
                 en: 'Hong Kong',
                 zh: '香港',
             },
-            flagEmoji: '🇭🇰',
-            flagSvg: '1F1ED-1F1F0.svg',
         },
         {
             id: 'taipei',
@@ -34,6 +30,32 @@ jest.mock('@railmapgen/rmg-palette-resources', () => ({
             name: {
                 en: 'Taipei',
                 zh: '台北',
+            },
+        },
+    ],
+
+    countryList: [
+        {
+            id: 'GBSCT',
+            name: {
+                en: 'Scotland',
+            },
+            flagEmoji: '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+            flagSvg: '1F3F4-E0067-E0062-E0073-E0063-E0074-E007F.svg',
+        },
+        {
+            id: 'HK',
+            name: {
+                en: 'Hong Kong',
+                zh: '香港',
+            },
+            flagEmoji: '🇭🇰',
+            flagSvg: '1F1ED-1F1F0.svg',
+        },
+        {
+            id: 'TW',
+            name: {
+                en: 'Taiwan',
             },
             flagEmoji: '🇹🇼',
             flagSvg: '1F1F9-1F1FC.svg',
