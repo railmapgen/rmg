@@ -23,8 +23,6 @@ jest.mock('@railmapgen/rmg-palette-resources', () => ({
                 en: 'Hong Kong',
                 zh: '香港',
             },
-            flagEmoji: '🇭🇰',
-            flagSvg: '1F1ED-1F1F0.svg',
         },
         {
             id: 'taipei',
@@ -33,8 +31,6 @@ jest.mock('@railmapgen/rmg-palette-resources', () => ({
                 en: 'Taipei',
                 zh: '台北',
             },
-            flagEmoji: '🇹🇼',
-            flagSvg: '1F1F9-1F1FC.svg',
         },
     ],
 
@@ -43,7 +39,6 @@ jest.mock('@railmapgen/rmg-palette-resources', () => ({
             id: 'GBSCT',
             name: {
                 en: 'Scotland',
-                zh: '苏格兰',
             },
             flagEmoji: '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
             flagSvg: '1F3F4-E0067-E0062-E0073-E0063-E0074-E007F.svg',
