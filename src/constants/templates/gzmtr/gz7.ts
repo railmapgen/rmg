@@ -115,7 +115,12 @@ const params = {
             num: '06',
             services: ['local'],
             facility: '',
-            transfer: { info: [[]], osi_names: [], paid_area: true, tick_direc: 'r' },
+            transfer: {
+                info: [[['guangzhou', 'gz18', '#0047BA', '#fff', '18号线', 'Line 18']]],
+                osi_names: [],
+                paid_area: true,
+                tick_direc: 'r',
+            },
             secondaryName: false,
         },
         dre1: {
@@ -127,12 +132,7 @@ const params = {
             services: ['local'],
             facility: '',
             transfer: {
-                info: [
-                    [
-                        ['guangzhou', 'gz3', '#ECA154', '#000', '3号线', 'Line 3'],
-                        ['guangzhou', 'gz18', '#0047BA', '#fff', '18号线', 'Line 18'],
-                    ],
-                ],
+                info: [[['guangzhou', 'gz3', '#ECA154', '#000', '3号线', 'Line 3']]],
                 osi_names: [],
                 paid_area: true,
                 tick_direc: 'r',

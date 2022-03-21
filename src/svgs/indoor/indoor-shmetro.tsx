@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import { adjacencyList, getXShareMTR, criticalPathMethod, getStnState } from '../railmap/methods/share';
 import StationSHMetro from './station-shmetro';
 import { StationsMTR } from '../railmap/methods/mtr';
-import { StationDict, Services } from "../../constants/constants";
+import { StationDict, Services } from '../../constants/constants';
 import { useAppSelector } from '../../redux';
 
 export default memo(function IndoorWrapperSHMetro() {
@@ -16,40 +16,60 @@ export default memo(function IndoorWrapperSHMetro() {
 
 export const DefsSHMetro = React.memo(() => (
     <defs>
-        <circle id="stn_indoor_sh" fill="var(--rmg-white)" strokeWidth={5} stroke="var(--rmg-theme-colour)"
-            r={8} transform="scale(1.5)" />
-        <path id="int2_indoor_sh" fill="var(--rmg-white)" stroke="black" transform="translate(0, -10)scale(2)"
-            strokeWidth={4} d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z" />
-        <path id="express_indoor_sh" fill="var(--rmg-white)" stroke="black" transform="translate(0, -10)scale(2)"
-            strokeWidth={4} d="M -5,0 a 5,5 0 1 1 10,0 V25 a 5,5 0 1 1 -10,0Z" />
-        <path id="direct_indoor_sh" fill="var(--rmg-white)" stroke="black" transform="translate(0, -10)scale(2)"
-            strokeWidth={4} d="M -5,0 a 5,5 0 1 1 10,0 V40 a 5,5 0 1 1 -10,0Z" />
+        <circle
+            id="stn_indoor_sh"
+            fill="var(--rmg-white)"
+            strokeWidth={5}
+            stroke="var(--rmg-theme-colour)"
+            r={8}
+            transform="scale(1.5)"
+        />
+        <path
+            id="int2_indoor_sh"
+            fill="var(--rmg-white)"
+            stroke="black"
+            transform="translate(0, -10)scale(2)"
+            strokeWidth={4}
+            d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"
+        />
+        <path
+            id="express_indoor_sh"
+            fill="var(--rmg-white)"
+            stroke="black"
+            transform="translate(0, -10)scale(2)"
+            strokeWidth={4}
+            d="M -5,0 a 5,5 0 1 1 10,0 V25 a 5,5 0 1 1 -10,0Z"
+        />
+        <path
+            id="direct_indoor_sh"
+            fill="var(--rmg-white)"
+            stroke="black"
+            transform="translate(0, -10)scale(2)"
+            strokeWidth={4}
+            d="M -5,0 a 5,5 0 1 1 10,0 V40 a 5,5 0 1 1 -10,0Z"
+        />
     </defs>
 ));
 
 const leftWideFactor = (stnList: StationDict, stnId: string) => {
-    let res = 0
-    if (stnList[stnId].parents.length === 2) res += 1
-    if (stnList[stnList[stnId].parents[0]].children.length === 2) res += 1
-    return res
-}
+    let res = 0;
+    if (stnList[stnId].parents.length === 2) res += 1;
+    if (stnList[stnList[stnId].parents[0]].children.length === 2) res += 1;
+    return res;
+};
 
 const rightWideFactor = (stnList: StationDict, stnId: string) => {
-    let res = 0
-    if (stnList[stnId].children.length === 2) res += 1
-    if (stnList[stnList[stnId].children[0]].parents.length === 2) res += 1
-    return res
-}
+    let res = 0;
+    if (stnList[stnId].children.length === 2) res += 1;
+    if (stnList[stnList[stnId].children[0]].parents.length === 2) res += 1;
+    return res;
+};
 
 const IndoorSHMetro = () => {
     const { routes, branches, depsStr: deps } = useAppSelector(store => store.helper);
     const param = useAppSelector(store => store.param);
 
-    const adjMat = adjacencyList(
-        param.stn_list,
-        leftWideFactor,
-        rightWideFactor
-    );
+    const adjMat = adjacencyList(param.stn_list, leftWideFactor, rightWideFactor);
 
     const criticalPath = criticalPathMethod('linestart', 'lineend', adjMat);
     const realCP = criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat);
@@ -93,17 +113,17 @@ const IndoorSHMetro = () => {
     const servicesAll = Object.values(Services);
     const servicesPresent = Object.values(param.stn_list)
         .map(stationInfo => stationInfo.services)
-        .flat()  // all services in all stations
+        .flat() // all services in all stations
         .reduce(
             (acc, cur) => {
                 acc[servicesAll.indexOf(cur)] = true;
                 return acc;
             },
             [false, false, false] as [boolean, boolean, boolean]
-        )  // set the flag in order
-        .map((bool, i) => [servicesAll[i], bool] as [Services, boolean])  // zip
-        .filter(s => s[1])  // get the existing service
-        .map(s => s[0]);  // maintain the services' order
+        ) // set the flag in order
+        .map((bool, i) => [servicesAll[i], bool] as [Services, boolean]) // zip
+        .filter(s => s[1]) // get the existing service
+        .map(s => s[0]); // maintain the services' order
 
     const linePaths = StationsMTR.drawLine(
         branches,
@@ -126,9 +146,9 @@ const IndoorSHMetro = () => {
             <InfoElements />
         </>
     );
-}
+};
 
-const Lines = (props: { paths: { main: string[]; pass: string[] }, services: Services[] }) => {
+const Lines = (props: { paths: { main: string[]; pass: string[] }; services: Services[] }) => {
     return (
         <g fill="none" strokeWidth={12} stroke="var(--rmg-theme-colour)">
             {props.services.map((service, i) => (
@@ -149,32 +169,35 @@ interface StationGroupProps {
     xs: { [stnId: string]: number };
     ys: { [stnId: string]: number };
     stnStates: { [stnId: string]: -1 | 0 | 1 };
-    services: Services[];  // determine if all station text should be upward
+    services: Services[]; // determine if all station text should be upward
 }
 
 const StationGroup = (props: StationGroupProps) => {
     const { branches } = useAppSelector(store => store.helper);
     const param = useAppSelector(store => store.param);
-    const {xs, ys, stnStates, services} = props;
+    const { xs, ys, stnStates, services } = props;
 
     return (
         <g>
             {Object.keys(param.stn_list)
                 .filter(stnId => !['linestart', 'lineend'].includes(stnId))
                 .filter(stnId => param.stn_list[stnId].services.length !== 0)
-                .map(stnId => (<g key={stnId} transform={`translate(${xs[stnId]},${ys[stnId]})`}>
-                    <StationSHMetro
-                        stnId={stnId}
-                        stnState={stnStates[stnId]}
-                        nameDirection={branches
-                            .filter(branch => branch.includes(stnId))
-                            .map(branch => branch.indexOf(stnId) % 2 === 0 || services.length > 1 ?
-                                'downward' : 'upward')[0] as 'upward' | 'downward'}
-                        services={services}
-                    />
-                </g>)
-                )
-            }
+                .map(stnId => (
+                    <g key={stnId} transform={`translate(${xs[stnId]},${ys[stnId]})`}>
+                        <StationSHMetro
+                            stnId={stnId}
+                            stnState={stnStates[stnId]}
+                            nameDirection={
+                                branches
+                                    .filter(branch => branch.includes(stnId))
+                                    .map(branch =>
+                                        branch.indexOf(stnId) % 2 === 0 || services.length > 1 ? 'downward' : 'upward'
+                                    )[0] as 'upward' | 'downward'
+                            }
+                            services={services}
+                        />
+                    </g>
+                ))}
         </g>
     );
 };
@@ -182,40 +205,55 @@ const StationGroup = (props: StationGroupProps) => {
 const InfoElements = () => {
     const param = useAppSelector(store => store.param);
 
-    return React.useMemo(() => (
-        <>
-            <g transform={`translate(${param.svgWidth.indoor / 2},50)`}>
-                <text textAnchor="middle" fontSize="30" className="rmg-name__zh">
-                    轨道交通{param.line_name[0]}运营线路示意图
-                </text>
-            </g>
-            <g transform={`translate(${param.svgWidth.indoor / 2},${param.svg_height - 270})`}>
-                <text textAnchor="middle" fontSize="18" className="rmg-name__zh" dx="-30" dy="230">
-                    友情提示：请留意您需要换乘线路的首末班时间，以免耽误您的出行，末班车进站前三分钟停售该末班车车票。
-                </text>
-                <text textAnchor="middle" fontSize="12" className="rmg-name__en" dx="10" dy="250">
-                    Please pay attention to the interchange schedule if you want to transfer to other lines. Stop selling tickets 3 minutes before the last train services.
-                </text>
-                <g transform="translate(-600,215)">
-                    <rect x="-5" y="-25" width="100" height="70" fill="none" stroke="black" rx="5"></rect>
-                    <line x1="28" x2="28" y1="-20" y2="40" stroke="black"></line>
-                    <text className="rmg-name__zh" dx="3" fontSize="18">图</text>
-                    <text className="rmg-name__zh" dx="3" dy="18" fontSize="18">例</text>
-                    <text className="rmg-name__en" dy="35" fontSize="8">legend</text>
-                    <use
-                        transform="translate(45,10)"
-                        xlinkHref="#int2_indoor_sh"
-                        stroke="var(--rmg-theme-colour)"
-                    />
-                    <text className="rmg-name__zh" dx="60" dy="10" fontSize="10">换乘站</text>
-                    <text className="rmg-name__en" dx="60" dy="20" fontSize="6">Interchange</text>
-                    <text className="rmg-name__en" dx="60" dy="30" fontSize="6">Station</text>
+    return React.useMemo(
+        () => (
+            <>
+                <g transform={`translate(${param.svgWidth.indoor / 2},50)`}>
+                    <text textAnchor="middle" fontSize="30" className="rmg-name__zh">
+                        轨道交通{param.line_name[0]}运营线路示意图
+                    </text>
                 </g>
-            </g>
-        </>
-    ),
+                <g transform={`translate(${param.svgWidth.indoor / 2},${param.svg_height - 270})`}>
+                    <text textAnchor="middle" fontSize="18" className="rmg-name__zh" dx="-30" dy="230">
+                        友情提示：请留意您需要换乘线路的首末班时间，以免耽误您的出行，末班车进站前三分钟停售该末班车车票。
+                    </text>
+                    <text textAnchor="middle" fontSize="12" className="rmg-name__en" dx="10" dy="250">
+                        Please pay attention to the interchange schedule if you want to transfer to other lines. Stop
+                        selling tickets 3 minutes before the last train services.
+                    </text>
+                    <g transform="translate(-600,215)">
+                        <rect x="-5" y="-25" width="100" height="70" fill="none" stroke="black" rx="5"></rect>
+                        <line x1="28" x2="28" y1="-20" y2="40" stroke="black"></line>
+                        <text className="rmg-name__zh" dx="3" fontSize="18">
+                            图
+                        </text>
+                        <text className="rmg-name__zh" dx="3" dy="18" fontSize="18">
+                            例
+                        </text>
+                        <text className="rmg-name__en" dy="35" fontSize="8">
+                            legend
+                        </text>
+                        <use
+                            transform="translate(45,10)"
+                            xlinkHref="#int2_indoor_sh"
+                            stroke="var(--rmg-theme-colour)"
+                        />
+                        <text className="rmg-name__zh" dx="60" dy="10" fontSize="10">
+                            换乘站
+                        </text>
+                        <text className="rmg-name__en" dx="60" dy="20" fontSize="6">
+                            Interchange
+                        </text>
+                        <text className="rmg-name__en" dx="60" dy="30" fontSize="6">
+                            Station
+                        </text>
+                    </g>
+                </g>
+            </>
+        ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.svgWidth.indoor, param.svg_height, param.line_name]);
+        [param.svgWidth.indoor, param.svg_height, param.line_name]
+    );
 };
 
 /* Some unused functions to split branches from the main line.
@@ -226,7 +264,7 @@ const InfoElements = () => {
  * Currently these functions only can be used on a line that
  * branches in the middle and ends at the linestart, which also
  * means that linestart has two children in the adjMat.
-*/
+ */
 /*
 const getPathLength = (adjMat: ReturnType<typeof adjacencyList>, from: string, to: string): number => {
     let cnt = 0, cur = from

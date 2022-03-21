@@ -1,11 +1,5 @@
 import React, { useRef, memo } from 'react';
-import {
-    InterchangeInfo,
-    Name,
-    PanelTypeGZMTR,
-    PanelTypeShmetro,
-    Facilities,
-} from '../../../../constants/constants';
+import { InterchangeInfo, Name, PanelTypeGZMTR, PanelTypeShmetro, Facilities } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 
 interface Props {
@@ -102,7 +96,11 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     const mainDx = facility !== Facilities.none ? 30 : 0;
 
     return (
-        <g transform={`translate(${direction === 'l' ? 6 : -6},${info_panel_type === 'sh2020' ? -20 : -6})rotate(${props.direction === 'l' ? -45 : 45})`}>
+        <g
+            transform={`translate(${direction === 'l' ? 6 : -6},${info_panel_type === 'sh2020' ? -20 : -6})rotate(${
+                props.direction === 'l' ? -45 : 45
+            })`}
+        >
             {infos.flat().length > 0 && (
                 <>
                     <line
@@ -119,13 +117,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 </>
             )}
 
-            {facility !== Facilities.none && (
-                <use
-                    xlinkHref={'#' + facility}
-                    x={10 * directionPolarity}
-                    y={-30}
-                />
-            )}
+            {facility !== Facilities.none && <use xlinkHref={'#' + facility} x={10 * directionPolarity} y={-30} />}
 
             <g
                 textAnchor={direction === 'l' ? 'start' : 'end'}
@@ -140,9 +132,9 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 {/* deal out-of-station here as it is a y axis element. leave out-of-system in IntBoxGroup*/}
                 {infos[1]?.length > 0 && (
                     <g
-                        transform={`translate(${(x + infos.reduce((sum, infos) => sum + infos.length, 0) * 15) *
-                            directionPolarity
-                            },-30)`}
+                        transform={`translate(${
+                            (x + infos.reduce((sum, infos) => sum + infos.length, 0) * 15) * directionPolarity
+                        },-30)`}
                     >
                         <OSIText osiInfos={infos[1]} />
                     </g>
@@ -189,13 +181,13 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[][]; direction: 'l' | 'r
     // also known as non out-of-system transfers
     const boxInfos = [
         ...intInfos[0],
-        ...intInfos[1] || [],
+        ...(intInfos[1] || []),
         // some dirty tricks here as shmetro shows maglev icon even it is a out-of-system transfer
-        // and display a maglev icon is much easier in boxInfos than OSysIText
-        ...intInfos[2]?.filter(info => Boolean(info[4].match(/^磁(悬)*浮/))) || []
+        // and display a maglev icon is much easier in boxInfos than in OSysIText
+        ...(intInfos[2]?.filter(info => Boolean(info[4].match(/^磁(悬)*浮/))) || []),
     ];
 
-    let dx = 0;  // update in every boxInfos
+    let dx = 0; // update in every boxInfos
 
     return (
         <g fontSize={14} textAnchor="middle" {...others}>
@@ -234,12 +226,11 @@ const IntBoxGroup = (props: { intInfos: InterchangeInfo[][]; direction: 'l' | 'r
                 return el;
             })}
 
-            {[...intInfos[2] || []].length > 0 &&
-                <g
-                    transform={`translate(${dx - (props.direction === 'r' ? 5 : 0)},0)`}
-                    key={boxInfos.length + 1}>
+            {[...(intInfos[2] || [])].length > 0 && (
+                <g transform={`translate(${dx - (props.direction === 'r' ? 5 : 0)},0)`} key={boxInfos.length + 1}>
                     <OSysIText osysiInfos={intInfos[2]} direction={props.direction} />
-                </g>}
+                </g>
+            )}
         </g>
     );
 };
@@ -283,7 +274,7 @@ const IntBoxLetter = memo(
 );
 
 const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
-    // get the all names from the out of station changes
+    // get the all names from the out of station interchanges
     const lineNames = props.osiInfos.map(info => info[4]).join('，');
     return React.useMemo(
         () => (
@@ -304,7 +295,7 @@ const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
     );
 };
 
-const OSysIText = (props: { osysiInfos: InterchangeInfo[], direction: 'l' | 'r' }) => {
+const OSysIText = (props: { osysiInfos: InterchangeInfo[]; direction: 'l' | 'r' }) => {
     // get the all names from out of system transfers
     const lineNames = props.osysiInfos.map(info => info[4]).join('，');
     const lineNamesEn = props.osysiInfos.map(info => info[5]).join(', ');

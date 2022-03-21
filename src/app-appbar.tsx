@@ -13,6 +13,7 @@ import {
     MenuItem,
     Divider,
     useMediaQuery,
+    Link,
 } from '@material-ui/core';
 import { AllCanvas, canvasConfig, CanvasType } from './constants/constants';
 import { useAppDispatch, useAppSelector } from './redux';
@@ -25,6 +26,18 @@ const useStyles = makeStyles(theme =>
         },
         rootDark: {
             backgroundColor: theme.palette.background.paper,
+        },
+        bannerLight: {
+            textAlign: 'center',
+            backgroundColor: theme.palette.primary.dark,
+            color: '#fff',
+            padding: 2,
+        },
+        bannerDark: {
+            textAlign: 'center',
+            backgroundColor: theme.palette.background.default,
+            color: '#fff',
+            padding: 2,
         },
         title: {
             flexGrow: 1,
@@ -44,6 +57,12 @@ const AppAppBar = () => {
     return React.useMemo(
         () => (
             <AppBar position="sticky" className={prefersDarkMode ? classes.rootDark : classes.rootLight}>
+                <Typography variant="body2" className={prefersDarkMode ? classes.bannerDark : classes.bannerLight}>
+                    <Link color="inherit" href="/uat-rail-map-generator" target="_blank">
+                        {t('banner')}
+                    </Link>
+                </Typography>
+
                 <Toolbar variant="dense">
                     <Typography variant="h6" className={classes.title} color="textPrimary">
                         {process.env.PUBLIC_URL.includes('uat') ? t('titleUAT') : t('title')}
