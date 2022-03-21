@@ -4,7 +4,7 @@ const params = {
     svg_width: 800,
     svg_dest_width: 1000,
     show_outer: true,
-    padding: 8.750201061605276,
+    padding: 8.75,
     y_pc: 40,
     strip_pc: 90,
     branch_spacing: 45,

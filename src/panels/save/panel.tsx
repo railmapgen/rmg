@@ -55,7 +55,7 @@ const SaveLists = () => {
 
     const saveClick = async () => {
         let link = document.createElement('a');
-        link.href = 'data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(param))));
+        link.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(param));
         link.download = 'rmg.param.' + new Date().toISOString() + '.json';
         link.click();
     };
