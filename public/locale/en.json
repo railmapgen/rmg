@@ -134,7 +134,8 @@
             "sh": "Default",
             "sh2020": "2020 (Beta)"
         },
-        "stationNumber":"Station Number",
+        "stationNumber":"Show Station Number",
+        "stationNumberRailmap":"Show Station Number in Railmap",
         "autoNum": {
             "button": "Station Auto-numbering",
             "title": "Warning",

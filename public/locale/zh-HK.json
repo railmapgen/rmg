@@ -134,7 +134,8 @@
             "sh": "默認樣式",
             "sh2020": "2020年新樣式(測試版)"
         },
-        "stationNumber":"車站號",
+        "stationNumber":"显示車站號",
+        "stationNumberRailmap":"在路線圖上显示車站號",
         "autoNum": {
             "button": "車站自動編碼",
             "title": "警告",

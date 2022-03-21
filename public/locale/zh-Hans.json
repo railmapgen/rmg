@@ -133,7 +133,8 @@
             "sh": "默认样式",
             "sh2020": "2020年样式(测试版)"
         },
-        "stationNumber":"车站号",
+        "stationNumber":"显示车站号",
+        "stationNumberRailmap":"在线路图中显示车站号",
         "autoNum": {
             "button": "车站自动编码",
             "title": "警告",
