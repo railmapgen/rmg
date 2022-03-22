@@ -20,7 +20,7 @@ jobs:
       - run: npm i
 
       - name: Clone UAT repo
-        run: git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.UAT_REPO_NAME }}.git
+        run: git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/uat-railmapgen/rmg-repositories.git
 
       - name: Build
         run: |

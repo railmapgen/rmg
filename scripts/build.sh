@@ -26,7 +26,7 @@ then
   export RMG_VER=$(node -p "require('./package.json').version")
 else
   # build with a hashed version
-  VERSION=`node -p "require('./package.json').version"`
+  VERSION=$(node -p "require('./package.json').version")
   GITHASH=$(git log -n 1 --pretty=%h)
   export RMG_VER="$VERSION.$BRANCH.$GITHASH"
   # git tag -a "${APP_NAME}-${RMG_VER}" -m "${APP_NAME}-${RMG_VER}"
@@ -34,20 +34,12 @@ fi
 
 
 ### BUILD
-mkdir -p $UAT_REPO_NAME/$RMG_VER/
+mkdir -p $UAT_REPO_NAME/"$APP_NAME"/
 
-# PRD
-if [ "$BRANCH" = "v5.main" ]
-then
-  CI='' npm run build
-  cp -r build/ $UAT_REPO_NAME/$RMG_VER/PRD/
-fi
-
-# UAT
-cat package.json | sed '2 s/RailMapGenerator/uat-rail-map-generator/' > package-new.json
+cat package.json | sed '2 s/RailMapGenerator/rmg/' > package-new.json
 cp package-new.json package.json
 CI='' npm run build
-cp -r build/ $UAT_REPO_NAME/$RMG_VER/UAT/
+cp -r build/ $UAT_REPO_NAME/"$APP_NAME"/"$RMG_VER"/
 
 
 ### PUSH TAG AND COMMIT
@@ -64,4 +56,4 @@ git commit -m "Build RMG version $RMG_VER"
 git push --force
 
 
-echo "Build Success: $RMG_VER"
+echo "Build Success: $APP_NAME-$RMG_VER"
