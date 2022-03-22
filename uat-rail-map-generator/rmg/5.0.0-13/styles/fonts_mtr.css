@@ -1,0 +1,94 @@
+@font-face {
+    font-family: 'Vegur';
+    src: url('../cdn/Vegur-Regular.otf') format('opentype');
+    unicode-range: U+0-10FFFF;
+}
+
+@font-face {
+    font-family: 'GenYoMin TW';
+    font-style: normal;
+    font-weight: 600;
+    src: url('../cdn/GenYoMin-TW-SB.4E.woff2') format('woff2');
+    unicode-range: U+4E00-4FFF;
+}
+
+@font-face {
+    font-family: 'GenYoMin TW';
+    font-style: normal;
+    font-weight: 600;
+    src: url('../cdn/GenYoMin-TW-SB.50.woff2') format('woff2');
+    unicode-range: U+5000-57FF;
+}
+
+@font-face {
+    font-family: 'GenYoMin TW';
+    font-style: normal;
+    font-weight: 600;
+    src: url('../cdn/GenYoMin-TW-SB.58.woff2') format('woff2');
+    unicode-range: U+5800-5FFF;
+}
+
+@font-face {
+    font-family: 'GenYoMin TW';
+    font-style: normal;
+    font-weight: 600;
+    src: url('../cdn/GenYoMin-TW-SB.60.woff2') format('woff2');
+    unicode-range: U+6000-67FF;
+}
+
+@font-face {
+    font-family: 'GenYoMin TW';
+    font-style: normal;
+    font-weight: 600;
+    src: url('../cdn/GenYoMin-TW-SB.68.woff2') format('woff2');
+    unicode-range: U+6800-6FFF;
+}
+
+@font-face {
+    font-family: 'GenYoMin TW';
+    font-style: normal;
+    font-weight: 600;
+    src: url('../cdn/GenYoMin-TW-SB.70.woff2') format('woff2');
+    unicode-range: U+7000-77FF;
+}
+
+@font-face {
+    font-family: 'GenYoMin TW';
+    font-style: normal;
+    font-weight: 600;
+    src: url('../cdn/GenYoMin-TW-SB.78.woff2') format('woff2');
+    unicode-range: U+7800-7FFF;
+}
+
+@font-face {
+    font-family: 'GenYoMin TW';
+    font-style: normal;
+    font-weight: 600;
+    src: url('../cdn/GenYoMin-TW-SB.80.woff2') format('woff2');
+    unicode-range: U+8000-87FF;
+}
+
+@font-face {
+    font-family: 'GenYoMin TW';
+    font-style: normal;
+    font-weight: 600;
+    src: url('../cdn/GenYoMin-TW-SB.88.woff2') format('woff2');
+    unicode-range: U+8800-8FFF;
+}
+
+@font-face {
+    font-family: 'GenYoMin TW';
+    font-style: normal;
+    font-weight: 600;
+    src: url('../cdn/GenYoMin-TW-SB.90.woff2') format('woff2');
+    unicode-range: U+9000-97FF;
+}
+
+@font-face {
+    font-family: 'GenYoMin TW';
+    font-style: normal;
+    font-weight: 600;
+    src: url('../cdn/GenYoMin-TW-SB.98.woff2') format('woff2');
+    unicode-range: U+9800-9FFF;
+}
+

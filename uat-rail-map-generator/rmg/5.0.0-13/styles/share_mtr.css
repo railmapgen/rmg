@@ -1,0 +1,17 @@
+/*@import url('https://fonts.googleapis.com/css?family=Noto+Serif+KR:600|Noto+Serif+JP:600|Noto+Serif+TC:600|Noto+Serif+SC:600%26display=swap');*/
+@import url('./fonts_mtr.css');
+
+.rmg-name__zh {
+    dominant-baseline: central;
+    font-family: Vegur, Helvetica, 'GenYoMin TW', HiraMinProN-W6, serif;
+}
+
+.rmg-name__en {
+    dominant-baseline: middle;
+    font-family: Myriad Pro, Vegur, Helvetica, sans-serif;
+}
+
+:root {
+    --rmg-black: #132647;
+    --rmg-grey: #a2aaad;
+}

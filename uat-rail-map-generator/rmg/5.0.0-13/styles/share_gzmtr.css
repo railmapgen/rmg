@@ -1,0 +1,19 @@
+.rmg-name__zh {
+    dominant-baseline: central;
+    font-family: Arial, SimHei, STHeitiSC-Medium, PingFangSC-Regular, sans-serif;
+}
+.rmg-name__en {
+    dominant-baseline: middle;
+    font-family: Arial, sans-serif;
+}
+
+rect#strip_gz {
+    fill: var(--rmg-theme-colour);
+    width: var(--rmg-svg-width);
+    transform: translateY(calc(var(--rmg-svg-height) - var(--height, 60px)));
+    height: var(--height, 60px);
+}
+
+.rmg-name__gzmtr--white-fg {
+    fill: #fff;
+}

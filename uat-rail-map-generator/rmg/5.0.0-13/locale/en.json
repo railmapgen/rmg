@@ -1,0 +1,309 @@
+{
+    "title": "Rail Map Generator",
+    "titleUAT": "RMG UAT",
+
+    "toggle": {
+        "tooltip": "Switch Canvas",
+        "all": "Show All",
+        "destination": "Destination Info Sign",
+        "runin": "Running-in Board",
+        "railmap": "Rail Map",
+        "indoor": "Indoor Map"
+    },
+
+    "zoom": {
+        "in": "Zoom In",
+        "out": "Zoom Out"
+    },
+
+    "tab": {
+        "file": "File",
+        "layout": "Layout",
+        "design": "Design",
+        "stations": "Stations",
+        "info": "Info"
+    },
+
+    "file": {
+        "new": {
+            "button": "New Canvas",
+            "title": "Choose a Template",
+            "notice": "Please note that all unsaved changes will be lost."
+        },
+        "open": {
+            "button": "Open From JSON",
+            "title": "Your Configuration"
+        },
+        "save": "Save As JSON",
+        "export": {
+            "button": "Preview And Export",
+            "title": "Choose a Canvas",
+            "destination": "Destination Info Sign",
+            "runin": "Running-in Board",
+            "railmap": "Rail Map",
+            "indoor": "Indoor Map"
+        },
+        "preview": {
+            "title": "Preview And Export",
+            "transparent": "Transparent Background",
+            "border": "Show Border",
+            "scale": "Scale",
+            "format": "Format",
+            "download": "Download",
+            "downloadCurrentStation": "Download This Station",
+            "downloadAllStations": "Download All Stations",
+            "terms": {
+                "accept": "I accept the ",
+                "tandc": "Terms and Conditions"
+            }
+        },
+        "style": {
+            "button": "Style",
+            "title": "Choose a Style",
+            "mtr": "MTR",
+            "gzmtr": "Guangzhou Metro",
+            "shmetro": "Shanghai Metro"
+        },
+        "lang": {
+            "button": "Language",
+            "title": "Choose a Language"
+        }
+    },
+
+    "layout": {
+        "size": {
+            "title": "Canvas Size",
+            "width": {
+                "destination": "Destination Sign Width",
+                "runin": "Running-in Board Width",
+                "railmap": "Rail Map Width",
+                "indoor": "Indoor Map Width"
+            },
+            "height": "Canvas Height"
+        },
+        "y": "Vertical Position",
+        "branchSpacing": "Branch Spacing",
+        "padding": "Rail Map Margin",
+        "directionGZ": {
+            "title": "Direction Indicator Position",
+            "horizontal": "Horizontal Position",
+            "vertical": "Vertical Position",
+            "left": "Left",
+            "right": "Right",
+            "top": "Top",
+            "bottom": "Bottom"
+        }
+    },
+
+    "design": {
+        "theme": "Theme Colour and Line Name",
+        "direction": {
+            "button": "Train Direction",
+            "l": "Left",
+            "r": "Right",
+            "switch": "Switch"
+        },
+        "platform": "Platform Number",
+        "txtFlip": {
+            "text": "Stagger Stations' Names",
+            "flipText": "Position of Stations' Names",
+            "flip": "Flip"
+        },
+        "MTRDest": {
+            "button": "Customise Direction Sign",
+            "legacy": "Show Name of Line",
+            "terminal": "Override Terminals",
+            "zh": "Chinese characters",
+            "en": "Latin characters"
+        },
+        "MTRLegacy": "Destination Panel Legacy Style",
+        "lineNum": "Line Number",
+        "psd": "Platform Door Number",
+        "panelType": {
+            "button": "Info Panel Type",
+            "title": "Choose a Type for Info Panel",
+            "gz1": "Line 1",
+            "gz28": "Line 2/8 (Panasonic)",
+            "gz2otis": "Line 2/8 (Otis)",
+            "gz3": "Line 3",
+            "gz1421": "Line 4 (South)/7/9/13/14/21",
+            "gz6": "Line 6/Guangfo Line",
+            "gzgf": "Line 6/Guangfo Line Phase 2",
+            "gz4": "Line 4",
+            "gz5": "Line 5",
+            "sh": "Default",
+            "sh2020": "2020 (Beta)"
+        },
+        "autoNum": {
+            "button": "Station Auto-numbering",
+            "title": "Warning",
+            "msg": "You are about to re-number all stations on the main line. This action can not be undo.",
+            "ascend": "Ascending Order",
+            "descend": "Descending Order"
+        },
+        "notesGZMTR": {
+            "text": "Notes",
+            "addNote": "Add note",
+            "edit": "Edit",
+            "remove": "Remove",
+            "add": "Add",
+            "editNote": "Edit note",
+            "border": "Show border"
+        }
+    },
+
+    "stations": {
+        "current": "Set As Current",
+        "fabs": {
+            "tooltip": "Options",
+            "add": "New Stations",
+            "reverse": "Reverse Entire Line"
+        },
+        "add": {
+            "title": "Choose a location",
+            "prep": "Relative Position",
+            "before": "Before",
+            "after": "After",
+            "station": "station",
+            "pivot": "Pivot",
+            "on": "On",
+            "loc": "Location",
+            "centre": "centre line",
+            "upper": "upper branch",
+            "lower": "lower branch",
+            "newUpper": "new upper branch",
+            "newLower": "new lower branch",
+            "bypass": "Bypass all stations until",
+            "end": "End of Branch"
+        },
+        "edit": {
+            "title": "Edit Station Detail",
+            "button": "Edit",
+            "tab": {
+                "name": "Name",
+                "interchange": "Interchange",
+                "branch": "Branch",
+                "more": "More"
+            },
+            "name": {
+                "secondary": "Secondary Station Name"
+            },
+            "interchange": {
+                "within": "Within-station Interchange",
+                "osi": "Out-of-station Interchange",
+                "osysi": "Out-of-system Interchange",
+                "note": "Please note that some combinations of interchanges may not be displayed properly.",
+                "add": "Add",
+                "osiName": "Edit OSI Station Name",
+                "settings": "More Settings",
+                "tickDirec": {
+                    "label": "Text Direction",
+                    "l": "Left",
+                    "r": "Right"
+                },
+                "paidArea": "OSI within Paid Area"
+            },
+            "branch": {
+                "left": "Branch on the Left",
+                "right": "Branch on the Right",
+                "type": {
+                    "title": "Branch Type",
+                    "na": "(No Branches Found)",
+                    "through": "Through",
+                    "nonThrough": "Non-through"
+                },
+                "first": "First Station on Branch",
+                "pos": {
+                    "title": "Branch Position",
+                    "upper": "Upper",
+                    "lower": "Lower"
+                }
+            },
+            "more": {
+                "facility": {
+                    "button": "Facility",
+                    "title": "Choose A Facility Near This Station",
+                    "airport": "Airport",
+                    "hsr": "High Speed Rail",
+                    "disney": "Disneyland Resort",
+                    "railway": "National Railway",
+                    "none": "None"
+                },
+                "services": {
+                    "button": "Train Services",
+                    "local": "Stopping",
+                    "express": "Express",
+                    "direct": "Direct"
+                }
+            }
+        },
+        "remove": {
+            "button": "Remove",
+            "title": "Warning",
+            "msg": "Are you sure to delete station {{name}}? You can't undo this action.",
+            "error": {
+                "title": "Deletion Error",
+                "msg": "You are not allowed to delete this station!"
+            }
+        }
+    },
+
+    "info": {
+        "title": "Rail Map Generator",
+        "notice": "Notice: Due to copyright, licensing and other legal restrictions, Rail Map Generator uses GenYoMin and Vegur instead of MTRSung and Myriad Pro respectively for MTR-style maps. If you have obtained the license of either font, please feel free to edit the relevant code chunk of the exported SVG file.",
+        "feedback": "Report Issues",
+        "core": {
+            "title": "Core contributors",
+            "wongchito": {
+                "first": "Project initiator",
+                "second": "MTR and Guangzhou Metro Author"
+            },
+            "thekingofcity": {
+                "first": "Shanghai Metro Author",
+                "second": "Electron Maintainer"
+            }
+        },
+        "colorAndLine": {
+            "title": "Color palette and line templates contributors",
+            "note": {
+                "first": "Want to be on the list? Follow the ",
+                "second": "contribution wiki",
+                "third": " and open an issue today!"
+            }
+        }
+    },
+
+    "colour": {
+        "title": "Edit Names and Colours",
+        "city": "City",
+        "line": "Line",
+        "tooltip": "Colour Picker",
+        "colour": "Background",
+        "fg": "Foreground",
+        "fgBlack": "Black",
+        "fgWhite": "White",
+        "palette": "Palette",
+        "custom": "Custom",
+        "recent": "Recently Used"
+    },
+
+    "editor": {
+        "zh": "Chinese characters",
+        "en": "Latin characters",
+        "enterToWrap": "Use Enter key to wrap text",
+        "backslashToWrap": "Use a backslash (\\) to wrap text"
+    },
+
+    "dialog": {
+        "done": "Done",
+        "cancel": "Cancel",
+        "ok": "OK",
+        "confirm": "Confirm",
+        "close": "Close"
+    },
+
+    "expansion": {
+        "collapse": "Collapse",
+        "expand": "Expand"
+    }
+}

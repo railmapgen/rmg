@@ -1,0 +1,37 @@
+.Name.Pass {
+    fill: #aaa;
+}
+.Name.Current {
+    fill: #fff;
+}
+.Name.CurrentGZ {
+    fill: #f00;
+}
+.Name.Future {
+    fill: #000;
+}
+
+g#line_name {
+    transform: translate(var(--translate-x, 0px), -18px) scale(1.5);
+}
+
+g#direction_gz {
+    transform: translate(var(--translate-x), var(--translate-y));
+    --translate-x: calc(var(--rmg-svg-width) * var(--x-percentage, 50) / 100);
+    --translate-y: calc(var(--rmg-svg-height) * var(--y-percentage, 70) / 100);
+}
+g#direction_gz use {
+    transform: scale(0.35) rotate(var(--rotate, 0deg));
+}
+
+g#terminus_gz {
+    transform: translate(var(--translate-x), var(--translate-y));
+    --translate-x: calc(var(--rmg-svg-width) / 2);
+    --translate-y: calc(var(--rmg-svg-height) / 2 - 50px);
+}
+
+g.note-box {
+    transform: translate(var(--translate-x), var(--translate-y));
+    --translate-x: calc(var(--x-percentage, 0) * var(--rmg-svg-width) / 100);
+    --translate-y: calc(var(--y-percentage, 0) * var(--rmg-svg-height) / 100);
+}

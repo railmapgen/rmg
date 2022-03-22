@@ -1,0 +1,43 @@
+.rmg-stn__mtr {
+    fill: #fff;
+    stroke-width: 2.69;
+    stroke-dasharray: 0;
+}
+.rmg-stn__mtr--future {stroke: var(--rmg-black);}
+.rmg-stn__mtr--pass {stroke: var(--rmg-grey);}
+.rmg-stn__mtr--unpaid-osi {
+    stroke-width: 2.69;
+    stroke-dasharray: 2.5;
+}
+.rmg-stn__mtr--paid-osi {
+    stroke-width: 2.69;
+}
+
+.rmg-line {fill:none}
+.rmg-line__mtr {
+    stroke-width: 9.68;
+}
+.rmg-line__mtr:not(.rmg-line__change) {
+    stroke: var(--rmg-theme-colour);
+}
+.rmg-line__mtr.rmg-line__change {stroke-width: 8;}
+.rmg-line__mtr.rmg-line__pass {
+    stroke: var(--rmg-grey);
+}
+
+.Name.Pass {fill: var(--rmg-grey);}
+.Name.Current {fill: #fff;}
+.Name.Future {fill: var(--rmg-black);}
+
+.rmg-name__en.rmg-name__mtr--station {font-size: 11px;}
+.rmg-name__zh.rmg-name__mtr--station {font-size: 18px;}
+
+.rmg-name__en.rmg-name__mtr--osi {font-size: 9px;}
+.rmg-name__zh.rmg-name__mtr--osi {font-size: 14px;}
+
+.rmg-name__en.IntName {font-size: 7px;}
+.rmg-name__zh.IntName {font-size: 10px;}
+
+rect#current_bg {
+    fill: var(--rmg-black);
+}

@@ -1,0 +1,12 @@
+.rmg-name__zh {
+    font-family: Arial, SimHei, STHeiti, STHeitiSC-Medium, PingFangSC-Regular, sans-serif;
+}
+.rmg-name__en {
+    font-family: Arial, sans-serif;
+}
+
+:root {
+    --rmg-black: black;
+    --rmg-grey: gray;
+    --rmg-white: white;
+}

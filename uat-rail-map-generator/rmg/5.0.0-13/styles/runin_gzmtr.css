@@ -1,0 +1,51 @@
+.rmg-name__en.rmg-name__gzmtr--next2-dest {
+    font-size: 8.5px;
+}
+
+g#big_name {
+    text-anchor: middle;
+    transform: translate(var(--translate-x), var(--translate-y, 125px));
+    --translate-x: calc(var(--rmg-svg-width) / 2);
+}
+
+g#big_sec {
+    transform: translate(var(--translate-x), var(--translate-y, 125px));
+    --translate-x: calc(var(--rmg-svg-width) / 2);
+}
+
+g#big_next {
+    --translate-y: calc(var(--rmg-svg-height) / 2 - 40px);
+}
+g#big_next > g {
+    transform: translate(var(--translate-x, 80px), var(--translate-y));
+}
+
+g#big_next_2 g:nth-child(1),
+g#big_next_2 g:nth-child(2) {
+    transform: translate(var(--translate-x, 70px), var(--translate-y));
+    --translate-y: calc(var(--rmg-svg-height) / 2 - 70px);
+}
+g#big_next_2 g:nth-child(3),
+g#big_next_2 g:nth-child(4) {
+    transform: translate(var(--translate-x, 70px), var(--translate-y));
+    --translate-y: calc(var(--rmg-svg-height) / 2 + 40px);
+}
+g#big_next_2 text:nth-child(1) {
+    font-size: 27px;
+}
+g#big_next_2 text:nth-child(2) {
+    font-size: 13px;
+}
+g#big_next_2 text:nth-child(3) {
+    font-size: 18.5px;
+}
+
+g#run_in_gzmtr use#arrow {
+    transform: translate(var(--translate-x, 300px), var(--translate-y)) scale(0.25) rotate(var(--rotate, 0deg));
+    --translate-y: calc(var(--rmg-svg-height) / 2 - 30px);
+}
+
+#runin path#arrow {
+    transform: translate(var(--translate-x, 300px), var(--translate-y)) scale(0.25) rotate(var(--rotate, 0deg));
+    --translate-y: calc(var(--rmg-svg-height) / 2 - 30px);
+}

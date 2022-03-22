@@ -1,0 +1,308 @@
+{
+    "title": "铁路线路图生成器",
+
+    "toggle": {
+        "tooltip": "切换画布",
+        "all": "显示全部",
+        "destination": "终点站牌",
+        "runin": "站名牌",
+        "railmap": "线路图",
+        "indoor": "门板图"
+    },
+
+    "zoom": {
+        "in": "放大",
+        "out": "缩小"
+    },
+
+    "tab": {
+        "file": "文件",
+        "layout": "布局",
+        "design": "设计",
+        "stations": "车站",
+        "info": "信息"
+    },
+
+    "file": {
+        "new": {
+            "button": "新建画布",
+            "title": "选择模板",
+            "notice": "请注意：所有未保存之更改将会丢失。"
+        },
+        "open": {
+            "button": "从JSON文件打开",
+            "title": "你的线路设置"
+        },
+        "save": "保存为JSON文件",
+        "export": {
+            "button": "预览和输出",
+            "title": "选择画布",
+            "destination": "终点站牌",
+            "runin": "站名牌",
+            "railmap": "线路图",
+            "indoor": "门板图"
+        },
+        "preview": {
+            "title": "预览和输出",
+            "transparent": "透明背景",
+            "border": "显示边框",
+            "scale": "缩放比例",
+            "format": "格式",
+            "download": "下载",
+            "downloadCurrentStation": "下载当前车站",
+            "downloadAllStations": "下载所有车站",
+            "terms": {
+                "accept": "我同意",
+                "tandc": "条款及细则"
+            }
+        },
+        "style": {
+            "button": "风格",
+            "title": "选择风格",
+            "mtr": "港铁",
+            "gzmtr": "广州地铁",
+            "shmetro": "上海地铁"
+        },
+        "lang": {
+            "button": "语言/Language",
+            "title": "选择语言"
+        }
+    },
+
+    "layout": {
+        "size": {
+            "title": "画布尺寸",
+            "width": {
+                "destination": "终点站牌宽度",
+                "runin": "站名牌宽度",
+                "railmap": "线路图宽度",
+                "indoor": "门板图宽度"
+            },
+            "height": "画布高度"
+        },
+        "y": "垂直位置",
+        "branchSpacing": "支线间距",
+        "padding": "线路图边距",
+        "directionGZ": {
+            "title": "终点站指示位置",
+            "horizontal": "水平位置",
+            "vertical": "垂直位置",
+            "left": "左",
+            "right": "右",
+            "top": "顶部",
+            "bottom": "底部"
+        }
+    },
+
+    "design": {
+        "theme": "主题颜色和线路名称",
+        "direction": {
+            "button": "行驶方向",
+            "l": "左行",
+            "r": "右行",
+            "switch": "交换"
+        },
+        "platform": "站台号",
+        "txtFlip": {
+            "text": "交错显示车站名称",
+            "flipText": "车站名称位置",
+            "flip": "翻转"
+        },
+        "MTRDest": {
+            "button": "自定义终点站牌",
+            "legacy": "显示线路名称",
+            "terminal": "重写终点站信息",
+            "zh": "汉字",
+            "en": "拉丁字母"
+        },
+        "MTRLegacy": "旧款终点站牌样式",
+        "lineNum": "线路编码",
+        "psd": "屏蔽门号",
+        "panelType": {
+            "button": "屏蔽门盖板样式",
+            "title": "选择屏蔽门盖板样式",
+            "gz1": "一号线",
+            "gz28": "二/八号线（松下）",
+            "gz2otis": "二/八号线（奥的斯）",
+            "gz3": "三号线",
+            "gz1421": "四（南）/七/九/十三/十四/二十一号线",
+            "gz6": "六号线/广佛线",
+            "gzgf": "六号线/广佛线二期",
+            "gz4": "四号线",
+            "gz5": "五号线",
+            "sh": "默认样式",
+            "sh2020": "2020年样式(测试版)"
+        },
+        "autoNum": {
+            "button": "车站自动编码",
+            "title": "警告",
+            "msg": "主线上的车站即将被重新编码。此动作将不能被撤销。",
+            "ascend": "升序编码",
+            "descend": "降序编码"
+        },
+        "notesGZMTR": {
+            "text": "备注",
+            "addNote": "添加备注",
+            "edit": "编辑",
+            "remove": "删除",
+            "add": "添加",
+            "editNote": "编辑备注",
+            "border": "显示边框"
+        }
+    },
+
+    "stations": {
+        "current": "设为当前车站",
+        "fabs": {
+            "tooltip": "选项",
+            "add": "添加车站",
+            "reverse": "翻转全线车站顺序"
+        },
+        "add": {
+            "title": "选择车站位置",
+            "prep": "相对位置",
+            "before": "先于",
+            "after": "后于",
+            "station": "车站",
+            "pivot": "定位车站",
+            "on": "在",
+            "loc": "线路位置",
+            "centre": "主线",
+            "upper": "上方支线",
+            "lower": "下方支线",
+            "newUpper": "新建上方支线",
+            "newLower": "新建下方支线",
+            "bypass": "绕过所有车站直至",
+            "end": "支线终点"
+        },
+        "edit": {
+            "title": "编辑车站详情",
+            "button": "编辑",
+            "tab": {
+                "name": "名称",
+                "interchange": "换乘",
+                "branch": "支线",
+                "more": "更多"
+            },
+            "name": {
+                "secondary": "车站第二名称"
+            },
+            "interchange": {
+                "within": "站内换乘",
+                "osi": "出站换乘",
+                "osysi": "出站转乘",
+                "note": "请注意，部分换乘组合可能无法正常显示。",
+                "add": "添加",
+                "osiName": "编辑出站换乘车站名称",
+                "settings": "更多设置",
+                "tickDirec": {
+                    "label": "换乘文字方向",
+                    "l": "左",
+                    "r": "右"
+                },
+                "paidArea": "付费区内出站换乘"
+            },
+            "branch": {
+                "left": "左方支线",
+                "right": "右方支线",
+                "type": {
+                    "title": "支线类型",
+                    "na": "（未找到支线）",
+                    "through": "贯通（无需换乘）",
+                    "nonThrough": "非贯通（需换乘）"
+                },
+                "first": "支线首站",
+                "pos": {
+                    "title": "支线位置",
+                    "upper": "上方",
+                    "lower": "下方"
+                }
+            },
+            "more": {
+                "facility": {
+                    "button": "设施",
+                    "title": "选择车站附近的设施",
+                    "airport": "机场",
+                    "hsr": "高铁",
+                    "disney": "迪士尼",
+                    "railway": "火车站",
+                    "none": "无"
+                },
+                "services": {
+                    "button": "列车类别",
+                    "local": "普通车",
+                    "express": "快车",
+                    "direct": "直达车"
+                }
+            }
+        },
+        "remove": {
+            "button": "删除",
+            "title": "警告",
+            "msg": "是否确认删除车站{{name}}？此动作将不能被撤销。",
+            "error": {
+                "title": "删除错误",
+                "msg": "此车站不能被删除！"
+            }
+        }
+    },
+
+    "info": {
+        "title": "铁路线路图生成器",
+        "notice": "请注意：由于著作权及有关法律限制，铁路线路图生成器使用源样明体及Vegur，以代替港铁样式线路图所使用之地铁宋及Myriad Pro。如您拥有该字体之授权，可自行于输出之SVG文件内修改相关代码。",
+        "feedback": "反馈问题",
+        "core": {
+            "title": "核心贡献者",
+            "wongchito": {
+                "first": "项目创始人",
+                "second": "香港地铁和广州地铁风格作者"
+            },
+            "thekingofcity": {
+                "first": "上海地铁风格作者",
+                "second": "桌面版维护者"
+            }
+        },
+        "colorAndLine": {
+            "title": "线路调色板和模板贡献者",
+            "note": {
+                "first": "想成为列表中的一员吗？打开",
+                "second": "如何贡献的教程",
+                "third": "并创建一个新的问题吧！"
+            }
+        }
+    },
+
+    "colour": {
+        "title": "编辑名称和颜色",
+        "city": "城市",
+        "line": "线路",
+        "tooltip": "颜色选择器",
+        "colour": "背景色",
+        "fg": "前景色",
+        "fgBlack": "黑",
+        "fgWhite": "白",
+        "palette": "颜色库",
+        "custom": "自定义",
+        "recent": "最近使用"
+    },
+
+    "editor": {
+        "zh": "汉字",
+        "en": "拉丁字母",
+        "enterToWrap": "用回车键使文本换行",
+        "backslashToWrap": "用反斜杠（\\）使名称换行"
+    },
+
+    "dialog": {
+        "done": "完成",
+        "cancel": "取消",
+        "ok": "好",
+        "confirm": "确认",
+        "close": "关闭"
+    },
+
+    "expansion": {
+        "collapse": "折叠",
+        "expand": "展开"
+    }
+}
