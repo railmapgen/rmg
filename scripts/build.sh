@@ -16,7 +16,7 @@ git config --global user.email rmg.build.agent@users.noreply.github.com
 # variables
 export APP_NAME=rmg
 BRANCH=$(git branch | grep \* | cut -d ' ' -f2 | tr '/' '.')
-UAT_REPO_NAME=uat-rail-map-generator
+UAT_REPO_NAME=rmg-repositories
 
 ### BUMP VERSION
 if [ "$BRANCH" = "v5.main" ]
