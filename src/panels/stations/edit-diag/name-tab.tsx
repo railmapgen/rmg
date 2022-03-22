@@ -27,7 +27,9 @@ const NameTab = (props: Props) => {
 
     return (
         <List component="div">
-            {(rmgStyle === RmgStyle.GZMTR || (rmgStyle === RmgStyle.SHMetro && showStationNumber)) && <NumInput {...props} />}
+            {(rmgStyle === RmgStyle.GZMTR || (rmgStyle === RmgStyle.SHMetro && showStationNumber)) && (
+                <NumInput {...props} />
+            )}
             <NameInput {...props} />
             {rmgStyle === RmgStyle.GZMTR && <SecondaryNameInput {...props} />}
         </List>

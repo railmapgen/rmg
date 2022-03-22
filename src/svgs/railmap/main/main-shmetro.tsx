@@ -330,21 +330,29 @@ const StationGroup = (props: StationGroupProps) => {
                 .map(stnId => (
                     <>
                         <g key={stnId} transform={`translate(${props.xs[stnId]},${props.ys[stnId]})`}>
-                            {(param.showStationNumberRailmap&&param.showStationNumber)?<g>
-                                <circle cx="0" cy="0" r="20" stroke={props.stnStates[stnId] === -1 ? 'gray' : 'var(--rmg-theme-colour)'} strokeWidth="5" fill="white">
-                                </circle>
-                                <line x1="-18" y1="0" x2="18" y2="0" stroke="rgb(0,0,0)" strokeWidth="2" />
-                                <g textAnchor="middle">
-                                    <text className="rmg-station-name" fontSize={15}
-                                        dy={-3}>
-                                        {param.line_num}
-                                    </text>
-                                    <text className="rmg-station-name" fontSize={15}
-                                        dy={15}>
-                                        {param.stn_list[stnId].num}
-                                    </text>
+                            {param.showStationNumberRailmap && param.showStationNumber ? (
+                                <g>
+                                    <circle
+                                        cx="0"
+                                        cy="0"
+                                        r="20"
+                                        stroke={props.stnStates[stnId] === -1 ? 'gray' : 'var(--rmg-theme-colour)'}
+                                        strokeWidth="5"
+                                        fill="white"
+                                    ></circle>
+                                    <line x1="-18" y1="0" x2="18" y2="0" stroke="rgb(0,0,0)" strokeWidth="2" />
+                                    <g textAnchor="middle">
+                                        <text className="rmg-station-name" fontSize={15} dy={-3}>
+                                            {param.line_num}
+                                        </text>
+                                        <text className="rmg-station-name" fontSize={15} dy={15}>
+                                            {param.stn_list[stnId].num}
+                                        </text>
+                                    </g>
                                 </g>
-                            </g>:<></>}
+                            ) : (
+                                <></>
+                            )}
                             <StationSHMetro stnId={stnId} stnState={props.stnStates[stnId]} />
                         </g>
                     </>
@@ -360,11 +368,11 @@ const ServicesElements = (props: { servicesLevel: Services[]; direction: 'l' | '
 
     const servicesLevel = props.servicesLevel.map(
         service =>
-        ({
-            local: '普通车',
-            express: '大站车',
-            direct: '直达车',
-        }[service])
+            ({
+                local: '普通车',
+                express: '大站车',
+                direct: '直达车',
+            }[service])
     );
 
     // let dx = props.direction === 'r' ? 5 : param.svgWidth.railmap - 55;
@@ -408,15 +416,17 @@ const DirectionElements = () => {
     return React.useMemo(
         () => (
             <g
-                transform={`translate(${param.direction === 'l' ? 50 : param.svgWidth.railmap - 150},${-param.svg_height + 100
-                    })`}
+                transform={`translate(${param.direction === 'l' ? 50 : param.svgWidth.railmap - 150},${
+                    -param.svg_height + 100
+                })`}
             >
                 <text className="rmg-name__zh">列车前进方向</text>
                 <path
                     d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
                     fill="var(--rmg-theme-colour)"
-                    transform={`translate(${param.direction === 'l' ? -30 : 125},-5)rotate(${param.direction === 'l' ? 0 : 180
-                        })scale(0.15)`}
+                    transform={`translate(${param.direction === 'l' ? -30 : 125},-5)rotate(${
+                        param.direction === 'l' ? 0 : 180
+                    })scale(0.15)`}
                 />
             </g>
         ),

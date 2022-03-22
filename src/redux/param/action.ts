@@ -246,11 +246,11 @@ export const setPanelType = (panelType: PanelTypeShmetro | PanelTypeGZMTR): setP
     return { type: SET_PANEL_TYPE, panelType };
 };
 
-export const setShowStationNumber = (showStationNumber:boolean): setShowStationNumberAction => {
+export const setShowStationNumber = (showStationNumber: boolean): setShowStationNumberAction => {
     return { type: SET_SHOW_STATION_NUMBER, showStationNumber };
 };
 
-export const setShowStationNumberRailmap = (showStationNumberRailmap:boolean): setShowStationNumberRailmapAction => {
+export const setShowStationNumberRailmap = (showStationNumberRailmap: boolean): setShowStationNumberRailmapAction => {
     return { type: SET_SHOW_STATION_NUMBER_RAILMAP, showStationNumberRailmap };
 };
 

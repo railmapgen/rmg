@@ -68,8 +68,8 @@ const initialState: RMGParam = {
     theme: [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white],
     line_name: ['線', 'line'],
     current_stn_idx: '',
-    showStationNumber:false,
-    showStationNumberRailmap:true,
+    showStationNumber: false,
+    showStationNumberRailmap: true,
     stn_list: {},
     namePosMTR: {
         isStagger: true,
@@ -182,10 +182,10 @@ export default function ParamReducer(
             state.stn_list = action.stations;
             break;
         case SET_SHOW_STATION_NUMBER:
-            state.showStationNumber=action.showStationNumber;
+            state.showStationNumber = action.showStationNumber;
             break;
         case SET_SHOW_STATION_NUMBER_RAILMAP:
-            state.showStationNumberRailmap=action.showStationNumberRailmap;
+            state.showStationNumberRailmap = action.showStationNumberRailmap;
             break;
         default:
             break;

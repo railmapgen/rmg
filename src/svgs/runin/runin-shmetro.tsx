@@ -89,11 +89,15 @@ const GeneralStation = (props: RunInGeneralProps) => {
     const original = props.prevStnIds.length === 1 && ['linestart', 'lineend'].includes(props.prevStnIds[0]);
 
     const nextNames = props.nextStnIds.map(stnId => param.stn_list[stnId].name);
-    const nextBranchLineDy = (props.nextStnIds.length > 1 ? (nextNames[0][0].split('\\').length - 1) * -50 +
-        (nextNames[0][1].split('\\').length - 1) * -30 : 0) + 10
+    const nextBranchLineDy =
+        (props.nextStnIds.length > 1
+            ? (nextNames[0][0].split('\\').length - 1) * -50 + (nextNames[0][1].split('\\').length - 1) * -30
+            : 0) + 10;
     const prevNames = props.prevStnIds.map(stnId => param.stn_list[stnId].name);
-    const prevBranchLineDy = (props.prevStnIds.length > 1 ? (prevNames[0][0].split('\\').length - 1) * -50 +
-        (prevNames[0][1].split('\\').length - 1) * -30 : 0) + 10
+    const prevBranchLineDy =
+        (props.prevStnIds.length > 1
+            ? (prevNames[0][0].split('\\').length - 1) * -50 + (prevNames[0][1].split('\\').length - 1) * -30
+            : 0) + 10;
     return (
         <>
             <g transform="translate(0,110)" strokeWidth={12} fill="none">
@@ -102,9 +106,18 @@ const GeneralStation = (props: RunInGeneralProps) => {
                         stroke="var(--rmg-theme-colour)"
                         d={
                             param.direction === 'l'
-                                ? `M${param.svgWidth.runin / 3},125 L${param.showStationNumber?param.svgWidth.runin / 6 + 20:param.svgWidth.runin / 6},${param.showStationNumber?nextBranchLineDy - 40:nextBranchLineDy} H${param.showStationNumber?32:36}`
-                                : `M${(param.svgWidth.runin / 3) * 2},125 L${param.showStationNumber?(param.svgWidth.runin / 6) * 5 + 20:(param.svgWidth.runin / 6) * 5 + 40},${param.showStationNumber?nextBranchLineDy - 40:nextBranchLineDy} H${param.svgWidth.runin - 36
-                                }`
+                                ? `M${param.svgWidth.runin / 3},125 L${
+                                      param.showStationNumber ? param.svgWidth.runin / 6 + 20 : param.svgWidth.runin / 6
+                                  },${param.showStationNumber ? nextBranchLineDy - 40 : nextBranchLineDy} H${
+                                      param.showStationNumber ? 32 : 36
+                                  }`
+                                : `M${(param.svgWidth.runin / 3) * 2},125 L${
+                                      param.showStationNumber
+                                          ? (param.svgWidth.runin / 6) * 5 + 20
+                                          : (param.svgWidth.runin / 6) * 5 + 40
+                                  },${param.showStationNumber ? nextBranchLineDy - 40 : nextBranchLineDy} H${
+                                      param.svgWidth.runin - 36
+                                  }`
                         }
                         markerEnd="url(#slope)"
                     />
@@ -115,9 +128,20 @@ const GeneralStation = (props: RunInGeneralProps) => {
                             stroke="var(--rmg-grey)"
                             d={
                                 param.direction === 'l'
-                                    ? `M${(param.svgWidth.runin / 3) * 2},125 L${param.showStationNumber?param.svgWidth.runin / 6*5 + 20:param.svgWidth.runin / 6*5},${param.showStationNumber?prevBranchLineDy - 40:prevBranchLineDy} H${param.svgWidth.runin - 24
-                                    }`
-                                    : `M${param.svgWidth.runin / 3},125 L${param.showStationNumber?param.svgWidth.runin / 6 + 20:param.svgWidth.runin / 6},${param.showStationNumber?prevBranchLineDy - 40:prevBranchLineDy} H${param.showStationNumber?32:24}`
+                                    ? `M${(param.svgWidth.runin / 3) * 2},125 L${
+                                          param.showStationNumber
+                                              ? (param.svgWidth.runin / 6) * 5 + 20
+                                              : (param.svgWidth.runin / 6) * 5
+                                      },${param.showStationNumber ? prevBranchLineDy - 40 : prevBranchLineDy} H${
+                                          param.svgWidth.runin - 24
+                                      }`
+                                    : `M${param.svgWidth.runin / 3},125 L${
+                                          param.showStationNumber
+                                              ? param.svgWidth.runin / 6 + 20
+                                              : param.svgWidth.runin / 6
+                                      },${param.showStationNumber ? prevBranchLineDy - 40 : prevBranchLineDy} H${
+                                          param.showStationNumber ? 32 : 24
+                                      }`
                             }
                         />
                     </g>
@@ -134,10 +158,22 @@ const GeneralStation = (props: RunInGeneralProps) => {
                             d={`M24,16 H ${param.svgWidth.runin - 24}`}
                         />
                     </g>
-                    <g transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},${param.showStationNumber?120:160})`}
-                        textAnchor={param.direction === 'l' ? 'start' : 'end'} >
+                    <g
+                        transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},${
+                            param.showStationNumber ? 120 : 160
+                        })`}
+                        textAnchor={param.direction === 'l' ? 'start' : 'end'}
+                    >
                         <CurrentText />
-                        {(param.showStationNumber || false) && <StationNumber xpos={140} ypos={115} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={3} />}
+                        {(param.showStationNumber || false) && (
+                            <StationNumber
+                                xpos={140}
+                                ypos={115}
+                                lineName={param.line_num}
+                                stationNumber={param.stn_list[param.current_stn_idx].num}
+                                type_={3}
+                            />
+                        )}
                     </g>
                 </>
             ) : original && param.info_panel_type !== 'sh2020' ? (
@@ -153,10 +189,22 @@ const GeneralStation = (props: RunInGeneralProps) => {
                         }
                         markerEnd="url(#slope)"
                     />
-                    <g transform={`translate(${param.direction === 'l' ? 36:param.svgWidth.runin - 36 },${param.showStationNumber?120:160})`}
-                        textAnchor={param.direction === 'l' ? 'end' : 'start'} >
+                    <g
+                        transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},${
+                            param.showStationNumber ? 120 : 160
+                        })`}
+                        textAnchor={param.direction === 'l' ? 'end' : 'start'}
+                    >
                         <CurrentText />
-                        {(param.showStationNumber || false) && <StationNumber xpos={param.direction === 'l' ? -120 : 120} ypos={115} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={1} />}
+                        {(param.showStationNumber || false) && (
+                            <StationNumber
+                                xpos={param.direction === 'l' ? -120 : 120}
+                                ypos={115}
+                                lineName={param.line_num}
+                                stationNumber={param.stn_list[param.current_stn_idx].num}
+                                type_={1}
+                            />
+                        )}
                     </g>
                 </>
             ) : (
@@ -175,9 +223,17 @@ const GeneralStation = (props: RunInGeneralProps) => {
                         </g>
                     </g>
 
-                    <g transform={`translate(${middle},${param.showStationNumber?120:160})`} textAnchor="middle">
+                    <g transform={`translate(${middle},${param.showStationNumber ? 120 : 160})`} textAnchor="middle">
                         <CurrentText />
-                        {(param.showStationNumber || false) && <StationNumber xpos={0} ypos={120} lineName={param.line_num} stationNumber={param.stn_list[param.current_stn_idx].num} type_={1} />}
+                        {(param.showStationNumber || false) && (
+                            <StationNumber
+                                xpos={0}
+                                ypos={120}
+                                lineName={param.line_num}
+                                stationNumber={param.stn_list[param.current_stn_idx].num}
+                                type_={1}
+                            />
+                        )}
                     </g>
                 </>
             )}
@@ -214,15 +270,23 @@ const NextText = (props: { nextName: Name } & React.SVGProps<SVGGElement>) => {
             {useMemo(
                 () => (
                     <>
-                        {nextName[0].split('\\').map((name, i, array) => (  
-                            <text className="rmg-name__zh" fontSize={48} key={name}
-                                dy={(array.length - 1 - i) * -50 - (nextName[1].split('\\').length - 1) * 30}>
+                        {nextName[0].split('\\').map((name, i, array) => (
+                            <text
+                                className="rmg-name__zh"
+                                fontSize={48}
+                                key={name}
+                                dy={(array.length - 1 - i) * -50 - (nextName[1].split('\\').length - 1) * 30}
+                            >
                                 {name}
                             </text>
                         ))}
                         {nextName[1].split('\\').map((name, i, array) => (
-                            <text className="rmg-name__en" fontSize={24} key={name}
-                                dy={28 + (array.length - 1 - i) * -30}>
+                            <text
+                                className="rmg-name__en"
+                                fontSize={24}
+                                key={name}
+                                dy={28 + (array.length - 1 - i) * -30}
+                            >
                                 {name}
                             </text>
                         ))}
@@ -234,76 +298,110 @@ const NextText = (props: { nextName: Name } & React.SVGProps<SVGGElement>) => {
         </g>
     );
 };
-const StationNumberText = (props: { lineNum: string, stationNum: string, now: boolean } & React.SVGProps<SVGGElement>) => {
+const StationNumberText = (
+    props: { lineNum: string; stationNum: string; now: boolean } & React.SVGProps<SVGGElement>
+) => {
     const { lineNum, stationNum, now, ...others } = props;
     return now ? (
         <g textAnchor="middle" {...others}>
-            <text className="rmg-station-name" fontSize={29}
-                dy={0}>
+            <text className="rmg-station-name" fontSize={29} dy={0}>
                 {lineNum}
             </text>
-            <text className="rmg-station-name" fontSize={29}
-                dy={35}>
+            <text className="rmg-station-name" fontSize={29} dy={35}>
                 {stationNum}
             </text>
         </g>
     ) : (
         <g textAnchor="middle" {...others}>
-            <text className="rmg-station-name" fontSize={22}
-                dy={0}>
+            <text className="rmg-station-name" fontSize={22} dy={0}>
                 {lineNum}
             </text>
-            <text className="rmg-station-name" fontSize={22}
-                dy={28}>
+            <text className="rmg-station-name" fontSize={22} dy={28}>
                 {stationNum}
             </text>
         </g>
     );
 };
 
-const StationNumber = (props: { xpos: number, ypos: number, lineName: string, stationNumber: string, type_: number } & React.SVGProps<SVGGElement>) => {
+const StationNumber = (
+    props: {
+        xpos: number;
+        ypos: number;
+        lineName: string;
+        stationNumber: string;
+        type_: number;
+    } & React.SVGProps<SVGGElement>
+) => {
     const { xpos, ypos, lineName, stationNumber, type_, ...others } = props;
     switch (type_) {
         case 3: //Line end
             return (
-                <g >
-                    <circle cx={xpos} cy={ypos} r="45" stroke="var(--rmg-grey)" strokeWidth="10" fill="white">
-                    </circle>
+                <g>
+                    <circle cx={xpos} cy={ypos} r="45" stroke="var(--rmg-grey)" strokeWidth="10" fill="white"></circle>
                     <line x1={xpos - 40} y1={ypos} x2={xpos + 40} y2={ypos} stroke="rgb(0,0,0)" strokeWidth="2" />
-                    <StationNumberText transform={"translate(" + (xpos).toString() + "," + (ypos - 5).toString() + ")"} lineNum={lineName} stationNum={stationNumber} now={true} />
+                    <StationNumberText
+                        transform={'translate(' + xpos.toString() + ',' + (ypos - 5).toString() + ')'}
+                        lineNum={lineName}
+                        stationNum={stationNumber}
+                        now={true}
+                    />
                 </g>
             );
         case 2: //Next
             return (
-                <g >
-                    <circle cx={xpos} cy={ypos} r="35" stroke="var(--rmg-theme-colour)" strokeWidth="8" fill="white">
-                    </circle>
+                <g>
+                    <circle
+                        cx={xpos}
+                        cy={ypos}
+                        r="35"
+                        stroke="var(--rmg-theme-colour)"
+                        strokeWidth="8"
+                        fill="white"
+                    ></circle>
                     <line x1={xpos - 30} y1={ypos} x2={xpos + 30} y2={ypos} stroke="rgb(0,0,0)" strokeWidth="2" />
-                    <StationNumberText transform={"translate(" + (xpos).toString() + "," + (ypos - 5).toString() + ")"} lineNum={lineName} stationNum={stationNumber} now={false} />
-                </g>);
+                    <StationNumberText
+                        transform={'translate(' + xpos.toString() + ',' + (ypos - 5).toString() + ')'}
+                        lineNum={lineName}
+                        stationNum={stationNumber}
+                        now={false}
+                    />
+                </g>
+            );
         case 1: //Now
             return (
-                <g >
-                    <circle cx={xpos} cy={ypos} r="45" stroke="var(--rmg-theme-colour)" strokeWidth="10" fill="white">
-                    </circle>
+                <g>
+                    <circle
+                        cx={xpos}
+                        cy={ypos}
+                        r="45"
+                        stroke="var(--rmg-theme-colour)"
+                        strokeWidth="10"
+                        fill="white"
+                    ></circle>
                     <line x1={xpos - 40} y1={ypos} x2={xpos + 40} y2={ypos} stroke="rgb(0,0,0)" strokeWidth="2" />
-                    <StationNumberText transform={"translate(" + (xpos).toString() + "," + (ypos - 5).toString() + ")"} lineNum={lineName} stationNum={stationNumber} now={true} />
+                    <StationNumberText
+                        transform={'translate(' + xpos.toString() + ',' + (ypos - 5).toString() + ')'}
+                        lineNum={lineName}
+                        stationNum={stationNumber}
+                        now={true}
+                    />
                 </g>
             );
         case 0: //Past
             return (
-                <g >
-                    <circle cx={xpos} cy={ypos} r="35" stroke="var(--rmg-grey)" strokeWidth="8" fill="white">
-                    </circle>
+                <g>
+                    <circle cx={xpos} cy={ypos} r="35" stroke="var(--rmg-grey)" strokeWidth="8" fill="white"></circle>
                     <line x1={xpos - 30} y1={ypos} x2={xpos + 30} y2={ypos} stroke="rgb(0,0,0)" strokeWidth="2" />
-                    <StationNumberText transform={"translate(" + (xpos).toString() + "," + (ypos - 5).toString() + ")"} lineNum={lineName} stationNum={stationNumber} now={false} />
+                    <StationNumberText
+                        transform={'translate(' + xpos.toString() + ',' + (ypos - 5).toString() + ')'}
+                        lineNum={lineName}
+                        stationNum={stationNumber}
+                        now={false}
+                    />
                 </g>
             );
         default:
-            return (
-                <>
-                </>
-            );
+            return <></>;
     }
 };
 
@@ -311,7 +409,8 @@ const PrevStn = (props: { stnIds: string[] }) => {
     const param = useAppSelector(store => store.param);
     const nextNames = props.stnIds.map(stnId => param.stn_list[stnId].name);
     const nextNumbers = props.stnIds.map(stnId => param.stn_list[stnId].num);
-    const prevHintDy = (props.stnIds.length > 1 ? 15 : 125) +
+    const prevHintDy =
+        (props.stnIds.length > 1 ? 15 : 125) +
         nextNames.map(name => name[0].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -50 +
         nextNames.map(name => name[1].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -30;
     const nextBranchTextDy =
@@ -325,15 +424,44 @@ const PrevStn = (props: { stnIds: string[] }) => {
             textAnchor={param.direction === 'l' ? 'end' : 'start'}
             transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},0)`}
         >
-            <NextText nextName={nextNames[0]} transform={`translate(0,${param.showStationNumber?160:183})`} />
-            {(param.showStationNumber || false) && <StationNumber xpos={param.direction === 'l' ? -80 : 80} ypos={235} lineName={param.line_num} stationNumber={nextNumbers[0]} type_={0} />}
+            <NextText nextName={nextNames[0]} transform={`translate(0,${param.showStationNumber ? 160 : 183})`} />
+            {(param.showStationNumber || false) && (
+                <StationNumber
+                    xpos={param.direction === 'l' ? -80 : 80}
+                    ypos={235}
+                    lineName={param.line_num}
+                    stationNumber={nextNumbers[0]}
+                    type_={0}
+                />
+            )}
             {props.stnIds.length > 1 && (
                 <>
-                    <NextText nextName={nextNames[1]} transform={`translate(0,${param.showStationNumber?nextBranchTextDy - 63:nextBranchTextDy})`} />
-                    {(param.showStationNumber || false) && <StationNumber xpos={param.direction === 'l' ? -80 : 80} ypos={nextBranchTextDy + 10} lineName={param.line_num} stationNumber={nextNumbers[1]} type_={0} />}
+                    <NextText
+                        nextName={nextNames[1]}
+                        transform={`translate(0,${param.showStationNumber ? nextBranchTextDy - 63 : nextBranchTextDy})`}
+                    />
+                    {(param.showStationNumber || false) && (
+                        <StationNumber
+                            xpos={param.direction === 'l' ? -80 : 80}
+                            ypos={nextBranchTextDy + 10}
+                            lineName={param.line_num}
+                            stationNumber={nextNumbers[1]}
+                            type_={0}
+                        />
+                    )}
                 </>
             )}
-            <g transform={`translate(0, ${props.stnIds.length > 1 ? (param.showStationNumber?prevHintDy - 60:prevHintDy) : (param.showStationNumber?prevHintDy - 20:prevHintDy)})`}>
+            <g
+                transform={`translate(0, ${
+                    props.stnIds.length > 1
+                        ? param.showStationNumber
+                            ? prevHintDy - 60
+                            : prevHintDy
+                        : param.showStationNumber
+                        ? prevHintDy - 20
+                        : prevHintDy
+                })`}
+            >
                 <text className="rmg-name__zh" fontSize={22}>
                     上一站
                 </text>
@@ -342,34 +470,69 @@ const PrevStn = (props: { stnIds: string[] }) => {
                 </text>
             </g>
         </g>
-    )
+    );
 };
 
 const NextStn = (props: { stnIds: string[] }) => {
     const param = useAppSelector(store => store.param);
     const nextNames = props.stnIds.map(stnId => param.stn_list[stnId].name);
     const nextNumbers = props.stnIds.map(stnId => param.stn_list[stnId].num);
-    const nextHintDy = (props.stnIds.length > 1 ? 15 : 125) +
+    const nextHintDy =
+        (props.stnIds.length > 1 ? 15 : 125) +
         nextNames.map(name => name[0].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -50 +
-        nextNames.map(name => name[1].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -30
-    const nextBranchTextDy = (props.stnIds.length > 1 ? (nextNames[0][0].split('\\').length - 1) * -50 +
-        (nextNames[0][1].split('\\').length - 1) * -30 : 0) + 70
-
+        nextNames.map(name => name[1].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -30;
+    const nextBranchTextDy =
+        (props.stnIds.length > 1
+            ? (nextNames[0][0].split('\\').length - 1) * -50 + (nextNames[0][1].split('\\').length - 1) * -30
+            : 0) + 70;
 
     return (
         <g
             textAnchor={param.direction === 'l' ? 'start' : 'end'}
             transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},0)`}
         >
-            <NextText nextName={param.stn_list[props.stnIds[0]].name} transform={`translate(0,${param.showStationNumber?160:183})`} />
-            {(param.showStationNumber || false) && <StationNumber xpos={param.direction === 'l' ? 80 : -80} ypos={235} lineName={param.line_num} stationNumber={nextNumbers[0]} type_={2} />}
-            ({props.stnIds.length > 1 && (
+            <NextText
+                nextName={param.stn_list[props.stnIds[0]].name}
+                transform={`translate(0,${param.showStationNumber ? 160 : 183})`}
+            />
+            {(param.showStationNumber || false) && (
+                <StationNumber
+                    xpos={param.direction === 'l' ? 80 : -80}
+                    ypos={235}
+                    lineName={param.line_num}
+                    stationNumber={nextNumbers[0]}
+                    type_={2}
+                />
+            )}
+            (
+            {props.stnIds.length > 1 && (
                 <>
-                    <NextText nextName={param.stn_list[props.stnIds[1]].name} transform={`translate(0,${param.showStationNumber?nextBranchTextDy - 63:nextBranchTextDy})`} />
-                    {(param.showStationNumber || false) && <StationNumber xpos={param.direction === 'l' ? 80 : -80} ypos={nextBranchTextDy + 10} lineName={param.line_num} stationNumber={nextNumbers[1]} type_={2} />}
+                    <NextText
+                        nextName={param.stn_list[props.stnIds[1]].name}
+                        transform={`translate(0,${param.showStationNumber ? nextBranchTextDy - 63 : nextBranchTextDy})`}
+                    />
+                    {(param.showStationNumber || false) && (
+                        <StationNumber
+                            xpos={param.direction === 'l' ? 80 : -80}
+                            ypos={nextBranchTextDy + 10}
+                            lineName={param.line_num}
+                            stationNumber={nextNumbers[1]}
+                            type_={2}
+                        />
+                    )}
                 </>
             )}
-            <g transform={`translate(0, ${props.stnIds.length > 1 ? (param.showStationNumber?nextHintDy - 60:nextHintDy) : (param.showStationNumber?nextHintDy - 20:nextHintDy)})`}>
+            <g
+                transform={`translate(0, ${
+                    props.stnIds.length > 1
+                        ? param.showStationNumber
+                            ? nextHintDy - 60
+                            : nextHintDy
+                        : param.showStationNumber
+                        ? nextHintDy - 20
+                        : nextHintDy
+                })`}
+            >
                 <text className="rmg-name__zh" fontSize={22}>
                     下一站
                 </text>

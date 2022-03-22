@@ -35,14 +35,14 @@ const StationSHMetro = (props: Props) => {
 
     return (
         <>
-            {
-                (!(param.showStationNumberRailmap&&param.showStationNumber))?
-                    <use
-                        xlinkHref={`#${stationIconStyle}`}
-                        {...stationIconColor} // different styles use either `fill` or `stroke`
-                    />
-                :<></>
-            }
+            {!(param.showStationNumberRailmap && param.showStationNumber) ? (
+                <use
+                    xlinkHref={`#${stationIconStyle}`}
+                    {...stationIconColor} // different styles use either `fill` or `stroke`
+                />
+            ) : (
+                <></>
+            )}
             <g transform={`translate(${branchNameDX},0)`}>
                 <StationNameGElement
                     name={stnInfo.name}

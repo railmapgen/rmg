@@ -195,7 +195,7 @@ export interface RMGParam {
     /**
      * Display the station number in railmap or not.
      */
-    showStationNumberRailmap: boolean,
+    showStationNumberRailmap: boolean;
     /**
      * Key-value pairs of the information of each station.
      */

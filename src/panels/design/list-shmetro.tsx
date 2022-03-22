@@ -1,6 +1,20 @@
 import React, { ChangeEvent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Switch, ListItem, ListItemIcon, Icon, ListItemText, Divider, Select, makeStyles, createStyles, ListItemSecondaryAction, Collapse, List, TextField } from '@material-ui/core';
+import {
+    Switch,
+    ListItem,
+    ListItemIcon,
+    Icon,
+    ListItemText,
+    Divider,
+    Select,
+    makeStyles,
+    createStyles,
+    ListItemSecondaryAction,
+    Collapse,
+    List,
+    TextField,
+} from '@material-ui/core';
 import { PanelTypeShmetro } from '../../constants/constants';
 import { useAppDispatch, useAppSelector } from '../../redux';
 import { setPanelType, setLineNum, setShowStationNumber, setShowStationNumberRailmap } from '../../redux/param/action';
@@ -84,11 +98,19 @@ const StationNumberSHMetroLi = () => {
                         <ListItem>
                             <ListItemText primary={t('design.stationNumberRailmap')} />
                             <ListItemSecondaryAction>
-                                <Switch color="primary" checked={station_number_railmap !== false} onChange={handleSwitchSecondary} />
+                                <Switch
+                                    color="primary"
+                                    checked={station_number_railmap !== false}
+                                    onChange={handleSwitchSecondary}
+                                />
                             </ListItemSecondaryAction>
                         </ListItem>
                         <ListItem>
-                            <TextField placeholder={t('design.lineNum')} defaultValue={line_number} onChange={handleChange} />
+                            <TextField
+                                placeholder={t('design.lineNum')}
+                                defaultValue={line_number}
+                                onChange={handleChange}
+                            />
                         </ListItem>
                     </List>
                 </Collapse>
