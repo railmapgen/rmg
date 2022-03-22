@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
     Button,
     Modal,
@@ -27,61 +27,19 @@ export default function AddStationModal(props: AddStationModalProps) {
     const [to, setTo] = useState('');
     const [position, setPosition] = useState<'upper' | 'lower'>('upper');
 
-    const [fromError, setFromError] = useState(false);
-    const [toError, setToError] = useState(false);
+    const [fromError, setFromError] = useState('');
+    const [toError, setToError] = useState('');
 
     const stationList = useAppSelector(state => state.param.stn_list);
     const branches = useAppSelector(state => state.helper.branches);
 
     const selectedBranch = where === 'new' ? [] : branches[Number(where)];
 
-    useEffect(() => {
-        setFromError(false);
-        if (from && to) {
-            if (selectedBranch.length) {
-                setToError(selectedBranch.indexOf(to) - selectedBranch.indexOf(from) !== 1);
-            } else {
-                const newBranchEndsVerification = dispatch(verifyNewBranchEnds(from, to));
-                if (newBranchEndsVerification) {
-                    console.log(newBranchEndsVerification);
-                    setToError(true);
-                } else {
-                    setToError(false);
-                }
-            }
-        }
-    }, [from]);
-
-    useEffect(() => {
-        setToError(false);
-        if (from && to) {
-            if (selectedBranch.length) {
-                setFromError(selectedBranch.indexOf(to) - selectedBranch.indexOf(from) !== 1);
-            } else {
-                const newBranchEndsVerification = dispatch(verifyNewBranchEnds(from, to));
-                if (newBranchEndsVerification) {
-                    console.log(newBranchEndsVerification);
-                    setFromError(true);
-                } else {
-                    setFromError(false);
-                }
-            }
-        }
-    }, [to]);
-
-    useEffect(() => {
-        if (from && to && selectedBranch.length) {
-            const isError = selectedBranch.indexOf(to) - selectedBranch.indexOf(from) !== 1;
-            setFromError(isError);
-            setToError(isError);
-        }
-    }, [selectedBranch?.toString()]);
-
     const getStationOptions = (stationIdList: string[]): Record<string, string> => {
         return stationIdList.reduce(
             (acc, cur) => ({
                 ...acc,
-                [cur]: stationList[cur]?.name[0],
+                [cur]: stationList[cur]?.name.join(' - '),
             }),
             { '': 'Please select...' }
         );
@@ -104,7 +62,7 @@ export default function AddStationModal(props: AddStationModalProps) {
                 ),
                 new: 'Create a new branch',
             },
-            onChange: value => setWhere(value as `${number}` | 'new'),
+            onChange: value => handleSelectWhere(value as `${number}` | 'new'),
         },
         {
             type: 'select',
@@ -112,8 +70,8 @@ export default function AddStationModal(props: AddStationModalProps) {
             value: from,
             options: where === 'new' ? newBranchEndStationOptions : getStationOptions(selectedBranch),
             disabledOptions: [''],
-            onChange: value => setFrom(value as string),
-            isInvalid: fromError,
+            onChange: value => handleSelectFrom(value as string),
+            isInvalid: Boolean(fromError),
         },
         {
             type: 'select',
@@ -121,8 +79,8 @@ export default function AddStationModal(props: AddStationModalProps) {
             value: to,
             options: where === 'new' ? newBranchEndStationOptions : getStationOptions(selectedBranch),
             disabledOptions: [''],
-            onChange: value => setTo(value as string),
-            isInvalid: toError,
+            onChange: value => handleSelectTo(value as string),
+            isInvalid: Boolean(toError),
         },
         {
             type: 'select',
@@ -137,6 +95,48 @@ export default function AddStationModal(props: AddStationModalProps) {
         },
     ];
 
+    const handleSelectWhere = (value: `${number}` | 'new') => {
+        setWhere(value);
+        setFrom('');
+        setTo('');
+        setFromError('');
+        setToError('');
+    };
+
+    const handleSelectFrom = (value: string) => {
+        setFrom(value);
+        setFromError('');
+
+        if (value && to) {
+            if (selectedBranch.length) {
+                if (selectedBranch.indexOf(to) - selectedBranch.indexOf(value) === 1) {
+                    setToError('');
+                } else {
+                    setToError("Must be next station of 'from'");
+                }
+            } else {
+                setToError(dispatch(verifyNewBranchEnds(value, to)));
+            }
+        }
+    };
+
+    const handleSelectTo = (value: string) => {
+        setTo(value);
+        setToError('');
+
+        if (from && value) {
+            if (selectedBranch.length) {
+                if (selectedBranch.indexOf(value) - selectedBranch.indexOf(from) === 1) {
+                    setFromError('');
+                } else {
+                    setFromError("Must be previous station of 'to'");
+                }
+            } else {
+                setFromError(dispatch(verifyNewBranchEnds(from, value)));
+            }
+        }
+    };
+
     const handleSubmit = () => {
         let result: boolean;
         if (where !== 'new') {
@@ -150,6 +150,8 @@ export default function AddStationModal(props: AddStationModalProps) {
         }
     };
 
+    const isSubmitDisabled = Boolean(!from || !to || fromError || toError);
+
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
@@ -162,7 +164,12 @@ export default function AddStationModal(props: AddStationModalProps) {
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button colorScheme="teal" onClick={handleSubmit} disabled={!from || !to || fromError || toError}>
+                    <Button
+                        colorScheme="teal"
+                        title={isSubmitDisabled ? fromError || toError : 'Submit'}
+                        onClick={handleSubmit}
+                        disabled={isSubmitDisabled}
+                    >
                         Submit
                     </Button>
                 </ModalFooter>

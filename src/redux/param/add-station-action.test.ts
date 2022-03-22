@@ -70,7 +70,7 @@ describe('Unit tests for addStation action', () => {
     it('Can add station in main line as expected', () => {
         /**
          *      v
-         * stn1 - stn2 - stn3
+         * stn1 - stn2 - stn3 - stn4
          *        /
          *   stn5
          */
@@ -90,7 +90,7 @@ describe('Unit tests for addStation action', () => {
 
     it('Can add station in branch as expected', () => {
         /**
-         * stn1 - stn2 - stn3
+         * stn1 - stn2 - stn3 - stn4
          *        / <
          *   stn5
          */
