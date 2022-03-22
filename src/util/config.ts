@@ -9,7 +9,7 @@ export enum Environments {
 export const getEnvironment = () => {
     if (window.location.hostname === 'localhost') {
         return Environments.DEV;
-    } else if (window.location.pathname.includes('uat')) {
+    } else if (window.location.hostname.includes('uat')) {
         return Environments.UAT;
     } else {
         return Environments.PRD;
