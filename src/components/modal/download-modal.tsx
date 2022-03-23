@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
     Button,
+    HStack,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -72,18 +73,23 @@ export default function DownloadModal(props: DownloadModalProps) {
             options: canvasOptions,
             disabledOptions: [''],
             onChange: value => setCanvasToDownload(value as CanvasType),
+            minW: 'full',
         },
         {
             type: 'switch',
             label: 'Transparent background',
             isChecked: isTransparent,
             onChange: setIsTransparent,
+            oneLine: true,
+            minW: 'full',
         },
         {
             type: 'switch',
             label: 'Show border',
             isChecked: isShowBorder,
             onChange: setIsShowBorder,
+            oneLine: true,
+            minW: 'full',
         },
         {
             type: 'select',
@@ -186,25 +192,28 @@ export default function DownloadModal(props: DownloadModalProps) {
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button colorScheme="teal" onClick={onClose}>
-                        Cancel
-                    </Button>
-                    <Button
-                        colorScheme="teal"
-                        variant="outline"
-                        onClick={() => handleDownload('current')}
-                        disabled={!canvasToDownload}
-                    >
-                        Download current station
-                    </Button>
-                    <Button
-                        colorScheme="teal"
-                        variant="outline"
-                        onClick={() => handleDownload('all')}
-                        disabled={!canvasToDownload || RmgStyle.GZMTR === style}
-                    >
-                        Download all stations
-                    </Button>
+                    <HStack>
+                        <Button
+                            colorScheme="teal"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDownload('current')}
+                            disabled={!canvasToDownload}
+                        >
+                            Download current station
+                        </Button>
+                        {style !== RmgStyle.GZMTR && (
+                            <Button
+                                colorScheme="teal"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleDownload('all')}
+                                disabled={!canvasToDownload}
+                            >
+                                Download all stations
+                            </Button>
+                        )}
+                    </HStack>
                 </ModalFooter>
             </ModalContent>
         </Modal>

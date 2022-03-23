@@ -102,10 +102,10 @@ describe('Unit tests for AddStationModal component', () => {
 
     it('Submit button is disabled by default (without selection)', () => {
         const fromDropdown = wrapper.find('select').at(1);
-        expect(fromDropdown.props().value).toBe('');
+        expect(fromDropdown.getDOMNode<HTMLSelectElement>().value).toBe('');
 
         const toDropdown = wrapper.find('select').at(2);
-        expect(toDropdown.props().value).toBe('');
+        expect(toDropdown.getDOMNode<HTMLSelectElement>().value).toBe('');
 
         const submitButton = wrapper.find('footer button');
         expect(submitButton.props().disabled).toBeTruthy();
@@ -146,8 +146,8 @@ describe('Unit tests for AddStationModal component', () => {
         const fromDropdown = wrapper.find('select').at(1);
         const toDropdown = wrapper.find('select').at(2);
 
-        expect(fromDropdown.props().value).toBe('');
-        expect(toDropdown.props().value).toBe('');
+        expect(fromDropdown.getDOMNode<HTMLSelectElement>().value).toBe('');
+        expect(toDropdown.getDOMNode<HTMLSelectElement>().value).toBe('');
 
         expect(fromDropdown.props()['aria-invalid']).toBeFalsy();
         expect(toDropdown.props()['aria-invalid']).toBeFalsy();

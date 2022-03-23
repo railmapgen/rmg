@@ -17,7 +17,7 @@ import {
     staggerStationNames,
     toggleLineNameBeforeDestination,
 } from '../../../redux/param/action';
-import RmgButtonGroup, { RmgBooleanButtonGroup } from '../../common/rmg-button-group';
+import RmgButtonGroup from '../../common/rmg-button-group';
 import { PanelTypeGZMTR, PanelTypeShmetro, RmgStyle, ShortDirection } from '../../../constants/constants';
 import { MdSwapVert } from 'react-icons/md';
 import GZMTRNoteSection from './gzmtr-note/gzmtr-note-section';
@@ -101,6 +101,8 @@ export default function DesignSection() {
                     onChange={nextDirection => dispatch(setDirection(nextDirection))}
                 />
             ),
+            minW: 'full',
+            oneLine: true,
         },
         {
             type: 'input',
@@ -161,26 +163,22 @@ export default function DesignSection() {
             hidden: ![RmgStyle.MTR].includes(style),
         },
         {
-            type: 'custom',
+            type: 'switch',
             label: 'Display line name on direction sign',
-            component: (
-                <RmgBooleanButtonGroup
-                    defaultValue={customiseMTRDest.isLegacy}
-                    onChange={value => dispatch(toggleLineNameBeforeDestination(value))}
-                />
-            ),
+            isChecked: customiseMTRDest.isLegacy,
+            onChange: checked => dispatch(toggleLineNameBeforeDestination(checked)),
             hidden: ![RmgStyle.MTR].includes(style),
+            minW: 'full',
+            oneLine: true,
         },
         {
-            type: 'custom',
+            type: 'switch',
             label: 'Override terminals',
-            component: (
-                <RmgBooleanButtonGroup
-                    defaultValue={customiseMTRDest.terminal !== false}
-                    onChange={value => dispatch(customiseDestinationName(value ? ['', ''] : false))}
-                />
-            ),
+            isChecked: customiseMTRDest.terminal !== false,
+            onChange: checked => dispatch(customiseDestinationName(checked ? ['', ''] : false)),
             hidden: ![RmgStyle.MTR].includes(style),
+            minW: 'full',
+            oneLine: true,
         },
         {
             type: 'input',

@@ -5,10 +5,12 @@ import { Box, Button, HStack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@c
 import { MdAdd } from 'react-icons/md';
 import AddStationModal from '../modal/add-station-modal';
 import { useAppSelector } from '../../redux';
+import { RmgStyle } from '../../constants/constants';
 
 export default function DataTables() {
     const [isAddStationModalOpen, setIsAddStationModalOpen] = useState(false);
 
+    const style = useAppSelector(state => state.param.style);
     const branches = useAppSelector(state => state.helper.branches);
 
     return (
@@ -17,7 +19,7 @@ export default function DataTables() {
                 <TabList>
                     {branches.map((_, i) => (i === 0 ? <Tab key={i}>Main line</Tab> : <Tab key={i}>Branch {i}</Tab>))}
 
-                    <Tab>Track sharing</Tab>
+                    {style === RmgStyle.SHMetro && <Tab>Track sharing</Tab>}
 
                     <HStack marginLeft="auto" marginRight={1}>
                         <Button
@@ -40,9 +42,11 @@ export default function DataTables() {
                         </TabPanel>
                     ))}
 
-                    <TabPanel padding={0}>
-                        <ColineDataTable />
-                    </TabPanel>
+                    {style === RmgStyle.SHMetro && (
+                        <TabPanel padding={0}>
+                            <ColineDataTable />
+                        </TabPanel>
+                    )}
                 </TabPanels>
             </Tabs>
 

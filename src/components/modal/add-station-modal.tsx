@@ -63,6 +63,7 @@ export default function AddStationModal(props: AddStationModalProps) {
                 new: 'Create a new branch',
             },
             onChange: value => handleSelectWhere(value as `${number}` | 'new'),
+            minW: 'full',
         },
         {
             type: 'select',
@@ -91,6 +92,7 @@ export default function AddStationModal(props: AddStationModalProps) {
                 lower: 'Lower',
             },
             onChange: value => setPosition(value as 'upper' | 'lower'),
+            minW: 'full',
             hidden: where !== 'new',
         },
     ];

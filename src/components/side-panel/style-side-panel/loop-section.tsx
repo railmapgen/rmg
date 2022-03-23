@@ -12,20 +12,14 @@ export default function LoopSection() {
     const { loop, loop_info } = useAppSelector(state => state.param);
     const { bank, left_and_right_factor, bottom_factor } = loop_info;
 
-    const loopFields: RmgFieldsField[] = [
+    const fields: RmgFieldsField[] = [
         {
-            type: 'custom',
+            type: 'switch',
             label: 'Treat this line as a loop line',
-            component: (
-                <Checkbox
-                    variant="flushed"
-                    size="sm"
-                    h={6}
-                    defaultChecked={loop}
-                    isDisabled={branches.length > 1}
-                    onChange={({ target: { checked } }) => dispatch(setLoop(checked))}
-                />
-            ),
+            isChecked: loop,
+            onChange: checked => dispatch(setLoop(checked)),
+            minW: 'full',
+            oneLine: true,
         },
         {
             type: 'custom',
@@ -41,9 +35,6 @@ export default function LoopSection() {
                 />
             ),
         },
-    ];
-
-    const loopFactorsFields: RmgFieldsField[] = [
         {
             type: 'slider',
             label: 'left_and_right_factor',
@@ -70,8 +61,7 @@ export default function LoopSection() {
                 Loop
             </Heading>
 
-            <RmgFields fields={loopFields} />
-            <RmgFields fields={loopFactorsFields} />
+            <RmgFields fields={fields} />
         </Box>
     );
 }

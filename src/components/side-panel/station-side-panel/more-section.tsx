@@ -1,4 +1,4 @@
-import { Box, Checkbox, Heading } from '@chakra-ui/react';
+import { Box, Heading } from '@chakra-ui/react';
 import React from 'react';
 import RmgButtonGroup from '../../common/rmg-button-group';
 import { useAppSelector } from '../../../redux';
@@ -58,20 +58,14 @@ export default function MoreSection() {
             onChange: value => dispatch(updateStationFacility(selectedStation, value as Facilities)),
             hidden: ![RmgStyle.MTR, RmgStyle.SHMetro].includes(style),
         },
-    ];
-    const loopFields: RmgFieldsField[] = [
         {
-            type: 'custom',
+            type: 'switch',
             label: 'Pivot station of a loop line',
-            component: (
-                <Checkbox
-                    variant="flushed"
-                    size="sm"
-                    h={6}
-                    defaultChecked={loop_pivot}
-                    onChange={({ target: { checked } }) => dispatch(updateStationLoopPivot(selectedStation, checked))}
-                />
-            ),
+            isChecked: loop_pivot,
+            onChange: checked => dispatch(updateStationLoopPivot(selectedStation, checked)),
+            hidden: ![RmgStyle.SHMetro].includes(style),
+            minW: 'full',
+            oneLine: true,
         },
     ];
 
@@ -82,7 +76,6 @@ export default function MoreSection() {
             </Heading>
 
             <RmgFields fields={fields} />
-            <RmgFields fields={loopFields} />
         </Box>
     );
 }

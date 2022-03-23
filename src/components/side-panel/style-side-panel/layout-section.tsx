@@ -30,7 +30,7 @@ export default function LayoutSection() {
         direction_gz_y,
     } = useAppSelector(state => state.param);
 
-    const svgSizeFields: RmgFieldsField[] = [
+    const fields: RmgFieldsField[] = [
         ...canvasConfig[rmgStyle].map<RmgFieldsField>(canvas => ({
             type: 'input',
             label: t(`StyleSidePanel.${canvas}Width`),
@@ -43,9 +43,6 @@ export default function LayoutSection() {
             value: svg_height.toString(),
             onChange: val => dispatch(setSvgHeight(Number(val))),
         },
-    ];
-
-    const componentPositionFields: RmgFieldsField[] = [
         {
             type: 'slider',
             label: t('StyleSidePanel.verticalPosition'),
@@ -71,9 +68,6 @@ export default function LayoutSection() {
             max: 100,
             onChange: val => dispatch(setPaddingPercentage(val)),
         },
-    ];
-
-    const directionPositionFields: RmgFieldsField[] = [
         {
             type: 'slider',
             label: 'Direction horizontal position',
@@ -100,9 +94,7 @@ export default function LayoutSection() {
                 Layout
             </Heading>
 
-            <RmgFields fields={svgSizeFields} />
-            <RmgFields fields={componentPositionFields} />
-            <RmgFields fields={directionPositionFields} />
+            <RmgFields fields={fields} minW={100} />
         </Box>
     );
 }

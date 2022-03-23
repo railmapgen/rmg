@@ -62,7 +62,7 @@ export default function InfoSection() {
                 Basic info
             </Heading>
 
-            <RmgFields fields={fields} />
+            <RmgFields fields={fields} minW={100} />
         </Box>
     );
 }

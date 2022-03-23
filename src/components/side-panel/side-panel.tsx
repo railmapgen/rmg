@@ -8,7 +8,7 @@ import StationSidePanel from './station-side-panel/station-side-panel';
 import StyleSidePanel from './style-side-panel/style-side-panel';
 import ColineSidePanel from './coline-side-panel/coline-side-panel';
 
-const SIDE_PANEL_WIDTH = 400;
+const SIDE_PANEL_WIDTH = 320;
 
 export default function SidePanel() {
     const dispatch = useDispatch();
