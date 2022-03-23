@@ -154,11 +154,11 @@ export default memo(function PanelInfo() {
                 </div>
                 <div className={classes.detailGrid}>
                     {[
+                        '52PD',
                         'AnDanJune\nUnderline',
                         'Jay20081229',
                         'clearng-kly',
                         'Dingdong2334',
-                        '52PD',
                         'linchen1965',
                         'C1P918R',
                         'GrassRabbit\n1410',

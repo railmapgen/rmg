@@ -102,6 +102,14 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
+            filename: 'bj10',
+            name: {
+                en: 'Line 10 by 52PD',
+                'zh-Hans': '10号线 来自 52PD',
+                'zh-Hant': '10號線 來自 52PD',
+            },
+        },
+        {
             filename: 'bj11',
             name: {
                 en: 'Line 11 by Jay20081229',
