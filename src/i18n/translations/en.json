@@ -32,10 +32,11 @@
         "title": "Select a template"
     },
 
-    "StationDataTable": {
+    "StationAgGrid": {
+        "num": "Station number",
         "zhName": "Chinese name",
         "enName": "English name",
-        "interchange": "Interchange",
+        "interchange": "Interchanges",
         "actions": "Actions"
     },
 

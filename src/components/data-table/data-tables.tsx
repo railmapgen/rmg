@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import StationDataTable from './station-data-table';
 import ColineDataTable from './coline-data-table';
 import { Box, Button, HStack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { MdAdd } from 'react-icons/md';
 import AddStationModal from '../modal/add-station-modal';
 import { useAppSelector } from '../../redux';
 import { RmgStyle } from '../../constants/constants';
+import StationAgGrid from '../ag-grid/station-ag-grid';
 
 export default function DataTables() {
     const [isAddStationModalOpen, setIsAddStationModalOpen] = useState(false);
@@ -35,10 +35,11 @@ export default function DataTables() {
 
                 <TabPanels flex={1} overflowY="auto">
                     {branches.map((branch, i) => (
-                        <TabPanel key={i} padding={0}>
-                            <StationDataTable
-                                stationIds={branch.filter(id => !['linestart', 'lineend'].includes(id))}
-                            />
+                        <TabPanel key={i} padding={0} h="100%">
+                            <StationAgGrid stationIds={branch.filter(id => !['linestart', 'lineend'].includes(id))} />
+                            {/*<StationDataTable*/}
+                            {/*    stationIds={branch.filter(id => !['linestart', 'lineend'].includes(id))}*/}
+                            {/*/>*/}
                         </TabPanel>
                     ))}
 
