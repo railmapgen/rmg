@@ -68,9 +68,13 @@ const lightTheme = createTheme({
 export default function App() {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const theme = prefersDarkMode ? darkTheme : lightTheme;
+    // Though Electron distribution will use a ./ to get local files,
+    // Router need to be configured to / as the render process is just like
+    // a regular browser and is expecting a web based url.
+    const basename = process.env.PUBLIC_URL === '.' ? '/' : process.env.PUBLIC_URL;
 
     return (
-        <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <BrowserRouter basename={basename}>
             <ThemeProvider theme={theme}>
                 <React.Suspense fallback={<LinearProgress />}>
                     <AppAppBar />
