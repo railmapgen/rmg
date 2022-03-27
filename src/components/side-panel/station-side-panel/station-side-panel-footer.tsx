@@ -14,12 +14,11 @@ export default function StationSidePanelFooter() {
     const dispatch = useDispatch();
 
     const selectedStation = useAppSelector(state => state.app.selectedStation);
-    const { stn_list: stnList } = useAppSelector(state => state.param);
 
     const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 
     const handleDelete = () => {
-        if (checkStationCouldBeRemoved(selectedStation, stnList)) {
+        if (dispatch(checkStationCouldBeRemoved(selectedStation))) {
             // close side panel
             dispatch(setSidePanelMode(SidePanelMode.CLOSE));
 

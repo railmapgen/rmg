@@ -22,7 +22,7 @@ export default function StationDeleteDialog(props: Props & { stnId: string }) {
 
     const handleClick = (action: 'close' | 'accept') => () => {
         if (action === 'accept') {
-            if (checkStationCouldBeRemoved(stnId, stnList)) {
+            if (dispatch(checkStationCouldBeRemoved(stnId))) {
                 dispatch(removeStation(stnId));
                 if (currentStationIndex === stnId) {
                     let newCurrentId = Object.keys(stnList).filter(id => !['linestart', 'lineend'].includes(id))[0];
