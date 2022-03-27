@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { useAppSelector } from '../../redux';
 import { setSidePanelMode } from '../../redux/app/action';
 import { useDispatch } from 'react-redux';
-import { Alert, AlertIcon, CloseButton, Flex } from '@chakra-ui/react';
 import { SidePanelMode } from '../../constants/constants';
 import StationSidePanel from './station-side-panel/station-side-panel';
 import StyleSidePanel from './style-side-panel/style-side-panel';
 import ColineSidePanel from './coline-side-panel/coline-side-panel';
+import { RmgSidePanel, RmgSidePanelHeader } from '@railmapgen/rmg-components';
+import RmgMultiLineString from '../common/rmg-multi-line-string';
+import StationSidePanelFooter from './station-side-panel/station-side-panel-footer';
 
 const SIDE_PANEL_WIDTH = 320;
 
@@ -16,11 +18,15 @@ export default function SidePanel() {
     const { sidePanelMode, selectedStation } = useAppSelector(state => state.app);
     const name = useAppSelector(state => state.param.stn_list[selectedStation]?.name);
 
-    const mode: { [key in SidePanelMode]: { name: string; component?: JSX.Element } } = {
-        [SidePanelMode.STATION]: { name: name?.[0] + ' - ' + name?.[1], component: <StationSidePanel /> },
-        [SidePanelMode.STYLE]: { name: 'Edit style', component: <StyleSidePanel /> },
-        [SidePanelMode.COLINE]: { name: 'Edit sharing track', component: <ColineSidePanel /> },
-        [SidePanelMode.CLOSE]: { name: 'Close', component: undefined },
+    const mode: Record<SidePanelMode, { header: ReactNode; body?: ReactNode; footer?: ReactNode }> = {
+        [SidePanelMode.STATION]: {
+            header: <RmgMultiLineString text={name?.join(' - ') || ''} />,
+            body: <StationSidePanel />,
+            footer: <StationSidePanelFooter />,
+        },
+        [SidePanelMode.STYLE]: { header: 'Edit style', body: <StyleSidePanel /> },
+        [SidePanelMode.COLINE]: { header: 'Edit sharing track', body: <ColineSidePanel /> },
+        [SidePanelMode.CLOSE]: { header: 'Close' },
     };
 
     const handleClose = () => {
@@ -28,26 +34,10 @@ export default function SidePanel() {
     };
 
     return (
-        <Flex
-            as="section"
-            height="100%"
-            maxW={sidePanelMode !== SidePanelMode.CLOSE ? SIDE_PANEL_WIDTH : 0}
-            visibility={sidePanelMode !== SidePanelMode.CLOSE ? 'initial' : 'hidden'}
-            position="relative"
-            boxShadow="lg"
-            shrink={0}
-            direction="column"
-            transition="0.3s"
-        >
-            <Flex direction="column" w={SIDE_PANEL_WIDTH} h="100%">
-                <Alert status="info" variant="solid" size="xs" flexShrink={0} pl={3} pr={1} pb={0} pt={0}>
-                    <AlertIcon />
-                    {mode[sidePanelMode].name}
-                    <CloseButton ml="auto" onClick={handleClose} />
-                </Alert>
-
-                {mode[sidePanelMode]?.component}
-            </Flex>
-        </Flex>
+        <RmgSidePanel isOpen={sidePanelMode !== SidePanelMode.CLOSE} width={SIDE_PANEL_WIDTH} header="Dummy header">
+            <RmgSidePanelHeader onClose={handleClose}>{mode[sidePanelMode].header}</RmgSidePanelHeader>
+            {mode[sidePanelMode]?.body}
+            {mode[sidePanelMode]?.footer}
+        </RmgSidePanel>
     );
 }
