@@ -58,9 +58,10 @@ const AppAppBar = () => {
         () => (
             <AppBar position="sticky" className={prefersDarkMode ? classes.rootDark : classes.rootLight}>
                 <Typography variant="body2" className={prefersDarkMode ? classes.bannerDark : classes.bannerLight}>
-                    <Link color="inherit" href="/uat-rail-map-generator" target="_blank">
+                    <Link color="inherit" href="https://uat-railmapgen.github.io/rmg" target="_blank">
                         {t('banner')}
                     </Link>
+                    {' - 24/03/2022'}
                 </Typography>
 
                 <Toolbar variant="dense">
