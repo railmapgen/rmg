@@ -34,11 +34,40 @@ export const getPossibleStnIdsFromBranchLine = (branches: string[][], stnList: S
         .map(branch => [branch[0], branch[branch.length - 1]]);
 
 /**
+ * Calculate row span for displaying track sharing column in StationAgGrid
+ * @param stationId id of station that begins to span rows
+ * @param branchIndex index of branch that the grid is displaying
+ */
+export const getRowSpanForColine = (stationId: string, branchIndex: number) => {
+    return (dispatch: AppDispatch, getState: () => RootState): number => {
+        const coline = getState().param.coline;
+        const branch = getState().helper.branches[branchIndex];
+
+        for (let cl of coline) {
+            if (cl.from === stationId && branch.includes(cl.to)) {
+                const thisIndex = branch.indexOf(stationId);
+                const thatIndex = branch.indexOf(cl.to);
+                if (thatIndex > thisIndex) {
+                    return thatIndex - thisIndex + 1;
+                }
+            } else if (cl.to === stationId && branch.includes(cl.to)) {
+                const thisIndex = branch.indexOf(stationId);
+                const thatIndex = branch.indexOf(cl.from);
+                if (thatIndex > thisIndex) {
+                    return thatIndex - thisIndex + 1;
+                }
+            }
+        }
+        return 1;
+    };
+};
+
+/**
  *  Checks the validity of from and to. Currently we accept coline if it:
-    1. Start from either ends of the mainline or branch stations and
-       terminate at either ends of the mainline or branch stations.
-    2. Start from the one end of the branch line and
-       terminate at the other end of the same branch line.
+ 1. Start from either ends of the mainline or branch stations and
+ terminate at either ends of the mainline or branch stations.
+ 2. Start from the one end of the branch line and
+ terminate at the other end of the same branch line.
 
  * @param branches branches from helper
  * @param from station id from

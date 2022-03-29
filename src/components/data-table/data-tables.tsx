@@ -6,18 +6,29 @@ import AddStationModal from '../modal/add-station-modal';
 import { useAppSelector } from '../../redux';
 import { RmgStyle } from '../../constants/constants';
 import StationAgGrid from '../ag-grid/station-ag-grid';
+import { isColineBranch } from '../../redux/param/coline-action';
 
 export default function DataTables() {
     const [isAddStationModalOpen, setIsAddStationModalOpen] = useState(false);
 
-    const style = useAppSelector(state => state.param.style);
+    const { style, stn_list: stationList } = useAppSelector(state => state.param);
     const branches = useAppSelector(state => state.helper.branches);
 
     return (
         <Box flex={1} overflow="hidden">
             <Tabs height="100%" display="flex" flexDirection="column" overflow="hidden">
                 <TabList>
-                    {branches.map((_, i) => (i === 0 ? <Tab key={i}>Main line</Tab> : <Tab key={i}>Branch {i}</Tab>))}
+                    {branches.map((branch, i) => {
+                        if (i === 0) {
+                            return <Tab key={i}>Main line</Tab>;
+                        } else {
+                            if (style !== RmgStyle.SHMetro || !isColineBranch(branch, stationList)) {
+                                return <Tab key={i}>Branch {i}</Tab>;
+                            } else {
+                                return <Tab key={i}>External track {i}</Tab>;
+                            }
+                        }
+                    })}
 
                     {style === RmgStyle.SHMetro && <Tab>Track sharing</Tab>}
 
@@ -34,12 +45,9 @@ export default function DataTables() {
                 </TabList>
 
                 <TabPanels flex={1} overflowY="auto">
-                    {branches.map((branch, i) => (
+                    {branches.map((_, i) => (
                         <TabPanel key={i} padding={0} h="100%">
-                            <StationAgGrid stationIds={branch.filter(id => !['linestart', 'lineend'].includes(id))} />
-                            {/*<StationDataTable*/}
-                            {/*    stationIds={branch.filter(id => !['linestart', 'lineend'].includes(id))}*/}
-                            {/*/>*/}
+                            <StationAgGrid branchIndex={i} />
                         </TabPanel>
                     ))}
 

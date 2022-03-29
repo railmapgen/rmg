@@ -1,17 +1,17 @@
 import { RmgAgGrid, RmgLineBadge } from '@railmapgen/rmg-components';
 import React, { useEffect, useRef } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { useAppSelector } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../redux';
 import { ColDef } from 'ag-grid-community';
 import { Name, RmgStyle, SidePanelMode, StationInfo, StationTransfer } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { HStack } from '@chakra-ui/react';
 import RmgMultiLineString from '../common/rmg-multi-line-string';
-import { useDispatch } from 'react-redux';
 import { setSelectedStation, setSidePanelMode } from '../../redux/app/action';
+import { getRowSpanForColine } from '../../redux/param/coline-action';
 
 interface StationAgGridProps {
-    stationIds: string[];
+    branchIndex: number;
 }
 
 interface RmgAgGridColDef<T> extends ColDef {
@@ -21,27 +21,40 @@ interface RmgAgGridColDef<T> extends ColDef {
 type RowDataType = StationInfo & { id: string };
 
 export default function StationAgGrid(props: StationAgGridProps) {
-    const { stationIds } = props;
+    const { branchIndex } = props;
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const sidePanelMode = useAppSelector(state => state.app.sidePanelMode);
     const { style, stn_list: stationList } = useAppSelector(state => state.param);
+    const branches = useAppSelector(state => state.helper.branches);
+    const stationIds = branches[branchIndex].filter(id => !['linestart', 'lineend'].includes(id));
+
     const gridRef = useRef<AgGridReact>(null);
+    const isGridReadyRef = useRef(false);
 
     useEffect(() => {
-        if (sidePanelMode !== SidePanelMode.STATION) {
-            gridRef?.current?.api?.deselectAll();
+        // deselect row when side panel is closed
+        // only take effect when one row is selected
+        if (isGridReadyRef.current && gridRef.current) {
+            const selectedRows = gridRef.current.api.getSelectedRows();
+            if (selectedRows.length === 1 && sidePanelMode !== SidePanelMode.STATION) {
+                gridRef.current.api.deselectAll();
+            }
         }
-    }, [sidePanelMode]);
+    }, [isGridReadyRef.current, sidePanelMode]);
 
     const rowData: RowDataType[] = stationIds.map(id => ({ ...stationList[id], id }));
 
-    const defaultColDef = {
-        flex: 1,
-    };
+    const defaultColDef = {};
 
     const columnDefs: RmgAgGridColDef<RowDataType>[] = [
+        {
+            headerName: ' ',
+            checkboxSelection: true,
+            width: 36,
+            hide: ![RmgStyle.SHMetro].includes(style) || branchIndex > 0,
+        },
         {
             headerName: t('StationAgGrid.num'),
             field: 'num',
@@ -67,15 +80,32 @@ export default function StationAgGrid(props: StationAgGridProps) {
                     ))}
                 </HStack>
             ),
-            flex: 1,
+        },
+        {
+            headerName: 'Track sharing',
+            field: 'id',
+            rowSpan: ({ data: { id } }: { data: RowDataType }) => dispatch(getRowSpanForColine(id, branchIndex)),
+            // TODO: render spanned cell
         },
     ];
 
     const handleSelectionChanged = () => {
-        const selectedStationId = gridRef?.current?.api?.getSelectedRows()?.[0]?.id;
-        if (selectedStationId) {
-            dispatch(setSelectedStation(selectedStationId));
-            dispatch(setSidePanelMode(SidePanelMode.STATION));
+        const selectedRowIds = gridRef?.current?.api?.getSelectedRows()?.map(row => row.id as string);
+
+        if (selectedRowIds) {
+            if (style !== RmgStyle.SHMetro || selectedRowIds.length === 1) {
+                dispatch(setSelectedStation(selectedRowIds[0]));
+                dispatch(setSidePanelMode(SidePanelMode.STATION));
+            } else {
+                dispatch(setSelectedStation('linestart'));
+                dispatch(setSidePanelMode(SidePanelMode.CLOSE));
+
+                console.log(selectedRowIds);
+            }
+        } else {
+            // unselect
+            dispatch(setSelectedStation('linestart'));
+            dispatch(setSidePanelMode(SidePanelMode.CLOSE));
         }
     };
 
@@ -86,9 +116,13 @@ export default function StationAgGrid(props: StationAgGridProps) {
                 rowData={rowData}
                 defaultColDef={defaultColDef}
                 columnDefs={columnDefs}
+                headerHeight={36}
+                rowHeight={36}
                 suppressCellFocus={true}
-                rowSelection="single"
+                suppressMovableColumns={true}
+                rowSelection={style === RmgStyle.SHMetro && branchIndex === 0 ? 'multiple' : 'single'}
                 onSelectionChanged={handleSelectionChanged}
+                onGridReady={() => (isGridReadyRef.current = true)}
                 debug={process.env.NODE_ENV !== 'production'}
             />
         </RmgAgGrid>
