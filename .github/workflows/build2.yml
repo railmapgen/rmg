@@ -40,4 +40,4 @@ jobs:
             -H "Accept: application/vnd.github.everest-preview+json" \
             -H "Content-Type: application/json" \
             https://api.github.com/repos/uat-railmapgen/rmg-repositories/actions/workflows/release.yml/dispatches \
-            --data '{"ref": "master", "inputs": {"app_name": "rmg", "version": "${{ steps.build.outputs.RMG_VER }}", "environment": "${{ github.event.inputs.auto_deploy }}"}}'
+            --data '{"ref": "main", "inputs": {"app_name": "rmg", "version": "${{ steps.build.outputs.RMG_VER }}", "environment": "${{ github.event.inputs.auto_deploy }}"}}'
