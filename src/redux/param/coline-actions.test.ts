@@ -203,12 +203,12 @@ describe('Unit tests for coline action', () => {
             },
         });
 
-        expect(mockStore.dispatch(getRowSpanForColine('stn1', 0))).toBe(1);
+        expect(mockStore.dispatch(getRowSpanForColine('stn1', 0))).toEqual([0, undefined]);
 
-        expect(mockStore.dispatch(getRowSpanForColine('stn2', 0))).toBe(2);
-        expect(mockStore.dispatch(getRowSpanForColine('stn3', 0))).toBe(1);
+        expect(mockStore.dispatch(getRowSpanForColine('stn2', 0))).toEqual([2, expect.any(Object)]);
+        expect(mockStore.dispatch(getRowSpanForColine('stn3', 0))).toEqual([0, undefined]);
 
-        expect(mockStore.dispatch(getRowSpanForColine('stn4', 1))).toBe(2);
-        expect(mockStore.dispatch(getRowSpanForColine('stn2', 1))).toBe(1);
+        expect(mockStore.dispatch(getRowSpanForColine('stn4', 1))).toEqual([2, expect.any(Object)]);
+        expect(mockStore.dispatch(getRowSpanForColine('stn2', 1))).toEqual([0, undefined]);
     });
 });

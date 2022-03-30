@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { useAppDispatch, useAppSelector } from '../../redux';
 import { ColDef } from 'ag-grid-community';
-import { Name, RmgStyle, SidePanelMode, StationInfo, StationTransfer } from '../../constants/constants';
+import { ColineInfo, Name, RmgStyle, SidePanelMode, StationInfo, StationTransfer } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { HStack } from '@chakra-ui/react';
 import RmgMultiLineString from '../common/rmg-multi-line-string';
@@ -18,7 +18,7 @@ interface RmgAgGridColDef<T> extends ColDef {
     field?: Extract<keyof T, string>;
 }
 
-type RowDataType = StationInfo & { id: string };
+type RowDataType = StationInfo & { id: string; rowSpan: [number, ColineInfo | undefined] };
 
 export default function StationAgGrid(props: StationAgGridProps) {
     const { branchIndex } = props;
@@ -44,7 +44,11 @@ export default function StationAgGrid(props: StationAgGridProps) {
         }
     }, [isGridReadyRef.current, sidePanelMode]);
 
-    const rowData: RowDataType[] = stationIds.map(id => ({ ...stationList[id], id }));
+    const rowData: RowDataType[] = stationIds.map(id => ({
+        ...stationList[id],
+        id,
+        rowSpan: dispatch(getRowSpanForColine(id, branchIndex)),
+    }));
 
     const defaultColDef = {};
 
@@ -83,9 +87,18 @@ export default function StationAgGrid(props: StationAgGridProps) {
         },
         {
             headerName: 'Track sharing',
-            field: 'id',
-            rowSpan: ({ data: { id } }: { data: RowDataType }) => dispatch(getRowSpanForColine(id, branchIndex)),
-            // TODO: render spanned cell
+            field: 'rowSpan',
+            rowSpan: ({ data: { rowSpan } }: { data: RowDataType }) => rowSpan[0],
+            cellClassRules: {
+                'rmg-ag-grid--spanned-cell': ({ value }) => value[0] > 0,
+            },
+            cellRenderer: ({ value }: { value: RowDataType['rowSpan'] }) => (
+                <HStack>
+                    {value[1]?.colors?.map((it, i) => (
+                        <RmgLineBadge key={i} name={[it[4], it[5]]} bg={it[2]} fg={it[3]} showShortName />
+                    ))}
+                </HStack>
+            ),
         },
     ];
 
@@ -120,6 +133,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
                 rowHeight={36}
                 suppressCellFocus={true}
                 suppressMovableColumns={true}
+                suppressRowTransform={true}
                 rowSelection={style === RmgStyle.SHMetro && branchIndex === 0 ? 'multiple' : 'single'}
                 onSelectionChanged={handleSelectionChanged}
                 onGridReady={() => (isGridReadyRef.current = true)}

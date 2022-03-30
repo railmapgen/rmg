@@ -1,5 +1,5 @@
 import { AppDispatch, RootState } from '../index';
-import { InterchangeInfo, SidePanelMode, StationDict } from '../../constants/constants';
+import { ColineInfo, InterchangeInfo, SidePanelMode, StationDict } from '../../constants/constants';
 import { setColineBulk } from './action';
 import { setSelectedColine, setSidePanelMode } from '../app/action';
 
@@ -39,7 +39,7 @@ export const getPossibleStnIdsFromBranchLine = (branches: string[][], stnList: S
  * @param branchIndex index of branch that the grid is displaying
  */
 export const getRowSpanForColine = (stationId: string, branchIndex: number) => {
-    return (dispatch: AppDispatch, getState: () => RootState): number => {
+    return (dispatch: AppDispatch, getState: () => RootState): [number, ColineInfo | undefined] => {
         const coline = getState().param.coline;
         const branch = getState().helper.branches[branchIndex];
 
@@ -48,17 +48,17 @@ export const getRowSpanForColine = (stationId: string, branchIndex: number) => {
                 const thisIndex = branch.indexOf(stationId);
                 const thatIndex = branch.indexOf(cl.to);
                 if (thatIndex > thisIndex) {
-                    return thatIndex - thisIndex + 1;
+                    return [thatIndex - thisIndex + 1, cl];
                 }
             } else if (cl.to === stationId && branch.includes(cl.to)) {
                 const thisIndex = branch.indexOf(stationId);
                 const thatIndex = branch.indexOf(cl.from);
                 if (thatIndex > thisIndex) {
-                    return thatIndex - thisIndex + 1;
+                    return [thatIndex - thisIndex + 1, cl];
                 }
             }
         }
-        return 1;
+        return [0, undefined];
     };
 };
 
