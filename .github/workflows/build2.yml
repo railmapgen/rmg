@@ -3,6 +3,11 @@ name: Build 2
 on:
   workflow_call:
   workflow_dispatch:
+    inputs:
+      auto_deploy:
+        description: Auto deploy to (NONE/UAT)
+        default: NONE
+        required: true
 
 jobs:
   build:
@@ -26,3 +31,13 @@ jobs:
         run: |
           chmod +x ./scripts/build.sh
           ./scripts/build.sh
+        id: build
+
+      - name: Auto deploy
+        if: ${{ github.event.inputs.auto_deploy == 'UAT' }}
+        run: |
+          curl -XPOST -u "wongchito:${{ secrets.ACCESS_TOKEN }}" \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Content-Type: application/json" \
+            https://api.github.com/repos/uat-railmapgen/rmg-repositories/actions/workflows/release.yml/dispatches \
+            --data '{"ref": "master", "inputs": {"app_name": "rmg", "version": "${{ steps.build.outputs.RMG_VER }}", "environment": "${{ github.event.inputs.auto_deploy }}"}}'

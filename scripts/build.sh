@@ -57,3 +57,4 @@ git push --force
 
 
 echo "Build Success: $APP_NAME-$RMG_VER"
+echo "::set-output name=RMG_VER::$RMG_VER"
