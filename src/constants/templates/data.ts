@@ -252,6 +252,14 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
+            filename: 'gz22',
+            name: {
+                en: 'Line 22',
+                'zh-Hans': '22号线',
+                'zh-Hant': '22號線',
+            },
+        },
+        {
             filename: 'gf',
             name: {
                 en: 'Guangfo Line',
