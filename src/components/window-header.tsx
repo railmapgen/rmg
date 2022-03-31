@@ -2,7 +2,7 @@ import React from 'react';
 import { Flex, Heading, Badge, Menu, MenuButton, MenuItem, MenuList, IconButton } from '@chakra-ui/react';
 import { Environments, getEnvironment, getVersion } from '../util/config';
 import { useTranslation } from 'react-i18next';
-import { MdLocationCity, MdTranslate, MdZoomOut } from 'react-icons/md';
+import { MdLocationCity, MdTranslate, MdZoomIn, MdZoomOut } from 'react-icons/md';
 import { LanguageCode, RmgStyle } from '../constants/constants';
 import { useDispatch } from 'react-redux';
 import { setStyle } from '../redux/param/action';
@@ -45,7 +45,7 @@ export default function WindowHeader() {
                 size="xs"
                 variant="ghost"
                 aria-label="Zoom in"
-                icon={<MdZoomOut />}
+                icon={<MdZoomIn />}
                 onClick={() => dispatch(zoomIn())}
             />
 

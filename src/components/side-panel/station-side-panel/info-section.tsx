@@ -10,6 +10,7 @@ export default function InfoSection() {
     const dispatch = useDispatch();
 
     const selectedStation = useAppSelector(state => state.app.selectedStation);
+    console.log('InfoSection:: Rendering for', selectedStation);
     const style = useAppSelector(state => state.param.style);
     const { num, name, secondaryName } = useAppSelector(state => state.param.stn_list[selectedStation]);
 

@@ -99,26 +99,28 @@ export default function StationAgGrid(props: StationAgGridProps) {
                     ))}
                 </HStack>
             ),
+            hide: ![RmgStyle.SHMetro].includes(style),
         },
     ];
 
     const handleSelectionChanged = () => {
         const selectedRowIds = gridRef?.current?.api?.getSelectedRows()?.map(row => row.id as string);
+        console.log('StationAgGrid.handleSelectionChanged():: Row selection changed', selectedRowIds);
 
-        if (selectedRowIds) {
+        if (selectedRowIds?.length) {
             if (style !== RmgStyle.SHMetro || selectedRowIds.length === 1) {
-                dispatch(setSelectedStation(selectedRowIds[0]));
                 dispatch(setSidePanelMode(SidePanelMode.STATION));
+                dispatch(setSelectedStation(selectedRowIds[0]));
             } else {
-                dispatch(setSelectedStation('linestart'));
                 dispatch(setSidePanelMode(SidePanelMode.CLOSE));
+                dispatch(setSelectedStation('linestart'));
 
                 console.log(selectedRowIds);
             }
         } else {
             // unselect
-            dispatch(setSelectedStation('linestart'));
             dispatch(setSidePanelMode(SidePanelMode.CLOSE));
+            dispatch(setSelectedStation('linestart'));
         }
     };
 
