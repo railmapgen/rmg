@@ -12,6 +12,7 @@ import {
     getRowSpanForColine,
     verifyAreSelectionsConsecutive,
 } from '../../redux/param/coline-action';
+import GzmtrStationCode from './gzmtr-station-code';
 
 interface StationAgGridProps {
     branchIndex: number;
@@ -29,7 +30,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
     const dispatch = useAppDispatch();
 
     const sidePanelMode = useAppSelector(state => state.app.sidePanelMode);
-    const { style, stn_list: stationList } = useAppSelector(state => state.param);
+    const { style, theme, stn_list: stationList, line_num: lineNumber } = useAppSelector(state => state.param);
     const branches = useAppSelector(state => state.helper.branches);
     const stationIds = branches[branchIndex].filter(id => !['linestart', 'lineend'].includes(id));
 
@@ -60,11 +61,16 @@ export default function StationAgGrid(props: StationAgGridProps) {
             headerName: ' ',
             checkboxSelection: true,
             width: 36,
+            pinned: 'left',
             hide: ![RmgStyle.SHMetro].includes(style) || branchIndex > 0,
         },
         {
             headerName: t('StationAgGrid.num'),
             field: 'num',
+            cellRenderer: ({ value }: { value: string }) => (
+                <GzmtrStationCode lineNumber={lineNumber} stationNumber={value} lineColour={theme[2]} />
+            ),
+            pinned: 'left',
             hide: ![RmgStyle.GZMTR].includes(style),
         },
         {
@@ -154,6 +160,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
                 rowData={rowData}
                 defaultColDef={defaultColDef}
                 columnDefs={columnDefs}
+                getRowId={({ data }) => data.id}
                 headerHeight={36}
                 rowHeight={36}
                 suppressCellFocus={true}

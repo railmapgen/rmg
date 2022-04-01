@@ -33,7 +33,7 @@
     },
 
     "StationAgGrid": {
-        "num": "Station number",
+        "num": "Station code",
         "zhName": "Chinese name",
         "enName": "English name",
         "interchange": "Interchanges",

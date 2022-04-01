@@ -41,7 +41,7 @@ export default function InfoSection() {
             type: 'input',
             label: 'Chinese secondary',
             value: secondaryName ? secondaryName[0] : '',
-            placeholder: '1號客運大樓',
+            placeholder: '1号航站楼',
             onChange: (value: string) =>
                 dispatch(updateStationSecondaryName(selectedStation, [value, secondaryName ? secondaryName[1] : ''])),
             hidden: ![RmgStyle.GZMTR].includes(style),
