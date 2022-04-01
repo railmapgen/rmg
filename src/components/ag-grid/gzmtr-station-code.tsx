@@ -11,31 +11,33 @@ interface GzmtrStationCodeProps {
 export default function GzmtrStationCode(props: GzmtrStationCodeProps) {
     const { lineNumber, stationNumber, lineColour } = props;
 
+    const styles = {
+        h: '24px',
+
+        div: {
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '3px',
+            minWidth: '24px',
+            border: '2px solid',
+            borderColor: lineColour,
+
+            '&:first-child': {
+                borderRadius: '12px 0 0 12px',
+            },
+
+            '&:last-child': {
+                borderRadius: '0 12px 12px 0',
+                marginLeft: '-2px',
+            },
+        },
+    };
+
     return (
-        <Flex h="28px">
-            <Flex
-                border="2px solid"
-                borderColor={lineColour}
-                borderRadius="14px 0 0 14px"
-                justifyContent="center"
-                alignItems="center"
-                padding="4px"
-                minW="28px"
-            >
-                {lineNumber}
-            </Flex>
-            <Flex
-                border="2px solid"
-                borderColor={lineColour}
-                borderRadius="0 14px 14px 0"
-                justifyContent="center"
-                alignItems="center"
-                padding="4px"
-                minW="28px"
-                marginLeft="-2px"
-            >
-                {stationNumber}
-            </Flex>
+        <Flex sx={styles}>
+            <div>{lineNumber}</div>
+            <div>{stationNumber}</div>
         </Flex>
     );
 }
