@@ -5,16 +5,18 @@ import {
     SET_CANVAS_TO_SHOW,
     SET_CANVAS_TO_SHOW_STATUS,
     SET_GLOBAL_ALERT,
-    SET_SELECTED_STATION,
+    SET_IS_SHARE_TRACK_DISABLED,
     SET_SELECTED_COLINE,
+    SET_SELECTED_STATION,
     SET_SIDE_PANEL_MODE,
     setCanvasScaleAction,
     setCanvasScaleStatusAction,
     setCanvasToShowAction,
     setCanvasToShowStatusAction,
     setGlobalAlertAction,
-    setSelectedStationAction,
+    setIsShareTrackDisabledAction,
     setSelectedColineAction,
+    setSelectedStationAction,
     setSidePanelModeAction,
 } from './action';
 import { AlertProps } from '@chakra-ui/react';
@@ -28,6 +30,7 @@ interface AppState {
     sidePanelMode: SidePanelMode;
     selectedStation: string;
     selectedColine?: number;
+    isShareTrackDisabled: boolean; // for main line only
     globalAlert?: {
         status: AlertProps['status'];
         message: string;
@@ -43,6 +46,7 @@ const initialState: AppState = {
     sidePanelMode: SidePanelMode.CLOSE,
     selectedStation: 'linestart',
     selectedColine: undefined,
+    isShareTrackDisabled: true,
 };
 
 export default function AppReducer(
@@ -55,6 +59,7 @@ export default function AppReducer(
         | setSidePanelModeAction
         | setSelectedStationAction
         | setSelectedColineAction
+        | setIsShareTrackDisabledAction
         | setGlobalAlertAction
 ): AppState {
     switch (action.type) {
@@ -78,6 +83,9 @@ export default function AppReducer(
             break;
         case SET_SELECTED_COLINE:
             state.selectedColine = action.selectedColine;
+            break;
+        case SET_IS_SHARE_TRACK_DISABLED:
+            state.isShareTrackDisabled = action.isShareTrackDisabled;
             break;
         case SET_GLOBAL_ALERT:
             state.globalAlert = action.globalAlert;

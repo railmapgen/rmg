@@ -1,4 +1,4 @@
-import { checkColineValidity, getRowSpanForColine } from './coline-action';
+import { checkColineValidity, getRowSpanForColine, verifyAreSelectionsConsecutive } from './coline-action';
 import { BranchStyle, ColineInfo, MonoColour, StationDict } from '../../constants/constants';
 import { getBranches } from '../helper/graph-theory-util';
 import { CityCode } from '@railmapgen/rmg-palette-resources';
@@ -40,18 +40,25 @@ describe('Unit tests for coline action', () => {
                 branch: { left: [], right: [] },
             },
         } as any as StationDict;
+        const branches = getBranches(mockStationList);
 
-        expect(() =>
-            checkColineValidity([['linestart', 'stn1', 'stn2', 'stn3', 'lineend']], 'stn1', 'stn2', mockStationList)
-        ).toThrow('addColine():: failed');
+        const mockStore = createMockAppStore({
+            ...realStore,
+            param: {
+                ...realStore.param,
+                stn_list: mockStationList,
+            },
+            helper: {
+                ...realStore.helper,
+                branches,
+            },
+        });
 
-        expect(() =>
-            checkColineValidity([['linestart', 'stn1', 'stn2', 'stn3', 'lineend']], 'stn2', 'stn3', mockStationList)
-        ).toThrow('addColine():: failed');
+        expect(() => mockStore.dispatch(checkColineValidity('stn1', 'stn2'))).toThrow('addColine():: failed');
 
-        expect(() =>
-            checkColineValidity([['linestart', 'stn1', 'stn2', 'stn3', 'lineend']], 'stn1', 'stn3', mockStationList)
-        ).not.toThrow();
+        expect(() => mockStore.dispatch(checkColineValidity('stn2', 'stn3'))).toThrow('addColine():: failed');
+
+        expect(() => mockStore.dispatch(checkColineValidity('stn1', 'stn3'))).not.toThrow();
     });
 
     it('Coline-check-validity-multiple-branch-lines', () => {
@@ -76,13 +83,13 @@ describe('Unit tests for coline action', () => {
                 branch: { left: [], right: [] },
             },
             stn2: {
-                parents: ['stn1'],
+                parents: ['stnB', 'stn1'],
                 children: ['stn3'],
                 branch: { left: ['through', 'stnB'], right: [] },
             },
             stn3: {
                 parents: ['stn2'],
-                children: ['lineend'],
+                children: ['stn4', 'stnZ'],
                 branch: { left: [], right: ['through', 'stnZ'] },
             },
             stn4: {
@@ -111,27 +118,35 @@ describe('Unit tests for coline action', () => {
                 branch: { left: ['through', 'stnZ'], right: [] },
             },
         } as any as StationDict;
-        const branches = [
-            ['linestart', 'stn1', 'stn2', 'stn3', 'stn4', 'lineend'],
-            ['linestart', 'stnA', 'stnB', 'stn2'],
-            ['stn3', 'stnZ', 'lineend'],
-        ];
+        const branches = getBranches(mockStationList);
 
-        expect(() => checkColineValidity(branches, 'stn1', 'stn2', mockStationList)).toThrow('addColine():: failed');
+        const mockStore = createMockAppStore({
+            ...realStore,
+            param: {
+                ...realStore.param,
+                stn_list: mockStationList,
+            },
+            helper: {
+                ...realStore.helper,
+                branches,
+            },
+        });
 
-        expect(() => checkColineValidity(branches, 'stn2', 'stn3', mockStationList)).toThrow('addColine():: failed');
+        expect(() => mockStore.dispatch(checkColineValidity('stn1', 'stn2'))).toThrow('addColine():: failed');
 
-        expect(() => checkColineValidity(branches, 'stn1', 'stn3', mockStationList)).not.toThrow();
+        expect(() => mockStore.dispatch(checkColineValidity('stn2', 'stn3'))).toThrow('addColine():: failed');
 
-        expect(() => checkColineValidity(branches, 'stn3', 'stn4', mockStationList)).not.toThrow();
+        expect(() => mockStore.dispatch(checkColineValidity('stn3', 'stn4'))).not.toThrow();
 
-        expect(() => checkColineValidity(branches, 'stn1', 'stn4', mockStationList)).not.toThrow();
+        expect(() => mockStore.dispatch(checkColineValidity('stn1', 'stn4'))).not.toThrow();
 
-        expect(() => checkColineValidity(branches, 'stn2', 'stnZ', mockStationList)).toThrow('addColine():: failed');
+        expect(() => mockStore.dispatch(checkColineValidity('stn1', 'stn4'))).not.toThrow();
 
-        expect(() => checkColineValidity(branches, 'stn3', 'stnZ', mockStationList)).not.toThrow();
+        expect(() => mockStore.dispatch(checkColineValidity('stn2', 'stnZ'))).toThrow('addColine():: failed');
 
-        expect(() => checkColineValidity(branches, 'stn4', 'stnZ', mockStationList)).toThrow('addColine():: failed');
+        expect(() => mockStore.dispatch(checkColineValidity('stn3', 'stnZ'))).not.toThrow();
+
+        expect(() => mockStore.dispatch(checkColineValidity('stn4', 'stnZ'))).toThrow('addColine():: failed');
     });
 
     it('Can calculate row span as expected', () => {
@@ -210,5 +225,54 @@ describe('Unit tests for coline action', () => {
 
         expect(mockStore.dispatch(getRowSpanForColine('stn4', 1))).toEqual([2, expect.any(Object)]);
         expect(mockStore.dispatch(getRowSpanForColine('stn2', 1))).toEqual([0, undefined]);
+    });
+
+    it('Can verify whether selected stations are consecutive as expected', () => {
+        /**
+         * stn1 - stn2 - stn3
+         */
+        const mockStationList = {
+            linestart: {
+                parents: [],
+                children: ['stn1'],
+                branch: { left: [], right: [] },
+            },
+            stn1: {
+                parents: ['linestart'],
+                children: ['stn2'],
+                branch: { left: [], right: [] },
+            },
+            stn2: {
+                parents: ['stn1'],
+                children: ['stn3'],
+                branch: { left: [], right: [] },
+            },
+            stn3: {
+                parents: ['stn2'],
+                children: ['lineend'],
+                branch: { left: [], right: [] },
+            },
+            lineend: {
+                parents: ['stn3'],
+                children: [],
+                branch: { left: [], right: [] },
+            },
+        } as any as StationDict;
+        const branches = getBranches(mockStationList);
+
+        const mockStore = createMockAppStore({
+            ...realStore,
+            param: {
+                ...realStore.param,
+                stn_list: mockStationList,
+            },
+            helper: {
+                ...realStore.helper,
+                branches,
+            },
+        });
+
+        expect(mockStore.dispatch(verifyAreSelectionsConsecutive(['stn1', 'stn3'], 0))).toBeFalsy();
+        expect(mockStore.dispatch(verifyAreSelectionsConsecutive(['stn1', 'stn2', 'stn3'], 0))).toBeTruthy();
     });
 });

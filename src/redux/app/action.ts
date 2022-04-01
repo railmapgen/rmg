@@ -3,13 +3,19 @@ import { Dispatch } from 'redux';
 import { RootState } from '../index';
 import { AlertProps } from '@chakra-ui/react';
 
+// canvas
 export const SET_CANVAS_SCALE = 'SET_CANVAS_SCALE';
 export const SET_CANVAS_SCALE_STATUS = 'SET_CANVAS_SCALE_STATUS';
 export const SET_CANVAS_TO_SHOW = 'SET_CANVAS_TO_SHOW';
 export const SET_CANVAS_TO_SHOW_STATUS = 'SET_CANVAS_TO_SHOW_STATUS';
+
+// side panel
 export const SET_SIDE_PANEL_MODE = 'SET_SIDE_PANEL_MODE';
 export const SET_SELECTED_STATION = 'SET_SELECTED_STATION';
 export const SET_SELECTED_COLINE = 'SET_SELECTED_COLINE';
+export const SET_IS_SHARE_TRACK_DISABLED = 'SET_IS_SHARE_TRACK_DISABLED';
+
+// global
 export const SET_GLOBAL_ALERT = 'SET_GLOBAL_ALERT';
 
 export interface setCanvasScaleAction {
@@ -45,6 +51,11 @@ export interface setSelectedStationAction {
 export interface setSelectedColineAction {
     type: typeof SET_SELECTED_COLINE;
     selectedColine: number;
+}
+
+export interface setIsShareTrackDisabledAction {
+    type: typeof SET_IS_SHARE_TRACK_DISABLED;
+    isShareTrackDisabled: boolean;
 }
 
 export interface setGlobalAlertAction {
@@ -123,6 +134,10 @@ export const setSelectedStation = (selectedStation: string): setSelectedStationA
 
 export const setSelectedColine = (selectedColine: number): setSelectedColineAction => {
     return { type: SET_SELECTED_COLINE, selectedColine };
+};
+
+export const setIsShareTrackDisabled = (isShareTrackDisabled: boolean): setIsShareTrackDisabledAction => {
+    return { type: SET_IS_SHARE_TRACK_DISABLED, isShareTrackDisabled };
 };
 
 export const setGlobalAlert = (globalAlert?: {

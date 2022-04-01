@@ -2,13 +2,17 @@ import { RmgAgGrid, RmgLineBadge } from '@railmapgen/rmg-components';
 import React, { useEffect, useRef } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { useAppDispatch, useAppSelector } from '../../redux';
-import { ColDef } from 'ag-grid-community';
+import { ColDef, SelectionChangedEvent } from 'ag-grid-community';
 import { ColineInfo, Name, RmgStyle, SidePanelMode, StationInfo, StationTransfer } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { HStack } from '@chakra-ui/react';
 import RmgMultiLineString from '../common/rmg-multi-line-string';
-import { setSelectedStation, setSidePanelMode } from '../../redux/app/action';
-import { getRowSpanForColine } from '../../redux/param/coline-action';
+import { setIsShareTrackDisabled, setSelectedStation, setSidePanelMode } from '../../redux/app/action';
+import {
+    checkColineValidity,
+    getRowSpanForColine,
+    verifyAreSelectionsConsecutive,
+} from '../../redux/param/coline-action';
 
 interface StationAgGridProps {
     branchIndex: number;
@@ -103,24 +107,44 @@ export default function StationAgGrid(props: StationAgGridProps) {
         },
     ];
 
-    const handleSelectionChanged = () => {
-        const selectedRowIds = gridRef?.current?.api?.getSelectedRows()?.map(row => row.id as string);
+    const handleSelectionChanged = ({ api }: SelectionChangedEvent) => {
+        const selectedRowIds = api.getSelectedRows()?.map(row => row.id as string);
         console.log('StationAgGrid.handleSelectionChanged():: Row selection changed', selectedRowIds);
 
         if (selectedRowIds?.length) {
             if (style !== RmgStyle.SHMetro || selectedRowIds.length === 1) {
                 dispatch(setSidePanelMode(SidePanelMode.STATION));
                 dispatch(setSelectedStation(selectedRowIds[0]));
+                dispatch(setIsShareTrackDisabled(true));
             } else {
+                // close side panel
                 dispatch(setSidePanelMode(SidePanelMode.CLOSE));
                 dispatch(setSelectedStation('linestart'));
 
-                console.log(selectedRowIds);
+                // check validity for track sharing
+                try {
+                    const isConsecutive = dispatch(verifyAreSelectionsConsecutive(selectedRowIds, branchIndex));
+                    if (isConsecutive) {
+                        dispatch(checkColineValidity(selectedRowIds[0], selectedRowIds.slice(-1)[0]));
+
+                        console.log('StationAgGrid.handleSelectionChanged():: Selections are valid for track sharing');
+                        dispatch(setIsShareTrackDisabled(false));
+                    } else {
+                        dispatch(setIsShareTrackDisabled(true));
+                    }
+                } catch (err) {
+                    console.log(
+                        'StationAgGrid.handleSelectionChanged():: Failed to validate selections for track sharing',
+                        err
+                    );
+                    dispatch(setIsShareTrackDisabled(true));
+                }
             }
         } else {
             // unselect
             dispatch(setSidePanelMode(SidePanelMode.CLOSE));
             dispatch(setSelectedStation('linestart'));
+            dispatch(setIsShareTrackDisabled(true));
         }
     };
 

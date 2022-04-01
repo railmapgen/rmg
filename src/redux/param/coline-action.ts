@@ -63,36 +63,63 @@ export const getRowSpanForColine = (stationId: string, branchIndex: number) => {
 };
 
 /**
+ * Verify station selections from table are consecutive, which is the prerequisite for track sharing.
+ * @param selectedIds IDs of the selected stations (get by gridApi)
+ * @param branchIndex
+ */
+export const verifyAreSelectionsConsecutive = (selectedIds: string[], branchIndex: number) => {
+    return (dispatch: AppDispatch, getState: () => RootState): boolean => {
+        const branch = getState().helper.branches[branchIndex];
+
+        const from = selectedIds[0];
+        const to = selectedIds.slice(-1)[0];
+
+        const areConsecutiveSelections =
+            branch.slice(branch.indexOf(from), branch.indexOf(to) + 1).toString() === selectedIds.toString();
+        if (!areConsecutiveSelections) {
+            console.log('verifyAreSelectionsConsecutive():: Selections are NOT consecutive');
+            return false;
+        } else {
+            return true;
+        }
+    };
+};
+
+/**
  *  Checks the validity of from and to. Currently we accept coline if it:
  1. Start from either ends of the mainline or branch stations and
  terminate at either ends of the mainline or branch stations.
  2. Start from the one end of the branch line and
  terminate at the other end of the same branch line.
 
- * @param branches branches from helper
  * @param from station id from
  * @param to station id to
  */
-export const checkColineValidity = (branches: string[][], from: string, to: string, stnList: StationDict) => {
-    if (from === to) {
-        throw new Error('addColine():: failed for same stnId');
-    }
-    // calculate if coline is in the main line
-    const colineInMainLine = getPossibleStnIdsFromMainLine(branches, stnList).filter(stnId =>
-        [from, to].includes(stnId)
-    );
-    // calculate if coline is in one branch line
-    const colineInBranches = getPossibleStnIdsFromBranchLine(branches, stnList).filter(terminals =>
-        [from, to].every(stnId => terminals.includes(stnId))
-    );
-    // see if coline is in the main line
-    if (colineInMainLine.length === 2 && colineInBranches.length > 0) {
-        throw new Error('addColine():: failed');
-    }
-    // see if coline is in one branch line
-    if (colineInMainLine.length !== 2 && colineInBranches.length !== 1) {
-        throw new Error('addColine():: failed');
-    }
+export const checkColineValidity = (from: string, to: string) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const stnList = getState().param.stn_list;
+        const branches = getState().helper.branches;
+
+        if (from === to) {
+            throw new Error('addColine():: failed for same stnId');
+        }
+        // calculate if coline is in the main line
+        const colineInMainLine = getPossibleStnIdsFromMainLine(branches, stnList).filter(stnId =>
+            [from, to].includes(stnId)
+        );
+        // calculate if coline is in one branch line
+        const colineInBranches = getPossibleStnIdsFromBranchLine(branches, stnList).filter(terminals =>
+            [from, to].every(stnId => terminals.includes(stnId))
+        );
+        // see if coline is in the main line
+        if (colineInMainLine.length === 2 && colineInBranches.length > 0) {
+            throw new Error('addColine():: failed');
+        }
+        // see if coline is in one branch line
+        if (colineInMainLine.length !== 2 && colineInBranches.length !== 1) {
+            throw new Error('addColine():: failed');
+        }
+    };
 };
 
 /**
@@ -111,11 +138,8 @@ export const removeInvalidColineOnRemoveStation = (deleteStnId: string) => {
 export const addColine = (from: string, to: string, colors: InterchangeInfo[], display: boolean = true) => {
     return (dispatch: AppDispatch, getState: () => RootState) => {
         const colineInfo = getState().param.coline;
-        const branches = getState().helper.branches;
-        const stnList = getState().param.stn_list;
 
-        checkColineValidity(branches, from, to, stnList);
-
+        dispatch(checkColineValidity(from, to));
         dispatch(setColineBulk([...colineInfo, { from: from, to: to, colors: colors, display: display }]));
     };
 };
@@ -123,11 +147,9 @@ export const addColine = (from: string, to: string, colors: InterchangeInfo[], d
 export const updateColine = (colineIndex: number, from: string, to: string, display = true) => {
     return (dispatch: AppDispatch, getState: () => RootState) => {
         const colineInfo = getState().param.coline;
-        const stnList = getState().param.stn_list;
 
         if (colineInfo.length > colineIndex) {
-            const branches = getState().helper.branches;
-            checkColineValidity(branches, from, to, stnList);
+            dispatch(checkColineValidity(from, to));
 
             const newColineInfo = colineInfo.map((set, setIdx) =>
                 setIdx === colineIndex ? { from: from, to: to, colors: set.colors, display: display } : set
