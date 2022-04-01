@@ -285,7 +285,7 @@ export const addStation = (where: `${number}` | 'new', from: string, to: string,
                     branch: {
                         left: stationList[from].branch.left,
                         right:
-                            stationList[from].branch.right.length && stationList[to].branch.right[1] === to
+                            stationList[from].branch.right.length && stationList[from].branch.right[1] === to
                                 ? ([stationList[from].branch.right[0], newId] as [BranchStyle, string])
                                 : stationList[from].branch.right,
                     },

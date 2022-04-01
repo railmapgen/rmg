@@ -12,11 +12,16 @@ jest.mock('./station-list-util', () => ({
 const mockStationList = {
     linestart: {
         parents: [],
+        children: ['stn0'],
+        branch: { left: [], right: [] },
+    },
+    stn0: {
+        parents: ['linestart'],
         children: ['stn1', 'stn5'],
         branch: { left: [], right: [BranchStyle.through, 'stn5'] },
     },
     stn1: {
-        parents: ['linestart'],
+        parents: ['stn0'],
         children: ['stn2'],
         branch: { left: [], right: [] },
     },
@@ -36,7 +41,7 @@ const mockStationList = {
         branch: { left: [], right: [] },
     },
     stn5: {
-        parents: ['linestart'],
+        parents: ['stn0'],
         children: ['stn2'],
         branch: { left: [], right: [] },
     },
@@ -69,10 +74,10 @@ describe('Unit tests for addStation action', () => {
 
     it('Can add station in main line as expected', () => {
         /**
-         *      v
-         * stn1 - stn2 - stn3 - stn4
-         *        /
-         *   stn5
+         *             v
+         * stn0 - stn1 - stn2 - stn3 - stn4
+         *      \      /
+         *        stn5
          */
         const result = mockStore.dispatch(addStation('0', 'stn1', 'stn2'));
         expect(result).toBeTruthy();
@@ -88,11 +93,11 @@ describe('Unit tests for addStation action', () => {
         expect(newStationList.testId.children).toEqual(['stn2']);
     });
 
-    it('Can add station in branch as expected', () => {
+    it('Can add station before branch ends as expected', () => {
         /**
-         * stn1 - stn2 - stn3 - stn4
-         *        / <
-         *   stn5
+         * stn0 - stn1 - stn2 - stn3 - stn4
+         *      \      / <
+         *        stn5
          */
         const result = mockStore.dispatch(addStation('1', 'stn5', 'stn2'));
         expect(result).toBeTruthy();
@@ -108,14 +113,34 @@ describe('Unit tests for addStation action', () => {
         expect(newStationList.testId.children).toEqual(['stn2']);
     });
 
+    it('Can add station after branch starts as expected', () => {
+        /**
+         * stn0 - stn1 - stn2 - stn3 - stn4
+         *    > \      /
+         *        stn5
+         */
+        const result = mockStore.dispatch(addStation('1', 'stn0', 'stn5'));
+        expect(result).toBeTruthy();
+
+        const actions = mockStore.getActions();
+        expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
+
+        const newStationList = actions.find(action => action.type === SET_STATIONS_BULK).stations;
+        expect(newStationList.stn0.children).toEqual(['stn1', 'testId']);
+        expect(newStationList.stn0.branch.right[1]).toEqual('testId');
+        expect(newStationList.stn5.parents).toEqual(['testId']);
+        expect(newStationList.testId.parents).toEqual(['stn0']);
+        expect(newStationList.testId.children).toEqual(['stn5']);
+    });
+
     it('Can add station in new branch as expected', () => {
         /**
-         *               v
-         *            (testId)
-         *          /
-         * stn1 - stn2 - stn3 - stn4
-         *        /
-         *   stn5
+         *                        v
+         *                    (testId)
+         *                  /
+         * stn0 - stn1 - stn2 - stn3 - stn4
+         *      \      /
+         *        stn5
          */
         const result = mockStore.dispatch(addStation('new', 'stn2', 'lineend', 'upper'));
         expect(result).toBeTruthy();
@@ -134,12 +159,12 @@ describe('Unit tests for addStation action', () => {
 
     it('Can find allowed ends for new branch as expected', () => {
         /**
-         * stn1 - stn2 - stn3 - stn4
-         *        /
-         *   stn5
+         * stn0 - stn1 - stn2 - stn3 - stn4
+         *      \      /
+         *        stn5
          */
         const allowEnds = mockStore.dispatch(getNewBranchAllowedEnds());
-        expect(allowEnds).toEqual(['linestart', 'stn2', 'stn3', 'stn4', 'lineend']);
+        expect(allowEnds).toEqual(['linestart', 'stn0', 'stn2', 'stn3', 'stn4', 'lineend']);
     });
 
     it('Can reject incorrect ordering for new branch', () => {
