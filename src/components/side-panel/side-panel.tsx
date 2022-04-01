@@ -6,8 +6,7 @@ import { SidePanelMode } from '../../constants/constants';
 import StationSidePanel from './station-side-panel/station-side-panel';
 import StyleSidePanel from './style-side-panel/style-side-panel';
 import ColineSidePanel from './coline-side-panel/coline-side-panel';
-import { RmgSidePanel, RmgSidePanelHeader } from '@railmapgen/rmg-components';
-import RmgMultiLineString from '../common/rmg-multi-line-string';
+import { RmgMultiLineString, RmgSidePanel, RmgSidePanelHeader } from '@railmapgen/rmg-components';
 import StationSidePanelFooter from './station-side-panel/station-side-panel-footer';
 
 const SIDE_PANEL_WIDTH = 320;

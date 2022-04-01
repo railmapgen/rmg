@@ -1,4 +1,4 @@
-import { RmgAgGrid, RmgLineBadge } from '@railmapgen/rmg-components';
+import { RmgAgGrid, RmgLineBadge, RmgMultiLineString } from '@railmapgen/rmg-components';
 import React, { useEffect, useRef } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { useAppDispatch, useAppSelector } from '../../redux';
@@ -6,7 +6,6 @@ import { ColDef, SelectionChangedEvent } from 'ag-grid-community';
 import { ColineInfo, Name, RmgStyle, SidePanelMode, StationInfo, StationTransfer } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { HStack } from '@chakra-ui/react';
-import RmgMultiLineString from '../common/rmg-multi-line-string';
 import { setIsShareTrackDisabled, setSelectedStation, setSidePanelMode } from '../../redux/app/action';
 import {
     checkColineValidity,
