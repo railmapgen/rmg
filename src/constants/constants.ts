@@ -38,7 +38,6 @@ export enum SidePanelMode {
     CLOSE = 'CLOSE',
     STATION = 'STATION',
     STYLE = 'STYLE',
-    COLINE = 'COLINE',
     BRANCH = 'BRANCH',
 }
 

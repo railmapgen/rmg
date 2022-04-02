@@ -1,10 +1,17 @@
 import React from 'react';
 import { Button, Heading, VStack } from '@chakra-ui/react';
 import { useAppDispatch, useAppSelector } from '../../../redux';
-import { addColine, findAllColinesInBranch, getPossibleCombinations } from '../../../redux/param/coline-action';
+import {
+    addColine,
+    findAllColinesInBranch,
+    getPossibleCombinations,
+    updateColine,
+    updateColineColor,
+} from '../../../redux/param/coline-action';
 import ColineCard from './coline-card';
 import { MdAdd } from 'react-icons/md';
 import { MonoColour } from '../../../constants/constants';
+import { setGlobalAlert } from '../../../redux/app/action';
 
 export default function ColineSection() {
     const dispatch = useAppDispatch();
@@ -39,6 +46,14 @@ export default function ColineSection() {
         );
     };
 
+    const handleUpdateRoute = (selectedColine: number) => (route: string) => {
+        try {
+            dispatch(updateColine(selectedColine, ...(route.split(',') as [string, string])));
+        } catch {
+            dispatch(setGlobalAlert({ status: 'error', message: 'Unable to draw this share track.' }));
+        }
+    };
+
     return (
         <VStack align="flex-start" p={1}>
             <Heading as="h5" size="sm">
@@ -46,7 +61,13 @@ export default function ColineSection() {
             </Heading>
 
             {colineInfoList.map((colineInfo, i) => (
-                <ColineCard key={i} colineInfo={colineInfo} routeOptions={routeOptions} />
+                <ColineCard
+                    key={i}
+                    colineInfo={colineInfo}
+                    routeOptions={routeOptions}
+                    onUpdateRoute={handleUpdateRoute(i)}
+                    onUpdateColourInfo={colourInfo => dispatch(updateColineColor(i, 0, colourInfo))}
+                />
             ))}
 
             {selectedBranch === 0 && (

@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux';
 import { SidePanelMode } from '../../constants/constants';
 import StationSidePanel from './station-side-panel/station-side-panel';
 import StyleSidePanel from './style-side-panel/style-side-panel';
-import ColineSidePanel from './coline-side-panel/coline-side-panel';
 import { RmgMultiLineString, RmgSidePanel, RmgSidePanelHeader } from '@railmapgen/rmg-components';
 import StationSidePanelFooter from './station-side-panel/station-side-panel-footer';
 import BranchSidePanel from './branch-side-panel/branch-side-panel';
@@ -25,7 +24,6 @@ export default function SidePanel() {
             footer: <StationSidePanelFooter />,
         },
         STYLE: { header: 'Edit style', body: <StyleSidePanel /> },
-        COLINE: { header: 'Edit sharing track', body: <ColineSidePanel /> },
         BRANCH: { header: 'Edit line section', body: <BranchSidePanel /> },
         CLOSE: { header: 'Close' },
     };
