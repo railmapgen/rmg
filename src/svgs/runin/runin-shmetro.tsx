@@ -152,7 +152,7 @@ const TerminalStation = (props: { mode: 'terminal' | 'original'; prevStnIds: str
         r: { original: { x: 36, anchor: 'start' }, terminal: { x: svgWidth.runin - 36, anchor: 'end' } },
     };
 
-    const colineStns = calculateColineStations(coline, branches);
+    const colineStns = calculateColineStations(Object.values(coline), branches);
     const nextColineColorFrom = mode === 'terminal' ? prevStnIds : nextStnIds;
     const nextColineColor =
         nextStnIds.length > 1
@@ -211,7 +211,7 @@ const Line = (props: RunInGeneralProps) => {
     // determine the end with linestart/lineend or .length === 0
     const isEnd = (stnIds: string[]) => stnIds.includes('linestart') || stnIds.includes('lineend');
 
-    const colineStns = calculateColineStations(coline, branches);
+    const colineStns = calculateColineStations(Object.values(coline), branches);
 
     // whether the next line is single color(var(--rmg-theme-colour) or coline color) or multiple colors
     // let nextColineMode: 'single' | 'multiple' = 'single';
@@ -256,13 +256,13 @@ const Line = (props: RunInGeneralProps) => {
 
     // change color to coline color only if it has coline and the curr and next stations are in the coline branch
     const nextColor =
-        coline.length > 0 && isInColineBranch(branches, current_stn_idx, nextStnIds, stnList)
+        Object.keys(coline).length > 0 && isInColineBranch(branches, current_stn_idx, nextStnIds, stnList)
             ? nextColineColor
             : 'var(--rmg-theme-colour)';
 
     // stretch the next line element if curr and next stations aren't in main line with coline
     const nextLineStretch =
-        coline.length > 0 &&
+        Object.keys(coline).length > 0 &&
         nextStnIds.length === 1 && // BranchLine will add branch next line so no stretch is needed
         (isEnd(prevStnIds) || isEnd(nextStnIds)
             ? true // terminal station with coline(prevent linestart/lineend)
@@ -273,7 +273,7 @@ const Line = (props: RunInGeneralProps) => {
               )); // no stretch if it is in main line with coline
 
     // stretch the pass line element if BranchLine is not in effect
-    const passLineStretch = coline.length > 0 && prevStnIds.length === 1;
+    const passLineStretch = Object.keys(coline).length > 0 && prevStnIds.length === 1;
 
     return (
         <g transform="translate(0,220)" strokeWidth={12}>
@@ -374,8 +374,8 @@ const BranchLine = (props: RunInBranchLineProps) => {
 
     let nextColor = 'var(--rmg-theme-colour)';
 
-    if (coline.length > 0) {
-        const colineStns = calculateColineStations(coline, branches);
+    if (Object.keys(coline).length > 0) {
+        const colineStns = calculateColineStations(Object.values(coline), branches);
 
         // If the next stns have coline branch here,
         // uplift branch a little bit with coline color.

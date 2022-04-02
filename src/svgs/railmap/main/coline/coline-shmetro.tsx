@@ -69,7 +69,7 @@ export const ColineSHMetro = (props: Props) => {
         () =>
             calculateColine(
                 calculateColineStations(
-                    colineInfo.filter(co => co.display),
+                    Object.values(colineInfo).filter(co => co.display),
                     branches
                 ),
                 stnStates
@@ -108,7 +108,7 @@ export const ColineSHMetro = (props: Props) => {
 
     // only display coline stations when coline in effect
     const colineStations = calculateColineStations(
-        colineInfo.filter(co => co.display),
+        Object.values(colineInfo).filter(co => co.display),
         branches
     )
         .map(co => co.linePath)
@@ -343,7 +343,10 @@ const ColineStationGroup = (props: StationGroupProps) => {
     const { line_name, theme, coline } = useAppSelector(store => store.param);
 
     // get colors of stations in coline branches, they use different colors than var(--rmg-theme-colour)
-    const colines = React.useMemo(() => calculateColineStations(coline, branches), [JSON.stringify(coline), deps]);
+    const colines = React.useMemo(
+        () => calculateColineStations(Object.values(coline), branches),
+        [JSON.stringify(coline), deps]
+    );
     const colors = stnIds.reduce(
         (acc, stnId) => ({
             ...acc,

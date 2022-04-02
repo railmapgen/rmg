@@ -190,20 +190,20 @@ describe('Unit tests for coline action', () => {
 
         const branches = getBranches(mockStationList);
 
-        const coline: ColineInfo[] = [
-            {
+        const coline: Record<string, ColineInfo> = {
+            col1: {
                 from: 'stn3',
                 to: 'stn2',
                 colors: [[CityCode.Guangzhou, 'gz1', '#FFFFFF', MonoColour.black, 'ZH Name', 'EN Name']],
                 display: true,
             },
-            {
+            col2: {
                 from: 'stn2',
                 to: 'stn4',
                 colors: [[CityCode.Guangzhou, 'gz1', '#FFFFFF', MonoColour.black, 'ZH Name', 'EN Name']],
                 display: true,
             },
-        ];
+        };
 
         const mockStore = createMockAppStore({
             ...realStore,
@@ -220,10 +220,10 @@ describe('Unit tests for coline action', () => {
 
         expect(mockStore.dispatch(getRowSpanForColine('stn1', 0))).toEqual([0, undefined]);
 
-        expect(mockStore.dispatch(getRowSpanForColine('stn2', 0))).toEqual([2, expect.any(Object)]);
+        expect(mockStore.dispatch(getRowSpanForColine('stn2', 0))).toEqual([2, 'col1']);
         expect(mockStore.dispatch(getRowSpanForColine('stn3', 0))).toEqual([0, undefined]);
 
-        expect(mockStore.dispatch(getRowSpanForColine('stn4', 1))).toEqual([2, expect.any(Object)]);
+        expect(mockStore.dispatch(getRowSpanForColine('stn4', 1))).toEqual([2, 'col2']);
         expect(mockStore.dispatch(getRowSpanForColine('stn2', 1))).toEqual([0, undefined]);
     });
 

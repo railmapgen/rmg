@@ -1,4 +1,5 @@
 import { LanguageCode, Note, RmgStyle, StationInfo, Translation } from './constants/constants';
+import { nanoid } from 'nanoid';
 
 export const updateParam = (param: { [x: string]: any }) => {
     // Version 0.10
@@ -230,6 +231,12 @@ export const updateParam = (param: { [x: string]: any }) => {
         if (!('loop_pivot' in stnInfo)) {
             param.stn_list[stnId].loop_pivot = false;
         }
+    }
+
+    // Version 5.0.0-19
+    // convert list of coline to key-value pairs
+    if (Array.isArray(param.coline)) {
+        param.coline = param.coline.reduce((acc, cur) => ({ ...acc, [nanoid(4)]: cur }), {});
     }
 
     return param;

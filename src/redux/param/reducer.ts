@@ -85,7 +85,7 @@ const initialState: RMGParam = {
     notesGZMTR: [],
     direction_gz_x: 0,
     direction_gz_y: 0,
-    coline: [],
+    coline: {},
     loop: false,
     loop_info: {
         bank: true,

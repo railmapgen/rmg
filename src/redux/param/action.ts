@@ -181,7 +181,7 @@ export interface setStationsBulkAction {
 
 export interface setColineBulkAction {
     type: typeof SET_COLINE_BULK;
-    coline: ColineInfo[];
+    coline: Record<string, ColineInfo>;
 }
 
 // export const setFullParam = (fullParam: RMGParam): setFullParamAction => {
@@ -381,10 +381,8 @@ export const setStationsBulk = (stations: StationDict) => {
     };
 };
 
-export const setColineBulk = (coline: ColineInfo[]) => {
-    return (dispatch: AppDispatch) => {
-        dispatch({ type: SET_COLINE_BULK, coline });
-    };
+export const setColineBulk = (coline: Record<string, ColineInfo>): setColineBulkAction => {
+    return { type: SET_COLINE_BULK, coline };
 };
 
 export const reverseStations = () => {

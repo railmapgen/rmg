@@ -18,7 +18,7 @@ interface RmgAgGridColDef<T> extends ColDef {
     field?: Extract<keyof T, string>;
 }
 
-type RowDataType = StationInfo & { id: string; rowSpan: [number, ColineInfo | undefined] };
+type RowDataType = StationInfo & { id: string; rowSpan: [number, string | undefined] };
 
 export default function StationAgGrid(props: StationAgGridProps) {
     const { branchIndex } = props;
@@ -26,7 +26,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
     const dispatch = useAppDispatch();
 
     const sidePanelMode = useAppSelector(state => state.app.sidePanelMode);
-    const { style, theme, stn_list: stationList, line_num: lineNumber } = useAppSelector(state => state.param);
+    const { style, theme, stn_list: stationList, line_num: lineNumber, coline } = useAppSelector(state => state.param);
     const branches = useAppSelector(state => state.helper.branches);
     const stationIds = branches[branchIndex].filter(id => !['linestart', 'lineend'].includes(id));
 
@@ -92,7 +92,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
             },
             cellRenderer: ({ value }: { value: RowDataType['rowSpan'] }) => (
                 <HStack>
-                    {value[1]?.colors?.map((it, i) => (
+                    {coline[value[1] as string]?.colors?.map((it, i) => (
                         <RmgLineBadge key={i} name={[it[4], it[5]]} bg={it[2]} fg={it[3]} showShortName />
                     ))}
                 </HStack>

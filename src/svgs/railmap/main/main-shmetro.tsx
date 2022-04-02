@@ -144,7 +144,10 @@ const MainSHMetro = () => {
     );
 
     return (
-        <g id="main" transform={`translate(0,${param.svg_height * (coline?.length > 0 ? 0.5 : 0.7 + 0.1)})`}>
+        <g
+            id="main"
+            transform={`translate(0,${param.svg_height * (Object.keys(coline).length > 0 ? 0.5 : 0.7 + 0.1)})`}
+        >
             <Line paths={paths} direction={param.direction} />
             <StationGroup
                 stnIds={Object.keys(lineYShares)
@@ -154,7 +157,9 @@ const MainSHMetro = () => {
                 ys={lineYs}
                 stnStates={stnStates}
             />
-            {coline?.length > 0 && <ColineSHMetro xs={xs} servicesPresent={servicesPresent} stnStates={stnStates} />}
+            {Object.keys(coline).length > 0 && (
+                <ColineSHMetro xs={xs} servicesPresent={servicesPresent} stnStates={stnStates} />
+            )}
             <ServicesElements servicesLevel={servicesPresent} lineXs={lineXs} />
         </g>
     );

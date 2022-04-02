@@ -46,9 +46,9 @@ export default function ColineSection() {
         );
     };
 
-    const handleUpdateRoute = (selectedColine: number) => (route: string) => {
+    const handleUpdateRoute = (colineId: string) => (route: string) => {
         try {
-            dispatch(updateColine(selectedColine, ...(route.split(',') as [string, string])));
+            dispatch(updateColine(colineId, ...(route.split(',') as [string, string])));
         } catch {
             dispatch(setGlobalAlert({ status: 'error', message: 'Unable to draw this share track.' }));
         }
@@ -60,13 +60,13 @@ export default function ColineSection() {
                 Track sharing
             </Heading>
 
-            {colineInfoList.map((colineInfo, i) => (
+            {Object.entries(colineInfoList).map(([id, colineInfo]) => (
                 <ColineCard
-                    key={i}
+                    key={id}
                     colineInfo={colineInfo}
                     routeOptions={routeOptions}
-                    onUpdateRoute={handleUpdateRoute(i)}
-                    onUpdateColourInfo={colourInfo => dispatch(updateColineColor(i, 0, colourInfo))}
+                    onUpdateRoute={handleUpdateRoute(id)}
+                    onUpdateColourInfo={colourInfo => dispatch(updateColineColor(id, 0, colourInfo))}
                 />
             ))}
 

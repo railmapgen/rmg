@@ -15,8 +15,8 @@ export interface ColineLinePath {
 /**
  * Return all stations from ColineInfo's `from` and `to` with coline color preserved.
  */
-export const calculateColineStations = (colineInfo: ColineInfo[], branches: string[][]) =>
-    colineInfo
+export const calculateColineStations = (colineInfoList: ColineInfo[], branches: string[][]) =>
+    colineInfoList
         .map(coLine => {
             const involvedBranches = branches.filter(
                 branch => branch.includes(coLine.from) && branch.includes(coLine.to)

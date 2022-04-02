@@ -246,7 +246,7 @@ export interface RMGParam {
     notesGZMTR: Note[];
     direction_gz_x: number;
     direction_gz_y: number;
-    coline: ColineInfo[];
+    coline: Record<string, ColineInfo>;
     loop: boolean;
     loop_info: {
         /**
