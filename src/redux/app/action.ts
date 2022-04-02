@@ -13,7 +13,8 @@ export const SET_CANVAS_TO_SHOW_STATUS = 'SET_CANVAS_TO_SHOW_STATUS';
 export const SET_SIDE_PANEL_MODE = 'SET_SIDE_PANEL_MODE';
 export const SET_SELECTED_STATION = 'SET_SELECTED_STATION';
 export const SET_SELECTED_COLINE = 'SET_SELECTED_COLINE';
-export const SET_IS_SHARE_TRACK_DISABLED = 'SET_IS_SHARE_TRACK_DISABLED';
+export const SET_SELECTED_BRANCH = 'SET_SELECTED_BRANCH';
+export const SET_IS_SHARE_TRACK_ENABLED = 'SET_IS_SHARE_TRACK_ENABLED';
 
 // global
 export const SET_GLOBAL_ALERT = 'SET_GLOBAL_ALERT';
@@ -53,9 +54,14 @@ export interface setSelectedColineAction {
     selectedColine: number;
 }
 
-export interface setIsShareTrackDisabledAction {
-    type: typeof SET_IS_SHARE_TRACK_DISABLED;
-    isShareTrackDisabled: boolean;
+export interface setSelectedBranchAction {
+    type: typeof SET_SELECTED_BRANCH;
+    selectedBranch: number;
+}
+
+export interface setIsShareTrackEnabledAction {
+    type: typeof SET_IS_SHARE_TRACK_ENABLED;
+    isShareTrackEnabled?: string[];
 }
 
 export interface setGlobalAlertAction {
@@ -136,8 +142,12 @@ export const setSelectedColine = (selectedColine: number): setSelectedColineActi
     return { type: SET_SELECTED_COLINE, selectedColine };
 };
 
-export const setIsShareTrackDisabled = (isShareTrackDisabled: boolean): setIsShareTrackDisabledAction => {
-    return { type: SET_IS_SHARE_TRACK_DISABLED, isShareTrackDisabled };
+export const setSelectedBranch = (selectedBranch: number): setSelectedBranchAction => {
+    return { type: SET_SELECTED_BRANCH, selectedBranch };
+};
+
+export const setIsShareTrackEnabled = (isShareTrackEnabled?: string[]): setIsShareTrackEnabledAction => {
+    return { type: SET_IS_SHARE_TRACK_ENABLED, isShareTrackEnabled };
 };
 
 export const setGlobalAlert = (globalAlert?: {

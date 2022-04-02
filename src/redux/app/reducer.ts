@@ -5,7 +5,8 @@ import {
     SET_CANVAS_TO_SHOW,
     SET_CANVAS_TO_SHOW_STATUS,
     SET_GLOBAL_ALERT,
-    SET_IS_SHARE_TRACK_DISABLED,
+    SET_IS_SHARE_TRACK_ENABLED,
+    SET_SELECTED_BRANCH,
     SET_SELECTED_COLINE,
     SET_SELECTED_STATION,
     SET_SIDE_PANEL_MODE,
@@ -14,7 +15,8 @@ import {
     setCanvasToShowAction,
     setCanvasToShowStatusAction,
     setGlobalAlertAction,
-    setIsShareTrackDisabledAction,
+    setIsShareTrackEnabledAction,
+    setSelectedBranchAction,
     setSelectedColineAction,
     setSelectedStationAction,
     setSidePanelModeAction,
@@ -30,7 +32,8 @@ interface AppState {
     sidePanelMode: SidePanelMode;
     selectedStation: string;
     selectedColine?: number;
-    isShareTrackDisabled: boolean; // for main line only
+    selectedBranch: number;
+    isShareTrackEnabled?: string[]; // for main line only, store the selections
     globalAlert?: {
         status: AlertProps['status'];
         message: string;
@@ -46,7 +49,8 @@ const initialState: AppState = {
     sidePanelMode: SidePanelMode.CLOSE,
     selectedStation: 'linestart',
     selectedColine: undefined,
-    isShareTrackDisabled: true,
+    selectedBranch: 0,
+    isShareTrackEnabled: undefined,
 };
 
 export default function AppReducer(
@@ -59,7 +63,8 @@ export default function AppReducer(
         | setSidePanelModeAction
         | setSelectedStationAction
         | setSelectedColineAction
-        | setIsShareTrackDisabledAction
+        | setSelectedBranchAction
+        | setIsShareTrackEnabledAction
         | setGlobalAlertAction
 ): AppState {
     switch (action.type) {
@@ -84,8 +89,11 @@ export default function AppReducer(
         case SET_SELECTED_COLINE:
             state.selectedColine = action.selectedColine;
             break;
-        case SET_IS_SHARE_TRACK_DISABLED:
-            state.isShareTrackDisabled = action.isShareTrackDisabled;
+        case SET_SELECTED_BRANCH:
+            state.selectedBranch = action.selectedBranch;
+            break;
+        case SET_IS_SHARE_TRACK_ENABLED:
+            state.isShareTrackEnabled = action.isShareTrackEnabled;
             break;
         case SET_GLOBAL_ALERT:
             state.globalAlert = action.globalAlert;

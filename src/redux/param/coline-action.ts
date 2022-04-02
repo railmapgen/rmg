@@ -3,6 +3,20 @@ import { ColineInfo, InterchangeInfo, SidePanelMode, StationDict } from '../../c
 import { setColineBulk } from './action';
 import { setSelectedColine, setSidePanelMode } from '../app/action';
 
+// Cartesian product of multiple arrays in JavaScript
+// https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
+// Equivalent typescript version
+// https://gist.github.com/ssippe/1f92625532eef28be6974f898efb23ef?permalink_comment_id=3364149#gistcomment-3364149
+function cartesian<T>(...allEntries: T[][]): T[][] {
+    return allEntries.reduce<T[][]>(
+        (results, entries) =>
+            results
+                .map(result => entries.map(entry => result.concat([entry])))
+                .reduce((subResults, result) => subResults.concat(result), []),
+        [[]]
+    );
+}
+
 /**
  * Coline branch is also known as the lower branch.
  */
@@ -32,6 +46,28 @@ export const getPossibleStnIdsFromBranchLine = (branches: string[][], stnList: S
         .filter(branch => isColineBranch(branch, stnList))
         .map(branch => branch.filter(stnId => !['linestart', 'lineend'].includes(stnId)))
         .map(branch => [branch[0], branch[branch.length - 1]]);
+
+export const getPossibleCombinations = (branchIndex: number) => {
+    return (dispatch: AppDispatch, getState: () => RootState): [string, string][] => {
+        const branches = getState().helper.branches;
+
+        if (branchIndex === 0) {
+            const stnList = getState().param.stn_list;
+            const possibleStnIdsFromMainLine = getPossibleStnIdsFromMainLine(branches, stnList);
+            return cartesian(possibleStnIdsFromMainLine, possibleStnIdsFromMainLine).filter(
+                val => val[0] !== val[1]
+            ) as [string, string][];
+        } else {
+            const branch = branches[branchIndex];
+            if (branch) {
+                const b = branch.filter(id => !['linestart', 'lineend'].includes(id));
+                return [[b[0], b.slice(-1)[0]]];
+            } else {
+                return [];
+            }
+        }
+    };
+};
 
 /**
  * Calculate row span for displaying track sharing column in StationAgGrid
@@ -118,6 +154,20 @@ export const checkColineValidity = (from: string, to: string) => {
         // see if coline is in one branch line
         if (colineInMainLine.length !== 2 && colineInBranches.length !== 1) {
             throw new Error('addColine():: failed');
+        }
+    };
+};
+
+export const findAllColinesInBranch = (branchIndex: number) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const coline = getState().param.coline;
+        const branches = getState().helper.branches;
+        const branch = branches[branchIndex];
+
+        if (branch) {
+            return coline.filter(cl => branch.includes(cl.from) && branch.includes(cl.to));
+        } else {
+            return [];
         }
     };
 };

@@ -6,12 +6,8 @@ import { ColDef, SelectionChangedEvent } from 'ag-grid-community';
 import { ColineInfo, Name, RmgStyle, SidePanelMode, StationInfo, StationTransfer } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { HStack } from '@chakra-ui/react';
-import { setIsShareTrackDisabled, setSelectedStation, setSidePanelMode } from '../../redux/app/action';
-import {
-    checkColineValidity,
-    getRowSpanForColine,
-    verifyAreSelectionsConsecutive,
-} from '../../redux/param/coline-action';
+import { setIsShareTrackEnabled, setSelectedStation, setSidePanelMode } from '../../redux/app/action';
+import { getRowSpanForColine } from '../../redux/param/coline-action';
 import GzmtrStationCode from './gzmtr-station-code';
 
 interface StationAgGridProps {
@@ -57,13 +53,6 @@ export default function StationAgGrid(props: StationAgGridProps) {
     const defaultColDef = {};
 
     const columnDefs: RmgAgGridColDef<RowDataType>[] = [
-        {
-            headerName: ' ',
-            checkboxSelection: true,
-            width: 36,
-            pinned: 'left',
-            hide: ![RmgStyle.SHMetro].includes(style) || branchIndex > 0,
-        },
         {
             headerName: t('StationAgGrid.num'),
             field: 'num',
@@ -117,39 +106,14 @@ export default function StationAgGrid(props: StationAgGridProps) {
         console.log('StationAgGrid.handleSelectionChanged():: Row selection changed', selectedRowIds);
 
         if (selectedRowIds?.length) {
-            if (style !== RmgStyle.SHMetro || selectedRowIds.length === 1) {
-                dispatch(setSidePanelMode(SidePanelMode.STATION));
-                dispatch(setSelectedStation(selectedRowIds[0]));
-                dispatch(setIsShareTrackDisabled(true));
-            } else {
-                // close side panel
-                dispatch(setSidePanelMode(SidePanelMode.CLOSE));
-                dispatch(setSelectedStation('linestart'));
-
-                // check validity for track sharing
-                try {
-                    const isConsecutive = dispatch(verifyAreSelectionsConsecutive(selectedRowIds, branchIndex));
-                    if (isConsecutive) {
-                        dispatch(checkColineValidity(selectedRowIds[0], selectedRowIds.slice(-1)[0]));
-
-                        console.log('StationAgGrid.handleSelectionChanged():: Selections are valid for track sharing');
-                        dispatch(setIsShareTrackDisabled(false));
-                    } else {
-                        dispatch(setIsShareTrackDisabled(true));
-                    }
-                } catch (err) {
-                    console.log(
-                        'StationAgGrid.handleSelectionChanged():: Failed to validate selections for track sharing',
-                        err
-                    );
-                    dispatch(setIsShareTrackDisabled(true));
-                }
-            }
+            dispatch(setSidePanelMode(SidePanelMode.STATION));
+            dispatch(setSelectedStation(selectedRowIds[0]));
+            dispatch(setIsShareTrackEnabled(undefined));
         } else {
             // unselect
             dispatch(setSidePanelMode(SidePanelMode.CLOSE));
             dispatch(setSelectedStation('linestart'));
-            dispatch(setIsShareTrackDisabled(true));
+            dispatch(setIsShareTrackEnabled(undefined));
         }
     };
 
@@ -166,7 +130,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
                 suppressCellFocus={true}
                 suppressMovableColumns={true}
                 suppressRowTransform={true}
-                rowSelection={style === RmgStyle.SHMetro && branchIndex === 0 ? 'multiple' : 'single'}
+                rowSelection={'single'}
                 onSelectionChanged={handleSelectionChanged}
                 onGridReady={() => (isGridReadyRef.current = true)}
                 debug={process.env.NODE_ENV !== 'production'}

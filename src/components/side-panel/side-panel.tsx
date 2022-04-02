@@ -8,6 +8,7 @@ import StyleSidePanel from './style-side-panel/style-side-panel';
 import ColineSidePanel from './coline-side-panel/coline-side-panel';
 import { RmgMultiLineString, RmgSidePanel, RmgSidePanelHeader } from '@railmapgen/rmg-components';
 import StationSidePanelFooter from './station-side-panel/station-side-panel-footer';
+import BranchSidePanel from './branch-side-panel/branch-side-panel';
 
 const SIDE_PANEL_WIDTH = 320;
 
@@ -18,14 +19,15 @@ export default function SidePanel() {
     const name = useAppSelector(state => state.param.stn_list[selectedStation]?.name);
 
     const mode: Record<SidePanelMode, { header: ReactNode; body?: ReactNode; footer?: ReactNode }> = {
-        [SidePanelMode.STATION]: {
+        STATION: {
             header: <RmgMultiLineString text={name?.join(' - ') || ''} />,
             body: <StationSidePanel />,
             footer: <StationSidePanelFooter />,
         },
-        [SidePanelMode.STYLE]: { header: 'Edit style', body: <StyleSidePanel /> },
-        [SidePanelMode.COLINE]: { header: 'Edit sharing track', body: <ColineSidePanel /> },
-        [SidePanelMode.CLOSE]: { header: 'Close' },
+        STYLE: { header: 'Edit style', body: <StyleSidePanel /> },
+        COLINE: { header: 'Edit sharing track', body: <ColineSidePanel /> },
+        BRANCH: { header: 'Edit line section', body: <BranchSidePanel /> },
+        CLOSE: { header: 'Close' },
     };
 
     const handleClose = () => {
