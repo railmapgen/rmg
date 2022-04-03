@@ -1,5 +1,5 @@
 import React from 'react';
-import { BranchStyle, StationDict } from '../../constants/constants';
+import { BranchStyle, RmgStyle, StationDict } from '../../constants/constants';
 import { getBranches } from '../../redux/helper/graph-theory-util';
 import rootReducer from '../../redux';
 import { createMockAppStore, TestingProvider } from '../../setupTests';
@@ -72,6 +72,24 @@ const wrapper = mount(<AddStationModal isOpen={true} onClose={jest.fn()} />, {
     wrappingComponentProps: { store: mockStore },
 });
 
+const mockSHMetroStore = createMockAppStore({
+    ...realStore,
+    param: {
+        ...realStore.param,
+        style: RmgStyle.SHMetro,
+        stn_list: mockStationList,
+    },
+    helper: {
+        ...realStore.helper,
+        branches,
+    },
+});
+
+const wrapperSHMetro = mount(<AddStationModal isOpen={true} onClose={jest.fn()} />, {
+    wrappingComponent: TestingProvider,
+    wrappingComponentProps: { store: mockSHMetroStore },
+});
+
 describe('Unit tests for AddStationModal component', () => {
     /**
      * stn1 - stn2 - stn3 - stn4
@@ -79,108 +97,129 @@ describe('Unit tests for AddStationModal component', () => {
      *   stn5
      */
 
-    afterEach(() => {
-        mockStore.clearActions();
+    describe('AddStationModal - General', () => {
+        afterEach(() => {
+            mockStore.clearActions();
+        });
+
+        it('Can render where dropdown as expected', () => {
+            const whereDropdown = wrapper.find('select').at(0);
+            expect(whereDropdown.find('option')).toHaveLength(4); // main, branch 1, new, ext
+            expect(whereDropdown.find('option').at(3).props().disabled).toBeTruthy();
+        });
+
+        it('Can render from and to dropdowns for main line as expected', () => {
+            const fromDropdown = wrapper.find('select').at(1);
+            const toDropdown = wrapper.find('select').at(2);
+
+            // 4 stations in main line + linestart + lineend + please select
+            expect(fromDropdown.find('option')).toHaveLength(7);
+            expect(fromDropdown.text()).not.toContain('Station 5');
+
+            expect(toDropdown.find('option')).toHaveLength(7);
+            expect(toDropdown.text()).not.toContain('Station 5');
+        });
+
+        it('Submit button is disabled by default (without selection)', () => {
+            const fromDropdown = wrapper.find('select').at(1);
+            expect(fromDropdown.getDOMNode<HTMLSelectElement>().value).toBe('');
+
+            const toDropdown = wrapper.find('select').at(2);
+            expect(toDropdown.getDOMNode<HTMLSelectElement>().value).toBe('');
+
+            const submitButton = wrapper.find('footer button');
+            expect(submitButton.props().disabled).toBeTruthy();
+        });
+
+        it('Can display error if not adjacent stations are selected', () => {
+            wrapper
+                .find('select')
+                .at(1)
+                .simulate('change', { target: { value: 'stn2' } });
+            wrapper.update();
+
+            wrapper
+                .find('select')
+                .at(2)
+                .simulate('change', { target: { value: 'stn4' } });
+            wrapper.update();
+
+            // previously selected field will be invalid
+            expect(wrapper.find('select').at(1).props()['aria-invalid']).toBeTruthy();
+
+            // currently selected field will be valid
+            expect(wrapper.find('select').at(2).props()['aria-invalid']).toBeFalsy();
+
+            // submit button is disabled
+            const submitButton = wrapper.find('footer button');
+            expect(submitButton.props().disabled).toBeTruthy();
+            expect(submitButton.props().title).toContain('Must be previous station');
+        });
+
+        it('Can reset from and to selections when where is changed', () => {
+            wrapper
+                .find('select')
+                .at(0)
+                .simulate('change', { target: { value: 'new' } });
+            wrapper.update();
+
+            const fromDropdown = wrapper.find('select').at(1);
+            const toDropdown = wrapper.find('select').at(2);
+
+            expect(fromDropdown.getDOMNode<HTMLSelectElement>().value).toBe('');
+            expect(toDropdown.getDOMNode<HTMLSelectElement>().value).toBe('');
+
+            expect(fromDropdown.props()['aria-invalid']).toBeFalsy();
+            expect(toDropdown.props()['aria-invalid']).toBeFalsy();
+        });
+
+        it('Can display error if failed at verification step', () => {
+            wrapper
+                .find('select')
+                .at(1)
+                .simulate('change', { target: { value: 'stn4' } });
+            wrapper.update();
+
+            wrapper
+                .find('select')
+                .at(2)
+                .simulate('change', { target: { value: 'lineend' } });
+            wrapper.update();
+
+            const submitButton = wrapper.find('footer button');
+            expect(submitButton.props().disabled).toBeTruthy();
+            expect(submitButton.props().title).toContain('should not be open jaw from the last station');
+        });
+
+        it('Can add station in new branch as expected', () => {
+            wrapper
+                .find('select')
+                .at(1)
+                .simulate('change', { target: { value: 'stn3' } });
+            wrapper.update();
+
+            wrapper.find('footer button').simulate('click');
+
+            const actions = mockStore.getActions();
+            expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
+        });
     });
 
-    it('Can render where dropdown as expected', () => {
-        const whereDropdown = wrapper.find('select').at(0);
-        expect(whereDropdown.find('option')).toHaveLength(3); // main, branch 1, new
-    });
+    describe('AddStationModal - SHMetro', () => {
+        it('Can render where dropdown for SHMetro style as expected', () => {
+            const whereDropdown = wrapperSHMetro.find('select').at(0);
+            expect(whereDropdown.find('option').at(3).props().disabled).toBeFalsy();
+        });
 
-    it('Can render from and to dropdowns for main line as expected', () => {
-        const fromDropdown = wrapper.find('select').at(1);
-        const toDropdown = wrapper.find('select').at(2);
+        it('Position selection is not available for new branch in SHMetro style', () => {
+            wrapperSHMetro
+                .find('select')
+                .at(0)
+                .simulate('change', { target: { value: 'new' } });
+            wrapperSHMetro.update();
 
-        // 4 stations in main line + linestart + lineend + please select
-        expect(fromDropdown.find('option')).toHaveLength(7);
-        expect(fromDropdown.text()).not.toContain('Station 5');
-
-        expect(toDropdown.find('option')).toHaveLength(7);
-        expect(toDropdown.text()).not.toContain('Station 5');
-    });
-
-    it('Submit button is disabled by default (without selection)', () => {
-        const fromDropdown = wrapper.find('select').at(1);
-        expect(fromDropdown.getDOMNode<HTMLSelectElement>().value).toBe('');
-
-        const toDropdown = wrapper.find('select').at(2);
-        expect(toDropdown.getDOMNode<HTMLSelectElement>().value).toBe('');
-
-        const submitButton = wrapper.find('footer button');
-        expect(submitButton.props().disabled).toBeTruthy();
-    });
-
-    it('Can display error if not adjacent stations are selected', () => {
-        wrapper
-            .find('select')
-            .at(1)
-            .simulate('change', { target: { value: 'stn2' } });
-        wrapper.update();
-
-        wrapper
-            .find('select')
-            .at(2)
-            .simulate('change', { target: { value: 'stn4' } });
-        wrapper.update();
-
-        // previously selected field will be invalid
-        expect(wrapper.find('select').at(1).props()['aria-invalid']).toBeTruthy();
-
-        // currently selected field will be valid
-        expect(wrapper.find('select').at(2).props()['aria-invalid']).toBeFalsy();
-
-        // submit button is disabled
-        const submitButton = wrapper.find('footer button');
-        expect(submitButton.props().disabled).toBeTruthy();
-        expect(submitButton.props().title).toContain('Must be previous station');
-    });
-
-    it('Can reset from and to selections when where is changed', () => {
-        wrapper
-            .find('select')
-            .at(0)
-            .simulate('change', { target: { value: 'new' } });
-        wrapper.update();
-
-        const fromDropdown = wrapper.find('select').at(1);
-        const toDropdown = wrapper.find('select').at(2);
-
-        expect(fromDropdown.getDOMNode<HTMLSelectElement>().value).toBe('');
-        expect(toDropdown.getDOMNode<HTMLSelectElement>().value).toBe('');
-
-        expect(fromDropdown.props()['aria-invalid']).toBeFalsy();
-        expect(toDropdown.props()['aria-invalid']).toBeFalsy();
-    });
-
-    it('Can display error if failed at verification step', () => {
-        wrapper
-            .find('select')
-            .at(1)
-            .simulate('change', { target: { value: 'stn4' } });
-        wrapper.update();
-
-        wrapper
-            .find('select')
-            .at(2)
-            .simulate('change', { target: { value: 'lineend' } });
-        wrapper.update();
-
-        const submitButton = wrapper.find('footer button');
-        expect(submitButton.props().disabled).toBeTruthy();
-        expect(submitButton.props().title).toContain('should not be open jaw from the last station');
-    });
-
-    it('Can add station in new branch as expected', () => {
-        wrapper
-            .find('select')
-            .at(1)
-            .simulate('change', { target: { value: 'stn3' } });
-        wrapper.update();
-
-        wrapper.find('footer button').simulate('click');
-
-        const actions = mockStore.getActions();
-        expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
+            const dropdowns = wrapperSHMetro.find('select');
+            expect(dropdowns).toHaveLength(3); // where, from, to
+        });
     });
 });

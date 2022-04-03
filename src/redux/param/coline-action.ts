@@ -173,7 +173,7 @@ export const findAllColinesInBranch = (branchIndex: number) => {
                 }
             }, {});
         } else {
-            return [];
+            return {};
         }
     };
 };

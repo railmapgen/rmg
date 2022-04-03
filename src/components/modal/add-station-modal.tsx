@@ -12,6 +12,8 @@ import {
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useAppDispatch, useAppSelector } from '../../redux';
 import { addStation, getNewBranchAllowedEnds, verifyNewBranchEnds } from '../../redux/param/add-station-action';
+import { RmgStyle } from '../../constants/constants';
+import { isColineBranch } from '../../redux/param/coline-action';
 
 interface AddStationModalProps {
     isOpen: boolean;
@@ -22,7 +24,7 @@ export default function AddStationModal(props: AddStationModalProps) {
     const { isOpen, onClose } = props;
     const dispatch = useAppDispatch();
 
-    const [where, setWhere] = useState<`${number}` | 'new'>('0');
+    const [where, setWhere] = useState<`${number}` | 'new' | 'ext'>('0');
     const [from, setFrom] = useState('');
     const [to, setTo] = useState('');
     const [position, setPosition] = useState<'upper' | 'lower'>('upper');
@@ -30,10 +32,10 @@ export default function AddStationModal(props: AddStationModalProps) {
     const [fromError, setFromError] = useState('');
     const [toError, setToError] = useState('');
 
-    const stationList = useAppSelector(state => state.param.stn_list);
+    const { style, stn_list: stationList } = useAppSelector(state => state.param);
     const branches = useAppSelector(state => state.helper.branches);
 
-    const selectedBranch = where === 'new' ? [] : branches[Number(where)];
+    const selectedBranch = ['new', 'ext'].includes(where) ? [] : branches[Number(where)];
 
     const getStationOptions = (stationIdList: string[]): Record<string, string> => {
         return stationIdList.reduce(
@@ -56,12 +58,19 @@ export default function AddStationModal(props: AddStationModalProps) {
                 ...branches.reduce(
                     (acc, cur, idx) => ({
                         ...acc,
-                        [idx]: idx === 0 ? 'Main line' : 'Branch ' + idx,
+                        [idx]:
+                            idx === 0
+                                ? 'Main line'
+                                : style !== RmgStyle.SHMetro || !isColineBranch(cur, stationList)
+                                ? 'Branch ' + idx
+                                : 'External line ' + idx,
                     }),
                     {}
                 ),
                 new: 'Create a new branch',
+                ext: 'Create an external line',
             },
+            disabledOptions: style === RmgStyle.SHMetro ? [] : ['ext'],
             onChange: value => handleSelectWhere(value as `${number}` | 'new'),
             minW: 'full',
         },
@@ -69,7 +78,7 @@ export default function AddStationModal(props: AddStationModalProps) {
             type: 'select',
             label: 'From',
             value: from,
-            options: where === 'new' ? newBranchEndStationOptions : getStationOptions(selectedBranch),
+            options: ['new', 'ext'].includes(where) ? newBranchEndStationOptions : getStationOptions(selectedBranch),
             disabledOptions: [''],
             onChange: value => handleSelectFrom(value as string),
             isInvalid: Boolean(fromError),
@@ -78,7 +87,7 @@ export default function AddStationModal(props: AddStationModalProps) {
             type: 'select',
             label: 'To',
             value: to,
-            options: where === 'new' ? newBranchEndStationOptions : getStationOptions(selectedBranch),
+            options: ['new', 'ext'].includes(where) ? newBranchEndStationOptions : getStationOptions(selectedBranch),
             disabledOptions: [''],
             onChange: value => handleSelectTo(value as string),
             isInvalid: Boolean(toError),
@@ -93,11 +102,11 @@ export default function AddStationModal(props: AddStationModalProps) {
             },
             onChange: value => setPosition(value as 'upper' | 'lower'),
             minW: 'full',
-            hidden: where !== 'new',
+            hidden: where !== 'new' || style === RmgStyle.SHMetro,
         },
     ];
 
-    const handleSelectWhere = (value: `${number}` | 'new') => {
+    const handleSelectWhere = (value: `${number}` | 'new' | 'ext') => {
         setWhere(value);
         setFrom('');
         setTo('');
@@ -141,10 +150,20 @@ export default function AddStationModal(props: AddStationModalProps) {
 
     const handleSubmit = () => {
         let result: boolean;
-        if (where !== 'new') {
-            result = dispatch(addStation(where, from, to));
-        } else {
-            result = dispatch(addStation(where, from, to, position));
+        switch (where) {
+            case 'ext':
+                // SHMetro specific - treat lower branch as external line
+                result = dispatch(addStation('new', from, to, 'lower'));
+                break;
+            case 'new':
+                if (style === RmgStyle.SHMetro) {
+                    result = dispatch(addStation('new', from, to, 'upper'));
+                } else {
+                    result = dispatch(addStation('new', from, to, position));
+                }
+                break;
+            default:
+                result = dispatch(addStation(where, from, to));
         }
 
         if (result) {

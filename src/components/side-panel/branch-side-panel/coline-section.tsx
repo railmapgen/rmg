@@ -79,7 +79,7 @@ export default function ColineSection() {
                 />
             ))}
 
-            {(selectedBranch === 0 || colineInfoList.length === 0) && (
+            {(selectedBranch === 0 || Object.keys(colineInfoList).length === 0) && (
                 <Button
                     size="xs"
                     variant="ghost"
