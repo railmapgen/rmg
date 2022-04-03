@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { MonoColour, RMGParam } from '../../constants/constants';
 import { RmgLineBadge } from '@railmapgen/rmg-components';
+import { useTranslation } from 'react-i18next';
 
 interface UploadConfirmModalProps {
     isOpen: boolean;
@@ -21,6 +22,7 @@ interface UploadConfirmModalProps {
 
 export default function UploadConfirmModal(props: UploadConfirmModalProps) {
     const { isOpen, onClose, cancelRef, uploadedParam, onOpenParam } = props;
+    const { t } = useTranslation();
 
     const handleConfirm = () => {
         if (uploadedParam) {
@@ -34,27 +36,27 @@ export default function UploadConfirmModal(props: UploadConfirmModalProps) {
             <AlertDialogOverlay>
                 <AlertDialogContent>
                     <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                        Open from configuration file
+                        {t('UploadConfirmModal.title')}
                     </AlertDialogHeader>
 
                     <AlertDialogBody>
-                        {'Are you sure to import '}
+                        {t('UploadConfirmModal.message1')}
                         <RmgLineBadge
                             name={uploadedParam?.line_name?.join(' ') || ''}
                             fg={uploadedParam?.theme?.[3] || MonoColour.white}
                             bg={uploadedParam?.theme?.[2] || '#AAAAAA'}
                         />
-                        {` with ${
-                            uploadedParam ? Object.keys(uploadedParam.stn_list).length - 2 : 0
-                        } stations? Your current unsaved progress will be lost. `}
+                        {t('UploadConfirmModal.message2') +
+                            (uploadedParam ? Object.keys(uploadedParam.stn_list).length - 2 : 0) +
+                            t('UploadConfirmModal.message3')}
                     </AlertDialogBody>
 
                     <AlertDialogFooter>
                         <Button ref={cancelRef} onClick={onClose}>
-                            Cancel
+                            {t('UploadConfirmModal.cancel')}
                         </Button>
                         <Button colorScheme="teal" onClick={handleConfirm} ml={3}>
-                            Confirm
+                            {t('UploadConfirmModal.confirm')}
                         </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>

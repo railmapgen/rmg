@@ -4,11 +4,13 @@ import { MdAdd } from 'react-icons/md';
 import AddStationModal from '../modal/add-station-modal';
 import { useAppDispatch, useAppSelector } from '../../redux';
 import { RmgStyle, SidePanelMode } from '../../constants/constants';
-import StationAgGrid from '../ag-grid/station-ag-grid';
+import StationAgGrid from './station-ag-grid';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { setSelectedBranch, setSidePanelMode } from '../../redux/app/action';
+import { useTranslation } from 'react-i18next';
 
-export default function DataTables() {
+export default function GridTabs() {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
     const [isAddStationModalOpen, setIsAddStationModalOpen] = useState(false);
@@ -32,12 +34,12 @@ export default function DataTables() {
                 <TabList>
                     {branches.map((branch, i) => {
                         if (i === 0) {
-                            return <Tab key={i}>Main line</Tab>;
+                            return <Tab key={i}>{t('GridTabs.main')}</Tab>;
                         } else {
                             if (style !== RmgStyle.SHMetro || !isColineBranch(branch, stationList)) {
-                                return <Tab key={i}>Branch {i}</Tab>;
+                                return <Tab key={i}>{t('GridTabs.branch') + ' ' + i}</Tab>;
                             } else {
-                                return <Tab key={i}>External line {i}</Tab>;
+                                return <Tab key={i}>{t('GridTabs.external') + ' ' + i}</Tab>;
                             }
                         }
                     })}
@@ -49,10 +51,10 @@ export default function DataTables() {
                             leftIcon={<MdAdd />}
                             onClick={() => setIsAddStationModalOpen(true)}
                         >
-                            Add station
+                            {t('GridTabs.addStation')}
                         </Button>
                         <Button size="xs" colorScheme="teal" onClick={handleEditLineSection}>
-                            Edit line section
+                            {t('GridTabs.editLine')}
                         </Button>
                     </HStack>
                 </TabList>

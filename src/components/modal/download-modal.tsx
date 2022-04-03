@@ -18,6 +18,7 @@ import { setCurrentStation } from '../../redux/param/action';
 import { useDispatch } from 'react-redux';
 import { cloneSvgCanvas, test } from '../../util/export-utils';
 import { downloadAs, downloadBlobAs } from '../../util/utils';
+import { useTranslation } from 'react-i18next';
 
 interface DownloadModalProps {
     isOpen: boolean;
@@ -26,6 +27,7 @@ interface DownloadModalProps {
 
 export default function DownloadModal(props: DownloadModalProps) {
     const { isOpen, onClose } = props;
+    const { t } = useTranslation();
 
     const dispatch = useDispatch();
 
@@ -47,7 +49,7 @@ export default function DownloadModal(props: DownloadModalProps) {
             ...acc,
             [cur]: cur,
         }),
-        { '': 'Please select...' }
+        { '': t('DownloadModal.pleaseSelect') }
     );
 
     const scaleOptions = [25, 33, 50, 67, 75, 80, 90, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500].reduce<
@@ -61,14 +63,14 @@ export default function DownloadModal(props: DownloadModalProps) {
     );
 
     const formatOptions = {
-        png: 'PNG',
-        svg: 'SVG (Web use)',
+        png: t('DownloadModal.png'),
+        svg: t('DownloadModal.svg'),
     };
 
     const fields: RmgFieldsField[] = [
         {
             type: 'select',
-            label: 'Canvas',
+            label: t('DownloadModal.canvas'),
             value: canvasToDownload,
             options: canvasOptions,
             disabledOptions: [''],
@@ -77,7 +79,7 @@ export default function DownloadModal(props: DownloadModalProps) {
         },
         {
             type: 'switch',
-            label: 'Transparent background',
+            label: t('DownloadModal.transparent'),
             isChecked: isTransparent,
             onChange: setIsTransparent,
             oneLine: true,
@@ -85,7 +87,7 @@ export default function DownloadModal(props: DownloadModalProps) {
         },
         {
             type: 'switch',
-            label: 'Show border',
+            label: t('DownloadModal.showBorder'),
             isChecked: isShowBorder,
             onChange: setIsShowBorder,
             oneLine: true,
@@ -93,14 +95,14 @@ export default function DownloadModal(props: DownloadModalProps) {
         },
         {
             type: 'select',
-            label: 'Scale',
+            label: t('DownloadModal.scale'),
             value: scale,
             options: scaleOptions,
             onChange: value => setScale(value as number),
         },
         {
             type: 'select',
-            label: 'Format',
+            label: t('DownloadModal.format'),
             value: format,
             options: formatOptions,
             onChange: value => setFormat(value as string),
@@ -184,7 +186,7 @@ export default function DownloadModal(props: DownloadModalProps) {
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Download images</ModalHeader>
+                <ModalHeader>{t('DownloadModal.title')}</ModalHeader>
                 <ModalCloseButton />
 
                 <ModalBody>
@@ -200,7 +202,7 @@ export default function DownloadModal(props: DownloadModalProps) {
                             onClick={() => handleDownload('current')}
                             disabled={!canvasToDownload}
                         >
-                            Download current station
+                            {t('DownloadModal.downloadOne')}
                         </Button>
                         {style !== RmgStyle.GZMTR && (
                             <Button
@@ -210,7 +212,7 @@ export default function DownloadModal(props: DownloadModalProps) {
                                 onClick={() => handleDownload('all')}
                                 disabled={!canvasToDownload}
                             >
-                                Download all stations
+                                {t('DownloadModal.downloadAll')}
                             </Button>
                         )}
                     </HStack>

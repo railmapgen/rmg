@@ -7,7 +7,7 @@ import { Alert, AlertIcon, Box, CloseButton, Flex } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../redux';
 import { setGlobalAlert } from '../redux/app/action';
-import DataTables from './data-table/data-tables';
+import GridTabs from './ag-grid/grid-tabs';
 
 export default function AppRoot() {
     const dispatch = useDispatch();
@@ -38,7 +38,7 @@ export default function AppRoot() {
                         <Box>
                             <SvgRouter />
                         </Box>
-                        <DataTables />
+                        <GridTabs />
                     </Flex>
 
                     <SidePanel />

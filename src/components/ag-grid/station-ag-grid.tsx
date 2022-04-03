@@ -84,7 +84,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
             ),
         },
         {
-            headerName: 'Tracks sharing',
+            headerName: t('StationAgGrid.coline'),
             field: 'rowSpan',
             rowSpan: ({ data: { rowSpan } }: { data: RowDataType }) => rowSpan[0],
             cellClassRules: {

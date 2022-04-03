@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '../../redux';
 import { addStation, getNewBranchAllowedEnds, verifyNewBranchEnds } from '../../redux/param/add-station-action';
 import { RmgStyle } from '../../constants/constants';
 import { isColineBranch } from '../../redux/param/coline-action';
+import { useTranslation } from 'react-i18next';
 
 interface AddStationModalProps {
     isOpen: boolean;
@@ -22,6 +23,7 @@ interface AddStationModalProps {
 
 export default function AddStationModal(props: AddStationModalProps) {
     const { isOpen, onClose } = props;
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
     const [where, setWhere] = useState<`${number}` | 'new' | 'ext'>('0');
@@ -43,7 +45,7 @@ export default function AddStationModal(props: AddStationModalProps) {
                 ...acc,
                 [cur]: stationList[cur]?.name.join(' - '),
             }),
-            { '': 'Please select...' }
+            { '': t('AddStationModal.pleaseSelect') }
         );
     };
 
@@ -52,7 +54,7 @@ export default function AddStationModal(props: AddStationModalProps) {
     const fields: RmgFieldsField[] = [
         {
             type: 'select',
-            label: 'Where',
+            label: t('AddStationModal.where'),
             value: where,
             options: {
                 ...branches.reduce(
@@ -60,15 +62,15 @@ export default function AddStationModal(props: AddStationModalProps) {
                         ...acc,
                         [idx]:
                             idx === 0
-                                ? 'Main line'
+                                ? t('AddStationModal.main')
                                 : style !== RmgStyle.SHMetro || !isColineBranch(cur, stationList)
-                                ? 'Branch ' + idx
-                                : 'External line ' + idx,
+                                ? t('AddStationModal.branch') + ' ' + idx
+                                : t('AddStationModal.external') + ' ' + idx,
                     }),
                     {}
                 ),
-                new: 'Create a new branch',
-                ext: 'Create an external line',
+                new: t('AddStationModal.new'),
+                ext: t('AddStationModal.ext'),
             },
             disabledOptions: style === RmgStyle.SHMetro ? [] : ['ext'],
             onChange: value => handleSelectWhere(value as `${number}` | 'new'),
@@ -76,7 +78,7 @@ export default function AddStationModal(props: AddStationModalProps) {
         },
         {
             type: 'select',
-            label: 'From',
+            label: t('AddStationModal.from'),
             value: from,
             options: ['new', 'ext'].includes(where) ? newBranchEndStationOptions : getStationOptions(selectedBranch),
             disabledOptions: [''],
@@ -85,7 +87,7 @@ export default function AddStationModal(props: AddStationModalProps) {
         },
         {
             type: 'select',
-            label: 'To',
+            label: t('AddStationModal.to'),
             value: to,
             options: ['new', 'ext'].includes(where) ? newBranchEndStationOptions : getStationOptions(selectedBranch),
             disabledOptions: [''],
@@ -94,11 +96,11 @@ export default function AddStationModal(props: AddStationModalProps) {
         },
         {
             type: 'select',
-            label: 'Position',
+            label: t('AddStationModal.position'),
             value: position,
             options: {
-                upper: 'Upper',
-                lower: 'Lower',
+                upper: t('AddStationModal.upper'),
+                lower: t('AddStationModal.lower'),
             },
             onChange: value => setPosition(value as 'upper' | 'lower'),
             minW: 'full',
@@ -177,7 +179,7 @@ export default function AddStationModal(props: AddStationModalProps) {
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Add station</ModalHeader>
+                <ModalHeader>{t('AddStationModal.title')}</ModalHeader>
                 <ModalCloseButton />
 
                 <ModalBody>
@@ -187,11 +189,11 @@ export default function AddStationModal(props: AddStationModalProps) {
                 <ModalFooter>
                     <Button
                         colorScheme="teal"
-                        title={isSubmitDisabled ? fromError || toError : 'Submit'}
+                        title={isSubmitDisabled ? fromError || toError : t('AddStationModal.submit')}
                         onClick={handleSubmit}
                         disabled={isSubmitDisabled}
                     >
-                        Submit
+                        {t('AddStationModal.submit')}
                     </Button>
                 </ModalFooter>
             </ModalContent>

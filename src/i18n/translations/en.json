@@ -28,8 +28,39 @@
         "templates": "Templates"
     },
 
+    "DownloadModal": {
+        "title": "Download images",
+        "canvas": "Canvas",
+        "transparent": "Transparent background",
+        "showBorder": "Show border",
+        "scale": "Scale",
+        "format": "Format",
+        "pleaseSelect": "Please select...",
+        "png": "PNG",
+        "svg": "SVG (Web use)",
+        "downloadOne": "Download current station",
+        "downloadAll": "Download all stations"
+    },
+
     "TemplateModal": {
         "title": "Select a template"
+    },
+
+    "UploadConfirmModal": {
+        "title": "Open from configuration file",
+        "message1": "Are you sure to import ",
+        "message2": " with ",
+        "message3": " stations? Your current unsaved progress will be lost.",
+        "cancel": "Cancel",
+        "confirm": "Confirm"
+    },
+
+    "GridTabs": {
+        "main": "Main line",
+        "branch": "Branch",
+        "external": "External line",
+        "addStation": "Add station",
+        "editLine":  "Edit line section"
     },
 
     "StationAgGrid": {
@@ -37,14 +68,8 @@
         "zhName": "Chinese name",
         "enName": "English name",
         "interchange": "Interchanges",
-        "actions": "Actions"
-    },
-
-    "ColineDataTable": {
-        "from": "From",
-        "to": "To",
-        "colors": "Share track with",
-        "actions": "Actions"
+        "actions": "Actions",
+        "coline": "Tracks sharing"
     },
 
     "StyleSidePanel": {
@@ -70,6 +95,30 @@
         "white":"White",
         "black": "Black",
         "submit": "Submit"
+    },
+
+    "AddStationModal": {
+        "title": "Add station",
+        "where": "Target location",
+        "main": "Main line",
+        "branch": "Branch",
+        "external": "External line",
+        "new": "Create a new branch",
+        "ext": "Create an external line",
+        "from": "From",
+        "to": "To",
+        "pleaseSelect": "Please select...",
+        "position": "Position",
+        "upper": "Upper",
+        "lower": "Lower",
+        "submit": "Submit"
+    },
+
+    "RemoveConfirmModal": {
+        "title": "Remove station",
+        "message": "Are you sure to remove station? You cannot undo this action.",
+        "cancel": "Cancel",
+        "confirm": "Confirm"
     },
 
     "InterchangeCard": {
