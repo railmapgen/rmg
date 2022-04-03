@@ -1,5 +1,7 @@
 import {
     Button,
+    Icon,
+    Link,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -12,6 +14,7 @@ import {
     TabPanel,
     TabPanels,
     Tabs,
+    Text,
     VStack,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
@@ -21,6 +24,7 @@ import ColourPicker from './colour-picker';
 import { CityCode } from '@railmapgen/rmg-palette-resources';
 import { useTranslation } from 'react-i18next';
 import { RmgFields, RmgFieldsField, RmgLineBadge } from '@railmapgen/rmg-components';
+import { MdOpenInNew } from 'react-icons/md';
 
 interface ColourModalProps {
     isOpen: boolean;
@@ -154,6 +158,13 @@ export default function ColourModal(props: ColourModalProps) {
                 </ModalBody>
 
                 <ModalFooter>
+                    <Text fontSize="sm" marginRight={2}>
+                        {t('ColourModal.seeAll')}
+                        <Link color="teal.500" href="https://railmapgen.github.io/rmg-palette" isExternal={true}>
+                            RMG Palette <Icon as={MdOpenInNew} />
+                        </Link>
+                    </Text>
+
                     <Button colorScheme="teal" onClick={handleSubmit} disabled={!isSubmitEnabled}>
                         {t('ColourModal.submit')}
                     </Button>

@@ -94,7 +94,8 @@
         "fg": "Foreground colour",
         "white":"White",
         "black": "Black",
-        "submit": "Submit"
+        "submit": "Submit",
+        "seeAll": "See full library in "
     },
 
     "AddStationModal": {
