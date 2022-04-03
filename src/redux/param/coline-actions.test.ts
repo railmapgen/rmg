@@ -1,4 +1,9 @@
-import { checkColineValidity, getRowSpanForColine, verifyAreSelectionsConsecutive } from './coline-action';
+import {
+    checkColineValidity,
+    getRowSpanForColine,
+    removeColineColor,
+    verifyAreSelectionsConsecutive,
+} from './coline-action';
 import { BranchStyle, ColineInfo, MonoColour, StationDict } from '../../constants/constants';
 import { getBranches } from '../helper/graph-theory-util';
 import { CityCode } from '@railmapgen/rmg-palette-resources';
@@ -274,5 +279,126 @@ describe('Unit tests for coline action', () => {
 
         expect(mockStore.dispatch(verifyAreSelectionsConsecutive(['stn1', 'stn3'], 0))).toBeFalsy();
         expect(mockStore.dispatch(verifyAreSelectionsConsecutive(['stn1', 'stn2', 'stn3'], 0))).toBeTruthy();
+    });
+
+    it('Can remove colour from a sharing track as expected', () => {
+        /**
+         * stn1 = stn2
+         */
+        const mockStationList = {
+            linestart: {
+                parents: [],
+                children: ['stn1'],
+                branch: { left: [], right: [] },
+            },
+            stn1: {
+                parents: ['linestart'],
+                children: ['stn2'],
+                branch: { left: [], right: [] },
+            },
+            stn2: {
+                parents: ['stn1'],
+                children: ['lineend'],
+                branch: { left: [], right: [] },
+            },
+            lineend: {
+                parents: ['stn2'],
+                children: [],
+                branch: { left: [], right: [] },
+            },
+        } as any as StationDict;
+        const branches = getBranches(mockStationList);
+
+        const coline: Record<string, ColineInfo> = {
+            col1: {
+                from: 'stn1',
+                to: 'stn2',
+                colors: [
+                    [CityCode.Guangzhou, 'gz1', '#AAAAAA', MonoColour.black, 'ZH Name 1', 'EN Name 1'],
+                    [CityCode.Guangzhou, 'gz2', '#BBBBBB', MonoColour.black, 'ZH Name 2', 'EN Name 2'],
+                ],
+                display: true,
+            },
+        };
+
+        const mockStore = createMockAppStore({
+            ...realStore,
+            param: {
+                ...realStore.param,
+                stn_list: mockStationList,
+                coline,
+            },
+            helper: {
+                ...realStore.helper,
+                branches,
+            },
+        });
+
+        mockStore.dispatch(removeColineColor('col1', 1));
+
+        const actions = mockStore.getActions();
+        expect(actions).toHaveLength(1);
+        expect(actions[0].type).toBe('SET_COLINE_BULK');
+        expect(actions[0].coline).toHaveProperty('col1');
+        expect(actions[0].coline.col1.colors).toHaveLength(1);
+        expect(actions[0].coline.col1.colors[0]).toContain('gz1');
+    });
+
+    it('Can remove entire coline if removing the last colour', () => {
+        /**
+         * stn1 = stn2
+         */
+        const mockStationList = {
+            linestart: {
+                parents: [],
+                children: ['stn1'],
+                branch: { left: [], right: [] },
+            },
+            stn1: {
+                parents: ['linestart'],
+                children: ['stn2'],
+                branch: { left: [], right: [] },
+            },
+            stn2: {
+                parents: ['stn1'],
+                children: ['lineend'],
+                branch: { left: [], right: [] },
+            },
+            lineend: {
+                parents: ['stn2'],
+                children: [],
+                branch: { left: [], right: [] },
+            },
+        } as any as StationDict;
+        const branches = getBranches(mockStationList);
+
+        const coline: Record<string, ColineInfo> = {
+            col1: {
+                from: 'stn1',
+                to: 'stn2',
+                colors: [[CityCode.Guangzhou, 'gz1', '#AAAAAA', MonoColour.black, 'ZH Name 1', 'EN Name 1']],
+                display: true,
+            },
+        };
+
+        const mockStore = createMockAppStore({
+            ...realStore,
+            param: {
+                ...realStore.param,
+                stn_list: mockStationList,
+                coline,
+            },
+            helper: {
+                ...realStore.helper,
+                branches,
+            },
+        });
+
+        mockStore.dispatch(removeColineColor('col1', 0));
+
+        const actions = mockStore.getActions();
+        expect(actions).toHaveLength(1);
+        expect(actions[0].type).toBe('SET_COLINE_BULK');
+        expect(actions[0].coline).not.toHaveProperty('col1');
     });
 });

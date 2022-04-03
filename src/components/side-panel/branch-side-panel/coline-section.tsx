@@ -5,6 +5,7 @@ import {
     addColine,
     findAllColinesInBranch,
     getPossibleCombinations,
+    removeColineColor,
     updateColine,
     updateColineColor,
 } from '../../../redux/param/coline-action';
@@ -47,17 +48,24 @@ export default function ColineSection() {
     };
 
     const handleUpdateRoute = (colineId: string) => (route: string) => {
+        const [from, to] = route.split(',');
+        console.log(`ColineSection.handleUpdateRoute():: Updating route, colineId=${colineId}, from=${from}, to=${to}`);
+
         try {
-            dispatch(updateColine(colineId, ...(route.split(',') as [string, string])));
+            dispatch(updateColine(colineId, from, to));
         } catch {
             dispatch(setGlobalAlert({ status: 'error', message: 'Unable to draw this share track.' }));
         }
     };
 
+    const handleDeleteColour = (colineId: string, colourIndex: number) => {
+        dispatch(removeColineColor(colineId, colourIndex));
+    };
+
     return (
         <VStack align="flex-start" p={1}>
             <Heading as="h5" size="sm">
-                Track sharing
+                Tracks sharing
             </Heading>
 
             {Object.entries(colineInfoList).map(([id, colineInfo]) => (
@@ -67,10 +75,11 @@ export default function ColineSection() {
                     routeOptions={routeOptions}
                     onUpdateRoute={handleUpdateRoute(id)}
                     onUpdateColourInfo={colourInfo => dispatch(updateColineColor(id, 0, colourInfo))}
+                    onDelete={colourIndex => handleDeleteColour(id, colourIndex)}
                 />
             ))}
 
-            {selectedBranch === 0 && (
+            {(selectedBranch === 0 || colineInfoList.length === 0) && (
                 <Button
                     size="xs"
                     variant="ghost"
@@ -78,7 +87,7 @@ export default function ColineSection() {
                     leftIcon={<MdAdd />}
                     onClick={handleAddTrackSharing}
                 >
-                    Add track sharing
+                    Add sharing track
                 </Button>
             )}
         </VStack>

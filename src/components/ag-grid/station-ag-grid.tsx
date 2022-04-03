@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { useAppDispatch, useAppSelector } from '../../redux';
 import { ColDef, SelectionChangedEvent } from 'ag-grid-community';
-import { ColineInfo, Name, RmgStyle, SidePanelMode, StationInfo, StationTransfer } from '../../constants/constants';
+import { Name, RmgStyle, SidePanelMode, StationInfo, StationTransfer } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { HStack } from '@chakra-ui/react';
 import { setIsShareTrackEnabled, setSelectedStation, setSidePanelMode } from '../../redux/app/action';
@@ -84,7 +84,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
             ),
         },
         {
-            headerName: 'Track sharing',
+            headerName: 'Tracks sharing',
             field: 'rowSpan',
             rowSpan: ({ data: { rowSpan } }: { data: RowDataType }) => rowSpan[0],
             cellClassRules: {

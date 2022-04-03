@@ -1,7 +1,6 @@
 import { AppDispatch, RootState } from '../index';
-import { ColineInfo, InterchangeInfo, SidePanelMode, StationDict } from '../../constants/constants';
+import { ColineInfo, InterchangeInfo, StationDict } from '../../constants/constants';
 import { setColineBulk } from './action';
-import { setSelectedColine, setSidePanelMode } from '../app/action';
 import { nanoid } from 'nanoid';
 
 // Cartesian product of multiple arrays in JavaScript
@@ -223,7 +222,7 @@ export const updateColine = (colineId: string, from: string, to: string, display
 
             const newColineInfo = {
                 ...colineInfo,
-                colineId: { ...colineInfo.colineId, from, to, display },
+                [colineId]: { ...colineInfo[colineId], from, to, display },
             };
 
             dispatch(setColineBulk(newColineInfo));
@@ -236,7 +235,7 @@ export const removeColine = (colineId: string) => {
         const colineInfo = getState().param.coline;
 
         if (colineId in colineInfo) {
-            const { colineId, ...nextColine } = colineInfo;
+            const { [colineId]: _, ...nextColine } = colineInfo;
             dispatch(setColineBulk(nextColine));
         }
     };
@@ -262,11 +261,19 @@ export const removeColineColor = (colineId: string, interchangeIndex: number) =>
         const colineInfo = getState().param.coline;
 
         if (colineId in colineInfo && colineInfo[colineId].colors.length > interchangeIndex) {
-            colineInfo[colineId].colors = colineInfo[colineId].colors.filter(
-                (_, colineIdx) => colineIdx !== interchangeIndex
-            );
-
-            dispatch(setColineBulk(colineInfo));
+            const nextColours = colineInfo[colineId].colors.filter((_, colineIdx) => colineIdx !== interchangeIndex);
+            if (nextColours.length === 0) {
+                // remove entire coline
+                const { [colineId]: _, ...nextColine } = colineInfo;
+                dispatch(setColineBulk(nextColine));
+            } else {
+                // update coline colour list
+                const nextColine = {
+                    ...colineInfo,
+                    [colineId]: { ...colineInfo[colineId], colors: nextColours },
+                };
+                dispatch(setColineBulk(nextColine));
+            }
         }
     };
 };
