@@ -1,6 +1,9 @@
 {
     "WindowHeader": {
-        "heading": "Rail Map Generator"
+        "heading": "Rail Map Generator",
+        "mtr": "MTR",
+        "gzmtr": "Guangzhou Metro",
+        "shmetro": "Shanghai Metro"
     },
 
     "CanvasButtonGroup": {
@@ -27,14 +30,14 @@
         "upload": "Upload configuration file",
         "templates": "Templates",
         "invalidType": "Invalid file type! Only file in JSON format is accepted.",
-        "unknownError": "Unknown error occurred while parsing the uploaded file. Please try again."
+        "unknownError": "Unknown error occurred while parsing the uploaded file! Please try again."
     },
 
     "DownloadModal": {
         "title": "Download images",
         "canvas": "Canvas",
         "transparent": "Transparent background",
-        "showBorder": "Show border",
+        "showBorder": "Display border",
         "scale": "Scale",
         "format": "Format",
         "pleaseSelect": "Please select...",
@@ -70,7 +73,6 @@
         "zhName": "Chinese name",
         "enName": "English name",
         "interchange": "Interchanges",
-        "actions": "Actions",
         "coline": "Tracks sharing"
     },
 
@@ -91,6 +93,7 @@
         },
         "design": {
             "title": "Design",
+            "colour": "Colour",
             "zhLineName": "Chinese line name",
             "enLineName": "English line name",
             "lineNum": "Line code",
@@ -232,8 +235,8 @@
         "external": "External line",
         "new": "Create a new branch",
         "ext": "Create an external line",
-        "from": "From",
-        "to": "To",
+        "from": "Between",
+        "to": "and",
         "pleaseSelect": "Please select...",
         "position": "Position",
         "upper": "Upper",

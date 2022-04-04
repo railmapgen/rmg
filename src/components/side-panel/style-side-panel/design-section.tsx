@@ -20,8 +20,7 @@ import {
 import RmgButtonGroup from '../../common/rmg-button-group';
 import { PanelTypeGZMTR, PanelTypeShmetro, RmgStyle, ShortDirection } from '../../../constants/constants';
 import { MdSwapVert } from 'react-icons/md';
-import GZMTRNoteSection from './gzmtr-note-section';
-import { RmgFields, RmgFieldsField, RmgLabel } from '@railmapgen/rmg-components';
+import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
 
 export default function DesignSection() {
@@ -42,28 +41,6 @@ export default function DesignSection() {
     } = useAppSelector(state => state.param);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const fields1: RmgFieldsField[] = [
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.zhLineName'),
-            value: lineName[0],
-            onChange: value => dispatch(setLineName([value, lineName[1]])),
-        },
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.enLineName'),
-            value: lineName[1],
-            onChange: value => dispatch(setLineName([lineName[0], value])),
-        },
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.lineNum'),
-            value: lineNum,
-            onChange: value => dispatch(setLineNum(value)),
-            hidden: ![RmgStyle.GZMTR].includes(style),
-        },
-    ];
 
     const directionSelections = [
         {
@@ -92,19 +69,33 @@ export default function DesignSection() {
         {}
     );
 
-    const fields2: RmgFieldsField[] = [
+    const fields: RmgFieldsField[] = [
         {
             type: 'custom',
-            label: t('StyleSidePanel.design.direction'),
-            component: (
-                <RmgButtonGroup
-                    selections={directionSelections}
-                    defaultValue={direction}
-                    onChange={nextDirection => dispatch(setDirection(nextDirection))}
-                />
-            ),
-            minW: 'full',
-            oneLine: true,
+            label: t('StyleSidePanel.design.colour'),
+            component: <ThemeButton theme={theme} onClick={() => setIsModalOpen(true)} />,
+            minW: '40px',
+        },
+        {
+            type: 'input',
+            label: t('StyleSidePanel.design.zhLineName'),
+            value: lineName[0],
+            onChange: value => dispatch(setLineName([value, lineName[1]])),
+            minW: '115px',
+        },
+        {
+            type: 'input',
+            label: t('StyleSidePanel.design.enLineName'),
+            value: lineName[1],
+            onChange: value => dispatch(setLineName([lineName[0], value])),
+            minW: '115px',
+        },
+        {
+            type: 'input',
+            label: t('StyleSidePanel.design.lineNum'),
+            value: lineNum,
+            onChange: value => dispatch(setLineNum(value)),
+            hidden: ![RmgStyle.GZMTR].includes(style),
         },
         {
             type: 'input',
@@ -126,6 +117,19 @@ export default function DesignSection() {
             options: style === RmgStyle.GZMTR ? panelTypeGZMTROptions : panelTypeSHMetroOptions,
             onChange: value => dispatch(setPanelType(value as PanelTypeGZMTR | PanelTypeShmetro)),
             hidden: ![RmgStyle.GZMTR, RmgStyle.SHMetro].includes(style),
+        },
+        {
+            type: 'custom',
+            label: t('StyleSidePanel.design.direction'),
+            component: (
+                <RmgButtonGroup
+                    selections={directionSelections}
+                    defaultValue={direction}
+                    onChange={nextDirection => dispatch(setDirection(nextDirection))}
+                />
+            ),
+            minW: 'full',
+            oneLine: true,
         },
     ];
 
@@ -212,15 +216,7 @@ export default function DesignSection() {
                 {t('StyleSidePanel.design.title')}
             </Heading>
 
-            <HStack spacing={0.5}>
-                <RmgLabel label="Colour">
-                    <ThemeButton theme={theme} onClick={() => setIsModalOpen(true)} />
-                </RmgLabel>
-
-                <RmgFields fields={fields1} />
-            </HStack>
-
-            <RmgFields fields={[...fields2, ...mtrSpecifiedFields]} />
+            <RmgFields fields={[...fields, ...mtrSpecifiedFields]} minW="110px" />
 
             <ColourModal
                 isOpen={isModalOpen}

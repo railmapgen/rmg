@@ -134,12 +134,7 @@ export default function ColourModal(props: ColourModalProps) {
                     <VStack>
                         <RmgLineBadge name={t('ColourModal.example')} fg={fgColour} bg={bgColour} />
 
-                        <Tabs
-                            isFitted
-                            variant="enclosed"
-                            colorScheme="teal"
-                            defaultIndex={cityCode === CityCode.Other ? 1 : 0}
-                        >
+                        <Tabs isFitted colorScheme="teal" w="100%" defaultIndex={cityCode === CityCode.Other ? 1 : 0}>
                             <TabList>
                                 <Tab>{t('ColourModal.palette')}</Tab>
                                 <Tab>{t('ColourModal.custom')}</Tab>

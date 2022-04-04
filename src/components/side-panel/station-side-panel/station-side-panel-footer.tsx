@@ -42,7 +42,7 @@ export default function StationSidePanelFooter() {
                     {t('StationSidePanel.footer.current')}
                 </Button>
                 <Button size="sm" variant="outline" onClick={() => setIsRemoveModalOpen(true)}>
-                    t('StationSidePanel.footer.remove')
+                    {t('StationSidePanel.footer.remove')}
                 </Button>
             </HStack>
 

@@ -54,7 +54,7 @@ export default function WindowHeader() {
                 <MenuList>
                     {Object.values(RmgStyle).map(style => (
                         <Link key={style} to={style}>
-                            <MenuItem onClick={() => dispatch(setStyle(style))}>{style}</MenuItem>
+                            <MenuItem onClick={() => dispatch(setStyle(style))}>{t('WindowHeader.' + style)}</MenuItem>
                         </Link>
                     ))}
                 </MenuList>
