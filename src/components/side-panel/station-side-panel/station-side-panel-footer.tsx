@@ -9,8 +9,10 @@ import { setGlobalAlert, setSelectedStation, setSidePanelMode } from '../../../r
 import RemoveConfirmModal from '../../modal/remove-confirm-modal';
 import { setCurrentStation } from '../../../redux/param/action';
 import { SidePanelMode } from '../../../constants/constants';
+import { useTranslation } from 'react-i18next';
 
 export default function StationSidePanelFooter() {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const selectedStation = useAppSelector(state => state.app.selectedStation);
@@ -29,7 +31,7 @@ export default function StationSidePanelFooter() {
             dispatch(removeStation(selectedStation));
             setIsRemoveModalOpen(false);
         } else {
-            dispatch(setGlobalAlert({ status: 'error', message: 'Unable to remove this station.' }));
+            dispatch(setGlobalAlert({ status: 'error', message: t('StationSidePanel.footer.errorOnRemove') }));
         }
     };
 
@@ -37,10 +39,10 @@ export default function StationSidePanelFooter() {
         <RmgSidePanelFooter>
             <HStack>
                 <Button size="sm" variant="outline" onClick={() => dispatch(setCurrentStation(selectedStation))}>
-                    Set as current
+                    {t('StationSidePanel.footer.current')}
                 </Button>
                 <Button size="sm" variant="outline" onClick={() => setIsRemoveModalOpen(true)}>
-                    Remove
+                    t('StationSidePanel.footer.remove')
                 </Button>
             </HStack>
 

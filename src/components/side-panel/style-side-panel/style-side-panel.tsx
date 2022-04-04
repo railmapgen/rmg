@@ -6,6 +6,7 @@ import LayoutSection from './layout-section';
 import DesignSection from './design-section';
 import LoopSection from './loop-section';
 import { RmgSidePanelBody } from '@railmapgen/rmg-components';
+import GZMTRNoteSection from './gzmtr-note-section';
 
 export default function StyleSidePanel() {
     const { style } = useAppSelector(state => state.param);
@@ -17,6 +18,14 @@ export default function StyleSidePanel() {
             <Divider />
 
             <DesignSection />
+
+            {style === RmgStyle.GZMTR && (
+                <>
+                    <Divider />
+
+                    <GZMTRNoteSection />
+                </>
+            )}
 
             {style === RmgStyle.SHMetro && (
                 <>

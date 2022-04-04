@@ -9,8 +9,10 @@ import {
     updateStationBranchType,
 } from '../../../redux/param/action';
 import { RmgCard, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import { useTranslation } from 'react-i18next';
 
 export default function BranchSection() {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const selectedStation = useAppSelector(state => state.app.selectedStation);
@@ -18,8 +20,8 @@ export default function BranchSection() {
     const { parents, children, branch } = stationList[selectedStation];
 
     const branchOptions = {
-        [BranchStyle.through]: 'Through',
-        [BranchStyle.nonThrough]: 'Non-through',
+        [BranchStyle.through]: t('StationSidePanel.branch.through'),
+        [BranchStyle.nonThrough]: t('StationSidePanel.branch.nonThrough'),
     };
 
     const getFirstStationOptions = (direction: Direction) => {
@@ -30,8 +32,8 @@ export default function BranchSection() {
     };
 
     const positionOptions = {
-        upper: 'Upper',
-        lower: 'Lower',
+        upper: t('StationSidePanel.branch.upper'),
+        lower: t('StationSidePanel.branch.lower'),
     };
 
     const getFields = (direction: Direction): RmgFieldsField[] => {
@@ -39,7 +41,7 @@ export default function BranchSection() {
             return [
                 {
                     type: 'select',
-                    label: 'Type',
+                    label: t('StationSidePanel.branch.type'),
                     options: branchOptions,
                     value: branch[direction][0],
                     onChange: value =>
@@ -47,7 +49,7 @@ export default function BranchSection() {
                 },
                 {
                     type: 'select',
-                    label: 'First station',
+                    label: t('StationSidePanel.branch.firstStation'),
                     options: getFirstStationOptions(direction),
                     value: branch[direction][1],
                     onChange: value =>
@@ -55,7 +57,7 @@ export default function BranchSection() {
                 },
                 {
                     type: 'select',
-                    label: 'Position',
+                    label: t('StationSidePanel.branch.position'),
                     options: positionOptions,
                     value:
                         (direction === Direction.left ? parents : children).indexOf(branch[direction][1]!) === 0
@@ -72,11 +74,11 @@ export default function BranchSection() {
     return (
         <Box p={1}>
             <Heading as="h5" size="sm">
-                Branch
+                {t('StationSidePanel.branch.title')}
             </Heading>
 
             <Heading as="h6" size="xs">
-                Branch on the left
+                {t('StationSidePanel.branch.left')}
             </Heading>
 
             <RmgCard direction="column">
@@ -84,13 +86,13 @@ export default function BranchSection() {
                     <RmgFields fields={getFields(Direction.left)} />
                 ) : (
                     <Text as="i" flex={1} align="center" fontSize="md" colorScheme="gray">
-                        No branches found
+                        {t('StationSidePanel.branch.noBranch')}
                     </Text>
                 )}
             </RmgCard>
 
             <Heading as="h6" size="xs">
-                Branch on the right
+                {t('StationSidePanel.branch.left')}
             </Heading>
 
             <RmgCard direction="column">
@@ -98,7 +100,7 @@ export default function BranchSection() {
                     <RmgFields fields={getFields(Direction.right)} />
                 ) : (
                     <Text as="i" flex={1} align="center" fontSize="md" colorScheme="gray">
-                        No branches found
+                        {t('StationSidePanel.branch.noBranch')}
                     </Text>
                 )}
             </RmgCard>

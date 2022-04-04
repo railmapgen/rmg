@@ -24,13 +24,13 @@ export default function OpenActions() {
 
     const handleUpload = async (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
-        console.log(file);
+        console.log('OpenActions.handleUpload():: received file', file);
 
         if (file?.type !== 'application/json') {
             dispatch(
                 setGlobalAlert({
                     status: 'error',
-                    message: 'Invalid file type! Only file in JSON format is accepted.',
+                    message: t('OpenActions.invalidType'),
                 })
             );
         } else {
@@ -43,10 +43,13 @@ export default function OpenActions() {
                 dispatch(
                     setGlobalAlert({
                         status: 'error',
-                        message: 'Unknown error occurred while parsing the uploaded file. Please try again.',
+                        message: t('OpenActions.unknownError'),
                     })
                 );
-                console.error('Unknown error occurred while parsing the uploaded file', err);
+                console.error(
+                    'OpenActions.handleUpload():: Unknown error occurred while parsing the uploaded file',
+                    err
+                );
             }
         }
 

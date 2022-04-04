@@ -6,8 +6,10 @@ import { Facilities, RmgStyle, Services } from '../../../constants/constants';
 import { useDispatch } from 'react-redux';
 import { updateStationFacility, updateStationLoopPivot, updateStationServices } from '../../../redux/param/action';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import { useTranslation } from 'react-i18next';
 
 export default function MoreSection() {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const selectedStation = useAppSelector(state => state.app.selectedStation);
@@ -16,30 +18,30 @@ export default function MoreSection() {
 
     const serviceSelections = Object.values(Services).map(service => {
         return {
-            label: service,
+            label: t('StationSidePanel.more.' + service),
             value: service,
             disabled: service === Services.local && style !== RmgStyle.SHMetro,
         };
     });
 
     const mtrFacilityOptions = {
-        [Facilities.none]: 'None',
-        [Facilities.airport]: 'Airport',
-        [Facilities.hsr]: 'High speed rail',
-        [Facilities.disney]: 'Disneyland resort',
+        [Facilities.none]: t('StationSidePanel.more.none'),
+        [Facilities.airport]: t('StationSidePanel.more.airport'),
+        [Facilities.hsr]: t('StationSidePanel.more.hsr'),
+        [Facilities.disney]: t('StationSidePanel.more.disney'),
     };
 
     const shmetroFacilityOptions = {
-        [Facilities.none]: 'None',
-        [Facilities.airport]: 'Airport',
-        [Facilities.railway]: 'National rail',
-        [Facilities.disney]: 'Disneyland resort',
+        [Facilities.none]: t('StationSidePanel.more.none'),
+        [Facilities.airport]: t('StationSidePanel.more.airport'),
+        [Facilities.railway]: t('StationSidePanel.more.railway'),
+        [Facilities.disney]: t('StationSidePanel.more.disney'),
     };
 
     const fields: RmgFieldsField[] = [
         {
             type: 'custom',
-            label: 'Train services',
+            label: t('StationSidePanel.more.service'),
             component: (
                 <RmgButtonGroup
                     selections={serviceSelections}
@@ -52,7 +54,7 @@ export default function MoreSection() {
         },
         {
             type: 'select',
-            label: 'Nearby facility',
+            label: t('StationSidePanel.more.facility'),
             value: facility,
             options: style === RmgStyle.MTR ? mtrFacilityOptions : shmetroFacilityOptions,
             onChange: value => dispatch(updateStationFacility(selectedStation, value as Facilities)),
@@ -60,7 +62,7 @@ export default function MoreSection() {
         },
         {
             type: 'switch',
-            label: 'Pivot station of a loop line',
+            label: t('StationSidePanel.more.pivot'),
             isChecked: loop_pivot,
             onChange: checked => dispatch(updateStationLoopPivot(selectedStation, checked)),
             hidden: ![RmgStyle.SHMetro].includes(style),
@@ -72,7 +74,7 @@ export default function MoreSection() {
     return (
         <Box p={1}>
             <Heading as="h5" size="sm">
-                More
+                {t('StationSidePanel.more.title')}
             </Heading>
 
             <RmgFields fields={fields} />

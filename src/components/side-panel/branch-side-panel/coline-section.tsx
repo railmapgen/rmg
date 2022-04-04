@@ -13,8 +13,10 @@ import ColineCard from './coline-card';
 import { MdAdd } from 'react-icons/md';
 import { MonoColour } from '../../../constants/constants';
 import { setGlobalAlert } from '../../../redux/app/action';
+import { useTranslation } from 'react-i18next';
 
 export default function ColineSection() {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
     const selectedBranch = useAppSelector(state => state.app.selectedBranch);
@@ -65,7 +67,7 @@ export default function ColineSection() {
     return (
         <VStack align="flex-start" p={1}>
             <Heading as="h5" size="sm">
-                Tracks sharing
+                {t('BranchSidePanel.coline.title')}
             </Heading>
 
             {Object.entries(colineInfoList).map(([id, colineInfo]) => (
@@ -87,7 +89,7 @@ export default function ColineSection() {
                     leftIcon={<MdAdd />}
                     onClick={handleAddTrackSharing}
                 >
-                    Add sharing track
+                    {t('BranchSidePanel.coline.add')}
                 </Button>
             )}
         </VStack>

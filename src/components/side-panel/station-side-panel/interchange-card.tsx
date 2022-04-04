@@ -28,14 +28,14 @@ export default function InterchangeCard(props: InterchangeCardProps) {
     const interchangeFields: RmgFieldsField[][] = interchangeList.map((it, i) => [
         {
             type: 'input',
-            label: t('InterchangeCard.zhName'),
+            label: t('StationSidePanel.interchange.zhName'),
             value: it[4],
             minW: '80px',
             onChange: val => onUpdate?.(i, [it[0], it[1], it[2], it[3], val, it[5]]),
         },
         {
             type: 'input',
-            label: t('InterchangeCard.enName'),
+            label: t('StationSidePanel.interchange.enName'),
             value: it[5],
             minW: '80px',
             onChange: val => onUpdate?.(i, [it[0], it[1], it[2], it[3], it[4], val]),
@@ -47,13 +47,13 @@ export default function InterchangeCard(props: InterchangeCardProps) {
             {interchangeList.length === 0 && (
                 <HStack spacing={0.5}>
                     <Text as="i" flex={1} align="center" fontSize="md" colorScheme="gray">
-                        {t('InterchangeCard.noInterchanges')}
+                        {t('StationSidePanel.interchange.noInterchanges')}
                     </Text>
 
                     <IconButton
                         size="sm"
                         variant="ghost"
-                        aria-label="Add interchange"
+                        aria-label={t('StationSidePanel.interchange.add')}
                         onClick={() => onAdd?.([theme[0], '', '#aaaaaa', MonoColour.white, '', ''])}
                         icon={<MdAdd />}
                     />
@@ -62,7 +62,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
 
             {interchangeList.map((it, i) => (
                 <HStack key={i} spacing={0.5}>
-                    <RmgLabel label={t('InterchangeCard.colour')} minW="40px" noLabel={i !== 0}>
+                    <RmgLabel label={t('StationSidePanel.interchange.colour')} minW="40px" noLabel={i !== 0}>
                         <ThemeButton
                             theme={[it[0], it[1], it[2], it[3]]}
                             onClick={() => {
@@ -78,7 +78,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
                         <IconButton
                             size="sm"
                             variant="ghost"
-                            aria-label="Copy interchange"
+                            aria-label={t('StationSidePanel.interchange.copy')}
                             onClick={() => onAdd?.(interchangeList.slice(-1)[0])} // duplicate last leg
                             icon={<MdContentCopy />}
                         />
@@ -90,7 +90,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
                         <IconButton
                             size="sm"
                             variant="ghost"
-                            aria-label="Delete interchange"
+                            aria-label={t('StationSidePanel.interchange.remove')}
                             onClick={() => onDelete?.(i)}
                             icon={<MdDelete />}
                         />

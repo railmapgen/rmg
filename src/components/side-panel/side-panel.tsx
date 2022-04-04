@@ -8,10 +8,12 @@ import StyleSidePanel from './style-side-panel/style-side-panel';
 import { RmgMultiLineString, RmgSidePanel, RmgSidePanelHeader } from '@railmapgen/rmg-components';
 import StationSidePanelFooter from './station-side-panel/station-side-panel-footer';
 import BranchSidePanel from './branch-side-panel/branch-side-panel';
+import { useTranslation } from 'react-i18next';
 
 const SIDE_PANEL_WIDTH = 320;
 
 export default function SidePanel() {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const { sidePanelMode, selectedStation } = useAppSelector(state => state.app);
@@ -23,8 +25,8 @@ export default function SidePanel() {
             body: <StationSidePanel />,
             footer: <StationSidePanelFooter />,
         },
-        STYLE: { header: 'Edit style', body: <StyleSidePanel /> },
-        BRANCH: { header: 'Edit line section', body: <BranchSidePanel /> },
+        STYLE: { header: t('StyleSidePanel.header'), body: <StyleSidePanel /> },
+        BRANCH: { header: t('BranchSidePanel.header'), body: <BranchSidePanel /> },
         CLOSE: { header: 'Close' },
     };
 

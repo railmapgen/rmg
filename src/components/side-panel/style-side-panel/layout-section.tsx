@@ -33,19 +33,19 @@ export default function LayoutSection() {
     const fields: RmgFieldsField[] = [
         ...canvasConfig[rmgStyle].map<RmgFieldsField>(canvas => ({
             type: 'input',
-            label: t(`StyleSidePanel.${canvas}Width`),
+            label: t(`StyleSidePanel.layout.${canvas}Width`),
             value: svgWidth[canvas].toString(),
             onChange: val => dispatch(setSvgWidth(Number(val), canvas)),
         })),
         {
             type: 'input',
-            label: t('StyleSidePanel.canvasHeight'),
+            label: t('StyleSidePanel.layout.canvasHeight'),
             value: svg_height.toString(),
             onChange: val => dispatch(setSvgHeight(Number(val))),
         },
         {
             type: 'slider',
-            label: t('StyleSidePanel.verticalPosition'),
+            label: t('StyleSidePanel.layout.verticalPosition'),
             value: y_pc,
             min: 0,
             max: 100,
@@ -54,7 +54,7 @@ export default function LayoutSection() {
         },
         {
             type: 'slider',
-            label: t('StyleSidePanel.branchSpacing'),
+            label: t('StyleSidePanel.layout.branchSpacing'),
             value: branch_spacing,
             min: 0,
             max: 100,
@@ -62,7 +62,7 @@ export default function LayoutSection() {
         },
         {
             type: 'slider',
-            label: t('StyleSidePanel.padding'),
+            label: t('StyleSidePanel.layout.padding'),
             value: padding,
             min: 0,
             max: 100,
@@ -70,7 +70,7 @@ export default function LayoutSection() {
         },
         {
             type: 'slider',
-            label: 'Direction horizontal position',
+            label: t('StyleSidePanel.layout.directionGzX'),
             value: direction_gz_x,
             min: 0,
             max: 100,
@@ -79,7 +79,7 @@ export default function LayoutSection() {
         },
         {
             type: 'slider',
-            label: 'Direction vertical position',
+            label: t('StyleSidePanel.layout.directionGzY'),
             value: direction_gz_y,
             min: 0,
             max: 100,
@@ -91,7 +91,7 @@ export default function LayoutSection() {
     return (
         <Box p={1}>
             <Heading as="h5" size="sm">
-                Layout
+                {t('StyleSidePanel.layout.title')}
             </Heading>
 
             <RmgFields fields={fields} minW={100} />

@@ -25,7 +25,9 @@
     "OpenActions": {
         "openFrom": "Open from",
         "upload": "Upload configuration file",
-        "templates": "Templates"
+        "templates": "Templates",
+        "invalidType": "Invalid file type! Only file in JSON format is accepted.",
+        "unknownError": "Unknown error occurred while parsing the uploaded file. Please try again."
     },
 
     "DownloadModal": {
@@ -73,14 +75,138 @@
     },
 
     "StyleSidePanel": {
-        "canvasHeight": "Canvas height",
-        "destinationWidth": "Destination width",
-        "runinWidth": "Running-in width",
-        "railmapWidth": "Rail map width",
-        "indoorWidth": "Indoor width",
-        "verticalPosition": "Vertical position",
-        "branchSpacing": "Branch spacing",
-        "padding": "Rail map padding"
+        "header": "Edit style",
+        "layout": {
+            "title": "Layout",
+            "canvasHeight": "Canvas height",
+            "destinationWidth": "Destination width",
+            "runinWidth": "Running-in width",
+            "railmapWidth": "Rail map width",
+            "indoorWidth": "Indoor width",
+            "verticalPosition": "Vertical position",
+            "branchSpacing": "Branch spacing",
+            "padding": "Rail map padding",
+            "directionGzX": "Direction horizontal position",
+            "directionGzY": "Direction vertical position"
+        },
+        "design": {
+            "title": "Design",
+            "zhLineName": "Chinese line name",
+            "enLineName": "English line name",
+            "lineNum": "Line code",
+            "direction": "Train direction",
+            "left": "Left",
+            "right": "Right",
+            "platformNum": "Platform number",
+            "psdNum": "Platform door number",
+            "panelType": "Panel type",
+            "gz1": "Line 1",
+            "gz28": "Line 2/8 (Panasonic)",
+            "gz2otis": "Line 2/8 (Otis)",
+            "gz3": "Line 3",
+            "gz1421": "2017 style",
+            "gz6": "2010 style",
+            "gzgf": "2016 style",
+            "gz4": "Line 4",
+            "gz5": "Line 5",
+            "sh": "Default",
+            "sh2020": "2020 (Beta)",
+            "nameDisplay": "Display station names",
+            "alternatively": "Alternatively",
+            "onOneSide": "On on side",
+            "flip": "Flip position",
+            "legacyDestination": "Display line name on direction sign",
+            "overrideTerminal": "Override terminal",
+            "terminalZhName": "Terminal Chinese name",
+            "terminalEnName": "Terminal English name"
+        },
+        "note": {
+            "title": "Notes",
+            "add": "Add note",
+            "zhNote": "Chinese note",
+            "enNote": "English note",
+            "positionX": "Horizontal position",
+            "positionY": "Vertical position",
+            "border": "Display border",
+            "remove": "Remove note"
+        },
+        "loop": {
+            "title": "Loop",
+            "isLoop": "Treat as loop line",
+            "isBank": "Bank the closed rectangular path",
+            "leftRightFactor": "Left and right factor",
+            "bottomFactor": "Bottom factor"
+        }
+    },
+
+    "BranchSidePanel": {
+        "header": "Edit line section",
+        "branch": {
+            "title": "Branch"
+        },
+        "coline": {
+            "title": "Tracks sharing",
+            "add": "Add sharing track"
+        }
+    },
+
+    "StationSidePanel": {
+        "info": {
+            "title": "Station info",
+            "num": "Station code",
+            "zhName": "Chinese name",
+            "enName": "English name",
+            "zhSecondary": "Chinese secondary",
+            "enSecondary": "English secondary"
+        },
+        "interchange": {
+            "title": "Interchanges",
+            "within": "Within-station interchange",
+            "outStation": "Out-of-station interchange",
+            "outSystem": "Out-of-system interchange",
+            "addGroup": "Add interchange group",
+            "stationZhName": "Station Chinese name",
+            "stationEnName": "Station English name",
+            "noInterchanges": "No interchanges",
+            "colour": "Colour",
+            "zhName": "Chinese name",
+            "enName": "English name",
+            "add": "Add interchange",
+            "copy": "Copy interchange",
+            "remove": "Remove interchange"
+        },
+        "branch": {
+            "title": "Branches",
+            "left": "Branch on the left",
+            "right": "Branch on the right",
+            "noBranch": "No branches found",
+            "type": "Type",
+            "through": "Through",
+            "nonThrough": "Non-through",
+            "firstStation": "First station",
+            "position": "Position",
+            "upper": "Upper",
+            "lower": "Lower"
+        },
+        "more": {
+            "title": "More settings",
+            "service": "Train services",
+            "local": "Local",
+            "express": "Express",
+            "direct": "Direct",
+            "facility": "Nearby facility",
+            "none": "None",
+            "airport": "Airport",
+            "hsr": "High speed rail",
+            "railway": "National rail",
+            "disney": "Disneyland resort",
+            "pivot": "Pivot station on loop line"
+        },
+        "footer": {
+            "current": "Set as current",
+            "remove": "Remove",
+            "errorOnRemove": "Unable to remove this station."
+        }
     },
 
     "ColourModal": {
@@ -120,12 +246,5 @@
         "message": "Are you sure to remove station? You cannot undo this action.",
         "cancel": "Cancel",
         "confirm": "Confirm"
-    },
-
-    "InterchangeCard": {
-        "noInterchanges": "No interchanges",
-        "colour": "Colour",
-        "zhName": "Chinese name",
-        "enName": "English name"
     }
 }

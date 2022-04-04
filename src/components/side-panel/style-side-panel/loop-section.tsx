@@ -4,8 +4,10 @@ import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux';
 import { setLoop, setLoopBank, setLoopLeftAndRightFactor, setLoopBottomFactor } from '../../../redux/param/action';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import { useTranslation } from 'react-i18next';
 
 export default function LoopSection() {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const { branches } = useAppSelector(state => state.helper);
@@ -15,7 +17,7 @@ export default function LoopSection() {
     const fields: RmgFieldsField[] = [
         {
             type: 'switch',
-            label: 'Treat this line as a loop line',
+            label: t('StyleSidePanel.loop.isLoop'),
             isChecked: loop,
             onChange: checked => dispatch(setLoop(checked)),
             minW: 'full',
@@ -23,7 +25,7 @@ export default function LoopSection() {
         },
         {
             type: 'custom',
-            label: 'Bank the closed rectangular path in railmap',
+            label: t('StyleSidePanel.loop.isBank'),
             component: (
                 <Checkbox
                     variant="flushed"
@@ -37,7 +39,7 @@ export default function LoopSection() {
         },
         {
             type: 'slider',
-            label: 'left_and_right_factor',
+            label: t('StyleSidePanel.loop.leftRightFactor'),
             value: left_and_right_factor,
             min: 0,
             max: Math.floor((branches[0].length - bottom_factor * 2) / 2),
@@ -46,7 +48,7 @@ export default function LoopSection() {
         },
         {
             type: 'slider',
-            label: 'bottom_factor',
+            label: t('StyleSidePanel.loop.bottomFactor'),
             value: bottom_factor,
             min: 1,
             max: Math.floor((branches[0].length - left_and_right_factor * 2) / 2),
@@ -58,7 +60,7 @@ export default function LoopSection() {
     return (
         <Box p={1}>
             <Heading as="h5" size="sm">
-                Loop
+                {t('StyleSidePanel.loop.title')}
             </Heading>
 
             <RmgFields fields={fields} />

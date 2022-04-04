@@ -64,8 +64,8 @@ export default function WindowHeader() {
                 <MenuButton as={IconButton} icon={<MdTranslate />} variant="ghost" size="xs" />
                 <MenuList>
                     <MenuItem onClick={() => i18n.changeLanguage(LanguageCode.English)}>English</MenuItem>
-                    <MenuItem onClick={() => i18n.changeLanguage(LanguageCode.ChineseSimp)}>中文（简体）</MenuItem>
-                    <MenuItem onClick={() => i18n.changeLanguage(LanguageCode.ChineseTrad)}>中文（繁體）</MenuItem>
+                    <MenuItem onClick={() => i18n.changeLanguage(LanguageCode.ChineseSimp)}>简体中文</MenuItem>
+                    <MenuItem onClick={() => i18n.changeLanguage(LanguageCode.ChineseTrad)}>繁體中文</MenuItem>
                 </MenuList>
             </Menu>
         </Flex>

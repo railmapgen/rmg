@@ -20,10 +20,12 @@ import {
 import RmgButtonGroup from '../../common/rmg-button-group';
 import { PanelTypeGZMTR, PanelTypeShmetro, RmgStyle, ShortDirection } from '../../../constants/constants';
 import { MdSwapVert } from 'react-icons/md';
-import GZMTRNoteSection from './gzmtr-note/gzmtr-note-section';
+import GZMTRNoteSection from './gzmtr-note-section';
 import { RmgFields, RmgFieldsField, RmgLabel } from '@railmapgen/rmg-components';
+import { useTranslation } from 'react-i18next';
 
 export default function DesignSection() {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const {
@@ -44,19 +46,19 @@ export default function DesignSection() {
     const fields1: RmgFieldsField[] = [
         {
             type: 'input',
-            label: 'Chinese line name',
+            label: t('StyleSidePanel.design.zhLineName'),
             value: lineName[0],
             onChange: value => dispatch(setLineName([value, lineName[1]])),
         },
         {
             type: 'input',
-            label: 'English line name',
+            label: t('StyleSidePanel.design.enLineName'),
             value: lineName[1],
             onChange: value => dispatch(setLineName([lineName[0], value])),
         },
         {
             type: 'input',
-            label: 'Line code',
+            label: t('StyleSidePanel.design.lineNum'),
             value: lineNum,
             onChange: value => dispatch(setLineNum(value)),
             hidden: ![RmgStyle.GZMTR].includes(style),
@@ -65,11 +67,11 @@ export default function DesignSection() {
 
     const directionSelections = [
         {
-            label: 'Left',
+            label: t('StyleSidePanel.design.left'),
             value: ShortDirection.left,
         },
         {
-            label: 'Right',
+            label: t('StyleSidePanel.design.right'),
             value: ShortDirection.right,
         },
     ];
@@ -77,7 +79,7 @@ export default function DesignSection() {
     const panelTypeGZMTROptions = Object.values(PanelTypeGZMTR).reduce<Record<string, string>>(
         (acc, cur) => ({
             ...acc,
-            [cur]: cur,
+            [cur]: t('StyleSidePanel.design.' + cur),
         }),
         {}
     );
@@ -85,7 +87,7 @@ export default function DesignSection() {
     const panelTypeSHMetroOptions = Object.values(PanelTypeShmetro).reduce<Record<string, string>>(
         (acc, cur) => ({
             ...acc,
-            [cur]: cur,
+            [cur]: t('StyleSidePanel.design.' + cur),
         }),
         {}
     );
@@ -93,7 +95,7 @@ export default function DesignSection() {
     const fields2: RmgFieldsField[] = [
         {
             type: 'custom',
-            label: 'Train direction',
+            label: t('StyleSidePanel.design.direction'),
             component: (
                 <RmgButtonGroup
                     selections={directionSelections}
@@ -106,20 +108,20 @@ export default function DesignSection() {
         },
         {
             type: 'input',
-            label: 'Platform number',
+            label: t('StyleSidePanel.design.platformNum'),
             value: platformNum || '',
             onChange: value => dispatch(setPlatform(value)),
         },
         {
             type: 'input',
-            label: 'Platform door number',
+            label: t('StyleSidePanel.design.psdNum'),
             value: psdNum,
             onChange: value => dispatch(setPsdNum(value)),
             hidden: ![RmgStyle.GZMTR].includes(style),
         },
         {
             type: 'select',
-            label: 'Panel type',
+            label: t('StyleSidePanel.design.panelType'),
             value: info_panel_type,
             options: style === RmgStyle.GZMTR ? panelTypeGZMTROptions : panelTypeSHMetroOptions,
             onChange: value => dispatch(setPanelType(value as PanelTypeGZMTR | PanelTypeShmetro)),
@@ -129,11 +131,11 @@ export default function DesignSection() {
 
     const staggerNameSelections = [
         {
-            label: 'Alternatively',
+            label: t('StyleSidePanel.design.alternatively'),
             value: true,
         },
         {
-            label: 'On one side',
+            label: t('StyleSidePanel.design.onOneSide'),
             value: false,
         },
     ];
@@ -141,7 +143,7 @@ export default function DesignSection() {
     const mtrSpecifiedFields: RmgFieldsField[] = [
         {
             type: 'custom',
-            label: 'Display station names',
+            label: t('StyleSidePanel.design.nameDisplay'),
             component: (
                 <HStack>
                     <RmgButtonGroup
@@ -155,7 +157,7 @@ export default function DesignSection() {
                         leftIcon={<MdSwapVert />}
                         onClick={() => dispatch(flipStationNames())}
                     >
-                        Flip position
+                        {t('StyleSidePanel.design.flip')}
                     </Button>
                 </HStack>
             ),
@@ -164,7 +166,7 @@ export default function DesignSection() {
         },
         {
             type: 'switch',
-            label: 'Display line name on direction sign',
+            label: t('StyleSidePanel.design.legacyDestination'),
             isChecked: customiseMTRDest.isLegacy,
             onChange: checked => dispatch(toggleLineNameBeforeDestination(checked)),
             hidden: ![RmgStyle.MTR].includes(style),
@@ -173,7 +175,7 @@ export default function DesignSection() {
         },
         {
             type: 'switch',
-            label: 'Override terminals',
+            label: t('StyleSidePanel.design.overrideTerminal'),
             isChecked: customiseMTRDest.terminal !== false,
             onChange: checked => dispatch(customiseDestinationName(checked ? ['', ''] : false)),
             hidden: ![RmgStyle.MTR].includes(style),
@@ -182,7 +184,7 @@ export default function DesignSection() {
         },
         {
             type: 'input',
-            label: 'Chinese terminal name',
+            label: t('StyleSidePanel.design.terminalZhName'),
             value: customiseMTRDest.terminal ? customiseMTRDest.terminal[0] : '',
             placeholder: '機場及博覽館',
             onChange: value =>
@@ -193,7 +195,7 @@ export default function DesignSection() {
         },
         {
             type: 'input',
-            label: 'English terminal name',
+            label: t('StyleSidePanel.design.terminalEnName'),
             value: customiseMTRDest.terminal ? customiseMTRDest.terminal[1] : '',
             placeholder: 'Airport and AsiaWorld-Expo',
             onChange: value =>
@@ -207,7 +209,7 @@ export default function DesignSection() {
     return (
         <Box p={1}>
             <Heading as="h5" size="sm">
-                Design
+                {t('StyleSidePanel.design.title')}
             </Heading>
 
             <HStack spacing={0.5}>
@@ -219,8 +221,6 @@ export default function DesignSection() {
             </HStack>
 
             <RmgFields fields={[...fields2, ...mtrSpecifiedFields]} />
-
-            {RmgStyle.GZMTR === style && <GZMTRNoteSection />}
 
             <ColourModal
                 isOpen={isModalOpen}

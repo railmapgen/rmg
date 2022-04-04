@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Button, Heading, VStack } from '@chakra-ui/react';
 import { useAppSelector } from '../../../redux';
-import InterchangeCard from '../interchange/interchange-card';
+import InterchangeCard from './interchange-card';
 import { useDispatch } from 'react-redux';
 import {
     addInterchange,
@@ -12,8 +12,10 @@ import {
 import { InterchangeInfo, MonoColour } from '../../../constants/constants';
 import { MdAdd } from 'react-icons/md';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import { useTranslation } from 'react-i18next';
 
 export default function InterchangeSection() {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const selectedStation = useAppSelector(state => state.app.selectedStation);
@@ -23,14 +25,14 @@ export default function InterchangeSection() {
     const getOSINameFields = (setIndex: number): RmgFieldsField[] => [
         {
             type: 'input',
-            label: 'Station Chinese name',
+            label: t('StationSidePanel.interchange.stationZhName'),
             value: transfer.osi_names[setIndex]?.[0],
             onChange: value =>
                 dispatch(updateStationOsiName(selectedStation, setIndex, [value, transfer.osi_names[setIndex]?.[1]])),
         },
         {
             type: 'input',
-            label: 'Station English name',
+            label: t('StationSidePanel.interchange.stationEnName'),
             value: transfer.osi_names[setIndex]?.[1],
             onChange: value =>
                 dispatch(updateStationOsiName(selectedStation, setIndex, [transfer.osi_names[setIndex]?.[0], value])),
@@ -58,17 +60,17 @@ export default function InterchangeSection() {
     return (
         <VStack align="flex-start" p={1}>
             <Heading as="h5" size="sm">
-                Interchange
+                {t('StationSidePanel.interchange.title')}
             </Heading>
 
             {transfer.info.map((infoList, i) => (
                 <Fragment key={i}>
                     <Heading as="h6" size="xs">
                         {i === 0
-                            ? 'Within-station interchange'
+                            ? t('StationSidePanel.interchange.within')
                             : i === 1
-                            ? 'Out-of-station interchange'
-                            : 'Out-of-system interchange'}
+                            ? t('StationSidePanel.interchange.outStation')
+                            : t('StationSidePanel.interchange.outSystem')}
                     </Heading>
 
                     {i !== 0 && <RmgFields fields={getOSINameFields(i - 1)} />}
@@ -90,7 +92,7 @@ export default function InterchangeSection() {
                     leftIcon={<MdAdd />}
                     onClick={handleAddInterchangeGroup}
                 >
-                    Add interchange group
+                    {t('StationSidePanel.interchange.addGroup')}
                 </Button>
             )}
         </VStack>
