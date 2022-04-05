@@ -17,6 +17,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { companies } from '../../constants/company-config';
 import { templateList } from '../../constants/templates/data';
+import { translateText } from '../../i18n/config';
 
 interface TemplateModalProps {
     isOpen: boolean;
@@ -47,7 +48,7 @@ export default function TemplateModal(props: TemplateModalProps) {
                     <Tabs isLazy size="sm" orientation="vertical">
                         <TabList maxW={150}>
                             {companies.map(company => (
-                                <Tab key={company.id}>{company.name.en}</Tab>
+                                <Tab key={company.id}>{translateText(company.name)}</Tab>
                             ))}
                         </TabList>
 
@@ -69,7 +70,7 @@ export default function TemplateModal(props: TemplateModalProps) {
                                                 overflow="hidden"
                                                 onClick={() => handleSelect(company, template.filename)}
                                             >
-                                                {template.name.en}
+                                                {translateText(template.name)}
                                             </Button>
                                         ))}
                                     </TabPanel>

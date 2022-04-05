@@ -54,7 +54,7 @@
     "UploadConfirmModal": {
         "title": "開啟自設定檔",
         "message1": "確定要讀入",
-        "message2": "嗎？該設定檔含有",
+        "message2": "嗎？此設定檔含有",
         "message3": "個車站。將立即覆寫未儲存的資料。",
         "cancel": "取消",
         "confirm": "確定"

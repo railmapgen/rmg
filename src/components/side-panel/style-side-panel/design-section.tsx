@@ -166,6 +166,7 @@ export default function DesignSection() {
                 </HStack>
             ),
             minW: 'full',
+            oneLine: true,
             hidden: ![RmgStyle.MTR].includes(style),
         },
         {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Heading, Badge, Menu, MenuButton, MenuItem, MenuList, IconButton } from '@chakra-ui/react';
+import { Badge, Flex, Heading, IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { Environments, getEnvironment, getVersion } from '../util/config';
 import { useTranslation } from 'react-i18next';
 import { MdLocationCity, MdTranslate, MdZoomIn, MdZoomOut } from 'react-icons/md';
@@ -23,6 +23,11 @@ export default function WindowHeader() {
             case Environments.PRD:
                 return 'green';
         }
+    };
+
+    const handleChangeLanguage = (language: LanguageCode) => {
+        i18n.changeLanguage(language);
+        document.documentElement.lang = language;
     };
 
     return (
@@ -63,9 +68,9 @@ export default function WindowHeader() {
             <Menu>
                 <MenuButton as={IconButton} icon={<MdTranslate />} variant="ghost" size="xs" />
                 <MenuList>
-                    <MenuItem onClick={() => i18n.changeLanguage(LanguageCode.English)}>English</MenuItem>
-                    <MenuItem onClick={() => i18n.changeLanguage(LanguageCode.ChineseSimp)}>简体中文</MenuItem>
-                    <MenuItem onClick={() => i18n.changeLanguage(LanguageCode.ChineseTrad)}>繁體中文</MenuItem>
+                    <MenuItem onClick={() => handleChangeLanguage(LanguageCode.English)}>English</MenuItem>
+                    <MenuItem onClick={() => handleChangeLanguage(LanguageCode.ChineseSimp)}>简体中文</MenuItem>
+                    <MenuItem onClick={() => handleChangeLanguage(LanguageCode.ChineseTrad)}>繁體中文</MenuItem>
                 </MenuList>
             </Menu>
         </Flex>

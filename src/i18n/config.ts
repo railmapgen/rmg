@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { LanguageCode } from '../constants/constants';
+import { LanguageCode, Translation } from '../constants/constants';
 import enTranslation from './translations/en.json';
 import zhHansTranslation from './translations/zh-Hans.json';
 import zhHantTranslation from './translations/zh-Hant.json';
@@ -31,6 +31,18 @@ i18n.use(LanguageDetector)
             default: [LanguageCode.English],
         },
         resources,
+    })
+    .then(t => {
+        document.title = t('WindowHeader.title');
+        document.documentElement.lang = i18n.language;
     });
 
 export default i18n;
+
+export const translateText = (translation: Translation): string => {
+    return (
+        i18n.languages.map(lang => translation[lang as LanguageCode]).find(name => name !== undefined) ??
+        translation[LanguageCode.English] ??
+        '(Translation Error)'
+    );
+};
