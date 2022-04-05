@@ -1,4 +1,3 @@
-import { createStyles, makeStyles } from '@material-ui/core';
 import React, { lazy, ReactNode, useEffect } from 'react';
 import { CanvasType, RmgStyle } from '../constants/constants';
 import { useAppSelector } from '../redux';
@@ -6,27 +5,22 @@ import SvgWrapper from './svg-wrapper';
 import { useDispatch } from 'react-redux';
 import { setStyle } from '../redux/param/action';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Flex } from '@chakra-ui/react';
 
-const useStyles = makeStyles(() =>
-    createStyles({
-        root: {
-            display: 'flex',
-            flexDirection: 'row',
-            overflowX: 'scroll',
-            '&::before, &::after': {
-                content: '""',
-                margin: 'auto',
-            },
-            '& > svg': {
-                flex: '0 0 auto',
-                border: '1px solid black',
-            },
-        },
-    })
-);
+const style = {
+    flexDirection: 'row',
+    overflowX: 'auto',
+    '&::before, &::after': {
+        content: '""',
+        margin: 'auto',
+    },
+    '& > svg': {
+        flex: '0 0 auto',
+        border: '1px solid black',
+    },
+};
 
 export default function SvgRouter() {
-    const classes = useStyles();
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -55,7 +49,7 @@ export default function SvgRouter() {
     );
 
     return (
-        <div className={classes.root}>
+        <Flex sx={style}>
             {filteredCanvas.map(canvas => (
                 <SvgWrapper
                     key={canvas + rmgStyle}
@@ -69,7 +63,7 @@ export default function SvgRouter() {
                     {canvasList[rmgStyle][canvas]}
                 </SvgWrapper>
             ))}
-        </div>
+        </Flex>
     );
 }
 

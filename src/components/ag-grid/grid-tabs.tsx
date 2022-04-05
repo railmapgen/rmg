@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import { Box, Button, HStack, IconButton, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import React, { lazy, Suspense, useState } from 'react';
+import { Box, Button, HStack, IconButton, Progress, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { MdAdd } from 'react-icons/md';
 import AddStationModal from '../modal/add-station-modal';
 import { useAppDispatch, useAppSelector } from '../../redux';
 import { RmgStyle, SidePanelMode } from '../../constants/constants';
-import StationAgGrid from './station-ag-grid';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { setSelectedBranch, setSidePanelMode } from '../../redux/app/action';
 import { useTranslation } from 'react-i18next';
 import NewBranchModal from '../modal/new-branch-modal';
+import ErrorBoundary from '../../error-boundary';
+
+const StationAgGrid = lazy(() => import(/* webpackChunkName: "StationAgGrid" */ './station-ag-grid'));
 
 export default function GridTabs() {
     const { t } = useTranslation();
@@ -74,7 +76,11 @@ export default function GridTabs() {
                 <TabPanels flex={1} overflowY="auto">
                     {branches.map((_, i) => (
                         <TabPanel key={i} padding={0} h="100%">
-                            <StationAgGrid branchIndex={i} />
+                            <Suspense fallback={<Progress isIndeterminate />}>
+                                <ErrorBoundary>
+                                    <StationAgGrid branchIndex={i} />
+                                </ErrorBoundary>
+                            </Suspense>
                         </TabPanel>
                     ))}
                 </TabPanels>
