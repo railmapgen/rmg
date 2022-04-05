@@ -744,3 +744,32 @@ export const updateStationLoopPivot = (stationId: string, loop_pivot: boolean) =
         dispatch(setStation(stationId, { ...stationInfo, loop_pivot }));
     };
 };
+
+export const autoNumbering = (
+    branchIndex: number,
+    from: number,
+    maxLength: number = 2,
+    sort: 'asc' | 'desc' = 'asc'
+) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const stationList = getState().param.stn_list;
+        const branches = getState().helper.branches;
+
+        // not altering station code of linestart, lineend, branch out station
+        const branch = branches[branchIndex]?.slice(1, -1);
+
+        if (branch) {
+            const nextStationList = branch.reduce((acc, cur, idx) => {
+                return {
+                    ...acc,
+                    [cur]: {
+                        ...stationList[cur],
+                        num: (from + idx * (sort === 'desc' ? -1 : 1)).toString().padStart(maxLength, '0'),
+                    },
+                };
+            }, stationList);
+
+            dispatch(setStationsBulk(nextStationList));
+        }
+    };
+};

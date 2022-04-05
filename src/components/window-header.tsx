@@ -25,9 +25,10 @@ export default function WindowHeader() {
         }
     };
 
-    const handleChangeLanguage = (language: LanguageCode) => {
-        i18n.changeLanguage(language);
+    const handleChangeLanguage = async (language: LanguageCode) => {
+        const t = await i18n.changeLanguage(language);
         document.documentElement.lang = language;
+        document.title = t('WindowHeader.heading');
     };
 
     return (

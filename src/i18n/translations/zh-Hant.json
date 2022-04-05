@@ -150,6 +150,10 @@
         "coline": {
             "title": "共綫",
             "add": "新增共綫"
+        },
+        "action": {
+            "title": "動作",
+            "autoNum": "車站自動編碼"
         }
     },
 
@@ -259,5 +263,19 @@
         "message": "確定移除該車站嗎？此動作無法還原。",
         "cancel": "取消",
         "confirm": "確定"
+    },
+
+    "AutoNumModal": {
+        "title": "車站自動編碼",
+        "where": "目標位置",
+        "main": "主綫",
+        "branch": "支綫",
+        "external": "外部路綫",
+        "from": "起始編碼",
+        "maxLength": "編碼位數",
+        "sort": "排序方式",
+        "asc": "升序",
+        "desc": "降序",
+        "submit": "確定"
     }
 }

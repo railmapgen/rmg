@@ -23,11 +23,11 @@ export default function GzmtrStationCode(props: GzmtrStationCodeProps) {
             border: '2px solid',
             borderColor: lineColour,
 
-            '&:first-child': {
+            '&:first-of-type': {
                 borderRadius: '12px 0 0 12px',
             },
 
-            '&:last-child': {
+            '&:last-of-type': {
                 borderRadius: '0 12px 12px 0',
                 marginLeft: '-2px',
             },

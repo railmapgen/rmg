@@ -150,6 +150,10 @@
         "coline": {
             "title": "共线",
             "add": "添加共线"
+        },
+        "action": {
+            "title": "操作作",
+            "autoNum": "车站自动编号"
         }
     },
 
@@ -260,5 +264,19 @@
         "message": "您确定刪除此车站吗？您不能撤销此操作。",
         "cancel": "取消",
         "confirm": "确定"
+    },
+
+    "AutoNumModal": {
+        "title": "车站自动编号",
+        "where": "目标位置",
+        "main": "主线",
+        "branch": "支线",
+        "external": "外部路线",
+        "from": "起始编号",
+        "maxLength": "编号位数",
+        "sort": "排序方式",
+        "asc": "升序",
+        "desc": "降序",
+        "submit": "确定"
     }
 }

@@ -68,12 +68,25 @@ export default function StationAgGrid(props: StationAgGridProps) {
         {
             headerName: t('StationAgGrid.zhName'),
             field: 'name',
-            valueFormatter: ({ value }: { value: Name }) => value[0],
+            valueFormatter: ({ value, data }: { value: Name; data: RowDataType }) =>
+                value[0] +
+                (style === RmgStyle.GZMTR && data.secondaryName && data.secondaryName[0]
+                    ? ` (${data.secondaryName[0]})`
+                    : ''),
         },
         {
             headerName: t('StationAgGrid.enName'),
             field: 'name',
-            cellRenderer: ({ value }: { value: Name }) => <RmgMultiLineString text={value[1]} />,
+            cellRenderer: ({ value, data }: { value: Name; data: RowDataType }) => (
+                <RmgMultiLineString
+                    text={
+                        value[1] +
+                        (style === RmgStyle.GZMTR && data.secondaryName && data.secondaryName[1]
+                            ? ` (${data.secondaryName[1]})`
+                            : '')
+                    }
+                />
+            ),
             minWidth: 300,
         },
         {

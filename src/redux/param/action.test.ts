@@ -3,6 +3,7 @@ import {
     addInterchange,
     addNote,
     addStationService,
+    autoNumbering,
     customiseDestinationName,
     flipStationNames,
     removeInterchange,
@@ -44,6 +45,7 @@ import {
 import { CityCode } from '@railmapgen/rmg-palette-resources';
 import { SET_DEPS_STR } from '../helper/action';
 import { createMockAppStore, mockSimpleStationList } from '../../setupTests';
+import { getBranches } from '../helper/graph-theory-util';
 
 const realStore = rootReducer.getState();
 
@@ -559,5 +561,53 @@ describe('Tests for param actions', () => {
 
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(0);
+    });
+
+    describe('Auto numbering', () => {
+        const branches = getBranches(mockSimpleStationList);
+        const mockStore = createMockAppStore({
+            ...realStore,
+            param: {
+                ...realStore.param,
+                stn_list: mockSimpleStationList,
+            },
+            helper: {
+                ...realStore.helper,
+                branches: branches,
+            },
+        });
+
+        afterEach(() => {
+            mockStore.clearActions();
+        });
+
+        it('Can number main line in ascending order as expected', () => {
+            mockStore.dispatch(autoNumbering(0, 1, 2, 'asc'));
+
+            const actions = mockStore.getActions();
+            expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
+
+            const nextStationList: StationDict = actions.find(action => action.type === SET_STATIONS_BULK).stations;
+
+            expect(nextStationList.linestart.num).toBeUndefined();
+            expect(nextStationList.stn0.num).toBe('01');
+            expect(nextStationList.stn1.num).toBe('02');
+            expect(nextStationList.stn2.num).toBe('03');
+            expect(nextStationList.lineend.num).toBeUndefined();
+        });
+
+        it('Can number branch in descending order as expected', () => {
+            mockStore.dispatch(autoNumbering(1, 10, 2, 'desc'));
+
+            const actions = mockStore.getActions();
+            expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
+
+            const nextStationList: StationDict = actions.find(action => action.type === SET_STATIONS_BULK).stations;
+
+            expect(nextStationList.stn1.num).toBeUndefined();
+            expect(nextStationList.stn3.num).toBe('10');
+            expect(nextStationList.stn4.num).toBe('09');
+            expect(nextStationList.lineend.num).toBeUndefined();
+        });
     });
 });
