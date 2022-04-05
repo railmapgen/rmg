@@ -1,13 +1,15 @@
-import React, { StrictMode, useEffect } from 'react';
+import React, { lazy, StrictMode, Suspense, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 // import AppAppBar from './app-appbar';
 // import Panels from './panels';
 // import { createTheme, ThemeProvider, useMediaQuery, LinearProgress } from '@material-ui/core';
 import { useAppSelector } from './redux';
 import SvgRouter from './svgs/svg-router';
-import AppRoot from './components/app-root';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, CircularProgress } from '@chakra-ui/react';
 import { rmgChakraTheme } from '@railmapgen/rmg-components';
+import ErrorBoundary from './error-boundary';
+
+const AppRoot = lazy(() => import(/* webpackChunkName: "AppRoot" */ './components/app-root'));
 
 // const darkTheme = createTheme({
 //     palette: {
@@ -95,7 +97,11 @@ export default function App() {
                     element={
                         <ChakraProvider theme={rmgChakraTheme}>
                             <StrictMode>
-                                <AppRoot />
+                                <Suspense fallback={<CircularProgress isIndeterminate />}>
+                                    <ErrorBoundary>
+                                        <AppRoot />
+                                    </ErrorBoundary>
+                                </Suspense>
                             </StrictMode>
                         </ChakraProvider>
                     }

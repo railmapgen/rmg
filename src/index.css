@@ -1,17 +1,23 @@
 :root {
-    background-color: #fafafa;
+    background-color: #FFFFFF;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        background-color: #303030;
+        background-color: #1A202C;
     }
+}
+
+html {
+    height: 100vh;
+    height: -webkit-fill-available;
 }
 
 body {
     margin: 0;
     overflow: hidden;
     height: 100vh;
+    height: -webkit-fill-available;
     width: 100%;
     padding: env(safe-area-inset-top, 20px) env(safe-area-inset-right, 20px) env(safe-area-inset-bottom, 20px) env(safe-area-inset-left, 20px);
 }
