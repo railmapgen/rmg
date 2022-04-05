@@ -3,6 +3,7 @@ import { getRandomId } from './station-list-util';
 import { BranchStyle, Facilities, Services, ShortDirection, StationDict, StationInfo } from '../../constants/constants';
 import { getYShareMTR } from '../../methods';
 import { setStationsBulk } from './action';
+import { nanoid } from 'nanoid';
 
 const getStationTemplate = (id: string): StationInfo => ({
     name: ['未命名 ' + id, 'Unnamed ' + id],
@@ -270,10 +271,7 @@ export const addStation = (where: `${number}` | 'new', from: string, to: string,
         const stationList = getState().param.stn_list;
 
         // get new id
-        let newId = getRandomId();
-        while (Object.keys(stationList).includes(newId)) {
-            newId = getRandomId();
-        }
+        const newId = nanoid(6);
         const newStationInfo = getStationTemplate(newId);
 
         if (where !== 'new') {
@@ -346,6 +344,25 @@ export const addStation = (where: `${number}` | 'new', from: string, to: string,
             };
             dispatch(setStationsBulk(nextStationList));
             return true;
+        }
+    };
+};
+
+export const addStationToExistingBranch = (where: number, preposition: 'before' | 'after', pivot: string) => {
+    return (dispatch: AppDispatch, getState: () => RootState): boolean => {
+        const branches = getState().helper.branches;
+        const branch = branches[where];
+
+        if (branch?.length) {
+            if (preposition === 'before') {
+                const from = branch[branch.indexOf(pivot) - 1];
+                return dispatch(addStation(where.toString() as `${number}`, from, pivot));
+            } else {
+                const to = branch[branch.indexOf(pivot) + 1];
+                return dispatch(addStation(where.toString() as `${number}`, pivot, to));
+            }
+        } else {
+            return false;
         }
     };
 };

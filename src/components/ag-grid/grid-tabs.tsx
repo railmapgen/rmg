@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, HStack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { Box, Button, HStack, IconButton, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { MdAdd } from 'react-icons/md';
 import AddStationModal from '../modal/add-station-modal';
 import { useAppDispatch, useAppSelector } from '../../redux';
@@ -8,13 +8,16 @@ import StationAgGrid from './station-ag-grid';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { setSelectedBranch, setSidePanelMode } from '../../redux/app/action';
 import { useTranslation } from 'react-i18next';
+import NewBranchModal from '../modal/new-branch-modal';
 
 export default function GridTabs() {
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
     const [isAddStationModalOpen, setIsAddStationModalOpen] = useState(false);
+    const [isNewBranchModalOpen, setIsNewBranchModalOpen] = useState(false);
 
+    const selectedBranch = useAppSelector(state => state.app.selectedBranch);
     const { style, stn_list: stationList } = useAppSelector(state => state.param);
     const branches = useAppSelector(state => state.helper.branches);
 
@@ -29,6 +32,7 @@ export default function GridTabs() {
                 display="flex"
                 flexDirection="column"
                 overflow="hidden"
+                index={selectedBranch}
                 onChange={index => dispatch(setSelectedBranch(index))}
             >
                 <TabList>
@@ -43,6 +47,14 @@ export default function GridTabs() {
                             }
                         }
                     })}
+                    <IconButton
+                        size="sm"
+                        variant="ghost"
+                        alignSelf="center"
+                        aria-label="New branch"
+                        onClick={() => setIsNewBranchModalOpen(true)}
+                        icon={<MdAdd />}
+                    />
 
                     <HStack marginLeft="auto" marginRight={1}>
                         <Button
@@ -69,6 +81,7 @@ export default function GridTabs() {
             </Tabs>
 
             <AddStationModal isOpen={isAddStationModalOpen} onClose={() => setIsAddStationModalOpen(false)} />
+            <NewBranchModal isOpen={isNewBranchModalOpen} onClose={() => setIsNewBranchModalOpen(false)} />
         </Box>
     );
 }

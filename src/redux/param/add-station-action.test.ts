@@ -5,8 +5,8 @@ import { createMockAppStore } from '../../setupTests';
 import rootReducer from '../index';
 import { SET_STATIONS_BULK } from './action';
 
-jest.mock('./station-list-util', () => ({
-    getRandomId: () => 'testId',
+jest.mock('nanoid', () => ({
+    nanoid: () => 'testId',
 }));
 
 const mockStationList = {

@@ -2,7 +2,7 @@
     "WindowHeader": {
         "heading": "铁路路线图生成器",
         "mtr": "港铁",
-        "gzmtr": "广州地地",
+        "gzmtr": "广州地铁",
         "shmetro": "上海地铁"
     },
 
@@ -229,10 +229,21 @@
 
     "AddStationModal": {
         "title": "添加车站",
-        "where": "目柰位置",
+        "where": "目标位置",
         "main": "主线",
         "branch": "支线",
         "external": "外部路线",
+        "preposition": "相对位置",
+        "before": "先于",
+        "after": "后于",
+        "pivot": "定位车站",
+        "pleaseSelect": "请选择...",
+        "submit": "确定"
+    },
+
+    "NewBranchModal": {
+        "title": "添加支线或外部路线",
+        "where": "目标位置",
         "new": "添加一条支线",
         "ext": "添加一条外部路线",
         "from": "介于",

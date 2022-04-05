@@ -233,6 +233,17 @@
         "main": "Main line",
         "branch": "Branch",
         "external": "External line",
+        "preposition": "Preposition",
+        "before": "Before",
+        "after": "After",
+        "pivot": "Pivot station",
+        "pleaseSelect": "Please select...",
+        "submit": "Submit"
+    },
+
+    "NewBranchModal": {
+        "title": "Create a new branch or external line",
+        "where": "Target location",
         "new": "Create a new branch",
         "ext": "Create an external line",
         "from": "Between",

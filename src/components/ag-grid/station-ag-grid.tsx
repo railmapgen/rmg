@@ -50,7 +50,9 @@ export default function StationAgGrid(props: StationAgGridProps) {
         rowSpan: dispatch(getRowSpanForColine(id, branchIndex)),
     }));
 
-    const defaultColDef = {};
+    const defaultColDef = {
+        resizable: true,
+    };
 
     const columnDefs: RmgAgGridColDef<RowDataType>[] = [
         {
@@ -60,6 +62,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
                 <GzmtrStationCode lineNumber={lineNumber} stationNumber={value} lineColour={theme[2]} />
             ),
             pinned: 'left',
+            minWidth: 110,
             hide: ![RmgStyle.GZMTR].includes(style),
         },
         {
@@ -71,6 +74,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
             headerName: t('StationAgGrid.enName'),
             field: 'name',
             cellRenderer: ({ value }: { value: Name }) => <RmgMultiLineString text={value[1]} />,
+            minWidth: 300,
         },
         {
             headerName: t('StationAgGrid.interchange'),

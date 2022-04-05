@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Button,
     Modal,
@@ -11,10 +11,10 @@ import {
 } from '@chakra-ui/react';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useAppDispatch, useAppSelector } from '../../redux';
-import { addStation, getNewBranchAllowedEnds, verifyNewBranchEnds } from '../../redux/param/add-station-action';
 import { RmgStyle } from '../../constants/constants';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { useTranslation } from 'react-i18next';
+import { addStationToExistingBranch } from '../../redux/param/add-station-action';
 
 interface AddStationModalProps {
     isOpen: boolean;
@@ -26,18 +26,19 @@ export default function AddStationModal(props: AddStationModalProps) {
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
-    const [where, setWhere] = useState<`${number}` | 'new' | 'ext'>('0');
-    const [from, setFrom] = useState('');
-    const [to, setTo] = useState('');
-    const [position, setPosition] = useState<'upper' | 'lower'>('upper');
-
-    const [fromError, setFromError] = useState('');
-    const [toError, setToError] = useState('');
-
+    const selectedBranch = useAppSelector(state => state.app.selectedBranch);
     const { style, stn_list: stationList } = useAppSelector(state => state.param);
     const branches = useAppSelector(state => state.helper.branches);
 
-    const selectedBranch = ['new', 'ext'].includes(where) ? [] : branches[Number(where)];
+    const [where, setWhere] = useState(selectedBranch);
+    const [preposition, setPreposition] = useState<'before' | 'after'>('before');
+    const [pivot, setPivot] = useState('');
+
+    useEffect(() => {
+        setWhere(selectedBranch);
+    }, [selectedBranch]);
+
+    const selectableStations = branches[Number(where)]?.slice(1, -1) ?? [];
 
     const getStationOptions = (stationIdList: string[]): Record<string, string> => {
         return stationIdList.reduce(
@@ -48,8 +49,6 @@ export default function AddStationModal(props: AddStationModalProps) {
             { '': t('AddStationModal.pleaseSelect') }
         );
     };
-
-    const newBranchEndStationOptions = getStationOptions(dispatch(getNewBranchAllowedEnds()));
 
     const fields: RmgFieldsField[] = [
         {
@@ -69,111 +68,41 @@ export default function AddStationModal(props: AddStationModalProps) {
                     }),
                     {}
                 ),
-                new: t('AddStationModal.new'),
-                ext: t('AddStationModal.ext'),
             },
-            disabledOptions: style === RmgStyle.SHMetro ? [] : ['ext'],
-            onChange: value => handleSelectWhere(value as `${number}` | 'new'),
+            onChange: value => handleSelectWhere(value as number),
             minW: 'full',
         },
         {
             type: 'select',
-            label: t('AddStationModal.from'),
-            value: from,
-            options: ['new', 'ext'].includes(where) ? newBranchEndStationOptions : getStationOptions(selectedBranch),
-            disabledOptions: [''],
-            onChange: value => handleSelectFrom(value as string),
-            isInvalid: Boolean(fromError),
-        },
-        {
-            type: 'select',
-            label: t('AddStationModal.to'),
-            value: to,
-            options: ['new', 'ext'].includes(where) ? newBranchEndStationOptions : getStationOptions(selectedBranch),
-            disabledOptions: [''],
-            onChange: value => handleSelectTo(value as string),
-            isInvalid: Boolean(toError),
-        },
-        {
-            type: 'select',
-            label: t('AddStationModal.position'),
-            value: position,
+            label: t('AddStationModal.preposition'),
+            value: preposition,
             options: {
-                upper: t('AddStationModal.upper'),
-                lower: t('AddStationModal.lower'),
+                before: t('AddStationModal.before'),
+                after: t('AddStationModal.after'),
             },
-            onChange: value => setPosition(value as 'upper' | 'lower'),
-            minW: 'full',
-            hidden: where !== 'new' || style === RmgStyle.SHMetro,
+            onChange: value => setPreposition(value as 'before' | 'after'),
+        },
+        {
+            type: 'select',
+            label: t('AddStationModal.pivot'),
+            value: pivot,
+            options: getStationOptions(selectableStations),
+            disabledOptions: [''],
+            onChange: value => setPivot(value as string),
         },
     ];
 
-    const handleSelectWhere = (value: `${number}` | 'new' | 'ext') => {
+    const handleSelectWhere = (value: number) => {
         setWhere(value);
-        setFrom('');
-        setTo('');
-        setFromError('');
-        setToError('');
-    };
-
-    const handleSelectFrom = (value: string) => {
-        setFrom(value);
-        setFromError('');
-
-        if (value && to) {
-            if (selectedBranch.length) {
-                if (selectedBranch.indexOf(to) - selectedBranch.indexOf(value) === 1) {
-                    setToError('');
-                } else {
-                    setToError("Must be next station of 'from'");
-                }
-            } else {
-                setToError(dispatch(verifyNewBranchEnds(value, to)));
-            }
-        }
-    };
-
-    const handleSelectTo = (value: string) => {
-        setTo(value);
-        setToError('');
-
-        if (from && value) {
-            if (selectedBranch.length) {
-                if (selectedBranch.indexOf(value) - selectedBranch.indexOf(from) === 1) {
-                    setFromError('');
-                } else {
-                    setFromError("Must be previous station of 'to'");
-                }
-            } else {
-                setFromError(dispatch(verifyNewBranchEnds(from, value)));
-            }
-        }
+        setPivot('');
     };
 
     const handleSubmit = () => {
-        let result: boolean;
-        switch (where) {
-            case 'ext':
-                // SHMetro specific - treat lower branch as external line
-                result = dispatch(addStation('new', from, to, 'lower'));
-                break;
-            case 'new':
-                if (style === RmgStyle.SHMetro) {
-                    result = dispatch(addStation('new', from, to, 'upper'));
-                } else {
-                    result = dispatch(addStation('new', from, to, position));
-                }
-                break;
-            default:
-                result = dispatch(addStation(where, from, to));
-        }
-
+        const result = dispatch(addStationToExistingBranch(where, preposition, pivot));
         if (result) {
             onClose();
         }
     };
-
-    const isSubmitDisabled = Boolean(!from || !to || fromError || toError);
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -187,12 +116,7 @@ export default function AddStationModal(props: AddStationModalProps) {
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button
-                        colorScheme="teal"
-                        title={isSubmitDisabled ? fromError || toError : t('AddStationModal.submit')}
-                        onClick={handleSubmit}
-                        disabled={isSubmitDisabled}
-                    >
+                    <Button colorScheme="teal" onClick={handleSubmit} disabled={!pivot}>
                         {t('AddStationModal.submit')}
                     </Button>
                 </ModalFooter>

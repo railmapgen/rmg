@@ -2,10 +2,11 @@ import React from 'react';
 import { BranchStyle, RmgStyle, StationDict } from '../../constants/constants';
 import { getBranches } from '../../redux/helper/graph-theory-util';
 import rootReducer from '../../redux';
-import { createMockAppStore, TestingProvider } from '../../setupTests';
-import { mount } from 'enzyme';
+import { createMockAppStore } from '../../setupTests';
 import AddStationModal from './add-station-modal';
 import { SET_STATIONS_BULK } from '../../redux/param/action';
+import { render } from '../../test-utils';
+import { fireEvent, screen, within } from '@testing-library/react';
 
 const mockStationList = {
     linestart: {
@@ -21,7 +22,7 @@ const mockStationList = {
         branch: { left: [], right: [] },
     },
     stn2: {
-        name: ['車站1', 'Station 1'],
+        name: ['車站2', 'Station 2'],
         parents: ['stn1', 'stn5'],
         children: ['stn3'],
         branch: { left: [BranchStyle.through, 'stn5'], right: [] },
@@ -55,42 +56,8 @@ const mockStationList = {
 const branches = getBranches(mockStationList);
 
 const realStore = rootReducer.getState();
-const mockStore = createMockAppStore({
-    ...realStore,
-    param: {
-        ...realStore.param,
-        stn_list: mockStationList,
-    },
-    helper: {
-        ...realStore.helper,
-        branches,
-    },
-});
 
-const wrapper = mount(<AddStationModal isOpen={true} onClose={jest.fn()} />, {
-    wrappingComponent: TestingProvider,
-    wrappingComponentProps: { store: mockStore },
-});
-
-const mockSHMetroStore = createMockAppStore({
-    ...realStore,
-    param: {
-        ...realStore.param,
-        style: RmgStyle.SHMetro,
-        stn_list: mockStationList,
-    },
-    helper: {
-        ...realStore.helper,
-        branches,
-    },
-});
-
-const wrapperSHMetro = mount(<AddStationModal isOpen={true} onClose={jest.fn()} />, {
-    wrappingComponent: TestingProvider,
-    wrappingComponentProps: { store: mockSHMetroStore },
-});
-
-describe('Unit tests for AddStationModal component', () => {
+describe('AddStationModal', () => {
     /**
      * stn1 - stn2 - stn3 - stn4
      *        /
@@ -98,107 +65,66 @@ describe('Unit tests for AddStationModal component', () => {
      */
 
     describe('AddStationModal - General', () => {
-        afterEach(() => {
-            mockStore.clearActions();
+        const mockStore = createMockAppStore({
+            ...realStore,
+            param: {
+                ...realStore.param,
+                stn_list: mockStationList,
+            },
+            helper: {
+                ...realStore.helper,
+                branches,
+            },
         });
+        const setup = () => render(<AddStationModal isOpen={true} onClose={jest.fn()} />, { store: mockStore });
 
         it('Can render where dropdown as expected', () => {
-            const whereDropdown = wrapper.find('select').at(0);
-            expect(whereDropdown.find('option')).toHaveLength(4); // main, branch 1, new, ext
-            expect(whereDropdown.find('option').at(3).props().disabled).toBeTruthy();
+            setup();
+
+            const fields = screen.getAllByRole('group');
+            expect(fields.length).toBe(3); // where, prep, pivot
+
+            expect(within(fields[0]).getAllByRole('option')).toHaveLength(2);
+            expect(within(fields[0]).getByText(/main/i)).not.toBeNull();
+            expect(within(fields[0]).getByText(/branch/i)).not.toBeNull();
         });
 
         it('Can render from and to dropdowns for main line as expected', () => {
-            const fromDropdown = wrapper.find('select').at(1);
-            const toDropdown = wrapper.find('select').at(2);
+            setup();
 
-            // 4 stations in main line + linestart + lineend + please select
-            expect(fromDropdown.find('option')).toHaveLength(7);
-            expect(fromDropdown.text()).not.toContain('Station 5');
+            const fields = screen.getAllByRole('group');
 
-            expect(toDropdown.find('option')).toHaveLength(7);
-            expect(toDropdown.text()).not.toContain('Station 5');
+            // 4 stations in main line + please select
+            expect(within(fields[2]).getAllByRole('option')).toHaveLength(5);
+            expect(within(fields[2]).queryByText(/Station 5/)).toBeNull();
         });
 
         it('Submit button is disabled by default (without selection)', () => {
-            const fromDropdown = wrapper.find('select').at(1);
-            expect(fromDropdown.getDOMNode<HTMLSelectElement>().value).toBe('');
+            setup();
 
-            const toDropdown = wrapper.find('select').at(2);
-            expect(toDropdown.getDOMNode<HTMLSelectElement>().value).toBe('');
+            expect(screen.getByDisplayValue(/Please select/)).not.toBeNull();
+            expect(screen.getByText('Submit')).toBeDisabled();
 
-            const submitButton = wrapper.find('footer button');
-            expect(submitButton.props().disabled).toBeTruthy();
+            fireEvent.change(screen.getAllByRole('combobox')[2], { target: { value: 'stn3' } });
+
+            expect(screen.getByText('Submit')).not.toBeDisabled();
         });
 
-        it('Can display error if not adjacent stations are selected', () => {
-            wrapper
-                .find('select')
-                .at(1)
-                .simulate('change', { target: { value: 'stn2' } });
-            wrapper.update();
+        it('Can reset pivot selection when where is changed', () => {
+            setup();
 
-            wrapper
-                .find('select')
-                .at(2)
-                .simulate('change', { target: { value: 'stn4' } });
-            wrapper.update();
+            fireEvent.change(screen.getAllByRole('combobox')[2], { target: { value: 'stn3' } });
+            expect(screen.queryByDisplayValue(/Please select/)).toBeNull();
 
-            // previously selected field will be invalid
-            expect(wrapper.find('select').at(1).props()['aria-invalid']).toBeTruthy();
-
-            // currently selected field will be valid
-            expect(wrapper.find('select').at(2).props()['aria-invalid']).toBeFalsy();
-
-            // submit button is disabled
-            const submitButton = wrapper.find('footer button');
-            expect(submitButton.props().disabled).toBeTruthy();
-            expect(submitButton.props().title).toContain('Must be previous station');
-        });
-
-        it('Can reset from and to selections when where is changed', () => {
-            wrapper
-                .find('select')
-                .at(0)
-                .simulate('change', { target: { value: 'new' } });
-            wrapper.update();
-
-            const fromDropdown = wrapper.find('select').at(1);
-            const toDropdown = wrapper.find('select').at(2);
-
-            expect(fromDropdown.getDOMNode<HTMLSelectElement>().value).toBe('');
-            expect(toDropdown.getDOMNode<HTMLSelectElement>().value).toBe('');
-
-            expect(fromDropdown.props()['aria-invalid']).toBeFalsy();
-            expect(toDropdown.props()['aria-invalid']).toBeFalsy();
-        });
-
-        it('Can display error if failed at verification step', () => {
-            wrapper
-                .find('select')
-                .at(1)
-                .simulate('change', { target: { value: 'stn4' } });
-            wrapper.update();
-
-            wrapper
-                .find('select')
-                .at(2)
-                .simulate('change', { target: { value: 'lineend' } });
-            wrapper.update();
-
-            const submitButton = wrapper.find('footer button');
-            expect(submitButton.props().disabled).toBeTruthy();
-            expect(submitButton.props().title).toContain('should not be open jaw from the last station');
+            fireEvent.change(screen.getAllByRole('combobox')[0], { target: { value: 1 } });
+            expect(screen.getByDisplayValue(/Please select/)).not.toBeNull();
         });
 
         it('Can add station in new branch as expected', () => {
-            wrapper
-                .find('select')
-                .at(1)
-                .simulate('change', { target: { value: 'stn3' } });
-            wrapper.update();
+            setup();
 
-            wrapper.find('footer button').simulate('click');
+            fireEvent.change(screen.getAllByRole('combobox')[2], { target: { value: 'stn3' } });
+            fireEvent.click(screen.getByText('Submit'));
 
             const actions = mockStore.getActions();
             expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
@@ -206,20 +132,30 @@ describe('Unit tests for AddStationModal component', () => {
     });
 
     describe('AddStationModal - SHMetro', () => {
-        it('Can render where dropdown for SHMetro style as expected', () => {
-            const whereDropdown = wrapperSHMetro.find('select').at(0);
-            expect(whereDropdown.find('option').at(3).props().disabled).toBeFalsy();
+        const mockStore = createMockAppStore({
+            ...realStore,
+            param: {
+                ...realStore.param,
+                style: RmgStyle.SHMetro,
+                stn_list: mockStationList,
+            },
+            helper: {
+                ...realStore.helper,
+                branches,
+            },
         });
+        const setup = () => render(<AddStationModal isOpen={true} onClose={jest.fn()} />, { store: mockStore });
 
-        it('Position selection is not available for new branch in SHMetro style', () => {
-            wrapperSHMetro
-                .find('select')
-                .at(0)
-                .simulate('change', { target: { value: 'new' } });
-            wrapperSHMetro.update();
+        it('Can render where dropdown for SHMetro style as expected', () => {
+            setup();
 
-            const dropdowns = wrapperSHMetro.find('select');
-            expect(dropdowns).toHaveLength(3); // where, from, to
+            const fields = screen.getAllByRole('group');
+            expect(fields.length).toBe(3); // where, prep, pivot
+
+            expect(within(fields[0]).getAllByRole('option')).toHaveLength(2);
+            expect(within(fields[0]).getByText(/main/i)).not.toBeNull();
+            expect(within(fields[0]).queryByText(/branch/i)).toBeNull();
+            expect(within(fields[0]).getByText(/external/i)).not.toBeNull();
         });
     });
 });

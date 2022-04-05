@@ -233,6 +233,17 @@
         "main": "主綫",
         "branch": "支綫",
         "external": "外部路綫",
+        "preposition": "相對位置",
+        "before": "先於",
+        "after": "後於",
+        "pivot": "定位車站",
+        "pleaseSelect": "請選擇...",
+        "submit": "確定"
+    },
+
+    "NewBranchModal": {
+        "title": "新增支綫或外部路綫",
+        "where": "目標位置",
         "new": "新增一條支綫",
         "ext": "新增一條外部路綫",
         "from": "介乎於",
@@ -240,8 +251,7 @@
         "pleaseSelect": "請選擇...",
         "position": "位置",
         "upper": "上方",
-        "lower": "下方",
-        "submit": "確定"
+        "lower": "下方"
     },
 
     "RemoveConfirmModal": {
