@@ -14,12 +14,13 @@ export default function BranchSidePanel() {
 
     return (
         <RmgSidePanelBody>
-            {style === RmgStyle.SHMetro && isColineBranch(branches[selectedBranch], stationList) && (
-                <>
-                    <ColineSection />
-                    <Divider />
-                </>
-            )}
+            {style === RmgStyle.SHMetro &&
+                (selectedBranch === 0 || isColineBranch(branches[selectedBranch], stationList)) && (
+                    <>
+                        <ColineSection />
+                        <Divider />
+                    </>
+                )}
 
             <ActionSection />
         </RmgSidePanelBody>

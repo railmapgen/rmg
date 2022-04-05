@@ -385,7 +385,10 @@ export const setColineBulk = (coline: Record<string, ColineInfo>): setColineBulk
     return { type: SET_COLINE_BULK, coline };
 };
 
-export const reverseStations = () => {
+/**
+ * @param flipBranch Set as false if you want to rotate the line but keeping the topology ordering (TPO). Set as true if you want to flip branches and break the TPO (for SHMetro).
+ */
+export const reverseStations = (flipBranch: boolean = false) => {
     return (dispatch: AppDispatch, getState: () => RootState) => {
         const { stn_list } = getState().param;
         const newStationList = Object.keys(stn_list).reduce(
@@ -397,25 +400,31 @@ export const reverseStations = () => {
                             return {
                                 ...stn_list.lineend,
                                 parents: [],
-                                children: stn_list.lineend.parents.slice().reverse(),
+                                children: flipBranch
+                                    ? stn_list.lineend.parents
+                                    : stn_list.lineend.parents.slice().reverse(),
                                 branch: { left: [] as [], right: stn_list.lineend.branch.left },
                             };
                         case 'lineend':
                             return {
                                 ...stn_list.linestart,
-                                parents: stn_list.linestart.children.slice().reverse(),
+                                parents: flipBranch
+                                    ? stn_list.linestart.children
+                                    : stn_list.linestart.children.slice().reverse(),
                                 children: [],
                                 branch: { left: stn_list.linestart.branch.right, right: [] as [] },
                             };
                         default:
+                            const mappedParents = stn_list[id].children.map(id =>
+                                id === 'linestart' ? 'lineend' : id === 'lineend' ? 'linestart' : id
+                            );
+                            const mappedChildren = stn_list[id].parents.map(id =>
+                                id === 'linestart' ? 'lineend' : id === 'lineend' ? 'linestart' : id
+                            );
                             return {
                                 ...stn_list[id],
-                                parents: stn_list[id].children
-                                    .map(id => (id === 'linestart' ? 'lineend' : id === 'lineend' ? 'linestart' : id))
-                                    .reverse(),
-                                children: stn_list[id].parents
-                                    .map(id => (id === 'linestart' ? 'lineend' : id === 'lineend' ? 'linestart' : id))
-                                    .reverse(),
+                                parents: flipBranch ? mappedParents : mappedParents.reverse(),
+                                children: flipBranch ? mappedChildren : mappedChildren.reverse(),
                                 branch: {
                                     left: stn_list[id].branch.right,
                                     right: stn_list[id].branch.left,

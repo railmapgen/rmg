@@ -136,7 +136,7 @@
         "loop": {
             "title": "環綫",
             "isLoop": "視作環綫",
-            "isBank": "Bank the closed rectangular path",
+            "isBank": "以平行四邊形顯示環綫",
             "leftRightFactor": "左右參數",
             "bottomFactor": "底部參數"
         }
@@ -153,7 +153,9 @@
         },
         "action": {
             "title": "動作",
-            "autoNum": "車站自動編碼"
+            "autoNum": "車站自動編碼",
+            "reverse": "旋轉整條路綫",
+            "flip": "反轉整條路綫"
         }
     },
 

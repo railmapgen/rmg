@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, Button, Heading, HStack } from '@chakra-ui/react';
-import { MdFilter1 } from 'react-icons/md';
+import { Box, Button, Flex, Heading } from '@chakra-ui/react';
+import { MdCached, MdFilter1 } from 'react-icons/md';
 import AutoNumModal from '../../modal/auto-num-modal';
-import { useAppSelector } from '../../../redux';
+import { useAppDispatch, useAppSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
+import { reverseStations } from '../../../redux/param/action';
 
 export default function ActionSection() {
     const { t } = useTranslation();
+    const dispatch = useAppDispatch();
 
     const style = useAppSelector(state => state.param.style);
 
@@ -19,7 +21,21 @@ export default function ActionSection() {
                 {t('BranchSidePanel.action.title')}
             </Heading>
 
-            <HStack>
+            <Flex
+                wrap="wrap"
+                sx={{
+                    p: 1,
+
+                    '&> *': {
+                        flexShrink: 0,
+                        flexBasis: '100%',
+
+                        '&:not(:first-child)': {
+                            marginTop: 2,
+                        },
+                    },
+                }}
+            >
                 {style === RmgStyle.GZMTR && (
                     <Button
                         size="sm"
@@ -31,7 +47,19 @@ export default function ActionSection() {
                         {t('BranchSidePanel.action.autoNum')}
                     </Button>
                 )}
-            </HStack>
+
+                <Button
+                    size="sm"
+                    variant="outline"
+                    leftIcon={<MdCached />}
+                    alignSelf="flex-end"
+                    onClick={() => dispatch(reverseStations(style === RmgStyle.SHMetro))}
+                >
+                    {style === RmgStyle.SHMetro
+                        ? t('BranchSidePanel.action.flip')
+                        : t('BranchSidePanel.action.reverse')}
+                </Button>
+            </Flex>
 
             <AutoNumModal isOpen={isAutoNumModalOpen} onClose={() => setIsAutoNumModalOpen(false)} />
         </Box>

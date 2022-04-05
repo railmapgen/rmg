@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Checkbox, Heading } from '@chakra-ui/react';
+import { Box, Heading } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux';
 import { setLoop, setLoopBank, setLoopLeftAndRightFactor, setLoopBottomFactor } from '../../../redux/param/action';
@@ -24,18 +24,13 @@ export default function LoopSection() {
             oneLine: true,
         },
         {
-            type: 'custom',
+            type: 'switch',
             label: t('StyleSidePanel.loop.isBank'),
-            component: (
-                <Checkbox
-                    variant="flushed"
-                    size="sm"
-                    h={6}
-                    defaultChecked={bank}
-                    isDisabled={true}
-                    onChange={({ target: { checked } }) => dispatch(setLoopBank(checked))}
-                />
-            ),
+            isChecked: bank,
+            isDisabled: true,
+            onChange: checked => dispatch(setLoopBank(checked)),
+            minW: 'full',
+            oneLine: true,
         },
         {
             type: 'slider',

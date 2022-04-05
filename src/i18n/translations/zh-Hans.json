@@ -136,7 +136,7 @@
         "loop": {
             "title": "环线",
             "isLoop": "视为环线",
-            "isBank": "Bank the closed rectangular path",
+            "isBank": "以平行四边形显示环线",
             "leftRightFactor": "左右参数",
             "bottomFactor": "底部参数"
         }
@@ -153,7 +153,9 @@
         },
         "action": {
             "title": "操作作",
-            "autoNum": "车站自动编号"
+            "autoNum": "车站自动编号",
+            "reverse": "旋转整条路线",
+            "flip": "翻转整条路线"
         }
     },
 

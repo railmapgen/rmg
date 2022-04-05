@@ -136,7 +136,7 @@
         "loop": {
             "title": "Loop",
             "isLoop": "Treat as loop line",
-            "isBank": "Bank the closed rectangular path",
+            "isBank": "Display loop as a parallelogram",
             "leftRightFactor": "Left and right factor",
             "bottomFactor": "Bottom factor"
         }
@@ -153,7 +153,9 @@
         },
         "action": {
             "title": "Actions",
-            "autoNum": "Auto numbering stations"
+            "autoNum": "Auto numbering stations",
+            "reverse": "Rotate entire line",
+            "flip": "Flip entire line"
         }
     },
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Flex, Heading, IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { Badge, Flex, Heading, HStack, IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { Environments, getEnvironment, getVersion } from '../util/config';
 import { useTranslation } from 'react-i18next';
 import { MdLocationCity, MdTranslate, MdZoomIn, MdZoomOut } from 'react-icons/md';
@@ -32,48 +32,52 @@ export default function WindowHeader() {
     };
 
     return (
-        <Flex pl={2} pr={2} pb={1} pt={1} align="center">
-            <Heading as="h4" size="md" mr="auto">
+        <Flex pl={2} pr={2} align="center">
+            <Heading as="h4" size="md">
                 {t('WindowHeader.heading')}
                 <Badge ml={1} colorScheme={getBadgeColour(environment)}>
                     {environment === Environments.PRD ? getVersion() : environment}
                 </Badge>
             </Heading>
 
-            <IconButton
-                size="xs"
-                variant="ghost"
-                aria-label="Zoom out"
-                icon={<MdZoomOut />}
-                onClick={() => dispatch(zoomOut())}
-            />
-            <IconButton
-                size="xs"
-                variant="ghost"
-                aria-label="Zoom in"
-                icon={<MdZoomIn />}
-                onClick={() => dispatch(zoomIn())}
-            />
+            <HStack ml="auto">
+                <IconButton
+                    size="sm"
+                    variant="ghost"
+                    aria-label="Zoom out"
+                    icon={<MdZoomOut />}
+                    onClick={() => dispatch(zoomOut())}
+                />
+                <IconButton
+                    size="sm"
+                    variant="ghost"
+                    aria-label="Zoom in"
+                    icon={<MdZoomIn />}
+                    onClick={() => dispatch(zoomIn())}
+                />
 
-            <Menu>
-                <MenuButton as={IconButton} icon={<MdLocationCity />} variant="ghost" size="xs" />
-                <MenuList>
-                    {Object.values(RmgStyle).map(style => (
-                        <Link key={style} to={style}>
-                            <MenuItem onClick={() => dispatch(setStyle(style))}>{t('WindowHeader.' + style)}</MenuItem>
-                        </Link>
-                    ))}
-                </MenuList>
-            </Menu>
+                <Menu>
+                    <MenuButton as={IconButton} icon={<MdLocationCity />} variant="ghost" size="sm" />
+                    <MenuList>
+                        {Object.values(RmgStyle).map(style => (
+                            <Link key={style} to={style}>
+                                <MenuItem onClick={() => dispatch(setStyle(style))}>
+                                    {t('WindowHeader.' + style)}
+                                </MenuItem>
+                            </Link>
+                        ))}
+                    </MenuList>
+                </Menu>
 
-            <Menu>
-                <MenuButton as={IconButton} icon={<MdTranslate />} variant="ghost" size="xs" />
-                <MenuList>
-                    <MenuItem onClick={() => handleChangeLanguage(LanguageCode.English)}>English</MenuItem>
-                    <MenuItem onClick={() => handleChangeLanguage(LanguageCode.ChineseSimp)}>简体中文</MenuItem>
-                    <MenuItem onClick={() => handleChangeLanguage(LanguageCode.ChineseTrad)}>繁體中文</MenuItem>
-                </MenuList>
-            </Menu>
+                <Menu>
+                    <MenuButton as={IconButton} icon={<MdTranslate />} variant="ghost" size="sm" />
+                    <MenuList>
+                        <MenuItem onClick={() => handleChangeLanguage(LanguageCode.English)}>English</MenuItem>
+                        <MenuItem onClick={() => handleChangeLanguage(LanguageCode.ChineseSimp)}>简体中文</MenuItem>
+                        <MenuItem onClick={() => handleChangeLanguage(LanguageCode.ChineseTrad)}>繁體中文</MenuItem>
+                    </MenuList>
+                </Menu>
+            </HStack>
         </Flex>
     );
 }
