@@ -28,38 +28,44 @@ describe('AutoNumModal', () => {
 
         fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: '' } });
         await act(async () => {
-            jest.advanceTimersByTime(501);
+            jest.advanceTimersByTime(0);
         });
+        expect(screen.getAllByRole('textbox')[0]).toBeValid();
         expect(screen.getByText('Submit')).toBeDisabled();
 
         fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: 'abc' } });
         await act(async () => {
-            jest.advanceTimersByTime(501);
+            jest.advanceTimersByTime(0);
         });
+        expect(screen.getAllByRole('textbox')[0]).not.toBeValid();
         expect(screen.getByText('Submit')).toBeDisabled();
 
         fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: '10' } });
         await act(async () => {
-            jest.advanceTimersByTime(501);
+            jest.advanceTimersByTime(0);
         });
+        expect(screen.getAllByRole('textbox')[0]).toBeValid();
         expect(screen.getByText('Submit')).not.toBeDisabled();
 
         fireEvent.change(screen.getAllByRole('textbox')[1], { target: { value: '' } });
         await act(async () => {
-            jest.advanceTimersByTime(501);
+            jest.advanceTimersByTime(0);
         });
+        expect(screen.getAllByRole('textbox')[1]).toBeValid();
         expect(screen.getByText('Submit')).toBeDisabled();
 
         fireEvent.change(screen.getAllByRole('textbox')[1], { target: { value: 'abc' } });
         await act(async () => {
-            jest.advanceTimersByTime(501);
+            jest.advanceTimersByTime(0);
         });
+        expect(screen.getAllByRole('textbox')[1]).not.toBeValid();
         expect(screen.getByText('Submit')).toBeDisabled();
 
         fireEvent.change(screen.getAllByRole('textbox')[1], { target: { value: '3' } });
         await act(async () => {
-            jest.advanceTimersByTime(501);
+            jest.advanceTimersByTime(0);
         });
+        expect(screen.getAllByRole('textbox')[1]).toBeValid();
         expect(screen.getByText('Submit')).not.toBeDisabled();
     });
 });

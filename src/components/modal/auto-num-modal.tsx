@@ -64,13 +64,17 @@ export default function AutoNumModal(props: AutoNumModalProps) {
             type: 'input',
             label: t('AutoNumModal.from'),
             value: from,
+            validator: value => !isNaN(Number(value)),
             onChange: setFrom,
+            debouncedDelay: 0,
         },
         {
             type: 'input',
             label: t('AutoNumModal.maxLength'),
+            validator: value => !isNaN(Number(value)),
             value: maxLength,
             onChange: setMaxLength,
+            debouncedDelay: 0,
         },
         {
             type: 'select',
