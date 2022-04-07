@@ -19,10 +19,10 @@ BRANCH=$(git branch | grep \* | cut -d ' ' -f2 | tr '/' '.')
 UAT_REPO_NAME=rmg-repositories
 
 ### BUMP VERSION
-if [ "$BRANCH" = "v5.main" ]
+if [ "$BRANCH" = "main" ]
 then
   # build with a normal version
-  npm version prerelease -m "${APP_NAME}-%s release" --force || { echo "Release Error"; exit 1; }
+  npm version patch -m "${APP_NAME}-%s release" --force || { echo "Release Error"; exit 1; }
   export RMG_VER=$(node -p "require('./package.json').version")
 else
   # build with a hashed version
@@ -43,7 +43,7 @@ cp -r build/ $UAT_REPO_NAME/"$APP_NAME"/"$RMG_VER"/
 
 
 ### PUSH TAG AND COMMIT
-if [ "$BRANCH" = "v5.main" ]
+if [ "$BRANCH" = "main" ]
 then
   git push --atomic origin HEAD "${APP_NAME}-${RMG_VER}"
 fi
