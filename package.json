@@ -1,9 +1,9 @@
 {
-    "homepage": "https://wongchito.github.io/RailMapGenerator",
-    "name": "rail-map-generator",
-    "repository": "github:wongchito/RailMapGenerator",
+    "homepage": "https://railmapgen.github.io/rmg",
+    "name": "rmg",
+    "repository": "github:railmapgen/rmg",
     "bugs": {
-        "url": "https://github.com/wongchito/RailMapGenerator/issues"
+        "url": "https://github.com/railmapgen/rmg/issues"
     },
     "license": "GPL-3.0-only",
     "dependencies": {

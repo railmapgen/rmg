@@ -35,9 +35,6 @@ fi
 
 ### BUILD
 mkdir -p $UAT_REPO_NAME/"$APP_NAME"/
-
-cat package.json | sed '2 s/RailMapGenerator/rmg/' > package-new.json
-cp package-new.json package.json
 CI='' npm run build
 cp -r build/ $UAT_REPO_NAME/"$APP_NAME"/"$RMG_VER"/
 
