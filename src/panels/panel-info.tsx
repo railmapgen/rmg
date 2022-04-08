@@ -95,13 +95,13 @@ export default memo(function PanelInfo() {
                             {t('info.title')} {packageJson.version}
                         </Typography>
                         <CardActions className={classes.action}>
-                            <Button size="small" color="primary" href="https://github.com/wongchito/RailMapGenerator">
+                            <Button size="small" color="primary" href="https://github.com/railmapgen/rmg">
                                 GitHub
                             </Button>
                             <Button
                                 size="small"
                                 color="primary"
-                                href="https://github.com/wongchito/RailMapGenerator/issues"
+                                href="https://github.com/railmapgen/rmg/issues"
                             >
                                 {t('info.feedback')}
                             </Button>
@@ -185,7 +185,7 @@ export default memo(function PanelInfo() {
                             component="a"
                             variant="subtitle2"
                             color="textSecondary"
-                            href="https://github.com/wongchito/RailMapGenerator/wiki/How-to-add-color-palette-and-line-templates"
+                            href="https://github.com/railmapgen/rmg/wiki/How-to-add-color-palette-and-line-templates"
                         >
                             {t('info.colorAndLine.note.second')}
                         </Typography>
