@@ -33,7 +33,7 @@ jobs:
           mkdir GitHub-UAT
           git clone --single-branch --branch master --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/wongchito.github.io.git GitHub-UAT/
           rm -r GitHub-UAT/uat-rail-map-generator/*
-          cp -r ${{ github.event.inputs.version }}/UAT/ GitHub-UAT/uat-rail-map-generator/
+          cp -r ${{ github.event.inputs.version }}/UAT/* GitHub-UAT/uat-rail-map-generator/
           cd GitHub-UAT/
           git add .
           git commit -m "Release RMG version ${{ github.event.inputs.version }} to UAT"
