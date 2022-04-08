@@ -44,9 +44,9 @@ jobs:
         run: |
           cd ${{ env.UAT_REPO_NAME }}/
           mkdir GitHub-PRD
-          git clone --single-branch --branch gh-pages --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.PRD_REPO_NAME }}.git GitHub-PRD/
-          rm -rf GitHub-PRD/*
-          cp -r ${{ github.event.inputs.version }}/PRD/* GitHub-PRD/
+          git clone --single-branch --branch gh-pages --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/wongchito.github.io.git GitHub-PRD/
+          rm -rf GitHub-PRD/RailMapGenerator/*
+          cp -r ${{ github.event.inputs.version }}/PRD/* GitHub-PRD/RailMapGenerator/
           cd GitHub-PRD/
           git add .
           git commit -m "Release RMG version ${{ github.event.inputs.version }} to PRD"
