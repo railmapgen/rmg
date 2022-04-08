@@ -244,7 +244,8 @@
         "after": "后于",
         "pivot": "定位车站",
         "pleaseSelect": "请选择...",
-        "submit": "确定"
+        "submit": "确定",
+        "error": "添加车站失败，请检查您的选项后重试。"
     },
 
     "NewBranchModal": {

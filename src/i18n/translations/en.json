@@ -244,7 +244,8 @@
         "after": "After",
         "pivot": "Pivot station",
         "pleaseSelect": "Please select...",
-        "submit": "Submit"
+        "submit": "Submit",
+        "error": "Failed to add station. Please check your selections and try again."
     },
 
     "NewBranchModal": {

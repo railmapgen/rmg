@@ -25,7 +25,7 @@ export default function AppRoot() {
             <WindowHeader />
             <Flex direction="column" flex={1} overflow="hidden">
                 <PageHeader />
-                <Flex flex={1} overflow="hidden">
+                <Flex flex={1} overflow="hidden" position="relative">
                     <Flex as="section" direction="column" flex={1} ml={1} mr={1} overflow="hidden">
                         {globalAlert && (
                             <Alert status={globalAlert.status} variant="solid" size="xs" pl={3} pr={1} pb={0} pt={0}>

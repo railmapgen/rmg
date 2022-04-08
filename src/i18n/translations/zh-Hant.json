@@ -244,7 +244,8 @@
         "after": "後於",
         "pivot": "定位車站",
         "pleaseSelect": "請選擇...",
-        "submit": "確定"
+        "submit": "確定",
+        "error": "新增車站失敗，請檢查你的選擇後重試。"
     },
 
     "NewBranchModal": {

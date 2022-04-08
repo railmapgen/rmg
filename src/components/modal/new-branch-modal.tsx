@@ -128,7 +128,7 @@ export default function NewBranchModal(props: NewBranchModalProps) {
     };
 
     const handleSubmit = () => {
-        let result: boolean;
+        let result: false | string;
         if (where === 'ext') {
             // SHMetro specific - treat lower branch as external line
             result = dispatch(addStation('new', from, to, 'lower'));

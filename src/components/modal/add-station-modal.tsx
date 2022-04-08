@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
+    Alert,
+    AlertIcon,
+    Box,
     Button,
     Modal,
     ModalBody,
@@ -11,10 +14,11 @@ import {
 } from '@chakra-ui/react';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useAppDispatch, useAppSelector } from '../../redux';
-import { RmgStyle } from '../../constants/constants';
+import { RmgStyle, SidePanelMode } from '../../constants/constants';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { useTranslation } from 'react-i18next';
 import { addStationToExistingBranch } from '../../redux/param/add-station-action';
+import { setSelectedStation, setSidePanelMode } from '../../redux/app/action';
 
 interface AddStationModalProps {
     isOpen: boolean;
@@ -33,10 +37,17 @@ export default function AddStationModal(props: AddStationModalProps) {
     const [where, setWhere] = useState(selectedBranch);
     const [preposition, setPreposition] = useState<'before' | 'after'>('before');
     const [pivot, setPivot] = useState('');
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         setWhere(selectedBranch);
     }, [selectedBranch]);
+
+    useEffect(() => {
+        if (!isOpen) {
+            setError(false);
+        }
+    }, [isOpen]);
 
     const selectableStations = branches[Number(where)]?.slice(1, -1) ?? [];
 
@@ -101,6 +112,12 @@ export default function AddStationModal(props: AddStationModalProps) {
         const result = dispatch(addStationToExistingBranch(where, preposition, pivot));
         if (result) {
             onClose();
+
+            dispatch(setSelectedStation(result));
+            dispatch(setSidePanelMode(SidePanelMode.STATION));
+        } else {
+            console.log('false here');
+            setError(true);
         }
     };
 
@@ -108,8 +125,16 @@ export default function AddStationModal(props: AddStationModalProps) {
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>{t('AddStationModal.title')}</ModalHeader>
-                <ModalCloseButton />
+                {error && (
+                    <Alert status="error" variant="solid" size="xs">
+                        <AlertIcon />
+                        {t('AddStationModal.error')}
+                    </Alert>
+                )}
+                <Box position="relative">
+                    <ModalHeader>{t('AddStationModal.title')}</ModalHeader>
+                    <ModalCloseButton />
+                </Box>
 
                 <ModalBody>
                     <RmgFields fields={fields} />

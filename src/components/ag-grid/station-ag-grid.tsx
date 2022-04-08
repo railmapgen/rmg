@@ -126,11 +126,6 @@ export default function StationAgGrid(props: StationAgGridProps) {
             dispatch(setSidePanelMode(SidePanelMode.STATION));
             dispatch(setSelectedStation(selectedRowIds[0]));
             dispatch(setIsShareTrackEnabled(undefined));
-        } else {
-            // unselect
-            dispatch(setSidePanelMode(SidePanelMode.CLOSE));
-            dispatch(setSelectedStation('linestart'));
-            dispatch(setIsShareTrackEnabled(undefined));
         }
     };
 

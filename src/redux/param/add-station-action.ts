@@ -267,7 +267,7 @@ export const addStationLegacy = (
 };
 
 export const addStation = (where: `${number}` | 'new', from: string, to: string, position?: 'upper' | 'lower') => {
-    return (dispatch: AppDispatch, getState: () => RootState): boolean => {
+    return (dispatch: AppDispatch, getState: () => RootState): string | false => {
         const stationList = getState().param.stn_list;
 
         // get new id
@@ -306,7 +306,7 @@ export const addStation = (where: `${number}` | 'new', from: string, to: string,
                 },
             };
             dispatch(setStationsBulk(nextStationList));
-            return true;
+            return newId;
         } else {
             if (!position) {
                 return false;
@@ -343,13 +343,13 @@ export const addStation = (where: `${number}` | 'new', from: string, to: string,
                 },
             };
             dispatch(setStationsBulk(nextStationList));
-            return true;
+            return newId;
         }
     };
 };
 
 export const addStationToExistingBranch = (where: number, preposition: 'before' | 'after', pivot: string) => {
-    return (dispatch: AppDispatch, getState: () => RootState): boolean => {
+    return (dispatch: AppDispatch, getState: () => RootState): false | string => {
         const branches = getState().helper.branches;
         const branch = branches[where];
 

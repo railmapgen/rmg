@@ -1,5 +1,5 @@
 import React from 'react';
-import { BranchStyle, RmgStyle, StationDict } from '../../constants/constants';
+import { BranchStyle, RmgStyle, SidePanelMode, StationDict } from '../../constants/constants';
 import { getBranches } from '../../redux/helper/graph-theory-util';
 import rootReducer from '../../redux';
 import { createMockAppStore } from '../../setupTests';
@@ -7,6 +7,8 @@ import AddStationModal from './add-station-modal';
 import { SET_STATIONS_BULK } from '../../redux/param/action';
 import { render } from '../../test-utils';
 import { fireEvent, screen, within } from '@testing-library/react';
+import { SET_SELECTED_STATION, SET_SIDE_PANEL_MODE } from '../../redux/app/action';
+import * as addStationActions from '../../redux/param/add-station-action';
 
 const mockStationList = {
     linestart: {
@@ -120,7 +122,7 @@ describe('AddStationModal', () => {
             expect(screen.getByDisplayValue(/Please select/)).not.toBeNull();
         });
 
-        it('Can add station in new branch as expected', () => {
+        it('Can add station in existing branch as expected', () => {
             setup();
 
             fireEvent.change(screen.getAllByRole('combobox')[2], { target: { value: 'stn3' } });
@@ -128,6 +130,10 @@ describe('AddStationModal', () => {
 
             const actions = mockStore.getActions();
             expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
+
+            // open side panel
+            expect(actions).toContainEqual({ type: SET_SELECTED_STATION, selectedStation: expect.any(String) });
+            expect(actions).toContainEqual({ type: SET_SIDE_PANEL_MODE, sidePanelMode: SidePanelMode.STATION });
         });
     });
 
