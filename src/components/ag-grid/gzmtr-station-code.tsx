@@ -13,8 +13,12 @@ export default function GzmtrStationCode(props: GzmtrStationCodeProps) {
 
     const styles = {
         h: '24px',
+        bg: 'white',
+        color: 'black',
+        borderRadius: '12px',
+        outline: '1px solid white',
 
-        div: {
+        span: {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -36,8 +40,8 @@ export default function GzmtrStationCode(props: GzmtrStationCodeProps) {
 
     return (
         <Flex sx={styles}>
-            <div>{lineNumber}</div>
-            <div>{stationNumber}</div>
+            <span>{lineNumber}</span>
+            <span>{stationNumber}</span>
         </Flex>
     );
 }

@@ -8,6 +8,7 @@ import SvgRouter from './svgs/svg-router';
 import { ChakraProvider, CircularProgress } from '@chakra-ui/react';
 import { rmgChakraTheme } from '@railmapgen/rmg-components';
 import ErrorBoundary from './error-boundary';
+import FallbackLoader from './components/fallback-loader';
 
 const AppRoot = lazy(() => import(/* webpackChunkName: "AppRoot" */ './components/app-root'));
 
@@ -97,7 +98,7 @@ export default function App() {
                     element={
                         <ChakraProvider theme={rmgChakraTheme}>
                             <StrictMode>
-                                <Suspense fallback={<CircularProgress isIndeterminate />}>
+                                <Suspense fallback={<FallbackLoader />}>
                                     <ErrorBoundary>
                                         <AppRoot />
                                     </ErrorBoundary>

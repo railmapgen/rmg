@@ -2,7 +2,7 @@ import React from 'react';
 import { Badge, Flex, Heading, HStack, IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { Environments, getEnvironment, getVersion } from '../util/config';
 import { useTranslation } from 'react-i18next';
-import { MdLocationCity, MdTranslate, MdZoomIn, MdZoomOut } from 'react-icons/md';
+import { MdHelp, MdLocationCity, MdTranslate, MdZoomIn, MdZoomOut } from 'react-icons/md';
 import { LanguageCode, RmgStyle } from '../constants/constants';
 import { useDispatch } from 'react-redux';
 import { setStyle } from '../redux/param/action';
@@ -77,6 +77,14 @@ export default function WindowHeader() {
                         <MenuItem onClick={() => handleChangeLanguage(LanguageCode.ChineseTrad)}>繁體中文</MenuItem>
                     </MenuList>
                 </Menu>
+
+                <IconButton
+                    size="sm"
+                    variant="ghost"
+                    aria-label="Help"
+                    icon={<MdHelp />}
+                    onClick={() => window.open('https://github.com/railmapgen/rmg', '_blank')}
+                />
             </HStack>
         </Flex>
     );

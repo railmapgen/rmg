@@ -155,7 +155,7 @@ export default function ColourModal(props: ColourModalProps) {
                 <ModalFooter>
                     <Text fontSize="sm" marginRight={2}>
                         {t('ColourModal.seeAll')}
-                        <Link color="teal.500" href="https://railmapgen.github.io/rmg-palette" isExternal={true}>
+                        <Link color="teal.500" href="/rmg-palette" isExternal={true}>
                             RMG Palette <Icon as={MdOpenInNew} />
                         </Link>
                     </Text>
