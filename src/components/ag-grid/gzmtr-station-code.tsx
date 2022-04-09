@@ -13,10 +13,19 @@ export default function GzmtrStationCode(props: GzmtrStationCodeProps) {
 
     const styles = {
         h: '24px',
-        bg: 'white',
+        position: 'relative',
         color: 'black',
-        borderRadius: '12px',
-        outline: '1px solid white',
+
+        '&::before': {
+            content: "''",
+            w: 'calc(100% + 2px)',
+            h: '26px',
+            position: 'absolute',
+            top: '-1px',
+            left: '-1px',
+            bg: 'white',
+            borderRadius: '13px',
+        },
 
         span: {
             display: 'flex',
@@ -26,6 +35,7 @@ export default function GzmtrStationCode(props: GzmtrStationCodeProps) {
             minWidth: '24px',
             border: '2px solid',
             borderColor: lineColour,
+            zIndex: 1,
 
             '&:first-of-type': {
                 borderRadius: '12px 0 0 12px',
