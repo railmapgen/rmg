@@ -63,6 +63,11 @@ const AppAppBar = () => {
                     </Link>
                     {' - 24/03/2022'}
                 </Typography>
+                <Typography variant="body2" className={prefersDarkMode ? classes.bannerDark : classes.bannerLight}>
+                    <Link color="inherit" href="https://zhuanlan.zhihu.com/p/495171971" target="_blank">
+                        Stand with Shanghainese who are starving! - 09/04/2022
+                    </Link>
+                </Typography>
 
                 <Toolbar variant="dense">
                     <Typography variant="h6" className={classes.title} color="textPrimary">
