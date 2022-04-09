@@ -70,8 +70,6 @@
 
     "StationAgGrid": {
         "num": "车站编号",
-        "zhName": "中文名称",
-        "enName": "英文名称",
         "interchange": "换乘",
         "coline": "共线"
     },
@@ -163,8 +161,6 @@
         "info": {
             "title": "车站资讯",
             "num": "车站编号",
-            "zhName": "中文名称",
-            "enName": "英文名称",
             "zhSecondary": "中文第二名称",
             "enSecondary": "英文第二名称"
         },
@@ -177,9 +173,6 @@
             "stationZhName": "车站中文名称",
             "stationEnName": "车站英文名称",
             "noInterchanges": "非换乘站",
-            "colour": "颜色",
-            "zhName": "中文名称",
-            "enName": "英文名称",
             "add": "添加换乘",
             "copy": "复制换乘",
             "remove": "删除换乘"
@@ -281,5 +274,9 @@
         "asc": "升序",
         "desc": "降序",
         "submit": "确定"
-    }
+    },
+
+    "Chinese name": "中文名称",
+    "Colour": "颜色",
+    "English name": "英文名称"
 }

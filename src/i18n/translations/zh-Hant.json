@@ -70,8 +70,6 @@
 
     "StationAgGrid": {
         "num": "車站編碼",
-        "zhName": "中文名稱",
-        "enName": "英文名稱",
         "interchange": "轉車",
         "coline": "共綫"
     },
@@ -163,8 +161,6 @@
         "info": {
             "title": "車站資訊",
             "num": "車站編碼",
-            "zhName": "中文名稱",
-            "enName": "英文名稱",
             "zhSecondary": "中文第二名稱",
             "enSecondary": "英文第二名稱"
         },
@@ -177,9 +173,6 @@
             "stationZhName": "車站中文名稱",
             "stationEnName": "車站英文名稱",
             "noInterchanges": "非轉車站",
-            "colour": "顏色",
-            "zhName": "中文名稱",
-            "enName": "英文名稱",
             "add": "新增轉綫",
             "copy": "製作轉綫副本",
             "remove": "移除轉綫"
@@ -280,5 +273,9 @@
         "asc": "升序",
         "desc": "降序",
         "submit": "確定"
-    }
+    },
+
+    "Chinese name": "中文名稱",
+    "Colour": "顏色",
+    "English name": "英文名稱"
 }

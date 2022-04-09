@@ -5,6 +5,7 @@ import ThemeButton from '../theme-button';
 import ColourModal from '../../modal/colour-modal/colour-modal';
 import { HStack, IconButton } from '@chakra-ui/react';
 import { MdDelete } from 'react-icons/md';
+import { useTranslation } from 'react-i18next';
 
 interface ColineCardProps {
     colineInfo: ColineInfo;
@@ -16,6 +17,7 @@ interface ColineCardProps {
 
 export default function ColineCard(props: ColineCardProps) {
     const { colineInfo, routeOptions, onUpdateRoute, onUpdateColourInfo, onDelete } = props;
+    const { t } = useTranslation();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -32,7 +34,7 @@ export default function ColineCard(props: ColineCardProps) {
     const fields2: RmgFieldsField[] = [
         {
             type: 'custom',
-            label: 'Colour',
+            label: t('Colour'),
             component: (
                 <ThemeButton
                     theme={[
@@ -47,9 +49,9 @@ export default function ColineCard(props: ColineCardProps) {
         },
         {
             type: 'input',
-            label: 'Chinese name',
+            label: t('Chinese name'),
             value: colineInfo.colors[0][4],
-            minW: '95px',
+            minW: 120,
             onChange: value =>
                 onUpdateColourInfo?.([
                     colineInfo.colors[0][0],
@@ -62,9 +64,9 @@ export default function ColineCard(props: ColineCardProps) {
         },
         {
             type: 'input',
-            label: 'English name',
+            label: t('English name'),
             value: colineInfo.colors[0][5],
-            minW: '95px',
+            minW: 120,
             onChange: value =>
                 onUpdateColourInfo?.([
                     colineInfo.colors[0][0],

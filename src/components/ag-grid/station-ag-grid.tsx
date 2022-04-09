@@ -66,7 +66,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
             hide: ![RmgStyle.GZMTR].includes(style),
         },
         {
-            headerName: t('StationAgGrid.zhName'),
+            headerName: t('Chinese name'),
             field: 'name',
             valueFormatter: ({ value, data }: { value: Name; data: RowDataType }) =>
                 value[0] +
@@ -75,7 +75,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
                     : ''),
         },
         {
-            headerName: t('StationAgGrid.enName'),
+            headerName: t('English name'),
             field: 'name',
             cellRenderer: ({ value, data }: { value: Name; data: RowDataType }) => (
                 <RmgMultiLineString

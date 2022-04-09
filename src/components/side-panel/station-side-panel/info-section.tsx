@@ -27,13 +27,13 @@ export default function InfoSection() {
         },
         {
             type: 'input',
-            label: t('StationSidePanel.info.zhName'),
+            label: t('Chinese name'),
             value: name[0],
             onChange: (value: string) => dispatch(updateStationName(selectedStation, [value, name[1]])),
         },
         {
             type: 'input',
-            label: t('StationSidePanel.info.enName'),
+            label: t('English name'),
             value: name[1],
             onChange: (value: string) => dispatch(updateStationName(selectedStation, [name[0], value])),
         },
@@ -63,7 +63,7 @@ export default function InfoSection() {
                 {t('StationSidePanel.info.title')}
             </Heading>
 
-            <RmgFields fields={fields} minW={100} />
+            <RmgFields fields={fields} minW={130} />
         </Box>
     );
 }

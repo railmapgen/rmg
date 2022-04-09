@@ -81,14 +81,14 @@ export default function DesignSection() {
             label: t('StyleSidePanel.design.zhLineName'),
             value: lineName[0],
             onChange: value => dispatch(setLineName([value, lineName[1]])),
-            minW: '115px',
+            minW: 130,
         },
         {
             type: 'input',
             label: t('StyleSidePanel.design.enLineName'),
             value: lineName[1],
             onChange: value => dispatch(setLineName([lineName[0], value])),
-            minW: '115px',
+            minW: 130,
         },
         {
             type: 'input',
@@ -217,7 +217,7 @@ export default function DesignSection() {
                 {t('StyleSidePanel.design.title')}
             </Heading>
 
-            <RmgFields fields={[...fields, ...mtrSpecifiedFields]} minW="110px" />
+            <RmgFields fields={[...fields, ...mtrSpecifiedFields]} minW={130} />
 
             <ColourModal
                 isOpen={isModalOpen}

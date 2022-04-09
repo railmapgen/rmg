@@ -94,7 +94,7 @@ export default function LayoutSection() {
                 {t('StyleSidePanel.layout.title')}
             </Heading>
 
-            <RmgFields fields={fields} minW={100} />
+            <RmgFields fields={fields} minW={130} />
         </Box>
     );
 }
