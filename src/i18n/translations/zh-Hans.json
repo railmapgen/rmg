@@ -152,7 +152,7 @@
             "add": "添加共线"
         },
         "action": {
-            "title": "操作作",
+            "title": "操作",
             "autoNum": "车站自动编号",
             "reverse": "旋转整条路线",
             "flip": "翻转整条路线"
@@ -179,7 +179,7 @@
             "noInterchanges": "非换乘站",
             "colour": "颜色",
             "zhName": "中文名称",
-            "enName": "中文名称",
+            "enName": "英文名称",
             "add": "添加换乘",
             "copy": "复制换乘",
             "remove": "删除换乘"

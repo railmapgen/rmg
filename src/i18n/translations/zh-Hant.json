@@ -179,7 +179,7 @@
             "noInterchanges": "非轉車站",
             "colour": "顏色",
             "zhName": "中文名稱",
-            "enName": "中文名稱",
+            "enName": "英文名稱",
             "add": "新增轉綫",
             "copy": "製作轉綫副本",
             "remove": "移除轉綫"
