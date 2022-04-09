@@ -5,8 +5,8 @@ set -eux
 npm run test:no-watch
 
 # git config
-git config --global user.name "Build Agent"
-git config --global user.email rmg.build.agent@users.noreply.github.com
+git config user.name 'github-actions[bot]'
+git config user.email 'github-actions[bot]@users.noreply.github.com'
 
 # variables
 export APP_NAME=rmg
