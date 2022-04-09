@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       auto_deploy:
-        description: Auto deploy to (NONE/UAT)
+        description: Auto deploy to (NONE/UAT/PRD)
         default: NONE
         required: true
 
@@ -31,7 +31,7 @@ jobs:
         id: build
 
       - name: Auto deploy
-        if: ${{ github.event.inputs.auto_deploy == 'UAT' }}
+        if: ${{ github.event.inputs.auto_deploy == 'UAT' || github.event.inputs.auto_deploy == 'PRD' }}
         run: |
           curl -XPOST -u "wongchito:${{ secrets.ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github.everest-preview+json" \
