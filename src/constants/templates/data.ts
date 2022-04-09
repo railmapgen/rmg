@@ -522,6 +522,49 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
         },
     ],
 
+    qdmetro: [
+        {
+            filename: 'qd2',
+            name: {
+                en: 'Line 2',
+                'zh-Hans': '2号线',
+                'zh-Hant': '2號線',
+            },
+        },
+        {
+            filename: 'qd3',
+            name: {
+                en: 'Line 3',
+                'zh-Hans': '3号线',
+                'zh-Hant': '3號線',
+            },
+        },
+        {
+            filename: 'qd8',
+            name: {
+                en: 'Line 8',
+                'zh-Hans': '8号线',
+                'zh-Hant': '8號線',
+            },
+        },
+        {
+            filename: 'qd11',
+            name: {
+                en: 'Line 11',
+                'zh-Hans': '11号线',
+                'zh-Hant': '11號線',
+            },
+        },
+        {
+            filename: 'qd13',
+            name: {
+                en: 'Line 13',
+                'zh-Hans': '13号线',
+                'zh-Hant': '13號線',
+            },
+        },
+    ],
+
     shmetro: [
         {
             filename: 'sh1',
