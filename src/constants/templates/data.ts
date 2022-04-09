@@ -134,6 +134,22 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
+            filename: 'bj16',
+            name: {
+                en: 'Line 16 by Jay20081229',
+                'zh-Hans': '16号线 来自 Jay20081229',
+                'zh-Hant': '16號線 來自 Jay20081229',
+            },
+        },
+        {
+            filename: 'bj17',
+            name: {
+                en: 'Line 17 by Jay20081229',
+                'zh-Hans': '17号线 来自 Jay20081229',
+                'zh-Hant': '17號線 來自 Jay20081229',
+            },
+        },
+        {
             filename: 'yzl',
             name: {
                 en: 'Yizhuang Line by AnDanJuneUnderline',
