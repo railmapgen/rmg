@@ -8,45 +8,45 @@ const LINE_WIDTH = 12;
 
 const RunInSHMetro = () => {
     const { branches, routes, depsStr: deps } = useAppSelector(store => store.helper);
-    const param = useAppSelector(store => store.param);
+    const { svg_height, current_stn_idx, direction, loop } = useAppSelector(store => store.param);
 
     // get the height
-    const dh = param.svg_height - 300;
+    const dh = svg_height - 300;
 
     const prevStnIds = useMemo(
         () => {
             let prevStnIds = routes
-                .filter(route => route.includes(param.current_stn_idx))
-                .map(route => route[route.indexOf(param.current_stn_idx) + (param.direction === 'l' ? 1 : -1)])
+                .filter(route => route.includes(current_stn_idx))
+                .map(route => route[route.indexOf(current_stn_idx) + (direction === 'l' ? 1 : -1)])
                 // .flat()
                 // remove duplicate
                 .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]);
-            if (param.loop && prevStnIds.length === 1 && ['linestart', 'lineend'].includes(prevStnIds[0])) {
+            if (loop && prevStnIds.length === 1 && ['linestart', 'lineend'].includes(prevStnIds[0])) {
                 // if it is a loop and it is the first station of that direction, get the station from the other end
-                prevStnIds = [branches[0][branches[0].length - 2]];
+                prevStnIds = direction === 'l' ? [branches[0][1]] : [branches[0][branches[0].length - 2]];
             }
             return prevStnIds;
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [deps, param.current_stn_idx, param.direction, param.loop]
+        [deps, current_stn_idx, direction, loop]
     );
 
     const nextStnIds = useMemo(
         () => {
             let nextStnIds = routes
-                .filter(route => route.includes(param.current_stn_idx))
-                .map(route => route[route.indexOf(param.current_stn_idx) + (param.direction === 'l' ? -1 : 1)])
+                .filter(route => route.includes(current_stn_idx))
+                .map(route => route[route.indexOf(current_stn_idx) + (direction === 'l' ? -1 : 1)])
                 // .flat()
                 // remove duplicate
                 .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]);
-            if (param.loop && nextStnIds.length === 1 && ['linestart', 'lineend'].includes(nextStnIds[0])) {
+            if (loop && nextStnIds.length === 1 && ['linestart', 'lineend'].includes(nextStnIds[0])) {
                 // if it is a loop and it is the last station of that direction, get the station from the other end
-                nextStnIds = [branches[0][1]];
+                nextStnIds = direction === 'l' ? [branches[0][branches[0].length - 2]] : [branches[0][1]];
             }
             return nextStnIds;
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [deps, param.current_stn_idx, param.direction, param.loop]
+        [deps, current_stn_idx, direction, loop]
     );
 
     return (
