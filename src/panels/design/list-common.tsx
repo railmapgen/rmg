@@ -148,11 +148,7 @@ const PlatformNumSHMetroLi = () => {
 
     return useMemo(() => {
         const handleSwitch = (_: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-            if (checked) {
-                dispatch(setPlatform(''));
-            } else {
-                dispatch(setPlatform(false));
-            }
+            dispatch(setPlatform(''));
         };
 
         const handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
@@ -167,10 +163,10 @@ const PlatformNumSHMetroLi = () => {
                     </ListItemIcon>
                     <ListItemText primary={t('design.platform')} />
                     <ListItemSecondaryAction>
-                        <Switch color="primary" checked={platform !== false} onChange={handleSwitch} />
+                        <Switch color="primary" checked={platform !== ''} onChange={handleSwitch} />
                     </ListItemSecondaryAction>
                 </ListItem>
-                <Collapse in={platform !== false} unmountOnExit>
+                <Collapse in={platform !== ''} unmountOnExit>
                     <List component="div" disablePadding className={classes.nestedList}>
                         <ListItem>
                             <TextField placeholder={t('design.platform')} value={platform} onChange={handleChange} />

@@ -119,7 +119,7 @@ export interface setDirectionAction {
 
 export interface setPlatformAction {
     type: typeof SET_PLATFORM;
-    platform: string | false;
+    platform: string;
 }
 
 export interface setLineNumAction {
@@ -239,7 +239,7 @@ export const setDirection = (direction: ShortDirection): setDirectionAction => {
     return { type: SET_DIRECTION, direction };
 };
 
-export const setPlatform = (platform: string | false): setPlatformAction => {
+export const setPlatform = (platform: string): setPlatformAction => {
     return { type: SET_PLATFORM, platform };
 };
 

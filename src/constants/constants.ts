@@ -208,7 +208,10 @@ export interface RMGParam {
      */
     branch_spacing: number;
     direction: ShortDirection;
-    platform_num: string | false;
+    /**
+     * Platform number of the destination canvas. Set to '' will hide the element.
+     */
+    platform_num: string;
     theme: Theme;
     line_name: Name;
     current_stn_idx: keyof StationDict;
@@ -250,17 +253,17 @@ export interface RMGParam {
     loop: boolean;
     loop_info: {
         /**
-         * Bank the close rectangular path or not.
+         * Bank the closed rectangular path or not.
          */
         bank: boolean;
         /**
          * Station size on the left and right side. Integer only, will be `Math.floor`ed.
-         * Also, these factors are subject to several rules, see loop-shmetro for more info.
+         * Also, this factor is subject to several rules, see loop-shmetro for more info.
          */
         left_and_right_factor: number;
         /**
          * Station size on the bottom side. Integer only, will be `Math.floor`ed.
-         * Also, these factors are subject to several rules, see loop-shmetro for more info.
+         * Also, this factor is subject to several rules, see loop-shmetro for more info.
          */
         bottom_factor: number;
     };

@@ -7,7 +7,7 @@ const params = {
     theme: ['shanghai', 'sh9', '#71C5E8', '#000'],
     direction: 'r',
     current_stn_idx: 'wq23',
-    platform_num: false,
+    platform_num: '',
     stn_list: {
         3571: {
             name: ['佘山', 'Sheshan'],

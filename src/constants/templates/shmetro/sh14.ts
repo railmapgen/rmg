@@ -7,7 +7,7 @@ const param = {
     theme: ['shanghai', 'sh14', '#827A04', '#fff'],
     direction: 'l',
     current_stn_idx: 'qnbj',
-    platform_num: false,
+    platform_num: '',
     stn_list: {
         linestart: {
             parents: [],

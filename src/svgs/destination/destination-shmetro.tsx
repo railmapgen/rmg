@@ -53,10 +53,10 @@ const InfoSHMetro = () => {
         : get_pivot_stations(branches, direction, stn_list, current_stn_id);
     // get the name from the destination id(s)
     const destNames: Name[] = loop
-        ? // loop line will always be two lines
+        ? // destination names of loop line will always be two lines
           validDests.map(id => stn_list[id].name.map(s => s.replace('\\', ' ')) as Name)
         : info_panel_type === 'sh2020'
-        ? // `sh2020` type will always be two lines
+        ? // destination names of `sh2020` type will always be two lines
           validDests.map(id => stn_list[id].name.map(s => s.replace('\\', ' ')) as Name)
         : [
               // only one line in `sh` type
@@ -108,13 +108,11 @@ const InfoSHMetro = () => {
             />
 
             <Terminal ref={terminalEl} destNames={destNames} />
-            {platform_num !== false && (
+            {platform_num !== '' && (
                 <g transform={`translate(${platformX},0)`}>
                     <PlatformNum />
                 </g>
             )}
-            {/* <!-- Todo: fix this absolute position --> */}
-            {/* Todo: fix svgWidth.destination*0.8, this has only been tested on 1000 width */}
 
             {line_name[0].match(/^[\w\d]+/) ? <LineNameBoxNumber /> : <LineNameBoxText />}
         </g>
@@ -155,7 +153,7 @@ const Terminal = forwardRef((props: { destNames: Name[] }, ref: React.Ref<SVGGEl
 });
 
 const PlatformNum = () => {
-    const param = useAppSelector(store => store.param);
+    const { platform_num } = useAppSelector(store => store.param);
 
     // Total width: 325
     return useMemo(
@@ -163,7 +161,7 @@ const PlatformNum = () => {
             <g transform={`translate(${-325 / 2 + 60},150)`}>
                 <circle r={60} fill="none" stroke="black" strokeWidth={2} />
                 <text className="rmg-name__en" dominantBaseline="central" fontSize={120} textAnchor="middle">
-                    {param.platform_num}
+                    {platform_num}
                 </text>
                 <text className="rmg-name__zh" fontSize={100} dominantBaseline="central" x={65}>
                     站台
@@ -171,7 +169,7 @@ const PlatformNum = () => {
             </g>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [param.platform_num]
+        [platform_num]
     );
 };
 
@@ -220,16 +218,16 @@ const LineNameBoxText = () => {
 };
 
 const LineNameBoxNumber = () => {
-    const param = useAppSelector(store => store.param);
+    const { line_name, direction, svgWidth } = useAppSelector(store => store.param);
 
-    const [lineNumber, lineNameRes] = param.line_name[0].match(/^[\w\d]+|.+/g) as string[];
+    const [lineNumber, lineNameRes] = line_name[0].match(/^[\w\d]+|.+/g) as string[];
 
     // Number width: 108
     // Text width: 136
     // Gap: 20
     // Left: 108/2 + 20 + 136 = 210
     // Right: 108/2 = 54
-    const boxX = param.direction === 'l' ? param.svgWidth.destination - 36 - 210 : 36 + 54;
+    const boxX = direction === 'l' ? svgWidth.destination - 36 - 210 : 36 + 54;
 
     // Total width: 264
     return useMemo(
@@ -252,12 +250,12 @@ const LineNameBoxNumber = () => {
                         {lineNameRes}
                     </text>
                     <text className="rmg-name__en" fontSize={30} dy={42}>
-                        {param.line_name[1]}
+                        {line_name[1]}
                     </text>
                 </g>
             </g>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [boxX, ...param.line_name]
+        [boxX, ...line_name, direction, svgWidth.destination]
     );
 };

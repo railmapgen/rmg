@@ -213,6 +213,7 @@ export const updateParam = (param: { [x: string]: any }) => {
         param.style === undefined || !Object.values(RmgStyle).includes(param.style) ? RmgStyle.MTR : param.style;
 
     // Version 5.0
+    // Add coline and loop default value
     param.coline = param.coline ?? [];
     param.loop = param.loop ?? false;
     param.loop_info =
@@ -237,6 +238,12 @@ export const updateParam = (param: { [x: string]: any }) => {
     // convert list of coline to key-value pairs
     if (Array.isArray(param.coline)) {
         param.coline = param.coline.reduce((acc, cur) => ({ ...acc, [nanoid(4)]: cur }), {});
+    }
+
+    // Version 5.0.4
+    // Convert platform_num from `string | false` to `''`
+    if (param.platform_num === false) {
+        param.platform_num = '';
     }
 
     return param;
