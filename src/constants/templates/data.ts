@@ -917,6 +917,14 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
+            filename: 'zz2',
+            name: {
+                en: 'Line 2',
+                'zh-Hans': '2号线',
+                'zh-Hant': '2號線',
+            },
+        },
+        {
             filename: 'zz3',
             name: {
                 en: 'Line 3',
@@ -933,11 +941,27 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
+            filename: 'zz5',
+            name: {
+                en: 'Line 5',
+                'zh-Hans': '5号线',
+                'zh-Hant': '5號線',
+            },
+        },
+        {
             filename: 'zz6',
             name: {
                 en: 'Line 6',
                 'zh-Hans': '6号线',
                 'zh-Hant': '6號線',
+            },
+        },
+        {
+            filename: 'zz9',
+            name: {
+                en: 'Line 9',
+                'zh-Hans': '9号线',
+                'zh-Hant': '9號線',
             },
         },
         {
