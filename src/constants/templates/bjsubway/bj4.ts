@@ -1,5 +1,5 @@
 const params = {
-    style: 'gzmtr',
+    style: 'shmetro',
     svg_height: 450,
     padding: 8.750201061605276,
     y_pc: 40,
@@ -34,7 +34,7 @@ const params = {
         l1mz: {
             parents: ['iwf6'],
             children: ['lineend'],
-            name: ['安河桥北', 'Anheqiao Bei(N)'],
+            name: ['安河桥北', 'Anheqiɑobei'],
             branch: { left: [], right: [] },
             num: '35',
             transfer: { tick_direc: 'r', paid_area: true, osi_names: [], info: [[]] },
@@ -54,7 +54,7 @@ const params = {
             secondaryName: false,
         },
         '3uhl': {
-            name: ['西苑', 'Xi Yuan'],
+            name: ['西苑', 'Xiyuɑn'],
             secondaryName: false,
             num: '33',
             services: ['local'],
@@ -70,7 +70,7 @@ const params = {
             facility: '',
         },
         w5cl: {
-            name: ['圆明园', 'Yuanmingyuan Park'],
+            name: ['圆明园', 'Yuɑnmingyuɑn\\(Yuanmingyuan Park)'],
             secondaryName: false,
             num: '32',
             services: ['local'],
@@ -81,7 +81,7 @@ const params = {
             facility: '',
         },
         gzcj: {
-            name: ['北京大学东门', 'Peking University East Gate'],
+            name: ['北京大学东门', 'Beijing Dɑxue Dongmen\\(Peking University East Gate)'],
             secondaryName: false,
             num: '31',
             services: ['local'],
@@ -92,7 +92,7 @@ const params = {
             facility: '',
         },
         xqeo: {
-            name: ['中关村', 'Zhongguancun'],
+            name: ['中关村', 'Zhongguɑnchun'],
             secondaryName: false,
             num: '30',
             services: ['local'],
@@ -103,7 +103,7 @@ const params = {
             facility: '',
         },
         '2dys': {
-            name: ['海淀黄庄', 'Haidian Huangzhuang'],
+            name: ['海淀黄庄', 'Hɑidiɑn Huɑngzhuɑng'],
             secondaryName: false,
             num: '29',
             services: ['local'],
@@ -119,7 +119,7 @@ const params = {
             facility: '',
         },
         i2dc: {
-            name: ['人民大学', 'Renmin University'],
+            name: ['人民大学', 'Renmin Dɑxue\\(Renmin Univ.)'],
             secondaryName: false,
             num: '28',
             services: ['local'],
@@ -141,7 +141,7 @@ const params = {
             facility: '',
         },
         y7zy: {
-            name: ['国家图书馆', 'National Library'],
+            name: ['国家图书馆', 'Guojiɑ Tushuguɑn\\(National Library)'],
             secondaryName: false,
             num: '26',
             services: ['local'],
@@ -162,7 +162,7 @@ const params = {
             facility: '',
         },
         svr4: {
-            name: ['动物园', 'Beijing Zoo'],
+            name: ['动物园', 'Dongwuyuɑn\\(Beijing Zoo)'],
             secondaryName: false,
             num: '25',
             services: ['local'],
@@ -173,7 +173,7 @@ const params = {
             facility: '',
         },
         '1zgd': {
-            name: ['西直门', 'Xizhi Men'],
+            name: ['西直门', 'Xizhimen'],
             secondaryName: false,
             num: '24',
             services: ['local'],
@@ -205,7 +205,7 @@ const params = {
             facility: '',
         },
         s3bu: {
-            name: ['平安里', "Ping'an Li"],
+            name: ['平安里', "Ping'ɑnli"],
             secondaryName: false,
             num: '22',
             services: ['local'],
@@ -213,7 +213,7 @@ const params = {
             children: ['egmd'],
             branch: { left: [], right: [] },
             transfer: {
-                info: [[['beijing', 'bj6', '#B58500', '#fff', '6号线', 'Line 6']]],
+                info: [[['beijing', 'bj6', '#B58500', '#fff', '6号线', 'Line 6']], [], []],
                 tick_direc: 'r',
                 paid_area: true,
                 osi_names: [],
@@ -232,7 +232,7 @@ const params = {
             facility: '',
         },
         xjjl: {
-            name: ['西单', 'Xidan'],
+            name: ['西单', 'Xidɑn'],
             secondaryName: false,
             num: '19',
             services: ['local'],
@@ -240,7 +240,7 @@ const params = {
             children: ['5ncb'],
             branch: { left: [], right: [] },
             transfer: {
-                info: [[['beijing', 'bj1', '#A4343A', '#fff', '1号线', 'Line 1']]],
+                info: [[['beijing', 'bj1', '#A4343A', '#fff', '1号线/八通线', 'Line 1/Batong Line']]],
                 tick_direc: 'r',
                 paid_area: true,
                 osi_names: [],
@@ -248,7 +248,7 @@ const params = {
             facility: '',
         },
         pxth: {
-            name: ['宣武门', 'Xuanwu Men'],
+            name: ['宣武门', 'Xuɑnwumen'],
             secondaryName: false,
             num: '18',
             services: ['local'],
@@ -264,7 +264,7 @@ const params = {
             facility: '',
         },
         at7o: {
-            name: ['菜市口', 'Caishi Kou'],
+            name: ['菜市口', 'Cɑishikou'],
             secondaryName: false,
             num: '17',
             services: ['local'],
@@ -280,7 +280,7 @@ const params = {
             facility: '',
         },
         p9ba: {
-            name: ['陶然亭', 'Taoranting'],
+            name: ['陶然亭', 'Tɑorɑnting'],
             secondaryName: false,
             num: '16',
             services: ['local'],
@@ -291,7 +291,7 @@ const params = {
             facility: '',
         },
         utpj: {
-            name: ['北京南站', 'Beijing South Railway Station'],
+            name: ['北京南站', 'Beijingnɑn Zhɑn\\(Beijing South Railway Station)'],
             secondaryName: false,
             num: '15',
             services: ['local'],
@@ -307,7 +307,7 @@ const params = {
             facility: '',
         },
         hvue: {
-            name: ['马家堡', 'Majiapu'],
+            name: ['马家堡', 'Mɑjiɑpu'],
             secondaryName: false,
             num: '14',
             services: ['local'],
@@ -318,7 +318,7 @@ const params = {
             facility: '',
         },
         dq01: {
-            name: ['角门西', 'Jiaomen Xi(W)'],
+            name: ['角门西', 'Jiɑomenxi'],
             secondaryName: false,
             num: '13',
             services: ['local'],
@@ -334,7 +334,7 @@ const params = {
             facility: '',
         },
         dafe: {
-            name: ['公益西桥', 'Gongyi Xiqiao'],
+            name: ['公益西桥', 'Gongyi Xiqiɑo'],
             secondaryName: false,
             num: '12',
             services: ['local'],
@@ -345,18 +345,23 @@ const params = {
             facility: '',
         },
         '7qwm': {
-            name: ['新宫', 'Xin Gong'],
+            name: ['新宫', 'Xingong'],
             secondaryName: false,
             num: '11',
             services: ['local'],
             parents: ['8ize'],
             children: ['dafe'],
             branch: { left: [], right: [] },
-            transfer: { info: [[]], tick_direc: 'r', paid_area: true, osi_names: [] },
+            transfer: {
+                info: [[['beijing', 'bj19', '#D6ABC1', '#fff', '19号线', 'Line 19']]],
+                tick_direc: 'r',
+                paid_area: true,
+                osi_names: [],
+            },
             facility: '',
         },
         '8ize': {
-            name: ['西红门', 'Xihong Men'],
+            name: ['西红门', 'Xihongmen'],
             secondaryName: false,
             num: '10',
             services: ['local'],
@@ -367,7 +372,7 @@ const params = {
             facility: '',
         },
         '94pa': {
-            name: ['高米店北', 'Gaomidian Bei(N)'],
+            name: ['高米店北', 'Gɑomidiɑnbei'],
             secondaryName: false,
             num: '09',
             services: ['local'],
@@ -378,7 +383,7 @@ const params = {
             facility: '',
         },
         hzmd: {
-            name: ['枣园', 'Zaoyuan'],
+            name: ['枣园', 'Zɑoyuɑn'],
             secondaryName: false,
             num: '07',
             services: ['local'],
@@ -389,7 +394,7 @@ const params = {
             facility: '',
         },
         '5sf1': {
-            name: ['清源路', 'Qingyuan Lu'],
+            name: ['清源路', 'Qingyuɑn Lu'],
             secondaryName: false,
             num: '06',
             services: ['local'],
@@ -400,7 +405,7 @@ const params = {
             facility: '',
         },
         '4fup': {
-            name: ['黄村西大街', 'Huangcun Xidajie'],
+            name: ['黄村西大街', 'Huɑngcun Xidɑjie'],
             secondaryName: false,
             num: '05',
             services: ['local'],
@@ -411,7 +416,7 @@ const params = {
             facility: '',
         },
         pcok: {
-            name: ['黄村火车站', 'Huangcun Railway Station'],
+            name: ['黄村火车站', 'Huɑngcun Huochezhɑn\\(Huangcun Railway Stati)on'],
             secondaryName: false,
             num: '04',
             services: ['local'],
@@ -422,7 +427,7 @@ const params = {
             facility: '',
         },
         uc7e: {
-            name: ['义和庄', 'Yihezhuang'],
+            name: ['义和庄', 'Yihezhuɑng'],
             secondaryName: false,
             num: '03',
             services: ['local'],
@@ -433,7 +438,7 @@ const params = {
             facility: '',
         },
         neqs: {
-            name: ['生物医药基地', 'Biomedical Base'],
+            name: ['生物医药基地', 'Shengwu Yiyɑo Jidi'],
             secondaryName: false,
             num: '02',
             services: ['local'],
@@ -444,7 +449,7 @@ const params = {
             facility: '',
         },
         vopg: {
-            name: ['天宫院', 'Tiangong Yuan'],
+            name: ['天宫院', 'Tiɑngongyuɑn'],
             secondaryName: false,
             num: '01',
             services: ['local'],
@@ -466,7 +471,7 @@ const params = {
             facility: '',
         },
         r4gt: {
-            name: ['高米店南', 'Gaomidian Nan(S)'],
+            name: ['高米店南', 'Gɑomidiɑnnɑn'],
             secondaryName: false,
             num: '08',
             services: ['local'],
@@ -477,7 +482,7 @@ const params = {
             facility: '',
         },
     },
-    line_name: ['4号线/大兴线', 'Line 4/DAXING Line'],
+    line_name: ['4号线/大兴线', 'Line 4/Daxing Line'],
     psd_num: '1',
     line_num: '4',
     info_panel_type: 'gz28',

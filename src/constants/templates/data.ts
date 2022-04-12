@@ -150,11 +150,19 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
-            filename: 'yzl',
+            filename: 'dae',
             name: {
-                en: 'Yizhuang Line by AnDanJuneUnderline',
-                'zh-Hans': '亦庄线 来自 AnDanJuneUnderline',
-                'zh-Hant': '亦莊線 來自 AnDanJuneUnderline',
+                en: 'Daxing Airport Express',
+                'zh-Hans': '大兴机场线',
+                'zh-Hant': '大興機場線',
+            },
+        },
+        {
+            filename: 's1l',
+            name: {
+                en: 'S1 Line',
+                'zh-Hans': 'S1线',
+                'zh-Hant': 'S1線',
             },
         },
         {
@@ -163,6 +171,22 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
                 en: 'Yizhuang T1 Line by AnDanJuneUnderline',
                 'zh-Hans': '亦庄T1线 来自 AnDanJuneUnderline',
                 'zh-Hant': '亦莊T1線 來自 AnDanJuneUnderline',
+            },
+        },
+        {
+            filename: 'xjl',
+            name: {
+                en: 'Xijiao Line',
+                'zh-Hans': '西郊线',
+                'zh-Hant': '西郊線',
+            },
+        },
+        {
+            filename: 'yzl',
+            name: {
+                en: 'Yizhuang Line by AnDanJuneUnderline',
+                'zh-Hans': '亦庄线 来自 AnDanJuneUnderline',
+                'zh-Hant': '亦莊線 來自 AnDanJuneUnderline',
             },
         },
     ],
