@@ -30,7 +30,6 @@ export const DefsSHMetro = React.memo(() => (
         <path
             id="int2_indoor_sh"
             fill="var(--rmg-white)"
-            stroke="black"
             transform="translate(0, -10)scale(2)"
             strokeWidth={4}
             d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"
@@ -38,7 +37,6 @@ export const DefsSHMetro = React.memo(() => (
         <path
             id="express_indoor_sh"
             fill="var(--rmg-white)"
-            stroke="black"
             transform="translate(0, -10)scale(2)"
             strokeWidth={4}
             d="M -5,0 a 5,5 0 1 1 10,0 V25 a 5,5 0 1 1 -10,0Z"
@@ -46,7 +44,6 @@ export const DefsSHMetro = React.memo(() => (
         <path
             id="direct_indoor_sh"
             fill="var(--rmg-white)"
-            stroke="black"
             transform="translate(0, -10)scale(2)"
             strokeWidth={4}
             d="M -5,0 a 5,5 0 1 1 10,0 V40 a 5,5 0 1 1 -10,0Z"

@@ -12,14 +12,13 @@ interface Props {
 
 export const StationSHMetro = (props: Props) => {
     const { stnId, nameDirection, services } = props;
-    const param = useAppSelector(store => store.param);
-    const stnInfo = param.stn_list[stnId];
+    const stnInfo = useAppSelector(store => store.param.stn_list[stnId]);
 
+    const transfer = [...stnInfo.transfer.info[0], ...(stnInfo.transfer.info[1] || [])]
     let stationIconStyle = '';
     if (stnInfo.services.length === 3) stationIconStyle = 'direct_indoor_sh';
     else if (stnInfo.services.length === 2) stationIconStyle = 'express_indoor_sh';
-    else if ([...stnInfo.transfer.info[0], ...(stnInfo.transfer.info[1] || [])].length > 0)
-        stationIconStyle = 'int2_indoor_sh';
+    else if (transfer.length > 0) stationIconStyle = 'int2_indoor_sh';
     else stationIconStyle = 'stn_indoor_sh';
 
     const dr = nameDirection === 'left' || nameDirection === 'right' ? 90 : 0;
@@ -31,7 +30,11 @@ export const StationSHMetro = (props: Props) => {
                 nameDirection={nameDirection}
                 services={services}
             />
-            <use xlinkHref={`#${stationIconStyle}`} stroke="var(--rmg-theme-colour)" transform={`rotate(${dr})`} />
+            <use
+                xlinkHref={`#${stationIconStyle}`}
+                stroke={transfer.length > 0 ? 'black' : 'var(--rmg-theme-colour)'}
+                transform={`rotate(${dr})`}
+            />
             {/* This should be in IntBoxGroupProps, put here because the station icon will cover this */}
             {stnInfo.services.length > 1 && (
                 <text className="rmg-name__zh" writingMode="tb" fontSize="60%" dy="-12">
