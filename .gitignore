@@ -29,3 +29,6 @@ yarn-error.log*
 # environment
 /.vscode
 /.idea
+
+# repositories
+/rmg-repositories

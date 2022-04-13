@@ -23,7 +23,7 @@ UAT_REPO_NAME=rmg-repositories
 if [ "$BRANCH" = "main" ]
 then
   # build with a normal version
-  npm version patch -m "${APP_NAME}-%s release" --force || { echo "Release Error"; exit 1; }
+  npm version patch -m "${APP_NAME}-%s release" --no-git-tag-version || { echo "Release Error"; exit 1; }
   export RMG_VER=$(node -p "require('./package.json').version")
 else
   # build with a hashed version
@@ -43,6 +43,10 @@ cp -r build/ $UAT_REPO_NAME/"$APP_NAME"/"$RMG_VER"/
 ### PUSH TAG AND COMMIT
 if [ "$BRANCH" = "main" ]
 then
+  git add .
+  git commit -m "${APP_NAME}-%s release"
+  git tag -a "${APP_NAME}-${RMG_VER}" -m "${APP_NAME}-%s release"
+  git push
   git push --atomic origin HEAD "${APP_NAME}-${RMG_VER}"
 fi
 
