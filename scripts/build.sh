@@ -7,6 +7,7 @@ ncu -f '/@railmapgen\/rmg-(?!components).*/' -t patch -u
 npm install
 
 # run tests
+npm run lint:fix
 npm run test:no-watch
 
 # git config
