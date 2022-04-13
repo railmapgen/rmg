@@ -44,8 +44,8 @@ cp -r build/ $UAT_REPO_NAME/"$APP_NAME"/"$RMG_VER"/
 if [ "$BRANCH" = "main" ]
 then
   git add .
-  git commit -m "${APP_NAME}-%s release"
-  git tag -a "${APP_NAME}-${RMG_VER}" -m "${APP_NAME}-%s release"
+  git commit -m "${APP_NAME}-${RMG_VER} release"
+  git tag -a "${APP_NAME}-${RMG_VER}" -m "${APP_NAME}-${RMG_VER} release"
   git push
   git push --atomic origin HEAD "${APP_NAME}-${RMG_VER}"
 fi
