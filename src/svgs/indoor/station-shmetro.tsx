@@ -14,7 +14,7 @@ export const StationSHMetro = (props: Props) => {
     const { stnId, nameDirection, services } = props;
     const stnInfo = useAppSelector(store => store.param.stn_list[stnId]);
 
-    const transfer = [...stnInfo.transfer.info[0], ...(stnInfo.transfer.info[1] || [])]
+    const transfer = [...stnInfo.transfer.info[0], ...(stnInfo.transfer.info[1] || [])];
     let stationIconStyle = '';
     if (stnInfo.services.length === 3) stationIconStyle = 'direct_indoor_sh';
     else if (stnInfo.services.length === 2) stationIconStyle = 'express_indoor_sh';
