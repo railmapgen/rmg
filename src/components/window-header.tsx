@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Badge, Flex, Heading, HStack, IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { Environments, getEnvironment, getVersion } from '../util/config';
 import { useTranslation } from 'react-i18next';
@@ -8,10 +8,13 @@ import { useDispatch } from 'react-redux';
 import { setStyle } from '../redux/param/action';
 import { Link } from 'react-router-dom';
 import { zoomIn, zoomOut } from '../redux/app/action';
+import HelpModal from './modal/help-modal';
 
 export default function WindowHeader() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
+
+    const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
     const environment = getEnvironment();
     const getBadgeColour = (env: Environments) => {
@@ -83,9 +86,11 @@ export default function WindowHeader() {
                     variant="ghost"
                     aria-label="Help"
                     icon={<MdHelp />}
-                    onClick={() => window.open('https://github.com/railmapgen/rmg', '_blank')}
+                    onClick={() => setIsHelpModalOpen(true)}
                 />
             </HStack>
+
+            <HelpModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
         </Flex>
     );
 }
