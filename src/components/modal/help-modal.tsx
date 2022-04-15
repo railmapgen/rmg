@@ -24,6 +24,7 @@ import { useTranslation } from 'react-i18next';
 import { MdOpenInNew } from 'react-icons/md';
 
 const CONTRIBUTORS_LIST = [
+    'jealousyge',
     'Jay20081229',
     'clearng-kly',
     'Dingdong2334',
