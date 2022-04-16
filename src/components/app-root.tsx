@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../redux';
 import { setGlobalAlert } from '../redux/app/action';
 import GridTabs from './ag-grid/grid-tabs';
+import LoadingModal from './modal/loading-modal';
 
 export default function AppRoot() {
     const dispatch = useDispatch();
@@ -22,6 +23,7 @@ export default function AppRoot() {
 
     return (
         <Flex direction="column" height="100%" overflow="hidden">
+            <LoadingModal />
             <WindowHeader />
             <Flex direction="column" flex={1} overflow="hidden">
                 <PageHeader />

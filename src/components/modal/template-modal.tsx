@@ -18,6 +18,8 @@ import { useTranslation } from 'react-i18next';
 import { companies } from '../../constants/company-config';
 import { templateList } from '../../constants/templates/data';
 import { translateText } from '../../i18n/config';
+import { useAppDispatch } from '../../redux';
+import { setIsLoading } from '../../redux/app/action';
 
 interface TemplateModalProps {
     isOpen: boolean;
@@ -29,8 +31,10 @@ export default function TemplateModal(props: TemplateModalProps) {
     const { isOpen, onClose, onOpenParam } = props;
 
     const { t } = useTranslation();
+    const dispatch = useAppDispatch();
 
     const handleSelect = async (company: string, filename: string) => {
+        dispatch(setIsLoading(true));
         const module = await import(
             /* webpackChunkName: "templates" */ `../../constants/templates/${company}/${filename}`
         );

@@ -18,6 +18,7 @@ export const SET_IS_SHARE_TRACK_ENABLED = 'SET_IS_SHARE_TRACK_ENABLED';
 
 // global
 export const SET_GLOBAL_ALERT = 'SET_GLOBAL_ALERT';
+export const SET_IS_LOADING = 'SET_IS_LOADING';
 
 export interface setCanvasScaleAction {
     type: typeof SET_CANVAS_SCALE;
@@ -67,6 +68,11 @@ export interface setIsShareTrackEnabledAction {
 export interface setGlobalAlertAction {
     type: typeof SET_GLOBAL_ALERT;
     globalAlert?: { status: AlertProps['status']; message: string };
+}
+
+export interface setIsLoadingAction {
+    type: typeof SET_IS_LOADING;
+    isLoading: boolean;
 }
 
 export const setCanvasScale = (canvasScale: number) => {
@@ -155,4 +161,8 @@ export const setGlobalAlert = (globalAlert?: {
     message: string;
 }): setGlobalAlertAction => {
     return { type: SET_GLOBAL_ALERT, globalAlert };
+};
+
+export const setIsLoading = (isLoading: boolean): setIsLoadingAction => {
+    return { type: SET_IS_LOADING, isLoading };
 };

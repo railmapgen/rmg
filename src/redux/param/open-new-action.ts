@@ -1,7 +1,7 @@
 import { AppDispatch, RootState } from '../index';
 import { updateParam } from '../../utils';
 import { AllCanvas, canvasConfig, RMGParam, SidePanelMode } from '../../constants/constants';
-import { selectCanvas, setSelectedStation, setSidePanelMode } from '../app/action';
+import { selectCanvas, setIsLoading, setSelectedStation, setSidePanelMode } from '../app/action';
 import { reRenderApp } from '../../index';
 
 export const openFromNewParam = (param: Record<string, any>) => {
@@ -18,5 +18,6 @@ export const openFromNewParam = (param: Record<string, any>) => {
         const canvas = canvasConfig[updatedParam.style].some(c => c === canvasToShow) ? canvasToShow : AllCanvas;
         await dispatch(selectCanvas(canvas));
         reRenderApp(updatedParam);
+        dispatch(setIsLoading(false));
     };
 };

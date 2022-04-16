@@ -5,6 +5,7 @@ import {
     SET_CANVAS_TO_SHOW,
     SET_CANVAS_TO_SHOW_STATUS,
     SET_GLOBAL_ALERT,
+    SET_IS_LOADING,
     SET_IS_SHARE_TRACK_ENABLED,
     SET_SELECTED_BRANCH,
     SET_SELECTED_COLINE,
@@ -15,6 +16,7 @@ import {
     setCanvasToShowAction,
     setCanvasToShowStatusAction,
     setGlobalAlertAction,
+    setIsLoadingAction,
     setIsShareTrackEnabledAction,
     setSelectedBranchAction,
     setSelectedColineAction,
@@ -38,6 +40,7 @@ interface AppState {
         status: AlertProps['status'];
         message: string;
     };
+    isLoading: boolean;
 }
 
 const initialState: AppState = {
@@ -51,6 +54,7 @@ const initialState: AppState = {
     selectedColine: undefined,
     selectedBranch: 0,
     isShareTrackEnabled: undefined,
+    isLoading: false,
 };
 
 export default function AppReducer(
@@ -66,6 +70,7 @@ export default function AppReducer(
         | setSelectedBranchAction
         | setIsShareTrackEnabledAction
         | setGlobalAlertAction
+        | setIsLoadingAction
 ): AppState {
     switch (action.type) {
         case SET_CANVAS_SCALE:
@@ -97,6 +102,9 @@ export default function AppReducer(
             break;
         case SET_GLOBAL_ALERT:
             state.globalAlert = action.globalAlert;
+            break;
+        case SET_IS_LOADING:
+            state.isLoading = action.isLoading;
             break;
         default:
             break;
