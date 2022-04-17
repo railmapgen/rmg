@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { Badge, Flex, Heading, HStack, IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
-import { Environments, getEnvironment, getVersion } from '../util/config';
-import { useTranslation } from 'react-i18next';
-import { MdHelp, MdLocationCity, MdTranslate, MdZoomIn, MdZoomOut } from 'react-icons/md';
+import { Flex, Heading, HStack, Icon, IconButton, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { getEnvironment, getVersion } from '../util/config';
+import { Trans, useTranslation } from 'react-i18next';
+import { MdHelp, MdLocationCity, MdOpenInNew, MdTranslate, MdZoomIn, MdZoomOut } from 'react-icons/md';
 import { LanguageCode, RmgStyle } from '../constants/constants';
 import { useDispatch } from 'react-redux';
 import { setStyle } from '../redux/param/action';
-import { Link } from 'react-router-dom';
+import * as ReactRouterDom from 'react-router-dom';
 import { zoomIn, zoomOut } from '../redux/app/action';
 import HelpModal from './modal/help-modal';
+import { RmgEnvBadge } from '@railmapgen/rmg-components';
 
 export default function WindowHeader() {
     const { t, i18n } = useTranslation();
@@ -17,16 +18,6 @@ export default function WindowHeader() {
     const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
     const environment = getEnvironment();
-    const getBadgeColour = (env: Environments) => {
-        switch (env) {
-            case Environments.DEV:
-                return 'red';
-            case Environments.UAT:
-                return 'orange';
-            case Environments.PRD:
-                return 'green';
-        }
-    };
 
     const handleChangeLanguage = async (language: LanguageCode) => {
         const t = await i18n.changeLanguage(language);
@@ -38,10 +29,30 @@ export default function WindowHeader() {
         <Flex pl={2} pr={2} align="center">
             <Heading as="h4" size="md">
                 {t('WindowHeader.heading')}
-                <Badge ml={1} colorScheme={getBadgeColour(environment)}>
-                    {environment === Environments.PRD ? getVersion() : environment}
-                </Badge>
             </Heading>
+            <RmgEnvBadge
+                environment={environment}
+                version={getVersion()}
+                popoverHeader={
+                    <Trans i18nKey="WindowHeader.popoverHeader" environment={environment}>
+                        You're on {{ environment }} environment!
+                    </Trans>
+                }
+                popoverBody={
+                    <Trans i18nKey="WindowHeader.popoverBody">
+                        This is a testing environment where we don't guarantee the stability and compatibility. Please
+                        switch back to{' '}
+                        <Link
+                            color="teal.500"
+                            href={'https://railmapgen.github.io' + window.location.pathname}
+                            isExternal={true}
+                        >
+                            Production environment <Icon as={MdOpenInNew} />
+                        </Link>
+                        .
+                    </Trans>
+                }
+            />
 
             <HStack ml="auto">
                 <IconButton
@@ -63,11 +74,11 @@ export default function WindowHeader() {
                     <MenuButton as={IconButton} icon={<MdLocationCity />} variant="ghost" size="sm" />
                     <MenuList>
                         {Object.values(RmgStyle).map(style => (
-                            <Link key={style} to={style}>
+                            <ReactRouterDom.Link key={style} to={style}>
                                 <MenuItem onClick={() => dispatch(setStyle(style))}>
                                     {t('WindowHeader.' + style)}
                                 </MenuItem>
-                            </Link>
+                            </ReactRouterDom.Link>
                         ))}
                     </MenuList>
                 </Menu>

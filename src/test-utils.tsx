@@ -7,6 +7,7 @@ import i18n from './i18n/config';
 import { Provider } from 'react-redux';
 import rootReducer from './redux';
 import { createMockAppStore } from './setupTests';
+import { MemoryRouter } from 'react-router-dom';
 
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
     store: Store;
@@ -26,7 +27,9 @@ const customRender = (ui: ReactElement, { store, ...renderOptions } = initialOpt
 
         return (
             <I18nextProvider i18n={i18n}>
-                <Provider store={store}>{children}</Provider>
+                <Provider store={store}>
+                    <MemoryRouter>{children}</MemoryRouter>
+                </Provider>
             </I18nextProvider>
         );
     };
