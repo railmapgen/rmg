@@ -98,11 +98,7 @@ export default memo(function PanelInfo() {
                             <Button size="small" color="primary" href="https://github.com/railmapgen/rmg">
                                 GitHub
                             </Button>
-                            <Button
-                                size="small"
-                                color="primary"
-                                href="https://github.com/railmapgen/rmg/issues"
-                            >
+                            <Button size="small" color="primary" href="https://github.com/railmapgen/rmg/issues">
                                 {t('info.feedback')}
                             </Button>
                         </CardActions>
