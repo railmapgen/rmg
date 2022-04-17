@@ -115,4 +115,7 @@ getRmgStorage()
     })
     .then(() => {
         autoSaveScheduler();
+    })
+    .catch(err => {
+        document.querySelector('#root')!.textContent += err.toString();
     });
