@@ -2,6 +2,7 @@
 set -eux
 
 # run tests
+npm run lint:fix
 npm run test:no-watch
 
 # git config
