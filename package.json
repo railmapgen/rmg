@@ -79,7 +79,7 @@
             "last 1 safari version"
         ]
     },
-    "version": "5.0.7",
+    "version": "5.0.8",
     "main": "public/electron.js",
     "build": {
         "publish": [
