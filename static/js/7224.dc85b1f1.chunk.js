@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkrail_map_generator=self.webpackChunkrail_map_generator||[]).push([[7224],{7224:function(a,e,r){a.exports=r.p+"static/media/1F1F7-1F1F4.1b99aae61eabe76d9ba9.svg"}}]);
