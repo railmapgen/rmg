@@ -48,7 +48,7 @@ cp -r build/ $UAT_REPO_NAME/$RMG_VER/UAT/
 ### PUSH TAG AND COMMIT
 if [ "$BRANCH" = "master" ]
 then
-  git add .
+  git add -u
   git commit -m "${APP_NAME}-${RMG_VER} release"
   git tag -a "${APP_NAME}-${RMG_VER}" -m "${APP_NAME}-${RMG_VER} release"
   git push
