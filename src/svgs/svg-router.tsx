@@ -52,7 +52,10 @@ export default function SvgRouter() {
     return (
         <Flex sx={style}>
             {filteredCanvas.map(canvas => (
-                <ErrorBoundary key={canvas + rmgStyle}>
+                <ErrorBoundary
+                    key={canvas + rmgStyle}
+                    style={{ minWidth: 750, height: svgHeight * canvasScale, overflowY: 'auto' }}
+                >
                     <SvgWrapper
                         type={canvas}
                         style={rmgStyle}

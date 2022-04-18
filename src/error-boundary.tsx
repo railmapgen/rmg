@@ -1,6 +1,6 @@
-import React, { ReactNode } from 'react';
+import React, { HTMLProps, ReactNode } from 'react';
 
-interface ErrorBoundaryProps {
+interface ErrorBoundaryProps extends HTMLProps<HTMLDivElement> {
     children?: ReactNode;
 }
 
@@ -22,10 +22,12 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, a
     }
 
     render() {
+        const { children, ...others } = this.props;
+
         if (this.state.hasError) {
             // You can render any custom fallback UI
             return (
-                <div>
+                <div {...others}>
                     <h2>Something went wrong.</h2>
                     <details style={{ whiteSpace: 'pre-wrap' }}>
                         {this.state.error?.toString()}
@@ -76,6 +78,6 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, a
             );
         }
 
-        return this.props.children;
+        return children;
     }
 }
