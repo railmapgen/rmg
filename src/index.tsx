@@ -109,5 +109,12 @@ getRmgStorage()
         autoSaveScheduler();
     })
     .catch(err => {
-        document.querySelector('#root')!.textContent += err.toString();
+        document.querySelector('#root')!.innerHTML = `<div>
+            Failed to load Rail Map Generator!
+            <br />
+            ${err.toString()}
+            <br />
+            Please contact us in 
+            <a href='https://github.com/railmapgen/rmg' target='_blank' rel='noreferrer'>GitHub</a>.
+        </div>`;
     });

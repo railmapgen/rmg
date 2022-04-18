@@ -1,7 +1,6 @@
 import { CanvasType, RmgStyle, Theme } from '../constants/constants';
-import React, { ReactNode, useEffect } from 'react';
-import ErrorBoundary from '../error-boundary';
-import { CircularProgress } from '@chakra-ui/react';
+import React, { ReactNode, Suspense, useEffect } from 'react';
+import FallbackLoader from '../components/fallback-loader';
 
 interface SvgWrapperProps {
     type: CanvasType;
@@ -44,9 +43,7 @@ export default function SvgWrapper(props: SvgWrapperProps) {
                 fill="white"
                 style={{ height: 'var(--rmg-svg-height)', width: 'var(--rmg-svg-width)' }}
             />
-            <React.Suspense fallback={<CircularProgress isIndeterminate />}>
-                <ErrorBoundary>{children}</ErrorBoundary>
-            </React.Suspense>
+            <Suspense fallback={<FallbackLoader />}>{children}</Suspense>
             <rect
                 id="canvas-border"
                 fill="none"
