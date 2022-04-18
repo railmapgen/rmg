@@ -1,5 +1,5 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import './index.css';
 import i18n from './i18n/config';
 import App from './App';
@@ -10,7 +10,6 @@ import { AllCanvas, CanvasType, RMGParam } from './constants/constants';
 import StorageService from './util/storage/storageService';
 import getRmgStorage from './util/storage';
 import store from './redux';
-import { Provider } from 'react-redux';
 import { setCanvasScale, setCanvasToShow } from './redux/app/action';
 import { setFullParam } from './redux/param/action';
 import autoSaveScheduler from './util/auto-save-scheduler';
@@ -39,14 +38,7 @@ document.head.append(
 );
 
 const renderApp = () => {
-    ReactDOM.render(
-        // <React.StrictMode>
-        <Provider store={store}>
-            <App />
-        </Provider>,
-        // </React.StrictMode>,
-        document.getElementById('root')
-    );
+    ReactDOM.render(<App />, document.getElementById('root'));
 };
 
 export const reRenderApp = (param: RMGParam) => {

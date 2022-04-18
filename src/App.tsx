@@ -4,6 +4,8 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { rmgChakraTheme } from '@railmapgen/rmg-components';
 import ErrorBoundary from './error-boundary';
 import FallbackLoader from './components/fallback-loader';
+import { Provider } from 'react-redux';
+import store from './redux';
 
 const AppRoot = lazy(() => import(/* webpackChunkName: "AppRoot" */ './components/app-root'));
 
@@ -16,23 +18,25 @@ export default function App() {
     const basename = process.env.PUBLIC_URL === '.' ? '/' : process.env.PUBLIC_URL;
 
     return (
-        <BrowserRouter basename={basename}>
-            <Routes>
-                <Route
-                    path="*"
-                    element={
-                        <ChakraProvider theme={rmgChakraTheme}>
-                            <StrictMode>
-                                <Suspense fallback={<FallbackLoader />}>
-                                    <ErrorBoundary>
-                                        <AppRoot />
-                                    </ErrorBoundary>
-                                </Suspense>
-                            </StrictMode>
-                        </ChakraProvider>
-                    }
-                />
-            </Routes>
-        </BrowserRouter>
+        <StrictMode>
+            <Provider store={store}>
+                <ChakraProvider theme={rmgChakraTheme}>
+                    <BrowserRouter basename={basename}>
+                        <Routes>
+                            <Route
+                                path="*"
+                                element={
+                                    <Suspense fallback={<FallbackLoader />}>
+                                        <ErrorBoundary>
+                                            <AppRoot />
+                                        </ErrorBoundary>
+                                    </Suspense>
+                                }
+                            />
+                        </Routes>
+                    </BrowserRouter>
+                </ChakraProvider>
+            </Provider>
+        </StrictMode>
     );
 }
