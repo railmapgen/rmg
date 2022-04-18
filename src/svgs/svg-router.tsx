@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { setStyle } from '../redux/param/action';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Flex } from '@chakra-ui/react';
+import ErrorBoundary from '../error-boundary';
 
 const style = {
     flexDirection: 'row',
@@ -51,17 +52,18 @@ export default function SvgRouter() {
     return (
         <Flex sx={style}>
             {filteredCanvas.map(canvas => (
-                <SvgWrapper
-                    key={canvas + rmgStyle}
-                    type={canvas}
-                    style={rmgStyle}
-                    svgWidth={svgWidths[canvas]}
-                    svgHeight={svgHeight}
-                    canvasScale={canvasScale}
-                    theme={theme}
-                >
-                    {canvasList[rmgStyle][canvas]}
-                </SvgWrapper>
+                <ErrorBoundary key={canvas + rmgStyle}>
+                    <SvgWrapper
+                        type={canvas}
+                        style={rmgStyle}
+                        svgWidth={svgWidths[canvas]}
+                        svgHeight={svgHeight}
+                        canvasScale={canvasScale}
+                        theme={theme}
+                    >
+                        {canvasList[rmgStyle][canvas]}
+                    </SvgWrapper>
+                </ErrorBoundary>
             ))}
         </Flex>
     );
