@@ -8,7 +8,6 @@ import { SET_STATIONS_BULK } from '../../redux/param/action';
 import { render } from '../../test-utils';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { SET_SELECTED_STATION, SET_SIDE_PANEL_MODE } from '../../redux/app/action';
-import * as addStationActions from '../../redux/param/add-station-action';
 
 const mockStationList = {
     linestart: {

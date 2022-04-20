@@ -57,7 +57,14 @@ export default function OpenActions() {
                 {t('OpenActions.openFrom')}
             </MenuButton>
             <MenuList>
-                <input ref={fileInputRef} type="file" accept=".json" hidden={true} onChange={handleUpload} />
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".json"
+                    hidden={true}
+                    onChange={handleUpload}
+                    data-testid="file-upload"
+                />
                 <MenuItem icon={<MdUpload />} onClick={() => fileInputRef?.current?.click()}>
                     {t('OpenActions.upload')}
                 </MenuItem>

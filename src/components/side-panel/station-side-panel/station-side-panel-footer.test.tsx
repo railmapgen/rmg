@@ -1,16 +1,17 @@
 import React from 'react';
 import StationSidePanelFooter from './station-side-panel-footer';
-import { mount, ReactWrapper } from 'enzyme';
-import { createMockAppStore, TestingProvider } from '../../../setupTests';
+import { createMockAppStore } from '../../../setupTests';
 import { SidePanelMode, StationDict } from '../../../constants/constants';
 import { SET_GLOBAL_ALERTS, SET_SELECTED_STATION, SET_SIDE_PANEL_MODE } from '../../../redux/app/action';
 import rootReducer from '../../../redux';
 import { SET_STATIONS_BULK } from '../../../redux/param/action';
+import { render } from '../../../test-utils';
+import { fireEvent, screen } from '@testing-library/react';
 
 const realStore = rootReducer.getState();
 
-describe('Unit tests for StationSidePanelFooter component', () => {
-    it('Can display error message if station is not removable', () => {
+describe('StationSidePanelFooter', () => {
+    it('Can display error message if station is not removable', async () => {
         /**
          * stn1 - stn2
          *  ^
@@ -49,26 +50,16 @@ describe('Unit tests for StationSidePanelFooter component', () => {
             },
         });
 
-        const wrapper = mount(<StationSidePanelFooter />, {
-            wrappingComponent: TestingProvider,
-            wrappingComponentProps: { store: mockStore },
-        });
+        render(<StationSidePanelFooter />, { store: mockStore });
 
         // click remove button
-        const removeBtn = wrapper.find('HStack button').at(1);
-        expect(removeBtn.text()).toBe('Remove');
-        removeBtn.simulate('click');
-        wrapper.update();
+        fireEvent.click(screen.getByRole('button', { name: 'Remove' }));
 
-        // assert delete confirmation modal is open
-        const modal = wrapper.find('RemoveConfirmModal') as ReactWrapper<any>;
-        expect(modal.props().isOpen).toBeTruthy();
+        // wait for modal to open
+        await screen.findByRole('alertdialog');
 
         // click confirm button
-        const confirmBtn = modal.find('button').last();
-        expect(confirmBtn.text()).toBe('Confirm');
-        confirmBtn.simulate('click');
-        wrapper.update();
+        fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
 
         // assert error message
         const actions = mockStore.getActions();
@@ -79,7 +70,7 @@ describe('Unit tests for StationSidePanelFooter component', () => {
         });
     });
 
-    it('Can remove station and clear states as expected', () => {
+    it('Can remove station and clear states as expected', async () => {
         /**
          * stn1 - stn2 - stn3
          *         ^
@@ -123,18 +114,16 @@ describe('Unit tests for StationSidePanelFooter component', () => {
             },
         });
 
-        const wrapper = mount(<StationSidePanelFooter />, {
-            wrappingComponent: TestingProvider,
-            wrappingComponentProps: { store: mockStore },
-        });
+        render(<StationSidePanelFooter />, { store: mockStore });
 
         // click remove button
-        wrapper.find('HStack button').at(1).simulate('click');
-        wrapper.update();
+        fireEvent.click(screen.getByRole('button', { name: 'Remove' }));
+
+        // wait for modal to open
+        await screen.findByRole('alertdialog');
 
         // click confirm button
-        wrapper.find('RemoveConfirmModal button').last().simulate('click');
-        wrapper.update();
+        fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
 
         // assertions
         const actions = mockStore.getActions();

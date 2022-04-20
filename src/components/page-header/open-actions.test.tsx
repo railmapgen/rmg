@@ -6,6 +6,8 @@ import rootReducer from '../../redux';
 import { SET_GLOBAL_ALERTS } from '../../redux/app/action';
 import * as utils from '../../util/utils';
 import { act } from 'react-dom/test-utils';
+import { render } from '../../test-utils';
+import { fireEvent, screen } from '@testing-library/react';
 
 jest.mock('../../index', () => ({
     reRenderApp: jest.fn(),
@@ -24,34 +26,30 @@ const mockUploadedFile = new File([], 'mock-uploaded-file.json', { type: 'applic
 const mockInvalidTypeFile = new File(['dummy-content'], 'invalid-file-type.txt', { type: 'text/plain' });
 const mockMalFormatFile = new File(['random-content'], 'mal-format-file.json', { type: 'application/json' });
 
-describe('Unit tests for OpenActions component', () => {
+describe('OpenActions', () => {
     afterEach(() => {
         mockStore.clearActions();
     });
 
     it('Can open UploadConfirmModal if a valid file is uploaded', async () => {
         readFileAsTextSpy.mockResolvedValue(JSON.stringify({ stn_list: [], theme: [] }));
-        const wrapper = mount(<OpenActions />, { wrappingComponent: TestingProvider });
+        render(<OpenActions />, { store: mockStore });
 
         // modal is closed
-        expect(document.querySelectorAll('.chakra-portal')).toHaveLength(0);
+        expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
 
-        await act(async () => {
-            await wrapper.find('input[type="file"]').simulate('change', { target: { files: [mockUploadedFile] } });
-        });
+        fireEvent.change(screen.getByTestId('file-upload'), { target: { files: [mockUploadedFile] } });
 
         // modal open
-        expect(document.querySelectorAll('.chakra-portal')).toHaveLength(1);
+        await screen.findByRole('alertdialog');
+        expect(screen.getByRole('alertdialog', { name: 'Open from configuration file' })).toBeInTheDocument();
     });
 
     it('Can display error message if invalid type of file is uploaded', async () => {
         readFileAsTextSpy.mockResolvedValue('dummy-content');
-        const wrapper = mount(<OpenActions />, {
-            wrappingComponent: TestingProvider,
-            wrappingComponentProps: { store: mockStore },
-        });
+        render(<OpenActions />, { store: mockStore });
 
-        await wrapper.find('input[type="file"]').simulate('change', { target: { files: [mockInvalidTypeFile] } });
+        fireEvent.change(screen.getByTestId('file-upload'), { target: { files: [mockInvalidTypeFile] } });
 
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(1);
