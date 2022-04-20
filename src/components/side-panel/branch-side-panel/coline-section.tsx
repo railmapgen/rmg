@@ -56,7 +56,7 @@ export default function ColineSection() {
         try {
             dispatch(updateColine(colineId, from, to));
         } catch {
-            dispatch(setGlobalAlert({ status: 'error', message: 'Unable to draw this share track.' }));
+            dispatch(setGlobalAlert('error', 'Unable to draw this share track.'));
         }
     };
 

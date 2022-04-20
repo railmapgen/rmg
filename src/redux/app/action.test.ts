@@ -1,10 +1,13 @@
 import rootReducer from '../';
 import {
+    closeGlobalAlert,
     selectCanvas,
     SET_CANVAS_SCALE,
     SET_CANVAS_SCALE_STATUS,
     SET_CANVAS_TO_SHOW,
     SET_CANVAS_TO_SHOW_STATUS,
+    SET_GLOBAL_ALERTS,
+    setGlobalAlert,
     zoomIn,
     zoomOut,
 } from './action';
@@ -18,7 +21,7 @@ const windowSpy = jest.spyOn(window, 'window', 'get');
 
 const mockEmptyPromise = jest.fn().mockResolvedValue(void 0);
 
-describe('Tests for app actions', () => {
+describe('AppActions', () => {
     beforeEach(() => {
         windowSpy.mockImplementation(
             () =>
@@ -98,5 +101,57 @@ describe('Tests for app actions', () => {
                     action.type === SET_CANVAS_TO_SHOW_STATUS && action.canvasToShowStatus === LoadingStatus.loaded
             )
         ).toBeDefined();
+    });
+
+    describe('AppAction - global alerts', () => {
+        const mockStore = createMockAppStore({
+            ...realStore,
+            app: {
+                ...realStore.app,
+                globalAlerts: {
+                    info: {
+                        message: 'Test info message',
+                        url: 'https://example.com',
+                    },
+                },
+            },
+        });
+
+        afterEach(() => {
+            mockStore.clearActions();
+        });
+
+        it('Can add new type of alert', () => {
+            mockStore.dispatch(setGlobalAlert('warning', 'Test warning message'));
+
+            const actions = mockStore.getActions();
+            expect(actions).toHaveLength(1);
+            expect(actions).toContainEqual({
+                type: SET_GLOBAL_ALERTS,
+                globalAlerts: expect.objectContaining({ info: expect.any(Object), warning: expect.any(Object) }),
+            });
+        });
+
+        it('Can override existing type of alert', () => {
+            mockStore.dispatch(setGlobalAlert('info', 'Test updated info message'));
+
+            const actions = mockStore.getActions();
+            expect(actions).toHaveLength(1);
+            expect(actions).toContainEqual({
+                type: SET_GLOBAL_ALERTS,
+                globalAlerts: expect.objectContaining({ info: { message: 'Test updated info message' } }),
+            });
+        });
+
+        it('Can close alert as expected', () => {
+            mockStore.dispatch(closeGlobalAlert('info'));
+
+            const actions = mockStore.getActions();
+            expect(actions).toHaveLength(1);
+            expect(actions).toContainEqual({
+                type: SET_GLOBAL_ALERTS,
+                globalAlerts: {},
+            });
+        });
     });
 });

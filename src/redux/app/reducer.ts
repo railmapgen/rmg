@@ -4,7 +4,7 @@ import {
     SET_CANVAS_SCALE_STATUS,
     SET_CANVAS_TO_SHOW,
     SET_CANVAS_TO_SHOW_STATUS,
-    SET_GLOBAL_ALERT,
+    SET_GLOBAL_ALERTS,
     SET_IS_LOADING,
     SET_IS_SHARE_TRACK_ENABLED,
     SET_SELECTED_BRANCH,
@@ -15,7 +15,7 @@ import {
     setCanvasScaleStatusAction,
     setCanvasToShowAction,
     setCanvasToShowStatusAction,
-    setGlobalAlertAction,
+    setGlobalAlertsAction,
     setIsLoadingAction,
     setIsShareTrackEnabledAction,
     setSelectedBranchAction,
@@ -23,9 +23,9 @@ import {
     setSelectedStationAction,
     setSidePanelModeAction,
 } from './action';
-import { AlertProps } from '@chakra-ui/react';
+import { AlertStatus } from '@chakra-ui/react';
 
-interface AppState {
+export interface AppState {
     rmgStyle: RmgStyle;
     canvasScale: number;
     canvasScaleStatus: LoadingStatus;
@@ -36,9 +36,11 @@ interface AppState {
     selectedColine?: number;
     selectedBranch: number;
     isShareTrackEnabled?: string[]; // for main line only, store the selections
-    globalAlert?: {
-        status: AlertProps['status'];
-        message: string;
+    globalAlerts: {
+        [s in AlertStatus]?: {
+            message: string;
+            url?: string;
+        };
     };
     isLoading: boolean;
 }
@@ -54,6 +56,7 @@ const initialState: AppState = {
     selectedColine: undefined,
     selectedBranch: 0,
     isShareTrackEnabled: undefined,
+    globalAlerts: {},
     isLoading: false,
 };
 
@@ -69,7 +72,7 @@ export default function AppReducer(
         | setSelectedColineAction
         | setSelectedBranchAction
         | setIsShareTrackEnabledAction
-        | setGlobalAlertAction
+        | setGlobalAlertsAction
         | setIsLoadingAction
 ): AppState {
     switch (action.type) {
@@ -100,8 +103,8 @@ export default function AppReducer(
         case SET_IS_SHARE_TRACK_ENABLED:
             state.isShareTrackEnabled = action.isShareTrackEnabled;
             break;
-        case SET_GLOBAL_ALERT:
-            state.globalAlert = action.globalAlert;
+        case SET_GLOBAL_ALERTS:
+            state.globalAlerts = action.globalAlerts;
             break;
         case SET_IS_LOADING:
             state.isLoading = action.isLoading;

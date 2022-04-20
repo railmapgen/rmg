@@ -1,7 +1,8 @@
 import { AllCanvas, CanvasType, LoadingStatus, SidePanelMode } from '../../constants/constants';
 import { Dispatch } from 'redux';
-import { RootState } from '../index';
-import { AlertProps } from '@chakra-ui/react';
+import { AppDispatch, RootState } from '../index';
+import { AlertStatus } from '@chakra-ui/react';
+import { AppState } from './reducer';
 
 // canvas
 export const SET_CANVAS_SCALE = 'SET_CANVAS_SCALE';
@@ -17,7 +18,7 @@ export const SET_SELECTED_BRANCH = 'SET_SELECTED_BRANCH';
 export const SET_IS_SHARE_TRACK_ENABLED = 'SET_IS_SHARE_TRACK_ENABLED';
 
 // global
-export const SET_GLOBAL_ALERT = 'SET_GLOBAL_ALERT';
+export const SET_GLOBAL_ALERTS = 'SET_GLOBAL_ALERTS';
 export const SET_IS_LOADING = 'SET_IS_LOADING';
 
 export interface setCanvasScaleAction {
@@ -65,9 +66,9 @@ export interface setIsShareTrackEnabledAction {
     isShareTrackEnabled?: string[];
 }
 
-export interface setGlobalAlertAction {
-    type: typeof SET_GLOBAL_ALERT;
-    globalAlert?: { status: AlertProps['status']; message: string };
+export interface setGlobalAlertsAction {
+    type: typeof SET_GLOBAL_ALERTS;
+    globalAlerts: AppState['globalAlerts'];
 }
 
 export interface setIsLoadingAction {
@@ -156,11 +157,27 @@ export const setIsShareTrackEnabled = (isShareTrackEnabled?: string[]): setIsSha
     return { type: SET_IS_SHARE_TRACK_ENABLED, isShareTrackEnabled };
 };
 
-export const setGlobalAlert = (globalAlert?: {
-    status: AlertProps['status'];
-    message: string;
-}): setGlobalAlertAction => {
-    return { type: SET_GLOBAL_ALERT, globalAlert };
+const setGlobalAlerts = (globalAlerts: AppState['globalAlerts']): setGlobalAlertsAction => {
+    return { type: SET_GLOBAL_ALERTS, globalAlerts };
+};
+
+export const setGlobalAlert = (status: AlertStatus, message: string, url?: string) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const globalAlerts = getState().app.globalAlerts;
+        dispatch(
+            setGlobalAlerts({
+                ...globalAlerts,
+                [status]: { message, url },
+            })
+        );
+    };
+};
+
+export const closeGlobalAlert = (status: AlertStatus) => {
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        const { [status]: _, ...otherAlerts } = getState().app.globalAlerts;
+        dispatch(setGlobalAlerts(otherAlerts));
+    };
 };
 
 export const setIsLoading = (isLoading: boolean): setIsLoadingAction => {

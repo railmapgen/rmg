@@ -3,7 +3,7 @@ import StationSidePanelFooter from './station-side-panel-footer';
 import { mount, ReactWrapper } from 'enzyme';
 import { createMockAppStore, TestingProvider } from '../../../setupTests';
 import { SidePanelMode, StationDict } from '../../../constants/constants';
-import { SET_GLOBAL_ALERT, SET_SELECTED_STATION, SET_SIDE_PANEL_MODE } from '../../../redux/app/action';
+import { SET_GLOBAL_ALERTS, SET_SELECTED_STATION, SET_SIDE_PANEL_MODE } from '../../../redux/app/action';
 import rootReducer from '../../../redux';
 import { SET_STATIONS_BULK } from '../../../redux/param/action';
 
@@ -74,8 +74,8 @@ describe('Unit tests for StationSidePanelFooter component', () => {
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(1);
         expect(actions).toContainEqual({
-            type: SET_GLOBAL_ALERT,
-            globalAlert: { status: 'error', message: expect.stringContaining('Unable to remove') },
+            type: SET_GLOBAL_ALERTS,
+            globalAlerts: { error: { message: expect.stringContaining('Unable to remove') } },
         });
     });
 

@@ -31,7 +31,7 @@ export default function StationSidePanelFooter() {
             dispatch(removeStation(selectedStation));
             setIsRemoveModalOpen(false);
         } else {
-            dispatch(setGlobalAlert({ status: 'error', message: t('StationSidePanel.footer.errorOnRemove') }));
+            dispatch(setGlobalAlert('error', t('StationSidePanel.footer.errorOnRemove')));
         }
     };
 
