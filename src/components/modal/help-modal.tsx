@@ -24,15 +24,15 @@ import { useTranslation } from 'react-i18next';
 import { MdOpenInNew } from 'react-icons/md';
 
 const CONTRIBUTORS_LIST = [
+    '52PD',
     'jealousyge',
     'Jay20081229',
     'clearng-kly',
     'Dingdong2334',
-    '52PD',
     'linchen1965',
     'C1P918R',
-    'AnDanJune\nUnderline',
-    'GrassRabbit\n1410',
+    'AnDanJuneUnderline',
+    'GrassRabbit1410',
     'xiany114514',
     'Andy1782010',
     'Thomastzc',
@@ -198,7 +198,7 @@ export default function HelpModal(props: HelpModalProps) {
                                     thekingofcity
                                 </Text>
                                 <Text fontSize="sm">Author of Shanghai Metro style</Text>
-                                <Text fontSize="sm">Desktop version (Electron) maintaner</Text>
+                                <Text fontSize="sm">Desktop version (Electron) maintainer</Text>
                             </TagLabel>
                         </Tag>
                     </VStack>
@@ -210,12 +210,7 @@ export default function HelpModal(props: HelpModalProps) {
                     <Flex wrap="wrap">
                         {CONTRIBUTORS_LIST.map(contributor => (
                             <Tag key={contributor} size="lg" mb={1} mr={1}>
-                                <Avatar
-                                    src={`https://github.com/${contributor.replaceAll('\n', '')}.png`}
-                                    size="xs"
-                                    ml={-1}
-                                    mr={2}
-                                />
+                                <Avatar src={`https://github.com/${contributor}.png`} size="xs" ml={-1} mr={2} />
                                 <TagLabel>{contributor}</TagLabel>
                             </Tag>
                         ))}

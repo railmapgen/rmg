@@ -14,6 +14,7 @@ export enum CompanyCode {
     shmetro = 'shmetro',
     saopaulometro = 'saopaulometro',
     szmetro = 'szmetro',
+    torontosubway = 'torontosubway',
     zzmetro = 'zzmetro',
 }
 
@@ -130,6 +131,15 @@ export const companies: CompanyEntry[] = [
             [LanguageCode.English]: 'Shenzhen Metro',
             [LanguageCode.ChineseSimp]: '深圳地铁',
             [LanguageCode.ChineseTrad]: '深圳地鐵',
+        },
+    },
+    {
+        id: CompanyCode.torontosubway,
+        name: {
+            en: 'Toronto Subway',
+            fr: 'Métro de Toronto',
+            'zh-Hans': '多伦多地铁',
+            'zh-Hant': '多倫多地鐵',
         },
     },
     {

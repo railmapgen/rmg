@@ -931,6 +931,45 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
         },
     ],
 
+    torontosubway: [
+        {
+            filename: 'ttc1',
+            name: {
+                en: 'Line 1 Yonge-University',
+                fr: 'Ligne 1 Yonge-University',
+                'zh-Hans': '1 央街－大学线',
+                'zh-Hant': '1 央街－大學線',
+            },
+        },
+        {
+            filename: 'ttc2',
+            name: {
+                en: 'Line 2 Bloor-Danforth',
+                fr: 'Ligne 2 Bloor-Danforth',
+                'zh-Hans': '2 布鲁亚－丹佛线',
+                'zh-Hant': '2 布魯亞－丹佛線',
+            },
+        },
+        {
+            filename: 'ttc3',
+            name: {
+                en: 'Line 3 Scarborough',
+                fr: 'Ligne 3 Scarborough',
+                'zh-Hans': '3 士嘉堡轻铁',
+                'zh-Hant': '3 士嘉堡輕鐵',
+            },
+        },
+        {
+            filename: 'ttc4',
+            name: {
+                en: 'Line 4 Sheppard',
+                fr: 'Ligne 4 Sheppard',
+                'zh-Hans': '1 雪柏线',
+                'zh-Hant': '1 雪柏線',
+            },
+        },
+    ],
+
     zzmetro: [
         {
             filename: 'zz1',

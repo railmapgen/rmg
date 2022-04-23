@@ -64,6 +64,12 @@ Make your own rail map on [GitHub Pages](https://wongchito.github.io/RailMapGene
       </a>
     </td>
     <td align="center" style="border-width:0px">
+      <a herf="https://github.com/jealousyge">
+        <img src="https://github.com/jealousyge.png" width="100px;" alt=""><br/>
+        <b>jealousyge</b><br/>
+      </a>
+    </td>
+    <td align="center" style="border-width:0px">
       <a herf="https://github.com/AnDanJuneUnderline">
         <img src="https://github.com/AnDanJuneUnderline.png" width="100px;" alt=""><br/>
         <b>AnDanJuneUnderline</b><br/>
