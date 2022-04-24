@@ -19,6 +19,7 @@ import { useDispatch } from 'react-redux';
 import { cloneSvgCanvas, test } from '../../util/export-utils';
 import { downloadAs, downloadBlobAs } from '../../util/utils';
 import { useTranslation } from 'react-i18next';
+import { setIsLoading } from '../../redux/app/action';
 
 interface DownloadModalProps {
     isOpen: boolean;
@@ -37,6 +38,7 @@ export default function DownloadModal(props: DownloadModalProps) {
     const [scale, setScale] = useState(100);
     const [format, setFormat] = useState('png');
 
+    const canvasToShow = useAppSelector(state => state.app.canvasToShow);
     const {
         style,
         stn_list: stationList,
@@ -45,10 +47,13 @@ export default function DownloadModal(props: DownloadModalProps) {
     } = useAppSelector(state => state.param);
 
     const canvasOptions = canvasConfig[style].reduce<Record<string, string>>(
-        (acc, cur) => ({
-            ...acc,
-            [cur]: cur,
-        }),
+        (acc, cur) => {
+            if (canvasToShow === 'all' || cur === canvasToShow) {
+                return { ...acc, [cur]: t('CanvasType.' + cur) };
+            } else {
+                return { ...acc };
+            }
+        },
         { '': t('DownloadModal.pleaseSelect') }
     );
 
@@ -110,6 +115,7 @@ export default function DownloadModal(props: DownloadModalProps) {
     ];
 
     const handleDownload = async (option: 'current' | 'all') => {
+        dispatch(setIsLoading(true));
         const stationIdListToDownload =
             option === 'current'
                 ? [currentStationId]
@@ -179,6 +185,7 @@ export default function DownloadModal(props: DownloadModalProps) {
 
         // revert to original station
         await dispatch(setCurrentStation(currentStationId));
+        dispatch(setIsLoading(false));
         onClose();
     };
 

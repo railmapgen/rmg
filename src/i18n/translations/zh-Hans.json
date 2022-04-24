@@ -288,5 +288,12 @@
     "Terms and conditions": "条款及细则",
     "Visit": "访问",
     "Visit GitHub": "访问GitHub",
-    ", open an issue and join us today!": "，创建一个Issue和加入我们！"
+    ", open an issue and join us today!": "，创建一个Issue和加入我们！",
+
+    "CanvasType": {
+        "destination": "终点站站牌",
+        "runin": "当前站名牌",
+        "railmap": "站台门路线图",
+        "indoor": "车内路线图"
+    }
 }

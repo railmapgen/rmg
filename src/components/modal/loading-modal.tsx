@@ -8,7 +8,16 @@ export default function LoadingModal() {
     return (
         <Modal isOpen={isLoading} onClose={() => {}}>
             <ModalOverlay />
-            <Flex position="absolute" top={0} left={0} h="100%" w="100%" justifyContent="center" alignItems="center">
+            <Flex
+                position="absolute"
+                top={0}
+                left={0}
+                h="100%"
+                w="100%"
+                justifyContent="center"
+                alignItems="center"
+                zIndex={9999}
+            >
                 <CircularProgress isIndeterminate color="teal" />
             </Flex>
         </Modal>
