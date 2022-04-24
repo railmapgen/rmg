@@ -8,15 +8,6 @@
         "shmetro": "上海地鐵"
     },
 
-    "CanvasButtonGroup": {
-        "label": "顯示的畫面",
-        "all": "全部",
-        "destination": "終點站牌",
-        "runin": "當前站名牌",
-        "railmap": "幕門路綫圖",
-        "indoor": "車內路綫圖"
-    },
-
     "HeaderActions": {
         "editStyle": "風格化設定"
     },
@@ -277,6 +268,7 @@
         "submit": "確定"
     },
 
+    "Canvas to show": "顯示的畫面",
     "Chinese name": "中文名稱",
     "Colour": "顏色",
     "Contribution Wiki": "貢獻者指南",
@@ -290,6 +282,7 @@
     ", open an issue and join us today!": "，新增一個Issue並且加入我們！",
 
     "CanvasType": {
+        "all": "全部",
         "destination": "終點站牌",
         "runin": "當前站名牌",
         "railmap": "幕門路綫圖",

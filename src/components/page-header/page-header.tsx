@@ -17,13 +17,13 @@ export default function PageHeader() {
     const style = useAppSelector(state => state.param.style);
 
     const canvasSelections = [AllCanvas, ...canvasConfig[style]].map(canvas => ({
-        label: t('CanvasButtonGroup.' + canvas),
+        label: t('CanvasType.' + canvas),
         value: canvas,
     }));
 
     return (
         <Flex align="center" wrap="wrap" pl={2} pr={3}>
-            <RmgLabel label={t('CanvasButtonGroup.label')}>
+            <RmgLabel label={t('Canvas to show')}>
                 <RmgButtonGroup
                     selections={canvasSelections}
                     defaultValue={canvasToShow}

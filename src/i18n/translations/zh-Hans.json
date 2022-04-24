@@ -8,15 +8,6 @@
         "shmetro": "上海地铁"
     },
 
-    "CanvasButtonGroup": {
-        "label": "显示的画面",
-        "all": "全部",
-        "destination": "终点站站牌",
-        "runin": "当前站名牌",
-        "railmap": "站台门路线图",
-        "indoor": "车内路线图"
-    },
-
     "HeaderActions": {
         "editStyle": "风格化设置"
     },
@@ -278,6 +269,7 @@
         "submit": "确定"
     },
 
+    "Canvas to show": "显示的画面",
     "Chinese name": "中文名称",
     "Colour": "颜色",
     "Contribution Wiki": "贡献者指南",
@@ -291,6 +283,7 @@
     ", open an issue and join us today!": "，创建一个Issue和加入我们！",
 
     "CanvasType": {
+        "all": "全部",
         "destination": "终点站站牌",
         "runin": "当前站名牌",
         "railmap": "站台门路线图",
