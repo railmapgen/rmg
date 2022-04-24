@@ -181,7 +181,12 @@ export default function HelpModal(props: HelpModalProps) {
                     </Heading>
 
                     <VStack>
-                        <Tag size="lg" minW="80%">
+                        <Tag
+                            size="lg"
+                            minW="80%"
+                            onClick={() => window.open('https://github.com/wongchito', '_blank')}
+                            cursor="pointer"
+                        >
                             <Avatar src="https://github.com/wongchito.png" size="lg" my={2} ml={-1} mr={2} />
                             <TagLabel>
                                 <Text fontSize="lg" fontWeight="bold" mb={1}>
@@ -191,7 +196,12 @@ export default function HelpModal(props: HelpModalProps) {
                                 <Text fontSize="sm">Author of MTR and Guangzhou Metro styles</Text>
                             </TagLabel>
                         </Tag>
-                        <Tag size="lg" minW="80%">
+                        <Tag
+                            size="lg"
+                            minW="80%"
+                            onClick={() => window.open('https://github.com/thekingofcity', '_blank')}
+                            cursor="pointer"
+                        >
                             <Avatar src="https://github.com/thekingofcity.png" size="lg" my={2} ml={-1} mr={2} />
                             <TagLabel>
                                 <Text fontSize="lg" fontWeight="bold" mb={1}>
@@ -209,7 +219,19 @@ export default function HelpModal(props: HelpModalProps) {
 
                     <Flex wrap="wrap">
                         {CONTRIBUTORS_LIST.map(contributor => (
-                            <Tag key={contributor} size="lg" mb={1} mr={1}>
+                            <Tag
+                                key={contributor}
+                                size="lg"
+                                mb={1}
+                                mr={1}
+                                onClick={() =>
+                                    window.open(
+                                        `https://github.com/railmapgen/rmg/issues?q=is:issue+author:${contributor}`,
+                                        '_blank'
+                                    )
+                                }
+                                cursor="pointer"
+                            >
                                 <Avatar src={`https://github.com/${contributor}.png`} size="xs" ml={-1} mr={2} />
                                 <TagLabel>{contributor}</TagLabel>
                             </Tag>
