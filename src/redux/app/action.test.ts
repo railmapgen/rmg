@@ -3,13 +3,11 @@ import {
     closeGlobalAlert,
     selectCanvas,
     SET_CANVAS_SCALE,
-    SET_CANVAS_SCALE_STATUS,
     SET_CANVAS_TO_SHOW,
     SET_CANVAS_TO_SHOW_STATUS,
     SET_GLOBAL_ALERTS,
     setGlobalAlert,
-    zoomIn,
-    zoomOut,
+    zoomToScale,
 } from './action';
 import { CanvasType, LoadingStatus } from '../../constants/constants';
 import { createMockAppStore } from '../../setupTests';
@@ -38,44 +36,15 @@ describe('AppActions', () => {
         jest.clearAllMocks();
     });
 
-    it('Can handle zoom in action correctly', async () => {
-        const expectedZoomedInScale = 1.1;
-
-        await mockStore.dispatch(zoomIn());
+    it('Can set canvas scale and write to localStorage as expected', async () => {
+        await mockStore.dispatch(zoomToScale(1.1));
 
         expect(mockEmptyPromise).toBeCalledTimes(1);
-        expect(mockEmptyPromise).toBeCalledWith('rmgScale', expectedZoomedInScale.toString());
+        expect(mockEmptyPromise).toBeCalledWith('rmgScale', '1.1');
 
         const actions = mockStore.getActions();
-        expect(actions).toHaveLength(3);
-        expect(
-            actions.find(
-                action => action.type === SET_CANVAS_SCALE_STATUS && action.canvasScaleStatus === LoadingStatus.loading
-            )
-        ).toBeDefined();
-        expect(
-            actions.find(action => action.type === SET_CANVAS_SCALE && action.canvasScale === expectedZoomedInScale)
-        ).toBeDefined();
-        expect(
-            actions.find(
-                action => action.type === SET_CANVAS_SCALE_STATUS && action.canvasScaleStatus === LoadingStatus.loaded
-            )
-        ).toBeDefined();
-    });
-
-    it('Can handle zoom out action correctly', async () => {
-        const expectedZoomedInScale = 0.9;
-
-        await mockStore.dispatch(zoomOut());
-
-        expect(mockEmptyPromise).toBeCalledTimes(1);
-        expect(mockEmptyPromise).toBeCalledWith('rmgScale', expectedZoomedInScale.toString());
-
-        const actions = mockStore.getActions();
-        expect(actions).toHaveLength(3);
-        expect(
-            actions.find(action => action.type === SET_CANVAS_SCALE && action.canvasScale === expectedZoomedInScale)
-        ).toBeDefined();
+        expect(actions).toHaveLength(1);
+        expect(actions.find(action => action.type === SET_CANVAS_SCALE && action.canvasScale === 1.1)).toBeDefined();
     });
 
     it('Can handle select canvas correctly', async () => {

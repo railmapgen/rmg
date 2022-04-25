@@ -1,7 +1,6 @@
 import { AllCanvas, CanvasType, LoadingStatus, RmgStyle, SidePanelMode } from '../../constants/constants';
 import {
     SET_CANVAS_SCALE,
-    SET_CANVAS_SCALE_STATUS,
     SET_CANVAS_TO_SHOW,
     SET_CANVAS_TO_SHOW_STATUS,
     SET_GLOBAL_ALERTS,
@@ -12,7 +11,6 @@ import {
     SET_SELECTED_STATION,
     SET_SIDE_PANEL_MODE,
     setCanvasScaleAction,
-    setCanvasScaleStatusAction,
     setCanvasToShowAction,
     setCanvasToShowStatusAction,
     setGlobalAlertsAction,
@@ -28,7 +26,6 @@ import { AlertStatus } from '@chakra-ui/react';
 export interface AppState {
     rmgStyle: RmgStyle;
     canvasScale: number;
-    canvasScaleStatus: LoadingStatus;
     canvasToShow: CanvasType | typeof AllCanvas;
     canvasToShowStatus: LoadingStatus;
     sidePanelMode: SidePanelMode;
@@ -48,7 +45,6 @@ export interface AppState {
 const initialState: AppState = {
     rmgStyle: RmgStyle.MTR,
     canvasScale: 1,
-    canvasScaleStatus: LoadingStatus.init,
     canvasToShow: AllCanvas,
     canvasToShowStatus: LoadingStatus.init,
     sidePanelMode: SidePanelMode.CLOSE,
@@ -64,7 +60,6 @@ export default function AppReducer(
     state = initialState,
     action:
         | setCanvasScaleAction
-        | setCanvasScaleStatusAction
         | setCanvasToShowAction
         | setCanvasToShowStatusAction
         | setSidePanelModeAction
@@ -78,9 +73,6 @@ export default function AppReducer(
     switch (action.type) {
         case SET_CANVAS_SCALE:
             state.canvasScale = action.canvasScale;
-            break;
-        case SET_CANVAS_SCALE_STATUS:
-            state.canvasScaleStatus = action.canvasScaleStatus;
             break;
         case SET_CANVAS_TO_SHOW:
             state.canvasToShow = action.canvasToShow;

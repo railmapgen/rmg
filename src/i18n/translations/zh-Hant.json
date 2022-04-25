@@ -2,7 +2,7 @@
     "WindowHeader": {
         "heading": "鐵路路綫圖產生器",
         "popoverHeader": "你正在瀏覽<1>{{environment}}</1>環境！",
-        "popoverBody": "這是一個測試環境，我們無法保證其穩定性及相容性。請返回<2>生產環境</2>。",
+        "popoverBody": "這是一個測試環境，我們無法確保其穩定性及相容性。請返回<2>生產環境</2>。",
         "mtr": "港鐵",
         "gzmtr": "廣州地鐵",
         "shmetro": "上海地鐵"
@@ -268,6 +268,7 @@
         "submit": "確定"
     },
 
+    "Canvas scale": "畫面縮放比例",
     "Canvas to show": "顯示的畫面",
     "Chinese name": "中文名稱",
     "Colour": "顏色",
