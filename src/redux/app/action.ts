@@ -6,7 +6,6 @@ import { AppState } from './reducer';
 
 // canvas
 export const SET_CANVAS_SCALE = 'SET_CANVAS_SCALE';
-export const SET_CANVAS_SCALE_STATUS = 'SET_CANVAS_SCALE_STATUS';
 export const SET_CANVAS_TO_SHOW = 'SET_CANVAS_TO_SHOW';
 export const SET_CANVAS_TO_SHOW_STATUS = 'SET_CANVAS_TO_SHOW_STATUS';
 
@@ -24,11 +23,6 @@ export const SET_IS_LOADING = 'SET_IS_LOADING';
 export interface setCanvasScaleAction {
     type: typeof SET_CANVAS_SCALE;
     canvasScale: number;
-}
-
-export interface setCanvasScaleStatusAction {
-    type: typeof SET_CANVAS_SCALE_STATUS;
-    canvasScaleStatus: LoadingStatus;
 }
 
 export interface setCanvasToShowAction {
@@ -80,38 +74,13 @@ export const setCanvasScale = (canvasScale: number) => {
     return { type: SET_CANVAS_SCALE, canvasScale } as setCanvasScaleAction;
 };
 
-const setCanvasScaleStatus = (canvasScaleStatus: LoadingStatus) => {
-    return { type: SET_CANVAS_SCALE_STATUS, canvasScaleStatus } as setCanvasScaleStatusAction;
-};
-
-export const zoomIn = () => {
-    return async (dispatch: Dispatch, getState: () => RootState) => {
-        dispatch(setCanvasScaleStatus(LoadingStatus.loading));
+export const zoomToScale = (scale: number) => {
+    return async (dispatch: AppDispatch) => {
         try {
-            const newScale = Number((getState().app.canvasScale + 0.1).toFixed(1));
-            dispatch(setCanvasScale(newScale));
-            await window.rmgStorage.writeFile('rmgScale', newScale.toString());
-            dispatch(setCanvasScaleStatus(LoadingStatus.loaded));
+            dispatch(setCanvasScale(scale));
+            await window.rmgStorage.writeFile('rmgScale', scale.toString());
         } catch (err) {
-            dispatch(setCanvasScaleStatus(LoadingStatus.failed));
-        }
-    };
-};
-
-export const zoomOut = () => {
-    return async (dispatch: Dispatch, getState: () => RootState) => {
-        dispatch(setCanvasScaleStatus(LoadingStatus.loading));
-        try {
-            const { canvasScale } = getState().app;
-            const newScale =
-                Number(canvasScale.toFixed(1)) <= 0.1
-                    ? Number(canvasScale.toFixed(1))
-                    : Number((canvasScale - 0.1).toFixed(1));
-            dispatch(setCanvasScale(newScale));
-            await window.rmgStorage.writeFile('rmgScale', newScale.toString());
-            dispatch(setCanvasScaleStatus(LoadingStatus.loaded));
-        } catch (err) {
-            dispatch(setCanvasScaleStatus(LoadingStatus.failed));
+            console.log('AppAction.zoomToScale():: Failed to write scale to localStorage', err);
         }
     };
 };

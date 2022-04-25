@@ -10,7 +10,7 @@ import { AllCanvas, CanvasType, RMGParam } from './constants/constants';
 import StorageService from './util/storage/storageService';
 import getRmgStorage from './util/storage';
 import store from './redux';
-import { setCanvasScale, setCanvasToShow } from './redux/app/action';
+import { setCanvasScale, setCanvasToShow, zoomToScale } from './redux/app/action';
 import { setFullParam } from './redux/param/action';
 import autoSaveScheduler from './util/auto-save-scheduler';
 
@@ -82,8 +82,7 @@ getRmgStorage()
         } catch (err) {
             console.warn('Error in reading rmgScale file', err);
             console.log('Initiating rmgScale as 1');
-            await window.rmgStorage.writeFile('rmgScale', '1');
-            store.dispatch(setCanvasScale(1));
+            await store.dispatch(zoomToScale(1));
         }
 
         // setup canvas to show

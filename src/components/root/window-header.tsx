@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import { Flex, Heading, HStack, Icon, IconButton, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { getEnvironment, getVersion } from '../../util/config';
 import { Trans, useTranslation } from 'react-i18next';
-import { MdHelp, MdLocationCity, MdOpenInNew, MdTranslate, MdZoomIn, MdZoomOut } from 'react-icons/md';
+import { MdHelp, MdLocationCity, MdOpenInNew, MdTranslate } from 'react-icons/md';
 import { LanguageCode, RmgStyle } from '../../constants/constants';
 import { useDispatch } from 'react-redux';
 import { setStyle } from '../../redux/param/action';
 import * as ReactRouterDom from 'react-router-dom';
-import { zoomIn, zoomOut } from '../../redux/app/action';
 import HelpModal from '../modal/help-modal';
 import { RmgEnvBadge } from '@railmapgen/rmg-components';
 
@@ -55,21 +54,6 @@ export default function WindowHeader() {
             />
 
             <HStack ml="auto">
-                <IconButton
-                    size="sm"
-                    variant="ghost"
-                    aria-label="Zoom out"
-                    icon={<MdZoomOut />}
-                    onClick={() => dispatch(zoomOut())}
-                />
-                <IconButton
-                    size="sm"
-                    variant="ghost"
-                    aria-label="Zoom in"
-                    icon={<MdZoomIn />}
-                    onClick={() => dispatch(zoomIn())}
-                />
-
                 <Menu>
                     <MenuButton as={IconButton} icon={<MdLocationCity />} variant="ghost" size="sm" />
                     <MenuList>
