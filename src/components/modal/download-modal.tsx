@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Button,
     HStack,
@@ -45,6 +45,13 @@ export default function DownloadModal(props: DownloadModalProps) {
         current_stn_idx: currentStationId,
         line_name: lineName,
     } = useAppSelector(state => state.param);
+
+    useEffect(() => {
+        // reset canvas to download if on-screen canvas changed
+        if (canvasToShow !== 'all' && canvasToDownload !== '' && canvasToShow !== canvasToDownload) {
+            setCanvasToDownload('');
+        }
+    }, [canvasToShow]);
 
     const canvasOptions = canvasConfig[style].reduce<Record<string, string>>(
         (acc, cur) => {
