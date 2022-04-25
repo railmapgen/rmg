@@ -20,7 +20,7 @@ export default RailMapSHMetro;
 
 const DefsSHMetro = React.memo(() => (
     <defs>
-        <circle id="stn_sh" fill="var(--rmg-white)" strokeWidth={0} r={5} />
+        <circle id="stn_sh" fill="var(--rmg-white)" strokeWidth={2} r={5} />
         <path id="int2_sh" fill="var(--rmg-white)" strokeWidth={2} d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z" />
         <path
             id="express_sh"
@@ -39,6 +39,22 @@ const DefsSHMetro = React.memo(() => (
         <rect id="stn_sh_2020_direct" stroke="none" height={74} width={12} x={-6} y={-18} />
 
         <rect id="intbox_number" height={22} width={20} y={-11} />
+
+        <g id="intbox_maglev" transform="translate(-25,0)">
+            <rect id="maglev_5" height={144} width={130} y="40" x="30" strokeWidth={10} />
+            <path
+                id="maglev_3"
+                fill="var(--rmg-white)"
+                d="m90,55a40,5 0 0 0 -40,3a5,5 0 0 0 -5,5a5,60 0 0 0 -3,60a5,5 0 0 0 5,5l96,0a5,5 0 0 0 5,-5a5,60 0 0 0 -3,-60a5,5 0 0 0 -5,-5a40,5 0 0 0 -40,-3l-5,-10l-5,10"
+            />
+            <path
+                id="maglev_4"
+                fill="var(--rmg-white)"
+                d="m90,140l-40,0a10,5 0 0 1 -10,-5l0,25a10,15 0 0 0 10,15l15,0l0,-10l-15,0l0,-15l90,0l0,15l-15,0l0,10l15,0a10,15 0 0 0 10,-15l0,-25a10,5 0 0 1 -10,5l-50,0"
+            />
+            <rect id="maglev_1" height="25" width="40" y="80" x="50" />
+            <rect id="maglev_2" height="25" width="40" y="80" x="100" />
+        </g>
 
         <g id="airport" transform="scale(0.5)">
             <circle cx="0" cy="29.33899" r="29.33899" fill="var(--rmg-grey)" />
