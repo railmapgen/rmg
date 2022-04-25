@@ -19,22 +19,26 @@ const initialOptions: CustomRenderOptions = {
 
 interface TestingProviderProps {
     children?: ReactNode;
+    store: Store;
 }
 
+export const TestingProvider = (props: TestingProviderProps) => {
+    const { children, store } = props;
+
+    return (
+        <I18nextProvider i18n={i18n}>
+            <Provider store={store}>
+                <MemoryRouter>{children}</MemoryRouter>
+            </Provider>
+        </I18nextProvider>
+    );
+};
+
 const customRender = (ui: ReactElement, { store, ...renderOptions } = initialOptions) => {
-    const TestingProvider = (props: TestingProviderProps) => {
-        const { children } = props;
-
-        return (
-            <I18nextProvider i18n={i18n}>
-                <Provider store={store}>
-                    <MemoryRouter>{children}</MemoryRouter>
-                </Provider>
-            </I18nextProvider>
-        );
-    };
-
-    return render(ui, { wrapper: TestingProvider, ...renderOptions });
+    return render(ui, {
+        wrapper: props => <TestingProvider store={store} {...props} />,
+        ...renderOptions,
+    });
 };
 
 export { customRender as render };

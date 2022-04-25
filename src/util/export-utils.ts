@@ -1,4 +1,5 @@
 import { CanvasType, RmgStyle } from '../constants/constants';
+import { isSafari } from './utils';
 
 export const cloneSvgCanvas = async (
     canvas: CanvasType,
@@ -112,13 +113,7 @@ export const getBase64FontFace = async (svgEl: SVGSVGElement): Promise<string[]>
     return await Promise.all(
         distinctCssRules.map(async cssRule => {
             try {
-                const ruleStyleSrc = (cssRule.style as any).src;
-                const isSafari = navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome');
-                const url = isSafari
-                    ? ruleStyleSrc.replace(/^url\(([\S]+)\).*$/, '$1')
-                    : process.env.PUBLIC_URL + '/styles/' + ruleStyleSrc.match(/^url\("([\S*]+)"\)/)?.[1];
-
-                const fontResp = await fetch(url);
+                const fontResp = await fetch(getAbsoluteUrl(cssRule));
                 const fontDataUri = await readBlobAsDataURL(await fontResp.blob());
                 return cssRule.cssText.replace(/src:[ \w('",\-:/.)]+;/g, `src: url('${fontDataUri}'); `);
             } catch (err) {
@@ -127,6 +122,13 @@ export const getBase64FontFace = async (svgEl: SVGSVGElement): Promise<string[]>
             }
         })
     );
+};
+
+export const getAbsoluteUrl = (cssRule: CSSFontFaceRule) => {
+    const ruleStyleSrc = (cssRule.style as any).src;
+    return isSafari()
+        ? ruleStyleSrc.replace(/^url\("([\S]+)"\).*$/, '$1')
+        : process.env.PUBLIC_URL + '/styles/' + ruleStyleSrc.match(/^url\("([\S*]+)"\)/)?.[1];
 };
 
 export const test = async (svgEl: SVGSVGElement, scale: number): Promise<Blob> => {

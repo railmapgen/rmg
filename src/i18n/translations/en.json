@@ -6,15 +6,6 @@
         "shmetro": "Shanghai Metro"
     },
 
-    "CanvasButtonGroup": {
-        "label": "Canvas to show",
-        "all": "All",
-        "destination": "Destination",
-        "runin": "Running-in",
-        "railmap": "Rail map",
-        "indoor": "Indoor"
-    },
-
     "HeaderActions": {
         "editStyle": "Edit style"
     },
@@ -281,5 +272,13 @@
         "asc": "Ascending",
         "desc": "Descending",
         "submit": "Submit"
+    },
+
+    "CanvasType": {
+        "all": "All",
+        "destination": "Destination",
+        "runin": "Running-in",
+        "railmap": "Rail map",
+        "indoor": "Indoor"
     }
 }
