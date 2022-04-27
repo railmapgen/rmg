@@ -21,7 +21,7 @@
     "OpenActions": {
         "openFrom": "打开",
         "upload": "上传配置文件",
-        "templates": "模版",
+        "templates": "模板",
         "invalidType": "无效的文件种类！只接受JSON种类的文件。",
         "unknownError": "导入上传的文件时发生错误！请重试。"
     },
@@ -41,7 +41,7 @@
     },
 
     "TemplateModal": {
-        "title": "选择模版"
+        "title": "选择模板"
     },
 
     "UploadConfirmModal": {
@@ -276,6 +276,7 @@
     "Contribution Wiki": "贡献者指南",
     "Contributors": "贡献者",
     "Core contributors": "核心贡献者",
+    "Empty template": "空白模板",
     "English name": "英文名称",
     "Help and support": "帮助和支持",
     "Terms and conditions": "条款及细则",

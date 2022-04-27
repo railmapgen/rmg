@@ -4,13 +4,6 @@ import { CompanyCode } from '../company-config';
 export const templateList: Record<CompanyCode, { filename: string; name: Translation }[]> = {
     basic: [
         {
-            filename: 'blank',
-            name: {
-                en: 'Blank',
-                zh: '空白',
-            },
-        },
-        {
             filename: 'default',
             name: {
                 en: 'Default',
