@@ -1,18 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import i18n from './i18n/config';
+import './i18n/config';
 import App from './App';
 import { updateParam } from './utils';
 import * as serviceWorker from './serviceWorker';
-
-import { AllCanvas, CanvasType, RMGParam } from './constants/constants';
+import { AllCanvas, CanvasType, LanguageCode, RMGParam, RmgStyle } from './constants/constants';
 import StorageService from './util/storage/storageService';
 import getRmgStorage from './util/storage';
 import store from './redux';
 import { setCanvasScale, setCanvasToShow, zoomToScale } from './redux/app/action';
 import { setFullParam } from './redux/param/action';
 import autoSaveScheduler from './util/auto-save-scheduler';
+import { initParam } from './redux/param/util';
 
 declare global {
     interface Window {
@@ -54,22 +54,19 @@ getRmgStorage()
         await rmgStorage.init();
         try {
             const contents = await rmgStorage.readFile('rmgParam');
-
             const updatedParam = updateParam(JSON.parse(contents));
+
             await rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
+            store.dispatch(setFullParam(updatedParam as RMGParam));
         } catch (err) {
             console.warn('Error in reading rmgParam', err);
-            const module = await import('./constants/templates/basic/blank');
-            const updatedParam = updateParam(module.default);
-            await rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
+
+            const param = initParam(RmgStyle.MTR, LanguageCode.ChineseTrad);
+            await rmgStorage.writeFile('rmgParam', JSON.stringify(param));
+            store.dispatch(setFullParam(param));
         } finally {
             window.rmgStorage = rmgStorage;
         }
-    })
-    .then(async () => {
-        // init param store with localStorage
-        const contents = await window.rmgStorage.readFile('rmgParam');
-        store.dispatch(setFullParam(JSON.parse(contents)));
     })
     .then(async () => {
         // style being setup in SVG's router
@@ -99,12 +96,7 @@ getRmgStorage()
         window.rmgStore = store;
     })
     .then(() => {
-        let config = i18n;
-    })
-    .then(() => {
         renderApp();
-    })
-    .then(() => {
         autoSaveScheduler();
     })
     .catch(err => {
