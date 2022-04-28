@@ -45,7 +45,7 @@ export default function LoopSection() {
             type: 'slider',
             label: t('StyleSidePanel.loop.bottomFactor'),
             value: bottom_factor,
-            min: 1,
+            min: 0,
             max: Math.floor((branches[0].length - left_and_right_factor * 2) / 2),
             onChange: val => dispatch(setLoopBottomFactor(Math.floor(val))),
             hidden: !loop,
