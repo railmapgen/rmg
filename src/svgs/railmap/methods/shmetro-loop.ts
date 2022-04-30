@@ -44,7 +44,7 @@ export type LoopStns = ReturnType<typeof split_loop_stns>;
  *
  * @param loopline The loop line aka branches[0].
  * @param loop_stns Object returned from split_loop_stns.
- * @returns Values sit between -1 and 1.
+ * @returns Values sit between 0 and 1.
  */
 export const get_xshares_yshares_of_loop = (loopline: string[], loop_stns: LoopStns) => {
     const x_shares = Object.fromEntries(loopline.map(stn_id => [stn_id, -1]));

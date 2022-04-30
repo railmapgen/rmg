@@ -127,7 +127,7 @@
         "loop": {
             "title": "Loop",
             "isLoop": "Treat as loop line",
-            "isBank": "Display loop as a parallelogram",
+            "isBank": "Display loop as a parallelogram in Rail map",
             "leftRightFactor": "Left and right factor",
             "bottomFactor": "Bottom factor"
         }

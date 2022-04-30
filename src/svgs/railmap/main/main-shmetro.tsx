@@ -160,7 +160,7 @@ const MainSHMetro = () => {
             {Object.keys(coline).length > 0 && (
                 <ColineSHMetro xs={xs} servicesPresent={servicesPresent} stnStates={stnStates} />
             )}
-            <ServicesElements servicesLevel={servicesPresent} lineXs={lineXs} />
+            {servicesPresent.length > 1 && <ServicesElements servicesLevel={servicesPresent} lineXs={lineXs} />}
         </g>
     );
 };
@@ -417,8 +417,6 @@ const ServicesElements = (props: { servicesLevel: Services[]; lineXs: number[] }
     const { svg_height, direction, svgWidth } = useAppSelector(store => store.param);
     const dy = -svg_height * (0.5 + 0.1);
 
-    if (props.servicesLevel.length === 1) return <></>;
-
     const servicesLevel = props.servicesLevel.map(
         service =>
             ({
@@ -433,46 +431,50 @@ const ServicesElements = (props: { servicesLevel: Services[]; lineXs: number[] }
 
     let dx_hint = props.servicesLevel.length === 2 ? 350 : 500;
 
-    return (
-        <g>
-            {servicesLevel.map((service, i) => (
-                <g key={service} transform={`translate(${labelX},${i * 25})`}>
-                    <rect x={-27.5} height={10} width={55} fill={'white'} stroke={'black'} y={-5}></rect>
-                    <text className="rmg-name__zh" fontSize={9} y={3} textAnchor="middle">{`${service}运行线`}</text>
-                </g>
-            ))}
-            <g transform={`translate(${direction === 'r' ? 30 : svgWidth.railmap - dx_hint},${dy})`}>
-                <text className="rmg-name__zh">图例：</text>
-                {servicesLevel.map((serviceLevel, i) => (
-                    <g key={`serviceLevel${i}`} transform={`translate(${i * 150 + 50},0)`}>
-                        <line
-                            x1="0"
-                            x2="35"
-                            y1="-5"
-                            y2="-5"
-                            stroke="var(--rmg-theme-colour)"
-                            strokeWidth="12"
-                            filter={i === 2 ? 'url(#contrast-direct)' : i === 1 ? 'url(#contrast-express)' : ''}
-                        />
-                        <use x="17.5" y="-5" xlinkHref="#stn_sh" fill="var(--rmg-theme-colour)" />
-                        <text x="40" className="rmg-name__zh">{`${serviceLevel}停靠站`}</text>
+    return React.useMemo(
+        () => (
+            <g>
+                {servicesLevel.map((service, i) => (
+                    <g key={service} transform={`translate(${labelX},${i * 25})`}>
+                        <rect x={-27.5} height={10} width={55} fill={'white'} stroke={'black'} y={-5}></rect>
+                        <text
+                            className="rmg-name__zh"
+                            fontSize={9}
+                            y={3}
+                            textAnchor="middle"
+                        >{`${service}运行线`}</text>
                     </g>
                 ))}
+                <g transform={`translate(${direction === 'r' ? 30 : svgWidth.railmap - dx_hint},${dy})`}>
+                    <text className="rmg-name__zh">图例：</text>
+                    {servicesLevel.map((serviceLevel, i) => (
+                        <g key={`serviceLevel${i}`} transform={`translate(${i * 150 + 50},0)`}>
+                            <line
+                                x1="0"
+                                x2="35"
+                                y1="-5"
+                                y2="-5"
+                                stroke="var(--rmg-theme-colour)"
+                                strokeWidth="12"
+                                filter={i === 2 ? 'url(#contrast-direct)' : i === 1 ? 'url(#contrast-express)' : ''}
+                            />
+                            <use x="17.5" y="-5" xlinkHref="#stn_sh" fill="var(--rmg-theme-colour)" />
+                            <text x="40" className="rmg-name__zh">{`${serviceLevel}停靠站`}</text>
+                        </g>
+                    ))}
+                </g>
             </g>
-        </g>
+        ),
+        [svg_height, direction, svgWidth, props.servicesLevel, props.lineXs]
     );
 };
 
 export const DirectionElements = () => {
-    const { direction, svgWidth, svg_height, loop } = useAppSelector(store => store.param);
+    const { direction, svgWidth } = useAppSelector(store => store.param);
 
     return React.useMemo(
         () => (
-            <g
-                transform={`translate(${direction === 'l' ? 50 : svgWidth.railmap - 150},${
-                    loop ? svg_height - 30 : 50
-                })`}
-            >
+            <g transform={`translate(${direction === 'l' ? 50 : svgWidth.railmap - 150},50)`}>
                 <text className="rmg-name__zh">列车前进方向</text>
                 <path
                     d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
@@ -483,7 +485,6 @@ export const DirectionElements = () => {
                 />
             </g>
         ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [direction, svgWidth.railmap, svg_height]
+        [direction, svgWidth.railmap]
     );
 };

@@ -1,12 +1,12 @@
 import React from 'react';
 import StationSHMetro from '../station/station-shmetro';
 import { NameDirection, StationSHMetro as StationSHMetroIndoor } from '../../../indoor/station-shmetro';
-import { Services, ShortDirection } from '../../../../constants/constants';
+import { CanvasType, Services, ShortDirection } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 import { split_loop_stns, LoopStns, get_xshares_yshares_of_loop } from '../../methods/shmetro-loop';
 
-const LoopSHMetro = (props: { bank_angle: boolean }) => {
-    const { bank_angle } = props;
+const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | CanvasType.Indoor }) => {
+    const { bank_angle, canvas } = props;
     const { branches } = useAppSelector(store => store.helper);
     const {
         current_stn_idx: current_stn_id,
@@ -24,8 +24,7 @@ const LoopSHMetro = (props: { bank_angle: boolean }) => {
 
     const { x_shares, y_shares } = get_xshares_yshares_of_loop(loopline, loop_stns);
 
-    const width = bank_angle ? svg_width.railmap : svg_width.indoor;
-    const line_ys = [175, svg_height - 75 - (bank_angle ? 0 : 125)] as [number, number];
+    const line_ys = [175, svg_height - 125] as [number, number];
     const ys = Object.keys(x_shares).reduce(
         (acc, cur) => ({
             ...acc,
@@ -34,8 +33,9 @@ const LoopSHMetro = (props: { bank_angle: boolean }) => {
         {} as typeof y_shares
     );
     const line_xs = [
-        (width * padding) / 100 + (bank_angle ? line_ys[1] - line_ys[0] : 0),
-        width * (1 - padding / 100) - (bank_angle ? line_ys[1] - line_ys[0] : 0),
+        // in railmap and bank, we need to add extra padding for the 45-degree angle
+        (svg_width[canvas] * padding) / 100 + (bank_angle && canvas === CanvasType.RailMap ? 100 : 0),
+        svg_width[canvas] * (1 - padding / 100) - (bank_angle && canvas === CanvasType.RailMap ? 100 : 0),
     ] as [number, number];
     const xs = Object.keys(x_shares).reduce(
         (acc, cur) => ({
@@ -60,7 +60,7 @@ const LoopSHMetro = (props: { bank_angle: boolean }) => {
         <>
             <g id="loop" transform={`translate(${((line_ys[1] - line_ys[0]) * bank) / 2},0)`}>
                 <path stroke="var(--rmg-theme-colour)" strokeWidth={12} fill="none" d={path} strokeLinejoin="round" />
-                <LoopStationGroup bank_angle={bank_angle} loop_stns={loop_stns} xs={xs} ys={ys} />
+                <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />
             </g>
         </>
     );
@@ -122,13 +122,13 @@ export const _linePath = (
 
     const path = stn_pos
         .slice(1)
-        .map(([x, y]) => `L${x},${y}`)
+        .map(([x, y]) => `L${x},${y} `)
         .join(' ');
     return `M${stn_pos[0][0]},${stn_pos[0][1]} ${path} Z`;
 };
 
 const LoopStationGroup = (props: {
-    bank_angle: boolean;
+    canvas: CanvasType.RailMap | CanvasType.Indoor;
     loop_stns: LoopStns;
     xs: {
         [k: string]: number;
@@ -137,7 +137,8 @@ const LoopStationGroup = (props: {
         [k: string]: number;
     };
 }) => {
-    const { bank_angle, loop_stns, xs, ys } = props;
+    const { canvas, loop_stns, xs, ys } = props;
+    const { current_stn_idx: current_stn_id } = useAppSelector(store => store.param);
 
     const railmap_bank: Record<keyof LoopStns, -1 | 0 | 1> = {
         top: 0,
@@ -160,30 +161,31 @@ const LoopStationGroup = (props: {
         }[side] as NameDirection);
     return (
         <g id="loop_stations">
-            {bank_angle
-                ? Object.entries(loop_stns).map(([side, stn_ids]) =>
-                      stn_ids.map(stn_id => (
-                          <g key={stn_id} transform={`translate(${xs[stn_id]},${ys[stn_id]})`}>
-                              <StationSHMetro
-                                  stnId={stn_id}
-                                  stnState={1}
-                                  bank={railmap_bank[side as keyof LoopStns]}
-                                  direction={railmap_direction[side as keyof LoopStns]}
-                              />
-                          </g>
-                      ))
-                  )
-                : Object.entries(loop_stns).map(([side, stn_ids]) =>
-                      stn_ids.map((stn_id, i) => (
-                          <g key={stn_id} transform={`translate(${xs[stn_id]},${ys[stn_id]})`}>
-                              <StationSHMetroIndoor
-                                  stnId={stn_id}
-                                  nameDirection={indoor_name_direction(side as keyof LoopStns, i)}
-                                  services={[Services.local]}
-                              />
-                          </g>
-                      ))
-                  )}
+            {canvas === CanvasType.RailMap &&
+                Object.entries(loop_stns).map(([side, stn_ids]) =>
+                    stn_ids.map(stn_id => (
+                        <g key={stn_id} transform={`translate(${xs[stn_id]},${ys[stn_id]})`}>
+                            <StationSHMetro
+                                stnId={stn_id}
+                                stnState={current_stn_id === stn_id ? 0 : 1}
+                                bank={railmap_bank[side as keyof LoopStns]}
+                                direction={railmap_direction[side as keyof LoopStns]}
+                            />
+                        </g>
+                    ))
+                )}
+            {canvas === CanvasType.Indoor &&
+                Object.entries(loop_stns).map(([side, stn_ids]) =>
+                    stn_ids.map((stn_id, i) => (
+                        <g key={stn_id} transform={`translate(${xs[stn_id]},${ys[stn_id]})`}>
+                            <StationSHMetroIndoor
+                                stnId={stn_id}
+                                nameDirection={indoor_name_direction(side as keyof LoopStns, i)}
+                                services={[Services.local]}
+                            />
+                        </g>
+                    ))
+                )}
         </g>
     );
 };

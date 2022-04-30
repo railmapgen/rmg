@@ -27,10 +27,10 @@ export default function LoopSection() {
             type: 'switch',
             label: t('StyleSidePanel.loop.isBank'),
             isChecked: bank,
-            isDisabled: true,
             onChange: checked => dispatch(setLoopBank(checked)),
             minW: 'full',
             oneLine: true,
+            hidden: !loop,
         },
         {
             type: 'slider',

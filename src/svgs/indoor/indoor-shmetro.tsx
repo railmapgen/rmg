@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import { adjacencyList, getXShareMTR, criticalPathMethod, getStnState } from '../railmap/methods/share';
 import StationSHMetro from './station-shmetro';
 import { StationsMTR } from '../railmap/methods/mtr';
-import { StationDict, Services } from '../../constants/constants';
+import { CanvasType, StationDict, Services } from '../../constants/constants';
 import { useAppSelector } from '../../redux';
 import LoopSHMetro from '../railmap/main/loop/loop-shmetro';
 
@@ -11,7 +11,7 @@ export default memo(function IndoorWrapperSHMetro() {
     return (
         <>
             <DefsSHMetro />
-            {loop ? <LoopSHMetro bank_angle={false} /> : <IndoorSHMetro />}
+            {loop ? <LoopSHMetro bank_angle={false} canvas={CanvasType.Indoor} /> : <IndoorSHMetro />}
             <InfoElements />
         </>
     );
