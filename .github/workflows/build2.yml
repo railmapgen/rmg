@@ -21,20 +21,16 @@ jobs:
           node-version: '16'
       - run: npm i
 
-      - name: Clone UAT repo
-        run: git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/uat-railmapgen/rmg-repositories.git
+      - name: Clone rmg-templates repo
+        run: git clone https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/railmapgen/rmg-templates.git
 
-      - name: Build
+      - name: Migrate templates
         run: |
-          chmod +x ./scripts/build.sh
-          ./scripts/build.sh
-        id: build
-
-      - name: Auto deploy
-        if: ${{ github.event.inputs.auto_deploy == 'UAT' || github.event.inputs.auto_deploy == 'PRD' }}
-        run: |
-          curl -XPOST -u "wongchito:${{ secrets.ACCESS_TOKEN }}" \
-            -H "Accept: application/vnd.github.everest-preview+json" \
-            -H "Content-Type: application/json" \
-            https://api.github.com/repos/uat-railmapgen/rmg-repositories/actions/workflows/release.yml/dispatches \
-            --data '{"ref": "main", "inputs": {"app_name": "rmg", "version": "${{ steps.build.outputs.RMG_VER }}", "environment": "${{ github.event.inputs.auto_deploy }}"}}'
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          npm test -- --watchAll=false ./src/template-migration.test.tsx
+          cp -r templates/ rmg-templates/public/resources/
+          cd rmg-templates
+          git add .
+          git commit -m '#2 Migrate templates from RMG'
+          git push
