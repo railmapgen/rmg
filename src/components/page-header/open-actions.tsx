@@ -1,19 +1,23 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
 import { Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
-import { MdExpandMore, MdInsertDriveFile, MdUpload } from 'react-icons/md';
+import { MdExpandMore, MdInsertDriveFile, MdNoteAdd, MdUpload } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { updateParam } from '../../utils';
 import { readFileAsText } from '../../util/utils';
 import UploadConfirmModal from '../modal/upload-confirm-modal';
 import { useDispatch } from 'react-redux';
 import { setGlobalAlert } from '../../redux/app/action';
-import { RMGParam } from '../../constants/constants';
+import { LanguageCode, RMGParam } from '../../constants/constants';
 import TemplateModal from '../modal/template-modal';
 import { openFromNewParam } from '../../redux/param/open-new-action';
+import { initParam } from '../../redux/param/util';
+import { useAppSelector } from '../../redux';
 
 export default function OpenActions() {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
+
+    const style = useAppSelector(state => state.param.style);
 
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
     const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
@@ -57,6 +61,13 @@ export default function OpenActions() {
                 {t('OpenActions.openFrom')}
             </MenuButton>
             <MenuList>
+                <MenuItem
+                    icon={<MdNoteAdd />}
+                    onClick={() => handleOpenParam(initParam(style, i18n.language as LanguageCode))}
+                >
+                    {t('Empty template')}
+                </MenuItem>
+
                 <input
                     ref={fileInputRef}
                     type="file"
