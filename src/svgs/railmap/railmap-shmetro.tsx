@@ -1,15 +1,19 @@
 import * as React from 'react';
+import { CanvasType } from '../../constants/constants';
 import MainSHMetro, { DirectionElements } from './main/main-shmetro';
 import LoopSHMetro from './main/loop/loop-shmetro';
 import { useAppSelector } from '../../redux';
 
 const RailMapSHMetro = React.memo(() => {
-    const { loop } = useAppSelector(store => store.param);
+    const {
+        loop,
+        loop_info: { bank },
+    } = useAppSelector(store => store.param);
     return (
         <>
             <DefsSHMetro />
 
-            {loop ? <LoopSHMetro bank_angle={true} /> : <MainSHMetro />}
+            {loop ? <LoopSHMetro bank_angle={bank} canvas={CanvasType.RailMap} /> : <MainSHMetro />}
 
             <DirectionElements />
         </>

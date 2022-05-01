@@ -44,32 +44,32 @@ export type LoopStns = ReturnType<typeof split_loop_stns>;
  *
  * @param loopline The loop line aka branches[0].
  * @param loop_stns Object returned from split_loop_stns.
- * @returns Values sit between -1 and 1.
+ * @returns Values sit between 0 and 1.
  */
 export const get_xshares_yshares_of_loop = (loopline: string[], loop_stns: LoopStns) => {
     const x_shares = Object.fromEntries(loopline.map(stn_id => [stn_id, -1]));
     const y_shares = Object.fromEntries(loopline.map(stn_id => [stn_id, -1]));
 
-    const [Y_TOP, Y_BOTTOM, X_LEFT, X_RIGHT] = [-1, 1, -1, 1];
+    const [Y_TOP, Y_BOTTOM, X_LEFT, X_RIGHT] = [0, 1, 0, 1];
 
     // make sure first and last station do not position at the corner
-    const e = 0.1; // e should be smaller than 1
+    const e = 0.1; // 0 < e < 1
 
     loop_stns.top.forEach((stn_id, i) => {
-        x_shares[stn_id] = -(1 - e) + ((2 - 2 * e) / loop_stns.top.length) * i + (1 - e) / loop_stns.top.length;
+        x_shares[stn_id] = e / 2 + ((1 - e) / (loop_stns.top.length + 1)) * (i + 1);
         y_shares[stn_id] = Y_TOP;
     });
     loop_stns.right.forEach((stn_id, i) => {
         x_shares[stn_id] = X_RIGHT;
-        y_shares[stn_id] = -(1 - e) + ((2 - 2 * e) / loop_stns.right.length) * i + (1 - e) / loop_stns.right.length;
+        y_shares[stn_id] = e / 2 + ((1 - e) / (loop_stns.right.length + 1)) * (i + 1);
     });
     loop_stns.bottom.forEach((stn_id, i) => {
-        x_shares[stn_id] = 1 - e - ((2 - 2 * e) / loop_stns.bottom.length) * i - (1 - e) / loop_stns.bottom.length;
+        x_shares[stn_id] = 1 - e / 2 - ((1 - e) / (loop_stns.bottom.length + 1)) * (i + 1);
         y_shares[stn_id] = Y_BOTTOM;
     });
     loop_stns.left.forEach((stn_id, i) => {
         x_shares[stn_id] = X_LEFT;
-        y_shares[stn_id] = 1 - e - ((2 - 2 * e) / loop_stns.left.length) * i - (1 - e) / loop_stns.left.length;
+        y_shares[stn_id] = 1 - e / 2 - ((1 - e) / (loop_stns.left.length + 1)) * (i + 1);
     });
 
     return {
