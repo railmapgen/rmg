@@ -15,11 +15,10 @@ import {
     Tabs,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { companies } from '../../constants/company-config';
-import { templateList } from '../../constants/templates/data';
 import { translateText } from '../../i18n/config';
 import { useAppDispatch } from '../../redux';
 import { setIsLoading } from '../../redux/app/action';
+import { companyConfig, templateList } from '@railmapgen/rmg-templates-resources';
 
 interface TemplateModalProps {
     isOpen: boolean;
@@ -36,7 +35,7 @@ export default function TemplateModal(props: TemplateModalProps) {
     const handleSelect = async (company: string, filename: string) => {
         dispatch(setIsLoading(true));
         const module = await import(
-            /* webpackChunkName: "templates" */ `../../constants/templates/${company}/${filename}`
+            /* webpackChunkName: "templates" */ `@railmapgen/rmg-templates-resources/templates/${company}/${filename}.json`
         );
         onOpenParam(module.default);
     };
@@ -51,7 +50,7 @@ export default function TemplateModal(props: TemplateModalProps) {
                 <ModalBody>
                     <Tabs isLazy size="sm" orientation="vertical">
                         <TabList maxW={150}>
-                            {companies.map(company => (
+                            {companyConfig.map(company => (
                                 <Tab key={company.id}>{translateText(company.name)}</Tab>
                             ))}
                         </TabList>
@@ -60,8 +59,8 @@ export default function TemplateModal(props: TemplateModalProps) {
                             {Object.entries(templateList)
                                 .sort(
                                     (a, b) =>
-                                        companies.findIndex(c => c.id === a[0]) -
-                                        companies.findIndex(c => c.id === b[0])
+                                        companyConfig.findIndex(c => c.id === a[0]) -
+                                        companyConfig.findIndex(c => c.id === b[0])
                                 )
                                 .map(([company, templates]) => (
                                     <TabPanel key={company} as={Flex} flexDirection="column" py={0} px={1}>
