@@ -37,6 +37,96 @@ export const split_loop_stns = (
     };
 };
 
+/**
+ * Split the loopline with one branch into four sides according to left_and_right_factor and bottom_factor.
+ * Note that the top side must start from the branch_stn_id.
+ *
+ * It assumes parameters will follow these rules:
+ *     1. loopline.length > bottom_factor + left_and_right_factor * 2
+ *     2. bottom_factor >= 0
+ *     3. left_and_right_factor >= 0
+ *     4. left_and_right_factor + bottom_factor > 0
+ *
+ * @param loopline The loop line aka branches[0].
+ * @param branch_stn_id Branch station id.
+ * @param bottom_factor How many stations the bottom side will have.
+ * @param left_and_right_factor How many stations the left and right side will have.
+ * @returns Each array returned should be consecutive, and when combined in top -> right -> bottom -> left order,
+ * it will also be consecutive. Note that the length of right, bottom, and left can be 0.
+ */
+export const split_loop_stns_with_branch = (
+    loopline: string[],
+    branch_stn_id: string,
+    bottom_factor: number,
+    left_and_right_factor: number
+) => {
+    const top_factor = loopline.length - left_and_right_factor * 2 - bottom_factor;
+    const non_undefined_loopline = [...loopline, ...loopline, ...loopline];
+    const split_a = loopline.length + loopline.findIndex(val => val === branch_stn_id);
+    const another_branch_stn_id = non_undefined_loopline[split_a + top_factor - 1];
+    const split_b =
+        loopline.length +
+        loopline.findIndex(val => val === another_branch_stn_id) +
+        (split_a + top_factor > loopline.length * 2 ? loopline.length : 0);
+    return {
+        top: non_undefined_loopline.slice(split_a, split_b + 1),
+        left: non_undefined_loopline.slice(split_a - left_and_right_factor, split_a),
+        right: non_undefined_loopline.slice(split_b + 1, split_b + 1 + left_and_right_factor),
+        bottom: non_undefined_loopline.slice(
+            split_b + 1 + left_and_right_factor,
+            split_b + 1 + left_and_right_factor + bottom_factor
+        ),
+    };
+};
+
+/**
+ * Split the loopline with two branches into four sides according to left_and_right_factor and arc.
+ * Note that the top side must start from one of the branch_stn_ids and end at another.
+ * Also the top side will be the major or the minor arc between branch_stn_ids.
+ *
+ * It assumes parameters will follow these rules:
+ *     1. loopline.length > the major or the minor arc length between branch_stn_ids +
+ *                          left_and_right_factor * 2
+ *     2. left_and_right_factor >= 0
+ *
+ * @param loopline The loop line aka branches[0].
+ * @param branch_stn_ids Branches station id.
+ * @param left_and_right_factor How many stations the left and right side will have.
+ * @param arc Which arc will be the top side, the major or the minor.
+ * @returns Each array returned should be consecutive, and when combined in top -> right -> bottom -> left order,
+ * it will also be consecutive. Note that the length of right, bottom, and left can be 0.
+ */
+export const split_loop_stns_with_branches = (
+    loopline: string[],
+    branch_stn_ids: [string, string],
+    left_and_right_factor: number,
+    arc: 'major' | 'minor'
+) => {
+    let split_a = loopline.findIndex(val => val === branch_stn_ids[0]);
+    let split_b = loopline.findIndex(val => val === branch_stn_ids[1]);
+    // swap a and b if a is bigger than b
+    [split_a, split_b, branch_stn_ids[0], branch_stn_ids[1]] =
+        split_a > split_b
+            ? [split_b, split_a, branch_stn_ids[1], branch_stn_ids[0]]
+            : [split_a, split_b, branch_stn_ids[0], branch_stn_ids[1]];
+    const top_a = loopline.slice(split_a, split_b + 1);
+    const top_b = loopline.filter(stn => !top_a.filter(stn => !branch_stn_ids.includes(stn)).includes(stn));
+    // which arc we use on the top will result to different bottom factor
+    const bottom_factor =
+        loopline.length -
+        (arc === 'major' ? Math.max : Math.min)(top_a.length, top_b.length) -
+        left_and_right_factor * 2;
+    const branch_stn_id =
+        arc === 'major'
+            ? top_a.length > top_b.length
+                ? branch_stn_ids[0]
+                : branch_stn_ids[1]
+            : top_a.length > top_b.length
+            ? branch_stn_ids[1]
+            : branch_stn_ids[0];
+    return split_loop_stns_with_branch(loopline, branch_stn_id, bottom_factor, left_and_right_factor);
+};
+
 export type LoopStns = ReturnType<typeof split_loop_stns>;
 
 /**
