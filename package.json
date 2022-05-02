@@ -12,6 +12,7 @@
         "@emotion/styled": "^11.8.1",
         "@railmapgen/rmg-components": "^0.4.1",
         "@railmapgen/rmg-palette-resources": "^0.3.2",
+        "@railmapgen/rmg-templates-resources": "^0.1.8",
         "ag-grid-community": "^27.2.1",
         "ag-grid-react": "^27.2.1",
         "framer-motion": "^6.3.0",
