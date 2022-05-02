@@ -24,7 +24,7 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
 
     const { x_shares, y_shares } = get_xshares_yshares_of_loop(loopline, loop_stns);
 
-    const line_ys = [175, svg_height - 125] as [number, number];
+    const line_ys = [175, svg_height - 75 - (canvas === CanvasType.RailMap ? 0 : 125)] as [number, number];
     const ys = Object.keys(x_shares).reduce(
         (acc, cur) => ({
             ...acc,
