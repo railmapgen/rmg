@@ -26,13 +26,15 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
 
     const loopline = branches[0].filter(stn_id => !['linestart', 'lineend'].includes(stn_id));
     const branch_stn_ids = branches
-        .slice(1, 3) // drop additional branches
-        .map(branch =>
-            branch
-                .filter(stn_id => !['linestart', 'lineend'].includes(stn_id))
-                .filter(stn_id => loopline.includes(stn_id))
-        )
-        .flat(); // find branch station(s)
+        .slice(0, 3) // drop additional branches
+        .flat()
+        .filter(
+            (
+                o => v =>
+                    (o[v] = (o[v] || 0) + 1) === 2
+            )({} as { [stn_id: string]: number })
+        ) // count each occurrence
+        .filter(stn_id => !['linestart', 'lineend'].includes(stn_id)); // find branch stations
     // hardcode support for line 3 and 4, should be chosen by user after coline support
     const arc: 'major' | 'minor' = 'minor';
 
