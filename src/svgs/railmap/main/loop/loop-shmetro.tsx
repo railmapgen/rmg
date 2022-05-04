@@ -3,7 +3,14 @@ import StationSHMetro from '../station/station-shmetro';
 import { NameDirection, StationSHMetro as StationSHMetroIndoor } from '../../../indoor/station-shmetro';
 import { CanvasType, Services, ShortDirection } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
-import { split_loop_stns, LoopStns, get_xshares_yshares_of_loop } from '../../methods/shmetro-loop';
+import {
+    split_loop_stns,
+    split_loop_stns_with_branch,
+    split_loop_stns_with_branches,
+    LoopStns,
+    get_xshares_yshares_of_loop,
+} from '../../methods/shmetro-loop';
+import { get_loop_branches, LoopBranches } from './loop-branches-shmetro';
 
 const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | CanvasType.Indoor }) => {
     const { bank_angle, canvas } = props;
@@ -14,18 +21,45 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
         svg_height,
         padding,
         direction,
-        loop_info,
+        loop_info: { left_and_right_factor, bottom_factor },
     } = useAppSelector(store => store.param);
-    const { left_and_right_factor, bottom_factor } = loop_info;
 
     const loopline = branches[0].filter(stn_id => !['linestart', 'lineend'].includes(stn_id));
+    const branch_stn_ids = branches
+        .slice(0, 3) // drop additional branches
+        .flat()
+        .filter(
+            (
+                o => v =>
+                    (o[v] = (o[v] || 0) + 1) === 2
+            )({} as { [stn_id: string]: number })
+        ) // count each occurrence
+        .filter(stn_id => !['linestart', 'lineend'].includes(stn_id)); // find branch stations
+    // hardcode support for line 3 and 4, should be chosen by user after coline support
+    const arc: 'major' | 'minor' = 'minor';
 
-    const loop_stns = split_loop_stns(loopline, current_stn_id, bottom_factor, left_and_right_factor);
+    // use different split methods for different branches length
+    const loop_stns = branch_stn_ids.at(1)
+        ? split_loop_stns_with_branches(loopline, branch_stn_ids as [string, string], left_and_right_factor, arc)
+        : branch_stn_ids.at(0)
+        ? split_loop_stns_with_branch(loopline, branch_stn_ids[0], bottom_factor, left_and_right_factor)
+        : split_loop_stns(loopline, current_stn_id, bottom_factor, left_and_right_factor);
+    const { x_shares: x_shares_loop, y_shares: y_shares_loop } = get_xshares_yshares_of_loop(loopline, loop_stns);
 
-    const { x_shares, y_shares } = get_xshares_yshares_of_loop(loopline, loop_stns);
+    // calculate xs and ys for branches
+    const { loop_branches, line_xs_branches, xs_branches } = get_loop_branches(
+        branches,
+        branch_stn_ids,
+        svg_width[canvas],
+        padding,
+        left_and_right_factor,
+        loop_stns.bottom.length // respect to the new bottom_factor if there are 2 branches for critical_path_length
+    );
 
-    const line_ys = [175, svg_height - 75 - (canvas === CanvasType.RailMap ? 0 : 125)] as [number, number];
-    const ys = Object.keys(x_shares).reduce(
+    // all y_shares in branches will be 0
+    const y_shares = { ...y_shares_loop, ...Object.fromEntries(loop_branches.flat().map(stn => [stn, 0])) };
+    const line_ys = [225, svg_height - 75 - (canvas === CanvasType.RailMap ? 0 : 125)] as [number, number];
+    const ys = Object.keys(y_shares).reduce(
         (acc, cur) => ({
             ...acc,
             [cur]: line_ys[0] + y_shares[cur] * (line_ys[1] - line_ys[0]),
@@ -34,35 +68,52 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
     );
     const line_xs = [
         // in railmap and bank, we need to add extra padding for the 45-degree angle
-        (svg_width[canvas] * padding) / 100 + (bank_angle && canvas === CanvasType.RailMap ? 100 : 0),
-        svg_width[canvas] * (1 - padding / 100) - (bank_angle && canvas === CanvasType.RailMap ? 100 : 0),
+        // also if there are branches, we need to leave additional spaces
+        Math.max(
+            (svg_width[canvas] * padding) / 100 + (bank_angle && canvas === CanvasType.RailMap ? 100 : 0),
+            line_xs_branches[0]
+        ),
+        Math.min(
+            svg_width[canvas] * (1 - padding / 100) - (bank_angle && canvas === CanvasType.RailMap ? 100 : 0),
+            line_xs_branches[1]
+        ),
     ] as [number, number];
-    const xs = Object.keys(x_shares).reduce(
+    const xs_loop = Object.keys(x_shares_loop).reduce(
         (acc, cur) => ({
             ...acc,
-            [cur]: line_xs[0] + x_shares[cur] * (line_xs[1] - line_xs[0]),
+            [cur]: line_xs[0] + x_shares_loop[cur] * (line_xs[1] - line_xs[0]),
         }),
-        {} as typeof x_shares
+        {} as typeof x_shares_loop
     );
 
     // bank the right, bottom, left side if bank_angle
     const bank = (bank_angle ? { l: 1, r: -1 }[direction] : 0) as -1 | 0 | 1;
     [...loop_stns.right, ...loop_stns.left].forEach(stn_id => {
-        xs[stn_id] -= (ys[stn_id] - line_ys[0]) * bank;
+        xs_loop[stn_id] -= (ys[stn_id] - line_ys[0]) * bank;
     });
     loop_stns.bottom.forEach(stn_id => {
-        xs[stn_id] -= (line_ys[1] - line_ys[0]) * bank;
+        xs_loop[stn_id] -= (line_ys[1] - line_ys[0]) * bank;
     });
 
+    const xs = { ...xs_branches, ...xs_loop };
+
+    // generate loop path used in svg
     const path = _linePath(loop_stns, xs, ys, bank, [...line_xs, ...line_ys], direction);
 
+    // FIXME: branches with only one station could not display properly
+    const dy = loop_branches.length ? 0 : ((line_ys[1] - line_ys[0]) * bank) / 2;
     return (
-        <>
-            <g id="loop" transform={`translate(${((line_ys[1] - line_ys[0]) * bank) / 2},0)`}>
-                <path stroke="var(--rmg-theme-colour)" strokeWidth={12} fill="none" d={path} strokeLinejoin="round" />
-                <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />
-            </g>
-        </>
+        <g id="loop" transform={`translate(${dy},0)`}>
+            <path stroke="var(--rmg-theme-colour)" strokeWidth={12} fill="none" d={path} strokeLinejoin="round" />
+            <LoopBranches
+                loop_branches={loop_branches}
+                edges={[...line_xs, ...line_ys]}
+                xs={xs}
+                ys={ys}
+                canvas={canvas}
+            />
+            <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />
+        </g>
     );
 };
 

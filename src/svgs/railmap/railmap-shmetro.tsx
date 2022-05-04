@@ -97,6 +97,9 @@ const DefsSHMetro = React.memo(() => (
         <marker id="arrow_theme_right" refY={0.5}>
             <path d="M0,0L1,1H-1z" fill="var(--rmg-theme-colour)" />
         </marker>
+        <marker id="arrow_theme" refX={1} refY={0.5}>
+            <path d="M0,1H2L1,0z" fill="var(--rmg-theme-colour)" />
+        </marker>
 
         {/* Contrast filters for lines. */}
         <filter id="contrast-direct" filterUnits="userSpaceOnUse">
