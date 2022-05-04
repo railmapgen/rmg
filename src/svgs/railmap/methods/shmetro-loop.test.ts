@@ -201,8 +201,6 @@ describe('Unit tests for loop methods', () => {
         ({ loopline, branch_stn_ids, left_and_right_factor, arc }) => {
             const loop_stns = split_loop_stns_with_branches(loopline, branch_stn_ids, left_and_right_factor, arc);
 
-            console.log(loop_stns);
-
             // every side is valid
             expect(loop_stns.top.length).toBeGreaterThanOrEqual(1);
             expect(loop_stns.right.length).toBeGreaterThanOrEqual(left_and_right_factor);

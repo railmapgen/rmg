@@ -59,7 +59,8 @@ export const LoopBranches = (props: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [X_LEFT, X_RIGHT, Y_TOP, Y_BOTTOM] = edges;
 
-    const { current_stn_idx: current_stn_id, direction } = useAppSelector(store => store.param);
+    const { branches } = useAppSelector(store => store.helper);
+    const { current_stn_idx: current_stn_id, direction, coline } = useAppSelector(store => store.param);
 
     const e = canvas === CanvasType.RailMap ? 30 : 0;
     const branches_paths = [
@@ -67,19 +68,35 @@ export const LoopBranches = (props: {
         `M ${X_RIGHT},${Y_TOP} H ${Number(xs[loop_branches.at(1)?.at(-1) ?? '']) + e}`,
     ];
 
+    const loopline = branches[0].filter(stn_id => !['linestart', 'lineend'].includes(stn_id));
+    const branches_coline_color = Object.values(coline)
+        .filter(co => ![co.from, co.to].every(stn_id => loopline.includes(stn_id)))
+        .map(co => co.colors);
+
     return (
         <>
             {loop_branches.map((loop_branch, i) => (
                 <React.Fragment key={loop_branch.at(0)}>
+                    {branches_coline_color
+                        // remove duplicate
+                        .filter((c, i, self) => i === self.findIndex(t => t.at(0)?.at(2) === c.at(0)?.at(2)))
+                        // generate marker with coline color
+                        .map(color => (
+                            <marker key={color[0][2]} id={`arrow_theme_${color[0][2]}`} refX={1} refY={0.5}>
+                                <path d="M0,1H2L1,0z" fill={color[0][2]} />
+                            </marker>
+                        ))}
                     <path
-                        stroke="var(--rmg-theme-colour)"
+                        stroke={branches_coline_color.at(i)?.at(0)?.at(2) ?? 'var(--rmg-theme-colour)'}
                         strokeWidth={12}
                         fill="none"
                         d={branches_paths[i]}
                         markerEnd={
                             canvas === CanvasType.RailMap &&
                             ((direction === 'l' && i === 0) || (direction === 'r' && i === 1))
-                                ? 'url(#arrow_theme)'
+                                ? branches_coline_color.at(i)
+                                    ? `url(#arrow_theme_${branches_coline_color[i][0][2]})`
+                                    : 'url(#arrow_theme)'
                                 : undefined
                         }
                     />
@@ -94,6 +111,9 @@ export const LoopBranches = (props: {
                                             stnState={current_stn_id === stn_id ? 0 : 1}
                                             bank={0}
                                             direction={direction}
+                                            color={
+                                                branches_coline_color.at(i)?.at(0)?.at(2) as `#${string}` | undefined
+                                            }
                                         />
                                     </g>
                                 )}

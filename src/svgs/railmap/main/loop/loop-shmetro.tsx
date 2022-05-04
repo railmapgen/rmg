@@ -3,6 +3,7 @@ import StationSHMetro from '../station/station-shmetro';
 import { NameDirection, StationSHMetro as StationSHMetroIndoor } from '../../../indoor/station-shmetro';
 import { CanvasType, Services, ShortDirection } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
+import { isColineBranch } from '../../../../redux/param/coline-action';
 import {
     split_loop_stns,
     split_loop_stns_with_branch,
@@ -11,6 +12,7 @@ import {
     get_xshares_yshares_of_loop,
 } from '../../methods/shmetro-loop';
 import { get_loop_branches, LoopBranches } from './loop-branches-shmetro';
+import { LoopColine } from './loop-coline-shmetro';
 
 const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | CanvasType.Indoor }) => {
     const { bank_angle, canvas } = props;
@@ -21,7 +23,10 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
         svg_height,
         padding,
         direction,
+        info_panel_type,
+        stn_list,
         loop_info: { left_and_right_factor, bottom_factor },
+        coline,
     } = useAppSelector(store => store.param);
 
     const loopline = branches[0].filter(stn_id => !['linestart', 'lineend'].includes(stn_id));
@@ -35,10 +40,29 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
             )({} as { [stn_id: string]: number })
         ) // count each occurrence
         .filter(stn_id => !['linestart', 'lineend'].includes(stn_id)); // find branch stations
-    // hardcode support for line 3 and 4, should be chosen by user after coline support
-    const arc: 'major' | 'minor' = 'minor';
 
-    // use different split methods for different branches length
+    // find which arc would be displayed on the top side from coline info
+    const arc =
+        Object.values(coline)
+            .filter(co =>
+                [co.from, co.to].every(stn_id =>
+                    branches
+                        .slice(1, 3)
+                        .filter(branch => isColineBranch(branch, stn_list))
+                        .flat()
+                        .includes(stn_id)
+                )
+            )
+            .map(co => {
+                const from_idx = loopline.findIndex(stn_id => stn_id === co.from);
+                const to_idx = loopline.findIndex(stn_id => stn_id === co.to);
+                return Math.abs(to_idx - from_idx) > loopline.length - 2 - Math.abs(to_idx - from_idx)
+                    ? 'major'
+                    : 'minor';
+            })
+            .at(0) ?? 'minor';
+
+    // use different split methods for different numbers of branches
     const loop_stns = branch_stn_ids.at(1)
         ? split_loop_stns_with_branches(loopline, branch_stn_ids as [string, string], left_and_right_factor, arc)
         : branch_stn_ids.at(0)
@@ -100,19 +124,45 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
     // generate loop path used in svg
     const path = _linePath(loop_stns, xs, ys, bank, [...line_xs, ...line_ys], direction);
 
+    // coline stuff
+    const LINE_WIDTH = 12;
+    const COLINE_GAP = canvas === CanvasType.RailMap && info_panel_type === 'sh2020' ? 3 : 0;
+    // move up to display the full station name and int
+    if (Object.keys(coline).length > 0) {
+        loop_stns.top.forEach(stn_id => {
+            ys[stn_id] -= COLINE_GAP + LINE_WIDTH;
+        });
+    }
+
     // FIXME: branches with only one station could not display properly
     const dy = loop_branches.length ? 0 : ((line_ys[1] - line_ys[0]) * bank) / 2;
     return (
         <g id="loop" transform={`translate(${dy},0)`}>
             <path stroke="var(--rmg-theme-colour)" strokeWidth={12} fill="none" d={path} strokeLinejoin="round" />
-            <LoopBranches
-                loop_branches={loop_branches}
-                edges={[...line_xs, ...line_ys]}
-                xs={xs}
-                ys={ys}
-                canvas={canvas}
-            />
-            <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />
+            {/* Order matters. The LoopColine should cover the station in RailMap. */}
+            {canvas === CanvasType.RailMap && (
+                <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />
+            )}
+            <g transform={`translate(0,${Object.keys(coline).length > 0 ? -LINE_WIDTH - COLINE_GAP : 0})`}>
+                <LoopBranches
+                    loop_branches={loop_branches}
+                    edges={[...line_xs, ...line_ys]}
+                    xs={xs}
+                    ys={ys}
+                    canvas={canvas}
+                />
+                {Object.keys(coline).length > 0 && (
+                    <LoopColine
+                        edges={[...line_xs, ...line_ys]}
+                        loop_stns={loop_stns}
+                        xs={xs}
+                        ys={ys}
+                        canvas={canvas}
+                    />
+                )}
+            </g>
+            {/* Order matters. The station should cover LoopColine's main path in Indoor. */}
+            {canvas === CanvasType.Indoor && <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />}
         </g>
     );
 };

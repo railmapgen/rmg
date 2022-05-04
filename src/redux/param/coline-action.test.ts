@@ -59,9 +59,13 @@ describe('Unit tests for coline action', () => {
             },
         });
 
-        expect(() => mockStore.dispatch(checkColineValidity('stn1', 'stn2'))).toThrow('addColine():: failed');
+        expect(() => mockStore.dispatch(checkColineValidity('stn1', 'stn2'))).toThrow(
+            /addColine():: main|branch check failed for .?/
+        );
 
-        expect(() => mockStore.dispatch(checkColineValidity('stn2', 'stn3'))).toThrow('addColine():: failed');
+        expect(() => mockStore.dispatch(checkColineValidity('stn2', 'stn3'))).toThrow(
+            /addColine():: main|branch check failed for .?/
+        );
 
         expect(() => mockStore.dispatch(checkColineValidity('stn1', 'stn3'))).not.toThrow();
     });
@@ -137,9 +141,13 @@ describe('Unit tests for coline action', () => {
             },
         });
 
-        expect(() => mockStore.dispatch(checkColineValidity('stn1', 'stn2'))).toThrow('addColine():: failed');
+        expect(() => mockStore.dispatch(checkColineValidity('stn1', 'stn2'))).toThrow(
+            /addColine():: main|branch check failed for .?/
+        );
 
-        expect(() => mockStore.dispatch(checkColineValidity('stn2', 'stn3'))).toThrow('addColine():: failed');
+        expect(() => mockStore.dispatch(checkColineValidity('stn2', 'stn3'))).toThrow(
+            /addColine():: main|branch check failed for .?/
+        );
 
         expect(() => mockStore.dispatch(checkColineValidity('stn3', 'stn4'))).not.toThrow();
 
@@ -147,11 +155,15 @@ describe('Unit tests for coline action', () => {
 
         expect(() => mockStore.dispatch(checkColineValidity('stn1', 'stn4'))).not.toThrow();
 
-        expect(() => mockStore.dispatch(checkColineValidity('stn2', 'stnZ'))).toThrow('addColine():: failed');
+        expect(() => mockStore.dispatch(checkColineValidity('stn2', 'stnZ'))).toThrow(
+            /addColine():: main|branch check failed for .?/
+        );
 
         expect(() => mockStore.dispatch(checkColineValidity('stn3', 'stnZ'))).not.toThrow();
 
-        expect(() => mockStore.dispatch(checkColineValidity('stn4', 'stnZ'))).toThrow('addColine():: failed');
+        expect(() => mockStore.dispatch(checkColineValidity('stn4', 'stnZ'))).toThrow(
+            /addColine():: main|branch check failed for .?/
+        );
     });
 
     it('Can calculate row span as expected', () => {
