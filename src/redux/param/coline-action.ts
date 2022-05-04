@@ -149,11 +149,15 @@ export const checkColineValidity = (from: string, to: string) => {
         );
         // see if coline is in the main line
         if (colineInMainLine.length === 2 && colineInBranches.length > 0) {
-            throw new Error('addColine():: failed');
+            throw new Error(
+                `addColine():: main check failed for ${from}${stnList[from].name[0]}, ${to}${stnList[to].name[0]}`
+            );
         }
         // see if coline is in one branch line
         if (colineInMainLine.length !== 2 && colineInBranches.length !== 1) {
-            throw new Error('addColine():: failed');
+            throw new Error(
+                `addColine():: branch check failed for ${from}${stnList[from].name[0]}, ${to}${stnList[to].name[0]}`
+            );
         }
     };
 };

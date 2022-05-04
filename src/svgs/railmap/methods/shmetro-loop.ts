@@ -142,8 +142,8 @@ export const get_xshares_yshares_of_loop = (loopline: string[], loop_stns: LoopS
 
     const [Y_TOP, Y_BOTTOM, X_LEFT, X_RIGHT] = [0, 1, 0, 1];
 
-    // make sure first and last station do not position at the corner
-    const e = 0.1; // 0 < e < 1
+    // loop's inner padding for xs
+    const e = 0; // 0 <= e <= 1
 
     loop_stns.top.forEach((stn_id, i) => {
         x_shares[stn_id] = e / 2 + ((1 - e) / (loop_stns.top.length + 1)) * (i + 1);
