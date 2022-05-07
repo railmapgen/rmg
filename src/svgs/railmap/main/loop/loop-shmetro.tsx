@@ -22,6 +22,7 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
         svgWidth: svg_width,
         svg_height,
         padding,
+        branch_spacing,
         direction,
         info_panel_type,
         stn_list,
@@ -82,7 +83,10 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
 
     // all y_shares in branches will be 0
     const y_shares = { ...y_shares_loop, ...Object.fromEntries(loop_branches.flat().map(stn => [stn, 0])) };
-    const line_ys = [225, svg_height - 75 - (canvas === CanvasType.RailMap ? 0 : 125)] as [number, number];
+    const line_ys = [
+        225 + (branch_spacing / 400) * svg_height,
+        svg_height - 75 - (canvas === CanvasType.RailMap ? 0 : 125) - (branch_spacing / 400) * svg_height,
+    ] as [number, number];
     const ys = Object.keys(y_shares).reduce(
         (acc, cur) => ({
             ...acc,

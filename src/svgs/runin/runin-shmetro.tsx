@@ -21,8 +21,13 @@ const RunInSHMetro = () => {
                 // .flat()
                 // remove duplicate
                 .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]);
-            if (loop && prevStnIds.length === 1 && ['linestart', 'lineend'].includes(prevStnIds[0])) {
-                // if it is a loop and it is the first station of that direction, get the station from the other end
+            if (
+                loop && // if it is a loop
+                branches[0].includes(current_stn_idx) && // and this station is on the loop line
+                prevStnIds.length === 1 && // and it is the first station of that direction
+                ['linestart', 'lineend'].includes(prevStnIds[0])
+            ) {
+                // get the station from the other end
                 prevStnIds = direction === 'l' ? [branches[0][1]] : [branches[0][branches[0].length - 2]];
             }
             return prevStnIds;
@@ -39,8 +44,13 @@ const RunInSHMetro = () => {
                 // .flat()
                 // remove duplicate
                 .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]);
-            if (loop && nextStnIds.length === 1 && ['linestart', 'lineend'].includes(nextStnIds[0])) {
-                // if it is a loop and it is the last station of that direction, get the station from the other end
+            if (
+                loop && // if it is a loop
+                branches[0].includes(current_stn_idx) && // and this station is on the loop line
+                nextStnIds.length === 1 && // and it is the last station of that direction
+                ['linestart', 'lineend'].includes(nextStnIds[0])
+            ) {
+                // get the station from the other end
                 nextStnIds = direction === 'l' ? [branches[0][branches[0].length - 2]] : [branches[0][1]];
             }
             return nextStnIds;

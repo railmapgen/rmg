@@ -28,6 +28,7 @@ export default function LayoutSection() {
         padding,
         direction_gz_x,
         direction_gz_y,
+        loop,
     } = useAppSelector(state => state.param);
 
     const fields: RmgFieldsField[] = [
@@ -54,7 +55,7 @@ export default function LayoutSection() {
         },
         {
             type: 'slider',
-            label: t('StyleSidePanel.layout.branchSpacing'),
+            label: !loop ? t('StyleSidePanel.layout.branchSpacing') : t('StyleSidePanel.layout.branchSpacingLoop'),
             value: branch_spacing,
             min: 0,
             max: 100,

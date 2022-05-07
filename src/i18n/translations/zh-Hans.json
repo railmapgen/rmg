@@ -78,6 +78,7 @@
             "indoorWidth": "车內路线图宽度",
             "verticalPosition": "垂直方向位置",
             "branchSpacing": "支线间距",
+            "branchSpacingLoop": "垂直边距",
             "padding": "路线图边距",
             "directionGzX": "终点站水平方向位置",
             "directionGzY": "终点站垂直方向位置"

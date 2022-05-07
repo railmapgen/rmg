@@ -78,6 +78,7 @@
             "indoorWidth": "Indoor width",
             "verticalPosition": "Vertical position",
             "branchSpacing": "Branch spacing",
+            "branchSpacingLoop": "Vertical padding",
             "padding": "Rail map padding",
             "directionGzX": "Direction horizontal position",
             "directionGzY": "Direction vertical position"

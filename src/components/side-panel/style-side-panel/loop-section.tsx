@@ -66,7 +66,7 @@ export default function LoopSection() {
             min: 0,
             max: Math.floor((branches[0].length - 2 - left_and_right_factor * 2) / 2),
             onChange: val => dispatch(setLoopBottomFactor(Math.floor(val))),
-            hidden: !loop || (loop && branches.length >= 2),
+            hidden: !loop || (loop && branches.length > 2),
         },
     ];
 
