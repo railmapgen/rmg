@@ -72,7 +72,7 @@ export default function DesignSection() {
     const fields: RmgFieldsField[] = [
         {
             type: 'custom',
-            label: t('StyleSidePanel.design.colour'),
+            label: t('Colour'),
             component: <ThemeButton theme={theme} onClick={() => setIsModalOpen(true)} />,
             minW: '40px',
         },

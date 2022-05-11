@@ -3,6 +3,7 @@ import ColourUtil from '../../theme/colour-util';
 import { MdCircle } from 'react-icons/md';
 import { IconButton } from '@chakra-ui/react';
 import { Theme } from '../../constants/constants';
+import { useTranslation } from 'react-i18next';
 
 interface ThemeButtonProps {
     theme: Theme;
@@ -12,10 +13,12 @@ interface ThemeButtonProps {
 export default function ThemeButton(props: ThemeButtonProps) {
     const { theme, onClick } = props;
 
+    const { t } = useTranslation();
+
     return (
         <IconButton
             size="xs"
-            aria-label="Theme colour"
+            aria-label={t('Colour')}
             mt="0.45px"
             color={theme[3]}
             bg={theme[2]}

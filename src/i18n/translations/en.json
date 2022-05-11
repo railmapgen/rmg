@@ -85,7 +85,6 @@
         },
         "design": {
             "title": "Design",
-            "colour": "Colour",
             "zhLineName": "Chinese line name",
             "enLineName": "English line name",
             "lineNum": "Line code",
@@ -166,10 +165,7 @@
             "outStation": "Out-of-station interchange",
             "outSystem": "Out-of-system interchange",
             "addGroup": "Add interchange group",
-            "stationZhName": "Station Chinese name",
-            "stationEnName": "Station English name",
             "noInterchanges": "No interchanges",
-            "colour": "Colour",
             "zhName": "Chinese name",
             "enName": "English name",
             "add": "Add interchange",

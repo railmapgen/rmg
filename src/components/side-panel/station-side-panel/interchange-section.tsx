@@ -8,8 +8,9 @@ import {
     removeInterchange,
     updateInterchange,
     updateStationOsiName,
+    updateStationPaidArea,
 } from '../../../redux/param/action';
-import { InterchangeInfo, MonoColour } from '../../../constants/constants';
+import { InterchangeInfo, MonoColour, RmgStyle } from '../../../constants/constants';
 import { MdAdd } from 'react-icons/md';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
@@ -19,23 +20,31 @@ export default function InterchangeSection() {
     const dispatch = useDispatch();
 
     const selectedStation = useAppSelector(state => state.app.selectedStation);
-    const theme = useAppSelector(state => state.param.theme);
+    const { theme, style } = useAppSelector(state => state.param);
     const { transfer } = useAppSelector(state => state.param.stn_list[selectedStation]);
 
     const getOSINameFields = (setIndex: number): RmgFieldsField[] => [
         {
             type: 'input',
-            label: t('StationSidePanel.interchange.stationZhName'),
+            label: t('Station Chinese name'),
             value: transfer.osi_names[setIndex]?.[0],
             onChange: value =>
                 dispatch(updateStationOsiName(selectedStation, setIndex, [value, transfer.osi_names[setIndex]?.[1]])),
         },
         {
             type: 'input',
-            label: t('StationSidePanel.interchange.stationEnName'),
+            label: t('Station English name'),
             value: transfer.osi_names[setIndex]?.[1],
             onChange: value =>
                 dispatch(updateStationOsiName(selectedStation, setIndex, [transfer.osi_names[setIndex]?.[0], value])),
+        },
+        {
+            type: 'switch',
+            label: t('Paid area'),
+            isChecked: transfer.paid_area,
+            onChange: checked => dispatch(updateStationPaidArea(selectedStation, checked)),
+            hidden: ![RmgStyle.MTR].includes(style) || setIndex !== 0,
+            oneLine: true,
         },
     ];
 

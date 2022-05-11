@@ -62,7 +62,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
 
             {interchangeList.map((it, i) => (
                 <HStack key={i} spacing={0.5}>
-                    <RmgLabel label={t('StationSidePanel.interchange.colour')} minW="40px" noLabel={i !== 0}>
+                    <RmgLabel label={t('Colour')} minW="40px" noLabel={i !== 0}>
                         <ThemeButton
                             theme={[it[0], it[1], it[2], it[3]]}
                             onClick={() => {
