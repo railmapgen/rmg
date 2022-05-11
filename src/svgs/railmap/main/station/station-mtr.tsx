@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Direction, InterchangeInfo, Name, ShortDirection, StationTransfer } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 import StationNameWrapper from '../../../mtr/station-name/station-name-wrapper';
+import StationIcon from '../../../mtr/station-icon';
 
 interface Props {
     stnId: string;
@@ -13,89 +14,6 @@ interface Props {
 const StationMTR = (props: Props) => {
     const { stnId, stnState, namePos } = props;
     const stnInfo = useAppSelector(store => store.param.stn_list[stnId]);
-
-    /**
-     * Arrays of directions of the branches a station has.
-     */
-    const branchPos = useMemo(
-        () => {
-            let pos: ('SE' | 'NE' | 'SW' | 'NW')[] = [];
-            if (stnInfo.branch.right.length) {
-                pos.push(stnInfo.children.indexOf(stnInfo.branch.right[1]) === 1 ? 'SE' : 'NE');
-            }
-            if (stnInfo.branch.left.length) {
-                pos.push(stnInfo.parents.indexOf(stnInfo.branch.left[1]) === 1 ? 'SW' : 'NW');
-            }
-            return pos;
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [stnInfo.parents.toString(), stnInfo.children.toString(), JSON.stringify(stnInfo.branch)]
-    );
-
-    /**
-     * Affix added to station icon's `href`.
-     */
-    const branchAffix = useMemo(
-        () => {
-            let pos = branchPos;
-            if (pos.length === 0) {
-                return '';
-            }
-            if (pos.includes('NW') && pos.includes('SE')) {
-                return '_bb';
-            }
-            if (pos.includes('NE') && pos.includes('SW')) {
-                return '_bb';
-            }
-            return '_b';
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [branchPos.toString()]
-    );
-
-    /**
-     * Changes of vertical position of station icon due to branching shift (11px/line width). Icon rotation should also be applied when using this property.
-     */
-    const branchDy = useMemo(
-        () => {
-            let affix = branchAffix;
-            if (affix === '') {
-                return 0;
-            } else if (affix === '_bb') {
-                return namePos ? 9.68 : -9.68;
-            } else {
-                let pos = branchPos;
-                if (pos.includes('SE') || pos.includes('SW')) {
-                    return namePos ? 9.68 : 0;
-                }
-                if (pos.includes('NE') || pos.includes('NW')) {
-                    return namePos ? 0 : -9.68;
-                }
-            }
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [branchPos.toString(), branchAffix, namePos]
-    );
-
-    /**
-     * Changes of vertical position of other elements such as intTick or intName. The result of the ternary operator is the opposite of `this._branchDy`
-     */
-    const branchElDy = useMemo(() => {
-        let affix = branchAffix;
-        if (affix === '') {
-            return 0;
-        } else if (affix === '_bb') {
-            return namePos ? -9.68 : 9.68;
-        } else {
-            let pos = branchPos;
-            if (pos.includes('SE') || pos.includes('SW')) {
-                return namePos ? 0 : 9.68;
-            }
-            if (pos.includes('NE') || pos.includes('NW')) {
-                return namePos ? -9.68 : 0;
-            }
-        }
-    }, [branchAffix, namePos, branchPos]);
 
     const stnIcon = ((l: number[]) => {
         const fallback = (n: number) => (n < 11 ? 'int' + (n + 1) : 'int12');
@@ -132,7 +50,7 @@ const StationMTR = (props: Props) => {
 
     return (
         <>
-            <g transform={`translate(0,${branchElDy})`}>
+            <g>
                 <IntTickGroup
                     variant={stnIcon}
                     stnTrans={stnInfo.transfer}
@@ -163,15 +81,15 @@ const StationMTR = (props: Props) => {
                     />
                 )}
             </g>
-            <use
-                xlinkHref={'#' + stnIcon + branchAffix}
-                stroke={stnState === -1 ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
-                className={stnInfo.transfer.paid_area ? 'rmg-stn__mtr--paid-osi' : 'rmg-stn__mtr--unpaid-osi'}
-                transform={
-                    `translate(0,${branchDy})` +
-                    `scale(${stnInfo.children[0] === 'lineend' ? 1 : -1},${namePos ? -1 : 1})`
-                }
-            />
+            <g transform={`scale(${stnInfo.children[0] === 'lineend' ? 1 : -1},${namePos ? -1 : 1})`}>
+                <StationIcon
+                    withinTransfer={stnInfo.transfer.info[0]?.length}
+                    outStationTransfer={stnInfo.transfer.info[1]?.length}
+                    isTerminal={stnInfo.parents[0] === 'linestart' || stnInfo.children[0] === 'lineend'}
+                    isPassed={stnState === -1}
+                    isPaidArea={stnInfo.transfer.paid_area}
+                />
+            </g>
             <StationNameWrapper
                 stationName={stnInfo.name}
                 stationState={stnState}
@@ -184,7 +102,6 @@ const StationMTR = (props: Props) => {
                             : Direction.right
                         : undefined
                 }
-                transform={`translate(0,${branchDy})`}
             />
         </>
     );
