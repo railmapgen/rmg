@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react';
-import { Direction, InterchangeInfo, Name, ShortDirection, StationTransfer } from '../../../../constants/constants';
+import React from 'react';
+import { Direction, Name, Position, ShortDirection, StationTransfer } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 import StationNameWrapper from '../../../mtr/station-name/station-name-wrapper';
 import StationIcon from '../../../mtr/station-icon';
+import InterchangeTick from '../../../mtr/interchange-tick';
 
 interface Props {
     stnId: string;
@@ -122,15 +123,21 @@ const IntTickGroup = (props: IntTickGroupProps) => {
     switch (variant) {
         case 'int':
             return (
-                <g>
-                    <IntTick intInfo={stnTrans.info[0][0]} stnState={stnState} rotation={namePos ? 180 : 0} />
-                </g>
+                <InterchangeTick
+                    interchangeInfo={stnTrans.info[0][0]}
+                    isPassed={stnState === -1}
+                    position={namePos ? Position.UP : Position.DOWN}
+                />
             );
 
         case 'osi11':
             return (
                 <g transform={`translate(0,${namePos ? -26 : 26})`}>
-                    <IntTick intInfo={stnTrans.info[1][0]} stnState={stnState} rotation={namePos ? 180 : 0} />
+                    <InterchangeTick
+                        interchangeInfo={stnTrans.info[1][0]}
+                        isPassed={stnState === -1}
+                        position={namePos ? Position.UP : Position.DOWN}
+                    />
                 </g>
             );
         case 'osi12':
@@ -143,10 +150,10 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                                 !namePos ? 8 + 18 * (i + 1) : -8 - 18 * (stnTrans.info[1].length - i)
                             })`}
                         >
-                            <IntTick
-                                intInfo={intInfo}
-                                stnState={stnState}
-                                rotation={stnTrans.tick_direc === ShortDirection.right ? -90 : 90}
+                            <InterchangeTick
+                                interchangeInfo={intInfo}
+                                isPassed={stnState === -1}
+                                position={stnTrans.tick_direc === ShortDirection.right ? Position.RIGHT : Position.LEFT}
                             />
                         </g>
                     ))}
@@ -156,11 +163,11 @@ const IntTickGroup = (props: IntTickGroupProps) => {
             return (
                 <>
                     <g>
-                        <IntTick
-                            intInfo={stnTrans.info[0][0]}
-                            stnState={stnState}
-                            rotation={namePos ? 0 : 180}
-                            nameDX={stnTrans.tick_direc === ShortDirection.right ? 3 : -3}
+                        <InterchangeTick
+                            interchangeInfo={stnTrans.info[0][0]}
+                            isPassed={stnState === -1}
+                            isRepelled={stnTrans.tick_direc === ShortDirection.right ? Direction.right : Direction.left}
+                            position={namePos ? Position.DOWN : Position.UP}
                         />
                     </g>
                     {stnTrans.info[1].map((intInfo, i) => (
@@ -170,10 +177,10 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                                 !namePos ? 8 + 18 * (i + 1) : -8 - 18 * (stnTrans.info[1].length - i)
                             })`}
                         >
-                            <IntTick
-                                intInfo={intInfo}
-                                stnState={stnState}
-                                rotation={stnTrans.tick_direc === ShortDirection.right ? -90 : 90}
+                            <InterchangeTick
+                                interchangeInfo={intInfo}
+                                isPassed={stnState === -1}
+                                position={stnTrans.tick_direc === ShortDirection.right ? Position.RIGHT : Position.LEFT}
                             />
                         </g>
                     ))}
@@ -183,7 +190,11 @@ const IntTickGroup = (props: IntTickGroupProps) => {
             return (
                 <>
                     <g>
-                        <IntTick intInfo={stnTrans.info[0][0]} stnState={stnState} rotation={namePos ? 180 : 0} />
+                        <InterchangeTick
+                            interchangeInfo={stnTrans.info[0][0]}
+                            isPassed={stnState === -1}
+                            position={namePos ? Position.UP : Position.DOWN}
+                        />
                     </g>
                     {stnTrans.info[1].map((intInfo, i) => (
                         <g
@@ -192,10 +203,10 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                                 namePos ? 18 * i : -18 * (stnTrans.info[1].length - 1 - i)
                             })`}
                         >
-                            <IntTick
-                                intInfo={intInfo}
-                                stnState={stnState}
-                                rotation={end === Direction.left ? 90 : -90}
+                            <InterchangeTick
+                                interchangeInfo={intInfo}
+                                isPassed={stnState === -1}
+                                position={end === Direction.right ? Position.RIGHT : Position.LEFT}
                             />
                         </g>
                     ))}
@@ -214,10 +225,12 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                                     }px)`,
                                 }}
                             >
-                                <IntTick
-                                    intInfo={intInfo}
-                                    stnState={stnState}
-                                    rotation={stnTrans.tick_direc === ShortDirection.right ? -90 : 90}
+                                <InterchangeTick
+                                    interchangeInfo={intInfo}
+                                    isPassed={stnState === -1}
+                                    position={
+                                        stnTrans.tick_direc === ShortDirection.right ? Position.RIGHT : Position.LEFT
+                                    }
                                 />
                             </g>
                         ))}
@@ -227,90 +240,6 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                 return <></>;
             }
     }
-};
-
-interface IntTickProps {
-    intInfo: InterchangeInfo;
-    stnState: -1 | 0 | 1;
-    rotation: 0 | 90 | 180 | -90;
-    nameDX?: number;
-}
-
-const IntTick = (props: IntTickProps) => {
-    const { intInfo, stnState, rotation, nameDX } = props;
-
-    const nameZHLns = intInfo[4].split('\\').length;
-    const nameENLns = intInfo[5].split('\\').length;
-
-    const x = (rotation => {
-        switch (rotation) {
-            case 90:
-                return -24;
-            case -90:
-                return 24;
-            default:
-                return 0;
-        }
-    })(rotation);
-
-    const y = (rotation => {
-        switch (rotation) {
-            case 0:
-                return 25 + 5.953125;
-            case 180:
-                return -25 + 5.953125 - 18.65625 - 10 * (nameZHLns - 1) - 7 * (nameENLns - 1);
-            default:
-                return 5.953125 - (19.65625 + 10 * (nameZHLns - 1) + 7 * (nameENLns - 1) - 1) / 2;
-        }
-    })(rotation);
-
-    const textAnchor = (rotation => {
-        switch (rotation) {
-            case 90:
-                return 'end';
-            case -90:
-                return 'start';
-            default:
-                if (!nameDX) {
-                    return 'middle';
-                } else if (nameDX > 0) {
-                    return 'start';
-                } else {
-                    return 'end';
-                }
-        }
-    })(rotation);
-
-    return useMemo(
-        () => (
-            <>
-                <use
-                    xlinkHref="#inttick"
-                    stroke={intInfo[2]}
-                    transform={`rotate(${rotation})`}
-                    className={'rmg-line rmg-line__mtr rmg-line__change' + (stnState === -1 ? ' rmg-line__pass' : '')}
-                />
-                <g
-                    textAnchor={textAnchor}
-                    transform={`translate(${x + (nameDX || 0)},${y})`}
-                    className={`Name ${stnState === -1 ? 'Pass' : 'Future'}`}
-                >
-                    {intInfo[4].split('\\').map((txt, i) => (
-                        <text key={i} className="rmg-name__zh IntName" dy={10 * i}>
-                            {txt}
-                        </text>
-                    ))}
-                    {intInfo[5].split('\\').map((txt, i) => (
-                        <text key={nameZHLns + i} className="rmg-name__en IntName" dy={nameZHLns * 10 - 1 + 7 * i}>
-                            {txt}
-                        </text>
-                    ))}
-                </g>
-            </>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [intInfo.toString(), rotation, stnState]
-    );
 };
 
 interface OSINameProps {

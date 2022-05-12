@@ -7,7 +7,7 @@ describe('MTR StationIcon', () => {
     it('Can draw circle for station with 1 within station interchange as expected', () => {
         render(
             <svg>
-                <StationIcon withinTransfer={1} outStationTransfer={0} />
+                <StationIcon withinTransfer={1} outStationTransfer={0} isPassed={false} />
             </svg>
         );
 
@@ -19,7 +19,7 @@ describe('MTR StationIcon', () => {
     it('Can draw pill for station with 3 within station interchange as expected', () => {
         render(
             <svg>
-                <StationIcon withinTransfer={3} outStationTransfer={0} />
+                <StationIcon withinTransfer={3} outStationTransfer={0} isPassed={false} />
             </svg>
         );
 
@@ -31,7 +31,7 @@ describe('MTR StationIcon', () => {
     it('Can draw circle for station with 1 out of station interchange as expected', () => {
         render(
             <svg>
-                <StationIcon withinTransfer={0} outStationTransfer={1} />
+                <StationIcon withinTransfer={0} outStationTransfer={1} isPassed={false} />
             </svg>
         );
 

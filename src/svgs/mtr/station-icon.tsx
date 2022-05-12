@@ -4,7 +4,7 @@ interface StationIconProps {
     withinTransfer: number;
     outStationTransfer: number;
     isTerminal?: boolean;
-    isPassed?: boolean;
+    isPassed: boolean;
     isPaidArea?: boolean;
 }
 

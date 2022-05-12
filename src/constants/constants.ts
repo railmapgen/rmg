@@ -336,3 +336,10 @@ export enum StationState {
     CURRENT = 0,
     FUTURE = 1,
 }
+
+export enum Position {
+    UP = 'UP',
+    DOWN = 'DOWN',
+    LEFT = 'LEFT',
+    RIGHT = 'RIGHT',
+}
