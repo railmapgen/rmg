@@ -335,7 +335,7 @@ export class Stations {
         ys: { [stnId: string]: number },
         branchSpacing: number,
         cp: { len: number; nodes: string[] },
-        e: number = 9.68
+        e: number = 0
     ) {
         let linePaths = { main: [] as string[], pass: [] as string[] };
         branches.forEach((branch, i) => {

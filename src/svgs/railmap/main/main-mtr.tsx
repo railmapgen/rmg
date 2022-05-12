@@ -114,7 +114,7 @@ const MainMTR = () => {
     const ys = Object.keys(yShares).reduce(
         (acc, cur) => ({
             ...acc,
-            [cur]: -yShares[cur] * branchSpacing + (branches[0].includes(cur) ? 0 : yShares[cur] > 0 ? -9.68 : 9.68),
+            [cur]: -yShares[cur] * branchSpacing,
         }),
         {} as typeof yShares
     );

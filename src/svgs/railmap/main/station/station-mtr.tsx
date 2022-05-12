@@ -1,7 +1,9 @@
-import React, { useMemo } from 'react';
-import { Direction, InterchangeInfo, Name, ShortDirection, StationTransfer } from '../../../../constants/constants';
+import React from 'react';
+import { Direction, Name, Position, ShortDirection, StationTransfer } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 import StationNameWrapper from '../../../mtr/station-name/station-name-wrapper';
+import StationIcon from '../../../mtr/station-icon';
+import InterchangeTick from '../../../mtr/interchange-tick';
 
 interface Props {
     stnId: string;
@@ -13,89 +15,6 @@ interface Props {
 const StationMTR = (props: Props) => {
     const { stnId, stnState, namePos } = props;
     const stnInfo = useAppSelector(store => store.param.stn_list[stnId]);
-
-    /**
-     * Arrays of directions of the branches a station has.
-     */
-    const branchPos = useMemo(
-        () => {
-            let pos: ('SE' | 'NE' | 'SW' | 'NW')[] = [];
-            if (stnInfo.branch.right.length) {
-                pos.push(stnInfo.children.indexOf(stnInfo.branch.right[1]) === 1 ? 'SE' : 'NE');
-            }
-            if (stnInfo.branch.left.length) {
-                pos.push(stnInfo.parents.indexOf(stnInfo.branch.left[1]) === 1 ? 'SW' : 'NW');
-            }
-            return pos;
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [stnInfo.parents.toString(), stnInfo.children.toString(), JSON.stringify(stnInfo.branch)]
-    );
-
-    /**
-     * Affix added to station icon's `href`.
-     */
-    const branchAffix = useMemo(
-        () => {
-            let pos = branchPos;
-            if (pos.length === 0) {
-                return '';
-            }
-            if (pos.includes('NW') && pos.includes('SE')) {
-                return '_bb';
-            }
-            if (pos.includes('NE') && pos.includes('SW')) {
-                return '_bb';
-            }
-            return '_b';
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [branchPos.toString()]
-    );
-
-    /**
-     * Changes of vertical position of station icon due to branching shift (11px/line width). Icon rotation should also be applied when using this property.
-     */
-    const branchDy = useMemo(
-        () => {
-            let affix = branchAffix;
-            if (affix === '') {
-                return 0;
-            } else if (affix === '_bb') {
-                return namePos ? 9.68 : -9.68;
-            } else {
-                let pos = branchPos;
-                if (pos.includes('SE') || pos.includes('SW')) {
-                    return namePos ? 9.68 : 0;
-                }
-                if (pos.includes('NE') || pos.includes('NW')) {
-                    return namePos ? 0 : -9.68;
-                }
-            }
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [branchPos.toString(), branchAffix, namePos]
-    );
-
-    /**
-     * Changes of vertical position of other elements such as intTick or intName. The result of the ternary operator is the opposite of `this._branchDy`
-     */
-    const branchElDy = useMemo(() => {
-        let affix = branchAffix;
-        if (affix === '') {
-            return 0;
-        } else if (affix === '_bb') {
-            return namePos ? -9.68 : 9.68;
-        } else {
-            let pos = branchPos;
-            if (pos.includes('SE') || pos.includes('SW')) {
-                return namePos ? 0 : 9.68;
-            }
-            if (pos.includes('NE') || pos.includes('NW')) {
-                return namePos ? -9.68 : 0;
-            }
-        }
-    }, [branchAffix, namePos, branchPos]);
 
     const stnIcon = ((l: number[]) => {
         const fallback = (n: number) => (n < 11 ? 'int' + (n + 1) : 'int12');
@@ -132,7 +51,7 @@ const StationMTR = (props: Props) => {
 
     return (
         <>
-            <g transform={`translate(0,${branchElDy})`}>
+            <g>
                 <IntTickGroup
                     variant={stnIcon}
                     stnTrans={stnInfo.transfer}
@@ -163,15 +82,15 @@ const StationMTR = (props: Props) => {
                     />
                 )}
             </g>
-            <use
-                xlinkHref={'#' + stnIcon + branchAffix}
-                stroke={stnState === -1 ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
-                className={stnInfo.transfer.paid_area ? 'rmg-stn__mtr--paid-osi' : 'rmg-stn__mtr--unpaid-osi'}
-                transform={
-                    `translate(0,${branchDy})` +
-                    `scale(${stnInfo.children[0] === 'lineend' ? 1 : -1},${namePos ? -1 : 1})`
-                }
-            />
+            <g transform={`scale(${stnInfo.children[0] === 'lineend' ? 1 : -1},${namePos ? -1 : 1})`}>
+                <StationIcon
+                    withinTransfer={stnInfo.transfer.info[0]?.length}
+                    outStationTransfer={stnInfo.transfer.info[1]?.length}
+                    isTerminal={stnInfo.parents[0] === 'linestart' || stnInfo.children[0] === 'lineend'}
+                    isPassed={stnState === -1}
+                    isPaidArea={stnInfo.transfer.paid_area}
+                />
+            </g>
             <StationNameWrapper
                 stationName={stnInfo.name}
                 stationState={stnState}
@@ -184,7 +103,6 @@ const StationMTR = (props: Props) => {
                             : Direction.right
                         : undefined
                 }
-                transform={`translate(0,${branchDy})`}
             />
         </>
     );
@@ -205,15 +123,21 @@ const IntTickGroup = (props: IntTickGroupProps) => {
     switch (variant) {
         case 'int':
             return (
-                <g>
-                    <IntTick intInfo={stnTrans.info[0][0]} stnState={stnState} rotation={namePos ? 180 : 0} />
-                </g>
+                <InterchangeTick
+                    interchangeInfo={stnTrans.info[0][0]}
+                    isPassed={stnState === -1}
+                    position={namePos ? Position.UP : Position.DOWN}
+                />
             );
 
         case 'osi11':
             return (
                 <g transform={`translate(0,${namePos ? -26 : 26})`}>
-                    <IntTick intInfo={stnTrans.info[1][0]} stnState={stnState} rotation={namePos ? 180 : 0} />
+                    <InterchangeTick
+                        interchangeInfo={stnTrans.info[1][0]}
+                        isPassed={stnState === -1}
+                        position={namePos ? Position.UP : Position.DOWN}
+                    />
                 </g>
             );
         case 'osi12':
@@ -226,10 +150,10 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                                 !namePos ? 8 + 18 * (i + 1) : -8 - 18 * (stnTrans.info[1].length - i)
                             })`}
                         >
-                            <IntTick
-                                intInfo={intInfo}
-                                stnState={stnState}
-                                rotation={stnTrans.tick_direc === ShortDirection.right ? -90 : 90}
+                            <InterchangeTick
+                                interchangeInfo={intInfo}
+                                isPassed={stnState === -1}
+                                position={stnTrans.tick_direc === ShortDirection.right ? Position.RIGHT : Position.LEFT}
                             />
                         </g>
                     ))}
@@ -239,11 +163,11 @@ const IntTickGroup = (props: IntTickGroupProps) => {
             return (
                 <>
                     <g>
-                        <IntTick
-                            intInfo={stnTrans.info[0][0]}
-                            stnState={stnState}
-                            rotation={namePos ? 0 : 180}
-                            nameDX={stnTrans.tick_direc === ShortDirection.right ? 3 : -3}
+                        <InterchangeTick
+                            interchangeInfo={stnTrans.info[0][0]}
+                            isPassed={stnState === -1}
+                            isRepelled={stnTrans.tick_direc === ShortDirection.right ? Direction.right : Direction.left}
+                            position={namePos ? Position.DOWN : Position.UP}
                         />
                     </g>
                     {stnTrans.info[1].map((intInfo, i) => (
@@ -253,10 +177,10 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                                 !namePos ? 8 + 18 * (i + 1) : -8 - 18 * (stnTrans.info[1].length - i)
                             })`}
                         >
-                            <IntTick
-                                intInfo={intInfo}
-                                stnState={stnState}
-                                rotation={stnTrans.tick_direc === ShortDirection.right ? -90 : 90}
+                            <InterchangeTick
+                                interchangeInfo={intInfo}
+                                isPassed={stnState === -1}
+                                position={stnTrans.tick_direc === ShortDirection.right ? Position.RIGHT : Position.LEFT}
                             />
                         </g>
                     ))}
@@ -266,7 +190,11 @@ const IntTickGroup = (props: IntTickGroupProps) => {
             return (
                 <>
                     <g>
-                        <IntTick intInfo={stnTrans.info[0][0]} stnState={stnState} rotation={namePos ? 180 : 0} />
+                        <InterchangeTick
+                            interchangeInfo={stnTrans.info[0][0]}
+                            isPassed={stnState === -1}
+                            position={namePos ? Position.UP : Position.DOWN}
+                        />
                     </g>
                     {stnTrans.info[1].map((intInfo, i) => (
                         <g
@@ -275,10 +203,10 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                                 namePos ? 18 * i : -18 * (stnTrans.info[1].length - 1 - i)
                             })`}
                         >
-                            <IntTick
-                                intInfo={intInfo}
-                                stnState={stnState}
-                                rotation={end === Direction.left ? 90 : -90}
+                            <InterchangeTick
+                                interchangeInfo={intInfo}
+                                isPassed={stnState === -1}
+                                position={end === Direction.right ? Position.RIGHT : Position.LEFT}
                             />
                         </g>
                     ))}
@@ -297,10 +225,12 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                                     }px)`,
                                 }}
                             >
-                                <IntTick
-                                    intInfo={intInfo}
-                                    stnState={stnState}
-                                    rotation={stnTrans.tick_direc === ShortDirection.right ? -90 : 90}
+                                <InterchangeTick
+                                    interchangeInfo={intInfo}
+                                    isPassed={stnState === -1}
+                                    position={
+                                        stnTrans.tick_direc === ShortDirection.right ? Position.RIGHT : Position.LEFT
+                                    }
                                 />
                             </g>
                         ))}
@@ -310,90 +240,6 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                 return <></>;
             }
     }
-};
-
-interface IntTickProps {
-    intInfo: InterchangeInfo;
-    stnState: -1 | 0 | 1;
-    rotation: 0 | 90 | 180 | -90;
-    nameDX?: number;
-}
-
-const IntTick = (props: IntTickProps) => {
-    const { intInfo, stnState, rotation, nameDX } = props;
-
-    const nameZHLns = intInfo[4].split('\\').length;
-    const nameENLns = intInfo[5].split('\\').length;
-
-    const x = (rotation => {
-        switch (rotation) {
-            case 90:
-                return -24;
-            case -90:
-                return 24;
-            default:
-                return 0;
-        }
-    })(rotation);
-
-    const y = (rotation => {
-        switch (rotation) {
-            case 0:
-                return 25 + 5.953125;
-            case 180:
-                return -25 + 5.953125 - 18.65625 - 10 * (nameZHLns - 1) - 7 * (nameENLns - 1);
-            default:
-                return 5.953125 - (19.65625 + 10 * (nameZHLns - 1) + 7 * (nameENLns - 1) - 1) / 2;
-        }
-    })(rotation);
-
-    const textAnchor = (rotation => {
-        switch (rotation) {
-            case 90:
-                return 'end';
-            case -90:
-                return 'start';
-            default:
-                if (!nameDX) {
-                    return 'middle';
-                } else if (nameDX > 0) {
-                    return 'start';
-                } else {
-                    return 'end';
-                }
-        }
-    })(rotation);
-
-    return useMemo(
-        () => (
-            <>
-                <use
-                    xlinkHref="#inttick"
-                    stroke={intInfo[2]}
-                    transform={`rotate(${rotation})`}
-                    className={'rmg-line rmg-line__mtr rmg-line__change' + (stnState === -1 ? ' rmg-line__pass' : '')}
-                />
-                <g
-                    textAnchor={textAnchor}
-                    transform={`translate(${x + (nameDX || 0)},${y})`}
-                    className={`Name ${stnState === -1 ? 'Pass' : 'Future'}`}
-                >
-                    {intInfo[4].split('\\').map((txt, i) => (
-                        <text key={i} className="rmg-name__zh IntName" dy={10 * i}>
-                            {txt}
-                        </text>
-                    ))}
-                    {intInfo[5].split('\\').map((txt, i) => (
-                        <text key={nameZHLns + i} className="rmg-name__en IntName" dy={nameZHLns * 10 - 1 + 7 * i}>
-                            {txt}
-                        </text>
-                    ))}
-                </g>
-            </>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [intInfo.toString(), rotation, stnState]
-    );
 };
 
 interface OSINameProps {
