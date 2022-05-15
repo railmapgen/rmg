@@ -4,6 +4,7 @@ import { useAppSelector } from '../../../../redux';
 import StationNameWrapper from '../../../mtr/station-name/station-name-wrapper';
 import StationIcon from '../../../mtr/station-icon';
 import InterchangeTick from '../../../mtr/interchange-tick';
+import OsiStation from '../../../mtr/osi-station';
 
 interface Props {
     stnId: string;
@@ -64,23 +65,8 @@ const StationMTR = (props: Props) => {
                                 : Direction.right
                             : undefined
                     }
+                    osiName={stnInfo.transfer.osi_names[0]}
                 />
-                {stnIcon.includes('osi') && (
-                    <OSIName
-                        name={stnInfo.transfer.osi_names[0]}
-                        stnState={stnState}
-                        variant={stnIcon}
-                        tickDirec={stnInfo.transfer.tick_direc}
-                        namePos={namePos}
-                        end={
-                            stnIcon === 'osi22end'
-                                ? stnInfo.parents[0] === 'linestart'
-                                    ? Direction.left
-                                    : Direction.right
-                                : undefined
-                        }
-                    />
-                )}
             </g>
             <g transform={`scale(${stnInfo.children[0] === 'lineend' ? 1 : -1},${namePos ? -1 : 1})`}>
                 <StationIcon
@@ -116,10 +102,11 @@ interface IntTickGroupProps {
     stnState: -1 | 0 | 1;
     namePos: boolean;
     end?: Direction;
+    osiName?: Name;
 }
 
 const IntTickGroup = (props: IntTickGroupProps) => {
-    const { variant, stnTrans, stnState, namePos, end } = props;
+    const { variant, stnTrans, stnState, namePos, end, osiName } = props;
     switch (variant) {
         case 'int':
             return (
@@ -131,33 +118,17 @@ const IntTickGroup = (props: IntTickGroupProps) => {
             );
 
         case 'osi11':
-            return (
-                <g transform={`translate(0,${namePos ? -26 : 26})`}>
-                    <InterchangeTick
-                        interchangeInfo={stnTrans.info[1][0]}
-                        isPassed={stnState === -1}
-                        position={namePos ? Position.UP : Position.DOWN}
-                    />
-                </g>
-            );
         case 'osi12':
             return (
-                <>
-                    {stnTrans.info[1].map((intInfo, i) => (
-                        <g
-                            key={i}
-                            transform={`translate(0,${
-                                !namePos ? 8 + 18 * (i + 1) : -8 - 18 * (stnTrans.info[1].length - i)
-                            })`}
-                        >
-                            <InterchangeTick
-                                interchangeInfo={intInfo}
-                                isPassed={stnState === -1}
-                                position={stnTrans.tick_direc === ShortDirection.right ? Position.RIGHT : Position.LEFT}
-                            />
-                        </g>
-                    ))}
-                </>
+                <g transform={`translate(0,${!namePos ? 26 : -26})`}>
+                    <OsiStation
+                        interchangeInfoList={stnTrans.info[1]}
+                        direction={stnTrans.tick_direc === ShortDirection.right ? Direction.right : Direction.left}
+                        stationName={osiName}
+                        isPassed={stnState === -1}
+                        isReverse={namePos}
+                    />
+                </g>
             );
         case 'osi22':
             return (
@@ -170,20 +141,15 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                             position={namePos ? Position.DOWN : Position.UP}
                         />
                     </g>
-                    {stnTrans.info[1].map((intInfo, i) => (
-                        <g
-                            key={i}
-                            transform={`translate(0,${
-                                !namePos ? 8 + 18 * (i + 1) : -8 - 18 * (stnTrans.info[1].length - i)
-                            })`}
-                        >
-                            <InterchangeTick
-                                interchangeInfo={intInfo}
-                                isPassed={stnState === -1}
-                                position={stnTrans.tick_direc === ShortDirection.right ? Position.RIGHT : Position.LEFT}
-                            />
-                        </g>
-                    ))}
+                    <g transform={`translate(0,${!namePos ? 26 : -26})`}>
+                        <OsiStation
+                            interchangeInfoList={stnTrans.info[1]}
+                            direction={stnTrans.tick_direc === ShortDirection.right ? Direction.right : Direction.left}
+                            stationName={osiName}
+                            isPassed={stnState === -1}
+                            isReverse={namePos}
+                        />
+                    </g>
                 </>
             );
         case 'osi22end':
@@ -196,20 +162,16 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                             position={namePos ? Position.UP : Position.DOWN}
                         />
                     </g>
-                    {stnTrans.info[1].map((intInfo, i) => (
-                        <g
-                            key={i}
-                            transform={`translate(${end === Direction.left ? -41 : 41},${
-                                namePos ? 18 * i : -18 * (stnTrans.info[1].length - 1 - i)
-                            })`}
-                        >
-                            <InterchangeTick
-                                interchangeInfo={intInfo}
-                                isPassed={stnState === -1}
-                                position={end === Direction.right ? Position.RIGHT : Position.LEFT}
-                            />
-                        </g>
-                    ))}
+                    <g transform={`translate(${end === Direction.left ? -41 : 41},0)`}>
+                        <OsiStation
+                            interchangeInfoList={stnTrans.info[1]}
+                            direction={end === Direction.right ? Direction.right : Direction.left}
+                            stationName={osiName}
+                            isPassed={stnState === -1}
+                            isReverse={!namePos}
+                            isTerminal={true}
+                        />
+                    </g>
                 </>
             );
         default:
@@ -240,84 +202,4 @@ const IntTickGroup = (props: IntTickGroupProps) => {
                 return <></>;
             }
     }
-};
-
-interface OSINameProps {
-    name: Name;
-    stnState: -1 | 0 | 1;
-    variant: string;
-    tickDirec: ShortDirection;
-    namePos: boolean;
-    end?: Direction;
-}
-
-const OSIName = (props: OSINameProps) => {
-    const { name, stnState, variant, tickDirec, namePos, end } = props;
-
-    const textAnchor = (variant => {
-        switch (variant) {
-            case 'osi11':
-                return tickDirec === ShortDirection.left ? 'end' : 'start';
-            case 'osi22':
-                return tickDirec === ShortDirection.left ? 'start' : 'end';
-            default:
-                return 'middle';
-        }
-    })(variant);
-
-    const x = (variant => {
-        switch (variant) {
-            case 'osi11':
-                return tickDirec === ShortDirection.left ? -13 : 13;
-            case 'osi22':
-                return tickDirec === ShortDirection.left ? 13 : -13;
-            case 'osi22end':
-                return end === Direction.left ? -41 : 41;
-            default:
-                return 0;
-        }
-    })(variant);
-
-    const y = (variant => {
-        switch (variant) {
-            case 'osi11':
-                return (
-                    (!namePos ? 26 : -26) +
-                    8.34375 -
-                    25.03125 / 2 -
-                    (!namePos ? 0 : 10 * (name?.[1]?.split('\\').length - 1))
-                );
-            case 'osi12':
-                return !namePos
-                    ? 26 + 18 + 10 + 8.34375
-                    : -(26 + 18 + 10) + 8.34375 - 25.03125 - 10 * (name?.[1]?.split('\\').length - 1);
-            case 'osi22':
-                return (
-                    (!namePos ? 26 - 18 : -8) -
-                    (namePos ? 18 + 9 : -27) +
-                    8.34375 -
-                    25.03125 / 2 -
-                    5 * (name?.[1]?.split('\\').length - 1)
-                );
-            case 'osi22end':
-                return !namePos ? 10 + 8.34375 : -10 + 8.34375 - 25.03125 - 10 * (name?.[1]?.split('\\').length - 1);
-            default:
-                return 0;
-        }
-    })(variant);
-
-    return (
-        <g
-            textAnchor={textAnchor}
-            transform={`translate(${x},${y})`}
-            className={`Name ${stnState === -1 ? 'Pass' : 'Future'}`}
-        >
-            <text className="rmg-name__zh rmg-name__mtr--osi">{name?.[0]}</text>
-            {name?.[1]?.split('\\').map((txt, i) => (
-                <text key={i} className="rmg-name__en rmg-name__mtr--osi" dy={12 + 10 * i}>
-                    {txt}
-                </text>
-            ))}
-        </g>
-    );
 };

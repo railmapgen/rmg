@@ -16,7 +16,7 @@ const getRotation = (position: Position): number => {
 
 interface InterchangeTickProps {
     interchangeInfo: InterchangeInfo;
-    isPassed: boolean;
+    isPassed?: boolean;
     position: Position;
     isRepelled?: Direction; // osi22
 }
@@ -52,7 +52,7 @@ function InterchangeTick(props: InterchangeTickProps) {
     };
 
     return (
-        <g>
+        <>
             <path
                 d="M0,0v17"
                 strokeLinecap="round"
@@ -76,7 +76,7 @@ function InterchangeTick(props: InterchangeTickProps) {
                     </text>
                 ))}
             </g>
-        </g>
+        </>
     );
 }
 
