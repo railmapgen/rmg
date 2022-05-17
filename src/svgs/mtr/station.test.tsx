@@ -1,22 +1,41 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-import StationIcon from './station-icon';
+import Station from './station';
 import { render } from '../../test-utils';
+import { InterchangeInfo, MonoColour, StationInfo, StationState } from '../../constants/constants';
+import { CityCode } from '@railmapgen/rmg-palette-resources';
+import { createMockStoreWithMockStations } from '../../setupTests';
+
+(Document.prototype as any).fonts = {
+    ready: Promise.resolve(),
+};
+
+const mockInterchangeInfo: InterchangeInfo = [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white, '', ''];
+const getMockStationInfo = (within: number, outStation: number): StationInfo => {
+    return {
+        name: ['ZH name', 'EN name'],
+        parents: ['stn-par'],
+        children: ['stn-child'],
+        transfer: {
+            info: [Array(within).fill(mockInterchangeInfo), Array(outStation).fill(mockInterchangeInfo)],
+            osi_names: [['ZH OSI', 'EN OSI']],
+        },
+    } as StationInfo;
+};
+
+const getMockStore = (within: number, outStation: number) =>
+    createMockStoreWithMockStations({ 'test-id': getMockStationInfo(within, outStation) });
 
 const setup = (within: number, outStation: number, isTerminal: boolean = false) =>
     render(
         <svg>
-            <StationIcon
-                withinTransfer={within}
-                outStationTransfer={outStation}
-                isTerminal={isTerminal}
-                isPassed={false}
-            />
-        </svg>
+            <Station stationId="test-id" stationState={StationState.CURRENT} isReversed={false} />
+        </svg>,
+        { store: getMockStore(within, outStation) }
     );
 
-describe('MTR StationIcon', () => {
-    describe('MTR StationIcon - OSI link', () => {
+describe('MTR Station', () => {
+    describe('MTR Station - OSI link', () => {
         const osiLinkSelector = 'path[stroke-width="2.69"]';
 
         it('Can render OSI link for 0-1 station as expected', () => {
@@ -77,7 +96,7 @@ describe('MTR StationIcon', () => {
         expect(wrapper.querySelectorAll('path')).toHaveLength(3);
     });
 
-    describe('MTR StationIcon - OSI Icon', () => {
+    describe('MTR Station - OSI Icon', () => {
         const osiIconSelector = 'path:last-of-type';
 
         it('Can render OSI icon for 0-1 station as expected', () => {

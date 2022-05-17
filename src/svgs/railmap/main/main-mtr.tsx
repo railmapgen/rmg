@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { adjacencyList, criticalPathMethod, getXShareMTR, getStnState } from '../methods/share';
 import { StationsMTR } from '../methods/mtr';
-import StationMTR from './station/station-mtr';
 import { CanvasType, RMGParam, StationDict } from '../../../constants/constants';
 import { useAppSelector } from '../../../redux';
+import Station from '../../mtr/station';
 
 const leftWideFactor = (stnList: StationDict, stnId: string) => {
     var res = 0;
@@ -200,7 +200,7 @@ const StationGroup = (props: StationGroupProps) => {
                             transform: `translate(${xs[stnId]}px,${ys[stnId]}px)`,
                         }}
                     >
-                        <StationMTR stnId={stnId} stnState={stnStates[stnId]} namePos={namePoss[stnId]} />
+                        <Station stationId={stnId} stationState={stnStates[stnId]} isReversed={namePoss[stnId]} />
                     </g>
                 ))}
         </g>

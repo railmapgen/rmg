@@ -16,6 +16,7 @@ export default function InterchangeStation(props: InterchangeStationProps) {
     const transforms = {
         icon: {
             v: interchangeInfoList.length <= 1 ? 0 : 18 * interchangeInfoList.length,
+            scaleY: isReverse ? -1 : 1,
         },
     };
 
@@ -44,6 +45,8 @@ export default function InterchangeStation(props: InterchangeStationProps) {
             <path
                 d={`M-8,0 v${transforms.icon.v} a8,8 0 0,0 16,0 v-${transforms.icon.v} a8,8 0 0,0 -16,0Z`}
                 className="rmg-stn__mtr"
+                stroke={isPassed ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
+                transform={`scale(1,${transforms.icon.scaleY})`}
             />
         </g>
     );
