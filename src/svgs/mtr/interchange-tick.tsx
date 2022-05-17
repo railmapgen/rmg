@@ -18,19 +18,19 @@ interface InterchangeTickProps {
     interchangeInfo: InterchangeInfo;
     isPassed?: boolean;
     position: Position;
-    isRepelled?: Direction; // osi22
+    repel?: Direction; // osi22
 }
 
 function InterchangeTick(props: InterchangeTickProps) {
-    const { interchangeInfo, isPassed, position, isRepelled } = props;
+    const { interchangeInfo, isPassed, position, repel } = props;
 
     const zhNameLines = interchangeInfo[4].split('\\').length;
     const enNameLines = interchangeInfo[5].split('\\').length;
 
     const textAnchor =
-        position === Position.LEFT || isRepelled === Direction.left
+        position === Position.LEFT || repel === Direction.left
             ? 'end'
-            : position === Position.RIGHT || isRepelled === Direction.right
+            : position === Position.RIGHT || repel === Direction.right
             ? 'start'
             : 'middle';
 
@@ -41,7 +41,7 @@ function InterchangeTick(props: InterchangeTickProps) {
         g: {
             x:
                 (position === Position.LEFT ? -24 : position === Position.RIGHT ? 24 : 0) +
-                (isRepelled === Direction.left ? -3 : isRepelled === Direction.right ? 3 : 0),
+                (repel === Direction.left ? -3 : repel === Direction.right ? 3 : 0),
             y:
                 position === Position.UP
                     ? -37 - 10 * (zhNameLines - 1) - 7 * (enNameLines - 1)
@@ -86,5 +86,5 @@ export default memo(
         prevProps.interchangeInfo.toString() === nextProps.interchangeInfo.toString() &&
         prevProps.isPassed === nextProps.isPassed &&
         prevProps.position === nextProps.position &&
-        prevProps.isRepelled === nextProps.isRepelled
+        prevProps.repel === nextProps.repel
 );

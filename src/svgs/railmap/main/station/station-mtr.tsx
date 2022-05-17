@@ -1,10 +1,10 @@
 import React from 'react';
-import { Direction, Name, Position, ShortDirection, StationTransfer } from '../../../../constants/constants';
+import { Direction, Name, ShortDirection, StationTransfer } from '../../../../constants/constants';
 import { useAppSelector } from '../../../../redux';
 import StationNameWrapper from '../../../mtr/station-name/station-name-wrapper';
 import StationIcon from '../../../mtr/station-icon';
-import InterchangeTick from '../../../mtr/interchange-tick';
 import OsiStation from '../../../mtr/osi-station';
+import InterchangeStation from '../../../mtr/interchange-station';
 
 interface Props {
     stnId: string;
@@ -108,15 +108,6 @@ interface IntTickGroupProps {
 const IntTickGroup = (props: IntTickGroupProps) => {
     const { variant, stnTrans, stnState, namePos, end, osiName } = props;
     switch (variant) {
-        case 'int':
-            return (
-                <InterchangeTick
-                    interchangeInfo={stnTrans.info[0][0]}
-                    isPassed={stnState === -1}
-                    position={namePos ? Position.UP : Position.DOWN}
-                />
-            );
-
         case 'osi11':
         case 'osi12':
             return (
@@ -133,14 +124,12 @@ const IntTickGroup = (props: IntTickGroupProps) => {
         case 'osi22':
             return (
                 <>
-                    <g>
-                        <InterchangeTick
-                            interchangeInfo={stnTrans.info[0][0]}
-                            isPassed={stnState === -1}
-                            isRepelled={stnTrans.tick_direc === ShortDirection.right ? Direction.right : Direction.left}
-                            position={namePos ? Position.DOWN : Position.UP}
-                        />
-                    </g>
+                    <InterchangeStation
+                        interchangeInfoList={stnTrans.info[0]}
+                        isPassed={stnState === -1}
+                        isReverse={!namePos}
+                        repel={stnTrans.tick_direc === ShortDirection.right ? Direction.right : Direction.left}
+                    />
                     <g transform={`translate(0,${!namePos ? 26 : -26})`}>
                         <OsiStation
                             interchangeInfoList={stnTrans.info[1]}
@@ -155,13 +144,11 @@ const IntTickGroup = (props: IntTickGroupProps) => {
         case 'osi22end':
             return (
                 <>
-                    <g>
-                        <InterchangeTick
-                            interchangeInfo={stnTrans.info[0][0]}
-                            isPassed={stnState === -1}
-                            position={namePos ? Position.UP : Position.DOWN}
-                        />
-                    </g>
+                    <InterchangeStation
+                        interchangeInfoList={stnTrans.info[0]}
+                        isPassed={stnState === -1}
+                        isReverse={namePos}
+                    />
                     <g transform={`translate(${end === Direction.left ? -41 : 41},0)`}>
                         <OsiStation
                             interchangeInfoList={stnTrans.info[1]}
@@ -177,26 +164,12 @@ const IntTickGroup = (props: IntTickGroupProps) => {
         default:
             if (variant.includes('int')) {
                 return (
-                    <>
-                        {stnTrans.info[0].map((intInfo, i) => (
-                            <g
-                                key={i}
-                                style={{
-                                    transform: `translateY(${
-                                        !namePos ? 18 * (i + 1) : -18 * (stnTrans.info[0].length - i)
-                                    }px)`,
-                                }}
-                            >
-                                <InterchangeTick
-                                    interchangeInfo={intInfo}
-                                    isPassed={stnState === -1}
-                                    position={
-                                        stnTrans.tick_direc === ShortDirection.right ? Position.RIGHT : Position.LEFT
-                                    }
-                                />
-                            </g>
-                        ))}
-                    </>
+                    <InterchangeStation
+                        interchangeInfoList={stnTrans.info[0]}
+                        direction={stnTrans.tick_direc === ShortDirection.right ? Direction.right : Direction.left}
+                        isPassed={stnState === -1}
+                        isReverse={namePos}
+                    />
                 );
             } else {
                 return <></>;
