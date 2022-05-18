@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Button, Heading, VStack } from '@chakra-ui/react';
+import { Button, Flex, Heading, VStack } from '@chakra-ui/react';
 import { useAppSelector } from '../../../redux';
 import InterchangeCard from './interchange-card';
 import { useDispatch } from 'react-redux';
@@ -9,11 +9,13 @@ import {
     updateInterchange,
     updateStationOsiName,
     updateStationPaidArea,
+    updateStationTickDirection,
 } from '../../../redux/param/action';
-import { InterchangeInfo, MonoColour, RmgStyle } from '../../../constants/constants';
+import { InterchangeInfo, MonoColour, RmgStyle, ShortDirection } from '../../../constants/constants';
 import { MdAdd } from 'react-icons/md';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
+import RmgButtonGroup from '../../common/rmg-button-group';
 
 export default function InterchangeSection() {
     const { t } = useTranslation();
@@ -68,9 +70,22 @@ export default function InterchangeSection() {
 
     return (
         <VStack align="flex-start" p={1}>
-            <Heading as="h5" size="sm">
-                {t('StationSidePanel.interchange.title')}
-            </Heading>
+            <Flex w="100%">
+                <Heading as="h5" size="sm" mr="auto">
+                    {t('StationSidePanel.interchange.title')}
+                </Heading>
+
+                {style === RmgStyle.MTR && (
+                    <RmgButtonGroup
+                        selections={[
+                            { label: t('Text on the left'), value: ShortDirection.left },
+                            { label: t('Text on the right'), value: ShortDirection.right },
+                        ]}
+                        defaultValue={transfer.tick_direc}
+                        onChange={value => dispatch(updateStationTickDirection(selectedStation, value))}
+                    />
+                )}
+            </Flex>
 
             {transfer.info.map((infoList, i) => (
                 <Fragment key={i}>

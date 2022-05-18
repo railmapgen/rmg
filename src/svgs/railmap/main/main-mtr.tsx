@@ -24,7 +24,7 @@ const leftWideFactor = (stnList: StationDict, stnId: string) => {
     // if (type === 'osi22') res += 0.8;
     if (stnList[stnId].parents.length === 2) res += 0.4;
     if (stnList[stnList[stnId].parents[0]].children.length === 2) res += 0.4;
-    return res * 2;
+    return res;
 };
 
 const rightWideFactor = (stnList: StationDict, stnId: string) => {
