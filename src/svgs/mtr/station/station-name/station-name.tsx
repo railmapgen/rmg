@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useRef } from 'react';
-import { Direction, Name } from '../../../constants/constants';
+import { Direction, Name } from '../../../../constants/constants';
 
 interface StationNameProps {
     stnName: Name;

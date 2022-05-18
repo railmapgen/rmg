@@ -151,15 +151,9 @@ export const test = async (svgEl: SVGSVGElement, scale: number): Promise<Blob> =
 
     svgEl.querySelectorAll('.rmg-name__en.rmg-name__mtr--station').forEach(el => el.setAttribute('font-size', '11px'));
 
-    svgEl.querySelectorAll('.rmg-name__zh.IntName').forEach(el => el.setAttribute('font-size', '10px'));
-
-    svgEl.querySelectorAll('.rmg-name__en.rmg-name__mtr--osi').forEach(el => el.setAttribute('font-size', '9px'));
-
     svgEl
         .querySelectorAll('.rmg-name__en.rmg-name__gzmtr--next2-dest')
         .forEach(el => el.setAttribute('font-size', '8.5px'));
-
-    svgEl.querySelectorAll('.rmg-name__en.IntName').forEach(el => el.setAttribute('font-size', '7px'));
 
     // svgEl
     //     .querySelectorAll('text:not([font-size]), tspan:not([font-size])')
