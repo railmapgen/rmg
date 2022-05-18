@@ -22,10 +22,12 @@ export default function Station(props: StationProps) {
         facility,
     } = useAppSelector(state => state.param.stn_list[stationId]);
 
-    const end: Direction | undefined = parents.includes('linestart')
-        ? Direction.left
-        : children.includes('lineend')
-        ? Direction.right
+    const end: Direction | undefined = info[0]?.length
+        ? parents.includes('linestart')
+            ? Direction.left
+            : children.includes('lineend')
+            ? Direction.right
+            : undefined
         : undefined;
     const isRepelled = Boolean(info[1]?.length && !end);
 
