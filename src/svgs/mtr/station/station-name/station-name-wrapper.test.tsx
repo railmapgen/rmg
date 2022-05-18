@@ -1,8 +1,8 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import StationNameWrapper, { NAME_FULL_HEIGHT } from './station-name-wrapper';
-import { Facilities, StationState } from '../../../constants/constants';
-import { waitForComponentToPaint } from '../../../setupTests';
+import { Facilities, StationState } from '../../../../constants/constants';
+import { waitForComponentToPaint } from '../../../../setupTests';
 
 (Document.prototype as any).fonts = {
     ready: Promise.resolve(),

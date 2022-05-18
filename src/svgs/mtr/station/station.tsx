@@ -1,7 +1,7 @@
 import React from 'react';
-import { Direction, ShortDirection, StationState } from '../../constants/constants';
+import { Direction, ShortDirection, StationState } from '../../../constants/constants';
 import InterchangeStation from './interchange-station';
-import { useAppSelector } from '../../redux';
+import { useAppSelector } from '../../../redux';
 import OsiStation from './osi-station';
 import StationNameWrapper from './station-name/station-name-wrapper';
 
@@ -56,7 +56,7 @@ export default function Station(props: StationProps) {
                 interchangeInfoList={info[0]}
                 direction={tick_direc === ShortDirection.right ? Direction.right : Direction.left}
                 isPassed={stationState === StationState.PASSED}
-                isReverse={!end && info[1]?.length ? !isReversed : isReversed}
+                isReversed={!end && info[1]?.length ? !isReversed : isReversed}
                 repel={
                     isRepelled ? (tick_direc === ShortDirection.right ? Direction.right : Direction.left) : undefined
                 }
@@ -69,7 +69,7 @@ export default function Station(props: StationProps) {
                         direction={end ? end : tick_direc === ShortDirection.right ? Direction.right : Direction.left}
                         stationName={osi_names[0]}
                         isPassed={stationState === StationState.PASSED}
-                        isReverse={end ? !isReversed : isReversed}
+                        isReversed={end ? !isReversed : isReversed}
                         isTerminal={Boolean(end)}
                     />
                 </g>

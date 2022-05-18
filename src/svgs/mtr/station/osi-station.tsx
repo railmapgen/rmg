@@ -1,26 +1,24 @@
 import React from 'react';
-import { Direction, InterchangeInfo, Name, Position } from '../../constants/constants';
+import { Direction, InterchangeInfo, Name, Position } from '../../../constants/constants';
 import InterchangeTick from './interchange-tick';
+import StationIcon from './station-icon';
 
 interface OsiStationProps {
     interchangeInfoList: InterchangeInfo[];
     direction: Direction;
     isPassed?: boolean;
-    isReverse?: boolean;
+    isReversed?: boolean;
     isTerminal?: boolean;
     stationName?: Name;
 }
 
 export default function OsiStation(props: OsiStationProps) {
-    const { interchangeInfoList, direction, isPassed, isReverse, isTerminal, stationName } = props;
+    const { interchangeInfoList, direction, isPassed, isReversed, isTerminal, stationName } = props;
 
     const enNameLines = stationName?.[1]?.split('\\')?.length ?? 1;
 
+    const iconLength = 18 * (interchangeInfoList.length - 1);
     const transforms = {
-        icon: {
-            v: 18 * (interchangeInfoList.length - 1),
-            scaleY: isReverse ? -1 : 1,
-        },
         name: {
             x: isTerminal
                 ? 0
@@ -32,23 +30,23 @@ export default function OsiStation(props: OsiStationProps) {
                 ? 13
                 : -13,
             y: isTerminal
-                ? isReverse
+                ? isReversed
                     ? 19
                     : -28
-                : -4 + (isReverse ? -9 : 9) * (interchangeInfoList.length - 1) - 5 * (enNameLines - 1),
+                : -4 + (isReversed ? -9 : 9) * (interchangeInfoList.length - 1) - 5 * (enNameLines - 1),
         },
     };
 
     return (
         <g>
             {interchangeInfoList.map((info, i, arr) => (
-                <g key={i} transform={`translate(0,${isReverse ? -18 * i : 18 * i})`}>
+                <g key={i} transform={`translate(0,${isReversed ? -18 * i : 18 * i})`}>
                     <InterchangeTick
                         interchangeInfo={info}
                         isPassed={isPassed}
                         position={
                             arr.length === 1
-                                ? isReverse
+                                ? isReversed
                                     ? Position.UP
                                     : Position.DOWN
                                 : direction === Direction.right
@@ -59,12 +57,7 @@ export default function OsiStation(props: OsiStationProps) {
                 </g>
             ))}
 
-            <path
-                d={`M-8,0 v${transforms.icon.v} a8,8 0 0,0 16,0 v-${transforms.icon.v} a8,8 0 0,0 -16,0Z`}
-                className="rmg-stn__mtr"
-                stroke={isPassed ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
-                transform={`scale(1,${transforms.icon.scaleY})`}
-            />
+            <StationIcon length={iconLength} isPassed={isPassed} isReversed={isReversed} />
 
             <g
                 textAnchor={transforms.name.x === 0 ? 'middle' : transforms.name.x > 0 ? 'start' : 'end'}

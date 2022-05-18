@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Direction, InterchangeInfo, Position } from '../../constants/constants';
+import { Direction, InterchangeInfo, Position } from '../../../constants/constants';
 
 const getRotation = (position: Position): number => {
     switch (position) {

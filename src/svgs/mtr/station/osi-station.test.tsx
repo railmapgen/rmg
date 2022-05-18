@@ -1,8 +1,8 @@
 import React from 'react';
 import { CityCode } from '@railmapgen/rmg-palette-resources';
-import { Direction, InterchangeInfo, MonoColour } from '../../constants/constants';
+import { Direction, InterchangeInfo, MonoColour } from '../../../constants/constants';
 import OsiStation from './osi-station';
-import { render } from '../../test-utils';
+import { render } from '../../../test-utils';
 import { screen } from '@testing-library/react';
 
 const mockInterchangeInfo: InterchangeInfo = [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white, '', ''];

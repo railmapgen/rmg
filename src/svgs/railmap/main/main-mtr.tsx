@@ -3,7 +3,7 @@ import { adjacencyList, criticalPathMethod, getXShareMTR, getStnState } from '..
 import { StationsMTR } from '../methods/mtr';
 import { CanvasType, RMGParam, StationDict } from '../../../constants/constants';
 import { useAppSelector } from '../../../redux';
-import Station from '../../mtr/station';
+import Station from '../../mtr/station/station';
 
 const leftWideFactor = (stnList: StationDict, stnId: string) => {
     var res = 0;
