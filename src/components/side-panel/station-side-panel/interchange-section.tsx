@@ -30,7 +30,7 @@ export default function InterchangeSection() {
             type: 'input',
             label: t('Station Chinese name'),
             value: transfer.osi_names[setIndex]?.[0],
-            hidden: [RmgStyle.SHMetro].includes(style),
+            hidden: ![RmgStyle.MTR].includes(style),
             onChange: value =>
                 dispatch(updateStationOsiName(selectedStation, setIndex, [value, transfer.osi_names[setIndex]?.[1]])),
         },
@@ -38,7 +38,7 @@ export default function InterchangeSection() {
             type: 'input',
             label: t('Station English name'),
             value: transfer.osi_names[setIndex]?.[1],
-            hidden: [RmgStyle.SHMetro].includes(style),
+            hidden: ![RmgStyle.MTR].includes(style),
             onChange: value =>
                 dispatch(updateStationOsiName(selectedStation, setIndex, [transfer.osi_names[setIndex]?.[0], value])),
         },
