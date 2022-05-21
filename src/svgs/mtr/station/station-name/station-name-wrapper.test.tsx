@@ -1,11 +1,10 @@
 import React from 'react';
-import { mount } from 'enzyme';
 import StationNameWrapper, { NAME_FULL_HEIGHT } from './station-name-wrapper';
 import { Facilities, StationState } from '../../../../constants/constants';
-import { waitForComponentToPaint } from '../../../../setupTests';
+import { render } from '../../../../test-utils';
 
 (Document.prototype as any).fonts = {
-    ready: Promise.resolve(),
+    ready: Promise.resolve([]),
 };
 
 const mockGetBBox = jest.fn();
@@ -18,10 +17,10 @@ const mockBBox = {
 };
 
 describe('Unit tests for StationNameWrapper component', () => {
-    it('Can calculate position of centre-aligned component correctly', async () => {
+    it('Can calculate position of centre-aligned component correctly', () => {
         mockGetBBox.mockReturnValue(mockBBox.centre);
 
-        const wrapper = mount(
+        const { container } = render(
             <svg>
                 <StationNameWrapper
                     stationName={['迪士尼', 'Disneyland Resort']}
@@ -30,11 +29,8 @@ describe('Unit tests for StationNameWrapper component', () => {
                 />
             </svg>
         );
-        await waitForComponentToPaint(wrapper);
 
-        const rect = wrapper.find('rect');
-        const { width: rectWidth } = rect.props();
-
-        expect(rectWidth).toBe(NAME_FULL_HEIGHT + mockBBox.centre.width + 6 + 3); // 6: padding, 3: gap between icon and name
+        const rectWidth = container.querySelector('rect')?.getAttribute('width');
+        expect(Number(rectWidth)).toBe(NAME_FULL_HEIGHT + mockBBox.centre.width + 6 + 3); // 6: padding, 3: gap between icon and name
     });
 });
