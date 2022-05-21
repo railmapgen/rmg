@@ -20,7 +20,7 @@ export default memo(
 
         useEffect(() => {
             updateNameBBox();
-            waitForFontReady().then().catch(console.error).finally(updateNameBBox);
+            waitForFontReady().then().catch(console.log).finally(updateNameBBox);
         }, [stnName.toString(), align]);
 
         const getTextAnchor = (direction?: Direction) => {
