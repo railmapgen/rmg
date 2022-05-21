@@ -14,11 +14,13 @@ export default memo(
 
         const nameEl = useRef<SVGGElement>(null);
 
+        const updateNameBBox = () => {
+            onUpdate?.(nameEl.current!.getBBox());
+        };
+
         useEffect(() => {
-            waitForFontReady()
-                .then()
-                .catch(console.error)
-                .finally(() => onUpdate?.(nameEl.current!.getBBox()));
+            updateNameBBox();
+            waitForFontReady().then().catch(console.error).finally(updateNameBBox);
         }, [stnName.toString(), align]);
 
         const getTextAnchor = (direction?: Direction) => {
