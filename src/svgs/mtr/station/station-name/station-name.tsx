@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useRef } from 'react';
 import { Direction, Name } from '../../../../constants/constants';
+import { waitForFontReady } from '../../utils';
 
 interface StationNameProps {
     stnName: Name;
@@ -14,7 +15,10 @@ export default memo(
         const nameEl = useRef<SVGGElement>(null);
 
         useEffect(() => {
-            document.fonts.ready.then(() => onUpdate?.(nameEl.current!.getBBox()));
+            waitForFontReady()
+                .then()
+                .catch(console.error)
+                .finally(() => onUpdate?.(nameEl.current!.getBBox()));
         }, [stnName.toString(), align]);
 
         const getTextAnchor = (direction?: Direction) => {
