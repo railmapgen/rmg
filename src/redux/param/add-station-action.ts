@@ -156,6 +156,11 @@ export const verifyNewBranchEnds = (from: string, to: string) => {
             return 'Not in correct ordering';
         }
 
+        // should not from linestart to lineend
+        if (from === 'linestart' && to === 'lineend') {
+            return 'Should not be parallel to main line';
+        }
+
         // should not be open jaw from the first station
         if (from === 'linestart' && branches[0].indexOf(to) === 1) {
             return 'Branch should not be open jaw from the first station';

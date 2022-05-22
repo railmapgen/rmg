@@ -7,7 +7,7 @@ import { CityCode } from '@railmapgen/rmg-palette-resources';
 import { createMockStoreWithMockStations } from '../../../setupTests';
 
 (Document.prototype as any).fonts = {
-    ready: Promise.resolve(),
+    ready: Promise.resolve([]),
 };
 
 (SVGElement.prototype as any).getBBox = () => ({ x: -40, width: 80 });
