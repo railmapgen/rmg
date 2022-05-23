@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot, Root } from 'react-dom/client';
 import './index.css';
 import './i18n/config';
 import App from './App';
@@ -37,12 +37,15 @@ document.head.append(
     })
 );
 
+let root: Root;
+
 const renderApp = () => {
-    ReactDOM.render(<App />, document.getElementById('root'));
+    root = createRoot(document.getElementById('root') as HTMLDivElement);
+    root.render(<App />);
 };
 
 export const reRenderApp = (param: RMGParam) => {
-    ReactDOM.unmountComponentAtNode(document.getElementById('root')!);
+    root.unmount();
     window.history.pushState({}, '', process.env.PUBLIC_URL + '/' + param.style);
     store.dispatch(setFullParam(param));
     renderApp();
@@ -106,6 +109,6 @@ getRmgStorage()
             ${err.toString()}
             <br />
             Please contact us in 
-            <a href='https://github.com/railmapgen/rmg' target='_blank' rel='noreferrer'>GitHub</a>.
+            <a href="https://github.com/railmapgen/rmg" target="_blank" rel="noreferrer">GitHub</a>.
         </div>`;
     });

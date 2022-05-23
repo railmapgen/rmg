@@ -1,8 +1,9 @@
 import React from 'react';
-import { mount } from 'enzyme';
 import UploadConfirmModal from './upload-confirm-modal';
-import { createMockAppStore, TestingProvider } from '../../setupTests';
+import { createMockAppStore } from '../../setupTests';
 import rootReducer from '../../redux';
+import { render } from '../../test-utils';
+import { fireEvent, screen } from '@testing-library/react';
 
 jest.mock('../../index', () => ({
     reRenderApp: jest.fn(),
@@ -22,21 +23,18 @@ const mockCallbacks = {
 
 describe('Unit tests for UploadConfirmModal', () => {
     it('Can save uploaded param to storage and re-render app', () => {
-        const wrapper = mount(
+        render(
             <UploadConfirmModal
                 isOpen={true}
                 cancelRef={null as any}
                 uploadedParam={realStore.param}
                 {...mockCallbacks}
             />,
-            {
-                wrappingComponent: TestingProvider,
-                wrappingComponentProps: { store: mockStore },
-            }
+            { store: mockStore }
         );
 
         // simulate confirm
-        wrapper.find('button.chakra-button').at(1).simulate('click');
+        fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
 
         expect(mockCallbacks.onOpenParam).toBeCalledTimes(1);
         expect(mockCallbacks.onOpenParam).toBeCalledWith(expect.any(Object));
