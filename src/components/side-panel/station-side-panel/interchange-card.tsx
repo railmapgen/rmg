@@ -23,7 +23,18 @@ export default function InterchangeCard(props: InterchangeCardProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
 
-    const theme = useAppSelector(state => state.param.theme);
+    const { theme, stn_list: stationList } = useAppSelector(state => state.param);
+
+    const usedNameList = Object.values(stationList).reduce<[string[], string[]]>(
+        (acc, cur) => {
+            const [zhAcc, enAcc] = acc;
+            return [
+                [...new Set(zhAcc.concat(cur.transfer.info.flat().map(it => it[4])))],
+                [...new Set(enAcc.concat(cur.transfer.info.flat().map(it => it[5])))],
+            ];
+        },
+        [[], []]
+    );
 
     const interchangeFields: RmgFieldsField[][] = interchangeList.map((it, i) => [
         {
@@ -32,6 +43,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
             value: it[4],
             minW: '80px',
             onChange: val => onUpdate?.(i, [it[0], it[1], it[2], it[3], val, it[5]]),
+            optionList: usedNameList[0],
         },
         {
             type: 'input',
@@ -39,6 +51,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
             value: it[5],
             minW: '80px',
             onChange: val => onUpdate?.(i, [it[0], it[1], it[2], it[3], it[4], val]),
+            optionList: usedNameList[1],
         },
     ]);
 

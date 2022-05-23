@@ -1,5 +1,5 @@
 import { RmgAgGrid, RmgLineBadge, RmgMultiLineString } from '@railmapgen/rmg-components';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { useAppDispatch, useAppSelector } from '../../redux';
 import { ColDef, SelectionChangedEvent } from 'ag-grid-community';
@@ -30,31 +30,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
     const branches = useAppSelector(state => state.helper.branches);
     const stationIds = branches[branchIndex].filter(id => !['linestart', 'lineend'].includes(id));
 
-    const gridRef = useRef<AgGridReact>(null);
-    const isGridReadyRef = useRef(false);
-
-    useEffect(() => {
-        // deselect row when side panel is closed
-        // only take effect when one row is selected
-        if (isGridReadyRef.current && gridRef.current) {
-            const selectedRows = gridRef.current.api.getSelectedRows();
-            if (selectedRows.length === 1 && sidePanelMode !== SidePanelMode.STATION) {
-                gridRef.current.api.deselectAll();
-            }
-        }
-    }, [isGridReadyRef.current, sidePanelMode]);
-
-    const rowData: RowDataType[] = stationIds.map(id => ({
-        ...stationList[id],
-        id,
-        rowSpan: dispatch(getRowSpanForColine(id, branchIndex)),
-    }));
-
-    const defaultColDef = {
-        resizable: true,
-    };
-
-    const columnDefs: RmgAgGridColDef<RowDataType>[] = [
+    const [columnDefs] = useState<RmgAgGridColDef<RowDataType>[]>([
         {
             headerName: t('StationAgGrid.num'),
             field: 'num',
@@ -116,7 +92,31 @@ export default function StationAgGrid(props: StationAgGridProps) {
             ),
             hide: ![RmgStyle.SHMetro].includes(style),
         },
-    ];
+    ]);
+
+    const gridRef = useRef<AgGridReact>(null);
+    const isGridReadyRef = useRef(false);
+
+    useEffect(() => {
+        // deselect row when side panel is closed
+        // only take effect when one row is selected
+        if (isGridReadyRef.current && gridRef.current) {
+            const selectedRows = gridRef.current.api.getSelectedRows();
+            if (selectedRows.length === 1 && sidePanelMode !== SidePanelMode.STATION) {
+                gridRef.current.api.deselectAll();
+            }
+        }
+    }, [isGridReadyRef.current, sidePanelMode]);
+
+    const rowData: RowDataType[] = stationIds.map(id => ({
+        ...stationList[id],
+        id,
+        rowSpan: dispatch(getRowSpanForColine(id, branchIndex)),
+    }));
+
+    const defaultColDef = {
+        resizable: true,
+    };
 
     const handleSelectionChanged = ({ api }: SelectionChangedEvent) => {
         const selectedRowIds = api.getSelectedRows()?.map(row => row.id as string);

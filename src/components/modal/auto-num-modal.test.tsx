@@ -20,52 +20,59 @@ const mockStore = createMockAppStore({
 });
 
 describe('AutoNumModal', () => {
-    it('Can disable submit button if entered text is invalid', async () => {
+    it('Can disable submit button if starting index is invalid', async () => {
         render(<AutoNumModal isOpen={true} onClose={jest.fn()} />, { store: mockStore });
 
         expect(screen.getByText('Submit')).not.toBeDisabled();
         jest.useFakeTimers();
 
-        fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: '' } });
+        fireEvent.change(screen.getByRole('combobox', { name: 'Starting index' }), { target: { value: '' } });
         await act(async () => {
             jest.advanceTimersByTime(0);
         });
-        expect(screen.getAllByRole('textbox')[0]).toBeValid();
+        expect(screen.getByRole('combobox', { name: 'Starting index' })).toBeValid();
         expect(screen.getByText('Submit')).toBeDisabled();
 
-        fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: 'abc' } });
+        fireEvent.change(screen.getByRole('combobox', { name: 'Starting index' }), { target: { value: 'abc' } });
         await act(async () => {
             jest.advanceTimersByTime(0);
         });
-        expect(screen.getAllByRole('textbox')[0]).not.toBeValid();
+        expect(screen.getByRole('combobox', { name: 'Starting index' })).not.toBeValid();
         expect(screen.getByText('Submit')).toBeDisabled();
 
-        fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: '10' } });
+        fireEvent.change(screen.getByRole('combobox', { name: 'Starting index' }), { target: { value: '10' } });
         await act(async () => {
             jest.advanceTimersByTime(0);
         });
-        expect(screen.getAllByRole('textbox')[0]).toBeValid();
+        expect(screen.getByRole('combobox', { name: 'Starting index' })).toBeValid();
         expect(screen.getByText('Submit')).not.toBeDisabled();
+    });
 
-        fireEvent.change(screen.getAllByRole('textbox')[1], { target: { value: '' } });
+    it('Can disable submit button if number of digits is invalid', async () => {
+        render(<AutoNumModal isOpen={true} onClose={jest.fn()} />, { store: mockStore });
+
+        expect(screen.getByText('Submit')).not.toBeDisabled();
+        jest.useFakeTimers();
+
+        fireEvent.change(screen.getByRole('combobox', { name: 'Number of digits' }), { target: { value: '' } });
         await act(async () => {
             jest.advanceTimersByTime(0);
         });
-        expect(screen.getAllByRole('textbox')[1]).toBeValid();
+        expect(screen.getByRole('combobox', { name: 'Number of digits' })).toBeValid();
         expect(screen.getByText('Submit')).toBeDisabled();
 
-        fireEvent.change(screen.getAllByRole('textbox')[1], { target: { value: 'abc' } });
+        fireEvent.change(screen.getByRole('combobox', { name: 'Number of digits' }), { target: { value: 'abc' } });
         await act(async () => {
             jest.advanceTimersByTime(0);
         });
-        expect(screen.getAllByRole('textbox')[1]).not.toBeValid();
+        expect(screen.getByRole('combobox', { name: 'Number of digits' })).not.toBeValid();
         expect(screen.getByText('Submit')).toBeDisabled();
 
-        fireEvent.change(screen.getAllByRole('textbox')[1], { target: { value: '3' } });
+        fireEvent.change(screen.getByRole('combobox', { name: 'Number of digits' }), { target: { value: '3' } });
         await act(async () => {
             jest.advanceTimersByTime(0);
         });
-        expect(screen.getAllByRole('textbox')[1]).toBeValid();
+        expect(screen.getByRole('combobox', { name: 'Number of digits' })).toBeValid();
         expect(screen.getByText('Submit')).not.toBeDisabled();
     });
 });
