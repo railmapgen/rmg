@@ -42,7 +42,6 @@ describe('OpenActions', () => {
 
         // modal open
         await screen.findByRole('alertdialog');
-        expect(screen.getByRole('alertdialog', { name: 'Open from configuration file' })).toBeInTheDocument();
     });
 
     it('Can display error message if invalid type of file is uploaded', async () => {

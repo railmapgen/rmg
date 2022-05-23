@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 interface RemoveConfirmModalProps {
     isOpen: boolean;
     onClose: () => void;
-    cancelRef?: RefObject<HTMLButtonElement>;
+    cancelRef: RefObject<HTMLButtonElement>;
     onConfirm: () => void;
 }
 

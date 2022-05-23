@@ -22,10 +22,18 @@ const mockCallbacks = {
 
 describe('Unit tests for UploadConfirmModal', () => {
     it('Can save uploaded param to storage and re-render app', () => {
-        const wrapper = mount(<UploadConfirmModal isOpen={true} uploadedParam={realStore.param} {...mockCallbacks} />, {
-            wrappingComponent: TestingProvider,
-            wrappingComponentProps: { store: mockStore },
-        });
+        const wrapper = mount(
+            <UploadConfirmModal
+                isOpen={true}
+                cancelRef={null as any}
+                uploadedParam={realStore.param}
+                {...mockCallbacks}
+            />,
+            {
+                wrappingComponent: TestingProvider,
+                wrappingComponentProps: { store: mockStore },
+            }
+        );
 
         // simulate confirm
         wrapper.find('button.chakra-button').at(1).simulate('click');
