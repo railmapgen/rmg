@@ -58,7 +58,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
     return (
         <RmgCard direction="column">
             {interchangeList.length === 0 && (
-                <HStack spacing={0.5}>
+                <HStack spacing={0.5} data-testid={`interchange-card-stack`}>
                     <Text as="i" flex={1} align="center" fontSize="md" colorScheme="gray">
                         {t('StationSidePanel.interchange.noInterchanges')}
                     </Text>
@@ -74,7 +74,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
             )}
 
             {interchangeList.map((it, i) => (
-                <HStack key={i} spacing={0.5}>
+                <HStack key={i} spacing={0.5} data-testid={`interchange-card-stack-${i}`}>
                     <RmgLabel label={t('Colour')} minW="40px" noLabel={i !== 0}>
                         <ThemeButton
                             theme={[it[0], it[1], it[2], it[3]]}

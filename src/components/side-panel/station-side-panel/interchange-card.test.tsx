@@ -1,10 +1,10 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
 import InterchangeCard from './interchange-card';
 import { InterchangeInfo, MonoColour } from '../../../constants/constants';
 import { CityCode } from '@railmapgen/rmg-palette-resources';
 import { act } from 'react-dom/test-utils';
-import { TestingProvider } from '../../../setupTests';
+import { render } from '../../../test-utils';
+import { fireEvent, screen, within } from '@testing-library/react';
 
 const mockInterchangeInfo1: InterchangeInfo = [
     CityCode.Hongkong,
@@ -29,109 +29,75 @@ const mockCallbacks = {
     onUpdate: jest.fn(),
 };
 
-describe('Unit tests for InterchangeCard component', () => {
+describe('InterchangeCard', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
 
     it('Can render card with empty interchange list as expected', () => {
-        const wrapper = mount(<InterchangeCard interchangeList={[]} {...mockCallbacks} />, {
-            wrappingComponent: TestingProvider,
-        });
+        render(<InterchangeCard interchangeList={[]} {...mockCallbacks} />);
 
-        expect(wrapper.text()).toContain('No interchanges');
+        expect(screen.getByText('No interchanges')).toBeInTheDocument();
 
-        wrapper.find('button').simulate('click');
+        fireEvent.click(screen.getByRole('button', { name: 'Add interchange' }));
         expect(mockCallbacks.onAdd).toBeCalledTimes(1);
         expect(mockCallbacks.onAdd).toBeCalledWith(['hongkong', '', '#aaaaaa', '#fff', '', '']); // empty interchange info
     });
 
     it('Can render card with 1 interchange info as expected', () => {
-        const wrapper = mount(<InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />, {
-            wrappingComponent: TestingProvider,
-        });
+        render(<InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />);
 
-        const hStack = wrapper.find('div.chakra-stack');
-        expect(hStack).toHaveLength(1);
+        // colour edit button has desired styles
+        expect(screen.getByRole('button', { name: 'Colour' })).toHaveStyle({ background: '#F38B00', color: '#FFFFFF' });
 
-        const iconBtns = hStack.find('IconButton');
-        expect(iconBtns).toHaveLength(3); // colour edit button, copy button, delete button
-        expect(iconBtns.at(0).props()).toMatchObject({ bg: '#F38B00', color: '#fff' }); // colour edit button has desired styles
-
-        const inputEls = hStack.find('input');
-        expect(inputEls).toHaveLength(2);
-        expect(inputEls.at(0).getDOMNode<HTMLInputElement>().value).toBe('東涌綫');
-        expect(inputEls.at(1).getDOMNode<HTMLInputElement>().value).toBe('Tung Chung Line');
+        expect(screen.getByRole('combobox', { name: 'Chinese name' })).toHaveDisplayValue('東涌綫');
+        expect(screen.getByRole('combobox', { name: 'English name' })).toHaveDisplayValue('Tung Chung Line');
     });
 
     it('Can handle open and close colour modal as expected', async () => {
-        const wrapper = mount(<InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />, {
-            wrappingComponent: TestingProvider,
-        });
-        expect(document.querySelectorAll('.chakra-portal')).toHaveLength(0);
+        render(<InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />);
 
+        expect(screen.queryByRole('dialog', { name: 'Select a colour' })).not.toBeInTheDocument();
+
+        fireEvent.click(screen.getByRole('button', { name: 'Colour' }));
         await act(async () => {
-            await wrapper.find('button').at(0).simulate('click');
+            await Promise.resolve();
         });
-        expect(document.querySelectorAll('.chakra-portal')).toHaveLength(1);
-    });
 
-    xit('Can handle theme update from colour modal as expected', () => {
-        // FIXME: investigate issue caused by combination of shallow, wrappingComponent, custom event
-        const wrapper = shallow(<InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />, {
-            wrappingComponent: TestingProvider,
-        });
-        // console.log(wrapper.debug());
-        wrapper.find('ColourModal').simulate('update', ['hongkong', 'eal', '#61B4E4', '#fff']);
-
-        expect(mockCallbacks.onUpdate).toBeCalledTimes(1);
-        expect(mockCallbacks.onUpdate).toBeCalledWith(0, [
-            'hongkong',
-            'eal',
-            '#61B4E4',
-            '#fff',
-            '東涌綫',
-            'Tung Chung Line',
-        ]);
+        expect(screen.getByRole('dialog', { name: 'Select a colour' })).toBeInTheDocument();
     });
 
     it('Can duplicate and delete interchange info as expected', () => {
-        const wrapper = mount(<InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />, {
-            wrappingComponent: TestingProvider,
-        });
+        render(<InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />);
 
         // copy current interchange info
-        wrapper.find('button').at(1).simulate('click');
+        fireEvent.click(screen.getByRole('button', { name: 'Copy interchange' }));
         expect(mockCallbacks.onAdd).toBeCalledTimes(1);
         expect(mockCallbacks.onAdd).toBeCalledWith(mockInterchangeInfo1); // current info
 
         // delete current interchange info
-        wrapper.find('button').at(2).simulate('click');
+        fireEvent.click(screen.getByRole('button', { name: 'Remove interchange' }));
         expect(mockCallbacks.onDelete).toBeCalledTimes(1);
         expect(mockCallbacks.onDelete).toBeCalledWith(0); // current index
     });
 
     it('Can render card with multiple interchange info as expected', () => {
-        const wrapper = mount(
-            <InterchangeCard interchangeList={[mockInterchangeInfo1, mockInterchangeInfo2]} {...mockCallbacks} />,
-            {
-                wrappingComponent: TestingProvider,
-            }
-        );
-
-        const hStacks = wrapper.find('HStack');
-        expect(hStacks).toHaveLength(2);
+        render(<InterchangeCard interchangeList={[mockInterchangeInfo1, mockInterchangeInfo2]} {...mockCallbacks} />);
 
         // only the first stack has labels
-        expect(hStacks.at(0).find('label')).not.toHaveLength(0);
-        expect(hStacks.at(1).find('label')).toHaveLength(0);
+        const stack0 = screen.getByTestId('interchange-card-stack-0');
+        within(stack0)
+            .getAllByRole('combobox')
+            .forEach(el => expect(el).toHaveAccessibleName());
+        expect(within(stack0).queryByRole('button', { name: 'Copy interchange' })).not.toBeInTheDocument();
+        expect(within(stack0).getByRole('button', { name: 'Remove interchange' })).toBeInTheDocument();
 
         // only the last stack has copy button
-        expect(hStacks.at(0).find('MdContentCopy')).toHaveLength(0);
-        expect(hStacks.at(1).find('MdContentCopy')).toHaveLength(1);
-
-        // both stacks have delete button
-        expect(hStacks.at(0).find('MdDelete')).toHaveLength(1);
-        expect(hStacks.at(1).find('MdDelete')).toHaveLength(1);
+        const stack1 = screen.getByTestId('interchange-card-stack-1');
+        within(stack1)
+            .getAllByRole('combobox')
+            .forEach(el => expect(el).not.toHaveAccessibleName());
+        expect(within(stack1).getByRole('button', { name: 'Copy interchange' })).toBeInTheDocument();
+        expect(within(stack1).getByRole('button', { name: 'Remove interchange' })).toBeInTheDocument();
     });
 });

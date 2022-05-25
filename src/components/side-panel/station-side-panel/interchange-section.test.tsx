@@ -1,16 +1,17 @@
 import React from 'react';
 import rootReducer from '../../../redux';
-import { createMockAppStore, TestingProvider } from '../../../setupTests';
+import { createMockAppStore } from '../../../setupTests';
 import InterchangeSection from './interchange-section';
-import { mount } from 'enzyme';
 import { MonoColour, RmgStyle, ShortDirection, StationInfo, StationTransfer } from '../../../constants/constants';
 import { CityCode } from '@railmapgen/rmg-palette-resources';
 import * as helperActions from '../../../redux/helper/action';
 import { SET_STATION } from '../../../redux/param/action';
+import { render } from '../../../test-utils';
+import { fireEvent, screen } from '@testing-library/react';
 
 const realStore = rootReducer.getState();
 
-describe('Unit tests for InterchangeSection component', () => {
+describe('InterchangeSection', () => {
     it('Can render InterchangeCard with headings as expected', () => {
         const mockStore = createMockAppStore({
             ...realStore,
@@ -30,19 +31,14 @@ describe('Unit tests for InterchangeSection component', () => {
             },
         });
 
-        const wrapper = mount(<InterchangeSection />, {
-            wrappingComponent: TestingProvider,
-            wrappingComponentProps: { store: mockStore },
-        });
+        render(<InterchangeSection />, { store: mockStore });
 
-        const headings = wrapper.find('h6');
-        expect(headings).toHaveLength(3);
-        expect(headings.at(0).text()).toBe('Within-station interchange');
-        expect(headings.at(1).text()).toBe('Out-of-station interchange');
-        expect(headings.at(2).text()).toBe('Out-of-system interchange');
+        expect(screen.getByRole('heading', { name: 'Within-station interchange' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Out-of-station interchange' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Out-of-system interchange' })).toBeInTheDocument();
 
         // no add interchange group button
-        expect(wrapper.find('button')).toHaveLength(3); // for each interchange cards
+        expect(screen.queryByRole('button', { name: 'Add interchange group' })).not.toBeInTheDocument();
     });
 
     it('Can handle add interchange group as expected', () => {
@@ -67,16 +63,10 @@ describe('Unit tests for InterchangeSection component', () => {
             },
         });
 
-        const wrapper = mount(<InterchangeSection />, {
-            wrappingComponent: TestingProvider,
-            wrappingComponentProps: { store: mockStore },
-        });
+        render(<InterchangeSection />, { store: mockStore });
 
-        const buttons = wrapper.find('button');
-        expect(buttons).toHaveLength(3);
-        expect(buttons.at(2).text()).toContain('Add interchange group');
+        fireEvent.click(screen.getByRole('button', { name: 'Add interchange group' }));
 
-        buttons.at(2).simulate('click');
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(1);
 
