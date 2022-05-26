@@ -78,22 +78,21 @@ describe('ColourPicker', () => {
             await Promise.resolve();
         });
 
+        fireEvent.focus(screen.getByRole('combobox'));
+        await screen.findByRole('dialog');
+
         jest.useFakeTimers();
         fireEvent.change(screen.getByRole('combobox'), { target: { value: '荃灣' } });
         await act(async () => {
             jest.advanceTimersByTime(1000);
         });
-        // FIXME: make button accessible
-        // expect(wrapper.find('button')).toHaveLength(1);
-        expect(screen.getByText('Tsuen Wan Line')).toBeInTheDocument();
+        expect(screen.getByRole('menuitem', { name: 'Tsuen Wan Line' })).toBeInTheDocument();
 
         fireEvent.change(screen.getByRole('combobox'), { target: { value: '觀塘' } });
         await act(async () => {
             jest.advanceTimersByTime(1000);
         });
-        // FIXME: make button accessible
-        // expect(wrapper.find('button')).toHaveLength(1);
-        expect(screen.getByText('Kwun Tong Line')).toBeInTheDocument();
+        expect(screen.getByRole('menuitem', { name: 'Kwun Tong Line' })).toBeInTheDocument();
 
         // select ktl
         fireEvent.click(screen.getByText('Kwun Tong Line'));
@@ -124,13 +123,16 @@ describe('ColourPicker', () => {
             await Promise.resolve();
         });
 
-        expect(screen.getByText('Tsuen Wan Line')).toBeInTheDocument();
+        fireEvent.focus(screen.getByRole('combobox'));
+        await screen.findByRole('dialog');
+
+        expect(screen.getByRole('menuitem', { name: 'Tsuen Wan Line' })).toBeInTheDocument();
 
         rerender(<ColourPicker city={undefined} {...mockCallbacks} />);
         await act(async () => {
             await Promise.resolve();
         });
 
-        // FIXME: expect empty list
+        expect(screen.queryByRole('menuitem')).not.toBeInTheDocument();
     });
 });
