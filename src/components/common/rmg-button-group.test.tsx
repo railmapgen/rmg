@@ -1,6 +1,7 @@
 import React from 'react';
-import { mount, ReactWrapper } from 'enzyme';
 import RmgButtonGroup from './rmg-button-group';
+import { render } from '../../test-utils';
+import { fireEvent, screen } from '@testing-library/react';
 
 const mockSelections = [
     {
@@ -28,34 +29,19 @@ describe('Unit tests for RmgButtonGroup component', () => {
     });
 
     it('Can render single select button group as expected', () => {
-        const wrapper = mount(<RmgButtonGroup selections={mockSelections} defaultValue="local" {...mockCallbacks} />);
+        render(<RmgButtonGroup selections={mockSelections} defaultValue="local" {...mockCallbacks} />);
 
-        // contains 3 buttons
-        const buttons = wrapper.find('Button') as ReactWrapper<any>;
-        expect(buttons).toHaveLength(3);
+        expect(screen.getByRole('checkbox', { name: 'Local' })).toBeChecked();
+        expect(screen.getByRole('checkbox', { name: 'Express' })).not.toBeChecked();
+        expect(screen.getByRole('checkbox', { name: 'Direct' })).not.toBeChecked();
 
-        // selected button
-        const localBtn = buttons.at(0);
-        expect(localBtn.text()).toBe('Local');
-        expect(localBtn.props().variant).toBe('solid');
-
-        // unselected button
-        const expressBtn = buttons.at(1);
-        expect(expressBtn.text()).toBe('Express');
-        expect(expressBtn.props().variant).toBe('outline');
-
-        // unselected button
-        const directBtn = buttons.at(2);
-        expect(directBtn.text()).toBe('Direct');
-        expect(directBtn.props().variant).toBe('outline');
-
-        expressBtn.find('button').simulate('click');
+        fireEvent.click(screen.getByRole('checkbox', { name: 'Express' }));
         expect(mockCallbacks.onChange).toBeCalledTimes(1);
         expect(mockCallbacks.onChange).toBeCalledWith('express');
     });
 
     it('Can render multi select button group as expected', () => {
-        const wrapper = mount(
+        render(
             <RmgButtonGroup
                 selections={mockSelections}
                 defaultValue={['local', 'express']}
@@ -64,17 +50,15 @@ describe('Unit tests for RmgButtonGroup component', () => {
             />
         );
 
-        const buttons = wrapper.find('Button') as ReactWrapper<any>;
-        expect(buttons).toHaveLength(3);
-        expect(buttons.at(0).props().variant).toBe('solid');
-        expect(buttons.at(1).props().variant).toBe('solid');
-        expect(buttons.at(2).props().variant).toBe('outline');
+        expect(screen.getByRole('checkbox', { name: 'Local' })).toBeChecked();
+        expect(screen.getByRole('checkbox', { name: 'Express' })).toBeChecked();
+        expect(screen.getByRole('checkbox', { name: 'Direct' })).not.toBeChecked();
 
         // disabled selection is not toggleable
-        buttons.at(0).find('button').simulate('click');
+        fireEvent.click(screen.getByRole('checkbox', { name: 'Local' }));
         expect(mockCallbacks.onChange).toBeCalledTimes(0);
 
-        buttons.at(2).find('button').simulate('click');
+        fireEvent.click(screen.getByRole('checkbox', { name: 'Direct' }));
         expect(mockCallbacks.onChange).toBeCalledTimes(1);
         expect(mockCallbacks.onChange).toBeCalledWith(['local', 'express', 'direct']);
     });

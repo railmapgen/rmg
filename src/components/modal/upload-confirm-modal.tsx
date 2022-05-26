@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 interface UploadConfirmModalProps {
     isOpen: boolean;
     onClose: () => void;
-    cancelRef?: RefObject<HTMLButtonElement>;
+    cancelRef: RefObject<HTMLButtonElement>;
     uploadedParam?: RMGParam;
     onOpenParam: (param: Record<string, any>) => void;
 }

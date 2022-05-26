@@ -1,18 +1,19 @@
 import React from 'react';
-import { mount } from 'enzyme';
 import LineIcon from './line-icon';
 import { MonoColour } from '../../../constants/constants';
+import { render } from '../../../test-utils';
+import { screen } from '@testing-library/react';
 
 const mockGetBBox = jest.fn();
 (SVGElement.prototype as any).getBBox = mockGetBBox;
 
-describe('Unit tests for LineIcon component', () => {
+describe('GZMTRLineIcon', () => {
     beforeEach(() => {
         mockGetBBox.mockReturnValue({ width: 0 });
     });
 
     it('Can render line icon for passed station as expected', () => {
-        const wrapper = mount(
+        const { container } = render(
             <svg>
                 <LineIcon
                     lineName={['18号线', 'Line 18']}
@@ -23,17 +24,17 @@ describe('Unit tests for LineIcon component', () => {
             </svg>
         );
 
-        const gEl = wrapper.find('g');
-        expect(gEl).toHaveLength(1);
-        expect(gEl.props().fill).toBe(MonoColour.white);
+        const gEl = container.querySelector('g');
+        expect(gEl).toBeInTheDocument();
+        expect(gEl?.getAttribute('fill')).toBe(MonoColour.white);
 
-        const rectEl = wrapper.find('rect');
-        expect(rectEl).toHaveLength(1);
-        expect(rectEl.props().fill).toBe('#aaa');
+        const rectEl = container.querySelector('rect');
+        expect(rectEl).toBeInTheDocument();
+        expect(rectEl?.getAttribute('fill')).toBe('#aaa');
     });
 
     it('Can render type 1 line icon as expected', () => {
-        const wrapper = mount(
+        render(
             <svg>
                 <LineIcon
                     lineName={['18号线', 'Line 18']}
@@ -43,21 +44,14 @@ describe('Unit tests for LineIcon component', () => {
             </svg>
         );
 
-        const textEls = wrapper.find('text');
-        expect(textEls).toHaveLength(2);
-
-        // nameZh
-        const tspanEls = textEls.at(0).find('tspan');
-        expect(tspanEls).toHaveLength(2);
-        expect(tspanEls.at(0).text()).toBe('18');
-        expect(tspanEls.at(1).text()).toBe('号线');
-
-        // nameEn
-        expect(textEls.at(1).text()).toBe('Line 18');
+        // text is separated in 3 elements
+        expect(screen.getByText('18').tagName).toBe('tspan');
+        expect(screen.getByText('号线').tagName).toBe('tspan');
+        expect(screen.getByText('Line 18').tagName).toBe('text');
     });
 
     it('Can render type 2 line icon as expected', () => {
-        const wrapper = mount(
+        render(
             <svg>
                 <LineIcon
                     lineName={['APM线', 'APM Line']}
@@ -67,21 +61,16 @@ describe('Unit tests for LineIcon component', () => {
             </svg>
         );
 
-        const textEl = wrapper.find('text');
-        expect(textEl).toHaveLength(1);
-
-        const tspanEls = textEl.find('tspan');
-        expect(tspanEls).toHaveLength(2);
         // remaining part
-        expect(tspanEls.at(0).text()).toBe('线');
-        expect(tspanEls.at(1).text()).toBe('Line');
+        expect(screen.getByText('线').tagName).toBe('tspan');
+        expect(screen.getByText('Line').tagName).toBe('tspan');
 
         // common part
-        expect(textEl.text()).toContain('APM');
+        expect(screen.getByText('APM').tagName).toBe('text');
     });
 
     it('Can render type 3 line icon as expected', () => {
-        const wrapper = mount(
+        render(
             <svg>
                 <LineIcon
                     lineName={['佛山2号线', 'Foshan Line 2']}
@@ -91,9 +80,7 @@ describe('Unit tests for LineIcon component', () => {
             </svg>
         );
 
-        const textEls = wrapper.find('text');
-        expect(textEls).toHaveLength(2);
-        expect(textEls.at(0).text()).toBe('佛山2号线');
-        expect(textEls.at(1).text()).toBe('Foshan Line 2');
+        expect(screen.getByText('佛山2号线').tagName).toBe('text');
+        expect(screen.getByText('Foshan Line 2').tagName).toBe('text');
     });
 });

@@ -1,8 +1,8 @@
 import React from 'react';
 import CityPicker from './city-picker';
-import { mount, ReactWrapper } from 'enzyme';
-import { useTranslation } from 'react-i18next';
-import { act } from 'react-dom/test-utils';
+import { render } from '../../../test-utils';
+import { fireEvent, screen } from '@testing-library/react';
+import i18n from '../../../i18n/config';
 
 jest.mock('@railmapgen/rmg-palette-resources', () => ({
     __esModule: true,
@@ -63,75 +63,72 @@ jest.mock('@railmapgen/rmg-palette-resources', () => ({
     ],
 }));
 
-jest.mock('react-i18next', () => ({
-    useTranslation: jest.fn(),
-}));
-
 const mockCallbacks = {
     onChange: jest.fn(),
 };
 
 describe('Unit tests for CityPicker component', () => {
     beforeEach(() => {
-        (useTranslation as any).mockReturnValue({
-            i18n: {
-                language: 'zh-Hans',
-                languages: ['zh-Hans', 'zh', 'en'],
-            },
-        });
+        i18n.changeLanguage('zh-Hans');
     });
 
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    it('Can render flag emojis (for non-Windows users) and translations as expected', () => {
-        const wrapper = mount(<CityPicker />);
+    it('Can render flag emojis (for non-Windows users) and translations as expected', async () => {
+        render(<CityPicker />);
 
-        const menuItems = wrapper.find('button');
+        fireEvent.focus(screen.getByRole('combobox'));
+        await screen.findByRole('dialog');
+
+        const menuItems = screen.getAllByRole('menuitem');
         expect(menuItems).toHaveLength(3);
 
-        expect(menuItems.at(0).text()).toContain('🏴󠁧󠁢󠁳󠁣󠁴󠁿'); // GBSCT
-        expect(menuItems.at(1).text()).toContain('🇭🇰'); // HK
-        expect(menuItems.at(2).text()).toContain('🏴'); // TW to be censored
+        expect(menuItems[0]).toHaveTextContent('🏴󠁧󠁢󠁳󠁣󠁴󠁿'); // GBSCT
+        expect(menuItems[1]).toHaveTextContent('🇭🇰'); // HK
+        expect(menuItems[2]).toHaveTextContent('🏴'); // TW to be censored
 
-        expect(menuItems.at(0).text()).toContain('爱丁堡'); // read zh-Hans field
-        expect(menuItems.at(1).text()).toContain('香港'); // read zh field
-        expect(menuItems.at(2).text()).toContain('台北'); // read zh field
+        expect(menuItems[0]).toHaveTextContent('爱丁堡'); // read zh-Hans field
+        expect(menuItems[1]).toHaveTextContent('香港'); // read zh field
+        expect(menuItems[2]).toHaveTextContent('台北'); // read zh field
     });
 
     it('Can render OpenMoji SVG-format emoji for Windows users as expected', async () => {
         const platformGetter = jest.spyOn(window.navigator, 'platform', 'get');
         platformGetter.mockReturnValue('Win64');
 
-        let wrapper: ReactWrapper;
-        await act(async () => {
-            wrapper = mount(<CityPicker />);
-        });
+        render(<CityPicker />);
 
-        // FIXME: how do i get rid of this typecheck error
-        // @ts-ignore
-        const menuItems = wrapper.find('button');
-        expect(menuItems).toHaveLength(3);
-        expect(menuItems.find('FlagSvgEmoji')).toHaveLength(2); // flag svg to be displayed for 2 of the cities
-        expect(menuItems.find('span').text()).toContain('🏴'); // TW to be censored
+        fireEvent.focus(screen.getByRole('combobox'));
+        await screen.findByRole('dialog');
+
+        // flag svg to be displayed for 2 of the cities
+        await screen.findByAltText('Flag of GBSCT');
+        await screen.findByAltText('Flag of HK');
+
+        // TW to be censored
+        expect(screen.getAllByRole('menuitem')[2]).toHaveTextContent('🏴');
     });
 
     it('Can mount component with default city code as expected', () => {
-        const wrapper = mount(<CityPicker defaultValueId={'hongkong' as any} />);
+        render(<CityPicker defaultValueId={'hongkong' as any} />);
 
-        expect(wrapper.find('input').getDOMNode<HTMLInputElement>().value).toBe('香港');
+        expect(screen.getByDisplayValue('香港')).toBeInTheDocument();
     });
 
-    it('Can handle city selection as expected', () => {
-        const wrapper = mount(<CityPicker {...mockCallbacks} />);
+    it('Can handle city selection as expected', async () => {
+        render(<CityPicker {...mockCallbacks} />);
 
-        wrapper.find('button').at(0).simulate('click');
+        fireEvent.focus(screen.getByRole('combobox'));
+        await screen.findByRole('dialog');
+
+        fireEvent.click(screen.getByRole('menuitem', { name: '🏴󠁧󠁢󠁳󠁣󠁴󠁿 爱丁堡' }));
 
         expect(mockCallbacks.onChange).toBeCalledTimes(1);
         expect(mockCallbacks.onChange).toBeCalledWith('edinburgh');
 
-        expect(wrapper.find('input').getDOMNode<HTMLInputElement>().value).toBe('爱丁堡');
+        expect(screen.getByDisplayValue('爱丁堡')).toBeInTheDocument();
     });
 
     // TODO: isSettled

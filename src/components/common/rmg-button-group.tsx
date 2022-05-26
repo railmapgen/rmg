@@ -57,6 +57,8 @@ export default function RmgButtonGroup<T extends string | boolean>(props: RmgBut
                 return (
                     <Button
                         key={selection.value.toString()}
+                        role="checkbox"
+                        aria-checked={isSelected}
                         variant={isSelected ? 'solid' : 'outline'}
                         mr={mr}
                         isDisabled={selection.disabled}

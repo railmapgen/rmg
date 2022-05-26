@@ -1,18 +1,8 @@
-import { configure, ReactWrapper } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import thunk, { ThunkDispatch } from 'redux-thunk';
 import { RootState } from './redux';
-import { Store } from 'redux';
 import createMockStore from 'redux-mock-store';
 import { BranchStyle, StationDict } from './constants/constants';
-import { act } from 'react-dom/test-utils';
-import i18n from './i18n/config';
-import { I18nextProvider } from 'react-i18next';
-import React, { ReactNode } from 'react';
-import { Provider } from 'react-redux';
 import rootReducer from './redux/index';
-
-configure({ adapter: new Adapter() });
 
 // FIXME: any -> AnyAction?
 type DispatchExts = ThunkDispatch<RootState, void, any>;
@@ -73,25 +63,3 @@ export const mockSimpleStationList: StationDict = {
         branch: { left: [BranchStyle.through, 'stn4'], right: [] },
     },
 } as any;
-
-export const waitForComponentToPaint = async (wrapper: ReactWrapper) => {
-    await act(async () => {
-        await new Promise(resolve => setInterval(resolve, 0));
-        wrapper.update();
-    });
-};
-
-interface TestingProviderProps {
-    store?: Store;
-    children?: ReactNode;
-}
-
-export const TestingProvider = (props: TestingProviderProps) => {
-    const { store, children } = props;
-
-    return (
-        <I18nextProvider i18n={i18n}>
-            <Provider store={store || createMockAppStore({ ...rootReducer.getState() })}>{children}</Provider>
-        </I18nextProvider>
-    );
-};
