@@ -74,11 +74,11 @@ export default function BranchSection() {
     return (
         <Box p={1}>
             <Heading as="h5" size="sm">
-                {t('StationSidePanel.branch.title')}
+                {t('Branches')}
             </Heading>
 
             <Heading as="h6" size="xs">
-                {t('StationSidePanel.branch.left')}
+                {t('Branch on the left')}
             </Heading>
 
             <RmgCard direction="column">
@@ -92,7 +92,7 @@ export default function BranchSection() {
             </RmgCard>
 
             <Heading as="h6" size="xs">
-                {t('StationSidePanel.branch.left')}
+                {t('Branch on the right')}
             </Heading>
 
             <RmgCard direction="column">
@@ -100,7 +100,7 @@ export default function BranchSection() {
                     <RmgFields fields={getFields(Direction.right)} />
                 ) : (
                     <Text as="i" flex={1} align="center" fontSize="md" colorScheme="gray">
-                        {t('StationSidePanel.branch.noBranch')}
+                        {t('No branches found')}
                     </Text>
                 )}
             </RmgCard>

@@ -173,10 +173,6 @@
             "remove": "Remove interchange"
         },
         "branch": {
-            "title": "Branches",
-            "left": "Branch on the left",
-            "right": "Branch on the right",
-            "noBranch": "No branches found",
             "type": "Type",
             "through": "Through",
             "nonThrough": "Non-through",

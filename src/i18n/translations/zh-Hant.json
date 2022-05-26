@@ -169,10 +169,6 @@
             "remove": "移除轉綫"
         },
         "branch": {
-            "title": "支綫",
-            "left": "左側支綫",
-            "right": "右側支綫",
-            "noBranch": "未找到支綫",
             "type": "種類",
             "through": "直通（無需轉車）",
             "nonThrough": "非直通（需轉車）",
@@ -266,6 +262,9 @@
         "submit": "確定"
     },
 
+    "Branch on the left": "左側支綫",
+    "Branch on the right": "右側支綫",
+    "Branches": "支綫",
     "Canvas scale": "畫面縮放比例",
     "Canvas to show": "顯示的畫面",
     "Chinese name": "中文名稱",
@@ -276,6 +275,7 @@
     "Empty template": "空白範本",
     "English name": "英文名稱",
     "Help and support": "幫助及支援",
+    "No branches found": "未找到支綫",
     "Paid area": "付費區轉車",
     "Station Chinese name": "車站中文名稱",
     "Station English name": "車站英文名稱",

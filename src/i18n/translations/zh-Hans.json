@@ -169,10 +169,6 @@
             "remove": "删除换乘"
         },
         "branch": {
-            "title": "支线",
-            "left": "左侧支线",
-            "right": "右侧支线",
-            "noBranch": "未找到支线",
             "type": "类型",
             "through": "贯通（无需换乘）",
             "nonThrough": "非贯通（需换乘）",
@@ -267,6 +263,9 @@
         "submit": "确定"
     },
 
+    "Branch on the left": "左侧支线",
+    "Branch on the right": "右侧支线",
+    "Branches": "支线",
     "Canvas scale": "画面缩放级别",
     "Canvas to show": "显示的画面",
     "Chinese name": "中文名称",
@@ -277,6 +276,7 @@
     "Empty template": "空白模板",
     "English name": "英文名称",
     "Help and support": "帮助和支持",
+    "No branches found": "未找到支线",
     "Paid area": "付费区换乘",
     "Station Chinese name": "车站中文名称",
     "Station English name": "车站英文名称",
