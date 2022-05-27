@@ -480,9 +480,9 @@ export const DirectionElements = () => {
                 <text className="rmg-name__zh">列车前进方向</text>
                 <path
                     d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
-                    stroke={!isColine ? undefined : 'black'}
+                    stroke={!isColine ? undefined : 'var(--rmg-black)'}
                     strokeWidth={!isColine ? undefined : 5}
-                    fill={!isColine ? 'var(--rmg-theme-colour)' : 'white'}
+                    fill={!isColine ? 'var(--rmg-theme-colour)' : 'var(--rmg-white)'}
                     transform={`translate(${direction === 'l' ? -30 : 125},-5)rotate(${
                         direction === 'l' ? 0 : 180
                     })scale(0.15)`}

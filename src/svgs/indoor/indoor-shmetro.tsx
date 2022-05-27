@@ -19,14 +19,7 @@ export default memo(function IndoorWrapperSHMetro() {
 
 export const DefsSHMetro = React.memo(() => (
     <defs>
-        <circle
-            id="stn_indoor_sh"
-            fill="var(--rmg-white)"
-            strokeWidth={5}
-            stroke="var(--rmg-theme-colour)"
-            r={8}
-            transform="scale(1.5)"
-        />
+        <circle id="stn_indoor_sh" fill="var(--rmg-white)" strokeWidth={5} r={8} transform="scale(1.5)" />
         <path
             id="int2_indoor_sh"
             fill="var(--rmg-white)"

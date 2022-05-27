@@ -1,5 +1,5 @@
 import { useAppSelector } from '../../../../redux';
-import { CanvasType, Services } from '../../../../constants/constants';
+import { CanvasType, ColourHex, Services } from '../../../../constants/constants';
 import StationSHMetro from '../station/station-shmetro';
 import { StationSHMetro as StationSHMetroIndoor } from '../../../indoor/station-shmetro';
 import React from 'react';
@@ -111,9 +111,7 @@ export const LoopBranches = (props: {
                                             stnState={current_stn_id === stn_id ? 0 : 1}
                                             bank={0}
                                             direction={direction}
-                                            color={
-                                                branches_coline_color.at(i)?.at(0)?.at(2) as `#${string}` | undefined
-                                            }
+                                            color={branches_coline_color.at(i)?.at(0)?.at(2) as ColourHex | undefined}
                                         />
                                     </g>
                                 )}
@@ -130,6 +128,7 @@ export const LoopBranches = (props: {
                                                     )[0] as 'upward' | 'downward'
                                             }
                                             services={[Services.local]}
+                                            color={branches_coline_color.at(i)?.at(0)?.at(2) as ColourHex | undefined}
                                         />
                                     </g>
                                 )}

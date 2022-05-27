@@ -1,5 +1,5 @@
 import React from 'react';
-import { InterchangeInfo, Name, Services } from '../../constants/constants';
+import { ColourHex, InterchangeInfo, Name, Services } from '../../constants/constants';
 import { useAppSelector } from '../../redux';
 
 export type NameDirection = 'upward' | 'downward' | 'left' | 'right';
@@ -8,10 +8,11 @@ interface Props {
     stnId: string;
     nameDirection: NameDirection;
     services: Services[];
+    color?: ColourHex; // Control the station color if coline is in effect.
 }
 
 export const StationSHMetro = (props: Props) => {
-    const { stnId, nameDirection, services } = props;
+    const { stnId, nameDirection, services, color } = props;
     const stnInfo = useAppSelector(store => store.param.stn_list[stnId]);
 
     const transfer = [...stnInfo.transfer.info[0], ...(stnInfo.transfer.info[1] || [])];
@@ -32,7 +33,7 @@ export const StationSHMetro = (props: Props) => {
             />
             <use
                 xlinkHref={`#${stationIconStyle}`}
-                stroke={transfer.length > 0 ? 'black' : 'var(--rmg-theme-colour)'}
+                stroke={transfer.length > 0 ? 'var(--rmg-black)' : color ?? 'var(--rmg-theme-colour)'}
                 transform={`rotate(${dr})`}
             />
             {/* This should be in IntBoxGroupProps, put here because the station icon will cover this */}
