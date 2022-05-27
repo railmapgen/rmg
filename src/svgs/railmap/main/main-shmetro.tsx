@@ -470,7 +470,9 @@ const ServicesElements = (props: { servicesLevel: Services[]; lineXs: number[] }
 };
 
 export const DirectionElements = () => {
-    const { direction, svgWidth } = useAppSelector(store => store.param);
+    const { direction, svgWidth, coline } = useAppSelector(store => store.param);
+    // arrow will be black stroke with white fill in coline
+    const isColine = Object.keys(coline).length ? true : false;
 
     return React.useMemo(
         () => (
@@ -478,13 +480,15 @@ export const DirectionElements = () => {
                 <text className="rmg-name__zh">列车前进方向</text>
                 <path
                     d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
-                    fill="var(--rmg-theme-colour)"
+                    stroke={!isColine ? undefined : 'black'}
+                    strokeWidth={!isColine ? undefined : 5}
+                    fill={!isColine ? 'var(--rmg-theme-colour)' : 'white'}
                     transform={`translate(${direction === 'l' ? -30 : 125},-5)rotate(${
                         direction === 'l' ? 0 : 180
                     })scale(0.15)`}
                 />
             </g>
         ),
-        [direction, svgWidth.railmap]
+        [direction, coline, svgWidth.railmap]
     );
 };
