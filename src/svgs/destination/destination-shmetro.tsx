@@ -1,13 +1,14 @@
 import React, { memo, useMemo, forwardRef, useRef, useState, useEffect } from 'react';
 import { useAppSelector } from '../../redux';
-import { Name, ShortDirection } from '../../constants/constants';
+import { isColineBranch } from '../../redux/param/coline-action';
+import { ColineInfo, ColourHex, MonoColour, Name, ShortDirection } from '../../constants/constants';
 import { get_pivot_stations } from '../railmap/methods/shmetro-loop';
 
 export default memo(function DestinationSHMetro() {
     return (
         <>
             <DefsSHMetro />
-            <InfoSHMetro />
+            <DestSHMetro />
         </>
     );
 });
@@ -21,18 +22,17 @@ const DefsSHMetro = memo(() => (
     </defs>
 ));
 
-const InfoSHMetro = () => {
+const DestSHMetro = () => {
     const { routes, branches } = useAppSelector(store => store.helper);
     const {
         line_name,
+        theme,
         current_stn_idx: current_stn_id,
         direction,
         stn_list,
-        platform_num,
         info_panel_type,
-        svgWidth,
-        svg_height,
         loop,
+        coline,
     } = useAppSelector(store => store.param);
 
     // get valid destination of each branch
@@ -46,35 +46,108 @@ const InfoSHMetro = () => {
                 })
         ),
     ];
+    // get the name from the destination id(s)
+    const get_dest_names = (dest_ids: string[], one_line: boolean) =>
+        !one_line
+            ? dest_ids.map(id => stn_list[id].name.map(s => s.replace('\\', ' ')) as Name)
+            : [
+                  // only one line in `sh` type
+                  [
+                      dest_ids.map(id => stn_list[id].name[0]).join('，'),
+                      dest_ids
+                          .map(id => stn_list[id].name[1])
+                          .join(', ')
+                          .replace('\\', ' '),
+                  ] as Name,
+              ];
 
     // get destination id(s)
-    const validDests = !loop
+    const valid_dest_ids = !loop
         ? get_valid_destinations(routes, direction, current_stn_id)
         : get_pivot_stations(branches, direction, stn_list, current_stn_id);
-    // get the name from the destination id(s)
-    const destNames: Name[] = loop
-        ? // destination names of loop line will always be two lines
-          validDests.map(id => stn_list[id].name.map(s => s.replace('\\', ' ')) as Name)
-        : info_panel_type === 'sh2020'
-        ? // destination names of `sh2020` type will always be two lines
-          validDests.map(id => stn_list[id].name.map(s => s.replace('\\', ' ')) as Name)
-        : [
-              // only one line in `sh` type
-              [
-                  validDests.map(id => stn_list[id].name[0]).join('，'),
-                  validDests
-                      .map(id => stn_list[id].name[1])
-                      .join(', ')
-                      .replace('\\', ' '),
-              ],
-          ];
+    // get coline destination id(s)
+    // note that for loop, coline branches' destination id(s) are needed
+    const coline_dest_ids = (!loop ? valid_dest_ids : get_valid_destinations(routes, direction, current_stn_id)).filter(
+        valid_dest_id =>
+            branches
+                .slice(1)
+                .filter(branch => isColineBranch(branch, stn_list))
+                .some(branch => branch.includes(valid_dest_id))
+    );
+    // filter out coline destination id(s)
+    const regular_dest_ids = valid_dest_ids.filter(valid_dest_id => !coline_dest_ids.includes(valid_dest_id));
+
+    // destination names of loop line, `sh2020` type will always be two lines
+    const dest_names = get_dest_names(regular_dest_ids, !loop && !(info_panel_type === 'sh2020'));
+    const coline_dest_names = get_dest_names(coline_dest_ids, true);
+    console.log(dest_names, coline_dest_names);
+
+    // this will give the space for at most two lines of dest_names
+    const coline_dy = 250;
+    // get coline info from coline_dest_ids
+    const colines = Object.fromEntries(
+        coline_dest_ids
+            .map(coline_dest_id => [
+                coline_dest_id,
+                Object.values(coline)
+                    .filter(co => co.from === coline_dest_id || co.to === coline_dest_id)
+                    .at(0),
+            ])
+            .filter(([key, val]) => val)
+    ) as {
+        [k: string]: ColineInfo;
+    };
+    return (
+        <>
+            <Dest
+                dest_names={dest_names}
+                line_name={line_name}
+                line_color={[theme[2], theme[3]]}
+                coline={coline_dest_ids.length ? true : false}
+                upper={coline_dest_ids.length ? true : false}
+            />
+            {coline_dest_ids.length &&
+                // multiple coline dest is not supported yet
+                coline_dest_ids.map(coline_dest_id => (
+                    <g key={`coline_${coline_dest_id}`} transform={`translate(0,${-coline_dy})`}>
+                        <Dest
+                            dest_names={[coline_dest_names.at(0)!]}
+                            line_name={colines[coline_dest_id]?.colors.at(0)!.slice(4) as Name}
+                            line_color={[
+                                colines[coline_dest_id]?.colors.at(0)![2],
+                                colines[coline_dest_id]?.colors.at(0)![3],
+                            ]}
+                            coline
+                            upper={false}
+                        />
+                    </g>
+                ))}
+        </>
+    );
+};
+
+const Dest = (props: {
+    dest_names: Name[];
+    line_name: Name;
+    line_color: [ColourHex, MonoColour]; // override coline color
+    coline: boolean; // hide the marker if it is a coline
+    upper: boolean; // coline needs the line in the upper position
+}) => {
+    const { dest_names, line_name, line_color, coline, upper } = props;
+    const {
+        current_stn_idx: current_stn_id,
+        direction,
+        platform_num,
+        svgWidth,
+        svg_height,
+    } = useAppSelector(store => store.param);
 
     const terminalEl = useRef<SVGGElement | null>(null);
     const [terminalBBox, setTerminalBBox] = useState({ width: 0 } as SVGRect);
     useEffect(
         () => setTerminalBBox(terminalEl.current!.getBBox()),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [JSON.stringify(destNames), JSON.stringify(current_stn_id)]
+        [JSON.stringify(dest_names), JSON.stringify(current_stn_id)]
     );
 
     const [middle, MARGIN, PADDING, LINEBOX_WIDTH, PLATFORM_WIDTH] = [svgWidth.destination / 2, 10, 36, 264, 325];
@@ -96,37 +169,41 @@ const InfoSHMetro = () => {
     return (
         <g transform={`translate(0,${svg_height - 300})`}>
             <path
-                stroke="var(--rmg-theme-colour)"
+                stroke={line_color[0]}
                 strokeWidth={12}
                 d={
                     direction === 'l'
                         ? `M${svgWidth.destination - 24},16 H 36`
                         : `M24,16 H ${svgWidth.destination - 36}`
                 }
-                transform="translate(0,220)"
-                markerEnd="url(#slope)"
+                transform={`translate(0,${!upper ? 220 : -20})`}
+                markerEnd={!coline ? 'url(#slope)' : undefined}
             />
 
-            <Terminal ref={terminalEl} destNames={destNames} />
+            <Terminal ref={terminalEl} dest_names={dest_names} />
             {platform_num !== '' && (
                 <g transform={`translate(${platformX},0)`}>
                     <PlatformNum />
                 </g>
             )}
 
-            {line_name[0].match(/^[\w\d]+/) ? <LineNameBoxNumber /> : <LineNameBoxText />}
+            {line_name[0].match(/^[\w\d]+/) ? (
+                <LineNameBoxNumber line_name={line_name} line_color={line_color} />
+            ) : (
+                <LineNameBoxText line_name={line_name} line_color={line_color} />
+            )}
         </g>
     );
 };
 
-const Terminal = forwardRef((props: { destNames: Name[] }, ref: React.Ref<SVGGElement>) => {
-    const { destNames } = props;
+const Terminal = forwardRef((props: { dest_names: Name[] }, ref: React.Ref<SVGGElement>) => {
+    const { dest_names } = props;
     const { direction, svgWidth } = useAppSelector(store => store.param);
 
     return (
         <g ref={ref} transform={`translate(${direction === 'l' ? 36 : svgWidth.destination - 36},145)`}>
             {/* this is not a generalized implementation, only dest length of 1 and 2 are supported */}
-            <g transform={`translate(0,${destNames.length === 2 ? -20 : 20})`}>
+            <g transform={`translate(0,${dest_names.length === 2 ? -20 : 20})`}>
                 <path
                     d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
                     fill="black"
@@ -137,7 +214,7 @@ const Terminal = forwardRef((props: { destNames: Name[] }, ref: React.Ref<SVGGEl
                 textAnchor={direction === 'l' ? 'start' : 'end'}
                 transform={`translate(${direction === 'l' ? 128 + 20 : -128 - 20},25)`}
             >
-                {destNames.map((name, i) => (
+                {dest_names.map((name, i) => (
                     <React.Fragment key={i}>
                         <text className="rmg-name__zh" fontSize={70} dy={i * -100 + 7} key={`zh${i}`}>
                             {'往' + name[0]}
@@ -173,8 +250,9 @@ const PlatformNum = () => {
     );
 };
 
-const LineNameBoxText = () => {
-    const { line_name, direction, svgWidth } = useAppSelector(store => store.param);
+const LineNameBoxText = (props: { line_name: Name; line_color: [ColourHex, MonoColour] }) => {
+    const { line_name, line_color } = props;
+    const { direction, svgWidth } = useAppSelector(store => store.param);
 
     const boxX = direction === 'l' ? svgWidth.destination - 42 : 42;
 
@@ -195,12 +273,8 @@ const LineNameBoxText = () => {
     return useMemo(
         () => (
             <g transform={`translate(${boxX},92)`}>
-                <rect fill="var(--rmg-theme-colour)" x={rectDx} width={bBox.width + 10} height={120} />
-                <g
-                    textAnchor={direction === 'r' ? 'start' : 'end'}
-                    transform="translate(0,68)"
-                    fill="var(--rmg-theme-fg)"
-                >
+                <rect fill={line_color[0]} x={rectDx} width={bBox.width + 10} height={120} />
+                <g textAnchor={direction === 'r' ? 'start' : 'end'} transform="translate(0,68)" fill={line_color[1]}>
                     <g ref={stnNameEl}>
                         <text className="rmg-name__zh" fontSize={68}>
                             {line_name[0]}
@@ -213,12 +287,13 @@ const LineNameBoxText = () => {
             </g>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [bBox, boxX, direction, line_name]
+        [bBox, ...line_name, ...line_color, direction, svgWidth.destination]
     );
 };
 
-const LineNameBoxNumber = () => {
-    const { line_name, direction, svgWidth } = useAppSelector(store => store.param);
+const LineNameBoxNumber = (props: { line_name: Name; line_color: [ColourHex, MonoColour] }) => {
+    const { line_name, line_color } = props;
+    const { direction, svgWidth } = useAppSelector(store => store.param);
 
     const [lineNumber, lineNameRes] = line_name[0].match(/^[\w\d]+|.+/g) as string[];
 
@@ -233,10 +308,10 @@ const LineNameBoxNumber = () => {
     return useMemo(
         () => (
             <g transform={`translate(${boxX},92)`}>
-                <rect fill="var(--rmg-theme-colour)" x={-54} width={108} height={120} />
+                <rect fill={line_color[0]} x={-54} width={108} height={120} />
                 <text
                     className="rmg-name__zh"
-                    fill="var(--rmg-theme-fg)"
+                    fill={line_color[1]}
                     fontSize={96}
                     textAnchor="middle"
                     dominantBaseline="central"
@@ -256,6 +331,6 @@ const LineNameBoxNumber = () => {
             </g>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [boxX, ...line_name, direction, svgWidth.destination]
+        [boxX, ...line_name, ...line_color, direction, svgWidth.destination]
     );
 };
