@@ -4,6 +4,7 @@ import { StationsMTR } from '../methods/mtr';
 import { CanvasType, RMGParam, StationDict } from '../../../constants/constants';
 import { useAppSelector } from '../../../redux';
 import Station from '../../mtr/station/station';
+import { getStationYShare } from '../../mtr/line-diagram-utils';
 
 const leftWideFactor = (stnList: StationDict, stnId: string) => {
     var res = 0;
@@ -106,17 +107,16 @@ const MainMTR = () => {
         {} as typeof xShares
     );
 
-    const yShares = useMemo(
-        () => StationsMTR.getYShares(stationList, branches),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [deps]
-    );
-    const ys = Object.keys(yShares).reduce(
-        (acc, cur) => ({
-            ...acc,
-            [cur]: -yShares[cur] * branchSpacing,
-        }),
-        {} as typeof yShares
+    const ys = useMemo(
+        () =>
+            Object.keys(stationList).reduce<Record<string, number>>(
+                (acc, cur) => ({
+                    ...acc,
+                    [cur]: getStationYShare(cur, branches, stationList) * branchSpacing,
+                }),
+                {}
+            ),
+        [deps, branchSpacing]
     );
 
     const stnStates = useMemo(
@@ -158,11 +158,21 @@ const MainMTR = () => {
 export default MainMTR;
 
 const Lines = React.memo(
-    (props: { paths: { main: string[]; pass: string[] } }) => {
+    (props: { paths: { main: string[]; pass: string[]; sidingMain: string[]; sidingPass: string[] } }) => {
         return (
             <g fill="none" strokeWidth={9.68}>
+                <g stroke="var(--rmg-grey)" strokeDasharray="10 4">
+                    {props.paths.sidingPass.map((path, i) => (
+                        <path key={i} d={path} />
+                    ))}
+                </g>
                 <g stroke="var(--rmg-grey)">
                     {props.paths.pass.map((path, i) => (
+                        <path key={i} d={path} />
+                    ))}
+                </g>
+                <g stroke="var(--rmg-theme-colour)" strokeDasharray="10 4">
+                    {props.paths.sidingMain.map((path, i) => (
                         <path key={i} d={path} />
                     ))}
                 </g>

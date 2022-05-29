@@ -41,3 +41,5 @@ export class StationsMTR extends Stations {
         return res;
     };
 }
+
+export class StationsSHMetro extends StationsMTR {}
