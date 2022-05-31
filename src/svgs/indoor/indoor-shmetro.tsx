@@ -1,8 +1,8 @@
 import React, { memo, useMemo } from 'react';
-import { adjacencyList, getXShareMTR, criticalPathMethod, getStnState } from '../railmap/methods/share';
+import { adjacencyList, criticalPathMethod, getStnState, getXShareMTR } from '../railmap/methods/share';
 import StationSHMetro from './station-shmetro';
-import { StationsMTR } from '../railmap/methods/mtr';
-import { CanvasType, StationDict, Services } from '../../constants/constants';
+import { StationsSHMetro } from '../railmap/methods/mtr';
+import { CanvasType, Services, StationDict } from '../../constants/constants';
 import { useAppSelector } from '../../redux';
 import LoopSHMetro from '../railmap/main/loop/loop-shmetro';
 
@@ -88,7 +88,7 @@ const IndoorSHMetro = () => {
     );
 
     const yShares = useMemo(
-        () => StationsMTR.getYShares(param.stn_list, branches),
+        () => StationsSHMetro.getYShares(param.stn_list, branches),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [deps]
     );
@@ -118,7 +118,7 @@ const IndoorSHMetro = () => {
         .filter(s => s[1]) // get the existing service
         .map(s => s[0]); // maintain the services' order
 
-    const linePaths = StationsMTR.drawLine(
+    const linePaths = StationsSHMetro.drawLine(
         branches,
         stnStates,
         param.stn_list,

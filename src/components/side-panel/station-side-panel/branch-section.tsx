@@ -86,7 +86,7 @@ export default function BranchSection() {
                     <RmgFields fields={getFields(Direction.left)} />
                 ) : (
                     <Text as="i" flex={1} align="center" fontSize="md" colorScheme="gray">
-                        {t('StationSidePanel.branch.noBranch')}
+                        {t('No branches found')}
                     </Text>
                 )}
             </RmgCard>

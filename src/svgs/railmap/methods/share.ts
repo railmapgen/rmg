@@ -1,5 +1,6 @@
 import * as Global from '../../../methods';
 import { RMGParam, ShortDirection, StationDict, StationInfo } from '../../../constants/constants';
+import { getSidingPath } from '../../mtr/line-diagram-utils';
 
 /**
  * Compute the adjacency list of the graph.
@@ -337,8 +338,17 @@ export class Stations {
         cp: { len: number; nodes: string[] },
         e: number = 0
     ) {
-        let linePaths = { main: [] as string[], pass: [] as string[] };
+        const isMTR = this.name === 'StationsMTR';
+        let linePaths = {
+            main: [] as string[],
+            pass: [] as string[],
+            sidingMain: [] as string[],
+            sidingPass: [] as string[],
+        };
+
         branches.forEach((branch, i) => {
+            const isSiding = branch[0] !== 'linestart' && branch.slice(-1)[0] !== 'lineend';
+
             branch = branch.filter(stnId => !['linestart', 'lineend'].includes(stnId));
             var lineMainStns = branch.filter(stnId => stnStates[stnId] >= 0);
             var linePassStns = branch.filter(stnId => stnStates[stnId] <= 0);
@@ -365,30 +375,35 @@ export class Stations {
                 }
             }
 
-            linePaths.main.push(
-                new this({ stnList, criticalPath: cp })._linePath(
-                    lineMainStns,
-                    lineXs,
-                    branches,
-                    xs,
-                    ys,
-                    branchSpacing,
-                    cp,
-                    e
-                )
-            );
-            linePaths.pass.push(
-                new this({ stnList, criticalPath: cp })._linePath(
-                    linePassStns,
-                    lineXs,
-                    branches,
-                    xs,
-                    ys,
-                    branchSpacing,
-                    cp,
-                    e
-                )
-            );
+            if (isSiding && isMTR) {
+                linePaths.sidingMain.push(getSidingPath(lineMainStns.map(id => [xs[id], ys[id]])));
+                linePaths.sidingPass.push(getSidingPath(linePassStns.map(id => [xs[id], ys[id]])));
+            } else {
+                linePaths.main.push(
+                    new this({ stnList, criticalPath: cp })._linePath(
+                        lineMainStns,
+                        lineXs,
+                        branches,
+                        xs,
+                        ys,
+                        branchSpacing,
+                        cp,
+                        e
+                    )
+                );
+                linePaths.pass.push(
+                    new this({ stnList, criticalPath: cp })._linePath(
+                        linePassStns,
+                        lineXs,
+                        branches,
+                        xs,
+                        ys,
+                        branchSpacing,
+                        cp,
+                        e
+                    )
+                );
+            }
         });
 
         return linePaths;
