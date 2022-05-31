@@ -2,14 +2,13 @@ import { configure, ReactWrapper } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import thunk, { ThunkDispatch } from 'redux-thunk';
 import { RootState } from './redux';
-import { AnyAction } from 'redux';
 import createMockStore from 'redux-mock-store';
 import { BranchStyle, StationDict } from './constants/constants';
 import { act } from 'react-dom/test-utils';
 
 configure({ adapter: new Adapter() });
 
-type DispatchExts = ThunkDispatch<RootState, void, AnyAction>;
+type DispatchExts = ThunkDispatch<RootState, void, any>;
 export const createMockAppStore = createMockStore<RootState, DispatchExts>([thunk]);
 
 /**

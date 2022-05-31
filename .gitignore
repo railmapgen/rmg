@@ -29,3 +29,5 @@ yarn-error.log*
 # environment
 /.vscode
 /.idea
+
+/uat-rail-map-generator

@@ -102,6 +102,22 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
             },
         },
         {
+            filename: 'bj16',
+            name: {
+                en: 'Line 16 by Jay20081229',
+                'zh-Hans': '16号线 来自 Jay20081229',
+                'zh-Hant': '16號線 來自 Jay20081229',
+            },
+        },
+        {
+            filename: 'bj17',
+            name: {
+                en: 'Line 17 by Jay20081229',
+                'zh-Hans': '17号线 来自 Jay20081229',
+                'zh-Hant': '17號線 來自 Jay20081229',
+            },
+        },
+        {
             filename: 'yzl',
             name: {
                 en: 'Yizhuang Line by AnDanJuneUnderline',
@@ -249,6 +265,14 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
                 en: 'Line 21',
                 'zh-Hans': '21号线',
                 'zh-Hant': '21號線',
+            },
+        },
+        {
+            filename: 'gz22',
+            name: {
+                en: 'Line 22',
+                'zh-Hans': '22号线',
+                'zh-Hant': '22號線',
             },
         },
         {
@@ -510,6 +534,49 @@ export const templateList: Record<CompanyCode, { filename: string; name: Transla
                 en: 'Line 10 by linchen1965',
                 'zh-Hans': '10号线 来自 linchen1965',
                 'zh-Hant': '10號線 來自 linchen1965',
+            },
+        },
+    ],
+
+    qdmetro: [
+        {
+            filename: 'qd2',
+            name: {
+                en: 'Line 2',
+                'zh-Hans': '2号线',
+                'zh-Hant': '2號線',
+            },
+        },
+        {
+            filename: 'qd3',
+            name: {
+                en: 'Line 3',
+                'zh-Hans': '3号线',
+                'zh-Hant': '3號線',
+            },
+        },
+        {
+            filename: 'qd8',
+            name: {
+                en: 'Line 8',
+                'zh-Hans': '8号线',
+                'zh-Hant': '8號線',
+            },
+        },
+        {
+            filename: 'qd11',
+            name: {
+                en: 'Line 11',
+                'zh-Hans': '11号线',
+                'zh-Hant': '11號線',
+            },
+        },
+        {
+            filename: 'qd13',
+            name: {
+                en: 'Line 13',
+                'zh-Hans': '13号线',
+                'zh-Hant': '13號線',
             },
         },
     ],

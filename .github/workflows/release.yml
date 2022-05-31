@@ -23,15 +23,18 @@ jobs:
       - name: Configure Git
         run: |
           git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.UAT_REPO_NAME }}.git
-          git config --global user.name "Release Agent"
-          git config --global user.email rmg.release.agent@users.noreply.github.com
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
       - name: Release to UAT
         if: ${{ github.event.inputs.environment == 'UAT' }}
         run: |
           cd ${{ env.UAT_REPO_NAME }}/
-          rm -r docs/
-          cp -r ${{ github.event.inputs.version }}/UAT/ docs/
+          mkdir GitHub-UAT
+          git clone --single-branch --branch master --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/wongchito.github.io.git GitHub-UAT/
+          rm -r GitHub-UAT/uat-rail-map-generator/*
+          cp -r ${{ github.event.inputs.version }}/UAT/* GitHub-UAT/uat-rail-map-generator/
+          cd GitHub-UAT/
           git add .
           git commit -m "Release RMG version ${{ github.event.inputs.version }} to UAT"
           git push
@@ -41,9 +44,9 @@ jobs:
         run: |
           cd ${{ env.UAT_REPO_NAME }}/
           mkdir GitHub-PRD
-          git clone --single-branch --branch gh-pages --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/${{ env.PRD_REPO_NAME }}.git GitHub-PRD/
-          rm -rf GitHub-PRD/*
-          cp -r ${{ github.event.inputs.version }}/PRD/* GitHub-PRD/
+          git clone --single-branch --branch master --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/wongchito/wongchito.github.io.git GitHub-PRD/
+          rm -rf GitHub-PRD/RailMapGenerator/*
+          cp -r ${{ github.event.inputs.version }}/PRD/* GitHub-PRD/RailMapGenerator/
           cd GitHub-PRD/
           git add .
           git commit -m "Release RMG version ${{ github.event.inputs.version }} to PRD"
