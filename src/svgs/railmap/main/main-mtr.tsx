@@ -1,53 +1,10 @@
 import React, { useMemo } from 'react';
-import { adjacencyList, criticalPathMethod, getXShareMTR, getStnState } from '../methods/share';
-import { StationsMTR } from '../methods/mtr';
-import { CanvasType, RMGParam, StationDict } from '../../../constants/constants';
+import { adjacencyList, criticalPathMethod, getStnState, getXShareMTR } from '../methods/share';
+import { leftWideFactor, rightWideFactor, StationsMTR } from '../methods/mtr';
+import { CanvasType, RMGParam } from '../../../constants/constants';
 import { useAppSelector } from '../../../redux';
 import Station from '../../mtr/station/station';
 import { getStationYShare } from '../../mtr/line-diagram-utils';
-
-const leftWideFactor = (stnList: StationDict, stnId: string) => {
-    var res = 0;
-    let { transfer } = stnList[stnId];
-    let ls = transfer.info.map(val => val.length);
-    if (transfer.tick_direc === 'l') {
-        // int3 or above
-        if (!ls[1] && ls[0] > 1) res += 0.8;
-        // osi except osi22
-        if (ls[1] && (ls[0] !== 1 || ls[1] !== 2)) res += 0.8;
-    }
-    if (ls[0] === 1 && ls[1] === 2) {
-        // osi22 not end
-        if (stnList[stnId].parents[0] !== 'linestart' && stnList[stnId].children[0] !== 'lineend') res += 0.8;
-    }
-    // let { type, tick_direc } = stnList[stnId].transfer;
-    // if (tick_direc === 'l' && ['int3', 'osi11', 'osi12', 'osi21', 'osi31'].includes(type)) res += 0.8;
-    // if (type === 'osi22') res += 0.8;
-    if (stnList[stnId].parents.length === 2) res += 0.4;
-    if (stnList[stnList[stnId].parents[0]].children.length === 2) res += 0.4;
-    return res;
-};
-
-const rightWideFactor = (stnList: StationDict, stnId: string) => {
-    var res = 0;
-    let { transfer } = stnList[stnId];
-    let ls = transfer.info.map(val => val.length);
-    if (transfer.tick_direc === 'r') {
-        // int3 or above
-        if (!ls[1] && ls[0] > 1) res += 0.8;
-        // osi except osi22
-        if (ls[1] && (ls[0] !== 1 || ls[1] !== 2)) res += 0.8;
-    }
-    if (ls[0] === 1 && ls[1] === 2) {
-        if (stnList[stnId].parents[0] !== 'linestart' && stnList[stnId].children[0] !== 'lineend') res += 0.8;
-    }
-    // let { type, tick_direc } = stnList[stnId].transfer;
-    // if (tick_direc === 'r' && ['int3', 'osi11', 'osi12', 'osi21', 'osi31'].includes(type)) res += 0.8;
-    // if (type === 'osi22') res += 0.8;
-    if (stnList[stnId].children.length === 2) res += 0.4;
-    if (stnList[stnList[stnId].children[0]].parents.length === 2) res += 0.4;
-    return res;
-};
 
 const getNamePos = (stnId: string, branches: string[][], { isStagger, isFlip }: RMGParam['namePosMTR']) => {
     if (!isStagger) return isFlip;
@@ -161,24 +118,21 @@ const Lines = React.memo(
     (props: { paths: { main: string[]; pass: string[]; sidingMain: string[]; sidingPass: string[] } }) => {
         return (
             <g fill="none" strokeWidth={9.68}>
-                <g stroke="var(--rmg-grey)" strokeDasharray="10 4">
-                    {props.paths.sidingPass.map((path, i) => (
-                        <path key={i} d={path} />
-                    ))}
-                </g>
                 <g stroke="var(--rmg-grey)">
                     {props.paths.pass.map((path, i) => (
                         <path key={i} d={path} />
                     ))}
-                </g>
-                <g stroke="var(--rmg-theme-colour)" strokeDasharray="10 4">
-                    {props.paths.sidingMain.map((path, i) => (
-                        <path key={i} d={path} />
+                    {props.paths.sidingPass.map((path, i) => (
+                        <path key={i} d={path} strokeDasharray={path.match(/a/g)?.length === 4 ? '10 4' : undefined} />
                     ))}
                 </g>
+
                 <g stroke="var(--rmg-theme-colour)">
                     {props.paths.main.map((path, i) => (
                         <path key={i} d={path} />
+                    ))}
+                    {props.paths.sidingMain.map((path, i) => (
+                        <path key={i} d={path} strokeDasharray={path.match(/a/g)?.length === 4 ? '10 4' : undefined} />
                     ))}
                 </g>
             </g>
