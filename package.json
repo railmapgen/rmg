@@ -12,7 +12,7 @@
         "@emotion/styled": "^11.8.1",
         "@railmapgen/rmg-components": "^1.0.1",
         "@railmapgen/rmg-palette-resources": "^0.3.2",
-        "@railmapgen/rmg-templates-resources": "^0.1.11",
+        "@railmapgen/rmg-templates-resources": "^0.1.12",
         "ag-grid-community": "^27.3.0",
         "ag-grid-react": "^27.3.0",
         "framer-motion": "^6.3.3",
@@ -76,7 +76,7 @@
             "last 1 safari version"
         ]
     },
-    "version": "5.2.3",
+    "version": "5.2.4",
     "main": "public/electron.js",
     "build": {
         "publish": [
