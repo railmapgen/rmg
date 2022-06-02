@@ -22,7 +22,7 @@ jobs:
       - run: npm i
 
       - name: Clone UAT repo
-        run: git clone --depth 1 https://wongchito:${{ secrets.ACCESS_TOKEN }}@github.com/uat-railmapgen/rmg-repositories.git
+        run: git clone --depth 1 https://wongchito:${{ secrets.RMG_BUILD_AND_RELEASE }}@github.com/uat-railmapgen/rmg-repositories.git
 
       - name: Build
         run: |
@@ -33,7 +33,7 @@ jobs:
       - name: Auto deploy
         if: ${{ github.event.inputs.auto_deploy == 'UAT' || github.event.inputs.auto_deploy == 'PRD' }}
         run: |
-          curl -XPOST -u "wongchito:${{ secrets.ACCESS_TOKEN }}" \
+          curl -XPOST -u "wongchito:${{ secrets.RMG_BUILD_AND_RELEASE }}" \
             -H "Accept: application/vnd.github.everest-preview+json" \
             -H "Content-Type: application/json" \
             https://api.github.com/repos/uat-railmapgen/rmg-repositories/actions/workflows/release.yml/dispatches \
