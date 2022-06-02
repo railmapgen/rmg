@@ -1,5 +1,5 @@
 import * as Global from '../../../methods';
-import { RMGParam, ShortDirection, StationDict, StationInfo } from '../../../constants/constants';
+import { RMGParam, RmgStyle, ShortDirection, StationDict, StationInfo } from '../../../constants/constants';
 import { getSidingPath } from '../../mtr/line-diagram-utils';
 
 /**
@@ -153,6 +153,7 @@ export class Stations {
     namePoss = {} as { [stnId: string]: boolean };
     stnList = {} as StationDict;
     criticalPath = {} as { len: number; nodes: string[] };
+    protected static style: RmgStyle | undefined;
 
     constructor(data: { stnList?: any; criticalPath?: any }) {
         this.stnList = data.stnList;
@@ -338,7 +339,6 @@ export class Stations {
         cp: { len: number; nodes: string[] },
         e: number = 0
     ) {
-        const isMTR = this.name === 'StationsMTR';
         let linePaths = {
             main: [] as string[],
             pass: [] as string[],
@@ -375,7 +375,7 @@ export class Stations {
                 }
             }
 
-            if (isSiding && isMTR) {
+            if (isSiding && this.style === RmgStyle.MTR) {
                 linePaths.sidingMain.push(getSidingPath(lineMainStns.map(id => [xs[id], ys[id]])));
                 linePaths.sidingPass.push(getSidingPath(linePassStns.map(id => [xs[id], ys[id]])));
             } else {

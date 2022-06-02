@@ -1,5 +1,5 @@
 import { Stations } from './share';
-import { StationDict } from '../../../constants/constants';
+import { RmgStyle, StationDict } from '../../../constants/constants';
 
 export const leftWideFactor = (stnList: StationDict, stnId: string) => {
     var res = 0;
@@ -43,6 +43,8 @@ export const rightWideFactor = (stnList: StationDict, stnId: string) => {
 };
 
 export class StationsMTR extends Stations {
+    style = RmgStyle.MTR;
+
     protected leftWideFactor = (stnId: string) => {
         return leftWideFactor(this.stnList, stnId);
     };
@@ -52,4 +54,6 @@ export class StationsMTR extends Stations {
     };
 }
 
-export class StationsSHMetro extends StationsMTR {}
+export class StationsSHMetro extends StationsMTR {
+    style = RmgStyle.SHMetro;
+}
