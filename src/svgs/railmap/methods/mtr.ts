@@ -1,5 +1,6 @@
 import { Stations } from './share';
-import { RmgStyle, StationDict } from '../../../constants/constants';
+import { RmgStyle, StationDict, StationInfo } from '../../../constants/constants';
+import { getSidingPath } from '../../mtr/line-diagram-utils';
 
 export const leftWideFactor = (stnList: StationDict, stnId: string) => {
     var res = 0;
@@ -43,8 +44,6 @@ export const rightWideFactor = (stnList: StationDict, stnId: string) => {
 };
 
 export class StationsMTR extends Stations {
-    style = RmgStyle.MTR;
-
     protected leftWideFactor = (stnId: string) => {
         return leftWideFactor(this.stnList, stnId);
     };
@@ -52,8 +51,161 @@ export class StationsMTR extends Stations {
     protected rightWideFactor = (stnId: string) => {
         return rightWideFactor(this.stnList, stnId);
     };
+
+    static drawLine(
+        branches: string[][],
+        stnStates: { [stnId: string]: -1 | 0 | 1 },
+        stnList: { [stnId: string]: StationInfo },
+        lineXs: [number, number],
+        xs: { [stnId: string]: number },
+        ys: { [stnId: string]: number },
+        branchSpacing: number,
+        cp: { len: number; nodes: string[] },
+        e: number = 0
+    ) {
+        let linePaths = {
+            main: [] as string[],
+            pass: [] as string[],
+            sidingMain: [] as string[],
+            sidingPass: [] as string[],
+        };
+
+        branches.forEach((branch, i) => {
+            const isSiding = branch[0] !== 'linestart' && branch.slice(-1)[0] !== 'lineend';
+
+            branch = branch.filter(stnId => !['linestart', 'lineend'].includes(stnId));
+            var lineMainStns = branch.filter(stnId => stnStates[stnId] >= 0);
+            var linePassStns = branch.filter(stnId => stnStates[stnId] <= 0);
+
+            if (lineMainStns.length === 1) {
+                linePassStns = branch;
+            }
+
+            if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length === 0 && lineMainStns.length) {
+                // if two set disjoint
+                if (linePassStns[0] === branch[0]) {
+                    // -1 -1 1 1
+                    linePassStns.push(lineMainStns[0]);
+                } else if (
+                    lineMainStns[0] === branch[0] &&
+                    lineMainStns[lineMainStns.length - 1] === branch[branch.length - 1] &&
+                    linePassStns.length
+                ) {
+                    linePassStns = branch;
+                    lineMainStns = [];
+                } else {
+                    // 1 1 -1 -1
+                    linePassStns.unshift(lineMainStns[lineMainStns.length - 1]);
+                }
+            }
+
+            if (isSiding) {
+                linePaths.sidingMain.push(getSidingPath(lineMainStns.map(id => [xs[id], ys[id]])));
+                linePaths.sidingPass.push(getSidingPath(linePassStns.map(id => [xs[id], ys[id]])));
+            } else {
+                linePaths.main.push(
+                    new this({ stnList, criticalPath: cp })._linePath(
+                        lineMainStns,
+                        lineXs,
+                        branches,
+                        xs,
+                        ys,
+                        branchSpacing,
+                        cp,
+                        e
+                    )
+                );
+                linePaths.pass.push(
+                    new this({ stnList, criticalPath: cp })._linePath(
+                        linePassStns,
+                        lineXs,
+                        branches,
+                        xs,
+                        ys,
+                        branchSpacing,
+                        cp,
+                        e
+                    )
+                );
+            }
+        });
+
+        return linePaths;
+    }
 }
 
 export class StationsSHMetro extends StationsMTR {
-    style = RmgStyle.SHMetro;
+    static drawLine(
+        branches: string[][],
+        stnStates: { [stnId: string]: -1 | 0 | 1 },
+        stnList: { [stnId: string]: StationInfo },
+        lineXs: [number, number],
+        xs: { [stnId: string]: number },
+        ys: { [stnId: string]: number },
+        branchSpacing: number,
+        cp: { len: number; nodes: string[] },
+        e: number = 0
+    ) {
+        let linePaths = {
+            main: [] as string[],
+            pass: [] as string[],
+            sidingMain: [] as string[],
+            sidingPass: [] as string[],
+        };
+
+        branches.forEach((branch, i) => {
+            branch = branch.filter(stnId => !['linestart', 'lineend'].includes(stnId));
+            var lineMainStns = branch.filter(stnId => stnStates[stnId] >= 0);
+            var linePassStns = branch.filter(stnId => stnStates[stnId] <= 0);
+
+            if (lineMainStns.length === 1) {
+                linePassStns = branch;
+            }
+
+            if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length === 0 && lineMainStns.length) {
+                // if two set disjoint
+                if (linePassStns[0] === branch[0]) {
+                    // -1 -1 1 1
+                    linePassStns.push(lineMainStns[0]);
+                } else if (
+                    lineMainStns[0] === branch[0] &&
+                    lineMainStns[lineMainStns.length - 1] === branch[branch.length - 1] &&
+                    linePassStns.length
+                ) {
+                    linePassStns = branch;
+                    lineMainStns = [];
+                } else {
+                    // 1 1 -1 -1
+                    linePassStns.unshift(lineMainStns[lineMainStns.length - 1]);
+                }
+            }
+
+            linePaths.main.push(
+                new this({ stnList, criticalPath: cp })._linePath(
+                    lineMainStns,
+                    lineXs,
+                    branches,
+                    xs,
+                    ys,
+                    branchSpacing,
+                    cp,
+                    e
+                )
+            );
+            linePaths.pass.push(
+                new this({ stnList, criticalPath: cp })._linePath(
+                    linePassStns,
+                    lineXs,
+                    branches,
+                    xs,
+                    ys,
+                    branchSpacing,
+                    cp,
+                    e
+                )
+            );
+        });
+
+        return linePaths;
+    }
 }
