@@ -1,6 +1,5 @@
 import * as Global from '../../../methods';
-import { RMGParam, RmgStyle, ShortDirection, StationDict, StationInfo } from '../../../constants/constants';
-import { getSidingPath } from '../../mtr/line-diagram-utils';
+import { RMGParam, ShortDirection, StationDict, StationInfo } from '../../../constants/constants';
 
 /**
  * Compute the adjacency list of the graph.
