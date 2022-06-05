@@ -15,6 +15,7 @@
         "@railmapgen/rmg-templates-resources": "^0.1.12",
         "ag-grid-community": "^27.3.0",
         "ag-grid-react": "^27.3.0",
+        "electron-is-dev": "^2.0.0",
         "framer-motion": "^6.3.3",
         "i18next": "^21.8.4",
         "i18next-browser-languagedetector": "^6.1.4",
@@ -42,7 +43,6 @@
         "cross-env": "^7.0.3",
         "electron": "^17.2.0",
         "electron-builder": "^22.14.13",
-        "electron-is-dev": "^2.0.0",
         "eslint-plugin-prettier": "^4.0.0",
         "identity-obj-proxy": "^3.0.0",
         "jest": "^27.5.1",
@@ -76,7 +76,7 @@
             "last 1 safari version"
         ]
     },
-    "version": "5.2.8",
+    "version": "5.2.9",
     "main": "public/electron.js",
     "build": {
         "publish": [

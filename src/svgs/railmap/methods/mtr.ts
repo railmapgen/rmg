@@ -1,5 +1,5 @@
 import { Stations } from './share';
-import { RmgStyle, StationDict, StationInfo } from '../../../constants/constants';
+import { StationDict, StationInfo } from '../../../constants/constants';
 import { getSidingPath } from '../../mtr/line-diagram-utils';
 
 export const leftWideFactor = (stnList: StationDict, stnId: string) => {
