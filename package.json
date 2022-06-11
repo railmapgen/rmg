@@ -11,7 +11,7 @@
         "@emotion/react": "^11.9.0",
         "@emotion/styled": "^11.8.1",
         "@railmapgen/rmg-components": "^1.0.1",
-        "@railmapgen/rmg-palette-resources": "^0.3.3",
+        "@railmapgen/rmg-palette-resources": "^0.3.4",
         "@railmapgen/rmg-templates-resources": "^0.1.12",
         "ag-grid-community": "^27.3.0",
         "ag-grid-react": "^27.3.0",
@@ -76,7 +76,7 @@
             "last 1 safari version"
         ]
     },
-    "version": "5.2.9",
+    "version": "5.2.10",
     "main": "public/electron.js",
     "build": {
         "publish": [
