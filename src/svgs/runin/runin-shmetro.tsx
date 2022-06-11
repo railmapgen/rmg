@@ -452,14 +452,13 @@ const CurrentText = () => {
         () => (
             <>
                 <text className="rmg-name__zh" fontSize={112}>
-                    {name[0]}
+                    {name[0].replace('\\', '')}
                 </text>
                 <text className="rmg-name__en" fontSize={36} dy={50}>
-                    {name[1].replace('\\', ' ')}
+                    {name[1].replace('\\', '')}
                 </text>
             </>
         ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [...name]
     );
 };
@@ -493,7 +492,6 @@ const NextText = (props: { nextName: Name } & React.SVGProps<SVGGElement>) => {
                         ))}
                     </>
                 ),
-                // eslint-disable-next-line react-hooks/exhaustive-deps
                 [...nextName]
             )}
         </g>

@@ -49,16 +49,13 @@ const DestSHMetro = () => {
     // get the name from the destination id(s)
     const get_dest_names = (dest_ids: string[], one_line: boolean) =>
         !one_line
-            ? dest_ids.map(id => stn_list[id].name.map(s => s.replace('\\', ' ')) as Name)
+            ? dest_ids.map(id => stn_list[id].name.map(s => s.replace('\\', '')) as Name)
             : [
                   // only one line in `sh` type
                   [
                       dest_ids.map(id => stn_list[id].name[0]).join('，'),
-                      dest_ids
-                          .map(id => stn_list[id].name[1])
-                          .join(', ')
-                          .replace('\\', ' '),
-                  ] as Name,
+                      dest_ids.map(id => stn_list[id].name[1]).join(', '),
+                  ].map(s => s.replace('\\', '')) as Name,
               ];
 
     // get destination id(s)
@@ -79,6 +76,7 @@ const DestSHMetro = () => {
 
     // destination names of loop line, `sh2020` type will always be two lines
     const dest_names = get_dest_names(regular_dest_ids, !loop && !(info_panel_type === 'sh2020'));
+    console.log(dest_names)
     const coline_dest_names = get_dest_names(coline_dest_ids, true);
 
     // this will give the space for at most two lines of dest_names
