@@ -59,21 +59,32 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     const { name, infos, nameDirection, services } = props;
     const dy = { upward: 60, downward: -30, left: 0, right: 0 }[nameDirection];
     const osi_dx = { upward: 0, downward: 0, left: 85, right: -85 }[nameDirection];
-    const osi_dy = { upward: -185, downward: 150, left: -30, right: -30 }[nameDirection];
-    const osysi_dx = (infos: InterchangeInfo[][]) =>
-        ({
-            upward: 0,
-            downward: 0,
-            left: infos[0].length + infos[1].length !== 0 ? 85 : 25,
-            right: infos[0].length + infos[1].length !== 0 ? -85 : -25,
-        }[nameDirection]);
-    const osysi_dy = (infos: InterchangeInfo[][], nameDirection: NameDirection, services: Services[]) =>
-        ({
-            upward: infos[1]?.length ? -210 : infos[0].length ? -180 : -100,
-            downward: (infos[1]?.length ? 190 : infos[0].length ? 160 : 75) + (services.length === 3 ? 40 : 0),
-            left: infos[1]?.length ? -60 : infos[0].length ? -30 : 0,
-            right: infos[1]?.length ? -60 : infos[0].length ? -30 : 0,
-        }[nameDirection]);
+    const osi_dy = {
+        upward: -185,
+        downward: 150 + (services.length === 3 ? 40 : 0),
+        left: -30,
+        right: -30,
+    }[nameDirection];
+    const osysi_dx =
+        // only compute when there is a out-of-system transfer
+        infos[2]?.length > 0
+            ? {
+                  upward: 0,
+                  downward: 0,
+                  left: infos[0].length + infos[1].length !== 0 ? 85 : 25,
+                  right: infos[0].length + infos[1].length !== 0 ? -85 : -25,
+              }[nameDirection]
+            : 0;
+    const osysi_dy =
+        // only compute when there is a out-of-system transfer
+        infos[2]?.length > 0
+            ? {
+                  upward: infos[1]?.length ? -210 : infos[0].length ? -180 : -100,
+                  downward: (infos[1]?.length ? 190 : infos[0].length ? 160 : 100) + (services.length === 3 ? 40 : 0),
+                  left: infos[1]?.length ? -60 : infos[0].length ? -30 : 0,
+                  right: infos[1]?.length ? -60 : infos[0].length ? -30 : 0,
+              }[nameDirection]
+            : 0;
     return (
         <g transform={`translate(0,${dy})`}>
             {nameDirection === 'upward' || nameDirection === 'downward' ? (
@@ -127,7 +138,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
             )}
 
             {infos[2]?.length > 0 && (
-                <g transform={`translate(${osysi_dx(infos)},${osysi_dy(infos, nameDirection, services)})`}>
+                <g transform={`translate(${osysi_dx},${osysi_dy})`}>
                     <OSysIText osysiInfos={infos[2]} nameDirection={nameDirection} />
                 </g>
             )}
