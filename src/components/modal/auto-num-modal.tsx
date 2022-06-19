@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
-import { useAppDispatch, useAppSelector } from '../../redux';
+import { useRootDispatch, useRootSelector } from '../../redux';
 import { RmgStyle } from '../../constants/constants';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { autoNumbering } from '../../redux/param/action';
@@ -24,11 +24,11 @@ interface AutoNumModalProps {
 export default function AutoNumModal(props: AutoNumModalProps) {
     const { isOpen, onClose } = props;
     const { t } = useTranslation();
-    const dispatch = useAppDispatch();
+    const dispatch = useRootDispatch();
 
-    const selectedBranch = useAppSelector(state => state.app.selectedBranch);
-    const { style, stn_list: stationList } = useAppSelector(state => state.param);
-    const branches = useAppSelector(state => state.helper.branches);
+    const selectedBranch = useRootSelector(state => state.app.selectedBranch);
+    const { style, stn_list: stationList } = useRootSelector(state => state.param);
+    const branches = useRootSelector(state => state.helper.branches);
 
     const [where, setWhere] = useState(selectedBranch);
     const [from, setFrom] = useState('1');

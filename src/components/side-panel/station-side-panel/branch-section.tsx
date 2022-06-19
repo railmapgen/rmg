@@ -1,8 +1,7 @@
 import { Box, Heading, Text } from '@chakra-ui/react';
 import React from 'react';
 import { BranchStyle, Direction } from '../../../constants/constants';
-import { useDispatch } from 'react-redux';
-import { useAppSelector } from '../../../redux';
+import { useRootDispatch, useRootSelector } from '../../../redux';
 import {
     flipStationBranchPosition,
     updateStationBranchFirstStation,
@@ -13,10 +12,10 @@ import { useTranslation } from 'react-i18next';
 
 export default function BranchSection() {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useRootDispatch();
 
-    const selectedStation = useAppSelector(state => state.app.selectedStation);
-    const stationList = useAppSelector(state => state.param.stn_list);
+    const selectedStation = useRootSelector(state => state.app.selectedStation);
+    const stationList = useRootSelector(state => state.param.stn_list);
     const { parents, children, branch } = stationList[selectedStation];
 
     const branchOptions = {

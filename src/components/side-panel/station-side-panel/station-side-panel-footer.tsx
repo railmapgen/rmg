@@ -1,10 +1,9 @@
 import { Button, HStack } from '@chakra-ui/react';
 import { RmgSidePanelFooter } from '@railmapgen/rmg-components';
 import React, { useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { removeInvalidColineOnRemoveStation } from '../../../redux/param/coline-action';
 import { checkStationCouldBeRemoved, removeStation } from '../../../redux/param/remove-station-action';
-import { useAppSelector } from '../../../redux';
+import { useRootDispatch, useRootSelector } from '../../../redux';
 import { setGlobalAlert, setSelectedStation, setSidePanelMode } from '../../../redux/app/action';
 import RemoveConfirmModal from '../../modal/remove-confirm-modal';
 import { setCurrentStation } from '../../../redux/param/action';
@@ -13,9 +12,9 @@ import { useTranslation } from 'react-i18next';
 
 export default function StationSidePanelFooter() {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useRootDispatch();
 
-    const selectedStation = useAppSelector(state => state.app.selectedStation);
+    const selectedStation = useRootSelector(state => state.app.selectedStation);
 
     const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 

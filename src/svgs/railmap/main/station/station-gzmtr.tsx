@@ -1,7 +1,7 @@
 import React from 'react';
 import StationNumber from '../../../gzmtr/station-icon/station-number';
 import { InterchangeInfo, Services } from '../../../../constants/constants';
-import { useAppSelector } from '../../../../redux';
+import { useRootSelector } from '../../../../redux';
 import LineIcon from '../../../gzmtr/line-icon/line-icon';
 import StationNameWrapper from '../../../gzmtr/station-name/station-name-wrapper';
 
@@ -14,10 +14,10 @@ interface Props {
 const StationGZMTR = (props: Props) => {
     const { stnId, stnState, stnY } = props;
 
-    const theme = useAppSelector(store => store.param.theme);
-    const lineName = useAppSelector(store => store.param.line_name);
-    const lineNumber = useAppSelector(store => store.param.line_num);
-    const stnInfo = useAppSelector(store => store.param.stn_list[stnId]);
+    const theme = useRootSelector(store => store.param.theme);
+    const lineName = useRootSelector(store => store.param.line_name);
+    const lineNumber = useRootSelector(store => store.param.line_num);
+    const stnInfo = useRootSelector(store => store.param.stn_list[stnId]);
 
     const isNameShift = stnInfo.parents.length === 2 || stnInfo.children.length === 2;
     const tickRotation =

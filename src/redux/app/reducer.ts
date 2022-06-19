@@ -72,38 +72,26 @@ export default function AppReducer(
 ): AppState {
     switch (action.type) {
         case SET_CANVAS_SCALE:
-            state.canvasScale = action.canvasScale;
-            break;
+            return { ...state, canvasScale: action.canvasScale };
         case SET_CANVAS_TO_SHOW:
-            state.canvasToShow = action.canvasToShow;
-            break;
+            return { ...state, canvasToShow: action.canvasToShow };
         case SET_CANVAS_TO_SHOW_STATUS:
-            state.canvasToShowStatus = action.canvasToShowStatus;
-            break;
+            return { ...state, canvasToShowStatus: action.canvasToShowStatus };
         case SET_SIDE_PANEL_MODE:
-            state.sidePanelMode = action.sidePanelMode;
-            break;
+            return { ...state, sidePanelMode: action.sidePanelMode };
         case SET_SELECTED_STATION:
-            state.selectedStation = action.selectedStation;
-            break;
+            return { ...state, selectedStation: action.selectedStation };
         case SET_SELECTED_COLINE:
-            state.selectedColine = action.selectedColine;
-            break;
+            return { ...state, selectedColine: action.selectedColine };
         case SET_SELECTED_BRANCH:
-            state.selectedBranch = action.selectedBranch;
-            break;
+            return { ...state, selectedBranch: action.selectedBranch };
         case SET_IS_SHARE_TRACK_ENABLED:
-            state.isShareTrackEnabled = action.isShareTrackEnabled;
-            break;
+            return { ...state, isShareTrackEnabled: action.isShareTrackEnabled };
         case SET_GLOBAL_ALERTS:
-            state.globalAlerts = action.globalAlerts;
-            break;
+            return { ...state, globalAlerts: action.globalAlerts };
         case SET_IS_LOADING:
-            state.isLoading = action.isLoading;
-            break;
+            return { ...state, isLoading: action.isLoading };
         default:
-            break;
+            return state;
     }
-
-    return { ...state };
 }

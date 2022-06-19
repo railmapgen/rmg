@@ -3,15 +3,14 @@ import { Box, Button, Heading, VStack } from '@chakra-ui/react';
 import GZMTRNoteCard from './gzmtr-note-card';
 import { addNote, removeNote, updateNote } from '../../../redux/param/action';
 import { MdAdd } from 'react-icons/md';
-import { useAppSelector } from '../../../redux';
-import { useDispatch } from 'react-redux';
+import { useRootDispatch, useRootSelector } from '../../../redux';
 import { useTranslation } from 'react-i18next';
 
 export default function GZMTRNoteSection() {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useRootDispatch();
 
-    const notesGZMTR = useAppSelector(state => state.param.notesGZMTR);
+    const notesGZMTR = useRootSelector(state => state.param.notesGZMTR);
 
     return (
         <Box p={1}>

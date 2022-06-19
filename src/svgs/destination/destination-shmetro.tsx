@@ -1,5 +1,5 @@
 import React, { memo, useMemo, forwardRef, useRef, useState, useEffect } from 'react';
-import { useAppSelector } from '../../redux';
+import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { ColineInfo, ColourHex, MonoColour, Name, ShortDirection } from '../../constants/constants';
 import { get_pivot_stations } from '../railmap/methods/shmetro-loop';
@@ -23,7 +23,7 @@ const DefsSHMetro = memo(() => (
 ));
 
 const DestSHMetro = () => {
-    const { routes, branches } = useAppSelector(store => store.helper);
+    const { routes, branches } = useRootSelector(store => store.helper);
     const {
         line_name,
         theme,
@@ -33,7 +33,7 @@ const DestSHMetro = () => {
         info_panel_type,
         loop,
         coline,
-    } = useAppSelector(store => store.param);
+    } = useRootSelector(store => store.param);
 
     // get valid destination of each branch
     const get_valid_destinations = (routes: string[][], direction: ShortDirection, current_stn_id: string) => [
@@ -137,7 +137,7 @@ const Dest = (props: {
         platform_num,
         svgWidth,
         svg_height,
-    } = useAppSelector(store => store.param);
+    } = useRootSelector(store => store.param);
 
     const terminalEl = useRef<SVGGElement | null>(null);
     const [terminalBBox, setTerminalBBox] = useState({ width: 0 } as SVGRect);
@@ -195,7 +195,7 @@ const Dest = (props: {
 
 const Terminal = forwardRef((props: { dest_names: Name[] }, ref: React.Ref<SVGGElement>) => {
     const { dest_names } = props;
-    const { direction, svgWidth } = useAppSelector(store => store.param);
+    const { direction, svgWidth } = useRootSelector(store => store.param);
 
     return (
         <g ref={ref} transform={`translate(${direction === 'l' ? 36 : svgWidth.destination - 36},145)`}>
@@ -227,7 +227,7 @@ const Terminal = forwardRef((props: { dest_names: Name[] }, ref: React.Ref<SVGGE
 });
 
 const PlatformNum = () => {
-    const { platform_num } = useAppSelector(store => store.param);
+    const { platform_num } = useRootSelector(store => store.param);
 
     // Total width: 325
     return useMemo(
@@ -249,7 +249,7 @@ const PlatformNum = () => {
 
 const LineNameBoxText = (props: { line_name: Name; line_color: [ColourHex, MonoColour] }) => {
     const { line_name, line_color } = props;
-    const { direction, svgWidth } = useAppSelector(store => store.param);
+    const { direction, svgWidth } = useRootSelector(store => store.param);
 
     const boxX = direction === 'l' ? svgWidth.destination - 42 : 42;
 
@@ -290,7 +290,7 @@ const LineNameBoxText = (props: { line_name: Name; line_color: [ColourHex, MonoC
 
 const LineNameBoxNumber = (props: { line_name: Name; line_color: [ColourHex, MonoColour] }) => {
     const { line_name, line_color } = props;
-    const { direction, svgWidth } = useAppSelector(store => store.param);
+    const { direction, svgWidth } = useRootSelector(store => store.param);
 
     const [lineNumber, lineNameRes] = line_name[0].match(/^[\w\d]+|.+/g) as string[];
 

@@ -1,6 +1,6 @@
 import React, { useRef, memo } from 'react';
 import { InterchangeInfo, Name, Facilities, ColourHex } from '../../../../constants/constants';
-import { useAppSelector } from '../../../../redux';
+import { useRootSelector } from '../../../../redux';
 
 interface Props {
     stnId: string;
@@ -12,7 +12,7 @@ interface Props {
 
 const StationSHMetro = (props: Props) => {
     const { stnId, stnState, color, bank: bank_, direction: direction_override } = props;
-    const { direction: direction_param, info_panel_type, stn_list, loop } = useAppSelector(store => store.param);
+    const { direction: direction_param, info_panel_type, stn_list, loop } = useRootSelector(store => store.param);
     const stnInfo = stn_list[stnId];
     const direction = direction_override ?? direction_param;
 

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { adjacencyList, criticalPathMethod, getStnState, getXShareMTR } from '../methods/share';
 import { leftWideFactor, rightWideFactor, StationsMTR } from '../methods/mtr';
 import { CanvasType, RMGParam } from '../../../constants/constants';
-import { useAppSelector } from '../../../redux';
+import { useRootSelector } from '../../../redux';
 import Station from '../../mtr/station/station';
 import { getStationYShare } from '../../mtr/line-diagram-utils';
 
@@ -19,17 +19,17 @@ const getNamePos = (stnId: string, branches: string[][], { isStagger, isFlip }: 
 };
 
 const MainMTR = () => {
-    const { branches, routes, depsStr: deps } = useAppSelector(store => store.helper);
+    const { branches, routes, depsStr: deps } = useRootSelector(store => store.helper);
 
-    const svgWidths = useAppSelector(store => store.param.svgWidth);
-    const yPercentage = useAppSelector(store => store.param.y_pc);
-    const paddingPercentage = useAppSelector(store => store.param.padding);
-    const branchSpacing = useAppSelector(store => store.param.branch_spacing);
-    const direction = useAppSelector(store => store.param.direction);
-    const namePosition = useAppSelector(store => store.param.namePosMTR);
+    const svgWidths = useRootSelector(store => store.param.svgWidth);
+    const yPercentage = useRootSelector(store => store.param.y_pc);
+    const paddingPercentage = useRootSelector(store => store.param.padding);
+    const branchSpacing = useRootSelector(store => store.param.branch_spacing);
+    const direction = useRootSelector(store => store.param.direction);
+    const namePosition = useRootSelector(store => store.param.namePosMTR);
 
-    const currentStationIndex = useAppSelector(store => store.param.current_stn_idx);
-    const stationList = useAppSelector(store => store.param.stn_list);
+    const currentStationIndex = useRootSelector(store => store.param.current_stn_idx);
+    const stationList = useRootSelector(store => store.param.stn_list);
 
     const adjMat = adjacencyList(stationList, leftWideFactor, rightWideFactor);
 
@@ -151,7 +151,7 @@ interface StationGroupProps {
 const StationGroup = (props: StationGroupProps) => {
     const { xs, ys, stnStates, namePoss } = props;
 
-    const stationList = useAppSelector(store => store.param.stn_list);
+    const stationList = useRootSelector(store => store.param.stn_list);
 
     return (
         <g id="stn_icons">

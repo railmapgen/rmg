@@ -1,6 +1,6 @@
 import React from 'react';
 import { ColourHex, InterchangeInfo, Name, Services } from '../../constants/constants';
-import { useAppSelector } from '../../redux';
+import { useRootSelector } from '../../redux';
 
 export type NameDirection = 'upward' | 'downward' | 'left' | 'right';
 
@@ -13,7 +13,7 @@ interface Props {
 
 export const StationSHMetro = (props: Props) => {
     const { stnId, nameDirection, services, color } = props;
-    const stnInfo = useAppSelector(store => store.param.stn_list[stnId]);
+    const stnInfo = useRootSelector(store => store.param.stn_list[stnId]);
 
     const transfer = [...stnInfo.transfer.info[0], ...(stnInfo.transfer.info[1] || [])];
     let stationIconStyle = '';

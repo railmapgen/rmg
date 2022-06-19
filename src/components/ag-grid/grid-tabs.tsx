@@ -2,7 +2,7 @@ import React, { lazy, Suspense, useState } from 'react';
 import { Box, Button, HStack, IconButton, Progress, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { MdAdd } from 'react-icons/md';
 import AddStationModal from '../modal/add-station-modal';
-import { useAppDispatch, useAppSelector } from '../../redux';
+import { useRootDispatch, useRootSelector } from '../../redux';
 import { RmgStyle, SidePanelMode } from '../../constants/constants';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { setSelectedBranch, setSidePanelMode } from '../../redux/app/action';
@@ -14,14 +14,14 @@ const StationAgGrid = lazy(() => import(/* webpackChunkName: "StationAgGrid" */ 
 
 export default function GridTabs() {
     const { t } = useTranslation();
-    const dispatch = useAppDispatch();
+    const dispatch = useRootDispatch();
 
     const [isAddStationModalOpen, setIsAddStationModalOpen] = useState(false);
     const [isNewBranchModalOpen, setIsNewBranchModalOpen] = useState(false);
 
-    const selectedBranch = useAppSelector(state => state.app.selectedBranch);
-    const { style, stn_list: stationList } = useAppSelector(state => state.param);
-    const branches = useAppSelector(state => state.helper.branches);
+    const selectedBranch = useRootSelector(state => state.app.selectedBranch);
+    const { style, stn_list: stationList } = useRootSelector(state => state.param);
+    const branches = useRootSelector(state => state.helper.branches);
 
     const handleEditLineSection = () => {
         dispatch(setSidePanelMode(SidePanelMode.BRANCH));

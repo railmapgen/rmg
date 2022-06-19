@@ -5,17 +5,16 @@ import RmgButtonGroup from '../common/rmg-button-group';
 import { selectCanvas, zoomToScale } from '../../redux/app/action';
 import { AllCanvas, canvasConfig, CanvasType } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
-import { useAppSelector } from '../../redux';
+import { useRootDispatch, useRootSelector } from '../../redux';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { MdZoomIn, MdZoomOut } from 'react-icons/md';
 
 export default function PageHeader() {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useRootDispatch();
 
-    const { canvasToShow, canvasScale } = useAppSelector(state => state.app);
-    const style = useAppSelector(state => state.param.style);
+    const { canvasToShow, canvasScale } = useRootSelector(state => state.app);
+    const style = useRootSelector(state => state.param.style);
 
     const canvasSelections = [AllCanvas, ...canvasConfig[style]].map(canvas => ({
         label: t('CanvasType.' + canvas),

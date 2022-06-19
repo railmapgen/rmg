@@ -1,6 +1,6 @@
 import { AllCanvas, CanvasType, LoadingStatus, SidePanelMode } from '../../constants/constants';
 import { Dispatch } from 'redux';
-import { AppDispatch, RootState } from '../index';
+import { RootDispatch, RootState } from '../index';
 import { AlertStatus } from '@chakra-ui/react';
 import { AppState } from './reducer';
 
@@ -75,7 +75,7 @@ export const setCanvasScale = (canvasScale: number) => {
 };
 
 export const zoomToScale = (scale: number) => {
-    return async (dispatch: AppDispatch) => {
+    return async (dispatch: RootDispatch) => {
         try {
             dispatch(setCanvasScale(scale));
             await window.rmgStorage.writeFile('rmgScale', scale.toString());
@@ -131,7 +131,7 @@ const setGlobalAlerts = (globalAlerts: AppState['globalAlerts']): setGlobalAlert
 };
 
 export const setGlobalAlert = (status: AlertStatus, message: string, url?: string) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const globalAlerts = getState().app.globalAlerts;
         dispatch(
             setGlobalAlerts({
@@ -143,7 +143,7 @@ export const setGlobalAlert = (status: AlertStatus, message: string, url?: strin
 };
 
 export const closeGlobalAlert = (status: AlertStatus) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const { [status]: _, ...otherAlerts } = getState().app.globalAlerts;
         dispatch(setGlobalAlerts(otherAlerts));
     };

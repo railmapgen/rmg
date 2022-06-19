@@ -4,13 +4,13 @@ import SidePanel from './side-panel/side-panel';
 import PageHeader from './page-header/page-header';
 import WindowHeader from './root/window-header';
 import { Box, Flex } from '@chakra-ui/react';
-import { useAppSelector } from '../redux';
+import { useRootSelector } from '../redux';
 import GridTabs from './ag-grid/grid-tabs';
 import LoadingModal from './modal/loading-modal';
 import GlobalAlerts from './root/global-alerts';
 
 export default function AppRoot() {
-    const param = useAppSelector(state => state.param);
+    const param = useRootSelector(state => state.param);
     const paramString = JSON.stringify(param);
 
     useEffect(() => {

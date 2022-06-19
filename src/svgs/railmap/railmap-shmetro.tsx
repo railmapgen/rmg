@@ -2,13 +2,13 @@ import * as React from 'react';
 import { CanvasType } from '../../constants/constants';
 import MainSHMetro, { DirectionElements } from './main/main-shmetro';
 import LoopSHMetro from './main/loop/loop-shmetro';
-import { useAppSelector } from '../../redux';
+import { useRootSelector } from '../../redux';
 
 const RailMapSHMetro = React.memo(() => {
     const {
         loop,
         loop_info: { bank },
-    } = useAppSelector(store => store.param);
+    } = useRootSelector(store => store.param);
     return (
         <>
             <DefsSHMetro />

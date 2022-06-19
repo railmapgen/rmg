@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { translateText } from '../../i18n/config';
-import { useAppDispatch } from '../../redux';
+import { useRootDispatch } from '../../redux';
 import { setIsLoading } from '../../redux/app/action';
 import { companyConfig, templateList } from '@railmapgen/rmg-templates-resources';
 
@@ -30,7 +30,7 @@ export default function TemplateModal(props: TemplateModalProps) {
     const { isOpen, onClose, onOpenParam } = props;
 
     const { t } = useTranslation();
-    const dispatch = useAppDispatch();
+    const dispatch = useRootDispatch();
 
     const handleSelect = async (company: string, filename: string) => {
         dispatch(setIsLoading(true));

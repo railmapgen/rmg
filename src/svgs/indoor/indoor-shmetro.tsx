@@ -3,11 +3,11 @@ import { adjacencyList, criticalPathMethod, getStnState, getXShareMTR } from '..
 import StationSHMetro from './station-shmetro';
 import { StationsSHMetro } from '../railmap/methods/mtr';
 import { CanvasType, Services, StationDict } from '../../constants/constants';
-import { useAppSelector } from '../../redux';
+import { useRootSelector } from '../../redux';
 import LoopSHMetro from '../railmap/main/loop/loop-shmetro';
 
 export default memo(function IndoorWrapperSHMetro() {
-    const { loop } = useAppSelector(store => store.param);
+    const { loop } = useRootSelector(store => store.param);
     return (
         <>
             <DefsSHMetro />
@@ -59,8 +59,8 @@ const rightWideFactor = (stnList: StationDict, stnId: string) => {
 };
 
 const IndoorSHMetro = () => {
-    const { routes, branches, depsStr: deps } = useAppSelector(store => store.helper);
-    const param = useAppSelector(store => store.param);
+    const { routes, branches, depsStr: deps } = useRootSelector(store => store.helper);
+    const param = useRootSelector(store => store.param);
 
     const adjMat = adjacencyList(param.stn_list, leftWideFactor, rightWideFactor);
 
@@ -162,8 +162,8 @@ interface StationGroupProps {
 }
 
 const StationGroup = (props: StationGroupProps) => {
-    const { branches } = useAppSelector(store => store.helper);
-    const param = useAppSelector(store => store.param);
+    const { branches } = useRootSelector(store => store.helper);
+    const param = useRootSelector(store => store.param);
     const { xs, ys, services } = props;
 
     return (
@@ -191,7 +191,7 @@ const StationGroup = (props: StationGroupProps) => {
 };
 
 const InfoElements = () => {
-    const param = useAppSelector(store => store.param);
+    const param = useRootSelector(store => store.param);
 
     return React.useMemo(
         () => (

@@ -1,4 +1,4 @@
-import { AppDispatch, RootState } from '../index';
+import { RootDispatch, RootState } from '../index';
 import { BranchStyle, Facilities, Services, ShortDirection, StationInfo } from '../../constants/constants';
 import { getYShareMTR } from '../../methods';
 import { setStationsBulk } from './action';
@@ -24,7 +24,7 @@ const getStationTemplate = (id: string): StationInfo => ({
 });
 
 export const addStation = (where: `${number}` | 'new', from: string, to: string, position?: 'upper' | 'lower') => {
-    return (dispatch: AppDispatch, getState: () => RootState): string | false => {
+    return (dispatch: RootDispatch, getState: () => RootState): string | false => {
         const stationList = getState().param.stn_list;
 
         // get new id
@@ -109,7 +109,7 @@ export const addStation = (where: `${number}` | 'new', from: string, to: string,
 };
 
 export const addStationToExistingBranch = (where: number, preposition: 'before' | 'after', pivot: string) => {
-    return (dispatch: AppDispatch, getState: () => RootState): false | string => {
+    return (dispatch: RootDispatch, getState: () => RootState): false | string => {
         const branches = getState().helper.branches;
         const branch = branches[where];
 
@@ -128,7 +128,7 @@ export const addStationToExistingBranch = (where: number, preposition: 'before' 
 };
 
 export const getNewBranchAllowedEnds = () => {
-    return (dispatch: AppDispatch, getState: () => RootState): string[] => {
+    return (dispatch: RootDispatch, getState: () => RootState): string[] => {
         const stationList = getState().param.stn_list;
         const branches = getState().helper.branches;
 
@@ -142,7 +142,7 @@ export const getNewBranchAllowedEnds = () => {
 };
 
 export const verifyNewBranchEnds = (from: string, to: string) => {
-    return (dispatch: AppDispatch, getState: () => RootState): string => {
+    return (dispatch: RootDispatch, getState: () => RootState): string => {
         const stationList = getState().param.stn_list;
         const branches = getState().helper.branches;
 

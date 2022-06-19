@@ -3,15 +3,15 @@ import { useTranslation } from 'react-i18next';
 import { Box, Button, Flex, Heading } from '@chakra-ui/react';
 import { MdCached, MdFilter1 } from 'react-icons/md';
 import AutoNumModal from '../../modal/auto-num-modal';
-import { useAppDispatch, useAppSelector } from '../../../redux';
+import { useRootDispatch, useRootSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
 import { reverseStations } from '../../../redux/param/action';
 
 export default function ActionSection() {
     const { t } = useTranslation();
-    const dispatch = useAppDispatch();
+    const dispatch = useRootDispatch();
 
-    const style = useAppSelector(state => state.param.style);
+    const style = useRootSelector(state => state.param.style);
 
     const [isAutoNumModalOpen, setIsAutoNumModalOpen] = useState(false);
 

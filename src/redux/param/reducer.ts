@@ -127,79 +127,54 @@ export default function ParamReducer(
         case SET_FULL_PARAM:
             return action.fullParam;
         case SET_STYLE:
-            state.style = action.style;
-            break;
+            return { ...state, style: action.style };
         case SET_SVG_HEIGHT:
-            state.svg_height = action.svgHeight;
-            break;
+            return { ...state, svg_height: action.svgHeight };
         case SET_SVG_WIDTH:
-            state.svgWidth = { ...state.svgWidth, [action.canvas]: action.svgWidth };
-            break;
+            return { ...state, svgWidth: { ...state.svgWidth, [action.canvas]: action.svgWidth } };
         case SET_Y_PERCENTAGE:
-            state.y_pc = action.yPercentage;
-            break;
+            return { ...state, y_pc: action.yPercentage };
         case SET_BRANCH_SPACING:
-            state.branch_spacing = action.branchSpacing;
-            break;
+            return { ...state, branch_spacing: action.branchSpacing };
         case SET_PADDING_PERCENTAGE:
-            state.padding = action.paddingPercentage;
-            break;
+            return { ...state, padding: action.paddingPercentage };
         case SET_DIRECTION_INDICATOR_X:
-            state.direction_gz_x = action.directionIndicatorX;
-            break;
+            return { ...state, direction_gz_x: action.directionIndicatorX };
         case SET_DIRECTION_INDICATOR_Y:
-            state.direction_gz_y = action.directionIndicatorY;
-            break;
+            return { ...state, direction_gz_y: action.directionIndicatorY };
         case SET_THEME:
-            state.theme = action.theme;
-            break;
+            return { ...state, theme: action.theme };
         case SET_LINE_NAME:
-            state.line_name = action.lineName;
-            break;
+            return { ...state, line_name: action.lineName };
         case SET_DIRECTION:
-            state.direction = action.direction;
-            break;
+            return { ...state, direction: action.direction };
         case SET_PLATFORM:
-            state.platform_num = action.platform;
-            break;
+            return { ...state, platform_num: action.platform };
         case SET_LINE_NUM:
-            state.line_num = action.lineNum;
-            break;
+            return { ...state, line_num: action.lineNum };
         case SET_PSD_NUM:
-            state.psd_num = action.psdNum;
-            break;
+            return { ...state, psd_num: action.psdNum };
         case SET_PANEL_TYPE:
-            state.info_panel_type = action.panelType;
-            break;
+            return { ...state, info_panel_type: action.panelType };
         case SET_NOTES:
-            state.notesGZMTR = action.notes;
-            break;
+            return { ...state, notesGZMTR: action.notes };
         case SET_NAME_POSITION:
-            state.namePosMTR = action.namePosition;
-            break;
+            return { ...state, namePosMTR: action.namePosition };
         case SET_CUSTOMISED_MTR_DESTINATION:
-            state.customiseMTRDest = action.customisedMtrDestination;
-            break;
+            return { ...state, customiseMTRDest: action.customisedMtrDestination };
         case SET_CURRENT_STATION:
-            state.current_stn_idx = action.currentStation;
-            break;
+            return { ...state, current_stn_idx: action.currentStation };
         case SET_STATION:
-            state.stn_list = { ...state.stn_list, [action.stationId]: action.station };
-            break;
+            return { ...state, stn_list: { ...state.stn_list, [action.stationId]: action.station } };
         case SET_STATIONS_BULK:
-            state.stn_list = action.stations;
-            break;
+            return { ...state, stn_list: action.stations };
         case SET_COLINE_BULK:
-            state.coline = action.coline;
-            break;
+            return { ...state, coline: action.coline };
         case SET_LOOP:
-            state.loop = action.loop;
-            break;
+            return { ...state, loop: action.loop };
         case SET_LOOP_INFO:
-            state.loop_info = action.loop_info;
-            break;
+            return { ...state, loop_info: action.loop_info };
         default:
-            break;
+            return state;
     }
-    return { ...state };
 }

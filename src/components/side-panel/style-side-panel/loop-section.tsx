@@ -1,17 +1,16 @@
 import React from 'react';
 import { Box, Heading } from '@chakra-ui/react';
-import { useDispatch } from 'react-redux';
-import { useAppSelector } from '../../../redux';
-import { setLoop, setLoopBank, setLoopLeftAndRightFactor, setLoopBottomFactor } from '../../../redux/param/action';
+import { useRootDispatch, useRootSelector } from '../../../redux';
+import { setLoop, setLoopBank, setLoopBottomFactor, setLoopLeftAndRightFactor } from '../../../redux/param/action';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
 
 export default function LoopSection() {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useRootDispatch();
 
-    const { branches } = useAppSelector(state => state.helper);
-    const { loop, loop_info } = useAppSelector(state => state.param);
+    const { branches } = useRootSelector(state => state.helper);
+    const { loop, loop_info } = useRootSelector(state => state.param);
     const { bank, left_and_right_factor, bottom_factor } = loop_info;
 
     // loop line with 2 branches has no bottom_factor and a specialized left_and_right_factor_max

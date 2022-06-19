@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import { MdExpandMore } from 'react-icons/md';
 import { downloadAs } from '../../util/utils';
-import { useAppSelector } from '../../redux';
+import { useRootSelector } from '../../redux';
 import { useTranslation } from 'react-i18next';
 import DownloadModal from '../modal/download-modal';
 
@@ -11,7 +11,7 @@ export default function DownloadActions() {
 
     const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
 
-    const param = useAppSelector(state => state.param);
+    const param = useRootSelector(state => state.param);
 
     const handleDownloadJson = () => {
         downloadAs(`RMG_${new Date().valueOf()}.json`, 'application/json', JSON.stringify(param));

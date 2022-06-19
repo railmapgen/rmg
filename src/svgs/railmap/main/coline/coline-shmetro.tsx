@@ -2,7 +2,7 @@ import React from 'react';
 import { drawLine } from '../../methods/share';
 import { calculateColineStations, calculateColine } from '../../methods/shmetro-coline';
 import { AtLeastOneOfPartial, Services, InterchangeInfo } from '../../../../constants/constants';
-import { useAppSelector } from '../../../../redux';
+import { useRootSelector } from '../../../../redux';
 import { _linePath, StationGroupProps } from '../main-shmetro';
 import StationSHMetro from '../station/station-shmetro';
 
@@ -37,8 +37,8 @@ export const ColineSHMetro = (props: Props) => {
         branch_spacing,
         info_panel_type,
         coline: colineInfo,
-    } = useAppSelector(store => store.param);
-    const { branches, depsStr: deps } = useAppSelector(store => store.helper);
+    } = useRootSelector(store => store.param);
+    const { branches, depsStr: deps } = useRootSelector(store => store.helper);
 
     const yShares = React.useMemo(
         () => {
@@ -273,7 +273,7 @@ interface ColineStationInMainLineProps {
  */
 const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
     const { colineStns, branches, xs, ys, stnStates, lineWidth: LINE_WIDTH, colineGap: COLINE_GAP } = props;
-    const { line_name, theme, info_panel_type } = useAppSelector(store => store.param);
+    const { line_name, theme, info_panel_type } = useRootSelector(store => store.param);
 
     // data to draw the station elements.
     const colineStations = [...colineStns.main, ...colineStns.pass]
@@ -339,8 +339,8 @@ const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
  */
 const ColineStationGroup = (props: StationGroupProps) => {
     const { xs, ys, stnStates, stnIds } = props;
-    const { branches, depsStr: deps } = useAppSelector(store => store.helper);
-    const { line_name, theme, coline } = useAppSelector(store => store.param);
+    const { branches, depsStr: deps } = useRootSelector(store => store.helper);
+    const { line_name, theme, coline } = useRootSelector(store => store.param);
 
     // get colors of stations in coline branches, they use different colors than var(--rmg-theme-colour)
     const colines = React.useMemo(

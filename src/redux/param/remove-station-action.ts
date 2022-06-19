@@ -1,4 +1,4 @@
-import { AppDispatch, RootState } from '../index';
+import { RootDispatch, RootState } from '../index';
 import { getYShareMTR } from '../../methods';
 import { StationDict } from '../../constants/constants';
 import { setStationsBulk } from './action';
@@ -8,7 +8,7 @@ import { setStationsBulk } from './action';
  * MUST BE CALLED AND CHECKED BEFORE removeStation!!!
  */
 export const checkStationCouldBeRemoved = (stationId: string) => {
-    return (dispatch: AppDispatch, getState: () => RootState): boolean => {
+    return (dispatch: RootDispatch, getState: () => RootState): boolean => {
         const stationList = getState().param.stn_list;
 
         const { parents, children } = stationList[stationId];
@@ -37,7 +37,7 @@ export const checkStationCouldBeRemoved = (stationId: string) => {
 
 export const removeStation = (stationId: string) => {
     // checkStationCouldBeRemoved BEFORE removeStation!!!
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationList = getState().param.stn_list;
         const { parents, children } = stationList[stationId];
 

@@ -1,4 +1,4 @@
-import { useAppSelector } from '../../../../redux';
+import { useRootSelector } from '../../../../redux';
 import { isColineBranch } from '../../../../redux/param/coline-action';
 import { CanvasType } from '../../../../constants/constants';
 
@@ -21,9 +21,9 @@ export const LoopColine = (props: {
     const { edges, loop_stns, xs, ys, canvas } = props;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [X_LEFT, X_RIGHT, Y_TOP, Y_BOTTOM] = edges;
-    const { info_panel_type, stn_list, coline } = useAppSelector(store => store.param);
+    const { info_panel_type, stn_list, coline } = useRootSelector(store => store.param);
 
-    const { branches } = useAppSelector(store => store.helper);
+    const { branches } = useRootSelector(store => store.helper);
 
     // find the coline color on the main/loop line
     const coline_main_color = Object.values(coline)

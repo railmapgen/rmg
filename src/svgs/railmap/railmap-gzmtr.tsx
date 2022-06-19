@@ -2,16 +2,16 @@ import React, { memo, useMemo } from 'react';
 import StripGZMTR from '../strip/strip-gzmtr';
 import MainGZMTR from './main/main-gzmtr';
 import { CanvasType, Note, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
-import { useAppSelector } from '../../redux';
+import { useRootSelector } from '../../redux';
 
 const RailMapGZMTR = () => {
-    const svgWidths = useAppSelector(store => store.param.svgWidth);
-    const direction = useAppSelector(store => store.param.direction);
-    const psdNumber = useAppSelector(store => store.param.psd_num);
-    const infoPanelType = useAppSelector(store => store.param.info_panel_type);
-    const notes = useAppSelector(store => store.param.notesGZMTR);
-    const currentStationIndex = useAppSelector(store => store.param.current_stn_idx);
-    const curStnInfo = useAppSelector(store => store.param.stn_list[currentStationIndex]);
+    const svgWidths = useRootSelector(store => store.param.svgWidth);
+    const direction = useRootSelector(store => store.param.direction);
+    const psdNumber = useRootSelector(store => store.param.psd_num);
+    const infoPanelType = useRootSelector(store => store.param.info_panel_type);
+    const notes = useRootSelector(store => store.param.notesGZMTR);
+    const currentStationIndex = useRootSelector(store => store.param.current_stn_idx);
+    const curStnInfo = useRootSelector(store => store.param.stn_list[currentStationIndex]);
 
     return (
         <>
@@ -53,13 +53,13 @@ const DefsGZMTR = memo(() => (
 ));
 
 const DirectionIndicator = () => {
-    const { routes } = useAppSelector(store => store.helper);
+    const { routes } = useRootSelector(store => store.helper);
     const {
         direction,
         direction_gz_x: directionIndicatorX,
         direction_gz_y: directionIndicatorY,
         current_stn_idx: currentStationIndex,
-    } = useAppSelector(store => store.param);
+    } = useRootSelector(store => store.param);
 
     const validDests = useMemo(
         () => [
@@ -114,7 +114,7 @@ type TextGroupProps = {
 
 const DirectionIndicatorTextGroup = (props: TextGroupProps) => {
     const { destIds, ...others } = props;
-    const stationList = useAppSelector(store => store.param.stn_list);
+    const stationList = useRootSelector(store => store.param.stn_list);
     return (
         <g {...others}>
             <text className="rmg-name__zh" fontSize={28}>
@@ -130,8 +130,8 @@ const DirectionIndicatorTextGroup = (props: TextGroupProps) => {
 const DirectionIndicatorTextGroup2 = (props: TextGroupProps) => {
     const { destIds, ...others } = props;
 
-    const direction = useAppSelector(store => store.param.direction);
-    const stationList = useAppSelector(store => store.param.stn_list);
+    const direction = useRootSelector(store => store.param.direction);
+    const stationList = useRootSelector(store => store.param.stn_list);
 
     const charCounts = destIds.map(stnId => stationList[stnId].name[0].length);
     const minCharCounts = Math.min(...charCounts);
