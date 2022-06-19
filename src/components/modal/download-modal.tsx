@@ -19,6 +19,7 @@ import { cloneSvgCanvas, test } from '../../util/export-utils';
 import { downloadAs, downloadBlobAs } from '../../util/utils';
 import { useTranslation } from 'react-i18next';
 import { setIsLoading } from '../../redux/app/action';
+import { waitForMs } from '../../utils';
 
 interface DownloadModalProps {
     isOpen: boolean;
@@ -131,7 +132,8 @@ export default function DownloadModal(props: DownloadModalProps) {
 
         for (const stnId of stationIdListToDownload) {
             // wait for svg elements updated for station A before we dispatch the current station to B.
-            await dispatch(setCurrentStation(stnId));
+            dispatch(setCurrentStation(stnId));
+            await waitForMs(1000);
 
             const elem = await cloneSvgCanvas(
                 canvasToDownload as CanvasType,
@@ -190,7 +192,7 @@ export default function DownloadModal(props: DownloadModalProps) {
         }
 
         // revert to original station
-        await dispatch(setCurrentStation(currentStationId));
+        dispatch(setCurrentStation(currentStationId));
         dispatch(setIsLoading(false));
         onClose();
     };

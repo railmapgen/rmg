@@ -359,7 +359,6 @@ export const customiseDestinationName = (customisedName: Name | false) => {
 export const setCurrentStation = (currentStation: string) => {
     return (dispatch: RootDispatch) => {
         dispatch({ type: SET_CURRENT_STATION, currentStation });
-        return Promise.resolve();
     };
 };
 
