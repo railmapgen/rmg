@@ -1,12 +1,11 @@
-import thunk, { ThunkDispatch } from 'redux-thunk';
-import { RootState } from './redux';
 import createMockStore from 'redux-mock-store';
 import { BranchStyle, StationDict } from './constants/constants';
-import rootReducer from './redux/index';
+import rootReducer, { RootState } from './redux';
+import { getDefaultMiddleware, ThunkDispatch } from '@reduxjs/toolkit';
 
 // FIXME: any -> AnyAction?
 type DispatchExts = ThunkDispatch<RootState, void, any>;
-export const createMockAppStore = createMockStore<RootState, DispatchExts>([thunk]);
+export const createMockAppStore = createMockStore<RootState, DispatchExts>(getDefaultMiddleware());
 
 const realStore = rootReducer.getState();
 export const createMockStoreWithMockStations = (stationList: StationDict) =>
