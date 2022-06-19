@@ -61,6 +61,10 @@ jest.mock('@railmapgen/rmg-palette-resources', () => ({
             flagSvg: '1F1F9-1F1FC.svg',
         },
     ],
+
+    CityCode: {
+        Other: 'other',
+    },
 }));
 
 const mockCallbacks = {
@@ -86,12 +90,13 @@ describe('Unit tests for CityPicker component', () => {
         expect(menuItems).toHaveLength(3);
 
         expect(menuItems[0]).toHaveTextContent('🏴󠁧󠁢󠁳󠁣󠁴󠁿'); // GBSCT
-        expect(menuItems[1]).toHaveTextContent('🇭🇰'); // HK
-        expect(menuItems[2]).toHaveTextContent('🏴'); // TW to be censored
+        expect(menuItems[1]).toHaveTextContent('🏴'); // TW to be censored
+        expect(menuItems[2]).toHaveTextContent('🇭🇰'); // HK
 
+        // sorted by Pinyin (under zh-Hans locale)
         expect(menuItems[0]).toHaveTextContent('爱丁堡'); // read zh-Hans field
-        expect(menuItems[1]).toHaveTextContent('香港'); // read zh field
-        expect(menuItems[2]).toHaveTextContent('台北'); // read zh field
+        expect(menuItems[1]).toHaveTextContent('台北'); // read zh field
+        expect(menuItems[2]).toHaveTextContent('香港'); // read zh field
     });
 
     it('Can render OpenMoji SVG-format emoji for Windows users as expected', async () => {
@@ -108,7 +113,7 @@ describe('Unit tests for CityPicker component', () => {
         await screen.findByAltText('Flag of HK');
 
         // TW to be censored
-        expect(screen.getAllByRole('menuitem')[2]).toHaveTextContent('🏴');
+        expect(screen.getAllByRole('menuitem')[1]).toHaveTextContent('🏴');
     });
 
     it('Can mount component with default city code as expected', () => {

@@ -15,8 +15,7 @@ export default function CityPicker(props: CityPickerProps) {
 
     const { i18n } = useTranslation();
 
-    const data = cityList;
-    const currentItem = defaultValueId ? data.find(item => item.id === defaultValueId) : undefined;
+    const currentItem = defaultValueId ? cityList.find(item => item.id === defaultValueId) : undefined;
 
     const displayValue = (item: CityEntry): string => {
         return i18n.languages.map(lng => item.name[lng as LanguageCode]).find(name => name !== undefined)!!;
@@ -25,7 +24,7 @@ export default function CityPicker(props: CityPickerProps) {
     const displayHandler = (item: CityEntry) => {
         const isCensorTWFlag =
             item.country === 'TW' &&
-            [LanguageCode.ChineseSimp, LanguageCode.ChineseCN].includes(i18n.language as LanguageCode);
+            [LanguageCode.ChineseSimp, LanguageCode.ChineseCN].includes(i18n.languages[0] as LanguageCode);
         const isWindowsClient = ['Win32', 'Win64'].includes(navigator.platform);
         // const isWindowsClient = true; // uncomment this line for Windows testing
 
@@ -50,6 +49,16 @@ export default function CityPicker(props: CityPickerProps) {
     const predicate = (item: CityEntry, input: string): boolean => {
         return Object.values(item.name).some(name => name.includes(input));
     };
+
+    const data = cityList.slice().sort((a, b) => {
+        if (a.id === CityCode.Other) {
+            return 1;
+        } else if (b.id === CityCode.Other) {
+            return -1;
+        } else {
+            return displayValue(a).localeCompare(displayValue(b), i18n.languages[0]);
+        }
+    });
 
     return (
         <RmgAutoComplete
