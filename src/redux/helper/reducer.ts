@@ -24,20 +24,14 @@ export default function HelperReducer(
 ) {
     switch (action.type) {
         case SET_DEPS_STR:
-            state.depsStr = action.depsStr;
-            break;
+            return { ...state, depsStr: action.depsStr };
         case SET_BRANCHES:
-            state.branches = action.branches;
-            break;
+            return { ...state, branches: action.branches };
         case SET_ROUTES:
-            state.routes = action.routes;
-            break;
+            return { ...state, routes: action.routes };
         case SET_TPO:
-            state.tpo = action.tpo;
-            break;
+            return { ...state, tpo: action.tpo };
         default:
-            break;
+            return state;
     }
-
-    return { ...state };
 }

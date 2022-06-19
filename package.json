@@ -13,6 +13,7 @@
         "@railmapgen/rmg-components": "^1.2.0",
         "@railmapgen/rmg-palette-resources": "^0.3.6",
         "@railmapgen/rmg-templates-resources": "^0.1.12",
+        "@reduxjs/toolkit": "^1.8.2",
         "ag-grid-community": "^27.3.0",
         "ag-grid-react": "^27.3.0",
         "electron-is-dev": "^2.0.0",
