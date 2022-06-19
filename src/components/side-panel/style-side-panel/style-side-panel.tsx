@@ -1,6 +1,6 @@
 import { Divider } from '@chakra-ui/react';
 import React from 'react';
-import { useAppSelector } from '../../../redux';
+import { useRootSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
 import LayoutSection from './layout-section';
 import DesignSection from './design-section';
@@ -9,7 +9,7 @@ import { RmgSidePanelBody } from '@railmapgen/rmg-components';
 import GZMTRNoteSection from './gzmtr-note-section';
 
 export default function StyleSidePanel() {
-    const { style } = useAppSelector(state => state.param);
+    const { style } = useRootSelector(state => state.param);
 
     return (
         <RmgSidePanelBody>

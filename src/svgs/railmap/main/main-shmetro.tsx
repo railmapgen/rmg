@@ -3,7 +3,7 @@ import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState 
 import StationSHMetro from './station/station-shmetro';
 import ColineSHMetro from './coline/coline-shmetro';
 import { AtLeastOneOfPartial, Services, StationDict } from '../../../constants/constants';
-import { useAppSelector } from '../../../redux';
+import { useRootSelector } from '../../../redux';
 
 interface servicesPath {
     main: string[];
@@ -14,9 +14,9 @@ interface servicesPath {
 type Paths = AtLeastOneOfPartial<Record<Services, servicesPath>>;
 
 const MainSHMetro = () => {
-    const { routes, branches, depsStr: deps } = useAppSelector(store => store.helper);
-    const param = useAppSelector(store => store.param);
-    const { stn_list, branch_spacing, coline, direction } = useAppSelector(store => store.param);
+    const { routes, branches, depsStr: deps } = useRootSelector(store => store.helper);
+    const param = useRootSelector(store => store.param);
+    const { stn_list, branch_spacing, coline, direction } = useRootSelector(store => store.param);
 
     const adjMat = adjacencyList(
         param.stn_list,
@@ -168,7 +168,7 @@ const MainSHMetro = () => {
 export default MainSHMetro;
 
 const Line = (props: { paths: Paths; direction: 'l' | 'r' }) => {
-    const { theme } = useAppSelector(store => store.param);
+    const { theme } = useRootSelector(store => store.param);
     const { paths, direction } = props;
 
     return (
@@ -414,7 +414,7 @@ const StationGroup = (props: StationGroupProps) => {
 };
 
 const ServicesElements = (props: { servicesLevel: Services[]; lineXs: number[] }) => {
-    const { svg_height, direction, svgWidth } = useAppSelector(store => store.param);
+    const { svg_height, direction, svgWidth } = useRootSelector(store => store.param);
     const dy = -svg_height * (0.5 + 0.1);
 
     const servicesLevel = props.servicesLevel.map(
@@ -470,7 +470,7 @@ const ServicesElements = (props: { servicesLevel: Services[]; lineXs: number[] }
 };
 
 export const DirectionElements = () => {
-    const { direction, svgWidth, coline } = useAppSelector(store => store.param);
+    const { direction, svgWidth, coline } = useRootSelector(store => store.param);
     // arrow will be black stroke with white fill in coline
     const isColine = Object.keys(coline).length ? true : false;
 

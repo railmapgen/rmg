@@ -15,6 +15,6 @@ export type RootState = ReturnType<typeof rootReducer>;
 const store = createStore(rootReducer, applyMiddleware(thunk as ThunkMiddleware<RootState>));
 export default store;
 
-export type AppDispatch = typeof store.dispatch;
-export const useAppDispatch = () => useDispatch<AppDispatch>();
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+export type RootDispatch = typeof store.dispatch;
+export const useRootDispatch = () => useDispatch<RootDispatch>();
+export const useRootSelector: TypedUseSelectorHook<RootState> = useSelector;

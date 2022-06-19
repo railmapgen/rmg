@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Box, Button, Heading, HStack } from '@chakra-ui/react';
-import { useAppSelector } from '../../../redux';
+import { useRootDispatch, useRootSelector } from '../../../redux';
 import ThemeButton from '../theme-button';
 import ColourModal from '../../modal/colour-modal/colour-modal';
-import { useDispatch } from 'react-redux';
 import {
     customiseDestinationName,
     flipStationNames,
@@ -25,7 +24,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function DesignSection() {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useRootDispatch();
 
     const {
         style,
@@ -38,7 +37,7 @@ export default function DesignSection() {
         namePosMTR,
         customiseMTRDest,
         info_panel_type,
-    } = useAppSelector(state => state.param);
+    } = useRootSelector(state => state.param);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 

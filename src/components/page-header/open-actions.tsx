@@ -5,19 +5,18 @@ import { useTranslation } from 'react-i18next';
 import { updateParam } from '../../utils';
 import { readFileAsText } from '../../util/utils';
 import UploadConfirmModal from '../modal/upload-confirm-modal';
-import { useDispatch } from 'react-redux';
 import { setGlobalAlert } from '../../redux/app/action';
 import { LanguageCode, RMGParam } from '../../constants/constants';
 import TemplateModal from '../modal/template-modal';
 import { openFromNewParam } from '../../redux/param/open-new-action';
 import { initParam } from '../../redux/param/util';
-import { useAppSelector } from '../../redux';
+import { useRootDispatch, useRootSelector } from '../../redux';
 
 export default function OpenActions() {
     const { t, i18n } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useRootDispatch();
 
-    const style = useAppSelector(state => state.param.style);
+    const style = useRootSelector(state => state.param.style);
 
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
     const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);

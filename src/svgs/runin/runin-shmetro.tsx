@@ -1,14 +1,14 @@
 import React, { useMemo, memo } from 'react';
 import { Name, StationDict } from '../../constants/constants';
-import { useAppSelector } from '../../redux';
+import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { calculateColineStations } from '../railmap/methods/shmetro-coline';
 
 const LINE_WIDTH = 12;
 
 const RunInSHMetro = () => {
-    const { branches, routes, depsStr: deps } = useAppSelector(store => store.helper);
-    const { svg_height, current_stn_idx, direction, loop } = useAppSelector(store => store.param);
+    const { branches, routes, depsStr: deps } = useRootSelector(store => store.helper);
+    const { svg_height, current_stn_idx, direction, loop } = useRootSelector(store => store.param);
 
     // get the height
     const dh = svg_height - 300;
@@ -104,7 +104,7 @@ interface RunInGeneralProps {
 
 const GeneralStation = (props: RunInGeneralProps) => {
     const { prevStnIds, nextStnIds } = props;
-    const { info_panel_type, svgWidth, stn_list } = useAppSelector(store => store.param);
+    const { info_panel_type, svgWidth, stn_list } = useRootSelector(store => store.param);
 
     const middle = svgWidth.runin / 2;
     const terminal = nextStnIds.length === 1 && ['linestart', 'lineend'].includes(nextStnIds[0]);
@@ -154,8 +154,8 @@ const GeneralStation = (props: RunInGeneralProps) => {
 
 const TerminalStation = (props: { mode: 'terminal' | 'original'; prevStnIds: string[]; nextStnIds: string[] }) => {
     const { mode, prevStnIds, nextStnIds } = props;
-    const { current_stn_idx, theme, svgWidth, direction, coline } = useAppSelector(store => store.param);
-    const { branches } = useAppSelector(store => store.helper);
+    const { current_stn_idx, theme, svgWidth, direction, coline } = useRootSelector(store => store.param);
+    const { branches } = useRootSelector(store => store.helper);
 
     const textProps = {
         l: { original: { x: svgWidth.runin - 36, anchor: 'end' }, terminal: { x: 36, anchor: 'start' } },
@@ -214,8 +214,8 @@ const Line = (props: RunInGeneralProps) => {
         coline,
         current_stn_idx,
         stn_list: stnList,
-    } = useAppSelector(store => store.param);
-    const { branches } = useAppSelector(store => store.helper);
+    } = useRootSelector(store => store.param);
+    const { branches } = useRootSelector(store => store.helper);
     const middle = svgWidth.runin / 2;
 
     // determine the end with linestart/lineend or .length === 0
@@ -340,8 +340,8 @@ interface RunInBranchLineProps {
 const BranchLine = (props: RunInBranchLineProps) => {
     const { prevStnIds, nextStnIds, nextBranchLineDy, prevBranchLineDy } = props;
 
-    const { direction, svgWidth, current_stn_idx, coline, theme } = useAppSelector(store => store.param);
-    const { branches } = useAppSelector(store => store.helper);
+    const { direction, svgWidth, current_stn_idx, coline, theme } = useRootSelector(store => store.param);
+    const { branches } = useRootSelector(store => store.helper);
     const middle = svgWidth.runin / 2;
 
     const LINE_BRANCH_Y = 125;
@@ -446,7 +446,7 @@ const BranchLine = (props: RunInBranchLineProps) => {
 };
 
 const CurrentText = () => {
-    const param = useAppSelector(store => store.param);
+    const param = useRootSelector(store => store.param);
     const { name } = param.stn_list[param.current_stn_idx];
     return useMemo(
         () => (
@@ -499,7 +499,7 @@ const NextText = (props: { nextName: Name } & React.SVGProps<SVGGElement>) => {
 };
 
 const PrevStn = (props: { stnIds: string[] }) => {
-    const param = useAppSelector(store => store.param);
+    const param = useRootSelector(store => store.param);
     const nextNames = props.stnIds.map(stnId => param.stn_list[stnId].name);
     const prevHintDy =
         (props.stnIds.length > 1 ? 15 : 125) +
@@ -533,7 +533,7 @@ const PrevStn = (props: { stnIds: string[] }) => {
 };
 
 const NextStn = (props: { stnIds: string[] }) => {
-    const param = useAppSelector(store => store.param);
+    const param = useRootSelector(store => store.param);
     const nextNames = props.stnIds.map(stnId => param.stn_list[stnId].name);
     const nextHintDy =
         (props.stnIds.length > 1 ? 15 : 125) +

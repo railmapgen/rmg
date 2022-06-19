@@ -4,7 +4,7 @@ import { InterchangeInfo, MonoColour, Theme } from '../../../constants/constants
 import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
 import ColourModal from '../../modal/colour-modal/colour-modal';
 import { useTranslation } from 'react-i18next';
-import { useAppSelector } from '../../../redux';
+import { useRootSelector } from '../../../redux';
 import ThemeButton from '../theme-button';
 import { RmgCard, RmgFields, RmgFieldsField, RmgLabel } from '@railmapgen/rmg-components';
 
@@ -23,7 +23,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
 
-    const { theme, stn_list: stationList } = useAppSelector(state => state.param);
+    const { theme, stn_list: stationList } = useRootSelector(state => state.param);
 
     const usedNameList = Object.values(stationList).reduce<[string[], string[]]>(
         (acc, cur) => {

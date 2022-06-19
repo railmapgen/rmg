@@ -11,11 +11,10 @@ import {
     ModalOverlay,
 } from '@chakra-ui/react';
 import { canvasConfig, CanvasType, RmgStyle } from '../../constants/constants';
-import { useAppSelector } from '../../redux';
+import { useRootDispatch, useRootSelector } from '../../redux';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import JSZip from 'jszip';
 import { setCurrentStation } from '../../redux/param/action';
-import { useDispatch } from 'react-redux';
 import { cloneSvgCanvas, test } from '../../util/export-utils';
 import { downloadAs, downloadBlobAs } from '../../util/utils';
 import { useTranslation } from 'react-i18next';
@@ -30,7 +29,7 @@ export default function DownloadModal(props: DownloadModalProps) {
     const { isOpen, onClose } = props;
     const { t } = useTranslation();
 
-    const dispatch = useDispatch();
+    const dispatch = useRootDispatch();
 
     const [canvasToDownload, setCanvasToDownload] = useState('');
     const [isTransparent, setIsTransparent] = useState(false);
@@ -38,13 +37,13 @@ export default function DownloadModal(props: DownloadModalProps) {
     const [scale, setScale] = useState(100);
     const [format, setFormat] = useState('png');
 
-    const canvasToShow = useAppSelector(state => state.app.canvasToShow);
+    const canvasToShow = useRootSelector(state => state.app.canvasToShow);
     const {
         style,
         stn_list: stationList,
         current_stn_idx: currentStationId,
         line_name: lineName,
-    } = useAppSelector(state => state.param);
+    } = useRootSelector(state => state.param);
 
     useEffect(() => {
         // reset canvas to download if on-screen canvas changed

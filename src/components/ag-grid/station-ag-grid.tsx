@@ -1,7 +1,7 @@
 import { RmgAgGrid, RmgLineBadge, RmgMultiLineString } from '@railmapgen/rmg-components';
 import React, { useEffect, useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { useAppDispatch, useAppSelector } from '../../redux';
+import { useRootDispatch, useRootSelector } from '../../redux';
 import { ColDef, SelectionChangedEvent } from 'ag-grid-community';
 import { Name, RmgStyle, SidePanelMode, StationInfo, StationTransfer } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
@@ -23,11 +23,11 @@ type RowDataType = StationInfo & { id: string; rowSpan: [number, string | undefi
 export default function StationAgGrid(props: StationAgGridProps) {
     const { branchIndex } = props;
     const { t } = useTranslation();
-    const dispatch = useAppDispatch();
+    const dispatch = useRootDispatch();
 
-    const sidePanelMode = useAppSelector(state => state.app.sidePanelMode);
-    const { style, theme, stn_list: stationList, line_num: lineNumber, coline } = useAppSelector(state => state.param);
-    const branches = useAppSelector(state => state.helper.branches);
+    const sidePanelMode = useRootSelector(state => state.app.sidePanelMode);
+    const { style, theme, stn_list: stationList, line_num: lineNumber, coline } = useRootSelector(state => state.param);
+    const branches = useRootSelector(state => state.helper.branches);
     const stationIds = branches[branchIndex].filter(id => !['linestart', 'lineend'].includes(id));
 
     const [columnDefs] = useState<RmgAgGridColDef<RowDataType>[]>([

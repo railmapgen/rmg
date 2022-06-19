@@ -1,20 +1,19 @@
 import React from 'react';
 import { Box, Heading } from '@chakra-ui/react';
 import { updateStationName, updateStationNum, updateStationSecondaryName } from '../../../redux/param/action';
-import { useDispatch } from 'react-redux';
-import { useAppSelector } from '../../../redux';
+import { useRootDispatch, useRootSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
 
 export default function InfoSection() {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useRootDispatch();
 
-    const selectedStation = useAppSelector(state => state.app.selectedStation);
+    const selectedStation = useRootSelector(state => state.app.selectedStation);
     console.log('InfoSection:: Rendering for', selectedStation);
-    const style = useAppSelector(state => state.param.style);
-    const { num, name, secondaryName } = useAppSelector(state => state.param.stn_list[selectedStation]);
+    const style = useRootSelector(state => state.param.style);
+    const { num, name, secondaryName } = useRootSelector(state => state.param.stn_list[selectedStation]);
 
     const fields: RmgFieldsField[] = [
         {

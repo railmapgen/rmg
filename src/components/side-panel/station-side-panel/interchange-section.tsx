@@ -1,8 +1,7 @@
 import React, { Fragment } from 'react';
 import { Button, Flex, Heading, VStack } from '@chakra-ui/react';
-import { useAppSelector } from '../../../redux';
+import { useRootDispatch, useRootSelector } from '../../../redux';
 import InterchangeCard from './interchange-card';
-import { useDispatch } from 'react-redux';
 import {
     addInterchange,
     removeInterchange,
@@ -19,11 +18,11 @@ import RmgButtonGroup from '../../common/rmg-button-group';
 
 export default function InterchangeSection() {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useRootDispatch();
 
-    const selectedStation = useAppSelector(state => state.app.selectedStation);
-    const { theme, style } = useAppSelector(state => state.param);
-    const { transfer } = useAppSelector(state => state.param.stn_list[selectedStation]);
+    const selectedStation = useRootSelector(state => state.app.selectedStation);
+    const { theme, style } = useRootSelector(state => state.param);
+    const { transfer } = useRootSelector(state => state.param.stn_list[selectedStation]);
 
     const getOSINameFields = (setIndex: number): RmgFieldsField[] => [
         {

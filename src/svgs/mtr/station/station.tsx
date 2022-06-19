@@ -1,7 +1,7 @@
 import React from 'react';
 import { Direction, ShortDirection, StationState } from '../../../constants/constants';
 import InterchangeStation from './interchange-station';
-import { useAppSelector } from '../../../redux';
+import { useRootSelector } from '../../../redux';
 import OsiStation from './osi-station';
 import StationNameWrapper from './station-name/station-name-wrapper';
 
@@ -20,7 +20,7 @@ export default function Station(props: StationProps) {
         children,
         transfer: { info, tick_direc, osi_names, paid_area },
         facility,
-    } = useAppSelector(state => state.param.stn_list[stationId]);
+    } = useRootSelector(state => state.param.stn_list[stationId]);
 
     const end: Direction | undefined = info[0]?.length
         ? parents.includes('linestart')

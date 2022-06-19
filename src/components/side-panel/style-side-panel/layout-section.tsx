@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Heading } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { useAppSelector } from '../../../redux';
+import { useRootSelector } from '../../../redux';
 import { canvasConfig, RmgStyle } from '../../../constants/constants';
 import {
     setBranchSpacing,
@@ -29,7 +29,7 @@ export default function LayoutSection() {
         direction_gz_x,
         direction_gz_y,
         loop,
-    } = useAppSelector(state => state.param);
+    } = useRootSelector(state => state.param);
 
     const fields: RmgFieldsField[] = [
         ...canvasConfig[rmgStyle].map<RmgFieldsField>(canvas => ({

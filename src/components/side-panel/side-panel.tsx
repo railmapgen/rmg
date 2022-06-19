@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { useAppSelector } from '../../redux';
+import { useRootSelector } from '../../redux';
 import { setSidePanelMode } from '../../redux/app/action';
 import { useDispatch } from 'react-redux';
 import { SidePanelMode } from '../../constants/constants';
@@ -16,8 +16,8 @@ export default function SidePanel() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
-    const { sidePanelMode, selectedStation } = useAppSelector(state => state.app);
-    const name = useAppSelector(state => state.param.stn_list[selectedStation]?.name);
+    const { sidePanelMode, selectedStation } = useRootSelector(state => state.app);
+    const name = useRootSelector(state => state.param.stn_list[selectedStation]?.name);
 
     const mode: Record<SidePanelMode, { header: ReactNode; body?: ReactNode; footer?: ReactNode }> = {
         STATION: {

@@ -1,6 +1,6 @@
 import React, { lazy, ReactNode, useEffect } from 'react';
 import { CanvasType, RmgStyle } from '../constants/constants';
-import { useAppSelector } from '../redux';
+import { useRootSelector } from '../redux';
 import SvgWrapper from './svg-wrapper';
 import { useDispatch } from 'react-redux';
 import { setStyle } from '../redux/param/action';
@@ -26,8 +26,13 @@ export default function SvgRouter() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { canvasToShow, canvasScale } = useAppSelector(state => state.app);
-    const { svgWidth: svgWidths, svg_height: svgHeight, style: rmgStyle, theme } = useAppSelector(state => state.param);
+    const { canvasToShow, canvasScale } = useRootSelector(state => state.app);
+    const {
+        svgWidth: svgWidths,
+        svg_height: svgHeight,
+        style: rmgStyle,
+        theme,
+    } = useRootSelector(state => state.param);
 
     if (location.pathname !== '/' + rmgStyle && location.pathname !== '/v3/' + rmgStyle) {
         const nextStyle = location.pathname.split('/').slice(-1)[0] as RmgStyle;

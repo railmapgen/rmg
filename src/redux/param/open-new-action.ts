@@ -1,11 +1,11 @@
-import { AppDispatch, RootState } from '../index';
+import { RootDispatch, RootState } from '../index';
 import { updateParam } from '../../utils';
 import { AllCanvas, canvasConfig, RMGParam, SidePanelMode } from '../../constants/constants';
 import { selectCanvas, setIsLoading, setSelectedStation, setSidePanelMode } from '../app/action';
 import { reRenderApp } from '../../index';
 
 export const openFromNewParam = (param: Record<string, any>) => {
-    return async (dispatch: AppDispatch, getState: () => RootState) => {
+    return async (dispatch: RootDispatch, getState: () => RootState) => {
         const updatedParam = updateParam(param) as RMGParam;
         await window.rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
 

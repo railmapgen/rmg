@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Heading, VStack } from '@chakra-ui/react';
-import { useAppDispatch, useAppSelector } from '../../../redux';
+import { useRootDispatch, useRootSelector } from '../../../redux';
 import {
     addColine,
     findAllColinesInBranch,
@@ -17,10 +17,10 @@ import { useTranslation } from 'react-i18next';
 
 export default function ColineSection() {
     const { t } = useTranslation();
-    const dispatch = useAppDispatch();
+    const dispatch = useRootDispatch();
 
-    const selectedBranch = useAppSelector(state => state.app.selectedBranch);
-    const { theme, stn_list: stationList } = useAppSelector(state => state.param);
+    const selectedBranch = useRootSelector(state => state.app.selectedBranch);
+    const { theme, stn_list: stationList } = useRootSelector(state => state.param);
 
     const colineInfoList = dispatch(findAllColinesInBranch(selectedBranch));
     const possibleCombinations = dispatch(getPossibleCombinations(selectedBranch));

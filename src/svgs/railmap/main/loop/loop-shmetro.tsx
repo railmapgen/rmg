@@ -2,7 +2,7 @@ import React from 'react';
 import StationSHMetro from '../station/station-shmetro';
 import { NameDirection, StationSHMetro as StationSHMetroIndoor } from '../../../indoor/station-shmetro';
 import { CanvasType, Services, ShortDirection } from '../../../../constants/constants';
-import { useAppSelector } from '../../../../redux';
+import { useRootSelector } from '../../../../redux';
 import { isColineBranch } from '../../../../redux/param/coline-action';
 import {
     split_loop_stns,
@@ -16,7 +16,7 @@ import { LoopColine } from './loop-coline-shmetro';
 
 const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | CanvasType.Indoor }) => {
     const { bank_angle, canvas } = props;
-    const { branches } = useAppSelector(store => store.helper);
+    const { branches } = useRootSelector(store => store.helper);
     const {
         current_stn_idx: current_stn_id,
         svgWidth: svg_width,
@@ -28,7 +28,7 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
         stn_list,
         loop_info: { left_and_right_factor, bottom_factor },
         coline,
-    } = useAppSelector(store => store.param);
+    } = useRootSelector(store => store.param);
 
     const loopline = branches[0].filter(stn_id => !['linestart', 'lineend'].includes(stn_id));
     const branch_stn_ids = branches
@@ -243,7 +243,7 @@ const LoopStationGroup = (props: {
     };
 }) => {
     const { canvas, loop_stns, xs, ys } = props;
-    const { current_stn_idx: current_stn_id } = useAppSelector(store => store.param);
+    const { current_stn_idx: current_stn_id } = useRootSelector(store => store.param);
 
     const railmap_bank: Record<keyof LoopStns, -1 | 0 | 1> = {
         top: 0,

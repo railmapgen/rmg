@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import StripMTR from '../strip/strip-mtr';
 import { CanvasType, Name, ShortDirection } from '../../constants/constants';
-import { useAppSelector } from '../../redux';
+import { useRootSelector } from '../../redux';
 
 export default memo(function DestinationMTR() {
     return (
@@ -20,16 +20,16 @@ const DefsMTR = memo(() => (
 ));
 
 const InfoMTR = () => {
-    const routes = useAppSelector(store => store.helper.routes);
+    const routes = useRootSelector(store => store.helper.routes);
 
-    const svgWidths = useAppSelector(store => store.param.svgWidth);
-    const direction = useAppSelector(store => store.param.direction);
-    const customisedMTRDestination = useAppSelector(store => store.param.customiseMTRDest);
-    const platformNumber = useAppSelector(store => store.param.platform_num);
-    const lineName = useAppSelector(store => store.param.line_name);
+    const svgWidths = useRootSelector(store => store.param.svgWidth);
+    const direction = useRootSelector(store => store.param.direction);
+    const customisedMTRDestination = useRootSelector(store => store.param.customiseMTRDest);
+    const platformNumber = useRootSelector(store => store.param.platform_num);
+    const lineName = useRootSelector(store => store.param.line_name);
 
-    const currentStationIndex = useAppSelector(store => store.param.current_stn_idx);
-    const stationList = useAppSelector(store => store.param.stn_list);
+    const currentStationIndex = useRootSelector(store => store.param.current_stn_idx);
+    const stationList = useRootSelector(store => store.param.stn_list);
 
     let destNames: Name;
     if (customisedMTRDestination.terminal !== false) {

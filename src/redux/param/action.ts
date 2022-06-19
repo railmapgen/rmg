@@ -17,7 +17,7 @@ import {
     StationInfo,
     Theme,
 } from '../../constants/constants';
-import { AppDispatch, RootState } from '../index';
+import { RootDispatch, RootState } from '../index';
 import { triggerHelpersUpdate } from '../helper/action';
 
 export const SET_FULL_PARAM = 'SET_FULL_PARAM';
@@ -189,7 +189,7 @@ export interface setColineBulkAction {
 // };
 
 export const setFullParam = (fullParam: RMGParam) => {
-    return (dispatch: AppDispatch) => {
+    return (dispatch: RootDispatch) => {
         dispatch({ type: SET_FULL_PARAM, fullParam });
         dispatch(triggerHelpersUpdate());
     };
@@ -260,21 +260,21 @@ const setNotes = (notes: Note[]): setNotesAction => {
 };
 
 export const addNote = () => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const notes = getState().param.notesGZMTR;
         dispatch(setNotes(notes.concat([['', '', 0, 0, false]])));
     };
 };
 
 export const updateNote = (index: number, updatedNote: Note) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const notes = getState().param.notesGZMTR;
         dispatch(setNotes(notes.map((originalNote, idx) => (idx === index ? updatedNote : originalNote))));
     };
 };
 
 export const removeNote = (index: number) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const notes = getState().param.notesGZMTR;
         dispatch(setNotes(notes.filter((_, idx) => idx !== index)));
     };
@@ -285,14 +285,14 @@ const setNamePosition = (namePosition: RMGParam['namePosMTR']): setNamePositionA
 };
 
 export const staggerStationNames = (isStagger: boolean) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const namePosition = getState().param.namePosMTR;
         dispatch(setNamePosition({ ...namePosition, isStagger }));
     };
 };
 
 export const flipStationNames = () => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const namePosition = getState().param.namePosMTR;
         dispatch(setNamePosition({ ...namePosition, isFlip: !namePosition.isFlip }));
     };
@@ -305,7 +305,7 @@ const setCustomisedMtrDestination = (
 };
 
 export const setLoop = (loop: RMGParam['loop']) => {
-    return (dispatch: AppDispatch) => {
+    return (dispatch: RootDispatch) => {
         // reset these factors to a non-breaking state as split_loop_stns might fail in the blank template
         dispatch(setLoopInfo({ bank: true, left_and_right_factor: 0, bottom_factor: 1 }));
         dispatch({ type: SET_LOOP, loop });
@@ -317,35 +317,35 @@ const setLoopInfo = (loop_info: RMGParam['loop_info']): setLoopInfoAction => {
 };
 
 export const setLoopBank = (bank: RMGParam['loop_info']['bank']) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const loop_info = getState().param.loop_info;
         dispatch(setLoopInfo({ ...loop_info, bank: bank }));
     };
 };
 
 export const setLoopLeftAndRightFactor = (left_and_right_factor: RMGParam['loop_info']['left_and_right_factor']) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const loop_info = getState().param.loop_info;
         dispatch(setLoopInfo({ ...loop_info, left_and_right_factor: left_and_right_factor }));
     };
 };
 
 export const setLoopBottomFactor = (bottom_factor: RMGParam['loop_info']['bottom_factor']) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const loop_info = getState().param.loop_info;
         dispatch(setLoopInfo({ ...loop_info, bottom_factor: bottom_factor }));
     };
 };
 
 export const toggleLineNameBeforeDestination = (isShow: boolean) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const customisedMtrDestination = getState().param.customiseMTRDest;
         dispatch(setCustomisedMtrDestination({ ...customisedMtrDestination, isLegacy: isShow }));
     };
 };
 
 export const customiseDestinationName = (customisedName: Name | false) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const customisedMtrDestination = getState().param.customiseMTRDest;
         dispatch(setCustomisedMtrDestination({ ...customisedMtrDestination, terminal: customisedName }));
     };
@@ -357,14 +357,14 @@ export const customiseDestinationName = (customisedName: Name | false) => {
  * @returns A promise that we can do something after svg elements are completely updated in `downloadSvg` of `PreviewDialog`.
  */
 export const setCurrentStation = (currentStation: string) => {
-    return (dispatch: AppDispatch) => {
+    return (dispatch: RootDispatch) => {
         dispatch({ type: SET_CURRENT_STATION, currentStation });
         return Promise.resolve();
     };
 };
 
 export const setStation = (stationId: string, station: StationInfo) => {
-    return (dispatch: AppDispatch) => {
+    return (dispatch: RootDispatch) => {
         dispatch({ type: SET_STATION, stationId, station });
         dispatch(triggerHelpersUpdate());
     };
@@ -375,7 +375,7 @@ export const setStation = (stationId: string, station: StationInfo) => {
 // };
 
 export const setStationsBulk = (stations: StationDict) => {
-    return (dispatch: AppDispatch) => {
+    return (dispatch: RootDispatch) => {
         dispatch({ type: SET_STATIONS_BULK, stations });
         dispatch(triggerHelpersUpdate());
     };
@@ -389,7 +389,7 @@ export const setColineBulk = (coline: Record<string, ColineInfo>): setColineBulk
  * @param flipBranch Set as false if you want to rotate the line but keeping the topology ordering (TPO). Set as true if you want to flip branches and break the TPO (for SHMetro).
  */
 export const reverseStations = (flipBranch: boolean = false) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const { stn_list } = getState().param;
         const newStationList = Object.keys(stn_list).reduce(
             (acc, stnId) => ({
@@ -440,21 +440,21 @@ export const reverseStations = (flipBranch: boolean = false) => {
 };
 
 export const updateStationName = (stationId: string, name: Name) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
         dispatch(setStation(stationId, { ...stationInfo, name }));
     };
 };
 
 export const updateStationSecondaryName = (stationId: string, secondaryName: Name | false) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
         dispatch(setStation(stationId, { ...stationInfo, secondaryName }));
     };
 };
 
 export const updateStationNum = (stationId: string, num: string) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
         dispatch(setStation(stationId, { ...stationInfo, num }));
     };
@@ -467,7 +467,7 @@ export const updateStationNum = (stationId: string, num: string) => {
  * @param interchangeInfo
  */
 export const addInterchange = (stationId: string, setIndex: number, interchangeInfo: InterchangeInfo) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
         const newTransferInfo = stationInfo.transfer.info.map(i => i.slice());
@@ -487,7 +487,7 @@ export const addInterchange = (stationId: string, setIndex: number, interchangeI
 };
 
 export const removeInterchange = (stationId: string, setIndex: number, interchangeIndex: number) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
         if (
@@ -510,7 +510,7 @@ export const updateInterchange = (
     interchangeIndex: number,
     interchangeInfo: InterchangeInfo
 ) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
         if (
@@ -536,7 +536,7 @@ export const updateInterchange = (
 };
 
 export const updateStationOsiName = (stationId: string, setIndex: number, osiName: Name) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
         const newOsiNames = stationInfo.transfer.osi_names.map(i => i.slice()) as Name[];
@@ -558,7 +558,7 @@ export const updateStationOsiName = (stationId: string, setIndex: number, osiNam
 };
 
 export const updateStationTickDirection = (stationId: string, tickDirection: ShortDirection) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
         dispatch(
             setStation(stationId, {
@@ -570,7 +570,7 @@ export const updateStationTickDirection = (stationId: string, tickDirection: Sho
 };
 
 export const updateStationPaidArea = (stationId: string, isPaidArea: boolean) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
         dispatch(
             setStation(stationId, {
@@ -582,7 +582,7 @@ export const updateStationPaidArea = (stationId: string, isPaidArea: boolean) =>
 };
 
 export const updateStationBranchType = (stationId: string, direction: Direction, branchStyle: BranchStyle) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
         dispatch(
             setStation(stationId, {
@@ -596,7 +596,7 @@ export const updateStationBranchType = (stationId: string, direction: Direction,
 // TODO: replace with branch swapping in future change
 export const updateStationBranchFirstStation = (stationId: string, direction: Direction, firstId: string) => {
     // update both end of the branch
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const branches = getState().helper.branches;
 
         const arg = { stnId: stationId, direction, first: firstId };
@@ -642,7 +642,7 @@ export type UpdateStationBranchFirstStationLegacyArgType = { stnId: string; dire
 export const updateStationBranchFirstStationLegacy = (
     branches: [UpdateStationBranchFirstStationLegacyArgType, UpdateStationBranchFirstStationLegacyArgType]
 ) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const { stn_list } = getState().param;
         dispatch(
             setStationsBulk({
@@ -674,7 +674,7 @@ export const updateStationBranchFirstStationLegacy = (
 
 export const flipStationBranchPosition = (stationId: string, direction: Direction) => {
     // flip both end of the branch
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const branches = getState().helper.branches;
 
         if (direction === Direction.left) {
@@ -694,7 +694,7 @@ export const flipStationBranchPosition = (stationId: string, direction: Directio
  * @deprecated For V3 legacy support
  */
 export const flipStationBranchPositionLegacy = (left: string, right: string) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const { stn_list } = getState().param;
         dispatch(
             setStationsBulk({
@@ -707,14 +707,14 @@ export const flipStationBranchPositionLegacy = (left: string, right: string) => 
 };
 
 export const updateStationFacility = (stationId: string, facility: Facilities) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
         dispatch(setStation(stationId, { ...stationInfo, facility }));
     };
 };
 
 export const updateStationServices = (stationId: string, services: Services[]) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
         dispatch(setStation(stationId, { ...stationInfo, services }));
@@ -722,7 +722,7 @@ export const updateStationServices = (stationId: string, services: Services[]) =
 };
 
 export const addStationService = (stationId: string, service: Services) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
         if (!stationInfo.services.includes(service)) {
@@ -732,7 +732,7 @@ export const addStationService = (stationId: string, service: Services) => {
 };
 
 export const removeStationService = (stationId: string, service: Services) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
         if (stationInfo.services.includes(service)) {
@@ -747,7 +747,7 @@ export const removeStationService = (stationId: string, service: Services) => {
 };
 
 export const updateStationLoopPivot = (stationId: string, loop_pivot: boolean) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
         dispatch(setStation(stationId, { ...stationInfo, loop_pivot }));
@@ -760,7 +760,7 @@ export const autoNumbering = (
     maxLength: number = 2,
     sort: 'asc' | 'desc' = 'asc'
 ) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationList = getState().param.stn_list;
         const branches = getState().helper.branches;
 

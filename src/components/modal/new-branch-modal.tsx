@@ -10,7 +10,7 @@ import {
     ModalOverlay,
 } from '@chakra-ui/react';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
-import { useAppDispatch, useAppSelector } from '../../redux';
+import { useRootDispatch, useRootSelector } from '../../redux';
 import { addStation, getNewBranchAllowedEnds, verifyNewBranchEnds } from '../../redux/param/add-station-action';
 import { RmgStyle } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +23,7 @@ interface NewBranchModalProps {
 export default function NewBranchModal(props: NewBranchModalProps) {
     const { isOpen, onClose } = props;
     const { t } = useTranslation();
-    const dispatch = useAppDispatch();
+    const dispatch = useRootDispatch();
 
     const [where, setWhere] = useState<'new' | 'ext'>('new');
     const [from, setFrom] = useState('');
@@ -33,7 +33,7 @@ export default function NewBranchModal(props: NewBranchModalProps) {
     const [fromError, setFromError] = useState('');
     const [toError, setToError] = useState('');
 
-    const { style, stn_list: stationList } = useAppSelector(state => state.param);
+    const { style, stn_list: stationList } = useRootSelector(state => state.param);
 
     useEffect(() => {
         // reset whenever modal is closed

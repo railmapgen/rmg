@@ -1,9 +1,9 @@
 import React from 'react';
 import { CircularProgress, Flex, Modal, ModalOverlay } from '@chakra-ui/react';
-import { useAppSelector } from '../../redux';
+import { useRootSelector } from '../../redux';
 
 export default function LoadingModal() {
-    const isLoading = useAppSelector(state => state.app.isLoading);
+    const isLoading = useRootSelector(state => state.app.isLoading);
 
     return (
         <Modal isOpen={isLoading} onClose={() => {}}>

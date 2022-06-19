@@ -1,4 +1,4 @@
-import { AppDispatch, RootState } from '../index';
+import { RootDispatch, RootState } from '../index';
 import { ColineInfo, InterchangeInfo, StationDict } from '../../constants/constants';
 import { setColineBulk } from './action';
 import { nanoid } from 'nanoid';
@@ -48,7 +48,7 @@ export const getPossibleStnIdsFromBranchLine = (branches: string[][], stnList: S
         .map(branch => [branch[0], branch[branch.length - 1]]);
 
 export const getPossibleCombinations = (branchIndex: number) => {
-    return (dispatch: AppDispatch, getState: () => RootState): [string, string][] => {
+    return (dispatch: RootDispatch, getState: () => RootState): [string, string][] => {
         const branches = getState().helper.branches;
 
         if (branchIndex === 0) {
@@ -75,7 +75,7 @@ export const getPossibleCombinations = (branchIndex: number) => {
  * @param branchIndex index of branch that the grid is displaying
  */
 export const getRowSpanForColine = (stationId: string, branchIndex: number) => {
-    return (dispatch: AppDispatch, getState: () => RootState): [number, string | undefined] => {
+    return (dispatch: RootDispatch, getState: () => RootState): [number, string | undefined] => {
         const coline = getState().param.coline;
         const branch = getState().helper.branches[branchIndex];
 
@@ -104,7 +104,7 @@ export const getRowSpanForColine = (stationId: string, branchIndex: number) => {
  * @param branchIndex
  */
 export const verifyAreSelectionsConsecutive = (selectedIds: string[], branchIndex: number) => {
-    return (dispatch: AppDispatch, getState: () => RootState): boolean => {
+    return (dispatch: RootDispatch, getState: () => RootState): boolean => {
         const branch = getState().helper.branches[branchIndex];
 
         const from = selectedIds[0];
@@ -132,7 +132,7 @@ export const verifyAreSelectionsConsecutive = (selectedIds: string[], branchInde
  * @param to station id to
  */
 export const checkColineValidity = (from: string, to: string) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stnList = getState().param.stn_list;
         const branches = getState().helper.branches;
 
@@ -159,7 +159,7 @@ export const checkColineValidity = (from: string, to: string) => {
 };
 
 export const findAllColinesInBranch = (branchIndex: number) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const coline = getState().param.coline;
         const branches = getState().helper.branches;
         const branch = branches[branchIndex];
@@ -182,7 +182,7 @@ export const findAllColinesInBranch = (branchIndex: number) => {
  * Remove related coline when the deleteStn is the coline `from` or `to` station.
  */
 export const removeInvalidColineOnRemoveStation = (deleteStnId: string) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const colineInfo = getState().param.coline;
 
         if (Object.keys(colineInfo).length === 0) return;
@@ -200,7 +200,7 @@ export const removeInvalidColineOnRemoveStation = (deleteStnId: string) => {
 };
 
 export const addColine = (from: string, to: string, colors: InterchangeInfo[], display: boolean = true) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const colineInfo = getState().param.coline;
 
         dispatch(checkColineValidity(from, to));
@@ -214,7 +214,7 @@ export const addColine = (from: string, to: string, colors: InterchangeInfo[], d
 };
 
 export const updateColine = (colineId: string, from: string, to: string, display = true) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const colineInfo = getState().param.coline;
 
         if (colineId in colineInfo) {
@@ -231,7 +231,7 @@ export const updateColine = (colineId: string, from: string, to: string, display
 };
 
 export const removeColine = (colineId: string) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const colineInfo = getState().param.coline;
 
         if (colineId in colineInfo) {
@@ -247,7 +247,7 @@ export const removeColine = (colineId: string) => {
  * @param interchangeInfo
  */
 export const addColineColor = (colineId: string, interchangeInfo: InterchangeInfo) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const colineInfo = getState().param.coline;
 
         colineInfo[colineId].colors = [...colineInfo[colineId].colors, interchangeInfo];
@@ -257,7 +257,7 @@ export const addColineColor = (colineId: string, interchangeInfo: InterchangeInf
 };
 
 export const removeColineColor = (colineId: string, interchangeIndex: number) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const colineInfo = getState().param.coline;
 
         if (colineId in colineInfo && colineInfo[colineId].colors.length > interchangeIndex) {
@@ -279,7 +279,7 @@ export const removeColineColor = (colineId: string, interchangeIndex: number) =>
 };
 
 export const updateColineColor = (colineId: string, interchangeIndex: number, interchangeInfo: InterchangeInfo) => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const colineInfo = getState().param.coline;
 
         if (colineId in colineInfo && colineInfo[colineId].colors.length > interchangeIndex) {

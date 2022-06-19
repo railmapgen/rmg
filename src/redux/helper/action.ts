@@ -1,4 +1,4 @@
-import { AppDispatch, RootState } from '../index';
+import { RootDispatch, RootState } from '../index';
 import { getBranches, getRoutes, getTpo } from './graph-theory-util';
 
 export const SET_DEPS_STR = 'SET_DEPS_STR';
@@ -40,7 +40,7 @@ const setTpo = (tpo: string[]): setTpoAction => {
 };
 
 const calcAndGetDepsStr = () => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const stnList = getState().param.stn_list;
         const nextDepsStr = Object.entries(stnList)
             .map(
@@ -57,7 +57,7 @@ const calcAndGetDepsStr = () => {
 };
 
 const calcBranches = () => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         console.log('Re-calculating branches...');
         const stnList = getState().param.stn_list;
         const nextBranches = getBranches(stnList);
@@ -67,7 +67,7 @@ const calcBranches = () => {
 };
 
 const calcRoutes = () => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         console.log('Re-calculating routes...');
         const stnList = getState().param.stn_list;
         dispatch(setRoutes(getRoutes(stnList)));
@@ -75,7 +75,7 @@ const calcRoutes = () => {
 };
 
 export const triggerHelpersUpdate = () => {
-    return (dispatch: AppDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const prevDepsStr = getState().helper.depsStr;
         const nextDepsStr = dispatch(calcAndGetDepsStr());
         if (prevDepsStr !== nextDepsStr) {

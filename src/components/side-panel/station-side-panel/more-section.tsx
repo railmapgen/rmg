@@ -1,20 +1,19 @@
 import { Box, Heading } from '@chakra-ui/react';
 import React from 'react';
 import RmgButtonGroup from '../../common/rmg-button-group';
-import { useAppSelector } from '../../../redux';
+import { useRootDispatch, useRootSelector } from '../../../redux';
 import { Facilities, RmgStyle, Services } from '../../../constants/constants';
-import { useDispatch } from 'react-redux';
 import { updateStationFacility, updateStationLoopPivot, updateStationServices } from '../../../redux/param/action';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
 
 export default function MoreSection() {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useRootDispatch();
 
-    const selectedStation = useAppSelector(state => state.app.selectedStation);
-    const style = useAppSelector(state => state.param.style);
-    const { services, facility, loop_pivot } = useAppSelector(state => state.param.stn_list[selectedStation]);
+    const selectedStation = useRootSelector(state => state.app.selectedStation);
+    const style = useRootSelector(state => state.param.style);
+    const { services, facility, loop_pivot } = useRootSelector(state => state.param.stn_list[selectedStation]);
 
     const serviceSelections = Object.values(Services).map(service => {
         return {

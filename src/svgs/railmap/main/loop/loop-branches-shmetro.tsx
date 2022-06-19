@@ -1,4 +1,4 @@
-import { useAppSelector } from '../../../../redux';
+import { useRootSelector } from '../../../../redux';
 import { CanvasType, ColourHex, Services } from '../../../../constants/constants';
 import StationSHMetro from '../station/station-shmetro';
 import { StationSHMetro as StationSHMetroIndoor } from '../../../indoor/station-shmetro';
@@ -59,8 +59,8 @@ export const LoopBranches = (props: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [X_LEFT, X_RIGHT, Y_TOP, Y_BOTTOM] = edges;
 
-    const { branches } = useAppSelector(store => store.helper);
-    const { current_stn_idx: current_stn_id, direction, coline } = useAppSelector(store => store.param);
+    const { branches } = useRootSelector(store => store.helper);
+    const { current_stn_idx: current_stn_id, direction, coline } = useRootSelector(store => store.param);
 
     const e = canvas === CanvasType.RailMap ? 30 : 0;
     const branches_paths = [
