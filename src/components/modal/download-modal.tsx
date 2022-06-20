@@ -19,7 +19,7 @@ import { cloneSvgCanvas, test } from '../../util/export-utils';
 import { downloadAs, downloadBlobAs } from '../../util/utils';
 import { useTranslation } from 'react-i18next';
 import { waitForMs } from '../../utils';
-import { setLoadingProgress, startLoading, stopLoading } from '../../redux/app/app-slice';
+import { setLoadingProgress, stopLoading } from '../../redux/app/app-slice';
 
 interface DownloadModalProps {
     isOpen: boolean;
@@ -122,7 +122,7 @@ export default function DownloadModal(props: DownloadModalProps) {
     ];
 
     const handleDownload = async (option: 'current' | 'all') => {
-        dispatch(startLoading());
+        dispatch(setLoadingProgress(0));
         const stationIdListToDownload =
             option === 'current'
                 ? [currentStationId]
@@ -130,7 +130,10 @@ export default function DownloadModal(props: DownloadModalProps) {
 
         const zip = new JSZip();
 
-        for (const stnId of stationIdListToDownload) {
+        for (let index in stationIdListToDownload) {
+            dispatch(setLoadingProgress(((Number(index) + 1) / stationIdListToDownload.length) * 100));
+
+            const stnId = stationIdListToDownload[index];
             // wait for svg elements updated for station A before we dispatch the current station to B.
             dispatch(setCurrentStation(stnId));
             await waitForMs(1000);

@@ -18,7 +18,11 @@ export default function LoadingModal() {
                 alignItems="center"
                 zIndex={9999}
             >
-                <CircularProgress isIndeterminate color="teal" />
+                <CircularProgress
+                    isIndeterminate={isLoading === -1}
+                    value={isLoading && isLoading >= 0 ? isLoading : undefined}
+                    color="teal"
+                />
             </Flex>
         </Modal>
     );
