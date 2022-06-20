@@ -136,7 +136,7 @@ export default function DownloadModal(props: DownloadModalProps) {
             const stnId = stationIdListToDownload[index];
             // wait for svg elements updated for station A before we dispatch the current station to B.
             dispatch(setCurrentStation(stnId));
-            await waitForMs(1000);
+            await waitForMs(500);
 
             const elem = await cloneSvgCanvas(
                 canvasToDownload as CanvasType,
