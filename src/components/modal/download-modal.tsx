@@ -16,7 +16,7 @@ import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import JSZip from 'jszip';
 import { setCurrentStation } from '../../redux/param/action';
 import { cloneSvgCanvas, test } from '../../util/export-utils';
-import { downloadAs, downloadBlobAs } from '../../util/utils';
+import { downloadAs, downloadBlobAs, isSafari } from '../../util/utils';
 import { useTranslation } from 'react-i18next';
 import { waitForMs } from '../../utils';
 import { setLoadingProgress, stopLoading } from '../../redux/app/app-slice';
@@ -155,13 +155,8 @@ export default function DownloadModal(props: DownloadModalProps) {
                 '_'
             );
             if (format === 'png') {
-                const blob = await test(elem, scale / 100);
-                if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
-                    if (stnId === '0') {
-                        console.log('Wait for 2 seconds for Safari');
-                        await waitForMs(2000);
-                    }
-                }
+                const isWait = isSafari() && index === '0';
+                const blob = await test(elem, scale / 100, isWait);
 
                 if (stationIdListToDownload.length > 1) {
                     // batch download and split base64 for this
