@@ -131,7 +131,7 @@ export const getAbsoluteUrl = (cssRule: CSSFontFaceRule) => {
         : process.env.PUBLIC_URL + '/styles/' + ruleStyleSrc.match(/^url\("([\S*]+)"\)/)?.[1];
 };
 
-export const test = async (svgEl: SVGSVGElement, scale: number): Promise<Blob> => {
+export const test = async (svgEl: SVGSVGElement, scale: number, isWait: boolean): Promise<Blob> => {
     let svgW = svgEl.viewBox.baseVal.width;
     let svgH = svgEl.viewBox.baseVal.height;
 
@@ -172,9 +172,13 @@ export const test = async (svgEl: SVGSVGElement, scale: number): Promise<Blob> =
     return new Promise((resolve, reject) => {
         const img = new Image();
         img.onload = () => {
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            canvas.toBlob(blob => resolve(blob!), 'image/png');
-            // return resolve(canvas.toDataURL('image/png'));
+            setTimeout(
+                () => {
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    canvas.toBlob(blob => resolve(blob!), 'image/png');
+                },
+                isWait ? 2000 : 0
+            );
         };
         img.onerror = reject;
         img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgEl.outerHTML)));

@@ -256,3 +256,9 @@ export const getTransText2 = (obj: Translation, langs: LanguageCode[]) => {
  */
 export const formatStnName = (stnInfo: StationInfo, style: RmgStyle) =>
     (style === RmgStyle.GZMTR ? (stnInfo?.num || '-') + ': ' : '') + stnInfo?.name.join().replace('\\', ' ');
+
+export const waitForMs = (ms: number) => {
+    return new Promise<void>(resolve => {
+        setTimeout(resolve, ms);
+    });
+};

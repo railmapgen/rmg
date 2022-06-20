@@ -12,7 +12,7 @@ import {
 import ColineCard from './coline-card';
 import { MdAdd } from 'react-icons/md';
 import { MonoColour } from '../../../constants/constants';
-import { setGlobalAlert } from '../../../redux/app/action';
+import { setGlobalAlert } from '../../../redux/app/app-slice';
 import { useTranslation } from 'react-i18next';
 
 export default function ColineSection() {
@@ -56,7 +56,7 @@ export default function ColineSection() {
         try {
             dispatch(updateColine(colineId, from, to));
         } catch {
-            dispatch(setGlobalAlert('error', 'Unable to draw this share track.'));
+            dispatch(setGlobalAlert({ status: 'error', message: 'Unable to draw this share track.' }));
         }
     };
 

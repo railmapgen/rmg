@@ -1,6 +1,5 @@
 import rootReducer from '../index';
 import { createMockAppStore } from '../../setupTests';
-import { SET_CANVAS_TO_SHOW } from '../app/action';
 import { reRenderApp } from '../../index';
 
 jest.mock('../../index', () => ({

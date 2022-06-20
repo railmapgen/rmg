@@ -5,7 +5,7 @@ import AddStationModal from '../modal/add-station-modal';
 import { useRootDispatch, useRootSelector } from '../../redux';
 import { RmgStyle, SidePanelMode } from '../../constants/constants';
 import { isColineBranch } from '../../redux/param/coline-action';
-import { setSelectedBranch, setSidePanelMode } from '../../redux/app/action';
+import { setSelectedBranch, setSidePanelMode } from '../../redux/app/app-slice';
 import { useTranslation } from 'react-i18next';
 import NewBranchModal from '../modal/new-branch-modal';
 import ErrorBoundary from '../../error-boundary';

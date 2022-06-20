@@ -6,7 +6,7 @@ export default function LoadingModal() {
     const isLoading = useRootSelector(state => state.app.isLoading);
 
     return (
-        <Modal isOpen={isLoading} onClose={() => {}}>
+        <Modal isOpen={isLoading !== undefined} onClose={() => {}}>
             <ModalOverlay />
             <Flex
                 position="absolute"
@@ -18,7 +18,11 @@ export default function LoadingModal() {
                 alignItems="center"
                 zIndex={9999}
             >
-                <CircularProgress isIndeterminate color="teal" />
+                <CircularProgress
+                    isIndeterminate={isLoading === -1}
+                    value={isLoading && isLoading >= 0 ? isLoading : undefined}
+                    color="teal"
+                />
             </Flex>
         </Modal>
     );

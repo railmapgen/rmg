@@ -7,7 +7,6 @@ import AddStationModal from './add-station-modal';
 import { SET_STATIONS_BULK } from '../../redux/param/action';
 import { render } from '../../test-utils';
 import { fireEvent, screen, within } from '@testing-library/react';
-import { SET_SELECTED_STATION, SET_SIDE_PANEL_MODE } from '../../redux/app/action';
 
 const mockStationList = {
     linestart: {
@@ -131,8 +130,8 @@ describe('AddStationModal', () => {
             expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
 
             // open side panel
-            expect(actions).toContainEqual({ type: SET_SELECTED_STATION, selectedStation: expect.any(String) });
-            expect(actions).toContainEqual({ type: SET_SIDE_PANEL_MODE, sidePanelMode: SidePanelMode.STATION });
+            expect(actions).toContainEqual({ type: 'app/setSelectedStation', payload: expect.any(String) });
+            expect(actions).toContainEqual({ type: 'app/setSidePanelMode', payload: SidePanelMode.STATION });
         });
     });
 

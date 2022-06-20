@@ -9,7 +9,7 @@ import { AllCanvas, CanvasType, LanguageCode, RMGParam, RmgStyle } from './const
 import StorageService from './util/storage/storageService';
 import getRmgStorage from './util/storage';
 import store from './redux';
-import { setCanvasScale, setCanvasToShow, zoomToScale } from './redux/app/action';
+import { setCanvasScale, setCanvasToShow, zoomToScale } from './redux/app/app-slice';
 import { setFullParam } from './redux/param/action';
 import autoSaveScheduler from './util/auto-save-scheduler';
 import { initParam } from './redux/param/util';

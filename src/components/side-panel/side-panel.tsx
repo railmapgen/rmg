@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { useRootSelector } from '../../redux';
-import { setSidePanelMode } from '../../redux/app/action';
+import { setSidePanelMode } from '../../redux/app/app-slice';
 import { useDispatch } from 'react-redux';
 import { SidePanelMode } from '../../constants/constants';
 import StationSidePanel from './station-side-panel/station-side-panel';

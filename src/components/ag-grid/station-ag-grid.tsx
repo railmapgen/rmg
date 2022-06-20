@@ -6,7 +6,7 @@ import { ColDef, SelectionChangedEvent } from 'ag-grid-community';
 import { Name, RmgStyle, SidePanelMode, StationInfo, StationTransfer } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { HStack } from '@chakra-ui/react';
-import { setIsShareTrackEnabled, setSelectedStation, setSidePanelMode } from '../../redux/app/action';
+import { setIsShareTrackEnabled, setSelectedStation, setSidePanelMode } from '../../redux/app/app-slice';
 import { getRowSpanForColine } from '../../redux/param/coline-action';
 import GzmtrStationCode from './gzmtr-station-code';
 

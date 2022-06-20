@@ -1,11 +1,11 @@
-import AppReducer from './app/reducer';
+import appReducer from './app/app-slice';
 import ParamReducer from './param/reducer';
 import HelperReducer from './helper/reducer';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 const rootReducer = combineReducers({
-    app: AppReducer,
+    app: appReducer,
     param: ParamReducer,
     helper: HelperReducer,
 });

@@ -18,7 +18,7 @@ import { RmgStyle, SidePanelMode } from '../../constants/constants';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { useTranslation } from 'react-i18next';
 import { addStationToExistingBranch } from '../../redux/param/add-station-action';
-import { setSelectedStation, setSidePanelMode } from '../../redux/app/action';
+import { setSelectedStation, setSidePanelMode } from '../../redux/app/app-slice';
 
 interface AddStationModalProps {
     isOpen: boolean;

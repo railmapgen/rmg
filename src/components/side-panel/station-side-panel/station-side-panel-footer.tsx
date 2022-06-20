@@ -4,7 +4,7 @@ import React, { useRef, useState } from 'react';
 import { removeInvalidColineOnRemoveStation } from '../../../redux/param/coline-action';
 import { checkStationCouldBeRemoved, removeStation } from '../../../redux/param/remove-station-action';
 import { useRootDispatch, useRootSelector } from '../../../redux';
-import { setGlobalAlert, setSelectedStation, setSidePanelMode } from '../../../redux/app/action';
+import { setGlobalAlert, setSelectedStation, setSidePanelMode } from '../../../redux/app/app-slice';
 import RemoveConfirmModal from '../../modal/remove-confirm-modal';
 import { setCurrentStation } from '../../../redux/param/action';
 import { SidePanelMode } from '../../../constants/constants';
@@ -32,7 +32,7 @@ export default function StationSidePanelFooter() {
             dispatch(removeStation(selectedStation));
             setIsRemoveModalOpen(false);
         } else {
-            dispatch(setGlobalAlert('error', t('StationSidePanel.footer.errorOnRemove')));
+            dispatch(setGlobalAlert({ status: 'error', message: t('StationSidePanel.footer.errorOnRemove') }));
         }
     };
 

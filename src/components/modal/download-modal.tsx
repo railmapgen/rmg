@@ -16,9 +16,10 @@ import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import JSZip from 'jszip';
 import { setCurrentStation } from '../../redux/param/action';
 import { cloneSvgCanvas, test } from '../../util/export-utils';
-import { downloadAs, downloadBlobAs } from '../../util/utils';
+import { downloadAs, downloadBlobAs, isSafari } from '../../util/utils';
 import { useTranslation } from 'react-i18next';
-import { setIsLoading } from '../../redux/app/action';
+import { waitForMs } from '../../utils';
+import { setLoadingProgress, stopLoading } from '../../redux/app/app-slice';
 
 interface DownloadModalProps {
     isOpen: boolean;
@@ -121,7 +122,7 @@ export default function DownloadModal(props: DownloadModalProps) {
     ];
 
     const handleDownload = async (option: 'current' | 'all') => {
-        dispatch(setIsLoading(true));
+        dispatch(setLoadingProgress(0));
         const stationIdListToDownload =
             option === 'current'
                 ? [currentStationId]
@@ -129,9 +130,13 @@ export default function DownloadModal(props: DownloadModalProps) {
 
         const zip = new JSZip();
 
-        for (const stnId of stationIdListToDownload) {
+        for (let index in stationIdListToDownload) {
+            dispatch(setLoadingProgress(((Number(index) + 1) / stationIdListToDownload.length) * 100));
+
+            const stnId = stationIdListToDownload[index];
             // wait for svg elements updated for station A before we dispatch the current station to B.
-            await dispatch(setCurrentStation(stnId));
+            dispatch(setCurrentStation(stnId));
+            await waitForMs(500);
 
             const elem = await cloneSvgCanvas(
                 canvasToDownload as CanvasType,
@@ -150,15 +155,8 @@ export default function DownloadModal(props: DownloadModalProps) {
                 '_'
             );
             if (format === 'png') {
-                const blob = await test(elem, scale / 100);
-                if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
-                    await new Promise<void>(resolve => {
-                        setTimeout(() => {
-                            console.log('Sleep 1 second for Safari');
-                            resolve();
-                        }, 1000);
-                    });
-                }
+                const isWait = isSafari() && index === '0';
+                const blob = await test(elem, scale / 100, isWait);
 
                 if (stationIdListToDownload.length > 1) {
                     // batch download and split base64 for this
@@ -190,8 +188,8 @@ export default function DownloadModal(props: DownloadModalProps) {
         }
 
         // revert to original station
-        await dispatch(setCurrentStation(currentStationId));
-        dispatch(setIsLoading(false));
+        dispatch(setCurrentStation(currentStationId));
+        dispatch(stopLoading());
         onClose();
     };
 

@@ -17,8 +17,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { translateText } from '../../i18n/config';
 import { useRootDispatch } from '../../redux';
-import { setIsLoading } from '../../redux/app/action';
 import { companyConfig, templateList } from '@railmapgen/rmg-templates-resources';
+import { startLoading } from '../../redux/app/app-slice';
 
 interface TemplateModalProps {
     isOpen: boolean;
@@ -33,7 +33,7 @@ export default function TemplateModal(props: TemplateModalProps) {
     const dispatch = useRootDispatch();
 
     const handleSelect = async (company: string, filename: string) => {
-        dispatch(setIsLoading(true));
+        dispatch(startLoading());
         const module = await import(
             /* webpackChunkName: "templates" */ `@railmapgen/rmg-templates-resources/templates/${company}/${filename}.json`
         );

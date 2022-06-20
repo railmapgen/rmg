@@ -1,8 +1,4 @@
-const waitFor = (ms: number) => {
-    return new Promise<void>(resolve => {
-        setTimeout(resolve, ms);
-    });
-};
+import { waitForMs } from '../../utils';
 
 export const waitForFontReady = async () => {
     let retryAttempt = 3;
@@ -23,7 +19,7 @@ export const waitForFontReady = async () => {
         }
 
         console.log('GenYoMin is NOT ready. Retry attempts remaining: ' + retryAttempt + ' ...');
-        await waitFor(500);
+        await waitForMs(500);
     }
 
     throw new Error('Failed to load GenYoMin after 3 attempts');
