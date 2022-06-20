@@ -6,7 +6,7 @@ export default function LoadingModal() {
     const isLoading = useRootSelector(state => state.app.isLoading);
 
     return (
-        <Modal isOpen={isLoading} onClose={() => {}}>
+        <Modal isOpen={isLoading !== undefined} onClose={() => {}}>
             <ModalOverlay />
             <Flex
                 position="absolute"

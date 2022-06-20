@@ -18,8 +18,8 @@ import { setCurrentStation } from '../../redux/param/action';
 import { cloneSvgCanvas, test } from '../../util/export-utils';
 import { downloadAs, downloadBlobAs } from '../../util/utils';
 import { useTranslation } from 'react-i18next';
-import { setIsLoading } from '../../redux/app/action';
 import { waitForMs } from '../../utils';
+import { setLoadingProgress, startLoading, stopLoading } from '../../redux/app/app-slice';
 
 interface DownloadModalProps {
     isOpen: boolean;
@@ -122,7 +122,7 @@ export default function DownloadModal(props: DownloadModalProps) {
     ];
 
     const handleDownload = async (option: 'current' | 'all') => {
-        dispatch(setIsLoading(true));
+        dispatch(startLoading());
         const stationIdListToDownload =
             option === 'current'
                 ? [currentStationId]
@@ -193,7 +193,7 @@ export default function DownloadModal(props: DownloadModalProps) {
 
         // revert to original station
         dispatch(setCurrentStation(currentStationId));
-        dispatch(setIsLoading(false));
+        dispatch(stopLoading());
         onClose();
     };
 

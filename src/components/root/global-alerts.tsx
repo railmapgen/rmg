@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRootDispatch, useRootSelector } from '../../redux';
 import { Alert, AlertIcon, AlertStatus, CloseButton, Link } from '@chakra-ui/react';
-import { closeGlobalAlert } from '../../redux/app/action';
+import { closeGlobalAlert } from '../../redux/app/app-slice';
 
 export default function GlobalAlerts() {
     const dispatch = useRootDispatch();

@@ -4,7 +4,7 @@ import DownloadActions from './download-actions';
 import { MdPalette } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { SidePanelMode } from '../../constants/constants';
-import { setSidePanelMode } from '../../redux/app/action';
+import { setSidePanelMode } from '../../redux/app/app-slice';
 import { useTranslation } from 'react-i18next';
 import OpenActions from './open-actions';
 

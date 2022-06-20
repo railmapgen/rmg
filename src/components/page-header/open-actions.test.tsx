@@ -2,7 +2,6 @@ import React from 'react';
 import OpenActions from './open-actions';
 import { createMockAppStore } from '../../setupTests';
 import rootReducer from '../../redux';
-import { SET_GLOBAL_ALERTS } from '../../redux/app/action';
 import * as utils from '../../util/utils';
 import { render } from '../../test-utils';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
@@ -51,11 +50,10 @@ describe('OpenActions', () => {
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(1);
         expect(actions).toContainEqual({
-            type: SET_GLOBAL_ALERTS,
-            globalAlerts: {
-                error: {
-                    message: expect.stringContaining('Invalid'),
-                },
+            type: 'app/setGlobalAlert',
+            payload: {
+                status: 'error',
+                message: expect.stringContaining('Invalid'),
             },
         });
     });
@@ -69,11 +67,10 @@ describe('OpenActions', () => {
         await waitFor(() => expect(mockStore.getActions()).toHaveLength(1));
         const actions = mockStore.getActions();
         expect(actions).toContainEqual({
-            type: SET_GLOBAL_ALERTS,
-            globalAlerts: {
-                error: {
-                    message: expect.stringContaining('Unknown error'),
-                },
+            type: 'app/setGlobalAlert',
+            payload: {
+                status: 'error',
+                message: expect.stringContaining('Unknown error'),
             },
         });
     });

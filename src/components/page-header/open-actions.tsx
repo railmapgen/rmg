@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { updateParam } from '../../utils';
 import { readFileAsText } from '../../util/utils';
 import UploadConfirmModal from '../modal/upload-confirm-modal';
-import { setGlobalAlert } from '../../redux/app/action';
+import { setGlobalAlert } from '../../redux/app/app-slice';
 import { LanguageCode, RMGParam } from '../../constants/constants';
 import TemplateModal from '../modal/template-modal';
 import { openFromNewParam } from '../../redux/param/open-new-action';
@@ -30,7 +30,7 @@ export default function OpenActions() {
         console.log('OpenActions.handleUpload():: received file', file);
 
         if (file?.type !== 'application/json') {
-            dispatch(setGlobalAlert('error', t('OpenActions.invalidType')));
+            dispatch(setGlobalAlert({ status: 'error', message: t('OpenActions.invalidType') }));
         } else {
             try {
                 const paramStr = await readFileAsText(file);
@@ -38,7 +38,7 @@ export default function OpenActions() {
                 setUploadedParam(updatedParam as RMGParam);
                 setIsUploadModalOpen(true);
             } catch (err) {
-                dispatch(setGlobalAlert('error', t('OpenActions.unknownError')));
+                dispatch(setGlobalAlert({ status: 'error', message: t('OpenActions.unknownError') }));
                 console.error(
                     'OpenActions.handleUpload():: Unknown error occurred while parsing the uploaded file',
                     err

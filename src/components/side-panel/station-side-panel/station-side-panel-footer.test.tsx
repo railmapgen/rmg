@@ -2,7 +2,6 @@ import React from 'react';
 import StationSidePanelFooter from './station-side-panel-footer';
 import { createMockAppStore } from '../../../setupTests';
 import { SidePanelMode, StationDict } from '../../../constants/constants';
-import { SET_GLOBAL_ALERTS, SET_SELECTED_STATION, SET_SIDE_PANEL_MODE } from '../../../redux/app/action';
 import rootReducer from '../../../redux';
 import { SET_STATIONS_BULK } from '../../../redux/param/action';
 import { render } from '../../../test-utils';
@@ -65,8 +64,8 @@ describe('StationSidePanelFooter', () => {
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(1);
         expect(actions).toContainEqual({
-            type: SET_GLOBAL_ALERTS,
-            globalAlerts: { error: { message: expect.stringContaining('Unable to remove') } },
+            type: 'app/setGlobalAlert',
+            payload: { status: 'error', message: expect.stringContaining('Unable to remove') },
         });
     });
 
@@ -127,8 +126,8 @@ describe('StationSidePanelFooter', () => {
 
         // assertions
         const actions = mockStore.getActions();
-        expect(actions).toContainEqual({ type: SET_SIDE_PANEL_MODE, sidePanelMode: SidePanelMode.CLOSE }); // close side panel
-        expect(actions).toContainEqual({ type: SET_SELECTED_STATION, selectedStation: 'linestart' }); // reset station selection
+        expect(actions).toContainEqual({ type: 'app/setSidePanelMode', payload: SidePanelMode.CLOSE }); // close side panel
+        expect(actions).toContainEqual({ type: 'app/setSelectedStation', payload: 'linestart' }); // reset station selection
         expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK })); // removal of station
     });
 });
