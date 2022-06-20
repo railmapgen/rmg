@@ -157,12 +157,10 @@ export default function DownloadModal(props: DownloadModalProps) {
             if (format === 'png') {
                 const blob = await test(elem, scale / 100);
                 if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
-                    await new Promise<void>(resolve => {
-                        setTimeout(() => {
-                            console.log('Sleep 1 second for Safari');
-                            resolve();
-                        }, 1000);
-                    });
+                    if (stnId === '0') {
+                        console.log('Wait for 2 seconds for Safari');
+                        await waitForMs(2000);
+                    }
                 }
 
                 if (stationIdListToDownload.length > 1) {
