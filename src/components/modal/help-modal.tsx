@@ -214,7 +214,7 @@ export default function HelpModal(props: HelpModalProps) {
                     </VStack>
 
                     <Heading as="h6" size="xs" my={1}>
-                        {t('Other contributors')}
+                        {t('Resource contributors')}
                     </Heading>
 
                     <Flex wrap="wrap">
