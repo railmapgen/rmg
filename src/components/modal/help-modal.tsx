@@ -23,13 +23,12 @@ import {
 import { useTranslation } from 'react-i18next';
 import { MdOpenInNew } from 'react-icons/md';
 
+const CONTRIBUTORS_ADMINS = ['52PD', 'linchen1965'];
 const CONTRIBUTORS_LIST = [
-    '52PD',
     'jealousyge',
     'Jay20081229',
     'clearng-kly',
     'Dingdong2334',
-    'linchen1965',
     'C1P918R',
     'AnDanJuneUnderline',
     'GrassRabbit1410',
@@ -218,6 +217,29 @@ export default function HelpModal(props: HelpModalProps) {
                     </Heading>
 
                     <Flex wrap="wrap">
+                        {CONTRIBUTORS_ADMINS.map(contributor => (
+                            <Tag
+                                key={contributor}
+                                size="lg"
+                                mb={1}
+                                mr={1}
+                                flex="100%"
+                                onClick={() =>
+                                    window.open(
+                                        `https://github.com/railmapgen/rmg/issues?q=is:issue+author:${contributor}`,
+                                        '_blank'
+                                    )
+                                }
+                                cursor="pointer"
+                            >
+                                <Avatar src={`https://github.com/${contributor}.png`} size="xs" ml={-1} mr={2} />
+                                <TagLabel>{contributor}</TagLabel>
+                                <TagLabel flexGrow={1} />
+                                <TagLabel>
+                                    <Text fontSize="sm">{t('Resource Administrator')}</Text>
+                                </TagLabel>
+                            </Tag>
+                        ))}
                         {CONTRIBUTORS_LIST.map(contributor => (
                             <Tag
                                 key={contributor}
