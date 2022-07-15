@@ -1,5 +1,5 @@
 import { RmgAgGrid, RmgLineBadge, RmgMultiLineString } from '@railmapgen/rmg-components';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { useRootDispatch, useRootSelector } from '../../redux';
 import { ColDef, SelectionChangedEvent } from 'ag-grid-community';
@@ -14,10 +14,6 @@ interface StationAgGridProps {
     branchIndex: number;
 }
 
-interface RmgAgGridColDef<T> extends ColDef {
-    field?: Extract<keyof T, string>;
-}
-
 type RowDataType = StationInfo & { id: string; rowSpan: [number, string | undefined] };
 
 export default function StationAgGrid(props: StationAgGridProps) {
@@ -30,69 +26,72 @@ export default function StationAgGrid(props: StationAgGridProps) {
     const branches = useRootSelector(state => state.helper.branches);
     const stationIds = branches[branchIndex].filter(id => !['linestart', 'lineend'].includes(id));
 
-    const [columnDefs] = useState<RmgAgGridColDef<RowDataType>[]>([
-        {
-            headerName: t('StationAgGrid.num'),
-            field: 'num',
-            cellRenderer: ({ value }: { value: string }) => (
-                <GzmtrStationCode lineNumber={lineNumber} stationNumber={value} lineColour={theme[2]} />
-            ),
-            pinned: 'left',
-            minWidth: 110,
-            hide: ![RmgStyle.GZMTR].includes(style),
-        },
-        {
-            headerName: t('Chinese name'),
-            field: 'name',
-            valueFormatter: ({ value, data }: { value: Name; data: RowDataType }) =>
-                value[0] +
-                (style === RmgStyle.GZMTR && data.secondaryName && data.secondaryName[0]
-                    ? ` (${data.secondaryName[0]})`
-                    : ''),
-        },
-        {
-            headerName: t('English name'),
-            field: 'name',
-            cellRenderer: ({ value, data }: { value: Name; data: RowDataType }) => (
-                <RmgMultiLineString
-                    text={
-                        value[1] +
-                        (style === RmgStyle.GZMTR && data.secondaryName && data.secondaryName[1]
-                            ? ` (${data.secondaryName[1]})`
-                            : '')
-                    }
-                />
-            ),
-            minWidth: 300,
-        },
-        {
-            headerName: t('StationAgGrid.interchange'),
-            field: 'transfer',
-            cellRenderer: ({ value }: { value: StationTransfer }) => (
-                <HStack>
-                    {value.info.flat().map((it, i) => (
-                        <RmgLineBadge key={i} name={[it[4], it[5]]} bg={it[2]} fg={it[3]} showShortName />
-                    ))}
-                </HStack>
-            ),
-        },
-        {
-            headerName: t('StationAgGrid.coline'),
-            field: 'rowSpan',
-            rowSpan: ({ data: { rowSpan } }: { data: RowDataType }) => rowSpan[0],
-            cellClassRules: {
-                'rmg-ag-grid--spanned-cell': ({ value }) => value[0] > 0,
+    const columnDefs = useMemo<ColDef<RowDataType>[]>(
+        () => [
+            {
+                headerName: t('StationAgGrid.num'),
+                field: 'num',
+                cellRenderer: ({ value }: { value: string }) => (
+                    <GzmtrStationCode lineNumber={lineNumber} stationNumber={value} lineColour={theme[2]} />
+                ),
+                pinned: 'left',
+                minWidth: 110,
+                hide: ![RmgStyle.GZMTR].includes(style),
             },
-            cellRenderer: ({ value }: { value: RowDataType['rowSpan'] }) => (
-                <HStack>
-                    {coline[value[1] as string]?.colors?.map((it, i) => (
-                        <RmgLineBadge key={i} name={[it[4], it[5]]} bg={it[2]} fg={it[3]} showShortName />
-                    ))}
-                </HStack>
-            ),
-            hide: ![RmgStyle.SHMetro].includes(style),
-        },
-    ]);
+            {
+                headerName: t('Chinese name'),
+                field: 'name',
+                valueFormatter: ({ value, data }) =>
+                    value[0] +
+                    (style === RmgStyle.GZMTR && data?.secondaryName && data?.secondaryName[0]
+                        ? ` (${data.secondaryName[0]})`
+                        : ''),
+            },
+            {
+                headerName: t('English name'),
+                field: 'name',
+                cellRenderer: ({ value, data }: { value: Name; data: RowDataType }) => (
+                    <RmgMultiLineString
+                        text={
+                            value[1] +
+                            (style === RmgStyle.GZMTR && data.secondaryName && data.secondaryName[1]
+                                ? ` (${data.secondaryName[1]})`
+                                : '')
+                        }
+                    />
+                ),
+                minWidth: 300,
+            },
+            {
+                headerName: t('StationAgGrid.interchange'),
+                field: 'transfer',
+                cellRenderer: ({ value }: { value: StationTransfer }) => (
+                    <HStack>
+                        {value.info.flat().map((it, i) => (
+                            <RmgLineBadge key={i} name={[it[4], it[5]]} bg={it[2]} fg={it[3]} showShortName />
+                        ))}
+                    </HStack>
+                ),
+            },
+            {
+                headerName: t('StationAgGrid.coline'),
+                field: 'rowSpan',
+                rowSpan: ({ data }) => data?.rowSpan[0] ?? 0,
+                cellClassRules: {
+                    'rmg-ag-grid--spanned-cell': ({ value }) => value[0] > 0,
+                },
+                cellRenderer: ({ value }: { value: RowDataType['rowSpan'] }) => (
+                    <HStack>
+                        {coline[value[1] as string]?.colors?.map((it, i) => (
+                            <RmgLineBadge key={i} name={[it[4], it[5]]} bg={it[2]} fg={it[3]} showShortName />
+                        ))}
+                    </HStack>
+                ),
+                hide: ![RmgStyle.SHMetro].includes(style),
+            },
+        ],
+        [style]
+    );
 
     const gridRef = useRef<AgGridReact>(null);
     const isGridReadyRef = useRef(false);
@@ -118,8 +117,8 @@ export default function StationAgGrid(props: StationAgGridProps) {
         resizable: true,
     };
 
-    const handleSelectionChanged = ({ api }: SelectionChangedEvent) => {
-        const selectedRowIds = api.getSelectedRows()?.map(row => row.id as string);
+    const handleSelectionChanged = ({ api }: SelectionChangedEvent<RowDataType>) => {
+        const selectedRowIds = api.getSelectedRows()?.map(row => row.id);
         console.log('StationAgGrid.handleSelectionChanged():: Row selection changed', selectedRowIds);
 
         if (selectedRowIds?.length) {
