@@ -1,6 +1,12 @@
 /**
+          * @ag-grid-community/all-modules - Advanced Data Grid / Data Table supporting Javascript / Typescript / React / Angular / Vue * @version v28.0.2
+          * @link https://www.ag-grid.com/
+          * @license MIT
+          */
+
+/**
  * @ag-grid-community/core - Advanced Data Grid / Data Table supporting Javascript / Typescript / React / Angular / Vue
- * @version v27.3.0
+ * @version v28.0.2
  * @link https://www.ag-grid.com/
  * @license MIT
  */
@@ -23,12 +29,6 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- */
-
-/**
- * ag-grid-community - Advanced Data Grid / Data Table supporting Javascript / Typescript / React / Angular / Vue * @version v27.3.0
- * @link https://www.ag-grid.com/
-' * @license MIT
  */
 
 /*@cc_on!@*/
