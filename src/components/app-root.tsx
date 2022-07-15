@@ -8,6 +8,7 @@ import { useRootSelector } from '../redux';
 import GridTabs from './ag-grid/grid-tabs';
 import LoadingModal from './modal/loading-modal';
 import GlobalAlerts from './root/global-alerts';
+import { RmgPage, RmgWindow } from '@railmapgen/rmg-components';
 
 export default function AppRoot() {
     const param = useRootSelector(state => state.param);
@@ -18,10 +19,10 @@ export default function AppRoot() {
     }, [paramString]);
 
     return (
-        <Flex direction="column" height="100%" overflow="hidden">
+        <RmgWindow>
             <LoadingModal />
             <WindowHeader />
-            <Flex direction="column" flex={1} overflow="hidden">
+            <RmgPage>
                 <PageHeader />
                 <GlobalAlerts />
                 <Flex flex={1} overflow="hidden" position="relative">
@@ -34,9 +35,9 @@ export default function AppRoot() {
 
                     <SidePanel />
                 </Flex>
-            </Flex>
+            </RmgPage>
 
             <canvas style={{ display: 'none' }} />
-        </Flex>
+        </RmgWindow>
     );
 }

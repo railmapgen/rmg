@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Flex, Heading, HStack, Icon, IconButton, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { Heading, HStack, Icon, IconButton, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { getEnvironment, getVersion } from '../../util/config';
 import { Trans, useTranslation } from 'react-i18next';
 import { MdHelp, MdLocationCity, MdOpenInNew, MdTranslate } from 'react-icons/md';
@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { setStyle } from '../../redux/param/action';
 import * as ReactRouterDom from 'react-router-dom';
 import HelpModal from '../modal/help-modal';
-import { RmgEnvBadge } from '@railmapgen/rmg-components';
+import { RmgEnvBadge, RmgWindowHeader } from '@railmapgen/rmg-components';
 
 export default function WindowHeader() {
     const { t, i18n } = useTranslation();
@@ -25,7 +25,7 @@ export default function WindowHeader() {
     };
 
     return (
-        <Flex pl={2} pr={2} align="center">
+        <RmgWindowHeader>
             <Heading as="h4" size="md">
                 {t('WindowHeader.heading')}
             </Heading>
@@ -86,6 +86,6 @@ export default function WindowHeader() {
             </HStack>
 
             <HelpModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
-        </Flex>
+        </RmgWindowHeader>
     );
 }

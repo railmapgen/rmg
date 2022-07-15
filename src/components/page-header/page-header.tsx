@@ -1,12 +1,11 @@
 import React from 'react';
-import { Flex } from '@chakra-ui/react';
 import HeaderActions from './header-actions';
 import RmgButtonGroup from '../common/rmg-button-group';
 import { selectCanvas, zoomToScale } from '../../redux/app/app-slice';
 import { AllCanvas, canvasConfig, CanvasType } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { useRootDispatch, useRootSelector } from '../../redux';
-import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import { RmgFields, RmgFieldsField, RmgPageHeader } from '@railmapgen/rmg-components';
 import { MdZoomIn, MdZoomOut } from 'react-icons/md';
 
 export default function PageHeader() {
@@ -48,10 +47,10 @@ export default function PageHeader() {
     ];
 
     return (
-        <Flex align="center" wrap="wrap" pl={2} pr={3} py={1}>
+        <RmgPageHeader>
             <RmgFields fields={fields} />
 
             <HeaderActions />
-        </Flex>
+        </RmgPageHeader>
     );
 }

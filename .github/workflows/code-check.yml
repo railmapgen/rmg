@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-      - run: npm ci
+      - run: ELECTRON_SKIP_BINARY_DOWNLOAD=1 npm ci
       - name: Check
         run: |
           npm run lint

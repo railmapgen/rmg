@@ -4,7 +4,7 @@ set -eux
 # bump resources version
 npm i -g npm-check-updates
 ncu -f '/@railmapgen\/rmg-(?!components).*/' -t patch -u
-npm install
+ELECTRON_SKIP_BINARY_DOWNLOAD=1 npm install
 
 # run tests
 npm run lint:fix
