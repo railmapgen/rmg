@@ -10,7 +10,7 @@
         "@chakra-ui/react": "^2.2.4",
         "@emotion/react": "^11.9.3",
         "@emotion/styled": "^11.9.3",
-        "@railmapgen/rmg-components": "^2.0.1",
+        "@railmapgen/rmg-components": "^2.0.2",
         "@railmapgen/rmg-palette-resources": "^0.3.15",
         "@railmapgen/rmg-templates-resources": "^0.1.12",
         "@reduxjs/toolkit": "^1.8.3",
