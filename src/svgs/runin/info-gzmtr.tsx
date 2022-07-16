@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import StationNumber from '../gzmtr/station-icon/station-number';
 import { CanvasType, Name, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
+import CurrentStationName, { CurrentStationSecondaryName } from '../gzmtr/current-station-name';
 
 const InfoGZMTR = () => {
     const svgHeight = useRootSelector(store => store.param.svg_height);
@@ -12,13 +13,7 @@ const InfoGZMTR = () => {
     const currentStationIndex = useRootSelector(store => store.param.current_stn_idx);
     const curStnInfo = useRootSelector(store => store.param.stn_list[currentStationIndex]);
 
-    const curNameEl = React.useRef<SVGGElement | null>(null);
-    const [nameBBox, setNameBBox] = useState({ width: 0 } as DOMRect);
-    useEffect(
-        () => setNameBBox(curNameEl.current!.getBBox()),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [curStnInfo.name[0], curStnInfo.name[1]]
-    );
+    const [nameBBox, setNameBBox] = useState({ width: 0 } as SVGRect);
 
     const nextStnId = curStnInfo[direction === ShortDirection.left ? 'parents' : 'children'];
 
@@ -27,22 +22,33 @@ const InfoGZMTR = () => {
         next: `translate(${((direction === ShortDirection.left ? 1 : -1) * svgWidths[CanvasType.RunIn]) / 10},45)`,
     };
 
+    const transforms = {
+        nameGroup: {
+            x: svgWidths.runin / 2,
+            y:
+                0.5 * svgHeight -
+                50 -
+                (curStnInfo.name[1].split('\\').length - 1) * 18 -
+                (curStnInfo.secondaryName ? 29 : 0),
+        },
+        secondaryName: {
+            x: 0,
+            y: 70 + curStnInfo.name[1].split('\\').length * 36,
+        },
+    };
+
     return (
         <g>
             <g transform={infoPanelType === PanelTypeGZMTR.gz2otis ? otisTransforms.name : ''}>
-                <BigName
-                    ref={curNameEl}
-                    curName={curStnInfo.name}
-                    curSecName={curStnInfo.secondaryName}
-                    style={{
-                        ['--translate-y' as any]: `${
-                            0.5 * svgHeight -
-                            50 -
-                            (curStnInfo.name[1].split('\\').length - 1) * 18 -
-                            (curStnInfo.secondaryName ? 58 / 2 : 0)
-                        }px`,
-                    }}
-                />
+                <g textAnchor="middle" transform={`translate(${transforms.nameGroup.x},${transforms.nameGroup.y})`}>
+                    <CurrentStationName stnName={curStnInfo.name} onUpdate={setNameBBox} />
+                    {curStnInfo.secondaryName && (
+                        <CurrentStationSecondaryName
+                            secondaryName={curStnInfo.secondaryName}
+                            transform={`translate(${transforms.secondaryName.x},${transforms.secondaryName.y})`}
+                        />
+                    )}
+                </g>
 
                 <StationNumber
                     lineNum={lineNumber}
@@ -75,74 +81,6 @@ const InfoGZMTR = () => {
 };
 
 export default InfoGZMTR;
-
-const BigName = React.forwardRef(
-    (props: { curName: Name; curSecName: false | Name } & React.SVGProps<SVGGElement>, ref: React.Ref<SVGGElement>) => {
-        const { curName, curSecName, ...others } = props;
-
-        return (
-            <g id="big_name" {...others}>
-                {React.useMemo(
-                    () => (
-                        <g ref={ref}>
-                            <text className="rmg-name__zh" fontSize={90}>
-                                {curName[0]}
-                            </text>
-                            <g fontSize={36} className="rmg-name__en">
-                                {curName[1].split('\\').map((txt, i) => (
-                                    <text key={i} dy={70 + i * 36}>
-                                        {txt}
-                                    </text>
-                                ))}
-                            </g>
-                        </g>
-                    ),
-                    // eslint-disable-next-line react-hooks/exhaustive-deps
-                    [curName]
-                )}
-
-                {curSecName && (
-                    <BigSecName
-                        secName={curSecName}
-                        transform={`translate(0,${70 + curName[1].split('\\').length * 36})`}
-                    />
-                )}
-            </g>
-        );
-    }
-);
-
-const BigSecName = (props: { secName: Name } & React.SVGProps<SVGGElement>) => {
-    const { secName, ...others } = props;
-    const nameEl = useRef<SVGGElement | null>(null);
-    const [bBox, setBBox] = useState({ x: 0, width: 0 } as DOMRect);
-    useEffect(
-        () => setBBox(nameEl.current!.getBBox()),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.secName.toString()]
-    );
-
-    return (
-        <g {...others}>
-            <g transform="translate(0,4.5)" fontSize={36}>
-                <text textAnchor="end" x={bBox.x - 3} className="rmg-name__zh">
-                    {'('}
-                </text>
-                <text textAnchor="start" x={bBox.width + bBox.x + 3} className="rmg-name__zh">
-                    {')'}
-                </text>
-            </g>
-            <g ref={nameEl} textAnchor="middle">
-                <text className="rmg-name__zh" fontSize={26}>
-                    {secName[0]}
-                </text>
-                <text dy={22} className="rmg-name__en" fontSize={14}>
-                    {secName[1]}
-                </text>
-            </g>
-        </g>
-    );
-};
 
 const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
     const { nextId, nameBBox } = props;
