@@ -2,12 +2,6 @@
     font-size: 8.5px;
 }
 
-g#big_name {
-    text-anchor: middle;
-    transform: translate(var(--translate-x), var(--translate-y, 125px));
-    --translate-x: calc(var(--rmg-svg-width) / 2);
-}
-
 g#big_sec {
     transform: translate(var(--translate-x), var(--translate-y, 125px));
     --translate-x: calc(var(--rmg-svg-width) / 2);
