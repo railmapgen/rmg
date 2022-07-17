@@ -415,7 +415,7 @@ const StationGroup = (props: StationGroupProps) => {
 
 const ServicesElements = (props: { servicesLevel: Services[]; lineXs: number[] }) => {
     const { svg_height, direction, svgWidth } = useRootSelector(store => store.param);
-    const dy = -svg_height * (0.5 + 0.1);
+    const dy = -svg_height + 130;
 
     const servicesLevel = props.servicesLevel.map(
         service =>

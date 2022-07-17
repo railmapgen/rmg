@@ -241,6 +241,14 @@ export const updateParam = (param: { [x: string]: any }) => {
         param.platform_num = '';
     }
 
+    // Version 5.4.4
+    // Add one_line switch and int_padding for station
+    Object.values(param.stn_list).forEach(stn => {
+        const s = stn as StationInfo;
+        s.one_line = s.one_line ?? true;
+        s.int_padding = s.int_padding ?? 355;
+    });
+
     return param;
 };
 

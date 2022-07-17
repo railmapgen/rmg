@@ -753,6 +753,22 @@ export const updateStationLoopPivot = (stationId: string, loop_pivot: boolean) =
     };
 };
 
+export const updateStationOneLine = (stationId: string, one_line: boolean) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+
+        dispatch(setStation(stationId, { ...stationInfo, one_line }));
+    };
+};
+
+export const updateStationIntPadding = (stationId: string, int_padding: number) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+
+        dispatch(setStation(stationId, { ...stationInfo, int_padding }));
+    };
+};
+
 export const autoNumbering = (
     branchIndex: number,
     from: number,

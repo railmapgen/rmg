@@ -193,7 +193,9 @@
             "hsr": "High speed rail",
             "railway": "National rail",
             "disney": "Disneyland resort",
-            "pivot": "Pivot station on loop line"
+            "pivot": "Pivot station on loop line",
+            "oneLine": "Display Chinese and English in one line",
+            "intPadding": "Padding between station name and interchange box"
         },
         "footer": {
             "current": "Set as current",

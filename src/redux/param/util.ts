@@ -39,7 +39,7 @@ const initLineName = (language: LanguageCode): Name => {
     }
 };
 
-const initStationInfo = (id: string): StationInfo => ({
+export const initStationInfo = (id: string): StationInfo => ({
     name: ['未命名 ' + id, 'Unnamed ' + id],
     secondaryName: false,
     num: '00',
@@ -55,6 +55,8 @@ const initStationInfo = (id: string): StationInfo => ({
     },
     facility: Facilities.none,
     loop_pivot: false,
+    one_line: true,
+    int_padding: 0,
 });
 
 export const initParam = (style: RmgStyle, language: LanguageCode): RMGParam => {

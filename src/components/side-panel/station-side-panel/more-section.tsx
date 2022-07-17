@@ -3,7 +3,13 @@ import React from 'react';
 import RmgButtonGroup from '../../common/rmg-button-group';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import { Facilities, RmgStyle, Services } from '../../../constants/constants';
-import { updateStationFacility, updateStationLoopPivot, updateStationServices } from '../../../redux/param/action';
+import {
+    updateStationFacility,
+    updateStationLoopPivot,
+    updateStationServices,
+    updateStationOneLine,
+    updateStationIntPadding,
+} from '../../../redux/param/action';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
 
@@ -13,7 +19,9 @@ export default function MoreSection() {
 
     const selectedStation = useRootSelector(state => state.app.selectedStation);
     const style = useRootSelector(state => state.param.style);
-    const { services, facility, loop_pivot } = useRootSelector(state => state.param.stn_list[selectedStation]);
+    const { services, facility, loop_pivot, one_line, int_padding } = useRootSelector(
+        state => state.param.stn_list[selectedStation]
+    );
 
     const serviceSelections = Object.values(Services).map(service => {
         return {
@@ -67,6 +75,23 @@ export default function MoreSection() {
             hidden: ![RmgStyle.SHMetro].includes(style),
             minW: 'full',
             oneLine: true,
+        },
+        {
+            type: 'switch',
+            label: t('StationSidePanel.more.oneLine'),
+            isChecked: one_line,
+            onChange: checked => dispatch(updateStationOneLine(selectedStation, checked)),
+            hidden: ![RmgStyle.SHMetro].includes(style),
+            minW: 'full',
+            oneLine: true,
+        },
+        {
+            type: 'input',
+            label: t('StationSidePanel.more.intPadding'),
+            value: int_padding.toString(),
+            validator: val => Number.isInteger(val),
+            onChange: val => dispatch(updateStationIntPadding(selectedStation, Number(val))),
+            hidden: ![RmgStyle.SHMetro].includes(style),
         },
     ];
 

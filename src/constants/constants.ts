@@ -167,6 +167,14 @@ export interface StationInfo {
      * Is a pivot station in the loop.
      */
     loop_pivot: boolean;
+    /**
+     * Whether display Chinese and English in the same line.
+     */
+    one_line: boolean;
+    /**
+     * Padding between int box and station name.
+     */
+    int_padding: number;
 }
 
 export type StationDict = Record<string, StationInfo>;

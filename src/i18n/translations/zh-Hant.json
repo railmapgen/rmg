@@ -189,7 +189,9 @@
             "hsr": "高速鐵路",
             "railway": "國家鐵路",
             "disney": "迪士尼",
-            "pivot": "環綫上的樞紐車站"
+            "pivot": "環綫上的樞紐車站",
+            "oneLine": "在一行內展示中英文站名",
+            "intPadding": "車站名與換乘線路間的間距"
         },
         "footer": {
             "current": "設定為當前車站",

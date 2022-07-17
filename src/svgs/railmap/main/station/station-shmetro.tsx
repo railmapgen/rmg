@@ -1,4 +1,4 @@
-import React, { useRef, memo } from 'react';
+import React from 'react';
 import { InterchangeInfo, Name, Facilities, ColourHex } from '../../../../constants/constants';
 import { useRootSelector } from '../../../../redux';
 
@@ -63,8 +63,11 @@ const StationSHMetro = (props: Props) => {
                     direction={direction}
                     facility={stnInfo.facility}
                     bank={bank}
+                    oneLine={stnInfo.one_line}
+                    intPadding={stnInfo.int_padding}
                 />
             </g>
+            {stnState === 0 ? <CurrentStationText /> : undefined}
         </>
     );
 };
@@ -78,28 +81,16 @@ interface StationNameGElementProps {
     direction: 'l' | 'r';
     facility: Facilities;
     bank: -1 | 0 | 1;
+    oneLine: boolean;
+    intPadding: number;
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {
-    const { name, infos, stnState, direction, facility, bank } = props;
-    const nameENLn = props.name[1].split('\\').length;
+    const { name, infos, stnState, direction, facility, bank, oneLine, intPadding } = props;
+    const { svg_height } = useRootSelector(store => store.param);
 
-    // get the exact station name width so that the
-    // interchange station icon can be right after the station name
-    const stnNameEl = useRef<SVGGElement | null>(null);
-    // the original name position
-    const [bBox, setBBox] = React.useState({ width: 0 } as DOMRect);
-    React.useEffect(
-        () => setBBox(stnNameEl.current!.getBBox()),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [...name]
-    );
-    // the original name position's right x
-    const x = bBox.width + 5;
-
-    // rotate the station info now
-    // other wise the bcr will be inaccurate due to the rotation
-    // Chito: so, use BBox instead
+    // legacy ref to get the exact station name width
+    const stnNameEl = React.useRef<SVGGElement | null>(null);
 
     // simplify the calculation times
     const directionPolarity = direction === 'l' ? 1 : -1;
@@ -110,20 +101,26 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     // interchange will have a line under the name, and should be stretched when placed horizontal in loop
     const lineDx = bank ? -12 : 0;
 
+    const intEl = React.useRef<SVGGElement | null>(null);
+    const [intWidth, setIntWidth] = React.useState(0);
+    React.useEffect(() => setIntWidth(intEl.current?.getBBox().width ?? 0), [...JSON.stringify(infos)]);
+    const intDx = intPadding - intWidth;
+
     return (
         <>
             {infos.flat().length > 0 && (
                 <>
                     <line
                         x1={(lineDx + mainDx) * directionPolarity}
-                        x2={(mainDx + x) * directionPolarity}
+                        x2={intDx * directionPolarity}
                         stroke={stnState === -1 ? 'gray' : 'black'}
                         strokeWidth={0.5}
                     />
                     <IntBoxGroup
+                        ref={intEl}
                         intInfos={infos}
-                        transform={`translate(${(mainDx + x) * directionPolarity},-10.75)`}
                         direction={direction}
+                        transform={`translate(${intDx * directionPolarity},-10.75)`}
                     />
                 </>
             )}
@@ -132,22 +129,26 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
             <g
                 textAnchor={direction === 'l' ? 'start' : 'end'}
-                transform={`translate(${mainDx * directionPolarity},${-14.15625 - 2 - 12 * (nameENLn - 1)})`}
+                transform={`translate(${mainDx * directionPolarity},-16.15625)`}
             >
                 <StationName
                     ref={stnNameEl}
                     stnName={name}
+                    oneLine={oneLine}
+                    directionPolarity={directionPolarity}
                     fill={stnState === -1 ? 'gray' : stnState === 0 ? 'red' : 'black'}
                 />
 
                 {/* deal out-of-station here as it is a y axis element. leave out-of-system in IntBoxGroup*/}
                 {infos[1]?.length > 0 && (
-                    <g
-                        transform={`translate(${
-                            (x + infos.reduce((sum, infos) => sum + infos.length, 0) * 15) * directionPolarity
-                        },-30)`}
-                    >
+                    <g transform={`translate(${(intDx + intWidth / 2) * directionPolarity},-30)`}>
                         <OSIText osiInfos={infos[1]} />
+                    </g>
+                )}
+
+                {[...(infos[2] || [])].length > 0 && (
+                    <g transform={`translate(${((svg_height - 200) * 1.414 + 5) * directionPolarity},0)`}>
+                        <OSysIText osysiInfos={infos[2]} direction={props.direction} />
                     </g>
                 )}
             </g>
@@ -156,97 +157,134 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 };
 
 const StationName = React.forwardRef(
-    (props: { stnName: Name } & React.SVGProps<SVGGElement>, ref: React.Ref<SVGGElement>) => {
-        const { stnName, ...others } = props;
+    (
+        props: { stnName: Name; oneLine: boolean; directionPolarity: 1 | -1 } & React.SVGProps<SVGGElement>,
+        ref: React.Ref<SVGGElement>
+    ) => {
+        const { stnName, oneLine, directionPolarity, ...others } = props;
+
+        const zhEl = React.useRef<SVGGElement | null>(null);
+        const [enDx, setEnDx] = React.useState(0);
+        React.useEffect(() => {
+            if (oneLine) setEnDx(zhEl.current!.getBBox().width + 5);
+            else setEnDx(0);
+        }, [...stnName, oneLine]);
+
+        const [ZH_HEIGHT, EN_HEIGHT] = [20, 12];
 
         return (
             <g ref={ref} {...others}>
                 {React.useMemo(
                     () => (
                         <>
-                            {stnName[0].split('\\').map((txt, i, array) => (
-                                <text key={i} className="rmg-name__zh" dy={(array.length - 1 - i) * -15}>
-                                    {txt}
-                                </text>
-                            ))}
-                            <g fontSize={9.6}>
-                                {stnName[1].split('\\').map((txt, i) => (
-                                    <text key={i} className="rmg-name__en" dy={12 * (i + 1)}>
+                            <g fontSize={20} ref={zhEl}>
+                                {stnName[0].split('\\').map((txt, i, arr) => (
+                                    <text
+                                        key={i}
+                                        className="rmg-name__zh"
+                                        dy={
+                                            (arr.length - 1 - i) * -ZH_HEIGHT +
+                                            (oneLine ? EN_HEIGHT : (stnName[1].split('\\').length - 1) * -EN_HEIGHT)
+                                        }
+                                    >
+                                        {txt}
+                                    </text>
+                                ))}
+                            </g>
+                            <g fontSize={9.6} transform={`translate(${enDx * directionPolarity},0)`}>
+                                {stnName[1].split('\\').map((txt, i, arr) => (
+                                    <text key={i} className="rmg-name__en" dy={(arr.length - 2 - i) * -EN_HEIGHT + 2}>
                                         {txt}
                                     </text>
                                 ))}
                             </g>
                         </>
                     ),
-                    // eslint-disable-next-line react-hooks/exhaustive-deps
-                    [...stnName]
+                    [...stnName, oneLine, enDx, directionPolarity]
                 )}
             </g>
         );
     }
 );
 
-const IntBoxGroup = (props: { intInfos: InterchangeInfo[][]; direction: 'l' | 'r' } & React.SVGProps<SVGGElement>) => {
-    const { intInfos, direction, ...others } = props;
-
-    // also known as non out-of-system transfers
-    const boxInfos = [
-        ...intInfos[0],
-        ...(intInfos[1] || []),
-        // some dirty tricks here as shmetro shows maglev icon even it is a out-of-system transfer
-        // and display a maglev icon is much easier in boxInfos than in OSysIText
-        ...(intInfos[2]?.filter(info => Boolean(info[4].match(/^磁(悬)*浮/))) || []),
-    ];
-
-    let dx = 0; // update in every boxInfos
+const CurrentStationText = () => {
+    const { stn_list } = useRootSelector(store => store.param);
+    const servicesPresent = new Set(
+        Object.values(stn_list)
+            .map(stn => stn.services)
+            .flat()
+    );
+    const dy = [-1, 35, 50, 75][servicesPresent.size];
 
     return (
-        <g fontSize={14} textAnchor="middle" {...others}>
-            {boxInfos.map((info, i) => {
-                const isLineNumber = Boolean(info[4].match(/^\d.*$/));
-                const isMaglev = Boolean(info[4].match(/^磁(悬)*浮/));
-
-                if (props.direction === 'r') {
-                    dx -= (isLineNumber || isMaglev ? 20 : info[4].length * 14 + 12 + 0) + (i === 0 ? 0 : 5);
-                }
-
-                let el = <g />;
-                if (isMaglev) {
-                    el = (
-                        <g transform={`translate(${dx},-16)scale(0.1428571429)`} key={i}>
-                            <IntBoxMaglev info={info} />
-                        </g>
-                    );
-                } else if (isLineNumber) {
-                    el = (
-                        <g transform={`translate(${dx},0)`} key={i}>
-                            <IntBoxNumber info={info} />
-                        </g>
-                    );
-                } else {
-                    el = (
-                        <g transform={`translate(${dx},0)`} key={i}>
-                            <IntBoxLetter info={info} />
-                        </g>
-                    );
-                }
-
-                if (props.direction === 'l') {
-                    dx += isLineNumber || isMaglev ? 20 + 5 : info[4].length * 14 + 12 + 5;
-                }
-                return el;
-            })}
-
-            {[...(intInfos[2] || [])].length > 0 && (
-                <g transform={`translate(${dx - (props.direction === 'r' ? 5 : 0)},0)`} key={boxInfos.length + 1}>
-                    <OSysIText osysiInfos={intInfos[2]} direction={props.direction} />
-                </g>
-            )}
+        <g transform={`translate(0, ${dy})`}>
+            <text className="rmg-name__zh" fill="red" textAnchor="middle">
+                本站
+            </text>
         </g>
     );
 };
 
-const IntBoxMaglev = memo(
+const IntBoxGroup = React.forwardRef(
+    (
+        props: { intInfos: InterchangeInfo[][]; direction: 'l' | 'r' } & React.SVGProps<SVGGElement>,
+        ref: React.Ref<SVGGElement>
+    ) => {
+        const { intInfos, direction, ...others } = props;
+
+        // also known as non out-of-system transfers
+        const boxInfos = [
+            ...intInfos[0],
+            ...(intInfos[1] || []),
+            // some dirty tricks here as shmetro shows maglev icon even it is a out-of-system transfer
+            // and display a maglev icon is much easier in boxInfos than in OSysIText
+            ...(intInfos[2]?.filter(info => Boolean(info[4].match(/^磁(悬)*浮/))) || []),
+        ];
+
+        let dx = 0; // update in every boxInfos
+
+        return (
+            <g ref={ref} fontSize={14} textAnchor="middle" {...others}>
+                {boxInfos.map((info, i) => {
+                    const isLineNumber = Boolean(info[4].match(/^\d.*$/));
+                    const isMaglev = Boolean(info[4].match(/^磁(悬)*浮/));
+
+                    if (props.direction === 'r') {
+                        dx -= (isLineNumber || isMaglev ? 20 : info[4].length * 14 + 12) + (i === 0 ? 0 : 5);
+                    }
+
+                    let el = <g />;
+                    if (isMaglev) {
+                        el = (
+                            <g transform={`translate(${dx},-16)scale(0.1428571429)`} key={i}>
+                                <IntBoxMaglev info={info} />
+                            </g>
+                        );
+                    } else if (isLineNumber) {
+                        el = (
+                            <g transform={`translate(${dx},0)`} key={i}>
+                                <IntBoxNumber info={info} />
+                            </g>
+                        );
+                    } else {
+                        el = (
+                            <g transform={`translate(${dx},0)`} key={i}>
+                                <IntBoxLetter info={info} />
+                            </g>
+                        );
+                    }
+
+                    if (props.direction === 'l') {
+                        dx += isLineNumber || isMaglev ? 20 + 5 : info[4].length * 14 + 12 + 5;
+                    }
+                    return el;
+                })}
+            </g>
+        );
+    }
+);
+
+const IntBoxMaglev = React.memo(
     (props: { info: InterchangeInfo }) => (
         <>
             <use xlinkHref="#intbox_maglev" fill={props.info[2]} stroke={props.info[2]} />
@@ -255,7 +293,7 @@ const IntBoxMaglev = memo(
     (prevProps, nextProps) => prevProps.info.toString() === nextProps.info.toString()
 );
 
-const IntBoxNumber = memo(
+const IntBoxNumber = React.memo(
     (props: { info: InterchangeInfo }) => (
         <>
             <use xlinkHref="#intbox_number" fill={props.info[2]} />
@@ -268,7 +306,7 @@ const IntBoxNumber = memo(
     (prevProps, nextProps) => prevProps.info.toString() === nextProps.info.toString()
 );
 
-const IntBoxLetter = memo(
+const IntBoxLetter = React.memo(
     (props: { info: InterchangeInfo }) => {
         // box width: 16 * number of characters + 12
         const textCount = props.info[4].split('\\')[0].length;

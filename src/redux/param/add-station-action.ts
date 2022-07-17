@@ -1,27 +1,9 @@
+import { nanoid } from 'nanoid';
 import { RootDispatch, RootState } from '../index';
-import { BranchStyle, Facilities, Services, ShortDirection, StationInfo } from '../../constants/constants';
+import { BranchStyle } from '../../constants/constants';
 import { getYShareMTR } from '../../methods';
 import { setStationsBulk } from './action';
-import { nanoid } from 'nanoid';
-
-const getStationTemplate = (id: string): StationInfo => ({
-    name: ['未命名 ' + id, 'Unnamed ' + id],
-    secondaryName: false,
-    num: '00',
-    services: [Services.local],
-    parents: [],
-    children: [],
-    branch: { left: [], right: [] },
-    transfer: {
-        info: [[]],
-        // type: 'none',
-        tick_direc: ShortDirection.right,
-        paid_area: true,
-        osi_names: [],
-    },
-    facility: Facilities.none,
-    loop_pivot: false,
-});
+import { initStationInfo } from './util';
 
 export const addStation = (where: `${number}` | 'new', from: string, to: string, position?: 'upper' | 'lower') => {
     return (dispatch: RootDispatch, getState: () => RootState): string | false => {
@@ -32,7 +14,7 @@ export const addStation = (where: `${number}` | 'new', from: string, to: string,
         while (newId in stationList) {
             newId = nanoid(6);
         }
-        const newStationInfo = getStationTemplate(newId);
+        const newStationInfo = initStationInfo(newId);
 
         if (where !== 'new') {
             const nextStationList = {
