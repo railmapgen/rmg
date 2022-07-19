@@ -129,7 +129,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
             <g
                 textAnchor={direction === 'l' ? 'start' : 'end'}
-                transform={`translate(${mainDx * directionPolarity},-16.15625)`}
+                transform={`translate(${mainDx * directionPolarity},-14)`}
             >
                 <StationName
                     ref={stnNameEl}
@@ -139,15 +139,16 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                     fill={stnState === -1 ? 'gray' : stnState === 0 ? 'red' : 'black'}
                 />
 
-                {/* deal out-of-station here as it is a y axis element. leave out-of-system in IntBoxGroup*/}
+                {/* deal out-of-station here as it is a y axis element. leave out-of-system in IntBoxGroup */}
                 {infos[1]?.length > 0 && (
                     <g transform={`translate(${(intDx + intWidth / 2) * directionPolarity},-30)`}>
                         <OSIText osiInfos={infos[1]} />
                     </g>
                 )}
 
+                {/* deal out-of-system here as it's dx is fixed and has nothing to do with IntBoxGroup */}
                 {[...(infos[2] || [])].length > 0 && (
-                    <g transform={`translate(${((svg_height - 200) * 1.414 + 5) * directionPolarity},0)`}>
+                    <g transform={`translate(${(intPadding + 5) * directionPolarity},0)`}>
                         <OSysIText osysiInfos={infos[2]} direction={props.direction} />
                     </g>
                 )}
@@ -170,14 +171,14 @@ const StationName = React.forwardRef(
             else setEnDx(0);
         }, [...stnName, oneLine]);
 
-        const [ZH_HEIGHT, EN_HEIGHT] = [20, 12];
+        const [ZH_HEIGHT, EN_HEIGHT] = [20, 8];
 
         return (
             <g ref={ref} {...others}>
                 {React.useMemo(
                     () => (
                         <>
-                            <g fontSize={20} ref={zhEl}>
+                            <g ref={zhEl}>
                                 {stnName[0].split('\\').map((txt, i, arr) => (
                                     <text
                                         key={i}
@@ -191,7 +192,7 @@ const StationName = React.forwardRef(
                                     </text>
                                 ))}
                             </g>
-                            <g fontSize={9.6} transform={`translate(${enDx * directionPolarity},0)`}>
+                            <g fontSize={8} transform={`translate(${enDx * directionPolarity},0)`}>
                                 {stnName[1].split('\\').map((txt, i, arr) => (
                                     <text key={i} className="rmg-name__en" dy={(arr.length - 2 - i) * -EN_HEIGHT + 2}>
                                         {txt}

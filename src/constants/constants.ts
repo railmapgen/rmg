@@ -172,7 +172,9 @@ export interface StationInfo {
      */
     one_line: boolean;
     /**
-     * Padding between int box and station name.
+     * Padding between int box and station name. Default to 355 in updateParam.
+     * This is calculate from (svg_height - 200) * 1.414 where typical svg_height
+     * is 450 and station element is tilted at a 45 degree angle.
      */
     int_padding: number;
 }
