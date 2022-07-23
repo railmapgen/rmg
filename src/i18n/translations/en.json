@@ -195,7 +195,9 @@
             "disney": "Disneyland resort",
             "pivot": "Pivot station on loop line",
             "oneLine": "Display Chinese and English in one line",
-            "intPadding": "Padding between station name and interchange box"
+            "intPadding": "Padding between station name and interchange box",
+            "intPaddingApplyGlobal": "Apply current padding to all stations",
+            "apply": "Apply"
         },
         "footer": {
             "current": "Set as current",

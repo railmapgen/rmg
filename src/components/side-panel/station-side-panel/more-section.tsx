@@ -9,6 +9,7 @@ import {
     updateStationServices,
     updateStationOneLine,
     updateStationIntPadding,
+    updateStationIntPaddingToAll,
 } from '../../../redux/param/action';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +19,7 @@ export default function MoreSection() {
     const dispatch = useRootDispatch();
 
     const selectedStation = useRootSelector(state => state.app.selectedStation);
-    const style = useRootSelector(state => state.param.style);
+    const { style, loop } = useRootSelector(state => state.param);
     const { services, facility, loop_pivot, one_line, int_padding } = useRootSelector(
         state => state.param.stn_list[selectedStation]
     );
@@ -72,7 +73,7 @@ export default function MoreSection() {
             label: t('StationSidePanel.more.pivot'),
             isChecked: loop_pivot,
             onChange: checked => dispatch(updateStationLoopPivot(selectedStation, checked)),
-            hidden: ![RmgStyle.SHMetro].includes(style),
+            hidden: ![RmgStyle.SHMetro].includes(style) || !loop,
             minW: 'full',
             oneLine: true,
         },
@@ -91,6 +92,19 @@ export default function MoreSection() {
             value: int_padding.toString(),
             validator: val => Number.isInteger(val),
             onChange: val => dispatch(updateStationIntPadding(selectedStation, Number(val))),
+            hidden: ![RmgStyle.SHMetro].includes(style),
+        },
+        {
+            type: 'custom',
+            label: t('StationSidePanel.more.intPaddingApplyGlobal'),
+            component: (
+                <RmgButtonGroup
+                    selections={[{ label: t('StationSidePanel.more.apply'), value: '', disabled: false }]}
+                    defaultValue=""
+                    onChange={_ => dispatch(updateStationIntPaddingToAll(selectedStation))}
+                />
+            ),
+            oneLine: true,
             hidden: ![RmgStyle.SHMetro].includes(style),
         },
     ];

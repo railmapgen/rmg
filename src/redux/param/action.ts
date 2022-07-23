@@ -769,6 +769,20 @@ export const updateStationIntPadding = (stationId: string, int_padding: number) 
     };
 };
 
+export const updateStationIntPaddingToAll = (stationId: string) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+        const int_padding = stationInfo.int_padding;
+
+        const stationList = JSON.parse(JSON.stringify(getState().param.stn_list)) as StationDict;
+        Object.values(stationList).forEach(stnInfo => {
+            stnInfo.int_padding = int_padding;
+        });
+
+        dispatch(setStationsBulk(stationList));
+    };
+};
+
 export const autoNumbering = (
     branchIndex: number,
     from: number,

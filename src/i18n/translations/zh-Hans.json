@@ -191,7 +191,9 @@
             "disney": "迪士尼",
             "pivot": "环线上的枢纽车站",
             "oneLine": "在一行内展示中英文站名",
-            "intPadding": "车站名与换乘线路间的间距"
+            "intPadding": "车站名与换乘线路间的间距",
+            "intPaddingApplyGlobal": "将当前的间距应用到所有车站上",
+            "apply": "应用"
         },
         "footer": {
             "current": "设置为当前车站",
