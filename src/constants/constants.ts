@@ -263,7 +263,7 @@ export interface RMGParam {
     loop: boolean;
     loop_info: {
         /**
-         * Bank the closed rectangular path or not.
+         * Bank the closed rectangular path (railmap) or not.
          */
         bank: boolean;
         /**

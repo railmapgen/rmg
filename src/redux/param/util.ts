@@ -56,7 +56,7 @@ export const initStationInfo = (id: string): StationInfo => ({
     facility: Facilities.none,
     loop_pivot: false,
     one_line: true,
-    int_padding: 0,
+    int_padding: 355,
 });
 
 export const initParam = (style: RmgStyle, language: LanguageCode): RMGParam => {

@@ -246,7 +246,7 @@ export const updateParam = (param: { [x: string]: any }) => {
     Object.values(param.stn_list).forEach(stn => {
         const s = stn as StationInfo;
         s.one_line = s.one_line ?? true;
-        s.int_padding = s.int_padding ?? 355;
+        s.int_padding = s.int_padding ?? (param.loop ? 250 : 355);
     });
 
     return param;
