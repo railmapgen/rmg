@@ -93,7 +93,7 @@ const IndoorSHMetro = () => {
         [deps]
     );
     const ys = Object.keys(yShares).reduce(
-        (acc, cur) => ({ ...acc, [cur]: yShares[cur] * param.branch_spacing * 2 }),
+        (acc, cur) => ({ ...acc, [cur]: (yShares[cur] * param.branchSpacingPct * param.svg_height) / 150 }),
         {} as typeof yShares
     );
 
@@ -125,7 +125,7 @@ const IndoorSHMetro = () => {
         lineXs,
         xs,
         ys,
-        param.branch_spacing * 2,
+        (param.branchSpacingPct * param.svg_height) / 150,
         criticalPath,
         0
     );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { drawLine } from '../../methods/share';
-import { calculateColineStations, calculateColine } from '../../methods/shmetro-coline';
-import { AtLeastOneOfPartial, Services, InterchangeInfo } from '../../../../constants/constants';
+import { calculateColine, calculateColineStations } from '../../methods/shmetro-coline';
+import { AtLeastOneOfPartial, InterchangeInfo, Services } from '../../../../constants/constants';
 import { useRootSelector } from '../../../../redux';
 import { _linePath, StationGroupProps } from '../main-shmetro';
 import StationSHMetro from '../station/station-shmetro';
@@ -31,10 +31,11 @@ export const ColineSHMetro = (props: Props) => {
     const { xs, servicesPresent, stnStates } = props;
 
     const {
+        svg_height,
         direction,
         stn_list,
         current_stn_idx,
-        branch_spacing,
+        branchSpacingPct,
         info_panel_type,
         coline: colineInfo,
     } = useRootSelector(store => store.param);
@@ -60,7 +61,7 @@ export const ColineSHMetro = (props: Props) => {
         .filter(([k, v]) => v <= 0)
         .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {} as typeof yShares);
     const colineYs = Object.keys(colineYShares).reduce(
-        (acc, cur) => ({ ...acc, [cur]: -colineYShares[cur] * branch_spacing }),
+        (acc, cur) => ({ ...acc, [cur]: (-colineYShares[cur] * branchSpacingPct * svg_height) / 300 }),
         {} as typeof yShares
     );
 
