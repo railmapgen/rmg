@@ -66,7 +66,7 @@ export default function LayoutSection() {
             label: t('StyleSidePanel.layout.padding'),
             value: padding,
             min: 0,
-            max: 100,
+            max: 50,
             onChange: val => dispatch(setPaddingPercentage(val)),
         },
         {
