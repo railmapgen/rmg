@@ -217,6 +217,8 @@ export interface RMGParam {
      * Branch spacing (in pixels) of line.
      */
     branch_spacing: number;
+    // Branch spacing percentage (space between upper and lower branch)
+    branchSpacingPct: number;
     direction: ShortDirection;
     /**
      * Platform number of the destination canvas. Set to '' will hide the element.

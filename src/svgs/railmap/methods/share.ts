@@ -93,17 +93,6 @@ export const getXShareMTR = (stnId: string, adjMat: ReturnType<typeof adjacencyL
     }
 };
 
-const getYShare = (stnId: string, stnList: { [stnId: string]: StationInfo }) => {
-    return Global.getYShareMTR(stnId, stnList);
-};
-
-/**
- * Vertical position (in pixels) of station icon related to vertical position of line.
- */
-export const getYReal = (stnId: string, param: RMGParam) => {
-    return -getYShare(stnId, param.stn_list) * param.branch_spacing;
-};
-
 const _isPredecessor = (stnId1: string, stnId2: string, routes: string[][]) => {
     for (let route of routes) {
         let idx1 = route.indexOf(stnId1);
