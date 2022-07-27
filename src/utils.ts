@@ -256,6 +256,8 @@ export const updateParam = (param: { [x: string]: any }) => {
         } else {
             param.branchSpacingPct = Math.round((param.branch_spacing / param.svg_height) * 200);
         }
+
+        delete param.branch_spacing;
     }
 
     return param;

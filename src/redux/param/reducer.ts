@@ -1,7 +1,6 @@
 import { CityCode } from '@railmapgen/rmg-palette-resources';
 import { MonoColour, PanelTypeGZMTR, RMGParam, RmgStyle, ShortDirection } from '../../constants/constants';
 import {
-    SET_BRANCH_SPACING,
     SET_BRANCH_SPACING_PCT,
     SET_COLINE_BULK,
     SET_CURRENT_STATION,
@@ -27,7 +26,6 @@ import {
     SET_SVG_WIDTH,
     SET_THEME,
     SET_Y_PERCENTAGE,
-    setBranchSpacingAction,
     setBranchSpacingPctAction,
     setColineBulkAction,
     setCurrentStationAction,
@@ -66,7 +64,6 @@ const initialState: RMGParam = {
     style: RmgStyle.MTR,
     y_pc: 50,
     padding: 10,
-    branch_spacing: 10,
     branchSpacingPct: 10,
     direction: ShortDirection.left,
     platform_num: '1',
@@ -105,7 +102,6 @@ export default function ParamReducer(
         | setSvgHeightAction
         | setSvgWidthAction
         | setYPercentageAction
-        | setBranchSpacingAction
         | setBranchSpacingPctAction
         | setPaddingPercentageAction
         | setDirectionIndicatorXAction
@@ -138,8 +134,6 @@ export default function ParamReducer(
             return { ...state, svgWidth: { ...state.svgWidth, [action.canvas]: action.svgWidth } };
         case SET_Y_PERCENTAGE:
             return { ...state, y_pc: action.yPercentage };
-        case SET_BRANCH_SPACING:
-            return { ...state, branch_spacing: action.branchSpacing };
         case SET_BRANCH_SPACING_PCT:
             return { ...state, branchSpacingPct: action.branchSpacingPct };
         case SET_PADDING_PERCENTAGE:
