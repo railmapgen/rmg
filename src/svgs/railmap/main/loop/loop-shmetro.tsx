@@ -84,7 +84,7 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
     // all y_shares in branches will be 0
     const y_shares = { ...y_shares_loop, ...Object.fromEntries(loop_branches.flat().map(stn => [stn, 0])) };
     // before: branch_spacing / 400 * svg_height (Chito)
-    const verticalPadding = ((branchSpacingPct * svg_height) / 300 / 400) * svg_height;
+    const verticalPadding = (branchSpacingPct * svg_height) / 300;
     const line_ys = [
         225 + verticalPadding,
         svg_height - 75 - (canvas === CanvasType.RailMap ? 0 : 125) - verticalPadding,
