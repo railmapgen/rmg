@@ -5,11 +5,11 @@ import { CanvasType, Services, ShortDirection } from '../../../../constants/cons
 import { useRootSelector } from '../../../../redux';
 import { isColineBranch } from '../../../../redux/param/coline-action';
 import {
+    get_xshares_yshares_of_loop,
+    LoopStns,
     split_loop_stns,
     split_loop_stns_with_branch,
     split_loop_stns_with_branches,
-    LoopStns,
-    get_xshares_yshares_of_loop,
 } from '../../methods/shmetro-loop';
 import { get_loop_branches, LoopBranches } from './loop-branches-shmetro';
 import { LoopColine } from './loop-coline-shmetro';
@@ -22,7 +22,7 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
         svgWidth: svg_width,
         svg_height,
         padding,
-        branch_spacing,
+        branchSpacingPct,
         direction,
         info_panel_type,
         stn_list,
@@ -83,9 +83,11 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
 
     // all y_shares in branches will be 0
     const y_shares = { ...y_shares_loop, ...Object.fromEntries(loop_branches.flat().map(stn => [stn, 0])) };
+    // before: branch_spacing / 400 * svg_height (Chito)
+    const verticalPadding = (branchSpacingPct * svg_height) / 300;
     const line_ys = [
-        225 + (branch_spacing / 400) * svg_height,
-        svg_height - 75 - (canvas === CanvasType.RailMap ? 0 : 125) - (branch_spacing / 400) * svg_height,
+        225 + verticalPadding,
+        svg_height - 75 - (canvas === CanvasType.RailMap ? 0 : 125) - verticalPadding,
     ] as [number, number];
     const ys = Object.keys(y_shares).reduce(
         (acc, cur) => ({

@@ -1,5 +1,5 @@
 import React from 'react';
-import { adjacencyList, getXShareMTR, criticalPathMethod, drawLine, getStnState } from '../methods/share';
+import { adjacencyList, criticalPathMethod, drawLine, getStnState, getXShareMTR } from '../methods/share';
 import StationSHMetro from './station/station-shmetro';
 import ColineSHMetro from './coline/coline-shmetro';
 import { AtLeastOneOfPartial, Services, StationDict } from '../../../constants/constants';
@@ -16,7 +16,7 @@ type Paths = AtLeastOneOfPartial<Record<Services, servicesPath>>;
 const MainSHMetro = () => {
     const { routes, branches, depsStr: deps } = useRootSelector(store => store.helper);
     const param = useRootSelector(store => store.param);
-    const { stn_list, branch_spacing, coline, direction } = useRootSelector(store => store.param);
+    const { svg_height, stn_list, branchSpacingPct, coline, direction } = useRootSelector(store => store.param);
 
     const adjMat = adjacencyList(
         param.stn_list,
@@ -79,7 +79,7 @@ const MainSHMetro = () => {
         .filter(([k, v]) => v >= 0)
         .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {} as typeof yShares);
     const lineYs = Object.keys(lineYShares).reduce(
-        (acc, cur) => ({ ...acc, [cur]: -lineYShares[cur] * branch_spacing }),
+        (acc, cur) => ({ ...acc, [cur]: (-lineYShares[cur] * branchSpacingPct * svg_height) / 300 }),
         {} as typeof yShares
     );
 

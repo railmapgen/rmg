@@ -75,14 +75,17 @@ const getXShare = (stnId: string, adjMat: ReturnType<typeof adjacencyList>, bran
 const MainGZMTR = () => {
     const { branches, routes, depsStr: deps } = useRootSelector(store => store.helper);
 
-    const svgWidths = useRootSelector(store => store.param.svgWidth);
-    const yPercentage = useRootSelector(store => store.param.y_pc);
-    const paddingPercentage = useRootSelector(store => store.param.padding);
-    const branchSpacing = useRootSelector(store => store.param.branch_spacing);
-    const direction = useRootSelector(store => store.param.direction);
-    const lineName = useRootSelector(store => store.param.line_name);
-    const currentStationIndex = useRootSelector(store => store.param.current_stn_idx);
-    const stationList = useRootSelector(store => store.param.stn_list);
+    const {
+        svgWidth: svgWidths,
+        svg_height: svgH,
+        y_pc: yPercentage,
+        padding: paddingPercentage,
+        branchSpacingPct,
+        direction,
+        line_name: lineName,
+        current_stn_idx: currentStationIndex,
+        stn_list: stationList,
+    } = useRootSelector(store => store.param);
 
     const adjMat = adjacencyList(stationList, wideFactor, wideFactor);
 
@@ -132,7 +135,7 @@ const MainGZMTR = () => {
         [deps]
     );
     const ys = Object.keys(yShares).reduce(
-        (acc, cur) => ({ ...acc, [cur]: -yShares[cur] * branchSpacing }),
+        (acc, cur) => ({ ...acc, [cur]: (-yShares[cur] * branchSpacingPct * svgH) / 200 }),
         {} as typeof yShares
     );
 

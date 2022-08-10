@@ -97,7 +97,7 @@ export const initParam = (style: RmgStyle, language: LanguageCode): RMGParam => 
         style: style,
         y_pc: 50,
         padding: 10,
-        branch_spacing: 10,
+        branchSpacingPct: 33,
         direction: ShortDirection.left,
         platform_num: '1',
         theme: initTheme(style),

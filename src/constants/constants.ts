@@ -213,10 +213,10 @@ export interface RMGParam {
      * Left and right margin of line (in percentage).
      */
     padding: number;
-    /**
-     * Branch spacing (in pixels) of line.
+    /** Branch spacing percentage (space between upper and lower branch).
+     *  In SHMetro loop line, this is also used in determining vertical padding.
      */
-    branch_spacing: number;
+    branchSpacingPct: number;
     direction: ShortDirection;
     /**
      * Platform number of the destination canvas. Set to '' will hide the element.

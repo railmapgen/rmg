@@ -1,7 +1,8 @@
 import { CityCode } from '@railmapgen/rmg-palette-resources';
-import { MonoColour, PanelTypeGZMTR, RMGParam, ShortDirection, RmgStyle } from '../../constants/constants';
+import { MonoColour, PanelTypeGZMTR, RMGParam, RmgStyle, ShortDirection } from '../../constants/constants';
 import {
-    SET_BRANCH_SPACING,
+    SET_BRANCH_SPACING_PCT,
+    SET_COLINE_BULK,
     SET_CURRENT_STATION,
     SET_CUSTOMISED_MTR_DESTINATION,
     SET_DIRECTION,
@@ -10,6 +11,8 @@ import {
     SET_FULL_PARAM,
     SET_LINE_NAME,
     SET_LINE_NUM,
+    SET_LOOP,
+    SET_LOOP_INFO,
     SET_NAME_POSITION,
     SET_NOTES,
     SET_PADDING_PERCENTAGE,
@@ -18,15 +21,13 @@ import {
     SET_PSD_NUM,
     SET_STATION,
     SET_STATIONS_BULK,
+    SET_STYLE,
     SET_SVG_HEIGHT,
     SET_SVG_WIDTH,
     SET_THEME,
     SET_Y_PERCENTAGE,
-    SET_STYLE,
-    SET_COLINE_BULK,
-    SET_LOOP,
-    SET_LOOP_INFO,
-    setBranchSpacingAction,
+    setBranchSpacingPctAction,
+    setColineBulkAction,
     setCurrentStationAction,
     setCustomisedMtrDestinationAction,
     setDirectionAction,
@@ -35,6 +36,8 @@ import {
     setFullParamAction,
     setLineNameAction,
     setLineNumAction,
+    setLoopAction,
+    setLoopInfoAction,
     setNamePositionAction,
     setNotesAction,
     setPaddingPercentageAction,
@@ -43,14 +46,11 @@ import {
     setPsdNumAction,
     setStationAction,
     setStationsBulkAction,
+    setStyleAction,
     setSvgHeightAction,
     setSvgWidthAction,
     setThemeAction,
     setYPercentageAction,
-    setStyleAction,
-    setColineBulkAction,
-    setLoopAction,
-    setLoopInfoAction,
 } from './action';
 
 const initialState: RMGParam = {
@@ -64,7 +64,7 @@ const initialState: RMGParam = {
     style: RmgStyle.MTR,
     y_pc: 50,
     padding: 10,
-    branch_spacing: 10,
+    branchSpacingPct: 10,
     direction: ShortDirection.left,
     platform_num: '1',
     theme: [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white],
@@ -102,7 +102,7 @@ export default function ParamReducer(
         | setSvgHeightAction
         | setSvgWidthAction
         | setYPercentageAction
-        | setBranchSpacingAction
+        | setBranchSpacingPctAction
         | setPaddingPercentageAction
         | setDirectionIndicatorXAction
         | setDirectionIndicatorYAction
@@ -134,8 +134,8 @@ export default function ParamReducer(
             return { ...state, svgWidth: { ...state.svgWidth, [action.canvas]: action.svgWidth } };
         case SET_Y_PERCENTAGE:
             return { ...state, y_pc: action.yPercentage };
-        case SET_BRANCH_SPACING:
-            return { ...state, branch_spacing: action.branchSpacing };
+        case SET_BRANCH_SPACING_PCT:
+            return { ...state, branchSpacingPct: action.branchSpacingPct };
         case SET_PADDING_PERCENTAGE:
             return { ...state, padding: action.paddingPercentage };
         case SET_DIRECTION_INDICATOR_X:

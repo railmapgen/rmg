@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useRootSelector } from '../../../redux';
 import { canvasConfig, RmgStyle } from '../../../constants/constants';
 import {
-    setBranchSpacing,
+    setBranchSpacingPct,
     setDirectionIndicatorX,
     setDirectionIndicatorY,
     setPaddingPercentage,
@@ -24,7 +24,7 @@ export default function LayoutSection() {
         svgWidth,
         svg_height,
         y_pc,
-        branch_spacing,
+        branchSpacingPct,
         padding,
         direction_gz_x,
         direction_gz_y,
@@ -55,11 +55,11 @@ export default function LayoutSection() {
         },
         {
             type: 'slider',
-            label: !loop ? t('StyleSidePanel.layout.branchSpacing') : t('StyleSidePanel.layout.branchSpacingLoop'),
-            value: branch_spacing,
+            label: !loop ? t('Branch spacing') : t('StyleSidePanel.layout.branchSpacingLoop'),
+            value: branchSpacingPct,
             min: 0,
-            max: 100,
-            onChange: val => dispatch(setBranchSpacing(val)),
+            max: loop ? 50 : 100,
+            onChange: val => dispatch(setBranchSpacingPct(val)),
         },
         {
             type: 'slider',

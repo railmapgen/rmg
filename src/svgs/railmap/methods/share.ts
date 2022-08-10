@@ -1,5 +1,4 @@
-import * as Global from '../../../methods';
-import { RMGParam, ShortDirection, StationDict, StationInfo } from '../../../constants/constants';
+import { ShortDirection, StationDict, StationInfo } from '../../../constants/constants';
 
 /**
  * Compute the adjacency list of the graph.
@@ -93,17 +92,6 @@ export const getXShareMTR = (stnId: string, adjMat: ReturnType<typeof adjacencyL
     }
 };
 
-const getYShare = (stnId: string, stnList: { [stnId: string]: StationInfo }) => {
-    return Global.getYShareMTR(stnId, stnList);
-};
-
-/**
- * Vertical position (in pixels) of station icon related to vertical position of line.
- */
-export const getYReal = (stnId: string, param: RMGParam) => {
-    return -getYShare(stnId, param.stn_list) * param.branch_spacing;
-};
-
 const _isPredecessor = (stnId1: string, stnId2: string, routes: string[][]) => {
     for (let route of routes) {
         let idx1 = route.indexOf(stnId1);
@@ -170,16 +158,6 @@ export class Stations {
      */
     protected rightWideFactor = (stnId: string) => {
         return 0;
-    };
-
-    /**
-     * Path weight from station 1 to station 2 (station 2 must be a child of station 1, otherwise return `-Infinity`).
-     */
-    public pathWeight = (stnId1: string, stnId2: string) => {
-        if (!this.stnList[stnId1].children.includes(stnId2)) {
-            return -Infinity;
-        }
-        return 1 + this.rightWideFactor(stnId1) + this.leftWideFactor(stnId2);
     };
 
     protected getYShare(stnId: string, branches?: string[][]): number {

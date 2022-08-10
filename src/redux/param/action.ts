@@ -29,7 +29,7 @@ export const SET_STYLE = 'SET_STYLE';
 export const SET_SVG_HEIGHT = 'SET_SVG_HEIGHT';
 export const SET_SVG_WIDTH = 'SET_SVG_WIDTH';
 export const SET_Y_PERCENTAGE = 'SET_Y_PERCENTAGE';
-export const SET_BRANCH_SPACING = 'SET_BRANCH_SPACING';
+export const SET_BRANCH_SPACING_PCT = 'SET_BRANCH_SPACING_PCT';
 export const SET_PADDING_PERCENTAGE = 'SET_PADDING_PERCENTAGE';
 export const SET_DIRECTION_INDICATOR_X = 'SET_DIRECTION_INDICATOR_X';
 export const SET_DIRECTION_INDICATOR_Y = 'SET_DIRECTION_INDICATOR_Y';
@@ -82,9 +82,9 @@ export interface setYPercentageAction {
     yPercentage: number;
 }
 
-export interface setBranchSpacingAction {
-    type: typeof SET_BRANCH_SPACING;
-    branchSpacing: number;
+export interface setBranchSpacingPctAction {
+    type: typeof SET_BRANCH_SPACING_PCT;
+    branchSpacingPct: number;
 }
 
 export interface setPaddingPercentageAction {
@@ -211,8 +211,8 @@ export const setYPercentage = (yPercentage: number): setYPercentageAction => {
     return { type: SET_Y_PERCENTAGE, yPercentage };
 };
 
-export const setBranchSpacing = (branchSpacing: number): setBranchSpacingAction => {
-    return { type: SET_BRANCH_SPACING, branchSpacing };
+export const setBranchSpacingPct = (branchSpacingPct: number): setBranchSpacingPctAction => {
+    return { type: SET_BRANCH_SPACING_PCT, branchSpacingPct };
 };
 
 export const setPaddingPercentage = (paddingPercentage: number): setPaddingPercentageAction => {

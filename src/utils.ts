@@ -249,6 +249,17 @@ export const updateParam = (param: { [x: string]: any }) => {
         s.int_padding = s.int_padding ?? (param.loop ? 250 : 355);
     });
 
+    // Version 5.4.19
+    if (param.branchSpacingPct === undefined) {
+        if (param.style === RmgStyle.SHMetro) {
+            param.branchSpacingPct = Math.round((param.branch_spacing / param.svg_height) * 300);
+        } else {
+            param.branchSpacingPct = Math.round((param.branch_spacing / param.svg_height) * 200);
+        }
+
+        delete param.branch_spacing;
+    }
+
     return param;
 };
 

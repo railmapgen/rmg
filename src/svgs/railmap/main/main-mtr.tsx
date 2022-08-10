@@ -21,15 +21,17 @@ const getNamePos = (stnId: string, branches: string[][], { isStagger, isFlip }: 
 const MainMTR = () => {
     const { branches, routes, depsStr: deps } = useRootSelector(store => store.helper);
 
-    const svgWidths = useRootSelector(store => store.param.svgWidth);
-    const yPercentage = useRootSelector(store => store.param.y_pc);
-    const paddingPercentage = useRootSelector(store => store.param.padding);
-    const branchSpacing = useRootSelector(store => store.param.branch_spacing);
-    const direction = useRootSelector(store => store.param.direction);
-    const namePosition = useRootSelector(store => store.param.namePosMTR);
-
-    const currentStationIndex = useRootSelector(store => store.param.current_stn_idx);
-    const stationList = useRootSelector(store => store.param.stn_list);
+    const {
+        svgWidth: svgWidths,
+        svg_height: svgH,
+        y_pc: yPercentage,
+        padding: paddingPercentage,
+        branchSpacingPct,
+        direction,
+        namePosMTR: namePosition,
+        current_stn_idx: currentStationIndex,
+        stn_list: stationList,
+    } = useRootSelector(store => store.param);
 
     const adjMat = adjacencyList(stationList, leftWideFactor, rightWideFactor);
 
@@ -69,11 +71,11 @@ const MainMTR = () => {
             Object.keys(stationList).reduce<Record<string, number>>(
                 (acc, cur) => ({
                     ...acc,
-                    [cur]: getStationYShare(cur, branches, stationList) * branchSpacing,
+                    [cur]: (getStationYShare(cur, branches, stationList) * branchSpacingPct * svgH) / 200,
                 }),
                 {}
             ),
-        [deps, branchSpacing]
+        [deps, branchSpacingPct, svgH]
     );
 
     const stnStates = useMemo(
@@ -94,7 +96,7 @@ const MainMTR = () => {
         lineXs,
         xs,
         ys,
-        branchSpacing,
+        (branchSpacingPct * svgH) / 200,
         criticalPath
     );
 
