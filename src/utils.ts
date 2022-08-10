@@ -245,7 +245,7 @@ export const updateParam = (param: { [x: string]: any }) => {
     // Add one_line switch and int_padding for station
     Object.values(param.stn_list).forEach(stn => {
         const s = stn as StationInfo;
-        s.one_line = s.one_line ?? true;
+        s.one_line = s.one_line ?? false;
         s.int_padding = s.int_padding ?? (param.loop ? 250 : 355);
     });
 
