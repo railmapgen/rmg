@@ -197,8 +197,7 @@
         },
         "footer": {
             "current": "設定為當前車站",
-            "remove": "移除",
-            "errorOnRemove": "無法移除該車站。"
+            "remove": "移除"
         }
     },
 
@@ -245,13 +244,6 @@
         "lower": "下方"
     },
 
-    "RemoveConfirmModal": {
-        "title": "移除車站",
-        "message": "確定移除該車站嗎？此動作無法還原。",
-        "cancel": "取消",
-        "confirm": "確定"
-    },
-
     "AutoNumModal": {
         "title": "車站自動編碼",
         "where": "目標位置",
@@ -266,17 +258,21 @@
         "submit": "確定"
     },
 
+    "Are you sure to remove station? You cannot undo this action.": "確定移除該車站嗎？此動作無法還原。",
     "Branch on the left": "左側支綫",
     "Branch on the right": "右側支綫",
     "Branch spacing": "支綫間距",
     "Branches": "支綫",
+    "Cancel": "取消",
     "Canvas scale": "畫面縮放比例",
     "Canvas to show": "顯示的畫面",
     "Chinese name": "中文名稱",
     "Colour": "顏色",
+    "Confirm": "確定",
     "Contribution Wiki": "貢獻者指南",
     "Contributors": "貢獻者",
     "Core contributors": "核心貢獻者",
+    "Remove station": "移除車站",
     "Resource contributors": "資源貢獻者",
     "Resource Administrator": "資源管理者",
     "Empty template": "空白範本",
@@ -289,6 +285,7 @@
     "Terms and conditions": "條款及細則",
     "Text on the left": "轉乘文字置左",
     "Text on the right": "轉乘文字置右",
+    "Unable to remove this station.": "無法移除該車站。",
     "Visit": "造訪",
     "Visit GitHub": "造訪GitHub",
     ", open an issue and join us today!": "，新增一個Issue並且加入我們！",

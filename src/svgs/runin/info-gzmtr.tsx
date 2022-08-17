@@ -68,7 +68,7 @@ const InfoGZMTR = () => {
             </g>
 
             <g transform={infoPanelType === PanelTypeGZMTR.gz2otis ? otisTransforms.next : ''}>
-                {nextStnId.includes('linestart') || nextStnId.includes('lineend') ? (
+                {!nextStnId || nextStnId.includes('linestart') || nextStnId.includes('lineend') ? (
                     <></>
                 ) : nextStnId.length === 1 ? (
                     <BigNext nextId={nextStnId[0]} nameBBox={nameBBox} />
