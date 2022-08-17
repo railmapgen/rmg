@@ -9,7 +9,12 @@ import { setStationsBulk } from './action';
  */
 export const checkStationCouldBeRemoved = (stationId: string) => {
     return (dispatch: RootDispatch, getState: () => RootState): boolean => {
-        const stationList = getState().param.stn_list;
+        const { stn_list: stationList, current_stn_idx: currentStationIndex } = getState().param;
+
+        if (stationId === currentStationIndex) {
+            console.log('removeStation():: failed as current station cannot be deleted');
+            return false;
+        }
 
         const { parents, children } = stationList[stationId];
 

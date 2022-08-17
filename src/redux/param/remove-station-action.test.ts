@@ -1,9 +1,59 @@
 import { checkStationCouldBeRemoved, removeStation } from './remove-station-action';
-import { createMockStoreWithMockStations } from '../../setupTests';
+import { createMockAppStore, createMockStoreWithMockStations } from '../../setupTests';
 import { BranchStyle, StationDict } from '../../constants/constants';
 import { SET_STATIONS_BULK } from './action';
+import rootReducer from '../index';
 
 describe('Unit tests for removeStation action', () => {
+    it('Can reject if the station to be deleted is current station', () => {
+        /**
+         *         o
+         * stn1 - stn2 - stn3
+         *         ^
+         */
+        const mockStationList = {
+            linestart: {
+                parents: [],
+                children: ['stn1'],
+                branch: { left: [], right: [] },
+            },
+            stn1: {
+                parents: ['linestart'],
+                children: ['stn2'],
+                branch: { left: [], right: [] },
+            },
+            stn2: {
+                parents: ['stn1'],
+                children: ['stn3'],
+                branch: { left: [], right: [] },
+            },
+            stn3: {
+                parents: ['stn2'],
+                children: ['lineend'],
+                branch: { left: [], right: [] },
+            },
+            lineend: {
+                parents: ['stn2'],
+                children: [],
+                branch: { left: [], right: [] },
+            },
+        } as any as StationDict;
+
+        const realStore = rootReducer.getState();
+        const mockStore = createMockAppStore({
+            ...realStore,
+            param: {
+                ...realStore.param,
+                stn_list: mockStationList,
+                current_stn_idx: 'stn2',
+            },
+        });
+
+        const result = mockStore.dispatch(checkStationCouldBeRemoved('stn2'));
+        expect(result).toBeFalsy();
+        expect(mockStore.getActions()).toHaveLength(0);
+    });
+
     it('Can reject if there are only 2 stations remaining', () => {
         /**
          * stn1 - stn2
