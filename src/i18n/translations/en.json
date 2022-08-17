@@ -201,8 +201,7 @@
         },
         "footer": {
             "current": "Set as current",
-            "remove": "Remove",
-            "errorOnRemove": "Unable to remove this station."
+            "remove": "Remove"
         }
     },
 
@@ -248,13 +247,6 @@
         "upper": "Upper",
         "lower": "Lower",
         "submit": "Submit"
-    },
-
-    "RemoveConfirmModal": {
-        "title": "Remove station",
-        "message": "Are you sure to remove station? You cannot undo this action.",
-        "cancel": "Cancel",
-        "confirm": "Confirm"
     },
 
     "AutoNumModal": {

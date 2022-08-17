@@ -197,8 +197,7 @@
         },
         "footer": {
             "current": "设置为当前车站",
-            "remove": "删除",
-            "errorOnRemove": "无法删除此车站。"
+            "remove": "删除"
         }
     },
 
@@ -246,13 +245,6 @@
         "submit": "确定"
     },
 
-    "RemoveConfirmModal": {
-        "title": "删除车站",
-        "message": "您确定刪除此车站吗？您不能撤销此操作。",
-        "cancel": "取消",
-        "confirm": "确定"
-    },
-
     "AutoNumModal": {
         "title": "车站自动编号",
         "where": "目标位置",
@@ -267,17 +259,21 @@
         "submit": "确定"
     },
 
+    "Are you sure to remove station? You cannot undo this action.": "您确定刪除此车站吗？您不能撤销此操作。",
     "Branch on the left": "左侧支线",
     "Branch on the right": "右侧支线",
     "Branch spacing": "支线间距",
     "Branches": "支线",
+    "Cancel": "取消",
     "Canvas scale": "画面缩放级别",
     "Canvas to show": "显示的画面",
     "Chinese name": "中文名称",
     "Colour": "颜色",
+    "Confirm": "确定",
     "Contribution Wiki": "贡献者指南",
     "Contributors": "贡献者",
     "Core contributors": "核心贡献者",
+    "Remove station": "删除车站",
     "Resource contributors": "资源贡献者",
     "Resource Administrator": "资源管理者",
     "Empty template": "空白模板",
@@ -290,6 +286,7 @@
     "Terms and conditions": "条款及细则",
     "Text on the left": "换乘文字靠左",
     "Text on the right": "换乘文字靠右",
+    "Unable to remove this station.": "无法删除此车站。",
     "Visit": "访问",
     "Visit GitHub": "访问GitHub",
     ", open an issue and join us today!": "，创建一个Issue和加入我们！",

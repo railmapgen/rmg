@@ -1,46 +1,85 @@
-import React, { RefObject } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    AlertDialog,
-    AlertDialogBody,
-    AlertDialogContent,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogOverlay,
+    Alert,
+    AlertIcon,
+    Box,
     Button,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
+import { checkStationCouldBeRemoved, removeStation } from '../../redux/param/remove-station-action';
+import { setSelectedStation, setSidePanelMode } from '../../redux/app/app-slice';
+import { useRootDispatch, useRootSelector } from '../../redux';
+import { SidePanelMode } from '../../constants/constants';
+import { removeInvalidColineOnRemoveStation } from '../../redux/param/coline-action';
 
 interface RemoveConfirmModalProps {
     isOpen: boolean;
     onClose: () => void;
-    cancelRef: RefObject<HTMLButtonElement>;
-    onConfirm: () => void;
 }
 
 export default function RemoveConfirmModal(props: RemoveConfirmModalProps) {
-    const { isOpen, onClose, cancelRef, onConfirm } = props;
+    const { isOpen, onClose } = props;
     const { t } = useTranslation();
 
+    const dispatch = useRootDispatch();
+    const selectedStation = useRootSelector(state => state.app.selectedStation);
+
+    const [error, setError] = useState(false);
+
+    useEffect(() => {
+        if (!isOpen) {
+            setError(false);
+        }
+    }, [isOpen]);
+
+    const handleConfirm = () => {
+        if (dispatch(checkStationCouldBeRemoved(selectedStation))) {
+            onClose();
+
+            // close side panel
+            dispatch(setSidePanelMode(SidePanelMode.CLOSE));
+
+            // reset selected station
+            dispatch(setSelectedStation('linestart'));
+
+            dispatch(removeInvalidColineOnRemoveStation(selectedStation));
+            dispatch(removeStation(selectedStation));
+        } else {
+            setError(true);
+        }
+    };
+
     return (
-        <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
-            <AlertDialogOverlay>
-                <AlertDialogContent>
-                    <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                        {t('RemoveConfirmModal.title')}
-                    </AlertDialogHeader>
+        <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+                {error && (
+                    <Alert status="error" variant="solid" size="xs">
+                        <AlertIcon />
+                        {t('Unable to remove this station.')}
+                    </Alert>
+                )}
+                <Box position="relative">
+                    <ModalHeader>{t('Remove station')}</ModalHeader>
+                    <ModalCloseButton />
+                </Box>
 
-                    <AlertDialogBody>Are you sure to remove station? You cannot undo this action.</AlertDialogBody>
+                <ModalBody>{t('Are you sure to remove station? You cannot undo this action.')}</ModalBody>
 
-                    <AlertDialogFooter>
-                        <Button ref={cancelRef} onClick={onClose}>
-                            {t('RemoveConfirmModal.cancel')}
-                        </Button>
-                        <Button colorScheme="teal" onClick={onConfirm} ml={3}>
-                            {t('RemoveConfirmModal.confirm')}
-                        </Button>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialogOverlay>
-        </AlertDialog>
+                <ModalFooter>
+                    <Button onClick={onClose}>{t('Cancel')}</Button>
+                    <Button colorScheme="teal" onClick={handleConfirm} ml={3}>
+                        {t('Confirm')}
+                    </Button>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
     );
 }
