@@ -87,7 +87,6 @@ interface StationNameGElementProps {
 
 const StationNameGElement = (props: StationNameGElementProps) => {
     const { name, infos, stnState, direction, facility, bank, oneLine, intPadding } = props;
-    const { svg_height } = useRootSelector(store => store.param);
 
     // legacy ref to get the exact station name width
     const stnNameEl = React.useRef<SVGGElement | null>(null);
