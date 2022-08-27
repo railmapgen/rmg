@@ -58,15 +58,16 @@ const AppAppBar = () => {
         () => (
             <AppBar position="sticky" className={prefersDarkMode ? classes.rootDark : classes.rootLight}>
                 <Typography variant="body2" className={prefersDarkMode ? classes.bannerDark : classes.bannerLight}>
+                    {t('banner')}
+                    {' ('}
                     <Link color="inherit" href="https://railmapgen.github.io/rmg" target="_blank">
-                        {t('banner')}
+                        GitHub
                     </Link>
-                    {' - 17/04/2022'}
-                </Typography>
-                <Typography variant="body2" className={prefersDarkMode ? classes.bannerDark : classes.bannerLight}>
-                    <Link color="inherit" href="https://zhuanlan.zhihu.com/p/495171971" target="_blank">
-                        Stand with Shanghainese who are starving! - 09/04/2022
+                    {' | '}
+                    <Link color="inherit" href="https://railmapgen.gitlab.io/rmg" target="_blank">
+                        GitLab
                     </Link>
+                    {') - 28/08/2022'}
                 </Typography>
 
                 <Toolbar variant="dense">
