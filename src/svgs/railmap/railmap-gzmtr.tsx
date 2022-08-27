@@ -3,7 +3,7 @@ import StripGZMTR from '../gzmtr/strip-gzmtr';
 import MainGZMTR from './main/main-gzmtr';
 import { CanvasType, Note, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
-import SvgWrapper from '../svg-wrapper';
+import SvgWrapper from '../common/svg-wrapper';
 
 const CANVAS_TYPE = CanvasType.RailMap;
 

@@ -2,7 +2,7 @@ import React from 'react';
 import StripMTR from '../mtr/strip-mtr';
 import MainMTR from './main/main-mtr';
 import { CanvasType } from '../../constants/constants';
-import SvgWrapper from '../svg-wrapper';
+import SvgWrapper from '../common/svg-wrapper';
 import { useRootSelector } from '../../redux';
 
 const CANVAS_TYPE = CanvasType.RailMap;

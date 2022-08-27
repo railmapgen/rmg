@@ -3,7 +3,7 @@ import { CanvasType } from '../../constants/constants';
 import MainSHMetro, { DirectionElements } from './main/main-shmetro';
 import LoopSHMetro from './main/loop/loop-shmetro';
 import { useRootSelector } from '../../redux';
-import SvgWrapper from '../svg-wrapper';
+import SvgWrapper from '../common/svg-wrapper';
 
 const CANVAS_TYPE = CanvasType.RailMap;
 
