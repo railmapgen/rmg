@@ -15,3 +15,33 @@
     --rmg-black: #132647;
     --rmg-grey: #a2aaad;
 }
+
+/* for railmap */
+.rmg-stn__mtr {
+    fill: #fff;
+    stroke-width: 2.69;
+    stroke-dasharray: 0;
+}
+
+.rmg-line {fill:none}
+.rmg-line__mtr {
+    stroke-width: 9.68;
+}
+.rmg-line__mtr:not(.rmg-line__change) {
+    stroke: var(--rmg-theme-colour);
+}
+.rmg-line__mtr.rmg-line__change {stroke-width: 8;}
+.rmg-line__mtr.rmg-line__pass {
+    stroke: var(--rmg-grey);
+}
+
+.Name.Pass {fill: var(--rmg-grey);}
+.Name.Current {fill: #fff;}
+.Name.Future {fill: var(--rmg-black);}
+
+.rmg-name__en.rmg-name__mtr--station {font-size: 11px;}
+.rmg-name__zh.rmg-name__mtr--station {font-size: 18px;}
+
+rect#current_bg {
+    fill: var(--rmg-black);
+}
