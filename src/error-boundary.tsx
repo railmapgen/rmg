@@ -1,7 +1,8 @@
-import React, { HTMLProps, ReactNode } from 'react';
+import React, { HTMLProps, ReactNode, Suspense } from 'react';
 
 interface ErrorBoundaryProps extends HTMLProps<HTMLDivElement> {
     children?: ReactNode;
+    suspenseFallback?: ReactNode;
 }
 
 export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, any> {
@@ -22,7 +23,7 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, a
     }
 
     render() {
-        const { children, ...others } = this.props;
+        const { children, suspenseFallback, ...others } = this.props;
 
         if (this.state.hasError) {
             // You can render any custom fallback UI
@@ -78,6 +79,6 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, a
             );
         }
 
-        return children;
+        return suspenseFallback ? <Suspense fallback={suspenseFallback}>{children}</Suspense> : children;
     }
 }

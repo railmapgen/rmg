@@ -1,18 +1,33 @@
-import React, { memo } from 'react';
-
+import React from 'react';
 import StripMTR from '../strip/strip-mtr';
 import MainMTR from './main/main-mtr';
+import { CanvasType } from '../../constants/constants';
+import SvgWrapper from '../svg-wrapper';
+import { useRootSelector } from '../../redux';
 
-export default memo(function RailMapMTR() {
+const CANVAS_TYPE = CanvasType.RailMap;
+
+export default function RailMapMTR() {
+    const { canvasScale } = useRootSelector(state => state.app);
+    const { svgWidth: svgWidths, svg_height: svgHeight, theme } = useRootSelector(state => state.param);
+
+    const svgWidth = svgWidths[CANVAS_TYPE];
+
     return (
-        <>
+        <SvgWrapper
+            type={CANVAS_TYPE}
+            svgWidth={svgWidth}
+            svgHeight={svgHeight}
+            canvasScale={canvasScale}
+            theme={theme}
+        >
             <DefsMTR />
 
             <StripMTR stripPc={90} />
             <MainMTR />
-        </>
+        </SvgWrapper>
     );
-});
+}
 
 const DefsMTR = React.memo(() => {
     return (

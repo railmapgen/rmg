@@ -10,3 +10,8 @@
     --rmg-grey: gray;
     --rmg-white: white;
 }
+
+/* for railmap */
+.rmg-stn__mtr--pass {
+    stroke: #aaa;
+}

@@ -1,15 +1,27 @@
-import React, { useMemo, memo } from 'react';
-import { Name, StationDict } from '../../constants/constants';
+import React, { memo, useMemo } from 'react';
+import { CanvasType, Name, StationDict } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { calculateColineStations } from '../railmap/methods/shmetro-coline';
+import SvgWrapper from '../svg-wrapper';
 
 const LINE_WIDTH = 12;
 
-const RunInSHMetro = () => {
-    const { branches, routes, depsStr: deps } = useRootSelector(store => store.helper);
-    const { svg_height, current_stn_idx, direction, loop } = useRootSelector(store => store.param);
+const CANVAS_TYPE = CanvasType.RunIn;
 
+const RunInSHMetro = () => {
+    const { canvasScale } = useRootSelector(state => state.app);
+    const { branches, routes, depsStr: deps } = useRootSelector(store => store.helper);
+    const {
+        svgWidth: svgWidths,
+        svg_height,
+        current_stn_idx,
+        direction,
+        loop,
+        theme,
+    } = useRootSelector(store => store.param);
+
+    const svgWidth = svgWidths[CANVAS_TYPE];
     // get the height
     const dh = svg_height - 300;
 
@@ -60,12 +72,18 @@ const RunInSHMetro = () => {
     );
 
     return (
-        <>
+        <SvgWrapper
+            type={CANVAS_TYPE}
+            svgWidth={svgWidth}
+            svgHeight={svg_height}
+            canvasScale={canvasScale}
+            theme={theme}
+        >
             <DefsSHMetro />
             <g transform={`translate(0,${dh})`}>
                 <GeneralStation prevStnIds={prevStnIds} nextStnIds={nextStnIds} />
             </g>
-        </>
+        </SvgWrapper>
     );
 };
 

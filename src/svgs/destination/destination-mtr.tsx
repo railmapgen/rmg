@@ -2,16 +2,30 @@ import React, { memo } from 'react';
 import StripMTR from '../strip/strip-mtr';
 import { CanvasType, Name, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
+import SvgWrapper from '../svg-wrapper';
 
-export default memo(function DestinationMTR() {
+const CANVAS_TYPE = CanvasType.Destination;
+
+export default function DestinationMTR() {
+    const { canvasScale } = useRootSelector(state => state.app);
+    const { svgWidth: svgWidths, svg_height: svgHeight, theme } = useRootSelector(state => state.param);
+
+    const svgWidth = svgWidths[CANVAS_TYPE];
+
     return (
-        <>
+        <SvgWrapper
+            type={CANVAS_TYPE}
+            svgWidth={svgWidth}
+            svgHeight={svgHeight}
+            canvasScale={canvasScale}
+            theme={theme}
+        >
             <DefsMTR />
             <StripMTR stripPc={90} />
             <InfoMTR />
-        </>
+        </SvgWrapper>
     );
-});
+}
 
 const DefsMTR = memo(() => (
     <defs>

@@ -1,21 +1,34 @@
-import React, { memo, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { adjacencyList, criticalPathMethod, getStnState, getXShareMTR } from '../railmap/methods/share';
 import StationSHMetro from './station-shmetro';
 import { StationsSHMetro } from '../railmap/methods/mtr';
 import { CanvasType, Services, StationDict } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import LoopSHMetro from '../railmap/main/loop/loop-shmetro';
+import SvgWrapper from '../svg-wrapper';
 
-export default memo(function IndoorWrapperSHMetro() {
-    const { loop } = useRootSelector(store => store.param);
+const CANVAS_TYPE = CanvasType.Indoor;
+
+export default function IndoorWrapperSHMetro() {
+    const { canvasScale } = useRootSelector(state => state.app);
+    const { svgWidth: svgWidths, svg_height: svgHeight, theme, loop } = useRootSelector(store => store.param);
+
+    const svgWidth = svgWidths[CANVAS_TYPE];
+
     return (
-        <>
+        <SvgWrapper
+            type={CANVAS_TYPE}
+            svgWidth={svgWidth}
+            svgHeight={svgHeight}
+            canvasScale={canvasScale}
+            theme={theme}
+        >
             <DefsSHMetro />
             {loop ? <LoopSHMetro bank_angle={false} canvas={CanvasType.Indoor} /> : <IndoorSHMetro />}
             <InfoElements />
-        </>
+        </SvgWrapper>
     );
-});
+}
 
 export const DefsSHMetro = React.memo(() => (
     <defs>

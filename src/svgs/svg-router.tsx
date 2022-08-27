@@ -1,12 +1,12 @@
 import React, { lazy, ReactNode, useEffect } from 'react';
 import { CanvasType, RmgStyle } from '../constants/constants';
 import { useRootSelector } from '../redux';
-import SvgWrapper from './svg-wrapper';
 import { useDispatch } from 'react-redux';
 import { setStyle } from '../redux/param/action';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Flex } from '@chakra-ui/react';
 import ErrorBoundary from '../error-boundary';
+import FallbackLoader from '../components/fallback-loader';
 
 const style = {
     flexDirection: 'row',
@@ -27,14 +27,9 @@ export default function SvgRouter() {
     const dispatch = useDispatch();
 
     const { canvasToShow, canvasScale } = useRootSelector(state => state.app);
-    const {
-        svgWidth: svgWidths,
-        svg_height: svgHeight,
-        style: rmgStyle,
-        theme,
-    } = useRootSelector(state => state.param);
+    const { svg_height: svgHeight, style: rmgStyle } = useRootSelector(state => state.param);
 
-    if (location.pathname !== '/' + rmgStyle && location.pathname !== '/v3/' + rmgStyle) {
+    if (location.pathname !== '/' + rmgStyle) {
         const nextStyle = location.pathname.split('/').slice(-1)[0] as RmgStyle;
         if (Object.values(RmgStyle).includes(nextStyle)) {
             // set style in param
@@ -59,18 +54,10 @@ export default function SvgRouter() {
             {filteredCanvas.map(canvas => (
                 <ErrorBoundary
                     key={canvas + rmgStyle}
+                    suspenseFallback={<FallbackLoader />}
                     style={{ minWidth: 750, height: svgHeight * canvasScale, overflowY: 'auto' }}
                 >
-                    <SvgWrapper
-                        type={canvas}
-                        style={rmgStyle}
-                        svgWidth={svgWidths[canvas]}
-                        svgHeight={svgHeight}
-                        canvasScale={canvasScale}
-                        theme={theme}
-                    >
-                        {canvasList[rmgStyle][canvas]}
-                    </SvgWrapper>
+                    {canvasList[rmgStyle][canvas]}
                 </ErrorBoundary>
             ))}
         </Flex>
