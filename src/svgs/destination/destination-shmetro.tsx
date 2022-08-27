@@ -1,17 +1,41 @@
-import React, { memo, useMemo, forwardRef, useRef, useState, useEffect } from 'react';
+import React, { forwardRef, memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
-import { ColineInfo, ColourHex, MonoColour, Name, ShortDirection } from '../../constants/constants';
+import {
+    CanvasType,
+    ColineInfo,
+    ColourHex,
+    MonoColour,
+    Name,
+    RmgStyle,
+    ShortDirection,
+} from '../../constants/constants';
 import { get_pivot_stations } from '../railmap/methods/shmetro-loop';
+import SvgWrapper from '../svg-wrapper';
 
-export default memo(function DestinationSHMetro() {
+const CANVAS_TYPE = CanvasType.Destination;
+const STYLE = RmgStyle.SHMetro;
+
+export default function DestinationSHMetro() {
+    const { canvasScale } = useRootSelector(state => state.app);
+    const { svgWidth: svgWidths, svg_height: svgHeight, theme } = useRootSelector(store => store.param);
+
+    const svgWidth = svgWidths[CANVAS_TYPE];
+
     return (
-        <>
+        <SvgWrapper
+            type={CANVAS_TYPE}
+            style={STYLE}
+            svgWidth={svgWidth}
+            svgHeight={svgHeight}
+            canvasScale={canvasScale}
+            theme={theme}
+        >
             <DefsSHMetro />
             <DestSHMetro />
-        </>
+        </SvgWrapper>
     );
-});
+}
 
 const DefsSHMetro = memo(() => (
     <defs>

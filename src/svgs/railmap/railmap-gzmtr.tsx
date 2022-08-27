@@ -1,20 +1,39 @@
 import React, { memo, useMemo } from 'react';
 import StripGZMTR from '../strip/strip-gzmtr';
 import MainGZMTR from './main/main-gzmtr';
-import { CanvasType, Note, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
+import { CanvasType, Note, PanelTypeGZMTR, RmgStyle, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
+import SvgWrapper from '../svg-wrapper';
+
+const CANVAS_TYPE = CanvasType.RailMap;
+const STYLE = RmgStyle.GZMTR;
 
 const RailMapGZMTR = () => {
-    const svgWidths = useRootSelector(store => store.param.svgWidth);
-    const direction = useRootSelector(store => store.param.direction);
-    const psdNumber = useRootSelector(store => store.param.psd_num);
-    const infoPanelType = useRootSelector(store => store.param.info_panel_type);
-    const notes = useRootSelector(store => store.param.notesGZMTR);
-    const currentStationIndex = useRootSelector(store => store.param.current_stn_idx);
-    const curStnInfo = useRootSelector(store => store.param.stn_list[currentStationIndex]);
+    const { canvasScale } = useRootSelector(state => state.app);
+    const {
+        svgWidth: svgWidths,
+        svg_height: svgHeight,
+        direction,
+        psd_num: psdNumber,
+        info_panel_type: infoPanelType,
+        notesGZMTR: notes,
+        current_stn_idx: currentStationIndex,
+        stn_list: stationList,
+        theme,
+    } = useRootSelector(store => store.param);
+
+    const svgWidth = svgWidths[CANVAS_TYPE];
+    const curStnInfo = stationList[currentStationIndex];
 
     return (
-        <>
+        <SvgWrapper
+            type={CANVAS_TYPE}
+            style={STYLE}
+            svgWidth={svgWidth}
+            svgHeight={svgHeight}
+            canvasScale={canvasScale}
+            theme={theme}
+        >
             <DefsGZMTR />
 
             <StripGZMTR
@@ -37,9 +56,9 @@ const RailMapGZMTR = () => {
             )}
 
             {infoPanelType === PanelTypeGZMTR.gz2otis && (
-                <line x2={svgWidths[CanvasType.RailMap]} transform="translate(0,90)" strokeWidth={3} stroke="black" />
+                <line x2={svgWidth} transform="translate(0,90)" strokeWidth={3} stroke="black" />
             )}
-        </>
+        </SvgWrapper>
     );
 };
 

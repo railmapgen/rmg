@@ -1,26 +1,42 @@
 import * as React from 'react';
-import { CanvasType } from '../../constants/constants';
+import { CanvasType, RmgStyle } from '../../constants/constants';
 import MainSHMetro, { DirectionElements } from './main/main-shmetro';
 import LoopSHMetro from './main/loop/loop-shmetro';
 import { useRootSelector } from '../../redux';
+import SvgWrapper from '../svg-wrapper';
 
-const RailMapSHMetro = React.memo(() => {
+const CANVAS_TYPE = CanvasType.RailMap;
+const STYLE = RmgStyle.SHMetro;
+
+export default function RailMapSHMetro() {
+    const { canvasScale } = useRootSelector(state => state.app);
     const {
+        svgWidth: svgWidths,
+        svg_height: svgHeight,
+        theme,
         loop,
         loop_info: { bank },
     } = useRootSelector(store => store.param);
+
+    const svgWidth = svgWidths[CANVAS_TYPE];
+
     return (
-        <>
+        <SvgWrapper
+            type={CANVAS_TYPE}
+            style={STYLE}
+            svgWidth={svgWidth}
+            svgHeight={svgHeight}
+            canvasScale={canvasScale}
+            theme={theme}
+        >
             <DefsSHMetro />
 
             {loop ? <LoopSHMetro bank_angle={bank} canvas={CanvasType.RailMap} /> : <MainSHMetro />}
 
             <DirectionElements />
-        </>
+        </SvgWrapper>
     );
-});
-
-export default RailMapSHMetro;
+}
 
 const DefsSHMetro = React.memo(() => (
     <defs>
