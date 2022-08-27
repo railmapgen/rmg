@@ -1,4 +1,4 @@
-import React, { lazy, ReactNode, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { CanvasType, RmgStyle } from '../constants/constants';
 import { useRootSelector } from '../redux';
 import { useDispatch } from 'react-redux';
@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Flex } from '@chakra-ui/react';
 import ErrorBoundary from '../error-boundary';
 import FallbackLoader from '../components/fallback-loader';
+import useCanvasMap from './use-canvas-map';
 
 const style = {
     flexDirection: 'row',
@@ -40,61 +41,31 @@ export default function SvgRouter() {
         }
     }
 
+    const canvasMap = useCanvasMap(rmgStyle);
+
     useEffect(() => {
         (document.getElementById('css_share') as HTMLLinkElement).href =
             process.env.PUBLIC_URL + `/styles/share_${rmgStyle}.css`;
     }, [rmgStyle]);
 
-    const filteredCanvas = (Object.keys(canvasList[rmgStyle]) as CanvasType[]).filter(canvas =>
+    const filteredCanvas = (Object.keys(canvasMap) as CanvasType[]).filter(canvas =>
         canvasToShow === 'all' ? true : canvasToShow === canvas
     );
 
     return (
         <Flex sx={style}>
-            {filteredCanvas.map(canvas => (
-                <ErrorBoundary
-                    key={canvas + rmgStyle}
-                    suspenseFallback={<FallbackLoader />}
-                    style={{ minWidth: 750, height: svgHeight * canvasScale, overflowY: 'auto' }}
-                >
-                    {canvasList[rmgStyle][canvas]}
-                </ErrorBoundary>
-            ))}
+            {Object.keys(canvasMap).length === 0 ? (
+                <FallbackLoader />
+            ) : (
+                filteredCanvas.map(canvas => (
+                    <ErrorBoundary
+                        key={canvas + rmgStyle}
+                        style={{ minWidth: 750, height: svgHeight * canvasScale, overflowY: 'auto' }}
+                    >
+                        {canvasMap[canvas]}
+                    </ErrorBoundary>
+                ))
+            )}
         </Flex>
     );
 }
-
-// Canvas available
-
-const RunInGZMTR = lazy(() => import(/* webpackChunkName: "runinGZMTR" */ './runin/runin-gzmtr'));
-const RailMapGZMTR = lazy(() => import(/* webpackChunkName: "railmapGZMTR" */ './railmap/railmap-gzmtr'));
-
-const DestinationMTR = lazy(() => import(/* webpackChunkName: "destinationMTR" */ './destination/destination-mtr'));
-const RailMapMTR = lazy(() => import(/* webpackChunkName: "railmapMTR" */ './railmap/railmap-mtr'));
-
-const DestinationSHMetro = lazy(
-    () => import(/* webpackChunkName: "destinationSHMetro" */ './destination/destination-shmetro')
-);
-const RunInSHMetro = lazy(() => import(/* webpackChunkName: "runinSHMetro" */ './runin/runin-shmetro'));
-const RailMapSHMetro = lazy(() => import(/* webpackChunkName: "railmapSHMetro" */ './railmap/railmap-shmetro'));
-const IndoorSHMetro = lazy(() => import(/* webpackChunkName: "indoorSHMetro" */ './indoor/indoor-shmetro'));
-
-/**
- * Each value of this object is an object of ORDERED key-value pairs
- */
-const canvasList: Record<RmgStyle, { [c in CanvasType]?: ReactNode }> = {
-    [RmgStyle.GZMTR]: {
-        [CanvasType.RunIn]: <RunInGZMTR />,
-        [CanvasType.RailMap]: <RailMapGZMTR />,
-    },
-    [RmgStyle.MTR]: {
-        [CanvasType.Destination]: <DestinationMTR />,
-        [CanvasType.RailMap]: <RailMapMTR />,
-    },
-    [RmgStyle.SHMetro]: {
-        [CanvasType.Destination]: <DestinationSHMetro />,
-        [CanvasType.RunIn]: <RunInSHMetro />,
-        [CanvasType.RailMap]: <RailMapSHMetro />,
-        [CanvasType.Indoor]: <IndoorSHMetro />,
-    },
-};
