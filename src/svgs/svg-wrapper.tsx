@@ -1,6 +1,5 @@
 import { CanvasType, Theme } from '../constants/constants';
-import React, { ReactNode, Suspense } from 'react';
-import FallbackLoader from '../components/fallback-loader';
+import React, { ReactNode } from 'react';
 
 interface SvgWrapperProps {
     type: CanvasType;
@@ -34,7 +33,7 @@ export default function SvgWrapper(props: SvgWrapperProps) {
                 fill="white"
                 style={{ height: 'var(--rmg-svg-height)', width: 'var(--rmg-svg-width)' }}
             />
-            <Suspense fallback={<FallbackLoader />}>{children}</Suspense>
+            {children}
             <rect
                 id="canvas-border"
                 fill="none"

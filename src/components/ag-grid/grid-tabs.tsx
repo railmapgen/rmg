@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState } from 'react';
+import React, { lazy, useState } from 'react';
 import { Box, Button, HStack, IconButton, Progress, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { MdAdd } from 'react-icons/md';
 import AddStationModal from '../modal/add-station-modal';
@@ -76,11 +76,9 @@ export default function GridTabs() {
                 <TabPanels flex={1} overflowY="auto">
                     {branches.map((_, i) => (
                         <TabPanel key={i} padding={0} h="100%">
-                            <Suspense fallback={<Progress isIndeterminate />}>
-                                <ErrorBoundary>
-                                    <StationAgGrid branchIndex={i} />
-                                </ErrorBoundary>
-                            </Suspense>
+                            <ErrorBoundary suspenseFallback={<Progress isIndeterminate />}>
+                                <StationAgGrid branchIndex={i} />
+                            </ErrorBoundary>
                         </TabPanel>
                     ))}
                 </TabPanels>

@@ -6,6 +6,7 @@ import { setStyle } from '../redux/param/action';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Flex } from '@chakra-ui/react';
 import ErrorBoundary from '../error-boundary';
+import FallbackLoader from '../components/fallback-loader';
 
 const style = {
     flexDirection: 'row',
@@ -53,6 +54,7 @@ export default function SvgRouter() {
             {filteredCanvas.map(canvas => (
                 <ErrorBoundary
                     key={canvas + rmgStyle}
+                    suspenseFallback={<FallbackLoader />}
                     style={{ minWidth: 750, height: svgHeight * canvasScale, overflowY: 'auto' }}
                 >
                     {canvasList[rmgStyle][canvas]}
