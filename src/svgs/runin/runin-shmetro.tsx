@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import { CanvasType, Name, RmgStyle, StationDict } from '../../constants/constants';
+import { CanvasType, Name, StationDict } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { calculateColineStations } from '../railmap/methods/shmetro-coline';
@@ -8,7 +8,6 @@ import SvgWrapper from '../svg-wrapper';
 const LINE_WIDTH = 12;
 
 const CANVAS_TYPE = CanvasType.RunIn;
-const STYLE = RmgStyle.SHMetro;
 
 const RunInSHMetro = () => {
     const { canvasScale } = useRootSelector(state => state.app);
@@ -75,7 +74,6 @@ const RunInSHMetro = () => {
     return (
         <SvgWrapper
             type={CANVAS_TYPE}
-            style={STYLE}
             svgWidth={svgWidth}
             svgHeight={svg_height}
             canvasScale={canvasScale}

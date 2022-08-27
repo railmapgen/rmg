@@ -20,7 +20,7 @@ export const cloneSvgCanvas = async (
     elem.setAttribute('height', ((thisSVGHeight * (scale || 100)) / 100).toString());
     elem.style.setProperty('all', 'initial');
 
-    ['share', canvas]
+    ['share']
         .map(tag =>
             [
                 ...(

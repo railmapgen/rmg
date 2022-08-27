@@ -1,20 +1,11 @@
 import React, { forwardRef, memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
-import {
-    CanvasType,
-    ColineInfo,
-    ColourHex,
-    MonoColour,
-    Name,
-    RmgStyle,
-    ShortDirection,
-} from '../../constants/constants';
+import { CanvasType, ColineInfo, ColourHex, MonoColour, Name, ShortDirection } from '../../constants/constants';
 import { get_pivot_stations } from '../railmap/methods/shmetro-loop';
 import SvgWrapper from '../svg-wrapper';
 
 const CANVAS_TYPE = CanvasType.Destination;
-const STYLE = RmgStyle.SHMetro;
 
 export default function DestinationSHMetro() {
     const { canvasScale } = useRootSelector(state => state.app);
@@ -25,7 +16,6 @@ export default function DestinationSHMetro() {
     return (
         <SvgWrapper
             type={CANVAS_TYPE}
-            style={STYLE}
             svgWidth={svgWidth}
             svgHeight={svgHeight}
             canvasScale={canvasScale}

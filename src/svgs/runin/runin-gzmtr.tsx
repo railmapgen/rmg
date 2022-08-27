@@ -2,13 +2,12 @@ import React from 'react';
 import StripGZMTR from '../strip/strip-gzmtr';
 import InfoGZMTR from './info-gzmtr';
 import { useRootSelector } from '../../redux';
-import { CanvasType, PanelTypeGZMTR, RmgStyle, ShortDirection } from '../../constants/constants';
+import { CanvasType, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 import PlatformNumber from '../gzmtr/platform-number';
 import SvgWrapper from '../svg-wrapper';
 import OtisFrame from '../gzmtr/otis-frame';
 
 const CANVAS_TYPE = CanvasType.RunIn;
-const STYLE = RmgStyle.GZMTR;
 
 export default function RunInGZMTR() {
     const { canvasScale } = useRootSelector(state => state.app);
@@ -30,7 +29,6 @@ export default function RunInGZMTR() {
     return (
         <SvgWrapper
             type={CANVAS_TYPE}
-            style={STYLE}
             svgWidth={svgWidth}
             svgHeight={svgHeight}
             canvasScale={canvasScale}

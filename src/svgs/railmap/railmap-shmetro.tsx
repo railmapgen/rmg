@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { CanvasType, RmgStyle } from '../../constants/constants';
+import { CanvasType } from '../../constants/constants';
 import MainSHMetro, { DirectionElements } from './main/main-shmetro';
 import LoopSHMetro from './main/loop/loop-shmetro';
 import { useRootSelector } from '../../redux';
 import SvgWrapper from '../svg-wrapper';
 
 const CANVAS_TYPE = CanvasType.RailMap;
-const STYLE = RmgStyle.SHMetro;
 
 export default function RailMapSHMetro() {
     const { canvasScale } = useRootSelector(state => state.app);
@@ -23,7 +22,6 @@ export default function RailMapSHMetro() {
     return (
         <SvgWrapper
             type={CANVAS_TYPE}
-            style={STYLE}
             svgWidth={svgWidth}
             svgHeight={svgHeight}
             canvasScale={canvasScale}

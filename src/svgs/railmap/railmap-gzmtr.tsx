@@ -1,12 +1,11 @@
 import React, { memo, useMemo } from 'react';
 import StripGZMTR from '../strip/strip-gzmtr';
 import MainGZMTR from './main/main-gzmtr';
-import { CanvasType, Note, PanelTypeGZMTR, RmgStyle, ShortDirection } from '../../constants/constants';
+import { CanvasType, Note, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import SvgWrapper from '../svg-wrapper';
 
 const CANVAS_TYPE = CanvasType.RailMap;
-const STYLE = RmgStyle.GZMTR;
 
 const RailMapGZMTR = () => {
     const { canvasScale } = useRootSelector(state => state.app);
@@ -28,7 +27,6 @@ const RailMapGZMTR = () => {
     return (
         <SvgWrapper
             type={CANVAS_TYPE}
-            style={STYLE}
             svgWidth={svgWidth}
             svgHeight={svgHeight}
             canvasScale={canvasScale}

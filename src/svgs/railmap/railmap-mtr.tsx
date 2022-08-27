@@ -1,12 +1,11 @@
 import React from 'react';
 import StripMTR from '../strip/strip-mtr';
 import MainMTR from './main/main-mtr';
-import { CanvasType, RmgStyle } from '../../constants/constants';
+import { CanvasType } from '../../constants/constants';
 import SvgWrapper from '../svg-wrapper';
 import { useRootSelector } from '../../redux';
 
 const CANVAS_TYPE = CanvasType.RailMap;
-const STYLE = RmgStyle.MTR;
 
 export default function RailMapMTR() {
     const { canvasScale } = useRootSelector(state => state.app);
@@ -17,7 +16,6 @@ export default function RailMapMTR() {
     return (
         <SvgWrapper
             type={CANVAS_TYPE}
-            style={STYLE}
             svgWidth={svgWidth}
             svgHeight={svgHeight}
             canvasScale={canvasScale}

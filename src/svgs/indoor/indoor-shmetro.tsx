@@ -2,13 +2,12 @@ import React, { useMemo } from 'react';
 import { adjacencyList, criticalPathMethod, getStnState, getXShareMTR } from '../railmap/methods/share';
 import StationSHMetro from './station-shmetro';
 import { StationsSHMetro } from '../railmap/methods/mtr';
-import { CanvasType, RmgStyle, Services, StationDict } from '../../constants/constants';
+import { CanvasType, Services, StationDict } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import LoopSHMetro from '../railmap/main/loop/loop-shmetro';
 import SvgWrapper from '../svg-wrapper';
 
 const CANVAS_TYPE = CanvasType.Indoor;
-const STYLE = RmgStyle.SHMetro;
 
 export default function IndoorWrapperSHMetro() {
     const { canvasScale } = useRootSelector(state => state.app);
@@ -19,7 +18,6 @@ export default function IndoorWrapperSHMetro() {
     return (
         <SvgWrapper
             type={CANVAS_TYPE}
-            style={STYLE}
             svgWidth={svgWidth}
             svgHeight={svgHeight}
             canvasScale={canvasScale}

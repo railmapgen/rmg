@@ -1,10 +1,9 @@
-import { CanvasType, RmgStyle, Theme } from '../constants/constants';
-import React, { ReactNode, Suspense, useEffect } from 'react';
+import { CanvasType, Theme } from '../constants/constants';
+import React, { ReactNode, Suspense } from 'react';
 import FallbackLoader from '../components/fallback-loader';
 
 interface SvgWrapperProps {
     type: CanvasType;
-    style: RmgStyle;
     svgWidth: number;
     svgHeight: number;
     canvasScale: number;
@@ -13,15 +12,7 @@ interface SvgWrapperProps {
 }
 
 export default function SvgWrapper(props: SvgWrapperProps) {
-    const { type, style, svgWidth, svgHeight, canvasScale, theme, children } = props;
-
-    useEffect(() => {
-        (document.getElementById('css_' + type) as HTMLLinkElement).href =
-            process.env.PUBLIC_URL + `/styles/${type}_${style}.css`;
-        return () => {
-            (document.getElementById('css_' + type) as HTMLLinkElement).href = '';
-        };
-    }, [style]);
+    const { type, svgWidth, svgHeight, canvasScale, theme, children } = props;
 
     return (
         <svg

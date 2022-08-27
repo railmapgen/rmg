@@ -1,11 +1,10 @@
 import React, { memo } from 'react';
 import StripMTR from '../strip/strip-mtr';
-import { CanvasType, Name, RmgStyle, ShortDirection } from '../../constants/constants';
+import { CanvasType, Name, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import SvgWrapper from '../svg-wrapper';
 
 const CANVAS_TYPE = CanvasType.Destination;
-const STYLE = RmgStyle.MTR;
 
 export default function DestinationMTR() {
     const { canvasScale } = useRootSelector(state => state.app);
@@ -16,7 +15,6 @@ export default function DestinationMTR() {
     return (
         <SvgWrapper
             type={CANVAS_TYPE}
-            style={STYLE}
             svgWidth={svgWidth}
             svgHeight={svgHeight}
             canvasScale={canvasScale}
