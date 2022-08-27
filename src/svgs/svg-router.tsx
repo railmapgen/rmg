@@ -30,18 +30,24 @@ export default function SvgRouter() {
     const { canvasToShow, canvasScale } = useRootSelector(state => state.app);
     const { svg_height: svgHeight, style: rmgStyle } = useRootSelector(state => state.param);
 
-    if (location.pathname !== '/' + rmgStyle) {
-        const nextStyle = location.pathname.split('/').slice(-1)[0] as RmgStyle;
-        if (Object.values(RmgStyle).includes(nextStyle)) {
-            // set style in param
-            dispatch(setStyle(nextStyle));
-        } else {
-            // push route to match param's style
-            navigate(rmgStyle);
-        }
-    }
-
     const canvasMap = useCanvasMap(rmgStyle);
+
+    useEffect(() => {
+        const pathname = location.pathname;
+        console.log(`SvgRouter:: requestedPath=${pathname}`);
+        if (pathname !== '/' + rmgStyle) {
+            const nextStyle = pathname.split('/').slice(-1)[0] as RmgStyle;
+            if (Object.values(RmgStyle).includes(nextStyle)) {
+                // set style in param
+                console.log(`SvgRouter:: updating param style to ${nextStyle}`);
+                dispatch(setStyle(nextStyle));
+            } else {
+                // push route to match param's style
+                console.log(`SvgRouter:: updating path to /${rmgStyle}`);
+                navigate(rmgStyle);
+            }
+        }
+    }, []);
 
     useEffect(() => {
         (document.getElementById('css_share') as HTMLLinkElement).href =

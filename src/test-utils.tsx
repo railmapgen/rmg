@@ -11,6 +11,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
     store: Store;
+    route?: string;
 }
 
 const initialOptions: CustomRenderOptions = {
@@ -20,23 +21,24 @@ const initialOptions: CustomRenderOptions = {
 interface TestingProviderProps {
     children?: ReactNode;
     store: Store;
+    route?: string;
 }
 
 export const TestingProvider = (props: TestingProviderProps) => {
-    const { children, store } = props;
+    const { children, store, route } = props;
 
     return (
         <I18nextProvider i18n={i18n}>
             <Provider store={store}>
-                <MemoryRouter>{children}</MemoryRouter>
+                <MemoryRouter initialEntries={[route ?? '/']}>{children}</MemoryRouter>
             </Provider>
         </I18nextProvider>
     );
 };
 
-const customRender = (ui: ReactElement, { store, ...renderOptions } = initialOptions) => {
+const customRender = (ui: ReactElement, { store, route, ...renderOptions } = initialOptions) => {
     return render(ui, {
-        wrapper: props => <TestingProvider store={store} {...props} />,
+        wrapper: props => <TestingProvider store={store} route={route} {...props} />,
         ...renderOptions,
     });
 };

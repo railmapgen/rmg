@@ -1,5 +1,5 @@
 import React from 'react';
-import StripMTR from '../strip/strip-mtr';
+import StripMTR from '../mtr/strip-mtr';
 import MainMTR from './main/main-mtr';
 import { CanvasType } from '../../constants/constants';
 import SvgWrapper from '../svg-wrapper';

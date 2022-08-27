@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import StripMTR from '../strip/strip-mtr';
+import StripMTR from './strip-mtr';
 import { CanvasType, Name, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import SvgWrapper from '../svg-wrapper';

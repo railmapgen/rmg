@@ -1,6 +1,6 @@
 import { CanvasType } from '../../constants/constants';
 import { ReactNode } from 'react';
-import DestinationMTR from '../destination/destination-mtr';
+import DestinationMTR from './destination-mtr';
 import RailMapMTR from '../railmap/railmap-mtr';
 
 const mtrSvgs: Partial<Record<CanvasType, ReactNode>> = {

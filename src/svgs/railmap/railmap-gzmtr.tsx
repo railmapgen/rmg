@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import StripGZMTR from '../strip/strip-gzmtr';
+import StripGZMTR from '../gzmtr/strip-gzmtr';
 import MainGZMTR from './main/main-gzmtr';
 import { CanvasType, Note, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
