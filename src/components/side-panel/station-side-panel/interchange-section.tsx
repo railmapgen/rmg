@@ -12,9 +12,8 @@ import {
 } from '../../../redux/param/action';
 import { InterchangeInfo, MonoColour, RmgStyle, ShortDirection } from '../../../constants/constants';
 import { MdAdd } from 'react-icons/md';
-import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
-import RmgButtonGroup from '../../common/rmg-button-group';
 
 export default function InterchangeSection() {
     const { t } = useTranslation();

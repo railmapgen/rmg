@@ -1,11 +1,10 @@
 import React from 'react';
 import HeaderActions from './header-actions';
-import RmgButtonGroup from '../common/rmg-button-group';
 import { selectCanvas, zoomToScale } from '../../redux/app/app-slice';
 import { AllCanvas, canvasConfig, CanvasType } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { useRootDispatch, useRootSelector } from '../../redux';
-import { RmgFields, RmgFieldsField, RmgPageHeader } from '@railmapgen/rmg-components';
+import { RmgButtonGroup, RmgFields, RmgFieldsField, RmgPageHeader } from '@railmapgen/rmg-components';
 import { MdZoomIn, MdZoomOut } from 'react-icons/md';
 
 export default function PageHeader() {
