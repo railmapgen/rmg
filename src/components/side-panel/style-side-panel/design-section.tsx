@@ -16,10 +16,9 @@ import {
     staggerStationNames,
     toggleLineNameBeforeDestination,
 } from '../../../redux/param/action';
-import RmgButtonGroup from '../../common/rmg-button-group';
 import { PanelTypeGZMTR, PanelTypeShmetro, RmgStyle, ShortDirection } from '../../../constants/constants';
 import { MdSwapVert } from 'react-icons/md';
-import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
 
 export default function DesignSection() {

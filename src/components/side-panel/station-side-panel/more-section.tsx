@@ -1,6 +1,5 @@
 import { Box, Heading } from '@chakra-ui/react';
 import React from 'react';
-import RmgButtonGroup from '../../common/rmg-button-group';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import { Facilities, RmgStyle, Services } from '../../../constants/constants';
 import {
@@ -11,7 +10,7 @@ import {
     updateStationIntPadding,
     updateStationIntPaddingToAll,
 } from '../../../redux/param/action';
-import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
 
 export default function MoreSection() {
