@@ -5,7 +5,7 @@ import { StationsSHMetro } from '../railmap/methods/mtr';
 import { CanvasType, Services, StationDict } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import LoopSHMetro from '../railmap/main/loop/loop-shmetro';
-import SvgWrapper from '../svg-wrapper';
+import SvgWrapper from '../common/svg-wrapper';
 
 const CANVAS_TYPE = CanvasType.Indoor;
 

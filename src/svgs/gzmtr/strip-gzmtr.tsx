@@ -1,6 +1,6 @@
 import React from 'react';
 import { PanelTypeGZMTR, PanelTypeShmetro } from '../../constants/constants';
-import PsdNumber from '../gzmtr/psd-number';
+import PsdNumber from './psd-number';
 
 interface Props {
     variant: PanelTypeGZMTR | PanelTypeShmetro;

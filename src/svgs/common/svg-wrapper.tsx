@@ -1,4 +1,4 @@
-import { CanvasType, Theme } from '../constants/constants';
+import { CanvasType, Theme } from '../../constants/constants';
 import React, { ReactNode } from 'react';
 
 interface SvgWrapperProps {

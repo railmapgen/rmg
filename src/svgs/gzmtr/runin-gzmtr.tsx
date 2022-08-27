@@ -1,11 +1,11 @@
 import React from 'react';
-import StripGZMTR from '../strip/strip-gzmtr';
+import StripGZMTR from './strip-gzmtr';
 import InfoGZMTR from './info-gzmtr';
 import { useRootSelector } from '../../redux';
 import { CanvasType, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
-import PlatformNumber from '../gzmtr/platform-number';
-import SvgWrapper from '../svg-wrapper';
-import OtisFrame from '../gzmtr/otis-frame';
+import PlatformNumber from './platform-number';
+import SvgWrapper from '../common/svg-wrapper';
+import OtisFrame from './otis-frame';
 
 const CANVAS_TYPE = CanvasType.RunIn;
 

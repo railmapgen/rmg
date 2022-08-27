@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import StationNumber from '../gzmtr/station-icon/station-number';
+import StationNumber from './station-icon/station-number';
 import { CanvasType, Name, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
-import CurrentStationName, { CurrentStationSecondaryName } from '../gzmtr/current-station-name';
+import CurrentStationName, { CurrentStationSecondaryName } from './current-station-name';
 
 const InfoGZMTR = () => {
     const svgHeight = useRootSelector(store => store.param.svg_height);

@@ -3,7 +3,7 @@ import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { CanvasType, ColineInfo, ColourHex, MonoColour, Name, ShortDirection } from '../../constants/constants';
 import { get_pivot_stations } from '../railmap/methods/shmetro-loop';
-import SvgWrapper from '../svg-wrapper';
+import SvgWrapper from '../common/svg-wrapper';
 
 const CANVAS_TYPE = CanvasType.Destination;
 
