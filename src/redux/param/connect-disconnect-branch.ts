@@ -81,7 +81,7 @@ export const connect2MainLine = (stationId: string, branchIndex: number) => {
             };
             dispatch(setStationsBulk(nextStationList));
         } else {
-            const seconndLastId : string = branch.slice(-2)[0];
+            const seconndLastId: string = branch.slice(-2)[0];
             const nextStationList: StationDict = {
                 ...stationList,
                 [seconndLastId]: {
