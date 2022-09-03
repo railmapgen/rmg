@@ -1,6 +1,5 @@
 import { BranchStyle, StationDict } from '../../constants/constants';
-import { createMockStoreWithMockStations } from '../../setupTests';
-import { getBranchType } from './connect-disconnect-branch';
+import { connect2MainLine, getBranchType, isStationValid2ConnectBranch } from './connect-disconnect-branch';
 import rootReducer from '../index';
 import { getBranches } from '../helper/graph-theory-util';
 import { createMockAppStore } from '../../setupTests';
@@ -80,6 +79,41 @@ describe('ConnectDisconnectBranch', () => {
         it('Can determine branch type 2 as expected', () => {
             const result = mockStore.dispatch(getBranchType(1));
             expect(result).toBe(2);
+        });
+    });
+
+    describe('ConnectDisconnectBranch - isStationValid2ConnectBranch', () => {
+        it('Can determine type2 branch is not able to connect as expected', () => {
+            const result = mockStore.dispatch(isStationValid2ConnectBranch('stn5', 1));
+            expect(result).toBeFalsy();
+        });
+
+        it('Can reject invalid target station', () => {
+            ['linestart', 'stn1', 'stn2', 'stn3', 'stn4', 'stn6', 'lineend'].forEach(stationId => {
+                const result = mockStore.dispatch(isStationValid2ConnectBranch(stationId, 2));
+                expect(result).toBeFalsy();
+            });
+        });
+
+        it('Fail to reject invalid target station', () => {
+            const result = mockStore.dispatch(isStationValid2ConnectBranch('stn5', 2));
+            expect(result).toBeTruthy();
+        });
+    });
+
+    describe('ConnectDisconnectBranch - connect to main line', () => {
+        it('Can update station info as expected', () => {
+            mockStore.dispatch(connect2MainLine('stn5', 2));
+            const actions = mockStore.getActions();
+
+            expect(actions).toContainEqual(expect.objectContaining({ type: 'SET_STATIONS_BULK' }));
+            const newStationList = actions.find(action => action.type === 'SET_STATIONS_BULK').stations;
+            expect(newStationList.stn5.parents).toStrictEqual(['stn6', 'stn4']);
+            expect(newStationList.stn6.children).toStrictEqual(['stn5']);
+            expect(newStationList.lineend.parents).toStrictEqual(['stn5']);
+
+            const newBranches = getBranches(newStationList);
+            expect(newBranches[2]).toStrictEqual(['stn4', 'stn6', 'stn5']);
         });
     });
 });
