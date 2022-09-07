@@ -1,9 +1,6 @@
 {
     "WindowHeader": {
-        "heading": "Rail Map Generator",
-        "mtr": "MTR",
-        "gzmtr": "Guangzhou Metro",
-        "shmetro": "Shanghai Metro"
+        "heading": "Rail Map Generator"
     },
 
     "HeaderActions": {
@@ -269,5 +266,11 @@
         "runin": "Running-in",
         "railmap": "Rail map",
         "indoor": "Indoor"
+    },
+
+    "RmgStyle": {
+        "mtr": "MTR",
+        "gzmtr": "Guangzhou Metro",
+        "shmetro": "Shanghai Metro"
     }
 }

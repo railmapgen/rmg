@@ -2,17 +2,13 @@ import React, { useState } from 'react';
 import { Heading, HStack, Icon, IconButton, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { getEnvironment, getVersion } from '../../util/config';
 import { Trans, useTranslation } from 'react-i18next';
-import { MdHelp, MdLocationCity, MdOpenInNew, MdTranslate } from 'react-icons/md';
-import { LanguageCode, RmgStyle } from '../../constants/constants';
-import { useDispatch } from 'react-redux';
-import { setStyle } from '../../redux/param/action';
-import * as ReactRouterDom from 'react-router-dom';
+import { MdHelp, MdOpenInNew, MdTranslate } from 'react-icons/md';
+import { LanguageCode } from '../../constants/constants';
 import HelpModal from '../modal/help-modal';
 import { RmgEnvBadge, RmgWindowHeader } from '@railmapgen/rmg-components';
 
 export default function WindowHeader() {
     const { t, i18n } = useTranslation();
-    const dispatch = useDispatch();
 
     const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
@@ -54,19 +50,6 @@ export default function WindowHeader() {
             />
 
             <HStack ml="auto">
-                <Menu>
-                    <MenuButton as={IconButton} icon={<MdLocationCity />} variant="ghost" size="sm" />
-                    <MenuList>
-                        {Object.values(RmgStyle).map(style => (
-                            <ReactRouterDom.Link key={style} to={style}>
-                                <MenuItem onClick={() => dispatch(setStyle(style))}>
-                                    {t('WindowHeader.' + style)}
-                                </MenuItem>
-                            </ReactRouterDom.Link>
-                        ))}
-                    </MenuList>
-                </Menu>
-
                 <Menu>
                     <MenuButton as={IconButton} icon={<MdTranslate />} variant="ghost" size="sm" />
                     <MenuList>
