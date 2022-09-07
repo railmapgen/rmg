@@ -2,10 +2,7 @@
     "WindowHeader": {
         "heading": "铁路线路图生成器",
         "popoverHeader": "你正在浏览<1>{{environment}}</1>环境！",
-        "popoverBody": "这是一个测试环境，我们无法保证其稳定性和兼容性。请返回<2>生产环境</2>。",
-        "mtr": "港铁",
-        "gzmtr": "广州地铁",
-        "shmetro": "上海地铁"
+        "popoverBody": "这是一个测试环境，我们无法保证其稳定性和兼容性。请返回<2>生产环境</2>。"
     },
 
     "HeaderActions": {
@@ -266,7 +263,6 @@
     "Branches": "支线",
     "Cancel": "取消",
     "Canvas scale": "画面缩放级别",
-    "Canvas to show": "显示的画面",
     "Chinese name": "中文名称",
     "Colour": "颜色",
     "Confirm": "确定",
@@ -281,12 +277,14 @@
     "Help and support": "帮助和支持",
     "No branches found": "未找到支线",
     "Paid area": "付费区换乘",
+    "Style": "风格",
     "Station Chinese name": "车站中文名称",
     "Station English name": "车站英文名称",
     "Terms and conditions": "条款及细则",
     "Text on the left": "换乘文字靠左",
     "Text on the right": "换乘文字靠右",
     "Unable to remove this station.": "无法删除此车站。",
+    "View": "查看",
     "Visit": "访问",
     "Visit GitHub": "访问GitHub",
     ", open an issue and join us today!": "，创建一个Issue和加入我们！",
@@ -297,5 +295,11 @@
         "runin": "当前站名牌",
         "railmap": "站台门路线图",
         "indoor": "车内路线图"
+    },
+
+    "RmgStyle": {
+        "mtr": "港铁",
+        "gzmtr": "广州地铁",
+        "shmetro": "上海地铁"
     }
 }
