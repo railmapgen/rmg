@@ -7,18 +7,14 @@ import App from './App';
 import { updateParam } from './utils';
 import * as serviceWorker from './serviceWorker';
 import { AllCanvas, CanvasType, LanguageCode, RMGParam, RmgStyle } from './constants/constants';
-import StorageService from './util/storage/storageService';
-import getRmgStorage from './util/storage';
 import store from './redux';
 import { setCanvasScale, setCanvasToShow, zoomToScale } from './redux/app/app-slice';
 import { setFullParam } from './redux/param/action';
-import autoSaveScheduler from './util/auto-save-scheduler';
 import { initParam } from './redux/param/util';
 
 declare global {
     interface Window {
         gtag: any;
-        rmgStorage: StorageService;
         rmgStore: any;
     }
 }
@@ -52,24 +48,21 @@ export const reRenderApp = (param: RMGParam) => {
     renderApp();
 };
 
-getRmgStorage()
-    .then(async rmgStorage => {
-        // setup storage and param
-        await rmgStorage.init();
+Promise.resolve()
+    .then(() => {
         try {
-            const contents = await rmgStorage.readFile('rmgParam');
-            const updatedParam = updateParam(JSON.parse(contents));
-
-            await rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
-            store.dispatch(setFullParam(updatedParam as RMGParam));
+            const contents = window.localStorage.getItem('rmgParam');
+            if (contents) {
+                const updatedParam = updateParam(JSON.parse(contents));
+                window.localStorage.setItem('rmgParam', JSON.stringify(updatedParam));
+                store.dispatch(setFullParam(updatedParam as RMGParam));
+            }
         } catch (err) {
             console.warn('Error in reading rmgParam', err);
 
             const param = initParam(RmgStyle.MTR, LanguageCode.ChineseTrad);
-            await rmgStorage.writeFile('rmgParam', JSON.stringify(param));
+            window.localStorage.setItem('rmgParam', JSON.stringify(param));
             store.dispatch(setFullParam(param));
-        } finally {
-            window.rmgStorage = rmgStorage;
         }
     })
     .then(async () => {
@@ -77,7 +70,7 @@ getRmgStorage()
 
         // setup canvas scale
         try {
-            const canvasScaleString = await window.rmgStorage.readFile('rmgScale');
+            const canvasScaleString = window.localStorage.getItem('rmgScale');
             const canvasScale = Number(canvasScaleString);
             canvasScale >= 0.1 && store.dispatch(setCanvasScale(canvasScale));
         } catch (err) {
@@ -88,12 +81,12 @@ getRmgStorage()
 
         // setup canvas to show
         try {
-            const canvasToShow = (await window.rmgStorage.readFile('rmgCanvas')) as CanvasType | typeof AllCanvas;
+            const canvasToShow = window.localStorage.getItem('rmgCanvas') as CanvasType | typeof AllCanvas;
             store.dispatch(setCanvasToShow(canvasToShow));
         } catch (err) {
             console.warn('Error in reading rmgCanvas file', err);
             console.log('Initiating rmgCanvas as "all"');
-            await window.rmgStorage.writeFile('rmgCanvas', AllCanvas);
+            window.localStorage.setItem('rmgCanvas', AllCanvas);
             store.dispatch(setCanvasToShow(AllCanvas));
         }
 
@@ -101,7 +94,6 @@ getRmgStorage()
     })
     .then(() => {
         renderApp();
-        autoSaveScheduler();
     })
     .catch(err => {
         document.querySelector('#root')!.innerHTML = `<div>

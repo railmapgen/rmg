@@ -43,9 +43,7 @@ const appSlice = createSlice({
         zoomToScale: (state, action: PayloadAction<number>) => {
             const scale = action.payload;
             state.canvasScale = scale;
-            window.rmgStorage
-                .writeFile('rmgScale', scale.toString())
-                .catch(e => console.error('AppSlice.zoomToScale():: Failed to write scale to localStorage', e));
+            window.localStorage.setItem('rmgScale', scale.toString());
         },
 
         setCanvasToShow: (state, action: PayloadAction<CanvasType | typeof AllCanvas>) => {
@@ -55,9 +53,7 @@ const appSlice = createSlice({
         selectCanvas: (state, action: PayloadAction<CanvasType | typeof AllCanvas>) => {
             const canvas = action.payload;
             state.canvasToShow = canvas;
-            window.rmgStorage
-                .writeFile('rmgCanvas', canvas)
-                .catch(e => console.error('AppSlice.selectCanvas():: Failed to write canvas to localStorage', e));
+            window.localStorage.setItem('rmgCanvas', canvas);
         },
 
         setSidePanelMode: (state, action: PayloadAction<SidePanelMode>) => {
@@ -104,24 +100,16 @@ const appSlice = createSlice({
 });
 
 export const zoomToScale = (scale: number) => {
-    return async (dispatch: RootDispatch) => {
-        try {
-            dispatch(setCanvasScale(scale));
-            await window.rmgStorage.writeFile('rmgScale', scale.toString());
-        } catch (e) {
-            console.error('AppSlice.zoomToScale():: Failed to write scale to localStorage', e);
-        }
+    return (dispatch: RootDispatch) => {
+        dispatch(setCanvasScale(scale));
+        window.localStorage.setItem('rmgScale', scale.toString());
     };
 };
 
 export const selectCanvas = (canvas: CanvasType | typeof AllCanvas) => {
-    return async (dispatch: Dispatch) => {
-        try {
-            dispatch(setCanvasToShow(canvas));
-            await window.rmgStorage.writeFile('rmgCanvas', canvas);
-        } catch (e) {
-            console.error('AppSlice.selectCanvas():: Failed to write canvas to localStorage', e);
-        }
+    return (dispatch: Dispatch) => {
+        dispatch(setCanvasToShow(canvas));
+        window.localStorage.setItem('rmgCanvas', canvas);
     };
 };
 
