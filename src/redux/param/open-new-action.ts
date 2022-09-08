@@ -5,9 +5,9 @@ import { selectCanvas, setSelectedStation, setSidePanelMode, stopLoading } from 
 import { reRenderApp } from '../../index';
 
 export const openFromNewParam = (param: Record<string, any>) => {
-    return async (dispatch: RootDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
         const updatedParam = updateParam(param) as RMGParam;
-        await window.rmgStorage.writeFile('rmgParam', JSON.stringify(updatedParam));
+        window.localStorage.setItem('rmgParam', JSON.stringify(updatedParam));
 
         // close side panel, reset selection
         dispatch(setSidePanelMode(SidePanelMode.CLOSE));
@@ -16,7 +16,7 @@ export const openFromNewParam = (param: Record<string, any>) => {
         // reset to AllCanvas if the current canvas is not supported in the new style
         const canvasToShow = getState().app.canvasToShow;
         const canvas = canvasConfig[updatedParam.style].some(c => c === canvasToShow) ? canvasToShow : AllCanvas;
-        await dispatch(selectCanvas(canvas));
+        dispatch(selectCanvas(canvas));
         reRenderApp(updatedParam);
         dispatch(stopLoading());
     };

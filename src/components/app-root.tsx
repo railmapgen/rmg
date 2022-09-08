@@ -15,7 +15,7 @@ export default function AppRoot() {
     const paramString = JSON.stringify(param);
 
     useEffect(() => {
-        window.rmgStorage.writeFile('rmgParam', paramString).then();
+        window.localStorage.setItem('rmgParam', paramString);
     }, [paramString]);
 
     return (

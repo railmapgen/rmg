@@ -7,15 +7,15 @@ const realStore = rootReducer.getState();
 const mockStore = createMockAppStore({ ...realStore });
 
 const windowSpy = jest.spyOn(window, 'window', 'get');
-const mockEmptyPromise = jest.fn().mockResolvedValue(void 0);
+const mockSetItem = jest.fn();
 
 describe('AppSlice', () => {
     beforeEach(() => {
         windowSpy.mockImplementation(
             () =>
                 ({
-                    rmgStorage: {
-                        writeFile: mockEmptyPromise,
+                    localStorage: {
+                        setItem: mockSetItem,
                     },
                 } as any)
         );
@@ -26,22 +26,22 @@ describe('AppSlice', () => {
         jest.clearAllMocks();
     });
 
-    it('Can set canvas scale and write to localStorage as expected', async () => {
-        await mockStore.dispatch(zoomToScale(1.1));
+    it('Can set canvas scale and write to localStorage as expected', () => {
+        mockStore.dispatch(zoomToScale(1.1));
 
-        expect(mockEmptyPromise).toBeCalledTimes(1);
-        expect(mockEmptyPromise).toBeCalledWith('rmgScale', '1.1');
+        expect(mockSetItem).toBeCalledTimes(1);
+        expect(mockSetItem).toBeCalledWith('rmgScale', '1.1');
 
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(1);
         expect(actions).toContainEqual({ type: 'app/setCanvasScale', payload: 1.1 });
     });
 
-    it('Can set canvas and write to localStorage as expected', async () => {
-        await mockStore.dispatch(selectCanvas(CanvasType.RailMap));
+    it('Can set canvas and write to localStorage as expected', () => {
+        mockStore.dispatch(selectCanvas(CanvasType.RailMap));
 
-        expect(mockEmptyPromise).toBeCalledTimes(1);
-        expect(mockEmptyPromise).toBeCalledWith('rmgCanvas', CanvasType.RailMap);
+        expect(mockSetItem).toBeCalledTimes(1);
+        expect(mockSetItem).toBeCalledWith('rmgCanvas', CanvasType.RailMap);
 
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(1);

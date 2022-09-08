@@ -10,8 +10,8 @@ jest.mock('../../index', () => ({
     reRenderApp: jest.fn(),
 }));
 
-global.window.rmgStorage = {
-    writeFile: jest.fn().mockResolvedValue(void 0),
+(global.window as any).localStorage = {
+    setItem: () => {},
 } as any;
 
 const realStore = rootReducer.getState();
