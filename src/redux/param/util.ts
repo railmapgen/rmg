@@ -1,6 +1,5 @@
 import {
     Facilities,
-    LanguageCode,
     MonoColour,
     Name,
     PanelTypeGZMTR,
@@ -13,6 +12,7 @@ import {
     Theme,
 } from '../../constants/constants';
 import { CityCode } from '@railmapgen/rmg-palette-resources';
+import { LanguageCode } from '@railmapgen/rmg-translate';
 import { nanoid } from 'nanoid';
 
 const initTheme = (style: RmgStyle): Theme => {

@@ -1,9 +1,9 @@
 import React from 'react';
 import { RmgAutoComplete } from '@railmapgen/rmg-components';
 import { CityCode, CityEntry, cityList, countryList } from '@railmapgen/rmg-palette-resources';
-import { LanguageCode } from '../../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import FlagSvgEmoji from './flag-svg-emoji';
+import { LanguageCode } from '@railmapgen/rmg-translate';
 
 interface CityPickerProps {
     defaultValueId?: CityCode;

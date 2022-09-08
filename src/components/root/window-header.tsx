@@ -1,33 +1,34 @@
 import React, { useState } from 'react';
 import { Heading, HStack, Icon, IconButton, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
-import { getEnvironment, getVersion } from '../../util/config';
 import { Trans, useTranslation } from 'react-i18next';
 import { MdHelp, MdOpenInNew, MdTranslate } from 'react-icons/md';
-import { LanguageCode } from '../../constants/constants';
 import HelpModal from '../modal/help-modal';
-import { RmgEnvBadge, RmgWindowHeader } from '@railmapgen/rmg-components';
+import { RmgEnvBadge, RmgWindowHeader, useAppVersion, useEnvironment } from '@railmapgen/rmg-components';
+import { LanguageCode } from '@railmapgen/rmg-translate';
+import rmgRuntime from '@railmapgen/rmg-runtime';
+import { handleLanguageChange } from '../../i18n/config';
 
 export default function WindowHeader() {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
-    const environment = getEnvironment();
+    const environment = useEnvironment();
+    const appVersion = useAppVersion();
 
     const handleChangeLanguage = async (language: LanguageCode) => {
-        const t = await i18n.changeLanguage(language);
-        document.documentElement.lang = language;
-        document.title = t('WindowHeader.heading');
+        rmgRuntime.setLanguage(language);
+        handleLanguageChange(language);
     };
 
     return (
         <RmgWindowHeader>
             <Heading as="h4" size="md">
-                {t('WindowHeader.heading')}
+                {t('Rail Map Generator')}
             </Heading>
             <RmgEnvBadge
                 environment={environment}
-                version={getVersion()}
+                version={appVersion}
                 popoverHeader={
                     <Trans i18nKey="WindowHeader.popoverHeader" environment={environment}>
                         You're on {{ environment }} environment!

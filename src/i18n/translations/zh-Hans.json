@@ -1,6 +1,5 @@
 {
     "WindowHeader": {
-        "heading": "铁路线路图生成器",
         "popoverHeader": "你正在浏览<1>{{environment}}</1>环境！",
         "popoverBody": "这是一个测试环境，我们无法保证其稳定性和兼容性。请返回<2>生产环境</2>。"
     },
@@ -210,7 +209,7 @@
         "white":"白",
         "black": "黑",
         "submit": "确定",
-        "seeAll": "查看完整颜色库 "
+        "seeAll": "查看完整"
     },
 
     "AddStationModal": {
