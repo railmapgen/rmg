@@ -1,26 +1,20 @@
+import rmgRuntime from '@railmapgen/rmg-runtime';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { LanguageCode, Translation } from '../constants/constants';
+import RmgTranslate, { LanguageCode, Translation } from '@railmapgen/rmg-translate';
 import enTranslation from './translations/en.json';
 import zhHansTranslation from './translations/zh-Hans.json';
 import zhHantTranslation from './translations/zh-Hant.json';
-import LanguageDetector from 'i18next-browser-languagedetector';
 
-const resources = {
-    [LanguageCode.English]: {
-        translation: enTranslation,
-    },
-    [LanguageCode.ChineseSimp]: {
-        translation: zhHansTranslation,
-    },
-    [LanguageCode.ChineseTrad]: {
-        translation: zhHantTranslation,
-    },
-};
+const resources = new RmgTranslate.Builder()
+    .withResource('en', enTranslation)
+    .withResource('zh-Hans', zhHansTranslation)
+    .withResource('zh-Hant', zhHantTranslation)
+    .build();
 
-i18n.use(LanguageDetector)
-    .use(initReactI18next)
+i18n.use(initReactI18next)
     .init({
+        lng: rmgRuntime.getLanguage(),
         fallbackLng: {
             [LanguageCode.ChineseCN]: [LanguageCode.ChineseSimp, LanguageCode.English],
             [LanguageCode.ChineseHK]: [LanguageCode.ChineseTrad, LanguageCode.English],
@@ -32,12 +26,17 @@ i18n.use(LanguageDetector)
         },
         resources,
     })
-    .then(t => {
-        document.title = t('WindowHeader.heading');
+    .then(() => {
         document.documentElement.lang = i18n.language;
     });
 
 export default i18n;
+
+export const handleLanguageChange = (language: string) => {
+    i18n.changeLanguage(language).then();
+    document.documentElement.lang = language;
+};
+rmgRuntime.onLanguageChange(handleLanguageChange);
 
 export const translateText = (translation: Translation): string => {
     return (

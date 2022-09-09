@@ -1,4 +1,5 @@
 import 'core-js/actual';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 import React from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import './index.css';
@@ -6,11 +7,12 @@ import './i18n/config';
 import App from './App';
 import { updateParam } from './utils';
 import * as serviceWorker from './serviceWorker';
-import { AllCanvas, CanvasType, LanguageCode, RMGParam, RmgStyle } from './constants/constants';
+import { AllCanvas, CanvasType, RMGParam, RmgStyle } from './constants/constants';
 import store from './redux';
 import { setCanvasScale, setCanvasToShow, zoomToScale } from './redux/app/app-slice';
 import { setFullParam } from './redux/param/action';
 import { initParam } from './redux/param/util';
+import { LanguageCode } from '@railmapgen/rmg-translate';
 
 declare global {
     interface Window {
@@ -94,6 +96,7 @@ Promise.resolve()
     })
     .then(() => {
         renderApp();
+        rmgRuntime.injectCss();
     })
     .catch(err => {
         document.querySelector('#root')!.innerHTML = `<div>

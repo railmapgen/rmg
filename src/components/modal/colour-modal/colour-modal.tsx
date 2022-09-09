@@ -25,6 +25,7 @@ import { CityCode } from '@railmapgen/rmg-palette-resources';
 import { useTranslation } from 'react-i18next';
 import { RmgFields, RmgFieldsField, RmgLineBadge } from '@railmapgen/rmg-components';
 import { MdOpenInNew } from 'react-icons/md';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 interface ColourModalProps {
     isOpen: boolean;
@@ -114,6 +115,14 @@ export default function ColourModal(props: ColourModalProps) {
         },
     ];
 
+    const handleOpenPalette = () => {
+        if (rmgRuntime.isStandaloneWindow()) {
+            window.open('/rmg-palette', '_blank');
+        } else {
+            rmgRuntime.openApp('rmg-palette');
+        }
+    };
+
     const isSubmitEnabled = cityCode && lineCode && bgColour && fgColour;
 
     const handleSubmit = () => {
@@ -155,8 +164,8 @@ export default function ColourModal(props: ColourModalProps) {
                 <ModalFooter>
                     <Text fontSize="sm" marginRight={2}>
                         {t('ColourModal.seeAll')}
-                        <Link color="teal.500" href="/rmg-palette" isExternal={true}>
-                            RMG Palette <Icon as={MdOpenInNew} />
+                        <Link color="teal.500" onClick={handleOpenPalette}>
+                            {t('Palette')} <Icon as={MdOpenInNew} />
                         </Link>
                     </Text>
 

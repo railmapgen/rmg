@@ -1,4 +1,4 @@
-import { LanguageCode, Note, RmgStyle, StationInfo, Translation } from './constants/constants';
+import { Note, RmgStyle, StationInfo } from './constants/constants';
 import { nanoid } from 'nanoid';
 
 export const updateParam = (param: { [x: string]: any }) => {
@@ -261,13 +261,6 @@ export const updateParam = (param: { [x: string]: any }) => {
     }
 
     return param;
-};
-
-export const getTransText2 = (obj: Translation, langs: LanguageCode[]) => {
-    for (let l of langs) {
-        if (obj[l]) return obj[l];
-    }
-    return obj[LanguageCode.English];
 };
 
 /**

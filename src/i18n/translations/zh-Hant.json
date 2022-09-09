@@ -1,6 +1,5 @@
 {
     "WindowHeader": {
-        "heading": "鐵路路綫圖產生器",
         "popoverHeader": "你正在瀏覽<1>{{environment}}</1>環境！",
         "popoverBody": "這是一個測試環境，我們無法確保其穩定性及相容性。請返回<2>生產環境</2>。"
     },
@@ -210,7 +209,7 @@
         "white":"白",
         "black": "黑",
         "submit": "確定",
-        "seeAll": "檢視完整顏色庫 "
+        "seeAll": "檢視完整"
     },
 
     "AddStationModal": {

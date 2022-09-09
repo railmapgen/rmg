@@ -6,11 +6,12 @@ import { updateParam } from '../../utils';
 import { readFileAsText } from '../../util/utils';
 import UploadConfirmModal from '../modal/upload-confirm-modal';
 import { setGlobalAlert } from '../../redux/app/app-slice';
-import { LanguageCode, RMGParam } from '../../constants/constants';
+import { RMGParam } from '../../constants/constants';
 import TemplateModal from '../modal/template-modal';
 import { openFromNewParam } from '../../redux/param/open-new-action';
 import { initParam } from '../../redux/param/util';
 import { useRootDispatch, useRootSelector } from '../../redux';
+import { LanguageCode } from '@railmapgen/rmg-translate';
 
 export default function OpenActions() {
     const { t, i18n } = useTranslation();
