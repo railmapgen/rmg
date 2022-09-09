@@ -1,5 +1,11 @@
-import { BranchStyle, StationDict } from '../../constants/constants';
-import { connect2MainLine, getBranchType, isStationValid2ConnectBranch } from './connect-disconnect-branch';
+import { BranchStyle, Direction, StationDict } from '../../constants/constants';
+import {
+    connect2MainLine,
+    disconnectFromMainLine,
+    getBranchType,
+    getPossibleDirection,
+    isStationValid2ConnectBranch,
+} from './connect-disconnect-branch';
 import rootReducer from '../index';
 import { getBranches } from '../helper/graph-theory-util';
 import { createMockAppStore } from '../../setupTests';
@@ -70,6 +76,10 @@ const mockStore = createMockAppStore({
 });
 
 describe('ConnectDisconnectBranch', () => {
+    afterEach(() => {
+        mockStore.clearActions();
+    });
+
     describe('ConnectDisconnectBranch - get branch type', () => {
         it('Can determine branch type 1 as expected', () => {
             const result = mockStore.dispatch(getBranchType(2));
@@ -114,6 +124,34 @@ describe('ConnectDisconnectBranch', () => {
 
             const newBranches = getBranches(newStationList);
             expect(newBranches[2]).toStrictEqual(['stn4', 'stn6', 'stn5']);
+        });
+    });
+
+    describe('ConnectDisconnectBranch - get possible direction', () => {
+        it('Can get empty direction list when the branch type is not 2 as expected', () => {
+            const result = mockStore.dispatch(getPossibleDirection(2));
+            expect(result).toStrictEqual([]);
+        });
+
+        it('Can get direction list as expected', () => {
+            const result = mockStore.dispatch(getPossibleDirection(1));
+            expect(result).toStrictEqual([Direction.left]);
+        });
+    });
+
+    describe('ConnectDisconnectBranch - disconnect to main line', () => {
+        it('Can disconnect the left direction', () => {
+            mockStore.dispatch(disconnectFromMainLine(Direction.left, 1));
+            const actions = mockStore.getActions();
+
+            expect(actions).toContainEqual(expect.objectContaining({ type: 'SET_STATIONS_BULK' }));
+            const newStationList = actions.find(action => action.type === 'SET_STATIONS_BULK').stations;
+            expect(newStationList.stn1.children).toStrictEqual(['stn2']);
+            expect(newStationList.stn3.parents).toStrictEqual(['linestart']);
+            expect(newStationList.linestart.children).toStrictEqual(['stn1', 'stn3']);
+
+            const newBranches = getBranches(newStationList);
+            expect(newBranches[1]).toStrictEqual(['linestart', 'stn3', 'stn4']);
         });
     });
 });
