@@ -1,5 +1,7 @@
+import { StatusPanelComponent } from 'ag-grid-community/dist/lib/components/framework/componentTypes';
+import { stat } from 'fs';
 import { RootDispatch, RootState } from '..';
-import { StationDict } from '../../constants/constants';
+import { Direction, StationDict } from '../../constants/constants';
 import { setStationsBulk } from './action';
 
 export const getBranchType = (branchIndex: number) => {
@@ -104,6 +106,120 @@ export const connect2MainLine = (stationId: string, branchIndex: number) => {
                     branch: {
                         left: [],
                         right: [],
+                    },
+                },
+            };
+            dispatch(setStationsBulk(nextStationList));
+        }
+    };
+};
+
+export const getPossibleDirection = (branchIndex: number) => {
+    return (dispatch: RootDispatch, getState: () => RootState): Direction[] => {
+        const { branches } = getState().helper;
+        const stationList = getState().param.stn_list;
+        const mainBranch = branches[0];
+        const branch = branches[branchIndex];
+        const branchType = dispatch(getBranchType(branchIndex));
+        if (branchType !== 2) {
+            console.log('getPossibleDirection():: failed as there is no possible direction');
+            return [];
+        }
+        const beginStation = mainBranch.indexOf(branch[0]);
+        const leftStationIdList = mainBranch.slice(0, beginStation);
+        const endStation = mainBranch.indexOf(branch.slice(-1)[0]);
+        const rightStationIdList = mainBranch.slice(endStation + 1);
+
+        const isLeftPossible = leftStationIdList.every(stationId => {
+            return stationList[stationId].children.length <= 1 && stationList[stationId].parents.length <= 1;
+        });
+
+        const isRightPossible = rightStationIdList.every(stationId => {
+            return stationList[stationId].children.length <= 1 && stationList[stationId].parents.length <= 1;
+        });
+
+        if (isLeftPossible) {
+            if (isRightPossible) {
+                return [Direction.left, Direction.right];
+            } else {
+                return [Direction.left];
+            }
+        } else {
+            if (isRightPossible) {
+                return [Direction.right];
+            } else {
+                return [];
+            }
+        }
+    };
+};
+
+export const disconnectFromMainLine = (direction: Direction, branchIndex: number) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
+        const directionList = dispatch(getPossibleDirection(branchIndex));
+        if (!directionList.includes(direction)) {
+            console.log('disconnectFromMainLine():: failed as the aim direction is not in the possible direction list');
+            return;
+        }
+        const { branches } = getState().helper;
+        const stationList = getState().param.stn_list;
+        const mainBranch = branches[0];
+        const branch = branches[branchIndex];
+
+        if (direction === Direction.left) {
+            const beginStation = branch[0];
+
+            const nextStationList: StationDict = {
+                ...stationList,
+                [branch[1]]: {
+                    ...stationList[branch[1]],
+                    parents: ['linestart'],
+                },
+                [beginStation]: {
+                    ...stationList[beginStation],
+                    children: stationList[beginStation].children.filter(id => id !== branch[1]),
+                    branch: {
+                        right: [],
+                        left: [],
+                    },
+                },
+                linestart: {
+                    ...stationList.linestart,
+                    children: stationList[beginStation].children.map(id => (id === branch[1] ? id : mainBranch[1])),
+                    branch: {
+                        left: [],
+                        right: stationList[beginStation].branch.right,
+                    },
+                },
+            };
+            dispatch(setStationsBulk(nextStationList));
+        }
+
+        if (direction === Direction.right) {
+            const endStation = branch.slice(-1)[0];
+            const secondEndStation = branch.slice(-2)[0];
+            const nextStationList: StationDict = {
+                ...stationList,
+                [secondEndStation]: {
+                    ...stationList[secondEndStation],
+                    children: ['lineend'],
+                },
+                [endStation]: {
+                    ...stationList[endStation],
+                    parents: stationList[endStation].parents.filter(id => id !== secondEndStation),
+                    branch: {
+                        right: [],
+                        left: [],
+                    },
+                },
+                lineend: {
+                    ...stationList.lineend,
+                    parents: stationList[endStation].parents.map(id =>
+                        id === secondEndStation ? id : mainBranch.slice(-2)[0]
+                    ),
+                    branch: {
+                        right: [],
+                        left: stationList[endStation].branch.left,
                     },
                 },
             };
