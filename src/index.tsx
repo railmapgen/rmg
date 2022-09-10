@@ -58,6 +58,8 @@ Promise.resolve()
                 const updatedParam = updateParam(JSON.parse(contents));
                 window.localStorage.setItem('rmgParam', JSON.stringify(updatedParam));
                 store.dispatch(setFullParam(updatedParam as RMGParam));
+            } else {
+                throw new Error('rmgParam does not exist in localStorage');
             }
         } catch (err) {
             console.warn('Error in reading rmgParam', err);
