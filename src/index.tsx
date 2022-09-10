@@ -86,7 +86,7 @@ Promise.resolve()
         // setup canvas to show
         try {
             const canvasToShow = window.localStorage.getItem('rmgCanvas') as CanvasType | typeof AllCanvas;
-            store.dispatch(setCanvasToShow(canvasToShow));
+            store.dispatch(setCanvasToShow(canvasToShow ?? AllCanvas));
         } catch (err) {
             console.warn('Error in reading rmgCanvas file', err);
             console.log('Initiating rmgCanvas as "all"');
