@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/rmg/static/css/main.7a71262c.css",
-    "main.js": "/rmg/static/js/main.e1647252.js",
+    "main.js": "/rmg/static/js/main.95c22e40.js",
     "AppRoot.js": "/rmg/static/js/AppRoot.f0857eff.chunk.js",
     "static/js/226.7c707772.chunk.js": "/rmg/static/js/226.7c707772.chunk.js",
     "static/js/1711.9745cfdd.chunk.js": "/rmg/static/js/1711.9745cfdd.chunk.js",
@@ -310,7 +310,7 @@
     "static/media/1F1F5-1F1F1.svg": "/rmg/static/media/1F1F5-1F1F1.0f2053ce10733fcf148d.svg",
     "static/media/1F1EF-1F1F5.svg": "/rmg/static/media/1F1EF-1F1F5.5bd4e29b292e65a558dd.svg",
     "main.7a71262c.css.map": "/rmg/static/css/main.7a71262c.css.map",
-    "main.e1647252.js.map": "/rmg/static/js/main.e1647252.js.map",
+    "main.95c22e40.js.map": "/rmg/static/js/main.95c22e40.js.map",
     "AppRoot.f0857eff.chunk.js.map": "/rmg/static/js/AppRoot.f0857eff.chunk.js.map",
     "226.7c707772.chunk.js.map": "/rmg/static/js/226.7c707772.chunk.js.map",
     "1711.9745cfdd.chunk.js.map": "/rmg/static/js/1711.9745cfdd.chunk.js.map",
@@ -409,6 +409,6 @@
   },
   "entrypoints": [
     "static/css/main.7a71262c.css",
-    "static/js/main.e1647252.js"
+    "static/js/main.95c22e40.js"
   ]
 }
