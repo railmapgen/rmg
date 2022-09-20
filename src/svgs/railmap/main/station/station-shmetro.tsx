@@ -246,7 +246,7 @@ const IntBoxGroup = React.forwardRef(
         return (
             <g ref={ref} fontSize={14} textAnchor="middle" {...others}>
                 {boxInfos.map((info, i) => {
-                    const isLineNumber = Boolean(info[4].match(/^\d.*$/));
+                    const isLineNumber = Boolean(info[4].match(/^[\w\d]+(号)?线/));
                     const isMaglev = Boolean(info[4].match(/^磁(悬)*浮/));
 
                     if (props.direction === 'r') {

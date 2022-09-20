@@ -198,7 +198,7 @@ const Dest = (props: {
                 </g>
             )}
 
-            {line_name[0].match(/^[\w\d]+/) ? (
+            {line_name[0].match(/^[\w\d]+(号)?线/) ? (
                 <LineNameBoxNumber line_name={line_name} line_color={line_color} />
             ) : (
                 <LineNameBoxText line_name={line_name} line_color={line_color} />
