@@ -130,7 +130,7 @@ export default function DownloadModal(props: DownloadModalProps) {
 
         const zip = new JSZip();
 
-        for (let index in stationIdListToDownload) {
+        for (const index in stationIdListToDownload) {
             dispatch(setLoadingProgress(((Number(index) + 1) / stationIdListToDownload.length) * 100));
 
             const stnId = stationIdListToDownload[index];
@@ -151,9 +151,9 @@ export default function DownloadModal(props: DownloadModalProps) {
             document.body.appendChild(elem);
 
             const filename = `rmg.${stnId}.${stationList[stnId].name[0]}.${stationList[stnId].name[1]}`.replaceAll(
-                ' ',
+                /\\|\/|\||\*|:|\?|<|>|"/g,
                 '_'
-            );
+            ); // forbidden characters on windows \ / : * ? " < > |
             if (format === 'png') {
                 const isWait = isSafari() && index === '0';
                 const blob = await test(elem, scale / 100, isWait);
