@@ -1,5 +1,3 @@
-import { StatusPanelComponent } from 'ag-grid-community/dist/lib/components/framework/componentTypes';
-import { stat } from 'fs';
 import { RootDispatch, RootState } from '..';
 import { Direction, StationDict } from '../../constants/constants';
 import { setStationsBulk } from './action';
@@ -46,10 +44,10 @@ export const isStationValid2ConnectBranch = (stationId: string, branchIndex: num
 };
 
 export const connect2MainLine = (stationId: string, branchIndex: number) => {
-    return (dispatch: RootDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState): boolean => {
         const isValid = dispatch(isStationValid2ConnectBranch(stationId, branchIndex));
         if (!isValid) {
-            return;
+            return false;
         }
         const { branches } = getState().helper;
         const stationList = getState().param.stn_list;
@@ -82,6 +80,7 @@ export const connect2MainLine = (stationId: string, branchIndex: number) => {
                 },
             };
             dispatch(setStationsBulk(nextStationList));
+            return true;
         } else {
             const seconndLastId: string = branch.slice(-2)[0];
             const nextStationList: StationDict = {
@@ -110,6 +109,7 @@ export const connect2MainLine = (stationId: string, branchIndex: number) => {
                 },
             };
             dispatch(setStationsBulk(nextStationList));
+            return true;
         }
     };
 };
@@ -155,11 +155,11 @@ export const getPossibleDirection = (branchIndex: number) => {
 };
 
 export const disconnectFromMainLine = (direction: Direction, branchIndex: number) => {
-    return (dispatch: RootDispatch, getState: () => RootState) => {
+    return (dispatch: RootDispatch, getState: () => RootState): boolean => {
         const directionList = dispatch(getPossibleDirection(branchIndex));
         if (!directionList.includes(direction)) {
             console.log('disconnectFromMainLine():: failed as the aim direction is not in the possible direction list');
-            return;
+            return false;
         }
         const { branches } = getState().helper;
         const stationList = getState().param.stn_list;
@@ -193,9 +193,8 @@ export const disconnectFromMainLine = (direction: Direction, branchIndex: number
                 },
             };
             dispatch(setStationsBulk(nextStationList));
-        }
-
-        if (direction === Direction.right) {
+            return true;
+        } else {
             const endStation = branch.slice(-1)[0];
             const secondEndStation = branch.slice(-2)[0];
             const nextStationList: StationDict = {
@@ -224,6 +223,7 @@ export const disconnectFromMainLine = (direction: Direction, branchIndex: number
                 },
             };
             dispatch(setStationsBulk(nextStationList));
+            return true;
         }
     };
 };
