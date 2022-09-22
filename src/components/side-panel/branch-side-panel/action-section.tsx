@@ -4,15 +4,16 @@ import { Box, Button, Flex, Heading } from '@chakra-ui/react';
 import { MdCached, MdFilter1 } from 'react-icons/md';
 import AutoNumModal from '../../modal/auto-num-modal';
 import { useRootDispatch, useRootSelector } from '../../../redux';
-import { RmgStyle } from '../../../constants/constants';
+import { Direction, RmgStyle } from '../../../constants/constants';
 import { reverseStations } from '../../../redux/param/action';
+import ConnectDisconnectCard from './connect-disconnect-card';
 
 export default function ActionSection() {
     const { t } = useTranslation();
     const dispatch = useRootDispatch();
 
     const style = useRootSelector(state => state.param.style);
-
+    const selectedBranch = useRootSelector(state => state.app.selectedBranch);
     const [isAutoNumModalOpen, setIsAutoNumModalOpen] = useState(false);
 
     return (
@@ -36,6 +37,19 @@ export default function ActionSection() {
                     },
                 }}
             >
+                {selectedBranch !== 0 && style !== RmgStyle.SHMetro && (
+                    <>
+                        <Heading as="h6" size="xs">
+                            {t('Branch left end')}
+                        </Heading>
+                        <ConnectDisconnectCard direction={Direction.left} />
+                        <Heading as="h6" size="xs">
+                            {t('Branch right end')}
+                        </Heading>
+                        <ConnectDisconnectCard direction={Direction.right} />
+                    </>
+                )}
+
                 {style === RmgStyle.GZMTR && (
                     <Button
                         size="sm"
