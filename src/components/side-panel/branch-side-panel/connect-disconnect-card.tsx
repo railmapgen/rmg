@@ -66,22 +66,22 @@ export default function ConnectDisconnectCard(props: ConnectDisconnectCardProps)
 
     return (
         <RmgCard direction="column">
-            <Flex>
+            <Flex alignItems="center">
                 <RmgLabel label={t('Station name')} flex={1}>
                     <RmgDebouncedInput defaultValue={branchEndInfo.name.join(' ')} isDisabled={true} />
                 </RmgLabel>
 
                 {isEditing ? (
-                    <Button ml={1} size="sm" variant="outline" onClick={() => setIsEditing(false)}>
+                    <Button mx={1} size="sm" variant="outline" onClick={() => setIsEditing(false)}>
                         {t('Cancel')}
                     </Button>
                 ) : isConnectable ? (
-                    <Button ml={1} size="sm" variant="solid" colorScheme="primary" onClick={() => setIsEditing(true)}>
+                    <Button mx={1} size="sm" variant="solid" colorScheme="primary" onClick={() => setIsEditing(true)}>
                         {t('Connect to main line')}
                     </Button>
                 ) : (
                     <Button
-                        ml={1}
+                        mx={1}
                         size="sm"
                         variant="solid"
                         colorScheme="primary"
@@ -94,7 +94,7 @@ export default function ConnectDisconnectCard(props: ConnectDisconnectCardProps)
             </Flex>
 
             {isEditing && (
-                <Flex>
+                <Flex alignItems="center">
                     <RmgLabel label={t('Target station')} flex={1}>
                         <RmgSelect
                             defaultValue={selection}
@@ -105,11 +105,10 @@ export default function ConnectDisconnectCard(props: ConnectDisconnectCardProps)
                     </RmgLabel>
 
                     <Button
-                        ml={1}
+                        mx={1}
                         size="sm"
                         variant="solid"
                         colorScheme="primary"
-                        alignSelf="flex-end"
                         onClick={handleConnect}
                         isDisabled={!selection}
                     >
