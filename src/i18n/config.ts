@@ -26,7 +26,8 @@ i18n.use(initReactI18next)
         },
         resources,
     })
-    .then(() => {
+    .then(t => {
+        document.title = t('Rail Map Generator');
         document.documentElement.lang = i18n.language;
     });
 
