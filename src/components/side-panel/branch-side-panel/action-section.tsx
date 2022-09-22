@@ -37,7 +37,7 @@ export default function ActionSection() {
                     },
                 }}
             >
-                {selectedBranch !== 0 && (
+                {selectedBranch !== 0 && style !== RmgStyle.SHMetro && (
                     <>
                         <Heading as="h6" size="xs">
                             {t('Branch left end')}
