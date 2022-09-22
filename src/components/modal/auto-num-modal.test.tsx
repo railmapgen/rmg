@@ -23,7 +23,7 @@ describe('AutoNumModal', () => {
     it('Can disable submit button if starting index is invalid', async () => {
         render(<AutoNumModal isOpen={true} onClose={jest.fn()} />, { store: mockStore });
 
-        expect(screen.getByText('Submit')).not.toBeDisabled();
+        expect(screen.getByText('Confirm')).not.toBeDisabled();
         jest.useFakeTimers();
 
         fireEvent.change(screen.getByRole('combobox', { name: 'Starting index' }), { target: { value: '' } });
@@ -31,27 +31,27 @@ describe('AutoNumModal', () => {
             jest.advanceTimersByTime(0);
         });
         expect(screen.getByRole('combobox', { name: 'Starting index' })).toBeValid();
-        expect(screen.getByText('Submit')).toBeDisabled();
+        expect(screen.getByText('Confirm')).toBeDisabled();
 
         fireEvent.change(screen.getByRole('combobox', { name: 'Starting index' }), { target: { value: 'abc' } });
         await act(async () => {
             jest.advanceTimersByTime(0);
         });
         expect(screen.getByRole('combobox', { name: 'Starting index' })).not.toBeValid();
-        expect(screen.getByText('Submit')).toBeDisabled();
+        expect(screen.getByText('Confirm')).toBeDisabled();
 
         fireEvent.change(screen.getByRole('combobox', { name: 'Starting index' }), { target: { value: '10' } });
         await act(async () => {
             jest.advanceTimersByTime(0);
         });
         expect(screen.getByRole('combobox', { name: 'Starting index' })).toBeValid();
-        expect(screen.getByText('Submit')).not.toBeDisabled();
+        expect(screen.getByText('Confirm')).not.toBeDisabled();
     });
 
     it('Can disable submit button if number of digits is invalid', async () => {
         render(<AutoNumModal isOpen={true} onClose={jest.fn()} />, { store: mockStore });
 
-        expect(screen.getByText('Submit')).not.toBeDisabled();
+        expect(screen.getByText('Confirm')).not.toBeDisabled();
         jest.useFakeTimers();
 
         fireEvent.change(screen.getByRole('combobox', { name: 'Number of digits' }), { target: { value: '' } });
@@ -59,20 +59,20 @@ describe('AutoNumModal', () => {
             jest.advanceTimersByTime(0);
         });
         expect(screen.getByRole('combobox', { name: 'Number of digits' })).toBeValid();
-        expect(screen.getByText('Submit')).toBeDisabled();
+        expect(screen.getByText('Confirm')).toBeDisabled();
 
         fireEvent.change(screen.getByRole('combobox', { name: 'Number of digits' }), { target: { value: 'abc' } });
         await act(async () => {
             jest.advanceTimersByTime(0);
         });
         expect(screen.getByRole('combobox', { name: 'Number of digits' })).not.toBeValid();
-        expect(screen.getByText('Submit')).toBeDisabled();
+        expect(screen.getByText('Confirm')).toBeDisabled();
 
         fireEvent.change(screen.getByRole('combobox', { name: 'Number of digits' }), { target: { value: '3' } });
         await act(async () => {
             jest.advanceTimersByTime(0);
         });
         expect(screen.getByRole('combobox', { name: 'Number of digits' })).toBeValid();
-        expect(screen.getByText('Submit')).not.toBeDisabled();
+        expect(screen.getByText('Confirm')).not.toBeDisabled();
     });
 });

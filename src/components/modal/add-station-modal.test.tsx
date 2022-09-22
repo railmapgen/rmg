@@ -103,11 +103,11 @@ describe('AddStationModal', () => {
             setup();
 
             expect(screen.getByDisplayValue(/Please select/)).not.toBeNull();
-            expect(screen.getByText('Submit')).toBeDisabled();
+            expect(screen.getByText('Confirm')).toBeDisabled();
 
             fireEvent.change(screen.getAllByRole('combobox')[2], { target: { value: 'stn3' } });
 
-            expect(screen.getByText('Submit')).not.toBeDisabled();
+            expect(screen.getByText('Confirm')).not.toBeDisabled();
         });
 
         it('Can reset pivot selection when where is changed', () => {
@@ -124,7 +124,7 @@ describe('AddStationModal', () => {
             setup();
 
             fireEvent.change(screen.getAllByRole('combobox')[2], { target: { value: 'stn3' } });
-            fireEvent.click(screen.getByText('Submit'));
+            fireEvent.click(screen.getByText('Confirm'));
 
             const actions = mockStore.getActions();
             expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
