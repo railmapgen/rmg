@@ -15,6 +15,7 @@ import {
     TabPanels,
     Tabs,
     Text,
+    useColorModeValue,
     VStack,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
@@ -38,6 +39,7 @@ export default function ColourModal(props: ColourModalProps) {
     const { isOpen, onClose, defaultTheme, onUpdate } = props;
 
     const { t } = useTranslation();
+    const linkColour = useColorModeValue('primary.500', 'primary.300');
 
     const [cityCode, setCityCode] = useState(defaultTheme?.[0]);
     const [lineCode, setLineCode] = useState(defaultTheme?.[1]);
@@ -143,7 +145,12 @@ export default function ColourModal(props: ColourModalProps) {
                     <VStack>
                         <RmgLineBadge name={t('ColourModal.example')} fg={fgColour} bg={bgColour} />
 
-                        <Tabs isFitted colorScheme="teal" w="100%" defaultIndex={cityCode === CityCode.Other ? 1 : 0}>
+                        <Tabs
+                            isFitted
+                            colorScheme="primary"
+                            w="100%"
+                            defaultIndex={cityCode === CityCode.Other ? 1 : 0}
+                        >
                             <TabList>
                                 <Tab>{t('ColourModal.palette')}</Tab>
                                 <Tab>{t('ColourModal.custom')}</Tab>
@@ -164,13 +171,13 @@ export default function ColourModal(props: ColourModalProps) {
                 <ModalFooter>
                     <Text fontSize="sm" marginRight={2}>
                         {t('ColourModal.seeAll')}
-                        <Link color="teal.500" onClick={handleOpenPalette}>
+                        <Link color={linkColour} onClick={handleOpenPalette}>
                             {t('Palette')} <Icon as={MdOpenInNew} />
                         </Link>
                     </Text>
 
-                    <Button colorScheme="teal" onClick={handleSubmit} disabled={!isSubmitEnabled}>
-                        {t('ColourModal.submit')}
+                    <Button colorScheme="primary" onClick={handleSubmit} disabled={!isSubmitEnabled}>
+                        {t('Confirm')}
                     </Button>
                 </ModalFooter>
             </ModalContent>

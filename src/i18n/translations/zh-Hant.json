@@ -206,7 +206,6 @@
         "fg": "前景色",
         "white":"白",
         "black": "黑",
-        "submit": "確定",
         "seeAll": "檢視完整"
     },
 
@@ -221,7 +220,6 @@
         "after": "後於",
         "pivot": "定位車站",
         "pleaseSelect": "請選擇...",
-        "submit": "確定",
         "error": "新增車站失敗，請檢查你的選擇後重試。"
     },
 
@@ -248,8 +246,7 @@
         "maxLength": "編碼位數",
         "sort": "排序方式",
         "asc": "升序",
-        "desc": "降序",
-        "submit": "確定"
+        "desc": "降序"
     },
 
     "Are you sure to remove station? You cannot undo this action.": "確定移除該車站嗎？此動作無法還原。",

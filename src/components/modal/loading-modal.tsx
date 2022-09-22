@@ -1,8 +1,10 @@
 import React from 'react';
-import { CircularProgress, Flex, Modal, ModalOverlay } from '@chakra-ui/react';
+import { CircularProgress, Flex, Modal, ModalOverlay, useColorModeValue } from '@chakra-ui/react';
 import { useRootSelector } from '../../redux';
 
 export default function LoadingModal() {
+    const loaderColour = useColorModeValue('primary.500', 'primary.300');
+
     const isLoading = useRootSelector(state => state.app.isLoading);
 
     return (
@@ -21,7 +23,7 @@ export default function LoadingModal() {
                 <CircularProgress
                     isIndeterminate={isLoading === -1}
                     value={isLoading && isLoading >= 0 ? isLoading : undefined}
-                    color="teal"
+                    color={loaderColour}
                 />
             </Flex>
         </Modal>

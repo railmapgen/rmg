@@ -50,7 +50,8 @@ export const reRenderApp = (param: RMGParam) => {
     renderApp();
 };
 
-Promise.resolve()
+rmgRuntime
+    .ready()
     .then(() => {
         try {
             const contents = window.localStorage.getItem('rmgParam');

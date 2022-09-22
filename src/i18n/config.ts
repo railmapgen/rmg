@@ -35,6 +35,7 @@ export default i18n;
 
 export const handleLanguageChange = (language: string) => {
     i18n.changeLanguage(language).then();
+    document.title = i18n.t('Rail Map Generator');
     document.documentElement.lang = language;
 };
 rmgRuntime.onLanguageChange(handleLanguageChange);

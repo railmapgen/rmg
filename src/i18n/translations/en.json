@@ -39,9 +39,7 @@
         "title": "Open from configuration file",
         "message1": "Are you sure to import ",
         "message2": " with ",
-        "message3": " stations? Your current unsaved progress will be lost.",
-        "cancel": "Cancel",
-        "confirm": "Confirm"
+        "message3": " stations? Your current unsaved progress will be lost."
     },
 
     "GridTabs": {
@@ -209,7 +207,6 @@
         "fg": "Foreground colour",
         "white":"White",
         "black": "Black",
-        "submit": "Submit",
         "seeAll": "See full library in "
     },
 
@@ -224,7 +221,6 @@
         "after": "After",
         "pivot": "Pivot station",
         "pleaseSelect": "Please select...",
-        "submit": "Submit",
         "error": "Failed to add station. Please check your selections and try again."
     },
 
@@ -238,8 +234,7 @@
         "pleaseSelect": "Please select...",
         "position": "Position",
         "upper": "Upper",
-        "lower": "Lower",
-        "submit": "Submit"
+        "lower": "Lower"
     },
 
     "AutoNumModal": {
@@ -252,8 +247,7 @@
         "maxLength": "Number of digits",
         "sort": "Sorting",
         "asc": "Ascending",
-        "desc": "Descending",
-        "submit": "Submit"
+        "desc": "Descending"
     },
 
     "CanvasType": {

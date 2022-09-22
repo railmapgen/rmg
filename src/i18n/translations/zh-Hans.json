@@ -206,7 +206,6 @@
         "fg": "前景色",
         "white":"白",
         "black": "黑",
-        "submit": "确定",
         "seeAll": "查看完整"
     },
 
@@ -221,7 +220,6 @@
         "after": "后于",
         "pivot": "定位车站",
         "pleaseSelect": "请选择...",
-        "submit": "确定",
         "error": "添加车站失败，请检查您的选项后重试。"
     },
 
@@ -235,8 +233,7 @@
         "pleaseSelect": "请选择...",
         "position": "位置",
         "upper": "上方",
-        "lower": "下方",
-        "submit": "确定"
+        "lower": "下方"
     },
 
     "AutoNumModal": {
@@ -249,8 +246,7 @@
         "maxLength": "编号位数",
         "sort": "排序方式",
         "asc": "升序",
-        "desc": "降序",
-        "submit": "确定"
+        "desc": "降序"
     },
 
     "Are you sure to remove station? You cannot undo this action.": "您确定刪除此车站吗？您不能撤销此操作。",

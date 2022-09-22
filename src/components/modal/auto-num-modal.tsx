@@ -107,8 +107,8 @@ export default function AutoNumModal(props: AutoNumModalProps) {
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button colorScheme="teal" isDisabled={isSubmitDisabled} onClick={handleSubmit}>
-                        {t('AutoNumModal.submit')}
+                    <Button colorScheme="primary" isDisabled={isSubmitDisabled} onClick={handleSubmit}>
+                        {t('Confirm')}
                     </Button>
                 </ModalFooter>
             </ModalContent>

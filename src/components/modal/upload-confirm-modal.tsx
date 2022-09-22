@@ -55,7 +55,7 @@ export default function UploadConfirmModal(props: UploadConfirmModalProps) {
                         <Button ref={cancelRef} onClick={onClose}>
                             {t('Cancel')}
                         </Button>
-                        <Button colorScheme="teal" onClick={handleConfirm} ml={3}>
+                        <Button colorScheme="primary" onClick={handleConfirm} ml={3}>
                             {t('Confirm')}
                         </Button>
                     </AlertDialogFooter>

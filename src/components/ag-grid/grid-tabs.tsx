@@ -67,7 +67,7 @@ export default function GridTabs() {
                         >
                             {t('GridTabs.addStation')}
                         </Button>
-                        <Button size="xs" colorScheme="teal" onClick={handleEditLineSection}>
+                        <Button size="xs" colorScheme="primary" onClick={handleEditLineSection}>
                             {t('GridTabs.editLine')}
                         </Button>
                     </HStack>
