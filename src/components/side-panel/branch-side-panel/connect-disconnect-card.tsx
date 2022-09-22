@@ -9,6 +9,7 @@ import {
     connect2MainLine,
     disconnectFromMainLine,
     getBranchType,
+    getPossibleDirection,
     getPossibleStations,
 } from '../../../redux/param/connect-disconnect-branch';
 
@@ -34,6 +35,10 @@ export default function ConnectDisconnectCard(props: ConnectDisconnectCardProps)
 
     const possibleStations = dispatch(getPossibleStations(selectedBranch));
     const branchType = dispatch(getBranchType(selectedBranch));
+    const possibleDirection = dispatch(getPossibleDirection(selectedBranch));
+
+    const isConnectable = branchType === 1 && !branches[0].includes(branchEndId);
+    const isDisconnectable = possibleDirection.includes(direction);
 
     const options = possibleStations.reduce(
         (acc, cur) => ({
@@ -70,19 +75,7 @@ export default function ConnectDisconnectCard(props: ConnectDisconnectCardProps)
                     <Button ml={1} size="sm" variant="outline" alignSelf="flex-end" onClick={() => setIsEditing(false)}>
                         {t('Cancel')}
                     </Button>
-                ) : branchType === 2 || branches[0].includes(branchEndId) ? (
-                    <Button
-                        ml={1}
-                        size="sm"
-                        variant="solid"
-                        colorScheme="teal"
-                        alignSelf="flex-end"
-                        onClick={handleDisonnect}
-                        isDisabled={branchType === 1}
-                    >
-                        {t('Disconnect from main line')}
-                    </Button>
-                ) : (
+                ) : isConnectable ? (
                     <Button
                         ml={1}
                         size="sm"
@@ -92,6 +85,18 @@ export default function ConnectDisconnectCard(props: ConnectDisconnectCardProps)
                         onClick={() => setIsEditing(true)}
                     >
                         {t('Connect to main line')}
+                    </Button>
+                ) : (
+                    <Button
+                        ml={1}
+                        size="sm"
+                        variant="solid"
+                        colorScheme="teal"
+                        alignSelf="flex-end"
+                        onClick={handleDisonnect}
+                        isDisabled={!isDisconnectable}
+                    >
+                        {t('Disconnect from main line')}
                     </Button>
                 )}
             </Flex>
