@@ -1,8 +1,6 @@
 import { AllCanvas, CanvasType, LoadingStatus, RmgStyle, SidePanelMode } from '../../constants/constants';
 import { AlertStatus } from '@chakra-ui/react';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootDispatch } from '../index';
-import { Dispatch } from 'redux';
 
 interface AppState {
     rmgStyle: RmgStyle;
@@ -40,20 +38,8 @@ const appSlice = createSlice({
             state.canvasScale = action.payload;
         },
 
-        zoomToScale: (state, action: PayloadAction<number>) => {
-            const scale = action.payload;
-            state.canvasScale = scale;
-            window.localStorage.setItem('rmgScale', scale.toString());
-        },
-
         setCanvasToShow: (state, action: PayloadAction<CanvasType | typeof AllCanvas>) => {
             state.canvasToShow = action.payload;
-        },
-
-        selectCanvas: (state, action: PayloadAction<CanvasType | typeof AllCanvas>) => {
-            const canvas = action.payload;
-            state.canvasToShow = canvas;
-            window.localStorage.setItem('rmgCanvas', canvas);
         },
 
         setSidePanelMode: (state, action: PayloadAction<SidePanelMode>) => {
@@ -98,20 +84,6 @@ const appSlice = createSlice({
         },
     },
 });
-
-export const zoomToScale = (scale: number) => {
-    return (dispatch: RootDispatch) => {
-        dispatch(setCanvasScale(scale));
-        window.localStorage.setItem('rmgScale', scale.toString());
-    };
-};
-
-export const selectCanvas = (canvas: CanvasType | typeof AllCanvas) => {
-    return (dispatch: Dispatch) => {
-        dispatch(setCanvasToShow(canvas));
-        window.localStorage.setItem('rmgCanvas', canvas);
-    };
-};
 
 export const {
     setCanvasScale,

@@ -1,7 +1,6 @@
 import rootReducer from '../index';
-import appReducer, { closeGlobalAlert, selectCanvas, setGlobalAlert, zoomToScale } from './app-slice';
+import appReducer, { closeGlobalAlert, setGlobalAlert } from './app-slice';
 import { createMockAppStore } from '../../setupTests';
-import { CanvasType } from '../../constants/constants';
 
 const realStore = rootReducer.getState();
 const mockStore = createMockAppStore({ ...realStore });
@@ -24,28 +23,6 @@ describe('AppSlice', () => {
     afterEach(() => {
         mockStore.clearActions();
         jest.clearAllMocks();
-    });
-
-    it('Can set canvas scale and write to localStorage as expected', () => {
-        mockStore.dispatch(zoomToScale(1.1));
-
-        expect(mockSetItem).toBeCalledTimes(1);
-        expect(mockSetItem).toBeCalledWith('rmgScale', '1.1');
-
-        const actions = mockStore.getActions();
-        expect(actions).toHaveLength(1);
-        expect(actions).toContainEqual({ type: 'app/setCanvasScale', payload: 1.1 });
-    });
-
-    it('Can set canvas and write to localStorage as expected', () => {
-        mockStore.dispatch(selectCanvas(CanvasType.RailMap));
-
-        expect(mockSetItem).toBeCalledTimes(1);
-        expect(mockSetItem).toBeCalledWith('rmgCanvas', CanvasType.RailMap);
-
-        const actions = mockStore.getActions();
-        expect(actions).toHaveLength(1);
-        expect(actions).toContainEqual({ type: 'app/setCanvasToShow', payload: 'railmap' });
     });
 
     describe('AppSlice - global alerts', () => {

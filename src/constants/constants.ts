@@ -301,3 +301,10 @@ export enum Position {
     LEFT = 'LEFT',
     RIGHT = 'RIGHT',
 }
+
+// localStorage keys
+export enum LocalStorageKey {
+    CANVAS_TO_SHOW = 'rmg__canvasToShow',
+    CANVAS_SCALE = 'rmg__canvasScale',
+    PARAM = 'rmg__param',
+}
