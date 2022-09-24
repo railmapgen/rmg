@@ -16,7 +16,7 @@ import { MdHelp, MdOpenInNew, MdTranslate } from 'react-icons/md';
 import HelpModal from '../modal/help-modal';
 import { RmgEnvBadge, RmgWindowHeader } from '@railmapgen/rmg-components';
 import { LanguageCode } from '@railmapgen/rmg-translate';
-import rmgRuntime from '@railmapgen/rmg-runtime';
+import rmgRuntime, { RmgEnv } from '@railmapgen/rmg-runtime';
 import { handleLanguageChange } from '../../i18n/config';
 
 export default function WindowHeader() {
@@ -33,6 +33,22 @@ export default function WindowHeader() {
         handleLanguageChange(language);
     };
 
+    const popoverHeader = (
+        <Trans i18nKey="WindowHeader.popoverHeader" environment={environment}>
+            You're on {{ environment }} environment!
+        </Trans>
+    );
+    const popoverBody = (
+        <Trans i18nKey="WindowHeader.popoverBody">
+            This is a testing environment where we don't guarantee the stability and compatibility. Please switch back
+            to{' '}
+            <Link color={linkColour} href={'https://railmapgen.github.io' + window.location.pathname} isExternal={true}>
+                Production environment <Icon as={MdOpenInNew} />
+            </Link>
+            .
+        </Trans>
+    );
+
     return (
         <RmgWindowHeader>
             <Heading as="h4" size="md">
@@ -41,25 +57,8 @@ export default function WindowHeader() {
             <RmgEnvBadge
                 environment={environment}
                 version={appVersion}
-                popoverHeader={
-                    <Trans i18nKey="WindowHeader.popoverHeader" environment={environment}>
-                        You're on {{ environment }} environment!
-                    </Trans>
-                }
-                popoverBody={
-                    <Trans i18nKey="WindowHeader.popoverBody">
-                        This is a testing environment where we don't guarantee the stability and compatibility. Please
-                        switch back to{' '}
-                        <Link
-                            color={linkColour}
-                            href={'https://railmapgen.github.io' + window.location.pathname}
-                            isExternal={true}
-                        >
-                            Production environment <Icon as={MdOpenInNew} />
-                        </Link>
-                        .
-                    </Trans>
-                }
+                popoverHeader={environment === RmgEnv.PRD ? undefined : popoverHeader}
+                popoverBody={environment === RmgEnv.PRD ? undefined : popoverBody}
             />
 
             <HStack ml="auto">
