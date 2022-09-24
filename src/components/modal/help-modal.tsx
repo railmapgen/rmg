@@ -18,6 +18,7 @@ import {
     Tag,
     TagLabel,
     Text,
+    useColorModeValue,
     VStack,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
@@ -47,6 +48,8 @@ export default function HelpModal(props: HelpModalProps) {
     const { isOpen, onClose } = props;
     const { t } = useTranslation();
 
+    const linkColour = useColorModeValue('primary.500', 'primary.300');
+
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="xl" scrollBehavior="inside">
             <ModalOverlay />
@@ -62,15 +65,15 @@ export default function HelpModal(props: HelpModalProps) {
                     <OrderedList>
                         <ListItem>
                             The layout of the elements on the signage or rail map, is designed by{' '}
-                            <Link color="teal.500" href="https://www.gzmtr.com/" isExternal={true}>
+                            <Link color={linkColour} href="https://www.gzmtr.com/" isExternal={true}>
                                 Guangzhou Metro Group <Icon as={MdOpenInNew} />
                             </Link>
                             {', '}
-                            <Link color="teal.500" href="https://www.mtr.com.hk/" isExternal={true}>
+                            <Link color={linkColour} href="https://www.mtr.com.hk/" isExternal={true}>
                                 MTR Corporation <Icon as={MdOpenInNew} />
                             </Link>
                             {' or '}
-                            <Link color="teal.500" href="https://www.shmetro.com/" isExternal={true}>
+                            <Link color={linkColour} href="https://www.shmetro.com/" isExternal={true}>
                                 Shanghai Shentong Metro Group <Icon as={MdOpenInNew} />
                             </Link>
                             , depending on your selection. You shall grant appropriate permit or license from the
@@ -78,44 +81,44 @@ export default function HelpModal(props: HelpModalProps) {
                             required to do so.
                             <br />
                             標誌版或路線圖之元素之佈局，基於你所選擇之風格，為
-                            <Link color="teal.500" href="https://www.gzmtr.com/" isExternal={true}>
+                            <Link color={linkColour} href="https://www.gzmtr.com/" isExternal={true}>
                                 廣州地鐵集團公司 <Icon as={MdOpenInNew} />
                             </Link>
                             ，
-                            <Link color="teal.500" href="https://www.mtr.com.hk/" isExternal={true}>
+                            <Link color={linkColour} href="https://www.mtr.com.hk/" isExternal={true}>
                                 港鐵公司 <Icon as={MdOpenInNew} />
                             </Link>
                             或
-                            <Link color="teal.500" href="https://www.shmetro.com/" isExternal={true}>
+                            <Link color={linkColour} href="https://www.shmetro.com/" isExternal={true}>
                                 上海申通地鐵集團 <Icon as={MdOpenInNew} />
                             </Link>
                             所設計。在產生之圖像用作商業用途前，你應向相關公司取得適當之許可證或授權。
                         </ListItem>
                         <ListItem>
                             The elements including shapes and lines on the image are drawn by{' '}
-                            <Link color="teal.500" href="https://www.github.com/wongchito" isExternal={true}>
+                            <Link color={linkColour} href="https://www.github.com/wongchito" isExternal={true}>
                                 Chito Wong <Icon as={MdOpenInNew} />
                             </Link>
                             {' and '}
-                            <Link color="teal.500" href="https://www.github.com/thekingofcity" isExternal={true}>
+                            <Link color={linkColour} href="https://www.github.com/thekingofcity" isExternal={true}>
                                 thekingofcity <Icon as={MdOpenInNew} />
                             </Link>
                             , based on the design standards or rules of the companies listed above. You may use them for
                             any purposes, but it is recommended to state the name and the link of software alongside.
                             <br />
                             圖像之元素，包括圖形及線條，均由
-                            <Link color="teal.500" href="https://www.github.com/wongchito" isExternal={true}>
+                            <Link color={linkColour} href="https://www.github.com/wongchito" isExternal={true}>
                                 Chito Wong <Icon as={MdOpenInNew} />
                             </Link>
                             及
-                            <Link color="teal.500" href="https://www.github.com/thekingofcity" isExternal={true}>
+                            <Link color={linkColour} href="https://www.github.com/thekingofcity" isExternal={true}>
                                 thekingofcity <Icon as={MdOpenInNew} />
                             </Link>
                             基於上述公司之設計標準或準則繪製。你可將其用於任何目的，但我們建議你於使用同時附以我們之名字以及該軟件之連結。
                         </ListItem>
                         <ListItem>
                             Due to copyright, licensing and other legal restrictions, Rail Map Generator uses{' '}
-                            <Link color="teal.500" href="https://github.com/ButTaiwan/genyo-font" isExternal={true}>
+                            <Link color={linkColour} href="https://github.com/ButTaiwan/genyo-font" isExternal={true}>
                                 GenYoMin provided by ButTaiwan <Icon as={MdOpenInNew} />
                             </Link>
                             , and Vegur instead of MTRSung and Myriad Pro respectively to display and generate MTR-style
@@ -123,7 +126,7 @@ export default function HelpModal(props: HelpModalProps) {
                             those generated images for commercial purposes.
                             <br />
                             由於著作權及其他法律限制，鐵路路線圖產生器使用
-                            <Link color="teal.500" href="https://github.com/ButTaiwan/genyo-font" isExternal={true}>
+                            <Link color={linkColour} href="https://github.com/ButTaiwan/genyo-font" isExternal={true}>
                                 由ButTaiwan提供之源樣明體 <Icon as={MdOpenInNew} />
                             </Link>
                             ，以及Vegur，以代替港鐵樣式標誌牌所使用之地鐵宋及Myriad
@@ -137,12 +140,12 @@ export default function HelpModal(props: HelpModalProps) {
                         </ListItem>
                         <ListItem>
                             All flag emojis shown on Windows platforms are designed by{' '}
-                            <Link color="teal.500" href="https://openmoji.org/" isExternal={true}>
+                            <Link color={linkColour} href="https://openmoji.org/" isExternal={true}>
                                 OpenMoji <Icon as={MdOpenInNew} />
                             </Link>{' '}
                             – the open-source emoji and icon project. License:
                             <Link
-                                color="teal.500"
+                                color={linkColour}
                                 href="https://creativecommons.org/licenses/by-sa/4.0/"
                                 isExternal={true}
                             >
@@ -150,12 +153,12 @@ export default function HelpModal(props: HelpModalProps) {
                             </Link>
                             <br />
                             於Windows作業系統上顯示之旗幟Emoji為
-                            <Link color="teal.500" href="https://openmoji.org/" isExternal={true}>
+                            <Link color={linkColour} href="https://openmoji.org/" isExternal={true}>
                                 OpenMoji <Icon as={MdOpenInNew} />
                             </Link>
                             所設計。許可證：
                             <Link
-                                color="teal.500"
+                                color={linkColour}
                                 href="https://creativecommons.org/licenses/by-sa/4.0/"
                                 isExternal={true}
                             >
@@ -187,7 +190,7 @@ export default function HelpModal(props: HelpModalProps) {
                             cursor="pointer"
                         >
                             <Avatar src="https://github.com/wongchito.png" size="lg" my={2} ml={-1} mr={2} />
-                            <TagLabel>
+                            <TagLabel display="block">
                                 <Text fontSize="lg" fontWeight="bold" mb={1}>
                                     Chito Wong
                                 </Text>
@@ -202,7 +205,7 @@ export default function HelpModal(props: HelpModalProps) {
                             cursor="pointer"
                         >
                             <Avatar src="https://github.com/thekingofcity.png" size="lg" my={2} ml={-1} mr={2} />
-                            <TagLabel>
+                            <TagLabel display="block">
                                 <Text fontSize="lg" fontWeight="bold" mb={1}>
                                     thekingofcity
                                 </Text>
@@ -263,7 +266,7 @@ export default function HelpModal(props: HelpModalProps) {
                     <Text>
                         {t('Visit')}{' '}
                         <Link
-                            color="teal.500"
+                            color={linkColour}
                             href="https://github.com/railmapgen/rmg/wiki/How-to-add-color-palette-and-line-templates"
                             isExternal={true}
                         >
@@ -275,7 +278,7 @@ export default function HelpModal(props: HelpModalProps) {
 
                 <ModalFooter>
                     <Button
-                        colorScheme="teal"
+                        colorScheme="primary"
                         onClick={() => window.open('https://github.com/railmapgen/rmg', '_blank')}
                     >
                         {t('Visit GitHub')}

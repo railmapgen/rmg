@@ -18,7 +18,7 @@ type RowDataType = StationInfo & { id: string; rowSpan: [number, string | undefi
 
 export default function StationAgGrid(props: StationAgGridProps) {
     const { branchIndex } = props;
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useRootDispatch();
 
     const sidePanelMode = useRootSelector(state => state.app.sidePanelMode);
@@ -90,7 +90,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
                 hide: ![RmgStyle.SHMetro].includes(style),
             },
         ],
-        [style]
+        [style, theme.toString(), i18n.language]
     );
 
     const gridRef = useRef<AgGridReact>(null);

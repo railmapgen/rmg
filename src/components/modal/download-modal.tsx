@@ -207,7 +207,7 @@ export default function DownloadModal(props: DownloadModalProps) {
                 <ModalFooter>
                     <HStack>
                         <Button
-                            colorScheme="teal"
+                            colorScheme="primary"
                             variant="outline"
                             size="sm"
                             onClick={() => handleDownload('current')}
@@ -217,7 +217,7 @@ export default function DownloadModal(props: DownloadModalProps) {
                         </Button>
                         {style !== RmgStyle.GZMTR && (
                             <Button
-                                colorScheme="teal"
+                                colorScheme="primary"
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleDownload('all')}

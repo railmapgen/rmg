@@ -160,12 +160,12 @@ export default function NewBranchModal(props: NewBranchModalProps) {
 
                 <ModalFooter>
                     <Button
-                        colorScheme="teal"
-                        title={isSubmitDisabled ? fromError || toError : t('NewBranchModal.submit')}
+                        colorScheme="primary"
+                        title={isSubmitDisabled ? fromError || toError : t('Confirm')}
                         onClick={handleSubmit}
                         disabled={isSubmitDisabled}
                     >
-                        {t('NewBranchModal.submit')}
+                        {t('Confirm')}
                     </Button>
                 </ModalFooter>
             </ModalContent>

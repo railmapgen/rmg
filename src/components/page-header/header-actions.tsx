@@ -21,7 +21,7 @@ export default function HeaderActions() {
             <Button
                 variant="solid"
                 size="sm"
-                colorScheme="teal"
+                colorScheme="primary"
                 leftIcon={<MdPalette />}
                 onClick={() => dispatch(setSidePanelMode(SidePanelMode.STYLE))}
             >

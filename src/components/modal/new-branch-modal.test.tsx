@@ -95,7 +95,7 @@ describe('NewBranchModal', () => {
             fireEvent.change(screen.getAllByRole('combobox')[1], { target: { value: 'stn4' } });
             fireEvent.change(screen.getAllByRole('combobox')[2], { target: { value: 'lineend' } });
 
-            const submitBtn = screen.getByText('Submit');
+            const submitBtn = screen.getByText('Confirm');
             expect(submitBtn).toBeDisabled();
             expect(submitBtn.title).toContain('should not be open jaw from the last station');
         });
@@ -105,7 +105,7 @@ describe('NewBranchModal', () => {
 
             fireEvent.change(screen.getAllByRole('combobox')[1], { target: { value: 'stn3' } });
             fireEvent.change(screen.getAllByRole('combobox')[2], { target: { value: 'lineend' } });
-            fireEvent.click(screen.getByText('Submit'));
+            fireEvent.click(screen.getByText('Confirm'));
 
             const actions = mockStore.getActions();
             expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));

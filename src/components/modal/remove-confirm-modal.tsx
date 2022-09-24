@@ -75,7 +75,7 @@ export default function RemoveConfirmModal(props: RemoveConfirmModalProps) {
 
                 <ModalFooter>
                     <Button onClick={onClose}>{t('Cancel')}</Button>
-                    <Button colorScheme="teal" onClick={handleConfirm} ml={3}>
+                    <Button colorScheme="primary" onClick={handleConfirm} ml={3}>
                         {t('Confirm')}
                     </Button>
                 </ModalFooter>
