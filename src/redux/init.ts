@@ -1,6 +1,34 @@
-import { AllCanvas, CanvasType, LocalStorageKey } from '../constants/constants';
+import { AllCanvas, CanvasType, LocalStorageKey, RMGParam, RmgStyle } from '../constants/constants';
 import { setCanvasScale, setCanvasToShow } from './app/app-slice';
 import { RootStore, startRootListening } from './index';
+import { updateParam } from '../utils';
+import { setFullParam } from './param/action';
+import { LanguageCode } from '@railmapgen/rmg-translate';
+import { initParam } from './param/util';
+
+export const initParamStore = (store: RootStore) => {
+    let paramToBeSaved: RMGParam = initParam(RmgStyle.MTR, LanguageCode.ChineseTrad);
+
+    try {
+        let contents = window.localStorage.getItem(LocalStorageKey.PARAM);
+        if (contents === null) {
+            contents = window.localStorage.getItem('rmgParam');
+            window.localStorage.removeItem('rmgParam');
+            window.localStorage.removeItem('rmgParamRedux');
+        }
+
+        if (contents) {
+            paramToBeSaved = updateParam(JSON.parse(contents)) as RMGParam;
+        } else {
+            throw new Error('rmgParam does not exist in localStorage');
+        }
+    } catch (err) {
+        console.warn('Error in reading rmgParam', err);
+    } finally {
+        window.localStorage.setItem(LocalStorageKey.PARAM, JSON.stringify(paramToBeSaved));
+        store.dispatch(setFullParam(paramToBeSaved));
+    }
+};
 
 export const initCanvasScale = (store: RootStore) => {
     try {
@@ -52,6 +80,7 @@ export const initCanvasToShow = (store: RootStore) => {
 };
 
 export const initStore = (store: RootStore) => {
+    initParamStore(store);
     initCanvasScale(store);
     initCanvasToShow(store);
 
@@ -76,6 +105,15 @@ export const initStore = (store: RootStore) => {
                 LocalStorageKey.CANVAS_TO_SHOW,
                 listenerApi.getState().app.canvasToShow.toString()
             );
+        },
+    });
+
+    startRootListening({
+        predicate: (action, currentState, previousState) => {
+            return JSON.stringify(currentState.param) !== JSON.stringify(previousState.param);
+        },
+        effect: (action, listenerApi) => {
+            window.localStorage.setItem(LocalStorageKey.PARAM, JSON.stringify(listenerApi.getState().param));
         },
     });
 };

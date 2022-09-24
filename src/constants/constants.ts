@@ -306,4 +306,5 @@ export enum Position {
 export enum LocalStorageKey {
     CANVAS_TO_SHOW = 'rmg__canvasToShow',
     CANVAS_SCALE = 'rmg__canvasScale',
+    PARAM = 'rmg__param',
 }

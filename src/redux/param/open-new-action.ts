@@ -7,7 +7,6 @@ import { reRenderApp } from '../../index';
 export const openFromNewParam = (param: Record<string, any>) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const updatedParam = updateParam(param) as RMGParam;
-        window.localStorage.setItem('rmgParam', JSON.stringify(updatedParam));
 
         // close side panel, reset selection
         dispatch(setSidePanelMode(SidePanelMode.CLOSE));
