@@ -90,7 +90,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
                 hide: ![RmgStyle.SHMetro].includes(style),
             },
         ],
-        [style, i18n.language]
+        [style, theme.toString(), i18n.language]
     );
 
     const gridRef = useRef<AgGridReact>(null);
