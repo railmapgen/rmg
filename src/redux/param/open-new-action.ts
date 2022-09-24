@@ -1,7 +1,7 @@
 import { RootDispatch, RootState } from '../index';
 import { updateParam } from '../../utils';
 import { AllCanvas, canvasConfig, RMGParam, SidePanelMode } from '../../constants/constants';
-import { selectCanvas, setSelectedStation, setSidePanelMode, stopLoading } from '../app/app-slice';
+import { setCanvasToShow, setSelectedStation, setSidePanelMode, stopLoading } from '../app/app-slice';
 import { reRenderApp } from '../../index';
 
 export const openFromNewParam = (param: Record<string, any>) => {
@@ -16,7 +16,7 @@ export const openFromNewParam = (param: Record<string, any>) => {
         // reset to AllCanvas if the current canvas is not supported in the new style
         const canvasToShow = getState().app.canvasToShow;
         const canvas = canvasConfig[updatedParam.style].some(c => c === canvasToShow) ? canvasToShow : AllCanvas;
-        dispatch(selectCanvas(canvas));
+        dispatch(setCanvasToShow(canvas));
         reRenderApp(updatedParam);
         dispatch(stopLoading());
     };

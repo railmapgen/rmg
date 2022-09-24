@@ -1,6 +1,6 @@
 import React from 'react';
 import HeaderActions from './header-actions';
-import { selectCanvas, zoomToScale } from '../../redux/app/app-slice';
+import { setCanvasScale, setCanvasToShow } from '../../redux/app/app-slice';
 import { AllCanvas, canvasConfig, CanvasType, RmgStyle } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { useRootDispatch, useRootSelector } from '../../redux';
@@ -47,7 +47,7 @@ export default function PageHeader() {
                 <RmgButtonGroup
                     selections={canvasSelections}
                     defaultValue={canvasToShow}
-                    onChange={canvas => dispatch(selectCanvas(canvas as CanvasType | typeof AllCanvas))}
+                    onChange={canvas => dispatch(setCanvasToShow(canvas as CanvasType | typeof AllCanvas))}
                 />
             ),
         },
@@ -58,7 +58,7 @@ export default function PageHeader() {
             min: 0.1,
             max: 2,
             step: 0.1,
-            onChange: value => dispatch(zoomToScale(value)),
+            onChange: value => dispatch(setCanvasScale(value)),
             leftIcon: <MdZoomOut />,
             rightIcon: <MdZoomIn />,
             minW: 160,
