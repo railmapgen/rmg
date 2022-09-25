@@ -8,17 +8,32 @@ import {
     ModalContent,
     ModalHeader,
     ModalOverlay,
+    SystemStyleObject,
     Tab,
     TabList,
     TabPanel,
     TabPanels,
     Tabs,
+    Text,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { translateText } from '../../i18n/config';
 import { useRootDispatch } from '../../redux';
 import { companyConfig, templateList } from '@railmapgen/rmg-templates-resources';
 import { startLoading } from '../../redux/app/app-slice';
+
+const templateButtonStyle: SystemStyleObject = {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    h: 10,
+    overflow: 'hidden',
+
+    '& span:last-of-type': {
+        fontWeight: 'normal',
+        fontSize: '2xs',
+    },
+};
 
 interface TemplateModalProps {
     isOpen: boolean;
@@ -69,11 +84,13 @@ export default function TemplateModal(props: TemplateModalProps) {
                                                 key={template.filename}
                                                 variant="ghost"
                                                 size="sm"
-                                                justifyContent="flex-start"
-                                                overflow="hidden"
+                                                sx={templateButtonStyle}
                                                 onClick={() => handleSelect(company, template.filename)}
                                             >
-                                                {translateText(template.name)}
+                                                <span>{translateText(template.name)}</span>
+                                                <Text as="span">
+                                                    {t('By')}: {template.updatedBy ?? 'Unknown'}
+                                                </Text>
                                             </Button>
                                         ))}
                                     </TabPanel>
