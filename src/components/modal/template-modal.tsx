@@ -89,7 +89,7 @@ export default function TemplateModal(props: TemplateModalProps) {
                                             >
                                                 <span>{translateText(template.name)}</span>
                                                 <Text as="span">
-                                                    {t('By')}: {template.updatedBy ?? 'Unknown'}
+                                                    {t('By')}: {template.uploadBy ?? 'Unknown'}
                                                 </Text>
                                             </Button>
                                         ))}
