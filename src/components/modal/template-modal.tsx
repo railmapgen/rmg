@@ -29,6 +29,11 @@ const templateButtonStyle: SystemStyleObject = {
     h: 10,
     overflow: 'hidden',
 
+    '& span:first-of-type': {
+        maxW: '100%',
+        textOverflow: 'ellipsis',
+    },
+
     '& span:last-of-type': {
         fontWeight: 'normal',
         fontSize: '2xs',
@@ -63,7 +68,7 @@ export default function TemplateModal(props: TemplateModalProps) {
                 <ModalCloseButton />
 
                 <ModalBody>
-                    <Tabs isLazy size="sm" orientation="vertical">
+                    <Tabs isLazy size="sm" orientation="vertical" colorScheme="primary">
                         <TabList maxW={150}>
                             {companyConfig.map(company => (
                                 <Tab key={company.id}>{translateText(company.name)}</Tab>
@@ -89,7 +94,7 @@ export default function TemplateModal(props: TemplateModalProps) {
                                             >
                                                 <span>{translateText(template.name)}</span>
                                                 <Text as="span">
-                                                    {t('By')}: {template.uploadBy ?? 'Unknown'}
+                                                    {t('by')}: {template.uploadBy ?? 'Unknown'}
                                                 </Text>
                                             </Button>
                                         ))}
