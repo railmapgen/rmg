@@ -14,11 +14,9 @@ const mockStore = createMockAppStore({
             info: {
                 message: 'Test info message',
                 url: 'https://example.com',
-                linkedApp: false,
             },
             warning: {
                 message: 'Test warning message',
-                linkedApp: false,
             },
         },
     },

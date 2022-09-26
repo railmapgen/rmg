@@ -12,7 +12,7 @@ interface AppState {
     selectedColine?: number;
     selectedBranch: number;
     isShareTrackEnabled?: string[]; // for main line only, store the selections
-    globalAlerts: Partial<Record<AlertStatus, { message: string; url?: string; linkedApp: boolean }>>;
+    globalAlerts: Partial<Record<AlertStatus, { message: string; url?: string; linkedApp?: string }>>;
     isLoading?: number; // undefined: not loading, -1: loading, 0-100: progress
 }
 
@@ -69,9 +69,9 @@ const appSlice = createSlice({
          */
         setGlobalAlert: (
             state,
-            action: PayloadAction<{ status: AlertStatus; message: string; url?: string; linkedApp?: boolean }>
+            action: PayloadAction<{ status: AlertStatus; message: string; url?: string; linkedApp?: string }>
         ) => {
-            const { status, message, url, linkedApp = false } = action.payload;
+            const { status, message, url, linkedApp } = action.payload;
             state.globalAlerts[status] = { message, url, linkedApp };
         },
 
