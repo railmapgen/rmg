@@ -22,8 +22,7 @@ export default function AppRoot() {
                 setGlobalAlert({
                     status: 'info',
                     message: t('rmpPromotion'),
-                    url: 'rmp',
-                    linkedApp: true,
+                    linkedApp: 'rmp',
                 })
             );
         }, 1000);
