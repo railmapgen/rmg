@@ -12,7 +12,7 @@ interface AppState {
     selectedColine?: number;
     selectedBranch: number;
     isShareTrackEnabled?: string[]; // for main line only, store the selections
-    globalAlerts: Partial<Record<AlertStatus, { message: string; url?: string }>>;
+    globalAlerts: Partial<Record<AlertStatus, { message: string; url?: string; linkedApp: boolean }>>;
     isLoading?: number; // undefined: not loading, -1: loading, 0-100: progress
 }
 
@@ -62,9 +62,17 @@ const appSlice = createSlice({
             state.isShareTrackEnabled = action.payload;
         },
 
-        setGlobalAlert: (state, action: PayloadAction<{ status: AlertStatus; message: string; url?: string }>) => {
-            const { status, message, url } = action.payload;
-            state.globalAlerts[status] = { message, url };
+        /**
+         * If linkedApp is true, alert will try to open link in the current domain.
+         * E.g. linkedApp=true, url='/rmp' will open https://railmapgen.github.io/rmp/
+         * If you want to open a url outside the domain, DO NOT set or pass FALSE to linkedApp.
+         */
+        setGlobalAlert: (
+            state,
+            action: PayloadAction<{ status: AlertStatus; message: string; url?: string; linkedApp?: boolean }>
+        ) => {
+            const { status, message, url, linkedApp = false } = action.payload;
+            state.globalAlerts[status] = { message, url, linkedApp };
         },
 
         closeGlobalAlert: (state, action: PayloadAction<AlertStatus>) => {

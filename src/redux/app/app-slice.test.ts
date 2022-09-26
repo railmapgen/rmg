@@ -32,6 +32,7 @@ describe('AppSlice', () => {
                 info: {
                     message: 'Test info message',
                     url: 'https://example.com',
+                    linkedApp: false,
                 },
             },
         };
