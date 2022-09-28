@@ -1,8 +1,7 @@
 import React, { lazy, StrictMode } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
-import { rmgChakraTheme } from '@railmapgen/rmg-components';
-import ErrorBoundary from './error-boundary';
+import { rmgChakraTheme, RmgErrorBoundary } from '@railmapgen/rmg-components';
 import { Provider } from 'react-redux';
 import store from './redux';
 import FallbackLoader from './components/fallback-loader';
@@ -26,9 +25,9 @@ export default function App() {
                             <Route
                                 path="*"
                                 element={
-                                    <ErrorBoundary suspenseFallback={<FallbackLoader />}>
+                                    <RmgErrorBoundary suspenseFallback={<FallbackLoader />}>
                                         <AppRoot />
-                                    </ErrorBoundary>
+                                    </RmgErrorBoundary>
                                 }
                             />
                         </Routes>

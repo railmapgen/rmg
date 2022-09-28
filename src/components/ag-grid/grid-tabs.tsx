@@ -8,7 +8,7 @@ import { isColineBranch } from '../../redux/param/coline-action';
 import { setSelectedBranch, setSidePanelMode } from '../../redux/app/app-slice';
 import { useTranslation } from 'react-i18next';
 import NewBranchModal from '../modal/new-branch-modal';
-import ErrorBoundary from '../../error-boundary';
+import { RmgErrorBoundary } from '@railmapgen/rmg-components';
 
 const StationAgGrid = lazy(() => import(/* webpackChunkName: "StationAgGrid" */ './station-ag-grid'));
 
@@ -76,9 +76,9 @@ export default function GridTabs() {
                 <TabPanels flex={1} overflowY="auto">
                     {branches.map((_, i) => (
                         <TabPanel key={i} padding={0} h="100%">
-                            <ErrorBoundary suspenseFallback={<Progress isIndeterminate />}>
+                            <RmgErrorBoundary suspenseFallback={<Progress isIndeterminate />}>
                                 <StationAgGrid branchIndex={i} />
-                            </ErrorBoundary>
+                            </RmgErrorBoundary>
                         </TabPanel>
                     ))}
                 </TabPanels>
