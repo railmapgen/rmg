@@ -6,13 +6,6 @@ import { CityCode } from '@railmapgen/rmg-palette-resources';
  */
 export type AtLeastOneOfPartial<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
 
-export enum LoadingStatus {
-    init = 'init',
-    loading = 'loading',
-    loaded = 'loaded',
-    failed = 'failed',
-}
-
 export enum RmgStyle {
     MTR = 'mtr',
     GZMTR = 'gzmtr',
@@ -25,8 +18,6 @@ export enum CanvasType {
     RailMap = 'railmap',
     Indoor = 'indoor',
 }
-
-export const AllCanvas = 'all';
 
 export const canvasConfig: { [s in RmgStyle]: CanvasType[] } = {
     [RmgStyle.MTR]: [CanvasType.Destination, CanvasType.RailMap],

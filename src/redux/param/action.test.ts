@@ -133,7 +133,7 @@ describe('Tests for param actions', () => {
         const action: setNotesAction = actions.find(action => action.type === SET_NOTES);
         expect(action).toBeDefined();
         expect(action.notes).toHaveLength(1);
-        expect(action.notes).toContainEqual(['', '', 0, 0, false]); // default value
+        expect(action.notes).toContainEqual(['', '', 10, 10, false]); // default value
     });
 
     it('Can add empty note to existing note list as expected', () => {
@@ -153,7 +153,7 @@ describe('Tests for param actions', () => {
         expect(action).toBeDefined();
         expect(action.notes).toHaveLength(2);
         expect(action.notes[0]).toEqual(mockNote1);
-        expect(action.notes[1]).toEqual(['', '', 0, 0, false]); // add to end of list
+        expect(action.notes[1]).toEqual(['', '', 10, 10, false]); // add to end of list
     });
 
     it('Can update note as expected', () => {

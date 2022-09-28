@@ -1,10 +1,10 @@
 import React from 'react';
 import HeaderActions from './header-actions';
 import { setCanvasScale, setCanvasToShow } from '../../redux/app/app-slice';
-import { AllCanvas, canvasConfig, CanvasType, RmgStyle } from '../../constants/constants';
+import { canvasConfig, CanvasType, RmgStyle } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { useRootDispatch, useRootSelector } from '../../redux';
-import { RmgButtonGroup, RmgFields, RmgFieldsField, RmgPageHeader } from '@railmapgen/rmg-components';
+import { RmgFields, RmgFieldsField, RmgMultiSelect, RmgPageHeader } from '@railmapgen/rmg-components';
 import { MdZoomIn, MdZoomOut } from 'react-icons/md';
 import { setStyle } from '../../redux/param/action';
 import { useNavigate } from 'react-router-dom';
@@ -17,12 +17,15 @@ export default function PageHeader() {
     const { canvasToShow, canvasScale } = useRootSelector(state => state.app);
     const rmgStyle = useRootSelector(state => state.param.style);
 
-    const styleSelections = Object.values(RmgStyle).map(style => ({
-        label: t('RmgStyle.' + style),
-        value: style,
-    }));
+    const styleSelections = Object.values(RmgStyle).reduce<Partial<Record<RmgStyle, string>>>(
+        (acc, cur) => ({
+            ...acc,
+            [cur]: t('RmgStyle.' + cur),
+        }),
+        {}
+    );
 
-    const canvasSelections = [AllCanvas, ...canvasConfig[rmgStyle]].map(canvas => ({
+    const canvasSelections = canvasConfig[rmgStyle].map(canvas => ({
         label: t('CanvasType.' + canvas),
         value: canvas,
     }));
@@ -34,20 +37,21 @@ export default function PageHeader() {
 
     const fields: RmgFieldsField[] = [
         {
-            type: 'custom',
+            type: 'select',
             label: t('Style'),
-            component: (
-                <RmgButtonGroup selections={styleSelections} defaultValue={rmgStyle} onChange={handleStyleChange} />
-            ),
+            value: rmgStyle,
+            options: styleSelections,
+            onChange: value => handleStyleChange(value as RmgStyle),
         },
         {
             type: 'custom',
             label: t('View'),
             component: (
-                <RmgButtonGroup
+                <RmgMultiSelect
+                    displayValue={t('Select canvas')}
                     selections={canvasSelections}
                     defaultValue={canvasToShow}
-                    onChange={canvas => dispatch(setCanvasToShow(canvas as CanvasType | typeof AllCanvas))}
+                    onChange={value => dispatch(setCanvasToShow(value as CanvasType[]))}
                 />
             ),
         },
@@ -61,13 +65,12 @@ export default function PageHeader() {
             onChange: value => dispatch(setCanvasScale(value)),
             leftIcon: <MdZoomOut />,
             rightIcon: <MdZoomIn />,
-            minW: 160,
         },
     ];
 
     return (
         <RmgPageHeader>
-            <RmgFields fields={fields} />
+            <RmgFields fields={fields} minW={160} />
 
             <HeaderActions />
         </RmgPageHeader>

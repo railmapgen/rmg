@@ -59,7 +59,7 @@ export default function GZMTRNoteCard(props: GZMTRNoteCardProps) {
     return (
         <RmgCard direction="column">
             <RmgFields fields={fields1} minW="full" />
-            <HStack spacing={0.5}>
+            <HStack spacing={0.5} sx={{ '&>div': { flex: 1 } }}>
                 <RmgFields fields={fields2} />
 
                 <IconButton

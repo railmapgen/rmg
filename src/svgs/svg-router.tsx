@@ -54,9 +54,7 @@ export default function SvgRouter() {
             process.env.PUBLIC_URL + `/styles/share_${rmgStyle}.css`;
     }, [rmgStyle]);
 
-    const filteredCanvas = (Object.keys(canvasMap) as CanvasType[]).filter(canvas =>
-        canvasToShow === 'all' ? true : canvasToShow === canvas
-    );
+    const filteredCanvas = (Object.keys(canvasMap) as CanvasType[]).filter(canvas => canvasToShow.includes(canvas));
 
     return (
         <Flex sx={style}>

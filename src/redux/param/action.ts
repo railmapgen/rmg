@@ -262,7 +262,7 @@ const setNotes = (notes: Note[]): setNotesAction => {
 export const addNote = () => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const notes = getState().param.notesGZMTR;
-        dispatch(setNotes(notes.concat([['', '', 0, 0, false]])));
+        dispatch(setNotes(notes.concat([['', '', 10, 10, false]])));
     };
 };
 

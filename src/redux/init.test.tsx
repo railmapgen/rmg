@@ -2,7 +2,7 @@ import rootReducer from './index';
 import { createMockAppStore } from '../setupTests';
 import { initCanvasScale, initCanvasToShow, initParamStore } from './init';
 import { initParam } from './param/util';
-import { RmgStyle } from '../constants/constants';
+import { CanvasType, RmgStyle } from '../constants/constants';
 import { LanguageCode } from '@railmapgen/rmg-translate';
 
 const realStore = rootReducer.getState();
@@ -76,12 +76,14 @@ describe('ReduxInit', () => {
         });
 
         it('Can read canvasToShow from localStorage as expected', () => {
-            mockGetItem.mockImplementation(key => (key === 'rmg__canvasToShow' ? 'railmap' : null));
+            mockGetItem.mockImplementation(key =>
+                key === 'rmg__canvasToShow' ? JSON.stringify([CanvasType.Destination, CanvasType.RailMap]) : null
+            );
 
             initCanvasToShow(mockStore);
 
             const actions = mockStore.getActions();
-            expect(actions).toContainEqual({ type: 'app/setCanvasToShow', payload: 'railmap' });
+            expect(actions).toContainEqual({ type: 'app/setCanvasToShow', payload: ['destination', 'railmap'] });
         });
 
         it('Can migrate canvasToShow from old localStorage key as expected', () => {
@@ -90,7 +92,7 @@ describe('ReduxInit', () => {
             initCanvasToShow(mockStore);
 
             const actions = mockStore.getActions();
-            expect(actions).toContainEqual({ type: 'app/setCanvasToShow', payload: 'railmap' });
+            expect(actions).toContainEqual({ type: 'app/setCanvasToShow', payload: ['railmap'] });
 
             // save to localStorage with new key
             expect(mockSetItem).lastCalledWith('rmg__canvasToShow', 'railmap');
@@ -104,6 +106,15 @@ describe('ReduxInit', () => {
 
             const actions = mockStore.getActions();
             expect(actions).toHaveLength(0);
+        });
+
+        it('Can parse string type canvasToShow from localStorage key as expected', () => {
+            mockGetItem.mockImplementation(key => (key === 'rmg__canvasToShow' ? 'railmap' : null));
+
+            initCanvasToShow(mockStore);
+
+            const actions = mockStore.getActions();
+            expect(actions).toContainEqual({ type: 'app/setCanvasToShow', payload: ['railmap'] });
         });
     });
 

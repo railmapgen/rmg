@@ -14,7 +14,7 @@ const mockStoreWithRailMap = createMockAppStore({
     ...realStore,
     app: {
         ...realStore.app,
-        canvasToShow: CanvasType.RailMap,
+        canvasToShow: [CanvasType.RailMap],
     },
 });
 

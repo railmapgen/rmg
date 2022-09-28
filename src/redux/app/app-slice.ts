@@ -1,12 +1,11 @@
-import { AllCanvas, CanvasType, LoadingStatus, RmgStyle, SidePanelMode } from '../../constants/constants';
+import { CanvasType, RmgStyle, SidePanelMode } from '../../constants/constants';
 import { AlertStatus } from '@chakra-ui/react';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AppState {
     rmgStyle: RmgStyle;
     canvasScale: number;
-    canvasToShow: CanvasType | typeof AllCanvas;
-    canvasToShowStatus: LoadingStatus;
+    canvasToShow: CanvasType[];
     sidePanelMode: SidePanelMode;
     selectedStation: string;
     selectedColine?: number;
@@ -19,8 +18,7 @@ interface AppState {
 const initialState: AppState = {
     rmgStyle: RmgStyle.MTR,
     canvasScale: 1,
-    canvasToShow: AllCanvas,
-    canvasToShowStatus: LoadingStatus.init,
+    canvasToShow: Object.values(CanvasType),
     sidePanelMode: SidePanelMode.CLOSE,
     selectedStation: 'linestart',
     selectedColine: undefined,
@@ -38,7 +36,7 @@ const appSlice = createSlice({
             state.canvasScale = action.payload;
         },
 
-        setCanvasToShow: (state, action: PayloadAction<CanvasType | typeof AllCanvas>) => {
+        setCanvasToShow: (state, action: PayloadAction<CanvasType[]>) => {
             state.canvasToShow = action.payload;
         },
 

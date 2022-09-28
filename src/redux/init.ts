@@ -1,4 +1,4 @@
-import { AllCanvas, CanvasType, LocalStorageKey, RMGParam, RmgStyle } from '../constants/constants';
+import { CanvasType, LocalStorageKey, RMGParam, RmgStyle } from '../constants/constants';
 import { setCanvasScale, setCanvasToShow } from './app/app-slice';
 import { RootStore, startRootListening } from './index';
 import { updateParam } from '../utils';
@@ -70,12 +70,20 @@ export const initCanvasToShow = (store: RootStore) => {
             }
         }
 
-        if ([...Object.values(CanvasType), AllCanvas].includes(canvasToShowValue as any)) {
-            store.dispatch(setCanvasToShow(canvasToShowValue as CanvasType | typeof AllCanvas));
+        if (canvasToShowValue !== null) {
+            if (Object.values(CanvasType).includes(canvasToShowValue as any)) {
+                store.dispatch(setCanvasToShow([canvasToShowValue as CanvasType]));
+                return;
+            }
+
+            const canvasToShow = JSON.parse(canvasToShowValue);
+            if (Array.isArray(canvasToShow)) {
+                store.dispatch(setCanvasToShow(canvasToShow));
+                return;
+            }
         }
     } catch (err) {
         console.warn('Error in reading canvas to show. Initiating as all...', err);
-        store.dispatch(setCanvasToShow('all'));
     }
 };
 
@@ -103,7 +111,7 @@ export const initStore = (store: RootStore) => {
         effect: (action, listenerApi) => {
             window.localStorage.setItem(
                 LocalStorageKey.CANVAS_TO_SHOW,
-                listenerApi.getState().app.canvasToShow.toString()
+                JSON.stringify(listenerApi.getState().app.canvasToShow)
             );
         },
     });

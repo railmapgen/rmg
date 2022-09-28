@@ -48,14 +48,14 @@ export default function DownloadModal(props: DownloadModalProps) {
 
     useEffect(() => {
         // reset canvas to download if on-screen canvas changed
-        if (canvasToShow !== 'all' && canvasToDownload !== '' && canvasToShow !== canvasToDownload) {
+        if (canvasToDownload !== '' && !canvasToShow.includes(canvasToDownload as CanvasType)) {
             setCanvasToDownload('');
         }
     }, [canvasToShow]);
 
     const canvasOptions = canvasConfig[style].reduce<Record<string, string>>(
         (acc, cur) => {
-            if (canvasToShow === 'all' || cur === canvasToShow) {
+            if (canvasToShow.includes(cur)) {
                 return { ...acc, [cur]: t('CanvasType.' + cur) };
             } else {
                 return { ...acc };
