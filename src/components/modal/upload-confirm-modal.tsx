@@ -8,9 +8,10 @@ import {
     AlertDialogOverlay,
     Button,
 } from '@chakra-ui/react';
-import { MonoColour, RMGParam } from '../../constants/constants';
+import { Events, MonoColour, RMGParam } from '../../constants/constants';
 import { RmgLineBadge } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 interface UploadConfirmModalProps {
     isOpen: boolean;
@@ -29,6 +30,7 @@ export default function UploadConfirmModal(props: UploadConfirmModalProps) {
             onOpenParam(uploadedParam);
         }
         onClose();
+        rmgRuntime.event(Events.UPLOAD_PARAM, { style: uploadedParam?.style });
     };
 
     return (

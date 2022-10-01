@@ -21,6 +21,8 @@ import { translateText } from '../../i18n/config';
 import { useRootDispatch } from '../../redux';
 import { companyConfig, templateList } from '@railmapgen/rmg-templates-resources';
 import { startLoading } from '../../redux/app/app-slice';
+import { Events } from '../../constants/constants';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 const templateButtonStyle: SystemStyleObject = {
     flexDirection: 'column',
@@ -58,6 +60,7 @@ export default function TemplateModal(props: TemplateModalProps) {
             /* webpackChunkName: "templates" */ `@railmapgen/rmg-templates-resources/templates/${company}/${filename}.json`
         );
         onOpenParam(module.default);
+        rmgRuntime.event(Events.OPEN_TEMPLATE, { company, filename });
     };
 
     return (

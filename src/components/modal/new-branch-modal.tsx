@@ -12,8 +12,9 @@ import {
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useRootDispatch, useRootSelector } from '../../redux';
 import { addStation, getNewBranchAllowedEnds, verifyNewBranchEnds } from '../../redux/param/add-station-action';
-import { RmgStyle } from '../../constants/constants';
+import { Events, RmgStyle } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 interface NewBranchModalProps {
     isOpen: boolean;
@@ -142,6 +143,7 @@ export default function NewBranchModal(props: NewBranchModalProps) {
 
         if (result) {
             onClose();
+            rmgRuntime.event(Events.ADD_BRANCH, { style, where });
         }
     };
 

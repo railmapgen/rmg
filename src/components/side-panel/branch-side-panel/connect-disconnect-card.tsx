@@ -2,7 +2,7 @@ import { Button, Flex } from '@chakra-ui/react';
 import { RmgCard, RmgDebouncedInput, RmgLabel, RmgSelect } from '@railmapgen/rmg-components';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Direction } from '../../../constants/constants';
+import { Direction, Events } from '../../../constants/constants';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import { setGlobalAlert } from '../../../redux/app/app-slice';
 import {
@@ -12,6 +12,7 @@ import {
     getPossibleDirection,
     getPossibleStations,
 } from '../../../redux/param/connect-disconnect-branch';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 interface ConnectDisconnectCardProps {
     direction: Direction;
@@ -24,7 +25,7 @@ export default function ConnectDisconnectCard(props: ConnectDisconnectCardProps)
 
     const { branches } = useRootSelector(state => state.helper);
     const selectedBranch = useRootSelector(state => state.app.selectedBranch);
-    const stn_list = useRootSelector(state => state.param.stn_list);
+    const { style, stn_list } = useRootSelector(state => state.param);
 
     const [isEditing, setIsEditing] = useState(false);
     const [selection, setSelection] = useState('');
@@ -55,6 +56,7 @@ export default function ConnectDisconnectCard(props: ConnectDisconnectCardProps)
         } else {
             dispatch(setGlobalAlert({ status: 'error', message: t('Unable to connect to main line.') }));
         }
+        rmgRuntime.event(Events.CONNECT_BRANCH, { style, success: result });
     };
 
     const handleDisconnect = () => {
@@ -62,6 +64,7 @@ export default function ConnectDisconnectCard(props: ConnectDisconnectCardProps)
         if (!result) {
             dispatch(setGlobalAlert({ status: 'error', message: t('Unable to disconnect from main line.') }));
         }
+        rmgRuntime.event(Events.DISCONNECT_BRANCH, { style, success: result });
     };
 
     return (

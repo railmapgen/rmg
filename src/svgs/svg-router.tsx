@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { CanvasType, RmgStyle } from '../constants/constants';
+import { CanvasType, Events, RmgStyle } from '../constants/constants';
 import { useRootSelector } from '../redux';
 import { useDispatch } from 'react-redux';
 import { setStyle } from '../redux/param/action';
@@ -8,6 +8,7 @@ import { Flex } from '@chakra-ui/react';
 import FallbackLoader from '../components/fallback-loader';
 import useCanvasMap from './use-canvas-map';
 import { RmgErrorBoundary } from '@railmapgen/rmg-components';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 const style = {
     flexDirection: 'row',
@@ -52,6 +53,7 @@ export default function SvgRouter() {
     useEffect(() => {
         (document.getElementById('css_share') as HTMLLinkElement).href =
             process.env.PUBLIC_URL + `/styles/share_${rmgStyle}.css`;
+        rmgRuntime.event(Events.STYLE_CHANGE, { style: rmgStyle });
     }, [rmgStyle]);
 
     const filteredCanvas = (Object.keys(canvasMap) as CanvasType[]).filter(canvas => canvasToShow.includes(canvas));

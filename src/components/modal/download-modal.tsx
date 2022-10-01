@@ -10,7 +10,7 @@ import {
     ModalHeader,
     ModalOverlay,
 } from '@chakra-ui/react';
-import { canvasConfig, CanvasType, RmgStyle } from '../../constants/constants';
+import { canvasConfig, CanvasType, Events, RmgStyle } from '../../constants/constants';
 import { useRootDispatch, useRootSelector } from '../../redux';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import JSZip from 'jszip';
@@ -20,6 +20,7 @@ import { downloadAs, downloadBlobAs, isSafari } from '../../util/utils';
 import { useTranslation } from 'react-i18next';
 import { waitForMs } from '../../utils';
 import { setLoadingProgress, stopLoading } from '../../redux/app/app-slice';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 interface DownloadModalProps {
     isOpen: boolean;
@@ -186,6 +187,9 @@ export default function DownloadModal(props: DownloadModalProps) {
             const filename = `rmg.${lineName[0]}.${lineName[1]}.zip`.replaceAll(' ', '_');
             downloadBlobAs(filename, zipData);
         }
+
+        // event
+        rmgRuntime.event(Events.DOWNLOAD_IMAGES, { canvasToDownload, style, option, format });
 
         // revert to original station
         dispatch(setCurrentStation(currentStationId));

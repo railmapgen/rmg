@@ -14,11 +14,12 @@ import {
 } from '@chakra-ui/react';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useRootDispatch, useRootSelector } from '../../redux';
-import { RmgStyle, SidePanelMode } from '../../constants/constants';
+import { Events, RmgStyle, SidePanelMode } from '../../constants/constants';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { useTranslation } from 'react-i18next';
 import { addStationToExistingBranch } from '../../redux/param/add-station-action';
 import { setSelectedStation, setSidePanelMode } from '../../redux/app/app-slice';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 interface AddStationModalProps {
     isOpen: boolean;
@@ -119,6 +120,7 @@ export default function AddStationModal(props: AddStationModalProps) {
             console.log('false here');
             setError(true);
         }
+        rmgRuntime.event(Events.ADD_STATION, { style, branchIndex: where, success: result });
     };
 
     return (
