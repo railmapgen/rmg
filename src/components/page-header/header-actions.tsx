@@ -13,7 +13,7 @@ export default function HeaderActions() {
     const dispatch = useDispatch();
 
     return (
-        <HStack ml="auto">
+        <HStack ml="auto" w="fit-content">
             <DownloadActions />
 
             <OpenActions />
