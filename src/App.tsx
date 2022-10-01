@@ -25,7 +25,7 @@ export default function App() {
                             <Route
                                 path="*"
                                 element={
-                                    <RmgErrorBoundary suspenseFallback={<FallbackLoader />}>
+                                    <RmgErrorBoundary suspenseFallback={<FallbackLoader />} allowReset>
                                         <AppRoot />
                                     </RmgErrorBoundary>
                                 }
