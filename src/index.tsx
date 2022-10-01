@@ -6,16 +6,10 @@ import './index.css';
 import './i18n/config';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { CanvasType, RMGParam } from './constants/constants';
+import { CanvasType, Events, RMGParam } from './constants/constants';
 import store from './redux';
 import { setFullParam } from './redux/param/action';
 import { initStore } from './redux/init';
-
-declare global {
-    interface Window {
-        gtag: any;
-    }
-}
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
@@ -52,6 +46,7 @@ rmgRuntime
         initStore(store);
         renderApp();
         rmgRuntime.injectCss();
+        rmgRuntime.event(Events.APP_LOAD, { isStandaloneWindow: rmgRuntime.isStandaloneWindow });
     })
     .catch(err => {
         document.querySelector('#root')!.innerHTML = `<div>

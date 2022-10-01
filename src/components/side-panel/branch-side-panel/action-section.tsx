@@ -4,9 +4,10 @@ import { Box, Button, Flex, Heading } from '@chakra-ui/react';
 import { MdCached, MdFilter1 } from 'react-icons/md';
 import AutoNumModal from '../../modal/auto-num-modal';
 import { useRootDispatch, useRootSelector } from '../../../redux';
-import { Direction, RmgStyle } from '../../../constants/constants';
+import { Direction, Events, RmgStyle } from '../../../constants/constants';
 import { reverseStations } from '../../../redux/param/action';
 import ConnectDisconnectCard from './connect-disconnect-card';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 export default function ActionSection() {
     const { t } = useTranslation();
@@ -15,6 +16,11 @@ export default function ActionSection() {
     const style = useRootSelector(state => state.param.style);
     const selectedBranch = useRootSelector(state => state.app.selectedBranch);
     const [isAutoNumModalOpen, setIsAutoNumModalOpen] = useState(false);
+
+    const handleReverseStations = () => {
+        dispatch(reverseStations(style === RmgStyle.SHMetro));
+        rmgRuntime.event(Events.REVERSE_STATIONS, { style });
+    };
 
     return (
         <Box p={1}>
@@ -67,7 +73,7 @@ export default function ActionSection() {
                     variant="outline"
                     leftIcon={<MdCached />}
                     alignSelf="flex-end"
-                    onClick={() => dispatch(reverseStations(style === RmgStyle.SHMetro))}
+                    onClick={handleReverseStations}
                 >
                     {style === RmgStyle.SHMetro
                         ? t('BranchSidePanel.action.flip')

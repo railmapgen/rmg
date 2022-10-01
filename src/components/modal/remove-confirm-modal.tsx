@@ -16,8 +16,9 @@ import { useTranslation } from 'react-i18next';
 import { checkStationCouldBeRemoved, removeStation } from '../../redux/param/remove-station-action';
 import { setSelectedStation, setSidePanelMode } from '../../redux/app/app-slice';
 import { useRootDispatch, useRootSelector } from '../../redux';
-import { SidePanelMode } from '../../constants/constants';
+import { Events, SidePanelMode } from '../../constants/constants';
 import { removeInvalidColineOnRemoveStation } from '../../redux/param/coline-action';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 interface RemoveConfirmModalProps {
     isOpen: boolean;
@@ -40,7 +41,8 @@ export default function RemoveConfirmModal(props: RemoveConfirmModalProps) {
     }, [isOpen]);
 
     const handleConfirm = () => {
-        if (dispatch(checkStationCouldBeRemoved(selectedStation))) {
+        const result = dispatch(checkStationCouldBeRemoved(selectedStation));
+        if (result) {
             onClose();
 
             // close side panel
@@ -54,6 +56,8 @@ export default function RemoveConfirmModal(props: RemoveConfirmModalProps) {
         } else {
             setError(true);
         }
+
+        rmgRuntime.event(Events.REMOVE_STATION, { success: result });
     };
 
     return (

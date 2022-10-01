@@ -12,9 +12,10 @@ import {
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
 import { useRootDispatch, useRootSelector } from '../../redux';
-import { RmgStyle } from '../../constants/constants';
+import { Events, RmgStyle } from '../../constants/constants';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { autoNumbering } from '../../redux/param/action';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 interface AutoNumModalProps {
     isOpen: boolean;
@@ -91,6 +92,7 @@ export default function AutoNumModal(props: AutoNumModalProps) {
     const handleSubmit = () => {
         dispatch(autoNumbering(where, Number(from), Number(maxLength), sort));
         onClose();
+        rmgRuntime.event(Events.AUTO_NUMBERING, {});
     };
 
     const isSubmitDisabled = !from || !maxLength || isNaN(Number(from)) || isNaN(Number(maxLength));

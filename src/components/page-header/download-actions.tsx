@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import { Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { MdExpandMore } from 'react-icons/md';
 import { downloadAs } from '../../util/utils';
 import { useRootSelector } from '../../redux';
 import { useTranslation } from 'react-i18next';
 import DownloadModal from '../modal/download-modal';
+import rmgRuntime from '@railmapgen/rmg-runtime';
+import { Events } from '../../constants/constants';
 
 export default function DownloadActions() {
     const { t } = useTranslation();
@@ -15,6 +17,7 @@ export default function DownloadActions() {
 
     const handleDownloadJson = () => {
         downloadAs(`RMG_${new Date().valueOf()}.json`, 'application/json', JSON.stringify(param));
+        rmgRuntime.event(Events.DOWNLOAD_PARAM, { style: param.style });
     };
 
     return (

@@ -19,7 +19,7 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { ColourHex, MonoColour, Theme } from '../../../constants/constants';
+import { ColourHex, Events, MonoColour, Theme } from '../../../constants/constants';
 import CityPicker from './city-picker';
 import ColourPicker from './colour-picker';
 import { CityCode } from '@railmapgen/rmg-palette-resources';
@@ -131,6 +131,7 @@ export default function ColourModal(props: ColourModalProps) {
         if (isSubmitEnabled) {
             onUpdate?.([cityCode, lineCode, bgColour, fgColour]);
             onClose();
+            rmgRuntime.event(Events.SELECT_COLOUR, { cityCode, lineCode });
         }
     };
 
