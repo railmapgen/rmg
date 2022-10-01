@@ -5,9 +5,9 @@ import { useDispatch } from 'react-redux';
 import { setStyle } from '../redux/param/action';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Flex } from '@chakra-ui/react';
-import ErrorBoundary from '../error-boundary';
 import FallbackLoader from '../components/fallback-loader';
 import useCanvasMap from './use-canvas-map';
+import { RmgErrorBoundary } from '@railmapgen/rmg-components';
 
 const style = {
     flexDirection: 'row',
@@ -62,12 +62,9 @@ export default function SvgRouter() {
                 <FallbackLoader />
             ) : (
                 filteredCanvas.map(canvas => (
-                    <ErrorBoundary
-                        key={canvas + rmgStyle}
-                        style={{ minWidth: 750, height: svgHeight * canvasScale, overflowY: 'auto' }}
-                    >
+                    <RmgErrorBoundary key={canvas + rmgStyle} sx={{ minWidth: 750, height: svgHeight * canvasScale }}>
                         {canvasMap[canvas]}
-                    </ErrorBoundary>
+                    </RmgErrorBoundary>
                 ))
             )}
         </Flex>
