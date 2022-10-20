@@ -1,10 +1,9 @@
 import React, { lazy, StrictMode } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
-import { rmgChakraTheme, RmgErrorBoundary } from '@railmapgen/rmg-components';
+import { rmgChakraTheme, RmgErrorBoundary, RmgLoader } from '@railmapgen/rmg-components';
 import { Provider } from 'react-redux';
 import store from './redux';
-import FallbackLoader from './components/fallback-loader';
 
 const AppRoot = lazy(() => import(/* webpackChunkName: "AppRoot" */ './components/app-root'));
 
@@ -25,7 +24,10 @@ export default function App() {
                             <Route
                                 path="*"
                                 element={
-                                    <RmgErrorBoundary suspenseFallback={<FallbackLoader />} allowReset>
+                                    <RmgErrorBoundary
+                                        suspenseFallback={<RmgLoader isIndeterminate={true} />}
+                                        allowReset
+                                    >
                                         <AppRoot />
                                     </RmgErrorBoundary>
                                 }

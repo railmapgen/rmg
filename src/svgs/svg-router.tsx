@@ -5,12 +5,12 @@ import { useDispatch } from 'react-redux';
 import { setStyle } from '../redux/param/action';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Flex } from '@chakra-ui/react';
-import FallbackLoader from '../components/fallback-loader';
 import useCanvasMap from './use-canvas-map';
-import { RmgErrorBoundary } from '@railmapgen/rmg-components';
+import { RmgErrorBoundary, RmgLoader } from '@railmapgen/rmg-components';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 
 const style = {
+    position: 'relative',
     flexDirection: 'row',
     overflowX: 'auto',
     '&::before, &::after': {
@@ -61,7 +61,7 @@ export default function SvgRouter() {
     return (
         <Flex sx={style}>
             {Object.keys(canvasMap).length === 0 ? (
-                <FallbackLoader />
+                <RmgLoader isIndeterminate={true} />
             ) : (
                 filteredCanvas.map(canvas => (
                     <RmgErrorBoundary key={canvas + rmgStyle} sx={{ minWidth: 750, height: svgHeight * canvasScale }}>
