@@ -1,23 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Box, Flex } from '@chakra-ui/react';
-import { RmgPage, RmgWindow } from '@railmapgen/rmg-components';
-import { useRootDispatch } from '../redux';
+import { RmgLoader, RmgPage, RmgWindow } from '@railmapgen/rmg-components';
+import { useRootDispatch, useRootSelector } from '../redux';
 import { setGlobalAlert } from '../redux/app/app-slice';
 import SvgRouter from '../svgs/svg-router';
 import SidePanel from './side-panel/side-panel';
 import PageHeader from './page-header/page-header';
 import WindowHeader from './root/window-header';
 import GridTabs from './ag-grid/grid-tabs';
-import LoadingModal from './modal/loading-modal';
 import GlobalAlerts from './root/global-alerts';
 
 export default function AppRoot() {
     const { t } = useTranslation();
     const dispatch = useRootDispatch();
 
-    React.useEffect(() => {
-        setTimeout(() => {
+    const isLoading = useRootSelector(state => state.app.isLoading);
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
             dispatch(
                 setGlobalAlert({
                     status: 'info',
@@ -26,11 +27,13 @@ export default function AppRoot() {
                 })
             );
         }, 1000);
+
+        return () => clearTimeout(timeoutId);
     }, []);
 
     return (
         <RmgWindow>
-            <LoadingModal />
+            {isLoading && <RmgLoader isIndeterminate={isLoading < 0} value={isLoading >= 0 ? isLoading : undefined} />}
             <WindowHeader />
             <RmgPage>
                 <PageHeader />
