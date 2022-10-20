@@ -57,14 +57,15 @@ export default function SvgRouter() {
     }, [rmgStyle]);
 
     const filteredCanvas = (Object.keys(canvasMap) as CanvasType[]).filter(canvas => canvasToShow.includes(canvas));
+    const scaledHeight = svgHeight * canvasScale;
 
     return (
-        <Flex sx={style}>
+        <Flex minH={scaledHeight} sx={style}>
             {Object.keys(canvasMap).length === 0 ? (
                 <RmgLoader isIndeterminate={true} />
             ) : (
                 filteredCanvas.map(canvas => (
-                    <RmgErrorBoundary key={canvas + rmgStyle} sx={{ minWidth: 750, height: svgHeight * canvasScale }}>
+                    <RmgErrorBoundary key={canvas + rmgStyle} sx={{ minWidth: 750, height: scaledHeight }}>
                         {canvasMap[canvas]}
                     </RmgErrorBoundary>
                 ))
