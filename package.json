@@ -39,8 +39,8 @@
         "@types/react-dom": "^18.0.6",
         "@types/react-router-dom": "^5.3.3",
         "@types/redux-mock-store": "^1.0.3",
-        "electron": "^17.2.0",
-        "electron-builder": "^22.14.13",
+        "electron": "^21.2.0",
+        "electron-builder": "^23.6.0",
         "eslint-plugin-prettier": "^4.2.1",
         "identity-obj-proxy": "^3.0.0",
         "jest": "^27.5.1",
@@ -48,7 +48,7 @@
         "react-scripts": "^5.0.1",
         "redux-mock-store": "^1.5.4",
         "typescript": "^4.8.4",
-        "wait-on": "^5.3.0"
+        "wait-on": "^6.0.1"
     },
     "scripts": {
         "start": "react-scripts start",
