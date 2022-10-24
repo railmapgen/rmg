@@ -11,7 +11,7 @@
         "@emotion/react": "^11.10.4",
         "@emotion/styled": "^11.10.4",
         "@railmapgen/rmg-components": "^4.3.3",
-        "@railmapgen/rmg-palette-resources": "^0.3.32",
+        "@railmapgen/rmg-palette-resources": "^0.4.2",
         "@railmapgen/rmg-runtime": "^2.0.4",
         "@railmapgen/rmg-templates-resources": "^0.3.0",
         "@railmapgen/rmg-translate": "^0.3.1",

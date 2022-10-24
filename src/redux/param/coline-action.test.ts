@@ -4,9 +4,9 @@ import {
     removeColineColor,
     verifyAreSelectionsConsecutive,
 } from './coline-action';
-import { BranchStyle, ColineInfo, MonoColour, StationDict } from '../../constants/constants';
+import { BranchStyle, ColineInfo, StationDict } from '../../constants/constants';
 import { getBranches } from '../helper/graph-theory-util';
-import { CityCode } from '@railmapgen/rmg-palette-resources';
+import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
 import rootReducer from '../index';
 import { createMockAppStore } from '../../setupTests';
 

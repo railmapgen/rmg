@@ -1,4 +1,4 @@
-import { CityCode } from '@railmapgen/rmg-palette-resources';
+import { CityCode, ColourHex, MonoColour } from '@railmapgen/rmg-palette-resources';
 
 /**
  * At least one key should exists in Partial
@@ -59,13 +59,6 @@ export enum BranchStyle {
  * @property 1 - ID of the first station of the branch (should also be one of the station's parents/children) or empty
  */
 export type BranchInfo = Record<Direction, [BranchStyle, string] | []>;
-
-export enum MonoColour {
-    black = '#000',
-    white = '#fff',
-}
-
-export type ColourHex = `#${string}`;
 
 /**
  * Colour theme of line, derived from `LineEntry`.

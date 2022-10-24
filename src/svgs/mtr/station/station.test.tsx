@@ -2,8 +2,8 @@ import React from 'react';
 import { act, screen } from '@testing-library/react';
 import Station from './station';
 import { render } from '../../../test-utils';
-import { Direction, InterchangeInfo, MonoColour, StationInfo, StationState } from '../../../constants/constants';
-import { CityCode } from '@railmapgen/rmg-palette-resources';
+import { Direction, InterchangeInfo, StationInfo, StationState } from '../../../constants/constants';
+import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
 import { createMockStoreWithMockStations } from '../../../setupTests';
 
 (Document.prototype as any).fonts = {

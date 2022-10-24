@@ -1,7 +1,8 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
-import { ColourHex, MonoColour, Name } from '../../../constants/constants';
+import { Name } from '../../../constants/constants';
 import LineIconType2 from './line-icon-type2';
 import InterchangeBox from './interchange-box';
+import { ColourHex, MonoColour } from '@railmapgen/rmg-palette-resources';
 
 export const MAX_WIDTH = 42;
 

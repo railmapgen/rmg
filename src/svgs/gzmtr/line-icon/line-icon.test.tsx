@@ -1,8 +1,8 @@
 import React from 'react';
 import LineIcon from './line-icon';
-import { MonoColour } from '../../../constants/constants';
 import { render } from '../../../test-utils';
 import { screen } from '@testing-library/react';
+import { MonoColour } from '@railmapgen/rmg-palette-resources';
 
 const mockGetBBox = jest.fn();
 (SVGElement.prototype as any).getBBox = mockGetBBox;

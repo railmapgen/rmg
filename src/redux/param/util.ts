@@ -1,6 +1,5 @@
 import {
     Facilities,
-    MonoColour,
     Name,
     PanelTypeGZMTR,
     PanelTypeShmetro,
@@ -11,7 +10,7 @@ import {
     StationInfo,
     Theme,
 } from '../../constants/constants';
-import { CityCode } from '@railmapgen/rmg-palette-resources';
+import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
 import { LanguageCode } from '@railmapgen/rmg-translate';
 import { nanoid } from 'nanoid';
 

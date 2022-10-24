@@ -1,5 +1,5 @@
+import { MonoColour } from '@railmapgen/rmg-palette-resources';
 import React, { SVGProps } from 'react';
-import { MonoColour } from '../../constants/constants';
 
 interface PsdNumberProps extends SVGProps<SVGGElement> {
     num: string;

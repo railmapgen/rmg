@@ -8,10 +8,11 @@ import {
     AlertDialogOverlay,
     Button,
 } from '@chakra-ui/react';
-import { Events, MonoColour, RMGParam } from '../../constants/constants';
+import { Events, RMGParam } from '../../constants/constants';
 import { RmgLineBadge } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
 import rmgRuntime from '@railmapgen/rmg-runtime';
+import { MonoColour } from '@railmapgen/rmg-palette-resources';
 
 interface UploadConfirmModalProps {
     isOpen: boolean;

@@ -1,9 +1,10 @@
 import React, { forwardRef, memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
-import { CanvasType, ColineInfo, ColourHex, MonoColour, Name, ShortDirection } from '../../constants/constants';
+import { CanvasType, ColineInfo, Name, ShortDirection } from '../../constants/constants';
 import { get_pivot_stations } from '../railmap/methods/shmetro-loop';
 import SvgWrapper from '../common/svg-wrapper';
+import { ColourHex, MonoColour } from '@railmapgen/rmg-palette-resources';
 
 const CANVAS_TYPE = CanvasType.Destination;
 

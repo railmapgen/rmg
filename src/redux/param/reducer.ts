@@ -1,5 +1,5 @@
-import { CityCode } from '@railmapgen/rmg-palette-resources';
-import { MonoColour, PanelTypeGZMTR, RMGParam, RmgStyle, ShortDirection } from '../../constants/constants';
+import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
+import { PanelTypeGZMTR, RMGParam, RmgStyle, ShortDirection } from '../../constants/constants';
 import {
     SET_BRANCH_SPACING_PCT,
     SET_COLINE_BULK,

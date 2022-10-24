@@ -19,10 +19,10 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { ColourHex, Events, MonoColour, Theme } from '../../../constants/constants';
+import { Events, Theme } from '../../../constants/constants';
 import CityPicker from './city-picker';
 import ColourPicker from './colour-picker';
-import { CityCode } from '@railmapgen/rmg-palette-resources';
+import { CityCode, ColourHex, MonoColour } from '@railmapgen/rmg-palette-resources';
 import { useTranslation } from 'react-i18next';
 import { RmgFields, RmgFieldsField, RmgLineBadge } from '@railmapgen/rmg-components';
 import { MdOpenInNew } from 'react-icons/md';

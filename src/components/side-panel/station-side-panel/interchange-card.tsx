@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Box, HStack, IconButton, Text } from '@chakra-ui/react';
-import { InterchangeInfo, MonoColour, Theme } from '../../../constants/constants';
+import { InterchangeInfo, Theme } from '../../../constants/constants';
 import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
 import ColourModal from '../../modal/colour-modal/colour-modal';
 import { useTranslation } from 'react-i18next';
 import { useRootSelector } from '../../../redux';
 import ThemeButton from '../theme-button';
 import { RmgCard, RmgFields, RmgFieldsField, RmgLabel } from '@railmapgen/rmg-components';
+import { MonoColour } from '@railmapgen/rmg-palette-resources';
 
 interface InterchangeCardProps {
     interchangeList: InterchangeInfo[];
