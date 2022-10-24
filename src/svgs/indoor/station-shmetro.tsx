@@ -1,5 +1,6 @@
+import { ColourHex } from '@railmapgen/rmg-palette-resources';
 import React from 'react';
-import { ColourHex, InterchangeInfo, Name, Services } from '../../constants/constants';
+import { InterchangeInfo, Name, Services } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 
 export type NameDirection = 'upward' | 'downward' | 'left' | 'right';

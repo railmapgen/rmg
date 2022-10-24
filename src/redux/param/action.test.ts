@@ -33,7 +33,6 @@ import {
 import {
     BranchStyle,
     InterchangeInfo,
-    MonoColour,
     Name,
     Note,
     RMGParam,
@@ -42,7 +41,7 @@ import {
     StationDict,
     StationInfo,
 } from '../../constants/constants';
-import { CityCode } from '@railmapgen/rmg-palette-resources';
+import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
 import { SET_DEPS_STR } from '../helper/action';
 import { createMockAppStore, mockSimpleStationList } from '../../setupTests';
 import { getBranches } from '../helper/graph-theory-util';

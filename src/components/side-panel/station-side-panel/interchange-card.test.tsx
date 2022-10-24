@@ -1,7 +1,7 @@
 import React from 'react';
 import InterchangeCard from './interchange-card';
-import { InterchangeInfo, MonoColour } from '../../../constants/constants';
-import { CityCode } from '@railmapgen/rmg-palette-resources';
+import { InterchangeInfo } from '../../../constants/constants';
+import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
 import { act } from 'react-dom/test-utils';
 import { render } from '../../../test-utils';
 import { fireEvent, screen, within } from '@testing-library/react';

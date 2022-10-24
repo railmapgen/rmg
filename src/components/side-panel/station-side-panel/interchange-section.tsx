@@ -10,10 +10,11 @@ import {
     updateStationPaidArea,
     updateStationTickDirection,
 } from '../../../redux/param/action';
-import { InterchangeInfo, MonoColour, RmgStyle, ShortDirection } from '../../../constants/constants';
+import { InterchangeInfo, RmgStyle, ShortDirection } from '../../../constants/constants';
 import { MdAdd } from 'react-icons/md';
 import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
+import { MonoColour } from '@railmapgen/rmg-palette-resources';
 
 export default function InterchangeSection() {
     const { t } = useTranslation();

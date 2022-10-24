@@ -1,6 +1,6 @@
 import React from 'react';
-import { ColourHex } from '../../constants/constants';
 import { Flex } from '@chakra-ui/react';
+import { ColourHex } from '@railmapgen/rmg-palette-resources';
 
 interface GzmtrStationCodeProps {
     lineNumber: string;

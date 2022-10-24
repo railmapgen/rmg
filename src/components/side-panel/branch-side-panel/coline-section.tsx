@@ -11,9 +11,9 @@ import {
 } from '../../../redux/param/coline-action';
 import ColineCard from './coline-card';
 import { MdAdd } from 'react-icons/md';
-import { MonoColour } from '../../../constants/constants';
 import { setGlobalAlert } from '../../../redux/app/app-slice';
 import { useTranslation } from 'react-i18next';
+import { MonoColour } from '@railmapgen/rmg-palette-resources';
 
 export default function ColineSection() {
     const { t } = useTranslation();

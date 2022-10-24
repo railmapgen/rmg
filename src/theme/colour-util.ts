@@ -1,5 +1,5 @@
-import { ColourHex } from '../constants/constants';
 import { rmgChakraTheme } from '@railmapgen/rmg-components';
+import { ColourHex } from '@railmapgen/rmg-palette-resources';
 
 export default class ColourUtil {
     private static hexToRgb(hex: ColourHex): [number, number, number] {

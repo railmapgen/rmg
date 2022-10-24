@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
 import StationGZMTR from './station/station-gzmtr';
 import { adjacencyList, criticalPathMethod, drawLine, getStnState } from '../methods/share';
-import { CanvasType, ColourHex, MonoColour, ShortDirection, StationDict } from '../../../constants/constants';
+import { CanvasType, ShortDirection, StationDict } from '../../../constants/constants';
 import { useRootSelector } from '../../../redux';
 import LineIcon from '../../gzmtr/line-icon/line-icon';
+import { ColourHex, MonoColour } from '@railmapgen/rmg-palette-resources';
 
 const wideFactor = (stnList: StationDict, stnId: string) =>
     stnList[stnId].parents.length === 2 || stnList[stnId].children.length === 2 ? 0.25 : 0;

@@ -1,5 +1,5 @@
 import React, { lazy, useState } from 'react';
-import { Box, Button, HStack, IconButton, Progress, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { Box, Button, HStack, IconButton, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { MdAdd } from 'react-icons/md';
 import AddStationModal from '../modal/add-station-modal';
 import { useRootDispatch, useRootSelector } from '../../redux';

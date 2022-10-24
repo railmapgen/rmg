@@ -1,6 +1,6 @@
 import React from 'react';
-import { CityCode } from '@railmapgen/rmg-palette-resources';
-import { Direction, InterchangeInfo, MonoColour } from '../../../constants/constants';
+import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
+import { Direction, InterchangeInfo } from '../../../constants/constants';
 import OsiStation from './osi-station';
 import { render } from '../../../test-utils';
 import { screen } from '@testing-library/react';

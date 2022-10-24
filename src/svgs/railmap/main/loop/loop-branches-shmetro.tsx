@@ -1,8 +1,9 @@
 import { useRootSelector } from '../../../../redux';
-import { CanvasType, ColourHex, Services } from '../../../../constants/constants';
+import { CanvasType, Services } from '../../../../constants/constants';
 import StationSHMetro from '../station/station-shmetro';
 import { StationSHMetro as StationSHMetroIndoor } from '../../../indoor/station-shmetro';
 import React from 'react';
+import { ColourHex } from '@railmapgen/rmg-palette-resources';
 
 export const get_loop_branches = (
     branches: string[][],
