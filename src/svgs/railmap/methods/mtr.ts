@@ -8,9 +8,9 @@ export const leftWideFactor = (stnList: StationDict, stnId: string) => {
     let ls = transfer.info.map(val => val.length);
     if (transfer.tick_direc === 'l') {
         // int3 or above
-        if (!ls[1] && ls[0] > 1) res += 0.8;
+        if (!ls[1] && ls[0] > 1) res += 0.4;
         // osi except osi22
-        if (ls[1] && (ls[0] !== 1 || ls[1] !== 2)) res += 0.8;
+        if (ls[1] && (ls[0] !== 1 || ls[1] !== 2)) res += 0.4;
     }
     if (ls[0] === 1 && ls[1] === 2) {
         // osi22 not end
@@ -29,9 +29,9 @@ export const rightWideFactor = (stnList: StationDict, stnId: string) => {
     let ls = transfer.info.map(val => val.length);
     if (transfer.tick_direc === 'r') {
         // int3 or above
-        if (!ls[1] && ls[0] > 1) res += 0.8;
+        if (!ls[1] && ls[0] > 1) res += 0.4;
         // osi except osi22
-        if (ls[1] && (ls[0] !== 1 || ls[1] !== 2)) res += 0.8;
+        if (ls[1] && (ls[0] !== 1 || ls[1] !== 2)) res += 0.4;
     }
     if (ls[0] === 1 && ls[1] === 2) {
         if (stnList[stnId].parents[0] !== 'linestart' && stnList[stnId].children[0] !== 'lineend') res += 0.8;
