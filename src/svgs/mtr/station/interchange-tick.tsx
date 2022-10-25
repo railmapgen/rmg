@@ -19,10 +19,11 @@ interface InterchangeTickProps {
     isPassed?: boolean;
     position: Position;
     repel?: Direction; // osi22
+    repelOffset?: number;
 }
 
 function InterchangeTick(props: InterchangeTickProps) {
-    const { interchangeInfo, isPassed, position, repel } = props;
+    const { interchangeInfo, isPassed, position, repel, repelOffset } = props;
 
     const zhNameLines = interchangeInfo[4].split('\\').length;
     const enNameLines = interchangeInfo[5].split('\\').length;
@@ -41,7 +42,7 @@ function InterchangeTick(props: InterchangeTickProps) {
         g: {
             x:
                 (position === Position.LEFT ? -24 : position === Position.RIGHT ? 24 : 0) +
-                (repel === Direction.left ? -3 : repel === Direction.right ? 3 : 0),
+                (repel === Direction.left ? -1 : repel === Direction.right ? 1 : 0) * (repelOffset ?? 3),
             y:
                 position === Position.UP
                     ? -37 - 10 * (zhNameLines - 1) - 7 * (enNameLines - 1)

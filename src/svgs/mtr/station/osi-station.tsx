@@ -53,6 +53,8 @@ export default function OsiStation(props: OsiStationProps) {
                                 ? Position.RIGHT
                                 : Position.LEFT
                         }
+                        repel={isTerminal ? direction : undefined}
+                        repelOffset={isTerminal && arr.length === 1 ? -4 : 0}
                     />
                 </g>
             ))}
