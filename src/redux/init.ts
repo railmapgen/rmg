@@ -5,27 +5,96 @@ import { updateParam } from '../utils';
 import { setFullParam } from './param/action';
 import { LanguageCode } from '@railmapgen/rmg-translate';
 import { initParam } from './param/util';
+import { nanoid } from 'nanoid';
+
+const getLegacyParam = (): string | null => {
+    let contents = window.localStorage.getItem(LocalStorageKey.PARAM);
+    if (contents === null) {
+        contents = window.localStorage.getItem('rmgParam');
+        window.localStorage.removeItem('rmgParam');
+        window.localStorage.removeItem('rmgParamRedux');
+    }
+    return contents;
+};
+
+const getParamMap = (): Record<string, string> => {
+    const paramMap: Record<string, string> = {};
+
+    let count = 0;
+    while (count < window.localStorage.length) {
+        const key = window.localStorage.key(count);
+        if (key?.startsWith(LocalStorageKey.PARAM_BY_ID)) {
+            const paramStr = window.localStorage.getItem(key);
+            if (paramStr !== null) {
+                paramMap[key.slice(LocalStorageKey.PARAM_BY_ID.length)] = paramStr;
+            }
+        }
+        count++;
+    }
+
+    return paramMap;
+};
 
 export const initParamStore = (store: RootStore) => {
     let paramToBeSaved: RMGParam = initParam(RmgStyle.MTR, LanguageCode.ChineseTrad);
+    let currentParamId: string | undefined = undefined;
 
     try {
-        let contents = window.localStorage.getItem(LocalStorageKey.PARAM);
-        if (contents === null) {
-            contents = window.localStorage.getItem('rmgParam');
-            window.localStorage.removeItem('rmgParam');
-            window.localStorage.removeItem('rmgParamRedux');
+        // get all param
+        const paramMap = getParamMap();
+        console.log('initParamStore():: Param with ID in localStorage:', Object.keys(paramMap));
+
+        // check if exist param going to migrate
+        const legacyParam = getLegacyParam();
+        if (legacyParam !== null) {
+            const paramId = nanoid();
+            console.log('initParamStore():: Found legacy param in localStorage. Assigning ID with', paramId);
+            window.localStorage.setItem(LocalStorageKey.CURRENT_PARAM_ID, paramId);
+
+            paramMap[paramId] = legacyParam;
+            window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + paramId, legacyParam);
+            window.localStorage.removeItem(LocalStorageKey.PARAM);
         }
 
-        if (contents) {
-            paramToBeSaved = updateParam(JSON.parse(contents)) as RMGParam;
+        // check if current param id valid
+        currentParamId = window.localStorage.getItem(LocalStorageKey.CURRENT_PARAM_ID) ?? Object.keys(paramMap)[0];
+        // if current param id invalid, reset to first id of paramMap
+        if (currentParamId && !(currentParamId in paramMap)) {
+            console.warn('initParamStore():: Current param ID defined in localStorage is invalid. Resetting...');
+            currentParamId = Object.keys(paramMap)[0];
+            window.localStorage.setItem(LocalStorageKey.CURRENT_PARAM_ID, currentParamId);
+        }
+        // if current param id is undefined, generate a new id with new param
+        if (!currentParamId) {
+            currentParamId = nanoid();
+            console.log(
+                'initParamStore():: Current param ID is undefined. Assigning new param with ID',
+                currentParamId
+            );
+            window.localStorage.setItem(LocalStorageKey.CURRENT_PARAM_ID, currentParamId);
+
+            paramMap[currentParamId] = JSON.stringify(paramToBeSaved);
+            window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + currentParamId, JSON.stringify(paramToBeSaved));
+        }
+
+        // update param
+        let paramStr = paramMap[currentParamId];
+        if (paramStr) {
+            paramToBeSaved = updateParam(JSON.parse(paramStr)) as RMGParam;
+            window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + currentParamId, JSON.stringify(paramToBeSaved));
         } else {
             throw new Error('rmgParam does not exist in localStorage');
         }
     } catch (err) {
-        console.warn('Error in reading rmgParam', err);
+        console.warn('initParamStore():: Error in reading rmgParam', err);
+
+        if (!currentParamId) {
+            currentParamId = nanoid();
+        }
+        console.log('initParamStore():: Use param with ID', currentParamId);
+        window.localStorage.setItem(LocalStorageKey.CURRENT_PARAM_ID, currentParamId);
+        window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + currentParamId, JSON.stringify(paramToBeSaved));
     } finally {
-        window.localStorage.setItem(LocalStorageKey.PARAM, JSON.stringify(paramToBeSaved));
         store.dispatch(setFullParam(paramToBeSaved));
     }
 };
