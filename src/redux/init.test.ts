@@ -107,8 +107,8 @@ describe('ReduxInit', () => {
             });
 
             // assign new id and store in new key
-            const currentParamId = window.localStorage.getItem(LocalStorageKey.CURRENT_PARAM_ID);
-            expect(currentParamId).not.toBeNull();
+            const currentParamId = actions.find(action => action.type === 'app/setCurrentParamId')?.payload;
+            expect(currentParamId).toBeDefined();
             expect(window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + currentParamId)).toContain('test-01');
 
             // remove rmg__param key
@@ -129,8 +129,8 @@ describe('ReduxInit', () => {
             });
 
             // assign new id and store in new key
-            const currentParamId = window.localStorage.getItem(LocalStorageKey.CURRENT_PARAM_ID);
-            expect(currentParamId).not.toBeNull();
+            const currentParamId = actions.find(action => action.type === 'app/setCurrentParamId')?.payload;
+            expect(currentParamId).toBeDefined();
             expect(window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + currentParamId)).toContain('test-02');
 
             // remove rmgParam and rmgParamRedux keys
@@ -149,8 +149,8 @@ describe('ReduxInit', () => {
             });
 
             // save to localStorage with new key
-            const currentParamId = window.localStorage.getItem(LocalStorageKey.CURRENT_PARAM_ID);
-            expect(currentParamId).not.toBeNull();
+            const currentParamId = actions.find(action => action.type === 'app/setCurrentParamId')?.payload;
+            expect(currentParamId).toBeDefined();
             expect(window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + currentParamId)).not.toBeNull();
             expect(window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + currentParamId)).not.toContain('invalid');
 
@@ -173,22 +173,8 @@ describe('ReduxInit', () => {
             window.localStorage.clear();
         });
 
-        it('Can read param by current param ID as expected', () => {
+        it('Can read first param as expected', () => {
             setup();
-            window.localStorage.setItem(LocalStorageKey.CURRENT_PARAM_ID, 'test-12');
-
-            initParamStore(mockStore);
-
-            const actions = mockStore.getActions();
-            expect(actions).toContainEqual({
-                type: 'SET_FULL_PARAM',
-                fullParam: expect.objectContaining({ line_num: 'test-12' }),
-            });
-        });
-
-        it('Can read first param if current param ID is not defined', () => {
-            setup();
-            window.localStorage.setItem(LocalStorageKey.CURRENT_PARAM_ID, 'invalid');
 
             initParamStore(mockStore);
 
@@ -197,15 +183,15 @@ describe('ReduxInit', () => {
                 type: 'SET_FULL_PARAM',
                 fullParam: expect.objectContaining({ line_num: 'test-11' }),
             });
-
-            // update rmg__currentParamId key
-            expect(window.localStorage.getItem(LocalStorageKey.CURRENT_PARAM_ID)).toBe('test-11');
+            expect(actions).toContainEqual({
+                type: 'app/setCurrentParamId',
+                payload: 'test-11',
+            });
         });
 
-        it('Can generate new param for current param ID if it is invalid', () => {
+        it('Can generate new param for first param if it is invalid', () => {
+            window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + 'test-10', 'invalid');
             setup();
-            window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + 'test-13', 'invalid');
-            window.localStorage.setItem(LocalStorageKey.CURRENT_PARAM_ID, 'test-13');
 
             initParamStore(mockStore);
 
@@ -214,34 +200,14 @@ describe('ReduxInit', () => {
                 type: 'SET_FULL_PARAM',
                 fullParam: expect.any(Object),
             });
-
-            // update rmg__param:test-13 key
-            expect(window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + 'test-13')).not.toBe('invalid');
-            expect(window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + 'test-13')).not.toBeNull();
-
-            // keep rmg__currentParamId key unchanged
-            expect(window.localStorage.getItem(LocalStorageKey.CURRENT_PARAM_ID)).toBe('test-13');
-        });
-
-        it('Can read legacy param if it presents and current param ID is undefined', () => {
-            setup();
-            window.localStorage.setItem(LocalStorageKey.PARAM, JSON.stringify(generateParam('test-13')));
-
-            initParamStore(mockStore);
-
-            const actions = mockStore.getActions();
             expect(actions).toContainEqual({
-                type: 'SET_FULL_PARAM',
-                fullParam: expect.objectContaining({ line_num: 'test-13' }),
+                type: 'app/setCurrentParamId',
+                payload: 'test-10',
             });
 
-            // save to localStorage with new key
-            const currentParamId = window.localStorage.getItem(LocalStorageKey.CURRENT_PARAM_ID);
-            expect(currentParamId).not.toBeNull();
-            expect(window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + currentParamId)).toContain('test-13');
-
-            // remove rmg__param key
-            expect(window.localStorage.getItem(LocalStorageKey.PARAM)).toBeNull();
+            // update rmg__param:test-13 key
+            expect(window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + 'test-10')).not.toBe('invalid');
+            expect(window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + 'test-10')).not.toBeNull();
         });
 
         it('Can generate new param if no param found in localStorage', () => {
@@ -254,8 +220,8 @@ describe('ReduxInit', () => {
             });
 
             // save to localStorage with new key
-            const currentParamId = window.localStorage.getItem(LocalStorageKey.CURRENT_PARAM_ID);
-            expect(currentParamId).not.toBeNull();
+            const currentParamId = actions.find(action => action.type === 'app/setCurrentParamId')?.payload;
+            expect(currentParamId).toBeDefined();
             expect(window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + currentParamId)).not.toBeNull();
         });
     });
