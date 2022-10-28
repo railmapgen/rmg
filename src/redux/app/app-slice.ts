@@ -4,6 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AppState {
     rmgStyle: RmgStyle;
+    currentParamId?: string;
     canvasScale: number;
     canvasToShow: CanvasType[];
     sidePanelMode: SidePanelMode;
@@ -17,6 +18,7 @@ interface AppState {
 
 const initialState: AppState = {
     rmgStyle: RmgStyle.MTR,
+    currentParamId: undefined,
     canvasScale: 1,
     canvasToShow: Object.values(CanvasType),
     sidePanelMode: SidePanelMode.CLOSE,
@@ -32,6 +34,10 @@ const appSlice = createSlice({
     name: 'app',
     initialState,
     reducers: {
+        setCurrentParamId: (state, action: PayloadAction<string>) => {
+            state.currentParamId = action.payload;
+        },
+
         setCanvasScale: (state, action: PayloadAction<number>) => {
             state.canvasScale = action.payload;
         },
@@ -92,6 +98,7 @@ const appSlice = createSlice({
 });
 
 export const {
+    setCurrentParamId,
     setCanvasScale,
     setCanvasToShow,
     setSidePanelMode,

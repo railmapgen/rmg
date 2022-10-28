@@ -114,6 +114,7 @@ export enum Facilities {
 }
 
 export interface StationInfo {
+    title?: string;
     /**
      * Station name in two languages.
      */
@@ -291,6 +292,7 @@ export enum LocalStorageKey {
     CANVAS_TO_SHOW = 'rmg__canvasToShow',
     CANVAS_SCALE = 'rmg__canvasScale',
     PARAM = 'rmg__param',
+    PARAM_BY_ID = 'rmg__param:',
 }
 
 export enum Events {
