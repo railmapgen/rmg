@@ -1,9 +1,10 @@
 import React, { lazy, StrictMode } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
-import { rmgChakraTheme, RmgErrorBoundary, RmgLoader } from '@railmapgen/rmg-components';
+import { rmgChakraTheme, RmgErrorBoundary, RmgLoader, RmgWindow } from '@railmapgen/rmg-components';
 import { Provider } from 'react-redux';
 import store from './redux';
+import WindowHeader from './components/root/window-header';
 
 const AppRouter = lazy(() => import(/* webpackChunkName: "AppRouter" */ './components/root/app-router'));
 
@@ -20,20 +21,23 @@ export default function App() {
             <Provider store={store}>
                 <ChakraProvider theme={rmgChakraTheme}>
                     <BrowserRouter basename={basename}>
-                        <Routes>
-                            <Route
-                                path="/"
-                                element={
-                                    <RmgErrorBoundary
-                                        suspenseFallback={<RmgLoader isIndeterminate={true} />}
-                                        allowReset
-                                    >
-                                        <AppRouter />
-                                    </RmgErrorBoundary>
-                                }
-                            />
-                            <Route path="*" element={<Navigate to="/" />} />
-                        </Routes>
+                        <RmgWindow>
+                            <WindowHeader />
+                            <Routes>
+                                <Route
+                                    path="/"
+                                    element={
+                                        <RmgErrorBoundary
+                                            suspenseFallback={<RmgLoader isIndeterminate={true} />}
+                                            allowReset
+                                        >
+                                            <AppRouter />
+                                        </RmgErrorBoundary>
+                                    }
+                                />
+                                <Route path="*" element={<Navigate to="/" />} />
+                            </Routes>
+                        </RmgWindow>
                     </BrowserRouter>
                 </ChakraProvider>
             </Provider>

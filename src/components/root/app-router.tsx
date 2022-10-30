@@ -1,12 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import AppRoot from './app-root';
+import AppView from './app-view';
+import { useRootDispatch, useRootSelector } from '../../redux';
+import rmgRuntime from '@railmapgen/rmg-runtime';
+import { LanguageCode } from '@railmapgen/rmg-translate';
+import ParamSelectorView from './param-selector-view';
+import { readParam } from '../../redux/app/action';
 
 export default function AppRouter() {
-    const [searchParams, setSearchParams] = useSearchParams();
+    const dispatch = useRootDispatch();
+
+    const { currentParamId } = useRootSelector(state => state.app);
+    const [searchParams] = useSearchParams();
     const paramId = searchParams.get('w');
 
-    console.log('searchParam: w=' + paramId);
+    const [isLoaded, setIsLoaded] = useState(false);
 
-    return <AppRoot />;
+    useEffect(() => {
+        console.log('searchParam: w=' + paramId);
+        if (paramId) {
+            if (paramId === currentParamId) {
+                setIsLoaded(true);
+            } else {
+                console.warn(
+                    'AppRouter:: URL param ID does not match store param ID. Reading param with ID=' + paramId
+                );
+                dispatch(readParam(paramId, rmgRuntime.getLanguage() as LanguageCode));
+                setIsLoaded(true);
+            }
+        } else {
+            console.log('AppRouter:: Render param selector');
+        }
+    }, [paramId]);
+
+    return isLoaded ? <AppView /> : <ParamSelectorView />;
 }

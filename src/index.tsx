@@ -35,7 +35,6 @@ const renderApp = () => {
 
 export const reRenderApp = (param: RMGParam) => {
     root.unmount();
-    window.history.pushState({}, '', process.env.PUBLIC_URL + '/' + param.style);
     store.dispatch(setFullParam(param));
     renderApp();
 };
