@@ -2,14 +2,14 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Box, Flex } from '@chakra-ui/react';
 import { RmgLoader, RmgPage, RmgWindow } from '@railmapgen/rmg-components';
-import { useRootDispatch, useRootSelector } from '../redux';
-import { setGlobalAlert } from '../redux/app/app-slice';
-import SvgRouter from '../svgs/svg-router';
-import SidePanel from './side-panel/side-panel';
-import PageHeader from './page-header/page-header';
-import WindowHeader from './root/window-header';
-import GridTabs from './ag-grid/grid-tabs';
-import GlobalAlerts from './root/global-alerts';
+import { useRootDispatch, useRootSelector } from '../../redux';
+import { setGlobalAlert } from '../../redux/app/app-slice';
+import SvgRouter from '../../svgs/svg-router';
+import SidePanel from '../side-panel/side-panel';
+import PageHeader from '../page-header/page-header';
+import WindowHeader from './window-header';
+import GridTabs from '../ag-grid/grid-tabs';
+import GlobalAlerts from './global-alerts';
 
 export default function AppRoot() {
     const { t } = useTranslation();
