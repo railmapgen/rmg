@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
-import { CanvasType, Events, RmgStyle } from '../constants/constants';
+import { CanvasType, Events } from '../constants/constants';
 import { useRootSelector } from '../redux';
-import { useDispatch } from 'react-redux';
-import { setStyle } from '../redux/param/action';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { Flex } from '@chakra-ui/react';
 import useCanvasMap from './use-canvas-map';
 import { RmgErrorBoundary, RmgLoader } from '@railmapgen/rmg-components';
@@ -24,31 +21,10 @@ const style = {
 };
 
 export default function SvgRouter() {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-
     const { canvasToShow, canvasScale } = useRootSelector(state => state.app);
     const { svg_height: svgHeight, style: rmgStyle } = useRootSelector(state => state.param);
 
     const canvasMap = useCanvasMap(rmgStyle);
-
-    useEffect(() => {
-        const pathname = location.pathname;
-        console.log(`SvgRouter:: requestedPath=${pathname}`);
-        if (pathname !== '/' + rmgStyle) {
-            const nextStyle = pathname.split('/').slice(-1)[0] as RmgStyle;
-            if (Object.values(RmgStyle).includes(nextStyle)) {
-                // set style in param
-                console.log(`SvgRouter:: updating param style to ${nextStyle}`);
-                dispatch(setStyle(nextStyle));
-            } else {
-                // push route to match param's style
-                console.log(`SvgRouter:: updating path to /${rmgStyle}`);
-                navigate(rmgStyle);
-            }
-        }
-    }, []);
 
     useEffect(() => {
         (document.getElementById('css_share') as HTMLLinkElement).href =

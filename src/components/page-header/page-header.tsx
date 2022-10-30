@@ -7,11 +7,9 @@ import { useRootDispatch, useRootSelector } from '../../redux';
 import { RmgFields, RmgFieldsField, RmgMultiSelect, RmgPageHeader } from '@railmapgen/rmg-components';
 import { MdZoomIn, MdZoomOut } from 'react-icons/md';
 import { setStyle } from '../../redux/param/action';
-import { useNavigate } from 'react-router-dom';
 
 export default function PageHeader() {
     const { t } = useTranslation();
-    const navigate = useNavigate();
     const dispatch = useRootDispatch();
 
     const { canvasToShow, canvasScale } = useRootSelector(state => state.app);
@@ -31,7 +29,6 @@ export default function PageHeader() {
     }));
 
     const handleStyleChange = (style: RmgStyle) => {
-        navigate('/' + style);
         dispatch(setStyle(style));
     };
 

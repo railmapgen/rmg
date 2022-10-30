@@ -1,11 +1,11 @@
 import React, { lazy, StrictMode } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
 import { rmgChakraTheme, RmgErrorBoundary, RmgLoader } from '@railmapgen/rmg-components';
 import { Provider } from 'react-redux';
 import store from './redux';
 
-const AppRoot = lazy(() => import(/* webpackChunkName: "AppRoot" */ './components/app-root'));
+const AppRouter = lazy(() => import(/* webpackChunkName: "AppRouter" */ './components/root/app-router'));
 
 export default function App() {
     // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -22,16 +22,17 @@ export default function App() {
                     <BrowserRouter basename={basename}>
                         <Routes>
                             <Route
-                                path="*"
+                                path="/"
                                 element={
                                     <RmgErrorBoundary
                                         suspenseFallback={<RmgLoader isIndeterminate={true} />}
                                         allowReset
                                     >
-                                        <AppRoot />
+                                        <AppRouter />
                                     </RmgErrorBoundary>
                                 }
                             />
+                            <Route path="*" element={<Navigate to="/" />} />
                         </Routes>
                     </BrowserRouter>
                 </ChakraProvider>
