@@ -111,8 +111,10 @@ export const initStore = (store: RootStore) => {
         },
         effect: (action, listenerApi) => {
             const { currentParamId } = listenerApi.getState().app;
-            const param = listenerApi.getState().param;
-            window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + currentParamId, JSON.stringify(param));
+            if (currentParamId) {
+                const param = listenerApi.getState().param;
+                window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + currentParamId, JSON.stringify(param));
+            }
         },
     });
 };

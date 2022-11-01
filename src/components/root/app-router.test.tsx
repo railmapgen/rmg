@@ -41,7 +41,7 @@ describe('AppRouter', () => {
     });
 
     it('Can read param from localStorage and render app view if param is not loaded', () => {
-        render(<AppRouter />, { store: mockStore, route: '/?w=test-id' });
+        render(<AppRouter />, { store: mockStore, route: '/?project=test-id' });
 
         const actions = mockStore.getActions();
         expect(actions).toContainEqual({ type: 'app/setCurrentParamId', payload: 'test-id' });
@@ -52,7 +52,7 @@ describe('AppRouter', () => {
 
     it('Can render app view if param is loaded', async () => {
         const mockStore = createMockAppStore({ ...realStore, app: { ...realStore.app, currentParamId: 'test-id' } });
-        render(<AppRouter />, { store: mockStore, route: '/?w=test-id' });
+        render(<AppRouter />, { store: mockStore, route: '/?project=test-id' });
 
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(0);

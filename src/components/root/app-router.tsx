@@ -12,12 +12,12 @@ export default function AppRouter() {
 
     const { currentParamId } = useRootSelector(state => state.app);
     const [searchParams] = useSearchParams();
-    const paramId = searchParams.get('w');
+    const paramId = searchParams.get('project');
 
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        console.log('searchParam: w=' + paramId);
+        console.log('searchParam: project=' + paramId);
         if (paramId) {
             if (paramId === currentParamId) {
                 setIsLoaded(true);
