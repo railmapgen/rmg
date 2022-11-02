@@ -96,10 +96,6 @@ describe('AppRouter', () => {
             expect(actions).toContainEqual(expect.objectContaining({ type: 'app/setCurrentParamId' }));
             expect(actions).toContainEqual(expect.objectContaining({ type: 'SET_FULL_PARAM' }));
 
-            // route to new param id
-            const currentParamId = actions.find(action => action.type === 'app/setCurrentParamId').payload;
-            // TODO: URL search param?
-
             expect(screen.getByRole('presentation', { name: 'Mock App View' })).toBeInTheDocument();
         });
 
@@ -115,9 +111,6 @@ describe('AppRouter', () => {
                 fullParam: expect.objectContaining({ line_num: 'test-id' }),
             });
 
-            // route to new param id
-            // TODO: URL search param?
-
             expect(screen.getByRole('presentation', { name: 'Mock App View' })).toBeInTheDocument();
         });
 
@@ -128,8 +121,6 @@ describe('AppRouter', () => {
             const actions = mockStore.getActions();
             expect(actions).toContainEqual({ type: 'app/setCurrentParamId', payload: 'test-id' });
             expect(actions).toContainEqual(expect.objectContaining({ type: 'SET_FULL_PARAM' }));
-
-            // TODO: URL search param?
 
             expect(screen.getByRole('presentation', { name: 'Mock App View' })).toBeInTheDocument();
         });
@@ -145,8 +136,6 @@ describe('AppRouter', () => {
                 type: 'SET_FULL_PARAM',
                 fullParam: expect.objectContaining({ line_num: 'test-id-1' }),
             });
-
-            // TODO: URL search param?
 
             expect(screen.getByRole('presentation', { name: 'Mock App View' })).toBeInTheDocument();
         });
