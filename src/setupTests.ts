@@ -1,7 +1,9 @@
 import createMockStore from 'redux-mock-store';
-import { BranchStyle, StationDict } from './constants/constants';
+import { BranchStyle, LocalStorageKey, RmgStyle, StationDict } from './constants/constants';
 import rootReducer, { RootState } from './redux';
 import { getDefaultMiddleware, ThunkDispatch } from '@reduxjs/toolkit';
+import { initParam } from './redux/param/util';
+import { LanguageCode } from '@railmapgen/rmg-translate';
 
 // FIXME: any -> AnyAction?
 type DispatchExts = ThunkDispatch<RootState, void, any>;
@@ -88,4 +90,10 @@ global.fetch = (...args) => {
     } else {
         return originalFetch(...args);
     }
+};
+
+export const createParamInLocalStorage = (id: string) => {
+    const rmgParam = initParam(RmgStyle.MTR, LanguageCode.English);
+    rmgParam.line_num = id;
+    window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + id, JSON.stringify(rmgParam));
 };

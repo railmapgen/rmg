@@ -2,25 +2,16 @@ import React from 'react';
 import { render } from '../../test-utils';
 import ParamSelectorView from './param-selector-view';
 import rootReducer from '../../redux';
-import { createMockAppStore } from '../../setupTests';
-import { initParam } from '../../redux/param/util';
-import { LocalStorageKey, RmgStyle } from '../../constants/constants';
-import { LanguageCode } from '@railmapgen/rmg-translate';
+import { createMockAppStore, createParamInLocalStorage } from '../../setupTests';
 import { fireEvent, screen } from '@testing-library/react';
 
 const realStore = rootReducer.getState();
 const mockStore = createMockAppStore({ ...realStore });
 
-const generateParamInLocalStorage = (id: string) => {
-    const rmgParam = initParam(RmgStyle.MTR, LanguageCode.English);
-    rmgParam.line_num = id;
-    window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + id, JSON.stringify(rmgParam));
-};
-
 describe('ParamSelectorView', () => {
     it('Can render view with list of projects as expected', () => {
-        generateParamInLocalStorage('test-1');
-        generateParamInLocalStorage('test-2');
+        createParamInLocalStorage('test-1');
+        createParamInLocalStorage('test-2');
 
         render(<ParamSelectorView />, { store: mockStore, route: '/' });
 
