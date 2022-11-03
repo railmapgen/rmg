@@ -250,6 +250,7 @@
     },
 
     "Are you sure to remove station? You cannot undo this action.": "您确定刪除此车站吗？您不能撤销此操作。",
+    "Blank project": "空白项目",
     "Branch left end": "支线左端",
     "Branch on the left": "左侧支线",
     "Branch on the right": "右侧支线",   
@@ -268,7 +269,6 @@
     "Empty template": "空白模板",
     "English name": "英文名称",
     "Help and support": "帮助和支持",
-    "New project": "新建项目",
     "No branches found": "未找到支线",
     "Open project": "打开项目",
     "Paid area": "付费区换乘",

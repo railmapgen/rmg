@@ -2,9 +2,64 @@ import React, { useRef, useState } from 'react';
 import { RmgCard, RmgLoader, RmgPage } from '@railmapgen/rmg-components';
 import { useSearchParams } from 'react-router-dom';
 import { getParamMap } from '../../util/param-manager-utils';
-import { nanoid } from 'nanoid';
-import { Button, Container, Flex, Heading, HStack, useOutsideClick, VStack } from '@chakra-ui/react';
+import {
+    Button,
+    ButtonGroup,
+    Container,
+    Flex,
+    Heading,
+    HStack,
+    IconButton,
+    SystemStyleObject,
+    useOutsideClick,
+    VStack,
+} from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
+import { MdAdd, MdDelete, MdOpenInBrowser } from 'react-icons/md';
+import { nanoid } from 'nanoid';
+import rmgRuntime from '@railmapgen/rmg-runtime';
+import { Events, LocalStorageKey } from '../../constants/constants';
+
+const paramSelectorCardStyle: SystemStyleObject = {
+    flexDirection: 'column',
+    p: 2,
+
+    h3: {
+        m: 2,
+    },
+
+    '& > div': {
+        m: 2,
+        flexWrap: 'wrap',
+
+        '& > div:first-of-type': {
+            flex: 1,
+            flexDirection: 'column',
+            h: 200,
+            overflowX: 'hidden',
+            overflowY: 'auto',
+            borderRadius: 'md',
+            borderWidth: 2,
+
+            '& .chakra-button__group': {
+                flexShrink: 0,
+
+                '& button:first-of-type': {
+                    flexGrow: 1,
+                    justifyContent: 'flex-start',
+                },
+            },
+        },
+
+        '& > div:last-of-type': {
+            alignSelf: 'flex-end',
+
+            '& button': {
+                w: '100%',
+            },
+        },
+    },
+};
 
 export default function ParamSelectorView() {
     const { t } = useTranslation();
@@ -19,37 +74,67 @@ export default function ParamSelectorView() {
 
     const paramMap = getParamMap();
 
-    const handleStart = () => {
-        setSearchParams({ project: selectedParam ?? nanoid() });
+    const handleNew = () => {
+        setSearchParams({ project: nanoid() });
+        rmgRuntime.event(Events.NEW_PARAM, {});
+    };
+
+    const handleOpen = () => {
+        if (selectedParam) {
+            setSearchParams({ project: selectedParam });
+            rmgRuntime.event(Events.OPEN_PARAM, {});
+        }
+    };
+
+    const handleDelete = (id: string) => {
+        window.localStorage.removeItem(LocalStorageKey.PARAM_BY_ID + id);
+        rmgRuntime.event(Events.REMOVE_PARAM, {});
+
+        // FIXME: rerender component to refresh param list
+        setSelectedParam(undefined);
     };
 
     return (
         <RmgPage justifyContent="center">
             {urlParamId && <RmgLoader isIndeterminate />}
             <Container>
-                <RmgCard direction="column">
-                    <Heading as="h3" size="lg" m={2}>
+                <RmgCard sx={paramSelectorCardStyle}>
+                    <Heading as="h3" size="lg">
                         {t('Saved projects')}
                     </Heading>
 
-                    <HStack ref={selectorRef} m={2} flexWrap="wrap">
-                        <Flex direction="column" w={300} h={200}>
+                    <HStack ref={selectorRef}>
+                        <Flex>
                             {Object.keys(paramMap).map(id => (
-                                <Button
+                                <ButtonGroup
+                                    key={id}
+                                    size="sm"
+                                    isAttached
                                     colorScheme={selectedParam === id ? 'primary' : undefined}
                                     variant={selectedParam === id ? 'solid' : 'ghost'}
-                                    size="sm"
-                                    key={id}
-                                    onClick={() => setSelectedParam(id)}
                                 >
-                                    {t('Project ID')}: {id}
-                                </Button>
+                                    <Button onClick={() => setSelectedParam(id)}>
+                                        {t('Project ID')}: {id}
+                                    </Button>
+                                    <IconButton
+                                        aria-label="Remove this project"
+                                        icon={<MdDelete />}
+                                        onClick={() => handleDelete(id)}
+                                    />
+                                </ButtonGroup>
                             ))}
                         </Flex>
 
-                        <VStack flex={1} alignItems="flex-end" alignSelf="flex-end">
-                            <Button onClick={handleStart}>
-                                {selectedParam ? t('Open project') : t('New project')}
+                        <VStack>
+                            <Button leftIcon={<MdAdd />} onClick={handleNew}>
+                                {t('Blank project')}
+                            </Button>
+                            <Button
+                                leftIcon={<MdOpenInBrowser />}
+                                onClick={handleOpen}
+                                isDisabled={selectedParam === undefined}
+                            >
+                                {t('Open project')}
                             </Button>
                         </VStack>
                     </HStack>
