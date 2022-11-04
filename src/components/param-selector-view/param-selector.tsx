@@ -1,9 +1,10 @@
 import React from 'react';
 import { useRootSelector } from '../../redux';
-import { Button, ButtonGroup, Flex, IconButton, SystemStyleObject } from '@chakra-ui/react';
+import { ButtonGroup, Flex, IconButton, SystemStyleObject } from '@chakra-ui/react';
 import { getRelativeTime } from '../../util/utils';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
+import { RmgEnrichedButton } from '@railmapgen/rmg-components';
 
 interface ParamSelectorProps {
     selectedParam?: string;
@@ -26,23 +27,6 @@ const styles: SystemStyleObject = {
 
         '& button': {
             h: '100%',
-        },
-
-        '& button:first-of-type': {
-            flexGrow: 1,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'flex-start',
-
-            '& span:first-of-type': {
-                maxW: '100%',
-                textOverflow: 'ellipsis',
-            },
-
-            '& span:last-of-type': {
-                fontWeight: 'normal',
-                fontSize: '2xs',
-            },
         },
     },
 };
@@ -68,14 +52,11 @@ export default function ParamSelector(props: ParamSelectorProps) {
                         colorScheme={selectedParam === id ? 'primary' : undefined}
                         variant={selectedParam === id ? 'solid' : 'ghost'}
                     >
-                        <Button onClick={() => onParamSelect(id)}>
-                            <span>
-                                {t('Project ID')}: {id}
-                            </span>
-                            <span>
-                                {t('Last modified')}: {getRelativeTime(lastModified)}
-                            </span>
-                        </Button>
+                        <RmgEnrichedButton
+                            primaryText={t('Project ID') + ': ' + id}
+                            secondaryText={t('Last modified') + ': ' + getRelativeTime(lastModified)}
+                            onClick={() => onParamSelect(id)}
+                        />
                         <IconButton
                             aria-label="Remove this project"
                             icon={<MdDelete />}
