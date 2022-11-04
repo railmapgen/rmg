@@ -1,19 +1,10 @@
 import rootReducer from './index';
 import { createMockAppStore } from '../setupTests';
-import { initCanvasScale, initCanvasToShow, upgradeLegacyParam } from './init';
-import { initParam } from './param/util';
-import { CanvasType, LocalStorageKey, RmgStyle } from '../constants/constants';
-import { LanguageCode } from '@railmapgen/rmg-translate';
-import { getParamMap } from '../util/param-manager-utils';
+import { initCanvasScale, initCanvasToShow } from './init';
+import { CanvasType, LocalStorageKey } from '../constants/constants';
 
 const realStore = rootReducer.getState();
 const mockStore = createMockAppStore({ ...realStore });
-
-const generateParam = (id: string) => {
-    const rmgParam = initParam(RmgStyle.MTR, LanguageCode.ChineseTrad);
-    rmgParam.line_num = id;
-    return rmgParam;
-};
 
 describe('ReduxInit', () => {
     describe('ReduxInit - initCanvasScale', () => {
@@ -86,49 +77,6 @@ describe('ReduxInit', () => {
 
             const actions = mockStore.getActions();
             expect(actions).toContainEqual({ type: 'app/setCanvasToShow', payload: ['railmap'] });
-        });
-    });
-
-    describe('ReduxInit - upgradeLegacyParam', () => {
-        afterEach(() => {
-            window.localStorage.clear();
-        });
-
-        it('Can migrate legacy param from localStorage as expected', () => {
-            // stored in rmgParam key
-            const rmgParam = generateParam('test-01');
-            window.localStorage.setItem(LocalStorageKey.PARAM, JSON.stringify(rmgParam));
-
-            upgradeLegacyParam();
-
-            // assign new id and store in new key
-            const paramMap = getParamMap();
-            const paramIds = Object.keys(paramMap);
-            expect(paramIds).toHaveLength(1);
-            const currentParamId = paramIds[0];
-            expect(window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + currentParamId)).toContain('test-01');
-
-            // remove rmgParam and rmgParamRedux keys
-            expect(window.localStorage.getItem(LocalStorageKey.PARAM)).toBeNull();
-        });
-
-        it('Can migrate legacy param from old localStorage key as expected', () => {
-            // stored in rmgParam key
-            const rmgParam = generateParam('test-02');
-            window.localStorage.setItem('rmgParam', JSON.stringify(rmgParam));
-
-            upgradeLegacyParam();
-
-            // assign new id and store in new key
-            const paramMap = getParamMap();
-            const paramIds = Object.keys(paramMap);
-            expect(paramIds).toHaveLength(1);
-            const currentParamId = paramIds[0];
-            expect(window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + currentParamId)).toContain('test-02');
-
-            // remove rmgParam and rmgParamRedux keys
-            expect(window.localStorage.getItem('rmgParam')).toBeNull();
-            expect(window.localStorage.getItem('rmgParamRedux')).toBeNull();
         });
     });
 });

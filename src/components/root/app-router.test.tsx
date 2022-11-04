@@ -14,7 +14,7 @@ jest.mock('./app-view', () => {
     );
 });
 
-jest.mock('./param-selector-view', () => {
+jest.mock('../param-selector-view', () => {
     return () => (
         <div role="presentation" aria-label="Mock Param Selector View">
             Mock Param Selector View

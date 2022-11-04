@@ -1,22 +1,13 @@
 import { CanvasType, LocalStorageKey } from '../constants/constants';
-import { setCanvasScale, setCanvasToShow } from './app/app-slice';
+import { setCanvasScale, setCanvasToShow, setParamRegistry, updateParamModifiedTime } from './app/app-slice';
 import { RootStore, startRootListening } from './index';
-import { nanoid } from 'nanoid';
+import { getParamRegistry, upgradeLegacyParam } from '../util/param-manager-utils';
 
-export const upgradeLegacyParam = () => {
-    let contents = window.localStorage.getItem(LocalStorageKey.PARAM);
-    if (contents === null) {
-        contents = window.localStorage.getItem('rmgParam');
-        window.localStorage.removeItem('rmgParam');
-        window.localStorage.removeItem('rmgParamRedux');
-    }
-
-    if (contents !== null) {
-        const paramId = nanoid();
-        console.log('upgradeLegacyParam():: Found legacy param. Assigning ID:', paramId);
-        window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + paramId, contents);
-        window.localStorage.removeItem(LocalStorageKey.PARAM);
-    }
+const initParamRegistry = (store: RootStore) => {
+    upgradeLegacyParam();
+    const paramRegistry = getParamRegistry();
+    window.localStorage.setItem(LocalStorageKey.PARAM_REGISTRY, JSON.stringify(paramRegistry));
+    store.dispatch(setParamRegistry(paramRegistry));
 };
 
 export const initCanvasScale = (store: RootStore) => {
@@ -77,10 +68,11 @@ export const initCanvasToShow = (store: RootStore) => {
 };
 
 export const initStore = (store: RootStore) => {
-    upgradeLegacyParam();
+    initParamRegistry(store);
     initCanvasScale(store);
     initCanvasToShow(store);
 
+    // listen to canvas scale change
     startRootListening({
         predicate: (action, currentState, previousState) => {
             return currentState.app.canvasScale.toString() !== previousState.app.canvasScale.toString();
@@ -93,6 +85,7 @@ export const initStore = (store: RootStore) => {
         },
     });
 
+    // listen to canvas to show change
     startRootListening({
         predicate: (action, currentState, previousState) => {
             return currentState.app.canvasToShow.toString() !== previousState.app.canvasToShow.toString();
@@ -105,6 +98,7 @@ export const initStore = (store: RootStore) => {
         },
     });
 
+    // listen to current param change - update lastModifiedTime in paramRegistry and update param in localStorage
     startRootListening({
         predicate: (action, currentState, previousState) => {
             return JSON.stringify(currentState.param) !== JSON.stringify(previousState.param);
@@ -112,9 +106,31 @@ export const initStore = (store: RootStore) => {
         effect: (action, listenerApi) => {
             const { currentParamId } = listenerApi.getState().app;
             if (currentParamId) {
-                const param = listenerApi.getState().param;
-                window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + currentParamId, JSON.stringify(param));
+                // write param to localStorage
+                console.log('ListenerMiddleware:: Writing param to localStorage, ID=' + currentParamId);
+                const prevParamStr = window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + currentParamId);
+                const nextParamStr = JSON.stringify(listenerApi.getState().param);
+                window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + currentParamId, nextParamStr);
+
+                // update lostModified in paramRegistry
+                if (prevParamStr !== nextParamStr) {
+                    console.log('ListenerMiddleware:: Updating paramRegistry');
+                    listenerApi.dispatch(updateParamModifiedTime(currentParamId));
+                }
             }
+        },
+    });
+
+    // listen to param registry change
+    startRootListening({
+        predicate: (action, currentState, previousState) => {
+            return JSON.stringify(currentState.app.paramRegistry) !== JSON.stringify(previousState.app.paramRegistry);
+        },
+        effect: (action, listenApi) => {
+            window.localStorage.setItem(
+                LocalStorageKey.PARAM_REGISTRY,
+                JSON.stringify(listenApi.getState().app.paramRegistry)
+            );
         },
     });
 };

@@ -287,20 +287,30 @@ export enum Position {
     RIGHT = 'RIGHT',
 }
 
+export interface ParamConfig {
+    id: string;
+    name?: string;
+    lastModified?: number;
+}
+
 // localStorage keys
 export enum LocalStorageKey {
     CANVAS_TO_SHOW = 'rmg__canvasToShow',
     CANVAS_SCALE = 'rmg__canvasScale',
     PARAM = 'rmg__param',
     PARAM_BY_ID = 'rmg__param:',
+    PARAM_REGISTRY = 'rmg__paramRegistry',
 }
 
 export enum Events {
     APP_LOAD = 'APP_LOAD',
     STYLE_CHANGE = 'STYLE_CHANGE',
 
+    OPEN_PARAM = 'OPEN_PARAM',
+    NEW_PARAM = 'NEW_PARAM',
     UPLOAD_PARAM = 'UPLOAD_PARAM',
     OPEN_TEMPLATE = 'OPEN_TEMPLATE',
+    REMOVE_PARAM = 'REMOVE_PARAM',
 
     ADD_STATION = 'ADD_STATION',
     REMOVE_STATION = 'REMOVE_STATION',

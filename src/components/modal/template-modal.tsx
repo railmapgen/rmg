@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-    Button,
     Flex,
     Modal,
     ModalBody,
@@ -8,13 +7,11 @@ import {
     ModalContent,
     ModalHeader,
     ModalOverlay,
-    SystemStyleObject,
     Tab,
     TabList,
     TabPanel,
     TabPanels,
     Tabs,
-    Text,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { translateText } from '../../i18n/config';
@@ -23,24 +20,7 @@ import { companyConfig, templateList } from '@railmapgen/rmg-templates-resources
 import { startLoading } from '../../redux/app/app-slice';
 import { Events } from '../../constants/constants';
 import rmgRuntime from '@railmapgen/rmg-runtime';
-
-const templateButtonStyle: SystemStyleObject = {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    h: 10,
-    overflow: 'hidden',
-
-    '& span:first-of-type': {
-        maxW: '100%',
-        textOverflow: 'ellipsis',
-    },
-
-    '& span:last-of-type': {
-        fontWeight: 'normal',
-        fontSize: '2xs',
-    },
-};
+import { RmgEnrichedButton } from '@railmapgen/rmg-components';
 
 interface TemplateModalProps {
     isOpen: boolean;
@@ -88,18 +68,14 @@ export default function TemplateModal(props: TemplateModalProps) {
                                 .map(([company, templates]) => (
                                     <TabPanel key={company} as={Flex} flexDirection="column" py={0} px={1}>
                                         {templates.map(template => (
-                                            <Button
+                                            <RmgEnrichedButton
                                                 key={template.filename}
                                                 variant="ghost"
                                                 size="sm"
-                                                sx={templateButtonStyle}
+                                                primaryText={translateText(template.name)}
+                                                secondaryText={t('by') + ': ' + (template.uploadBy ?? 'Unknown')}
                                                 onClick={() => handleSelect(company, template.filename)}
-                                            >
-                                                <span>{translateText(template.name)}</span>
-                                                <Text as="span">
-                                                    {t('by')}: {template.uploadBy ?? 'Unknown'}
-                                                </Text>
-                                            </Button>
+                                            />
                                         ))}
                                     </TabPanel>
                                 ))}
