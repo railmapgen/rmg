@@ -4,7 +4,7 @@ import AppView from './app-view';
 import { useRootDispatch, useRootSelector } from '../../redux';
 import rmgRuntime, { RmgEnv } from '@railmapgen/rmg-runtime';
 import { LanguageCode } from '@railmapgen/rmg-translate';
-import ParamSelectorView from './param-selector-view';
+import ParamSelectorView from '../param-selector-view';
 import { readParam } from '../../redux/app/action';
 import { getParamMap } from '../../util/param-manager-utils';
 import { nanoid } from 'nanoid';

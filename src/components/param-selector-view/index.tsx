@@ -1,24 +1,15 @@
 import React, { useRef, useState } from 'react';
 import { RmgCard, RmgLoader, RmgPage } from '@railmapgen/rmg-components';
 import { useSearchParams } from 'react-router-dom';
-import { getParamMap } from '../../util/param-manager-utils';
-import {
-    Button,
-    ButtonGroup,
-    Container,
-    Flex,
-    Heading,
-    HStack,
-    IconButton,
-    SystemStyleObject,
-    useOutsideClick,
-    VStack,
-} from '@chakra-ui/react';
+import { Button, Container, Heading, HStack, SystemStyleObject, useOutsideClick, VStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdDelete, MdOpenInBrowser } from 'react-icons/md';
+import { MdAdd, MdOpenInBrowser } from 'react-icons/md';
 import { nanoid } from 'nanoid';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { Events, LocalStorageKey } from '../../constants/constants';
+import { useRootDispatch } from '../../redux';
+import { removeParam } from '../../redux/app/app-slice';
+import ParamSelector from '../param-selector-view/param-selector';
 
 const paramSelectorCardStyle: SystemStyleObject = {
     flexDirection: 'column',
@@ -31,25 +22,6 @@ const paramSelectorCardStyle: SystemStyleObject = {
     '& > div': {
         m: 2,
         flexWrap: 'wrap',
-
-        '& > div:first-of-type': {
-            flex: 1,
-            flexDirection: 'column',
-            h: 200,
-            overflowX: 'hidden',
-            overflowY: 'auto',
-            borderRadius: 'md',
-            borderWidth: 2,
-
-            '& .chakra-button__group': {
-                flexShrink: 0,
-
-                '& button:first-of-type': {
-                    flexGrow: 1,
-                    justifyContent: 'flex-start',
-                },
-            },
-        },
 
         '& > div:last-of-type': {
             alignSelf: 'flex-end',
@@ -67,12 +39,11 @@ export default function ParamSelectorView() {
     const [searchParams, setSearchParams] = useSearchParams();
     const urlParamId = searchParams.get('project');
 
+    const dispatch = useRootDispatch();
     const [selectedParam, setSelectedParam] = useState<string>();
     const selectorRef = useRef<HTMLDivElement>(null);
 
     useOutsideClick({ ref: selectorRef, handler: () => setSelectedParam(undefined) });
-
-    const paramMap = getParamMap();
 
     const handleNew = () => {
         setSearchParams({ project: nanoid() });
@@ -87,11 +58,10 @@ export default function ParamSelectorView() {
     };
 
     const handleDelete = (id: string) => {
+        setSelectedParam(undefined);
+        dispatch(removeParam(id));
         window.localStorage.removeItem(LocalStorageKey.PARAM_BY_ID + id);
         rmgRuntime.event(Events.REMOVE_PARAM, {});
-
-        // FIXME: rerender component to refresh param list
-        setSelectedParam(undefined);
     };
 
     return (
@@ -104,26 +74,11 @@ export default function ParamSelectorView() {
                     </Heading>
 
                     <HStack ref={selectorRef}>
-                        <Flex>
-                            {Object.keys(paramMap).map(id => (
-                                <ButtonGroup
-                                    key={id}
-                                    size="sm"
-                                    isAttached
-                                    colorScheme={selectedParam === id ? 'primary' : undefined}
-                                    variant={selectedParam === id ? 'solid' : 'ghost'}
-                                >
-                                    <Button onClick={() => setSelectedParam(id)}>
-                                        {t('Project ID')}: {id}
-                                    </Button>
-                                    <IconButton
-                                        aria-label="Remove this project"
-                                        icon={<MdDelete />}
-                                        onClick={() => handleDelete(id)}
-                                    />
-                                </ButtonGroup>
-                            ))}
-                        </Flex>
+                        <ParamSelector
+                            selectedParam={selectedParam}
+                            onParamSelect={setSelectedParam}
+                            onParamRemove={handleDelete}
+                        />
 
                         <VStack>
                             <Button leftIcon={<MdAdd />} onClick={handleNew}>

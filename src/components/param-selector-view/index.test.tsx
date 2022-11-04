@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '../../test-utils';
-import ParamSelectorView from './param-selector-view';
+import ParamSelectorView from './index';
 import rootReducer from '../../redux';
 import { createMockAppStore, createParamInLocalStorage } from '../../setupTests';
 import { fireEvent, screen } from '@testing-library/react';
@@ -9,19 +9,21 @@ const realStore = rootReducer.getState();
 const mockStore = createMockAppStore({ ...realStore });
 
 describe('ParamSelectorView', () => {
-    it('Can render view with list of projects as expected', () => {
+    it('Can disable open button if no project is selected', () => {
         createParamInLocalStorage('test-1');
         createParamInLocalStorage('test-2');
 
         render(<ParamSelectorView />, { store: mockStore, route: '/' });
 
         // display 2 projects for selecting
-        expect(screen.getByRole('button', { name: 'Project ID: test-1' })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'Project ID: test-2' })).toBeInTheDocument();
+        expect(screen.getByText(/test-1/)).toBeInTheDocument();
+        expect(screen.getByText(/test-2/)).toBeInTheDocument();
 
-        fireEvent.click(screen.getByRole('button', { name: 'Project ID: test-2' }));
-        fireEvent.click(screen.getByRole('button', { name: 'Open project' }));
+        // open button is disabled
+        expect(screen.getByRole('button', { name: 'Open project' })).toBeDisabled();
 
-        // TODO: assert open project with id = test-2
+        // select test-2 and open
+        fireEvent.click(screen.getByText(/test-2/));
+        expect(screen.getByRole('button', { name: 'Open project' })).toBeEnabled();
     });
 });

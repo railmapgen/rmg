@@ -1,10 +1,11 @@
-import { CanvasType, RmgStyle, SidePanelMode } from '../../constants/constants';
+import { CanvasType, ParamConfig, RmgStyle, SidePanelMode } from '../../constants/constants';
 import { AlertStatus } from '@chakra-ui/react';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AppState {
     rmgStyle: RmgStyle;
     currentParamId?: string;
+    paramRegistry: ParamConfig[];
     canvasScale: number;
     canvasToShow: CanvasType[];
     sidePanelMode: SidePanelMode;
@@ -19,6 +20,7 @@ interface AppState {
 const initialState: AppState = {
     rmgStyle: RmgStyle.MTR,
     currentParamId: undefined,
+    paramRegistry: [],
     canvasScale: 1,
     canvasToShow: Object.values(CanvasType),
     sidePanelMode: SidePanelMode.CLOSE,
@@ -36,6 +38,31 @@ const appSlice = createSlice({
     reducers: {
         setCurrentParamId: (state, action: PayloadAction<string>) => {
             state.currentParamId = action.payload;
+        },
+
+        setParamRegistry: (state, action: PayloadAction<ParamConfig[]>) => {
+            state.paramRegistry = action.payload;
+        },
+
+        updateParamModifiedTime: (state, action: PayloadAction<string>) => {
+            if (state.paramRegistry.some(config => config.id === action.payload)) {
+                state.paramRegistry = state.paramRegistry.map(config => {
+                    if (config.id === action.payload) {
+                        return { ...config, lastModified: new Date().getTime() };
+                    } else {
+                        return config;
+                    }
+                });
+            } else {
+                state.paramRegistry = [
+                    ...state.paramRegistry,
+                    { id: action.payload, lastModified: new Date().getTime() },
+                ];
+            }
+        },
+
+        removeParam: (state, action: PayloadAction<string>) => {
+            state.paramRegistry = state.paramRegistry.filter(config => config.id !== action.payload);
         },
 
         setCanvasScale: (state, action: PayloadAction<number>) => {
@@ -99,6 +126,9 @@ const appSlice = createSlice({
 
 export const {
     setCurrentParamId,
+    setParamRegistry,
+    updateParamModifiedTime,
+    removeParam,
     setCanvasScale,
     setCanvasToShow,
     setSidePanelMode,
