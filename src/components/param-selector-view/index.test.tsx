@@ -4,7 +4,6 @@ import ParamSelectorView from './index';
 import rootReducer from '../../redux';
 import { createMockAppStore, createParamInLocalStorage } from '../../setupTests';
 import { fireEvent, screen } from '@testing-library/react';
-import { getParamRegistry } from '../../util/param-manager-utils';
 
 const realStore = rootReducer.getState();
 
@@ -12,8 +11,7 @@ describe('ParamSelectorView', () => {
     it('Can disable open button if no project is selected', () => {
         createParamInLocalStorage('test-1');
         createParamInLocalStorage('test-2');
-        const paramRegistry = getParamRegistry();
-        const mockStore = createMockAppStore({ ...realStore, app: { ...realStore.app, paramRegistry } });
+        const mockStore = createMockAppStore({ ...realStore, app: { ...realStore.app } });
 
         render(<ParamSelectorView />, { store: mockStore, route: '/' });
 

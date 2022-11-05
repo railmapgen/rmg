@@ -1,14 +1,8 @@
 import { CanvasType, LocalStorageKey } from '../constants/constants';
-import { setCanvasScale, setCanvasToShow, setParamRegistry, updateParamModifiedTime } from './app/app-slice';
-import { RootStore, startRootListening } from './index';
-import { getParamRegistry, upgradeLegacyParam } from '../util/param-manager-utils';
-
-const initParamRegistry = (store: RootStore) => {
-    upgradeLegacyParam();
-    const paramRegistry = getParamRegistry();
-    window.localStorage.setItem(LocalStorageKey.PARAM_REGISTRY, JSON.stringify(paramRegistry));
-    store.dispatch(setParamRegistry(paramRegistry));
-};
+import { setCanvasScale, setCanvasToShow, updateParamModifiedTime } from './app/app-slice';
+import { RootDispatch, RootState, RootStore, startRootListening } from './index';
+import { upgradeLegacyParam } from '../util/param-manager-utils';
+import { AnyAction, ListenerEffect } from '@reduxjs/toolkit';
 
 export const initCanvasScale = (store: RootStore) => {
     try {
@@ -68,7 +62,7 @@ export const initCanvasToShow = (store: RootStore) => {
 };
 
 export const initStore = (store: RootStore) => {
-    initParamRegistry(store);
+    upgradeLegacyParam();
     initCanvasScale(store);
     initCanvasToShow(store);
 
@@ -103,34 +97,34 @@ export const initStore = (store: RootStore) => {
         predicate: (action, currentState, previousState) => {
             return JSON.stringify(currentState.param) !== JSON.stringify(previousState.param);
         },
-        effect: (action, listenerApi) => {
-            const { currentParamId } = listenerApi.getState().app;
-            if (currentParamId) {
-                // write param to localStorage
-                console.log('ListenerMiddleware:: Writing param to localStorage, ID=' + currentParamId);
-                const prevParamStr = window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + currentParamId);
-                const nextParamStr = JSON.stringify(listenerApi.getState().param);
-                window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + currentParamId, nextParamStr);
-
-                // update lostModified in paramRegistry
-                if (prevParamStr !== nextParamStr) {
-                    console.log('ListenerMiddleware:: Updating paramRegistry');
-                    listenerApi.dispatch(updateParamModifiedTime(currentParamId));
-                }
-            }
-        },
+        effect: paramUpdateTrigger,
     });
+};
 
-    // listen to param registry change
-    startRootListening({
-        predicate: (action, currentState, previousState) => {
-            return JSON.stringify(currentState.app.paramRegistry) !== JSON.stringify(previousState.app.paramRegistry);
-        },
-        effect: (action, listenApi) => {
+export const paramUpdateTrigger: ListenerEffect<AnyAction, RootState, RootDispatch> = (action, listenerApi) => {
+    const { id, ...others } = listenerApi.getState().app.paramConfig ?? {};
+    if (id) {
+        // write param to localStorage
+        const prevParamStr = window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + id);
+        const nextParamStr = JSON.stringify(listenerApi.getState().param);
+
+        // update lostModified in paramConfig only if param localStorage value is actually updated
+        if (prevParamStr !== nextParamStr) {
+            console.log('ListenerMiddleware:: Writing param and paramConfig to localStorage, ID=' + id);
+
+            window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + id, nextParamStr);
+
+            const now = Date.now();
+            listenerApi.dispatch(updateParamModifiedTime(now));
             window.localStorage.setItem(
-                LocalStorageKey.PARAM_REGISTRY,
-                JSON.stringify(listenApi.getState().app.paramRegistry)
+                LocalStorageKey.PARAM_CONFIG_BY_ID + id,
+                JSON.stringify({
+                    ...others,
+                    lastModified: now,
+                })
             );
-        },
-    });
+        } else {
+            console.log('ListenerMiddleware:: Do not write to localStorage as no changes in param, ID=' + id);
+        }
+    }
 };

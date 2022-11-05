@@ -4,8 +4,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AppState {
     rmgStyle: RmgStyle;
-    currentParamId?: string;
-    paramRegistry: ParamConfig[];
+
+    /** keep only 1 param config in redux store to
+     *  avoid semantic error in multi-instance mode
+     */
+    paramConfig?: ParamConfig;
     canvasScale: number;
     canvasToShow: CanvasType[];
     sidePanelMode: SidePanelMode;
@@ -19,8 +22,7 @@ interface AppState {
 
 const initialState: AppState = {
     rmgStyle: RmgStyle.MTR,
-    currentParamId: undefined,
-    paramRegistry: [],
+    paramConfig: undefined,
     canvasScale: 1,
     canvasToShow: Object.values(CanvasType),
     sidePanelMode: SidePanelMode.CLOSE,
@@ -36,33 +38,15 @@ const appSlice = createSlice({
     name: 'app',
     initialState,
     reducers: {
-        setCurrentParamId: (state, action: PayloadAction<string>) => {
-            state.currentParamId = action.payload;
+        setParamConfig: (state, action: PayloadAction<ParamConfig>) => {
+            state.paramConfig = action.payload;
         },
 
-        setParamRegistry: (state, action: PayloadAction<ParamConfig[]>) => {
-            state.paramRegistry = action.payload;
-        },
-
-        updateParamModifiedTime: (state, action: PayloadAction<string>) => {
-            if (state.paramRegistry.some(config => config.id === action.payload)) {
-                state.paramRegistry = state.paramRegistry.map(config => {
-                    if (config.id === action.payload) {
-                        return { ...config, lastModified: new Date().getTime() };
-                    } else {
-                        return config;
-                    }
-                });
-            } else {
-                state.paramRegistry = [
-                    ...state.paramRegistry,
-                    { id: action.payload, lastModified: new Date().getTime() },
-                ];
+        // to be called in ListenerMiddleware only
+        updateParamModifiedTime: (state, action: PayloadAction<number>) => {
+            if (state.paramConfig) {
+                state.paramConfig.lastModified = action.payload;
             }
-        },
-
-        removeParam: (state, action: PayloadAction<string>) => {
-            state.paramRegistry = state.paramRegistry.filter(config => config.id !== action.payload);
         },
 
         setCanvasScale: (state, action: PayloadAction<number>) => {
@@ -125,10 +109,8 @@ const appSlice = createSlice({
 });
 
 export const {
-    setCurrentParamId,
-    setParamRegistry,
+    setParamConfig,
     updateParamModifiedTime,
-    removeParam,
     setCanvasScale,
     setCanvasToShow,
     setSidePanelMode,

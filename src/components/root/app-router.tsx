@@ -12,7 +12,7 @@ import { nanoid } from 'nanoid';
 export default function AppRouter() {
     const dispatch = useRootDispatch();
 
-    const { currentParamId } = useRootSelector(state => state.app);
+    const { paramConfig } = useRootSelector(state => state.app);
     const [searchParams, setSearchParams] = useSearchParams();
     const paramId = searchParams.get('project');
 
@@ -21,7 +21,7 @@ export default function AppRouter() {
     useEffect(() => {
         console.log('searchParam: project=' + paramId);
         if (paramId) {
-            if (paramId === currentParamId) {
+            if (paramId === paramConfig?.id) {
                 console.log('AppRouter:: Store param ID matches URL param ID. Rendering app view...');
                 setIsLoaded(true);
             } else {

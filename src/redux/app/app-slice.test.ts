@@ -1,5 +1,5 @@
 import rootReducer from '../index';
-import appReducer, { closeGlobalAlert, setGlobalAlert, updateParamModifiedTime } from './app-slice';
+import appReducer, { closeGlobalAlert, setGlobalAlert } from './app-slice';
 import { createMockAppStore } from '../../setupTests';
 
 const realStore = rootReducer.getState();
@@ -55,28 +55,6 @@ describe('AppSlice', () => {
         it('Can close alert as expected', () => {
             const nextState = appReducer(initialState, closeGlobalAlert('info'));
             expect(nextState.globalAlerts).not.toHaveProperty('info');
-        });
-    });
-
-    describe('AppSlice - param registry', () => {
-        it('Can update last modified time for existing param as expected', () => {
-            const initialState = {
-                ...realStore.app,
-                paramRegistry: [{ id: 'test-id' }],
-            };
-            const nextState = appReducer(initialState, updateParamModifiedTime('test-id'));
-
-            expect(nextState.paramRegistry).toContainEqual({ id: 'test-id', lastModified: expect.any(Number) });
-        });
-
-        it('Can update last modified time for non-existing param as expected', () => {
-            const initialState = {
-                ...realStore.app,
-                paramRegistry: [],
-            };
-            const nextState = appReducer(initialState, updateParamModifiedTime('test-id'));
-
-            expect(nextState.paramRegistry).toContainEqual({ id: 'test-id', lastModified: expect.any(Number) });
         });
     });
 });

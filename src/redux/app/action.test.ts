@@ -31,7 +31,7 @@ describe('AppAction', () => {
             mockStore.dispatch(readParam('test-id', LanguageCode.English));
 
             const actions = mockStore.getActions();
-            expect(actions).toContainEqual({ type: 'app/setCurrentParamId', payload: 'test-id' });
+            expect(actions).toContainEqual({ type: 'app/setParamConfig', payload: { id: 'test-id' } });
             expect(actions).toContainEqual({
                 type: 'SET_FULL_PARAM',
                 fullParam: expect.objectContaining({ line_num: 'test-id' }),
@@ -43,7 +43,7 @@ describe('AppAction', () => {
             mockStore.dispatch(readParam('test-id', LanguageCode.English));
 
             const actions = mockStore.getActions();
-            expect(actions).toContainEqual({ type: 'app/setCurrentParamId', payload: 'test-id' });
+            expect(actions).toContainEqual({ type: 'app/setParamConfig', payload: { id: 'test-id' } });
             expect(actions).toContainEqual({
                 type: 'SET_FULL_PARAM',
                 fullParam: expect.not.objectContaining({ line_num: 'test-id' }),
@@ -54,7 +54,7 @@ describe('AppAction', () => {
             mockStore.dispatch(readParam('test-id', LanguageCode.English));
 
             const actions = mockStore.getActions();
-            expect(actions).toContainEqual({ type: 'app/setCurrentParamId', payload: 'test-id' });
+            expect(actions).toContainEqual({ type: 'app/setParamConfig', payload: { id: 'test-id' } });
             expect(actions).toContainEqual({
                 type: 'SET_FULL_PARAM',
                 fullParam: expect.not.objectContaining({ line_num: 'test-id' }),

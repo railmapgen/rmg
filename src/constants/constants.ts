@@ -300,6 +300,7 @@ export enum LocalStorageKey {
     PARAM = 'rmg__param',
     PARAM_BY_ID = 'rmg__param:',
     PARAM_REGISTRY = 'rmg__paramRegistry',
+    PARAM_CONFIG_BY_ID = 'rmg__paramConfig:',
 }
 
 export enum Events {
