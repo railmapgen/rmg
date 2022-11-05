@@ -4,9 +4,10 @@ import { getRelativeTime } from '../../util/utils';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { RmgEnrichedButton } from '@railmapgen/rmg-components';
-import { getParamRegistry } from '../../util/param-manager-utils';
+import { ParamConfig } from '../../constants/constants';
 
 interface ParamSelectorProps {
+    paramRegistry: ParamConfig[];
     selectedParam?: string;
     onParamSelect: (id: string) => void;
     onParamRemove: (id: string) => void;
@@ -32,11 +33,8 @@ const styles: SystemStyleObject = {
 };
 
 export default function ParamSelector(props: ParamSelectorProps) {
-    const { selectedParam, onParamSelect, onParamRemove } = props;
+    const { paramRegistry, selectedParam, onParamSelect, onParamRemove } = props;
     const { t } = useTranslation();
-
-    // const { paramRegistry } = useRootSelector(state => state.app);
-    const paramRegistry = getParamRegistry();
 
     return (
         <Flex sx={styles}>

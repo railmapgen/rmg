@@ -4,6 +4,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AppState {
     rmgStyle: RmgStyle;
+
+    /** keep only 1 param config in redux store to
+     *  avoid semantic error in multi-instance mode
+     */
     paramConfig?: ParamConfig;
     canvasScale: number;
     canvasToShow: CanvasType[];
@@ -38,9 +42,10 @@ const appSlice = createSlice({
             state.paramConfig = action.payload;
         },
 
-        updateParamModifiedTime: state => {
+        // to be called in ListenerMiddleware only
+        updateParamModifiedTime: (state, action: PayloadAction<number>) => {
             if (state.paramConfig) {
-                state.paramConfig.lastModified = Date.now();
+                state.paramConfig.lastModified = action.payload;
             }
         },
 

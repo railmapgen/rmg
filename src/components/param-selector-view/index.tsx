@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { RmgCard, RmgLoader, RmgPage } from '@railmapgen/rmg-components';
 import { useSearchParams } from 'react-router-dom';
 import { Button, Container, Heading, HStack, SystemStyleObject, useOutsideClick, VStack } from '@chakra-ui/react';
@@ -6,8 +6,9 @@ import { useTranslation } from 'react-i18next';
 import { MdAdd, MdOpenInBrowser } from 'react-icons/md';
 import { nanoid } from 'nanoid';
 import rmgRuntime from '@railmapgen/rmg-runtime';
-import { Events, LocalStorageKey } from '../../constants/constants';
+import { Events, LocalStorageKey, ParamConfig } from '../../constants/constants';
 import ParamSelector from '../param-selector-view/param-selector';
+import { getParamRegistry } from '../../util/param-manager-utils';
 
 const paramSelectorCardStyle: SystemStyleObject = {
     flexDirection: 'column',
@@ -37,8 +38,14 @@ export default function ParamSelectorView() {
     const [searchParams, setSearchParams] = useSearchParams();
     const urlParamId = searchParams.get('project');
 
+    const [paramRegistry, setParamRegistry] = useState<ParamConfig[]>([]);
     const [selectedParam, setSelectedParam] = useState<string>();
     const selectorRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        // init paramRegistry state once
+        setParamRegistry(getParamRegistry());
+    }, []);
 
     useOutsideClick({ ref: selectorRef, handler: () => setSelectedParam(undefined) });
 
@@ -55,9 +62,12 @@ export default function ParamSelectorView() {
     };
 
     const handleDelete = (id: string) => {
-        setSelectedParam(undefined);
         window.localStorage.removeItem(LocalStorageKey.PARAM_BY_ID + id);
         window.localStorage.removeItem(LocalStorageKey.PARAM_CONFIG_BY_ID + id);
+
+        setSelectedParam(undefined);
+        setParamRegistry(getParamRegistry());
+
         rmgRuntime.event(Events.REMOVE_PARAM, {});
     };
 
@@ -72,6 +82,7 @@ export default function ParamSelectorView() {
 
                     <HStack ref={selectorRef}>
                         <ParamSelector
+                            paramRegistry={paramRegistry}
                             selectedParam={selectedParam}
                             onParamSelect={setSelectedParam}
                             onParamRemove={handleDelete}
