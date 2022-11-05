@@ -1,14 +1,7 @@
 import { CanvasType, LocalStorageKey } from '../constants/constants';
-import { setCanvasScale, setCanvasToShow, setParamRegistry, updateParamModifiedTime } from './app/app-slice';
+import { setCanvasScale, setCanvasToShow, updateParamModifiedTime } from './app/app-slice';
 import { RootStore, startRootListening } from './index';
-import { getParamRegistry, upgradeLegacyParam } from '../util/param-manager-utils';
-
-const initParamRegistry = (store: RootStore) => {
-    upgradeLegacyParam();
-    const paramRegistry = getParamRegistry();
-    window.localStorage.setItem(LocalStorageKey.PARAM_REGISTRY, JSON.stringify(paramRegistry));
-    store.dispatch(setParamRegistry(paramRegistry));
-};
+import { upgradeLegacyParam } from '../util/param-manager-utils';
 
 export const initCanvasScale = (store: RootStore) => {
     try {
@@ -68,7 +61,7 @@ export const initCanvasToShow = (store: RootStore) => {
 };
 
 export const initStore = (store: RootStore) => {
-    initParamRegistry(store);
+    upgradeLegacyParam();
     initCanvasScale(store);
     initCanvasToShow(store);
 
@@ -104,18 +97,18 @@ export const initStore = (store: RootStore) => {
             return JSON.stringify(currentState.param) !== JSON.stringify(previousState.param);
         },
         effect: (action, listenerApi) => {
-            const { currentParamId } = listenerApi.getState().app;
-            if (currentParamId) {
+            const { id } = listenerApi.getState().app.paramConfig ?? {};
+            if (id) {
                 // write param to localStorage
-                console.log('ListenerMiddleware:: Writing param to localStorage, ID=' + currentParamId);
-                const prevParamStr = window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + currentParamId);
+                console.log('ListenerMiddleware:: Writing param to localStorage, ID=' + id);
+                const prevParamStr = window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + id);
                 const nextParamStr = JSON.stringify(listenerApi.getState().param);
-                window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + currentParamId, nextParamStr);
+                window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + id, nextParamStr);
 
-                // update lostModified in paramRegistry
+                // update lostModified in paramConfig
                 if (prevParamStr !== nextParamStr) {
                     console.log('ListenerMiddleware:: Updating paramRegistry');
-                    listenerApi.dispatch(updateParamModifiedTime(currentParamId));
+                    listenerApi.dispatch(updateParamModifiedTime());
                 }
             }
         },
@@ -124,13 +117,13 @@ export const initStore = (store: RootStore) => {
     // listen to param registry change
     startRootListening({
         predicate: (action, currentState, previousState) => {
-            return JSON.stringify(currentState.app.paramRegistry) !== JSON.stringify(previousState.app.paramRegistry);
+            return JSON.stringify(currentState.app.paramConfig) !== JSON.stringify(previousState.app.paramConfig);
         },
         effect: (action, listenApi) => {
-            window.localStorage.setItem(
-                LocalStorageKey.PARAM_REGISTRY,
-                JSON.stringify(listenApi.getState().app.paramRegistry)
-            );
+            const { id, ...others } = listenApi.getState().app.paramConfig ?? {};
+            if (id) {
+                window.localStorage.setItem(LocalStorageKey.PARAM_CONFIG_BY_ID + id, JSON.stringify(others));
+            }
         },
     });
 };

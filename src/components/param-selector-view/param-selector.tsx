@@ -1,10 +1,10 @@
 import React from 'react';
-import { useRootSelector } from '../../redux';
 import { ButtonGroup, Flex, IconButton, SystemStyleObject } from '@chakra-ui/react';
 import { getRelativeTime } from '../../util/utils';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { RmgEnrichedButton } from '@railmapgen/rmg-components';
+import { getParamRegistry } from '../../util/param-manager-utils';
 
 interface ParamSelectorProps {
     selectedParam?: string;
@@ -35,7 +35,8 @@ export default function ParamSelector(props: ParamSelectorProps) {
     const { selectedParam, onParamSelect, onParamRemove } = props;
     const { t } = useTranslation();
 
-    const { paramRegistry } = useRootSelector(state => state.app);
+    // const { paramRegistry } = useRootSelector(state => state.app);
+    const paramRegistry = getParamRegistry();
 
     return (
         <Flex sx={styles}>

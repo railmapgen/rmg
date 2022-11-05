@@ -7,8 +7,6 @@ import { MdAdd, MdOpenInBrowser } from 'react-icons/md';
 import { nanoid } from 'nanoid';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { Events, LocalStorageKey } from '../../constants/constants';
-import { useRootDispatch } from '../../redux';
-import { removeParam } from '../../redux/app/app-slice';
 import ParamSelector from '../param-selector-view/param-selector';
 
 const paramSelectorCardStyle: SystemStyleObject = {
@@ -39,7 +37,6 @@ export default function ParamSelectorView() {
     const [searchParams, setSearchParams] = useSearchParams();
     const urlParamId = searchParams.get('project');
 
-    const dispatch = useRootDispatch();
     const [selectedParam, setSelectedParam] = useState<string>();
     const selectorRef = useRef<HTMLDivElement>(null);
 
@@ -59,8 +56,8 @@ export default function ParamSelectorView() {
 
     const handleDelete = (id: string) => {
         setSelectedParam(undefined);
-        dispatch(removeParam(id));
         window.localStorage.removeItem(LocalStorageKey.PARAM_BY_ID + id);
+        window.localStorage.removeItem(LocalStorageKey.PARAM_CONFIG_BY_ID + id);
         rmgRuntime.event(Events.REMOVE_PARAM, {});
     };
 

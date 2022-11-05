@@ -51,7 +51,7 @@ describe('AppRouter', () => {
             render(<AppRouter />, { store: mockStore, route: '/?project=test-id' });
 
             const actions = mockStore.getActions();
-            expect(actions).toContainEqual({ type: 'app/setCurrentParamId', payload: 'test-id' });
+            expect(actions).toContainEqual({ type: 'app/setParamConfig', payload: { id: 'test-id' } });
             expect(actions).toContainEqual(expect.objectContaining({ type: 'SET_FULL_PARAM' }));
 
             expect(screen.getByRole('presentation', { name: 'Mock App View' })).toBeInTheDocument();
@@ -67,7 +67,7 @@ describe('AppRouter', () => {
         it('Can render app view if param is loaded', async () => {
             const mockStore = createMockAppStore({
                 ...realStore,
-                app: { ...realStore.app, currentParamId: 'test-id' },
+                app: { ...realStore.app, paramConfig: { id: 'test-id' } },
             });
             render(<AppRouter />, { store: mockStore, route: '/?project=test-id' });
 
@@ -93,7 +93,7 @@ describe('AppRouter', () => {
 
             // update redux store
             const actions = mockStore.getActions();
-            expect(actions).toContainEqual(expect.objectContaining({ type: 'app/setCurrentParamId' }));
+            expect(actions).toContainEqual(expect.objectContaining({ type: 'app/setParamConfig' }));
             expect(actions).toContainEqual(expect.objectContaining({ type: 'SET_FULL_PARAM' }));
 
             expect(screen.getByRole('presentation', { name: 'Mock App View' })).toBeInTheDocument();
@@ -105,7 +105,7 @@ describe('AppRouter', () => {
 
             // update redux store
             const actions = mockStore.getActions();
-            expect(actions).toContainEqual({ type: 'app/setCurrentParamId', payload: 'test-id' });
+            expect(actions).toContainEqual({ type: 'app/setParamConfig', payload: { id: 'test-id' } });
             expect(actions).toContainEqual({
                 type: 'SET_FULL_PARAM',
                 fullParam: expect.objectContaining({ line_num: 'test-id' }),
@@ -119,7 +119,7 @@ describe('AppRouter', () => {
             render(<AppRouter />, { store: mockStore, route: '/?project=test-id' });
 
             const actions = mockStore.getActions();
-            expect(actions).toContainEqual({ type: 'app/setCurrentParamId', payload: 'test-id' });
+            expect(actions).toContainEqual({ type: 'app/setParamConfig', payload: { id: 'test-id' } });
             expect(actions).toContainEqual(expect.objectContaining({ type: 'SET_FULL_PARAM' }));
 
             expect(screen.getByRole('presentation', { name: 'Mock App View' })).toBeInTheDocument();
@@ -131,7 +131,7 @@ describe('AppRouter', () => {
 
             // update redux store
             const actions = mockStore.getActions();
-            expect(actions).toContainEqual({ type: 'app/setCurrentParamId', payload: 'test-id-1' });
+            expect(actions).toContainEqual({ type: 'app/setParamConfig', payload: { id: 'test-id-1' } });
             expect(actions).toContainEqual({
                 type: 'SET_FULL_PARAM',
                 fullParam: expect.objectContaining({ line_num: 'test-id-1' }),
@@ -143,7 +143,7 @@ describe('AppRouter', () => {
         it('Can render app view if param is loaded', async () => {
             const mockStore = createMockAppStore({
                 ...realStore,
-                app: { ...realStore.app, currentParamId: 'test-id' },
+                app: { ...realStore.app, paramConfig: { id: 'test-id' } },
             });
             render(<AppRouter />, { store: mockStore, route: '/?project=test-id' });
 

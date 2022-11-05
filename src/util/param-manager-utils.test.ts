@@ -13,17 +13,14 @@ describe('ParamMgrUtils', () => {
             expect(result).toHaveLength(0);
         });
 
-        it('Can reset param registry if registry in localStorage is malformat', () => {
-            window.localStorage.setItem(LocalStorageKey.PARAM_REGISTRY, JSON.stringify({ x: 1 }));
-            const result = loadParamRegistry();
-            expect(result).toHaveLength(0);
-        });
-
         it('Can load param registry from localStorage as expected', () => {
-            window.localStorage.setItem(LocalStorageKey.PARAM_REGISTRY, JSON.stringify([{ id: 'test-id' }]));
+            window.localStorage.setItem(
+                LocalStorageKey.PARAM_CONFIG_BY_ID + 'test-id',
+                JSON.stringify({ lastModified: Date.now() })
+            );
             const result = loadParamRegistry();
             expect(result).toHaveLength(1);
-            expect(result).toContainEqual(expect.objectContaining({ id: 'test-id' }));
+            expect(result).toContainEqual({ id: 'test-id', lastModified: expect.any(Number) });
         });
     });
 
@@ -79,8 +76,12 @@ describe('ParamMgrUtils', () => {
             createParamInLocalStorage('test-01');
             createParamInLocalStorage('test-03');
             window.localStorage.setItem(
-                LocalStorageKey.PARAM_REGISTRY,
-                JSON.stringify([{ id: 'test-01' }, { id: 'test-02' }])
+                LocalStorageKey.PARAM_CONFIG_BY_ID + 'test-01',
+                JSON.stringify({ lastModified: Date.now() })
+            );
+            window.localStorage.setItem(
+                LocalStorageKey.PARAM_CONFIG_BY_ID + 'test-02',
+                JSON.stringify({ lastModified: Date.now() })
             );
 
             const result = getParamRegistry();

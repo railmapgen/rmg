@@ -23,26 +23,29 @@ export const getParamMap = (): Record<string, string> => {
 };
 
 export const loadParamRegistry = (): ParamConfig[] => {
-    const paramRegistryStr = window.localStorage.getItem(LocalStorageKey.PARAM_REGISTRY);
-    if (paramRegistryStr !== null) {
-        try {
-            const paramRegistry = JSON.parse(paramRegistryStr);
-            if (Array.isArray(paramRegistry)) {
-                console.log(
-                    'loadParamRegistry():: Read param registry from localStorage. Size=' + paramRegistry.length
-                );
-                return paramRegistry;
+    const registry: ParamConfig[] = [];
+    iterateLocalStorage(
+        key => key.startsWith(LocalStorageKey.PARAM_CONFIG_BY_ID),
+        (key, value) => {
+            const id = key.slice(LocalStorageKey.PARAM_CONFIG_BY_ID.length);
+            if (value) {
+                try {
+                    const config = JSON.parse(value);
+                    registry.push({ ...config, id });
+                } catch (err) {
+                    registry.push({ id });
+                }
             } else {
-                throw new Error('Invalid format of param registry');
+                registry.push({ id });
             }
-        } catch (err) {
-            console.warn('loadParamRegistry():: Failed to parse param registry. Resetting to empty list...', err);
-            return [];
         }
-    } else {
-        console.log('loadParamRegistry():: Param registry not found in localStorage. Resetting to empty list...');
-        return [];
-    }
+    );
+
+    console.log(
+        'loadParamRegistry():: Found param config in localStorage',
+        registry.map(config => config.id)
+    );
+    return registry;
 };
 
 export const upgradeLegacyParam = () => {
@@ -66,10 +69,9 @@ export const getParamRegistry = (): ParamConfig[] => {
 
     // sync paramRegistry with localStorage items
     const actualParamRegistry: ParamConfig[] = [];
-    let count = 0;
-    while (count < window.localStorage.length) {
-        const key = window.localStorage.key(count);
-        if (key?.startsWith(LocalStorageKey.PARAM_BY_ID)) {
+    iterateLocalStorage(
+        key => key.startsWith(LocalStorageKey.PARAM_BY_ID),
+        key => {
             const paramId = key.slice(LocalStorageKey.PARAM_BY_ID.length);
 
             const loadedConfig = loadedParamRegistry.find(config => config.id === paramId);
@@ -79,8 +81,25 @@ export const getParamRegistry = (): ParamConfig[] => {
                 actualParamRegistry.push({ id: paramId });
             }
         }
+    );
+
+    console.log(
+        'getParamRegistry():: Actual param found in localStorage',
+        actualParamRegistry.map(config => config.id)
+    );
+    return actualParamRegistry;
+};
+
+const iterateLocalStorage = (
+    predicate: (key: string) => boolean,
+    callback: (key: string, value: string | null) => void
+): void => {
+    let count = 0;
+    while (count < window.localStorage.length) {
+        const key = window.localStorage.key(count);
+        if (key !== null && predicate(key)) {
+            callback(key, window.localStorage.getItem(key));
+        }
         count++;
     }
-
-    return actualParamRegistry;
 };
