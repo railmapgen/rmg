@@ -65,9 +65,10 @@ export const upgradeLegacyParam = () => {
 };
 
 export const getParamRegistry = (): ParamConfig[] => {
+    // load all paramConfig from localStorage
     const loadedParamRegistry = loadParamRegistry();
 
-    // sync paramRegistry with localStorage items
+    // sync paramRegistry with actual localStorage param items
     const actualParamRegistry: ParamConfig[] = [];
     iterateLocalStorage(
         key => key.startsWith(LocalStorageKey.PARAM_BY_ID),
@@ -82,11 +83,16 @@ export const getParamRegistry = (): ParamConfig[] => {
             }
         }
     );
-
     console.log(
         'getParamRegistry():: Actual param found in localStorage',
         actualParamRegistry.map(config => config.id)
     );
+
+    // remove invalid paramConfig from localStorage
+    loadedParamRegistry
+        .filter(config => actualParamRegistry.every(c => c.id !== config.id))
+        .forEach(config => window.localStorage.removeItem(LocalStorageKey.PARAM_CONFIG_BY_ID + config.id));
+
     return actualParamRegistry;
 };
 
@@ -102,4 +108,14 @@ const iterateLocalStorage = (
         }
         count++;
     }
+};
+
+/**
+ * @param param Accept any param string and save to localStorage. It will not be validated until opening it.
+ */
+export const importParam = (param: string): string => {
+    const id = nanoid();
+    window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + id, param);
+    window.localStorage.setItem(LocalStorageKey.PARAM_CONFIG_BY_ID + id, JSON.stringify({ lastModified: Date.now() }));
+    return id;
 };

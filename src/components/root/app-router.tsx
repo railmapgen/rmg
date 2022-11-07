@@ -49,6 +49,7 @@ export default function AppRouter() {
                 setSearchParams({ project: Object.keys(paramMap)[0] ?? nanoid() });
             } else {
                 console.log('AppRouter:: No URL param ID provided. Rendering param selector view...');
+                setIsLoaded(false);
             }
         }
     }, [paramId]);

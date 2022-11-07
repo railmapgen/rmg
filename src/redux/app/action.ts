@@ -31,6 +31,7 @@ export const readParam = (paramId: string, language: LanguageCode) => {
             dispatch(setFullParam(nextParam));
         } catch (err) {
             console.warn('Failed to parse param.', err);
+            // FIXME: show error preventing from opening app view
             console.log('Initiating new param for ID=' + paramId);
 
             const nextParam = initParam(RmgStyle.MTR, language);

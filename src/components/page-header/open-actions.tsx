@@ -13,6 +13,9 @@ import { initParam } from '../../redux/param/util';
 import { useRootDispatch, useRootSelector } from '../../redux';
 import { LanguageCode } from '@railmapgen/rmg-translate';
 
+/**
+ * @deprecated
+ */
 export default function OpenActions() {
     const { t, i18n } = useTranslation();
     const dispatch = useRootDispatch();
