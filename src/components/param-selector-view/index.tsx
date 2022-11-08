@@ -1,14 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { RmgCard, RmgLoader, RmgPage } from '@railmapgen/rmg-components';
 import { useSearchParams } from 'react-router-dom';
 import { Button, Container, Heading, HStack, SystemStyleObject, useOutsideClick, VStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdOpenInBrowser } from 'react-icons/md';
+import { MdAdd, MdInsertDriveFile, MdOpenInBrowser, MdUpload } from 'react-icons/md';
 import { nanoid } from 'nanoid';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { Events, LocalStorageKey, ParamConfig } from '../../constants/constants';
 import ParamSelector from '../param-selector-view/param-selector';
-import { getParamRegistry } from '../../util/param-manager-utils';
+import { getParamRegistry, importParam } from '../../util/param-manager-utils';
+import TemplateModal from '../modal/template-modal';
+import { readFileAsText } from '../../util/utils';
 
 const paramSelectorCardStyle: SystemStyleObject = {
     flexDirection: 'column',
@@ -40,7 +42,9 @@ export default function ParamSelectorView() {
 
     const [paramRegistry, setParamRegistry] = useState<ParamConfig[]>([]);
     const [selectedParam, setSelectedParam] = useState<string>();
+    const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
     const selectorRef = useRef<HTMLDivElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         // init paramRegistry state once
@@ -54,7 +58,36 @@ export default function ParamSelectorView() {
         rmgRuntime.event(Events.NEW_PARAM, {});
     };
 
-    const handleOpen = () => {
+    const handleOpenTemplate = (param: Record<string, any>) => {
+        const id = importParam(JSON.stringify(param));
+        setSearchParams({ project: id });
+    };
+
+    const handleImportProject = async (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        console.log('handleImportProject():: received file', file);
+
+        try {
+            if (file?.type !== 'application/json') {
+                // TODO
+                // dispatch(setGlobalAlert({ status: 'error', message: t('OpenActions.invalidType') }));
+            }
+
+            const paramStr = await readFileAsText(file!);
+            const id = importParam(paramStr);
+            setSearchParams({ project: id });
+            rmgRuntime.event(Events.UPLOAD_PARAM, {});
+        } catch (err) {
+            // TODO
+            // dispatch(setGlobalAlert({ status: 'error', message: t('OpenActions.unknownError') }));
+            console.error('handleImportProject():: Unknown error occurred while parsing the uploaded file', err);
+        }
+
+        // clear field for next upload
+        event.target.value = '';
+    };
+
+    const handleOpenSelected = () => {
         if (selectedParam) {
             setSearchParams({ project: selectedParam });
             rmgRuntime.event(Events.OPEN_PARAM, {});
@@ -70,6 +103,8 @@ export default function ParamSelectorView() {
 
         rmgRuntime.event(Events.REMOVE_PARAM, {});
     };
+
+    const isProjectLimitReached = paramRegistry.length >= 10;
 
     return (
         <RmgPage justifyContent="center">
@@ -89,20 +124,49 @@ export default function ParamSelectorView() {
                         />
 
                         <VStack>
-                            <Button leftIcon={<MdAdd />} onClick={handleNew}>
+                            <Button leftIcon={<MdAdd />} onClick={handleNew} isDisabled={isProjectLimitReached}>
                                 {t('Blank project')}
                             </Button>
                             <Button
+                                leftIcon={<MdInsertDriveFile />}
+                                onClick={() => setIsTemplateModalOpen(true)}
+                                isDisabled={isProjectLimitReached}
+                            >
+                                {t('Open template')}
+                            </Button>
+                            <Button
+                                leftIcon={<MdUpload />}
+                                onClick={() => fileInputRef.current?.click()}
+                                isDisabled={isProjectLimitReached}
+                            >
+                                {t('Import project')}
+                            </Button>
+                            <Button
+                                colorScheme="primary"
                                 leftIcon={<MdOpenInBrowser />}
-                                onClick={handleOpen}
+                                onClick={handleOpenSelected}
                                 isDisabled={selectedParam === undefined}
                             >
-                                {t('Open project')}
+                                {t('Open selected')}
                             </Button>
                         </VStack>
                     </HStack>
                 </RmgCard>
             </Container>
+
+            <input
+                ref={fileInputRef}
+                type="file"
+                accept=".json"
+                hidden={true}
+                onChange={handleImportProject}
+                data-testid="file-upload"
+            />
+            <TemplateModal
+                isOpen={isTemplateModalOpen}
+                onClose={() => setIsTemplateModalOpen(false)}
+                onOpenParam={handleOpenTemplate}
+            />
         </RmgPage>
     );
 }

@@ -6,12 +6,17 @@ import { createMockAppStore, createParamInLocalStorage } from '../../setupTests'
 import { fireEvent, screen } from '@testing-library/react';
 
 const realStore = rootReducer.getState();
+const mockStore = createMockAppStore({ ...realStore });
 
 describe('ParamSelectorView', () => {
+    afterEach(() => {
+        window.localStorage.clear();
+        mockStore.clearActions();
+    });
+
     it('Can disable open button if no project is selected', () => {
         createParamInLocalStorage('test-1');
         createParamInLocalStorage('test-2');
-        const mockStore = createMockAppStore({ ...realStore, app: { ...realStore.app } });
 
         render(<ParamSelectorView />, { store: mockStore, route: '/' });
 
@@ -20,10 +25,27 @@ describe('ParamSelectorView', () => {
         expect(screen.getByText(/test-2/)).toBeInTheDocument();
 
         // open button is disabled
-        expect(screen.getByRole('button', { name: 'Open project' })).toBeDisabled();
+        expect(screen.getByRole('button', { name: 'Open selected' })).toBeDisabled();
 
         // select test-2 and open
         fireEvent.click(screen.getByText(/test-2/));
-        expect(screen.getByRole('button', { name: 'Open project' })).toBeEnabled();
+        expect(screen.getByRole('button', { name: 'Open selected' })).toBeEnabled();
+    });
+
+    it('Can disable new/template/upload buttons if max number reached', () => {
+        for (let i = 1; i <= 10; i++) {
+            createParamInLocalStorage('test-' + i);
+        }
+
+        render(<ParamSelectorView />, { store: mockStore, route: '/' });
+
+        // new/template/upload buttons are disabled
+        expect(screen.getByRole('button', { name: 'Blank project' })).toBeDisabled();
+        expect(screen.getByRole('button', { name: 'Open template' })).toBeDisabled();
+        expect(screen.getByRole('button', { name: 'Import project' })).toBeDisabled();
+    });
+
+    it('Can show error message if invalid type of file is uploaded', () => {
+        // TODO
     });
 });

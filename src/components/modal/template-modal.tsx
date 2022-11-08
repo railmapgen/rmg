@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { translateText } from '../../i18n/config';
 import { useRootDispatch } from '../../redux';
 import { companyConfig, templateList } from '@railmapgen/rmg-templates-resources';
-import { startLoading } from '../../redux/app/app-slice';
+import { startLoading, stopLoading } from '../../redux/app/app-slice';
 import { Events } from '../../constants/constants';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { RmgEnrichedButton } from '@railmapgen/rmg-components';
@@ -41,6 +41,7 @@ export default function TemplateModal(props: TemplateModalProps) {
         );
         onOpenParam(module.default);
         rmgRuntime.event(Events.OPEN_TEMPLATE, { company, filename });
+        dispatch(stopLoading());
     };
 
     return (

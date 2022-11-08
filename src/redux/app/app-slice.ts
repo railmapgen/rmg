@@ -38,7 +38,7 @@ const appSlice = createSlice({
     name: 'app',
     initialState,
     reducers: {
-        setParamConfig: (state, action: PayloadAction<ParamConfig>) => {
+        setParamConfig: (state, action: PayloadAction<ParamConfig | undefined>) => {
             state.paramConfig = action.payload;
         },
 

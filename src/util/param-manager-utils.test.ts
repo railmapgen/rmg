@@ -84,10 +84,14 @@ describe('ParamMgrUtils', () => {
                 JSON.stringify({ lastModified: Date.now() })
             );
 
+            // get actual param registry
             const result = getParamRegistry();
             expect(result).toHaveLength(2);
             expect(result).toContainEqual(expect.objectContaining({ id: 'test-01' }));
             expect(result).toContainEqual(expect.objectContaining({ id: 'test-03' }));
+
+            // remove invalid param config from localStorage
+            expect(window.localStorage.getItem(LocalStorageKey.PARAM_CONFIG_BY_ID + 'test-02')).toBeNull();
         });
     });
 });
