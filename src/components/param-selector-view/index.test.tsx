@@ -18,7 +18,7 @@ describe('ParamSelectorView', () => {
         createParamInLocalStorage('test-1');
         createParamInLocalStorage('test-2');
 
-        render(<ParamSelectorView />, { store: mockStore, route: '/' });
+        render(<ParamSelectorView />);
 
         // display 2 projects for selecting
         expect(screen.getByText(/test-1/)).toBeInTheDocument();
@@ -37,15 +37,11 @@ describe('ParamSelectorView', () => {
             createParamInLocalStorage('test-' + i);
         }
 
-        render(<ParamSelectorView />, { store: mockStore, route: '/' });
+        render(<ParamSelectorView />);
 
         // new/template/upload buttons are disabled
         expect(screen.getByRole('button', { name: 'Blank project' })).toBeDisabled();
         expect(screen.getByRole('button', { name: 'Open template' })).toBeDisabled();
         expect(screen.getByRole('button', { name: 'Import project' })).toBeDisabled();
-    });
-
-    it('Can show error message if invalid type of file is uploaded', () => {
-        // TODO
     });
 });
