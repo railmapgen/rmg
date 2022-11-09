@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { RmgCard, RmgLoader, RmgPage } from '@railmapgen/rmg-components';
 import { useSearchParams } from 'react-router-dom';
-import { Container, Heading, HStack, SystemStyleObject, useOutsideClick, useToast } from '@chakra-ui/react';
+import { Container, Flex, Heading, SystemStyleObject, useOutsideClick, useToast } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { Events, LocalStorageKey, ParamConfig } from '../../constants/constants';
@@ -20,14 +20,7 @@ const paramSelectorCardStyle: SystemStyleObject = {
     '& > div': {
         m: 2,
         flexWrap: 'wrap',
-
-        '& > div:last-of-type': {
-            alignSelf: 'flex-end',
-
-            '& button': {
-                w: '100%',
-            },
-        },
+        flexDirection: { base: 'column', md: 'row' },
     },
 };
 
@@ -73,7 +66,7 @@ export default function ParamSelectorView() {
                         {t('Saved projects')}
                     </Heading>
 
-                    <HStack ref={selectorRef}>
+                    <Flex ref={selectorRef}>
                         <ParamSelector
                             paramRegistry={paramRegistry}
                             selectedParam={selectedParam}
@@ -86,7 +79,7 @@ export default function ParamSelectorView() {
                             disableNew={paramRegistry.length >= 10}
                             onError={handleError}
                         />
-                    </HStack>
+                    </Flex>
                 </RmgCard>
             </Container>
         </RmgPage>

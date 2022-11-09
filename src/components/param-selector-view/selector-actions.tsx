@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
-import { Button, VStack } from '@chakra-ui/react';
+import { Button, Flex, SystemStyleObject } from '@chakra-ui/react';
 import { MdAdd, MdInsertDriveFile, MdOpenInBrowser, MdUpload } from 'react-icons/md';
 import TemplateModal from '../modal/template-modal';
 import { nanoid } from 'nanoid';
@@ -15,6 +15,17 @@ interface SelectorActionsProps {
     disableNew?: boolean;
     onError: (msg: string) => void;
 }
+
+const styles: SystemStyleObject = {
+    flexWrap: 'wrap',
+    flex: '1 1 0%',
+    minW: 120,
+
+    '& button': {
+        w: '100%',
+        m: 1,
+    },
+};
 
 export default function SelectorActions(props: SelectorActionsProps) {
     const { selectedParam, disableNew, onError } = props;
@@ -65,7 +76,7 @@ export default function SelectorActions(props: SelectorActionsProps) {
     };
 
     return (
-        <VStack>
+        <Flex sx={styles}>
             <Button leftIcon={<MdAdd />} onClick={handleNew} isDisabled={disableNew}>
                 {t('Blank project')}
             </Button>
@@ -101,6 +112,6 @@ export default function SelectorActions(props: SelectorActionsProps) {
                 onClose={() => setIsTemplateModalOpen(false)}
                 onOpenParam={handleOpenTemplate}
             />
-        </VStack>
+        </Flex>
     );
 }

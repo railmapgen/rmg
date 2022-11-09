@@ -14,7 +14,12 @@ interface ParamSelectorProps {
 }
 
 const styles: SystemStyleObject = {
-    flex: 1,
+    flex: '2 1 0%',
+    overflow: 'hidden',
+    minW: { base: 'unset', md: 240 },
+    w: { base: '100%', md: 'unset' },
+    mr: { base: 0, md: 2 },
+    mb: { base: 2, md: 0 },
 
     '& > div': {
         flexDirection: 'column',
@@ -25,10 +30,7 @@ const styles: SystemStyleObject = {
         borderWidth: 2,
 
         '& .chakra-button__group': {
-            flexShrink: 0,
-            h: 10,
-
-            '& button': {
+            '& button:last-of-type': {
                 h: '100%',
             },
         },
