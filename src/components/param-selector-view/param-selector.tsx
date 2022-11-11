@@ -1,20 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, ButtonGroup, Flex, IconButton, SystemStyleObject, Text } from '@chakra-ui/react';
 import { getRelativeTime } from '../../util/utils';
-import { MdDelete } from 'react-icons/md';
+import { MdDelete, MdEdit } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { RmgEnrichedButton } from '@railmapgen/rmg-components';
 import { ParamConfig } from '../../constants/constants';
+import ParamConfigEditModal from '../modal/param-config-edit-modal';
 
 interface ParamSelectorProps {
     paramRegistry: ParamConfig[];
     selectedParam?: string;
     onParamSelect: (id: string) => void;
     onParamRemove: (id: string) => void;
+    onParamUpdate: (config: ParamConfig) => void;
 }
 
 const styles: SystemStyleObject = {
-    flex: 1,
+    flex: '2 1 0%',
+    overflow: 'hidden',
+    minW: { base: 'unset', md: 240 },
+    w: { base: '100%', md: 'unset' },
+    mr: { base: 0, md: 2 },
+    mb: { base: 2, md: 0 },
 
     '& > div': {
         flexDirection: 'column',
@@ -25,10 +32,7 @@ const styles: SystemStyleObject = {
         borderWidth: 2,
 
         '& .chakra-button__group': {
-            flexShrink: 0,
-            h: 10,
-
-            '& button': {
+            '& button:not(:first-of-type)': {
                 h: '100%',
             },
         },
@@ -36,8 +40,15 @@ const styles: SystemStyleObject = {
 };
 
 export default function ParamSelector(props: ParamSelectorProps) {
-    const { paramRegistry, selectedParam, onParamSelect, onParamRemove } = props;
+    const { paramRegistry, selectedParam, onParamSelect, onParamRemove, onParamUpdate } = props;
     const { t } = useTranslation();
+
+    const [configEditing, setConfigEditing] = useState<ParamConfig>();
+
+    const handleConfigUpdate = (config: ParamConfig) => {
+        onParamUpdate(config);
+        setConfigEditing(undefined);
+    };
 
     return (
         <Box sx={styles}>
@@ -47,25 +58,32 @@ export default function ParamSelector(props: ParamSelectorProps) {
                     .sort((a, b) => {
                         return (b.lastModified ?? 0) - (a.lastModified ?? 0);
                     })
-                    .map(({ id, lastModified }) => (
+                    .map(config => (
                         <ButtonGroup
-                            key={id}
+                            key={config.id}
                             size="sm"
                             isAttached
-                            colorScheme={selectedParam === id ? 'primary' : undefined}
-                            variant={selectedParam === id ? 'solid' : 'ghost'}
+                            colorScheme={selectedParam === config.id ? 'primary' : undefined}
+                            variant={selectedParam === config.id ? 'solid' : 'ghost'}
                         >
                             <RmgEnrichedButton
-                                primaryText={t('Project ID') + ': ' + id}
+                                primaryText={config.name ?? t('Project') + ' ' + config.id}
                                 secondaryText={
-                                    t('Last modified') + ': ' + getRelativeTime(lastModified).map(t).join(' ')
+                                    t('Last modified') + ': ' + getRelativeTime(config.lastModified).map(t).join(' ')
                                 }
-                                onClick={() => onParamSelect(id)}
+                                onClick={() => onParamSelect(config.id)}
                             />
                             <IconButton
-                                aria-label="Remove this project"
+                                aria-label={t('Edit project info')}
+                                title={t('Edit project info')}
+                                icon={<MdEdit />}
+                                onClick={() => setConfigEditing(config)}
+                            />
+                            <IconButton
+                                aria-label={t('Remove project')}
+                                title={t('Remove project')}
                                 icon={<MdDelete />}
-                                onClick={() => onParamRemove(id)}
+                                onClick={() => onParamRemove(config.id)}
                             />
                         </ButtonGroup>
                     ))}
@@ -75,6 +93,12 @@ export default function ParamSelector(props: ParamSelectorProps) {
                     {t('You have reached the maximum number of projects.')}
                 </Text>
             )}
+
+            <ParamConfigEditModal
+                config={configEditing}
+                onClose={() => setConfigEditing(undefined)}
+                onUpdate={handleConfigUpdate}
+            />
         </Box>
     );
 }
