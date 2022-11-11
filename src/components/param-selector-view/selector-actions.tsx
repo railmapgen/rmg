@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Button, Flex, SystemStyleObject } from '@chakra-ui/react';
 import { MdAdd, MdInsertDriveFile, MdOpenInBrowser, MdUpload } from 'react-icons/md';
 import TemplateModal from '../modal/template-modal';
@@ -35,6 +35,13 @@ export default function SelectorActions(props: SelectorActionsProps) {
 
     const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const openSelectedRef = useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+        if (selectedParam) {
+            openSelectedRef.current?.focus();
+        }
+    }, [selectedParam]);
 
     const handleNew = () => {
         setSearchParams({ project: nanoid() });
@@ -91,6 +98,7 @@ export default function SelectorActions(props: SelectorActionsProps) {
                 {t('Import project')}
             </Button>
             <Button
+                ref={openSelectedRef}
                 colorScheme="primary"
                 leftIcon={<MdOpenInBrowser />}
                 onClick={handleOpenSelected}

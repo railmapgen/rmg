@@ -43,6 +43,21 @@ export default function ParamSelectorView() {
 
     useOutsideClick({ ref: selectorRef, handler: () => setSelectedParam(undefined) });
 
+    const handleUpdate = (config: ParamConfig) => {
+        const { id, name, lastModified } = config;
+        if (id) {
+            window.localStorage.setItem(
+                LocalStorageKey.PARAM_CONFIG_BY_ID + id,
+                JSON.stringify({ name, lastModified })
+            );
+
+            setSelectedParam(undefined);
+            setParamRegistry(getParamRegistry());
+
+            rmgRuntime.event(Events.UPDATE_PARAM_CONFIG, {});
+        }
+    };
+
     const handleDelete = (id: string) => {
         window.localStorage.removeItem(LocalStorageKey.PARAM_BY_ID + id);
         window.localStorage.removeItem(LocalStorageKey.PARAM_CONFIG_BY_ID + id);
@@ -72,6 +87,7 @@ export default function ParamSelectorView() {
                             selectedParam={selectedParam}
                             onParamSelect={setSelectedParam}
                             onParamRemove={handleDelete}
+                            onParamUpdate={handleUpdate}
                         />
 
                         <SelectorActions
