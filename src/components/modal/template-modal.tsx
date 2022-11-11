@@ -25,7 +25,7 @@ import { RmgEnrichedButton } from '@railmapgen/rmg-components';
 interface TemplateModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onOpenParam: (param: Record<string, any>) => void;
+    onOpenParam: (param: Record<string, any>, name: string) => void;
 }
 
 export default function TemplateModal(props: TemplateModalProps) {
@@ -34,12 +34,12 @@ export default function TemplateModal(props: TemplateModalProps) {
     const { t } = useTranslation();
     const dispatch = useRootDispatch();
 
-    const handleSelect = async (company: string, filename: string) => {
+    const handleSelect = async (company: string, filename: string, displayName: string) => {
         dispatch(startLoading());
         const module = await import(
             /* webpackChunkName: "templates" */ `@railmapgen/rmg-templates-resources/templates/${company}/${filename}.json`
         );
-        onOpenParam(module.default);
+        onOpenParam(module.default, displayName);
         rmgRuntime.event(Events.OPEN_TEMPLATE, { company, filename });
         dispatch(stopLoading());
     };
@@ -68,16 +68,21 @@ export default function TemplateModal(props: TemplateModalProps) {
                                 )
                                 .map(([company, templates]) => (
                                     <TabPanel key={company} as={Flex} flexDirection="column" py={0} px={1}>
-                                        {templates.map(template => (
-                                            <RmgEnrichedButton
-                                                key={template.filename}
-                                                variant="ghost"
-                                                size="sm"
-                                                primaryText={translateText(template.name)}
-                                                secondaryText={t('by') + ': ' + (template.uploadBy ?? 'Unknown')}
-                                                onClick={() => handleSelect(company, template.filename)}
-                                            />
-                                        ))}
+                                        {templates.map(template => {
+                                            const displayName = translateText(template.name);
+                                            return (
+                                                <RmgEnrichedButton
+                                                    key={template.filename}
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    primaryText={displayName}
+                                                    secondaryText={t('by') + ': ' + (template.uploadBy ?? 'Unknown')}
+                                                    onClick={() =>
+                                                        handleSelect(company, template.filename, displayName)
+                                                    }
+                                                />
+                                            );
+                                        })}
                                     </TabPanel>
                                 ))}
                         </TabPanels>

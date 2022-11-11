@@ -48,8 +48,8 @@ export default function SelectorActions(props: SelectorActionsProps) {
         rmgRuntime.event(Events.NEW_PARAM, {});
     };
 
-    const handleOpenTemplate = (param: Record<string, any>) => {
-        const id = importParam(JSON.stringify(param));
+    const handleOpenTemplate = (param: Record<string, any>, name: string) => {
+        const id = importParam(JSON.stringify(param), name);
         setSearchParams({ project: id });
     };
 

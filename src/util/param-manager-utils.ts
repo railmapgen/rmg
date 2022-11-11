@@ -112,10 +112,17 @@ const iterateLocalStorage = (
 
 /**
  * @param param Accept any param string and save to localStorage. It will not be validated until opening it.
+ * @param name Project name stored in paramConfig in localStorage.
  */
-export const importParam = (param: string): string => {
+export const importParam = (param: string, name?: string): string => {
     const id = nanoid();
     window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + id, param);
-    window.localStorage.setItem(LocalStorageKey.PARAM_CONFIG_BY_ID + id, JSON.stringify({ lastModified: Date.now() }));
+    window.localStorage.setItem(
+        LocalStorageKey.PARAM_CONFIG_BY_ID + id,
+        JSON.stringify({
+            name,
+            lastModified: Date.now(),
+        })
+    );
     return id;
 };
