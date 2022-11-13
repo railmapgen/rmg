@@ -15,9 +15,6 @@
     },
 
     "OpenActions": {
-        "openFrom": "打开",
-        "upload": "上传配置文件",
-        "templates": "模板",
         "invalidType": "无效的文件种类！只接受JSON种类的文件。",
         "unknownError": "导入上传的文件时发生错误！请重试。"
     },

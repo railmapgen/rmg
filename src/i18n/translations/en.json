@@ -10,9 +10,6 @@
     },
 
     "OpenActions": {
-        "openFrom": "Open from",
-        "upload": "Upload configuration file",
-        "templates": "Templates",
         "invalidType": "Invalid file type! Only file in JSON format is accepted.",
         "unknownError": "Unknown error occurred while parsing the uploaded file! Please try again."
     },

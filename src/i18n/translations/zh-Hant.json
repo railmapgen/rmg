@@ -12,9 +12,6 @@
         "images": "圖像"
     },
     "OpenActions": {
-        "openFrom": "開啟",
-        "upload": "上載設定檔",
-        "templates": "範本",
         "invalidType": "無效的檔案種類！只接受JSON種類的檔案。",
         "unknownError": "讀取上載的檔案時發生錯誤！請重試。"
     },
