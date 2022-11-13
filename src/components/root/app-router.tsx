@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import AppView from './app-view';
 import { useRootDispatch, useRootSelector } from '../../redux';
 import ParamSelectorView from '../param-selector-view';
 import { readParam } from '../../redux/app/action';
 import { useToast } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
+import useRootSearchParams from '../../hooks/use-root-search-params';
 
 export default function AppRouter() {
     const { t } = useTranslation();
     const dispatch = useRootDispatch();
 
     const { paramConfig } = useRootSelector(state => state.app);
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useRootSearchParams();
     const paramId = searchParams.get('project');
 
     const [isLoaded, setIsLoaded] = useState(false);

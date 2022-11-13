@@ -6,13 +6,13 @@ import { useDispatch } from 'react-redux';
 import { SidePanelMode } from '../../constants/constants';
 import { setParamConfig, setSidePanelMode } from '../../redux/app/app-slice';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
+import useRootSearchParams from '../../hooks/use-root-search-params';
 
 export default function HeaderActions() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
-    const [, setSearchParams] = useSearchParams();
+    const [, setSearchParams] = useRootSearchParams();
 
     const handleGoToSelectorView = () => {
         // reset param config to stop param update trigger

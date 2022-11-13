@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { RmgCard, RmgLoader, RmgPage } from '@railmapgen/rmg-components';
-import { useSearchParams } from 'react-router-dom';
 import { Container, Flex, Heading, SystemStyleObject, useOutsideClick, useToast } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import rmgRuntime from '@railmapgen/rmg-runtime';
@@ -8,6 +7,7 @@ import { Events, LocalStorageKey, ParamConfig } from '../../constants/constants'
 import ParamSelector from '../param-selector-view/param-selector';
 import { getParamRegistry } from '../../util/param-manager-utils';
 import SelectorActions from './selector-actions';
+import useRootSearchParams from '../../hooks/use-root-search-params';
 
 const paramSelectorCardStyle: SystemStyleObject = {
     flexDirection: 'column',
@@ -27,7 +27,7 @@ const paramSelectorCardStyle: SystemStyleObject = {
 export default function ParamSelectorView() {
     const { t } = useTranslation();
 
-    const [searchParams] = useSearchParams();
+    const [searchParams] = useRootSearchParams();
     const urlParamId = searchParams.get('project');
 
     const [paramRegistry, setParamRegistry] = useState<ParamConfig[]>([]);

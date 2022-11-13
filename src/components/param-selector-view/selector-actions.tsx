@@ -7,8 +7,8 @@ import rmgRuntime from '@railmapgen/rmg-runtime';
 import { Events } from '../../constants/constants';
 import { importParam } from '../../util/param-manager-utils';
 import { readFileAsText } from '../../util/utils';
-import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import useRootSearchParams from '../../hooks/use-root-search-params';
 
 interface SelectorActionsProps {
     selectedParam?: string;
@@ -31,7 +31,7 @@ export default function SelectorActions(props: SelectorActionsProps) {
     const { selectedParam, disableNew, onError } = props;
     const { t } = useTranslation();
 
-    const [, setSearchParams] = useSearchParams();
+    const [, setSearchParams] = useRootSearchParams();
 
     const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
