@@ -4,7 +4,6 @@ import AppRouter from './app-router';
 import rootReducer from '../../redux';
 import { createMockAppStore, createParamInLocalStorage } from '../../setupTests';
 import { screen } from '@testing-library/react';
-import rmgRuntime, { RmgEnv } from '@railmapgen/rmg-runtime';
 
 jest.mock('./app-view', () => {
     return () => (
@@ -28,11 +27,8 @@ const mockStore = createMockAppStore({
 });
 
 describe('AppRouter', () => {
-    beforeEach(() => {
-        jest.spyOn(rmgRuntime, 'getEnv').mockReturnValue(RmgEnv.UAT);
-    });
-
     afterEach(() => {
+        window.localStorage.clear();
         mockStore.clearActions();
     });
 
@@ -59,11 +55,13 @@ describe('AppRouter', () => {
     it('Can render param selector view if no param in localStorage matches URL param ID', () => {
         render(<AppRouter />, { store: mockStore, route: '/?project=test-id-2' });
 
-        // TODO
-        // expect(screen.getByRole('presentation', { name: 'Mock Param Selector View' })).toBeInTheDocument();
+        const actions = mockStore.getActions();
+        expect(actions).toHaveLength(0);
+
+        expect(screen.getByRole('presentation', { name: 'Mock Param Selector View' })).toBeInTheDocument();
     });
 
-    it('Can render app view if param is loaded', async () => {
+    it('Can render app view for direct url if param is loaded', async () => {
         const mockStore = createMockAppStore({
             ...realStore,
             app: { ...realStore.app, paramConfig: { id: 'test-id' } },
