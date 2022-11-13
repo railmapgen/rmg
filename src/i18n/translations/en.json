@@ -10,9 +10,6 @@
     },
 
     "OpenActions": {
-        "openFrom": "Open from",
-        "upload": "Upload configuration file",
-        "templates": "Templates",
         "invalidType": "Invalid file type! Only file in JSON format is accepted.",
         "unknownError": "Unknown error occurred while parsing the uploaded file! Please try again."
     },
@@ -33,13 +30,6 @@
 
     "TemplateModal": {
         "title": "Select a template"
-    },
-
-    "UploadConfirmModal": {
-        "title": "Open from configuration file",
-        "message1": "Are you sure to import ",
-        "message2": " with ",
-        "message3": " stations? Your current unsaved progress will be lost."
     },
 
     "GridTabs": {

@@ -1,8 +1,6 @@
 import rootReducer from '../index';
-import { createMockAppStore } from '../../setupTests';
-import { LocalStorageKey, RmgStyle } from '../../constants/constants';
-import { initParam } from '../param/util';
-import { LanguageCode } from '@railmapgen/rmg-translate';
+import { createMockAppStore, createParamInLocalStorage } from '../../setupTests';
+import { LocalStorageKey } from '../../constants/constants';
 import { readParam } from './action';
 
 const realStore = rootReducer.getState();
@@ -10,25 +8,16 @@ const mockStore = createMockAppStore({ ...realStore });
 
 describe('AppAction', () => {
     describe('AppAction - readParam', () => {
-        const generateParam = (id: string) => {
-            const rmgParam = initParam(RmgStyle.MTR, LanguageCode.ChineseTrad);
-            rmgParam.line_num = id;
-            return rmgParam;
-        };
-
-        const setup = () => {
-            const rmgParam = generateParam('test-id');
-            window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + 'test-id', JSON.stringify(rmgParam));
-        };
-
         afterEach(() => {
             mockStore.clearActions();
             window.localStorage.clear();
         });
 
         it('Can read param from localStorage and save to store', () => {
-            setup();
-            mockStore.dispatch(readParam('test-id', LanguageCode.English));
+            createParamInLocalStorage('test-id');
+
+            const result = mockStore.dispatch(readParam('test-id'));
+            expect(result).toBeTruthy();
 
             const actions = mockStore.getActions();
             expect(actions).toContainEqual({ type: 'app/setParamConfig', payload: { id: 'test-id' } });
@@ -38,27 +27,47 @@ describe('AppAction', () => {
             });
         });
 
-        it('Can generate new param if param in localStorage is invalid', () => {
-            window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + 'test-id', 'invalid');
-            mockStore.dispatch(readParam('test-id', LanguageCode.English));
+        it('Can read param config and param from localStorage and save to store', () => {
+            const now = new Date().getTime();
+            createParamInLocalStorage('test-id');
+            window.localStorage.setItem(
+                LocalStorageKey.PARAM_CONFIG_BY_ID + 'test-id',
+                JSON.stringify({
+                    lastModified: now,
+                    name: 'My Masterpiece',
+                })
+            );
+
+            const result = mockStore.dispatch(readParam('test-id'));
+            expect(result).toBeTruthy();
 
             const actions = mockStore.getActions();
-            expect(actions).toContainEqual({ type: 'app/setParamConfig', payload: { id: 'test-id' } });
+            expect(actions).toContainEqual({
+                type: 'app/setParamConfig',
+                payload: { id: 'test-id', lastModified: now, name: 'My Masterpiece' },
+            });
             expect(actions).toContainEqual({
                 type: 'SET_FULL_PARAM',
-                fullParam: expect.not.objectContaining({ line_num: 'test-id' }),
+                fullParam: expect.objectContaining({ line_num: 'test-id' }),
             });
         });
 
-        it('Can generate new param if param not found in localStorage', () => {
-            mockStore.dispatch(readParam('test-id', LanguageCode.English));
+        it('Can return false if param in localStorage is invalid', () => {
+            window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + 'test-id', 'invalid');
+
+            const result = mockStore.dispatch(readParam('test-id'));
+            expect(result).toBeFalsy();
 
             const actions = mockStore.getActions();
-            expect(actions).toContainEqual({ type: 'app/setParamConfig', payload: { id: 'test-id' } });
-            expect(actions).toContainEqual({
-                type: 'SET_FULL_PARAM',
-                fullParam: expect.not.objectContaining({ line_num: 'test-id' }),
-            });
+            expect(actions).toHaveLength(0);
+        });
+
+        it('Can return false if param not found in localStorage', () => {
+            const result = mockStore.dispatch(readParam('test-id'));
+            expect(result).toBeFalsy();
+
+            const actions = mockStore.getActions();
+            expect(actions).toHaveLength(0);
         });
     });
 });

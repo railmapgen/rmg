@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import AppView from './app-view';
 import { useRootDispatch, useRootSelector } from '../../redux';
-import rmgRuntime, { RmgEnv } from '@railmapgen/rmg-runtime';
-import { LanguageCode } from '@railmapgen/rmg-translate';
 import ParamSelectorView from '../param-selector-view';
 import { readParam } from '../../redux/app/action';
-import { getParamMap } from '../../util/param-manager-utils';
-import { nanoid } from 'nanoid';
+import { useToast } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 
 export default function AppRouter() {
+    const { t } = useTranslation();
     const dispatch = useRootDispatch();
 
     const { paramConfig } = useRootSelector(state => state.app);
@@ -18,39 +17,36 @@ export default function AppRouter() {
 
     const [isLoaded, setIsLoaded] = useState(false);
 
+    const toast = useToast();
+
     useEffect(() => {
         console.log('searchParam: project=' + paramId);
         if (paramId) {
+            // clear existing toast to avoid duplicate messages
+            toast.closeAll();
+
             if (paramId === paramConfig?.id) {
                 console.log('AppRouter:: Store param ID matches URL param ID. Rendering app view...');
                 setIsLoaded(true);
             } else {
-                if (rmgRuntime.getEnv() === RmgEnv.PRD) {
-                    const paramMap = getParamMap();
-                    const paramIds = Object.keys(paramMap);
-                    if (paramIds.length && !paramIds.includes(paramId)) {
-                        console.warn(
-                            'AppRouter:: URL param ID does not exist in localStorage. Reset to first param in localStorage in PRD env.'
-                        );
-                        const paramMap = getParamMap();
-                        setSearchParams({ project: Object.keys(paramMap)[0] });
-                        return;
-                    }
+                console.log(`AppRouter:: Loading app view for param (ID=${paramId})...`);
+                const result = dispatch(readParam(paramId));
+                if (result) {
+                    setIsLoaded(true);
+                } else {
+                    console.log(`AppRouter:: Failed to read param (ID=${paramId}). Rendering param selector view...`);
+                    toast({
+                        description: t('Project selected is invalid or corrupted.'),
+                        status: 'error',
+                        duration: 10000,
+                        isClosable: true,
+                    });
+                    setSearchParams({});
                 }
-
-                console.log(`AppRouter:: Reading param (ID=${paramId}) from localStorage`);
-                dispatch(readParam(paramId, rmgRuntime.getLanguage() as LanguageCode));
-                setIsLoaded(true);
             }
         } else {
-            if (rmgRuntime.getEnv() === RmgEnv.PRD) {
-                console.log('AppRouter:: Redirect to first param in localStorage in PRD env');
-                const paramMap = getParamMap();
-                setSearchParams({ project: Object.keys(paramMap)[0] ?? nanoid() });
-            } else {
-                console.log('AppRouter:: No URL param ID provided. Rendering param selector view...');
-                setIsLoaded(false);
-            }
+            console.log('AppRouter:: No URL param ID provided. Rendering param selector view...');
+            setIsLoaded(false);
         }
     }, [paramId]);
 

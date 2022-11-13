@@ -15,9 +15,6 @@
     },
 
     "OpenActions": {
-        "openFrom": "打开",
-        "upload": "上传配置文件",
-        "templates": "模板",
         "invalidType": "无效的文件种类！只接受JSON种类的文件。",
         "unknownError": "导入上传的文件时发生错误！请重试。"
     },
@@ -38,13 +35,6 @@
 
     "TemplateModal": {
         "title": "选择模板"
-    },
-
-    "UploadConfirmModal": {
-        "title": "从配置文件打开",
-        "message1": "您确定要导入",
-        "message2": "吗？此配置文件含有",
-        "message3": "个车站。将立即覆盖未保存的数据。"
     },
 
     "GridTabs": {
@@ -286,6 +276,7 @@
     "Paid area": "付费区换乘",
     "Please select...": "请选择...",
     "Project": "项目",
+    "Project selected is invalid or corrupted.": "选中的项目无效或已损坏。",
     "Project name": "项目名称",
     "Remove project": "删除项目",
     "Remove station": "删除车站",

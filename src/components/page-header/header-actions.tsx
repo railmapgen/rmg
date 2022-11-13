@@ -6,8 +6,6 @@ import { useDispatch } from 'react-redux';
 import { SidePanelMode } from '../../constants/constants';
 import { setParamConfig, setSidePanelMode } from '../../redux/app/app-slice';
 import { useTranslation } from 'react-i18next';
-import OpenActions from './open-actions';
-import rmgRuntime, { RmgEnv } from '@railmapgen/rmg-runtime';
 import { useSearchParams } from 'react-router-dom';
 
 export default function HeaderActions() {
@@ -24,15 +22,11 @@ export default function HeaderActions() {
 
     return (
         <HStack ml="auto" w="fit-content">
-            {rmgRuntime.getEnv() !== RmgEnv.PRD && (
-                <Button variant="ghost" size="sm" leftIcon={<MdFolder />} onClick={handleGoToSelectorView}>
-                    {t('All projects')}
-                </Button>
-            )}
+            <Button variant="ghost" size="sm" leftIcon={<MdFolder />} onClick={handleGoToSelectorView}>
+                {t('All projects')}
+            </Button>
 
             <DownloadActions />
-
-            {rmgRuntime.getEnv() === RmgEnv.PRD && <OpenActions />}
 
             <Button
                 variant="solid"
