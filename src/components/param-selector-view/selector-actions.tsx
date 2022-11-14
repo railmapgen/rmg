@@ -2,13 +2,14 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Button, Flex, SystemStyleObject } from '@chakra-ui/react';
 import { MdAdd, MdInsertDriveFile, MdOpenInBrowser, MdUpload } from 'react-icons/md';
 import TemplateModal from '../modal/template-modal';
-import { nanoid } from 'nanoid';
 import rmgRuntime from '@railmapgen/rmg-runtime';
-import { Events } from '../../constants/constants';
+import { Events, RmgStyle } from '../../constants/constants';
 import { importParam } from '../../util/param-manager-utils';
 import { readFileAsText } from '../../util/utils';
 import { useTranslation } from 'react-i18next';
 import useRootSearchParams from '../../hooks/use-root-search-params';
+import { initParam } from '../../redux/param/util';
+import { LanguageCode } from '@railmapgen/rmg-translate';
 
 interface SelectorActionsProps {
     selectedParam?: string;
@@ -44,7 +45,9 @@ export default function SelectorActions(props: SelectorActionsProps) {
     }, [selectedParam]);
 
     const handleNew = () => {
-        setSearchParams({ project: nanoid() });
+        const newParam = initParam(RmgStyle.MTR, rmgRuntime.getLanguage() as LanguageCode);
+        const id = importParam(JSON.stringify(newParam));
+        setSearchParams({ project: id });
         rmgRuntime.event(Events.NEW_PARAM, {});
     };
 

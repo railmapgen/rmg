@@ -9,6 +9,21 @@ const mockCallbacks = {
 };
 
 describe('SelectorActions', () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+        window.localStorage.clear();
+    });
+
+    it('Can init new param and save to localStorage as expected', () => {
+        render(<SelectorActions {...mockCallbacks} />);
+
+        expect(window.localStorage.length).toBe(0);
+
+        fireEvent.click(screen.getByRole('button', { name: 'Blank project' }));
+
+        expect(window.localStorage.length).toBe(2);
+    });
+
     it('Can show error message if invalid type of file is uploaded', () => {
         const readFileAsTextSpy = jest.spyOn(utils, 'readFileAsText');
         readFileAsTextSpy.mockResolvedValue('dummy-content');
