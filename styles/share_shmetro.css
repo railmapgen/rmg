@@ -4,6 +4,11 @@
 .rmg-name__en {
     font-family: Arial, sans-serif;
 }
+.rmg-outline {
+    paint-order: stroke;
+    stroke: #FFFFFF;
+    stroke-width: 2px;
+}
 
 :root {
     --rmg-black: black;
