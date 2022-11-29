@@ -139,7 +139,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                     fill={stnState === -1 ? 'gray' : stnState === 0 ? 'red' : 'black'}
                 />
 
-                {/* deal out-of-station here as it is a y axis element. leave out-of-system in IntBoxGroup */}
+                {/* this is out-of-station text displayed above the IntBoxGroup */}
                 {infos[1]?.length > 0 && (
                     <g transform={`translate(${(intDx + intWidth / 2) * directionPolarity},-30)`}>
                         <OSIText osiInfos={infos[1]} />
@@ -182,7 +182,7 @@ const StationName = React.forwardRef(
                                 {stnName[0].split('\\').map((txt, i, arr) => (
                                     <text
                                         key={i}
-                                        className="rmg-name__zh"
+                                        className="rmg-name__zh rmg-outline"
                                         dy={
                                             (arr.length - 1 - i) * -ZH_HEIGHT +
                                             (oneLine ? EN_HEIGHT : (stnName[1].split('\\').length - 1) * -EN_HEIGHT)
@@ -194,7 +194,11 @@ const StationName = React.forwardRef(
                             </g>
                             <g fontSize={8} transform={`translate(${enDx * directionPolarity},0)`}>
                                 {stnName[1].split('\\').map((txt, i, arr) => (
-                                    <text key={i} className="rmg-name__en" dy={(arr.length - 2 - i) * -EN_HEIGHT + 2}>
+                                    <text
+                                        key={i}
+                                        className="rmg-name__en rmg-outline"
+                                        dy={(arr.length - 2 - i) * -EN_HEIGHT + 2}
+                                    >
                                         {txt}
                                     </text>
                                 ))}
