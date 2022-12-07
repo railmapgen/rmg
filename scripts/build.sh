@@ -37,7 +37,7 @@ fi
 ### BUILD
 mkdir -p $UAT_REPO_NAME/"$APP_NAME"/
 CI='' npm run build
-cp -r build/ $UAT_REPO_NAME/"$APP_NAME"/"$RMG_VER"/
+cp -r dist/ $UAT_REPO_NAME/"$APP_NAME"/"$RMG_VER"/
 
 
 ### PUSH TAG AND COMMIT
