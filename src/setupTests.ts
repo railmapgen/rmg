@@ -4,6 +4,7 @@ import rootReducer, { RootState } from './redux';
 import { getDefaultMiddleware, ThunkDispatch } from '@reduxjs/toolkit';
 import { initParam } from './redux/param/util';
 import { LanguageCode } from '@railmapgen/rmg-translate';
+import infoJson from '../info.json';
 
 // FIXME: any -> AnyAction?
 type DispatchExts = ThunkDispatch<RootState, void, any>;
@@ -79,13 +80,7 @@ global.fetch = (...args) => {
         return Promise.resolve({
             ok: true,
             status: 200,
-            json: () =>
-                Promise.resolve({
-                    component: 'rmg',
-                    version: '9.9.9',
-                    environment: 'DEV',
-                    instance: 'localhost',
-                }),
+            json: () => Promise.resolve(infoJson),
         }) as any;
     } else {
         return originalFetch(...args);

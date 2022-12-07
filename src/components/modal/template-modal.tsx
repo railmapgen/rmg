@@ -22,6 +22,8 @@ import { Events } from '../../constants/constants';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { RmgEnrichedButton } from '@railmapgen/rmg-components';
 
+const templatesGlob = import.meta.glob('/node_modules/@railmapgen/rmg-templates-resources/templates/**/*.json');
+
 interface TemplateModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -36,9 +38,9 @@ export default function TemplateModal(props: TemplateModalProps) {
 
     const handleSelect = async (company: string, filename: string, displayName: string) => {
         dispatch(startLoading());
-        const module = await import(
-            /* webpackChunkName: "templates" */ `@railmapgen/rmg-templates-resources/templates/${company}/${filename}.json`
-        );
+        const module = (await templatesGlob[
+            `/node_modules/@railmapgen/rmg-templates-resources/templates/${company}/${filename}.json`
+        ]()) as any;
         onOpenParam(module.default, displayName);
         rmgRuntime.event(Events.OPEN_TEMPLATE, { company, filename });
         dispatch(stopLoading());

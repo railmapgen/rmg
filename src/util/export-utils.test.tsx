@@ -32,9 +32,7 @@ describe('ExportUtils', () => {
             };
             isSafariSpy.mockReturnValue(false);
 
-            expect(getAbsoluteUrl(mockCssRule as any)).toBe(
-                'https://railmapgen.github.io/rmg/styles/../cdn/GenYoMin-TW-SB.woff2'
-            );
+            expect(getAbsoluteUrl(mockCssRule as any)).toContain('/styles/../cdn/GenYoMin-TW-SB.woff2');
         });
     });
 });

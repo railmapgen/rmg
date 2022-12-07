@@ -1,12 +1,6 @@
 {
-    "root": true,
-    "extends": [
-        "react-app",
-        "react-app/jest"
-    ],
-    "plugins": [
-        "prettier"
-    ],
+    "extends": ["react-app", "react-app/jest"],
+    "plugins": ["prettier"],
     "rules": {
         "prettier/prettier": [
             "warn",
@@ -14,6 +8,14 @@
                 "endOfLine": "auto"
             }
         ],
-        "react-hooks/exhaustive-deps": "off"
-    }
+        "react-hooks/exhaustive-deps": "off",
+        "react/self-closing-comp": [
+            "error",
+            {
+                "component": true
+            }
+        ],
+        "@typescript-eslint/no-unused-vars": "off"
+    },
+    "ignorePatterns": ["**/*.json"]
 }

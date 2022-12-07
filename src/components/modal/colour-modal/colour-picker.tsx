@@ -8,7 +8,7 @@ const usePalette = (cityCode?: CityCode) => {
     const [paletteList, setPaletteList] = useState<PaletteEntry[]>([]);
 
     useEffect(() => {
-        import(/* webpackChunkName: "palettes" */ `@railmapgen/rmg-palette-resources/palettes/${cityCode}.js`)
+        import(`../../../../node_modules/@railmapgen/rmg-palette-resources/palettes/${cityCode}.js`)
             .then(module => setPaletteList(module.default))
             .catch(() => setPaletteList([]));
     }, [cityCode]);

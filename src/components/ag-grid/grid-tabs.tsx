@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import NewBranchModal from '../modal/new-branch-modal';
 import { RmgErrorBoundary, RmgLoader } from '@railmapgen/rmg-components';
 
-const StationAgGrid = lazy(() => import(/* webpackChunkName: "StationAgGrid" */ './station-ag-grid'));
+const StationAgGrid = lazy(() => import('./station-ag-grid'));
 
 export default function GridTabs() {
     const { t } = useTranslation();

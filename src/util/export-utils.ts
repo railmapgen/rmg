@@ -128,7 +128,7 @@ export const getAbsoluteUrl = (cssRule: CSSFontFaceRule) => {
     const ruleStyleSrc = (cssRule.style as any).src;
     return isSafari()
         ? ruleStyleSrc.replace(/^url\("([\S]+)"\).*$/, '$1')
-        : process.env.PUBLIC_URL + '/styles/' + ruleStyleSrc.match(/^url\("([\S*]+)"\)/)?.[1];
+        : import.meta.env.BASE_URL + 'styles/' + ruleStyleSrc.match(/^url\("([\S*]+)"\)/)?.[1];
 };
 
 export const test = async (svgEl: SVGSVGElement, scale: number, isWait: boolean): Promise<Blob> => {

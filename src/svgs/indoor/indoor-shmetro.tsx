@@ -223,8 +223,8 @@ const InfoElements = () => {
                         selling tickets 3 minutes before the last train services.
                     </text>
                     <g transform="translate(-600,215)">
-                        <rect x="-5" y="-25" width="100" height="70" fill="none" stroke="black" rx="5"></rect>
-                        <line x1="28" x2="28" y1="-20" y2="40" stroke="black"></line>
+                        <rect x="-5" y="-25" width="100" height="70" fill="none" stroke="black" rx="5" />
+                        <line x1="28" x2="28" y1="-20" y2="40" stroke="black" />
                         <text className="rmg-name__zh" dx="3" fontSize="18">
                             图
                         </text>
