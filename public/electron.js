@@ -9,7 +9,7 @@ let mainWindow;
 
 const createWindow = () => {
     mainWindow = new BrowserWindow({ width: 1280, height: 720 });
-    const appUrl = isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`;
+    const appUrl = isDev ? 'http://localhost:5173/' : `file://${path.join(__dirname, '../build/index.html')}`;
     mainWindow.loadURL(appUrl);
     // mainWindow.webContents.openDevTools();
     // mainWindow.maximize()

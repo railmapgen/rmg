@@ -42,7 +42,7 @@
         "@vitejs/plugin-react": "^2.2.0",
         "babel-plugin-transform-vite-meta-env": "^1.0.3",
         "babel-plugin-transform-vite-meta-glob": "^1.0.3",
-        "electron": "^21.2.0",
+        "electron": "^22.0.0",
         "electron-builder": "^23.6.0",
         "eslint": "^8.29.0",
         "eslint-config-react-app": "^7.0.1",
@@ -61,11 +61,12 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
+        "build:electron": "tsc && vite build --config vite.config.electron.ts",
         "test": "jest",
         "lint": "eslint ./src",
         "lint:fix": "eslint ./src --fix",
         "preview": "vite preview",
-        "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
+        "electron-dev": "concurrently \"vite --config vite.config.electron.ts\" \"wait-on http://localhost:5173/ && electron .\"",
         "electron-package": "npx electron-builder build -c.extraMetadata.main=build/electron.js"
     },
     "browserslist": {
@@ -80,9 +81,10 @@
             "last 1 safari version"
         ]
     },
-    "version": "5.8.0-0",
+    "version": "5.8.2-1",
     "main": "public/electron.js",
     "build": {
+        "extends": "react-cra",
         "publish": [
             {
                 "provider": "github",
