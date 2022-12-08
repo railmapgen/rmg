@@ -65,8 +65,8 @@
         "lint": "eslint ./src",
         "lint:fix": "eslint ./src --fix",
         "preview": "vite preview",
-        "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
-        "electron-package": "npx electron-builder build -c.extraMetadata.main=build/electron.js"
+        "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5173/rmg/ && electron .\"",
+        "electron-package": "npx electron-builder build -c.extraMetadata.main=dist/electron.js"
     },
     "browserslist": {
         "production": [
