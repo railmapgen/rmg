@@ -1,0 +1,1 @@
+const n=[{id:"hrb1",name:{en:"Line 1","zh-Hans":"1\u53F7\u7EBF","zh-Hant":"1\u865F\u7DDA"},colour:"#C8102E"},{id:"hrb2",name:{en:"Line 2","zh-Hans":"2\u53F7\u7EBF","zh-Hant":"2\u865F\u7DDA"},colour:"#44AF52"},{id:"hrb3",name:{en:"Line 3","zh-Hans":"3\u53F7\u7EBF","zh-Hant":"3\u865F\u7DDA"},colour:"#FFC72C"}];export{n as default};
