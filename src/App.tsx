@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import store from './redux';
 import WindowHeader from './components/root/window-header';
 
-const AppRouter = lazy(() => import(/* webpackChunkName: "AppRouter" */ './components/root/app-router'));
+const AppRouter = lazy(() => import('./components/root/app-router'));
 
 export default function App() {
     // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -14,7 +14,7 @@ export default function App() {
     // Though Electron distribution will use a ./ to get local files,
     // Router need to be configured to / as the render process is just like
     // a regular browser and is expecting a web based url.
-    const basename = process.env.PUBLIC_URL === '.' ? '/' : process.env.PUBLIC_URL;
+    const basename = import.meta.env.BASE_URL === './' ? '/' : import.meta.env.BASE_URL;
 
     return (
         <StrictMode>

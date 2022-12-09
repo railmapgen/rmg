@@ -144,7 +144,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
                 rowSelection={'single'}
                 onSelectionChanged={handleSelectionChanged}
                 onGridReady={() => (isGridReadyRef.current = true)}
-                debug={process.env.NODE_ENV !== 'production'}
+                debug={import.meta.env.DEV}
             />
         </RmgAgGrid>
     );

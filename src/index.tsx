@@ -1,4 +1,3 @@
-import 'core-js/actual';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import React from 'react';
 import { createRoot, Root } from 'react-dom/client';

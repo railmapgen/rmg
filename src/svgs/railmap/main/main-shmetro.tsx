@@ -436,7 +436,7 @@ const ServicesElements = (props: { servicesLevel: Services[]; lineXs: number[] }
             <g>
                 {servicesLevel.map((service, i) => (
                     <g key={service} transform={`translate(${labelX},${i * 25})`}>
-                        <rect x={-27.5} height={10} width={55} fill={'white'} stroke={'black'} y={-5}></rect>
+                        <rect x={-27.5} height={10} width={55} fill={'white'} stroke={'black'} y={-5} />
                         <text
                             className="rmg-name__zh"
                             fontSize={9}

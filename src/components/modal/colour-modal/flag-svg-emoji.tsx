@@ -13,7 +13,7 @@ export default function FlagSvgEmoji(props: FlagSvgEmojiProps) {
 
     useEffect(() => {
         if (svgFilename) {
-            import('@railmapgen/rmg-palette-resources/flags/' + svgFilename)
+            import(`../../../../node_modules/@railmapgen/rmg-palette-resources/flags/${svgFilename.slice(0, -4)}.svg`)
                 .then(module => module.default)
                 .then(setSrc)
                 .catch(err => console.error(`Failed to find SVG file ${svgFilename} as ${err?.message}`));

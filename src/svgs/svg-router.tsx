@@ -28,7 +28,7 @@ export default function SvgRouter() {
 
     useEffect(() => {
         (document.getElementById('css_share') as HTMLLinkElement).href =
-            process.env.PUBLIC_URL + `/styles/share_${rmgStyle}.css`;
+            import.meta.env.BASE_URL + `styles/share_${rmgStyle}.css`;
         rmgRuntime.event(Events.STYLE_CHANGE, { style: rmgStyle });
     }, [rmgStyle]);
 
