@@ -1,11 +1,11 @@
-import React from 'react';
 import StationName from './station-name';
 import { render } from '../../../test-utils';
+import { vi } from 'vitest';
 
-const mockGetBBox = jest.fn();
+const mockGetBBox = vi.fn();
 (SVGElement.prototype as any).getBBox = mockGetBBox;
 
-const onUpdate = jest.fn();
+const onUpdate = vi.fn();
 
 const mockBBox = { width: 70, height: 30 } as DOMRect;
 

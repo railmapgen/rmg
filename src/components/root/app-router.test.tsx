@@ -1,24 +1,28 @@
-import React from 'react';
 import { render } from '../../test-utils';
 import AppRouter from './app-router';
 import rootReducer from '../../redux';
 import { createMockAppStore, createParamInLocalStorage } from '../../setupTests';
 import { screen } from '@testing-library/react';
+import { vi } from 'vitest';
 
-jest.mock('./app-view', () => {
-    return () => (
-        <div role="presentation" aria-label="Mock App View">
-            Mock App View
-        </div>
-    );
+vi.mock('./app-view', () => {
+    return {
+        default: () => (
+            <div role="presentation" aria-label="Mock App View">
+                Mock App View
+            </div>
+        ),
+    };
 });
 
-jest.mock('../param-selector-view', () => {
-    return () => (
-        <div role="presentation" aria-label="Mock Param Selector View">
-            Mock Param Selector View
-        </div>
-    );
+vi.mock('../param-selector-view', () => {
+    return {
+        default: () => (
+            <div role="presentation" aria-label="Mock Param Selector View">
+                Mock Param Selector View
+            </div>
+        ),
+    };
 });
 
 const realStore = rootReducer.getState();

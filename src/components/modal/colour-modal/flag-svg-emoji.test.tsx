@@ -1,9 +1,9 @@
-import React from 'react';
 import FlagSvgEmoji from './flag-svg-emoji';
 import { render } from '../../../test-utils';
 import { screen } from '@testing-library/react';
+import { vi } from 'vitest';
 
-jest.doMock('@railmapgen/rmg-palette-resources/flags/1F1ED-1F1F0.svg', () => ({
+vi.doMock('@railmapgen/rmg-palette-resources/flags/1F1ED-1F1F0.svg', () => ({
     __esModule: true,
     default: 'mock-svg-src-url',
 }));

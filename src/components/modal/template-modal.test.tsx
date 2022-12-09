@@ -1,8 +1,8 @@
-import React from 'react';
+import { vi } from 'vitest';
 
 const mockCallbacks = {
-    onClose: jest.fn(),
-    onOpenParam: jest.fn(),
+    onClose: vi.fn(),
+    onOpenParam: vi.fn(),
 };
 
 // TODO: add unit test

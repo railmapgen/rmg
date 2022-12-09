@@ -1,4 +1,3 @@
-import React from 'react';
 import rootReducer from '../../../redux';
 import { createMockAppStore } from '../../../setupTests';
 import InterchangeSection from './interchange-section';
@@ -8,6 +7,7 @@ import * as helperActions from '../../../redux/helper/action';
 import { SET_STATION } from '../../../redux/param/action';
 import { render } from '../../../test-utils';
 import { fireEvent, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 
 const realStore = rootReducer.getState();
 
@@ -42,7 +42,7 @@ describe('InterchangeSection', () => {
     });
 
     it('Can handle add interchange group as expected', () => {
-        jest.spyOn(helperActions, 'triggerHelpersUpdate').mockReturnValue(() => {});
+        vi.spyOn(helperActions, 'triggerHelpersUpdate').mockReturnValue(() => {});
 
         const mockStore = createMockAppStore({
             ...realStore,

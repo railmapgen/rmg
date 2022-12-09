@@ -1,4 +1,3 @@
-import React from 'react';
 import { BranchStyle, RmgStyle, StationDict } from '../../constants/constants';
 import { getBranches } from '../../redux/helper/graph-theory-util';
 import rootReducer from '../../redux';
@@ -7,6 +6,7 @@ import { render } from '../../test-utils';
 import NewBranchModal from './new-branch-modal';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { SET_STATIONS_BULK } from '../../redux/param/action';
+import { vi } from 'vitest';
 
 const mockStationList = {
     linestart: {
@@ -76,7 +76,7 @@ describe('NewBranchModal', () => {
                 branches,
             },
         });
-        const setup = () => render(<NewBranchModal isOpen={true} onClose={jest.fn()} />, { store: mockStore });
+        const setup = () => render(<NewBranchModal isOpen={true} onClose={vi.fn()} />, { store: mockStore });
 
         it('Can render where dropdown as expected', () => {
             setup();
@@ -120,8 +120,8 @@ describe('NewBranchModal', () => {
             expect(screen.getByDisplayValue(/Station 3/)).not.toBeNull();
             expect(screen.getByDisplayValue(/RIGHT END/)).not.toBeNull();
 
-            rerender(<NewBranchModal isOpen={false} onClose={jest.fn()} />);
-            rerender(<NewBranchModal isOpen={true} onClose={jest.fn()} />);
+            rerender(<NewBranchModal isOpen={false} onClose={vi.fn()} />);
+            rerender(<NewBranchModal isOpen={true} onClose={vi.fn()} />);
 
             await waitFor(() => {
                 expect(screen.getAllByDisplayValue(/Please select/)).toHaveLength(2);
@@ -142,7 +142,7 @@ describe('NewBranchModal', () => {
                 branches,
             },
         });
-        const setup = () => render(<NewBranchModal isOpen={true} onClose={jest.fn()} />, { store: mockStore });
+        const setup = () => render(<NewBranchModal isOpen={true} onClose={vi.fn()} />, { store: mockStore });
 
         it('Can render where dropdown as expected', () => {
             setup();

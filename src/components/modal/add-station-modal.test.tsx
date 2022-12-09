@@ -1,4 +1,3 @@
-import React from 'react';
 import { BranchStyle, RmgStyle, SidePanelMode, StationDict } from '../../constants/constants';
 import { getBranches } from '../../redux/helper/graph-theory-util';
 import rootReducer from '../../redux';
@@ -7,6 +6,7 @@ import AddStationModal from './add-station-modal';
 import { SET_STATIONS_BULK } from '../../redux/param/action';
 import { render } from '../../test-utils';
 import { fireEvent, screen, within } from '@testing-library/react';
+import { vi } from 'vitest';
 
 const mockStationList = {
     linestart: {
@@ -76,7 +76,7 @@ describe('AddStationModal', () => {
                 branches,
             },
         });
-        const setup = () => render(<AddStationModal isOpen={true} onClose={jest.fn()} />, { store: mockStore });
+        const setup = () => render(<AddStationModal isOpen={true} onClose={vi.fn()} />, { store: mockStore });
 
         it('Can render where dropdown as expected', () => {
             setup();
@@ -148,7 +148,7 @@ describe('AddStationModal', () => {
                 branches,
             },
         });
-        const setup = () => render(<AddStationModal isOpen={true} onClose={jest.fn()} />, { store: mockStore });
+        const setup = () => render(<AddStationModal isOpen={true} onClose={vi.fn()} />, { store: mockStore });
 
         it('Can render where dropdown for SHMetro style as expected', () => {
             setup();

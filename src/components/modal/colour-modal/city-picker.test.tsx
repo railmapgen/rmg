@@ -1,10 +1,10 @@
-import React from 'react';
 import CityPicker from './city-picker';
 import { render } from '../../../test-utils';
 import { fireEvent, screen } from '@testing-library/react';
 import i18n from '../../../i18n/config';
+import { vi } from 'vitest';
 
-jest.mock('@railmapgen/rmg-palette-resources', () => ({
+vi.mock('@railmapgen/rmg-palette-resources', () => ({
     __esModule: true,
     cityList: [
         {
@@ -68,7 +68,7 @@ jest.mock('@railmapgen/rmg-palette-resources', () => ({
 }));
 
 const mockCallbacks = {
-    onChange: jest.fn(),
+    onChange: vi.fn(),
 };
 
 describe('Unit tests for CityPicker component', () => {
@@ -77,7 +77,7 @@ describe('Unit tests for CityPicker component', () => {
     });
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('Can render flag emojis (for non-Windows users) and translations as expected', async () => {
@@ -100,7 +100,7 @@ describe('Unit tests for CityPicker component', () => {
     });
 
     it('Can render OpenMoji SVG-format emoji for Windows users as expected', async () => {
-        const platformGetter = jest.spyOn(window.navigator, 'platform', 'get');
+        const platformGetter = vi.spyOn(window.navigator, 'platform', 'get');
         platformGetter.mockReturnValue('Win64');
 
         render(<CityPicker />);

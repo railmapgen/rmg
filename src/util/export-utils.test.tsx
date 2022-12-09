@@ -1,12 +1,13 @@
+import { vi } from 'vitest';
 import { getAbsoluteUrl } from './export-utils';
 import * as Utils from './utils';
 
-const isSafariSpy = jest.spyOn(Utils, 'isSafari');
+const isSafariSpy = vi.spyOn(Utils, 'isSafari');
 const originalEnv = process.env;
 
 describe('ExportUtils', () => {
     beforeEach(() => {
-        jest.resetModules();
+        vi.resetModules();
         process.env = { ...originalEnv, PUBLIC_URL: 'https://railmapgen.github.io/rmg' };
     });
 
