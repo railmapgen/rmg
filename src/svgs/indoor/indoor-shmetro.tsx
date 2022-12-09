@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { adjacencyList, criticalPathMethod, getStnState, getXShareMTR } from '../railmap/methods/share';
 import StationSHMetro from './station-shmetro';
 import { StationsSHMetro } from '../railmap/methods/mtr';
@@ -30,32 +30,34 @@ export default function IndoorWrapperSHMetro() {
     );
 }
 
-export const DefsSHMetro = React.memo(() => (
-    <defs>
-        <circle id="stn_indoor_sh" fill="var(--rmg-white)" strokeWidth={5} r={8} transform="scale(1.5)" />
-        <path
-            id="int2_indoor_sh"
-            fill="var(--rmg-white)"
-            transform="translate(0, -10)scale(2)"
-            strokeWidth={4}
-            d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"
-        />
-        <path
-            id="express_indoor_sh"
-            fill="var(--rmg-white)"
-            transform="translate(0, -10)scale(2)"
-            strokeWidth={4}
-            d="M -5,0 a 5,5 0 1 1 10,0 V25 a 5,5 0 1 1 -10,0Z"
-        />
-        <path
-            id="direct_indoor_sh"
-            fill="var(--rmg-white)"
-            transform="translate(0, -10)scale(2)"
-            strokeWidth={4}
-            d="M -5,0 a 5,5 0 1 1 10,0 V40 a 5,5 0 1 1 -10,0Z"
-        />
-    </defs>
-));
+export const DefsSHMetro = memo(function DefsSHMetro() {
+    return (
+        <defs>
+            <circle id="stn_indoor_sh" fill="var(--rmg-white)" strokeWidth={5} r={8} transform="scale(1.5)" />
+            <path
+                id="int2_indoor_sh"
+                fill="var(--rmg-white)"
+                transform="translate(0, -10)scale(2)"
+                strokeWidth={4}
+                d="M -5,0 a 5,5 0 1 1 10,0 V10 a 5,5 0 1 1 -10,0Z"
+            />
+            <path
+                id="express_indoor_sh"
+                fill="var(--rmg-white)"
+                transform="translate(0, -10)scale(2)"
+                strokeWidth={4}
+                d="M -5,0 a 5,5 0 1 1 10,0 V25 a 5,5 0 1 1 -10,0Z"
+            />
+            <path
+                id="direct_indoor_sh"
+                fill="var(--rmg-white)"
+                transform="translate(0, -10)scale(2)"
+                strokeWidth={4}
+                d="M -5,0 a 5,5 0 1 1 10,0 V40 a 5,5 0 1 1 -10,0Z"
+            />
+        </defs>
+    );
+});
 
 const leftWideFactor = (stnList: StationDict, stnId: string) => {
     let res = 0;
@@ -80,17 +82,13 @@ const IndoorSHMetro = () => {
     const criticalPath = criticalPathMethod('linestart', 'lineend', adjMat);
     const realCP = criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat);
 
-    const xShares = React.useMemo(
-        () => {
-            console.log('computing x shares');
-            return Object.keys(param.stn_list).reduce(
-                (acc, cur) => ({ ...acc, [cur]: getXShareMTR(cur, adjMat, branches) }),
-                {} as { [stnId: string]: number }
-            );
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [branches.toString(), JSON.stringify(adjMat)]
-    );
+    const xShares = useMemo(() => {
+        console.log('computing x shares');
+        return Object.keys(param.stn_list).reduce(
+            (acc, cur) => ({ ...acc, [cur]: getXShareMTR(cur, adjMat, branches) }),
+            {} as { [stnId: string]: number }
+        );
+    }, [branches.toString(), JSON.stringify(adjMat)]);
     const lineXs: [number, number] = [
         (param.svgWidth.indoor * param.padding) / 100,
         param.svgWidth.indoor * (1 - param.padding / 100),
@@ -100,19 +98,14 @@ const IndoorSHMetro = () => {
         {} as typeof xShares
     );
 
-    const yShares = useMemo(
-        () => StationsSHMetro.getYShares(param.stn_list, branches),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [deps]
-    );
+    const yShares = useMemo(() => StationsSHMetro.getYShares(param.stn_list, branches), [deps]);
     const ys = Object.keys(yShares).reduce(
         (acc, cur) => ({ ...acc, [cur]: (yShares[cur] * param.branchSpacingPct * param.svg_height) / 200 }),
         {} as typeof yShares
     );
 
-    const stnStates = React.useMemo(
+    const stnStates = useMemo(
         () => getStnState(param.current_stn_idx, routes, param.direction),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [param.current_stn_idx, param.direction, routes.toString()]
     );
 
@@ -206,7 +199,7 @@ const StationGroup = (props: StationGroupProps) => {
 const InfoElements = () => {
     const param = useRootSelector(store => store.param);
 
-    return React.useMemo(
+    return useMemo(
         () => (
             <>
                 <g transform={`translate(${param.svgWidth.indoor / 2},50)`}>
@@ -252,7 +245,6 @@ const InfoElements = () => {
                 </g>
             </>
         ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [param.svgWidth.indoor, param.svg_height, param.line_name]
     );
 };

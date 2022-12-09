@@ -1,7 +1,7 @@
 import { ColourHex } from '@railmapgen/rmg-palette-resources';
-import React from 'react';
 import { InterchangeInfo, Name, Services } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
+import { forwardRef, Fragment, Ref, SVGProps, useMemo } from 'react';
 
 export type NameDirection = 'upward' | 'downward' | 'left' | 'right';
 
@@ -17,7 +17,7 @@ export const StationSHMetro = (props: Props) => {
     const stnInfo = useRootSelector(store => store.param.stn_list[stnId]);
 
     const transfer = [...stnInfo.transfer.info[0], ...(stnInfo.transfer.info[1] || [])];
-    let stationIconStyle = '';
+    let stationIconStyle: string;
     if (stnInfo.services.length === 3) stationIconStyle = 'direct_indoor_sh';
     else if (stnInfo.services.length === 2) stationIconStyle = 'express_indoor_sh';
     else if (transfer.length > 0) stationIconStyle = 'int2_indoor_sh';
@@ -147,60 +147,57 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     );
 };
 
-const StationName = React.forwardRef(
-    (
-        props: { stnName: Name; nameDirection: NameDirection } & React.SVGProps<SVGGElement>,
-        ref: React.Ref<SVGGElement>
-    ) => {
-        const { stnName, nameDirection, ...others } = props;
-        const name = stnName[0].split('\\');
-        const nameENLn = stnName[1].split('\\').length;
-        const dx = { upward: 0, downward: 0, left: -60, right: 60 }[nameDirection];
-        const dy = {
-            upward: -2,
-            downward: -30 - 12 * (nameENLn - 1),
-            left: -10 * (nameENLn - 1),
-            right: -10 * (nameENLn - 1),
-        }[nameDirection];
-        const anchor = { upward: 'middle', downward: 'middle', left: 'end', right: 'start' }[nameDirection];
+const StationName = forwardRef(function StationName(
+    props: { stnName: Name; nameDirection: NameDirection } & SVGProps<SVGGElement>,
+    ref: Ref<SVGGElement>
+) {
+    const { stnName, nameDirection, ...others } = props;
+    const name = stnName[0].split('\\');
+    const nameENLn = stnName[1].split('\\').length;
+    const dx = { upward: 0, downward: 0, left: -60, right: 60 }[nameDirection];
+    const dy = {
+        upward: -2,
+        downward: -30 - 12 * (nameENLn - 1),
+        left: -10 * (nameENLn - 1),
+        right: -10 * (nameENLn - 1),
+    }[nameDirection];
+    const anchor = { upward: 'middle', downward: 'middle', left: 'end', right: 'start' }[nameDirection];
 
-        return (
-            <g ref={ref} {...others} textAnchor={anchor} transform={`translate(${dx},${dy})`}>
-                {React.useMemo(
-                    () => (
-                        <>
-                            {name.map((txt, i, array) => (
+    return (
+        <g ref={ref} {...others} textAnchor={anchor} transform={`translate(${dx},${dy})`}>
+            {useMemo(
+                () => (
+                    <>
+                        {name.map((txt, i, array) => (
+                            <text
+                                key={i}
+                                className="rmg-name__zh"
+                                dy={nameDirection === 'upward' ? 16 * i : (array.length - 1 - i) * -16}
+                            >
+                                {txt}
+                            </text>
+                        ))}
+                        <g fontSize={9.6}>
+                            {stnName[1].split('\\').map((txt, i) => (
                                 <text
                                     key={i}
-                                    className="rmg-name__zh"
-                                    dy={nameDirection === 'upward' ? 16 * i : (array.length - 1 - i) * -16}
+                                    className="rmg-name__en"
+                                    dy={
+                                        12 * (i + 1) +
+                                        (nameDirection === 'upward' ? (name.length > 1 ? name.length * 7.5 : 0) : 0)
+                                    }
                                 >
                                     {txt}
                                 </text>
                             ))}
-                            <g fontSize={9.6}>
-                                {stnName[1].split('\\').map((txt, i) => (
-                                    <text
-                                        key={i}
-                                        className="rmg-name__en"
-                                        dy={
-                                            12 * (i + 1) +
-                                            (nameDirection === 'upward' ? (name.length > 1 ? name.length * 7.5 : 0) : 0)
-                                        }
-                                    >
-                                        {txt}
-                                    </text>
-                                ))}
-                            </g>
-                        </>
-                    ),
-                    // eslint-disable-next-line react-hooks/exhaustive-deps
-                    [...stnName]
-                )}
-            </g>
-        );
-    }
-);
+                        </g>
+                    </>
+                ),
+                [...stnName]
+            )}
+        </g>
+    );
+});
 
 interface IntBoxGroupProps {
     intInfos: InterchangeInfo[];
@@ -208,7 +205,7 @@ interface IntBoxGroupProps {
     services: Services[];
 }
 
-const IntBoxGroup = (props: IntBoxGroupProps & React.SVGProps<SVGGElement>) => {
+const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
     const { intInfos, arrowDirection, services } = props;
 
     // name each different linearGradient that will fill the arrow
@@ -278,17 +275,17 @@ const IntBoxGroup = (props: IntBoxGroupProps & React.SVGProps<SVGGElement>) => {
                         x2={arrowDirection === 'upward' ? '75%' : '25%'}
                     >
                         {intInfos.map((intInfo, i) => (
-                            <React.Fragment key={i}>
+                            <Fragment key={i}>
                                 {/* more about React.Fragment on https://stackoverflow.com/a/59390967 */}
                                 <stop // start from
-                                    offset={`${(100 / intInfos.length) * (i + 0)}%`}
+                                    offset={`${(100 / intInfos.length) * i}%`}
                                     stopColor={intInfo[2]}
                                 />
                                 <stop // to
                                     offset={`${(100 / intInfos.length) * (i + 1)}%`}
                                     stopColor={intInfo[2]}
                                 />
-                            </React.Fragment>
+                            </Fragment>
                         ))}
                     </linearGradient>
 
@@ -317,7 +314,7 @@ const IntBoxGroup = (props: IntBoxGroupProps & React.SVGProps<SVGGElement>) => {
 
 const OSIText = (props: { osiInfos: InterchangeInfo[]; nameDirection: NameDirection }) => {
     const anchor = { upward: 'middle', downward: 'middle', left: 'start', right: 'end' }[props.nameDirection];
-    return React.useMemo(
+    return useMemo(
         () => (
             <g textAnchor={`${anchor}`} fontSize="50%">
                 <text className="rmg-name__zh" dy={-5}>
@@ -331,14 +328,13 @@ const OSIText = (props: { osiInfos: InterchangeInfo[]; nameDirection: NameDirect
                 </text>
             </g>
         ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.osiInfos.toString(), props.nameDirection]
     );
 };
 
 const OSysIText = (props: { osysiInfos: InterchangeInfo[]; nameDirection: NameDirection }) => {
     const anchor = { upward: 'middle', downward: 'middle', left: 'start', right: 'end' }[props.nameDirection];
-    return React.useMemo(
+    return useMemo(
         () => (
             <g textAnchor={`${anchor}`}>
                 <text className="rmg-name__zh" dy={-5}>
@@ -349,7 +345,6 @@ const OSysIText = (props: { osysiInfos: InterchangeInfo[]; nameDirection: NameDi
                 </text>
             </g>
         ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.osysiInfos.toString(), props.nameDirection]
     );
 };

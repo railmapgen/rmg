@@ -8,7 +8,7 @@ export const cloneSvgCanvas = async (
     isShowBorder?: boolean,
     scale?: number
 ): Promise<SVGSVGElement> => {
-    let [, thisSVGHeight] = ['--rmg-svg-width', '--rmg-svg-height']
+    const [, thisSVGHeight] = ['--rmg-svg-width', '--rmg-svg-height']
         .map(
             key =>
                 (document.querySelector(`svg#${canvas}`) as SVGSVGElement).style.getPropertyValue(key).match(/\d+/g)![0]
@@ -31,7 +31,7 @@ export const cloneSvgCanvas = async (
                 .join(' ')
         )
         .forEach(txt => {
-            let s = document.createElement('style');
+            const s = document.createElement('style');
             s.textContent = txt;
             elem.prepend(s);
         });
@@ -132,19 +132,19 @@ export const getAbsoluteUrl = (cssRule: CSSFontFaceRule) => {
 };
 
 export const test = async (svgEl: SVGSVGElement, scale: number, isWait: boolean): Promise<Blob> => {
-    let svgW = svgEl.viewBox.baseVal.width;
-    let svgH = svgEl.viewBox.baseVal.height;
+    const svgW = svgEl.viewBox.baseVal.width;
+    const svgH = svgEl.viewBox.baseVal.height;
 
     // svgEl.removeAttribute('height');
 
-    let canvas = document.querySelectorAll('canvas')[0];
+    const canvas = document.querySelectorAll('canvas')[0];
     canvas.width = Number(svgW) * window.devicePixelRatio * scale;
     canvas.height = Number(svgH) * window.devicePixelRatio * scale;
 
     svgEl.setAttribute('width', canvas.width.toString());
     svgEl.setAttribute('height', canvas.height.toString());
 
-    let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // bypass Chrome min font size (to be improved)
@@ -160,7 +160,7 @@ export const test = async (svgEl: SVGSVGElement, scale: number, isWait: boolean)
     //     .forEach((el) => el.setAttribute('font-size', window.getComputedStyle(el).fontSize));
 
     svgEl.querySelectorAll('text, tspan').forEach(el => {
-        let elStyle = window.getComputedStyle(el);
+        const elStyle = window.getComputedStyle(el);
         el.setAttribute('font-family', elStyle.fontFamily);
         el.setAttribute('fill', elStyle.fill);
         el.setAttribute('dominant-baseline', elStyle.dominantBaseline);

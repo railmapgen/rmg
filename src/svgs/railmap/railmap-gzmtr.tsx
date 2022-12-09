@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import { Fragment, memo, SVGProps, useEffect, useMemo, useRef, useState } from 'react';
 import StripGZMTR from '../gzmtr/strip-gzmtr';
 import MainGZMTR from './main/main-gzmtr';
 import { CanvasType, Note, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
@@ -62,12 +62,18 @@ const RailMapGZMTR = () => {
 
 export default RailMapGZMTR;
 
-const DefsGZMTR = memo(() => (
-    <defs>
-        <path id="arrow_direction" d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z" fill="black" />
-        <path id="inttick" d="M 0,0 v 18" strokeLinecap="square" />
-    </defs>
-));
+const DefsGZMTR = memo(function DefsGZMTR() {
+    return (
+        <defs>
+            <path
+                id="arrow_direction"
+                d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z"
+                fill="black"
+            />
+            <path id="inttick" d="M 0,0 v 18" strokeLinecap="square" />
+        </defs>
+    );
+});
 
 const DirectionIndicator = () => {
     const { routes } = useRootSelector(store => store.helper);
@@ -96,7 +102,6 @@ const DirectionIndicator = () => {
                     .filter(id => id !== currentStationIndex)
             ),
         ],
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [currentStationIndex, direction, routes.toString()]
     );
 
@@ -127,7 +132,7 @@ const DirectionIndicator = () => {
 
 type TextGroupProps = {
     destIds: string[];
-} & React.SVGProps<SVGGElement>;
+} & SVGProps<SVGGElement>;
 
 const DirectionIndicatorTextGroup = (props: TextGroupProps) => {
     const { destIds, ...others } = props;
@@ -160,7 +165,7 @@ const DirectionIndicatorTextGroup2 = (props: TextGroupProps) => {
     return (
         <g {...others}>
             {destIds.map((id, i) => (
-                <React.Fragment key={id}>
+                <Fragment key={id}>
                     <text
                         className="rmg-name__zh"
                         fontSize={25}
@@ -178,7 +183,7 @@ const DirectionIndicatorTextGroup2 = (props: TextGroupProps) => {
                     >
                         {'Towards ' + stationList[id].name[1].replace('\\', ' ')}
                     </text>
-                </React.Fragment>
+                </Fragment>
             ))}
             <text
                 className="rmg-name__zh"
@@ -192,30 +197,31 @@ const DirectionIndicatorTextGroup2 = (props: TextGroupProps) => {
     );
 };
 
-const TerminusFlag = React.memo(() => (
-    <g id="terminus_gz" textAnchor="middle">
-        <text className="rmg-name__zh" fontSize={90}>
-            终 点 站
-        </text>
-        <text dy={70} className="rmg-name__en" fontSize={36}>
-            Terminal
-        </text>
-        <g strokeWidth={8} stroke="#000">
-            <path d="M -160,68 h -160" />
-            <path d="M 160,68 h 160" />
+const TerminusFlag = memo(function TerminusFlag() {
+    return (
+        <g id="terminus_gz" textAnchor="middle">
+            <text className="rmg-name__zh" fontSize={90}>
+                终 点 站
+            </text>
+            <text dy={70} className="rmg-name__en" fontSize={36}>
+                Terminal
+            </text>
+            <g strokeWidth={8} stroke="#000">
+                <path d="M -160,68 h -160" />
+                <path d="M 160,68 h 160" />
+            </g>
         </g>
-    </g>
-));
+    );
+});
 
-const NoteBox = React.memo(
-    (props: { note: Note }) => {
-        const noteTextEl = React.useRef<SVGGElement | null>(null);
-        const [bBox, setBBox] = React.useState({ width: 0, height: 0, y: 0 } as DOMRect);
-        React.useEffect(
-            () => setBBox(noteTextEl.current!.getBBox()),
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            [props.note[0], props.note[1]]
-        );
+const NoteBox = memo(
+    function NoteBox(props: { note: Note }) {
+        const noteTextEl = useRef<SVGGElement | null>(null);
+        const [bBox, setBBox] = useState({ width: 0, height: 0, y: 0 } as DOMRect);
+
+        useEffect(() => {
+            noteTextEl.current && setBBox(noteTextEl.current.getBBox());
+        }, [props.note[0], props.note[1]]);
 
         return (
             <g

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { Fragment, SVGProps, useEffect, useRef, useState } from 'react';
 import StationNumber from './station-icon/station-number';
 import { CanvasType, Name, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
@@ -90,12 +90,8 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
     const { name, secondaryName } = nextInfo;
 
     const [nextBBox, setNextBBox] = useState({ width: 0 } as DOMRect);
-    const nextNameEl = React.useRef<SVGGElement | null>(null);
-    useEffect(
-        () => setNextBBox(nextNameEl.current!.getBBox()),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [name.toString()]
-    );
+    const nextNameEl = useRef<SVGGElement | null>(null);
+    useEffect(() => setNextBBox(nextNameEl.current!.getBBox()), [name.toString()]);
 
     const nextNameZHCount = name[0].length;
     const nameBcrX = (svgWidths[CanvasType.RunIn] - nameBBox.width) / 2;
@@ -192,16 +188,12 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
     );
 };
 
-const BigNextSec = (props: { secName: Name } & React.SVGProps<SVGGElement>) => {
+const BigNextSec = (props: { secName: Name } & SVGProps<SVGGElement>) => {
     const { secName, ...others } = props;
 
     const nameEl = useRef<SVGGElement | null>(null);
     const [bBox, setBBox] = useState({ x: 0, width: 0 } as DOMRect);
-    useEffect(
-        () => setBBox(nameEl.current!.getBBox()),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.secName.toString()]
-    );
+    useEffect(() => setBBox(nameEl.current!.getBBox()), [props.secName.toString()]);
 
     return (
         <g {...others}>
@@ -235,23 +227,19 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
     const nextNames = nextIds.map(id => stationList[id].name);
     const [nextBBox, setNextBBox] = useState({ width: 0 } as DOMRect);
     const nextNameEls = useRef<(SVGGElement | null)[]>([]);
-    useEffect(
-        () => {
-            setNextBBox(prevBBox => ({ ...prevBBox, width: 0 }));
-            nextNameEls.current.forEach(el => {
-                let nextBBox = el?.getBBox();
-                setNextBBox(prevBBox => {
-                    if (nextBBox) {
-                        return prevBBox.width > nextBBox.width ? prevBBox : nextBBox;
-                    } else {
-                        return prevBBox;
-                    }
-                });
+    useEffect(() => {
+        setNextBBox(prevBBox => ({ ...prevBBox, width: 0 }));
+        nextNameEls.current.forEach(el => {
+            const nextBBox = el?.getBBox();
+            setNextBBox(prevBBox => {
+                if (nextBBox) {
+                    return prevBBox.width > nextBBox.width ? prevBBox : nextBBox;
+                } else {
+                    return prevBBox;
+                }
             });
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [nextNames.toString()]
-    );
+        });
+    }, [nextNames.toString()]);
 
     const validEnds = props.nextIds.map(stnId =>
         routes.reduce(
@@ -277,7 +265,7 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
             <g id="big_next_2">
                 {nextNames.map((name, i) => {
                     return (
-                        <React.Fragment key={i}>
+                        <Fragment key={i}>
                             <g
                                 textAnchor="middle"
                                 style={{
@@ -319,7 +307,7 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                                             .replace('\\', ' ')}
                                 </text>
                             </g>
-                        </React.Fragment>
+                        </Fragment>
                     );
                 })}
             </g>

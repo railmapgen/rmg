@@ -67,9 +67,13 @@ export const mockSimpleStationList: StationDict = {
 } as any;
 
 class BroadcastChannel {
-    postMessage() {}
+    postMessage() {
+        // mocked
+    }
 
-    onmessage() {}
+    onmessage() {
+        // mocked
+    }
 }
 
 global.BroadcastChannel = BroadcastChannel as any;

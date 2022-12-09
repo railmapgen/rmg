@@ -29,8 +29,8 @@ export const getBranches = (stnList: StationDict) => {
                 case 1:
                     curId = children[0];
                     break;
-                case 2:
-                    let branchNextId = stnList[prevId].branch.right[1] as string;
+                case 2: {
+                    const branchNextId = stnList[prevId].branch.right[1] as string;
                     // if (branchCount === 0) {
                     if (stnList[prevId].branch.right[0] === 'through') {
                         branches.push([curId]);
@@ -44,6 +44,7 @@ export const getBranches = (stnList: StationDict) => {
                     }
                     curId = children.filter(stnId => stnId !== branchNextId)[0];
                     break;
+                }
             }
             branches[branchCount].push(curId);
 
@@ -88,8 +89,8 @@ export const getRoutes = (stnList: StationDict) => {
                 case 1:
                     curId = children[0];
                     break;
-                case 2:
-                    let branchNextId = stnList[prevId].branch.right[1] as string;
+                case 2: {
+                    const branchNextId = stnList[prevId].branch.right[1] as string;
                     // if (branchCount === 0) {
                     if (stnList[prevId].branch.right[0] === 'through') {
                         branches.push(branches[branchCount].slice());
@@ -105,6 +106,7 @@ export const getRoutes = (stnList: StationDict) => {
                     // }
                     curId = children.filter(stnId => stnId !== branchNextId)[0];
                     break;
+                }
             }
             branches[branchCount].push(curId);
 

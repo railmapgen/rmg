@@ -1,6 +1,6 @@
-import React from 'react';
 import { PanelTypeGZMTR, PanelTypeShmetro } from '../../constants/constants';
 import PsdNumber from './psd-number';
+import { memo, useMemo } from 'react';
 
 interface Props {
     variant: PanelTypeGZMTR | PanelTypeShmetro;
@@ -28,7 +28,7 @@ const StripGZMTR = (props: Props) => {
         }
     })(props.variant);
 
-    const indicatorLight = React.useMemo(() => {
+    const indicatorLight = useMemo(() => {
         switch (props.variant) {
             case 'gz1':
                 return <circle cy={-58} r={16} fill="red" />;
@@ -76,8 +76,8 @@ const StripGZMTR = (props: Props) => {
 
 export default StripGZMTR;
 
-const PSD = React.memo(
-    (props: Props) => {
+const PSD = memo(
+    function PSD(props: Props) {
         /**
          * Flag of whether PSD number is stick within the strip area. If `true`, should fill with white, otherwise, fill with theme colour.
          */

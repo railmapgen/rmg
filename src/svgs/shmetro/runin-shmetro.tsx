@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import { memo, SVGProps, useMemo } from 'react';
 import { CanvasType, Name, StationDict } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
@@ -25,51 +25,43 @@ const RunInSHMetro = () => {
     // get the height
     const dh = svg_height - 300;
 
-    const prevStnIds = useMemo(
-        () => {
-            let prevStnIds = routes
-                .filter(route => route.includes(current_stn_idx))
-                .map(route => route[route.indexOf(current_stn_idx) + (direction === 'l' ? 1 : -1)])
-                // .flat()
-                // remove duplicate
-                .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]);
-            if (
-                loop && // if it is a loop
-                branches[0].includes(current_stn_idx) && // and this station is on the loop line
-                prevStnIds.length === 1 && // and it is the first station of that direction
-                ['linestart', 'lineend'].includes(prevStnIds[0])
-            ) {
-                // get the station from the other end
-                prevStnIds = direction === 'l' ? [branches[0][1]] : [branches[0][branches[0].length - 2]];
-            }
-            return prevStnIds;
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [deps, current_stn_idx, direction, loop]
-    );
+    const prevStnIds = useMemo(() => {
+        let prevStnIds = routes
+            .filter(route => route.includes(current_stn_idx))
+            .map(route => route[route.indexOf(current_stn_idx) + (direction === 'l' ? 1 : -1)])
+            // .flat()
+            // remove duplicate
+            .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]);
+        if (
+            loop && // if it is a loop
+            branches[0].includes(current_stn_idx) && // and this station is on the loop line
+            prevStnIds.length === 1 && // and it is the first station of that direction
+            ['linestart', 'lineend'].includes(prevStnIds[0])
+        ) {
+            // get the station from the other end
+            prevStnIds = direction === 'l' ? [branches[0][1]] : [branches[0][branches[0].length - 2]];
+        }
+        return prevStnIds;
+    }, [deps, current_stn_idx, direction, loop]);
 
-    const nextStnIds = useMemo(
-        () => {
-            let nextStnIds = routes
-                .filter(route => route.includes(current_stn_idx))
-                .map(route => route[route.indexOf(current_stn_idx) + (direction === 'l' ? -1 : 1)])
-                // .flat()
-                // remove duplicate
-                .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]);
-            if (
-                loop && // if it is a loop
-                branches[0].includes(current_stn_idx) && // and this station is on the loop line
-                nextStnIds.length === 1 && // and it is the last station of that direction
-                ['linestart', 'lineend'].includes(nextStnIds[0])
-            ) {
-                // get the station from the other end
-                nextStnIds = direction === 'l' ? [branches[0][branches[0].length - 2]] : [branches[0][1]];
-            }
-            return nextStnIds;
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [deps, current_stn_idx, direction, loop]
-    );
+    const nextStnIds = useMemo(() => {
+        let nextStnIds = routes
+            .filter(route => route.includes(current_stn_idx))
+            .map(route => route[route.indexOf(current_stn_idx) + (direction === 'l' ? -1 : 1)])
+            // .flat()
+            // remove duplicate
+            .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]);
+        if (
+            loop && // if it is a loop
+            branches[0].includes(current_stn_idx) && // and this station is on the loop line
+            nextStnIds.length === 1 && // and it is the last station of that direction
+            ['linestart', 'lineend'].includes(nextStnIds[0])
+        ) {
+            // get the station from the other end
+            nextStnIds = direction === 'l' ? [branches[0][branches[0].length - 2]] : [branches[0][1]];
+        }
+        return nextStnIds;
+    }, [deps, current_stn_idx, direction, loop]);
 
     return (
         <SvgWrapper
@@ -89,31 +81,33 @@ const RunInSHMetro = () => {
 
 export default RunInSHMetro;
 
-const DefsSHMetro = memo(() => (
-    <defs>
-        {/* An extension of the line/path. Remember to minus the stroke-width.  */}
-        <marker id="slope" viewBox="-1.5 0 3 1.5" refY={0.5}>
-            <path d="M0,0L1,1H-1z" fill="var(--rmg-theme-colour)" />
-        </marker>
+const DefsSHMetro = memo(function DefsSHMetro() {
+    return (
+        <defs>
+            {/* An extension of the line/path. Remember to minus the stroke-width.  */}
+            <marker id="slope" viewBox="-1.5 0 3 1.5" refY={0.5}>
+                <path d="M0,0L1,1H-1z" fill="var(--rmg-theme-colour)" />
+            </marker>
 
-        {/* Outline filter of white pass color in Pujiang Line */}
-        <filter
-            id="pujiang_outline_runin"
-            colorInterpolationFilters="sRGB"
-            // TODO: remove the absolute value while make the filter works correctly
-            filterUnits="userSpaceOnUse"
-            x="0"
-            y="-1000"
-            width="5000"
-            height="2000"
-        >
-            <feMorphology operator="erode" in="SourceAlpha" radius="0" result="e1" />
-            <feMorphology operator="erode" in="SourceAlpha" radius="1" result="e2" />
-            <feComposite in="e1" in2="e2" operator="xor" result="outline" />
-            <feComposite in="outline" in2="SourceGraphic" operator="over" result="output" />
-        </filter>
-    </defs>
-));
+            {/* Outline filter of white pass color in Pujiang Line */}
+            <filter
+                id="pujiang_outline_runin"
+                colorInterpolationFilters="sRGB"
+                // TODO: remove the absolute value while make the filter works correctly
+                filterUnits="userSpaceOnUse"
+                x="0"
+                y="-1000"
+                width="5000"
+                height="2000"
+            >
+                <feMorphology operator="erode" in="SourceAlpha" radius="0" result="e1" />
+                <feMorphology operator="erode" in="SourceAlpha" radius="1" result="e2" />
+                <feComposite in="e1" in2="e2" operator="xor" result="outline" />
+                <feComposite in="outline" in2="SourceGraphic" operator="over" result="output" />
+            </filter>
+        </defs>
+    );
+});
 
 interface RunInGeneralProps {
     prevStnIds: string[];
@@ -373,7 +367,7 @@ const BranchLine = (props: RunInBranchLineProps) => {
             .map(dot => `L${dotToPos(dot)}`)
             .join(' ');
 
-    let nextDots = (
+    const nextDots = (
         direction === 'l'
             ? [
                   [svgWidth.runin / 3, LINE_BRANCH_Y],
@@ -386,7 +380,7 @@ const BranchLine = (props: RunInBranchLineProps) => {
                   [svgWidth.runin - 36, nextBranchLineDy],
               ]
     ) as [number, number][];
-    let prevDots = (
+    const prevDots = (
         direction === 'l'
             ? [
                   [(svgWidth.runin / 3) * 2, LINE_BRANCH_Y],
@@ -481,7 +475,7 @@ const CurrentText = () => {
     );
 };
 
-const NextText = (props: { nextName: Name } & React.SVGProps<SVGGElement>) => {
+const NextText = (props: { nextName: Name } & SVGProps<SVGGElement>) => {
     const { nextName, ...others } = props;
     return (
         <g {...others}>

@@ -1,6 +1,12 @@
 {
-    "extends": ["react-app", "react-app/jest"],
-    "plugins": ["prettier"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["prettier", "react", "@typescript-eslint"],
     "rules": {
         "prettier/prettier": [
             "warn",
@@ -8,14 +14,23 @@
                 "endOfLine": "auto"
             }
         ],
-        "react-hooks/exhaustive-deps": "off",
-        "react/self-closing-comp": [
-            "error",
-            {
-                "component": true
-            }
-        ],
-        "@typescript-eslint/no-unused-vars": "off"
+        "no-constant-condition": ["error", { "checkLoops": false }],
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-explicit-any": "off"
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true
     },
     "ignorePatterns": ["**/*.json"]
 }

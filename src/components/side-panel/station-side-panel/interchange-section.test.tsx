@@ -42,7 +42,9 @@ describe('InterchangeSection', () => {
     });
 
     it('Can handle add interchange group as expected', () => {
-        vi.spyOn(helperActions, 'triggerHelpersUpdate').mockReturnValue(() => {});
+        vi.spyOn(helperActions, 'triggerHelpersUpdate').mockReturnValue(() => {
+            // mocked
+        });
 
         const mockStore = createMockAppStore({
             ...realStore,

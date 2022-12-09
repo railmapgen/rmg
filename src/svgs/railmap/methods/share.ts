@@ -33,16 +33,16 @@ export const criticalPathMethod = (from: string, to: string, adjMat: ReturnType<
     if (from === to) {
         return { len: 0, nodes: [from] };
     }
-    let allLengths: number[] = [];
-    let criticalPaths: string[][] = [];
+    const allLengths: number[] = [];
+    const criticalPaths: string[][] = [];
     Object.keys(adjMat[from]).forEach(child => {
-        let cp = criticalPathMethod(child, to, adjMat);
+        const cp = criticalPathMethod(child, to, adjMat);
         if (cp.len < 0) return;
         allLengths.push(adjMat[from][child] + cp.len);
         cp.nodes.unshift(from);
         criticalPaths.push(cp.nodes);
     });
-    let maxLength = Math.max(...allLengths);
+    const maxLength = Math.max(...allLengths);
     return {
         len: maxLength,
         nodes: criticalPaths[allLengths.indexOf(maxLength)],
@@ -50,12 +50,12 @@ export const criticalPathMethod = (from: string, to: string, adjMat: ReturnType<
 };
 
 export const getXShareMTR = (stnId: string, adjMat: ReturnType<typeof adjacencyList>, branches: string[][]) => {
-    let criticalPath = criticalPathMethod('linestart', 'lineend', adjMat);
+    const criticalPath = criticalPathMethod('linestart', 'lineend', adjMat);
     if (criticalPath.nodes.includes(stnId)) {
         return criticalPathMethod(criticalPath.nodes[1], stnId, adjMat).len;
     } else {
         // must has 1 parent and 1 child only
-        let branchOfStn = branches.filter(branch => branch.includes(stnId))[0];
+        const branchOfStn = branches.filter(branch => branch.includes(stnId))[0];
 
         let partSource = stnId;
         while (!criticalPath.nodes.includes(partSource)) {
@@ -66,11 +66,11 @@ export const getXShareMTR = (stnId: string, adjMat: ReturnType<typeof adjacencyL
             partSink = branchOfStn[branchOfStn.indexOf(partSink) + 1];
         }
 
-        let leftOpenJaw = partSource === 'linestart';
-        let rightOpenJaw = partSink === 'lineend';
+        const leftOpenJaw = partSource === 'linestart';
+        const rightOpenJaw = partSink === 'lineend';
 
         // expand to fit
-        let lens = [];
+        const lens = [];
         if (!leftOpenJaw && !rightOpenJaw) {
             lens[0] = criticalPathMethod(criticalPath.nodes[1], partSource, adjMat).len;
             lens[1] = criticalPathMethod(partSource, partSink, adjMat).len;
@@ -93,18 +93,18 @@ export const getXShareMTR = (stnId: string, adjMat: ReturnType<typeof adjacencyL
 };
 
 const _isPredecessor = (stnId1: string, stnId2: string, routes: string[][]) => {
-    for (let route of routes) {
-        let idx1 = route.indexOf(stnId1);
-        let idx2 = route.indexOf(stnId2);
+    for (const route of routes) {
+        const idx1 = route.indexOf(stnId1);
+        const idx2 = route.indexOf(stnId2);
         if (idx2 !== -1 && idx2 < idx1) return true;
     }
     return false;
 };
 
 const _isSuccessor = (stnId1: string, stnId2: string, routes: string[][]) => {
-    for (let route of routes) {
-        let idx1 = route.indexOf(stnId1);
-        let idx2 = route.indexOf(stnId2);
+    for (const route of routes) {
+        const idx1 = route.indexOf(stnId1);
+        const idx2 = route.indexOf(stnId2);
         if (idx1 !== -1 && idx1 < idx2) return true;
     }
     return false;
@@ -171,17 +171,17 @@ export class Stations {
             this.yShares[stnId] = 0;
             return 0;
         }
-        var stnPred = this.stnList[stnId].parents[0];
+        const stnPred = this.stnList[stnId].parents[0];
         if (stnPred) {
             // parent exist
             if (this.stnList[stnPred].children.length === 1) {
                 // no sibling, then y same as parent
-                let res = this.getYShare(stnPred);
+                const res = this.getYShare(stnPred);
                 this.yShares[stnId] = res;
                 return res;
             } else {
                 // sibling exists, then y depends on its idx of being children
-                let res: 1 | -1 = this.stnList[stnPred].children.indexOf(stnId) === 0 ? 1 : -1;
+                const res: 1 | -1 = this.stnList[stnPred].children.indexOf(stnId) === 0 ? 1 : -1;
                 this.yShares[stnId] = res;
                 return res;
             }
@@ -194,7 +194,7 @@ export class Stations {
 
     static getYShares(stnList: StationDict, branches?: string[][]) {
         console.log('computing y shares');
-        let stations = new this({ stnList });
+        const stations = new this({ stnList });
 
         Object.keys(stnList).forEach(stnId => {
             if (['linestart', 'lineend'].includes(stnId)) return;
@@ -209,11 +209,11 @@ export class Stations {
      * Parameters of the arcs involved in the `<path>` element.
      */
     private pathTurnParams = (branchSpacing: number) => {
-        let tr = 35; // turning radius
-        let dx_a = tr / 2; // dx of a
-        let dy_a = tr - dx_a * Math.sqrt(3); // dy of a
-        let dy_l = branchSpacing - 2 * dy_a; // dy of l
-        let dx_l = dy_l * Math.sqrt(3); // dx of l
+        const tr = 35; // turning radius
+        const dx_a = tr / 2; // dx of a
+        const dy_a = tr - dx_a * Math.sqrt(3); // dy of a
+        const dy_l = branchSpacing - 2 * dy_a; // dy of l
+        const dx_l = dy_l * Math.sqrt(3); // dx of l
         return { tr, dx_a, dy_a, dx_l, dy_l };
     };
 
@@ -221,7 +221,7 @@ export class Stations {
      * Path segment from a station towards its southeast (lower-right).
      */
     private pathTurnSE = (branchSpacing: number) => {
-        let { tr, dx_a, dy_a, dx_l, dy_l } = this.pathTurnParams(branchSpacing);
+        const { tr, dx_a, dy_a, dx_l, dy_l } = this.pathTurnParams(branchSpacing);
         return `a ${tr},${tr} 0 0,1 ${dx_a},${dy_a} l ${dx_l},${dy_l} a ${tr},${tr} 0 0,0 ${dx_a},${dy_a}`;
     };
 
@@ -229,7 +229,7 @@ export class Stations {
      * Path segment from a station towards its northeast (upper-right).
      */
     private pathTurnNE = (branchSpacing: number) => {
-        let { tr, dx_a, dy_a, dx_l, dy_l } = this.pathTurnParams(branchSpacing);
+        const { tr, dx_a, dy_a, dx_l, dy_l } = this.pathTurnParams(branchSpacing);
         return `a ${tr},${tr} 0 0,0 ${dx_a},${-dy_a} l ${dx_l},${-dy_l} a ${tr},${tr} 0 0,1 ${dx_a},${-dy_a}`;
     };
 
@@ -246,20 +246,20 @@ export class Stations {
         cp: { len: number; nodes: string[] },
         e: number
     ) {
-        var [prevId, prevY, prevX] = [] as unknown as [string, number, number];
-        var path = [] as string[];
+        let [prevId, prevY, prevX] = [] as unknown as [string, number, number];
+        const path = [] as string[];
 
-        let { dx_a, dx_l } = this.pathTurnParams(branchSpacing);
-        let stnDX = dx_a + dx_l / 2;
-        let stnExtraH = ((lineXs[1] - lineXs[0]) / cp.len) * 2;
-        let stnSpareH = ((lineXs[1] - lineXs[0]) / cp.len - 2 * stnDX) / 2;
+        const { dx_a, dx_l } = this.pathTurnParams(branchSpacing);
+        const stnDX = dx_a + dx_l / 2;
+        const stnExtraH = ((lineXs[1] - lineXs[0]) / cp.len) * 2;
+        const stnSpareH = ((lineXs[1] - lineXs[0]) / cp.len - 2 * stnDX) / 2;
         if (stnSpareH + stnExtraH < 0) {
             console.warn(`SVG width too small! ${stnSpareH + stnExtraH}`);
         }
 
         stnIds.forEach(stnId => {
-            let x = realXs[stnId];
-            let y = realYs[stnId];
+            const x = realXs[stnId];
+            const y = realYs[stnId];
             if (!prevY && prevY !== 0) {
                 [prevId, prevX, prevY] = [stnId, x, y];
                 if (stnIds.length === 1) {

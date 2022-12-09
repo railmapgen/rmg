@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RmgAutoComplete, RmgLineBadge } from '@railmapgen/rmg-components';
 import { CityCode, ColourHex, MonoColour, PaletteEntry } from '@railmapgen/rmg-palette-resources';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +32,7 @@ export default function ColourPicker(props: ColourPickerProps) {
     const currentItem = defaultValueId ? paletteList.find(palette => palette.id === defaultValueId) : undefined;
 
     const displayValue = (item: PaletteEntry): string => {
-        return i18n.languages.map(lng => item.name[lng as LanguageCode]).find(name => name !== undefined)!!;
+        return i18n.languages.map(lng => item.name[lng as LanguageCode]).find(name => name !== undefined) ?? '';
     };
 
     const displayHandler = (item: PaletteEntry) => {

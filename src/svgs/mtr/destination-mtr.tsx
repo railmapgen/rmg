@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo, SVGProps, useEffect, useMemo, useRef, useState } from 'react';
 import StripMTR from './strip-mtr';
 import { CanvasType, Name, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
@@ -27,11 +27,13 @@ export default function DestinationMTR() {
     );
 }
 
-const DefsMTR = memo(() => (
-    <defs>
-        <path id="arrow" d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z" fill="var(--rmg-black,#000)" />
-    </defs>
-));
+const DefsMTR = memo(function DefsMTR() {
+    return (
+        <defs>
+            <path id="arrow" d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z" fill="var(--rmg-black,#000)" />
+        </defs>
+    );
+});
 
 const InfoMTR = () => {
     const routes = useRootSelector(store => store.helper.routes);
@@ -71,13 +73,9 @@ const InfoMTR = () => {
         ];
     }
 
-    const destNameEl = React.useRef<SVGGElement | null>(null);
-    const [bBox, setBBox] = React.useState({ width: 0 } as DOMRect);
-    React.useEffect(
-        () => setBBox(destNameEl.current!.getBBox()),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [destNames.toString(), customisedMTRDestination.isLegacy]
-    );
+    const destNameEl = useRef<SVGGElement | null>(null);
+    const [bBox, setBBox] = useState({ width: 0 } as DOMRect);
+    useEffect(() => setBBox(destNameEl.current!.getBBox()), [destNames.toString(), customisedMTRDestination.isLegacy]);
 
     const flagLength = 160 + 150 + bBox.width + 45 + 50;
     const arrowX = (svgWidths[CanvasType.Destination] - (direction === ShortDirection.left ? 1 : -1) * flagLength) / 2;
@@ -108,12 +106,12 @@ const InfoMTR = () => {
     );
 };
 
-const PlatformNum = (props: { num: string | false } & React.SVGProps<SVGGElement>) => {
+const PlatformNum = (props: { num: string | false } & SVGProps<SVGGElement>) => {
     const { num, ...others } = props;
 
     return (
         <g id="platform" {...others}>
-            {React.useMemo(
+            {useMemo(
                 () => (
                     <>
                         <circle cx={0} cy={0} r={75} fill="var(--rmg-theme-colour)" />

@@ -1,4 +1,3 @@
-import React from 'react';
 import { act, screen } from '@testing-library/react';
 import Station from './station';
 import { render } from '../../../test-utils';
@@ -87,7 +86,7 @@ describe('MTR Station', () => {
             const link = screen.getByTestId('station-icon-wrapper').querySelector(osiLinkSelector);
             expect(link?.getAttribute('d')).toContain('H41');
 
-            const [scaleX] = link?.getAttribute('transform')?.match(/-?\d+/g)!;
+            const scaleX = link?.getAttribute('transform')?.match(/-?\d+/g)?.[0];
             expect(scaleX).toBe('-1');
         });
 
@@ -100,7 +99,7 @@ describe('MTR Station', () => {
             const link = screen.getByTestId('station-icon-wrapper').querySelector(osiLinkSelector);
             expect(link?.getAttribute('d')).toContain('H41');
 
-            const [scaleX] = link?.getAttribute('transform')?.match(/-?\d+/g)!;
+            const scaleX = link?.getAttribute('transform')?.match(/-?\d+/g)?.[0];
             expect(scaleX).toBe('1');
         });
     });
