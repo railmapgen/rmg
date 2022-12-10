@@ -78,6 +78,7 @@ describe('Unit tests for CityPicker component', () => {
 
     afterEach(() => {
         vi.clearAllMocks();
+        vi.resetAllMocks();
     });
 
     it('Can render flag emojis (for non-Windows users) and translations as expected', async () => {

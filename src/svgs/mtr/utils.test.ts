@@ -12,6 +12,10 @@ describe('MTRUtils', () => {
         const mockResolve = vi.fn();
         const mockReject = vi.fn();
 
+        afterEach(() => {
+            vi.resetAllMocks();
+        });
+
         it('Can reject font ready promise if GenYoMin is not loaded after 3 attempts', () =>
             new Promise<void>(done => {
                 setFontFaceSet('Arial');

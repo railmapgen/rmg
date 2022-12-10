@@ -19,7 +19,6 @@ export default defineConfig({
         deps: {
             fallbackCJS: true,
         },
-        mockReset: true,
         watch: false,
     },
 });
