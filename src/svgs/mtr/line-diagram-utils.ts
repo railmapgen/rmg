@@ -60,10 +60,10 @@ export const getSidingPath = (coords: [number, number][]): string => {
     const RIGHT_UP_ARC = `a${TURNING_RADIUS},${TURNING_RADIUS},0,0,0,${TURNING_RADIUS},-${TURNING_RADIUS}`;
     const UP_RIGHT_ARC = `a${TURNING_RADIUS},${TURNING_RADIUS},0,0,1,${TURNING_RADIUS},-${TURNING_RADIUS}`;
 
-    let prevCoord: [number, number] | undefined;
-    let paths: string[] = [];
+    let prevCoord: [number, number] | undefined = undefined;
+    const paths: string[] = [];
 
-    for (let coord of coords) {
+    for (const coord of coords) {
         if (!prevCoord) {
             paths.push('M' + coord.join(','));
         } else {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { fireEvent, screen } from '@testing-library/react';
 import { SidePanelMode, StationDict } from '../../constants/constants';
 import { createMockAppStore } from '../../setupTests';
@@ -6,10 +5,11 @@ import { render } from '../../test-utils';
 import RemoveConfirmModal from './remove-confirm-modal';
 import rootReducer from '../../redux';
 import { SET_STATIONS_BULK } from '../../redux/param/action';
+import { vi } from 'vitest';
 
 const realStore = rootReducer.getState();
 const mockCallbacks = {
-    onClose: jest.fn(),
+    onClose: vi.fn(),
 };
 
 describe('RemoveConfirmModal', () => {

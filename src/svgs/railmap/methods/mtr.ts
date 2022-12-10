@@ -3,9 +3,9 @@ import { StationDict, StationInfo } from '../../../constants/constants';
 import { getSidingPath } from '../../mtr/line-diagram-utils';
 
 export const leftWideFactor = (stnList: StationDict, stnId: string) => {
-    var res = 0;
-    let { transfer } = stnList[stnId];
-    let ls = transfer.info.map(val => val.length);
+    let res = 0;
+    const { transfer } = stnList[stnId];
+    const ls = transfer.info.map(val => val.length);
     if (transfer.tick_direc === 'l') {
         // int3 or above
         if (!ls[1] && ls[0] > 1) res += 0.4;
@@ -24,9 +24,9 @@ export const leftWideFactor = (stnList: StationDict, stnId: string) => {
 };
 
 export const rightWideFactor = (stnList: StationDict, stnId: string) => {
-    var res = 0;
-    let { transfer } = stnList[stnId];
-    let ls = transfer.info.map(val => val.length);
+    let res = 0;
+    const { transfer } = stnList[stnId];
+    const ls = transfer.info.map(val => val.length);
     if (transfer.tick_direc === 'r') {
         // int3 or above
         if (!ls[1] && ls[0] > 1) res += 0.4;
@@ -61,21 +61,21 @@ export class StationsMTR extends Stations {
         ys: { [stnId: string]: number },
         branchSpacing: number,
         cp: { len: number; nodes: string[] },
-        e: number = 0
+        e = 0
     ) {
-        let linePaths = {
+        const linePaths = {
             main: [] as string[],
             pass: [] as string[],
             sidingMain: [] as string[],
             sidingPass: [] as string[],
         };
 
-        branches.forEach((branch, i) => {
+        branches.forEach(branch => {
             const isSiding = branch[0] !== 'linestart' && branch.slice(-1)[0] !== 'lineend';
 
             branch = branch.filter(stnId => !['linestart', 'lineend'].includes(stnId));
-            var lineMainStns = branch.filter(stnId => stnStates[stnId] >= 0);
-            var linePassStns = branch.filter(stnId => stnStates[stnId] <= 0);
+            let lineMainStns = branch.filter(stnId => stnStates[stnId] >= 0);
+            let linePassStns = branch.filter(stnId => stnStates[stnId] <= 0);
 
             if (lineMainStns.length === 1) {
                 linePassStns = branch;
@@ -144,19 +144,19 @@ export class StationsSHMetro extends StationsMTR {
         ys: { [stnId: string]: number },
         branchSpacing: number,
         cp: { len: number; nodes: string[] },
-        e: number = 0
+        e = 0
     ) {
-        let linePaths = {
+        const linePaths = {
             main: [] as string[],
             pass: [] as string[],
             sidingMain: [] as string[],
             sidingPass: [] as string[],
         };
 
-        branches.forEach((branch, i) => {
+        branches.forEach(branch => {
             branch = branch.filter(stnId => !['linestart', 'lineend'].includes(stnId));
-            var lineMainStns = branch.filter(stnId => stnStates[stnId] >= 0);
-            var linePassStns = branch.filter(stnId => stnStates[stnId] <= 0);
+            let lineMainStns = branch.filter(stnId => stnStates[stnId] >= 0);
+            let linePassStns = branch.filter(stnId => stnStates[stnId] <= 0);
 
             if (lineMainStns.length === 1) {
                 linePassStns = branch;

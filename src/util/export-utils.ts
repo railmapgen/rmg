@@ -8,15 +8,13 @@ export const cloneSvgCanvas = async (
     isShowBorder?: boolean,
     scale?: number
 ): Promise<SVGSVGElement> => {
-    let [, thisSVGHeight] = ['--rmg-svg-width', '--rmg-svg-height']
-        .map(
-            key =>
-                (document.querySelector(`svg#${canvas}`) as SVGSVGElement).style.getPropertyValue(key).match(/\d+/g)![0]
-        )
-        .map(Number);
+    const svg: SVGSVGElement | null = document.querySelector(`svg#${canvas}`);
+    if (!svg) {
+        throw new Error('Requested canvas SVG element not found');
+    }
 
-    const elem = document.querySelector(`svg#${canvas}`)!.cloneNode(true) as SVGSVGElement;
-    // elem.setAttribute('width', (thisSVGWidth * scaleFactor).toString());
+    const thisSVGHeight = Number(svg.style.getPropertyValue('--rmg-svg-height').match(/\d+/g)?.[0]);
+    const elem = svg.cloneNode(true) as SVGSVGElement;
     elem.setAttribute('height', ((thisSVGHeight * (scale || 100)) / 100).toString());
     elem.style.setProperty('all', 'initial');
 
@@ -31,7 +29,7 @@ export const cloneSvgCanvas = async (
                 .join(' ')
         )
         .forEach(txt => {
-            let s = document.createElement('style');
+            const s = document.createElement('style');
             s.textContent = txt;
             elem.prepend(s);
         });
@@ -84,13 +82,13 @@ export const getBase64FontFace = async (svgEl: SVGSVGElement): Promise<string[]>
             ]
                 .map(el => el.innerHTML)
                 .join('')
-                .replace(/[\s]/g, '')
+                .replace(/\s/g, '')
         )
     ).join('');
 
     const fontFaceList = await document.fonts.load('80px GenYoMin TW, Vegur', uniqueCharacters);
     const cssRules = Array.from(
-        (document.querySelector<HTMLLinkElement>('link#css_share')!.sheet!.cssRules[0] as CSSImportRule).styleSheet
+        (document.querySelector<HTMLLinkElement>('link#css_share')?.sheet?.cssRules?.[0] as CSSImportRule).styleSheet
             .cssRules
     ) as CSSFontFaceRule[];
     const distinctCssRules = fontFaceList.reduce<CSSFontFaceRule[]>((acc, cur) => {
@@ -127,24 +125,24 @@ export const getBase64FontFace = async (svgEl: SVGSVGElement): Promise<string[]>
 export const getAbsoluteUrl = (cssRule: CSSFontFaceRule) => {
     const ruleStyleSrc = (cssRule.style as any).src;
     return isSafari()
-        ? ruleStyleSrc.replace(/^url\("([\S]+)"\).*$/, '$1')
+        ? ruleStyleSrc.replace(/^url\("(\S+)"\).*$/, '$1')
         : import.meta.env.BASE_URL + 'styles/' + ruleStyleSrc.match(/^url\("([\S*]+)"\)/)?.[1];
 };
 
 export const test = async (svgEl: SVGSVGElement, scale: number, isWait: boolean): Promise<Blob> => {
-    let svgW = svgEl.viewBox.baseVal.width;
-    let svgH = svgEl.viewBox.baseVal.height;
+    const svgW = svgEl.viewBox.baseVal.width;
+    const svgH = svgEl.viewBox.baseVal.height;
 
     // svgEl.removeAttribute('height');
 
-    let canvas = document.querySelectorAll('canvas')[0];
+    const canvas = document.querySelectorAll('canvas')[0];
     canvas.width = Number(svgW) * window.devicePixelRatio * scale;
     canvas.height = Number(svgH) * window.devicePixelRatio * scale;
 
     svgEl.setAttribute('width', canvas.width.toString());
     svgEl.setAttribute('height', canvas.height.toString());
 
-    let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // bypass Chrome min font size (to be improved)
@@ -160,7 +158,7 @@ export const test = async (svgEl: SVGSVGElement, scale: number, isWait: boolean)
     //     .forEach((el) => el.setAttribute('font-size', window.getComputedStyle(el).fontSize));
 
     svgEl.querySelectorAll('text, tspan').forEach(el => {
-        let elStyle = window.getComputedStyle(el);
+        const elStyle = window.getComputedStyle(el);
         el.setAttribute('font-family', elStyle.fontFamily);
         el.setAttribute('fill', elStyle.fill);
         el.setAttribute('dominant-baseline', elStyle.dominantBaseline);
@@ -175,7 +173,13 @@ export const test = async (svgEl: SVGSVGElement, scale: number, isWait: boolean)
             setTimeout(
                 () => {
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    canvas.toBlob(blob => resolve(blob!), 'image/png');
+                    canvas.toBlob(blob => {
+                        if (blob) {
+                            resolve(blob);
+                        } else {
+                            reject('Canvas blob is null');
+                        }
+                    }, 'image/png');
                 },
                 isWait ? 2000 : 0
             );

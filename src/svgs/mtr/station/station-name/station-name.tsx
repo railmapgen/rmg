@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { Direction, Name } from '../../../../constants/constants';
 import { waitForFontReady } from '../../utils';
 
@@ -15,7 +15,9 @@ export default memo(
         const nameEl = useRef<SVGGElement>(null);
 
         const updateNameBBox = () => {
-            onUpdate?.(nameEl.current!.getBBox());
+            if (nameEl.current && onUpdate) {
+                onUpdate(nameEl.current.getBBox());
+            }
         };
 
         useEffect(() => {

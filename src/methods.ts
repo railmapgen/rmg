@@ -11,7 +11,7 @@ export const getYShareMTR = (stnId: string, stnList: StationDict): -1 | 0 | 1 =>
     ) {
         return 0;
     }
-    var stnPred = stnList[stnId].parents[0];
+    const stnPred = stnList[stnId].parents[0];
     if (stnPred) {
         // parent exist
         if (stnList[stnPred].children.length === 1) {

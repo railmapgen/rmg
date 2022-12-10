@@ -4,6 +4,7 @@ import { initCanvasScale, initCanvasToShow, paramUpdateTrigger } from './init';
 import { CanvasType, LocalStorageKey, RMGParam, RmgStyle } from '../constants/constants';
 import { initParam } from './param/util';
 import { LanguageCode } from '@railmapgen/rmg-translate';
+import { vi } from 'vitest';
 
 const realStore = rootReducer.getState();
 const mockStore = createMockAppStore({ ...realStore });
@@ -83,7 +84,7 @@ describe('ReduxInit', () => {
     });
 
     describe('ReduxInit - paramUpdateTrigger', () => {
-        const mockDispatch = jest.fn();
+        const mockDispatch = vi.fn();
         const getMockParam = (id: string): RMGParam => {
             const mockParam = initParam(RmgStyle.MTR, LanguageCode.English);
             mockParam.line_num = id;
@@ -92,7 +93,7 @@ describe('ReduxInit', () => {
 
         afterEach(() => {
             window.localStorage.clear();
-            jest.clearAllMocks();
+            vi.clearAllMocks();
         });
 
         it('Can update param and param config in localStorage as expected', () => {

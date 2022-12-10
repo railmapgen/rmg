@@ -1,4 +1,4 @@
-import React from 'react';
+import { Fragment, useMemo } from 'react';
 import { drawLine } from '../../methods/share';
 import { calculateColine, calculateColineStations } from '../../methods/shmetro-coline';
 import { AtLeastOneOfPartial, InterchangeInfo, Services } from '../../../../constants/constants';
@@ -41,21 +41,17 @@ export const ColineSHMetro = (props: Props) => {
     } = useRootSelector(store => store.param);
     const { branches, depsStr: deps } = useRootSelector(store => store.helper);
 
-    const yShares = React.useMemo(
-        () => {
-            console.log('computing y shares');
-            return Object.keys(stn_list).reduce((acc, cur) => {
-                if (branches[0].includes(cur)) {
-                    return { ...acc, [cur]: 0 };
-                } else {
-                    const branchOfStn = branches.slice(1).filter(branch => branch.includes(cur))[0];
-                    return { ...acc, [cur]: stn_list[branchOfStn[0]].children.indexOf(branchOfStn[1]) ? -3 : 3 };
-                }
-            }, {} as { [stnId: string]: number });
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [deps]
-    );
+    const yShares = useMemo(() => {
+        console.log('computing y shares');
+        return Object.keys(stn_list).reduce((acc, cur) => {
+            if (branches[0].includes(cur)) {
+                return { ...acc, [cur]: 0 };
+            } else {
+                const branchOfStn = branches.slice(1).filter(branch => branch.includes(cur))[0];
+                return { ...acc, [cur]: stn_list[branchOfStn[0]].children.indexOf(branchOfStn[1]) ? -3 : 3 };
+            }
+        }, {} as { [stnId: string]: number });
+    }, [deps]);
     // filter out all positive yShares to draw the railmap w/ coline and its branches
     const colineYShares = Object.entries(yShares)
         .filter(([k, v]) => v <= 0)
@@ -66,7 +62,7 @@ export const ColineSHMetro = (props: Props) => {
     );
 
     // coline color and all stations in the coline segments
-    const colineStns = React.useMemo(
+    const colineStns = useMemo(
         () =>
             calculateColine(
                 calculateColineStations(
@@ -157,7 +153,7 @@ const CoLine = (props: { paths: ColinePath; direction: 'l' | 'r' }) => {
                 <g key={`servicePath${i}`} transform={`translate(0,${i * 25})`}>
                     <g>
                         {paths[service]?.pass.map((colinePath, j) => (
-                            <React.Fragment key={j}>
+                            <Fragment key={j}>
                                 <path
                                     key={j}
                                     stroke="var(--rmg-grey)"
@@ -167,11 +163,11 @@ const CoLine = (props: { paths: ColinePath; direction: 'l' | 'r' }) => {
                                     strokeLinejoin="round"
                                     filter={service === Services.local ? undefined : `url(#contrast-${service})`}
                                 />
-                            </React.Fragment>
+                            </Fragment>
                         ))}
 
                         {paths[service]?.main.map((colinePath, j) => (
-                            <React.Fragment key={j}>
+                            <Fragment key={j}>
                                 {colinePath.colors.length > 1 && (
                                     <linearGradient
                                         id={`grad${j}`}
@@ -183,7 +179,7 @@ const CoLine = (props: { paths: ColinePath; direction: 'l' | 'r' }) => {
                                         gradientUnits="userSpaceOnUse"
                                     >
                                         {colinePath.colors.map((color, i) => (
-                                            <React.Fragment key={i}>
+                                            <Fragment key={i}>
                                                 {/* more about React.Fragment on https://stackoverflow.com/a/59390967 */}
                                                 <stop // from
                                                     offset={`${(100 / colinePath.colors.length) * (i + 0)}%`}
@@ -193,7 +189,7 @@ const CoLine = (props: { paths: ColinePath; direction: 'l' | 'r' }) => {
                                                     offset={`${(100 / colinePath.colors.length) * (i + 1)}%`}
                                                     stopColor={color[2]}
                                                 />
-                                            </React.Fragment>
+                                            </Fragment>
                                         ))}
                                     </linearGradient>
                                 )}
@@ -250,7 +246,7 @@ const CoLine = (props: { paths: ColinePath; direction: 'l' | 'r' }) => {
                                     strokeLinejoin="round"
                                     filter={service === Services.local ? undefined : `url(#contrast-${service})`}
                                 />
-                            </React.Fragment>
+                            </Fragment>
                         ))}
                     </g>
                 </g>
@@ -344,7 +340,7 @@ const ColineStationGroup = (props: StationGroupProps) => {
     const { line_name, theme, coline } = useRootSelector(store => store.param);
 
     // get colors of stations in coline branches, they use different colors than var(--rmg-theme-colour)
-    const colines = React.useMemo(
+    const colines = useMemo(
         () => calculateColineStations(Object.values(coline), branches),
         [JSON.stringify(coline), deps]
     );

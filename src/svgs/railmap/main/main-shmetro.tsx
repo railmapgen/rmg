@@ -1,9 +1,9 @@
-import React from 'react';
 import { adjacencyList, criticalPathMethod, drawLine, getStnState, getXShareMTR } from '../methods/share';
 import StationSHMetro from './station/station-shmetro';
 import ColineSHMetro from './coline/coline-shmetro';
 import { AtLeastOneOfPartial, Services, StationDict } from '../../../constants/constants';
 import { useRootSelector } from '../../../redux';
+import { useMemo } from 'react';
 
 interface servicesPath {
     main: string[];
@@ -27,17 +27,13 @@ const MainSHMetro = () => {
     const criticalPath = criticalPathMethod('linestart', 'lineend', adjMat);
     const realCP = criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat);
 
-    const xShares = React.useMemo(
-        () => {
-            console.log('computing x shares');
-            return Object.keys(param.stn_list).reduce(
-                (acc, cur) => ({ ...acc, [cur]: getXShareMTR(cur, adjMat, branches) }),
-                {} as { [stnId: string]: number }
-            );
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [branches.toString(), JSON.stringify(adjMat)]
-    );
+    const xShares = useMemo(() => {
+        console.log('computing x shares');
+        return Object.keys(param.stn_list).reduce(
+            (acc, cur) => ({ ...acc, [cur]: getXShareMTR(cur, adjMat, branches) }),
+            {} as { [stnId: string]: number }
+        );
+    }, [branches.toString(), JSON.stringify(adjMat)]);
     const lineXs: [number, number] = [
         (param.svgWidth.railmap * param.padding) / 100,
         param.svgWidth.railmap * (1 - param.padding / 100),
@@ -58,34 +54,29 @@ const MainSHMetro = () => {
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     //     [deps]
     // );
-    const yShares = React.useMemo(
-        () => {
-            console.log('computing y shares');
-            return Object.keys(stn_list).reduce((acc, cur) => {
-                if (branches[0].includes(cur)) {
-                    return { ...acc, [cur]: 0 };
-                } else {
-                    const branchOfStn = branches.slice(1).filter(branch => branch.includes(cur))[0];
-                    return { ...acc, [cur]: stn_list[branchOfStn[0]].children.indexOf(branchOfStn[1]) ? -3 : 3 };
-                }
-            }, {} as { [stnId: string]: number });
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [deps]
-    );
+    const yShares = useMemo(() => {
+        console.log('computing y shares');
+        return Object.keys(stn_list).reduce((acc, cur) => {
+            if (branches[0].includes(cur)) {
+                return { ...acc, [cur]: 0 };
+            } else {
+                const branchOfStn = branches.slice(1).filter(branch => branch.includes(cur))[0];
+                return { ...acc, [cur]: stn_list[branchOfStn[0]].children.indexOf(branchOfStn[1]) ? -3 : 3 };
+            }
+        }, {} as { [stnId: string]: number });
+    }, [deps]);
 
     // filter out all negative yShares to draw the traditional railmap w/o coline and its branches
     const lineYShares = Object.entries(yShares)
-        .filter(([k, v]) => v >= 0)
+        .filter(([, v]) => v >= 0)
         .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {} as typeof yShares);
     const lineYs = Object.keys(lineYShares).reduce(
         (acc, cur) => ({ ...acc, [cur]: (-lineYShares[cur] * branchSpacingPct * svg_height) / 300 }),
         {} as typeof yShares
     );
 
-    const stnStates = React.useMemo(
+    const stnStates = useMemo(
         () => getStnState(param.current_stn_idx, routes, param.direction),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [param.current_stn_idx, param.direction, routes.toString()]
     );
 
@@ -228,8 +219,8 @@ export const _linePath = (
     stn_list: StationDict, // only used to determine startFromTerminal or endAtTerminal
     bend: 'rightangle' | 'diagonal' = 'rightangle'
 ) => {
-    var [prevY, prevX] = [] as number[];
-    var path: { [key: string]: number[] } = {};
+    let [prevY, prevX] = [] as number[];
+    const path: { [key: string]: number[] } = {};
 
     const servicesDelta = {
         local: 0,
@@ -257,8 +248,8 @@ export const _linePath = (
     const e2 = 30;
 
     stnIds.forEach(stnId => {
-        var x = xs[stnId];
-        var y = ys[stnId];
+        const x = xs[stnId];
+        const y = ys[stnId];
         if (!prevY && prevY !== 0) {
             [prevX, prevY] = [x, y];
             path['start'] = [x, y];
@@ -280,14 +271,14 @@ export const _linePath = (
     });
 
     // generate path
-    if (!path.hasOwnProperty('start')) {
+    if (!('start' in path)) {
         // no line generated
         // keys in path: none
         return '';
-    } else if (!path.hasOwnProperty('end')) {
+    } else if (!('end' in path)) {
         // little line (only beyond terminal station)
         // keys in path: start
-        let [x, y] = path['start'];
+        const [x, y] = path['start'];
         if (type === 'main') {
             // current at terminal(end) station, draw the litte main line
             if (direction === 'l') {
@@ -304,10 +295,10 @@ export const _linePath = (
                 return `M ${x - e1 - servicesPassDelta},${y} L ${x},${y}`;
             }
         }
-    } else if (!path.hasOwnProperty('bifurcate')) {
+    } else if (!('bifurcate' in path)) {
         // general main line
         // keys in path: start, end
-        let [x, y] = path['start'],
+        const [x, y] = path['start'],
             h = path['end'][0];
         if (type === 'main') {
             if (direction === 'l') {
@@ -329,9 +320,9 @@ export const _linePath = (
         // keys in path: start, bifurcate, end
         // TODO: make diagonal available to `sh`
 
-        let [x, y] = path['start'];
-        let xb = path['bifurcate'][0];
-        let [xm, ym] = path['end'];
+        const [x, y] = path['start'];
+        const xb = path['bifurcate'][0];
+        const [xm, ym] = path['end'];
         if (type === 'main') {
             if (direction === 'l') {
                 if (ym > y) {
@@ -429,9 +420,9 @@ const ServicesElements = (props: { servicesLevel: Services[]; lineXs: number[] }
     // let dx = props.direction === 'r' ? 5 : param.svgWidth.railmap - 55;
     const labelX = direction === 'r' ? props.lineXs[0] - 42 : props.lineXs[1] + 42;
 
-    let dx_hint = props.servicesLevel.length === 2 ? 350 : 500;
+    const dx_hint = props.servicesLevel.length === 2 ? 350 : 500;
 
-    return React.useMemo(
+    return useMemo(
         () => (
             <g>
                 {servicesLevel.map((service, i) => (
@@ -472,9 +463,9 @@ const ServicesElements = (props: { servicesLevel: Services[]; lineXs: number[] }
 export const DirectionElements = () => {
     const { direction, svgWidth, coline } = useRootSelector(store => store.param);
     // arrow will be black stroke with white fill in coline
-    const isColine = Object.keys(coline).length ? true : false;
+    const isColine = !!Object.keys(coline).length;
 
-    return React.useMemo(
+    return useMemo(
         () => (
             <g transform={`translate(${direction === 'l' ? 50 : svgWidth.railmap - 150},50)`}>
                 <text className="rmg-name__zh">列车前进方向</text>

@@ -1,13 +1,13 @@
-import React from 'react';
 import StationNameWrapper, { NAME_FULL_HEIGHT } from './station-name-wrapper';
 import { Facilities, StationState } from '../../../../constants/constants';
 import { render } from '../../../../test-utils';
+import { vi } from 'vitest';
 
 (Document.prototype as any).fonts = {
     ready: Promise.resolve([]),
 };
 
-const mockGetBBox = jest.fn();
+const mockGetBBox = vi.fn();
 (SVGElement.prototype as any).getBBox = mockGetBBox;
 
 const mockBBox = {
@@ -16,7 +16,7 @@ const mockBBox = {
     right: { x: -80, width: -80 },
 };
 
-describe('Unit tests for StationNameWrapper component', () => {
+describe('StationNameWrapper', () => {
     it('Can calculate position of centre-aligned component correctly', () => {
         mockGetBBox.mockReturnValue(mockBBox.centre);
 

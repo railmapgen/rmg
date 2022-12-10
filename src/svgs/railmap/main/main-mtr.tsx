@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { adjacencyList, criticalPathMethod, getStnState, getXShareMTR } from '../methods/share';
 import { leftWideFactor, rightWideFactor, StationsMTR } from '../methods/mtr';
 import { CanvasType, RMGParam } from '../../../constants/constants';
@@ -12,7 +12,7 @@ const getNamePos = (stnId: string, branches: string[][], { isStagger, isFlip }: 
     if (branches[0].includes(stnId)) {
         res = branches[0].indexOf(stnId) % 2;
     } else {
-        let branchOfStn = branches.filter(branch => branch.includes(stnId))[0];
+        const branchOfStn = branches.filter(branch => branch.includes(stnId))[0];
         res = (branches[0].indexOf(branchOfStn[0]) + branchOfStn.indexOf(stnId) + 1) % 2;
     }
     return res === 0 ? isFlip : !isFlip;
@@ -35,28 +35,19 @@ const MainMTR = () => {
 
     const adjMat = adjacencyList(stationList, leftWideFactor, rightWideFactor);
 
-    const criticalPath = useMemo(
-        () => criticalPathMethod('linestart', 'lineend', adjMat),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [JSON.stringify(adjMat)]
-    );
+    const criticalPath = useMemo(() => criticalPathMethod('linestart', 'lineend', adjMat), [JSON.stringify(adjMat)]);
     const realCP = useMemo(
         () => criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [JSON.stringify(adjMat)]
     );
 
-    const xShares = useMemo(
-        () => {
-            console.log('computing x shares');
-            return Object.keys(stationList).reduce(
-                (acc, cur) => ({ ...acc, [cur]: getXShareMTR(cur, adjMat, branches) }),
-                {} as { [stnId: string]: number }
-            );
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [branches.toString(), JSON.stringify(adjMat)]
-    );
+    const xShares = useMemo(() => {
+        console.log('computing x shares');
+        return Object.keys(stationList).reduce(
+            (acc, cur) => ({ ...acc, [cur]: getXShareMTR(cur, adjMat, branches) }),
+            {} as { [stnId: string]: number }
+        );
+    }, [branches.toString(), JSON.stringify(adjMat)]);
     const lineXs: [number, number] = [
         (svgWidths[CanvasType.RailMap] * paddingPercentage) / 100,
         svgWidths[CanvasType.RailMap] * (1 - paddingPercentage / 100),
@@ -80,7 +71,6 @@ const MainMTR = () => {
 
     const stnStates = useMemo(
         () => getStnState(currentStationIndex, routes, direction),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [currentStationIndex, direction, routes.toString()]
     );
 
@@ -116,8 +106,8 @@ const MainMTR = () => {
 
 export default MainMTR;
 
-const Lines = React.memo(
-    (props: { paths: { main: string[]; pass: string[]; sidingMain: string[]; sidingPass: string[] } }) => {
+const Lines = memo(
+    function Lines(props: { paths: { main: string[]; pass: string[]; sidingMain: string[]; sidingPass: string[] } }) {
         return (
             <g fill="none" strokeWidth={9.68}>
                 <g stroke="var(--rmg-grey)">

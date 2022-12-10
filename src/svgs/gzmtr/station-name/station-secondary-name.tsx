@@ -1,4 +1,4 @@
-import React, { SVGProps, useEffect, useRef, useState } from 'react';
+import { SVGProps, useEffect, useRef, useState } from 'react';
 import { Name } from '../../../constants/constants';
 
 interface StationSecondaryNameProps extends SVGProps<SVGGElement> {
@@ -14,9 +14,11 @@ export default function StationSecondaryName(props: StationSecondaryNameProps) {
     const [bBox, setBBox] = useState({ x: 0, width: 0 } as SVGRect);
 
     useEffect(() => {
-        const nextBBox = nameEl.current!.getBBox();
-        setBBox(nextBBox);
-        onUpdate && onUpdate(nextBBox);
+        if (nameEl.current) {
+            const nextBBox = nameEl.current.getBBox();
+            setBBox(nextBBox);
+            onUpdate && onUpdate(nextBBox);
+        }
     }, [stnName.toString()]);
 
     return (

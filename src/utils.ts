@@ -17,7 +17,7 @@ export const updateParam = (param: { [x: string]: any }) => {
     delete param.weightEN;
 
     // Version 0.12
-    for (let [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
+    for (const [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('branch' in stnInfo)) {
             param.stn_list[stnId].branch = { left: [], right: [] };
             if (stnInfo.children.length === 2) {
@@ -48,7 +48,7 @@ export const updateParam = (param: { [x: string]: any }) => {
     }
 
     // Version 1.3
-    for (let [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
+    for (const [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('num' in stnInfo)) {
             param.stn_list[stnId].num = '00';
         }
@@ -64,7 +64,7 @@ export const updateParam = (param: { [x: string]: any }) => {
     }
 
     // Version 1.5
-    for (let [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
+    for (const [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (stnInfo.change_type === 'osi22_end_p') {
             param.stn_list[stnId].change_type = 'osi22_pr';
         }
@@ -74,7 +74,7 @@ export const updateParam = (param: { [x: string]: any }) => {
     }
 
     // Version 2.1
-    for (let [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
+    for (const [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('interchange' in stnInfo)) {
             param.stn_list[stnId].interchange = [[]];
         }
@@ -109,7 +109,7 @@ export const updateParam = (param: { [x: string]: any }) => {
     }
 
     // Version 2.6
-    for (let [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
+    for (const [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('transfer' in stnInfo)) {
             param.stn_list[stnId].transfer = {
                 // type: stnInfo.change_type?.split('_')[0] as 'none' | 'int2' | 'int3' | 'osi11' | 'osi12' | 'osi22',
@@ -132,7 +132,7 @@ export const updateParam = (param: { [x: string]: any }) => {
 
     // Version 2.8
     // Version 3.0
-    for (let [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
+    for (const [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('services' in stnInfo)) {
             param.stn_list[stnId].services = ['local'];
         }
@@ -223,7 +223,7 @@ export const updateParam = (param: { [x: string]: any }) => {
                   ...param.loop_info,
                   bottom_factor: Math.max(param.loop_info.bottom_factor, 1),
               };
-    for (let [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
+    for (const [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('loop_pivot' in stnInfo)) {
             param.stn_list[stnId].loop_pivot = false;
         }

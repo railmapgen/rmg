@@ -387,7 +387,7 @@ export const setColineBulk = (coline: Record<string, ColineInfo>): setColineBulk
 /**
  * @param flipBranch Set as false if you want to rotate the line but keeping the topology ordering (TPO). Set as true if you want to flip branches and break the TPO (for SHMetro).
  */
-export const reverseStations = (flipBranch: boolean = false) => {
+export const reverseStations = (flipBranch = false) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const { stn_list } = getState().param;
         const newStationList = Object.keys(stn_list).reduce(
@@ -413,7 +413,7 @@ export const reverseStations = (flipBranch: boolean = false) => {
                                 children: [],
                                 branch: { left: stn_list.linestart.branch.right, right: [] as [] },
                             };
-                        default:
+                        default: {
                             const mappedParents = stn_list[id].children.map(id =>
                                 id === 'linestart' ? 'lineend' : id === 'lineend' ? 'linestart' : id
                             );
@@ -429,6 +429,7 @@ export const reverseStations = (flipBranch: boolean = false) => {
                                     right: stn_list[id].branch.left,
                                 },
                             };
+                        }
                     }
                 })(stnId),
             }),
@@ -601,34 +602,38 @@ export const updateStationBranchFirstStation = (stationId: string, direction: Di
         const arg = { stnId: stationId, direction, first: firstId };
 
         if (direction === Direction.left) {
-            const branchStartId = branches.slice(1).find(branch => branch.slice(-1)[0] === stationId)![0];
-            const branchStartFirstId = branches[0][branches[0].indexOf(branchStartId) + 1];
-            dispatch(
-                updateStationBranchFirstStationLegacy([
-                    arg,
-                    {
-                        stnId: branchStartId,
-                        direction: Direction.right,
-                        first: branchStartFirstId,
-                    },
-                ])
-            );
+            const branchStartId = branches.slice(1).find(branch => branch.slice(-1)[0] === stationId)?.[0];
+            if (branchStartId) {
+                const branchStartFirstId = branches[0][branches[0].indexOf(branchStartId) + 1];
+                dispatch(
+                    updateStationBranchFirstStationLegacy([
+                        arg,
+                        {
+                            stnId: branchStartId,
+                            direction: Direction.right,
+                            first: branchStartFirstId,
+                        },
+                    ])
+                );
+            }
         } else {
             const branchEndId = branches
                 .slice(1)
-                .find(branch => branch[0] === stationId)!
-                .slice(-1)[0];
-            const branchEndFirstId = branches[0][branches[0].indexOf(branchEndId) - 1];
-            dispatch(
-                updateStationBranchFirstStationLegacy([
-                    arg,
-                    {
-                        stnId: branchEndId,
-                        direction: Direction.left,
-                        first: branchEndFirstId,
-                    },
-                ])
-            );
+                .find(branch => branch[0] === stationId)
+                ?.slice(-1)?.[0];
+            if (branchEndId) {
+                const branchEndFirstId = branches[0][branches[0].indexOf(branchEndId) - 1];
+                dispatch(
+                    updateStationBranchFirstStationLegacy([
+                        arg,
+                        {
+                            stnId: branchEndId,
+                            direction: Direction.left,
+                            first: branchEndFirstId,
+                        },
+                    ])
+                );
+            }
         }
     };
 };
@@ -677,14 +682,14 @@ export const flipStationBranchPosition = (stationId: string, direction: Directio
         const branches = getState().helper.branches;
 
         if (direction === Direction.left) {
-            const branchStartId = branches.slice(1).find(branch => branch.slice(-1)[0] === stationId)![0];
-            dispatch(flipStationBranchPositionLegacy(stationId, branchStartId));
+            const branchStartId = branches.slice(1).find(branch => branch.slice(-1)[0] === stationId)?.[0];
+            branchStartId && dispatch(flipStationBranchPositionLegacy(stationId, branchStartId));
         } else {
             const branchEndId = branches
                 .slice(1)
-                .find(branch => branch[0] === stationId)!
-                .slice(-1)[0];
-            dispatch(flipStationBranchPositionLegacy(branchEndId, stationId));
+                .find(branch => branch[0] === stationId)
+                ?.slice(-1)?.[0];
+            branchEndId && dispatch(flipStationBranchPositionLegacy(branchEndId, stationId));
         }
     };
 };
@@ -783,12 +788,7 @@ export const updateStationIntPaddingToAll = (stationId: string) => {
     };
 };
 
-export const autoNumbering = (
-    branchIndex: number,
-    from: number,
-    maxLength: number = 2,
-    sort: 'asc' | 'desc' = 'asc'
-) => {
+export const autoNumbering = (branchIndex: number, from: number, maxLength = 2, sort: 'asc' | 'desc' = 'asc') => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationList = getState().param.stn_list;
         const branches = getState().helper.branches;

@@ -1,16 +1,16 @@
-import React from 'react';
 import { render } from '../../test-utils';
 import { fireEvent, screen } from '@testing-library/react';
 import * as utils from '../../util/utils';
 import SelectorActions from './selector-actions';
+import { vi } from 'vitest';
 
 const mockCallbacks = {
-    onError: jest.fn(),
+    onError: vi.fn(),
 };
 
 describe('SelectorActions', () => {
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
         window.localStorage.clear();
     });
 
@@ -25,7 +25,7 @@ describe('SelectorActions', () => {
     });
 
     it('Can show error message if invalid type of file is uploaded', () => {
-        const readFileAsTextSpy = jest.spyOn(utils, 'readFileAsText');
+        const readFileAsTextSpy = vi.spyOn(utils, 'readFileAsText');
         readFileAsTextSpy.mockResolvedValue('dummy-content');
         const mockInvalidTypeFile = new File(['dummy-content'], 'invalid-file-type.txt', { type: 'text/plain' });
 

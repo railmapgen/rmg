@@ -1,13 +1,13 @@
-import React from 'react';
 import StationNumber from './station-number';
 import { render } from '../../../test-utils';
 import { screen } from '@testing-library/react';
+import { vi } from 'vitest';
 
 const getScaleFromTransform = (transformAttr?: string | null) => {
     return transformAttr?.match(/scale\(([\d.]+)\)/)?.[1];
 };
 
-const mockGetBBox = jest.fn();
+const mockGetBBox = vi.fn();
 (SVGElement.prototype as any).getBBox = mockGetBBox;
 
 describe('GZMTRStationNumber', () => {

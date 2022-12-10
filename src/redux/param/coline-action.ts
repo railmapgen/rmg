@@ -79,7 +79,7 @@ export const getRowSpanForColine = (stationId: string, branchIndex: number) => {
         const coline = getState().param.coline;
         const branch = getState().helper.branches[branchIndex];
 
-        for (let [clId, cl] of Object.entries(coline)) {
+        for (const [clId, cl] of Object.entries(coline)) {
             if (cl.from === stationId && branch.includes(cl.to)) {
                 const thisIndex = branch.indexOf(stationId);
                 const thatIndex = branch.indexOf(cl.to);
@@ -199,7 +199,7 @@ export const removeInvalidColineOnRemoveStation = (deleteStnId: string) => {
     };
 };
 
-export const addColine = (from: string, to: string, colors: InterchangeInfo[], display: boolean = true) => {
+export const addColine = (from: string, to: string, colors: InterchangeInfo[], display = true) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const colineInfo = getState().param.coline;
 

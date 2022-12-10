@@ -1,10 +1,10 @@
-import React from 'react';
 import { render as customRender, TestingProvider } from '../../test-utils';
 import DownloadModal from './download-modal';
 import rootReducer from '../../redux';
 import { createMockAppStore } from '../../setupTests';
 import { CanvasType } from '../../constants/constants';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 
 const realStore = rootReducer.getState();
 const mockStore = createMockAppStore({
@@ -19,7 +19,7 @@ const mockStoreWithRailMap = createMockAppStore({
 });
 
 const mockCallbacks = {
-    onClose: jest.fn(),
+    onClose: vi.fn(),
 };
 
 describe('DownloadModal', () => {

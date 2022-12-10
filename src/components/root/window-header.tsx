@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     Heading,
     HStack,
@@ -35,13 +35,13 @@ export default function WindowHeader() {
 
     const popoverHeader = (
         <Trans i18nKey="WindowHeader.popoverHeader" environment={environment}>
-            You're on {{ environment }} environment!
+            You&apos;re on {{ environment }} environment!
         </Trans>
     );
     const popoverBody = (
         <Trans i18nKey="WindowHeader.popoverBody">
-            This is a testing environment where we don't guarantee the stability and compatibility. Please switch back
-            to{' '}
+            This is a testing environment where we don&apos;t guarantee the stability and compatibility. Please switch
+            back to{' '}
             <Link color={linkColour} href={'https://railmapgen.github.io' + window.location.pathname} isExternal={true}>
                 Production environment <Icon as={MdOpenInNew} />
             </Link>

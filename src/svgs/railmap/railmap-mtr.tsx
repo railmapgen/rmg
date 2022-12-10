@@ -1,9 +1,9 @@
-import React from 'react';
 import StripMTR from '../mtr/strip-mtr';
 import MainMTR from './main/main-mtr';
 import { CanvasType } from '../../constants/constants';
 import SvgWrapper from '../common/svg-wrapper';
 import { useRootSelector } from '../../redux';
+import { memo } from 'react';
 
 const CANVAS_TYPE = CanvasType.RailMap;
 
@@ -29,7 +29,7 @@ export default function RailMapMTR() {
     );
 }
 
-const DefsMTR = React.memo(() => {
+const DefsMTR = memo(function DefsMTR() {
     return (
         <defs>
             <g id="airport" transform="scale(0.5970084519)">

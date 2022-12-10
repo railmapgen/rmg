@@ -101,7 +101,7 @@ export const removeStation = (stationId: string) => {
 
             // parents have length 1
             parents.forEach(parId => {
-                var idx = newStnList[parId].children.indexOf(stationId);
+                const idx = newStnList[parId].children.indexOf(stationId);
                 if (children.length) {
                     newStnList[parId].children[idx] = children[0];
                 } else {
@@ -116,7 +116,7 @@ export const removeStation = (stationId: string) => {
 
             // children have length 1
             children.forEach(childId => {
-                var idx = newStnList[childId].parents.indexOf(stationId);
+                const idx = newStnList[childId].parents.indexOf(stationId);
                 if (parents.length) {
                     newStnList[childId].parents[idx] = parents[0];
                 } else {

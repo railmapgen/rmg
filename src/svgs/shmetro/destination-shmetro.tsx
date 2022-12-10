@@ -1,4 +1,5 @@
-import React, { forwardRef, memo, useEffect, useMemo, useRef, useState } from 'react';
+/* eslint @typescript-eslint/no-non-null-assertion: 0 */
+import { forwardRef, Fragment, memo, Ref, useEffect, useMemo, useRef, useState } from 'react';
 import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { CanvasType, ColineInfo, Name, ShortDirection } from '../../constants/constants';
@@ -28,14 +29,16 @@ export default function DestinationSHMetro() {
     );
 }
 
-const DefsSHMetro = memo(() => (
-    <defs>
-        {/* An extension of the line/path. Remember to minus the stroke-width.  */}
-        <marker id="slope" viewBox="-1.5 0 3 1.5" refY={0.5}>
-            <path d="M0,0L1,1H-1z" fill="var(--rmg-theme-colour)" />
-        </marker>
-    </defs>
-));
+const DefsSHMetro = memo(function DefsSHMetro() {
+    return (
+        <defs>
+            {/* An extension of the line/path. Remember to minus the stroke-width.  */}
+            <marker id="slope" viewBox="-1.5 0 3 1.5" refY={0.5}>
+                <path d="M0,0L1,1H-1z" fill="var(--rmg-theme-colour)" />
+            </marker>
+        </defs>
+    );
+});
 
 const DestSHMetro = () => {
     const { routes, branches } = useRootSelector(store => store.helper);
@@ -105,7 +108,7 @@ const DestSHMetro = () => {
                     .filter(co => co.from === coline_dest_id || co.to === coline_dest_id)
                     .at(0),
             ])
-            .filter(([key, val]) => val)
+            .filter(([, val]) => val)
     ) as {
         [k: string]: ColineInfo;
     };
@@ -115,8 +118,8 @@ const DestSHMetro = () => {
                 dest_names={dest_names}
                 line_name={line_name}
                 line_color={[theme[2], theme[3]]}
-                coline={coline_dest_ids.length ? true : false}
-                upper={coline_dest_ids.length ? true : false}
+                coline={!!coline_dest_ids.length}
+                upper={!!coline_dest_ids.length}
             />
             {coline_dest_ids.length &&
                 // multiple coline dest is not supported yet
@@ -156,11 +159,9 @@ const Dest = (props: {
 
     const terminalEl = useRef<SVGGElement | null>(null);
     const [terminalBBox, setTerminalBBox] = useState({ width: 0 } as SVGRect);
-    useEffect(
-        () => setTerminalBBox(terminalEl.current!.getBBox()),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [JSON.stringify(dest_names), JSON.stringify(current_stn_id)]
-    );
+    useEffect(() => {
+        terminalEl.current && setTerminalBBox(terminalEl.current.getBBox());
+    }, [JSON.stringify(dest_names), JSON.stringify(current_stn_id)]);
 
     const [middle, MARGIN, PADDING, LINEBOX_WIDTH, PLATFORM_WIDTH] = [svgWidth.destination / 2, 10, 36, 264, 325];
     // Alignment Priority:
@@ -208,7 +209,7 @@ const Dest = (props: {
     );
 };
 
-const Terminal = forwardRef((props: { dest_names: Name[] }, ref: React.Ref<SVGGElement>) => {
+const Terminal = forwardRef(function Terminal(props: { dest_names: Name[] }, ref: Ref<SVGGElement>) {
     const { dest_names } = props;
     const { direction, svgWidth } = useRootSelector(store => store.param);
 
@@ -227,14 +228,14 @@ const Terminal = forwardRef((props: { dest_names: Name[] }, ref: React.Ref<SVGGE
                 transform={`translate(${direction === 'l' ? 128 + 20 : -128 - 20},25)`}
             >
                 {dest_names.map((name, i) => (
-                    <React.Fragment key={i}>
+                    <Fragment key={i}>
                         <text className="rmg-name__zh" fontSize={70} dy={i * -100 + 7} key={`zh${i}`}>
                             {'往' + name[0]}
                         </text>
                         <text className="rmg-name__en" fontSize={25} dy={i * -100 + 40} key={`en${i}`}>
                             {'To ' + name[1]}
                         </text>
-                    </React.Fragment>
+                    </Fragment>
                 ))}
             </g>
         </g>
@@ -257,7 +258,6 @@ const PlatformNum = () => {
                 </text>
             </g>
         ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [platform_num]
     );
 };
@@ -272,12 +272,10 @@ const LineNameBoxText = (props: { line_name: Name; line_color: [ColourHex, MonoC
     // line color rectangle can be the right width.
     const stnNameEl = useRef<SVGGElement | null>(null);
     // the original name position
-    const [bBox, setBBox] = React.useState({ width: 0 } as DOMRect);
-    React.useEffect(
-        () => setBBox(stnNameEl.current!.getBBox()),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [...line_name]
-    );
+    const [bBox, setBBox] = useState({ width: 0 } as DOMRect);
+    useEffect(() => {
+        stnNameEl.current && setBBox(stnNameEl.current.getBBox());
+    }, [...line_name]);
 
     const rectDx = (direction === 'l' ? -bBox.width : 0) - 6;
     const stnNameEnDx = ((direction === 'l' ? -1 : 1) * bBox.width) / 2;
@@ -298,7 +296,6 @@ const LineNameBoxText = (props: { line_name: Name; line_color: [ColourHex, MonoC
                 </g>
             </g>
         ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [bBox, ...line_name, ...line_color, direction, svgWidth.destination]
     );
 };
@@ -342,7 +339,6 @@ const LineNameBoxNumber = (props: { line_name: Name; line_color: [ColourHex, Mon
                 </g>
             </g>
         ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [boxX, ...line_name, ...line_color, direction, svgWidth.destination]
     );
 };

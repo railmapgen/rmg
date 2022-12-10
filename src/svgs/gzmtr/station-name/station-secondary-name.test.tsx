@@ -1,16 +1,16 @@
-import React from 'react';
 import StationSecondaryName from './station-secondary-name';
 import { render } from '../../../test-utils';
 import { screen } from '@testing-library/react';
+import { vi } from 'vitest';
 
-const mockGetBBox = jest.fn();
+const mockGetBBox = vi.fn();
 (SVGElement.prototype as any).getBBox = mockGetBBox;
 
-const onUpdate = jest.fn();
+const onUpdate = vi.fn();
 
 const mockBBox = { x: -30, width: 59 } as SVGRect;
 
-describe('Unit tests for StationSecondaryName component', () => {
+describe('StationSecondaryName', () => {
     beforeEach(() => {
         mockGetBBox.mockReturnValueOnce(mockBBox);
     });

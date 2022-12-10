@@ -1,18 +1,18 @@
-import React from 'react';
 import { render } from '../../test-utils';
 import ParamSelector from './param-selector';
 import { act, fireEvent, screen } from '@testing-library/react';
 import { ParamConfig } from '../../constants/constants';
+import { vi } from 'vitest';
 
 const mockCallbacks = {
-    onParamSelect: jest.fn(),
-    onParamRemove: jest.fn(),
-    onParamUpdate: jest.fn(),
+    onParamSelect: vi.fn(),
+    onParamRemove: vi.fn(),
+    onParamUpdate: vi.fn(),
 };
 
 describe('ParamSelector', () => {
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('Can sort params by last modified time', () => {
@@ -42,13 +42,13 @@ describe('ParamSelector', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Edit project info' }));
         await screen.findByRole('dialog');
 
-        jest.useFakeTimers();
+        vi.useFakeTimers();
         // input project name and submit
         fireEvent.change(screen.getByRole('combobox', { name: 'Project name' }), {
             target: { value: 'My Masterpiece' },
         });
         await act(async () => {
-            jest.advanceTimersByTime(0);
+            vi.advanceTimersByTime(0);
         });
         fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
 

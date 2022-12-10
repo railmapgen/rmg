@@ -5,24 +5,9 @@ import { createMockAppStore } from '../../setupTests';
 const realStore = rootReducer.getState();
 const mockStore = createMockAppStore({ ...realStore });
 
-const windowSpy = jest.spyOn(window, 'window', 'get');
-const mockSetItem = jest.fn();
-
 describe('AppSlice', () => {
-    beforeEach(() => {
-        windowSpy.mockImplementation(
-            () =>
-                ({
-                    localStorage: {
-                        setItem: mockSetItem,
-                    },
-                } as any)
-        );
-    });
-
     afterEach(() => {
         mockStore.clearActions();
-        jest.clearAllMocks();
     });
 
     describe('AppSlice - global alerts', () => {

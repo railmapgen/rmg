@@ -1,7 +1,7 @@
 import { ColourHex } from '@railmapgen/rmg-palette-resources';
-import React from 'react';
 import { InterchangeInfo, Name, Facilities } from '../../../../constants/constants';
 import { useRootSelector } from '../../../../redux';
+import { forwardRef, memo, Ref, SVGProps, useEffect, useMemo, useRef, useState } from 'react';
 
 interface Props {
     stnId: string;
@@ -24,8 +24,8 @@ const StationSHMetro = (props: Props) => {
         : ([...stnInfo.branch.left, ...stnInfo.branch.right].length ? 8 + 12 * stnInfo.name[1].split('\\').length : 0) *
           (direction === 'r' ? -1 : 1);
 
-    let stationIconStyle = '';
-    let stationIconColor: { [pos: string]: string } = {};
+    let stationIconStyle: string;
+    const stationIconColor: { [pos: string]: string } = {};
     if (info_panel_type === 'sh2020') {
         if (stnInfo.services.length === 3) stationIconStyle = 'stn_sh_2020_direct';
         else if (stnInfo.services.length === 2) stationIconStyle = 'stn_sh_2020_express';
@@ -90,7 +90,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     const { name, infos, stnState, direction, facility, bank, oneLine, intPadding } = props;
 
     // legacy ref to get the exact station name width
-    const stnNameEl = React.useRef<SVGGElement | null>(null);
+    const stnNameEl = useRef<SVGGElement | null>(null);
 
     // simplify the calculation times
     const directionPolarity = direction === 'l' ? 1 : -1;
@@ -101,9 +101,9 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     // interchange will have a line under the name, and should be stretched when placed horizontal in loop
     const lineDx = bank ? -12 : 0;
 
-    const intEl = React.useRef<SVGGElement | null>(null);
-    const [intWidth, setIntWidth] = React.useState(0);
-    React.useEffect(() => setIntWidth(intEl.current?.getBBox().width ?? 0), [...JSON.stringify(infos)]);
+    const intEl = useRef<SVGGElement | null>(null);
+    const [intWidth, setIntWidth] = useState(0);
+    useEffect(() => setIntWidth(intEl.current?.getBBox().width ?? 0), [...JSON.stringify(infos)]);
     const intDx = intPadding - intWidth;
 
     return (
@@ -157,60 +157,58 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     );
 };
 
-const StationName = React.forwardRef(
-    (
-        props: { stnName: Name; oneLine: boolean; directionPolarity: 1 | -1 } & React.SVGProps<SVGGElement>,
-        ref: React.Ref<SVGGElement>
-    ) => {
-        const { stnName, oneLine, directionPolarity, ...others } = props;
+const StationName = forwardRef(function StationName(
+    props: { stnName: Name; oneLine: boolean; directionPolarity: 1 | -1 } & SVGProps<SVGGElement>,
+    ref: Ref<SVGGElement>
+) {
+    const { stnName, oneLine, directionPolarity, ...others } = props;
 
-        const zhEl = React.useRef<SVGGElement | null>(null);
-        const [enDx, setEnDx] = React.useState(0);
-        React.useEffect(() => {
-            if (oneLine) setEnDx(zhEl.current!.getBBox().width + 5);
-            else setEnDx(0);
-        }, [...stnName, oneLine]);
+    const zhEl = useRef<SVGGElement | null>(null);
+    const [enDx, setEnDx] = useState(0);
+    useEffect(() => {
+        if (oneLine && zhEl.current) setEnDx(zhEl.current.getBBox().width + 5);
+        else setEnDx(0);
+    }, [...stnName, oneLine]);
 
-        const [ZH_HEIGHT, EN_HEIGHT] = [20, 8];
+    const [ZH_HEIGHT, EN_HEIGHT] = [20, 8];
 
-        return (
-            <g ref={ref} {...others}>
-                {React.useMemo(
-                    () => (
-                        <>
-                            <g ref={zhEl}>
-                                {stnName[0].split('\\').map((txt, i, arr) => (
-                                    <text
-                                        key={i}
-                                        className="rmg-name__zh rmg-outline"
-                                        dy={
-                                            (arr.length - 1 - i) * -ZH_HEIGHT +
-                                            (oneLine ? EN_HEIGHT : (stnName[1].split('\\').length - 1) * -EN_HEIGHT)
-                                        }
-                                    >
-                                        {txt}
-                                    </text>
-                                ))}
-                            </g>
-                            <g fontSize={8} transform={`translate(${enDx * directionPolarity},0)`}>
-                                {stnName[1].split('\\').map((txt, i, arr) => (
-                                    <text
-                                        key={i}
-                                        className="rmg-name__en rmg-outline"
-                                        dy={(arr.length - 2 - i) * -EN_HEIGHT + 2}
-                                    >
-                                        {txt}
-                                    </text>
-                                ))}
-                            </g>
-                        </>
-                    ),
-                    [...stnName, oneLine, enDx, directionPolarity]
-                )}
-            </g>
-        );
-    }
-);
+    return (
+        <g ref={ref} {...others}>
+            {useMemo(
+                () => (
+                    <>
+                        <g ref={zhEl}>
+                            {stnName[0].split('\\').map((txt, i, arr) => (
+                                <text
+                                    key={i}
+                                    className="rmg-name__zh rmg-outline"
+                                    dy={
+                                        (arr.length - 1 - i) * -ZH_HEIGHT +
+                                        (oneLine ? EN_HEIGHT : (stnName[1].split('\\').length - 1) * -EN_HEIGHT)
+                                    }
+                                >
+                                    {txt}
+                                </text>
+                            ))}
+                        </g>
+                        <g fontSize={8} transform={`translate(${enDx * directionPolarity},0)`}>
+                            {stnName[1].split('\\').map((txt, i, arr) => (
+                                <text
+                                    key={i}
+                                    className="rmg-name__en rmg-outline"
+                                    dy={(arr.length - 2 - i) * -EN_HEIGHT + 2}
+                                >
+                                    {txt}
+                                </text>
+                            ))}
+                        </g>
+                    </>
+                ),
+                [...stnName, oneLine, enDx, directionPolarity]
+            )}
+        </g>
+    );
+});
 
 const CurrentStationText = () => {
     const { stn_list } = useRootSelector(store => store.param);
@@ -230,89 +228,91 @@ const CurrentStationText = () => {
     );
 };
 
-const IntBoxGroup = React.forwardRef(
-    (
-        props: { intInfos: InterchangeInfo[][]; direction: 'l' | 'r' } & React.SVGProps<SVGGElement>,
-        ref: React.Ref<SVGGElement>
-    ) => {
-        const { intInfos, direction, ...others } = props;
+const IntBoxGroup = forwardRef(function IntBoxGroup(
+    props: { intInfos: InterchangeInfo[][]; direction: 'l' | 'r' } & SVGProps<SVGGElement>,
+    ref: Ref<SVGGElement>
+) {
+    const { intInfos, direction, ...others } = props;
 
-        // also known as non out-of-system transfers
-        const boxInfos = [
-            ...intInfos[0],
-            ...(intInfos[1] || []),
-            // some dirty tricks here as shmetro shows maglev icon even it is a out-of-system transfer
-            // and display a maglev icon is much easier in boxInfos than in OSysIText
-            ...(intInfos[2]?.filter(info => Boolean(info[4].match(/^磁(悬)*浮/))) || []),
-        ];
+    // also known as non out-of-system transfers
+    const boxInfos = [
+        ...intInfos[0],
+        ...(intInfos[1] || []),
+        // some dirty tricks here as shmetro shows maglev icon even it is a out-of-system transfer
+        // and display a maglev icon is much easier in boxInfos than in OSysIText
+        ...(intInfos[2]?.filter(info => Boolean(info[4].match(/^磁(悬)*浮/))) || []),
+    ];
 
-        let dx = 0; // update in every boxInfos
+    let dx = 0; // update in every boxInfos
 
+    return (
+        <g ref={ref} fontSize={14} textAnchor="middle" {...others}>
+            {boxInfos.map((info, i) => {
+                const isLineNumber = Boolean(info[4].match(/^\w+(号)?线/));
+                const isMaglev = Boolean(info[4].match(/^磁(悬)*浮/));
+
+                if (props.direction === 'r') {
+                    dx -= (isLineNumber || isMaglev ? 20 : info[4].length * 14 + 12) + (i === 0 ? 0 : 5);
+                }
+
+                let el: JSX.Element;
+                if (isMaglev) {
+                    el = (
+                        <g transform={`translate(${dx},-16)scale(0.1428571429)`} key={i}>
+                            <IntBoxMaglev info={info} />
+                        </g>
+                    );
+                } else if (isLineNumber) {
+                    el = (
+                        <g transform={`translate(${dx},0)`} key={i}>
+                            <IntBoxNumber info={info} />
+                        </g>
+                    );
+                } else {
+                    el = (
+                        <g transform={`translate(${dx},0)`} key={i}>
+                            <IntBoxLetter info={info} />
+                        </g>
+                    );
+                }
+
+                if (props.direction === 'l') {
+                    dx += isLineNumber || isMaglev ? 20 + 5 : info[4].length * 14 + 12 + 5;
+                }
+                return el;
+            })}
+        </g>
+    );
+});
+
+const IntBoxMaglev = memo(
+    function IntBoxMaglev(props: { info: InterchangeInfo }) {
         return (
-            <g ref={ref} fontSize={14} textAnchor="middle" {...others}>
-                {boxInfos.map((info, i) => {
-                    const isLineNumber = Boolean(info[4].match(/^[\w\d]+(号)?线/));
-                    const isMaglev = Boolean(info[4].match(/^磁(悬)*浮/));
-
-                    if (props.direction === 'r') {
-                        dx -= (isLineNumber || isMaglev ? 20 : info[4].length * 14 + 12) + (i === 0 ? 0 : 5);
-                    }
-
-                    let el = <g />;
-                    if (isMaglev) {
-                        el = (
-                            <g transform={`translate(${dx},-16)scale(0.1428571429)`} key={i}>
-                                <IntBoxMaglev info={info} />
-                            </g>
-                        );
-                    } else if (isLineNumber) {
-                        el = (
-                            <g transform={`translate(${dx},0)`} key={i}>
-                                <IntBoxNumber info={info} />
-                            </g>
-                        );
-                    } else {
-                        el = (
-                            <g transform={`translate(${dx},0)`} key={i}>
-                                <IntBoxLetter info={info} />
-                            </g>
-                        );
-                    }
-
-                    if (props.direction === 'l') {
-                        dx += isLineNumber || isMaglev ? 20 + 5 : info[4].length * 14 + 12 + 5;
-                    }
-                    return el;
-                })}
-            </g>
+            <>
+                <use xlinkHref="#intbox_maglev" fill={props.info[2]} stroke={props.info[2]} />
+            </>
         );
-    }
-);
-
-const IntBoxMaglev = React.memo(
-    (props: { info: InterchangeInfo }) => (
-        <>
-            <use xlinkHref="#intbox_maglev" fill={props.info[2]} stroke={props.info[2]} />
-        </>
-    ),
+    },
     (prevProps, nextProps) => prevProps.info.toString() === nextProps.info.toString()
 );
 
-const IntBoxNumber = React.memo(
-    (props: { info: InterchangeInfo }) => (
-        <>
-            <use xlinkHref="#intbox_number" fill={props.info[2]} />
-            <text x={10} className="rmg-name__zh" fill={props.info[3]} dominantBaseline="central">
-                {/* // line starts with numbers */}
-                {props.info[4].match(/(\d*)\w+/)![0]}
-            </text>
-        </>
-    ),
+const IntBoxNumber = memo(
+    function IntBoxNumber(props: { info: InterchangeInfo }) {
+        return (
+            <>
+                <use xlinkHref="#intbox_number" fill={props.info[2]} />
+                <text x={10} className="rmg-name__zh" fill={props.info[3]} dominantBaseline="central">
+                    {/* // line starts with numbers */}
+                    {props.info[4].match(/(\d*)\w+/)?.[0]}
+                </text>
+            </>
+        );
+    },
     (prevProps, nextProps) => prevProps.info.toString() === nextProps.info.toString()
 );
 
-const IntBoxLetter = React.memo(
-    (props: { info: InterchangeInfo }) => {
+const IntBoxLetter = memo(
+    function IntBoxLetter(props: { info: InterchangeInfo }) {
         // box width: 16 * number of characters + 12
         const textCount = props.info[4].split('\\')[0].length;
         return (
@@ -330,7 +330,7 @@ const IntBoxLetter = React.memo(
 const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
     // get the all names from the out of station interchanges
     const lineNames = props.osiInfos.map(info => info[4]).join('，');
-    return React.useMemo(
+    return useMemo(
         () => (
             <g textAnchor="middle" fontSize="50%">
                 <text className="rmg-name__zh" dy={-5}>
@@ -344,7 +344,6 @@ const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
                 </text>
             </g>
         ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [lineNames.toString()]
     );
 };
@@ -354,7 +353,7 @@ const OSysIText = (props: { osysiInfos: InterchangeInfo[]; direction: 'l' | 'r' 
     const lineNames = props.osysiInfos.map(info => info[4]).join('，');
     const lineNamesEn = props.osysiInfos.map(info => info[5]).join(', ');
 
-    return React.useMemo(
+    return useMemo(
         () => (
             <g textAnchor={props.direction === 'l' ? 'start' : 'end'} fontSize="50%">
                 <text className="rmg-name__zh" dy={3}>
@@ -365,7 +364,6 @@ const OSysIText = (props: { osysiInfos: InterchangeInfo[]; direction: 'l' | 'r' 
                 </text>
             </g>
         ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.osysiInfos.toString(), props.direction]
     );
 };

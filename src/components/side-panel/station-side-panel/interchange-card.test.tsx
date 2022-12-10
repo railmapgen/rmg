@@ -1,10 +1,10 @@
-import React from 'react';
 import InterchangeCard from './interchange-card';
 import { InterchangeInfo } from '../../../constants/constants';
 import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
 import { act } from 'react-dom/test-utils';
 import { render } from '../../../test-utils';
 import { fireEvent, screen, within } from '@testing-library/react';
+import { vi } from 'vitest';
 
 const mockInterchangeInfo1: InterchangeInfo = [
     CityCode.Hongkong,
@@ -24,14 +24,14 @@ const mockInterchangeInfo2: InterchangeInfo = [
 ];
 
 const mockCallbacks = {
-    onAdd: jest.fn(),
-    onDelete: jest.fn(),
-    onUpdate: jest.fn(),
+    onAdd: vi.fn(),
+    onDelete: vi.fn(),
+    onUpdate: vi.fn(),
 };
 
 describe('InterchangeCard', () => {
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('Can render card with empty interchange list as expected', () => {

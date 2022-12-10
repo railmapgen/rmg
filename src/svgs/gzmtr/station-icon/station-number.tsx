@@ -1,4 +1,4 @@
-import React, { SVGProps, useEffect, useRef, useState } from 'react';
+import { SVGProps, useEffect, useRef, useState } from 'react';
 import StationIcon from './station-icon';
 
 const TEXT_MAX_WIDTH = 15;
@@ -20,8 +20,8 @@ export default function StationNumber(props: StationNumberProps) {
     const [stnNumBBox, setStnNumBBox] = useState({ width: 0 } as DOMRect);
 
     useEffect(() => {
-        setLineNumBBox(lineNumEl.current!.getBBox());
-        setStnNumBBox(stnNumEl.current!.getBBox());
+        lineNumEl.current && setLineNumBBox(lineNumEl.current.getBBox());
+        stnNumEl.current && setStnNumBBox(stnNumEl.current.getBBox());
     }, [lineNum, stnNum]);
 
     const lineNumScale = TEXT_MAX_WIDTH / Math.max(TEXT_MAX_WIDTH, lineNumBBox.width);

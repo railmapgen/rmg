@@ -4,8 +4,9 @@ import { getBranches } from '../helper/graph-theory-util';
 import { createMockAppStore } from '../../setupTests';
 import rootReducer from '../index';
 import { SET_STATIONS_BULK } from './action';
+import { vi } from 'vitest';
 
-jest.mock('nanoid', () => ({
+vi.mock('nanoid', () => ({
     nanoid: () => 'testId',
 }));
 

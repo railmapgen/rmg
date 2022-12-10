@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { Name } from '../../../constants/constants';
 
 interface StationNameProps {
@@ -13,7 +13,9 @@ export default memo(
         const nameEl = useRef<SVGGElement | null>(null);
 
         useEffect(() => {
-            onUpdate && onUpdate(nameEl.current!.getBBox());
+            if (nameEl.current && onUpdate) {
+                onUpdate(nameEl.current.getBBox());
+            }
         }, [stnName.toString()]);
 
         return (
