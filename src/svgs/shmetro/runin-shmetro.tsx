@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-non-null-assertion: 0 */
 import { memo, SVGProps, useMemo } from 'react';
 import { CanvasType, Name, StationDict } from '../../constants/constants';
 import { useRootSelector } from '../../redux';

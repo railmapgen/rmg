@@ -1,4 +1,4 @@
-import React, { memo, SVGProps, useEffect, useRef, useState } from 'react';
+import { memo, SVGProps, useEffect, useRef, useState } from 'react';
 import { Name } from '../../constants/constants';
 
 interface CurrentStationNameProps {
@@ -13,7 +13,9 @@ export default memo(
         const nameEl = useRef<SVGGElement | null>(null);
 
         useEffect(() => {
-            onUpdate?.(nameEl.current!.getBBox());
+            if (nameEl.current && onUpdate) {
+                onUpdate(nameEl.current.getBBox());
+            }
         }, [stnName.toString()]);
 
         return (
@@ -44,7 +46,9 @@ export const CurrentStationSecondaryName = (props: CurrentStationSecondaryNamePr
     const nameEl = useRef<SVGGElement | null>(null);
 
     const [bBox, setBBox] = useState({ x: 0, width: 0 } as DOMRect);
-    useEffect(() => setBBox(nameEl.current!.getBBox()), [secondaryName.toString()]);
+    useEffect(() => {
+        nameEl.current && setBBox(nameEl.current.getBBox());
+    }, [secondaryName.toString()]);
 
     return (
         <g transform={transform}>

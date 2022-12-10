@@ -1,5 +1,4 @@
 import { Box, Heading, Text } from '@chakra-ui/react';
-import React from 'react';
 import { BranchStyle, Direction } from '../../../constants/constants';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import {
@@ -59,7 +58,7 @@ export default function BranchSection() {
                     label: t('StationSidePanel.branch.position'),
                     options: positionOptions,
                     value:
-                        (direction === Direction.left ? parents : children).indexOf(branch[direction][1]!) === 0
+                        (direction === Direction.left ? parents : children)[0] === branch[direction][1]
                             ? 'upper'
                             : 'lower',
                     onChange: () => dispatch(flipStationBranchPosition(selectedStation, direction)),

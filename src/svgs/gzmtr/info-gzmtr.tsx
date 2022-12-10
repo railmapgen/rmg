@@ -91,7 +91,9 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
 
     const [nextBBox, setNextBBox] = useState({ width: 0 } as DOMRect);
     const nextNameEl = useRef<SVGGElement | null>(null);
-    useEffect(() => setNextBBox(nextNameEl.current!.getBBox()), [name.toString()]);
+    useEffect(() => {
+        nextNameEl.current && setNextBBox(nextNameEl.current.getBBox());
+    }, [name.toString()]);
 
     const nextNameZHCount = name[0].length;
     const nameBcrX = (svgWidths[CanvasType.RunIn] - nameBBox.width) / 2;
@@ -193,7 +195,9 @@ const BigNextSec = (props: { secName: Name } & SVGProps<SVGGElement>) => {
 
     const nameEl = useRef<SVGGElement | null>(null);
     const [bBox, setBBox] = useState({ x: 0, width: 0 } as DOMRect);
-    useEffect(() => setBBox(nameEl.current!.getBBox()), [props.secName.toString()]);
+    useEffect(() => {
+        nameEl.current && setBBox(nameEl.current.getBBox());
+    }, [props.secName.toString()]);
 
     return (
         <g {...others}>

@@ -75,7 +75,9 @@ const InfoMTR = () => {
 
     const destNameEl = useRef<SVGGElement | null>(null);
     const [bBox, setBBox] = useState({ width: 0 } as DOMRect);
-    useEffect(() => setBBox(destNameEl.current!.getBBox()), [destNames.toString(), customisedMTRDestination.isLegacy]);
+    useEffect(() => {
+        destNameEl.current && setBBox(destNameEl.current.getBBox());
+    }, [destNames.toString(), customisedMTRDestination.isLegacy]);
 
     const flagLength = 160 + 150 + bBox.width + 45 + 50;
     const arrowX = (svgWidths[CanvasType.Destination] - (direction === ShortDirection.left ? 1 : -1) * flagLength) / 2;

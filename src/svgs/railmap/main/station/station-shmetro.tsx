@@ -166,7 +166,7 @@ const StationName = forwardRef(function StationName(
     const zhEl = useRef<SVGGElement | null>(null);
     const [enDx, setEnDx] = useState(0);
     useEffect(() => {
-        if (oneLine) setEnDx(zhEl.current!.getBBox().width + 5);
+        if (oneLine && zhEl.current) setEnDx(zhEl.current.getBBox().width + 5);
         else setEnDx(0);
     }, [...stnName, oneLine]);
 
@@ -248,7 +248,7 @@ const IntBoxGroup = forwardRef(function IntBoxGroup(
     return (
         <g ref={ref} fontSize={14} textAnchor="middle" {...others}>
             {boxInfos.map((info, i) => {
-                const isLineNumber = Boolean(info[4].match(/^[\w\d]+(号)?线/));
+                const isLineNumber = Boolean(info[4].match(/^\w+(号)?线/));
                 const isMaglev = Boolean(info[4].match(/^磁(悬)*浮/));
 
                 if (props.direction === 'r') {
@@ -303,7 +303,7 @@ const IntBoxNumber = memo(
                 <use xlinkHref="#intbox_number" fill={props.info[2]} />
                 <text x={10} className="rmg-name__zh" fill={props.info[3]} dominantBaseline="central">
                     {/* // line starts with numbers */}
-                    {props.info[4].match(/(\d*)\w+/)![0]}
+                    {props.info[4].match(/(\d*)\w+/)?.[0]}
                 </text>
             </>
         );

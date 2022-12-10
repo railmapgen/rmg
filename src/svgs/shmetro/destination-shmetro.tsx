@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-non-null-assertion: 0 */
 import { forwardRef, Fragment, memo, Ref, useEffect, useMemo, useRef, useState } from 'react';
 import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
@@ -107,7 +108,7 @@ const DestSHMetro = () => {
                     .filter(co => co.from === coline_dest_id || co.to === coline_dest_id)
                     .at(0),
             ])
-            .filter(([key, val]) => val)
+            .filter(([, val]) => val)
     ) as {
         [k: string]: ColineInfo;
     };
@@ -158,10 +159,9 @@ const Dest = (props: {
 
     const terminalEl = useRef<SVGGElement | null>(null);
     const [terminalBBox, setTerminalBBox] = useState({ width: 0 } as SVGRect);
-    useEffect(
-        () => setTerminalBBox(terminalEl.current!.getBBox()),
-        [JSON.stringify(dest_names), JSON.stringify(current_stn_id)]
-    );
+    useEffect(() => {
+        terminalEl.current && setTerminalBBox(terminalEl.current.getBBox());
+    }, [JSON.stringify(dest_names), JSON.stringify(current_stn_id)]);
 
     const [middle, MARGIN, PADDING, LINEBOX_WIDTH, PLATFORM_WIDTH] = [svgWidth.destination / 2, 10, 36, 264, 325];
     // Alignment Priority:
@@ -273,7 +273,9 @@ const LineNameBoxText = (props: { line_name: Name; line_color: [ColourHex, MonoC
     const stnNameEl = useRef<SVGGElement | null>(null);
     // the original name position
     const [bBox, setBBox] = useState({ width: 0 } as DOMRect);
-    useEffect(() => setBBox(stnNameEl.current!.getBBox()), [...line_name]);
+    useEffect(() => {
+        stnNameEl.current && setBBox(stnNameEl.current.getBBox());
+    }, [...line_name]);
 
     const rectDx = (direction === 'l' ? -bBox.width : 0) - 6;
     const stnNameEnDx = ((direction === 'l' ? -1 : 1) * bBox.width) / 2;

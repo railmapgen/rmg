@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Button, Flex, SystemStyleObject } from '@chakra-ui/react';
 import { MdAdd, MdInsertDriveFile, MdOpenInBrowser, MdUpload } from 'react-icons/md';
 import TemplateModal from '../modal/template-modal';
@@ -61,10 +61,12 @@ export default function SelectorActions(props: SelectorActionsProps) {
         console.log('handleImportProject():: received file', file);
 
         try {
-            if (file?.type !== 'application/json') {
+            if (!file) {
+                onError(t('OpenActions.unknownError'));
+            } else if (file.type !== 'application/json') {
                 onError(t('OpenActions.invalidType'));
             } else {
-                const paramStr = await readFileAsText(file!);
+                const paramStr = await readFileAsText(file);
                 const id = importParam(paramStr);
                 setSearchParams({ project: id });
                 rmgRuntime.event(Events.UPLOAD_PARAM, {});

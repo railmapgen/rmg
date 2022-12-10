@@ -17,7 +17,11 @@ export default function CityPicker(props: CityPickerProps) {
     const currentItem = defaultValueId ? cityList.find(item => item.id === defaultValueId) : undefined;
 
     const displayValue = (item: CityEntry): string => {
-        return i18n.languages.map(lng => item.name[lng as LanguageCode]).find(name => name !== undefined)!;
+        return (
+            i18n.languages.map(lng => item.name[lng as LanguageCode]).find(name => name !== undefined) ??
+            item.name.en ??
+            ''
+        );
     };
 
     const displayHandler = (item: CityEntry) => {

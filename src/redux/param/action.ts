@@ -602,34 +602,38 @@ export const updateStationBranchFirstStation = (stationId: string, direction: Di
         const arg = { stnId: stationId, direction, first: firstId };
 
         if (direction === Direction.left) {
-            const branchStartId = branches.slice(1).find(branch => branch.slice(-1)[0] === stationId)![0];
-            const branchStartFirstId = branches[0][branches[0].indexOf(branchStartId) + 1];
-            dispatch(
-                updateStationBranchFirstStationLegacy([
-                    arg,
-                    {
-                        stnId: branchStartId,
-                        direction: Direction.right,
-                        first: branchStartFirstId,
-                    },
-                ])
-            );
+            const branchStartId = branches.slice(1).find(branch => branch.slice(-1)[0] === stationId)?.[0];
+            if (branchStartId) {
+                const branchStartFirstId = branches[0][branches[0].indexOf(branchStartId) + 1];
+                dispatch(
+                    updateStationBranchFirstStationLegacy([
+                        arg,
+                        {
+                            stnId: branchStartId,
+                            direction: Direction.right,
+                            first: branchStartFirstId,
+                        },
+                    ])
+                );
+            }
         } else {
             const branchEndId = branches
                 .slice(1)
-                .find(branch => branch[0] === stationId)!
-                .slice(-1)[0];
-            const branchEndFirstId = branches[0][branches[0].indexOf(branchEndId) - 1];
-            dispatch(
-                updateStationBranchFirstStationLegacy([
-                    arg,
-                    {
-                        stnId: branchEndId,
-                        direction: Direction.left,
-                        first: branchEndFirstId,
-                    },
-                ])
-            );
+                .find(branch => branch[0] === stationId)
+                ?.slice(-1)?.[0];
+            if (branchEndId) {
+                const branchEndFirstId = branches[0][branches[0].indexOf(branchEndId) - 1];
+                dispatch(
+                    updateStationBranchFirstStationLegacy([
+                        arg,
+                        {
+                            stnId: branchEndId,
+                            direction: Direction.left,
+                            first: branchEndFirstId,
+                        },
+                    ])
+                );
+            }
         }
     };
 };
@@ -678,14 +682,14 @@ export const flipStationBranchPosition = (stationId: string, direction: Directio
         const branches = getState().helper.branches;
 
         if (direction === Direction.left) {
-            const branchStartId = branches.slice(1).find(branch => branch.slice(-1)[0] === stationId)![0];
-            dispatch(flipStationBranchPositionLegacy(stationId, branchStartId));
+            const branchStartId = branches.slice(1).find(branch => branch.slice(-1)[0] === stationId)?.[0];
+            branchStartId && dispatch(flipStationBranchPositionLegacy(stationId, branchStartId));
         } else {
             const branchEndId = branches
                 .slice(1)
-                .find(branch => branch[0] === stationId)!
-                .slice(-1)[0];
-            dispatch(flipStationBranchPositionLegacy(branchEndId, stationId));
+                .find(branch => branch[0] === stationId)
+                ?.slice(-1)?.[0];
+            branchEndId && dispatch(flipStationBranchPositionLegacy(branchEndId, stationId));
         }
     };
 };
