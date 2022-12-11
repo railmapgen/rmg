@@ -12,7 +12,7 @@ export default defineConfig({
         react(),
         checker({ typescript: true, eslint: { lintCommand: 'eslint ./src' } }),
         legacy({
-            targets: ['>0.2%', 'not dead'],
+            targets: ['defaults', '>0.2%', 'not dead', 'iOS >= 12'],
             modernPolyfills: true,
         }),
         splitVendorChunkPlugin(),
