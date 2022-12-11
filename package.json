@@ -11,7 +11,7 @@
         "@emotion/react": "^11.10.5",
         "@emotion/styled": "^11.10.5",
         "@railmapgen/rmg-components": "^4.4.1",
-        "@railmapgen/rmg-palette-resources": "^0.6.10",
+        "@railmapgen/rmg-palette-resources": "^0.6.11",
         "@railmapgen/rmg-runtime": "^2.1.0",
         "@railmapgen/rmg-templates-resources": "^0.4.5",
         "@railmapgen/rmg-translate": "^0.4.1",
@@ -68,7 +68,7 @@
         "electron-dev": "concurrently \"vite --config vite.config.electron.ts\" \"wait-on http://localhost:5173/ && electron .\"",
         "electron-package": "npx electron-builder build -c.extraMetadata.main=build/electron.js"
     },
-    "version": "5.8.4",
+    "version": "5.8.5",
     "main": "public/electron.js",
     "build": {
         "extends": "react-cra",
