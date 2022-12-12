@@ -12,7 +12,8 @@ export default defineConfig({
         react(),
         checker({ typescript: true, eslint: { lintCommand: 'eslint ./src' } }),
         legacy({
-            targets: ['>0.05%', 'not dead'],
+            targets: ['defaults', '>0.2%', 'not dead'],
+            modernPolyfills: true,
         }),
         splitVendorChunkPlugin(),
     ],
