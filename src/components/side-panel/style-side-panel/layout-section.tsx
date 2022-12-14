@@ -14,6 +14,7 @@ import {
     setYPercentage,
 } from '../../../redux/param/action';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import { MdAdd, MdArrowDropDown, MdArrowDropUp, MdArrowLeft, MdArrowRight, MdRemove } from 'react-icons/md';
 
 export default function LayoutSection() {
     const { t } = useTranslation();
@@ -51,6 +52,8 @@ export default function LayoutSection() {
             min: 0,
             max: 100,
             onChange: val => dispatch(setYPercentage(val)),
+            leftIcon: <MdArrowDropUp />,
+            rightIcon: <MdArrowDropDown />,
             hidden: ![RmgStyle.MTR, RmgStyle.GZMTR].includes(rmgStyle),
         },
         {
@@ -60,6 +63,8 @@ export default function LayoutSection() {
             min: 0,
             max: loop ? 50 : 100,
             onChange: val => dispatch(setBranchSpacingPct(val)),
+            leftIcon: <MdRemove />,
+            rightIcon: <MdAdd />,
         },
         {
             type: 'slider',
@@ -68,6 +73,8 @@ export default function LayoutSection() {
             min: 0,
             max: 50,
             onChange: val => dispatch(setPaddingPercentage(val)),
+            leftIcon: <MdRemove />,
+            rightIcon: <MdAdd />,
         },
         {
             type: 'slider',
@@ -76,6 +83,8 @@ export default function LayoutSection() {
             min: 0,
             max: 100,
             onChange: val => dispatch(setDirectionIndicatorX(val)),
+            leftIcon: <MdArrowLeft />,
+            rightIcon: <MdArrowRight />,
             hidden: ![RmgStyle.GZMTR].includes(rmgStyle),
         },
         {
@@ -85,6 +94,8 @@ export default function LayoutSection() {
             min: 0,
             max: 100,
             onChange: val => dispatch(setDirectionIndicatorY(val)),
+            leftIcon: <MdArrowDropUp />,
+            rightIcon: <MdArrowDropDown />,
             hidden: ![RmgStyle.GZMTR].includes(rmgStyle),
         },
     ];

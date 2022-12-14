@@ -1,7 +1,7 @@
 import React from 'react';
 import { HStack, IconButton } from '@chakra-ui/react';
 import { Note } from '../../../constants/constants';
-import { MdDelete } from 'react-icons/md';
+import { MdArrowDropDown, MdArrowDropUp, MdArrowLeft, MdArrowRight, MdDelete } from 'react-icons/md';
 import { RmgCard, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
 
@@ -45,6 +45,8 @@ export default function GZMTRNoteCard(props: GZMTRNoteCardProps) {
             min: 0,
             max: 100,
             onChange: value => onUpdate?.([note[0], note[1], value, note[3], note[4]]),
+            leftIcon: <MdArrowLeft />,
+            rightIcon: <MdArrowRight />,
         },
         {
             type: 'slider',
@@ -53,6 +55,8 @@ export default function GZMTRNoteCard(props: GZMTRNoteCardProps) {
             min: 0,
             max: 100,
             onChange: value => onUpdate?.([note[0], note[1], note[2], value, note[4]]),
+            leftIcon: <MdArrowDropUp />,
+            rightIcon: <MdArrowDropDown />,
         },
     ];
 
