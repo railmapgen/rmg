@@ -58,7 +58,7 @@ export default function PageHeader() {
             value: canvasScale,
             min: 0.1,
             max: 2,
-            step: 0.1,
+            step: 0.01,
             onChange: value => dispatch(setCanvasScale(value)),
             leftIcon: <MdZoomOut />,
             rightIcon: <MdZoomIn />,
