@@ -1,5 +1,5 @@
 import { RmgAgGrid, RmgLineBadge, RmgMultiLineString } from '@railmapgen/rmg-components';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { useRootDispatch, useRootSelector } from '../../redux';
 import { ColDef, SelectionChangedEvent } from 'ag-grid-community';
@@ -117,7 +117,11 @@ export default function StationAgGrid(props: StationAgGridProps) {
         resizable: true,
     };
 
-    const handleSelectionChanged = ({ api }: SelectionChangedEvent<RowDataType>) => {
+    const handleGridReady = useCallback(() => {
+        isGridReadyRef.current = true;
+    }, [isGridReadyRef.current]);
+
+    const handleSelectionChanged = useCallback(({ api }: SelectionChangedEvent<RowDataType>) => {
         const selectedRowIds = api.getSelectedRows()?.map(row => row.id);
         console.log('StationAgGrid.handleSelectionChanged():: Row selection changed', selectedRowIds);
 
@@ -126,7 +130,9 @@ export default function StationAgGrid(props: StationAgGridProps) {
             dispatch(setSelectedStation(selectedRowIds[0]));
             dispatch(setIsShareTrackEnabled(undefined));
         }
-    };
+    }, []);
+
+    const handleGetRowId = useCallback(({ data }: { data: RowDataType }) => data.id, []);
 
     return (
         <RmgAgGrid>
@@ -135,7 +141,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
                 rowData={rowData}
                 defaultColDef={defaultColDef}
                 columnDefs={columnDefs}
-                getRowId={({ data }) => data.id}
+                getRowId={handleGetRowId}
                 headerHeight={36}
                 rowHeight={36}
                 suppressCellFocus={true}
@@ -143,7 +149,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
                 suppressRowTransform={true}
                 rowSelection={'single'}
                 onSelectionChanged={handleSelectionChanged}
-                onGridReady={() => (isGridReadyRef.current = true)}
+                onGridReady={handleGridReady}
                 debug={import.meta.env.DEV}
             />
         </RmgAgGrid>
