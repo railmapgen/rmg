@@ -1,9 +1,6 @@
-import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Box, Flex } from '@chakra-ui/react';
 import { RmgLoader, RmgPage } from '@railmapgen/rmg-components';
-import { useRootDispatch, useRootSelector } from '../../redux';
-import { setGlobalAlert } from '../../redux/app/app-slice';
+import { useRootSelector } from '../../redux';
 import SvgRouter from '../../svgs/svg-router';
 import SidePanel from '../side-panel/side-panel';
 import PageHeader from '../page-header/page-header';
@@ -11,24 +8,7 @@ import GridTabs from '../ag-grid/grid-tabs';
 import GlobalAlerts from './global-alerts';
 
 export default function AppView() {
-    const { t } = useTranslation();
-    const dispatch = useRootDispatch();
-
     const isLoading = useRootSelector(state => state.app.isLoading);
-
-    useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            dispatch(
-                setGlobalAlert({
-                    status: 'info',
-                    message: t('rmpPromotion'),
-                    linkedApp: 'rmp',
-                })
-            );
-        }, 1000);
-
-        return () => clearTimeout(timeoutId);
-    }, []);
 
     return (
         <RmgPage>
