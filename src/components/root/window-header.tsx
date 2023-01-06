@@ -4,6 +4,7 @@ import {
     HStack,
     Icon,
     IconButton,
+    Image,
     Link,
     Menu,
     MenuButton,
@@ -18,20 +19,14 @@ import { RmgEnvBadge, RmgWindowHeader } from '@railmapgen/rmg-components';
 import { LanguageCode } from '@railmapgen/rmg-translate';
 import rmgRuntime, { RmgEnv } from '@railmapgen/rmg-runtime';
 import { handleLanguageChange } from '../../i18n/config';
+import RMPlogo from '../../img/rmp.png';
 
 export default function WindowHeader() {
     const { t } = useTranslation();
+
     const linkColour = useColorModeValue('primary.500', 'primary.300');
-
-    const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
-
     const environment = rmgRuntime.getEnv();
     const appVersion = rmgRuntime.getAppVersion();
-
-    const handleChangeLanguage = async (language: LanguageCode) => {
-        rmgRuntime.setLanguage(language);
-        handleLanguageChange(language);
-    };
 
     const popoverHeader = (
         <Trans i18nKey="WindowHeader.popoverHeader" environment={environment}>
@@ -49,6 +44,21 @@ export default function WindowHeader() {
         </Trans>
     );
 
+    const handleOpenRMP = () => {
+        if (rmgRuntime.isStandaloneWindow()) {
+            window.open('/rmp', '_blank');
+        } else {
+            rmgRuntime.openApp('rmp');
+        }
+    };
+
+    const handleChangeLanguage = (language: LanguageCode) => {
+        rmgRuntime.setLanguage(language);
+        handleLanguageChange(language);
+    };
+
+    const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
+
     return (
         <RmgWindowHeader>
             <Heading as="h4" size="md">
@@ -62,6 +72,14 @@ export default function WindowHeader() {
             />
 
             <HStack ml="auto">
+                <IconButton
+                    size="sm"
+                    variant="ghost"
+                    aria-label="Open RMP"
+                    icon={<Image src={RMPlogo} width="3.5" height="3.5" />}
+                    onClick={handleOpenRMP}
+                />
+
                 <Menu>
                     <MenuButton as={IconButton} icon={<MdTranslate />} variant="ghost" size="sm" />
                     <MenuList>
