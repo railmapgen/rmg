@@ -228,12 +228,12 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
     const lineNamesEn = [
         'Line '.concat(
             intInfos
-                .filter(intInfo => intInfo[5].match(/^L|line$/))
+                .filter(intInfo => intInfo[5].match(/^(L|l)ine$/))
                 .map(intInfo => intInfo[5].replace('Line', '').replace('line', '').trim())
                 .join(',')
         ),
         intInfos
-            .filter(intInfo => !intInfo[5].match(/^L|line$/))
+            .filter(intInfo => !intInfo[5].match(/^(L|l)ine$/))
             .map(intInfo => intInfo[5])
             .join('，'),
     ]
