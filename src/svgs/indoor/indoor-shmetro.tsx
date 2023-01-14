@@ -227,11 +227,7 @@ const InfoElements = () => {
                         <text className="rmg-name__en" dy="35" fontSize="8">
                             legend
                         </text>
-                        <use
-                            transform="translate(45,10)"
-                            xlinkHref="#int2_indoor_sh"
-                            stroke="var(--rmg-theme-colour)"
-                        />
+                        <use transform="translate(45,10)" xlinkHref="#int2_indoor_sh" stroke="var(--rmg-black)" />
                         <text className="rmg-name__zh" dx="60" dy="10" fontSize="10">
                             换乘站
                         </text>
