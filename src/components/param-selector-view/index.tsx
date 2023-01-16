@@ -24,7 +24,12 @@ const paramSelectorCardStyle: SystemStyleObject = {
     },
 };
 
-export default function ParamSelectorView() {
+interface ParamSelectorViewProps {
+    downloading?: string;
+}
+
+export default function ParamSelectorView(props: ParamSelectorViewProps) {
+    const { downloading } = props;
     const { t } = useTranslation();
 
     const [searchParams] = useRootSearchParams();
@@ -37,9 +42,9 @@ export default function ParamSelectorView() {
     const toast = useToast();
 
     useEffect(() => {
-        // init paramRegistry state once
+        // init paramRegistry state on mount and when external project is downloaded
         setParamRegistry(getParamRegistry());
-    }, []);
+    }, [downloading]);
 
     useOutsideClick({ ref: selectorRef, handler: () => setSelectedParam(undefined) });
 
@@ -84,6 +89,7 @@ export default function ParamSelectorView() {
                     <Flex ref={selectorRef}>
                         <ParamSelector
                             paramRegistry={paramRegistry}
+                            downloading={downloading}
                             selectedParam={selectedParam}
                             onParamSelect={setSelectedParam}
                             onParamRemove={handleDelete}

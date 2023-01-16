@@ -126,3 +126,26 @@ export const importParam = (param: string, name?: string): string => {
     );
     return id;
 };
+
+export const downloadParam = async (url: string): Promise<string | null> => {
+    const name = url.split('/').at(-1);
+    try {
+        const res = await fetch(url);
+        if (res.ok) {
+            const param = await res.text();
+            const id = nanoid();
+            window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + id, param);
+            window.localStorage.setItem(
+                LocalStorageKey.PARAM_CONFIG_BY_ID + id,
+                JSON.stringify({ name, lastModified: Date.now() })
+            );
+            return id;
+        } else {
+            console.warn('Failed to download param');
+            return null;
+        }
+    } catch (err) {
+        console.warn('Failed to download param.', err);
+        return null;
+    }
+};
