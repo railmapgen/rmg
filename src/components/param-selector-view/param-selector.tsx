@@ -9,6 +9,7 @@ import ParamConfigEditModal from '../modal/param-config-edit-modal';
 
 interface ParamSelectorProps {
     paramRegistry: ParamConfig[];
+    downloading?: string;
     selectedParam?: string;
     onParamSelect: (id: string) => void;
     onParamRemove: (id: string) => void;
@@ -31,6 +32,10 @@ const styles: SystemStyleObject = {
         borderRadius: 'md',
         borderWidth: 2,
 
+        '& >.chakra-button': {
+            alignItems: 'center',
+        },
+
         '& .chakra-button__group': {
             '& button:not(:first-of-type)': {
                 h: '100%',
@@ -40,7 +45,7 @@ const styles: SystemStyleObject = {
 };
 
 export default function ParamSelector(props: ParamSelectorProps) {
-    const { paramRegistry, selectedParam, onParamSelect, onParamRemove, onParamUpdate } = props;
+    const { paramRegistry, downloading, selectedParam, onParamSelect, onParamRemove, onParamUpdate } = props;
     const { t } = useTranslation();
 
     const [configEditing, setConfigEditing] = useState<ParamConfig>();
@@ -53,6 +58,14 @@ export default function ParamSelector(props: ParamSelectorProps) {
     return (
         <Box sx={styles}>
             <Flex>
+                {downloading && (
+                    <RmgEnrichedButton
+                        variant="ghost"
+                        primaryText={t('Downloading') + '...'}
+                        secondaryText={downloading}
+                        isDisabled={true}
+                    />
+                )}
                 {paramRegistry
                     .slice()
                     .sort((a, b) => {

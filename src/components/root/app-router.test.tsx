@@ -2,8 +2,11 @@ import { render } from '../../test-utils';
 import AppRouter from './app-router';
 import rootReducer from '../../redux';
 import { createMockAppStore, createParamInLocalStorage } from '../../setupTests';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
+import { initParam } from '../../redux/param/util';
+import { RmgStyle } from '../../constants/constants';
+import { LanguageCode } from '@railmapgen/rmg-translate';
 
 vi.mock('./app-view', () => {
     return {
@@ -30,10 +33,14 @@ const mockStore = createMockAppStore({
     ...realStore,
 });
 
+const mockFetch = vi.fn();
+const originalFetch = global.fetch;
+
 describe('AppRouter', () => {
     afterEach(() => {
         window.localStorage.clear();
         mockStore.clearActions();
+        global.fetch = originalFetch;
     });
 
     it('Can render param selector view if param id is not specified', () => {
@@ -74,6 +81,27 @@ describe('AppRouter', () => {
 
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(0);
+
+        await screen.findByRole('presentation', { name: 'Mock App View' });
+    });
+
+    it('Can download external project and open it', async () => {
+        const externalUrl = 'https://example.com/path/to/file.json';
+        const rmgParam = initParam(RmgStyle.MTR, LanguageCode.English);
+        global.fetch = mockFetch.mockResolvedValue({ ok: true, text: () => Promise.resolve(JSON.stringify(rmgParam)) });
+
+        render(<AppRouter />, { store: mockStore, route: '/?external=' + encodeURIComponent(externalUrl) });
+
+        expect(mockFetch).toBeCalledTimes(1);
+        expect(mockFetch).lastCalledWith(externalUrl);
+
+        await waitFor(() => expect(mockStore.getActions().length).toBeGreaterThanOrEqual(1));
+        const actions = mockStore.getActions();
+        expect(actions).toContainEqual({
+            type: 'app/setParamConfig',
+            payload: expect.objectContaining({ name: 'file.json' }),
+        });
+        expect(actions).toContainEqual(expect.objectContaining({ type: 'SET_FULL_PARAM' }));
 
         await screen.findByRole('presentation', { name: 'Mock App View' });
     });
