@@ -13,7 +13,7 @@
         "@railmapgen/rmg-components": "^5.0.0",
         "@railmapgen/rmg-palette-resources": "^0.6.23",
         "@railmapgen/rmg-runtime": "^2.2.1",
-        "@railmapgen/rmg-templates-resources": "^0.4.7",
+        "@railmapgen/rmg-templates-resources": "^0.4.8",
         "@railmapgen/rmg-translate": "^0.4.1",
         "@reduxjs/toolkit": "^1.9.1",
         "ag-grid-community": "^28.2.1",
@@ -68,7 +68,7 @@
         "electron-dev": "concurrently \"vite --config vite.config.electron.ts\" \"wait-on http://localhost:5173/ && electron .\"",
         "electron-package": "npx electron-builder build -c.extraMetadata.main=build/electron.js"
     },
-    "version": "5.8.25",
+    "version": "5.8.26",
     "main": "public/electron.js",
     "build": {
         "extends": "react-cra",
