@@ -33,6 +33,20 @@ export default memo(
         const nameZhScale = MAX_WIDTH / Math.max(MAX_WIDTH, nameZhBBox.width);
         const nameEnScale = MAX_WIDTH / Math.max(MAX_WIDTH, nameEnBBox.width);
 
+        const transforms = {
+            nameZh: {
+                // 7.3 -- original y
+                // 13.5 -- text height
+                // (1 - scale) -- offset multiplier
+                // scale -- visualisation offset
+                // 2 -- divide into halves (top and bottom)
+                y: 7.3 + (13.5 * (1 - nameZhScale) * nameZhScale) / 2,
+            },
+            nameEn: {
+                y: 19.5 - (9 * (1 - nameEnScale) * nameEnScale) / 2,
+            },
+        };
+
         return (
             <g textAnchor="middle" fill={passed ? MonoColour.white : foregroundColour}>
                 <InterchangeBox fill={passed ? '#aaa' : backgroundColour} />
@@ -42,10 +56,9 @@ export default memo(
                     <>
                         <text
                             ref={nameZhEl}
-                            y={getYByType(type, 'zh', nameZhScale)}
                             className="rmg-name__zh"
                             fontSize={12}
-                            transform={`scale(${nameZhScale})`}
+                            transform={`translate(0,${transforms.nameZh.y})scale(${nameZhScale})`}
                         >
                             {type === 1 ? (
                                 <>
@@ -62,10 +75,9 @@ export default memo(
                         </text>
                         <text
                             ref={nameEnEl}
-                            y={getYByType(type, 'en', nameEnScale)}
                             className="rmg-name__en"
                             fontSize={8}
-                            transform={`scale(${nameEnScale})`}
+                            transform={`translate(0,${transforms.nameEn.y})scale(${nameEnScale})`}
                         >
                             {lineName[1]}
                         </text>
@@ -90,25 +102,10 @@ const getType = (name: Name): [1 | 2 | 3, string] => {
     const matchResultForType1 = name[0].match(/^(\d+)\D+$/);
     if (matchResultForType1) return [1, matchResultForType1[1]];
 
-    const matchResultForType2 = name.map(text => text.match(/^([\w\d]+).+$/));
+    const matchResultForType2 = name.map(text => text.match(/^(\w+).+$/));
     if (matchResultForType2[0] && matchResultForType2[1] && matchResultForType2[0][1] === matchResultForType2[1][1]) {
         return [2, matchResultForType2[0][1]];
     }
 
     return [3, ''];
-};
-
-const getYByType = (type: ReturnType<typeof getType>[0], field: 'zh' | 'en', scale: number) => {
-    switch (type) {
-        case 1:
-            return (field === 'zh' ? 7.3 : 19.5) * (1 + 1 - scale);
-        case 2:
-            return 0;
-        case 3:
-            if (field === 'zh') {
-                return 8 * (2 - scale);
-            } else {
-                return 19.5 + 19.5 * (19.5 / 8) * (1 - scale) - (scale === 1 ? 0 : 5.5);
-            }
-    }
 };
