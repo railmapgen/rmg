@@ -1,1 +1,0 @@
-import{M as o}from"./vendor.f27047fc.js";const r=[{id:"taoyuanairport",colour:"#8246af",fg:o.white,name:{en:"Taoyuan Airport MRT","zh-CN":"\u6843\u56ED\u673A\u573A\u6377\u8FD0","zh-TW":"\u6843\u5712\u6A5F\u5834\u6377\u904B","zh-HK":"\u6843\u5712\u6A5F\u5834\u6377\u904B"}}];export{r as default};

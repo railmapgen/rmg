@@ -1,0 +1,1 @@
+const n=[{id:"xm1",name:{en:"Line 1","zh-Hans":"1号线","zh-Hant":"1號線"},colour:"#E27326"},{id:"xm2",name:{en:"Line 2","zh-Hans":"2号线","zh-Hant":"2號線"},colour:"#52AB43"},{id:"xm3",name:{en:"Line 3","zh-Hans":"3号线","zh-Hant":"3號線"},colour:"#2EC6D6"},{id:"xmb",name:{en:"BRT","zh-Hans":"快速公交","zh-Hant":"快速公交"},colour:"#00A5A6"}];export{n as default};

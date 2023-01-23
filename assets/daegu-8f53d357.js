@@ -1,0 +1,1 @@
+const n=[{id:"d1",name:{en:"Line 1",ko:"1호선 ","zh-Hans":"1号线","zh-Hant":"1號線"},colour:"#D50F4D"},{id:"d2",name:{en:"Line 2",ko:"2호선 ","zh-Hans":"2号线","zh-Hant":"2號線"},colour:"#21A37F"},{id:"d3",name:{en:"Line 3",ko:"3호선 ","zh-Hans":"3号线","zh-Hant":"3號線"},colour:"#F0C01E"}];export{n as default};
