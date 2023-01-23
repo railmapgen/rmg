@@ -3,6 +3,7 @@ import StationNumber from './station-icon/station-number';
 import { CanvasType, Name, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import CurrentStationName, { CurrentStationSecondaryName } from './current-station-name';
+import ArrowGzmtr from './arrow-gzmtr';
 
 const InfoGZMTR = () => {
     const svgHeight = useRootSelector(store => store.param.svg_height);
@@ -161,10 +162,8 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
                     </g>
                 )}
             </g>
-            <path
+            <ArrowGzmtr
                 id="arrow"
-                d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z"
-                fill="black"
                 style={{
                     ['--translate-x' as any]:
                         direction === ShortDirection.left
@@ -315,10 +314,8 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                     );
                 })}
             </g>
-            <path
+            <ArrowGzmtr
                 id="arrow"
-                d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z"
-                fill="black"
                 style={{
                     ['--translate-x' as any]:
                         direction === ShortDirection.left

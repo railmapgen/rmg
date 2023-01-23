@@ -4,6 +4,7 @@ import MainGZMTR from './main/main-gzmtr';
 import { CanvasType, Note, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import SvgWrapper from '../common/svg-wrapper';
+import ArrowGzmtr from '../gzmtr/arrow-gzmtr';
 
 const CANVAS_TYPE = CanvasType.RailMap;
 
@@ -65,11 +66,6 @@ export default RailMapGZMTR;
 const DefsGZMTR = memo(function DefsGZMTR() {
     return (
         <defs>
-            <path
-                id="arrow_direction"
-                d="M 60,60 L 0,0 L 60,-60 H 100 L 55,-15 H 160 V 15 H 55 L 100,60z"
-                fill="black"
-            />
             <path id="inttick" d="M 0,0 v 18" strokeLinecap="square" />
         </defs>
     );
@@ -116,10 +112,7 @@ const DirectionIndicator = () => {
             id="direction_gz"
             style={{ ['--x-percentage' as any]: directionIndicatorX, ['--y-percentage' as any]: directionIndicatorY }}
         >
-            <use
-                xlinkHref="#arrow_direction"
-                style={{ ['--rotate' as any]: direction === ShortDirection.left ? '0deg' : '180deg' }}
-            />
+            <ArrowGzmtr transform={`scale(0.35)rotate(${direction === ShortDirection.left ? 0 : 180})`} />
 
             {validDests.length !== 2 ? (
                 <DirectionIndicatorTextGroup {...textGroupProps} />
