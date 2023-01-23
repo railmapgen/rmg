@@ -55,12 +55,7 @@ g#big_next_2 text:nth-child(3) {
     font-size: 18.5px;
 }
 
-g#run_in_gzmtr use#arrow {
-    transform: translate(var(--translate-x, 300px), var(--translate-y)) scale(0.25) rotate(var(--rotate, 0deg));
-    --translate-y: calc(var(--rmg-svg-height) / 2 - 30px);
-}
-
-#runin path#arrow {
+#runin #arrow {
     transform: translate(var(--translate-x, 300px), var(--translate-y)) scale(0.25) rotate(var(--rotate, 0deg));
     --translate-y: calc(var(--rmg-svg-height) / 2 - 30px);
 }
@@ -87,9 +82,6 @@ g#direction_gz {
     transform: translate(var(--translate-x), var(--translate-y));
     --translate-x: calc(var(--rmg-svg-width) * var(--x-percentage, 50) / 100);
     --translate-y: calc(var(--rmg-svg-height) * var(--y-percentage, 70) / 100);
-}
-g#direction_gz use {
-    transform: scale(0.35) rotate(var(--rotate, 0deg));
 }
 
 g#terminus_gz {
