@@ -16,6 +16,7 @@ export default function HeaderActions() {
 
     const handleGoToSelectorView = () => {
         // reset param config to stop param update trigger
+        dispatch(setSidePanelMode(SidePanelMode.CLOSE));
         dispatch(setParamConfig(undefined));
         setSearchParams({});
     };
