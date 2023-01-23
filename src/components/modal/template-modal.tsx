@@ -38,10 +38,14 @@ export default function TemplateModal(props: TemplateModalProps) {
 
     const handleSelect = async (company: string, filename: string, displayName: string) => {
         dispatch(startLoading());
+
+        const companyEntry = companyConfig.find(entry => entry.id === company);
+        const companyDisplayName = companyEntry ? translateText(companyEntry.name) : company;
+
         const module = (await templatesGlob[
             `/node_modules/@railmapgen/rmg-templates-resources/templates/${company}/${filename}.json`
         ]()) as any;
-        onOpenParam(module.default, displayName);
+        onOpenParam(module.default, [companyDisplayName, displayName].join(' '));
         rmgRuntime.event(Events.OPEN_TEMPLATE, { company, filename });
         dispatch(stopLoading());
     };
