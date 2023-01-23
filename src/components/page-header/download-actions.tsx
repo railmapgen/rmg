@@ -13,10 +13,11 @@ export default function DownloadActions() {
 
     const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
 
+    const { paramConfig } = useRootSelector(state => state.app);
     const param = useRootSelector(state => state.param);
 
     const handleDownloadJson = () => {
-        downloadAs(`RMG_${new Date().valueOf()}.json`, 'application/json', JSON.stringify(param));
+        downloadAs(`RMG_${paramConfig?.id}.json`, 'application/json', JSON.stringify(param));
         rmgRuntime.event(Events.DOWNLOAD_PARAM, { style: param.style });
     };
 
