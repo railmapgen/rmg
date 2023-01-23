@@ -177,7 +177,7 @@ export default function ColourModal(props: ColourModalProps) {
                         </Link>
                     </Text>
 
-                    <Button colorScheme="primary" onClick={handleSubmit} disabled={!isSubmitEnabled}>
+                    <Button colorScheme="primary" onClick={handleSubmit} isDisabled={!isSubmitEnabled}>
                         {t('Confirm')}
                     </Button>
                 </ModalFooter>

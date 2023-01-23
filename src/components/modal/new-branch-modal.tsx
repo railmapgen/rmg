@@ -165,7 +165,7 @@ export default function NewBranchModal(props: NewBranchModalProps) {
                         colorScheme="primary"
                         title={isSubmitDisabled ? fromError || toError : t('Confirm')}
                         onClick={handleSubmit}
-                        disabled={isSubmitDisabled}
+                        isDisabled={isSubmitDisabled}
                     >
                         {t('Confirm')}
                     </Button>

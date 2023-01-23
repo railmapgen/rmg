@@ -143,7 +143,7 @@ export default function AddStationModal(props: AddStationModalProps) {
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button colorScheme="primary" onClick={handleSubmit} disabled={!pivot}>
+                    <Button colorScheme="primary" onClick={handleSubmit} isDisabled={!pivot}>
                         {t('Confirm')}
                     </Button>
                 </ModalFooter>

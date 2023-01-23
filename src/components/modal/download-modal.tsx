@@ -215,7 +215,7 @@ export default function DownloadModal(props: DownloadModalProps) {
                             variant="outline"
                             size="sm"
                             onClick={() => handleDownload('current')}
-                            disabled={!canvasToDownload}
+                            isDisabled={!canvasToDownload}
                         >
                             {t('DownloadModal.downloadOne')}
                         </Button>
@@ -225,7 +225,7 @@ export default function DownloadModal(props: DownloadModalProps) {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleDownload('all')}
-                                disabled={!canvasToDownload}
+                                isDisabled={!canvasToDownload}
                             >
                                 {t('DownloadModal.downloadAll')}
                             </Button>
