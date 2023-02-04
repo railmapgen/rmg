@@ -55,8 +55,12 @@ fi
 cd $UAT_REPO_NAME/
 git add .
 git commit -m "Build RMG version $RMG_VER"
-git push --force
-
+{
+  git push;
+} || {
+  git pull --rebase;
+  git push;
+}
 
 echo "Build Success: $APP_NAME-$RMG_VER"
-echo "::set-output name=RMG_VER::$RMG_VER"
+echo "RMG_VER=$RMG_VER" >> $GITHUB_OUTPUT
