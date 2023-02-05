@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Flex,
     Modal,
@@ -16,11 +16,12 @@ import {
 import { useTranslation } from 'react-i18next';
 import { translateText } from '../../i18n/config';
 import { useRootDispatch } from '../../redux';
-import { companyConfig, templateList } from '@railmapgen/rmg-templates-resources';
+import { coreCompanyConfig, coreTemplateList } from '@railmapgen/rmg-templates-resources';
 import { startLoading, stopLoading } from '../../redux/app/app-slice';
 import { Events } from '../../constants/constants';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { RmgEnrichedButton } from '@railmapgen/rmg-components';
+import { fetchOtherCompanyConfig, fetchTemplatesByCompany } from '../../service/rmg-templates-service';
 
 const templatesGlob = import.meta.glob('/node_modules/@railmapgen/rmg-templates-resources/templates/**/*.json');
 
@@ -35,6 +36,20 @@ export default function TemplateModal(props: TemplateModalProps) {
 
     const { t } = useTranslation();
     const dispatch = useRootDispatch();
+
+    const [companyConfig, setCompanyConfig] = useState(coreCompanyConfig);
+    const [templateList, setTemplateList] = useState(coreTemplateList);
+
+    useEffect(() => {
+        fetchOtherCompanyConfig().then(otherConfig => {
+            setCompanyConfig([...coreCompanyConfig, ...otherConfig]);
+            for (const company of otherConfig) {
+                fetchTemplatesByCompany(company.id).then(templates => {
+                    setTemplateList(prevState => ({ ...prevState, [company.id]: templates }));
+                });
+            }
+        });
+    }, []);
 
     const handleSelect = async (company: string, filename: string, displayName: string) => {
         dispatch(startLoading());
