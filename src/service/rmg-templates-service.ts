@@ -19,3 +19,8 @@ export const fetchTemplatesByCompany = async (company: string): Promise<Template
         return [];
     }
 };
+
+export const fetchTemplate = async (company: string, filename: string) => {
+    const response = await fetch(`/rmg-templates/resources/templates/${company}/${filename}.json`);
+    return await response.json();
+};
