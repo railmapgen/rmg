@@ -17,7 +17,6 @@ git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 # variables
 export APP_NAME=rmg
 BRANCH=$(git branch | grep \* | cut -d ' ' -f2 | tr '/' '.')
-UAT_REPO_NAME=rmg-repositories
 
 ### BUMP VERSION
 if [ "$BRANCH" = "main" ]
@@ -33,12 +32,8 @@ else
   # git tag -a "${APP_NAME}-${RMG_VER}" -m "${APP_NAME}-${RMG_VER}"
 fi
 
-
 ### BUILD
-mkdir -p $UAT_REPO_NAME/"$APP_NAME"/
 CI='' npm run build
-cp -r dist/ $UAT_REPO_NAME/"$APP_NAME"/"$RMG_VER"/
-
 
 ### PUSH TAG AND COMMIT
 if [ "$BRANCH" = "main" ]
@@ -49,18 +44,6 @@ then
   git push
   git push --atomic origin HEAD "${APP_NAME}-${RMG_VER}"
 fi
-
-
-### UPLOAD ARTIFACTS
-cd $UAT_REPO_NAME/
-git add .
-git commit -m "Build RMG version $RMG_VER"
-{
-  git push;
-} || {
-  git pull --rebase;
-  git push;
-}
 
 echo "Build Success: $APP_NAME-$RMG_VER"
 echo "RMG_VER=$RMG_VER" >> $GITHUB_OUTPUT
