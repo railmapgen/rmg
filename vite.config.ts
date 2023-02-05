@@ -17,6 +17,15 @@ export default defineConfig({
         }),
         splitVendorChunkPlugin(),
     ],
+    server: {
+        proxy: {
+            '/rmg-templates': {
+                target: 'https://railmapgen.github.io',
+                changeOrigin: true,
+                secure: false,
+            },
+        },
+    },
     test: {
         globals: true,
         environment: 'jsdom',
