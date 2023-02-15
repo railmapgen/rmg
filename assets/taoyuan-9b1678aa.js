@@ -1,0 +1,1 @@
+import{M as o}from"./vendor-40a796df.js";const r=[{id:"taoyuanairport",colour:"#8246af",fg:o.white,name:{en:"Taoyuan Airport MRT","zh-CN":"桃园机场捷运","zh-TW":"桃園機場捷運","zh-HK":"桃園機場捷運"}}];export{r as default};
