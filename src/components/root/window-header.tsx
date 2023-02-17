@@ -86,6 +86,7 @@ export default function WindowHeader() {
                         <MenuItem onClick={() => handleChangeLanguage(LanguageCode.English)}>English</MenuItem>
                         <MenuItem onClick={() => handleChangeLanguage(LanguageCode.ChineseSimp)}>简体中文</MenuItem>
                         <MenuItem onClick={() => handleChangeLanguage(LanguageCode.ChineseTrad)}>繁體中文</MenuItem>
+                        <MenuItem onClick={() => handleChangeLanguage(LanguageCode.Korean)}>한국어</MenuItem>
                     </MenuList>
                 </Menu>
 

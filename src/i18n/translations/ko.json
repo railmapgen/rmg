@@ -1,0 +1,318 @@
+{
+    "WindowHeader": {
+        "popoverHeader": "당신은 환경을<1>{{environment}}</1>탐색하고 있습니다.",
+        "popoverBody": "테스트 환경이라 안정성과 호환성을 보장할 수 없습니다.생산 환경으로<2>돌아가십시오</2>."
+    },
+
+    "HeaderActions": {
+        "editStyle": "스타일 설정"
+    },
+
+    "DownloadActions": {
+        "downloads": "다운로드",
+        "configFile": "설정 파일",
+        "images": "이미지"
+    },
+
+    "OpenActions": {
+        "invalidType": "잘못된 파일 종류! JSON 종류의 파일만 받습니다.",
+        "unknownError": "업로드한 파일을 가져오는 중 오류가 발생했습니다! 다시 시도해 주세요."
+    },
+
+    "DownloadModal": {
+        "title": "이미지 다운로드",
+        "canvas": "화면",
+        "transparent": "투명 배경",
+        "showBorder": "테두리 보이기",
+        "scale": "확대/ 축소 수준",
+        "format": "파일 종류",
+        "pleaseSelect": "선택해주세요",
+        "png": "PNG 이미지",
+        "svg": "SVG 이미지（웹용）",
+        "downloadOne": "현재 역 다운로드",
+        "downloadAll": "모든 역 다운로드"
+    },
+
+    "TemplateModal": {
+        "title": "템플릿 선택"
+    },
+
+    "GridTabs": {
+        "main": "주노선",
+        "branch": "지노선",
+        "external": "외부 노선",
+        "addStation": "역 추가",
+        "editLine":  "노선 구간 설정"
+    },
+
+    "StationAgGrid": {
+        "num": "역 번호",
+        "interchange": "환승",
+        "coline": "공용"
+    },
+
+    "StyleSidePanel": {
+        "header": "스타일 설정",
+        "layout": {
+            "title": "구성",
+            "canvasHeight": "화면 고도",
+            "destinationWidth": "터미널 정거장 너비",
+            "runinWidth": "현재 정거장 너비",
+            "railmapWidth": "승강장문 노선도 폭",
+            "indoorWidth": "차내 노선도 폭",
+            "verticalPosition": "수직 방향 위치",
+            "branchSpacing": "지선 간격",
+            "branchSpacingLoop": "수직 여백",
+            "padding": "로드맵 여백",
+            "directionGzX": "터미널 수평 방향 위치",
+            "directionGzY": "터미널 수직 방향 위치"
+        },
+        "design": {
+            "title": "设计",
+            "zhLineName": "노선 한자 명칭",
+            "enLineName": "노선 영문 명칭",
+            "lineNum": "노선 번호",
+            "direction": "주행 방향",
+            "left": "왼쪽으로",
+            "right": "오른쪽으로",
+            "platformNum": "플랫폼 번호",
+            "psdNum": "플랫폼 도어 번호",
+            "panelType": "플랫폼 도어 패널 스타일",
+            "gz1": "1호선",
+            "gz28": "2/8호선（파나소닉）",
+            "gz2otis": "2/8호선（오디스）",
+            "gz3": "3호선",
+            "gz1421": "2017년 모양",
+            "gz6": "2010년 모양",
+            "gzgf": "2016년 모양",
+            "gz4": "4호선",
+            "gz5": "5호선",
+            "sh": "默认",
+            "sh2020": "2020모양（사전 검토）",
+            "nameDisplay": "역 명칭 보이기",
+            "alternatively": "교차 표시",
+            "onOneSide": "같은 쪽",
+            "flip": "위치를 뒤집다",
+            "legacyDestination": "터미널에 경로 명칭 표시",
+            "overrideTerminal": "끝점 다시 쓰기",
+            "terminalZhName": "터미널 한자 명칭",
+            "terminalEnName": "터미널 영문 명칭"
+        },
+        "note": {
+            "title": "설명",
+            "add": "설명 추가",
+            "zhNote": "한자 설명",
+            "enNote": "영문 설명",
+            "positionX": "수평 방향 위치",
+            "positionY": "수직 방향 위치",
+            "border": "显테두리 보이기",
+            "remove": "설명 삭제"
+        },
+        "loop": {
+            "title": "환상선",
+            "isLoop": "순환선으로 간주하기",
+            "isBank": "승강장 도면에 평행사변형으로 순환선을 표시하기",
+            "leftRightFactor": "좌우 파라미터",
+            "bottomFactor": "바닥 인자"
+        }
+    },
+
+    "BranchSidePanel": {
+        "header": "노선 구간 설정",
+        "branch": {
+            "title": "지선"
+        },
+        "coline": {
+            "title": "공선",
+            "add": "공선 추가"
+        },
+        "action": {
+            "title": "조작",
+            "autoNum": "역 자동 번호 매기기",
+            "reverse": "전체 노선을 회전하기",
+            "flip": "전체 노선을 뒤집기"
+        }
+    },
+
+    "StationSidePanel": {
+        "info": {
+            "title": "역 정보",
+            "num": "역 번호",
+            "zhSecondary": "한자 제2명칭",
+            "enSecondary": "영문 제2명칭"
+        },
+        "interchange": {
+            "title": "환승",
+            "within": "같은 역에서 환승",
+            "outStation": "역을 나가 환승",
+            "outSystem": "시스템외환승",
+            "addGroup": "환승 조합 추가",
+            "noInterchanges": "비환승역",
+            "add": "환승 추가",
+            "copy": "환승 복사",
+            "remove": "환승 삭제"
+        },
+        "branch": {
+            "type": "유형",
+            "through": "관통(환승 불필요)",
+            "nonThrough": "비관통(환승 필요)",
+            "firstStation": "첫 번째 역",
+            "position": "위치",
+            "upper": "위쪽",
+            "lower": "아래쪽"
+        },
+        "more": {
+            "title": "자세한 설정",
+            "service": "열차 종류",
+            "local": "서행",
+            "express": "급행",
+            "direct": "특급",
+            "facility": "인근 시설",
+            "none": "무",
+            "airport": "공항",
+            "hsr": "고속 철도",
+            "railway": "국가 철도",
+            "disney": "디즈니",
+            "pivot": "순환선의 허브 역",
+            "oneLine": "한 줄 안에 한자와 영문의 역명을 전시하기",
+            "intPadding": "역명과 환승 노선 사이의 간격",
+            "intPaddingApplyGlobal": "현재 간격을 모든 역에 적용",
+            "apply": "응용"
+        },
+        "footer": {
+            "current": "현재 역으로 설정",
+            "remove": "삭제"
+        }
+    },
+
+    "ColourModal": {
+        "title": "색상 선택",
+        "example": "보기",
+        "palette": "색상 라이브러리",
+        "custom": "사용자 정의",
+        "city": "도시 주제",
+        "line": "노선 주제",
+        "bg": "배경색",
+        "fg": "전경색",
+        "white":"하얀색",
+        "black": "검은색",
+        "seeAll": "전체보기"
+    },
+
+    "AddStationModal": {
+        "title": "역 추가",
+        "where": "목표 위치",
+        "main": "주선로",
+        "branch": "지선",
+        "external": "외부 노선",
+        "preposition": "상대 위치",
+        "before": "전에",
+        "after": "후에",
+        "pivot": "위치추적역",
+        "pleaseSelect": "선택해주세요",
+        "error": "스테이션 추가에 실패하였습니다, 옵션을 확인하신 후 다시 시도하십시오."
+    },
+
+    "NewBranchModal": {
+        "title": "지선 또는 외부 노선 추가",
+        "where": "목표 위치",
+        "new": "지선을 첨가",
+        "ext": "외부 노선 추가",
+        "from": "부터",
+        "to": "까지",
+        "pleaseSelect": "선택해주세요",
+        "position": "위치",
+        "upper": "위쪽",
+        "lower": "아래쪽"
+    },
+
+    "AutoNumModal": {
+        "title": "역 자동 번호 매기기",
+        "where": "목표 위치",
+        "main": "주선",
+        "branch": "지선",
+        "external": "외부 노선",
+        "from": "시작 번호",
+        "maxLength": "번호 자릿수",
+        "sort": "정렬 방식",
+        "asc": "오름차순",
+        "desc": "내림차순"
+    },
+
+    "All projects": "모든 프로젝트",
+    "Are you sure to remove station? You cannot undo this action.": "이 역을 삭제하시겠습니까? 이 작업을 취소할 수 없습니다.",
+    "Blank project": "백지 프로젝트",
+    "Branch left end": "지선 좌단",
+    "Branch on the left": "좌측 지선",
+    "Branch on the right": "우측 지선",   
+    "Branch right end": "지선 우단",
+    "Branch spacing": "지선 간격",
+    "Branches": "지선",
+    "by": "에서 오다",
+    "Canvas scale": "화면 크기 조정 단계",
+    "Chinese name": "한자 명칭",
+    "Colour": "색깔",
+    "Connect to main line": "메인 라인에 연결",
+    "Contribution Wiki": "기여자 안내",
+    "Contributors": "기여자",
+    "Core contributors": "핵심 기여자",
+    "day ago": "일 전",
+    "days ago": "일 전",
+    "Disconnect from main line": "본선에서 끊기다",
+    "Edit project info": "프로젝트 정보 편집",
+    "Empty template": "공백 틀",
+    "English name": "영문 명칭",
+    "Help and support": "도움과 지지",
+    "hour ago": "시간 전",
+    "hours ago": "시간 전",
+    "Import project": "프로젝트 가져오기",
+    "Just now": "방금",
+    "Last modified": "마지막 편집",
+    "minute ago": "분 전에",
+    "minutes ago": "분 전에",
+    "No branches found": "지선을 찾지 못했다.",
+    "Open selected": "선택한 프로젝트 열기",
+    "Open template": "틀 열기",
+    "Paid area": "유료환승",
+    "Please select...": "선택해 주세요!",
+    "Project": "프로젝트",
+    "Project selected is invalid or corrupted.": "선택한 항목이 잘못되었거나 손상되었습니다.",
+    "Project name": "프로젝트 명칭",
+    "Remove project": "프로젝트 삭제",
+    "Remove station": "역 삭제",
+    "Resource contributors": "자원 기여자",
+    "Resource Administrator": "자원 관리자",
+    "Saved projects": "저장된 프로젝트",
+    "Select canvas": "화면 선택",
+    "Style": "스타일",
+    "Station Chinese name": "역 한자 명칭",
+    "Station English name": "역 영문 명칭",
+    "Station name": "역 명칭",
+    "Target station": "목표 역",
+    "Terms and conditions": "조관 및 세칙",
+    "Text on the left": "글로 갈아타면 왼쪽으로 붙다",
+    "Text on the right": "글로 갈아타면 오른쪽으로 붙다",
+    "Unable to connect to main line.": "메인 라인에 연결할 수 없습니다.",
+    "Unable to disconnect from main line.": "메인라인에서 연결이 되지 않습니다.",
+    "Unable to remove this station.": "이 역은 삭제할 수 없습니다.",
+    "Unknown": "미지",
+    "View": "찾아 보기",
+    "Visit": "방문",
+    "Visit GitHub": "GitHub 방문하기",
+    "You have reached the maximum number of projects.": "프로젝트 수량 상한에 도달했습니다.",
+    ", open an issue and join us today!": "，Issue를 만들고 우리와 합류하세요!",
+
+    "CanvasType": {
+        "all": "모두",
+        "destination": "터미널 번호판",
+        "runin": "현재 역 번호판",
+        "railmap": "플랫폼 도어 노선도",
+        "indoor": "차내 노선도"
+    },
+
+    "RmgStyle": {
+        "mtr": "홍콩 지하철",
+        "gzmtr": "광저우 지하철",
+        "shmetro": "상해 지하철"
+    }
+}

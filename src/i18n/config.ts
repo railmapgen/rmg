@@ -5,11 +5,13 @@ import RmgTranslate, { LanguageCode, Translation } from '@railmapgen/rmg-transla
 import enTranslation from './translations/en.json';
 import zhHansTranslation from './translations/zh-Hans.json';
 import zhHantTranslation from './translations/zh-Hant.json';
+import koTranslation from './translations/ko.json';
 
 const resources = new RmgTranslate.Builder()
     .withResource('en', enTranslation)
     .withResource('zh-Hans', zhHansTranslation)
     .withResource('zh-Hant', zhHantTranslation)
+    .withResource('ko', koTranslation)
     .build();
 
 i18n.use(initReactI18next)
