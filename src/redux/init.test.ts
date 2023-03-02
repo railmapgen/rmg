@@ -86,7 +86,7 @@ describe('ReduxInit', () => {
     describe('ReduxInit - paramUpdateTrigger', () => {
         const mockDispatch = vi.fn();
         const getMockParam = (id: string): RMGParam => {
-            const mockParam = initParam(RmgStyle.MTR, LanguageCode.English);
+            const mockParam = initParam(RmgStyle.MTR, 'en');
             mockParam.line_num = id;
             return mockParam;
         };

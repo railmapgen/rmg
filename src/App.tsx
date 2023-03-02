@@ -1,9 +1,6 @@
-import React, { lazy, StrictMode } from 'react';
+import React, { lazy } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { ChakraProvider } from '@chakra-ui/react';
-import { rmgChakraTheme, RmgErrorBoundary, RmgLoader, RmgWindow } from '@railmapgen/rmg-components';
-import { Provider } from 'react-redux';
-import store from './redux';
+import { RmgErrorBoundary, RmgLoader, RmgWindow } from '@railmapgen/rmg-components';
 import WindowHeader from './components/root/window-header';
 
 const AppRouter = lazy(() => import('./components/root/app-router'));
@@ -17,30 +14,21 @@ export default function App() {
     const basename = import.meta.env.BASE_URL === './' ? '/' : import.meta.env.BASE_URL;
 
     return (
-        <StrictMode>
-            <Provider store={store}>
-                <ChakraProvider theme={rmgChakraTheme}>
-                    <BrowserRouter basename={basename}>
-                        <RmgWindow>
-                            <WindowHeader />
-                            <Routes>
-                                <Route
-                                    path="/"
-                                    element={
-                                        <RmgErrorBoundary
-                                            suspenseFallback={<RmgLoader isIndeterminate={true} />}
-                                            allowReset
-                                        >
-                                            <AppRouter />
-                                        </RmgErrorBoundary>
-                                    }
-                                />
-                                <Route path="*" element={<Navigate to="/" />} />
-                            </Routes>
-                        </RmgWindow>
-                    </BrowserRouter>
-                </ChakraProvider>
-            </Provider>
-        </StrictMode>
+        <BrowserRouter basename={basename}>
+            <RmgWindow>
+                <WindowHeader />
+                <Routes>
+                    <Route
+                        path="/"
+                        element={
+                            <RmgErrorBoundary suspenseFallback={<RmgLoader isIndeterminate={true} />} allowReset>
+                                <AppRouter />
+                            </RmgErrorBoundary>
+                        }
+                    />
+                    <Route path="*" element={<Navigate to="/" />} />
+                </Routes>
+            </RmgWindow>
+        </BrowserRouter>
     );
 }

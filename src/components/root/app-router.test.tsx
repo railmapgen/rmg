@@ -87,7 +87,7 @@ describe('AppRouter', () => {
 
     it('Can download external project and open it', async () => {
         const externalUrl = 'https://example.com/path/to/file.json';
-        const rmgParam = initParam(RmgStyle.MTR, LanguageCode.English);
+        const rmgParam = initParam(RmgStyle.MTR, 'en');
         global.fetch = mockFetch.mockResolvedValue({ ok: true, text: () => Promise.resolve(JSON.stringify(rmgParam)) });
 
         render(<AppRouter />, { store: mockStore, route: '/?external=' + encodeURIComponent(externalUrl) });

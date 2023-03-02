@@ -26,8 +26,7 @@ export default function CityPicker(props: CityPickerProps) {
 
     const displayHandler = (item: CityEntry) => {
         const isCensorTWFlag =
-            item.country === 'TW' &&
-            [LanguageCode.ChineseSimp, LanguageCode.ChineseCN].includes(i18n.languages[0] as LanguageCode);
+            item.country === 'TW' && ['zh-Hans', 'zh-CN'].includes(i18n.languages[0] as LanguageCode);
         const isWindowsClient = ['Win32', 'Win64'].includes(navigator.platform);
         // const isWindowsClient = true; // uncomment this line for Windows testing
 

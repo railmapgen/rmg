@@ -16,10 +16,9 @@ import { Trans, useTranslation } from 'react-i18next';
 import { MdHelp, MdOpenInNew, MdTranslate } from 'react-icons/md';
 import HelpModal from '../modal/help-modal';
 import { RmgEnvBadge, RmgWindowHeader } from '@railmapgen/rmg-components';
-import { LanguageCode } from '@railmapgen/rmg-translate';
 import rmgRuntime, { RmgEnv } from '@railmapgen/rmg-runtime';
-import { handleLanguageChange } from '../../i18n/config';
 import RMPlogo from '../../img/rmp.png';
+import { LanguageCode } from '@railmapgen/rmg-translate';
 
 export default function WindowHeader() {
     const { t } = useTranslation();
@@ -54,7 +53,7 @@ export default function WindowHeader() {
 
     const handleChangeLanguage = (language: LanguageCode) => {
         rmgRuntime.setLanguage(language);
-        handleLanguageChange(language);
+        rmgRuntime.getI18nInstance().changeLanguage(language);
     };
 
     const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
@@ -83,10 +82,10 @@ export default function WindowHeader() {
                 <Menu>
                     <MenuButton as={IconButton} icon={<MdTranslate />} variant="ghost" size="sm" />
                     <MenuList>
-                        <MenuItem onClick={() => handleChangeLanguage(LanguageCode.English)}>English</MenuItem>
-                        <MenuItem onClick={() => handleChangeLanguage(LanguageCode.ChineseSimp)}>简体中文</MenuItem>
-                        <MenuItem onClick={() => handleChangeLanguage(LanguageCode.ChineseTrad)}>繁體中文</MenuItem>
-                        <MenuItem onClick={() => handleChangeLanguage(LanguageCode.Korean)}>한국어</MenuItem>
+                        <MenuItem onClick={() => handleChangeLanguage('en')}>English</MenuItem>
+                        <MenuItem onClick={() => handleChangeLanguage('zh-Hans')}>简体中文</MenuItem>
+                        <MenuItem onClick={() => handleChangeLanguage('zh-Hant')}>繁體中文</MenuItem>
+                        <MenuItem onClick={() => handleChangeLanguage('ko')}>한국어</MenuItem>
                     </MenuList>
                 </Menu>
 

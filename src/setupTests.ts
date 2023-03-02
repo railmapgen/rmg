@@ -92,7 +92,7 @@ global.fetch = (...args) => {
 };
 
 export const createParamInLocalStorage = (id: string) => {
-    const rmgParam = initParam(RmgStyle.MTR, LanguageCode.English);
+    const rmgParam = initParam(RmgStyle.MTR, 'en');
     rmgParam.line_num = id;
     window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + id, JSON.stringify(rmgParam));
 };

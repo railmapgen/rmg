@@ -1,12 +1,17 @@
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { createRoot, Root } from 'react-dom/client';
 import './index.css';
-import './i18n/config';
+import i18n from './i18n/config';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { CanvasType, Events } from './constants/constants';
 import store from './redux';
 import { initStore } from './redux/init';
+import { rmgChakraTheme } from '@railmapgen/rmg-components';
+import { StrictMode } from 'react';
+import { Provider } from 'react-redux';
+import { ChakraProvider } from '@chakra-ui/react';
+import { I18nextProvider } from 'react-i18next';
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
@@ -27,7 +32,17 @@ let root: Root;
 
 const renderApp = () => {
     root = createRoot(document.getElementById('root') as HTMLDivElement);
-    root.render(<App />);
+    root.render(
+        <StrictMode>
+            <Provider store={store}>
+                <ChakraProvider theme={rmgChakraTheme}>
+                    <I18nextProvider i18n={i18n}>
+                        <App />
+                    </I18nextProvider>
+                </ChakraProvider>
+            </Provider>
+        </StrictMode>
+    );
 };
 
 rmgRuntime

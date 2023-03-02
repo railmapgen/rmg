@@ -29,9 +29,9 @@ const initTheme = (style: RmgStyle): Theme => {
 
 const initLineName = (language: LanguageCode): Name => {
     switch (language) {
-        case LanguageCode.ChineseSimp:
+        case 'zh-Hans':
             return ['1号线', 'Line 1'];
-        case LanguageCode.ChineseTrad:
+        case 'zh-Hant':
             return ['荃灣綫', 'Tsuen Wan Line'];
         default:
             return ['地鐵線', 'Metro Line'];
