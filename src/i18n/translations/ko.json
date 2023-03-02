@@ -68,7 +68,7 @@
             "directionGzY": "터미널 수직 방향 위치"
         },
         "design": {
-            "title": "设计",
+            "title": "디자인",
             "zhLineName": "노선 한자 명칭",
             "enLineName": "노선 영문 명칭",
             "lineNum": "노선 번호",
@@ -87,7 +87,7 @@
             "gzgf": "2016년 모양",
             "gz4": "4호선",
             "gz5": "5호선",
-            "sh": "默认",
+            "sh": "묵인",
             "sh2020": "2020모양（사전 검토）",
             "nameDisplay": "역 명칭 보이기",
             "alternatively": "교차 표시",
@@ -105,7 +105,7 @@
             "enNote": "영문 설명",
             "positionX": "수평 방향 위치",
             "positionY": "수직 방향 위치",
-            "border": "显테두리 보이기",
+            "border": "테두리 보이기",
             "remove": "설명 삭제"
         },
         "loop": {
@@ -244,7 +244,7 @@
     "Blank project": "백지 프로젝트",
     "Branch left end": "지선 좌단",
     "Branch on the left": "좌측 지선",
-    "Branch on the right": "우측 지선",   
+    "Branch on the right": "우측 지선",
     "Branch right end": "지선 우단",
     "Branch spacing": "지선 간격",
     "Branches": "지선",
