@@ -5,8 +5,22 @@ on:
   workflow_dispatch:
     inputs:
       auto_deploy:
+        type: choice
         description: Auto deploy to (NONE/UAT/PRD)
+        options:
+        - PRD
+        - UAT
+        - NONE
         default: NONE
+        required: true
+      bump_version:
+        type: choice
+        description: Bump version
+        options:
+        - patch
+        - minor
+        - major
+        default: patch
         required: true
 
 jobs:
@@ -25,6 +39,8 @@ jobs:
         id: build
         run: ./scripts/build.sh
         shell: bash
+        env:
+          BUMP_VERSION: ${{ github.event.inputs.bump_version }}
 
       - name: Upload artefacts
         uses: railmapgen/upload-artefacts@main
