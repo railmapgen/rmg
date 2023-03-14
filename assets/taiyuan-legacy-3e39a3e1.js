@@ -1,1 +1,0 @@
-System.register(["./vendor-legacy-9eb8ae94.js"],(function(e,t){"use strict";var n;return{setters:[function(e){n=e.Y}],execute:function(){e("default",[{id:"2",colour:"#b31c21",fg:n.white,name:{en:"Line 2","zh-Hans":"2号线","zh-Hant":"2號線"}}])}}}));
