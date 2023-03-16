@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Box, Button, Heading, HStack } from '@chakra-ui/react';
+import { useState } from 'react';
+import { Box, Heading, HStack, IconButton } from '@chakra-ui/react';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import ThemeButton from '../theme-button';
 import ColourModal from '../../modal/colour-modal/colour-modal';
@@ -147,20 +147,20 @@ export default function DesignSection() {
             type: 'custom',
             label: t('StyleSidePanel.design.nameDisplay'),
             component: (
-                <HStack>
+                <HStack spacing={0.5}>
+                    <IconButton
+                        size="xs"
+                        variant="ghost"
+                        aria-label={t('StyleSidePanel.design.flip')}
+                        title={t('StyleSidePanel.design.flip')}
+                        icon={<MdSwapVert />}
+                        onClick={() => dispatch(flipStationNames())}
+                    />
                     <RmgButtonGroup
                         selections={staggerNameSelections}
                         defaultValue={namePosMTR.isStagger}
                         onChange={value => dispatch(staggerStationNames(value))}
                     />
-                    <Button
-                        size="xs"
-                        variant="ghost"
-                        leftIcon={<MdSwapVert />}
-                        onClick={() => dispatch(flipStationNames())}
-                    >
-                        {t('StyleSidePanel.design.flip')}
-                    </Button>
                 </HStack>
             ),
             minW: 'full',
