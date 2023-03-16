@@ -7,10 +7,8 @@ import * as serviceWorker from './serviceWorker';
 import { CanvasType, Events } from './constants/constants';
 import store from './redux';
 import { initStore } from './redux/init';
-import { rmgChakraTheme } from '@railmapgen/rmg-components';
 import { StrictMode } from 'react';
 import { Provider } from 'react-redux';
-import { ChakraProvider } from '@chakra-ui/react';
 import { I18nextProvider } from 'react-i18next';
 
 // If you want your app to work offline and load faster, you can change
@@ -35,11 +33,9 @@ const renderApp = () => {
     root.render(
         <StrictMode>
             <Provider store={store}>
-                <ChakraProvider theme={rmgChakraTheme}>
-                    <I18nextProvider i18n={i18n}>
-                        <App />
-                    </I18nextProvider>
-                </ChakraProvider>
+                <I18nextProvider i18n={i18n}>
+                    <App />
+                </I18nextProvider>
             </Provider>
         </StrictMode>
     );
