@@ -68,6 +68,7 @@ describe('ColourPicker', () => {
             await Promise.resolve();
         });
 
+        await screen.findByText('Tsuen Wan Line');
         expect(screen.getByText('Tsuen Wan Line')).toHaveStyle({ background: '#E2231A', color: '#FFFFFF' });
         expect(screen.getByText('Kwun Tong Line')).toHaveStyle({ background: '#00AF41', color: '#000000' });
     });
