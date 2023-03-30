@@ -60,14 +60,14 @@ const AppAppBar = () => {
                 <Typography variant="body2" className={prefersDarkMode ? classes.bannerDark : classes.bannerLight}>
                     {t('banner')}
                     {' ('}
-                    <Link color="inherit" href="https://railmapgen.github.io/rmg" target="_blank">
+                    <Link color="inherit" href="https://railmapgen.github.io/?app=rmg" target="_blank">
                         GitHub
                     </Link>
                     {' | '}
-                    <Link color="inherit" href="https://railmapgen.gitlab.io/rmg" target="_blank">
+                    <Link color="inherit" href="https://railmapgen.gitlab.io/?app=rmg" target="_blank">
                         GitLab
                     </Link>
-                    {') - 28/08/2022'}
+                    {') - 31/03/2023'}
                 </Typography>
 
                 <Toolbar variant="dense">
