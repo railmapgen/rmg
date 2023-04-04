@@ -189,6 +189,14 @@ export interface RMGParam {
     line_name: Name;
     current_stn_idx: keyof StationDict;
     /**
+     * Display the station number or not.
+     */
+    showStationNumber: boolean;
+    /**
+     * Display the station number in railmap or not.
+     */
+    showStationNumberRailmap: boolean;
+    /**
      * Key-value pairs of the information of each station.
      */
     stn_list: StationDict;

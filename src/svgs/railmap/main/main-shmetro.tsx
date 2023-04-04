@@ -328,9 +328,34 @@ const StationGroup = (props: StationGroupProps) => {
                 .filter(stnId => !['linestart', 'lineend'].includes(stnId))
                 .filter(stnId => param.stn_list[stnId].services.length !== 0)
                 .map(stnId => (
-                    <g key={stnId} transform={`translate(${props.xs[stnId]},${props.ys[stnId]})`}>
-                        <StationSHMetro stnId={stnId} stnState={props.stnStates[stnId]} />
-                    </g>
+                    <>
+                        <g key={stnId} transform={`translate(${props.xs[stnId]},${props.ys[stnId]})`}>
+                            {param.showStationNumberRailmap && param.showStationNumber ? (
+                                <g>
+                                    <circle
+                                        cx="0"
+                                        cy="0"
+                                        r="20"
+                                        stroke={props.stnStates[stnId] === -1 ? 'gray' : 'var(--rmg-theme-colour)'}
+                                        strokeWidth="5"
+                                        fill="white"
+                                    ></circle>
+                                    <line x1="-18" y1="0" x2="18" y2="0" stroke="rgb(0,0,0)" strokeWidth="2" />
+                                    <g textAnchor="middle">
+                                        <text className="rmg-station-name" fontSize={15} dy={-3}>
+                                            {param.line_num}
+                                        </text>
+                                        <text className="rmg-station-name" fontSize={15} dy={15}>
+                                            {param.stn_list[stnId].num}
+                                        </text>
+                                    </g>
+                                </g>
+                            ) : (
+                                <></>
+                            )}
+                            <StationSHMetro stnId={stnId} stnState={props.stnStates[stnId]} />
+                        </g>
+                    </>
                 ))}
         </g>
     );

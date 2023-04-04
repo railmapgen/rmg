@@ -211,6 +211,12 @@ export const updateParam = (param: { [x: string]: any }) => {
     param.style =
         param.style === undefined || !Object.values(RmgStyle).includes(param.style) ? RmgStyle.MTR : param.style;
 
+    // Version 3.11.37
+    // Station number for shmetro
+    param.showStationNumber = param.showStationNumber === undefined ? false : param.showStationNumber;
+    param.showStationNumberRailmap =
+        param.showStationNumberRailmap === undefined ? false : param.showStationNumberRailmap;
+
     return param;
 };
 
