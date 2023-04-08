@@ -66,9 +66,10 @@ const readBlobAsDataURL = (blob: Blob): Promise<string> => {
 
 const matchCssRuleByFontFace = (rules: CSSFontFaceRule[], font: FontFace): CSSFontFaceRule | undefined => {
     return rules.find(rule => {
-        const cssStyle = rule.style as any;
+        const cssStyle = rule.style;
         return (
-            cssStyle.fontFamily.replace(/^"(.+)"$/, '$1') === font.family && cssStyle.unicodeRange === font.unicodeRange
+            cssStyle.getPropertyValue('font-family').replace(/^"(.+)"$/, '$1') === font.family &&
+            cssStyle.getPropertyValue('unicode-range') === font.unicodeRange
         );
     });
 };
