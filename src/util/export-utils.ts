@@ -66,9 +66,10 @@ const readBlobAsDataURL = (blob: Blob): Promise<string> => {
 
 const matchCssRuleByFontFace = (rules: CSSFontFaceRule[], font: FontFace): CSSFontFaceRule | undefined => {
     return rules.find(rule => {
-        const cssStyle = rule.style as any;
+        const cssStyle = rule.style;
         return (
-            cssStyle.fontFamily.replace(/^"(.+)"$/, '$1') === font.family && cssStyle.unicodeRange === font.unicodeRange
+            cssStyle.getPropertyValue('font-family').replace(/^"(.+)"$/, '$1') === font.family &&
+            cssStyle.getPropertyValue('unicode-range') === font.unicodeRange
         );
     });
 };
@@ -95,11 +96,11 @@ export const getBase64FontFace = async (svgEl: SVGSVGElement): Promise<string[]>
         const matchedRule = matchCssRuleByFontFace(cssRules, cur);
         if (matchedRule) {
             const existence = acc.find(rule => {
-                const ruleStyle = rule.style as any;
-                const matchedStyle = matchedRule.style as any;
+                const ruleStyle = rule.style;
+                const matchedStyle = matchedRule.style;
                 return (
-                    ruleStyle.fontFamily === matchedStyle.fontFamily &&
-                    ruleStyle.unicodeRange === matchedStyle.unicodeRange
+                    ruleStyle.getPropertyValue('font-family') === matchedStyle.getPropertyValue('font-family') &&
+                    ruleStyle.getPropertyValue('unicode-range') === matchedStyle.getPropertyValue('unicode-range')
                 );
             });
             return existence ? acc : acc.concat(matchedRule);
