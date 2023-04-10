@@ -464,10 +464,10 @@ const CurrentText = () => {
     return useMemo(
         () => (
             <>
-                <text className="rmg-name__zh" fontSize={112}>
+                <text className="rmg-name__zh rmg-outline" fontSize={112}>
                     {name[0].replace('\\', '')}
                 </text>
-                <text className="rmg-name__en" fontSize={36} dy={50}>
+                <text className="rmg-name__en rmg-outline" fontSize={36} dy={50}>
                     {name[1].replace('\\', '')}
                 </text>
             </>
@@ -485,7 +485,7 @@ const NextText = (props: { nextName: Name } & SVGProps<SVGGElement>) => {
                     <>
                         {nextName[0].split('\\').map((name, i, array) => (
                             <text
-                                className="rmg-name__zh"
+                                className="rmg-name__zh rmg-outline"
                                 fontSize={48}
                                 key={name}
                                 dy={(array.length - 1 - i) * -50 - (nextName[1].split('\\').length - 1) * 30}
@@ -495,7 +495,7 @@ const NextText = (props: { nextName: Name } & SVGProps<SVGGElement>) => {
                         ))}
                         {nextName[1].split('\\').map((name, i, array) => (
                             <text
-                                className="rmg-name__en"
+                                className="rmg-name__en rmg-outline"
                                 fontSize={24}
                                 key={name}
                                 dy={28 + (array.length - 1 - i) * -30}
@@ -534,10 +534,10 @@ const PrevStn = (props: { stnIds: string[] }) => {
                 <NextText nextName={nextNames[1]} transform={`translate(0,${nextBranchTextDy})`} />
             )}
             <g transform={`translate(0, ${prevHintDy})`}>
-                <text className="rmg-name__zh" fontSize={22}>
+                <text className="rmg-name__zh rmg-outline" fontSize={22}>
                     上一站
                 </text>
-                <text className="rmg-name__en" fontSize={12} dx={param.direction === 'l' ? -70 : 70}>
+                <text className="rmg-name__en rmg-outline" fontSize={12} dx={param.direction === 'l' ? -70 : 70}>
                     Past Stop
                 </text>
             </g>
@@ -570,10 +570,10 @@ const NextStn = (props: { stnIds: string[] }) => {
                 />
             )}
             <g transform={`translate(0, ${nextHintDy})`}>
-                <text className="rmg-name__zh" fontSize={22}>
+                <text className="rmg-name__zh rmg-outline" fontSize={22}>
                     下一站
                 </text>
-                <text className="rmg-name__en" fontSize={12} dx={param.direction === 'l' ? 70 : -70}>
+                <text className="rmg-name__en rmg-outline" fontSize={12} dx={param.direction === 'l' ? 70 : -70}>
                     Next Stop
                 </text>
             </g>

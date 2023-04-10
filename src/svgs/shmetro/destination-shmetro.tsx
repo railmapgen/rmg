@@ -229,10 +229,10 @@ const Terminal = forwardRef(function Terminal(props: { dest_names: Name[] }, ref
             >
                 {dest_names.map((name, i) => (
                     <Fragment key={i}>
-                        <text className="rmg-name__zh" fontSize={70} dy={i * -100 + 7} key={`zh${i}`}>
+                        <text className="rmg-name__zh rmg-outline" fontSize={70} dy={i * -100 + 7} key={`zh${i}`}>
                             {'往' + name[0]}
                         </text>
-                        <text className="rmg-name__en" fontSize={25} dy={i * -100 + 40} key={`en${i}`}>
+                        <text className="rmg-name__en rmg-outline" fontSize={25} dy={i * -100 + 40} key={`en${i}`}>
                             {'To ' + name[1]}
                         </text>
                     </Fragment>
@@ -250,10 +250,15 @@ const PlatformNum = () => {
         () => (
             <g transform={`translate(${-325 / 2 + 60},150)`}>
                 <circle r={60} fill="none" stroke="black" strokeWidth={2} />
-                <text className="rmg-name__en" dominantBaseline="central" fontSize={120} textAnchor="middle">
+                <text
+                    className="rmg-name__en rmg-outline"
+                    dominantBaseline="central"
+                    fontSize={120}
+                    textAnchor="middle"
+                >
                     {platform_num}
                 </text>
-                <text className="rmg-name__zh" fontSize={100} dominantBaseline="central" x={65}>
+                <text className="rmg-name__zh rmg-outline" fontSize={100} dominantBaseline="central" x={65}>
                     站台
                 </text>
             </g>
@@ -286,11 +291,17 @@ const LineNameBoxText = (props: { line_name: Name; line_color: [ColourHex, MonoC
                 <rect fill={line_color[0]} x={rectDx} width={bBox.width + 10} height={120} />
                 <g textAnchor={direction === 'r' ? 'start' : 'end'} transform="translate(0,68)" fill={line_color[1]}>
                     <g ref={stnNameEl}>
-                        <text className="rmg-name__zh" fontSize={68}>
+                        <text className="rmg-name__zh rmg-outline" fontSize={68}>
                             {line_name[0]}
                         </text>
                     </g>
-                    <text className="rmg-name__en" fontSize={30} textAnchor="middle" x={stnNameEnDx} dy={42}>
+                    <text
+                        className="rmg-name__en rmg-outline"
+                        fontSize={30}
+                        textAnchor="middle"
+                        x={stnNameEnDx}
+                        dy={42}
+                    >
                         {line_name[1]}
                     </text>
                 </g>
@@ -319,7 +330,7 @@ const LineNameBoxNumber = (props: { line_name: Name; line_color: [ColourHex, Mon
             <g transform={`translate(${boxX},92)`}>
                 <rect fill={line_color[0]} x={-54} width={108} height={120} />
                 <text
-                    className="rmg-name__zh"
+                    className="rmg-name__zh rmg-outline"
                     fill={line_color[1]}
                     fontSize={96}
                     textAnchor="middle"
@@ -330,10 +341,10 @@ const LineNameBoxNumber = (props: { line_name: Name; line_color: [ColourHex, Mon
                     {lineNumber}
                 </text>
                 <g textAnchor="start" transform="translate(74,68)">
-                    <text className="rmg-name__zh" fontSize={68}>
+                    <text className="rmg-name__zh rmg-outline" fontSize={68}>
                         {lineNameRes}
                     </text>
-                    <text className="rmg-name__en" fontSize={30} dy={42}>
+                    <text className="rmg-name__en rmg-outline" fontSize={30} dy={42}>
                         {line_name[1]}
                     </text>
                 </g>
