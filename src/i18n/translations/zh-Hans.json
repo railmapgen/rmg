@@ -1,9 +1,4 @@
 {
-    "WindowHeader": {
-        "popoverHeader": "你正在浏览<1>{{environment}}</1>环境！",
-        "popoverBody": "这是一个测试环境，我们无法保证其稳定性和兼容性。请返回<2>生产环境</2>。"
-    },
-
     "HeaderActions": {
         "editStyle": "风格化设置"
     },
