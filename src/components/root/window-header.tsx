@@ -1,47 +1,18 @@
 import { useState } from 'react';
-import {
-    Heading,
-    HStack,
-    Icon,
-    IconButton,
-    Image,
-    Link,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuList,
-    useColorModeValue,
-} from '@chakra-ui/react';
-import { Trans, useTranslation } from 'react-i18next';
-import { MdHelp, MdOpenInNew, MdTranslate } from 'react-icons/md';
+import { Heading, HStack, IconButton, Image, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+import { MdHelp, MdTranslate } from 'react-icons/md';
 import HelpModal from '../modal/help-modal';
 import { RmgEnvBadge, RmgWindowHeader } from '@railmapgen/rmg-components';
-import rmgRuntime, { RmgEnv } from '@railmapgen/rmg-runtime';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 import RMPlogo from '../../img/rmp.png';
-import { LanguageCode } from '@railmapgen/rmg-translate';
+import { LANGUAGE_NAMES, LanguageCode, SUPPORTED_LANGUAGES } from '@railmapgen/rmg-translate';
 
 export default function WindowHeader() {
     const { t } = useTranslation();
 
-    const linkColour = useColorModeValue('primary.500', 'primary.300');
     const environment = rmgRuntime.getEnv();
     const appVersion = rmgRuntime.getAppVersion();
-
-    const popoverHeader = (
-        <Trans i18nKey="WindowHeader.popoverHeader" environment={environment}>
-            You&apos;re on {{ environment }} environment!
-        </Trans>
-    );
-    const popoverBody = (
-        <Trans i18nKey="WindowHeader.popoverBody">
-            This is a testing environment where we don&apos;t guarantee the stability and compatibility. Please switch
-            back to{' '}
-            <Link color={linkColour} href={'https://railmapgen.github.io' + window.location.pathname} isExternal={true}>
-                Production environment <Icon as={MdOpenInNew} />
-            </Link>
-            .
-        </Trans>
-    );
 
     const handleOpenRMP = () => {
         if (rmgRuntime.isStandaloneWindow()) {
@@ -63,31 +34,31 @@ export default function WindowHeader() {
             <Heading as="h4" size="md">
                 {t('Rail Map Generator')}
             </Heading>
-            <RmgEnvBadge
-                environment={environment}
-                version={appVersion}
-                popoverHeader={environment === RmgEnv.PRD ? undefined : popoverHeader}
-                popoverBody={environment === RmgEnv.PRD ? undefined : popoverBody}
-            />
+            <RmgEnvBadge environment={environment} version={appVersion} />
 
             <HStack ml="auto">
-                <IconButton
-                    size="sm"
-                    variant="ghost"
-                    aria-label="Open RMP"
-                    icon={<Image src={RMPlogo} width="3.5" height="3.5" />}
-                    onClick={handleOpenRMP}
-                />
+                {rmgRuntime.isStandaloneWindow() && (
+                    <IconButton
+                        size="sm"
+                        variant="ghost"
+                        aria-label="Open RMP"
+                        icon={<Image src={RMPlogo} width="3.5" height="3.5" />}
+                        onClick={handleOpenRMP}
+                    />
+                )}
 
-                <Menu>
-                    <MenuButton as={IconButton} icon={<MdTranslate />} variant="ghost" size="sm" />
-                    <MenuList>
-                        <MenuItem onClick={() => handleChangeLanguage('en')}>English</MenuItem>
-                        <MenuItem onClick={() => handleChangeLanguage('zh-Hans')}>简体中文</MenuItem>
-                        <MenuItem onClick={() => handleChangeLanguage('zh-Hant')}>繁體中文</MenuItem>
-                        <MenuItem onClick={() => handleChangeLanguage('ko')}>한국어</MenuItem>
-                    </MenuList>
-                </Menu>
+                {rmgRuntime.isStandaloneWindow() && (
+                    <Menu>
+                        <MenuButton as={IconButton} icon={<MdTranslate />} variant="ghost" size="sm" />
+                        <MenuList>
+                            {SUPPORTED_LANGUAGES.map(lang => (
+                                <MenuItem key={lang} onClick={() => handleChangeLanguage(lang)}>
+                                    {LANGUAGE_NAMES[lang][lang]}
+                                </MenuItem>
+                            ))}
+                        </MenuList>
+                    </Menu>
+                )}
 
                 <IconButton
                     size="sm"

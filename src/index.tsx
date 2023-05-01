@@ -46,7 +46,7 @@ rmgRuntime
     .then(() => {
         initStore(store);
         renderApp();
-        rmgRuntime.injectCss();
+        rmgRuntime.injectUITools();
         rmgRuntime.event(Events.APP_LOAD, { isStandaloneWindow: rmgRuntime.isStandaloneWindow });
     })
     .catch(err => {

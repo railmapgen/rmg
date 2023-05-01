@@ -1,9 +1,4 @@
 {
-    "WindowHeader": {
-        "popoverHeader": "당신은 환경을<1>{{environment}}</1>탐색하고 있습니다.",
-        "popoverBody": "테스트 환경이라 안정성과 호환성을 보장할 수 없습니다.생산 환경으로<2>돌아가십시오</2>."
-    },
-
     "HeaderActions": {
         "editStyle": "스타일 설정"
     },
