@@ -12,8 +12,8 @@ interface ParamSelectorProps {
     downloading?: string;
     selectedParam?: string;
     onParamSelect: (id: string) => void;
-    onParamRemove: (id: string) => void;
-    onParamUpdate: (config: ParamConfig) => void;
+    onParamRemove?: (id: string) => void;
+    onParamUpdate?: (config: ParamConfig) => void;
 }
 
 const styles: SystemStyleObject = {
@@ -51,13 +51,13 @@ export default function ParamSelector(props: ParamSelectorProps) {
     const [configEditing, setConfigEditing] = useState<ParamConfig>();
 
     const handleConfigUpdate = (config: ParamConfig) => {
-        onParamUpdate(config);
+        onParamUpdate?.(config);
         setConfigEditing(undefined);
     };
 
     return (
         <Box sx={styles}>
-            <Flex>
+            <Flex className="param-selector--inner">
                 {downloading && (
                     <RmgEnrichedButton
                         variant="ghost"
@@ -86,18 +86,22 @@ export default function ParamSelector(props: ParamSelectorProps) {
                                 }
                                 onClick={() => onParamSelect(config.id)}
                             />
-                            <IconButton
-                                aria-label={t('Edit project info')}
-                                title={t('Edit project info')}
-                                icon={<MdEdit />}
-                                onClick={() => setConfigEditing(config)}
-                            />
-                            <IconButton
-                                aria-label={t('Remove project')}
-                                title={t('Remove project')}
-                                icon={<MdDelete />}
-                                onClick={() => onParamRemove(config.id)}
-                            />
+                            {onParamUpdate && (
+                                <IconButton
+                                    aria-label={t('Edit project info')}
+                                    title={t('Edit project info')}
+                                    icon={<MdEdit />}
+                                    onClick={() => setConfigEditing(config)}
+                                />
+                            )}
+                            {onParamRemove && (
+                                <IconButton
+                                    aria-label={t('Remove project')}
+                                    title={t('Remove project')}
+                                    icon={<MdDelete />}
+                                    onClick={() => onParamRemove(config.id)}
+                                />
+                            )}
                         </ButtonGroup>
                     ))}
             </Flex>

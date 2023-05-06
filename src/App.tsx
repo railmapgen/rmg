@@ -4,6 +4,7 @@ import { RmgErrorBoundary, RmgLoader, RmgThemeProvider, RmgWindow } from '@railm
 import WindowHeader from './components/root/window-header';
 
 const AppRouter = lazy(() => import('./components/root/app-router'));
+const AppClipView = lazy(() => import('./components/param-selector-view/app-clip-view'));
 
 export default function App() {
     // Though Electron distribution will use a ./ to get local files,
@@ -17,6 +18,14 @@ export default function App() {
                 <RmgWindow>
                     <WindowHeader />
                     <Routes>
+                        <Route
+                            path="/import"
+                            element={
+                                <RmgErrorBoundary suspenseFallback={<RmgLoader isIndeterminate={true} />}>
+                                    <AppClipView />
+                                </RmgErrorBoundary>
+                            }
+                        />
                         <Route
                             path="/"
                             element={
