@@ -57,7 +57,7 @@ export default function ParamSelector(props: ParamSelectorProps) {
 
     return (
         <Box sx={styles}>
-            <Flex className="param-selector--inner">
+            <Flex>
                 {downloading && (
                     <RmgEnrichedButton
                         variant="ghost"

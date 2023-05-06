@@ -13,13 +13,20 @@ const CHANNEL_PREFIX = 'rmg-bridge--';
 const styles: SystemStyleObject = {
     flexDirection: 'column',
     h: '100%',
+    p: 2,
 
-    '& .param-selector--inner': {
-        h: '100%',
+    '& > div:first-of-type': {
+        mr: 0,
+        '& > div': {
+            h: '100%',
+        },
     },
 
-    '& .app-clip-actions button': {
-        flex: 1,
+    '& > div:last-of-type': {
+        mt: 2,
+        '& button': {
+            flex: 1,
+        },
     },
 };
 
@@ -40,16 +47,22 @@ export default function AppClipView() {
         channelRef.current = new BroadcastChannel(CHANNEL_PREFIX + parentId);
         rmgRuntime.event(Events.APP_CLIP_VIEW_OPENED, { parentComponent });
 
+        // hide window header
+        const styleEl = document.createElement('style');
+        styleEl.textContent = `.rmg-window__header{display: none;}`;
+        document.head.appendChild(styleEl);
+
         // init paramRegistry state on mount and when external project is downloaded
         setParamRegistry(getParamRegistry());
 
         return () => {
             channelRef.current?.close();
+            document.head.removeChild(styleEl);
         };
     }, []);
 
     const handleImport = () => {
-        const paramStr = window.localStorage.getItem(LocalStorageKey.PARAM_CONFIG_BY_ID + selectedParam);
+        const paramStr = window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + selectedParam);
         channelRef.current?.postMessage({
             event: 'IMPORT',
             data: paramStr ? JSON.parse(paramStr) : null,
@@ -58,6 +71,7 @@ export default function AppClipView() {
     };
 
     const handleClose = () => {
+        setSelectedParam(undefined);
         channelRef.current?.postMessage({
             event: 'CLOSE',
         });
@@ -73,7 +87,7 @@ export default function AppClipView() {
                     onParamSelect={setSelectedParam}
                 />
 
-                <HStack className="app-clip-actions">
+                <HStack>
                     <Button onClick={handleClose}>{t('Close')}</Button>
                     <Button colorScheme="primary" isDisabled={!selectedParam} onClick={handleImport}>
                         {t('Import')}
