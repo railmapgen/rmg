@@ -77,6 +77,12 @@ global.fetch = (...args) => {
             status: 200,
             json: () => Promise.resolve(infoJson),
         }) as any;
+    } else if (args[0].toString().includes('other-company-config.json')) {
+        return Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => Promise.resolve([]),
+        }) as any;
     } else {
         return originalFetch(...args);
     }

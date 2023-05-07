@@ -3,7 +3,7 @@ import { render } from '../../test-utils';
 import ParamSelectorView from './index';
 import rootReducer from '../../redux';
 import { createMockAppStore, createParamInLocalStorage } from '../../setupTests';
-import { fireEvent, screen } from '@testing-library/react';
+import { act, fireEvent, screen } from '@testing-library/react';
 
 const realStore = rootReducer.getState();
 const mockStore = createMockAppStore({ ...realStore });
@@ -14,11 +14,13 @@ describe('ParamSelectorView', () => {
         mockStore.clearActions();
     });
 
-    it('Can disable open button if no project is selected', () => {
+    it('Can disable open button if no project is selected', async () => {
         createParamInLocalStorage('test-1');
         createParamInLocalStorage('test-2');
 
-        render(<ParamSelectorView />);
+        await act(() => {
+            render(<ParamSelectorView />);
+        });
 
         // display 2 projects for selecting
         expect(screen.getByText(/test-1/)).toBeInTheDocument();
@@ -32,12 +34,14 @@ describe('ParamSelectorView', () => {
         expect(screen.getByRole('button', { name: 'Open selected' })).toBeEnabled();
     });
 
-    it('Can disable new/template/upload buttons if max number reached', () => {
+    it('Can disable new/template/upload buttons if max number reached', async () => {
         for (let i = 1; i <= 10; i++) {
             createParamInLocalStorage('test-' + i);
         }
 
-        render(<ParamSelectorView />);
+        await act(() => {
+            render(<ParamSelectorView />);
+        });
 
         // new/template/upload buttons are disabled
         expect(screen.getByRole('button', { name: 'Blank project' })).toBeDisabled();

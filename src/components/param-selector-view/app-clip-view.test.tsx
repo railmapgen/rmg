@@ -18,7 +18,7 @@ describe('AppClipView', () => {
         const messages: any[] = [];
         const receiver = new BroadcastChannel('rmg-bridge--test-id');
         receiver.onmessage = message => {
-            messages.push(message);
+            messages.push(message.data);
         };
 
         // select project

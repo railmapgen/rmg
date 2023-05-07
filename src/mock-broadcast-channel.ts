@@ -13,7 +13,7 @@ export class MockBroadcastChannel {
     postMessage(message: any) {
         channels.forEach(channel => {
             if (channel !== this && channel.name === this.name) {
-                channel.eventHandlers.forEach(handler => handler(message));
+                channel.eventHandlers.forEach(handler => handler({ data: message } as any));
             }
         });
     }
