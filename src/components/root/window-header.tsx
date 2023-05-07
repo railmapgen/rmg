@@ -6,7 +6,7 @@ import HelpModal from '../modal/help-modal';
 import { RmgEnvBadge, RmgWindowHeader } from '@railmapgen/rmg-components';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import RMPlogo from '../../img/rmp.png';
-import { LANGUAGE_NAMES, LanguageCode, SUPPORTED_LANGUAGES } from '@railmapgen/rmg-translate';
+import { LANGUAGE_NAMES, SUPPORTED_LANGUAGES, SupportedLanguageCode } from '@railmapgen/rmg-translate';
 
 export default function WindowHeader() {
     const { t } = useTranslation();
@@ -22,7 +22,7 @@ export default function WindowHeader() {
         }
     };
 
-    const handleChangeLanguage = (language: LanguageCode) => {
+    const handleChangeLanguage = (language: SupportedLanguageCode) => {
         rmgRuntime.setLanguage(language);
         rmgRuntime.getI18nInstance().changeLanguage(language);
     };
