@@ -198,7 +198,7 @@ const TerminalStation = (props: { mode: 'terminal' | 'original'; prevStnIds: str
             )}
 
             {mode === 'terminal' && (
-                <g filter={theme[2] === '#999999' ? 'url(#pujiang_outline_runin)' : undefined}>
+                <g filter={theme[2] === '#B5B5B6' ? 'url(#pujiang_outline_runin)' : undefined}>
                     <path
                         transform={`translate(0,${coline.length ? '198' : '220'})${coline.length ? 'scale(1,2)' : ''}`}
                         stroke="var(--rmg-grey)"
@@ -331,7 +331,7 @@ const Line = (props: RunInGeneralProps) => {
             )}
 
             <g
-                filter={theme[2] === '#999999' ? 'url(#pujiang_outline_runin)' : undefined}
+                filter={theme[2] === '#B5B5B6' ? 'url(#pujiang_outline_runin)' : undefined}
                 transform={`translate(0,${passLineStretch ? -22 : 0})scale(1,${passLineStretch ? 2 : 1})`}
             >
                 <path
@@ -443,7 +443,7 @@ const BranchLine = (props: RunInBranchLineProps) => {
             transform="translate(0,110)"
             strokeWidth={12}
             fill="none"
-            filter={theme[2] === '#999999' ? 'url(#pujiang_outline_runin)' : undefined}
+            filter={theme[2] === '#B5B5B6' ? 'url(#pujiang_outline_runin)' : undefined}
         >
             {/* An extension of the line/path with coline color. */}
             <marker id="slope_branch" viewBox="-1.5 0 3 1.5" refY={0.5}>
