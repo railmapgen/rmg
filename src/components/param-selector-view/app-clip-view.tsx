@@ -3,10 +3,11 @@ import ParamSelector from './param-selector';
 import React, { useEffect, useRef, useState } from 'react';
 import { Events, LocalStorageKey, ParamConfig } from '../../constants/constants';
 import { getParamRegistry } from '../../util/param-manager-utils';
-import { Button, HStack, SystemStyleObject } from '@chakra-ui/react';
+import { Button, HStack, IconButton, SystemStyleObject } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import rmgRuntime from '@railmapgen/rmg-runtime';
+import { MdRefresh, MdSettings } from 'react-icons/md';
 
 const CHANNEL_PREFIX = 'rmg-bridge--';
 
@@ -16,7 +17,7 @@ const styles: SystemStyleObject = {
     p: 2,
 
     '& > div:first-of-type': {
-        mr: 0,
+        m: 0,
         '& > div': {
             h: '100%',
         },
@@ -24,8 +25,8 @@ const styles: SystemStyleObject = {
 
     '& > div:last-of-type': {
         mt: 2,
-        '& button': {
-            flex: 1,
+        '& button:nth-child(2)': {
+            mr: 'auto',
         },
     },
 };
@@ -52,7 +53,7 @@ export default function AppClipView() {
         styleEl.textContent = `.rmg-window__header{display: none;}`;
         document.head.appendChild(styleEl);
 
-        // init paramRegistry state on mount and when external project is downloaded
+        // init paramRegistry state update
         setParamRegistry(getParamRegistry());
 
         return () => {
@@ -62,9 +63,11 @@ export default function AppClipView() {
     }, []);
 
     const handleImport = () => {
+        const paramConfigStr = window.localStorage.getItem(LocalStorageKey.PARAM_CONFIG_BY_ID + selectedParam);
         const paramStr = window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + selectedParam);
         channelRef.current?.postMessage({
             event: 'IMPORT',
+            meta: paramConfigStr ? JSON.parse(paramConfigStr) : null,
             data: paramStr ? JSON.parse(paramStr) : null,
         });
         rmgRuntime.event(Events.APP_CLIP_VIEW_IMPORT, { parentComponent });
@@ -78,6 +81,10 @@ export default function AppClipView() {
         rmgRuntime.event(Events.APP_CLIP_VIEW_CLOSED, { parentComponent });
     };
 
+    const handleManage = () => {
+        rmgRuntime.openApp('rmg');
+    };
+
     return (
         <RmgPage>
             <RmgCard sx={styles}>
@@ -88,6 +95,21 @@ export default function AppClipView() {
                 />
 
                 <HStack>
+                    <IconButton
+                        variant="ghost"
+                        aria-label={t('Manage')}
+                        title={t('Manage')}
+                        icon={<MdSettings />}
+                        onClick={handleManage}
+                    />
+                    <IconButton
+                        variant="ghost"
+                        aria-label={t('Refresh')}
+                        title={t('Refresh')}
+                        icon={<MdRefresh />}
+                        onClick={() => setParamRegistry(getParamRegistry())}
+                    />
+
                     <Button onClick={handleClose}>{t('Close')}</Button>
                     <Button colorScheme="primary" isDisabled={!selectedParam} onClick={handleImport}>
                         {t('Import')}

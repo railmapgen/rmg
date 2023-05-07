@@ -3,8 +3,8 @@ import { BranchStyle, LocalStorageKey, RmgStyle, StationDict } from './constants
 import rootReducer, { RootState } from './redux';
 import { getDefaultMiddleware, ThunkDispatch } from '@reduxjs/toolkit';
 import { initParam } from './redux/param/util';
-import { LanguageCode } from '@railmapgen/rmg-translate';
 import infoJson from '../info.json';
+import { MockBroadcastChannel } from './mock-broadcast-channel';
 
 // FIXME: any -> AnyAction?
 type DispatchExts = ThunkDispatch<RootState, void, any>;
@@ -76,7 +76,7 @@ class BroadcastChannel {
     }
 }
 
-global.BroadcastChannel = BroadcastChannel as any;
+global.BroadcastChannel = MockBroadcastChannel as any;
 
 const originalFetch = global.fetch;
 global.fetch = (...args) => {
