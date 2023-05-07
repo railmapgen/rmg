@@ -5,6 +5,7 @@ import { getDefaultMiddleware, ThunkDispatch } from '@reduxjs/toolkit';
 import { initParam } from './redux/param/util';
 import infoJson from '../info.json';
 import { MockBroadcastChannel } from './mock-broadcast-channel';
+import { vi } from 'vitest';
 
 // FIXME: any -> AnyAction?
 type DispatchExts = ThunkDispatch<RootState, void, any>;
@@ -66,17 +67,7 @@ export const mockSimpleStationList: StationDict = {
     },
 } as any;
 
-class BroadcastChannel {
-    postMessage() {
-        // mocked
-    }
-
-    onmessage() {
-        // mocked
-    }
-}
-
-global.BroadcastChannel = MockBroadcastChannel as any;
+vi.stubGlobal('BroadcastChannel', MockBroadcastChannel);
 
 const originalFetch = global.fetch;
 global.fetch = (...args) => {

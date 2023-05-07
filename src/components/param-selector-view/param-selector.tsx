@@ -84,6 +84,7 @@ export default function ParamSelector(props: ParamSelectorProps) {
                                 secondaryText={
                                     t('Last modified') + ': ' + getRelativeTime(config.lastModified).map(t).join(' ')
                                 }
+                                aria-pressed={selectedParam === config.id}
                                 onClick={() => onParamSelect(config.id)}
                             />
                             {onParamUpdate && (

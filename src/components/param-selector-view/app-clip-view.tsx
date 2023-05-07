@@ -25,7 +25,7 @@ const styles: SystemStyleObject = {
 
     '& > div:last-of-type': {
         mt: 2,
-        '& button:nth-child(2)': {
+        '& button:nth-of-type(2)': {
             mr: 'auto',
         },
     },
@@ -71,14 +71,17 @@ export default function AppClipView() {
             data: paramStr ? JSON.parse(paramStr) : null,
         });
         rmgRuntime.event(Events.APP_CLIP_VIEW_IMPORT, { parentComponent });
+
+        setSelectedParam(undefined);
     };
 
     const handleClose = () => {
-        setSelectedParam(undefined);
         channelRef.current?.postMessage({
             event: 'CLOSE',
         });
         rmgRuntime.event(Events.APP_CLIP_VIEW_CLOSED, { parentComponent });
+
+        setSelectedParam(undefined);
     };
 
     const handleManage = () => {

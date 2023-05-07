@@ -14,16 +14,23 @@ describe('AppClipView', () => {
         createParamInLocalStorage('test-id');
         render(<AppClipView />, { store: mockStore, route: '/import?parentId=test-id' });
 
+        // mock broadcast channel receiver
         const messages: any[] = [];
         const receiver = new BroadcastChannel('rmg-bridge--test-id');
         receiver.onmessage = message => {
             messages.push(message);
         };
 
+        // select project
         fireEvent.click(screen.getByRole('button', { name: /test-id/ }));
-        fireEvent.click(screen.getByRole('button', { name: 'Import' }));
+        expect(screen.getByRole('button', { name: /test-id/ })).toHaveAttribute('aria-pressed', 'true');
 
+        // click import
+        fireEvent.click(screen.getByRole('button', { name: 'Import' }));
         await waitFor(() => expect(messages).toHaveLength(1));
         expect(messages).toContainEqual(expect.objectContaining({ event: 'IMPORT' }));
+
+        // deselect project
+        expect(screen.getByRole('button', { name: /test-id/ })).toHaveAttribute('aria-pressed', 'false');
     });
 });
