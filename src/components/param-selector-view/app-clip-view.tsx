@@ -107,8 +107,8 @@ export default function AppClipView() {
                     />
                     <IconButton
                         variant="ghost"
-                        aria-label={t('Refresh')}
-                        title={t('Refresh')}
+                        aria-label={t('Reload')}
+                        title={t('Reload')}
                         icon={<MdRefresh />}
                         onClick={() => setParamRegistry(getParamRegistry())}
                     />
