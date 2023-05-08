@@ -10,9 +10,9 @@
         "@chakra-ui/react": "^2.6.1",
         "@emotion/react": "^11.11.0",
         "@emotion/styled": "^11.11.0",
-        "@railmapgen/rmg-components": "^7.1.4",
+        "@railmapgen/rmg-components": "^7.1.5",
         "@railmapgen/rmg-palette-resources": "^0.7.12",
-        "@railmapgen/rmg-runtime": "^6.0.2",
+        "@railmapgen/rmg-runtime": "^6.0.3",
         "@railmapgen/rmg-templates-resources": "^2.0.2",
         "@railmapgen/rmg-translate": "^2.0.3",
         "@reduxjs/toolkit": "^1.9.5",
@@ -59,7 +59,7 @@
         "nwsapi": "2.2.2"
     },
     "scripts": {
-        "dev": "vite",
+        "dev": "vite --host",
         "build": "tsc && vite build",
         "build:electron": "tsc && vite build --config vite.config.electron.ts",
         "test": "vitest",
