@@ -249,9 +249,6 @@
     "Close": "关闭",
     "Colour": "颜色",
     "Connect to main line": "连接至主线",
-    "Contribution Wiki": "贡献者指南",
-    "Contributors": "贡献者",
-    "Core contributors": "核心贡献者",
     "day ago": "天前",
     "days ago": "天前",
     "Disconnect from main line": "从主线断开",
@@ -279,8 +276,6 @@
     "Reload": "重新加载",
     "Remove project": "删除项目",
     "Remove station": "删除车站",
-    "Resource contributors": "资源贡献者",
-    "Resource Administrator": "资源管理者",
     "Saved projects": "保存的项目",
     "Select canvas": "选择画面",
     "Style": "风格",
@@ -299,7 +294,6 @@
     "Visit": "访问",
     "Visit GitHub": "访问GitHub",
     "You have reached the maximum number of projects.": "您已到达项目数量上限。",
-    ", open an issue and join us today!": "，创建一个Issue和加入我们！",
 
     "CanvasType": {
         "all": "全部",

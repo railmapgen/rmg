@@ -248,9 +248,6 @@
     "Chinese name": "한자 명칭",
     "Colour": "색깔",
     "Connect to main line": "메인 라인에 연결",
-    "Contribution Wiki": "기여자 안내",
-    "Contributors": "기여자",
-    "Core contributors": "핵심 기여자",
     "day ago": "일 전",
     "days ago": "일 전",
     "Disconnect from main line": "본선에서 끊기다",
@@ -275,8 +272,6 @@
     "Project name": "프로젝트 명칭",
     "Remove project": "프로젝트 삭제",
     "Remove station": "역 삭제",
-    "Resource contributors": "자원 기여자",
-    "Resource Administrator": "자원 관리자",
     "Saved projects": "저장된 프로젝트",
     "Select canvas": "화면 선택",
     "Style": "스타일",
@@ -295,7 +290,6 @@
     "Visit": "방문",
     "Visit GitHub": "GitHub 방문하기",
     "You have reached the maximum number of projects.": "프로젝트 수량 상한에 도달했습니다.",
-    ", open an issue and join us today!": "，Issue를 만들고 우리와 합류하세요!",
 
     "CanvasType": {
         "all": "모두",

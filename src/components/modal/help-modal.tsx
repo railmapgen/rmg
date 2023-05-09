@@ -1,8 +1,6 @@
 import React from 'react';
 import {
-    Avatar,
     Button,
-    Flex,
     Heading,
     Icon,
     Link,
@@ -15,29 +13,10 @@ import {
     ModalHeader,
     ModalOverlay,
     OrderedList,
-    Tag,
-    TagLabel,
-    Text,
     useColorModeValue,
-    VStack,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { MdOpenInNew } from 'react-icons/md';
-
-const CONTRIBUTORS_ADMINS = ['52PD', 'linchen1965'];
-const CONTRIBUTORS_LIST = [
-    'jealousyge',
-    'Jay20081229',
-    'clearng-kly',
-    'Dingdong2334',
-    'C1P918R',
-    'AnDanJuneUnderline',
-    'GrassRabbit1410',
-    'xiany114514',
-    'Andy1782010',
-    'Thomastzc',
-    'Tianxiu11111',
-];
 
 interface HelpModalProps {
     isOpen: boolean;
@@ -173,107 +152,6 @@ export default function HelpModal(props: HelpModalProps) {
                             我們保留修改、新增或移除上述條款之權利，而無需另行通知。中文譯本僅供參考，文義如與英文有歧異，概以英文本為準。
                         </ListItem>
                     </OrderedList>
-
-                    <Heading as="h5" size="sm" mt={3} mb={2}>
-                        {t('Contributors')}
-                    </Heading>
-
-                    <Heading as="h6" size="xs" my={1}>
-                        {t('Core contributors')}
-                    </Heading>
-
-                    <VStack>
-                        <Tag
-                            size="lg"
-                            minW="80%"
-                            onClick={() => window.open('https://github.com/wongchito', '_blank')}
-                            cursor="pointer"
-                        >
-                            <Avatar src="https://github.com/wongchito.png" size="lg" my={2} ml={-1} mr={2} />
-                            <TagLabel display="block">
-                                <Text fontSize="lg" fontWeight="bold" mb={1}>
-                                    Chito Wong
-                                </Text>
-                                <Text fontSize="sm">Project initiator</Text>
-                                <Text fontSize="sm">Author of MTR and Guangzhou Metro styles</Text>
-                            </TagLabel>
-                        </Tag>
-                        <Tag
-                            size="lg"
-                            minW="80%"
-                            onClick={() => window.open('https://github.com/thekingofcity', '_blank')}
-                            cursor="pointer"
-                        >
-                            <Avatar src="https://github.com/thekingofcity.png" size="lg" my={2} ml={-1} mr={2} />
-                            <TagLabel display="block">
-                                <Text fontSize="lg" fontWeight="bold" mb={1}>
-                                    thekingofcity
-                                </Text>
-                                <Text fontSize="sm">Author of Shanghai Metro style</Text>
-                                <Text fontSize="sm">Desktop version (Electron) maintainer</Text>
-                            </TagLabel>
-                        </Tag>
-                    </VStack>
-
-                    <Heading as="h6" size="xs" my={1}>
-                        {t('Resource contributors')}
-                    </Heading>
-
-                    <Flex wrap="wrap">
-                        {CONTRIBUTORS_ADMINS.map(contributor => (
-                            <Tag
-                                key={contributor}
-                                size="lg"
-                                mb={1}
-                                mr={1}
-                                flex="100%"
-                                onClick={() =>
-                                    window.open(
-                                        `https://github.com/railmapgen/rmg/issues?q=is:issue+author:${contributor}`,
-                                        '_blank'
-                                    )
-                                }
-                                cursor="pointer"
-                            >
-                                <Avatar src={`https://github.com/${contributor}.png`} size="xs" ml={-1} mr={2} />
-                                <TagLabel>{contributor}</TagLabel>
-                                <TagLabel flexGrow={1} />
-                                <TagLabel>
-                                    <Text fontSize="sm">{t('Resource Administrator')}</Text>
-                                </TagLabel>
-                            </Tag>
-                        ))}
-                        {CONTRIBUTORS_LIST.map(contributor => (
-                            <Tag
-                                key={contributor}
-                                size="lg"
-                                mb={1}
-                                mr={1}
-                                onClick={() =>
-                                    window.open(
-                                        `https://github.com/railmapgen/rmg/issues?q=is:issue+author:${contributor}`,
-                                        '_blank'
-                                    )
-                                }
-                                cursor="pointer"
-                            >
-                                <Avatar src={`https://github.com/${contributor}.png`} size="xs" ml={-1} mr={2} />
-                                <TagLabel>{contributor}</TagLabel>
-                            </Tag>
-                        ))}
-                    </Flex>
-
-                    <Text>
-                        {t('Visit')}{' '}
-                        <Link
-                            color={linkColour}
-                            href="https://github.com/railmapgen/rmg/wiki/How-to-add-color-palette-and-line-templates"
-                            isExternal={true}
-                        >
-                            {t('Contribution Wiki')} <Icon as={MdOpenInNew} />
-                        </Link>
-                        {t(', open an issue and join us today!')}
-                    </Text>
                 </ModalBody>
 
                 <ModalFooter>
