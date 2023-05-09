@@ -301,6 +301,7 @@ export enum LocalStorageKey {
     PARAM_BY_ID = 'rmg__param:',
     PARAM_REGISTRY = 'rmg__paramRegistry',
     PARAM_CONFIG_BY_ID = 'rmg__paramConfig:',
+    DO_NOT_SHOW_RMT_MSG = 'rmg__doNotShowRMTMsg',
 }
 
 export enum Events {
