@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { Heading, HStack, IconButton, Image, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { Heading, HStack, IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { MdHelp, MdTranslate } from 'react-icons/md';
 import HelpModal from '../modal/help-modal';
 import { RmgEnvBadge, RmgWindowHeader } from '@railmapgen/rmg-components';
 import rmgRuntime from '@railmapgen/rmg-runtime';
-import RMPlogo from '../../img/rmp.png';
 import { LANGUAGE_NAMES, SUPPORTED_LANGUAGES, SupportedLanguageCode } from '@railmapgen/rmg-translate';
 
 export default function WindowHeader() {
@@ -13,14 +12,6 @@ export default function WindowHeader() {
 
     const environment = rmgRuntime.getEnv();
     const appVersion = rmgRuntime.getAppVersion();
-
-    const handleOpenRMP = () => {
-        if (rmgRuntime.isStandaloneWindow()) {
-            window.open('/rmp', '_blank');
-        } else {
-            rmgRuntime.openApp('rmp');
-        }
-    };
 
     const handleChangeLanguage = (language: SupportedLanguageCode) => {
         rmgRuntime.setLanguage(language);
@@ -37,16 +28,6 @@ export default function WindowHeader() {
             <RmgEnvBadge environment={environment} version={appVersion} />
 
             <HStack ml="auto">
-                {rmgRuntime.isStandaloneWindow() && (
-                    <IconButton
-                        size="sm"
-                        variant="ghost"
-                        aria-label="Open RMP"
-                        icon={<Image src={RMPlogo} width="3.5" height="3.5" />}
-                        onClick={handleOpenRMP}
-                    />
-                )}
-
                 {rmgRuntime.isStandaloneWindow() && (
                     <Menu>
                         <MenuButton as={IconButton} icon={<MdTranslate />} variant="ghost" size="sm" />
