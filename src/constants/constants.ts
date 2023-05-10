@@ -114,7 +114,7 @@ export interface StationTransfer {
      * @property remaining - arrays of out-of-station interchange info (from the nearest to the furthest station)
      */
     info: InterchangeInfo[][];
-    groups?: (InterchangeGroup | undefined)[];
+    groups: InterchangeGroup[];
 }
 
 export enum Facilities {

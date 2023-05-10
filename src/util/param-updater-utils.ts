@@ -9,7 +9,6 @@ import {
     Theme,
 } from '../constants/constants';
 import { nanoid } from 'nanoid';
-import rmgRuntime from '@railmapgen/rmg-runtime';
 
 export const updateParam = (param: { [x: string]: any }) => {
     // Version 0.10
@@ -271,9 +270,7 @@ export const updateParam = (param: { [x: string]: any }) => {
     }
 
     // Version pre 5.10
-    if (rmgRuntime.getEnv() !== 'PRD') {
-        v5_10_updateInterchangeGroup(param);
-    }
+    v5_10_updateInterchangeGroup(param);
 
     return param;
 };
@@ -281,10 +278,10 @@ export const updateParam = (param: { [x: string]: any }) => {
 export const v5_10_updateInterchangeGroup = (param: Record<string, any>) => {
     for (const [stnId, stnInfo] of Object.entries(param.stn_list as Record<string, any>)) {
         const originalInfo: (InterchangeInfo | ExtendedInterchangeInfo)[][] = stnInfo.transfer.info;
-        if (!('groups' in stnInfo.transfer)) {
-            param.stn_list[stnId].transfer.groups = originalInfo.map<InterchangeGroup | undefined>((infoGroup, idx) => {
+        if (originalInfo) {
+            param.stn_list[stnId].transfer.groups = originalInfo.map<InterchangeGroup>((infoGroup, idx) => {
                 if (!infoGroup.length) {
-                    return undefined;
+                    return { lines: [] };
                 }
 
                 return {

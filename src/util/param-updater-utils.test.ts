@@ -33,14 +33,15 @@ describe('ParamUpdaterUtils', () => {
         };
         v5_10_updateInterchangeGroup(param);
 
-        expect(param.stn_list.stn0.transfer.groups[0]).toBeUndefined();
+        expect(param.stn_list.stn0.transfer.groups[0]).toEqual({ lines: [] });
+        expect(param.stn_list.stn0.transfer.groups[1]).toBeUndefined();
 
         expect(param.stn_list.stn1.transfer.groups[0]).toEqual({
             lines: [
                 { theme: [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white], name: ['荃灣綫', 'Tsuen Wan Line'] },
             ],
         });
-        expect(param.stn_list.stn1.transfer.groups[1]).toBeUndefined();
+        expect(param.stn_list.stn1.transfer.groups[1]).toEqual({ lines: [] });
 
         expect(param.stn_list.stn2.transfer.groups[0]).toEqual({
             lines: [
@@ -51,6 +52,35 @@ describe('ParamUpdaterUtils', () => {
             name: ['車站', 'Station'],
             lines: [
                 { theme: [CityCode.Hongkong, 'ktl', '#00AF41', MonoColour.white], name: ['觀塘綫', 'Kwun Tong Line'] },
+            ],
+        });
+    });
+
+    it('v5_10_updateInterchangeGroup - post upgrade', () => {
+        const param: Record<string, any> = {
+            stn_list: {
+                stn0: {
+                    transfer: {
+                        groups: [
+                            {
+                                lines: [
+                                    {
+                                        theme: [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white],
+                                        name: ['荃灣綫', 'Tsuen Wan Line'],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                },
+            },
+        };
+        v5_10_updateInterchangeGroup(param);
+
+        // nothing changed
+        expect(param.stn_list.stn0.transfer.groups[0]).toEqual({
+            lines: [
+                { theme: [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white], name: ['荃灣綫', 'Tsuen Wan Line'] },
             ],
         });
     });
