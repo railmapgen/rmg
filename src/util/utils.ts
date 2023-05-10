@@ -50,3 +50,9 @@ export const getRelativeTime = (timestamp?: number): string[] => {
         return ['Unknown'];
     }
 };
+
+export const waitForMs = (ms: number) => {
+    return new Promise<void>(resolve => {
+        setTimeout(resolve, ms);
+    });
+};

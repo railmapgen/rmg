@@ -84,6 +84,17 @@ export interface ColineInfo {
 
 export type InterchangeInfo = [...Theme, ...Name];
 
+export interface ExtendedInterchangeInfo {
+    theme?: Theme;
+    name: Name;
+    facility?: Facilities;
+}
+
+export interface InterchangeGroup {
+    name?: Name;
+    lines: ExtendedInterchangeInfo[];
+}
+
 export interface StationTransfer {
     /**
      * Direction of text/tick of interchanges.
@@ -103,6 +114,7 @@ export interface StationTransfer {
      * @property remaining - arrays of out-of-station interchange info (from the nearest to the furthest station)
      */
     info: InterchangeInfo[][];
+    groups?: (InterchangeGroup | undefined)[];
 }
 
 export enum Facilities {

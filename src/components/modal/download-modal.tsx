@@ -16,9 +16,8 @@ import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import JSZip from 'jszip';
 import { setCurrentStation } from '../../redux/param/action';
 import { cloneSvgCanvas, test } from '../../util/export-utils';
-import { downloadAs, downloadBlobAs, isSafari } from '../../util/utils';
+import { downloadAs, downloadBlobAs, isSafari, waitForMs } from '../../util/utils';
 import { useTranslation } from 'react-i18next';
-import { waitForMs } from '../../utils';
 import { setLoadingProgress, stopLoading } from '../../redux/app/app-slice';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 
