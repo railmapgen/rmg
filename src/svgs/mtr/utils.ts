@@ -1,4 +1,4 @@
-import { waitForMs } from '../../utils';
+import { waitForMs } from '../../util/utils';
 
 export const waitForFontReady = async () => {
     let retryAttempt = 3;

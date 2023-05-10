@@ -1,6 +1,6 @@
 import { RootDispatch } from '../index';
 import { LocalStorageKey, ParamConfig, RMGParam } from '../../constants/constants';
-import { updateParam } from '../../utils';
+import { updateParam } from '../../util/param-updater-utils';
 import { setFullParam } from '../param/action';
 import { setParamConfig } from './app-slice';
 
