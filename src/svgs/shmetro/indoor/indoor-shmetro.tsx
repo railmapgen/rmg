@@ -1,11 +1,11 @@
 import { memo, useMemo } from 'react';
-import { adjacencyList, criticalPathMethod, getStnState, getXShareMTR } from '../railmap/methods/share';
+import { adjacencyList, criticalPathMethod, getStnState, getXShareMTR } from '../../methods/share';
 import StationSHMetro from './station-shmetro';
-import { StationsSHMetro } from '../railmap/methods/mtr';
-import { CanvasType, Services, StationDict } from '../../constants/constants';
-import { useRootSelector } from '../../redux';
-import LoopSHMetro from '../railmap/main/loop/loop-shmetro';
-import SvgWrapper from '../common/svg-wrapper';
+import { StationsSHMetro } from '../../methods/mtr';
+import { CanvasType, Services, StationDict } from '../../../constants/constants';
+import { useRootSelector } from '../../../redux';
+import LoopSHMetro from '../loop/loop-shmetro';
+import SvgWrapper from '../../svg-wrapper';
 
 const CANVAS_TYPE = CanvasType.Indoor;
 

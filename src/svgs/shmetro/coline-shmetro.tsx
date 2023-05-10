@@ -1,10 +1,10 @@
 import { Fragment, useMemo } from 'react';
-import { drawLine } from '../../methods/share';
-import { calculateColine, calculateColineStations } from '../../methods/shmetro-coline';
-import { AtLeastOneOfPartial, InterchangeInfo, Services } from '../../../../constants/constants';
-import { useRootSelector } from '../../../../redux';
-import { _linePath, StationGroupProps } from '../main-shmetro';
-import StationSHMetro from '../station/station-shmetro';
+import { drawLine } from '../methods/share';
+import { calculateColine, calculateColineStations } from '../methods/shmetro-coline';
+import { AtLeastOneOfPartial, InterchangeInfo, Services } from '../../constants/constants';
+import { useRootSelector } from '../../redux';
+import { _linePath, StationGroupProps } from './main-shmetro';
+import StationSHMetro from './station-shmetro';
 
 interface Props {
     xs: { [stnId: string]: number };

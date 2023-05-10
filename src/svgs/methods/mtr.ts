@@ -1,6 +1,6 @@
 import { Stations } from './share';
-import { StationDict, StationInfo } from '../../../constants/constants';
-import { getSidingPath } from '../../mtr/line-diagram-utils';
+import { StationDict, StationInfo } from '../../constants/constants';
+import { getSidingPath } from '../mtr/line-diagram-utils';
 
 export const leftWideFactor = (stnList: StationDict, stnId: string) => {
     let res = 0;

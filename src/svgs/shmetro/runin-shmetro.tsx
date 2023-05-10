@@ -3,8 +3,8 @@ import { memo, SVGProps, useMemo } from 'react';
 import { CanvasType, Name, StationDict } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
-import { calculateColineStations } from '../railmap/methods/shmetro-coline';
-import SvgWrapper from '../common/svg-wrapper';
+import { calculateColineStations } from '../methods/shmetro-coline';
+import SvgWrapper from '../svg-wrapper';
 import PujiangLineDefs from './pujiang-line-filter';
 
 const LINE_WIDTH = 12;

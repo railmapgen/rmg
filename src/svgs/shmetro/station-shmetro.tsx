@@ -1,6 +1,6 @@
 import { ColourHex } from '@railmapgen/rmg-palette-resources';
-import { InterchangeInfo, Name, Facilities } from '../../../../constants/constants';
-import { useRootSelector } from '../../../../redux';
+import { InterchangeInfo, Name, Facilities } from '../../constants/constants';
+import { useRootSelector } from '../../redux';
 import { forwardRef, memo, Ref, SVGProps, useEffect, useMemo, useRef, useState } from 'react';
 
 interface Props {

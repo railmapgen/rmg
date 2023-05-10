@@ -1,4 +1,4 @@
-import { ShortDirection, StationDict } from '../../../constants/constants';
+import { ShortDirection, StationDict } from '../../constants/constants';
 import {
     split_loop_stns,
     split_loop_stns_with_branch,

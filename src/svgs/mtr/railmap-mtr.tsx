@@ -1,7 +1,7 @@
-import StripMTR from '../mtr/strip-mtr';
-import MainMTR from './main/main-mtr';
+import StripMTR from './strip-mtr';
+import MainMTR from './main-mtr';
 import { CanvasType } from '../../constants/constants';
-import SvgWrapper from '../common/svg-wrapper';
+import SvgWrapper from '../svg-wrapper';
 import { useRootSelector } from '../../redux';
 import { memo } from 'react';
 

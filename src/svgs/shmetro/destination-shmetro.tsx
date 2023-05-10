@@ -3,8 +3,8 @@ import { forwardRef, Fragment, memo, Ref, useEffect, useMemo, useRef, useState }
 import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { CanvasType, ColineInfo, Name, ShortDirection } from '../../constants/constants';
-import { get_pivot_stations } from '../railmap/methods/shmetro-loop';
-import SvgWrapper from '../common/svg-wrapper';
+import { get_pivot_stations } from '../methods/shmetro-loop';
+import SvgWrapper from '../svg-wrapper';
 import { ColourHex, MonoColour } from '@railmapgen/rmg-palette-resources';
 
 const CANVAS_TYPE = CanvasType.Destination;

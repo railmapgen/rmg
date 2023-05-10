@@ -1,4 +1,4 @@
-import { ShortDirection, StationDict, StationInfo } from '../../../constants/constants';
+import { ShortDirection, StationDict, StationInfo } from '../../constants/constants';
 
 /**
  * Compute the adjacency list of the graph.

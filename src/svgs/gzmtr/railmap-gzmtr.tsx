@@ -1,10 +1,10 @@
 import { Fragment, memo, SVGProps, useEffect, useMemo, useRef, useState } from 'react';
-import StripGZMTR from '../gzmtr/strip-gzmtr';
-import MainGZMTR from './main/main-gzmtr';
+import StripGZMTR from './strip-gzmtr';
+import MainGZMTR from './main-gzmtr';
 import { CanvasType, Note, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
-import SvgWrapper from '../common/svg-wrapper';
-import ArrowGzmtr from '../gzmtr/arrow-gzmtr';
+import SvgWrapper from '../svg-wrapper';
+import ArrowGzmtr from './arrow-gzmtr';
 
 const CANVAS_TYPE = CanvasType.RailMap;
 
