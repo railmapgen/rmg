@@ -1,10 +1,13 @@
 import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
-import { Direction, InterchangeInfo } from '../../../constants/constants';
+import { Direction, InterchangeGroup } from '../../../constants/constants';
 import OsiStation from './osi-station';
 import { render } from '../../../test-utils';
 import { screen } from '@testing-library/react';
 
-const mockInterchangeInfo: InterchangeInfo = [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white, '', ''];
+const getInterchangeGroup = (size: number): InterchangeGroup => ({
+    lines: Array(size).fill({ theme: [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white], name: ['', ''] }),
+    name: ['ZH name', 'EN name'],
+});
 
 describe('MTR OsiStation', () => {
     describe('MTR OsiStation - OSI name', () => {
@@ -12,10 +15,9 @@ describe('MTR OsiStation', () => {
             render(
                 <svg>
                     <OsiStation
-                        interchangeInfoList={Array(size).fill(mockInterchangeInfo)}
+                        interchangeGroup={getInterchangeGroup(size)}
                         direction={direction}
                         isTerminal={isTerminal}
-                        stationName={['ZH name', 'EN name']}
                     />
                 </svg>
             );

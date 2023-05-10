@@ -1,5 +1,5 @@
 import { memo, useMemo } from 'react';
-import StationGZMTR from './station/station-gzmtr';
+import Station from '../../gzmtr/station';
 import { adjacencyList, criticalPathMethod, drawLine, getStnState } from '../methods/share';
 import { CanvasType, ShortDirection, StationDict } from '../../../constants/constants';
 import { useRootSelector } from '../../../redux';
@@ -254,7 +254,7 @@ const StationGroup = (props: StationGroupProps) => {
                             transform: `translate(${xs[stnId]}px,${ys[stnId]}px)`,
                         }}
                     >
-                        <StationGZMTR stnId={stnId} stnState={stnStates[stnId]} stnY={ys[stnId]} />
+                        <Station stnId={stnId} stnState={stnStates[stnId]} stnY={ys[stnId]} />
                     </g>
                 ))}
         </g>

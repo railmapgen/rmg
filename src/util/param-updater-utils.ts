@@ -1,13 +1,4 @@
-import {
-    ExtendedInterchangeInfo,
-    InterchangeGroup,
-    InterchangeInfo,
-    Name,
-    Note,
-    RmgStyle,
-    StationInfo,
-    Theme,
-} from '../constants/constants';
+import { InterchangeGroup, InterchangeInfo, Name, Note, RmgStyle, StationInfo, Theme } from '../constants/constants';
 import { nanoid } from 'nanoid';
 
 export const updateParam = (param: { [x: string]: any }) => {
@@ -277,7 +268,7 @@ export const updateParam = (param: { [x: string]: any }) => {
 
 export const v5_10_updateInterchangeGroup = (param: Record<string, any>) => {
     for (const [stnId, stnInfo] of Object.entries(param.stn_list as Record<string, any>)) {
-        const originalInfo: (InterchangeInfo | ExtendedInterchangeInfo)[][] = stnInfo.transfer.info;
+        const originalInfo: InterchangeInfo[][] = stnInfo.transfer.info;
         if (originalInfo) {
             param.stn_list[stnId].transfer.groups = originalInfo.map<InterchangeGroup>((infoGroup, idx) => {
                 if (!infoGroup.length) {
@@ -287,7 +278,7 @@ export const v5_10_updateInterchangeGroup = (param: Record<string, any>) => {
                 return {
                     name: stnInfo.transfer.osi_names[idx - 1],
                     lines: infoGroup.map(info => {
-                        const typedInfo = info as InterchangeInfo;
+                        const typedInfo = info;
                         return {
                             theme: typedInfo.slice(0, 4) as Theme,
                             name: typedInfo.slice(4, 6) as Name,
