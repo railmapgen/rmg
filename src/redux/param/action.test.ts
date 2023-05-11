@@ -490,7 +490,7 @@ describe('Tests for param actions', () => {
     it('Cannot remove interchange info if out of index', () => {
         const mockStationList = {
             test: {
-                transfer: { info: [[mockInterchange1]] },
+                transfer: { groups: [{ lines: [mockInterchange1] }] },
             },
         } as any as StationDict;
         const mockStore = createMockAppStore({
