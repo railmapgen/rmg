@@ -1,5 +1,5 @@
 import { ColourHex } from '@railmapgen/rmg-palette-resources';
-import { InterchangeInfo, Name, Services } from '../../../constants/constants';
+import { ExtendedInterchangeInfo, InterchangeGroup, Name, Services } from '../../../constants/constants';
 import { useRootSelector } from '../../../redux';
 import { forwardRef, Fragment, Ref, SVGProps, useMemo } from 'react';
 
@@ -28,7 +28,7 @@ export const StationSHMetro = (props: Props) => {
         <>
             <StationNameGElement
                 name={stnInfo.name}
-                infos={stnInfo.transfer.info}
+                groups={stnInfo.transfer.groups}
                 nameDirection={nameDirection}
                 services={services}
             />
@@ -51,13 +51,13 @@ export default StationSHMetro;
 
 interface StationNameGElementProps {
     name: Name;
-    infos: InterchangeInfo[][];
+    groups: InterchangeGroup[];
     nameDirection: NameDirection;
     services: Services[];
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {
-    const { name, infos, nameDirection, services } = props;
+    const { name, groups, nameDirection, services } = props;
     const dy = { upward: 60, downward: -30, left: 0, right: 0 }[nameDirection];
     const osi_dx = { upward: 0, downward: 0, left: 85, right: -85 }[nameDirection];
     const osi_dy = {
@@ -67,23 +67,25 @@ const StationNameGElement = (props: StationNameGElementProps) => {
         right: -30,
     }[nameDirection];
     const osysi_dx =
-        // only compute when there is a out-of-system transfer
-        infos[2]?.length > 0
+        // only compute when there is an out-of-system transfer
+        groups[2]?.lines?.length > 0
             ? {
                   upward: 0,
                   downward: 0,
-                  left: infos[0].length + infos[1].length !== 0 ? 85 : 25,
-                  right: infos[0].length + infos[1].length !== 0 ? -85 : -25,
+                  left: groups[0].lines.length + groups[1]?.lines?.length !== 0 ? 85 : 25,
+                  right: groups[0].lines.length + groups[1]?.lines?.length !== 0 ? -85 : -25,
               }[nameDirection]
             : 0;
     const osysi_dy =
-        // only compute when there is a out-of-system transfer
-        infos[2]?.length > 0
+        // only compute when there is an out-of-system transfer
+        groups[2]?.lines?.length > 0
             ? {
-                  upward: infos[1]?.length ? -210 : infos[0].length ? -180 : -100,
-                  downward: (infos[1]?.length ? 190 : infos[0].length ? 160 : 100) + (services.length === 3 ? 40 : 0),
-                  left: infos[1]?.length ? -60 : infos[0].length ? -30 : 0,
-                  right: infos[1]?.length ? -60 : infos[0].length ? -30 : 0,
+                  upward: groups[1]?.lines?.length ? -210 : groups[0].lines.length ? -180 : -100,
+                  downward:
+                      (groups[1]?.lines?.length ? 190 : groups[0].lines.length ? 160 : 100) +
+                      (services.length === 3 ? 40 : 0),
+                  left: groups[1]?.lines?.length ? -60 : groups[0].lines.length ? -30 : 0,
+                  right: groups[1]?.lines?.length ? -60 : groups[0].lines.length ? -30 : 0,
               }[nameDirection]
             : 0;
     return (
@@ -122,9 +124,9 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 </>
             )}
 
-            {[...infos[0], ...(infos[1] || [])].length > 0 && (
+            {[...groups[0].lines, ...(groups[1]?.lines || [])].length && (
                 <IntBoxGroup
-                    intInfos={[...infos[0], ...(infos[1] || [])]}
+                    intInfos={[...groups[0].lines, ...(groups[1]?.lines || [])]}
                     arrowDirection={nameDirection}
                     services={services}
                 />
@@ -132,15 +134,15 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
             <StationName stnName={name} nameDirection={nameDirection} fill="black" />
 
-            {infos[1]?.length > 0 && (
+            {groups[1]?.lines?.length && (
                 <g transform={`translate(${osi_dx},${osi_dy})`}>
-                    <OSIText osiInfos={infos[1]} nameDirection={nameDirection} />
+                    <OSIText osiInfos={groups[1].lines} nameDirection={nameDirection} />
                 </g>
             )}
 
-            {infos[2]?.length > 0 && (
+            {groups[2]?.lines?.length && (
                 <g transform={`translate(${osysi_dx},${osysi_dy})`}>
-                    <OSysIText osysiInfos={infos[2]} nameDirection={nameDirection} />
+                    <OSysIText osysiInfos={groups[2].lines} nameDirection={nameDirection} />
                 </g>
             )}
         </g>
@@ -200,7 +202,7 @@ const StationName = forwardRef(function StationName(
 });
 
 interface IntBoxGroupProps {
-    intInfos: InterchangeInfo[];
+    intInfos: ExtendedInterchangeInfo[];
     arrowDirection: NameDirection;
     services: Services[];
 }
@@ -209,18 +211,18 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
     const { intInfos, arrowDirection, services } = props;
 
     // name each different linearGradient that will fill the arrow
-    const intNameId = intInfos.map(intInfo => intInfo[2]).reduce((name, color) => name + color, '');
+    const intNameId = intInfos.map(intInfo => intInfo.theme?.[2]).reduce((name, color) => name + color, '');
 
     // get the interchange line names
     const lineNames = [
         intInfos
-            .filter(intInfo => intInfo[4].match(/^\d+.*$/))
-            .map(intInfo => intInfo[4].replace(/^(\d+)(.*)$/, '$1'))
+            .filter(intInfo => intInfo.name[0].match(/^\d+.*$/))
+            .map(intInfo => intInfo.name[0].replace(/^(\d+)(.*)$/, '$1'))
             .join('，')
             .concat('号线'),
         intInfos
-            .filter(intInfo => !intInfo[4].match(/^\d+.*$/))
-            .map(intInfo => intInfo[4])
+            .filter(intInfo => !intInfo.name[0].match(/^\d+.*$/))
+            .map(intInfo => intInfo.name[0])
             .join('，'),
     ]
         .filter(name => name && name !== '号线')
@@ -228,13 +230,13 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
     const lineNamesEn = [
         'Line '.concat(
             intInfos
-                .filter(intInfo => intInfo[5].match(/^(L|l)ine$/))
-                .map(intInfo => intInfo[5].replace('Line', '').replace('line', '').trim())
+                .filter(intInfo => intInfo.name[1].match(/^(L|l)ine$/))
+                .map(intInfo => intInfo.name[1].replace('Line', '').replace('line', '').trim())
                 .join(',')
         ),
         intInfos
-            .filter(intInfo => !intInfo[5].match(/^(L|l)ine$/))
-            .map(intInfo => intInfo[5])
+            .filter(intInfo => !intInfo.name[1].match(/^(L|l)ine$/))
+            .map(intInfo => intInfo.name[1])
             .join('，'),
     ]
         .filter(name => name && name !== 'Line ')
@@ -261,7 +263,7 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
                 stroke="var(--rmg-black)"
                 strokeWidth={1}
                 transform={`translate(${arrow_dx},${arrow_dy})rotate(${arrow_dr})`}
-                fill={intInfos.length === 1 ? intInfos[0][2] : `url(#grad${intNameId})`}
+                fill={intInfos.length === 1 ? intInfos[0].theme?.[2] : `url(#grad${intNameId})`}
                 d={`M -7.5,0 v -${arrowLength} h -7.5 l 15,-15 l 15,15 h -7.5 v ${arrowLength} Z`}
             />
 
@@ -279,11 +281,11 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
                                 {/* more about React.Fragment on https://stackoverflow.com/a/59390967 */}
                                 <stop // start from
                                     offset={`${(100 / intInfos.length) * i}%`}
-                                    stopColor={intInfo[2]}
+                                    stopColor={intInfo.theme?.[2]}
                                 />
                                 <stop // to
                                     offset={`${(100 / intInfos.length) * (i + 1)}%`}
-                                    stopColor={intInfo[2]}
+                                    stopColor={intInfo.theme?.[2]}
                                 />
                             </Fragment>
                         ))}
@@ -312,13 +314,13 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
     );
 };
 
-const OSIText = (props: { osiInfos: InterchangeInfo[]; nameDirection: NameDirection }) => {
+const OSIText = (props: { osiInfos: ExtendedInterchangeInfo[]; nameDirection: NameDirection }) => {
     const anchor = { upward: 'middle', downward: 'middle', left: 'start', right: 'end' }[props.nameDirection];
     return useMemo(
         () => (
             <g textAnchor={`${anchor}`} fontSize="50%">
                 <text className="rmg-name__zh" dy={-5}>
-                    {`换乘${props.osiInfos.map(info => info[4]).join('，')}`}
+                    {`换乘${props.osiInfos.map(info => info.name[0]).join('，')}`}
                 </text>
                 <text className="rmg-name__zh" dy={5}>
                     仅限公共交通卡
@@ -328,23 +330,23 @@ const OSIText = (props: { osiInfos: InterchangeInfo[]; nameDirection: NameDirect
                 </text>
             </g>
         ),
-        [props.osiInfos.toString(), props.nameDirection]
+        [JSON.stringify(props.osiInfos), props.nameDirection]
     );
 };
 
-const OSysIText = (props: { osysiInfos: InterchangeInfo[]; nameDirection: NameDirection }) => {
+const OSysIText = (props: { osysiInfos: ExtendedInterchangeInfo[]; nameDirection: NameDirection }) => {
     const anchor = { upward: 'middle', downward: 'middle', left: 'start', right: 'end' }[props.nameDirection];
     return useMemo(
         () => (
             <g textAnchor={`${anchor}`}>
                 <text className="rmg-name__zh" dy={-5}>
-                    {`转乘${props.osysiInfos.map(info => info[4]).join('，')}`}
+                    {`转乘${props.osysiInfos.map(info => info.name[0]).join('，')}`}
                 </text>
                 <text className="rmg-name__en" dy={7.5} fontSize={9.6}>
-                    {`To ${props.osysiInfos.map(info => info[5]).join(', ')}`}
+                    {`To ${props.osysiInfos.map(info => info.name[1]).join(', ')}`}
                 </text>
             </g>
         ),
-        [props.osysiInfos.toString(), props.nameDirection]
+        [JSON.stringify(props.osysiInfos), props.nameDirection]
     );
 };
