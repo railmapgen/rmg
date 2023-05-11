@@ -22,7 +22,7 @@ describe('InterchangeSection', () => {
                 stn_list: {
                     'test-station': {
                         transfer: {
-                            info: [[], [], []],
+                            groups: [{ lines: [] }, { lines: [] }, { lines: [] }],
                             osi_names: [],
                             tick_direc: ShortDirection.right,
                         } as any as StationTransfer,
@@ -56,7 +56,7 @@ describe('InterchangeSection', () => {
                 stn_list: {
                     'test-station': {
                         transfer: {
-                            info: [[], []],
+                            groups: [{ lines: [] }, { lines: [] }],
                             osi_names: [],
                             tick_direc: ShortDirection.right,
                         } as any as StationTransfer,
@@ -79,7 +79,18 @@ describe('InterchangeSection', () => {
                 stationId: 'test-station',
                 station: expect.objectContaining({
                     transfer: expect.objectContaining({
-                        info: [[], [], [['hongkong', '', '#AAAAAA', '#fff', '', '']]],
+                        groups: [
+                            { lines: [] },
+                            { lines: [] },
+                            {
+                                lines: [
+                                    {
+                                        theme: ['hongkong', '', '#AAAAAA', '#fff'],
+                                        name: ['', ''],
+                                    },
+                                ],
+                            },
+                        ],
                     }),
                 }),
             })

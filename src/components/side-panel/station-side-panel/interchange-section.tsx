@@ -10,7 +10,7 @@ import {
     updateStationPaidArea,
     updateStationTickDirection,
 } from '../../../redux/param/action';
-import { InterchangeInfo, RmgStyle, ShortDirection } from '../../../constants/constants';
+import { ExtendedInterchangeInfo, RmgStyle, ShortDirection } from '../../../constants/constants';
 import { MdAdd } from 'react-icons/md';
 import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
@@ -51,7 +51,7 @@ export default function InterchangeSection() {
         },
     ];
 
-    const handleAdd = (i: number) => (info: InterchangeInfo) => {
+    const handleAdd = (i: number) => (info: ExtendedInterchangeInfo) => {
         dispatch(addInterchange(selectedStation, i, info));
     };
 
@@ -59,13 +59,16 @@ export default function InterchangeSection() {
         dispatch(removeInterchange(selectedStation, i, j));
     };
 
-    const handleUpdate = (i: number) => (j: number, info: InterchangeInfo) => {
+    const handleUpdate = (i: number) => (j: number, info: ExtendedInterchangeInfo) => {
         dispatch(updateInterchange(selectedStation, i, j, info));
     };
 
     const handleAddInterchangeGroup = () => {
         dispatch(
-            addInterchange(selectedStation, transfer.info.length, [theme[0], '', '#AAAAAA', MonoColour.white, '', ''])
+            addInterchange(selectedStation, transfer.groups.length, {
+                theme: [theme[0], '', '#AAAAAA', MonoColour.white],
+                name: ['', ''],
+            })
         );
     };
 
@@ -88,7 +91,7 @@ export default function InterchangeSection() {
                 )}
             </Flex>
 
-            {transfer.info.map((infoList, i) => (
+            {transfer.groups.map((group, i) => (
                 <Fragment key={i}>
                     <Heading as="h6" size="xs">
                         {i === 0
@@ -101,7 +104,7 @@ export default function InterchangeSection() {
                     {i !== 0 && <RmgFields fields={getOSINameFields(i - 1)} />}
 
                     <InterchangeCard
-                        interchangeList={infoList}
+                        interchangeList={group.lines}
                         onAdd={handleAdd(i)}
                         onDelete={handleDelete(i)}
                         onUpdate={handleUpdate(i)}
@@ -109,7 +112,7 @@ export default function InterchangeSection() {
                 </Fragment>
             ))}
 
-            {transfer.info.length < 3 && (
+            {transfer.groups.length < 3 && (
                 <Button
                     size="xs"
                     variant="ghost"

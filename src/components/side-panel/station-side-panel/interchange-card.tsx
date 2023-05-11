@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, HStack, IconButton, Text } from '@chakra-ui/react';
-import { InterchangeInfo, Theme } from '../../../constants/constants';
+import { ExtendedInterchangeInfo } from '../../../constants/constants';
 import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
 import ColourModal from '../../modal/colour-modal/colour-modal';
 import { useTranslation } from 'react-i18next';
@@ -10,10 +10,10 @@ import { RmgCard, RmgFields, RmgFieldsField, RmgLabel } from '@railmapgen/rmg-co
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
 
 interface InterchangeCardProps {
-    interchangeList: InterchangeInfo[];
-    onAdd?: (info: InterchangeInfo) => void;
+    interchangeList: ExtendedInterchangeInfo[];
+    onAdd?: (info: ExtendedInterchangeInfo) => void;
     onDelete?: (index: number) => void;
-    onUpdate?: (index: number, info: InterchangeInfo) => void;
+    onUpdate?: (index: number, info: ExtendedInterchangeInfo) => void;
 }
 
 export default function InterchangeCard(props: InterchangeCardProps) {
@@ -30,8 +30,8 @@ export default function InterchangeCard(props: InterchangeCardProps) {
         (acc, cur) => {
             const [zhAcc, enAcc] = acc;
             return [
-                [...new Set(zhAcc.concat(cur.transfer.info.flat().map(it => it[4])))],
-                [...new Set(enAcc.concat(cur.transfer.info.flat().map(it => it[5])))],
+                [...new Set(zhAcc.concat(cur.transfer.groups.map(it => it.lines.map(line => line.name[0])).flat()))],
+                [...new Set(enAcc.concat(cur.transfer.groups.map(it => it.lines.map(line => line.name[1])).flat()))],
             ];
         },
         [[], []]
@@ -41,17 +41,17 @@ export default function InterchangeCard(props: InterchangeCardProps) {
         {
             type: 'input',
             label: t('Chinese name'),
-            value: it[4],
+            value: it.name[0],
             minW: '80px',
-            onChange: val => onUpdate?.(i, [it[0], it[1], it[2], it[3], val, it[5]]),
+            onChange: val => onUpdate?.(i, { ...it, name: [val, it.name[1]] }),
             optionList: usedNameList[0],
         },
         {
             type: 'input',
             label: t('English name'),
-            value: it[5],
+            value: it.name[1],
             minW: '80px',
-            onChange: val => onUpdate?.(i, [it[0], it[1], it[2], it[3], it[4], val]),
+            onChange: val => onUpdate?.(i, { ...it, name: [it.name[0], val] }),
             optionList: usedNameList[1],
         },
     ]);
@@ -68,7 +68,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
                         size="sm"
                         variant="ghost"
                         aria-label={t('StationSidePanel.interchange.add')}
-                        onClick={() => onAdd?.([theme[0], '', '#aaaaaa', MonoColour.white, '', ''])}
+                        onClick={() => onAdd?.({ theme: [theme[0], '', '#aaaaaa', MonoColour.white], name: ['', ''] })}
                         icon={<MdAdd />}
                     />
                 </HStack>
@@ -78,7 +78,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
                 <HStack key={i} spacing={0.5} data-testid={`interchange-card-stack-${i}`}>
                     <RmgLabel label={t('Colour')} minW="40px" noLabel={i !== 0}>
                         <ThemeButton
-                            theme={[it[0], it[1], it[2], it[3]]}
+                            theme={it.theme}
                             onClick={() => {
                                 setIsModalOpen(true);
                                 setSelectedIndex(i);
@@ -115,14 +115,8 @@ export default function InterchangeCard(props: InterchangeCardProps) {
             <ColourModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                defaultTheme={interchangeList[selectedIndex]?.slice(0, 4) as Theme}
-                onUpdate={theme =>
-                    onUpdate?.(selectedIndex, [
-                        ...theme,
-                        interchangeList[selectedIndex][4],
-                        interchangeList[selectedIndex][5],
-                    ])
-                }
+                defaultTheme={interchangeList[selectedIndex]?.theme}
+                onUpdate={theme => onUpdate?.(selectedIndex, { ...interchangeList[selectedIndex], theme })}
             />
         </RmgCard>
     );

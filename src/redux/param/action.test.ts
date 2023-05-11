@@ -32,7 +32,7 @@ import {
 } from './action';
 import {
     BranchStyle,
-    InterchangeInfo,
+    ExtendedInterchangeInfo,
     Name,
     Note,
     RMGParam,
@@ -51,23 +51,18 @@ const realStore = rootReducer.getState();
 const mockNote1: Note = ['Note 1 ZH', 'Note 1 EN', 10, 10, true];
 const mockNote2: Note = ['Note 2 ZH', 'Note 2 EN', 20, 20, false];
 const mockUpdatedNote: Note = ['Note 2 ZH Updated', 'Note 2 EN', 25, 25, false];
-const mockInterchange1: InterchangeInfo = [
-    CityCode.Hongkong,
-    'twl',
-    '#000000',
-    MonoColour.white,
-    'Int 1 ZH',
-    'Int 1 EN',
-];
-const mockInterchange2: InterchangeInfo = [
-    CityCode.Guangzhou,
-    'gz1',
-    '#FFFFFF',
-    MonoColour.black,
-    'Int 2 ZH',
-    'Int 2 EN',
-];
-const mockUpdatedThemeInterchange = [CityCode.London, 'bakerloo', '#AAAAAA', MonoColour.white].concat(Array(2));
+const mockInterchange1: ExtendedInterchangeInfo = {
+    theme: [CityCode.Hongkong, 'twl', '#000000', MonoColour.white],
+    name: ['Int 1 ZH', 'Int 1 EN'],
+};
+const mockInterchange2: ExtendedInterchangeInfo = {
+    theme: [CityCode.Guangzhou, 'gz1', '#FFFFFF', MonoColour.black],
+    name: ['Int 2 ZH', 'Int 2 EN'],
+};
+const mockUpdatedThemeInterchange: ExtendedInterchangeInfo = {
+    theme: [CityCode.London, 'bakerloo', '#AAAAAA', MonoColour.white],
+    name: ['碧嘉老綫', 'Bakerloo Line'],
+};
 
 const mockStationList = {
     linestart: {
@@ -393,7 +388,7 @@ describe('Tests for param actions', () => {
                 ...realStore.param,
                 stn_list: {
                     ...mockStationList,
-                    test: { ...mockStationList.test, transfer: { info: [] } as any },
+                    test: { ...mockStationList.test, transfer: { groups: [{ lines: [] }] } as any },
                 },
             },
         });
@@ -404,11 +399,11 @@ describe('Tests for param actions', () => {
         expect(actions.find(action => action.type === SET_STATION)).toBeDefined();
 
         const setStationAction: setStationAction = actions[0];
-        const stationTransferInfo = setStationAction.station.transfer.info;
-        expect(stationTransferInfo).toHaveLength(2); // empty within-station, and osi with 1 info
-        expect(stationTransferInfo[0]).toHaveLength(0); // concat with length 0 array to info, to avoid error while stringify JSON
-        expect(stationTransferInfo[1]).toHaveLength(1);
-        expect(stationTransferInfo[1]).toContainEqual(mockInterchange1);
+        const stationTransferGroups = setStationAction.station.transfer.groups;
+        expect(stationTransferGroups).toHaveLength(2); // empty within-station, and osi with 1 info
+        expect(stationTransferGroups[0].lines).toHaveLength(0); // concat with length 0 array to info, to avoid error while stringify JSON
+        expect(stationTransferGroups[1].lines).toHaveLength(1);
+        expect(stationTransferGroups[1].lines).toContainEqual(mockInterchange1);
     });
 
     it('Can add interchange info to within-station set for station with 1 within-station interchange as expected', () => {
@@ -418,7 +413,7 @@ describe('Tests for param actions', () => {
                 ...realStore.param,
                 stn_list: {
                     ...mockStationList,
-                    test: { ...mockStationList.test, transfer: { info: [[mockInterchange1]] } as any },
+                    test: { ...mockStationList.test, transfer: { groups: [{ lines: [mockInterchange1] }] } as any },
                 },
             },
         });
@@ -429,10 +424,10 @@ describe('Tests for param actions', () => {
         expect(actions.find(action => action.type === SET_STATION)).toBeDefined();
 
         const setStationAction: setStationAction = actions[0];
-        const stationTransferInfo = setStationAction.station.transfer.info;
-        expect(stationTransferInfo).toHaveLength(1); // 2 within-station
-        expect(stationTransferInfo[0]).toHaveLength(2);
-        expect(stationTransferInfo[0]).toEqual([mockInterchange1, mockInterchange2]);
+        const stationTransferGroups = setStationAction.station.transfer.groups;
+        expect(stationTransferGroups).toHaveLength(1); // 2 within-station
+        expect(stationTransferGroups[0].lines).toHaveLength(2);
+        expect(stationTransferGroups[0].lines).toEqual([mockInterchange1, mockInterchange2]);
     });
 
     it('Can add OSI name for station as expected', () => {
@@ -506,23 +501,21 @@ describe('Tests for param actions', () => {
                 ...realStore.param,
                 stn_list: {
                     ...mockStationList,
-                    test: { ...mockStationList.test, transfer: { info: [[mockInterchange1]] } as any },
+                    test: { ...mockStationList.test, transfer: { groups: [{ lines: [mockInterchange1] }] } as any },
                 },
             },
         });
-        mockStore.dispatch(updateInterchange('test', 0, 0, mockUpdatedThemeInterchange as any));
+        mockStore.dispatch(updateInterchange('test', 0, 0, mockUpdatedThemeInterchange));
 
         const actions = mockStore.getActions();
         // expect(actions).toHaveLength(1);
         expect(actions.find(action => action.type === SET_STATION)).toBeDefined();
 
         const setStationAction: setStationAction = actions[0];
-        const stationTransferInfo = setStationAction.station.transfer.info;
-        expect(stationTransferInfo).toHaveLength(1);
-        expect(stationTransferInfo[0]).toHaveLength(1);
-        expect(stationTransferInfo[0]).toContainEqual(
-            mockUpdatedThemeInterchange.slice(0, 4).concat(mockInterchange1.slice(4))
-        );
+        const stationTransferGroups = setStationAction.station.transfer.groups;
+        expect(stationTransferGroups).toHaveLength(1);
+        expect(stationTransferGroups[0].lines).toHaveLength(1);
+        expect(stationTransferGroups[0].lines).toContainEqual(mockUpdatedThemeInterchange);
     });
 
     // TODO

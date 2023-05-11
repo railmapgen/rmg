@@ -103,7 +103,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
     const intEl = useRef<SVGGElement | null>(null);
     const [intWidth, setIntWidth] = useState(0);
-    useEffect(() => setIntWidth(intEl.current?.getBBox().width ?? 0), [...JSON.stringify(groups)]);
+    useEffect(() => setIntWidth(intEl.current?.getBBox().width ?? 0), [JSON.stringify(groups)]);
     const intDx = intPadding - intWidth;
 
     return (

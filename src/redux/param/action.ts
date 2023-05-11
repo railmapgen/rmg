@@ -3,8 +3,8 @@ import {
     CanvasType,
     ColineInfo,
     Direction,
+    ExtendedInterchangeInfo,
     Facilities,
-    InterchangeInfo,
     Name,
     Note,
     PanelTypeGZMTR,
@@ -466,22 +466,31 @@ export const updateStationNum = (stationId: string, num: string) => {
  * @param setIndex - set 0: within-station interchange. set 1: Out of station(OSI) transfer. set 2: Out of system(OSysI) transfer
  * @param interchangeInfo
  */
-export const addInterchange = (stationId: string, setIndex: number, interchangeInfo: InterchangeInfo) => {
+export const addInterchange = (stationId: string, setIndex: number, interchangeInfo: ExtendedInterchangeInfo) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
-        const newTransferInfo = stationInfo.transfer.info.map(i => i.slice());
-        if (newTransferInfo.length > setIndex) {
-            newTransferInfo[setIndex].push(interchangeInfo);
+        const newTransferGroups = stationInfo.transfer.groups.map(group => ({ ...group }));
+        if (newTransferGroups.length > setIndex) {
+            newTransferGroups[setIndex] = {
+                ...newTransferGroups[setIndex],
+                lines: newTransferGroups[setIndex].lines.concat(interchangeInfo),
+            };
         } else {
-            for (let i = newTransferInfo.length; i < setIndex; i++) {
-                newTransferInfo[i] = [];
+            for (let i = newTransferGroups.length; i < setIndex; i++) {
+                newTransferGroups[i] = { lines: [] };
             }
-            newTransferInfo[setIndex] = [interchangeInfo];
+            newTransferGroups[setIndex] = { lines: [interchangeInfo] };
         }
 
         dispatch(
-            setStation(stationId, { ...stationInfo, transfer: { ...stationInfo.transfer, info: newTransferInfo } })
+            setStation(stationId, {
+                ...stationInfo,
+                transfer: {
+                    ...stationInfo.transfer,
+                    groups: [newTransferGroups[0], ...(newTransferGroups.slice(1) ?? [])],
+                },
+            })
         );
     };
 };
@@ -506,30 +515,35 @@ export const removeInterchange = (stationId: string, setIndex: number, interchan
 
 export const updateInterchange = (
     stationId: string,
-    setIndex: number,
+    groupIndex: number,
     interchangeIndex: number,
-    interchangeInfo: InterchangeInfo
+    interchangeInfo: ExtendedInterchangeInfo
 ) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
         if (
-            stationInfo.transfer.info.length > setIndex &&
-            stationInfo.transfer.info[setIndex].length > interchangeIndex
+            stationInfo.transfer.groups.length > groupIndex &&
+            stationInfo.transfer.groups[groupIndex].lines.length > interchangeIndex
         ) {
-            const newTransferInfo = stationInfo.transfer.info.map((set, setIdx) =>
-                setIdx === setIndex
-                    ? set.map((int, intIdx) =>
-                          intIdx === interchangeIndex
-                              ? ([0, 1, 2, 3, 4, 5].map(i =>
-                                    interchangeInfo[i] === undefined ? int[i] : interchangeInfo[i]
-                                ) as InterchangeInfo)
-                              : int
-                      )
-                    : set
+            const newTransferGroups = stationInfo.transfer.groups.map((group, groupIdx) =>
+                groupIdx === groupIndex
+                    ? {
+                          ...group,
+                          lines: group.lines.map((line, lineIdx) =>
+                              lineIdx === interchangeIndex ? interchangeInfo : line
+                          ),
+                      }
+                    : group
             );
             dispatch(
-                setStation(stationId, { ...stationInfo, transfer: { ...stationInfo.transfer, info: newTransferInfo } })
+                setStation(stationId, {
+                    ...stationInfo,
+                    transfer: {
+                        ...stationInfo.transfer,
+                        groups: [newTransferGroups[0], ...(newTransferGroups.slice(1) ?? [])],
+                    },
+                })
             );
         }
     };
