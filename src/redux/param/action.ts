@@ -495,19 +495,30 @@ export const addInterchange = (stationId: string, setIndex: number, interchangeI
     };
 };
 
-export const removeInterchange = (stationId: string, setIndex: number, interchangeIndex: number) => {
+export const removeInterchange = (stationId: string, groupIndex: number, interchangeIndex: number) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
         if (
-            stationInfo.transfer.info.length > setIndex &&
-            stationInfo.transfer.info[setIndex].length > interchangeIndex
+            stationInfo.transfer.groups.length > groupIndex &&
+            stationInfo.transfer.groups[groupIndex].lines.length > interchangeIndex
         ) {
-            const newTransferInfo = stationInfo.transfer.info.map((set, setIdx) =>
-                setIdx === setIndex ? set.filter((_, intIdx) => intIdx !== interchangeIndex) : set
+            const newTransferGroups = stationInfo.transfer.groups.map((group, groupIdx) =>
+                groupIdx === groupIndex
+                    ? {
+                          ...group,
+                          lines: group.lines.filter((_, intIdx) => intIdx !== interchangeIndex),
+                      }
+                    : group
             );
             dispatch(
-                setStation(stationId, { ...stationInfo, transfer: { ...stationInfo.transfer, info: newTransferInfo } })
+                setStation(stationId, {
+                    ...stationInfo,
+                    transfer: {
+                        ...stationInfo.transfer,
+                        groups: [newTransferGroups[0], ...(newTransferGroups.slice(1) ?? [])],
+                    },
+                })
             );
         }
     };

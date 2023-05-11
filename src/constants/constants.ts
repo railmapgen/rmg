@@ -78,11 +78,11 @@ export enum Services {
 export interface ColineInfo {
     from: string;
     to: string;
-    colors: InterchangeInfo[];
+    colors: ColineColours[];
     display: boolean;
 }
 
-export type InterchangeInfo = [...Theme, ...Name];
+export type ColineColours = [...Theme, ...Name];
 
 export interface ExtendedInterchangeInfo {
     theme?: Theme;
@@ -108,12 +108,6 @@ export interface StationTransfer {
      * Array of name (in two languages) of all out-of-station interchange stations.
      */
     osi_names: Name[];
-    /**
-     * Array of arrays of interchange info.
-     * @property 0 - array of within-station interchange info
-     * @property remaining - arrays of out-of-station interchange info (from the nearest to the furthest station)
-     */
-    info: InterchangeInfo[][];
     groups: [InterchangeGroup, ...InterchangeGroup[]];
 }
 

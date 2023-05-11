@@ -69,16 +69,19 @@ const mockStationList = {
         parents: [],
         children: ['test'],
         branch: { left: [], right: [] },
+        transfer: {},
     },
     test: {
         parents: ['linestart'],
         children: ['lineend'],
         branch: { left: [], right: [] },
+        transfer: {},
     },
     lineend: {
         parents: ['test'],
         children: [],
         branch: { left: [], right: [] },
+        transfer: {},
     },
 } as any as StationDict;
 
@@ -388,7 +391,10 @@ describe('Tests for param actions', () => {
                 ...realStore.param,
                 stn_list: {
                     ...mockStationList,
-                    test: { ...mockStationList.test, transfer: { groups: [{ lines: [] }] } as any },
+                    test: {
+                        ...mockStationList.test,
+                        transfer: { ...mockStationList.test.transfer, groups: [{ lines: [] }] },
+                    },
                 },
             },
         });
@@ -460,7 +466,10 @@ describe('Tests for param actions', () => {
                     ...mockStationList,
                     test: {
                         ...mockStationList.test,
-                        transfer: { info: [[mockInterchange1, mockInterchange2]] } as any,
+                        transfer: {
+                            ...mockStationList.test.transfer,
+                            groups: [{ lines: [mockInterchange1, mockInterchange2] }],
+                        },
                     },
                 },
             },
@@ -472,10 +481,10 @@ describe('Tests for param actions', () => {
         expect(actions.find(action => action.type === SET_STATION)).toBeDefined();
 
         const setStationAction: setStationAction = actions[0];
-        const stationTransferInfo = setStationAction.station.transfer.info;
-        expect(stationTransferInfo).toHaveLength(1);
-        expect(stationTransferInfo[0]).toHaveLength(1);
-        expect(stationTransferInfo[0]).toContainEqual(mockInterchange1);
+        const stationTransferGroups = setStationAction.station.transfer.groups;
+        expect(stationTransferGroups).toHaveLength(1);
+        expect(stationTransferGroups[0].lines).toHaveLength(1);
+        expect(stationTransferGroups[0].lines).toContainEqual(mockInterchange1);
     });
 
     it('Cannot remove interchange info if out of index', () => {
@@ -501,7 +510,10 @@ describe('Tests for param actions', () => {
                 ...realStore.param,
                 stn_list: {
                     ...mockStationList,
-                    test: { ...mockStationList.test, transfer: { groups: [{ lines: [mockInterchange1] }] } as any },
+                    test: {
+                        ...mockStationList.test,
+                        transfer: { ...mockStationList.test.transfer, groups: [{ lines: [mockInterchange1] }] },
+                    },
                 },
             },
         });
