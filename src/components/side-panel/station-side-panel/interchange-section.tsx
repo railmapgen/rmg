@@ -28,18 +28,22 @@ export default function InterchangeSection() {
         {
             type: 'input',
             label: t('Station Chinese name'),
-            value: transfer.osi_names[setIndex]?.[0],
+            value: transfer.groups[setIndex].name?.[0] ?? '',
             hidden: ![RmgStyle.MTR].includes(style),
             onChange: value =>
-                dispatch(updateStationOsiName(selectedStation, setIndex, [value, transfer.osi_names[setIndex]?.[1]])),
+                dispatch(
+                    updateStationOsiName(selectedStation, setIndex, [value, transfer.groups[setIndex].name?.[1] ?? ''])
+                ),
         },
         {
             type: 'input',
             label: t('Station English name'),
-            value: transfer.osi_names[setIndex]?.[1],
+            value: transfer.groups[setIndex].name?.[1] ?? '',
             hidden: ![RmgStyle.MTR].includes(style),
             onChange: value =>
-                dispatch(updateStationOsiName(selectedStation, setIndex, [transfer.osi_names[setIndex]?.[0], value])),
+                dispatch(
+                    updateStationOsiName(selectedStation, setIndex, [transfer.groups[setIndex].name?.[0] ?? '', value])
+                ),
         },
         {
             type: 'switch',
@@ -101,7 +105,7 @@ export default function InterchangeSection() {
                             : t('StationSidePanel.interchange.outSystem')}
                     </Heading>
 
-                    {i !== 0 && <RmgFields fields={getOSINameFields(i - 1)} />}
+                    {i !== 0 && <RmgFields fields={getOSINameFields(i)} />}
 
                     <InterchangeCard
                         interchangeList={group.lines}

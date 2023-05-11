@@ -560,25 +560,23 @@ export const updateInterchange = (
     };
 };
 
-export const updateStationOsiName = (stationId: string, setIndex: number, osiName: Name) => {
+export const updateStationOsiName = (stationId: string, groupIndex: number, osiName: Name) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
-        const newOsiNames = stationInfo.transfer.osi_names.map(i => i.slice()) as Name[];
-        if (newOsiNames.length > setIndex) {
-            newOsiNames[setIndex] = osiName;
-        } else {
-            for (let i = newOsiNames.length; i < setIndex; i++) {
-                newOsiNames[i] = ['車站名', 'Stn Name'];
-            }
-            newOsiNames[setIndex] = osiName;
+        const newTransferGroups = stationInfo.transfer.groups.map(group => ({ ...group }));
+        if (newTransferGroups.length > groupIndex) {
+            newTransferGroups[groupIndex] = { ...newTransferGroups[groupIndex], name: osiName };
+            dispatch(
+                setStation(stationId, {
+                    ...stationInfo,
+                    transfer: {
+                        ...stationInfo.transfer,
+                        groups: [newTransferGroups[0], ...(newTransferGroups.slice(1) ?? [])],
+                    },
+                })
+            );
         }
-        dispatch(
-            setStation(stationId, {
-                ...stationInfo,
-                transfer: { ...stationInfo.transfer, osi_names: newOsiNames },
-            })
-        );
     };
 };
 

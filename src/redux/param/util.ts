@@ -50,7 +50,6 @@ export const initStationInfo = (id: string): StationInfo => ({
         groups: [{ lines: [] }],
         tick_direc: ShortDirection.right,
         paid_area: true,
-        osi_names: [],
     },
     facility: Facilities.none,
     loop_pivot: false,

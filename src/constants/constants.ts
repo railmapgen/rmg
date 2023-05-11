@@ -104,10 +104,6 @@ export interface StationTransfer {
      * Flag of paid area within out-of-station interchange.
      */
     paid_area: boolean;
-    /**
-     * Array of name (in two languages) of all out-of-station interchange stations.
-     */
-    osi_names: Name[];
     groups: [InterchangeGroup, ...InterchangeGroup[]];
 }
 

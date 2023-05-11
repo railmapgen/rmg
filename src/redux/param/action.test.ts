@@ -441,20 +441,50 @@ describe('Tests for param actions', () => {
             ...realStore,
             param: {
                 ...realStore.param,
-                stn_list: { ...mockStationList, test: { ...mockStationList.test, transfer: { osi_names: [] } as any } },
+                stn_list: {
+                    ...mockStationList,
+                    test: {
+                        ...mockStationList.test,
+                        transfer: {
+                            ...mockStationList.test.transfer,
+                            groups: [{ lines: [] }, { lines: [] }, { lines: [] }],
+                        },
+                    },
+                },
             },
         });
-        mockStore.dispatch(updateStationOsiName('test', 1, ['Name ZH', 'Name EN']));
+        mockStore.dispatch(updateStationOsiName('test', 2, ['Name ZH', 'Name EN']));
 
         const actions = mockStore.getActions();
         // expect(actions).toHaveLength(1);
         expect(actions.find(action => action.type === SET_STATION)).toBeDefined();
 
         const setStationAction: setStationAction = actions[0];
-        const stationOsiNames = setStationAction.station.transfer.osi_names;
-        expect(stationOsiNames).toHaveLength(2);
-        expect(stationOsiNames[0]).toEqual(['車站名', 'Stn Name']); // dummy name
-        expect(stationOsiNames[1]).toEqual(['Name ZH', 'Name EN']);
+        const stationTransferGroups = setStationAction.station.transfer.groups;
+        expect(stationTransferGroups[0].name).toBeUndefined();
+        expect(stationTransferGroups[1].name).toBeUndefined();
+        expect(stationTransferGroups[2].name).toEqual(['Name ZH', 'Name EN']);
+    });
+
+    it('Cannot add OSI name for group out of bound', () => {
+        const mockStore = createMockAppStore({
+            ...realStore,
+            param: {
+                ...realStore.param,
+                stn_list: {
+                    ...mockStationList,
+                    test: {
+                        ...mockStationList.test,
+                        transfer: { ...mockStationList.test.transfer, groups: [{ lines: [] }] },
+                    },
+                },
+            },
+        });
+        mockStore.dispatch(updateStationOsiName('test', 1, ['Name ZH', 'Name EN']));
+
+        const actions = mockStore.getActions();
+        expect(actions).toHaveLength(0);
+        expect(actions.find(action => action.type === SET_STATION)).not.toBeDefined();
     });
 
     it('Can remove interchange info as expected', () => {

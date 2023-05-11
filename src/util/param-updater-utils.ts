@@ -289,6 +289,6 @@ export const v5_10_updateInterchangeGroup = (param: Record<string, any>) => {
         }
 
         delete param.stn_list[stnId].transfer.info;
-        // delete param.stn_list[stnId].transfer.osi_names;
+        delete param.stn_list[stnId].transfer.osi_names;
     }
 };
