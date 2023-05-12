@@ -3,11 +3,12 @@ import ParamSelector from './param-selector';
 import React, { useEffect, useRef, useState } from 'react';
 import { Events, LocalStorageKey, ParamConfig } from '../../constants/constants';
 import { getParamRegistry } from '../../util/param-manager-utils';
-import { Button, HStack, IconButton, SystemStyleObject } from '@chakra-ui/react';
+import { Alert, AlertIcon, Button, HStack, IconButton, SystemStyleObject } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { MdRefresh, MdSettings } from 'react-icons/md';
+import { updateParam } from '../../util/param-updater-utils';
 
 const CHANNEL_PREFIX = 'rmg-bridge--';
 
@@ -40,6 +41,7 @@ export default function AppClipView() {
 
     const [paramRegistry, setParamRegistry] = useState<ParamConfig[]>([]);
     const [selectedParam, setSelectedParam] = useState<string>();
+    const [isError, setIsError] = useState(false);
 
     const channelRef = useRef<BroadcastChannel>();
 
@@ -65,14 +67,21 @@ export default function AppClipView() {
     const handleImport = () => {
         const paramConfigStr = window.localStorage.getItem(LocalStorageKey.PARAM_CONFIG_BY_ID + selectedParam);
         const paramStr = window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + selectedParam);
-        channelRef.current?.postMessage({
-            event: 'IMPORT',
-            meta: paramConfigStr ? JSON.parse(paramConfigStr) : null,
-            data: paramStr ? JSON.parse(paramStr) : null,
-        });
-        rmgRuntime.event(Events.APP_CLIP_VIEW_IMPORT, { parentComponent });
 
-        setSelectedParam(undefined);
+        try {
+            const updatedParam = paramStr ? updateParam(JSON.parse(paramStr)) : null;
+            channelRef.current?.postMessage({
+                event: 'IMPORT',
+                meta: paramConfigStr ? JSON.parse(paramConfigStr) : null,
+                data: updatedParam,
+            });
+            rmgRuntime.event(Events.APP_CLIP_VIEW_IMPORT, { parentComponent });
+
+            setSelectedParam(undefined);
+            setIsError(false);
+        } catch (e) {
+            setIsError(true);
+        }
     };
 
     const handleClose = () => {
@@ -82,6 +91,7 @@ export default function AppClipView() {
         rmgRuntime.event(Events.APP_CLIP_VIEW_CLOSED, { parentComponent });
 
         setSelectedParam(undefined);
+        setIsError(false);
     };
 
     const handleManage = () => {
@@ -90,6 +100,12 @@ export default function AppClipView() {
 
     return (
         <RmgPage>
+            {isError && (
+                <Alert status="error" variant="solid" size="xs" pl={3} pr={1} py={1}>
+                    <AlertIcon />
+                    {t('Project selected is invalid or corrupted.')}
+                </Alert>
+            )}
             <RmgCard sx={styles}>
                 <ParamSelector
                     paramRegistry={paramRegistry}
