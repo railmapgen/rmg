@@ -1,7 +1,7 @@
-import { useRootSelector } from '../../../../redux';
-import { CanvasType, Services } from '../../../../constants/constants';
-import StationSHMetro from '../station/station-shmetro';
-import { StationSHMetro as StationSHMetroIndoor } from '../../../indoor/station-shmetro';
+import { useRootSelector } from '../../../redux';
+import { CanvasType, Services } from '../../../constants/constants';
+import StationSHMetro from '../station-shmetro';
+import { StationSHMetro as StationSHMetroIndoor } from '../indoor/station-shmetro';
 import React from 'react';
 import { ColourHex } from '@railmapgen/rmg-palette-resources';
 

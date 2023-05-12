@@ -1,10 +1,10 @@
 import { CanvasType } from '../../constants/constants';
-import MainSHMetro, { DirectionElements } from './main/main-shmetro';
-import LoopSHMetro from './main/loop/loop-shmetro';
+import MainSHMetro, { DirectionElements } from './main-shmetro';
+import LoopSHMetro from './loop/loop-shmetro';
 import { useRootSelector } from '../../redux';
-import SvgWrapper from '../common/svg-wrapper';
+import SvgWrapper from '../svg-wrapper';
 import { memo } from 'react';
-import PujiangLineDefs from '../shmetro/pujiang-line-filter';
+import PujiangLineDefs from './pujiang-line-filter';
 
 const CANVAS_TYPE = CanvasType.RailMap;
 

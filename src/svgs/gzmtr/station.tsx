@@ -1,9 +1,10 @@
 import React from 'react';
-import StationNumber from '../../../gzmtr/station-icon/station-number';
-import { InterchangeInfo, Services } from '../../../../constants/constants';
-import { useRootSelector } from '../../../../redux';
-import LineIcon from '../../../gzmtr/line-icon/line-icon';
-import StationNameWrapper from '../../../gzmtr/station-name/station-name-wrapper';
+import StationNumber from './station-icon/station-number';
+import { ExtendedInterchangeInfo, Services, Theme } from '../../constants/constants';
+import { useRootSelector } from '../../redux';
+import LineIcon from './line-icon/line-icon';
+import StationNameWrapper from './station-name/station-name-wrapper';
+import { MonoColour } from '@railmapgen/rmg-palette-resources';
 
 interface Props {
     stnId: string;
@@ -11,7 +12,7 @@ interface Props {
     stnY: number;
 }
 
-const StationGZMTR = (props: Props) => {
+export default function Station(props: Props) {
     const { stnId, stnState, stnY } = props;
 
     const theme = useRootSelector(store => store.param.theme);
@@ -41,12 +42,19 @@ const StationGZMTR = (props: Props) => {
             <IntGroup
                 intInfos={
                     isNameShift
-                        ? (
-                              [
-                                  [theme[0], theme[1], 'var(--rmg-theme-colour)', 'var(--rmg-theme-fg)', ...lineName],
-                              ] as any[] as InterchangeInfo[]
-                          ).concat(stnInfo.transfer.info[0])
-                        : stnInfo.transfer.info[0]
+                        ? [
+                              {
+                                  theme: [
+                                      theme[0],
+                                      theme[1],
+                                      'var(--rmg-theme-colour)',
+                                      'var(--rmg-theme-fg)',
+                                  ] as unknown as Theme,
+                                  name: lineName,
+                              },
+                              ...stnInfo.transfer.groups[0].lines,
+                          ]
+                        : stnInfo.transfer.groups[0].lines
                 }
                 stnState={stnState}
                 tickRotation={tickRotation}
@@ -63,12 +71,10 @@ const StationGZMTR = (props: Props) => {
             </g>
         </>
     );
-};
-
-export default StationGZMTR;
+}
 
 interface IntGroupProps {
-    intInfos: InterchangeInfo[];
+    intInfos: ExtendedInterchangeInfo[];
     stnState: -1 | 0 | 1;
     tickRotation: 0 | 180;
 }
@@ -89,7 +95,7 @@ const IntTicks = (props: IntGroupProps & React.SVGProps<SVGGElement>) => {
                 <use
                     key={i}
                     xlinkHref="#inttick"
-                    stroke={stnState === -1 ? '#aaa' : info[2]}
+                    stroke={stnState === -1 ? '#aaa' : info.theme?.[2]}
                     transform={`translate(${-2 * (intInfos.length - 1) + 4 * i},0)rotate(${
                         tickRotation === 180 ? 180 : 0
                     })`}
@@ -107,9 +113,9 @@ const IntBoxs = (props: IntGroupProps & React.SVGProps<SVGGElement>) => {
             {intInfos.map((info, i) => (
                 <g key={i} transform={`translate(0,${i * 28 * (tickRotation === 180 ? -1 : 1)})`}>
                     <LineIcon
-                        lineName={[info[4], info[5]]}
-                        foregroundColour={info[3]}
-                        backgroundColour={info[2]}
+                        lineName={info.name}
+                        foregroundColour={info.theme?.[3] ?? MonoColour.white}
+                        backgroundColour={info.theme?.[2] ?? '#aaaaaa'}
                         passed={stnState === -1}
                     />
                 </g>

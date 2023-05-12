@@ -1,27 +1,19 @@
 import InterchangeCard from './interchange-card';
-import { InterchangeInfo } from '../../../constants/constants';
+import { ExtendedInterchangeInfo } from '../../../constants/constants';
 import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
 import { act } from 'react-dom/test-utils';
 import { render } from '../../../test-utils';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { vi } from 'vitest';
 
-const mockInterchangeInfo1: InterchangeInfo = [
-    CityCode.Hongkong,
-    'tcl',
-    '#F38B00',
-    MonoColour.white,
-    '東涌綫',
-    'Tung Chung Line',
-];
-const mockInterchangeInfo2: InterchangeInfo = [
-    CityCode.Hongkong,
-    'ael',
-    '#007078',
-    MonoColour.white,
-    '機場快綫',
-    'Airport Express',
-];
+const mockInterchangeInfo1: ExtendedInterchangeInfo = {
+    theme: [CityCode.Hongkong, 'tcl', '#F38B00', MonoColour.white],
+    name: ['東涌綫', 'Tung Chung Line'],
+};
+const mockInterchangeInfo2: ExtendedInterchangeInfo = {
+    theme: [CityCode.Hongkong, 'ael', '#007078', MonoColour.white],
+    name: ['機場快綫', 'Airport Express'],
+};
 
 const mockCallbacks = {
     onAdd: vi.fn(),
@@ -41,7 +33,7 @@ describe('InterchangeCard', () => {
 
         fireEvent.click(screen.getByRole('button', { name: 'Add interchange' }));
         expect(mockCallbacks.onAdd).toBeCalledTimes(1);
-        expect(mockCallbacks.onAdd).toBeCalledWith(['hongkong', '', '#aaaaaa', '#fff', '', '']); // empty interchange info
+        expect(mockCallbacks.onAdd).toBeCalledWith({ theme: ['hongkong', '', '#aaaaaa', '#fff'], name: ['', ''] }); // empty interchange info
     });
 
     it('Can render card with 1 interchange info as expected', () => {

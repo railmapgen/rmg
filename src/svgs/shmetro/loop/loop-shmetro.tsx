@@ -1,10 +1,10 @@
 /* eslint @typescript-eslint/no-non-null-assertion: 0 */
 import React from 'react';
-import StationSHMetro from '../station/station-shmetro';
-import { NameDirection, StationSHMetro as StationSHMetroIndoor } from '../../../indoor/station-shmetro';
-import { CanvasType, Services, ShortDirection } from '../../../../constants/constants';
-import { useRootSelector } from '../../../../redux';
-import { isColineBranch } from '../../../../redux/param/coline-action';
+import StationSHMetro from '../station-shmetro';
+import { NameDirection, StationSHMetro as StationSHMetroIndoor } from '../indoor/station-shmetro';
+import { CanvasType, Services, ShortDirection } from '../../../constants/constants';
+import { useRootSelector } from '../../../redux';
+import { isColineBranch } from '../../../redux/param/coline-action';
 import {
     get_xshares_yshares_of_loop,
     LoopStns,

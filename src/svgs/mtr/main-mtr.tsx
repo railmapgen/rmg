@@ -1,10 +1,10 @@
 import { memo, useMemo } from 'react';
 import { adjacencyList, criticalPathMethod, getStnState, getXShareMTR } from '../methods/share';
 import { leftWideFactor, rightWideFactor, StationsMTR } from '../methods/mtr';
-import { CanvasType, RMGParam } from '../../../constants/constants';
-import { useRootSelector } from '../../../redux';
-import Station from '../../mtr/station/station';
-import { getStationYShare } from '../../mtr/line-diagram-utils';
+import { CanvasType, RMGParam } from '../../constants/constants';
+import { useRootSelector } from '../../redux';
+import Station from './station/station';
+import { getStationYShare } from './line-diagram-utils';
 
 const getNamePos = (stnId: string, branches: string[][], { isStagger, isFlip }: RMGParam['namePosMTR']) => {
     if (!isStagger) return isFlip;

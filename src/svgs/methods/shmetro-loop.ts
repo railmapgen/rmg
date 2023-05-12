@@ -1,4 +1,4 @@
-import { ShortDirection, StationDict } from '../../../constants/constants';
+import { ShortDirection, StationDict } from '../../constants/constants';
 
 /**
  * Split the loopline into four sides according to left_and_right_factor and bottom_factor.

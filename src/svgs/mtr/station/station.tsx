@@ -18,18 +18,20 @@ export default function Station(props: StationProps) {
         name,
         parents,
         children,
-        transfer: { info, tick_direc, osi_names, paid_area },
+        transfer: { groups, tick_direc, paid_area },
         facility,
     } = useRootSelector(state => state.param.stn_list[stationId]);
 
-    const end: Direction | undefined = info[0]?.length
+    const end: Direction | undefined = groups[0].lines.length
         ? parents.includes('linestart')
             ? Direction.left
             : children.includes('lineend')
             ? Direction.right
             : undefined
         : undefined;
-    const isRepelled = Boolean(info[1]?.length && !end);
+
+    const hasOsi = !!groups[1]?.lines?.length;
+    const isRepelled = hasOsi && !end;
 
     const transforms = {
         link: {
@@ -44,9 +46,9 @@ export default function Station(props: StationProps) {
 
     return (
         <g data-testid="station-icon-wrapper">
-            {info[1]?.length && (
+            {hasOsi && (
                 <path
-                    d={end && info[0]?.length ? 'M0,0H41' : 'M0,0V26'}
+                    d={end && groups[0].lines.length ? 'M0,0H41' : 'M0,0V26'}
                     strokeWidth={2.69}
                     strokeDasharray={paid_area ? 0 : 2.5}
                     stroke={stationState === StationState.PASSED ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
@@ -55,21 +57,20 @@ export default function Station(props: StationProps) {
             )}
 
             <InterchangeStation
-                interchangeInfoList={info[0]}
+                interchangeInfoList={groups[0].lines}
                 direction={tick_direc === ShortDirection.right ? Direction.right : Direction.left}
                 isPassed={stationState === StationState.PASSED}
-                isReversed={!end && info[1]?.length ? !isReversed : isReversed}
+                isReversed={isRepelled ? !isReversed : isReversed}
                 repel={
                     isRepelled ? (tick_direc === ShortDirection.right ? Direction.right : Direction.left) : undefined
                 }
             />
 
-            {info[1]?.length && (
+            {hasOsi && (
                 <g transform={`translate(${transforms.osi.x},${transforms.osi.y})`}>
                     <OsiStation
-                        interchangeInfoList={info[1]}
+                        interchangeGroup={groups[1]}
                         direction={end ? end : tick_direc === ShortDirection.right ? Direction.right : Direction.left}
-                        stationName={osi_names[0]}
                         isPassed={stationState === StationState.PASSED}
                         isReversed={end ? !isReversed : isReversed}
                         isTerminal={Boolean(end)}
@@ -83,7 +84,7 @@ export default function Station(props: StationProps) {
                 facility={facility}
                 lower={isReversed}
                 align={
-                    info[0]?.length && isRepelled
+                    groups[0].lines.length && isRepelled
                         ? tick_direc === ShortDirection.left
                             ? Direction.left
                             : Direction.right

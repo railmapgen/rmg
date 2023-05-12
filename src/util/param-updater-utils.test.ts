@@ -33,6 +33,7 @@ describe('ParamUpdaterUtils', () => {
         };
         v5_10_updateInterchangeGroup(param);
 
+        // data upgraded
         expect(param.stn_list.stn0.transfer.groups[0]).toEqual({ lines: [] });
         expect(param.stn_list.stn0.transfer.groups[1]).toBeUndefined();
 
@@ -54,6 +55,14 @@ describe('ParamUpdaterUtils', () => {
                 { theme: [CityCode.Hongkong, 'ktl', '#00AF41', MonoColour.white], name: ['觀塘綫', 'Kwun Tong Line'] },
             ],
         });
+
+        // legacy fields removed
+        expect(param.stn_list.stn0.transfer.info).toBeUndefined();
+        expect(param.stn_list.stn0.transfer.osi_names).toBeUndefined();
+        expect(param.stn_list.stn1.transfer.info).toBeUndefined();
+        expect(param.stn_list.stn1.transfer.osi_names).toBeUndefined();
+        expect(param.stn_list.stn2.transfer.info).toBeUndefined();
+        expect(param.stn_list.stn2.transfer.osi_names).toBeUndefined();
     });
 
     it('v5_10_updateInterchangeGroup - post upgrade', () => {

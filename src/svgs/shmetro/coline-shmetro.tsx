@@ -1,10 +1,10 @@
 import { Fragment, useMemo } from 'react';
-import { drawLine } from '../../methods/share';
-import { calculateColine, calculateColineStations } from '../../methods/shmetro-coline';
-import { AtLeastOneOfPartial, InterchangeInfo, Services } from '../../../../constants/constants';
-import { useRootSelector } from '../../../../redux';
-import { _linePath, StationGroupProps } from '../main-shmetro';
-import StationSHMetro from '../station/station-shmetro';
+import { drawLine } from '../methods/share';
+import { calculateColine, calculateColineStations } from '../methods/shmetro-coline';
+import { AtLeastOneOfPartial, ColineColours, Services } from '../../constants/constants';
+import { useRootSelector } from '../../redux';
+import { _linePath, StationGroupProps } from './main-shmetro';
+import StationSHMetro from './station-shmetro';
 
 interface Props {
     xs: { [stnId: string]: number };
@@ -15,17 +15,17 @@ interface Props {
 interface ColineServicesPath {
     main: {
         path: string;
-        colors: InterchangeInfo[];
+        colors: ColineColours[];
     }[];
     pass: {
         path: string;
-        colors: InterchangeInfo[];
+        colors: ColineColours[];
     }[];
     service: Services;
 }
 
 type ColinePath = AtLeastOneOfPartial<Record<Services, ColineServicesPath>>;
-const defaultTheme = ['shanghai', 'sh4', '#5F259F', '#fff', '4号线', 'Line 4'] as InterchangeInfo;
+const defaultTheme = ['shanghai', 'sh4', '#5F259F', '#fff', '4号线', 'Line 4'] as ColineColours;
 
 export const ColineSHMetro = (props: Props) => {
     const { xs, servicesPresent, stnStates } = props;
@@ -292,7 +292,7 @@ const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
                 curStn: string;
                 x: number;
                 y: number;
-                color: InterchangeInfo;
+                color: ColineColours;
             }[]
         )
         // only take the coline stations in the first branch(general main line)
@@ -354,7 +354,7 @@ const ColineStationGroup = (props: StationGroupProps) => {
                 // TODO-coline: support multiple colines
                 .at(0) ?? [...theme, ...line_name],
         }),
-        {} as { [stnId: string]: InterchangeInfo }
+        {} as { [stnId: string]: ColineColours }
     );
 
     return (

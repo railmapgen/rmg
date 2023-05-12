@@ -1,6 +1,6 @@
 import { RmgCard, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import React, { useState } from 'react';
-import { ColineInfo, InterchangeInfo, Theme } from '../../../constants/constants';
+import { ColineColours, ColineInfo, Theme } from '../../../constants/constants';
 import ThemeButton from '../theme-button';
 import ColourModal from '../../modal/colour-modal/colour-modal';
 import { HStack, IconButton } from '@chakra-ui/react';
@@ -11,7 +11,7 @@ interface ColineCardProps {
     colineInfo: ColineInfo;
     routeOptions: Record<string, string>;
     onUpdateRoute?: (route: string) => void;
-    onUpdateColourInfo?: (colourInfo: InterchangeInfo) => void;
+    onUpdateColourInfo?: (colourInfo: ColineColours) => void;
     onDelete?: (colourIndex: number) => void;
 }
 

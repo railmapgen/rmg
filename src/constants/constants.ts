@@ -1,7 +1,7 @@
 import { CityCode, ColourHex, MonoColour } from '@railmapgen/rmg-palette-resources';
 
 /**
- * At least one key should exists in Partial
+ * At least one key should exist in Partial
  * https://stackoverflow.com/questions/48230773/how-to-create-a-partial-like-that-requires-a-single-property-to-be-set
  */
 export type AtLeastOneOfPartial<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
@@ -78,11 +78,11 @@ export enum Services {
 export interface ColineInfo {
     from: string;
     to: string;
-    colors: InterchangeInfo[];
+    colors: ColineColours[];
     display: boolean;
 }
 
-export type InterchangeInfo = [...Theme, ...Name];
+export type ColineColours = [...Theme, ...Name];
 
 export interface ExtendedInterchangeInfo {
     theme?: Theme;
@@ -104,17 +104,7 @@ export interface StationTransfer {
      * Flag of paid area within out-of-station interchange.
      */
     paid_area: boolean;
-    /**
-     * Array of name (in two languages) of all out-of-station interchange stations.
-     */
-    osi_names: Name[];
-    /**
-     * Array of arrays of interchange info.
-     * @property 0 - array of within-station interchange info
-     * @property remaining - arrays of out-of-station interchange info (from the nearest to the furthest station)
-     */
-    info: InterchangeInfo[][];
-    groups: InterchangeGroup[];
+    groups: [InterchangeGroup, ...InterchangeGroup[]];
 }
 
 export enum Facilities {
@@ -170,8 +160,8 @@ export interface StationInfo {
     one_line: boolean;
     /**
      * Padding between int box and station name. Default to 355 in updateParam.
-     * This is calculate from (svg_height - 200) * 1.414 where typical svg_height
-     * is 450 and station element is tilted at a 45 degree angle.
+     * This is calculated from (svg_height - 200) * 1.414 where typical svg_height
+     * is 450 and station element is tilted at a 45-degree angle.
      */
     int_padding: number;
 }

@@ -1,7 +1,7 @@
 import { act, screen } from '@testing-library/react';
 import Station from './station';
 import { render } from '../../../test-utils';
-import { Direction, InterchangeInfo, StationInfo, StationState } from '../../../constants/constants';
+import { Direction, ExtendedInterchangeInfo, StationInfo, StationState } from '../../../constants/constants';
 import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
 import { createMockStoreWithMockStations } from '../../../setupTests';
 
@@ -11,15 +11,21 @@ import { createMockStoreWithMockStations } from '../../../setupTests';
 
 (SVGElement.prototype as any).getBBox = () => ({ x: -40, width: 80 });
 
-const mockInterchangeInfo: InterchangeInfo = [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white, '', ''];
+const mockInterchangeInfo: ExtendedInterchangeInfo = {
+    theme: [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white],
+    name: ['', ''],
+};
+
 const getMockStationInfo = (within: number, outStation: number, end?: Direction): StationInfo => {
     return {
         name: ['ZH name', 'EN name'],
         parents: end === Direction.left ? ['linestart'] : ['stn-par'],
         children: end === Direction.right ? ['lineend'] : ['stn-child'],
         transfer: {
-            info: [Array(within).fill(mockInterchangeInfo), Array(outStation).fill(mockInterchangeInfo)],
-            osi_names: [['ZH OSI', 'EN OSI']],
+            groups: [
+                { lines: Array(within).fill(mockInterchangeInfo) },
+                ...[{ lines: Array(outStation).fill(mockInterchangeInfo), name: ['ZH OSI', 'EN OSI'] }],
+            ],
         },
     } as StationInfo;
 };

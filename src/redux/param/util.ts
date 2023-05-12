@@ -48,10 +48,8 @@ export const initStationInfo = (id: string): StationInfo => ({
     branch: { left: [], right: [] },
     transfer: {
         groups: [{ lines: [] }],
-        info: [[]],
         tick_direc: ShortDirection.right,
         paid_area: true,
-        osi_names: [],
     },
     facility: Facilities.none,
     loop_pivot: false,

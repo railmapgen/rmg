@@ -1,6 +1,6 @@
-import { useRootSelector } from '../../../../redux';
-import { isColineBranch } from '../../../../redux/param/coline-action';
-import { CanvasType } from '../../../../constants/constants';
+import { useRootSelector } from '../../../redux';
+import { isColineBranch } from '../../../redux/param/coline-action';
+import { CanvasType } from '../../../constants/constants';
 
 export const LoopColine = (props: {
     edges: [number, number, number, number];

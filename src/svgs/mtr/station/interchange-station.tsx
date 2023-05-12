@@ -1,10 +1,10 @@
 import React from 'react';
-import { Direction, InterchangeInfo, Position } from '../../../constants/constants';
+import { Direction, ExtendedInterchangeInfo, Position } from '../../../constants/constants';
 import InterchangeTick from './interchange-tick';
 import StationIcon from './station-icon';
 
 interface InterchangeStationProps {
-    interchangeInfoList: InterchangeInfo[];
+    interchangeInfoList: ExtendedInterchangeInfo[];
     direction?: Direction;
     isPassed?: boolean;
     isReversed?: boolean;

@@ -1,6 +1,6 @@
 import { ColourHex } from '@railmapgen/rmg-palette-resources';
-import { InterchangeInfo, Name, Facilities } from '../../../../constants/constants';
-import { useRootSelector } from '../../../../redux';
+import { ExtendedInterchangeInfo, Facilities, InterchangeGroup, Name } from '../../constants/constants';
+import { useRootSelector } from '../../redux';
 import { forwardRef, memo, Ref, SVGProps, useEffect, useMemo, useRef, useState } from 'react';
 
 interface Props {
@@ -35,7 +35,7 @@ const StationSHMetro = (props: Props) => {
         // param.info_panel_type === 'sh' or others (from other styles)
         if (stnInfo.services.length === 3) stationIconStyle = 'direct_sh';
         else if (stnInfo.services.length === 2) stationIconStyle = 'express_sh';
-        else if ([...stnInfo.transfer.info[0], ...(stnInfo.transfer.info[1] || [])].length > 0)
+        else if ([...stnInfo.transfer.groups[0].lines, ...(stnInfo.transfer.groups[1]?.lines || [])].length > 0)
             stationIconStyle = 'int2_sh';
         else stationIconStyle = 'stn_sh';
         stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
@@ -59,7 +59,7 @@ const StationSHMetro = (props: Props) => {
             <g transform={`translate(${dx},${dy})rotate(${dr})`}>
                 <StationNameGElement
                     name={stnInfo.name}
-                    infos={stnInfo.transfer.info}
+                    groups={stnInfo.transfer.groups}
                     stnState={stnState}
                     direction={direction}
                     facility={stnInfo.facility}
@@ -77,7 +77,7 @@ export default StationSHMetro;
 
 interface StationNameGElementProps {
     name: Name;
-    infos: InterchangeInfo[][];
+    groups: InterchangeGroup[];
     stnState: -1 | 0 | 1;
     direction: 'l' | 'r';
     facility: Facilities;
@@ -87,7 +87,7 @@ interface StationNameGElementProps {
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {
-    const { name, infos, stnState, direction, facility, bank, oneLine, intPadding } = props;
+    const { name, groups, stnState, direction, facility, bank, oneLine, intPadding } = props;
 
     // legacy ref to get the exact station name width
     const stnNameEl = useRef<SVGGElement | null>(null);
@@ -103,12 +103,12 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
     const intEl = useRef<SVGGElement | null>(null);
     const [intWidth, setIntWidth] = useState(0);
-    useEffect(() => setIntWidth(intEl.current?.getBBox().width ?? 0), [...JSON.stringify(infos)]);
+    useEffect(() => setIntWidth(intEl.current?.getBBox().width ?? 0), [JSON.stringify(groups)]);
     const intDx = intPadding - intWidth;
 
     return (
         <>
-            {infos.flat().length > 0 && (
+            {groups.map(group => group.lines).flat().length > 0 && (
                 <>
                     <line
                         x1={(lineDx + mainDx) * directionPolarity}
@@ -118,7 +118,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                     />
                     <IntBoxGroup
                         ref={intEl}
-                        intInfos={infos}
+                        groups={groups}
                         direction={direction}
                         transform={`translate(${intDx * directionPolarity},-10.75)`}
                     />
@@ -140,16 +140,16 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 />
 
                 {/* this is out-of-station text displayed above the IntBoxGroup */}
-                {infos[1]?.length > 0 && (
+                {groups[1]?.lines?.length && (
                     <g transform={`translate(${(intDx + intWidth / 2) * directionPolarity},-30)`}>
-                        <OSIText osiInfos={infos[1]} />
+                        <OSIText osiInfos={groups[1].lines} />
                     </g>
                 )}
 
                 {/* deal out-of-system here as it's dx is fixed and has nothing to do with IntBoxGroup */}
-                {[...(infos[2] || [])].length > 0 && (
+                {groups[2]?.lines?.length && (
                     <g transform={`translate(${(intPadding + 5) * directionPolarity},0)`}>
-                        <OSysIText osysiInfos={infos[2]} direction={props.direction} />
+                        <OSysIText osysiInfos={groups[2].lines} direction={props.direction} />
                     </g>
                 )}
             </g>
@@ -229,18 +229,18 @@ const CurrentStationText = () => {
 };
 
 const IntBoxGroup = forwardRef(function IntBoxGroup(
-    props: { intInfos: InterchangeInfo[][]; direction: 'l' | 'r' } & SVGProps<SVGGElement>,
+    props: { groups: InterchangeGroup[]; direction: 'l' | 'r' } & SVGProps<SVGGElement>,
     ref: Ref<SVGGElement>
 ) {
-    const { intInfos, direction, ...others } = props;
+    const { groups, direction, ...others } = props;
 
     // also known as non out-of-system transfers
-    const boxInfos = [
-        ...intInfos[0],
-        ...(intInfos[1] || []),
-        // some dirty tricks here as shmetro shows maglev icon even it is a out-of-system transfer
+    const boxInfos: ExtendedInterchangeInfo[] = [
+        ...groups[0].lines,
+        ...(groups[1]?.lines || []),
+        // some dirty tricks here as shmetro shows maglev icon even it is an out-of-system transfer
         // and display a maglev icon is much easier in boxInfos than in OSysIText
-        ...(intInfos[2]?.filter(info => Boolean(info[4].match(/^磁(悬)*浮/))) || []),
+        ...(groups[2]?.lines?.filter(info => Boolean(info.name[0].match(/^磁(悬)*浮/))) || []),
     ];
 
     let dx = 0; // update in every boxInfos
@@ -248,11 +248,11 @@ const IntBoxGroup = forwardRef(function IntBoxGroup(
     return (
         <g ref={ref} fontSize={14} textAnchor="middle" {...others}>
             {boxInfos.map((info, i) => {
-                const isLineNumber = Boolean(info[4].match(/^\w+(号)?线/));
-                const isMaglev = Boolean(info[4].match(/^磁(悬)*浮/));
+                const isLineNumber = Boolean(info.name[0].match(/^\w+(号)?线/));
+                const isMaglev = Boolean(info.name[0].match(/^磁(悬)*浮/));
 
                 if (props.direction === 'r') {
-                    dx -= (isLineNumber || isMaglev ? 20 : info[4].length * 14 + 12) + (i === 0 ? 0 : 5);
+                    dx -= (isLineNumber || isMaglev ? 20 : info.name[0].length * 14 + 12) + (i === 0 ? 0 : 5);
                 }
 
                 let el: JSX.Element;
@@ -277,7 +277,7 @@ const IntBoxGroup = forwardRef(function IntBoxGroup(
                 }
 
                 if (props.direction === 'l') {
-                    dx += isLineNumber || isMaglev ? 20 + 5 : info[4].length * 14 + 12 + 5;
+                    dx += isLineNumber || isMaglev ? 20 + 5 : info.name[0].length * 14 + 12 + 5;
                 }
                 return el;
             })}
@@ -286,50 +286,55 @@ const IntBoxGroup = forwardRef(function IntBoxGroup(
 });
 
 const IntBoxMaglev = memo(
-    function IntBoxMaglev(props: { info: InterchangeInfo }) {
+    function IntBoxMaglev(props: { info: ExtendedInterchangeInfo }) {
         return (
             <>
-                <use xlinkHref="#intbox_maglev" fill={props.info[2]} stroke={props.info[2]} />
+                <use xlinkHref="#intbox_maglev" fill={props.info.theme?.[2]} stroke={props.info.theme?.[2]} />
             </>
         );
     },
-    (prevProps, nextProps) => prevProps.info.toString() === nextProps.info.toString()
+    (prevProps, nextProps) => JSON.stringify(prevProps.info) === JSON.stringify(nextProps.info)
 );
 
 const IntBoxNumber = memo(
-    function IntBoxNumber(props: { info: InterchangeInfo }) {
+    function IntBoxNumber(props: { info: ExtendedInterchangeInfo }) {
         return (
             <>
-                <use xlinkHref="#intbox_number" fill={props.info[2]} />
-                <text x={10} className="rmg-name__zh" fill={props.info[3]} dominantBaseline="central">
+                <use xlinkHref="#intbox_number" fill={props.info.theme?.[2]} />
+                <text x={10} className="rmg-name__zh" fill={props.info.theme?.[3]} dominantBaseline="central">
                     {/* // line starts with numbers */}
-                    {props.info[4].match(/(\d*)\w+/)?.[0]}
+                    {props.info.name[0].match(/(\d*)\w+/)?.[0]}
                 </text>
             </>
         );
     },
-    (prevProps, nextProps) => prevProps.info.toString() === nextProps.info.toString()
+    (prevProps, nextProps) => JSON.stringify(prevProps.info) === JSON.stringify(nextProps.info)
 );
 
 const IntBoxLetter = memo(
-    function IntBoxLetter(props: { info: InterchangeInfo }) {
+    function IntBoxLetter(props: { info: ExtendedInterchangeInfo }) {
         // box width: 16 * number of characters + 12
-        const textCount = props.info[4].split('\\')[0].length;
+        const textCount = props.info.name[0].split('\\')[0].length;
         return (
             <>
-                <rect height={22} width={textCount * 14 + 12} y={-11} fill={props.info[2]} />
-                <text x={textCount * 7 + 6} className="rmg-name__zh" fill={props.info[3]} dominantBaseline="central">
-                    {props.info[4].split('\\')[0]}
+                <rect height={22} width={textCount * 14 + 12} y={-11} fill={props.info.theme?.[2]} />
+                <text
+                    x={textCount * 7 + 6}
+                    className="rmg-name__zh"
+                    fill={props.info.theme?.[3]}
+                    dominantBaseline="central"
+                >
+                    {props.info.name[0].split('\\')[0]}
                 </text>
             </>
         );
     },
-    (prevProps, nextProps) => prevProps.info.toString() === nextProps.info.toString()
+    (prevProps, nextProps) => JSON.stringify(prevProps.info) === JSON.stringify(nextProps.info)
 );
 
-const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
+const OSIText = (props: { osiInfos: ExtendedInterchangeInfo[] }) => {
     // get the all names from the out of station interchanges
-    const lineNames = props.osiInfos.map(info => info[4]).join('，');
+    const lineNames = props.osiInfos.map(info => info.name[0]).join('，');
     return useMemo(
         () => (
             <g textAnchor="middle" fontSize="50%">
@@ -348,10 +353,10 @@ const OSIText = (props: { osiInfos: InterchangeInfo[] }) => {
     );
 };
 
-const OSysIText = (props: { osysiInfos: InterchangeInfo[]; direction: 'l' | 'r' }) => {
+const OSysIText = (props: { osysiInfos: ExtendedInterchangeInfo[]; direction: 'l' | 'r' }) => {
     // get the all names from out of system transfers
-    const lineNames = props.osysiInfos.map(info => info[4]).join('，');
-    const lineNamesEn = props.osysiInfos.map(info => info[5]).join(', ');
+    const lineNames = props.osysiInfos.map(info => info.name[0]).join('，');
+    const lineNamesEn = props.osysiInfos.map(info => info.name[1]).join(', ');
 
     return useMemo(
         () => (
@@ -364,6 +369,6 @@ const OSysIText = (props: { osysiInfos: InterchangeInfo[]; direction: 'l' | 'r' 
                 </text>
             </g>
         ),
-        [props.osysiInfos.toString(), props.direction]
+        [JSON.stringify(props.osysiInfos), props.direction]
     );
 };

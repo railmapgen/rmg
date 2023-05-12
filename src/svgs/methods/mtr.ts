@@ -1,11 +1,11 @@
 import { Stations } from './share';
-import { StationDict, StationInfo } from '../../../constants/constants';
-import { getSidingPath } from '../../mtr/line-diagram-utils';
+import { StationDict, StationInfo } from '../../constants/constants';
+import { getSidingPath } from '../mtr/line-diagram-utils';
 
 export const leftWideFactor = (stnList: StationDict, stnId: string) => {
     let res = 0;
     const { transfer } = stnList[stnId];
-    const ls = transfer.info.map(val => val.length);
+    const ls = transfer.groups.map(val => val.lines.length);
     if (transfer.tick_direc === 'l') {
         // int3 or above
         if (!ls[1] && ls[0] > 1) res += 0.4;
@@ -26,7 +26,7 @@ export const leftWideFactor = (stnList: StationDict, stnId: string) => {
 export const rightWideFactor = (stnList: StationDict, stnId: string) => {
     let res = 0;
     const { transfer } = stnList[stnId];
-    const ls = transfer.info.map(val => val.length);
+    const ls = transfer.groups.map(val => val.lines.length);
     if (transfer.tick_direc === 'r') {
         // int3 or above
         if (!ls[1] && ls[0] > 1) res += 0.4;

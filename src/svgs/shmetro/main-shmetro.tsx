@@ -1,8 +1,8 @@
 import { adjacencyList, criticalPathMethod, drawLine, getStnState, getXShareMTR } from '../methods/share';
-import StationSHMetro from './station/station-shmetro';
-import ColineSHMetro from './coline/coline-shmetro';
-import { AtLeastOneOfPartial, Services, StationDict } from '../../../constants/constants';
-import { useRootSelector } from '../../../redux';
+import StationSHMetro from './station-shmetro';
+import ColineSHMetro from './coline-shmetro';
+import { AtLeastOneOfPartial, Services, StationDict } from '../../constants/constants';
+import { useRootSelector } from '../../redux';
 import { useMemo } from 'react';
 
 interface servicesPath {

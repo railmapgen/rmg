@@ -9,6 +9,7 @@ import { HStack } from '@chakra-ui/react';
 import { setIsShareTrackEnabled, setSelectedStation, setSidePanelMode } from '../../redux/app/app-slice';
 import { getRowSpanForColine } from '../../redux/param/coline-action';
 import GzmtrStationCode from './gzmtr-station-code';
+import { MonoColour } from '@railmapgen/rmg-palette-resources';
 
 interface StationAgGridProps {
     branchIndex: number;
@@ -67,9 +68,18 @@ export default function StationAgGrid(props: StationAgGridProps) {
                 field: 'transfer',
                 cellRenderer: ({ value }: { value: StationTransfer }) => (
                     <HStack>
-                        {value.info.flat().map((it, i) => (
-                            <RmgLineBadge key={i} name={[it[4], it[5]]} bg={it[2]} fg={it[3]} showShortName />
-                        ))}
+                        {value.groups
+                            .map(group => group.lines)
+                            .flat()
+                            .map((it, i) => (
+                                <RmgLineBadge
+                                    key={i}
+                                    name={it.name}
+                                    bg={it.theme?.[2] ?? '#aaaaaa'}
+                                    fg={it.theme?.[3] ?? MonoColour.white}
+                                    showShortName
+                                />
+                            ))}
                     </HStack>
                 ),
             },
