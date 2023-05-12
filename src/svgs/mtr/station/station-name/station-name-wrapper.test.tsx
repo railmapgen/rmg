@@ -1,5 +1,5 @@
 import StationNameWrapper, { NAME_FULL_HEIGHT } from './station-name-wrapper';
-import { Facilities, StationState } from '../../../../constants/constants';
+import { StationState } from '../../../../constants/constants';
 import { render } from '../../../../test-utils';
 import { vi } from 'vitest';
 
@@ -25,7 +25,7 @@ describe('StationNameWrapper', () => {
                 <StationNameWrapper
                     stationName={['迪士尼', 'Disneyland Resort']}
                     stationState={StationState.CURRENT}
-                    facility={Facilities.disney}
+                    facility="disney"
                 />
             </svg>
         );

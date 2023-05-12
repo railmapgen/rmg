@@ -19,7 +19,7 @@ const NAME_EN_TOP = -8;
  */
 const NAME_EN_HEIGHT = 13.21875;
 /**
- * Difference of `y`s of station's Chinese name and English name (1 line). (This number should used as the `dy` of the English `text` element after Chinese `text` elements. )
+ * Difference of `y`s of station's Chinese name and English name (1 line). (This number should use as the `dy` of the English `text` element after Chinese `text` elements. )
  */
 const NAME_ZH_EN_GAP = 17;
 /**
@@ -74,7 +74,7 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
             x:
                 bBox.x -
                 3 +
-                (facility === Facilities.none
+                (facility === ''
                     ? 0
                     : align
                     ? align === Direction.right
@@ -82,7 +82,7 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
                         : 0
                     : (NAME_FULL_HEIGHT + 5) / 2 - 3 - NAME_FULL_HEIGHT),
             y: NAME_ZH_TOP - 1,
-            width: bBox.width + 6 + (facility === Facilities.none ? 0 : NAME_FULL_HEIGHT + 3),
+            width: bBox.width + 6 + (facility === '' ? 0 : NAME_FULL_HEIGHT + 3),
             height: NAME_FULL_HEIGHT + 2 + 11 * (nameEnRows - 1),
         },
         use: {
@@ -95,7 +95,7 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
         },
         StationName: {
             x:
-                facility === Facilities.none
+                facility === ''
                     ? 0
                     : align
                     ? align === Direction.right
@@ -119,7 +119,7 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
                     />
                 )}
 
-                {facility !== Facilities.none && (
+                {facility !== '' && (
                     <use
                         xlinkHref={`#${facility}`}
                         fill={stationState === StationState.PASSED ? 'var(--rmg-grey)' : 'var(--rmg-black)'}

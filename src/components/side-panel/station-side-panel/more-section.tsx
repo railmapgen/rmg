@@ -4,11 +4,11 @@ import { useRootDispatch, useRootSelector } from '../../../redux';
 import { Facilities, RmgStyle, Services } from '../../../constants/constants';
 import {
     updateStationFacility,
-    updateStationLoopPivot,
-    updateStationServices,
-    updateStationOneLine,
     updateStationIntPadding,
     updateStationIntPaddingToAll,
+    updateStationLoopPivot,
+    updateStationOneLine,
+    updateStationServices,
 } from '../../../redux/param/action';
 import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
@@ -31,19 +31,21 @@ export default function MoreSection() {
         };
     });
 
-    const mtrFacilityOptions = {
-        [Facilities.none]: t('StationSidePanel.more.none'),
-        [Facilities.airport]: t('StationSidePanel.more.airport'),
-        [Facilities.hsr]: t('StationSidePanel.more.hsr'),
-        [Facilities.disney]: t('StationSidePanel.more.disney'),
+    const facilityOptions: Record<Facilities, string> = {
+        '': t('None'),
+        airport: t('Airport'),
+        hsr: t('High speed rail'),
+        railway: t('National rail'),
+        disney: t('Disneyland resort'),
+        np360: t('Ngong Ping 360'),
     };
 
-    const shmetroFacilityOptions = {
-        [Facilities.none]: t('StationSidePanel.more.none'),
-        [Facilities.airport]: t('StationSidePanel.more.airport'),
-        [Facilities.railway]: t('StationSidePanel.more.railway'),
-        [Facilities.disney]: t('StationSidePanel.more.disney'),
-    };
+    const mtrFacilityOptions = Object.fromEntries(
+        Object.entries(facilityOptions).filter(([f]) => !['railway'].includes(f))
+    );
+    const shmetroFacilityOptions = Object.fromEntries(
+        Object.entries(facilityOptions).filter(([f]) => !['np360'].includes(f))
+    );
 
     const fields: RmgFieldsField[] = [
         {

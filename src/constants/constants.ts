@@ -107,13 +107,8 @@ export interface StationTransfer {
     groups: [InterchangeGroup, ...InterchangeGroup[]];
 }
 
-export enum Facilities {
-    airport = 'airport',
-    disney = 'disney',
-    hsr = 'hsr',
-    railway = 'railway',
-    none = '',
-}
+const FACILITIES = ['', 'airport', 'disney', 'hsr', 'railway', 'np360'] as const;
+export type Facilities = (typeof FACILITIES)[number];
 
 export interface StationInfo {
     title?: string;

@@ -1,5 +1,4 @@
 import {
-    Facilities,
     Name,
     PanelTypeGZMTR,
     PanelTypeShmetro,
@@ -51,7 +50,7 @@ export const initStationInfo = (id: string): StationInfo => ({
         tick_direc: ShortDirection.right,
         paid_area: true,
     },
-    facility: Facilities.none,
+    facility: '',
     loop_pivot: false,
     one_line: true,
     int_padding: 355,

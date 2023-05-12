@@ -96,7 +96,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     const directionPolarity = direction === 'l' ? 1 : -1;
 
     // main elements icon's dx will change if there is a facility icon or not
-    const mainDx = facility !== Facilities.none ? 30 : 0;
+    const mainDx = facility !== '' ? 30 : 0;
 
     // interchange will have a line under the name, and should be stretched when placed horizontal in loop
     const lineDx = bank ? -12 : 0;
@@ -125,7 +125,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 </>
             )}
 
-            {facility !== Facilities.none && <use xlinkHref={'#' + facility} x={10 * directionPolarity} y={-30} />}
+            {facility !== '' && <use xlinkHref={'#' + facility} x={10 * directionPolarity} y={-30} />}
 
             <g
                 textAnchor={direction === 'l' ? 'start' : 'end'}
