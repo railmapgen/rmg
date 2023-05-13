@@ -107,8 +107,15 @@ export interface StationTransfer {
     groups: [InterchangeGroup, ...InterchangeGroup[]];
 }
 
-const FACILITIES = ['', 'airport', 'disney', 'hsr', 'railway', 'np360'] as const;
-export type Facilities = (typeof FACILITIES)[number];
+export const FACILITIES = {
+    '': 'None',
+    airport: 'Airport',
+    hsr: 'High speed rail',
+    railway: 'National rail',
+    disney: 'Disneyland resort',
+    np360: 'Ngong Ping 360',
+};
+export type Facilities = keyof typeof FACILITIES;
 
 export interface StationInfo {
     title?: string;

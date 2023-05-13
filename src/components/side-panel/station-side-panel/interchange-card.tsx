@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, HStack, IconButton, Text } from '@chakra-ui/react';
-import { ExtendedInterchangeInfo } from '../../../constants/constants';
+import { ExtendedInterchangeInfo, Facilities, FACILITIES, RmgStyle } from '../../../constants/constants';
 import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
 import ColourModal from '../../modal/colour-modal/colour-modal';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +24,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
 
-    const { theme, stn_list: stationList } = useRootSelector(state => state.param);
+    const { style, theme, stn_list: stationList } = useRootSelector(state => state.param);
 
     const usedNameList = Object.values(stationList).reduce<[string[], string[]]>(
         (acc, cur) => {
@@ -37,12 +37,17 @@ export default function InterchangeCard(props: InterchangeCardProps) {
         [[], []]
     );
 
+    const facilityOptions = Object.fromEntries(
+        Object.entries(FACILITIES)
+            .filter(([p]) => !['railway'].includes(p))
+            .map(([f, name]) => [f, t(name)])
+    );
+
     const interchangeFields: RmgFieldsField[][] = interchangeList.map((it, i) => [
         {
             type: 'input',
             label: t('Chinese name'),
             value: it.name[0],
-            minW: '80px',
             onChange: val => onUpdate?.(i, { ...it, name: [val, it.name[1]] }),
             optionList: usedNameList[0],
         },
@@ -50,9 +55,16 @@ export default function InterchangeCard(props: InterchangeCardProps) {
             type: 'input',
             label: t('English name'),
             value: it.name[1],
-            minW: '80px',
             onChange: val => onUpdate?.(i, { ...it, name: [it.name[0], val] }),
             optionList: usedNameList[1],
+        },
+        {
+            type: 'select',
+            label: t('Line icon'),
+            value: it.facility,
+            options: facilityOptions,
+            onChange: val => onUpdate?.(i, { ...it, facility: val as Facilities }),
+            hidden: ![RmgStyle.MTR].includes(style),
         },
     ]);
 

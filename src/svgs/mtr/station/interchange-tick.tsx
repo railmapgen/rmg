@@ -1,19 +1,6 @@
 import React, { memo } from 'react';
 import { Direction, ExtendedInterchangeInfo, Position } from '../../../constants/constants';
 
-const getRotation = (position: Position): number => {
-    switch (position) {
-        case Position.UP:
-            return 180;
-        case Position.DOWN:
-            return 0;
-        case Position.LEFT:
-            return 90;
-        case Position.RIGHT:
-            return -90;
-    }
-};
-
 interface InterchangeTickProps {
     interchangeInfo: ExtendedInterchangeInfo;
     isPassed?: boolean;
@@ -23,44 +10,79 @@ interface InterchangeTickProps {
 }
 
 function InterchangeTick(props: InterchangeTickProps) {
-    const { interchangeInfo, isPassed, position, repel, repelOffset } = props;
+    const {
+        interchangeInfo: { theme, name, facility },
+        isPassed,
+        position,
+        repel,
+        repelOffset,
+    } = props;
 
-    const zhNameParts = interchangeInfo.name[0].split('\\');
-    const enNameParts = interchangeInfo.name[1].split('\\');
+    const zhNameParts = name[0].split('\\');
+    const enNameParts = name[1].split('\\');
+    const extraHeights = 10 * (zhNameParts.length - 1) + 7 * (enNameParts.length - 1);
+    const repelDX = (repel === Direction.left ? -1 : repel === Direction.right ? 1 : 0) * (repelOffset ?? 3);
 
     const textAnchor =
         position === Position.LEFT || repel === Direction.left
             ? 'end'
             : position === Position.RIGHT || repel === Direction.right
             ? 'start'
+            : facility
+            ? 'start'
             : 'middle';
 
     const transforms = {
-        path: {
-            rotate: getRotation(position),
+        [Position.LEFT]: {
+            path: { rotate: 90 },
+            use: { x: -32, y: -8 },
+            g: {
+                x: (facility ? -42 : -24) + repelDX,
+                y: 6 - (20 + extraHeights - 1) / 2,
+            },
         },
-        g: {
-            x:
-                (position === Position.LEFT ? -24 : position === Position.RIGHT ? 24 : 0) +
-                (repel === Direction.left ? -1 : repel === Direction.right ? 1 : 0) * (repelOffset ?? 3),
-            y:
-                position === Position.UP
-                    ? -37 - 10 * (zhNameParts.length - 1) - 7 * (enNameParts.length - 1)
-                    : position === Position.DOWN
-                    ? 31
-                    : 6 - (20 + 10 * (zhNameParts.length - 1) + 7 * (enNameParts.length - 1) - 1) / 2,
+        [Position.RIGHT]: {
+            path: { rotate: -90 },
+            use: { x: 32, y: -8 },
+            g: {
+                x: (facility ? 42 : 24) + repelDX,
+                y: 6 - (20 + extraHeights - 1) / 2,
+            },
         },
-    };
+        [Position.UP]: {
+            path: { rotate: 180 },
+            use: { x: 0, y: -41 },
+            g: {
+                x: (facility ? (repel === Direction.left ? -14 : repel === Direction.right ? 14 : 10) : 0) + repelDX,
+                y: -36 - extraHeights,
+            },
+        },
+        [Position.DOWN]: {
+            path: { rotate: 0 },
+            use: { x: 0, y: 26 },
+            g: {
+                x: (facility ? (repel === Direction.left ? -14 : repel === Direction.right ? 14 : 10) : 0) + repelDX,
+                y: 31,
+            },
+        },
+    }[position];
 
     return (
         <>
             <path
                 d="M0,0v17"
                 strokeLinecap="round"
-                stroke={isPassed ? 'var(--rmg-grey)' : interchangeInfo.theme?.[2]}
+                stroke={isPassed ? 'var(--rmg-grey)' : theme?.[2]}
                 strokeWidth={8}
                 transform={`rotate(${transforms.path.rotate})`}
             />
+            {facility && (
+                <use
+                    xlinkHref={'#' + facility}
+                    fill={isPassed ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
+                    transform={`translate(${transforms.use.x},${transforms.use.y})scale(0.45)`}
+                />
+            )}
             <g
                 textAnchor={textAnchor}
                 transform={`translate(${transforms.g.x},${transforms.g.y})`}

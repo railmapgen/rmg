@@ -10,7 +10,7 @@ import StationSidePanelFooter from './station-side-panel/station-side-panel-foot
 import BranchSidePanel from './branch-side-panel/branch-side-panel';
 import { useTranslation } from 'react-i18next';
 
-const SIDE_PANEL_WIDTH = 375;
+const SIDE_PANEL_WIDTH = 410;
 
 export default function SidePanel() {
     const { t } = useTranslation();

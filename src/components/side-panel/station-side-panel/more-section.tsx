@@ -1,7 +1,7 @@
 import { Box, Heading } from '@chakra-ui/react';
 import React from 'react';
 import { useRootDispatch, useRootSelector } from '../../../redux';
-import { Facilities, RmgStyle, Services } from '../../../constants/constants';
+import { FACILITIES, Facilities, RmgStyle, Services } from '../../../constants/constants';
 import {
     updateStationFacility,
     updateStationIntPadding,
@@ -31,20 +31,15 @@ export default function MoreSection() {
         };
     });
 
-    const facilityOptions: Record<Facilities, string> = {
-        '': t('None'),
-        airport: t('Airport'),
-        hsr: t('High speed rail'),
-        railway: t('National rail'),
-        disney: t('Disneyland resort'),
-        np360: t('Ngong Ping 360'),
-    };
-
     const mtrFacilityOptions = Object.fromEntries(
-        Object.entries(facilityOptions).filter(([f]) => !['railway'].includes(f))
+        Object.entries(FACILITIES)
+            .filter(([f]) => !['railway'].includes(f))
+            .map(([f, name]) => [f, t(name)])
     );
     const shmetroFacilityOptions = Object.fromEntries(
-        Object.entries(facilityOptions).filter(([f]) => !['np360'].includes(f))
+        Object.entries(FACILITIES)
+            .filter(([f]) => !['np360'].includes(f))
+            .map(([f, name]) => [f, t(name)])
     );
 
     const fields: RmgFieldsField[] = [
