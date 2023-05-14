@@ -229,18 +229,20 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
         .join('，');
     const lineNamesEn = [
         'Line '.concat(
+            // contact number lines to Line 1,2,3...
             intInfos
-                .filter(intInfo => intInfo.name[1].match(/^(L|l)ine$/))
+                .filter(intInfo => /^(L|l)ine \d+$/.test(intInfo.name[1]))
                 .map(intInfo => intInfo.name[1].replace('Line', '').replace('line', '').trim())
                 .join(',')
         ),
+        // and then add text lines without any change
         intInfos
-            .filter(intInfo => !intInfo.name[1].match(/^(L|l)ine$/))
+            .filter(intInfo => !/^(L|l)ine \d+$/.test(intInfo.name[1]))
             .map(intInfo => intInfo.name[1])
-            .join('，'),
+            .join(', '),
     ]
         .filter(name => name && name !== 'Line ')
-        .join(',');
+        .join(', ');
 
     // for services contains three level (normal, express, direct)
     // additional length is required on transfer arrow otherwise
