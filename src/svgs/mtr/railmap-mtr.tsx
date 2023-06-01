@@ -23,7 +23,7 @@ export default function RailMapMTR() {
         >
             <DefsMTR />
 
-            <StripMTR stripPc={90} />
+            <StripMTR />
             <MainMTR />
         </SvgWrapper>
     );

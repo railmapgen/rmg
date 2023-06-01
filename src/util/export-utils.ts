@@ -148,8 +148,6 @@ export const test = async (svgEl: SVGSVGElement, scale: number, isWait: boolean)
 
     // bypass Chrome min font size (to be improved)
 
-    svgEl.querySelectorAll('.rmg-name__en.rmg-name__mtr--station').forEach(el => el.setAttribute('font-size', '11px'));
-
     svgEl
         .querySelectorAll('.rmg-name__en.rmg-name__gzmtr--next2-dest')
         .forEach(el => el.setAttribute('font-size', '8.5px'));

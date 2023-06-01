@@ -39,9 +39,6 @@
 .Name.Current {fill: #fff;}
 .Name.Future {fill: var(--rmg-black);}
 
-.rmg-name__en.rmg-name__mtr--station {font-size: 11px;}
-.rmg-name__zh.rmg-name__mtr--station {font-size: 18px;}
-
 rect#current_bg {
     fill: var(--rmg-black);
 }

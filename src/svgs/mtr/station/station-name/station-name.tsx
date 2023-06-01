@@ -36,14 +36,16 @@ export default memo(
             }
         };
 
-        const getDy = (index: number) => 17 + 11 * index;
+        const getDy = (index: number) => 16 + 10 * index;
 
         return (
             <g ref={nameEl} textAnchor={getTextAnchor(align)}>
-                <text className="rmg-name__zh rmg-name__mtr--station">{stnName[0]}</text>
+                <text className="rmg-name__zh" fontSize={18} transform="scale(1,0.97)">
+                    {stnName[0]}
+                </text>
 
                 {stnName[1].split('\\').map((txt, i) => (
-                    <text key={i} className="rmg-name__en rmg-name__mtr--station" dy={getDy(i)}>
+                    <text key={i} className="rmg-name__en" fontSize={10} dy={getDy(i)}>
                         {txt}
                     </text>
                 ))}

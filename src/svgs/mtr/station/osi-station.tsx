@@ -75,7 +75,7 @@ export default function OsiStation(props: OsiStationProps) {
                     {name?.[0]}
                 </text>
                 {name?.[1]?.split('\\')?.map((txt, i) => (
-                    <text key={i} className="rmg-name__en" fontSize={9} dy={12 + 10 * i}>
+                    <text key={i} className="rmg-name__en" fontSize={8.5} dy={13 + 10 * i}>
                         {txt}
                     </text>
                 ))}
