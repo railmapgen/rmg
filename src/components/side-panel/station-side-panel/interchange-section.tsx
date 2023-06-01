@@ -50,7 +50,7 @@ export default function InterchangeSection() {
             label: t('Paid area'),
             isChecked: transfer.paid_area,
             onChange: checked => dispatch(updateStationPaidArea(selectedStation, checked)),
-            hidden: ![RmgStyle.MTR].includes(style) || setIndex !== 0,
+            hidden: ![RmgStyle.MTR].includes(style) || setIndex === 0,
             oneLine: true,
         },
     ];
