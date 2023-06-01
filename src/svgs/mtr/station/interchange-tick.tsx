@@ -96,9 +96,9 @@ function InterchangeTick(props: InterchangeTickProps) {
                 {enNameParts.map((txt, j) => (
                     <text
                         key={zhNameParts.length + j}
-                        dy={zhNameParts.length * 10 - 1 + 7 * j}
+                        dy={zhNameParts.length * 10 - 1 + 6 * j}
                         className="rmg-name__en"
-                        fontSize={7}
+                        fontSize={6}
                     >
                         {txt}
                     </text>

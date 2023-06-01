@@ -21,7 +21,7 @@ const NAME_EN_HEIGHT = 13.21875;
 /**
  * Difference of `y`s of station's Chinese name and English name (1 line). (This number should use as the `dy` of the English `text` element after Chinese `text` elements. )
  */
-const NAME_ZH_EN_GAP = 17;
+const NAME_ZH_EN_GAP = 16;
 /**
  * Height (in pixels) from the top of station's Chinese name to the bottom of English name (1 line).
  */

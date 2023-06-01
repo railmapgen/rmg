@@ -1,8 +1,9 @@
-import { memo, SVGProps, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import StripMTR from './strip-mtr';
 import { CanvasType, Name, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import SvgWrapper from '../svg-wrapper';
+import PlatformNumber from './platform-number';
 
 const CANVAS_TYPE = CanvasType.Destination;
 
@@ -21,7 +22,7 @@ export default function DestinationMTR() {
             theme={theme}
         >
             <DefsMTR />
-            <StripMTR stripPc={90} />
+            <StripMTR />
             <InfoMTR />
         </SvgWrapper>
     );
@@ -79,51 +80,33 @@ const InfoMTR = () => {
         destNameEl.current && setBBox(destNameEl.current.getBBox());
     }, [destNames.toString(), customisedMTRDestination.isLegacy]);
 
-    const flagLength = 160 + 150 + bBox.width + 45 + 50;
+    const flagLength = 126 + 120 + bBox.width + 30 + 60;
     const arrowX = (svgWidths[CanvasType.Destination] - (direction === ShortDirection.left ? 1 : -1) * flagLength) / 2;
-    const platformNumX = arrowX + (direction === ShortDirection.left ? 1 : -1) * (160 + 50 + 75);
-    const destNameX = platformNumX + (direction === ShortDirection.left ? 1 : -1) * (75 + 45);
+    const platformNumX = arrowX + (direction === ShortDirection.left ? 1 : -1) * (126 + 60 + 60);
+    const destNameX = platformNumX + (direction === ShortDirection.left ? 1 : -1) * (60 + 30);
 
     return (
-        <g id="dest_name" style={{ transform: 'translateY(calc(var(--rmg-svg-height) / 2 - 20px))' }}>
+        <g style={{ transform: 'translateY(calc(var(--rmg-svg-height) / 2 - 5px))' }}>
             <use
                 xlinkHref="#arrow"
-                transform={`translate(${arrowX},0)rotate(${direction === ShortDirection.left ? 0 : 180})`}
+                transform={`translate(${arrowX},0)scale(0.8)rotate(${direction === ShortDirection.left ? 0 : 180})`}
             />
-            <PlatformNum num={platformNumber} transform={`translate(${platformNumX},0)`} />
+            <g transform={`translate(${platformNumX},0)`}>
+                <PlatformNumber num={platformNumber} />
+            </g>
             <g
                 ref={destNameEl}
                 textAnchor={direction === ShortDirection.left ? 'start' : 'end'}
                 transform={`translate(${destNameX},-25)`}
                 fill="var(--rmg-black)"
             >
-                <text className="rmg-name__zh" fontSize={90}>
+                <text className="rmg-name__zh" fontSize={72} letterSpacing={1.5}>
                     {(customisedMTRDestination.isLegacy ? lineName[0] : '') + '往' + destNames[0]}
                 </text>
-                <text className="rmg-name__en" fontSize={45} dy={80}>
+                <text className="rmg-name__en" fontSize={42} dy={66}>
                     {(customisedMTRDestination.isLegacy ? lineName[1] + ' ' : '') + 'to ' + destNames[1]}
                 </text>
             </g>
-        </g>
-    );
-};
-
-const PlatformNum = (props: { num: string | false } & SVGProps<SVGGElement>) => {
-    const { num, ...others } = props;
-
-    return (
-        <g id="platform" {...others}>
-            {useMemo(
-                () => (
-                    <>
-                        <circle cx={0} cy={0} r={75} fill="var(--rmg-theme-colour)" />
-                        <text className="rmg-name__zh" dy={0} textAnchor="middle" fontSize={135} fill="#fff">
-                            {num}
-                        </text>
-                    </>
-                ),
-                [num]
-            )}
         </g>
     );
 };
