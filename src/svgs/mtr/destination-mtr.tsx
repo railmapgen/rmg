@@ -1,8 +1,9 @@
-import { memo, SVGProps, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import StripMTR from './strip-mtr';
 import { CanvasType, Name, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import SvgWrapper from '../svg-wrapper';
+import PlatformNumber from './platform-number';
 
 const CANVAS_TYPE = CanvasType.Destination;
 
@@ -85,12 +86,14 @@ const InfoMTR = () => {
     const destNameX = platformNumX + (direction === ShortDirection.left ? 1 : -1) * (60 + 30);
 
     return (
-        <g id="dest_name" style={{ transform: 'translateY(calc(var(--rmg-svg-height) / 2 - 5px))' }}>
+        <g style={{ transform: 'translateY(calc(var(--rmg-svg-height) / 2 - 5px))' }}>
             <use
                 xlinkHref="#arrow"
                 transform={`translate(${arrowX},0)scale(0.8)rotate(${direction === ShortDirection.left ? 0 : 180})`}
             />
-            <PlatformNum num={platformNumber} transform={`translate(${platformNumX},0)`} />
+            <g transform={`translate(${platformNumX},0)`}>
+                <PlatformNumber num={platformNumber} />
+            </g>
             <g
                 ref={destNameEl}
                 textAnchor={direction === ShortDirection.left ? 'start' : 'end'}
@@ -104,26 +107,6 @@ const InfoMTR = () => {
                     {(customisedMTRDestination.isLegacy ? lineName[1] + ' ' : '') + 'to ' + destNames[1]}
                 </text>
             </g>
-        </g>
-    );
-};
-
-const PlatformNum = (props: { num: string | false } & SVGProps<SVGGElement>) => {
-    const { num, ...others } = props;
-
-    return (
-        <g id="platform" {...others}>
-            {useMemo(
-                () => (
-                    <>
-                        <circle cx={0} cy={0} r={60} fill="var(--rmg-theme-colour)" />
-                        <text className="rmg-name__zh" dy={0} textAnchor="middle" fontSize={100} fill="#fff">
-                            {num}
-                        </text>
-                    </>
-                ),
-                [num]
-            )}
         </g>
     );
 };
