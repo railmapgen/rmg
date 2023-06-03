@@ -58,10 +58,8 @@ const DestSHMetro = () => {
         ...new Set(
             routes
                 .filter(route => route.includes(current_stn_id))
-                .map(route => {
-                    const res = route.filter(stn_id => !['linestart', 'lineend'].includes(stn_id));
-                    return direction === 'l' ? res[0] : res.reverse()[0];
-                })
+                // find the first/last station id other than linestart/lineend
+                .map(route => (direction === 'l' ? route.at(1)! : route.at(route.length - 2)!))
         ),
     ];
     // get the name from the destination id(s)
@@ -94,8 +92,10 @@ const DestSHMetro = () => {
 
     // destination names of loop line, `sh2020` type will always be two lines
     const dest_names = get_dest_names(regular_dest_ids, !loop && !(info_panel_type === 'sh2020'));
-    console.log(dest_names);
     const coline_dest_names = get_dest_names(coline_dest_ids, true);
+
+    // hide regular Dest when the current station is on the coline in a direction that can not go to main line
+    const only_coline = coline_dest_ids.length !== 0 && regular_dest_ids.length === 0;
 
     // this will give the space for at most two lines of dest_names
     const coline_dy = 250;
@@ -114,13 +114,15 @@ const DestSHMetro = () => {
     };
     return (
         <>
-            <Dest
-                dest_names={dest_names}
-                line_name={line_name}
-                line_color={[theme[2], theme[3]]}
-                coline={!!coline_dest_ids.length}
-                upper={!!coline_dest_ids.length}
-            />
+            {!only_coline && (
+                <Dest
+                    dest_names={dest_names}
+                    line_name={line_name}
+                    line_color={[theme[2], theme[3]]}
+                    coline={!!coline_dest_ids.length}
+                    upper={!!coline_dest_ids.length}
+                />
+            )}
             {coline_dest_ids.length &&
                 // multiple coline dest is not supported yet
                 coline_dest_ids.map(coline_dest_id => (

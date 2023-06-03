@@ -175,19 +175,34 @@ const TerminalStation = (props: { mode: 'terminal' | 'original'; prevStnIds: str
     return (
         <>
             {mode === 'original' && (
-                <path
-                    transform={`translate(0,${coline.length ? '198' : '220'})${coline.length ? 'scale(1,2)' : ''}`}
-                    stroke={nextColineColor}
-                    strokeWidth={12}
-                    d={direction === 'l' ? `M ${svgWidth.runin - 24},16 H 36` : `M24,16 H ${svgWidth.runin - 36}`}
-                    markerEnd="url(#slope)"
-                />
+                <>
+                    {nextColineColor !== 'var(--rmg-theme-colour)' && (
+                        <marker id={`slope_${nextColineColor}`} viewBox="-1.5 0 3 1.5" refY={0.5}>
+                            <path d="M0,0L1,1H-1z" fill={nextColineColor} />
+                        </marker>
+                    )}
+                    <path
+                        transform={`translate(0,${Object.keys(coline).length ? 198 : 220})${
+                            Object.keys(coline).length ? 'scale(1,2)' : ''
+                        }`}
+                        stroke={nextColineColor}
+                        strokeWidth={12}
+                        d={direction === 'l' ? `M ${svgWidth.runin - 24},16 H 36` : `M24,16 H ${svgWidth.runin - 36}`}
+                        markerEnd={
+                            nextColineColor === 'var(--rmg-theme-colour)'
+                                ? 'url(#slope)'
+                                : `url(#slope_${nextColineColor})`
+                        }
+                    />
+                </>
             )}
 
             {mode === 'terminal' && (
                 <g filter={theme[2] === '#B5B5B6' ? 'url(#pujiang_outline)' : undefined}>
                     <path
-                        transform={`translate(0,${coline.length ? '198' : '220'})${coline.length ? 'scale(1,2)' : ''}`}
+                        transform={`translate(0,${Object.keys(coline).length ? 198 : 220})${
+                            Object.keys(coline).length ? 'scale(1,2)' : ''
+                        }`}
                         stroke="var(--rmg-grey)"
                         strokeWidth={12}
                         d={`M24,16 H ${svgWidth.runin - 24}`}
