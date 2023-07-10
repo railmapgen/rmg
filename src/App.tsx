@@ -7,13 +7,8 @@ const AppRouter = lazy(() => import('./components/root/app-router'));
 const AppClipView = lazy(() => import('./components/param-selector-view/app-clip-view'));
 
 export default function App() {
-    // Though Electron distribution will use a ./ to get local files,
-    // Router need to be configured to / as the render process is just like
-    // a regular browser and is expecting a web based url.
-    const basename = import.meta.env.BASE_URL === './' ? '/' : import.meta.env.BASE_URL;
-
     return (
-        <BrowserRouter basename={basename}>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
             <RmgThemeProvider>
                 <RmgWindow>
                     <WindowHeader />
