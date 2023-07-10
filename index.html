@@ -55,8 +55,31 @@
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root">
-            Loading Rail Map Generator...
+            <p style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);margin: 0;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;">
+                Loading Rail Map Generator...
+            </p>
+            <p style="position: absolute;top: 75%;left: 50%;transform: translate(-50%, -50%);margin: 0;font-size: small;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;color: gray;">
+                Seeing this page for too long? Try another mirror
+                <a href="https://railmapgen.github.io/?app=rmg" target="_blank" rel="noreferrer">GitHub</a>
+                <a href="https://railmapgen.gitlab.io/?app=rmg" target="_blank" rel="noreferrer">Gitlab</a>
+                or the
+                <a href="https://github.com/railmapgen/railmapgen.github.io/releases" target="_blank" rel="noreferrer">offline applications</a>
+                .    
+                </br>
+                </br>
+                Offline applications via ghproxy.com
+                <a id="win">Windows</a>
+                <a id="mac">MacOS</a>
+                <a id="linux">Linux</a>
+                if you are in mainland China :)
+            </p>
         </div>
+        <script>
+            const d = new Date();const tag=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2, '0')}01`;const ver=`${String(d.getFullYear()).slice(-2)}.${d.getMonth()+1}.1`;
+            document.getElementById('win').href=`https://ghproxy.com/https://github.com/railmapgen/railmapgen.github.io/releases/download/tauri-${tag}/railmapgen_${ver}_x64-setup.exe`;
+            document.getElementById('mac').href=`https://ghproxy.com/https://github.com/railmapgen/railmapgen.github.io/releases/download/tauri-${tag}/railmapgen_${ver}_x64.dmg`;
+            document.getElementById('linux').href=`https://ghproxy.com/https://github.com/railmapgen/railmapgen.github.io/releases/download/tauri-${tag}/railmapgen_${ver}_amd64.deb`;
+        </script>
 
         <script type="module" src="src/index.tsx"></script>
     </body>

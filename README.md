@@ -6,7 +6,7 @@ A tool for generating railway maps and information panels in the styles of follo
 - MTR (Hong Kong)
 - Shanghai Metro (Shanghai)
 
-Make your own rail map on [GitHub Pages](https://railmapgen.github.io/rmg/) | [GitLab Pages](https://railmapgen.gitlab.io/rmg/) or get the latest offline desktop application at the [Release Page](https://github.com/railmapgen/rmg/releases).
+Make your own rail map on [GitHub Pages](https://railmapgen.github.io/?app=rmg) | [GitLab Pages](https://railmapgen.gitlab.io/?app=rmg) or get the latest Rail Map Toolkit offline application at the [Release Page](https://github.com/railmapgen/railmapgen.github.io/releases).
 
 ---
 
@@ -37,7 +37,6 @@ Make your own rail map on [GitHub Pages](https://railmapgen.github.io/rmg/) | [G
         <img src="https://github.com/wongchito.png" width="100px;" alt="" /><br/>
         <b>Chito Wong</b><br/>
       </a>
-      <sub>Project initiator</sub><br/>
       <sub>MTR and Guangzhou Metro Author</sub><br/>
     </td>
     <td align="center" style="border-width:0px">
@@ -46,7 +45,6 @@ Make your own rail map on [GitHub Pages](https://railmapgen.github.io/rmg/) | [G
         <b>thekingofcity</b><br/>
       </a>
       <sub>Shanghai Metro Author</sub><br/>
-      <sub>Electron Maintainer</sub><br/>
     </td>
   </tr>
 </table>
