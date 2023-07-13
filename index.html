@@ -53,7 +53,7 @@
             })(window.location);
         </script>
         <!-- End Single Page Apps for GitHub Pages -->
-      <script type="module" crossorigin src="/rmg/assets/index-b842785f.js"></script>
+      <script type="module" crossorigin src="/rmg/assets/index-f2c1c1d7.js"></script>
       <link rel="modulepreload" crossorigin href="/rmg/assets/react-5680e458.js">
       <link rel="modulepreload" crossorigin href="/rmg/assets/chakra-c9623454.js">
       <link rel="stylesheet" href="/rmg/assets/index-522067ed.css">
@@ -63,12 +63,35 @@
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root">
-            Loading Rail Map Generator...
+            <p style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);margin: 0;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;">
+                Loading Rail Map Generator...
+            </p>
+            <p style="position: absolute;top: 75%;left: 50%;transform: translate(-50%, -50%);margin: 0;font-size: small;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;color: gray;">
+                Seeing this page for too long? Try another mirror
+                <a href="https://railmapgen.github.io/?app=rmg" target="_blank" rel="noreferrer">GitHub</a>
+                <a href="https://railmapgen.gitlab.io/?app=rmg" target="_blank" rel="noreferrer">Gitlab</a>
+                or the
+                <a href="https://github.com/railmapgen/railmapgen.github.io/releases" target="_blank" rel="noreferrer">offline applications</a>
+                .    
+                </br>
+                </br>
+                Offline applications via ghproxy.com
+                <a id="win">Windows</a>
+                <a id="mac">MacOS</a>
+                <a id="linux">Linux</a>
+                if you are in mainland China :)
+            </p>
         </div>
+        <script>
+            const d = new Date();const tag=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2, '0')}01`;const ver=`${String(d.getFullYear()).slice(-2)}.${d.getMonth()+1}.1`;
+            document.getElementById('win').href=`https://ghproxy.com/https://github.com/railmapgen/railmapgen.github.io/releases/download/tauri-${tag}/railmapgen_${ver}_x64-setup.exe`;
+            document.getElementById('mac').href=`https://ghproxy.com/https://github.com/railmapgen/railmapgen.github.io/releases/download/tauri-${tag}/railmapgen_${ver}_x64.dmg`;
+            document.getElementById('linux').href=`https://ghproxy.com/https://github.com/railmapgen/railmapgen.github.io/releases/download/tauri-${tag}/railmapgen_${ver}_amd64.deb`;
+        </script>
 
         
       <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
       <script nomodule crossorigin id="vite-legacy-polyfill" src="/rmg/assets/polyfills-legacy-319dfa7a.js"></script>
-      <script nomodule crossorigin id="vite-legacy-entry" data-src="/rmg/assets/index-legacy-97b2b4ba.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+      <script nomodule crossorigin id="vite-legacy-entry" data-src="/rmg/assets/index-legacy-5bed6fbd.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
     </body>
 </html>
