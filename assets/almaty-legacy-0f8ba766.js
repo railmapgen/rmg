@@ -1,0 +1,1 @@
+System.register(["./index-legacy-e65d4b71.js","./chakra-legacy-b8b156e3.js","./react-legacy-e9fbe36a.js"],(function(e,t){"use strict";var n;return{setters:[function(e){n=e.M},null,null],execute:function(){e("default",[{id:"m",colour:"#d40201",fg:n.white,name:{en:"Metro","zh-Hans":"地铁","zh-Hant":"捷運",kk:"Метрополитен"}}])}}}));
