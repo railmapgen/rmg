@@ -1,0 +1,1 @@
+System.register(["./index-legacy-fece0b6e.js","./chakra-legacy-f5bf28d6.js","./react-legacy-2b378ecc.js"],(function(e,t){"use strict";var n;return{setters:[function(e){n=e.M},null,null],execute:function(){e("default",[{id:"scbl",colour:"#2e83c5",fg:n.white,name:{en:"Streetcar Blue Line","zh-Hans":"有轨电车蓝线","zh-Hant":"有軌電車藍線"}}])}}}));
