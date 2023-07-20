@@ -82,7 +82,11 @@ export default function ParamSelector(props: ParamSelectorProps) {
                             <RmgEnrichedButton
                                 primaryText={config.name ?? t('Project') + ' ' + config.id}
                                 secondaryText={
-                                    t('Last modified') + ': ' + getRelativeTime(config.lastModified).map(t).join(' ')
+                                    t('Last modified') +
+                                    ': ' +
+                                    getRelativeTime(config.lastModified)
+                                        .map(v => t(v))
+                                        .join(' ')
                                 }
                                 aria-pressed={selectedParam === config.id}
                                 onClick={() => onParamSelect(config.id)}
