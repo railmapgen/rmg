@@ -9,9 +9,9 @@ export default function useRootSearchParams() {
 
         if (Object.keys(searchParamInit)) {
             const urlSearchParams = new URLSearchParams(searchParamInit);
-            rmgRuntime.updateUrl('/rmg/?' + urlSearchParams);
+            rmgRuntime.updateUrl('/rmg/#/?' + urlSearchParams);
         } else {
-            rmgRuntime.updateUrl('/rmg/');
+            rmgRuntime.updateUrl('/rmg/#/');
         }
     };
 
