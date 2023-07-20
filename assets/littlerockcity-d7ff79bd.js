@@ -1,1 +1,0 @@
-import{M as o}from"./index-9f5a9934.js";import"./chakra-a3d23f24.js";import"./react-480e816f.js";const i=[{id:"scbl",colour:"#2e83c5",fg:o.white,name:{en:"Streetcar Blue Line","zh-Hans":"有轨电车蓝线","zh-Hant":"有軌電車藍線"}}];export{i as default};
