@@ -1,1 +1,0 @@
-import{M as o}from"./index-2c782f91.js";import"./chakra-c9623454.js";import"./react-5680e458.js";const m=[{id:"m",colour:"#d40201",fg:o.white,name:{en:"Metro","zh-Hans":"地铁","zh-Hant":"捷運",kk:"Метрополитен"}}];export{m as default};
