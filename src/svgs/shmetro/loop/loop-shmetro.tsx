@@ -266,7 +266,7 @@ const LoopStationGroup = (props: {
             bottom: i % 2 === 0 ? 'upward' : 'downward',
             left: 'left',
             right: 'right',
-        }[side] as NameDirection);
+        })[side] as NameDirection;
     return (
         <g id="loop_stations">
             {canvas === CanvasType.RailMap &&

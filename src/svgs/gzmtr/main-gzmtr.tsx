@@ -118,14 +118,17 @@ const MainGZMTR = () => {
 
     const yShares = useMemo(() => {
         console.log('computing y shares');
-        return Object.keys(stationList).reduce((acc, cur) => {
-            if (branches[0].includes(cur)) {
-                return { ...acc, [cur]: 0 };
-            } else {
-                const branchOfStn = branches.slice(1).filter(branch => branch.includes(cur))[0];
-                return { ...acc, [cur]: stationList[branchOfStn[0]].children.indexOf(branchOfStn[1]) ? -2 : 2 };
-            }
-        }, {} as { [stnId: string]: number });
+        return Object.keys(stationList).reduce(
+            (acc, cur) => {
+                if (branches[0].includes(cur)) {
+                    return { ...acc, [cur]: 0 };
+                } else {
+                    const branchOfStn = branches.slice(1).filter(branch => branch.includes(cur))[0];
+                    return { ...acc, [cur]: stationList[branchOfStn[0]].children.indexOf(branchOfStn[1]) ? -2 : 2 };
+                }
+            },
+            {} as { [stnId: string]: number }
+        );
     }, [deps]);
     const ys = Object.keys(yShares).reduce(
         (acc, cur) => ({ ...acc, [cur]: (-yShares[cur] * branchSpacingPct * svgH) / 200 }),

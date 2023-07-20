@@ -43,14 +43,17 @@ export const ColineSHMetro = (props: Props) => {
 
     const yShares = useMemo(() => {
         console.log('computing y shares');
-        return Object.keys(stn_list).reduce((acc, cur) => {
-            if (branches[0].includes(cur)) {
-                return { ...acc, [cur]: 0 };
-            } else {
-                const branchOfStn = branches.slice(1).filter(branch => branch.includes(cur))[0];
-                return { ...acc, [cur]: stn_list[branchOfStn[0]].children.indexOf(branchOfStn[1]) ? -3 : 3 };
-            }
-        }, {} as { [stnId: string]: number });
+        return Object.keys(stn_list).reduce(
+            (acc, cur) => {
+                if (branches[0].includes(cur)) {
+                    return { ...acc, [cur]: 0 };
+                } else {
+                    const branchOfStn = branches.slice(1).filter(branch => branch.includes(cur))[0];
+                    return { ...acc, [cur]: stn_list[branchOfStn[0]].children.indexOf(branchOfStn[1]) ? -3 : 3 };
+                }
+            },
+            {} as { [stnId: string]: number }
+        );
     }, [deps]);
     // filter out all positive yShares to draw the railmap w/ coline and its branches
     const colineYShares = Object.entries(yShares)
