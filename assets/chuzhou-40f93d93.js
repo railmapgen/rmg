@@ -1,0 +1,1 @@
+import{M as o}from"./index-b7df30a6.js";import"./chakra-f6b4d908.js";import"./react-f83802c2.js";const t=[{id:"ningchu",colour:"#ff631b",fg:o.white,name:{en:"Nanjing-Chuzhou Line","zh-Hans":"宁滁线","zh-Hant":"寧滁線"}}];export{t as default};
