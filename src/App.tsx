@@ -1,5 +1,5 @@
 import React, { lazy } from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { RmgErrorBoundary, RmgLoader, RmgThemeProvider, RmgWindow } from '@railmapgen/rmg-components';
 import WindowHeader from './components/root/window-header';
 
@@ -8,7 +8,7 @@ const AppClipView = lazy(() => import('./components/param-selector-view/app-clip
 
 export default function App() {
     return (
-        <BrowserRouter basename={import.meta.env.BASE_URL}>
+        <HashRouter>
             <RmgThemeProvider>
                 <RmgWindow>
                     <WindowHeader />
@@ -33,6 +33,6 @@ export default function App() {
                     </Routes>
                 </RmgWindow>
             </RmgThemeProvider>
-        </BrowserRouter>
+        </HashRouter>
     );
 }
