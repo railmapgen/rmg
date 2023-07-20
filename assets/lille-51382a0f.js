@@ -1,0 +1,1 @@
+import{M as n}from"./index-9f5a9934.js";import"./chakra-a3d23f24.js";import"./react-480e816f.js";const r=[{id:"m1",colour:"#F9B122",fg:n.white,name:{en:"Line 1","zh-Hans":"1号线","zh-Hant":"1號線",fr:"Ligne 1"}},{id:"m2",colour:"#E30613",fg:n.white,name:{en:"Line 2","zh-Hans":"2号线","zh-Hant":"2號線",fr:"Ligne 2"}}];export{r as default};
