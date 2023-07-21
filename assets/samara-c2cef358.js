@@ -1,0 +1,1 @@
+import{M as o}from"./index-887db0bb.js";import"./chakra-f6b4d908.js";import"./react-f83802c2.js";const e=[{id:"rl",colour:"#f84a39",fg:o.white,name:{en:"Red Line","zh-Hans":"红线","zh-Hant":"紅線",ru:"Красная линия"}}];export{e as default};
