@@ -21,6 +21,10 @@ export default function StationSecondaryName(props: StationSecondaryNameProps) {
         }
     }, [stnName.toString()]);
 
+    if (!stnName[0] && !stnName[1]) {
+        return <></>;
+    }
+
     return (
         <g fill={passed ? '#aaa' : '#000'} {...others}>
             <g transform="translate(0,3)" fontSize={18}>
