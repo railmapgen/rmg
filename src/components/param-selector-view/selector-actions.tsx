@@ -1,7 +1,6 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Button, Flex, SystemStyleObject } from '@chakra-ui/react';
 import { MdAdd, MdInsertDriveFile, MdOpenInBrowser, MdUpload } from 'react-icons/md';
-import TemplateModal from '../modal/template-modal';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { Events, RmgStyle } from '../../constants/constants';
 import { importParam } from '../../util/param-manager-utils';
@@ -10,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import useRootSearchParams from '../../hooks/use-root-search-params';
 import { initParam } from '../../redux/param/util';
 import { LanguageCode } from '@railmapgen/rmg-translate';
+import RmgTemplatesAppClip from '../app-clip/rmg-templates-app-clip';
 
 interface SelectorActionsProps {
     selectedParam?: string;
@@ -120,10 +120,10 @@ export default function SelectorActions(props: SelectorActionsProps) {
                 onChange={handleImportProject}
                 data-testid="file-upload"
             />
-            <TemplateModal
+            <RmgTemplatesAppClip
                 isOpen={isTemplateModalOpen}
                 onClose={() => setIsTemplateModalOpen(false)}
-                onOpenParam={handleOpenTemplate}
+                onImport={handleOpenTemplate}
             />
         </Flex>
     );
