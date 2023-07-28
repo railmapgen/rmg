@@ -28,10 +28,6 @@
         "downloadAll": "Download all stations"
     },
 
-    "TemplateModal": {
-        "title": "Select a template"
-    },
-
     "GridTabs": {
         "main": "Main line",
         "branch": "Branch",
