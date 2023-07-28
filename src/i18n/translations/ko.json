@@ -28,10 +28,6 @@
         "downloadAll": "모든 역 다운로드"
     },
 
-    "TemplateModal": {
-        "title": "템플릿 선택"
-    },
-
     "GridTabs": {
         "main": "주노선",
         "branch": "지노선",

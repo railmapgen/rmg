@@ -28,10 +28,6 @@
         "downloadAll": "下载所有车站"
     },
 
-    "TemplateModal": {
-        "title": "选择模板"
-    },
-
     "GridTabs": {
         "main": "主线",
         "branch": "支线",

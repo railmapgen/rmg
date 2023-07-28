@@ -24,9 +24,6 @@
         "downloadOne": "下載當前車站",
         "downloadAll": "下載所有車站"
     },
-    "TemplateModal": {
-        "title": "選擇範本"
-    },
 
     "GridTabs": {
         "main": "主綫",
@@ -246,8 +243,8 @@
     "High speed rail": "高速鐵路",
     "hour ago": "小时前",
     "hours ago": "小时前",
-    "Import": "讀入",
-    "Import project": "讀入專案",
+    "Import": "匯入",
+    "Import project": "匯入專案",
     "Just now": "剛才",
     "Last modified": "上次修改",
     "Manage": "管理",
