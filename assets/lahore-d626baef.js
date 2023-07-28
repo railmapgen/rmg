@@ -1,0 +1,1 @@
+import{M as o}from"./index-b47975a7.js";import"./chakra-0b0a1fde.js";import"./react-f83802c2.js";const n=[{id:"orange",colour:"#f66725",fg:o.white,name:{en:"Orange Line","zh-Hans":"橙线","zh-Hant":"橙線"}}];export{n as default};
