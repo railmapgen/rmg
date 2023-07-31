@@ -1,1 +1,0 @@
-import{M as o}from"./index-b47975a7.js";import"./chakra-0b0a1fde.js";import"./react-f83802c2.js";const t=[{id:"gl",colour:"#007a3d",fg:o.white,name:{en:"Green Line","zh-Hans":"绿线","zh-Hant":"綠線",ru:"Зеленая линия"}}];export{t as default};
