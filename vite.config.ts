@@ -27,7 +27,7 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '/rmg-templates/': {
+            '^/rmg-palette|rmg-templates/': {
                 target: 'https://uat-railmapgen.github.io',
                 changeOrigin: true,
                 secure: false,

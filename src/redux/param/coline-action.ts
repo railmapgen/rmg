@@ -283,15 +283,20 @@ export const updateColineColor = (colineId: string, interchangeIndex: number, in
         const colineInfo = getState().param.coline;
 
         if (colineId in colineInfo && colineInfo[colineId].colors.length > interchangeIndex) {
-            colineInfo[colineId].colors = colineInfo[colineId].colors.map((int, colineIdx) =>
-                colineIdx === interchangeIndex
-                    ? ([0, 1, 2, 3, 4, 5].map(i =>
-                          interchangeInfo[i] === undefined ? int[i] : interchangeInfo[i]
-                      ) as ColineColours)
-                    : int
-            );
-
-            dispatch(setColineBulk(colineInfo));
+            const nextColineInfo = {
+                ...colineInfo,
+                [colineId]: {
+                    ...colineInfo[colineId],
+                    colors: colineInfo[colineId].colors.map((int, colineIdx) =>
+                        colineIdx === interchangeIndex
+                            ? ([0, 1, 2, 3, 4, 5].map(i =>
+                                  interchangeInfo[i] === undefined ? int[i] : interchangeInfo[i]
+                              ) as ColineColours)
+                            : int
+                    ),
+                },
+            };
+            dispatch(setColineBulk(nextColineInfo));
         }
     };
 };
