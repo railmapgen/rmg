@@ -1,10 +1,10 @@
 import InterchangeCard from './interchange-card';
 import { ExtendedInterchangeInfo } from '../../../constants/constants';
 import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
-import { act } from 'react-dom/test-utils';
 import { render } from '../../../test-utils';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { vi } from 'vitest';
+import SidePanelContext from '../side-panel-context';
 
 const mockInterchangeInfo1: ExtendedInterchangeInfo = {
     theme: [CityCode.Hongkong, 'tcl', '#F38B00', MonoColour.white],
@@ -46,17 +46,34 @@ describe('InterchangeCard', () => {
         expect(screen.getByRole('combobox', { name: 'English name' })).toHaveDisplayValue('Tung Chung Line');
     });
 
-    it('Can handle open and close colour modal as expected', async () => {
-        render(<InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />);
+    it('Can request theme update and receive updated theme from context', async () => {
+        const setPrevTheme = vi.fn();
+        const { rerender } = render(
+            <SidePanelContext.Provider value={{ setPrevTheme }}>
+                <InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />
+            </SidePanelContext.Provider>
+        );
 
-        expect(screen.queryByRole('dialog', { name: 'Select a colour' })).not.toBeInTheDocument();
-
+        // click theme button
         fireEvent.click(screen.getByRole('button', { name: 'Colour' }));
-        await act(async () => {
-            await Promise.resolve();
-        });
 
-        expect(screen.getByRole('dialog', { name: 'Select a colour' })).toBeInTheDocument();
+        // context receive setPrevTheme event
+        expect(setPrevTheme).toBeCalledTimes(1);
+        expect(setPrevTheme).toBeCalledWith(mockInterchangeInfo1.theme);
+
+        // rerender with next context
+        rerender(
+            <SidePanelContext.Provider value={{ setPrevTheme, nextTheme: mockInterchangeInfo2.theme }}>
+                <InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />
+            </SidePanelContext.Provider>
+        );
+
+        // update theme to parent
+        expect(mockCallbacks.onUpdate).toBeCalledTimes(1);
+        expect(mockCallbacks.onUpdate).toBeCalledWith(0, {
+            ...mockInterchangeInfo1,
+            theme: mockInterchangeInfo2.theme,
+        });
     });
 
     it('Can duplicate and delete interchange info as expected', () => {

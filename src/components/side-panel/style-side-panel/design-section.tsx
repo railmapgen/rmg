@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Box, Heading, HStack, IconButton } from '@chakra-ui/react';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import ThemeButton from '../theme-button';
-import ColourModal from '../../modal/colour-modal/colour-modal';
 import {
     customiseDestinationName,
     flipStationNames,
@@ -20,6 +19,7 @@ import { PanelTypeGZMTR, PanelTypeShmetro, RmgStyle, ShortDirection } from '../.
 import { MdSwapVert } from 'react-icons/md';
 import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
+import SidePanelContext from '../side-panel-context';
 
 export default function DesignSection() {
     const { t } = useTranslation();
@@ -38,7 +38,15 @@ export default function DesignSection() {
         info_panel_type,
     } = useRootSelector(state => state.param);
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { setPrevTheme, nextTheme } = useContext(SidePanelContext);
+    const [isThemeRequested, setIsThemeRequested] = useState(false);
+
+    useEffect(() => {
+        if (isThemeRequested && nextTheme) {
+            dispatch(setTheme(nextTheme));
+            setIsThemeRequested(false);
+        }
+    }, [nextTheme?.toString()]);
 
     const directionSelections = [
         {
@@ -71,7 +79,15 @@ export default function DesignSection() {
         {
             type: 'custom',
             label: t('Colour'),
-            component: <ThemeButton theme={theme} onClick={() => setIsModalOpen(true)} />,
+            component: (
+                <ThemeButton
+                    theme={theme}
+                    onClick={() => {
+                        setIsThemeRequested(true);
+                        setPrevTheme?.(theme);
+                    }}
+                />
+            ),
             minW: '40px',
         },
         {
@@ -216,13 +232,6 @@ export default function DesignSection() {
             </Heading>
 
             <RmgFields fields={[...fields, ...mtrSpecifiedFields]} minW={130} />
-
-            <ColourModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                defaultTheme={theme}
-                onUpdate={nextTheme => dispatch(setTheme(nextTheme))}
-            />
         </Box>
     );
 }

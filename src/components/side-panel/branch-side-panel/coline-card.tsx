@@ -1,11 +1,11 @@
 import { RmgCard, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ColineColours, ColineInfo, Theme } from '../../../constants/constants';
 import ThemeButton from '../theme-button';
-import ColourModal from '../../modal/colour-modal/colour-modal';
 import { HStack, IconButton } from '@chakra-ui/react';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
+import SidePanelContext from '../side-panel-context';
 
 interface ColineCardProps {
     colineInfo: ColineInfo;
@@ -19,7 +19,15 @@ export default function ColineCard(props: ColineCardProps) {
     const { colineInfo, routeOptions, onUpdateRoute, onUpdateColourInfo, onDelete } = props;
     const { t } = useTranslation();
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { nextTheme, setPrevTheme } = useContext(SidePanelContext);
+    const [isThemeRequested, setIsThemeRequested] = useState(false);
+
+    useEffect(() => {
+        if (isThemeRequested && nextTheme) {
+            onUpdateColourInfo?.([...nextTheme, colineInfo.colors[0][4], colineInfo.colors[0][5]]);
+            setIsThemeRequested(false);
+        }
+    }, [nextTheme?.toString()]);
 
     const fields1: RmgFieldsField[] = [
         {
@@ -43,7 +51,10 @@ export default function ColineCard(props: ColineCardProps) {
                         colineInfo.colors[0][2],
                         colineInfo.colors[0][3],
                     ]}
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => {
+                        setIsThemeRequested(true);
+                        setPrevTheme?.(colineInfo.colors[0].slice(0, 4) as Theme);
+                    }}
                 />
             ),
         },
@@ -93,13 +104,6 @@ export default function ColineCard(props: ColineCardProps) {
                     icon={<MdDelete />}
                 />
             </HStack>
-
-            <ColourModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                defaultTheme={colineInfo.colors[0].slice(0, 4) as Theme}
-                onUpdate={theme => onUpdateColourInfo?.([...theme, colineInfo.colors[0][4], colineInfo.colors[0][5]])}
-            />
         </RmgCard>
     );
 }
