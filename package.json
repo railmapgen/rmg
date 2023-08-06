@@ -11,7 +11,7 @@
         "@emotion/react": "^11.11.1",
         "@emotion/styled": "^11.11.0",
         "@railmapgen/rmg-components": "^7.1.7",
-        "@railmapgen/rmg-palette-resources": "^0.8.31",
+        "@railmapgen/rmg-palette-resources": "^0.8.32",
         "@railmapgen/rmg-runtime": "^7.0.1",
         "@railmapgen/rmg-translate": "^3.0.2",
         "@reduxjs/toolkit": "^1.9.5",
@@ -58,5 +58,5 @@
         "lint:fix": "eslint ./src --fix",
         "preview": "vite preview"
     },
-    "version": "5.12.5"
+    "version": "5.12.6"
 }
