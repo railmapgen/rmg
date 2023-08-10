@@ -171,20 +171,6 @@
         }
     },
 
-    "ColourModal": {
-        "title": "색상 선택",
-        "example": "보기",
-        "palette": "색상 라이브러리",
-        "custom": "사용자 정의",
-        "city": "도시 주제",
-        "line": "노선 주제",
-        "bg": "배경색",
-        "fg": "전경색",
-        "white":"하얀색",
-        "black": "검은색",
-        "seeAll": "전체보기"
-    },
-
     "AddStationModal": {
         "title": "역 추가",
         "where": "목표 위치",

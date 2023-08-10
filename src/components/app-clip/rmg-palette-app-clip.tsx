@@ -34,6 +34,8 @@ export default function RmgPaletteAppClip(props: RmgPaletteAppClip) {
     const { isOpen, onClose, defaultTheme, onSelect } = props;
 
     const [appClipId] = useState(crypto.randomUUID());
+    const [isLoaded, setIsLoaded] = useState(false);
+
     const frameUrl =
         '/rmg-palette/#/picker?' +
         new URLSearchParams({
@@ -54,10 +56,9 @@ export default function RmgPaletteAppClip(props: RmgPaletteAppClip) {
                 onClose();
             } else if (event === 'SELECT') {
                 onSelect(data);
-            } else if (event === 'LOADED' && defaultTheme) {
-                // post default theme when app clip first opened
-                // the useEffect below cannot handle this case as iframe is not loaded
-                channel.postMessage({ event: 'OPEN', data: defaultTheme });
+            } else if (event === 'LOADED') {
+                // force trigger default theme update again when app clip first opened
+                setIsLoaded(true);
             }
         };
 
@@ -70,12 +71,12 @@ export default function RmgPaletteAppClip(props: RmgPaletteAppClip) {
         if (defaultTheme) {
             channelRef.current?.postMessage({ event: 'OPEN', data: defaultTheme });
         }
-    }, [defaultTheme?.toString()]);
+    }, [isLoaded, defaultTheme?.toString()]);
 
     return (
         <RmgAppClip size="md" isOpen={isOpen} onClose={onClose} sx={styles}>
             <CloseButton onClick={onClose} />
-            <iframe src={frameUrl} loading="lazy" />
+            <iframe src={frameUrl} loading="eager" />
         </RmgAppClip>
     );
 }

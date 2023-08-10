@@ -171,20 +171,6 @@
         }
     },
 
-    "ColourModal": {
-        "title": "选择颜色",
-        "example": "例子",
-        "palette": "颜色库",
-        "custom": "自定义",
-        "city": "城市主题",
-        "line": "路线主题",
-        "bg": "背景色",
-        "fg": "前景色",
-        "white":"白",
-        "black": "黑",
-        "seeAll": "查看完整"
-    },
-
     "AddStationModal": {
         "title": "添加车站",
         "where": "目标位置",
