@@ -164,19 +164,7 @@
             "remove": "移除"
         }
     },
-    "ColourModal": {
-        "title": "選擇顏色",
-        "example": "範例",
-        "palette": "顏色庫",
-        "custom": "自訂",
-        "city": "城市主題",
-        "line": "路綫主題",
-        "bg": "背景色",
-        "fg": "前景色",
-        "white": "白",
-        "black": "黑",
-        "seeAll": "檢視完整"
-    },
+
     "AddStationModal": {
         "title": "新增車站",
         "where": "目標位置",

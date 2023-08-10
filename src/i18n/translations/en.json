@@ -178,20 +178,6 @@
         }
     },
 
-    "ColourModal": {
-        "title": "Select a colour",
-        "example": "Example",
-        "palette": "From palette",
-        "custom": "Customise",
-        "city": "City theme",
-        "line": "Line theme",
-        "bg": "Background colour",
-        "fg": "Foreground colour",
-        "white":"White",
-        "black": "Black",
-        "seeAll": "See full library in "
-    },
-
     "AddStationModal": {
         "title": "Add station",
         "where": "Target location",
