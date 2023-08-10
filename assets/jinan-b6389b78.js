@@ -1,1 +1,0 @@
-const n=[{id:"jn1",name:{en:"Line 1","zh-Hans":"1号线","zh-Hant":"1號線"},colour:"#BE1FA1"},{id:"jn2",name:{en:"Line 2","zh-Hans":"2号线","zh-Hant":"2號線"},colour:"#FFB620"},{id:"jn3",name:{en:"Line 3","zh-Hans":"3号线","zh-Hant":"3號線"},colour:"#0073CE"},{id:"jn4",name:{en:"Line 4","zh-Hans":"4号线","zh-Hant":"4號線"},colour:"#229719"}];export{n as default};
