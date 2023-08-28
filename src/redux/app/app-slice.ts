@@ -1,4 +1,4 @@
-import { CanvasType, ParamConfig, RmgStyle, SidePanelMode } from '../../constants/constants';
+import { CanvasType, ParamConfig, RmgStyle, SidePanelMode, Theme } from '../../constants/constants';
 import { AlertStatus } from '@chakra-ui/react';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -18,6 +18,8 @@ interface AppState {
     isShareTrackEnabled?: string[]; // for main line only, store the selections
     globalAlerts: Partial<Record<AlertStatus, { message: string; url?: string; linkedApp?: string }>>;
     isLoading?: number; // undefined: not loading, -1: loading, 0-100: progress
+    paletteAppClipInput?: Theme;
+    paletteAppClipOutput?: Theme;
 }
 
 const initialState: AppState = {
@@ -105,6 +107,20 @@ const appSlice = createSlice({
         stopLoading: state => {
             state.isLoading = undefined;
         },
+
+        openPaletteAppClip: (state, action: PayloadAction<Theme>) => {
+            state.paletteAppClipInput = action.payload;
+            state.paletteAppClipOutput = undefined;
+        },
+
+        closePaletteAppClip: state => {
+            state.paletteAppClipInput = undefined;
+        },
+
+        onPaletteAppClipEmit: (state, action: PayloadAction<Theme>) => {
+            state.paletteAppClipOutput = action.payload;
+            state.paletteAppClipInput = undefined;
+        },
     },
 });
 
@@ -123,6 +139,9 @@ export const {
     startLoading,
     setLoadingProgress,
     stopLoading,
+    openPaletteAppClip,
+    closePaletteAppClip,
+    onPaletteAppClipEmit,
 } = appSlice.actions;
 
 const appReducer = appSlice.reducer;

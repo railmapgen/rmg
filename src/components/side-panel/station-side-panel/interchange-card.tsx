@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, HStack, IconButton, Text } from '@chakra-ui/react';
 import { ExtendedInterchangeInfo, Facilities, FACILITIES, RmgStyle } from '../../../constants/constants';
 import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
-import { useRootSelector } from '../../../redux';
+import { useRootDispatch, useRootSelector } from '../../../redux';
 import ThemeButton from '../theme-button';
 import { RmgCard, RmgFields, RmgFieldsField, RmgLabel } from '@railmapgen/rmg-components';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
-import SidePanelContext from '../side-panel-context';
+import { openPaletteAppClip } from '../../../redux/app/app-slice';
 
 interface InterchangeCardProps {
     interchangeList: ExtendedInterchangeInfo[];
@@ -20,18 +20,19 @@ export default function InterchangeCard(props: InterchangeCardProps) {
     const { interchangeList, onAdd, onDelete, onUpdate } = props;
 
     const { t } = useTranslation();
+    const dispatch = useRootDispatch();
 
-    const { nextTheme, setPrevTheme } = useContext(SidePanelContext);
     const [indexRequestedTheme, setIndexRequestedTheme] = useState<number>();
 
+    const { paletteAppClipOutput } = useRootSelector(state => state.app);
     const { style, theme, stn_list: stationList } = useRootSelector(state => state.param);
 
     useEffect(() => {
-        if (indexRequestedTheme !== undefined && nextTheme) {
-            onUpdate?.(indexRequestedTheme, { ...interchangeList[indexRequestedTheme], theme: nextTheme });
+        if (indexRequestedTheme !== undefined && paletteAppClipOutput) {
+            onUpdate?.(indexRequestedTheme, { ...interchangeList[indexRequestedTheme], theme: paletteAppClipOutput });
             setIndexRequestedTheme(undefined);
         }
-    }, [nextTheme?.toString()]);
+    }, [paletteAppClipOutput?.toString()]);
 
     const usedNameList = Object.values(stationList).reduce<[string[], string[]]>(
         (acc, cur) => {
@@ -100,7 +101,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
                             theme={it.theme}
                             onClick={() => {
                                 setIndexRequestedTheme(i);
-                                setPrevTheme?.(it.theme);
+                                dispatch(openPaletteAppClip(it.theme ?? [theme[0], '', '#aaaaaa', MonoColour.white]));
                             }}
                         />
                     </RmgLabel>
