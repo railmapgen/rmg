@@ -1,11 +1,12 @@
 import { RmgCard, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ColineColours, ColineInfo, Theme } from '../../../constants/constants';
 import ThemeButton from '../theme-button';
 import { HStack, IconButton } from '@chakra-ui/react';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
-import SidePanelContext from '../side-panel-context';
+import { useRootDispatch, useRootSelector } from '../../../redux';
+import { openPaletteAppClip } from '../../../redux/app/app-slice';
 
 interface ColineCardProps {
     colineInfo: ColineInfo;
@@ -19,15 +20,17 @@ export default function ColineCard(props: ColineCardProps) {
     const { colineInfo, routeOptions, onUpdateRoute, onUpdateColourInfo, onDelete } = props;
     const { t } = useTranslation();
 
-    const { nextTheme, setPrevTheme } = useContext(SidePanelContext);
+    const dispatch = useRootDispatch();
+    const { paletteAppClipOutput } = useRootSelector(state => state.app);
+
     const [isThemeRequested, setIsThemeRequested] = useState(false);
 
     useEffect(() => {
-        if (isThemeRequested && nextTheme) {
-            onUpdateColourInfo?.([...nextTheme, colineInfo.colors[0][4], colineInfo.colors[0][5]]);
+        if (isThemeRequested && paletteAppClipOutput) {
+            onUpdateColourInfo?.([...paletteAppClipOutput, colineInfo.colors[0][4], colineInfo.colors[0][5]]);
             setIsThemeRequested(false);
         }
-    }, [nextTheme?.toString()]);
+    }, [paletteAppClipOutput?.toString()]);
 
     const fields1: RmgFieldsField[] = [
         {
@@ -53,7 +56,7 @@ export default function ColineCard(props: ColineCardProps) {
                     ]}
                     onClick={() => {
                         setIsThemeRequested(true);
-                        setPrevTheme?.(colineInfo.colors[0].slice(0, 4) as Theme);
+                        dispatch(openPaletteAppClip(colineInfo.colors[0].slice(0, 4) as Theme));
                     }}
                 />
             ),

@@ -1,10 +1,13 @@
 import InterchangeCard from './interchange-card';
 import { ExtendedInterchangeInfo } from '../../../constants/constants';
 import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
-import { render } from '../../../test-utils';
-import { fireEvent, screen, within } from '@testing-library/react';
+import { render, TestingProvider } from '../../../test-utils';
+import { fireEvent, render as originalRender, screen, within } from '@testing-library/react';
 import { vi } from 'vitest';
-import SidePanelContext from '../side-panel-context';
+import rootReducer from '../../../redux';
+import { createMockAppStore } from '../../../setupTests';
+
+const realStore = rootReducer.getState();
 
 const mockInterchangeInfo1: ExtendedInterchangeInfo = {
     theme: [CityCode.Hongkong, 'tcl', '#F38B00', MonoColour.white],
@@ -46,26 +49,31 @@ describe('InterchangeCard', () => {
         expect(screen.getByRole('combobox', { name: 'English name' })).toHaveDisplayValue('Tung Chung Line');
     });
 
-    it('Can request theme update and receive updated theme from context', async () => {
-        const setPrevTheme = vi.fn();
-        const { rerender } = render(
-            <SidePanelContext.Provider value={{ setPrevTheme }}>
+    it('Can request theme update and receive updated theme from store', async () => {
+        const mockStore = createMockAppStore({ ...realStore });
+        const { rerender } = originalRender(
+            <TestingProvider store={mockStore}>
                 <InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />
-            </SidePanelContext.Provider>
+            </TestingProvider>
         );
 
         // click theme button
         fireEvent.click(screen.getByRole('button', { name: 'Colour' }));
 
-        // context receive setPrevTheme event
-        expect(setPrevTheme).toBeCalledTimes(1);
-        expect(setPrevTheme).toBeCalledWith(mockInterchangeInfo1.theme);
+        // context receive open event
+        const actions = mockStore.getActions();
+        expect(actions).toHaveLength(1);
+        expect(actions).toContainEqual({ type: 'app/openPaletteAppClip', payload: mockInterchangeInfo1.theme });
 
         // rerender with next context
+        const updatedStore = createMockAppStore({
+            ...realStore,
+            app: { ...realStore.app, paletteAppClipOutput: mockInterchangeInfo2.theme },
+        });
         rerender(
-            <SidePanelContext.Provider value={{ setPrevTheme, nextTheme: mockInterchangeInfo2.theme }}>
+            <TestingProvider store={updatedStore}>
                 <InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />
-            </SidePanelContext.Provider>
+            </TestingProvider>
         );
 
         // update theme to parent

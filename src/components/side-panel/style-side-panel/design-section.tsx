@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Heading, HStack, IconButton } from '@chakra-ui/react';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import ThemeButton from '../theme-button';
@@ -19,12 +19,13 @@ import { PanelTypeGZMTR, PanelTypeShmetro, RmgStyle, ShortDirection } from '../.
 import { MdSwapVert } from 'react-icons/md';
 import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
-import SidePanelContext from '../side-panel-context';
+import { openPaletteAppClip } from '../../../redux/app/app-slice';
 
 export default function DesignSection() {
     const { t } = useTranslation();
     const dispatch = useRootDispatch();
 
+    const { paletteAppClipOutput } = useRootSelector(state => state.app);
     const {
         style,
         theme,
@@ -38,15 +39,14 @@ export default function DesignSection() {
         info_panel_type,
     } = useRootSelector(state => state.param);
 
-    const { setPrevTheme, nextTheme } = useContext(SidePanelContext);
     const [isThemeRequested, setIsThemeRequested] = useState(false);
 
     useEffect(() => {
-        if (isThemeRequested && nextTheme) {
-            dispatch(setTheme(nextTheme));
+        if (isThemeRequested && paletteAppClipOutput) {
+            dispatch(setTheme(paletteAppClipOutput));
             setIsThemeRequested(false);
         }
-    }, [nextTheme?.toString()]);
+    }, [paletteAppClipOutput?.toString()]);
 
     const directionSelections = [
         {
@@ -84,7 +84,7 @@ export default function DesignSection() {
                     theme={theme}
                     onClick={() => {
                         setIsThemeRequested(true);
-                        setPrevTheme?.(theme);
+                        dispatch(openPaletteAppClip(theme));
                     }}
                 />
             ),
