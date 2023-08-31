@@ -1,10 +1,9 @@
-import React from 'react';
 import StationNumber from './station-icon/station-number';
-import { ExtendedInterchangeInfo, Services, Theme } from '../../constants/constants';
+import { ExtendedInterchangeInfo, Services } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import LineIcon from './line-icon/line-icon';
 import StationNameWrapper from './station-name/station-name-wrapper';
-import { MonoColour } from '@railmapgen/rmg-palette-resources';
+import { MonoColour, Theme } from '@railmapgen/rmg-palette-resources';
 
 interface Props {
     stnId: string;

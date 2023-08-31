@@ -38,8 +38,10 @@ export default defineConfig({
         globals: true,
         environment: 'jsdom',
         setupFiles: './src/setupTests.ts',
-        deps: {
-            fallbackCJS: true,
+        server: {
+            deps: {
+                fallbackCJS: true,
+            },
         },
         watch: false,
     },

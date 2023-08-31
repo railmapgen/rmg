@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { RmgAppClip } from '@railmapgen/rmg-components';
 import { CloseButton, SystemStyleObject } from '@chakra-ui/react';
-import { Theme } from '../../constants/constants';
+import { Theme } from '@railmapgen/rmg-palette-resources';
 
 const CHANNEL_PREFIX = 'rmg-palette-bridge--';
 

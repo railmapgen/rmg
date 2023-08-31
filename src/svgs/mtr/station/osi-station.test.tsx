@@ -1,11 +1,11 @@
-import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
+import { MonoColour } from '@railmapgen/rmg-palette-resources';
 import { Direction, InterchangeGroup } from '../../../constants/constants';
 import OsiStation from './osi-station';
 import { render } from '../../../test-utils';
 import { screen } from '@testing-library/react';
 
 const getInterchangeGroup = (size: number): InterchangeGroup => ({
-    lines: Array(size).fill({ theme: [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white], name: ['', ''] }),
+    lines: Array(size).fill({ theme: ['hongkong', 'twl', '#E2231A', MonoColour.white], name: ['', ''] }),
     name: ['ZH name', 'EN name'],
 });
 

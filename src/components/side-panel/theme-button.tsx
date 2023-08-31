@@ -1,9 +1,8 @@
-import React from 'react';
 import ColourUtil from '../../theme/colour-util';
 import { MdCircle } from 'react-icons/md';
 import { IconButton } from '@chakra-ui/react';
-import { Theme } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
+import { Theme } from '@railmapgen/rmg-palette-resources';
 
 interface ThemeButtonProps {
     theme?: Theme;

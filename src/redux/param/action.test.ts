@@ -41,7 +41,7 @@ import {
     StationDict,
     StationInfo,
 } from '../../constants/constants';
-import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
+import { MonoColour } from '@railmapgen/rmg-palette-resources';
 import { SET_DEPS_STR } from '../helper/action';
 import { createMockAppStore, mockSimpleStationList } from '../../setupTests';
 import { getBranches } from '../helper/graph-theory-util';
@@ -52,15 +52,15 @@ const mockNote1: Note = ['Note 1 ZH', 'Note 1 EN', 10, 10, true];
 const mockNote2: Note = ['Note 2 ZH', 'Note 2 EN', 20, 20, false];
 const mockUpdatedNote: Note = ['Note 2 ZH Updated', 'Note 2 EN', 25, 25, false];
 const mockInterchange1: ExtendedInterchangeInfo = {
-    theme: [CityCode.Hongkong, 'twl', '#000000', MonoColour.white],
+    theme: ['hongkong', 'twl', '#000000', MonoColour.white],
     name: ['Int 1 ZH', 'Int 1 EN'],
 };
 const mockInterchange2: ExtendedInterchangeInfo = {
-    theme: [CityCode.Guangzhou, 'gz1', '#FFFFFF', MonoColour.black],
+    theme: ['guangzhou', 'gz1', '#FFFFFF', MonoColour.black],
     name: ['Int 2 ZH', 'Int 2 EN'],
 };
 const mockUpdatedThemeInterchange: ExtendedInterchangeInfo = {
-    theme: [CityCode.London, 'bakerloo', '#AAAAAA', MonoColour.white],
+    theme: ['london', 'bakerloo', '#AAAAAA', MonoColour.white],
     name: ['碧嘉老綫', 'Bakerloo Line'],
 };
 

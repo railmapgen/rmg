@@ -2,7 +2,7 @@ import rootReducer from '../../../redux';
 import { createMockAppStore } from '../../../setupTests';
 import InterchangeSection from './interchange-section';
 import { RmgStyle, ShortDirection, StationInfo, StationTransfer } from '../../../constants/constants';
-import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
+import { MonoColour } from '@railmapgen/rmg-palette-resources';
 import * as helperActions from '../../../redux/helper/action';
 import { SET_STATION } from '../../../redux/param/action';
 import { render } from '../../../test-utils';
@@ -52,7 +52,7 @@ describe('InterchangeSection', () => {
             param: {
                 ...realStore.param,
                 style: RmgStyle.GZMTR,
-                theme: [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white],
+                theme: ['hongkong', 'twl', '#E2231A', MonoColour.white],
                 stn_list: {
                     'test-station': {
                         transfer: {

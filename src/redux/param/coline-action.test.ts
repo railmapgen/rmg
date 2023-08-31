@@ -6,7 +6,7 @@ import {
 } from './coline-action';
 import { BranchStyle, ColineInfo, StationDict } from '../../constants/constants';
 import { getBranches } from '../helper/graph-theory-util';
-import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
+import { MonoColour } from '@railmapgen/rmg-palette-resources';
 import rootReducer from '../index';
 import { createMockAppStore } from '../../setupTests';
 
@@ -211,13 +211,13 @@ describe('Unit tests for coline action', () => {
             col1: {
                 from: 'stn3',
                 to: 'stn2',
-                colors: [[CityCode.Guangzhou, 'gz1', '#FFFFFF', MonoColour.black, 'ZH Name', 'EN Name']],
+                colors: [['guangzhou', 'gz1', '#FFFFFF', MonoColour.black, 'ZH Name', 'EN Name']],
                 display: true,
             },
             col2: {
                 from: 'stn2',
                 to: 'stn4',
-                colors: [[CityCode.Guangzhou, 'gz1', '#FFFFFF', MonoColour.black, 'ZH Name', 'EN Name']],
+                colors: [['guangzhou', 'gz1', '#FFFFFF', MonoColour.black, 'ZH Name', 'EN Name']],
                 display: true,
             },
         };
@@ -326,8 +326,8 @@ describe('Unit tests for coline action', () => {
                 from: 'stn1',
                 to: 'stn2',
                 colors: [
-                    [CityCode.Guangzhou, 'gz1', '#AAAAAA', MonoColour.black, 'ZH Name 1', 'EN Name 1'],
-                    [CityCode.Guangzhou, 'gz2', '#BBBBBB', MonoColour.black, 'ZH Name 2', 'EN Name 2'],
+                    ['guangzhou', 'gz1', '#AAAAAA', MonoColour.black, 'ZH Name 1', 'EN Name 1'],
+                    ['guangzhou', 'gz2', '#BBBBBB', MonoColour.black, 'ZH Name 2', 'EN Name 2'],
                 ],
                 display: true,
             },
@@ -388,7 +388,7 @@ describe('Unit tests for coline action', () => {
             col1: {
                 from: 'stn1',
                 to: 'stn2',
-                colors: [[CityCode.Guangzhou, 'gz1', '#AAAAAA', MonoColour.black, 'ZH Name 1', 'EN Name 1']],
+                colors: [['guangzhou', 'gz1', '#AAAAAA', MonoColour.black, 'ZH Name 1', 'EN Name 1']],
                 display: true,
             },
         };

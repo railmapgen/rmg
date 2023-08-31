@@ -1,5 +1,6 @@
-import { InterchangeGroup, Name, Note, RmgStyle, StationInfo, Theme } from '../constants/constants';
+import { InterchangeGroup, Name, Note, RmgStyle, StationInfo } from '../constants/constants';
 import { nanoid } from 'nanoid';
+import { Theme } from '@railmapgen/rmg-palette-resources';
 
 export const updateParam = (param: { [x: string]: any }) => {
     // Version 0.10

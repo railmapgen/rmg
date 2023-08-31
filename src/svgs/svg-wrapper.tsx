@@ -1,5 +1,6 @@
-import { CanvasType, Theme } from '../constants/constants';
-import React, { ReactNode } from 'react';
+import { CanvasType } from '../constants/constants';
+import { ReactNode } from 'react';
+import { Theme } from '@railmapgen/rmg-palette-resources';
 
 interface SvgWrapperProps {
     type: CanvasType;

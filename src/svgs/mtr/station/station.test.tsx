@@ -2,7 +2,7 @@ import { act, screen } from '@testing-library/react';
 import Station from './station';
 import { render } from '../../../test-utils';
 import { Direction, ExtendedInterchangeInfo, StationInfo, StationState } from '../../../constants/constants';
-import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
+import { MonoColour } from '@railmapgen/rmg-palette-resources';
 import { createMockStoreWithMockStations } from '../../../setupTests';
 
 (Document.prototype as any).fonts = {
@@ -12,7 +12,7 @@ import { createMockStoreWithMockStations } from '../../../setupTests';
 (SVGElement.prototype as any).getBBox = () => ({ x: -40, width: 80 });
 
 const mockInterchangeInfo: ExtendedInterchangeInfo = {
-    theme: [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white],
+    theme: ['hongkong', 'twl', '#E2231A', MonoColour.white],
     name: ['', ''],
 };
 

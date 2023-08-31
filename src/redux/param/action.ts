@@ -15,10 +15,10 @@ import {
     ShortDirection,
     StationDict,
     StationInfo,
-    Theme,
 } from '../../constants/constants';
 import { RootDispatch, RootState } from '../index';
 import { triggerHelpersUpdate } from '../helper/action';
+import { Theme } from '@railmapgen/rmg-palette-resources';
 
 export const SET_FULL_PARAM = 'SET_FULL_PARAM';
 

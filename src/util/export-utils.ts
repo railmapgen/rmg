@@ -90,7 +90,7 @@ export const getBase64FontFace = async (svgEl: SVGSVGElement): Promise<string[]>
     const fontFaceList = await document.fonts.load('80px GenYoMin TW, Vegur', uniqueCharacters);
     const cssRules = Array.from(
         (document.querySelector<HTMLLinkElement>('link#css_share')?.sheet?.cssRules?.[0] as CSSImportRule).styleSheet
-            .cssRules
+            ?.cssRules || []
     ) as CSSFontFaceRule[];
     const distinctCssRules = fontFaceList.reduce<CSSFontFaceRule[]>((acc, cur) => {
         const matchedRule = matchCssRuleByFontFace(cssRules, cur);

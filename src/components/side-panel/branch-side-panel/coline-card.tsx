@@ -1,12 +1,13 @@
 import { RmgCard, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
-import React, { useEffect, useState } from 'react';
-import { ColineColours, ColineInfo, Theme } from '../../../constants/constants';
+import { useEffect, useState } from 'react';
+import { ColineColours, ColineInfo } from '../../../constants/constants';
 import ThemeButton from '../theme-button';
 import { HStack, IconButton } from '@chakra-ui/react';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import { openPaletteAppClip } from '../../../redux/app/app-slice';
+import { Theme } from '@railmapgen/rmg-palette-resources';
 
 interface ColineCardProps {
     colineInfo: ColineInfo;

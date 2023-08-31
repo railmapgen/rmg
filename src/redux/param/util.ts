@@ -7,22 +7,21 @@ import {
     Services,
     ShortDirection,
     StationInfo,
-    Theme,
 } from '../../constants/constants';
-import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
+import { MonoColour, Theme } from '@railmapgen/rmg-palette-resources';
 import { LanguageCode } from '@railmapgen/rmg-translate';
 import { nanoid } from 'nanoid';
 
 const initTheme = (style: RmgStyle): Theme => {
     switch (style) {
         case RmgStyle.MTR:
-            return [CityCode.Hongkong, 'twl', '#E2231A', MonoColour.white];
+            return ['hongkong', 'twl', '#E2231A', MonoColour.white];
         case RmgStyle.GZMTR:
-            return [CityCode.Guangzhou, 'gz1', '#F3D03E', MonoColour.black];
+            return ['guangzhou', 'gz1', '#F3D03E', MonoColour.black];
         case RmgStyle.SHMetro:
-            return [CityCode.Shanghai, 'sh1', '#E4002B', MonoColour.white];
+            return ['shanghai', 'sh1', '#E4002B', MonoColour.white];
         default:
-            return [CityCode.Other, 'other', '#AAAAAA', MonoColour.white];
+            return ['other', 'other', '#AAAAAA', MonoColour.white];
     }
 };
 

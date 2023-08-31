@@ -1,6 +1,6 @@
 import InterchangeCard from './interchange-card';
 import { ExtendedInterchangeInfo } from '../../../constants/constants';
-import { CityCode, MonoColour } from '@railmapgen/rmg-palette-resources';
+import { MonoColour } from '@railmapgen/rmg-palette-resources';
 import { render, TestingProvider } from '../../../test-utils';
 import { fireEvent, render as originalRender, screen, within } from '@testing-library/react';
 import { vi } from 'vitest';
@@ -10,11 +10,11 @@ import { createMockAppStore } from '../../../setupTests';
 const realStore = rootReducer.getState();
 
 const mockInterchangeInfo1: ExtendedInterchangeInfo = {
-    theme: [CityCode.Hongkong, 'tcl', '#F38B00', MonoColour.white],
+    theme: ['hongkong', 'tcl', '#F38B00', MonoColour.white],
     name: ['東涌綫', 'Tung Chung Line'],
 };
 const mockInterchangeInfo2: ExtendedInterchangeInfo = {
-    theme: [CityCode.Hongkong, 'ael', '#007078', MonoColour.white],
+    theme: ['hongkong', 'ael', '#007078', MonoColour.white],
     name: ['機場快綫', 'Airport Express'],
 };
 

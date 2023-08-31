@@ -1,6 +1,7 @@
-import { CanvasType, ParamConfig, RmgStyle, SidePanelMode, Theme } from '../../constants/constants';
+import { CanvasType, ParamConfig, RmgStyle, SidePanelMode } from '../../constants/constants';
 import { AlertStatus } from '@chakra-ui/react';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Theme } from '@railmapgen/rmg-palette-resources';
 
 interface AppState {
     rmgStyle: RmgStyle;
