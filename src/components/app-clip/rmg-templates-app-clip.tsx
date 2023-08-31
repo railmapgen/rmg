@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { RmgAppClip } from '@railmapgen/rmg-components';
 import { SystemStyleObject } from '@chakra-ui/react';
+import { nanoid } from 'nanoid';
 
 const CHANNEL_PREFIX = 'rmg-templates-bridge--';
 
@@ -24,7 +25,7 @@ interface RmgTemplatesAppClipProps {
 export default function RmgTemplatesAppClip(props: RmgTemplatesAppClipProps) {
     const { isOpen, onClose, onImport } = props;
 
-    const [appClipId] = useState(crypto.randomUUID());
+    const [appClipId] = useState(nanoid());
     const frameUrl =
         '/rmg-templates/#/import?' +
         new URLSearchParams({

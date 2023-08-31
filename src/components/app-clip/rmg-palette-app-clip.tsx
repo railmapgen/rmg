@@ -3,6 +3,7 @@ import rmgRuntime from '@railmapgen/rmg-runtime';
 import { RmgAppClip } from '@railmapgen/rmg-components';
 import { CloseButton, SystemStyleObject } from '@chakra-ui/react';
 import { Theme } from '@railmapgen/rmg-palette-resources';
+import { nanoid } from 'nanoid';
 
 const CHANNEL_PREFIX = 'rmg-palette-bridge--';
 
@@ -33,7 +34,7 @@ interface RmgPaletteAppClip {
 export default function RmgPaletteAppClip(props: RmgPaletteAppClip) {
     const { isOpen, onClose, defaultTheme, onSelect } = props;
 
-    const [appClipId] = useState(crypto.randomUUID());
+    const [appClipId] = useState(nanoid());
     const [isLoaded, setIsLoaded] = useState(false);
 
     const frameUrl =
