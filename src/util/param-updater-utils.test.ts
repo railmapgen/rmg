@@ -1,7 +1,15 @@
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
-import { v5_10_updateInterchangeGroup } from './param-updater-utils';
+import { getMatchedThemesWithPaths, updateThemes, v5_10_updateInterchangeGroup } from './param-updater-utils';
+import { vi } from 'vitest';
+import { waitForMs } from './utils';
+
+const originalFetch = global.fetch;
 
 describe('ParamUpdaterUtils', () => {
+    afterEach(() => {
+        global.fetch = originalFetch;
+    });
+
     it('v5_10_updateInterchangeGroup', () => {
         const param: Record<string, any> = {
             stn_list: {
@@ -82,4 +90,67 @@ describe('ParamUpdaterUtils', () => {
             lines: [{ theme: ['hongkong', 'twl', '#E2231A', MonoColour.white], name: ['荃灣綫', 'Tsuen Wan Line'] }],
         });
     });
+
+    it('Can find all matched themes with paths as expected', () => {
+        const obj = {
+            theme: ['hongkong', 'twl', '#E2231A', '#fff'],
+            unrelated: 'abc',
+            nested: {
+                themes: [
+                    ['guangzhou', 'gz1', '#F3D03E', '#000'],
+                    ['Chinese name', 'English name'],
+                    ['guangzhou', 'gz2', '#00629b', '#fff'],
+                ],
+                deeply: {
+                    inside: ['guangzhou', 'gz3', '#ECA154', '#fff'],
+                },
+            },
+            deep: [
+                {
+                    val: ['shanghai', 'gz1', '#E3002B', '#fff'],
+                },
+                {
+                    fake: ['shanghai', 'is', 'a', 'city'],
+                },
+            ],
+        };
+
+        const result = getMatchedThemesWithPaths(obj);
+        console.log(result);
+
+        expect(result).toHaveLength(5);
+        expect(result).toContainEqual(expect.objectContaining({ path: 'theme' }));
+        expect(result).toContainEqual(expect.objectContaining({ path: 'nested.themes.0' }));
+        expect(result).toContainEqual(expect.objectContaining({ path: 'nested.themes.2' }));
+        expect(result).toContainEqual(expect.objectContaining({ path: 'nested.deeply.inside' }));
+        expect(result).toContainEqual(expect.objectContaining({ path: 'deep.0.val' }));
+    });
+
+    it('Can return partially updated param when timed out', async () => {
+        const mockFetch = vi.fn().mockImplementation(async () => {
+            await waitForMs(1500);
+            return { json: () => Promise.resolve([{ id: 'm', colour: '#bbbbbb' }]) };
+        });
+        global.fetch = mockFetch;
+
+        const mockParam = [
+            ['hongkong', 'm', '#aaaaaa', '#fff'],
+            ['guangzhou', 'm', '#aaaaaa', '#fff'],
+            ['shanghai', 'm', '#aaaaaa', '#fff'],
+            ['london', 'm', '#aaaaaa', '#fff'],
+            ['newyork', 'm', '#aaaaaa', '#fff'],
+        ];
+
+        const updatedParam: any = await updateThemes(mockParam as any);
+        console.log(updatedParam);
+
+        expect(updatedParam[0][2]).toBe('#bbbbbb');
+        expect(updatedParam[1][2]).toBe('#bbbbbb');
+        expect(updatedParam[2][2]).toBe('#bbbbbb');
+        expect(updatedParam[3][2]).toBe('#aaaaaa'); // no time to update this
+        expect(updatedParam[4][2]).toBe('#aaaaaa'); // no time to update this
+
+        await waitForMs(3000); // by now 8 sec passed
+        expect(mockFetch).toBeCalledTimes(4); // 5th time isn't called
+    }, 10_000);
 });

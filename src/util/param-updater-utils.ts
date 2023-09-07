@@ -1,6 +1,6 @@
-import { InterchangeGroup, Name, Note, RmgStyle, StationInfo } from '../constants/constants';
+import { InterchangeGroup, Name, Note, RMGParam, RmgStyle, StationInfo } from '../constants/constants';
 import { nanoid } from 'nanoid';
-import { Theme } from '@railmapgen/rmg-palette-resources';
+import { MonoColour, Theme, updateTheme } from '@railmapgen/rmg-palette-resources';
 
 export const updateParam = (param: { [x: string]: any }) => {
     // Version 0.10
@@ -291,5 +291,109 @@ export const v5_10_updateInterchangeGroup = (param: Record<string, any>) => {
 
         delete param.stn_list[stnId].transfer.info;
         delete param.stn_list[stnId].transfer.osi_names;
+    }
+};
+
+interface MatchedThemeWithPaths {
+    path: string;
+    value: Theme;
+}
+
+const isTheme = (arr: any[]): boolean => {
+    return (
+        arr.length === 4 && // length ok
+        arr.every(elem => typeof elem === 'string') && // type ok
+        !!arr[2].match(/^#[0-9a-fA-F]{6}$/) && // hex ok
+        Object.values(MonoColour).includes(arr[3]) // bg ok
+    );
+};
+
+export const getMatchedThemesWithPaths = (obj: any): MatchedThemeWithPaths[] => {
+    const results: MatchedThemeWithPaths[] = [];
+
+    const search = (o: any, currentPath?: string) => {
+        if (Array.isArray(o) && isTheme(o)) {
+            // push itself if it's theme
+            results.push({ path: currentPath || '', value: o as Theme });
+            return;
+        }
+
+        for (const key in o) {
+            const value = o[key];
+            const newPath = currentPath ? `${currentPath}.${key}` : key;
+            if (Array.isArray(value)) {
+                if (isTheme(value)) {
+                    results.push({ path: newPath, value: value as Theme });
+                } else {
+                    value.forEach((it, idx) => search(it, `${newPath}.${idx}`));
+                }
+            } else if (value && typeof value === 'object') {
+                search(value, newPath);
+            }
+        }
+    };
+
+    search(obj);
+
+    return results;
+};
+
+const dottieSet = (obj: any, path: string, value: any): void => {
+    const pathParts = path.split('.');
+    let currentObj: any = obj;
+    for (let i = 0; i < pathParts.length - 1; i++) {
+        currentObj = currentObj[pathParts[i]];
+    }
+    currentObj[pathParts[pathParts.length - 1]] = value;
+};
+
+export const updateThemes = async (param: RMGParam): Promise<RMGParam> => {
+    const startTimestamp = new Date().getTime();
+
+    const matchedThemes = getMatchedThemesWithPaths(param);
+    console.log(`[rmg] Found all themes pending for update`, matchedThemes);
+
+    const paramCopy: RMGParam = JSON.parse(JSON.stringify(param));
+
+    const TIMEOUT = 5000;
+    let timeoutId;
+    let aborted = false;
+    const updatePromise = new Promise<void>((resolve, reject) => {
+        timeoutId = setTimeout(() => {
+            aborted = true;
+            reject(`Executing time exceeds ${TIMEOUT}ms`);
+        }, TIMEOUT);
+
+        (async () => {
+            for (const { path, value } of matchedThemes) {
+                if (aborted) {
+                    throw new Error('Update aborted');
+                }
+
+                // do not use Promise.all to void firing hundreds of same requests
+                const updatedTheme = await updateTheme(value);
+                dottieSet(paramCopy, path, updatedTheme);
+            }
+        })()
+            .then(resolve)
+            .catch(reject);
+    });
+
+    try {
+        await updatePromise;
+        console.log(
+            `[rmg] Themes update completed, elapsed time ${(new Date().getTime() - startTimestamp) / 1000} sec`
+        );
+        return paramCopy;
+    } catch (e) {
+        console.warn(
+            `[rmg] Error occurs when updating themes, elapsed time ${
+                (new Date().getTime() - startTimestamp) / 1000
+            } sec`,
+            e
+        );
+        return paramCopy;
+    } finally {
+        clearTimeout(timeoutId);
     }
 };
