@@ -1,6 +1,6 @@
 import { RootDispatch } from '../index';
 import { LocalStorageKey, ParamConfig, RMGParam } from '../../constants/constants';
-import { updateParam } from '../../util/param-updater-utils';
+import { updateParam, updateThemes } from '../../util/param-updater-utils';
 import { setFullParam } from '../param/action';
 import { setParamConfig } from './app-slice';
 
@@ -21,6 +21,7 @@ export const readParam = (paramId: string) => {
                 return false;
             } else {
                 const nextParam = updateParam(JSON.parse(paramStr)) as RMGParam;
+                updateThemes(nextParam).then(param => console.log('Param after updating themes', param)); // dry run
                 dispatch(setParamConfig(nextParamConfig));
                 dispatch(setFullParam(nextParam));
                 return true;
