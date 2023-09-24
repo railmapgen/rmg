@@ -5,7 +5,7 @@ import { setFullParam } from '../param/action';
 import { setParamConfig } from './app-slice';
 
 export const readParam = (paramId: string) => {
-    return (dispatch: RootDispatch): boolean => {
+    return async (dispatch: RootDispatch): Promise<boolean> => {
         let nextParamConfig: ParamConfig = { id: paramId };
         const configStr = window.localStorage.getItem(LocalStorageKey.PARAM_CONFIG_BY_ID + paramId);
         if (configStr === null) {
@@ -21,9 +21,14 @@ export const readParam = (paramId: string) => {
                 return false;
             } else {
                 const nextParam = updateParam(JSON.parse(paramStr)) as RMGParam;
-                updateThemes(nextParam).then(param => console.log('Param after updating themes', param)); // dry run
-                dispatch(setParamConfig(nextParamConfig));
-                dispatch(setFullParam(nextParam));
+                try {
+                    const updatedParam = await updateThemes(nextParam);
+                    dispatch(setParamConfig(nextParamConfig));
+                    dispatch(setFullParam(updatedParam));
+                } catch (e) {
+                    dispatch(setParamConfig(nextParamConfig));
+                    dispatch(setFullParam(nextParam));
+                }
                 return true;
             }
         } catch (err) {

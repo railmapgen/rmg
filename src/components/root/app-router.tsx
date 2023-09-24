@@ -36,19 +36,22 @@ export default function AppRouter() {
                 setIsLoaded(true);
             } else {
                 console.log(`AppRouter:: Loading app view for param (ID=${paramId})...`);
-                const result = dispatch(readParam(paramId));
-                if (result) {
-                    setIsLoaded(true);
-                } else {
-                    console.log(`AppRouter:: Failed to read param (ID=${paramId}). Rendering param selector view...`);
-                    toast({
-                        description: t('Project selected is invalid or corrupted.'),
-                        status: 'error',
-                        duration: 10000,
-                        isClosable: true,
-                    });
-                    setSearchParams({});
-                }
+                dispatch(readParam(paramId)).then(result => {
+                    if (result) {
+                        setIsLoaded(true);
+                    } else {
+                        console.log(
+                            `AppRouter:: Failed to read param (ID=${paramId}). Rendering param selector view...`
+                        );
+                        toast({
+                            description: t('Project selected is invalid or corrupted.'),
+                            status: 'error',
+                            duration: 10000,
+                            isClosable: true,
+                        });
+                        setSearchParams({});
+                    }
+                });
             }
         } else if (externalUrl) {
             console.log('AppRouter:: External project URl is provided. Downloading project...');
