@@ -118,33 +118,6 @@ export default function HelpModal(props: HelpModalProps) {
                             輸出之PNG或SVG種類之圖像可基於上述條款，用於修改、發行或其他用途。
                         </ListItem>
                         <ListItem>
-                            All flag emojis shown on Windows platforms are designed by{' '}
-                            <Link color={linkColour} href="https://openmoji.org/" isExternal={true}>
-                                OpenMoji <Icon as={MdOpenInNew} />
-                            </Link>{' '}
-                            – the open-source emoji and icon project. License:
-                            <Link
-                                color={linkColour}
-                                href="https://creativecommons.org/licenses/by-sa/4.0/"
-                                isExternal={true}
-                            >
-                                CC BY-SA 4.0 <Icon as={MdOpenInNew} />
-                            </Link>
-                            <br />
-                            於Windows作業系統上顯示之旗幟Emoji為
-                            <Link color={linkColour} href="https://openmoji.org/" isExternal={true}>
-                                OpenMoji <Icon as={MdOpenInNew} />
-                            </Link>
-                            所設計。許可證：
-                            <Link
-                                color={linkColour}
-                                href="https://creativecommons.org/licenses/by-sa/4.0/"
-                                isExternal={true}
-                            >
-                                CC BY-SA 4.0 <Icon as={MdOpenInNew} />
-                            </Link>
-                        </ListItem>
-                        <ListItem>
                             We reserve the rights, without prior notice, to modify, add, or remove these terms. The
                             Chinese translation is for reference only. In case of any discrepancy between the English
                             version and the Chinese version, the English version shall prevail.
