@@ -1,10 +1,11 @@
-import { Fragment, memo, SVGProps, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, SVGProps, useEffect, useMemo, useRef, useState } from 'react';
 import StripGZMTR from './strip-gzmtr';
 import MainGZMTR from './main-gzmtr';
 import { CanvasType, Note, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import SvgWrapper from '../svg-wrapper';
 import ArrowGzmtr from './arrow-gzmtr';
+import { DoubleDestinations } from './destination-indicator/double-destinations';
 
 const CANVAS_TYPE = CanvasType.RailMap;
 
@@ -117,7 +118,7 @@ const DirectionIndicator = () => {
             {validDests.length !== 2 ? (
                 <DirectionIndicatorTextGroup {...textGroupProps} />
             ) : (
-                <DirectionIndicatorTextGroup2 {...textGroupProps} />
+                <DoubleDestinations {...textGroupProps} />
             )}
         </g>
     );
@@ -137,54 +138,6 @@ const DirectionIndicatorTextGroup = (props: TextGroupProps) => {
             </text>
             <text className="rmg-name__en" fontSize={14} dy={22}>
                 {'Towards ' + destIds.map(stnId => stationList[stnId].name[1].replace('\\', ' ')).join('/')}
-            </text>
-        </g>
-    );
-};
-
-const DirectionIndicatorTextGroup2 = (props: TextGroupProps) => {
-    const { destIds, ...others } = props;
-
-    const direction = useRootSelector(store => store.param.direction);
-    const stationList = useRootSelector(store => store.param.stn_list);
-
-    const charCounts = destIds.map(stnId => stationList[stnId].name[0].length);
-    const minCharCounts = Math.min(...charCounts);
-    const charSpacing =
-        minCharCounts > 1 && charCounts[0] !== charCounts[1]
-            ? Math.abs(charCounts[0] - charCounts[1]) / (minCharCounts - 1)
-            : 0;
-
-    return (
-        <g {...others}>
-            {destIds.map((id, i) => (
-                <Fragment key={id}>
-                    <text
-                        className="rmg-name__zh"
-                        fontSize={25}
-                        x={direction === ShortDirection.left ? 0 : -75}
-                        y={-21 + 42 * i}
-                        letterSpacing={charCounts[i] > charCounts[1 - i] ? '0em' : `${charSpacing}em`}
-                    >
-                        {stationList[id].name[0]}
-                    </text>
-                    <text
-                        className="rmg-name__en"
-                        fontSize={11.5}
-                        x={direction === ShortDirection.left ? 0 : -75}
-                        y={-1 + 42 * i}
-                    >
-                        {'Towards ' + stationList[id].name[1].replace('\\', ' ')}
-                    </text>
-                </Fragment>
-            ))}
-            <text
-                className="rmg-name__zh"
-                fontSize={28}
-                x={direction === ShortDirection.left ? 25 * (Math.max(...charCounts) + 1) : 0}
-                y={5}
-            >
-                方向
             </text>
         </g>
     );
