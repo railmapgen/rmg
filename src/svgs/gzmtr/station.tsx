@@ -1,7 +1,6 @@
-import StationNumber from './station-icon/station-number';
 import { ExtendedInterchangeInfo, Services } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
-import LineIcon from './line-icon/line-icon';
+import { LineIcon, StationNumber } from '@railmapgen/svg-assets/gzmtr';
 import StationNameWrapper from './station-name/station-name-wrapper';
 import { MonoColour, Theme } from '@railmapgen/rmg-palette-resources';
 
@@ -58,7 +57,7 @@ export default function Station(props: Props) {
                 stnState={stnState}
                 tickRotation={tickRotation}
             />
-            <StationNumber lineNum={lineNumber} stnNum={stnInfo.num} passed={stnState === -1} />
+            <StationNumber lineNum={lineNumber} stnNum={stnInfo.num} strokeColour={theme[2]} passed={stnState === -1} />
             <g transform={`translate(${-nameDX},0)`}>
                 <StationNameWrapper
                     primaryName={stnInfo.name}
