@@ -1,18 +1,22 @@
 import { Fragment, SVGProps, useEffect, useRef, useState } from 'react';
-import StationNumber from './station-icon/station-number';
+import { StationNumber } from '@railmapgen/svg-assets/gzmtr';
 import { CanvasType, Name, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import CurrentStationName, { CurrentStationSecondaryName } from './current-station-name';
 import ArrowGzmtr from './arrow-gzmtr';
 
 const InfoGZMTR = () => {
-    const svgHeight = useRootSelector(store => store.param.svg_height);
-    const svgWidths = useRootSelector(store => store.param.svgWidth);
-    const direction = useRootSelector(store => store.param.direction);
-    const infoPanelType = useRootSelector(store => store.param.info_panel_type);
-    const lineNumber = useRootSelector(store => store.param.line_num);
-    const currentStationIndex = useRootSelector(store => store.param.current_stn_idx);
-    const curStnInfo = useRootSelector(store => store.param.stn_list[currentStationIndex]);
+    const {
+        svg_height: svgHeight,
+        svgWidth: svgWidths,
+        theme,
+        direction,
+        info_panel_type: infoPanelType,
+        line_num: lineNumber,
+        current_stn_idx: currentStationIndex,
+        stn_list: stationList,
+    } = useRootSelector(store => store.param);
+    const curStnInfo = stationList[currentStationIndex];
 
     const [nameBBox, setNameBBox] = useState({ width: 0 } as SVGRect);
 
@@ -54,6 +58,7 @@ const InfoGZMTR = () => {
                 <StationNumber
                     lineNum={lineNumber}
                     stnNum={curStnInfo.num}
+                    strokeColour={theme[2]}
                     style={{
                         ['--translate-x' as any]: `${(svgWidths[CanvasType.RunIn] + nameBBox.width) / 2 + 55}px`,
                         ['--translate-y' as any]: `${
