@@ -294,7 +294,7 @@ export enum LocalStorageKey {
     CANVAS_SCALE = 'canvasScale',
     PARAM_BY_ID = 'param:',
     PARAM_CONFIG_BY_ID = 'paramConfig:',
-    DO_NOT_SHOW_RMT_MSG = 'rmg__doNotShowRMTMsg',
+    DO_NOT_SHOW_RMT_MSG = 'doNotShowRMTMsg',
 }
 
 export enum Events {

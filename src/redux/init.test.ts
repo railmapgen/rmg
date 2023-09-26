@@ -5,6 +5,7 @@ import { initCanvasScale, initCanvasToShow, paramUpdateTrigger } from './init';
 import { CanvasType, LocalStorageKey, RMGParam, RmgStyle } from '../constants/constants';
 import { initParam } from './param/util';
 import { vi } from 'vitest';
+import { getParam } from '../util/param-manager-utils';
 
 const realStore = rootReducer.getState();
 const mockStore = createMockAppStore({ ...realStore });
@@ -89,18 +90,16 @@ describe('ReduxInit', () => {
             } as any;
             paramUpdateTrigger({ type: 'MOCK_ACTION' }, mockListenerApi);
 
-            // param in localStorage is updated
-            expect(rmgRuntime.storage.get(LocalStorageKey.PARAM_BY_ID + 'test-id')).toEqual(JSON.stringify(nextParam));
+            // param and config in localStorage are updated
+            const { config, param } = getParam('test-id');
+            expect(param).toEqual(nextParam);
 
-            // param config in redux and localStorage are updated
             expect(mockDispatch).toBeCalledTimes(1);
             expect(mockDispatch).lastCalledWith({ type: 'app/updateParamModifiedTime', payload: expect.any(Number) });
 
             const lastModified = mockDispatch.mock.calls[0][0].payload;
             expect(lastModified).toBeGreaterThan(now);
-            expect(rmgRuntime.storage.get(LocalStorageKey.PARAM_CONFIG_BY_ID + 'test-id')).toBe(
-                JSON.stringify({ lastModified })
-            );
+            expect(config).toEqual({ lastModified });
         });
 
         it('Do not update param config in localStorage if no changes in param', () => {
@@ -121,14 +120,11 @@ describe('ReduxInit', () => {
             } as any;
             paramUpdateTrigger({ type: 'MOCK_ACTION' }, mockListenerApi);
 
-            // param in localStorage is unchanged
-            expect(rmgRuntime.storage.get(LocalStorageKey.PARAM_BY_ID + 'test-id')).toEqual(JSON.stringify(nextParam));
-
-            // param config in redux and localStorage are unchanged
+            // param and config in localStorage are unchanged
+            const { config, param } = getParam('test-id');
+            expect(param).toEqual(nextParam);
             expect(mockDispatch).toBeCalledTimes(0);
-            expect(rmgRuntime.storage.get(LocalStorageKey.PARAM_CONFIG_BY_ID + 'test-id')).toEqual(
-                JSON.stringify({ lastModified })
-            );
+            expect(config).toEqual({ lastModified });
         });
     });
 

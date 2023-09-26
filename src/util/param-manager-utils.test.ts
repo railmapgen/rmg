@@ -6,7 +6,7 @@ import rmgRuntime from '@railmapgen/rmg-runtime';
 describe('ParamMgrUtils', () => {
     describe('ParamMgrUtils - loadParamRegistry', () => {
         afterEach(() => {
-            window.localStorage.clear();
+            rmgRuntime.storage.clear();
         });
 
         it('Can reset param registry if not found in localStorage', () => {
@@ -27,7 +27,7 @@ describe('ParamMgrUtils', () => {
 
     describe('ParamMgrUtils - getParamRegistry', () => {
         afterEach(() => {
-            window.localStorage.clear();
+            rmgRuntime.storage.clear();
         });
 
         it('Can sync loaded param registry with actual param stored in localStorage as expected', () => {
