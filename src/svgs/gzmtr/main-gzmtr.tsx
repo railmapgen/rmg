@@ -180,6 +180,8 @@ const MainGZMTR = () => {
                     lineName={lineName}
                     foregroundColour={'var(--rmg-theme-fg)' as MonoColour}
                     backgroundColour={'var(--rmg-theme-colour)' as ColourHex}
+                    zhClassName="rmg-name__zh"
+                    enClassName="rmg-name__en"
                 />
             </g>
         </g>

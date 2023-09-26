@@ -59,6 +59,7 @@ const InfoGZMTR = () => {
                     lineNum={lineNumber}
                     stnNum={curStnInfo.num}
                     strokeColour={theme[2]}
+                    textClassName="rmg-name__zh"
                     style={{
                         ['--translate-x' as any]: `${(svgWidths[CanvasType.RunIn] + nameBBox.width) / 2 + 55}px`,
                         ['--translate-y' as any]: `${

@@ -57,7 +57,13 @@ export default function Station(props: Props) {
                 stnState={stnState}
                 tickRotation={tickRotation}
             />
-            <StationNumber lineNum={lineNumber} stnNum={stnInfo.num} strokeColour={theme[2]} passed={stnState === -1} />
+            <StationNumber
+                lineNum={lineNumber}
+                stnNum={stnInfo.num}
+                strokeColour={theme[2]}
+                textClassName="rmg-name__zh"
+                passed={stnState === -1}
+            />
             <g transform={`translate(${-nameDX},0)`}>
                 <StationNameWrapper
                     primaryName={stnInfo.name}
@@ -114,6 +120,8 @@ const IntBoxs = (props: IntGroupProps & React.SVGProps<SVGGElement>) => {
                         lineName={info.name}
                         foregroundColour={info.theme?.[3] ?? MonoColour.white}
                         backgroundColour={info.theme?.[2] ?? '#aaaaaa'}
+                        zhClassName="rmg-name__zh"
+                        enClassName="rmg-name__en"
                         passed={stnState === -1}
                     />
                 </g>
