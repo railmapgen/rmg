@@ -51,10 +51,7 @@ export default function ParamSelectorView(props: ParamSelectorViewProps) {
     const handleUpdate = (config: ParamConfig) => {
         const { id, name, lastModified } = config;
         if (id) {
-            window.localStorage.setItem(
-                LocalStorageKey.PARAM_CONFIG_BY_ID + id,
-                JSON.stringify({ name, lastModified })
-            );
+            rmgRuntime.storage.set(LocalStorageKey.PARAM_CONFIG_BY_ID + id, JSON.stringify({ name, lastModified }));
 
             setSelectedParam(undefined);
             setParamRegistry(getParamRegistry());
@@ -64,8 +61,8 @@ export default function ParamSelectorView(props: ParamSelectorViewProps) {
     };
 
     const handleDelete = (id: string) => {
-        window.localStorage.removeItem(LocalStorageKey.PARAM_BY_ID + id);
-        window.localStorage.removeItem(LocalStorageKey.PARAM_CONFIG_BY_ID + id);
+        rmgRuntime.storage.remove(LocalStorageKey.PARAM_BY_ID + id);
+        rmgRuntime.storage.remove(LocalStorageKey.PARAM_CONFIG_BY_ID + id);
 
         setSelectedParam(undefined);
         setParamRegistry(getParamRegistry());
