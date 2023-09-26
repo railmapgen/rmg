@@ -19,7 +19,7 @@ export default function AppView() {
     const [isShowRMTMessage, setIsShowRMTMessage] = useState(false);
 
     useEffect(() => {
-        if (rmgRuntime.isStandaloneWindow() && !window.localStorage.getItem(LocalStorageKey.DO_NOT_SHOW_RMT_MSG)) {
+        if (rmgRuntime.isStandaloneWindow() && !rmgRuntime.storage.get(LocalStorageKey.DO_NOT_SHOW_RMT_MSG)) {
             setIsShowRMTMessage(true);
         }
     }, []);
@@ -46,7 +46,7 @@ export default function AppView() {
                             as="button"
                             onClick={() => {
                                 setIsShowRMTMessage(false);
-                                window.localStorage.setItem(LocalStorageKey.DO_NOT_SHOW_RMT_MSG, 'true');
+                                rmgRuntime.storage.set(LocalStorageKey.DO_NOT_SHOW_RMT_MSG, 'true');
                             }}
                         >
                             {t("Don't show me again")}

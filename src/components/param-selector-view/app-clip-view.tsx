@@ -1,8 +1,8 @@
 import { RmgCard, RmgPage } from '@railmapgen/rmg-components';
 import ParamSelector from './param-selector';
 import React, { useEffect, useRef, useState } from 'react';
-import { Events, LocalStorageKey, ParamConfig } from '../../constants/constants';
-import { getParamRegistry } from '../../util/param-manager-utils';
+import { Events, ParamConfig } from '../../constants/constants';
+import { getParam, getParamRegistry } from '../../util/param-manager-utils';
 import { Alert, AlertIcon, Button, HStack, IconButton, SystemStyleObject } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
@@ -65,15 +65,16 @@ export default function AppClipView() {
     }, []);
 
     const handleImport = () => {
-        const paramConfigStr = rmgRuntime.storage.get(LocalStorageKey.PARAM_CONFIG_BY_ID + selectedParam);
-        const paramStr = rmgRuntime.storage.get(LocalStorageKey.PARAM_BY_ID + selectedParam);
+        if (!selectedParam) {
+            return;
+        }
 
+        const { config, param } = getParam(selectedParam);
         try {
-            const updatedParam = paramStr ? updateParam(JSON.parse(paramStr)) : null;
             channelRef.current?.postMessage({
                 event: 'IMPORT',
-                meta: paramConfigStr ? JSON.parse(paramConfigStr) : null,
-                data: updatedParam,
+                meta: config,
+                data: param ? updateParam(param) : param,
             });
             rmgRuntime.event(Events.APP_CLIP_VIEW_IMPORT, { parentComponent });
 

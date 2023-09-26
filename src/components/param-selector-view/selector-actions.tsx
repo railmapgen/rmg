@@ -3,7 +3,7 @@ import { Button, Flex, SystemStyleObject } from '@chakra-ui/react';
 import { MdAdd, MdInsertDriveFile, MdOpenInBrowser, MdUpload } from 'react-icons/md';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { Events, RmgStyle } from '../../constants/constants';
-import { importParam } from '../../util/param-manager-utils';
+import { insertParam } from '../../util/param-manager-utils';
 import { readFileAsText } from '../../util/utils';
 import { useTranslation } from 'react-i18next';
 import useRootSearchParams from '../../hooks/use-root-search-params';
@@ -46,13 +46,13 @@ export default function SelectorActions(props: SelectorActionsProps) {
 
     const handleNew = () => {
         const newParam = initParam(RmgStyle.MTR, rmgRuntime.getLanguage() as LanguageCode);
-        const id = importParam(JSON.stringify(newParam));
+        const id = insertParam(JSON.stringify(newParam));
         setSearchParams({ project: id });
         rmgRuntime.event(Events.NEW_PARAM, {});
     };
 
     const handleOpenTemplate = (param: Record<string, any>, name: string) => {
-        const id = importParam(JSON.stringify(param), name);
+        const id = insertParam(JSON.stringify(param), name);
         setSearchParams({ project: id });
     };
 
@@ -67,7 +67,7 @@ export default function SelectorActions(props: SelectorActionsProps) {
                 onError(t('OpenActions.invalidType'));
             } else {
                 const paramStr = await readFileAsText(file);
-                const id = importParam(paramStr);
+                const id = insertParam(paramStr);
                 setSearchParams({ project: id });
                 rmgRuntime.event(Events.UPLOAD_PARAM, {});
             }

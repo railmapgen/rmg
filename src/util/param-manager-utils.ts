@@ -52,11 +52,21 @@ export const getParamRegistry = (): ParamConfig[] => {
     return actualParamRegistry;
 };
 
+export const getParam = (id: string): { param: any; config?: ParamConfig } => {
+    const configStr = rmgRuntime.storage.get(LocalStorageKey.PARAM_CONFIG_BY_ID + id);
+    const paramStr = rmgRuntime.storage.get(LocalStorageKey.PARAM_BY_ID + id);
+    return {
+        param: paramStr ? JSON.parse(paramStr) : paramStr,
+        config: configStr ? JSON.parse(configStr) : configStr,
+    };
+};
+
 /**
  * @param param Accept any param string and save to localStorage. It will not be validated until opening it.
  * @param name Project name stored in paramConfig in localStorage.
+ * @return ID assigned
  */
-export const importParam = (param: string, name?: string): string => {
+export const insertParam = (param: string, name?: string): string => {
     const id = nanoid();
     rmgRuntime.storage.set(LocalStorageKey.PARAM_BY_ID + id, param);
     rmgRuntime.storage.set(
@@ -75,13 +85,7 @@ export const downloadParam = async (url: string): Promise<string | null> => {
         const res = await fetch(url);
         if (res.ok) {
             const param = await res.text();
-            const id = nanoid();
-            rmgRuntime.storage.set(LocalStorageKey.PARAM_BY_ID + id, param);
-            rmgRuntime.storage.set(
-                LocalStorageKey.PARAM_CONFIG_BY_ID + id,
-                JSON.stringify({ name, lastModified: Date.now() })
-            );
-            return id;
+            return insertParam(param, name);
         } else {
             console.warn('Failed to download param');
             return null;

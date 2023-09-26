@@ -52,7 +52,7 @@ export default function RmgTemplatesAppClip(props: RmgTemplatesAppClipProps) {
 
     return (
         <RmgAppClip size="xl" isOpen={isOpen} onClose={onClose} sx={styles}>
-            <iframe src={frameUrl} loading="lazy" />
+            <iframe src={frameUrl} loading="eager" />
         </RmgAppClip>
     );
 }
