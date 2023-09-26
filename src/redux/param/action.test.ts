@@ -149,8 +149,8 @@ describe('Tests for param actions', () => {
         const action: setNotesAction = actions.find(action => action.type === SET_NOTES);
         expect(action).toBeDefined();
         expect(action.notes).toHaveLength(2);
-        expect(action.notes[0]).toEqual(mockNote1);
-        expect(action.notes[1]).toEqual(['', '', 10, 10, false]); // add to end of list
+        expect(action.notes?.[0]).toEqual(mockNote1);
+        expect(action.notes?.[1]).toEqual(['', '', 10, 10, false]); // add to end of list
     });
 
     it('Can update note as expected', () => {
@@ -169,8 +169,8 @@ describe('Tests for param actions', () => {
         const action: setNotesAction = actions.find(action => action.type === SET_NOTES);
         expect(action).toBeDefined();
         expect(action.notes).toHaveLength(2);
-        expect(action.notes[0]).toEqual(mockNote1);
-        expect(action.notes[1]).toEqual(mockUpdatedNote);
+        expect(action.notes?.[0]).toEqual(mockNote1);
+        expect(action.notes?.[1]).toEqual(mockUpdatedNote);
     });
 
     it('Can delete note as expected', () => {

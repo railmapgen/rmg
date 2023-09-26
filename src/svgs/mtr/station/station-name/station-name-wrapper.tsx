@@ -34,7 +34,7 @@ const STN_NAME_LINE_GAP = 14;
 interface StationNameWrapperProps extends SVGProps<SVGGElement> {
     stationName: Name;
     stationState: StationState;
-    facility: Facilities;
+    facility?: Facilities;
     lower?: boolean;
     align?: Direction;
 }
@@ -74,7 +74,7 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
             x:
                 bBox.x -
                 3 +
-                (facility === ''
+                (!facility
                     ? 0
                     : align
                     ? align === Direction.right
@@ -82,7 +82,7 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
                         : 0
                     : (NAME_FULL_HEIGHT + 5) / 2 - 3 - NAME_FULL_HEIGHT),
             y: NAME_ZH_TOP - 1,
-            width: bBox.width + 6 + (facility === '' ? 0 : NAME_FULL_HEIGHT + 3),
+            width: bBox.width + 6 + (!facility ? 0 : NAME_FULL_HEIGHT + 3),
             height: NAME_FULL_HEIGHT + 2 + 11 * (nameEnRows - 1),
         },
         use: {
@@ -94,14 +94,13 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
             y: NAME_ZH_TOP - 1 + 5.5 * (nameEnRows - 1),
         },
         StationName: {
-            x:
-                facility === ''
+            x: !facility
+                ? 0
+                : align
+                ? align === Direction.right
                     ? 0
-                    : align
-                    ? align === Direction.right
-                        ? 0
-                        : NAME_FULL_HEIGHT + 3
-                    : (NAME_FULL_HEIGHT + 5) / 2,
+                    : NAME_FULL_HEIGHT + 3
+                : (NAME_FULL_HEIGHT + 5) / 2,
             y: 0,
         },
     };
@@ -119,7 +118,7 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
                     />
                 )}
 
-                {facility !== '' && (
+                {facility && (
                     <use
                         xlinkHref={`#${facility}`}
                         fill={stationState === StationState.PASSED ? 'var(--rmg-grey)' : 'var(--rmg-black)'}

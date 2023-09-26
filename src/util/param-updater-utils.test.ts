@@ -1,5 +1,10 @@
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
-import { getMatchedThemesWithPaths, updateThemes, v5_10_updateInterchangeGroup } from './param-updater-utils';
+import {
+    dottieGet,
+    getMatchedThemesWithPaths,
+    updateThemes,
+    v5_10_updateInterchangeGroup,
+} from './param-updater-utils';
 import { vi } from 'vitest';
 import { waitForMs } from './utils';
 
@@ -153,4 +158,32 @@ describe('ParamUpdaterUtils', () => {
         await waitForMs(3000); // by now 8 sec passed
         expect(mockFetch).toBeCalledTimes(4); // 5th time isn't called
     }, 10_000);
+
+    it('dottie get with wildcard', () => {
+        const obj = {
+            stations: {
+                a: { name: 'A', facility: '' },
+                b: { name: 'B' },
+                c: { name: 'C', secondaryName: 'c' },
+                d: { name: 'D', secondaryName: '' },
+            },
+            interchanges: [{ line: '1', osi: true }, { line: '2', osi: false }, { line: '3' }],
+            notes: [],
+            loop: {
+                bank: true,
+            },
+        };
+
+        expect(dottieGet(obj, 'stations.*.secondaryName')).toEqual({
+            'stations.c.secondaryName': 'c',
+            'stations.d.secondaryName': '',
+        });
+        expect(dottieGet(obj, 'stations.*.facility')).toEqual({ 'stations.a.facility': '' });
+        expect(dottieGet(obj, 'interchanges.*.osi')).toEqual({
+            'interchanges.0.osi': true,
+            'interchanges.1.osi': false,
+        });
+        expect(dottieGet(obj, 'notes')).toEqual({ notes: [] });
+        expect(dottieGet(obj, 'loop.bank')).toEqual({ 'loop.bank': true });
+    });
 });
