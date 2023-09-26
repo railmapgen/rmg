@@ -1,5 +1,6 @@
-import rootReducer from '../index';
 import { createMockAppStore, createParamInLocalStorage } from '../../setupTests';
+import rmgRuntime from '@railmapgen/rmg-runtime';
+import rootReducer from '../index';
 import { LocalStorageKey } from '../../constants/constants';
 import { readParam } from './action';
 import { vi } from 'vitest';
@@ -11,6 +12,10 @@ const mockStore = createMockAppStore({ ...realStore });
 const updateThemesSpy = vi.spyOn(paramUpdaterUtils, 'updateThemes');
 
 describe('AppAction', () => {
+    beforeAll(async () => {
+        await rmgRuntime.ready();
+    });
+
     describe('AppAction - readParam', () => {
         afterEach(() => {
             mockStore.clearActions();
@@ -38,7 +43,7 @@ describe('AppAction', () => {
         it('Can read param config and param from localStorage and save to store', async () => {
             const now = new Date().getTime();
             createParamInLocalStorage('test-id');
-            window.localStorage.setItem(
+            rmgRuntime.storage.set(
                 LocalStorageKey.PARAM_CONFIG_BY_ID + 'test-id',
                 JSON.stringify({
                     lastModified: now,
@@ -61,7 +66,7 @@ describe('AppAction', () => {
         });
 
         it('Can return false if param in localStorage is invalid', async () => {
-            window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + 'test-id', 'invalid');
+            rmgRuntime.storage.set(LocalStorageKey.PARAM_BY_ID + 'test-id', 'invalid');
 
             const result = await mockStore.dispatch(readParam('test-id'));
             expect(result).toBeFalsy();

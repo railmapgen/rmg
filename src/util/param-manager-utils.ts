@@ -1,45 +1,23 @@
 import { LocalStorageKey, ParamConfig } from '../constants/constants';
 import { nanoid } from 'nanoid';
-
-export const getParamMap = (): Record<string, string> => {
-    const paramMap: Record<string, string> = {};
-
-    let count = 0;
-    while (count < window.localStorage.length) {
-        const key = window.localStorage.key(count);
-        if (key?.startsWith(LocalStorageKey.PARAM_BY_ID)) {
-            const paramStr = window.localStorage.getItem(key);
-            if (paramStr !== null) {
-                const paramId = key.slice(LocalStorageKey.PARAM_BY_ID.length);
-                if (paramId) {
-                    paramMap[paramId] = paramStr;
-                }
-            }
-        }
-        count++;
-    }
-
-    return paramMap;
-};
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 export const loadParamRegistry = (): ParamConfig[] => {
-    const registry: ParamConfig[] = [];
-    iterateLocalStorage(
-        key => key.startsWith(LocalStorageKey.PARAM_CONFIG_BY_ID),
-        (key, value) => {
-            const id = key.slice(LocalStorageKey.PARAM_CONFIG_BY_ID.length);
+    const prefix = `${rmgRuntime.getAppName()}__${LocalStorageKey.PARAM_CONFIG_BY_ID}`;
+    const registry: ParamConfig[] = Object.entries(rmgRuntime.storage.getAll())
+        .filter(([key]) => key.startsWith(prefix))
+        .map(([key, value]) => {
+            const id = key.slice(prefix.length);
             if (value) {
                 try {
-                    const config = JSON.parse(value);
-                    registry.push({ ...config, id });
+                    return { ...JSON.parse(value), id };
                 } catch (err) {
-                    registry.push({ id });
+                    return { id };
                 }
             } else {
-                registry.push({ id });
+                return { id };
             }
-        }
-    );
+        });
 
     console.log(
         'loadParamRegistry():: Found param config in localStorage',
@@ -48,41 +26,19 @@ export const loadParamRegistry = (): ParamConfig[] => {
     return registry;
 };
 
-export const upgradeLegacyParam = () => {
-    let contents = window.localStorage.getItem(LocalStorageKey.PARAM);
-    if (contents === null) {
-        contents = window.localStorage.getItem('rmgParam');
-        window.localStorage.removeItem('rmgParam');
-        window.localStorage.removeItem('rmgParamRedux');
-    }
-
-    if (contents !== null) {
-        const paramId = nanoid();
-        console.log('upgradeLegacyParam():: Found legacy param. Assigning ID:', paramId);
-        window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + paramId, contents);
-        window.localStorage.removeItem(LocalStorageKey.PARAM);
-    }
-};
-
 export const getParamRegistry = (): ParamConfig[] => {
     // load all paramConfig from localStorage
     const loadedParamRegistry = loadParamRegistry();
 
     // sync paramRegistry with actual localStorage param items
-    const actualParamRegistry: ParamConfig[] = [];
-    iterateLocalStorage(
-        key => key.startsWith(LocalStorageKey.PARAM_BY_ID),
-        key => {
-            const paramId = key.slice(LocalStorageKey.PARAM_BY_ID.length);
+    const prefix = `${rmgRuntime.getAppName()}__${LocalStorageKey.PARAM_BY_ID}`;
+    const actualParamRegistry: ParamConfig[] = Object.keys(rmgRuntime.storage.getAll())
+        .filter(key => key.startsWith(prefix))
+        .map(key => {
+            const paramId = key.slice(prefix.length);
+            return loadedParamRegistry.find(config => config.id === paramId) ?? { id: paramId };
+        });
 
-            const loadedConfig = loadedParamRegistry.find(config => config.id === paramId);
-            if (loadedConfig) {
-                actualParamRegistry.push(loadedConfig);
-            } else {
-                actualParamRegistry.push({ id: paramId });
-            }
-        }
-    );
     console.log(
         'getParamRegistry():: Actual param found in localStorage',
         actualParamRegistry.map(config => config.id)
@@ -91,23 +47,9 @@ export const getParamRegistry = (): ParamConfig[] => {
     // remove invalid paramConfig from localStorage
     loadedParamRegistry
         .filter(config => actualParamRegistry.every(c => c.id !== config.id))
-        .forEach(config => window.localStorage.removeItem(LocalStorageKey.PARAM_CONFIG_BY_ID + config.id));
+        .forEach(config => rmgRuntime.storage.remove(LocalStorageKey.PARAM_CONFIG_BY_ID + config.id));
 
     return actualParamRegistry;
-};
-
-const iterateLocalStorage = (
-    predicate: (key: string) => boolean,
-    callback: (key: string, value: string | null) => void
-): void => {
-    let count = 0;
-    while (count < window.localStorage.length) {
-        const key = window.localStorage.key(count);
-        if (key !== null && predicate(key)) {
-            callback(key, window.localStorage.getItem(key));
-        }
-        count++;
-    }
 };
 
 /**
@@ -116,8 +58,8 @@ const iterateLocalStorage = (
  */
 export const importParam = (param: string, name?: string): string => {
     const id = nanoid();
-    window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + id, param);
-    window.localStorage.setItem(
+    rmgRuntime.storage.set(LocalStorageKey.PARAM_BY_ID + id, param);
+    rmgRuntime.storage.set(
         LocalStorageKey.PARAM_CONFIG_BY_ID + id,
         JSON.stringify({
             name,
@@ -134,8 +76,8 @@ export const downloadParam = async (url: string): Promise<string | null> => {
         if (res.ok) {
             const param = await res.text();
             const id = nanoid();
-            window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + id, param);
-            window.localStorage.setItem(
+            rmgRuntime.storage.set(LocalStorageKey.PARAM_BY_ID + id, param);
+            rmgRuntime.storage.set(
                 LocalStorageKey.PARAM_CONFIG_BY_ID + id,
                 JSON.stringify({ name, lastModified: Date.now() })
             );

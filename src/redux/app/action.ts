@@ -3,11 +3,12 @@ import { LocalStorageKey, ParamConfig, RMGParam } from '../../constants/constant
 import { updateParam, updateThemes } from '../../util/param-updater-utils';
 import { setFullParam } from '../param/action';
 import { setParamConfig } from './app-slice';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 export const readParam = (paramId: string) => {
     return async (dispatch: RootDispatch): Promise<boolean> => {
         let nextParamConfig: ParamConfig = { id: paramId };
-        const configStr = window.localStorage.getItem(LocalStorageKey.PARAM_CONFIG_BY_ID + paramId);
+        const configStr = rmgRuntime.storage.get(LocalStorageKey.PARAM_CONFIG_BY_ID + paramId);
         if (configStr === null) {
             console.warn(`Config for paramID=${paramId} does not exist in localStorage`);
         } else {
@@ -15,7 +16,7 @@ export const readParam = (paramId: string) => {
         }
 
         try {
-            const paramStr = window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + paramId);
+            const paramStr = rmgRuntime.storage.get(LocalStorageKey.PARAM_BY_ID + paramId);
             if (paramStr === null) {
                 console.warn(`Param ID=${paramId} does not exist in localStorage`);
                 return false;

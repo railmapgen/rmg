@@ -290,12 +290,10 @@ export interface ParamConfig {
 
 // localStorage keys
 export enum LocalStorageKey {
-    CANVAS_TO_SHOW = 'rmg__canvasToShow',
-    CANVAS_SCALE = 'rmg__canvasScale',
-    PARAM = 'rmg__param',
-    PARAM_BY_ID = 'rmg__param:',
-    PARAM_REGISTRY = 'rmg__paramRegistry',
-    PARAM_CONFIG_BY_ID = 'rmg__paramConfig:',
+    CANVAS_TO_SHOW = 'canvasToShow',
+    CANVAS_SCALE = 'canvasScale',
+    PARAM_BY_ID = 'param:',
+    PARAM_CONFIG_BY_ID = 'paramConfig:',
     DO_NOT_SHOW_RMT_MSG = 'rmg__doNotShowRMTMsg',
 }
 

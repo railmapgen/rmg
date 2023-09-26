@@ -1,3 +1,4 @@
+import rmgRuntime from '@railmapgen/rmg-runtime';
 import rootReducer from './index';
 import { createMockAppStore } from '../setupTests';
 import { initCanvasScale, initCanvasToShow, paramUpdateTrigger } from './init';
@@ -9,14 +10,18 @@ const realStore = rootReducer.getState();
 const mockStore = createMockAppStore({ ...realStore });
 
 describe('ReduxInit', () => {
+    beforeAll(async () => {
+        await rmgRuntime.ready();
+    });
+
     describe('ReduxInit - initCanvasScale', () => {
         afterEach(() => {
             mockStore.clearActions();
-            window.localStorage.clear();
+            rmgRuntime.storage.clear();
         });
 
         it('Can read canvasScale from localStorage as expected', () => {
-            window.localStorage.setItem(LocalStorageKey.CANVAS_SCALE, '0.5');
+            rmgRuntime.storage.set(LocalStorageKey.CANVAS_SCALE, '0.5');
             initCanvasScale(mockStore);
 
             const actions = mockStore.getActions();
@@ -27,11 +32,11 @@ describe('ReduxInit', () => {
     describe('ReduxInit - initCanvasToShow', () => {
         afterEach(() => {
             mockStore.clearActions();
-            window.localStorage.clear();
+            rmgRuntime.storage.clear();
         });
 
         it('Can read canvasToShow from localStorage as expected', () => {
-            window.localStorage.setItem(
+            rmgRuntime.storage.set(
                 LocalStorageKey.CANVAS_TO_SHOW,
                 JSON.stringify([CanvasType.Destination, CanvasType.RailMap])
             );
@@ -42,7 +47,7 @@ describe('ReduxInit', () => {
         });
 
         it('Can ignore invalid canvas from localStorage', () => {
-            window.localStorage.setItem(LocalStorageKey.CANVAS_TO_SHOW, 'invalid');
+            rmgRuntime.storage.set(LocalStorageKey.CANVAS_TO_SHOW, 'invalid');
             initCanvasToShow(mockStore);
 
             const actions = mockStore.getActions();
@@ -68,7 +73,7 @@ describe('ReduxInit', () => {
             const nextParam = getMockParam('test-id');
 
             // current param in localStorage is outdated
-            expect(window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + 'test-id')).not.toEqual(
+            expect(rmgRuntime.storage.get(LocalStorageKey.PARAM_BY_ID + 'test-id')).not.toEqual(
                 JSON.stringify(nextParam)
             );
 
@@ -85,9 +90,7 @@ describe('ReduxInit', () => {
             paramUpdateTrigger({ type: 'MOCK_ACTION' }, mockListenerApi);
 
             // param in localStorage is updated
-            expect(window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + 'test-id')).toEqual(
-                JSON.stringify(nextParam)
-            );
+            expect(rmgRuntime.storage.get(LocalStorageKey.PARAM_BY_ID + 'test-id')).toEqual(JSON.stringify(nextParam));
 
             // param config in redux and localStorage are updated
             expect(mockDispatch).toBeCalledTimes(1);
@@ -95,7 +98,7 @@ describe('ReduxInit', () => {
 
             const lastModified = mockDispatch.mock.calls[0][0].payload;
             expect(lastModified).toBeGreaterThan(now);
-            expect(window.localStorage.getItem(LocalStorageKey.PARAM_CONFIG_BY_ID + 'test-id')).toBe(
+            expect(rmgRuntime.storage.get(LocalStorageKey.PARAM_CONFIG_BY_ID + 'test-id')).toBe(
                 JSON.stringify({ lastModified })
             );
         });
@@ -103,11 +106,8 @@ describe('ReduxInit', () => {
         it('Do not update param config in localStorage if no changes in param', () => {
             const lastModified = Date.now() - 60 * 1000;
             const nextParam = getMockParam('test-id');
-            window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + 'test-id', JSON.stringify(nextParam));
-            window.localStorage.setItem(
-                LocalStorageKey.PARAM_CONFIG_BY_ID + 'test-id',
-                JSON.stringify({ lastModified })
-            );
+            rmgRuntime.storage.set(LocalStorageKey.PARAM_BY_ID + 'test-id', JSON.stringify(nextParam));
+            rmgRuntime.storage.set(LocalStorageKey.PARAM_CONFIG_BY_ID + 'test-id', JSON.stringify({ lastModified }));
 
             // receive null change in param redux store
             const mockListenerApi = {
@@ -122,13 +122,11 @@ describe('ReduxInit', () => {
             paramUpdateTrigger({ type: 'MOCK_ACTION' }, mockListenerApi);
 
             // param in localStorage is unchanged
-            expect(window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + 'test-id')).toEqual(
-                JSON.stringify(nextParam)
-            );
+            expect(rmgRuntime.storage.get(LocalStorageKey.PARAM_BY_ID + 'test-id')).toEqual(JSON.stringify(nextParam));
 
             // param config in redux and localStorage are unchanged
             expect(mockDispatch).toBeCalledTimes(0);
-            expect(window.localStorage.getItem(LocalStorageKey.PARAM_CONFIG_BY_ID + 'test-id')).toEqual(
+            expect(rmgRuntime.storage.get(LocalStorageKey.PARAM_CONFIG_BY_ID + 'test-id')).toEqual(
                 JSON.stringify({ lastModified })
             );
         });

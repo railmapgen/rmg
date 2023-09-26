@@ -1,12 +1,12 @@
 import { LocalStorageKey } from '../constants/constants';
 import { setCanvasScale, setCanvasToShow, updateParamModifiedTime } from './app/app-slice';
 import { RootDispatch, RootState, RootStore, startRootListening } from './index';
-import { upgradeLegacyParam } from '../util/param-manager-utils';
 import { AnyAction, ListenerEffect } from '@reduxjs/toolkit';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 export const initCanvasScale = (store: RootStore) => {
     try {
-        const canvasScaleValue = window.localStorage.getItem(LocalStorageKey.CANVAS_SCALE);
+        const canvasScaleValue = rmgRuntime.storage.get(LocalStorageKey.CANVAS_SCALE);
         const canvasScale = Number(canvasScaleValue);
         if (canvasScale >= 0.1) {
             store.dispatch(setCanvasScale(canvasScale));
@@ -19,7 +19,7 @@ export const initCanvasScale = (store: RootStore) => {
 
 export const initCanvasToShow = (store: RootStore) => {
     try {
-        const canvasToShowValue = window.localStorage.getItem(LocalStorageKey.CANVAS_TO_SHOW);
+        const canvasToShowValue = rmgRuntime.storage.get(LocalStorageKey.CANVAS_TO_SHOW);
         if (canvasToShowValue !== null) {
             const canvasToShow = JSON.parse(canvasToShowValue);
             if (Array.isArray(canvasToShow)) {
@@ -33,7 +33,6 @@ export const initCanvasToShow = (store: RootStore) => {
 };
 
 export const initStore = (store: RootStore) => {
-    upgradeLegacyParam();
     initCanvasScale(store);
     initCanvasToShow(store);
 
@@ -43,10 +42,7 @@ export const initStore = (store: RootStore) => {
             return currentState.app.canvasScale.toString() !== previousState.app.canvasScale.toString();
         },
         effect: (action, listenerApi) => {
-            window.localStorage.setItem(
-                LocalStorageKey.CANVAS_SCALE,
-                listenerApi.getState().app.canvasScale.toString()
-            );
+            rmgRuntime.storage.set(LocalStorageKey.CANVAS_SCALE, listenerApi.getState().app.canvasScale.toString());
         },
     });
 
@@ -56,7 +52,7 @@ export const initStore = (store: RootStore) => {
             return currentState.app.canvasToShow.toString() !== previousState.app.canvasToShow.toString();
         },
         effect: (action, listenerApi) => {
-            window.localStorage.setItem(
+            rmgRuntime.storage.set(
                 LocalStorageKey.CANVAS_TO_SHOW,
                 JSON.stringify(listenerApi.getState().app.canvasToShow)
             );
@@ -76,18 +72,18 @@ export const paramUpdateTrigger: ListenerEffect<AnyAction, RootState, RootDispat
     const { id, ...others } = listenerApi.getState().app.paramConfig ?? {};
     if (id) {
         // write param to localStorage
-        const prevParamStr = window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + id);
+        const prevParamStr = rmgRuntime.storage.get(LocalStorageKey.PARAM_BY_ID + id);
         const nextParamStr = JSON.stringify(listenerApi.getState().param);
 
         // update lostModified in paramConfig only if param localStorage value is actually updated
         if (prevParamStr !== nextParamStr) {
             console.log('ListenerMiddleware:: Writing param and paramConfig to localStorage, ID=' + id);
 
-            window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + id, nextParamStr);
+            rmgRuntime.storage.set(LocalStorageKey.PARAM_BY_ID + id, nextParamStr);
 
             const now = Date.now();
             listenerApi.dispatch(updateParamModifiedTime(now));
-            window.localStorage.setItem(
+            rmgRuntime.storage.set(
                 LocalStorageKey.PARAM_CONFIG_BY_ID + id,
                 JSON.stringify({
                     ...others,

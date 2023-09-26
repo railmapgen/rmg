@@ -65,8 +65,8 @@ export default function AppClipView() {
     }, []);
 
     const handleImport = () => {
-        const paramConfigStr = window.localStorage.getItem(LocalStorageKey.PARAM_CONFIG_BY_ID + selectedParam);
-        const paramStr = window.localStorage.getItem(LocalStorageKey.PARAM_BY_ID + selectedParam);
+        const paramConfigStr = rmgRuntime.storage.get(LocalStorageKey.PARAM_CONFIG_BY_ID + selectedParam);
+        const paramStr = rmgRuntime.storage.get(LocalStorageKey.PARAM_BY_ID + selectedParam);
 
         try {
             const updatedParam = paramStr ? updateParam(JSON.parse(paramStr)) : null;

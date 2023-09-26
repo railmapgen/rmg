@@ -84,6 +84,7 @@ global.fetch = (...args) => {
             json: () => Promise.resolve([]),
         }) as any;
     } else {
+        console.warn('No mocked response for', args[0]);
         return originalFetch(...args);
     }
 };
@@ -91,5 +92,5 @@ global.fetch = (...args) => {
 export const createParamInLocalStorage = (id: string) => {
     const rmgParam = initParam(RmgStyle.MTR, 'en');
     rmgParam.line_num = id;
-    window.localStorage.setItem(LocalStorageKey.PARAM_BY_ID + id, JSON.stringify(rmgParam));
+    window.localStorage.setItem('rmg__' + LocalStorageKey.PARAM_BY_ID + id, JSON.stringify(rmgParam));
 };
