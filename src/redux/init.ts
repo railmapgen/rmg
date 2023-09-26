@@ -1,4 +1,4 @@
-import { CanvasType, LocalStorageKey } from '../constants/constants';
+import { LocalStorageKey } from '../constants/constants';
 import { setCanvasScale, setCanvasToShow, updateParamModifiedTime } from './app/app-slice';
 import { RootDispatch, RootState, RootStore, startRootListening } from './index';
 import { upgradeLegacyParam } from '../util/param-manager-utils';
@@ -6,19 +6,7 @@ import { AnyAction, ListenerEffect } from '@reduxjs/toolkit';
 
 export const initCanvasScale = (store: RootStore) => {
     try {
-        let canvasScaleValue = window.localStorage.getItem(LocalStorageKey.CANVAS_SCALE);
-
-        // migrate from old key
-        if (canvasScaleValue == null) {
-            const canvasScaleOldValue = window.localStorage.getItem('rmgScale');
-            if (canvasScaleOldValue != null) {
-                canvasScaleValue = canvasScaleOldValue;
-                console.log('Migrating canvas scale from old key...');
-                window.localStorage.setItem(LocalStorageKey.CANVAS_SCALE, canvasScaleValue);
-                window.localStorage.removeItem('rmgScale');
-            }
-        }
-
+        const canvasScaleValue = window.localStorage.getItem(LocalStorageKey.CANVAS_SCALE);
         const canvasScale = Number(canvasScaleValue);
         if (canvasScale >= 0.1) {
             store.dispatch(setCanvasScale(canvasScale));
@@ -31,25 +19,8 @@ export const initCanvasScale = (store: RootStore) => {
 
 export const initCanvasToShow = (store: RootStore) => {
     try {
-        let canvasToShowValue = window.localStorage.getItem(LocalStorageKey.CANVAS_TO_SHOW);
-
-        // migrate from old key
-        if (canvasToShowValue == null) {
-            const canvasToShowOldValue = window.localStorage.getItem('rmgCanvas');
-            if (canvasToShowOldValue != null) {
-                canvasToShowValue = canvasToShowOldValue;
-                console.log('Migrating canvas to show from old key...');
-                window.localStorage.setItem(LocalStorageKey.CANVAS_TO_SHOW, canvasToShowValue);
-                window.localStorage.removeItem('rmgCanvas');
-            }
-        }
-
+        const canvasToShowValue = window.localStorage.getItem(LocalStorageKey.CANVAS_TO_SHOW);
         if (canvasToShowValue !== null) {
-            if (Object.values(CanvasType).includes(canvasToShowValue as any)) {
-                store.dispatch(setCanvasToShow([canvasToShowValue as CanvasType]));
-                return;
-            }
-
             const canvasToShow = JSON.parse(canvasToShowValue);
             if (Array.isArray(canvasToShow)) {
                 store.dispatch(setCanvasToShow(canvasToShow));
