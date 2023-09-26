@@ -59,9 +59,9 @@ export default function MoreSection() {
         {
             type: 'select',
             label: t('StationSidePanel.more.facility'),
-            value: facility,
-            options: style === RmgStyle.MTR ? mtrFacilityOptions : shmetroFacilityOptions,
-            onChange: value => dispatch(updateStationFacility(selectedStation, value as Facilities)),
+            value: facility || '',
+            options: { '': t('None'), ...(style === RmgStyle.MTR ? mtrFacilityOptions : shmetroFacilityOptions) },
+            onChange: value => dispatch(updateStationFacility(selectedStation, value as Facilities | '')),
             hidden: ![RmgStyle.MTR, RmgStyle.SHMetro].includes(style),
         },
         {

@@ -99,7 +99,6 @@ export interface StationTransfer {
 }
 
 export const FACILITIES = {
-    '': 'None',
     airport: 'Airport',
     hsr: 'High speed rail',
     railway: 'National rail',
@@ -114,7 +113,7 @@ export interface StationInfo {
      * Station name in two languages.
      */
     name: Name;
-    secondaryName: false | Name;
+    secondaryName?: Name;
     /**
      * Station number. (GZMTR specific)
      */
@@ -142,7 +141,7 @@ export interface StationInfo {
     /**
      * Facility near the station.
      */
-    facility: Facilities;
+    facility?: Facilities;
     /**
      * Is a pivot station in the loop.
      */
@@ -236,7 +235,7 @@ export interface RMGParam {
     line_num: string;
     psd_num: string;
     info_panel_type: PanelTypeGZMTR | PanelTypeShmetro;
-    notesGZMTR: Note[];
+    notesGZMTR?: Note[];
     direction_gz_x: number;
     direction_gz_y: number;
     coline: Record<string, ColineInfo>;

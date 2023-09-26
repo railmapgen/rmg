@@ -7,9 +7,6 @@ export const updateParam = (param: { [x: string]: any }) => {
     if (!('line_name' in param)) {
         param.line_name = ['路線名', 'Name of Line'];
     }
-    if (!('dest_legacy' in param)) {
-        param.dest_legacy = false;
-    }
 
     // Version 0.11
     delete param.fontZH;
@@ -138,11 +135,9 @@ export const updateParam = (param: { [x: string]: any }) => {
             param.stn_list[stnId].services = ['local'];
         }
         if (!('facility' in stnInfo)) {
-            if ('usage' in stnInfo) {
-                param.stn_list[stnId].facility = stnInfo.usage;
-            } else {
-                param.stn_list[stnId].facility = '';
-            }
+            param.stn_list[stnId].facility = stnInfo.usage || undefined;
+        } else if (stnInfo.facility === '') {
+            param.stn_list[stnId].facility = undefined;
         }
         delete param.stn_list[stnId].usage;
     }
@@ -169,10 +164,6 @@ export const updateParam = (param: { [x: string]: any }) => {
     delete param.svg_width;
     delete param.svg_dest_width;
 
-    if (!('notesGZMTR' in param)) {
-        param.notesGZMTR = [];
-    }
-
     param.notesGZMTR = param.notesGZMTR?.map((note: any[]) =>
         note.length === 4 ? note.concat([false]) : note
     ) as Note[];
@@ -195,11 +186,9 @@ export const updateParam = (param: { [x: string]: any }) => {
     // Version 3.5.6
     // Version 3.6.2
     Object.keys(param.stn_list).forEach(stnId => {
-        if (!('secondaryName' in param.stn_list[stnId])) {
-            param.stn_list[stnId].secondaryName = false;
-        } else {
-            if (param.stn_list[stnId].secondaryName !== false && param.stn_list[stnId].secondaryName.join() === ',') {
-                param.stn_list[stnId].secondaryName = false;
+        if ('secondaryName' in param.stn_list[stnId]) {
+            if (param.stn_list[stnId].secondaryName === false) {
+                param.stn_list[stnId].secondaryName = undefined;
             }
         }
 
@@ -264,6 +253,7 @@ export const updateParam = (param: { [x: string]: any }) => {
     // Version pre 5.10
     v5_10_updateInterchangeGroup(param);
 
+    sanitiseParam(param);
     return param;
 };
 
@@ -338,6 +328,29 @@ export const getMatchedThemesWithPaths = (obj: any): MatchedThemeWithPaths[] => 
     return results;
 };
 
+export const dottieGet = (obj: any, path: string) => {
+    const result: Record<string, any> = {};
+    const get = (o: any, currentPaths: string[], remainingPaths: string[]) => {
+        let curO = o;
+        for (let i = 0; i < remainingPaths.length - 1; i++) {
+            if (remainingPaths[i] === '*') {
+                Object.keys(curO).forEach(key =>
+                    get(curO, [...currentPaths, ...remainingPaths.slice(0, i)], [key, ...remainingPaths.slice(i + 1)])
+                );
+                return;
+            }
+            curO = curO?.[remainingPaths[i]];
+        }
+
+        const value = curO?.[remainingPaths[remainingPaths.length - 1]];
+        if (value !== undefined) {
+            result[[...currentPaths, ...remainingPaths].join('.')] = value;
+        }
+    };
+    get(obj, [], path.split('.'));
+    return result;
+};
+
 const dottieSet = (obj: any, path: string, value: any): void => {
     const pathParts = path.split('.');
     let currentObj: any = obj;
@@ -396,4 +409,21 @@ export const updateThemes = async (param: RMGParam): Promise<RMGParam> => {
     } finally {
         clearTimeout(timeoutId);
     }
+};
+
+const SANITISATION_RULES: Record<string, (value: any) => boolean> = {
+    notesGZMTR: value => !value || value?.length === 0,
+    'stn_list.*.facility': value => !value,
+    'stn_list.*.secondaryName': value => !value || value.join(',') === ',',
+};
+
+const sanitiseParam = (param: any) => {
+    Object.entries(SANITISATION_RULES).forEach(([path, predicate]) => {
+        Object.entries(dottieGet(param, path)).forEach(([exactPath, value]) => {
+            if (predicate(value)) {
+                dottieSet(param, exactPath, undefined);
+            }
+        });
+    });
+    return param;
 };

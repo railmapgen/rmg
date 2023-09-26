@@ -38,7 +38,6 @@ const initLineName = (language: LanguageCode): Name => {
 
 export const initStationInfo = (id: string): StationInfo => ({
     name: ['未命名 ' + id, 'Unnamed ' + id],
-    secondaryName: false,
     num: '00',
     services: [Services.local],
     parents: [],
@@ -49,7 +48,6 @@ export const initStationInfo = (id: string): StationInfo => ({
         tick_direc: ShortDirection.right,
         paid_area: true,
     },
-    facility: '',
     loop_pivot: false,
     one_line: true,
     int_padding: 355,

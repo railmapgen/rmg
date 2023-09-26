@@ -19,7 +19,7 @@ export default function GZMTRNoteSection() {
             </Heading>
 
             <VStack spacing={0.5}>
-                {notesGZMTR.map((note, i) => (
+                {notesGZMTR?.map((note, i) => (
                     <GZMTRNoteCard
                         key={i}
                         note={note}

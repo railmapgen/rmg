@@ -139,7 +139,7 @@ export interface setPanelTypeAction {
 
 export interface setNotesAction {
     type: typeof SET_NOTES;
-    notes: Note[];
+    notes?: Note[];
 }
 
 export interface setNamePositionAction {
@@ -255,28 +255,28 @@ export const setPanelType = (panelType: PanelTypeShmetro | PanelTypeGZMTR): setP
     return { type: SET_PANEL_TYPE, panelType };
 };
 
-const setNotes = (notes: Note[]): setNotesAction => {
+const setNotes = (notes?: Note[]): setNotesAction => {
     return { type: SET_NOTES, notes };
 };
 
 export const addNote = () => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const notes = getState().param.notesGZMTR;
-        dispatch(setNotes(notes.concat([['', '', 10, 10, false]])));
+        dispatch(setNotes((notes || []).concat([['', '', 10, 10, false]])));
     };
 };
 
 export const updateNote = (index: number, updatedNote: Note) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const notes = getState().param.notesGZMTR;
-        dispatch(setNotes(notes.map((originalNote, idx) => (idx === index ? updatedNote : originalNote))));
+        dispatch(setNotes(notes?.map((originalNote, idx) => (idx === index ? updatedNote : originalNote))));
     };
 };
 
 export const removeNote = (index: number) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const notes = getState().param.notesGZMTR;
-        dispatch(setNotes(notes.filter((_, idx) => idx !== index)));
+        dispatch(setNotes(notes?.filter((_, idx) => idx !== index)));
     };
 };
 
@@ -446,7 +446,7 @@ export const updateStationName = (stationId: string, name: Name) => {
     };
 };
 
-export const updateStationSecondaryName = (stationId: string, secondaryName: Name | false) => {
+export const updateStationSecondaryName = (stationId: string, secondaryName?: Name) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
         dispatch(setStation(stationId, { ...stationInfo, secondaryName }));
@@ -733,10 +733,10 @@ export const flipStationBranchPositionLegacy = (left: string, right: string) => 
     };
 };
 
-export const updateStationFacility = (stationId: string, facility: Facilities) => {
+export const updateStationFacility = (stationId: string, facility: Facilities | '') => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
-        dispatch(setStation(stationId, { ...stationInfo, facility }));
+        dispatch(setStation(stationId, { ...stationInfo, facility: facility || undefined }));
     };
 };
 
