@@ -340,12 +340,12 @@ export const dottieGet = (obj: any, path: string) => {
                 return;
             }
             curO = curO?.[remainingPaths[i]];
+            if (curO === undefined) {
+                return;
+            }
         }
 
-        const value = curO?.[remainingPaths[remainingPaths.length - 1]];
-        if (value !== undefined) {
-            result[[...currentPaths, ...remainingPaths].join('.')] = value;
-        }
+        result[[...currentPaths, ...remainingPaths].join('.')] = curO?.[remainingPaths[remainingPaths.length - 1]];
     };
     get(obj, [], path.split('.'));
     return result;
@@ -413,6 +413,8 @@ export const updateThemes = async (param: RMGParam): Promise<RMGParam> => {
 
 const SANITISATION_RULES: Record<string, (value: any) => boolean> = {
     notesGZMTR: value => !value || value?.length === 0,
+    'stn_list.*.branch.left': value => !value || value?.length === 0,
+    'stn_list.*.branch.right': value => !value || value?.length === 0,
     'stn_list.*.facility': value => !value,
     'stn_list.*.secondaryName': value => !value || value.join(',') === ',',
 };

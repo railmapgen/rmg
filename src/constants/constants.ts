@@ -58,7 +58,7 @@ export enum BranchStyle {
  * @property 0 - branch type
  * @property 1 - ID of the first station of the branch (should also be one of the station's parents/children) or empty
  */
-export type BranchInfo = Record<Direction, [BranchStyle, string] | []>;
+export type BranchInfo = Partial<Record<Direction, [BranchStyle, string]>>;
 
 export enum Services {
     local = 'local',

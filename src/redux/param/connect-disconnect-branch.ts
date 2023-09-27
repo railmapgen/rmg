@@ -66,17 +66,13 @@ export const connect2MainLine = (stationId: string, branchIndex: number) => {
                         id === branch[1] ? id : stationList[stationId].children[0]
                     ),
                     branch: {
-                        left: [],
                         right: stationList.linestart.branch.right,
                     },
                 },
                 linestart: {
                     ...stationList.linestart,
                     children: stationList.linestart.children.filter(id => id !== branch[1]),
-                    branch: {
-                        left: [],
-                        right: [],
-                    },
+                    branch: {},
                 },
             };
             dispatch(setStationsBulk(nextStationList));
@@ -95,17 +91,13 @@ export const connect2MainLine = (stationId: string, branchIndex: number) => {
                         id === seconndLastId ? id : stationList[stationId].parents[0]
                     ),
                     branch: {
-                        right: [],
                         left: stationList.lineend.branch.left,
                     },
                 },
                 lineend: {
                     ...stationList.lineend,
                     parents: stationList.lineend.parents.filter(id => id !== seconndLastId),
-                    branch: {
-                        left: [],
-                        right: [],
-                    },
+                    branch: {},
                 },
             };
             dispatch(setStationsBulk(nextStationList));
@@ -178,16 +170,12 @@ export const disconnectFromMainLine = (direction: Direction, branchIndex: number
                 [beginStation]: {
                     ...stationList[beginStation],
                     children: stationList[beginStation].children.filter(id => id !== branch[1]),
-                    branch: {
-                        right: [],
-                        left: [],
-                    },
+                    branch: {},
                 },
                 linestart: {
                     ...stationList.linestart,
                     children: stationList[beginStation].children.map(id => (id === branch[1] ? id : mainBranch[1])),
                     branch: {
-                        left: [],
                         right: stationList[beginStation].branch.right,
                     },
                 },
@@ -206,10 +194,7 @@ export const disconnectFromMainLine = (direction: Direction, branchIndex: number
                 [endStation]: {
                     ...stationList[endStation],
                     parents: stationList[endStation].parents.filter(id => id !== secondEndStation),
-                    branch: {
-                        right: [],
-                        left: [],
-                    },
+                    branch: {},
                 },
                 lineend: {
                     ...stationList.lineend,
@@ -217,7 +202,6 @@ export const disconnectFromMainLine = (direction: Direction, branchIndex: number
                         id === secondEndStation ? id : mainBranch.slice(-2)[0]
                     ),
                     branch: {
-                        right: [],
                         left: stationList[endStation].branch.left,
                     },
                 },

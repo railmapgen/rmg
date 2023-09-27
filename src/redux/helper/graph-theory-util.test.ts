@@ -24,7 +24,7 @@ describe('Unit tests for graph theory utilities', () => {
             ...mockSimpleStationList,
             stn1: {
                 ...mockSimpleStationList.stn1,
-                branch: { left: [], right: [BranchStyle.nonThrough, 'stn3'] },
+                branch: { right: [BranchStyle.nonThrough, 'stn3'] },
             },
         });
         expect(routes).toHaveLength(2);

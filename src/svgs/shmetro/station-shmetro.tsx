@@ -21,8 +21,9 @@ const StationSHMetro = (props: Props) => {
     // no shift for loop as there is no vertical line covering the station
     const branchNameDX = loop
         ? 0
-        : ([...stnInfo.branch.left, ...stnInfo.branch.right].length ? 8 + 12 * stnInfo.name[1].split('\\').length : 0) *
-          (direction === 'r' ? -1 : 1);
+        : (stnInfo.parents.length > 1 || stnInfo.children.length > 1
+              ? 8 + 12 * stnInfo.name[1].split('\\').length
+              : 0) * (direction === 'r' ? -1 : 1);
 
     let stationIconStyle: string;
     const stationIconColor: { [pos: string]: string } = {};

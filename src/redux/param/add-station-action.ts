@@ -25,8 +25,8 @@ export const addStation = (where: `${number}` | 'new', from: string, to: string,
                     branch: {
                         left: stationList[from].branch.left,
                         right:
-                            stationList[from].branch.right.length && stationList[from].branch.right[1] === to
-                                ? ([stationList[from].branch.right[0], newId] as [BranchStyle, string])
+                            stationList[from].branch.right?.[1] === to
+                                ? (stationList[from].branch.right?.with(1, newId) as [BranchStyle, string])
                                 : stationList[from].branch.right,
                     },
                 },
@@ -35,8 +35,8 @@ export const addStation = (where: `${number}` | 'new', from: string, to: string,
                     parents: stationList[to].parents.map(id => (id === from ? newId : id)),
                     branch: {
                         left:
-                            stationList[to].branch.left.length && stationList[to].branch.left[1] === from
-                                ? ([stationList[to].branch.left[0], newId] as [BranchStyle, string])
+                            stationList[to].branch.left?.[1] === from
+                                ? (stationList[to].branch.left?.with(1, newId) as [BranchStyle, string])
                                 : stationList[to].branch.left,
                         right: stationList[to].branch.right,
                     },

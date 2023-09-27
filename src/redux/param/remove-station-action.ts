@@ -1,6 +1,6 @@
 import { RootDispatch, RootState } from '../index';
 import { getYShareMTR } from '../../methods';
-import { StationDict } from '../../constants/constants';
+import { BranchStyle, StationDict } from '../../constants/constants';
 import { setStationsBulk } from './action';
 
 /**
@@ -79,7 +79,7 @@ export const removeStation = (stationId: string) => {
                     children: stationList[parents[0]].children.filter(id => id !== stationId),
                     branch: {
                         ...stationList[parents[0]].branch,
-                        right: [],
+                        right: undefined,
                     },
                 },
                 [children[0]]: {
@@ -87,7 +87,7 @@ export const removeStation = (stationId: string) => {
                     parents: stationList[children[0]].parents.filter(id => id !== stationId),
                     branch: {
                         ...stationList[children[0]].branch,
-                        left: [],
+                        left: undefined,
                     },
                 },
             };
@@ -109,8 +109,11 @@ export const removeStation = (stationId: string) => {
                     newStnList[parId].children.splice(idx, 1);
                 }
 
-                if (newStnList[parId].branch.right[1] === stationId) {
-                    newStnList[parId].branch.right[1] = children[0];
+                if (newStnList[parId].branch.right?.[1] === stationId) {
+                    newStnList[parId].branch.right = newStnList[parId].branch.right?.with(1, children[0]) as [
+                        BranchStyle,
+                        string,
+                    ];
                 }
             });
 
@@ -124,8 +127,11 @@ export const removeStation = (stationId: string) => {
                     newStnList[childId].parents.splice(idx, 1);
                 }
 
-                if (newStnList[childId].branch.left[1] === stationId) {
-                    newStnList[childId].branch.left[1] = parents[0];
+                if (newStnList[childId].branch.left?.[1] === stationId) {
+                    newStnList[childId].branch.left = newStnList[childId].branch.left?.with(1, parents[0]) as [
+                        BranchStyle,
+                        string,
+                    ];
                 }
             });
         }

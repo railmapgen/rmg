@@ -343,9 +343,9 @@ describe('Unit tests for removeStation action', () => {
 
         const newStationList = actions.find(action => action.type === SET_STATIONS_BULK).stations;
         expect(newStationList.stn1.children).toEqual(['stn4']);
-        expect(newStationList.stn1.branch.right).toHaveLength(0);
+        expect(newStationList.stn1.branch.right).toBeUndefined();
         expect(newStationList.stn3.parents).toEqual(['stn5']);
-        expect(newStationList.stn3.branch.left).toHaveLength(0);
+        expect(newStationList.stn3.branch.left).toBeUndefined();
     });
 
     it('Can remove station with 1 parent and 1 child as expected', () => {
