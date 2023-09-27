@@ -24,6 +24,9 @@ export const updateParam = (param: { [x: string]: any }) => {
             if (stnInfo.parents.length === 2) {
                 param.stn_list[stnId].branch.left = ['through', stnInfo.parents[1]];
             }
+            if (Object.keys(param.stn_list[stnId].branch).length === 0) {
+                delete param.stn_list[stnId].branch;
+            }
         }
     }
 
@@ -341,7 +344,10 @@ export const dottieGet = (obj: any, path: string) => {
             }
         }
 
-        result[[...currentPaths, ...remainingPaths].join('.')] = curO?.[remainingPaths[remainingPaths.length - 1]];
+        const value = curO?.[remainingPaths[remainingPaths.length - 1]];
+        if (value !== undefined) {
+            result[[...currentPaths, ...remainingPaths].join('.')] = curO?.[remainingPaths[remainingPaths.length - 1]];
+        }
     };
     get(obj, [], path.split('.'));
     return result;
@@ -411,13 +417,15 @@ const SANITISATION_RULES: Record<string, (value: any) => boolean> = {
     notesGZMTR: value => !value || value?.length === 0,
     'stn_list.*.branch.left': value => !value || value?.length === 0,
     'stn_list.*.branch.right': value => !value || value?.length === 0,
+    'stn_list.*.branch': value => !value || Object.keys(value).length === 0,
     'stn_list.*.facility': value => !value,
     'stn_list.*.secondaryName': value => !value || value.join(',') === ',',
 };
 
-const sanitiseParam = (param: any) => {
+export const sanitiseParam = (param: any) => {
     Object.entries(SANITISATION_RULES).forEach(([path, predicate]) => {
         Object.entries(dottieGet(param, path)).forEach(([exactPath, value]) => {
+            console.debug('[rmg] Sanitising', exactPath, value);
             if (predicate(value)) {
                 dottieSet(param, exactPath, undefined);
             }

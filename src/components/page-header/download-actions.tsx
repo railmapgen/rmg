@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import DownloadModal from '../modal/download-modal';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { Events } from '../../constants/constants';
+import { sanitiseParam } from '../../util/param-updater-utils';
 
 export default function DownloadActions() {
     const { t } = useTranslation();
@@ -17,7 +18,8 @@ export default function DownloadActions() {
     const param = useRootSelector(state => state.param);
 
     const handleDownloadJson = () => {
-        downloadAs(`RMG_${paramConfig?.id}.json`, 'application/json', JSON.stringify(param));
+        const sanitisedParam = sanitiseParam(param);
+        downloadAs(`RMG_${paramConfig?.id}.json`, 'application/json', JSON.stringify(sanitisedParam));
         rmgRuntime.event(Events.DOWNLOAD_PARAM, { style: param.style });
     };
 
