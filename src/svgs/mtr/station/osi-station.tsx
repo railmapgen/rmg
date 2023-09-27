@@ -22,12 +22,12 @@ export default function OsiStation(props: OsiStationProps) {
 
     const enNameLines = name?.[1]?.split('\\')?.length ?? 1;
 
-    const iconLength = 18 * (lines.length - 1);
+    const iconLength = 18 * ((lines?.length || 0) - 1);
     const transforms = {
         name: {
             x: isTerminal
                 ? 0
-                : lines.length === 1
+                : lines?.length === 1
                 ? direction === Direction.left
                     ? -13
                     : 13
@@ -38,13 +38,13 @@ export default function OsiStation(props: OsiStationProps) {
                 ? isReversed
                     ? 19
                     : -28
-                : -4 + (isReversed ? -9 : 9) * (lines.length - 1) - 5 * (enNameLines - 1),
+                : -4 + (isReversed ? -9 : 9) * ((lines?.length || 0) - 1) - 5 * (enNameLines - 1),
         },
     };
 
     return (
         <g>
-            {lines.map((info, i, arr) => (
+            {lines?.map((info, i, arr) => (
                 <g key={i} transform={`translate(0,${isReversed ? -18 * i : 18 * i})`}>
                     <InterchangeTick
                         interchangeInfo={info}

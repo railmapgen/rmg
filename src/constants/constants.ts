@@ -83,7 +83,7 @@ export interface ExtendedInterchangeInfo {
 
 export interface InterchangeGroup {
     name?: Name;
-    lines: ExtendedInterchangeInfo[];
+    lines?: ExtendedInterchangeInfo[];
 }
 
 export interface StationTransfer {

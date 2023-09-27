@@ -38,8 +38,16 @@ export default function InterchangeCard(props: InterchangeCardProps) {
         (acc, cur) => {
             const [zhAcc, enAcc] = acc;
             return [
-                [...new Set(zhAcc.concat(cur.transfer.groups.map(it => it.lines.map(line => line.name[0])).flat()))],
-                [...new Set(enAcc.concat(cur.transfer.groups.map(it => it.lines.map(line => line.name[1])).flat()))],
+                [
+                    ...new Set(
+                        zhAcc.concat(cur.transfer.groups.map(it => it.lines?.map(line => line.name[0]) ?? []).flat())
+                    ),
+                ],
+                [
+                    ...new Set(
+                        enAcc.concat(cur.transfer.groups.map(it => it.lines?.map(line => line.name[1]) ?? []).flat())
+                    ),
+                ],
             ];
         },
         [[], []]

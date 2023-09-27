@@ -36,7 +36,7 @@ const StationSHMetro = (props: Props) => {
         // param.info_panel_type === 'sh' or others (from other styles)
         if (stnInfo.services.length === 3) stationIconStyle = 'direct_sh';
         else if (stnInfo.services.length === 2) stationIconStyle = 'express_sh';
-        else if ([...stnInfo.transfer.groups[0].lines, ...(stnInfo.transfer.groups[1]?.lines || [])].length > 0)
+        else if ([...(stnInfo.transfer.groups[0].lines || []), ...(stnInfo.transfer.groups[1]?.lines || [])].length > 0)
             stationIconStyle = 'int2_sh';
         else stationIconStyle = 'stn_sh';
         stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
@@ -109,7 +109,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
     return (
         <>
-            {groups.map(group => group.lines).flat().length > 0 && (
+            {groups.map(group => group.lines ?? []).flat().length > 0 && (
                 <>
                     <line
                         x1={(lineDx + mainDx) * directionPolarity}
@@ -237,7 +237,7 @@ const IntBoxGroup = forwardRef(function IntBoxGroup(
 
     // also known as non out-of-system transfers
     const boxInfos: ExtendedInterchangeInfo[] = [
-        ...groups[0].lines,
+        ...(groups[0].lines || []),
         ...(groups[1]?.lines || []),
         // some dirty tricks here as shmetro shows maglev icon even it is an out-of-system transfer
         // and display a maglev icon is much easier in boxInfos than in OSysIText

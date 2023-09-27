@@ -16,7 +16,7 @@ export const StationSHMetro = (props: Props) => {
     const { stnId, nameDirection, services, color } = props;
     const stnInfo = useRootSelector(store => store.param.stn_list[stnId]);
 
-    const transfer = [...stnInfo.transfer.groups[0].lines, ...(stnInfo.transfer.groups[1]?.lines || [])];
+    const transfer = [...(stnInfo.transfer.groups[0]?.lines || []), ...(stnInfo.transfer.groups[1]?.lines || [])];
     let stationIconStyle: string;
     if (stnInfo.services.length === 3) stationIconStyle = 'direct_indoor_sh';
     else if (stnInfo.services.length === 2) stationIconStyle = 'express_indoor_sh';
@@ -68,24 +68,24 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     }[nameDirection];
     const osysi_dx =
         // only compute when there is an out-of-system transfer
-        groups[2]?.lines?.length > 0
+        groups[2]?.lines?.length
             ? {
                   upward: 0,
                   downward: 0,
-                  left: groups[0].lines.length + groups[1]?.lines?.length !== 0 ? 85 : 25,
-                  right: groups[0].lines.length + groups[1]?.lines?.length !== 0 ? -85 : -25,
+                  left: (groups[0].lines?.length || 0) + (groups[1]?.lines?.length || 0) !== 0 ? 85 : 25,
+                  right: (groups[0].lines?.length || 0) + (groups[1]?.lines?.length || 0) !== 0 ? -85 : -25,
               }[nameDirection]
             : 0;
     const osysi_dy =
         // only compute when there is an out-of-system transfer
-        groups[2]?.lines?.length > 0
+        groups[2]?.lines?.length
             ? {
-                  upward: groups[1]?.lines?.length ? -210 : groups[0].lines.length ? -180 : -100,
+                  upward: groups[1]?.lines?.length ? -210 : groups[0].lines?.length ? -180 : -100,
                   downward:
-                      (groups[1]?.lines?.length ? 190 : groups[0].lines.length ? 160 : 100) +
+                      (groups[1]?.lines?.length ? 190 : groups[0].lines?.length ? 160 : 100) +
                       (services.length === 3 ? 40 : 0),
-                  left: groups[1]?.lines?.length ? -60 : groups[0].lines.length ? -30 : 0,
-                  right: groups[1]?.lines?.length ? -60 : groups[0].lines.length ? -30 : 0,
+                  left: groups[1]?.lines?.length ? -60 : groups[0].lines?.length ? -30 : 0,
+                  right: groups[1]?.lines?.length ? -60 : groups[0].lines?.length ? -30 : 0,
               }[nameDirection]
             : 0;
     return (
@@ -124,9 +124,9 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 </>
             )}
 
-            {[...groups[0].lines, ...(groups[1]?.lines || [])].length && (
+            {[...(groups[0].lines || []), ...(groups[1]?.lines || [])].length && (
                 <IntBoxGroup
-                    intInfos={[...groups[0].lines, ...(groups[1]?.lines || [])]}
+                    intInfos={[...(groups[0].lines || []), ...(groups[1]?.lines || [])]}
                     arrowDirection={nameDirection}
                     services={services}
                 />

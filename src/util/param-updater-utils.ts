@@ -414,12 +414,13 @@ export const updateThemes = async (param: RMGParam): Promise<RMGParam> => {
 };
 
 const SANITISATION_RULES: Record<string, (value: any) => boolean> = {
-    notesGZMTR: value => !value || value?.length === 0,
-    'stn_list.*.branch.left': value => !value || value?.length === 0,
-    'stn_list.*.branch.right': value => !value || value?.length === 0,
+    notesGZMTR: value => !value?.length,
+    'stn_list.*.branch.left': value => !value?.length,
+    'stn_list.*.branch.right': value => !value?.length,
     'stn_list.*.branch': value => !value || Object.keys(value).length === 0,
     'stn_list.*.facility': value => !value,
     'stn_list.*.secondaryName': value => !value || value.join(',') === ',',
+    'stn_list.*.transfer.groups.*.lines': value => !value?.length,
 };
 
 export const sanitiseParam = (param: any) => {
