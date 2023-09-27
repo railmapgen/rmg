@@ -1,6 +1,7 @@
 import { InterchangeGroup, Name, Note, RMGParam, RmgStyle, StationInfo } from '../constants/constants';
 import { nanoid } from 'nanoid';
 import { MonoColour, Theme, updateTheme } from '@railmapgen/rmg-palette-resources';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 export const updateParam = (param: { [x: string]: any }) => {
     // Version 0.10
@@ -432,5 +433,7 @@ export const sanitiseParam = (param: any) => {
             }
         });
     });
+
+    param.version = rmgRuntime.getAppVersion();
     return param;
 };

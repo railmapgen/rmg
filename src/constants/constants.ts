@@ -256,6 +256,7 @@ export interface RMGParam {
          */
         bottom_factor: number;
     };
+    version?: string; // RMG version
 }
 
 /**
