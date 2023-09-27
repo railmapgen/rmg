@@ -82,7 +82,6 @@ const initialState: RMGParam = {
     line_num: '1',
     psd_num: '1',
     info_panel_type: PanelTypeGZMTR.gz1,
-    notesGZMTR: [],
     direction_gz_x: 0,
     direction_gz_y: 0,
     coline: {},
