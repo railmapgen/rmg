@@ -35,7 +35,7 @@ export default function BranchSection() {
     };
 
     const getFields = (direction: Direction): RmgFieldsField[] => {
-        const branchInfo = branch[direction];
+        const branchInfo = branch?.[direction];
         if (branchInfo) {
             return [
                 {

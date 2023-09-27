@@ -68,19 +68,16 @@ const mockStationList = {
     linestart: {
         parents: [],
         children: ['test'],
-        branch: {},
         transfer: {},
     },
     test: {
         parents: ['linestart'],
         children: ['lineend'],
-        branch: {},
         transfer: {},
     },
     lineend: {
         parents: ['test'],
         children: [],
-        branch: {},
         transfer: {},
     },
 } as any as StationDict;

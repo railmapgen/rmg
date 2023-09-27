@@ -15,27 +15,22 @@ describe('Unit tests for removeStation action', () => {
             linestart: {
                 parents: [],
                 children: ['stn1'],
-                branch: { left: [], right: [] },
             },
             stn1: {
                 parents: ['linestart'],
                 children: ['stn2'],
-                branch: { left: [], right: [] },
             },
             stn2: {
                 parents: ['stn1'],
                 children: ['stn3'],
-                branch: { left: [], right: [] },
             },
             stn3: {
                 parents: ['stn2'],
                 children: ['lineend'],
-                branch: { left: [], right: [] },
             },
             lineend: {
                 parents: ['stn2'],
                 children: [],
-                branch: { left: [], right: [] },
             },
         } as any as StationDict;
 
@@ -63,22 +58,18 @@ describe('Unit tests for removeStation action', () => {
             linestart: {
                 parents: [],
                 children: ['stn1'],
-                branch: { left: [], right: [] },
             },
             stn1: {
                 parents: ['linestart'],
                 children: ['stn2'],
-                branch: { left: [], right: [] },
             },
             stn2: {
                 parents: ['stn1'],
                 children: ['lineend'],
-                branch: { left: [], right: [] },
             },
             lineend: {
                 parents: ['stn2'],
                 children: [],
-                branch: { left: [], right: [] },
             },
         } as any as StationDict;
         const mockStore = createMockStoreWithMockStations(mockStationList);
@@ -98,17 +89,15 @@ describe('Unit tests for removeStation action', () => {
             linestart: {
                 parents: [],
                 children: ['stn1', 'stn2'],
-                branch: { left: [], right: [BranchStyle.through, 'stn2'] },
+                branch: { right: [BranchStyle.through, 'stn2'] },
             },
             stn1: {
                 parents: ['linestart'],
                 children: ['stn3'],
-                branch: { left: [], right: [] },
             },
             stn2: {
                 parents: ['linestart'],
                 children: ['stn3'],
-                branch: { left: [], right: [] },
             },
             stn3: {
                 parents: ['stn1', 'stn2'],
@@ -118,17 +107,15 @@ describe('Unit tests for removeStation action', () => {
             stn4: {
                 parents: ['stn3'],
                 children: ['lineend'],
-                branch: { left: [], right: [] },
             },
             stn5: {
                 parents: ['stn3'],
                 children: ['lineend'],
-                branch: { left: [], right: [] },
             },
             lineend: {
                 parents: ['stn4', 'stn5'],
                 children: [],
-                branch: { left: [BranchStyle.through, 'stn5'], right: [] },
+                branch: { left: [BranchStyle.through, 'stn5'] },
             },
         } as any as StationDict;
         const mockStore = createMockStoreWithMockStations(mockStationList);
@@ -148,27 +135,24 @@ describe('Unit tests for removeStation action', () => {
             linestart: {
                 parents: [],
                 children: ['stn1'],
-                branch: { left: [], right: [] },
             },
             stn1: {
                 parents: ['linestart'],
                 children: ['stn2', 'stn3'],
-                branch: { left: [], right: [BranchStyle.through, 'stn3'] },
+                branch: { right: [BranchStyle.through, 'stn3'] },
             },
             stn2: {
                 parents: ['stn1'],
                 children: ['lineend'],
-                branch: { left: [], right: [] },
             },
             stn3: {
                 parents: ['stn1'],
                 children: ['lineend'],
-                branch: { left: [], right: [] },
             },
             lineend: {
                 parents: ['stn2', 'stn3'],
                 children: [],
-                branch: { left: [BranchStyle.through, 'stn3'], right: [] },
+                branch: { left: [BranchStyle.through, 'stn3'] },
             },
         } as any as StationDict;
         const mockStore = createMockStoreWithMockStations(mockStationList);
@@ -188,32 +172,28 @@ describe('Unit tests for removeStation action', () => {
             linestart: {
                 parents: [],
                 children: ['stn1'],
-                branch: { left: [], right: [] },
             },
             stn1: {
                 parents: ['linestart'],
                 children: ['stn2'],
-                branch: { left: [], right: [] },
             },
             stn2: {
                 parents: ['stn1'],
                 children: ['stn3', 'stn4'],
-                branch: { left: [], right: [BranchStyle.through, 'stn4'] },
+                branch: { right: [BranchStyle.through, 'stn4'] },
             },
             stn3: {
                 parents: ['stn2'],
                 children: ['lineend'],
-                branch: { left: [], right: [] },
             },
             stn4: {
                 parents: ['stn2'],
                 children: ['lineend'],
-                branch: { left: [], right: [] },
             },
             lineend: {
                 parents: ['stn2', 'stn3'],
                 children: [],
-                branch: { left: [BranchStyle.through, 'stn4'], right: [] },
+                branch: { left: [BranchStyle.through, 'stn4'] },
             },
         } as any as StationDict;
         const mockStore = createMockStoreWithMockStations(mockStationList);
@@ -243,32 +223,28 @@ describe('Unit tests for removeStation action', () => {
             linestart: {
                 parents: [],
                 children: ['stn1', 'stn2'],
-                branch: { left: [], right: [BranchStyle.through, 'stn2'] },
+                branch: { right: [BranchStyle.through, 'stn2'] },
             },
             stn1: {
                 parents: ['linestart'],
                 children: ['stn3'],
-                branch: { left: [], right: [] },
             },
             stn2: {
                 parents: ['linestart'],
                 children: ['stn3'],
-                branch: { left: [], right: [] },
             },
             stn3: {
                 parents: ['stn1', 'stn2'],
                 children: ['stn4'],
-                branch: { left: [BranchStyle.through, 'stn2'], right: [] },
+                branch: { left: [BranchStyle.through, 'stn2'] },
             },
             stn4: {
                 parents: ['stn3'],
                 children: ['lineend'],
-                branch: { left: [], right: [] },
             },
             lineend: {
                 parents: ['stn3'],
                 children: [],
-                branch: { left: [], right: [] },
             },
         } as any as StationDict;
         const mockStore = createMockStoreWithMockStations(mockStationList);
@@ -298,37 +274,33 @@ describe('Unit tests for removeStation action', () => {
             linestart: {
                 parents: [],
                 children: ['stn1'],
-                branch: { left: [], right: [] },
             },
             stn1: {
                 parents: ['linestart'],
                 children: ['stn2', 'stn4'],
-                branch: { left: [], right: [BranchStyle.through, 'stn4'] },
+                branch: { right: [BranchStyle.through, 'stn4'] },
             },
             stn2: {
                 parents: ['stn1'],
                 children: ['stn3'],
-                branch: { left: [], right: [] },
             },
             stn3: {
                 parents: ['stn2', 'stn5'],
                 children: ['lineend'],
-                branch: { left: [BranchStyle.through, 'stn5'], right: [] },
+                branch: { left: [BranchStyle.through, 'stn5'] },
             },
             stn4: {
                 parents: ['stn1'],
                 children: ['stn5'],
-                branch: { left: [], right: [] },
             },
             stn5: {
                 parents: ['stn4'],
                 children: ['stn3'],
-                branch: { left: [], right: [] },
             },
             lineend: {
                 parents: ['stn2', 'stn3'],
                 children: [],
-                branch: { left: [BranchStyle.through, 'stn3'], right: [] },
+                branch: { left: [BranchStyle.through, 'stn3'] },
             },
         } as any as StationDict;
         const mockStore = createMockStoreWithMockStations(mockStationList);
@@ -359,32 +331,28 @@ describe('Unit tests for removeStation action', () => {
             linestart: {
                 parents: [],
                 children: ['stn1'],
-                branch: { left: [], right: [] },
             },
             stn1: {
                 parents: ['linestart'],
                 children: ['stn2', 'stn3'],
-                branch: { left: [], right: [BranchStyle.through, 'stn3'] },
+                branch: { right: [BranchStyle.through, 'stn3'] },
             },
             stn2: {
                 parents: ['stn1'],
                 children: ['lineend'],
-                branch: { left: [], right: [] },
             },
             stn3: {
                 parents: ['stn1'],
                 children: ['stn4'],
-                branch: { left: [], right: [] },
             },
             stn4: {
                 parents: ['stn3'],
                 children: ['lineend'],
-                branch: { left: [], right: [] },
             },
             lineend: {
                 parents: ['stn2', 'stn4'],
                 children: [],
-                branch: { left: [BranchStyle.through, 'stn4'], right: [] },
+                branch: { left: [BranchStyle.through, 'stn4'] },
             },
         } as any as StationDict;
         const mockStore = createMockStoreWithMockStations(mockStationList);
