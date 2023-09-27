@@ -17,16 +17,12 @@ export const updateParam = (param: { [x: string]: any }) => {
     // Version 0.12
     for (const [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('branch' in stnInfo)) {
-            param.stn_list[stnId].branch = { left: [], right: [] };
+            param.stn_list[stnId].branch = {};
             if (stnInfo.children.length === 2) {
                 param.stn_list[stnId].branch.right = ['through', stnInfo.children[1]];
-            } else {
-                param.stn_list[stnId].branch.right = [];
             }
             if (stnInfo.parents.length === 2) {
                 param.stn_list[stnId].branch.left = ['through', stnInfo.parents[1]];
-            } else {
-                param.stn_list[stnId].branch.left = [];
             }
         }
     }
@@ -188,7 +184,7 @@ export const updateParam = (param: { [x: string]: any }) => {
     Object.keys(param.stn_list).forEach(stnId => {
         if ('secondaryName' in param.stn_list[stnId]) {
             if (param.stn_list[stnId].secondaryName === false) {
-                param.stn_list[stnId].secondaryName = undefined;
+                delete param.stn_list[stnId].secondaryName;
             }
         }
 
