@@ -61,10 +61,16 @@ export const removeStation = (stationId: string) => {
                 newStnList[childId].parents = parents;
             });
             if (parents.length === 1) {
-                newStnList[parents[0]].branch.right = newStnList[stationId].branch.right;
+                newStnList[parents[0]].branch = {
+                    ...newStnList[parents[0]].branch,
+                    right: newStnList[stationId].branch?.right,
+                };
             }
             if (children.length === 1) {
-                newStnList[children[0]].branch.left = newStnList[stationId].branch.left;
+                newStnList[children[0]].branch = {
+                    ...newStnList[children[0]].branch,
+                    left: newStnList[stationId].branch?.left,
+                };
             }
         } else if (stationList[parents[0]].children.length === 2 && stationList[children[0]].parents.length === 2) {
             /**
@@ -109,11 +115,11 @@ export const removeStation = (stationId: string) => {
                     newStnList[parId].children.splice(idx, 1);
                 }
 
-                if (newStnList[parId].branch.right?.[1] === stationId) {
-                    newStnList[parId].branch.right = newStnList[parId].branch.right?.with(1, children[0]) as [
-                        BranchStyle,
-                        string,
-                    ];
+                if (newStnList[parId].branch?.right?.[1] === stationId) {
+                    newStnList[parId].branch = {
+                        ...newStnList[parId].branch,
+                        right: newStnList[parId].branch?.right?.with(1, children[0]) as [BranchStyle, string],
+                    };
                 }
             });
 
@@ -127,11 +133,11 @@ export const removeStation = (stationId: string) => {
                     newStnList[childId].parents.splice(idx, 1);
                 }
 
-                if (newStnList[childId].branch.left?.[1] === stationId) {
-                    newStnList[childId].branch.left = newStnList[childId].branch.left?.with(1, parents[0]) as [
-                        BranchStyle,
-                        string,
-                    ];
+                if (newStnList[childId].branch?.left?.[1] === stationId) {
+                    newStnList[childId].branch = {
+                        ...newStnList[childId].branch,
+                        left: newStnList[childId].branch?.left?.with(1, parents[0]) as [BranchStyle, string],
+                    };
                 }
             });
         }

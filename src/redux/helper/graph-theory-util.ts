@@ -30,7 +30,7 @@ export const getBranches = (stnList: StationDict) => {
                     curId = children[0];
                     break;
                 case 2: {
-                    const rightBranchInfo = stnList[prevId].branch.right!;
+                    const rightBranchInfo = stnList[prevId].branch!.right!;
                     const branchNextId = rightBranchInfo[1];
                     // if (branchCount === 0) {
                     if (rightBranchInfo[0] === 'through') {
@@ -49,7 +49,7 @@ export const getBranches = (stnList: StationDict) => {
             }
             branches[branchCount].push(curId);
 
-            if (prevId === stnList[curId].branch.left?.[1]) {
+            if (prevId === stnList[curId].branch?.left?.[1]) {
                 break;
             }
         }
@@ -91,7 +91,7 @@ export const getRoutes = (stnList: StationDict) => {
                     curId = children[0];
                     break;
                 case 2: {
-                    const rightBranchInfo = stnList[prevId].branch.right!;
+                    const rightBranchInfo = stnList[prevId].branch!.right!;
                     const branchNextId = rightBranchInfo[1];
                     // if (branchCount === 0) {
                     if (rightBranchInfo[0] === 'through') {
@@ -112,7 +112,7 @@ export const getRoutes = (stnList: StationDict) => {
             }
             branches[branchCount].push(curId);
 
-            if (prevId === stnList[curId].branch.left?.[1] && stnList[curId].branch.left?.[0] === 'nonthrough') {
+            if (prevId === stnList[curId].branch?.left?.[1] && stnList[curId].branch?.left?.[0] === 'nonthrough') {
                 break;
             }
         }

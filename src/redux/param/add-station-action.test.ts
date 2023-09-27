@@ -14,42 +14,36 @@ const mockStationList = {
     linestart: {
         parents: [],
         children: ['stn0'],
-        branch: { left: [], right: [] },
     },
     stn0: {
         parents: ['linestart'],
         children: ['stn1', 'stn5'],
-        branch: { left: [], right: [BranchStyle.through, 'stn5'] },
+        branch: { right: [BranchStyle.through, 'stn5'] },
     },
     stn1: {
         parents: ['stn0'],
         children: ['stn2'],
-        branch: { left: [], right: [] },
     },
     stn2: {
         parents: ['stn1', 'stn5'],
         children: ['stn3'],
-        branch: { left: [BranchStyle.through, 'stn5'], right: [] },
+        branch: { left: [BranchStyle.through, 'stn5'] },
     },
     stn3: {
         parents: ['stn2'],
         children: ['stn4'],
-        branch: { left: [], right: [] },
     },
     stn4: {
         parents: ['stn3'],
         children: ['lineend'],
-        branch: { left: [], right: [] },
     },
     stn5: {
         parents: ['stn0'],
         children: ['stn2'],
-        branch: { left: [], right: [] },
     },
     lineend: {
         parents: ['stn4'],
         children: [],
-        branch: { left: [], right: [] },
     },
 } as any as StationDict;
 

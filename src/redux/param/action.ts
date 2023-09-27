@@ -399,19 +399,17 @@ export const reverseStations = (flipBranch = false) => {
                             return {
                                 ...stn_list.lineend,
                                 parents: [],
-                                children: flipBranch
-                                    ? stn_list.lineend.parents
-                                    : stn_list.lineend.parents.slice().reverse(),
-                                branch: { right: stn_list.lineend.branch.left },
+                                children: flipBranch ? stn_list.lineend.parents : stn_list.lineend.parents.toReversed(),
+                                branch: { right: stn_list.lineend.branch?.left },
                             };
                         case 'lineend':
                             return {
                                 ...stn_list.linestart,
                                 parents: flipBranch
                                     ? stn_list.linestart.children
-                                    : stn_list.linestart.children.slice().reverse(),
+                                    : stn_list.linestart.children.toReversed(),
                                 children: [],
-                                branch: { left: stn_list.linestart.branch.right },
+                                branch: { left: stn_list.linestart.branch?.right },
                             };
                         default: {
                             const mappedParents = stn_list[id].children.map(id =>
@@ -425,8 +423,8 @@ export const reverseStations = (flipBranch = false) => {
                                 parents: flipBranch ? mappedParents : mappedParents.reverse(),
                                 children: flipBranch ? mappedChildren : mappedChildren.reverse(),
                                 branch: {
-                                    left: stn_list[id].branch.right,
-                                    right: stn_list[id].branch.left,
+                                    left: stn_list[id].branch?.right,
+                                    right: stn_list[id].branch?.left,
                                 },
                             };
                         }
@@ -612,7 +610,7 @@ export const updateStationBranchType = (stationId: string, direction: Direction,
                 ...stationInfo,
                 branch: {
                     ...stationInfo.branch,
-                    [direction]: stationInfo.branch[direction]?.with(0, branchStyle),
+                    [direction]: stationInfo.branch?.[direction]?.with(0, branchStyle),
                 },
             })
         );
@@ -681,7 +679,7 @@ export const updateStationBranchFirstStationLegacy = (
                     ...stn_list[branches[0].stnId],
                     branch: {
                         ...stn_list[branches[0].stnId].branch,
-                        [branches[0].direction]: stn_list[branches[0].stnId].branch[branches[0].direction]?.with(
+                        [branches[0].direction]: stn_list[branches[0].stnId].branch?.[branches[0].direction]?.with(
                             1,
                             branches[0].first
                         ),
@@ -691,7 +689,7 @@ export const updateStationBranchFirstStationLegacy = (
                     ...stn_list[branches[1].stnId],
                     branch: {
                         ...stn_list[branches[1].stnId].branch,
-                        [branches[1].direction]: stn_list[branches[1].stnId].branch[branches[1].direction]?.with(
+                        [branches[1].direction]: stn_list[branches[1].stnId].branch?.[branches[1].direction]?.with(
                             1,
                             branches[1].first
                         ),

@@ -66,7 +66,7 @@ export const connect2MainLine = (stationId: string, branchIndex: number) => {
                         id === branch[1] ? id : stationList[stationId].children[0]
                     ),
                     branch: {
-                        right: stationList.linestart.branch.right,
+                        right: stationList.linestart.branch?.right,
                     },
                 },
                 linestart: {
@@ -91,7 +91,7 @@ export const connect2MainLine = (stationId: string, branchIndex: number) => {
                         id === seconndLastId ? id : stationList[stationId].parents[0]
                     ),
                     branch: {
-                        left: stationList.lineend.branch.left,
+                        left: stationList.lineend.branch?.left,
                     },
                 },
                 lineend: {
@@ -176,7 +176,7 @@ export const disconnectFromMainLine = (direction: Direction, branchIndex: number
                     ...stationList.linestart,
                     children: stationList[beginStation].children.map(id => (id === branch[1] ? id : mainBranch[1])),
                     branch: {
-                        right: stationList[beginStation].branch.right,
+                        right: stationList[beginStation].branch?.right,
                     },
                 },
             };
@@ -202,7 +202,7 @@ export const disconnectFromMainLine = (direction: Direction, branchIndex: number
                         id === secondEndStation ? id : mainBranch.slice(-2)[0]
                     ),
                     branch: {
-                        left: stationList[endStation].branch.left,
+                        left: stationList[endStation].branch?.left,
                     },
                 },
             };

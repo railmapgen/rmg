@@ -121,7 +121,7 @@ export interface StationInfo {
     /**
      * Dictionary of the information of branch on the station's both side.
      */
-    branch: BranchInfo;
+    branch?: BranchInfo;
     /**
      * Array of parents' IDs.
      */
