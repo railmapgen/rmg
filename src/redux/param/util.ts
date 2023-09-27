@@ -42,7 +42,7 @@ export const initStationInfo = (id: string): StationInfo => ({
     services: [Services.local],
     parents: [],
     children: [],
-    branch: { left: [], right: [] },
+    branch: {},
     transfer: {
         groups: [{ lines: [] }],
         tick_direc: ShortDirection.right,

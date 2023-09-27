@@ -402,7 +402,7 @@ export const reverseStations = (flipBranch = false) => {
                                 children: flipBranch
                                     ? stn_list.lineend.parents
                                     : stn_list.lineend.parents.slice().reverse(),
-                                branch: { left: [] as [], right: stn_list.lineend.branch.left },
+                                branch: { right: stn_list.lineend.branch.left },
                             };
                         case 'lineend':
                             return {
@@ -411,7 +411,7 @@ export const reverseStations = (flipBranch = false) => {
                                     ? stn_list.linestart.children
                                     : stn_list.linestart.children.slice().reverse(),
                                 children: [],
-                                branch: { left: stn_list.linestart.branch.right, right: [] as [] },
+                                branch: { left: stn_list.linestart.branch.right },
                             };
                         default: {
                             const mappedParents = stn_list[id].children.map(id =>
@@ -610,7 +610,10 @@ export const updateStationBranchType = (stationId: string, direction: Direction,
         dispatch(
             setStation(stationId, {
                 ...stationInfo,
-                branch: { ...stationInfo.branch, [direction]: [branchStyle, stationInfo.branch[direction][1]] },
+                branch: {
+                    ...stationInfo.branch,
+                    [direction]: stationInfo.branch[direction]?.with(0, branchStyle),
+                },
             })
         );
     };
@@ -678,20 +681,20 @@ export const updateStationBranchFirstStationLegacy = (
                     ...stn_list[branches[0].stnId],
                     branch: {
                         ...stn_list[branches[0].stnId].branch,
-                        [branches[0].direction]: [
-                            stn_list[branches[0].stnId].branch[branches[0].direction][0],
-                            branches[0].first,
-                        ],
+                        [branches[0].direction]: stn_list[branches[0].stnId].branch[branches[0].direction]?.with(
+                            1,
+                            branches[0].first
+                        ),
                     },
                 },
                 [branches[1].stnId]: {
                     ...stn_list[branches[1].stnId],
                     branch: {
                         ...stn_list[branches[1].stnId].branch,
-                        [branches[1].direction]: [
-                            stn_list[branches[1].stnId].branch[branches[1].direction][0],
-                            branches[1].first,
-                        ],
+                        [branches[1].direction]: stn_list[branches[1].stnId].branch[branches[1].direction]?.with(
+                            1,
+                            branches[1].first
+                        ),
                     },
                 },
             })

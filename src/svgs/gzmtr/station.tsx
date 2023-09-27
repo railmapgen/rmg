@@ -22,8 +22,8 @@ export default function Station(props: Props) {
     const tickRotation =
         stnY > 0
             ? 180
-            : stnInfo.parents.indexOf(stnInfo.branch.left[1] || '') === 1 ||
-              stnInfo.children.indexOf(stnInfo.branch.right[1] || '') === 1
+            : stnInfo.parents.indexOf(stnInfo.branch.left?.[1] || '') === 1 ||
+              stnInfo.children.indexOf(stnInfo.branch.right?.[1] || '') === 1
             ? 180
             : 0;
     const nameENLns = stnInfo.name[1].split('\\').length;

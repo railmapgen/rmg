@@ -33,37 +33,37 @@ export const mockSimpleStationList: StationDict = {
     linestart: {
         parents: [],
         children: ['stn0'],
-        branch: { left: [], right: [] },
+        branch: {},
     },
     stn0: {
         parents: ['linestart'],
         children: ['stn1'],
-        branch: { left: [], right: [] },
+        branch: {},
     },
     stn1: {
         parents: ['stn0'],
         children: ['stn2', 'stn3'],
-        branch: { left: [], right: [BranchStyle.through, 'stn3'] },
+        branch: { right: [BranchStyle.through, 'stn3'] },
     },
     stn2: {
         parents: ['stn1'],
         children: ['lineend'],
-        branch: { left: [], right: [] },
+        branch: {},
     },
     stn3: {
         parents: ['stn1'],
         children: ['stn4'],
-        branch: { left: [], right: [] },
+        branch: {},
     },
     stn4: {
         parents: ['stn3'],
         children: ['lineend'],
-        branch: { left: [], right: [] },
+        branch: {},
     },
     lineend: {
         parents: ['stn2', 'stn4'],
         children: [],
-        branch: { left: [BranchStyle.through, 'stn4'], right: [] },
+        branch: { left: [BranchStyle.through, 'stn4'] },
     },
 } as any;
 

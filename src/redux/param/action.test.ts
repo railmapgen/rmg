@@ -68,19 +68,19 @@ const mockStationList = {
     linestart: {
         parents: [],
         children: ['test'],
-        branch: { left: [], right: [] },
+        branch: {},
         transfer: {},
     },
     test: {
         parents: ['linestart'],
         children: ['lineend'],
-        branch: { left: [], right: [] },
+        branch: {},
         transfer: {},
     },
     lineend: {
         parents: ['test'],
         children: [],
-        branch: { left: [], right: [] },
+        branch: {},
         transfer: {},
     },
 } as any as StationDict;
@@ -312,50 +312,50 @@ describe('Tests for param actions', () => {
             expect(linestartInfo).toBeDefined();
             expect(linestartInfo.parents).toHaveLength(0);
             expect(linestartInfo.children).toEqual(['stn4', 'stn2']); // reverse lineend's parents
-            expect(linestartInfo.branch.left).toHaveLength(0);
+            expect(linestartInfo.branch.left).toBeUndefined();
             expect(linestartInfo.branch.right).toEqual([BranchStyle.through, 'stn4']); // lineend's left branch
 
             const stn0Info = updatedStationList.stn0;
             expect(stn0Info).toBeDefined();
             expect(stn0Info.parents).toEqual(['stn1']);
             expect(stn0Info.children).toEqual(['lineend']);
-            expect(stn0Info.branch.left).toHaveLength(0);
-            expect(stn0Info.branch.right).toHaveLength(0);
+            expect(stn0Info.branch.left).toBeUndefined();
+            expect(stn0Info.branch.right).toBeUndefined();
 
             const stn1Info = updatedStationList.stn1;
             expect(stn1Info).toBeDefined();
             expect(stn1Info.parents).toEqual(['stn3', 'stn2']); // reverse self children
             expect(stn1Info.children).toEqual(['stn0']); // reverse self parent and swap linestart and lineend
             expect(stn1Info.branch.left).toEqual([BranchStyle.through, 'stn3']); // self right branch
-            expect(stn1Info.branch.right).toHaveLength(0);
+            expect(stn1Info.branch.right).toBeUndefined();
 
             const stn2Info = updatedStationList.stn2;
             expect(stn2Info).toBeDefined();
             expect(stn2Info.parents).toEqual(['linestart']);
             expect(stn2Info.children).toEqual(['stn1']); // swap parents and children and swap linestart and lineend
-            expect(stn2Info.branch.left).toHaveLength(0);
-            expect(stn2Info.branch.right).toHaveLength(0);
+            expect(stn2Info.branch.left).toBeUndefined();
+            expect(stn2Info.branch.right).toBeUndefined();
 
             const stn3Info = updatedStationList.stn3;
             expect(stn3Info).toBeDefined();
             expect(stn3Info.parents).toEqual(['stn4']);
             expect(stn3Info.children).toEqual(['stn1']);
-            expect(stn3Info.branch.left).toHaveLength(0);
-            expect(stn3Info.branch.right).toHaveLength(0);
+            expect(stn3Info.branch.left).toBeUndefined();
+            expect(stn3Info.branch.right).toBeUndefined();
 
             const stn4Info = updatedStationList.stn4;
             expect(stn4Info).toBeDefined();
             expect(stn4Info.parents).toEqual(['linestart']);
             expect(stn4Info.children).toEqual(['stn3']);
-            expect(stn4Info.branch.left).toHaveLength(0);
-            expect(stn4Info.branch.right).toHaveLength(0);
+            expect(stn4Info.branch.left).toBeUndefined();
+            expect(stn4Info.branch.right).toBeUndefined();
 
             const lineendInfo = updatedStationList.lineend;
             expect(lineendInfo).toBeDefined();
             expect(lineendInfo.parents).toEqual(['stn0']);
             expect(lineendInfo.children).toHaveLength(0);
-            expect(lineendInfo.branch.left).toHaveLength(0);
-            expect(lineendInfo.branch.right).toHaveLength(0);
+            expect(lineendInfo.branch.left).toBeUndefined();
+            expect(lineendInfo.branch.right).toBeUndefined();
         });
 
         it('Can flip stations as expected - SHMetro', () => {
@@ -372,7 +372,7 @@ describe('Tests for param actions', () => {
             expect(linestartInfo).toBeDefined();
             expect(linestartInfo.parents).toHaveLength(0);
             expect(linestartInfo.children).toEqual(['stn2', 'stn4']); // lineend's parents not reversed
-            expect(linestartInfo.branch.left).toHaveLength(0);
+            expect(linestartInfo.branch.left).toBeUndefined();
             expect(linestartInfo.branch.right).toEqual([BranchStyle.through, 'stn4']); // lineend's left branch
 
             const stn1Info = updatedStationList.stn1;
@@ -380,7 +380,7 @@ describe('Tests for param actions', () => {
             expect(stn1Info.parents).toEqual(['stn2', 'stn3']); // self children not reversed
             expect(stn1Info.children).toEqual(['stn0']);
             expect(stn1Info.branch.left).toEqual([BranchStyle.through, 'stn3']);
-            expect(stn1Info.branch.right).toHaveLength(0);
+            expect(stn1Info.branch.right).toBeUndefined();
         });
     });
 

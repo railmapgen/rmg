@@ -167,7 +167,10 @@ describe('ParamUpdaterUtils', () => {
                 c: { name: 'C', secondaryName: 'c' },
                 d: { name: 'D', secondaryName: '' },
             },
-            interchanges: [{ line: '1', osi: true }, { line: '2', osi: false }, { line: '3' }],
+            interchanges: {
+                groups: [{ lines: [{ name: '1' }, { name: '2' }] }, { lines: [{ name: '3' }] }],
+                osi: true,
+            },
             notes: [],
             loop: {
                 bank: true,
@@ -179,9 +182,10 @@ describe('ParamUpdaterUtils', () => {
             'stations.d.secondaryName': '',
         });
         expect(dottieGet(obj, 'stations.*.facility')).toEqual({ 'stations.a.facility': '' });
-        expect(dottieGet(obj, 'interchanges.*.osi')).toEqual({
-            'interchanges.0.osi': true,
-            'interchanges.1.osi': false,
+        expect(dottieGet(obj, 'interchanges.groups.*.lines.*.name')).toEqual({
+            'interchanges.groups.0.lines.0.name': '1',
+            'interchanges.groups.0.lines.1.name': '2',
+            'interchanges.groups.1.lines.0.name': '3',
         });
         expect(dottieGet(obj, 'notes')).toEqual({ notes: [] });
         expect(dottieGet(obj, 'loop.bank')).toEqual({ 'loop.bank': true });

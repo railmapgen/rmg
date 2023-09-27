@@ -35,13 +35,14 @@ export default function BranchSection() {
     };
 
     const getFields = (direction: Direction): RmgFieldsField[] => {
-        if (branch[direction].length) {
+        const branchInfo = branch[direction];
+        if (branchInfo) {
             return [
                 {
                     type: 'select',
                     label: t('StationSidePanel.branch.type'),
                     options: branchOptions,
-                    value: branch[direction][0],
+                    value: branchInfo[0],
                     onChange: value =>
                         dispatch(updateStationBranchType(selectedStation, direction, value as BranchStyle)),
                 },
@@ -49,7 +50,7 @@ export default function BranchSection() {
                     type: 'select',
                     label: t('StationSidePanel.branch.firstStation'),
                     options: getFirstStationOptions(direction),
-                    value: branch[direction][1],
+                    value: branchInfo[1],
                     onChange: value =>
                         dispatch(updateStationBranchFirstStation(selectedStation, direction, value as string)),
                 },
@@ -57,10 +58,7 @@ export default function BranchSection() {
                     type: 'select',
                     label: t('StationSidePanel.branch.position'),
                     options: positionOptions,
-                    value:
-                        (direction === Direction.left ? parents : children)[0] === branch[direction][1]
-                            ? 'upper'
-                            : 'lower',
+                    value: (direction === Direction.left ? parents : children)[0] === branchInfo[1] ? 'upper' : 'lower',
                     onChange: () => dispatch(flipStationBranchPosition(selectedStation, direction)),
                 },
             ];
