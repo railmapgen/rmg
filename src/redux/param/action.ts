@@ -472,7 +472,7 @@ export const addInterchange = (stationId: string, setIndex: number, interchangeI
         if (newTransferGroups.length > setIndex) {
             newTransferGroups[setIndex] = {
                 ...newTransferGroups[setIndex],
-                lines: newTransferGroups[setIndex].lines.concat(interchangeInfo),
+                lines: (newTransferGroups[setIndex].lines ?? []).concat(interchangeInfo),
             };
         } else {
             for (let i = newTransferGroups.length; i < setIndex; i++) {
@@ -499,13 +499,13 @@ export const removeInterchange = (stationId: string, groupIndex: number, interch
 
         if (
             stationInfo.transfer.groups.length > groupIndex &&
-            stationInfo.transfer.groups[groupIndex].lines.length > interchangeIndex
+            (stationInfo.transfer.groups[groupIndex].lines?.length || 0) > interchangeIndex
         ) {
             const newTransferGroups = stationInfo.transfer.groups.map((group, groupIdx) =>
                 groupIdx === groupIndex
                     ? {
                           ...group,
-                          lines: group.lines.filter((_, intIdx) => intIdx !== interchangeIndex),
+                          lines: group.lines?.filter((_, intIdx) => intIdx !== interchangeIndex),
                       }
                     : group
             );
@@ -533,13 +533,13 @@ export const updateInterchange = (
 
         if (
             stationInfo.transfer.groups.length > groupIndex &&
-            stationInfo.transfer.groups[groupIndex].lines.length > interchangeIndex
+            (stationInfo.transfer.groups[groupIndex].lines?.length || 0) > interchangeIndex
         ) {
             const newTransferGroups = stationInfo.transfer.groups.map((group, groupIdx) =>
                 groupIdx === groupIndex
                     ? {
                           ...group,
-                          lines: group.lines.map((line, lineIdx) =>
+                          lines: group.lines?.map((line, lineIdx) =>
                               lineIdx === interchangeIndex ? interchangeInfo : line
                           ),
                       }

@@ -69,7 +69,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
                 cellRenderer: ({ value }: { value: StationTransfer }) => (
                     <HStack>
                         {value.groups
-                            .map(group => group.lines)
+                            .map(group => group.lines ?? [])
                             .flat()
                             .map((it, i) => (
                                 <RmgLineBadge

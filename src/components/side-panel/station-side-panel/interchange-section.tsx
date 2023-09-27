@@ -108,7 +108,7 @@ export default function InterchangeSection() {
                     {i !== 0 && <RmgFields fields={getOSINameFields(i)} />}
 
                     <InterchangeCard
-                        interchangeList={group.lines}
+                        interchangeList={group.lines ?? []}
                         onAdd={handleAdd(i)}
                         onDelete={handleDelete(i)}
                         onUpdate={handleUpdate(i)}

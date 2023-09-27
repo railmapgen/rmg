@@ -5,7 +5,7 @@ import { getSidingPath } from '../mtr/line-diagram-utils';
 export const leftWideFactor = (stnList: StationDict, stnId: string) => {
     let res = 0;
     const { transfer } = stnList[stnId];
-    const ls = transfer.groups.map(val => val.lines.length);
+    const ls = transfer.groups.map(val => val.lines?.length || 0);
     if (transfer.tick_direc === 'l') {
         // int3 or above
         if (!ls[1] && ls[0] > 1) res += 0.4;
@@ -26,7 +26,7 @@ export const leftWideFactor = (stnList: StationDict, stnId: string) => {
 export const rightWideFactor = (stnList: StationDict, stnId: string) => {
     let res = 0;
     const { transfer } = stnList[stnId];
-    const ls = transfer.groups.map(val => val.lines.length);
+    const ls = transfer.groups.map(val => val.lines?.length || 0);
     if (transfer.tick_direc === 'r') {
         // int3 or above
         if (!ls[1] && ls[0] > 1) res += 0.4;

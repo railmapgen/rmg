@@ -22,7 +22,7 @@ export default function Station(props: StationProps) {
         facility,
     } = useRootSelector(state => state.param.stn_list[stationId]);
 
-    const end: Direction | undefined = groups[0].lines.length
+    const end: Direction | undefined = groups[0].lines?.length
         ? parents.includes('linestart')
             ? Direction.left
             : children.includes('lineend')
@@ -48,7 +48,7 @@ export default function Station(props: StationProps) {
         <g data-testid="station-icon-wrapper">
             {hasOsi && (
                 <path
-                    d={end && groups[0].lines.length ? 'M0,0H41' : 'M0,0V26'}
+                    d={end && groups[0].lines?.length ? 'M0,0H41' : 'M0,0V26'}
                     strokeWidth={2.69}
                     strokeDasharray={paid_area ? 0 : 2.5}
                     stroke={stationState === StationState.PASSED ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
@@ -57,7 +57,7 @@ export default function Station(props: StationProps) {
             )}
 
             <InterchangeStation
-                interchangeInfoList={groups[0].lines}
+                interchangeInfoList={groups[0].lines ?? []}
                 direction={tick_direc === ShortDirection.right ? Direction.right : Direction.left}
                 isPassed={stationState === StationState.PASSED}
                 isReversed={isRepelled ? !isReversed : isReversed}
@@ -84,7 +84,7 @@ export default function Station(props: StationProps) {
                 facility={facility}
                 lower={isReversed}
                 align={
-                    groups[0].lines.length && isRepelled
+                    groups[0].lines?.length && isRepelled
                         ? tick_direc === ShortDirection.left
                             ? Direction.left
                             : Direction.right
