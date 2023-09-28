@@ -185,7 +185,6 @@
         "ext": "新增一條外部路綫",
         "from": "介乎於",
         "to": "與",
-        "pleaseSelect": "請選擇...",
         "position": "位置",
         "upper": "上方",
         "lower": "下方"
@@ -235,6 +234,7 @@
     "Import project": "匯入專案",
     "Just now": "剛才",
     "Last modified": "上次修改",
+    "LEFT END": "路綫左端",
     "Manage": "管理",
     "minute ago": "分鐘前",
     "minutes ago": "分鐘前",
@@ -252,6 +252,7 @@
     "Reload": "重新載入",
     "Remove project": "移除專案",
     "Remove station": "移除車站",
+    "RIGHT END": "路綫右端",
     "Saved projects": "儲存的專案",
     "Select canvas": "選擇畫面",
     "Style": "風格",

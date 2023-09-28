@@ -192,7 +192,6 @@
         "ext": "添加一条外部路线",
         "from": "介于",
         "to": "和",
-        "pleaseSelect": "请选择...",
         "position": "位置",
         "upper": "上方",
         "lower": "下方"
@@ -243,6 +242,7 @@
     "Import project": "导入项目",
     "Just now": "刚刚",
     "Last modified": "上次编辑",
+    "LEFT END": "线路左端",
     "Manage": "管理",
     "minute ago": "分钟前",
     "minutes ago": "分钟前",
@@ -260,6 +260,7 @@
     "Reload": "重新加载",
     "Remove project": "删除项目",
     "Remove station": "删除车站",
+    "RIGHT END": "线路右端",
     "Saved projects": "保存的项目",
     "Select canvas": "选择画面",
     "Style": "风格",

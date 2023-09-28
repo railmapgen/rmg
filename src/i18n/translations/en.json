@@ -199,7 +199,6 @@
         "ext": "Create an external line",
         "from": "Between",
         "to": "and",
-        "pleaseSelect": "Please select...",
         "position": "Position",
         "upper": "Upper",
         "lower": "Lower"

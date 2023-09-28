@@ -49,9 +49,14 @@ export default function NewBranchModal(props: NewBranchModalProps) {
         return stationIdList.reduce(
             (acc, cur) => ({
                 ...acc,
-                [cur]: stationList[cur]?.name.join(' - '),
+                [cur]:
+                    cur === 'linestart'
+                        ? `(${t('LEFT END')})`
+                        : cur === 'lineend'
+                        ? `(${t('RIGHT END')})`
+                        : stationList[cur]?.name.join(' - '),
             }),
-            { '': t('NewBranchModal.pleaseSelect') }
+            { '': t('Please select...') }
         );
     };
 
