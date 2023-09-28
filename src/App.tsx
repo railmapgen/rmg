@@ -1,7 +1,7 @@
 import React, { lazy } from 'react';
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { RmgErrorBoundary, RmgLoader, RmgThemeProvider, RmgWindow } from '@railmapgen/rmg-components';
-import WindowHeader from './components/root/window-header';
+import { ImportViewWindowHeader, WindowHeader } from './components/root/window-header';
 
 const AppRouter = lazy(() => import('./components/root/app-router'));
 const AppClipView = lazy(() => import('./components/param-selector-view/app-clip-view'));
@@ -11,12 +11,12 @@ export default function App() {
         <HashRouter>
             <RmgThemeProvider>
                 <RmgWindow>
-                    <WindowHeader />
                     <Routes>
                         <Route
                             path="/import"
                             element={
                                 <RmgErrorBoundary suspenseFallback={<RmgLoader isIndeterminate={true} />}>
+                                    <ImportViewWindowHeader />
                                     <AppClipView />
                                 </RmgErrorBoundary>
                             }
@@ -25,6 +25,7 @@ export default function App() {
                             path="/"
                             element={
                                 <RmgErrorBoundary suspenseFallback={<RmgLoader isIndeterminate={true} />} allowReset>
+                                    <WindowHeader />
                                     <AppRouter />
                                 </RmgErrorBoundary>
                             }

@@ -1,9 +1,9 @@
-import { RmgCard, RmgPage } from '@railmapgen/rmg-components';
+import { RmgPage } from '@railmapgen/rmg-components';
 import ParamSelector from './param-selector';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Events, ParamConfig } from '../../constants/constants';
 import { getParam, getParamRegistry } from '../../util/param-manager-utils';
-import { Alert, AlertIcon, Button, HStack, IconButton, SystemStyleObject } from '@chakra-ui/react';
+import { Alert, AlertIcon, Button, chakra, Divider, HStack, IconButton, SystemStyleObject } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import rmgRuntime from '@railmapgen/rmg-runtime';
@@ -13,21 +13,17 @@ import { updateParam } from '../../util/param-updater-utils';
 const CHANNEL_PREFIX = 'rmg-bridge--';
 
 const styles: SystemStyleObject = {
-    flexDirection: 'column',
-    h: '100%',
-    p: 2,
+    overflow: 'hidden',
+    flex: 1,
+    px: 2,
+    pb: 2,
 
-    '& > div:first-of-type': {
+    '& > div': {
         m: 0,
+        h: '100%',
+
         '& > div': {
             h: '100%',
-        },
-    },
-
-    '& > div:last-of-type': {
-        mt: 2,
-        '& button:nth-of-type(2)': {
-            mr: 'auto',
         },
     },
 };
@@ -50,17 +46,11 @@ export default function AppClipView() {
         channelRef.current = new BroadcastChannel(CHANNEL_PREFIX + parentId);
         rmgRuntime.event(Events.APP_CLIP_VIEW_OPENED, { parentComponent });
 
-        // hide window header
-        const styleEl = document.createElement('style');
-        styleEl.textContent = `.rmg-window__header{display: none;}`;
-        document.head.appendChild(styleEl);
-
         // init paramRegistry state update
         setParamRegistry(getParamRegistry());
 
         return () => {
             channelRef.current?.close();
-            document.head.removeChild(styleEl);
         };
     }, []);
 
@@ -107,35 +97,42 @@ export default function AppClipView() {
                     {t('Project selected is invalid or corrupted.')}
                 </Alert>
             )}
-            <RmgCard sx={styles}>
+
+            <chakra.div sx={styles}>
                 <ParamSelector
                     paramRegistry={paramRegistry}
                     selectedParam={selectedParam}
                     onParamSelect={setSelectedParam}
                 />
+            </chakra.div>
 
-                <HStack>
-                    <IconButton
-                        variant="ghost"
-                        aria-label={t('Manage')}
-                        title={t('Manage')}
-                        icon={<MdSettings />}
-                        onClick={handleManage}
-                    />
-                    <IconButton
-                        variant="ghost"
-                        aria-label={t('Reload')}
-                        title={t('Reload')}
-                        icon={<MdRefresh />}
-                        onClick={() => setParamRegistry(getParamRegistry())}
-                    />
+            <Divider />
 
-                    <Button onClick={handleClose}>{t('Close')}</Button>
-                    <Button colorScheme="primary" isDisabled={!selectedParam} onClick={handleImport}>
-                        {t('Import')}
-                    </Button>
-                </HStack>
-            </RmgCard>
+            <HStack p={2}>
+                <IconButton
+                    variant="ghost"
+                    size="sm"
+                    aria-label={t('Manage')}
+                    title={t('Manage')}
+                    icon={<MdSettings />}
+                    onClick={handleManage}
+                />
+                <IconButton
+                    variant="ghost"
+                    size="sm"
+                    aria-label={t('Reload')}
+                    title={t('Reload')}
+                    icon={<MdRefresh />}
+                    onClick={() => setParamRegistry(getParamRegistry())}
+                />
+
+                <Button size="sm" onClick={handleClose} ml="auto">
+                    {t('Close')}
+                </Button>
+                <Button size="sm" colorScheme="primary" isDisabled={!selectedParam} onClick={handleImport}>
+                    {t('Import')}
+                </Button>
+            </HStack>
         </RmgPage>
     );
 }

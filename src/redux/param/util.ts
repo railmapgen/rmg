@@ -42,9 +42,8 @@ export const initStationInfo = (id: string): StationInfo => ({
     services: [Services.local],
     parents: [],
     children: [],
-    branch: {},
     transfer: {
-        groups: [{ lines: [] }],
+        groups: [{}],
         tick_direc: ShortDirection.right,
         paid_area: true,
     },
@@ -114,7 +113,6 @@ export const initParam = (style: RmgStyle, language: LanguageCode): RMGParam => 
         line_num: '1',
         psd_num: '1',
         info_panel_type: style === RmgStyle.SHMetro ? PanelTypeShmetro.sh : PanelTypeGZMTR.gz1,
-        notesGZMTR: [],
         direction_gz_x: 40,
         direction_gz_y: 70,
         coline: {},

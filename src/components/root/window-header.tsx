@@ -6,7 +6,7 @@ import HelpModal from '../modal/help-modal';
 import { RmgEnvBadge, RmgWindowHeader } from '@railmapgen/rmg-components';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 
-export default function WindowHeader() {
+export const WindowHeader = () => {
     const { t } = useTranslation();
 
     const environment = rmgRuntime.getEnv();
@@ -34,4 +34,16 @@ export default function WindowHeader() {
             <HelpModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
         </RmgWindowHeader>
     );
-}
+};
+
+export const ImportViewWindowHeader = () => {
+    const { t } = useTranslation();
+
+    return (
+        <RmgWindowHeader isAppClipHeader>
+            <Heading as="h4" size="md">
+                {t('Rail Map Generator') + ' - ' + t('Project Selector')}
+            </Heading>
+        </RmgWindowHeader>
+    );
+};
