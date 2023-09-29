@@ -3,6 +3,9 @@ import { Fragment, Ref, SVGProps, forwardRef, useEffect, useMemo, useRef, useSta
 import { ExtendedInterchangeInfo, InterchangeGroup, Name, Services } from '../../../constants/constants';
 import { useRootSelector } from '../../../redux';
 
+/**
+ * Which direction to display station name. Currently shmetro only.
+ */
 export type NameDirection = 'upward' | 'downward' | 'left' | 'right';
 
 interface Props {

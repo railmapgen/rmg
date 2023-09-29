@@ -169,24 +169,32 @@ interface StationGroupProps {
 
 const StationGroup = (props: StationGroupProps) => {
     const { branches } = useRootSelector(store => store.helper);
-    const param = useRootSelector(store => store.param);
+    const {
+        stn_list,
+        namePosMTR: { isFlip },
+    } = useRootSelector(store => store.param);
     const { xs, ys, services } = props;
+
+    const name_direction_even = isFlip ?? true ? 'upward' : 'downward';
+    const name_direction_odd = name_direction_even === 'upward' ? 'downward' : 'upward';
 
     return (
         <g>
-            {Object.keys(param.stn_list)
+            {Object.keys(stn_list)
                 .filter(stnId => !['linestart', 'lineend'].includes(stnId))
-                .filter(stnId => param.stn_list[stnId].services.length !== 0)
+                .filter(stnId => stn_list[stnId].services.length !== 0)
                 .map(stnId => (
                     <g key={stnId} transform={`translate(${xs[stnId]},${ys[stnId]})`}>
                         <StationSHMetro
                             stnId={stnId}
                             nameDirection={
-                                branches
-                                    .filter(branch => branch.includes(stnId))
-                                    .map(branch =>
-                                        branch.indexOf(stnId) % 2 === 0 || services.length > 1 ? 'downward' : 'upward'
-                                    )[0] as 'upward' | 'downward'
+                                services.length > 1
+                                    ? 'downward'
+                                    : branches
+                                          .filter(branch => branch.includes(stnId))
+                                          .map(branch =>
+                                              branch.indexOf(stnId) % 2 === 0 ? name_direction_even : name_direction_odd
+                                          )[0]
                             }
                             services={services}
                         />

@@ -5,6 +5,7 @@ import ThemeButton from '../theme-button';
 import {
     customiseDestinationName,
     flipStationNames,
+    flipStationNamesWithFlip,
     setDirection,
     setLineName,
     setLineNum,
@@ -37,7 +38,10 @@ export default function DesignSection() {
         namePosMTR,
         customiseMTRDest,
         info_panel_type,
+        stn_list,
     } = useRootSelector(state => state.param);
+
+    const lineServices = Math.max(...Object.values(stn_list).map(s => s.services.length));
 
     const [isThemeRequested, setIsThemeRequested] = useState(false);
 
@@ -147,6 +151,36 @@ export default function DesignSection() {
         },
     ];
 
+    const flipNameSelections = [
+        {
+            label: t('StyleSidePanel.design.upwards'),
+            value: true,
+        },
+        {
+            label: t('StyleSidePanel.design.downward'),
+            value: false,
+        },
+    ];
+
+    const shmetroSpecifiedFields: RmgFieldsField[] = [
+        {
+            type: 'custom',
+            label: t('StyleSidePanel.design.firstStationNameDisplay'),
+            component: (
+                <HStack spacing={0.5}>
+                    <RmgButtonGroup
+                        selections={flipNameSelections}
+                        defaultValue={namePosMTR.isFlip ?? true}
+                        onChange={value => dispatch(flipStationNamesWithFlip(value))}
+                    />
+                </HStack>
+            ),
+            minW: 'full',
+            oneLine: true,
+            hidden: ![RmgStyle.SHMetro].includes(style) || lineServices > 1,
+        },
+    ];
+
     const staggerNameSelections = [
         {
             label: t('StyleSidePanel.design.alternatively'),
@@ -231,7 +265,7 @@ export default function DesignSection() {
                 {t('StyleSidePanel.design.title')}
             </Heading>
 
-            <RmgFields fields={[...fields, ...mtrSpecifiedFields]} minW={130} />
+            <RmgFields fields={[...fields, ...mtrSpecifiedFields, ...shmetroSpecifiedFields]} minW={130} />
         </Box>
     );
 }

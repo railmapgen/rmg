@@ -247,12 +247,12 @@ export interface RMGParam {
         bank: boolean;
         /**
          * Station size on the left and right side. Integer only, will be `Math.floor`ed.
-         * Also, this factor is subject to several rules, see loop-shmetro for more info.
+         * Also, this factor is subject to several rules, see shmetro-loop for more info.
          */
         left_and_right_factor: number;
         /**
          * Station size on the bottom side. Integer only, will be `Math.floor`ed.
-         * Also, this factor is subject to several rules, see loop-shmetro for more info.
+         * Also, this factor is subject to several rules, see shmetro-loop for more info.
          */
         bottom_factor: number;
     };
