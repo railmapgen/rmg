@@ -6,6 +6,7 @@ import {
     autoNumbering,
     customiseDestinationName,
     flipStationNames,
+    flipStationNamesWithFlip,
     removeInterchange,
     removeNote,
     removeStationService,
@@ -224,6 +225,28 @@ describe('Tests for param actions', () => {
         });
 
         mockStore.dispatch(flipStationNames());
+        const actions = mockStore.getActions();
+        expect(actions).toHaveLength(1);
+
+        const action: setNamePositionAction = actions.find(action => action.type === SET_NAME_POSITION);
+        expect(action).toBeDefined();
+        expect(action.namePosition.isStagger).toBeTruthy();
+        expect(action.namePosition.isFlip).toBeFalsy();
+    });
+
+    it('Can flip station names with flip', () => {
+        const mockStore = createMockAppStore({
+            ...realStore,
+            param: {
+                ...realStore.param,
+                namePosMTR: {
+                    isStagger: true,
+                    isFlip: true,
+                },
+            },
+        });
+
+        mockStore.dispatch(flipStationNamesWithFlip(false));
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(1);
 

@@ -298,6 +298,13 @@ export const flipStationNames = () => {
     };
 };
 
+export const flipStationNamesWithFlip = (isFlip: boolean) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
+        const namePosition = getState().param.namePosMTR;
+        dispatch(setNamePosition({ ...namePosition, isFlip }));
+    };
+};
+
 const setCustomisedMtrDestination = (
     customisedMtrDestination: RMGParam['customiseMTRDest']
 ): setCustomisedMtrDestinationAction => {
