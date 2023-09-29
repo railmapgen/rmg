@@ -1,7 +1,7 @@
 import { ColourHex } from '@railmapgen/rmg-palette-resources';
+import { Fragment, Ref, SVGProps, forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import { ExtendedInterchangeInfo, InterchangeGroup, Name, Services } from '../../../constants/constants';
 import { useRootSelector } from '../../../redux';
-import { forwardRef, Fragment, Ref, SVGProps, useMemo } from 'react';
 
 export type NameDirection = 'upward' | 'downward' | 'left' | 'right';
 
@@ -88,13 +88,19 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                   right: groups[1]?.lines?.length ? -60 : groups[0].lines?.length ? -30 : 0,
               }[nameDirection]
             : 0;
+    const nameRef = useRef<SVGGElement | null>(null);
+    const MIN_NAME_LINE_LENGTH = 60;
+    const [nameWidth, setNameWidth] = useState(MIN_NAME_LINE_LENGTH);
+    useEffect(() => {
+        nameRef?.current && setNameWidth(Math.max(MIN_NAME_LINE_LENGTH, nameRef.current.getBBox().width));
+    }, [...name]);
     return (
         <g transform={`translate(0,${dy})`}>
             {nameDirection === 'upward' || nameDirection === 'downward' ? (
                 <>
                     <line
-                        x1={-30}
-                        x2={30}
+                        x1={-nameWidth / 2}
+                        x2={nameWidth / 2}
                         y1={nameDirection === 'upward' ? -23 : -10}
                         y2={nameDirection === 'upward' ? -23 : -10}
                         stroke="black"
@@ -132,7 +138,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 />
             )}
 
-            <StationName stnName={name} nameDirection={nameDirection} fill="black" />
+            <StationName ref={nameRef} stnName={name} nameDirection={nameDirection} fill="black" />
 
             {groups[1]?.lines?.length && (
                 <g transform={`translate(${osi_dx},${osi_dy})`}>
