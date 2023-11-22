@@ -31,7 +31,7 @@ const RunInSHMetro = () => {
         let prevStnIds = routes
             .filter(route => route.includes(current_stn_idx))
             .map(route => route[route.indexOf(current_stn_idx) + (direction === 'l' ? 1 : -1)])
-            // .flat()
+            .filter(stnId => stnId !== undefined)
             // remove duplicate
             .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]);
         if (
@@ -50,7 +50,7 @@ const RunInSHMetro = () => {
         let nextStnIds = routes
             .filter(route => route.includes(current_stn_idx))
             .map(route => route[route.indexOf(current_stn_idx) + (direction === 'l' ? -1 : 1)])
-            // .flat()
+            .filter(stnId => stnId !== undefined)
             // remove duplicate
             .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]);
         if (
