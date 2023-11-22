@@ -39,6 +39,7 @@ export default function DesignSection() {
         customiseMTRDest,
         info_panel_type,
         stn_list,
+        loop,
     } = useRootSelector(state => state.param);
 
     const lineServices = Math.max(...Object.values(stn_list).map(s => s.services.length));
@@ -177,7 +178,7 @@ export default function DesignSection() {
             ),
             minW: 'full',
             oneLine: true,
-            hidden: ![RmgStyle.SHMetro].includes(style) || lineServices > 1,
+            hidden: ![RmgStyle.SHMetro].includes(style) || lineServices > 1 || loop,
         },
     ];
 
