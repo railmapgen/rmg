@@ -77,10 +77,10 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
                 (!facility
                     ? 0
                     : align
-                    ? align === Direction.right
-                        ? -3 - NAME_FULL_HEIGHT
-                        : 0
-                    : (NAME_FULL_HEIGHT + 5) / 2 - 3 - NAME_FULL_HEIGHT),
+                      ? align === Direction.right
+                          ? -3 - NAME_FULL_HEIGHT
+                          : 0
+                      : (NAME_FULL_HEIGHT + 5) / 2 - 3 - NAME_FULL_HEIGHT),
             y: NAME_ZH_TOP - 1,
             width: bBox.width + 6 + (!facility ? 0 : NAME_FULL_HEIGHT + 3),
             height: NAME_FULL_HEIGHT + 2 + 11 * (nameEnRows - 1),
@@ -97,10 +97,10 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
             x: !facility
                 ? 0
                 : align
-                ? align === Direction.right
-                    ? 0
-                    : NAME_FULL_HEIGHT + 3
-                : (NAME_FULL_HEIGHT + 5) / 2,
+                  ? align === Direction.right
+                      ? 0
+                      : NAME_FULL_HEIGHT + 3
+                  : (NAME_FULL_HEIGHT + 5) / 2,
             y: 0,
         },
     };

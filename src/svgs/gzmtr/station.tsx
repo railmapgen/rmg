@@ -23,17 +23,17 @@ export default function Station(props: Props) {
         stnY > 0
             ? 180
             : stnInfo.parents.indexOf(stnInfo.branch?.left?.[1] || '') === 1 ||
-              stnInfo.children.indexOf(stnInfo.branch?.right?.[1] || '') === 1
-            ? 180
-            : 0;
+                stnInfo.children.indexOf(stnInfo.branch?.right?.[1] || '') === 1
+              ? 180
+              : 0;
     const nameENLns = stnInfo.name[1].split('\\').length;
     const nameDX = isNameShift
         ? tickRotation === 180
             ? 16 + (nameENLns - 1) * 12 * Math.cos(-45)
             : -9
         : tickRotation === 180
-        ? -6
-        : (25 + (nameENLns - 1) * 15) * Math.cos(-45);
+          ? -6
+          : (25 + (nameENLns - 1) * 15) * Math.cos(-45);
 
     return (
         <>

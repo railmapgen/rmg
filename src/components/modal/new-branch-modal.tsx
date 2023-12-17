@@ -53,8 +53,8 @@ export default function NewBranchModal(props: NewBranchModalProps) {
                     cur === 'linestart'
                         ? `(${t('LEFT END')})`
                         : cur === 'lineend'
-                        ? `(${t('RIGHT END')})`
-                        : stationList[cur]?.name.join(' - '),
+                          ? `(${t('RIGHT END')})`
+                          : stationList[cur]?.name.join(' - '),
             }),
             { '': t('Please select...') }
         );

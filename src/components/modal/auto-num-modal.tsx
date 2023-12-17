@@ -53,8 +53,8 @@ export default function AutoNumModal(props: AutoNumModalProps) {
                             idx === 0
                                 ? t('AutoNumModal.main')
                                 : style !== RmgStyle.SHMetro || !isColineBranch(cur, stationList)
-                                ? t('AutoNumModal.branch') + ' ' + idx
-                                : t('AutoNumModal.external') + ' ' + idx,
+                                  ? t('AutoNumModal.branch') + ' ' + idx
+                                  : t('AutoNumModal.external') + ' ' + idx,
                     }),
                     {}
                 ),

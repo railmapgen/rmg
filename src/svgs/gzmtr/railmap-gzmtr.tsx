@@ -206,8 +206,8 @@ const NoteBox = memo(
                                     i < (props.note[1].match(/\n/g)?.length || 0)
                                         ? bBox.width
                                         : navigator.userAgent.includes('Firefox')
-                                        ? -1
-                                        : 0
+                                          ? -1
+                                          : 0
                                 }
                                 lengthAdjust="spacing"
                             >

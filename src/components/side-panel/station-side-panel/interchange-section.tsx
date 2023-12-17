@@ -101,8 +101,8 @@ export default function InterchangeSection() {
                         {i === 0
                             ? t('StationSidePanel.interchange.within')
                             : i === 1
-                            ? t('StationSidePanel.interchange.outStation')
-                            : t('StationSidePanel.interchange.outSystem')}
+                              ? t('StationSidePanel.interchange.outStation')
+                              : t('StationSidePanel.interchange.outSystem')}
                     </Heading>
 
                     {i !== 0 && <RmgFields fields={getOSINameFields(i)} />}

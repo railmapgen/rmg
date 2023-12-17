@@ -122,8 +122,8 @@ export const split_loop_stns_with_branches = (
                 ? branch_stn_ids[0]
                 : branch_stn_ids[1]
             : top_a.length > top_b.length
-            ? branch_stn_ids[1]
-            : branch_stn_ids[0];
+              ? branch_stn_ids[1]
+              : branch_stn_ids[0];
     return split_loop_stns_with_branch(loopline, branch_stn_id, bottom_factor, left_and_right_factor);
 };
 

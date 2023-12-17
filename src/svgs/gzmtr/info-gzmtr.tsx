@@ -115,8 +115,8 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
                             direction === ShortDirection.left
                                 ? '80px'
                                 : nextNameZHCount <= 2
-                                ? `${svgWidths[CanvasType.RunIn] - 45 - nextBBox.width - 70}px`
-                                : `${svgWidths[CanvasType.RunIn] - 45 - nextBBox.width - 35 * 1.5}px`,
+                                  ? `${svgWidths[CanvasType.RunIn] - 45 - nextBBox.width - 70}px`
+                                  : `${svgWidths[CanvasType.RunIn] - 45 - nextBBox.width - 35 * 1.5}px`,
                     }}
                 >
                     <text className="rmg-name__zh" fontSize={35}>

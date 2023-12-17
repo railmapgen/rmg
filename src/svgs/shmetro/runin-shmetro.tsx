@@ -231,17 +231,17 @@ const Line = (props: RunInGeneralProps) => {
             ? // needs to be single since BranchLine is in effect
               'single'
             : isEnd(nextStnIds)
-            ? colineStns.filter(co => [current_stn_idx, prevStnIds[0]].every(stnId => co.linePath.includes(stnId)))
-                  .length > 0
-                ? // if this the terminal station, look back to see if it falls in coline
-                  'multiple'
-                : 'single'
-            : [current_stn_idx, nextStnIds[0]].every(stnId => branches[0].includes(stnId)) && // is in the main line
-              // and has coline from current_stn_idx to nextStnIds[0]
-              colineStns.filter(co => [current_stn_idx, nextStnIds[0]].every(stnId => co.linePath.includes(stnId)))
-                  .length > 0
-            ? 'multiple'
-            : 'single';
+              ? colineStns.filter(co => [current_stn_idx, prevStnIds[0]].every(stnId => co.linePath.includes(stnId)))
+                    .length > 0
+                  ? // if this the terminal station, look back to see if it falls in coline
+                    'multiple'
+                  : 'single'
+              : [current_stn_idx, nextStnIds[0]].every(stnId => branches[0].includes(stnId)) && // is in the main line
+                  // and has coline from current_stn_idx to nextStnIds[0]
+                  colineStns.filter(co => [current_stn_idx, nextStnIds[0]].every(stnId => co.linePath.includes(stnId)))
+                      .length > 0
+                ? 'multiple'
+                : 'single';
 
     const nextColineColorFrom = isEnd(nextStnIds) ? prevStnIds : nextStnIds;
     const nextColineColor =

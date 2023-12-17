@@ -26,8 +26,8 @@ export default function Station(props: StationProps) {
         ? parents.includes('linestart')
             ? Direction.left
             : children.includes('lineend')
-            ? Direction.right
-            : undefined
+              ? Direction.right
+              : undefined
         : undefined;
 
     const hasOsi = !!groups[1]?.lines?.length;

@@ -27,10 +27,10 @@ function InterchangeTick(props: InterchangeTickProps) {
         position === Position.LEFT || repel === Direction.left
             ? 'end'
             : position === Position.RIGHT || repel === Direction.right
-            ? 'start'
-            : facility
-            ? 'start'
-            : 'middle';
+              ? 'start'
+              : facility
+                ? 'start'
+                : 'middle';
 
     const transforms = {
         [Position.LEFT]: {

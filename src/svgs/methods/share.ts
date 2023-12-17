@@ -123,12 +123,12 @@ export const getStnState = (
                 cur === currentId
                     ? 0
                     : (
-                          direction === ShortDirection.right
-                              ? _isSuccessor(currentId, cur, routes)
-                              : _isPredecessor(currentId, cur, routes)
-                      )
-                    ? 1
-                    : -1,
+                            direction === ShortDirection.right
+                                ? _isSuccessor(currentId, cur, routes)
+                                : _isPredecessor(currentId, cur, routes)
+                        )
+                      ? 1
+                      : -1,
         }),
         {}
     );

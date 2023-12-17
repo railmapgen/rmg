@@ -28,12 +28,12 @@ export default function OsiStation(props: OsiStationProps) {
             x: isTerminal
                 ? 0
                 : lines?.length === 1
-                ? direction === Direction.left
-                    ? -13
-                    : 13
-                : direction === Direction.left
-                ? 13
-                : -13,
+                  ? direction === Direction.left
+                      ? -13
+                      : 13
+                  : direction === Direction.left
+                    ? 13
+                    : -13,
             y: isTerminal
                 ? isReversed
                     ? 19
@@ -55,8 +55,8 @@ export default function OsiStation(props: OsiStationProps) {
                                     ? Position.UP
                                     : Position.DOWN
                                 : direction === Direction.right
-                                ? Position.RIGHT
-                                : Position.LEFT
+                                  ? Position.RIGHT
+                                  : Position.LEFT
                         }
                         repel={isTerminal ? direction : undefined}
                         repelOffset={isTerminal && arr.length === 1 ? -4 : 0}

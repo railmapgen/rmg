@@ -172,8 +172,8 @@ const Dest = (props: {
         middle - MARGIN - PADDING - LINEBOX_WIDTH >= PLATFORM_WIDTH / 2
             ? middle
             : direction === 'l'
-            ? (svgWidth.destination + terminalBBox.width - LINEBOX_WIDTH) / 2
-            : (svgWidth.destination - terminalBBox.width + LINEBOX_WIDTH) / 2;
+              ? (svgWidth.destination + terminalBBox.width - LINEBOX_WIDTH) / 2
+              : (svgWidth.destination - terminalBBox.width + LINEBOX_WIDTH) / 2;
 
     // the platform screen doors flash light
     // #20

@@ -68,8 +68,8 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
     const loop_stns = branch_stn_ids.at(1)
         ? split_loop_stns_with_branches(loopline, branch_stn_ids as [string, string], left_and_right_factor, arc)
         : branch_stn_ids.at(0)
-        ? split_loop_stns_with_branch(loopline, branch_stn_ids[0], bottom_factor, left_and_right_factor)
-        : split_loop_stns(loopline, current_stn_id, bottom_factor, left_and_right_factor);
+          ? split_loop_stns_with_branch(loopline, branch_stn_ids[0], bottom_factor, left_and_right_factor)
+          : split_loop_stns(loopline, current_stn_id, bottom_factor, left_and_right_factor);
     const { x_shares: x_shares_loop, y_shares: y_shares_loop } = get_xshares_yshares_of_loop(loopline, loop_stns);
 
     // calculate xs and ys for branches

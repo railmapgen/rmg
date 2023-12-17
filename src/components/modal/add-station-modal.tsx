@@ -75,8 +75,8 @@ export default function AddStationModal(props: AddStationModalProps) {
                             idx === 0
                                 ? t('AddStationModal.main')
                                 : style !== RmgStyle.SHMetro || !isColineBranch(cur, stationList)
-                                ? t('AddStationModal.branch') + ' ' + idx
-                                : t('AddStationModal.external') + ' ' + idx,
+                                  ? t('AddStationModal.branch') + ' ' + idx
+                                  : t('AddStationModal.external') + ' ' + idx,
                     }),
                     {}
                 ),
