@@ -6,6 +6,7 @@ import { fireEvent, render as originalRender, screen, within } from '@testing-li
 import { vi } from 'vitest';
 import rootReducer from '../../../redux';
 import { createMockAppStore } from '../../../setupTests';
+import ColourUtil from '../../../theme/colour-util';
 
 const realStore = rootReducer.getState();
 
@@ -43,7 +44,10 @@ describe('InterchangeCard', () => {
         render(<InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />);
 
         // colour edit button has desired styles
-        expect(screen.getByRole('button', { name: 'Colour' })).toHaveStyle({ background: '#F38B00', color: '#FFFFFF' });
+        expect(screen.getByRole('button', { name: 'Colour' })).toHaveStyle({
+            background: ColourUtil.fade('#F38B00', 0.7),
+            color: '#FFFFFF',
+        });
 
         expect(screen.getByRole('combobox', { name: 'Chinese name' })).toHaveDisplayValue('東涌綫');
         expect(screen.getByRole('combobox', { name: 'English name' })).toHaveDisplayValue('Tung Chung Line');
