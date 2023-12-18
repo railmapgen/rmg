@@ -251,6 +251,7 @@
     "minutes ago": "分钟前",
     "National rail": "国家铁路",
     "Ngong Ping 360": "昂坪360",
+    "No": "否",
     "No branches found": "未找到支线",
     "None": "无",
     "now and enjoy an even better rail map design experience!": "，享受更好的线路图设计体验！",
@@ -267,6 +268,7 @@
     "RIGHT END": "线路右端",
     "Saved projects": "保存的项目",
     "Select canvas": "选择画面",
+    "Span digits over rows": "跨行显示数字",
     "Style": "风格",
     "Station Chinese name": "车站中文名称",
     "Station English name": "车站英文名称",
@@ -283,6 +285,7 @@
     "View": "查看",
     "Visit": "访问",
     "Visit GitHub": "访问GitHub",
+    "Yes": "是",
     "You have reached the maximum number of projects.": "您已到达项目数量上限。",
 
     "CanvasType": {

@@ -243,6 +243,7 @@
     "minutes ago": "分鐘前",
     "National rail": "國家鐵路",
     "Ngong Ping 360": "昂坪360",
+    "No": "否",
     "No branches found": "未找到支綫",
     "None": "無",
     "now and enjoy an even better rail map design experience!": "，享受更好的路綫圖設計體驗！",
@@ -259,6 +260,7 @@
     "RIGHT END": "路綫右端",
     "Saved projects": "儲存的專案",
     "Select canvas": "選擇畫面",
+    "Span digits over rows": "跨行顯示數字",
     "Style": "風格",
     "Station Chinese name": "車站中文名稱",
     "Station English name": "車站英文名稱",
@@ -275,6 +277,7 @@
     "View": "檢視",
     "Visit": "造訪",
     "Visit GitHub": "造訪GitHub",
+    "Yes": "是",
     "You have reached the maximum number of projects.": "你已到達專案數量上限。",
     "CanvasType": {
         "all": "全部",

@@ -19,6 +19,7 @@ import {
     SET_PANEL_TYPE,
     SET_PLATFORM,
     SET_PSD_NUM,
+    SET_SPAN_LINE_NUM,
     SET_STATION,
     SET_STATIONS_BULK,
     SET_STYLE,
@@ -44,6 +45,7 @@ import {
     setPanelTypeAction,
     setPlatformAction,
     setPsdNumAction,
+    setSpanLineNumAction,
     setStationAction,
     setStationsBulkAction,
     setStyleAction,
@@ -110,6 +112,7 @@ export default function ParamReducer(
         | setDirectionAction
         | setPlatformAction
         | setLineNumAction
+        | setSpanLineNumAction
         | setPsdNumAction
         | setPanelTypeAction
         | setNotesAction
@@ -151,6 +154,8 @@ export default function ParamReducer(
             return { ...state, platform_num: action.platform };
         case SET_LINE_NUM:
             return { ...state, line_num: action.lineNum };
+        case SET_SPAN_LINE_NUM:
+            return { ...state, spanLineNum: action.spanLineNum };
         case SET_PSD_NUM:
             return { ...state, psd_num: action.psdNum };
         case SET_PANEL_TYPE:

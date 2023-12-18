@@ -40,6 +40,7 @@ export const SET_LINE_NAME = 'SET_LINE_NAME';
 export const SET_DIRECTION = 'SET_DIRECTION';
 export const SET_PLATFORM = 'SET_PLATFORM';
 export const SET_LINE_NUM = 'SET_LINE_NUM';
+export const SET_SPAN_LINE_NUM = 'SET_SPAN_LINE_NUM';
 export const SET_PSD_NUM = 'SET_PSD_NUM';
 export const SET_PANEL_TYPE = 'SET_PANEL_TYPE';
 export const SET_NOTES = 'SET_NOTES';
@@ -125,6 +126,11 @@ export interface setPlatformAction {
 export interface setLineNumAction {
     type: typeof SET_LINE_NUM;
     lineNum: string;
+}
+
+export interface setSpanLineNumAction {
+    type: typeof SET_SPAN_LINE_NUM;
+    spanLineNum?: boolean;
 }
 
 export interface setPsdNumAction {
@@ -245,6 +251,10 @@ export const setPlatform = (platform: string): setPlatformAction => {
 
 export const setLineNum = (lineNum: string): setLineNumAction => {
     return { type: SET_LINE_NUM, lineNum };
+};
+
+export const setSpanLineNum = (spanLineNum?: boolean): setSpanLineNumAction => {
+    return { type: SET_SPAN_LINE_NUM, spanLineNum };
 };
 
 export const setPsdNum = (psdNum: string): setPsdNumAction => {

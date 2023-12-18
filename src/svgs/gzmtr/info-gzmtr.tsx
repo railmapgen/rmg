@@ -70,7 +70,7 @@ const InfoGZMTR = () => {
                         }px`,
                         transform: 'translate(var(--translate-x, 800px), var(--translate-y, 145px))',
                     }}
-                    large
+                    size="lg"
                 />
             </g>
 
