@@ -84,6 +84,7 @@ const MainGZMTR = () => {
         branchSpacingPct,
         direction,
         line_name: lineName,
+        spanLineNum,
         current_stn_idx: currentStationIndex,
         stn_list: stationList,
     } = useRootSelector(store => store.param);
@@ -177,11 +178,13 @@ const MainGZMTR = () => {
                 }}
             >
                 <LineIcon
-                    lineName={lineName}
+                    zhName={lineName[0]}
+                    enName={lineName[1]}
                     foregroundColour={'var(--rmg-theme-fg)' as MonoColour}
                     backgroundColour={'var(--rmg-theme-colour)' as ColourHex}
                     zhClassName="rmg-name__zh"
                     enClassName="rmg-name__en"
+                    spanDigits={spanLineNum}
                 />
             </g>
         </g>

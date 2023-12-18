@@ -13,10 +13,14 @@ interface Props {
 export default function Station(props: Props) {
     const { stnId, stnState, stnY } = props;
 
-    const theme = useRootSelector(store => store.param.theme);
-    const lineName = useRootSelector(store => store.param.line_name);
-    const lineNumber = useRootSelector(store => store.param.line_num);
-    const stnInfo = useRootSelector(store => store.param.stn_list[stnId]);
+    const {
+        theme,
+        line_name: lineName,
+        line_num: lineNumber,
+        spanLineNum,
+        stn_list,
+    } = useRootSelector(store => store.param);
+    const stnInfo = stn_list[stnId];
 
     const isNameShift = stnInfo.parents.length === 2 || stnInfo.children.length === 2;
     const tickRotation =
@@ -56,6 +60,7 @@ export default function Station(props: Props) {
                 }
                 stnState={stnState}
                 tickRotation={tickRotation}
+                spanDigits={spanLineNum}
             />
             <StationNumber
                 lineNum={lineNumber}
@@ -81,6 +86,7 @@ interface IntGroupProps {
     intInfos: ExtendedInterchangeInfo[];
     stnState: -1 | 0 | 1;
     tickRotation: 0 | 180;
+    spanDigits?: boolean;
 }
 
 const IntGroup = (props: IntGroupProps) => (
@@ -91,7 +97,7 @@ const IntGroup = (props: IntGroupProps) => (
 );
 
 const IntTicks = (props: IntGroupProps & React.SVGProps<SVGGElement>) => {
-    const { intInfos, stnState, tickRotation, ...others } = props;
+    const { intInfos, stnState, tickRotation, spanDigits, ...others } = props;
 
     return (
         <g {...others}>
@@ -110,19 +116,21 @@ const IntTicks = (props: IntGroupProps & React.SVGProps<SVGGElement>) => {
 };
 
 const IntBoxs = (props: IntGroupProps & React.SVGProps<SVGGElement>) => {
-    const { intInfos, tickRotation, stnState, ...other } = props;
+    const { intInfos, tickRotation, stnState, spanDigits, ...other } = props;
 
     return (
         <g {...other}>
             {intInfos.map((info, i) => (
                 <g key={i} transform={`translate(0,${i * 28 * (tickRotation === 180 ? -1 : 1)})`}>
                     <LineIcon
-                        lineName={info.name}
+                        zhName={info.name[0]}
+                        enName={info.name[1]}
                         foregroundColour={info.theme?.[3] ?? MonoColour.white}
                         backgroundColour={info.theme?.[2] ?? '#aaaaaa'}
                         zhClassName="rmg-name__zh"
                         enClassName="rmg-name__en"
                         passed={stnState === -1}
+                        spanDigits={spanDigits}
                     />
                 </g>
             ))}

@@ -233,6 +233,7 @@ export interface RMGParam {
         terminal: false | Name;
     };
     line_num: string;
+    spanLineNum?: boolean;
     psd_num: string;
     info_panel_type: PanelTypeGZMTR | PanelTypeShmetro;
     notesGZMTR?: Note[];

@@ -12,6 +12,7 @@ import {
     setPanelType,
     setPlatform,
     setPsdNum,
+    setSpanLineNum,
     setTheme,
     staggerStationNames,
     toggleLineNameBeforeDestination,
@@ -32,6 +33,7 @@ export default function DesignSection() {
         theme,
         line_name: lineName,
         line_num: lineNum,
+        spanLineNum,
         direction,
         platform_num: platformNum,
         psd_num: psdNum,
@@ -114,6 +116,23 @@ export default function DesignSection() {
             label: t('StyleSidePanel.design.lineNum'),
             value: lineNum,
             onChange: value => dispatch(setLineNum(value)),
+            hidden: ![RmgStyle.GZMTR].includes(style),
+        },
+        {
+            type: 'custom',
+            label: t('Span digits over rows'),
+            component: (
+                <RmgButtonGroup
+                    selections={
+                        [
+                            { label: t('Yes'), value: true },
+                            { label: t('No'), value: false },
+                        ] as { label: string; value: boolean }[]
+                    }
+                    defaultValue={spanLineNum ?? false}
+                    onChange={span => dispatch(setSpanLineNum(span))}
+                />
+            ),
             hidden: ![RmgStyle.GZMTR].includes(style),
         },
         {
