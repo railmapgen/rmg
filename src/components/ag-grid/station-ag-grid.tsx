@@ -1,5 +1,5 @@
 import { RmgAgGrid, RmgLineBadge, RmgMultiLineString } from '@railmapgen/rmg-components';
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { useRootDispatch, useRootSelector } from '../../redux';
 import { ColDef, SelectionChangedEvent } from 'ag-grid-community';
@@ -25,7 +25,25 @@ export default function StationAgGrid(props: StationAgGridProps) {
     const sidePanelMode = useRootSelector(state => state.app.sidePanelMode);
     const { style, theme, stn_list: stationList, line_num: lineNumber, coline } = useRootSelector(state => state.param);
     const branches = useRootSelector(state => state.helper.branches);
-    const stationIds = branches[branchIndex].filter(id => !['linestart', 'lineend'].includes(id));
+
+    const [rowData, setRowData] = useState<RowDataType[]>([]);
+    useEffect(() => {
+        const nextRowData = branches[branchIndex].reduce<RowDataType[]>(
+            (acc, cur) =>
+                ['linestart', 'lineend'].includes(cur)
+                    ? acc
+                    : [
+                          ...acc,
+                          {
+                              ...stationList[cur],
+                              id: cur,
+                              rowSpan: dispatch(getRowSpanForColine(cur, branchIndex)),
+                          },
+                      ],
+            []
+        );
+        setRowData(nextRowData);
+    }, [branches, branchIndex, stationList]);
 
     const columnDefs = useMemo<ColDef<RowDataType>[]>(
         () => [
@@ -117,15 +135,9 @@ export default function StationAgGrid(props: StationAgGridProps) {
         }
     }, [isGridReadyRef.current, sidePanelMode]);
 
-    const rowData: RowDataType[] = stationIds.map(id => ({
-        ...stationList[id],
-        id,
-        rowSpan: dispatch(getRowSpanForColine(id, branchIndex)),
-    }));
-
-    const defaultColDef = {
+    const [defaultColDef] = useState({
         resizable: true,
-    };
+    });
 
     const handleGridReady = useCallback(() => {
         isGridReadyRef.current = true;
