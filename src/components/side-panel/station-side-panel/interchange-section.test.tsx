@@ -3,11 +3,9 @@ import { createMockAppStore } from '../../../setupTests';
 import InterchangeSection from './interchange-section';
 import { RmgStyle, ShortDirection, StationInfo, StationTransfer } from '../../../constants/constants';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
-import * as helperActions from '../../../redux/helper/action';
-import { SET_STATION } from '../../../redux/param/action';
+import { SET_STATIONS_BULK } from '../../../redux/param/action';
 import { render } from '../../../test-utils';
 import { fireEvent, screen } from '@testing-library/react';
-import { vi } from 'vitest';
 
 const realStore = rootReducer.getState();
 
@@ -42,10 +40,6 @@ describe('InterchangeSection', () => {
     });
 
     it('Can handle add interchange group as expected', () => {
-        vi.spyOn(helperActions, 'triggerHelpersUpdate').mockReturnValue(() => {
-            // mocked
-        });
-
         const mockStore = createMockAppStore({
             ...realStore,
             app: { ...realStore.app, selectedStation: 'test-station' },
@@ -70,30 +64,32 @@ describe('InterchangeSection', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Add interchange group' }));
 
         const actions = mockStore.getActions();
-        expect(actions).toHaveLength(1);
+        expect(actions).toHaveLength(2);
 
         // new interchange is added to group 2, index 0
         expect(actions).toContainEqual(
             expect.objectContaining({
-                type: SET_STATION,
-                stationId: 'test-station',
-                station: expect.objectContaining({
-                    transfer: expect.objectContaining({
-                        groups: [
-                            { lines: [] },
-                            { lines: [] },
-                            {
-                                lines: [
-                                    {
-                                        theme: ['hongkong', '', '#AAAAAA', '#fff'],
-                                        name: ['', ''],
-                                    },
-                                ],
-                            },
-                        ],
+                type: SET_STATIONS_BULK,
+                stations: expect.objectContaining({
+                    'test-station': expect.objectContaining({
+                        transfer: expect.objectContaining({
+                            groups: [
+                                { lines: [] },
+                                { lines: [] },
+                                {
+                                    lines: [
+                                        {
+                                            theme: ['hongkong', '', '#AAAAAA', '#fff'],
+                                            name: ['', ''],
+                                        },
+                                    ],
+                                },
+                            ],
+                        }),
                     }),
                 }),
             })
         );
+        expect(actions).toContainEqual(expect.objectContaining({ type: 'helper/updateHelper' }));
     });
 });

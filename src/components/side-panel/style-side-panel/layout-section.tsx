@@ -1,8 +1,7 @@
 import React from 'react';
 import { Box, Heading } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
-import { useRootSelector } from '../../../redux';
+import { useRootDispatch, useRootSelector } from '../../../redux';
 import { canvasConfig, RmgStyle } from '../../../constants/constants';
 import {
     setBranchSpacingPct,
@@ -18,7 +17,7 @@ import { MdAdd, MdArrowDropDown, MdArrowDropUp, MdArrowLeft, MdArrowRight, MdRem
 
 export default function LayoutSection() {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useRootDispatch();
 
     const {
         style: rmgStyle,
