@@ -14,7 +14,6 @@ import {
     SET_CUSTOMISED_MTR_DESTINATION,
     SET_NAME_POSITION,
     SET_NOTES,
-    SET_STATION,
     SET_STATIONS_BULK,
     SET_STYLE,
     setCustomisedMtrDestinationAction,
@@ -22,8 +21,8 @@ import {
     setNamePositionAction,
     setNotesAction,
     setStation,
-    setStationAction,
     setStationsBulk,
+    setStationsBulkAction,
     setStyle,
     staggerStationNames,
     toggleLineNameBeforeDestination,
@@ -43,7 +42,6 @@ import {
     StationInfo,
 } from '../../constants/constants';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
-import { SET_DEPS_STR } from '../helper/action';
 import { createMockAppStore, mockSimpleStationList } from '../../setupTests';
 import { getBranches } from '../helper/graph-theory-util';
 
@@ -101,21 +99,21 @@ describe('Tests for param actions', () => {
         mockStore.dispatch(setFullParam({} as RMGParam));
         actions = mockStore.getActions();
         expect(actions).toHaveLength(2);
-        expect(actions.find(action => action.type === SET_DEPS_STR)).toBeDefined();
+        expect(actions.find(action => action.type === 'helper/updateHelper')).toBeDefined();
 
         mockStore.clearActions();
 
         mockStore.dispatch(setStation('test-id', {} as StationInfo));
         actions = mockStore.getActions();
         expect(actions).toHaveLength(2);
-        expect(actions.find(action => action.type === SET_DEPS_STR)).toBeDefined();
+        expect(actions.find(action => action.type === 'helper/updateHelper')).toBeDefined();
 
         mockStore.clearActions();
 
         mockStore.dispatch(setStationsBulk({} as StationDict));
         actions = mockStore.getActions();
         expect(actions).toHaveLength(2);
-        expect(actions.find(action => action.type === SET_DEPS_STR)).toBeDefined();
+        expect(actions.find(action => action.type === 'helper/updateHelper')).toBeDefined();
     });
 
     it('Can add empty note as expected', () => {
@@ -422,10 +420,10 @@ describe('Tests for param actions', () => {
 
         const actions = mockStore.getActions();
         // expect(actions).toHaveLength(1);
-        expect(actions.find(action => action.type === SET_STATION)).toBeDefined();
+        expect(actions.find(action => action.type === SET_STATIONS_BULK)).toBeDefined();
 
-        const setStationAction: setStationAction = actions[0];
-        const stationTransferGroups = setStationAction.station.transfer.groups;
+        const action: setStationsBulkAction = actions[0];
+        const stationTransferGroups = action.stations.test.transfer.groups;
         expect(stationTransferGroups).toHaveLength(2); // empty within-station, and osi with 1 info
         expect(stationTransferGroups[0].lines).toHaveLength(0); // concat with length 0 array to info, to avoid error while stringify JSON
         expect(stationTransferGroups[1].lines).toHaveLength(1);
@@ -447,10 +445,10 @@ describe('Tests for param actions', () => {
 
         const actions = mockStore.getActions();
         // expect(actions).toHaveLength(1);
-        expect(actions.find(action => action.type === SET_STATION)).toBeDefined();
+        expect(actions.find(action => action.type === SET_STATIONS_BULK)).toBeDefined();
 
-        const setStationAction: setStationAction = actions[0];
-        const stationTransferGroups = setStationAction.station.transfer.groups;
+        const action: setStationsBulkAction = actions[0];
+        const stationTransferGroups = action.stations.test.transfer.groups;
         expect(stationTransferGroups).toHaveLength(1); // 2 within-station
         expect(stationTransferGroups[0].lines).toHaveLength(2);
         expect(stationTransferGroups[0].lines).toEqual([mockInterchange1, mockInterchange2]);
@@ -477,10 +475,10 @@ describe('Tests for param actions', () => {
 
         const actions = mockStore.getActions();
         // expect(actions).toHaveLength(1);
-        expect(actions.find(action => action.type === SET_STATION)).toBeDefined();
+        expect(actions.find(action => action.type === SET_STATIONS_BULK)).toBeDefined();
 
-        const setStationAction: setStationAction = actions[0];
-        const stationTransferGroups = setStationAction.station.transfer.groups;
+        const action: setStationsBulkAction = actions[0];
+        const stationTransferGroups = action.stations.test.transfer.groups;
         expect(stationTransferGroups[0].name).toBeUndefined();
         expect(stationTransferGroups[1].name).toBeUndefined();
         expect(stationTransferGroups[2].name).toEqual(['Name ZH', 'Name EN']);
@@ -504,7 +502,7 @@ describe('Tests for param actions', () => {
 
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(0);
-        expect(actions.find(action => action.type === SET_STATION)).not.toBeDefined();
+        expect(actions.find(action => action.type === SET_STATIONS_BULK)).not.toBeDefined();
     });
 
     it('Can remove interchange info as expected', () => {
@@ -528,10 +526,10 @@ describe('Tests for param actions', () => {
 
         const actions = mockStore.getActions();
         // expect(actions).toHaveLength(1);
-        expect(actions.find(action => action.type === SET_STATION)).toBeDefined();
+        expect(actions.find(action => action.type === SET_STATIONS_BULK)).toBeDefined();
 
-        const setStationAction: setStationAction = actions[0];
-        const stationTransferGroups = setStationAction.station.transfer.groups;
+        const action: setStationsBulkAction = actions[0];
+        const stationTransferGroups = action.stations.test.transfer.groups;
         expect(stationTransferGroups).toHaveLength(1);
         expect(stationTransferGroups[0].lines).toHaveLength(1);
         expect(stationTransferGroups[0].lines).toContainEqual(mockInterchange1);
@@ -571,10 +569,10 @@ describe('Tests for param actions', () => {
 
         const actions = mockStore.getActions();
         // expect(actions).toHaveLength(1);
-        expect(actions.find(action => action.type === SET_STATION)).toBeDefined();
+        expect(actions.find(action => action.type === SET_STATIONS_BULK)).toBeDefined();
 
-        const setStationAction: setStationAction = actions[0];
-        const stationTransferGroups = setStationAction.station.transfer.groups;
+        const action: setStationsBulkAction = actions[0];
+        const stationTransferGroups = action.stations.test.transfer.groups;
         expect(stationTransferGroups).toHaveLength(1);
         expect(stationTransferGroups[0].lines).toHaveLength(1);
         expect(stationTransferGroups[0].lines).toContainEqual(mockUpdatedThemeInterchange);
@@ -605,8 +603,8 @@ describe('Tests for param actions', () => {
         mockStore.dispatch(addStationService('test', Services.express));
         const addServiceActions = mockStore.getActions();
         // expect(addServiceActions).toHaveLength(1);
-        const addServiceAction: setStationAction = addServiceActions[0];
-        const servicesAfterAdding = addServiceAction.station.services;
+        const addServiceAction: setStationsBulkAction = addServiceActions[0];
+        const servicesAfterAdding = addServiceAction.stations.test.services;
         expect(servicesAfterAdding).toHaveLength(2);
         expect(servicesAfterAdding).toContain(Services.express);
 
@@ -615,8 +613,8 @@ describe('Tests for param actions', () => {
         mockStore.dispatch(removeStationService('test', Services.local));
         const removeServiceActions = mockStore.getActions();
         // expect(removeServiceActions).toHaveLength(1);
-        const removeServiceAction: setStationAction = removeServiceActions[0];
-        const servicesAfterRemoving = removeServiceAction.station.services;
+        const removeServiceAction: setStationsBulkAction = removeServiceActions[0];
+        const servicesAfterRemoving = removeServiceAction.stations.test.services;
         expect(servicesAfterRemoving).toHaveLength(0);
         expect(servicesAfterRemoving).not.toContain(Services.local);
     });

@@ -1,13 +1,13 @@
 import appReducer from './app/app-slice';
 import ParamReducer from './param/reducer';
-import HelperReducer from './helper/reducer';
+import helperReducer from './helper/helper-slice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { combineReducers, configureStore, createListenerMiddleware, TypedStartListening } from '@reduxjs/toolkit';
 
 const rootReducer = combineReducers({
     app: appReducer,
     param: ParamReducer,
-    helper: HelperReducer,
+    helper: helperReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 

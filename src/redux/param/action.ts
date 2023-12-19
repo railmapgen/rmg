@@ -17,8 +17,8 @@ import {
     StationInfo,
 } from '../../constants/constants';
 import { RootDispatch, RootState } from '../index';
-import { triggerHelpersUpdate } from '../helper/action';
 import { Theme } from '@railmapgen/rmg-palette-resources';
+import { updateHelper } from '../helper/helper-slice';
 
 export const SET_FULL_PARAM = 'SET_FULL_PARAM';
 
@@ -197,7 +197,8 @@ export interface setColineBulkAction {
 export const setFullParam = (fullParam: RMGParam) => {
     return (dispatch: RootDispatch) => {
         dispatch({ type: SET_FULL_PARAM, fullParam });
-        dispatch(triggerHelpersUpdate());
+        // dispatch(triggerHelpersUpdate())
+        dispatch(updateHelper(fullParam.stn_list));
     };
 };
 
@@ -380,9 +381,13 @@ export const setCurrentStation = (currentStation: string) => {
 };
 
 export const setStation = (stationId: string, station: StationInfo) => {
-    return (dispatch: RootDispatch) => {
-        dispatch({ type: SET_STATION, stationId, station });
-        dispatch(triggerHelpersUpdate());
+    return (dispatch: RootDispatch, getState: () => RootState) => {
+        const { stn_list } = getState().param;
+        const nextStationList = {
+            ...stn_list,
+            [stationId]: station,
+        };
+        dispatch(setStationsBulk(nextStationList));
     };
 };
 
@@ -393,7 +398,8 @@ export const setStation = (stationId: string, station: StationInfo) => {
 export const setStationsBulk = (stations: StationDict) => {
     return (dispatch: RootDispatch) => {
         dispatch({ type: SET_STATIONS_BULK, stations });
-        dispatch(triggerHelpersUpdate());
+        // dispatch(triggerHelpersUpdate());
+        dispatch(updateHelper(stations));
     };
 };
 
