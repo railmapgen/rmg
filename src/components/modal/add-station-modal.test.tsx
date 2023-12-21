@@ -1,7 +1,7 @@
 import { BranchStyle, RmgStyle, SidePanelMode, StationDict } from '../../constants/constants';
 import { getBranches } from '../../redux/helper/graph-theory-util';
 import rootReducer from '../../redux';
-import { createMockAppStore } from '../../setupTests';
+import { createTestStore } from '../../setupTests';
 import AddStationModal from './add-station-modal';
 import { render } from '../../test-utils';
 import { fireEvent, screen, within } from '@testing-library/react';
@@ -64,8 +64,7 @@ describe('AddStationModal', () => {
      */
 
     describe('AddStationModal - General', () => {
-        const mockStore = createMockAppStore({
-            ...realStore,
+        const mockStore = createTestStore({
             param: {
                 ...realStore.param,
                 stn_list: mockStationList,
@@ -121,22 +120,24 @@ describe('AddStationModal', () => {
 
         it('Can add station in existing branch as expected', () => {
             setup();
+            const prevStations = Object.keys(mockStore.getState().param.stn_list);
 
             fireEvent.change(screen.getAllByRole('combobox')[2], { target: { value: 'stn3' } });
             fireEvent.click(screen.getByText('Confirm'));
 
-            const actions = mockStore.getActions();
-            expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
+            const addedStations = Object.keys(mockStore.getState().param.stn_list).filter(
+                id => !prevStations.includes(id)
+            );
+            expect(addedStations).toHaveLength(1);
 
             // open side panel
-            expect(actions).toContainEqual({ type: 'app/setSelectedStation', payload: expect.any(String) });
-            expect(actions).toContainEqual({ type: 'app/setSidePanelMode', payload: SidePanelMode.STATION });
+            expect(mockStore.getState().app.selectedStation).toBe(addedStations[0]);
+            expect(mockStore.getState().app.sidePanelMode).toBe(SidePanelMode.STATION);
         });
     });
 
     describe('AddStationModal - SHMetro', () => {
-        const mockStore = createMockAppStore({
-            ...realStore,
+        const mockStore = createTestStore({
             param: {
                 ...realStore.param,
                 style: RmgStyle.SHMetro,

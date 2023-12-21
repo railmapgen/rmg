@@ -1,4 +1,4 @@
-import { createMockAppStore, mockSimpleStationList } from '../../setupTests';
+import { createTestStore, mockSimpleStationList } from '../../setupTests';
 import rootReducer from '../../redux';
 import { getBranches } from '../../redux/helper/graph-theory-util';
 import { render } from '../../test-utils';
@@ -7,8 +7,7 @@ import { act, fireEvent, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 
 const realStore = rootReducer.getState();
-const mockStore = createMockAppStore({
-    ...realStore,
+const mockStore = createTestStore({
     param: {
         ...realStore.param,
         stn_list: mockSimpleStationList,

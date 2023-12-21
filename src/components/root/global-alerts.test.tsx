@@ -1,13 +1,11 @@
-import React from 'react';
 import rootReducer from '../../redux';
-import { createMockAppStore } from '../../setupTests';
+import { createTestStore } from '../../setupTests';
 import { render } from '../../test-utils';
 import GlobalAlerts from './global-alerts';
 import { screen, within } from '@testing-library/react';
 
 const realStore = rootReducer.getState();
-const mockStore = createMockAppStore({
-    ...realStore,
+const mockStore = createTestStore({
     app: {
         ...realStore.app,
         globalAlerts: {

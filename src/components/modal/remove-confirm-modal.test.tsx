@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { SidePanelMode, StationDict } from '../../constants/constants';
-import { createMockAppStore } from '../../setupTests';
+import { createTestStore } from '../../setupTests';
 import { render } from '../../test-utils';
 import RemoveConfirmModal from './remove-confirm-modal';
 import rootReducer from '../../redux';
@@ -39,8 +39,7 @@ describe('RemoveConfirmModal', () => {
                 branch: { left: [], right: [] },
             },
         } as any as StationDict;
-        const mockStore = createMockAppStore({
-            ...realStore,
+        const mockStore = createTestStore({
             app: {
                 ...realStore.app,
                 selectedStation: 'stn1',
@@ -50,6 +49,7 @@ describe('RemoveConfirmModal', () => {
                 stn_list: mockStationList,
             },
         });
+        const prevState = mockStore.getState().param;
 
         render(<RemoveConfirmModal isOpen={true} {...mockCallbacks} />, { store: mockStore });
 
@@ -57,8 +57,7 @@ describe('RemoveConfirmModal', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
 
         // redux state not modified
-        const actions = mockStore.getActions();
-        expect(actions).toHaveLength(0);
+        expect(mockStore.getState().param).toEqual(prevState);
 
         // display error message
         expect(screen.getByRole('alert')).toBeInTheDocument();
@@ -97,8 +96,7 @@ describe('RemoveConfirmModal', () => {
                 branch: { left: [], right: [] },
             },
         } as any as StationDict;
-        const mockStore = createMockAppStore({
-            ...realStore,
+        const mockStore = createTestStore({
             app: {
                 ...realStore.app,
                 selectedStation: 'stn2',
@@ -115,9 +113,8 @@ describe('RemoveConfirmModal', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
 
         // assertions
-        const actions = mockStore.getActions();
-        expect(actions).toContainEqual({ type: 'app/setSidePanelMode', payload: SidePanelMode.CLOSE }); // close side panel
-        expect(actions).toContainEqual({ type: 'app/setSelectedStation', payload: 'linestart' }); // reset station selection
-        expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' })); // removal of station
+        expect(mockStore.getState().param.stn_list).not.toHaveProperty('stn2'); // removal of station
+        expect(mockStore.getState().app.sidePanelMode).toBe(SidePanelMode.CLOSE); // close side panel
+        expect(mockStore.getState().app.selectedStation).toBe('linestart'); // reset station selection
     });
 });

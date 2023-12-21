@@ -1,14 +1,12 @@
 import InterchangeCard from './interchange-card';
 import { ExtendedInterchangeInfo } from '../../../constants/constants';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
-import { render, TestingProvider } from '../../../test-utils';
-import { fireEvent, render as originalRender, screen, within } from '@testing-library/react';
+import { render } from '../../../test-utils';
+import { act, fireEvent, screen, within } from '@testing-library/react';
 import { vi } from 'vitest';
-import rootReducer from '../../../redux';
-import { createMockAppStore } from '../../../setupTests';
+import { createTestStore } from '../../../setupTests';
 import ColourUtil from '../../../theme/colour-util';
-
-const realStore = rootReducer.getState();
+import { onPaletteAppClipEmit } from '../../../redux/app/app-slice';
 
 const mockInterchangeInfo1: ExtendedInterchangeInfo = {
     theme: ['hongkong', 'tcl', '#F38B00', MonoColour.white],
@@ -54,31 +52,20 @@ describe('InterchangeCard', () => {
     });
 
     it('Can request theme update and receive updated theme from store', async () => {
-        const mockStore = createMockAppStore({ ...realStore });
-        const { rerender } = originalRender(
-            <TestingProvider store={mockStore}>
-                <InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />
-            </TestingProvider>
-        );
+        const mockStore = createTestStore();
+        render(<InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />, { store: mockStore });
 
         // click theme button
         fireEvent.click(screen.getByRole('button', { name: 'Colour' }));
 
         // context receive open event
-        const actions = mockStore.getActions();
-        expect(actions).toHaveLength(1);
-        expect(actions).toContainEqual({ type: 'app/openPaletteAppClip', payload: mockInterchangeInfo1.theme });
+        expect(mockStore.getState().app.paletteAppClipInput).toEqual(mockInterchangeInfo1.theme);
+        expect(mockStore.getState().app.paletteAppClipOutput).toBeUndefined;
 
         // rerender with next context
-        const updatedStore = createMockAppStore({
-            ...realStore,
-            app: { ...realStore.app, paletteAppClipOutput: mockInterchangeInfo2.theme },
+        await act(async () => {
+            mockStore.dispatch(onPaletteAppClipEmit(mockInterchangeInfo2.theme!));
         });
-        rerender(
-            <TestingProvider store={updatedStore}>
-                <InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />
-            </TestingProvider>
-        );
 
         // update theme to parent
         expect(mockCallbacks.onUpdate).toBeCalledTimes(1);

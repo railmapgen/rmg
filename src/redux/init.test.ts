@@ -1,14 +1,13 @@
 import rmgRuntime from '@railmapgen/rmg-runtime';
-import rootReducer from './index';
-import { createMockAppStore } from '../setupTests';
+import { RootStore } from './index';
+import { createTestStore } from '../setupTests';
 import { initCanvasScale, initCanvasToShow, paramUpdateTrigger } from './init';
 import { CanvasType, LocalStorageKey, RMGParam, RmgStyle } from '../constants/constants';
 import { initParam } from './param/util';
 import { vi } from 'vitest';
 import { getParam } from '../util/param-manager-utils';
 
-const realStore = rootReducer.getState();
-const mockStore = createMockAppStore({ ...realStore });
+let mockStore: RootStore;
 
 describe('ReduxInit', () => {
     beforeAll(async () => {
@@ -16,23 +15,21 @@ describe('ReduxInit', () => {
     });
 
     describe('ReduxInit - initCanvasScale', () => {
-        afterEach(() => {
-            mockStore.clearActions();
+        beforeEach(() => {
+            mockStore = createTestStore();
             rmgRuntime.storage.clear();
         });
 
         it('Can read canvasScale from localStorage as expected', () => {
             rmgRuntime.storage.set(LocalStorageKey.CANVAS_SCALE, '0.5');
             initCanvasScale(mockStore);
-
-            const actions = mockStore.getActions();
-            expect(actions).toContainEqual({ type: 'app/setCanvasScale', payload: 0.5 });
+            expect(mockStore.getState().app.canvasScale).toBe(0.5);
         });
     });
 
     describe('ReduxInit - initCanvasToShow', () => {
-        afterEach(() => {
-            mockStore.clearActions();
+        beforeEach(() => {
+            mockStore = createTestStore();
             rmgRuntime.storage.clear();
         });
 
@@ -42,17 +39,14 @@ describe('ReduxInit', () => {
                 JSON.stringify([CanvasType.Destination, CanvasType.RailMap])
             );
             initCanvasToShow(mockStore);
-
-            const actions = mockStore.getActions();
-            expect(actions).toContainEqual({ type: 'app/setCanvasToShow', payload: ['destination', 'railmap'] });
+            expect(mockStore.getState().app.canvasToShow).toEqual(['destination', 'railmap']);
         });
 
         it('Can ignore invalid canvas from localStorage', () => {
             rmgRuntime.storage.set(LocalStorageKey.CANVAS_TO_SHOW, 'invalid');
+            const prevAppState = mockStore.getState().app;
             initCanvasToShow(mockStore);
-
-            const actions = mockStore.getActions();
-            expect(actions).toHaveLength(0);
+            expect(mockStore.getState().app).toEqual(prevAppState);
         });
     });
 

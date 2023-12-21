@@ -3,7 +3,10 @@ import Station from './station';
 import { render } from '../../../test-utils';
 import { Direction, ExtendedInterchangeInfo, StationInfo, StationState } from '../../../constants/constants';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
-import { createMockStoreWithMockStations } from '../../../setupTests';
+import { createTestStore } from '../../../setupTests';
+import rootReducer from '../../../redux';
+
+const realStore = rootReducer.getState();
 
 (Document.prototype as any).fonts = {
     ready: Promise.resolve([]),
@@ -35,7 +38,14 @@ const setup = (within: number, outStation: number, end?: Direction) => {
         <svg>
             <Station stationId="test-id" stationState={StationState.CURRENT} isReversed={false} />
         </svg>,
-        { store: createMockStoreWithMockStations({ 'test-id': getMockStationInfo(within, outStation, end) }) }
+        {
+            store: createTestStore({
+                param: {
+                    ...realStore.param,
+                    stn_list: { 'test-id': getMockStationInfo(within, outStation, end) },
+                },
+            }),
+        }
     );
 };
 

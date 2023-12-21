@@ -1,7 +1,13 @@
 import { checkStationCouldBeRemoved, removeStation } from './remove-station-action';
-import { createMockAppStore, createMockStoreWithMockStations } from '../../setupTests';
+import { createTestStore } from '../../setupTests';
 import { BranchStyle, StationDict } from '../../constants/constants';
 import rootReducer from '../index';
+
+const realStore = rootReducer.getState();
+const createTestStoreWithStations = (stationList: StationDict) =>
+    createTestStore({
+        param: { ...realStore.param, stn_list: stationList },
+    });
 
 describe('Unit tests for removeStation action', () => {
     it('Can reject if the station to be deleted is current station', () => {
@@ -34,8 +40,7 @@ describe('Unit tests for removeStation action', () => {
         } as any as StationDict;
 
         const realStore = rootReducer.getState();
-        const mockStore = createMockAppStore({
-            ...realStore,
+        const mockStore = createTestStore({
             param: {
                 ...realStore.param,
                 stn_list: mockStationList,
@@ -45,7 +50,7 @@ describe('Unit tests for removeStation action', () => {
 
         const result = mockStore.dispatch(checkStationCouldBeRemoved('stn2'));
         expect(result).toBeFalsy();
-        expect(mockStore.getActions()).toHaveLength(0);
+        expect(mockStore.getState().param.stn_list).toHaveProperty('stn2');
     });
 
     it('Can reject if there are only 2 stations remaining', () => {
@@ -71,11 +76,11 @@ describe('Unit tests for removeStation action', () => {
                 children: [],
             },
         } as any as StationDict;
-        const mockStore = createMockStoreWithMockStations(mockStationList);
+        const mockStore = createTestStoreWithStations(mockStationList);
 
         const result = mockStore.dispatch(checkStationCouldBeRemoved('stn1'));
         expect(result).toBeFalsy();
-        expect(mockStore.getActions()).toHaveLength(0);
+        expect(mockStore.getState().param.stn_list).toHaveProperty('stn1');
     });
 
     it('Can reject if station has 2 parents and 2 children', () => {
@@ -117,11 +122,11 @@ describe('Unit tests for removeStation action', () => {
                 branch: { left: [BranchStyle.through, 'stn5'] },
             },
         } as any as StationDict;
-        const mockStore = createMockStoreWithMockStations(mockStationList);
+        const mockStore = createTestStoreWithStations(mockStationList);
 
         const result = mockStore.dispatch(checkStationCouldBeRemoved('stn3'));
         expect(result).toBeFalsy();
-        expect(mockStore.getActions()).toHaveLength(0);
+        expect(mockStore.getState().param.stn_list).toHaveProperty('stn3');
     });
 
     it('Can reject if station is the only one without siblings', () => {
@@ -154,11 +159,11 @@ describe('Unit tests for removeStation action', () => {
                 branch: { left: [BranchStyle.through, 'stn3'] },
             },
         } as any as StationDict;
-        const mockStore = createMockStoreWithMockStations(mockStationList);
+        const mockStore = createTestStoreWithStations(mockStationList);
 
         const result = mockStore.dispatch(checkStationCouldBeRemoved('stn1'));
         expect(result).toBeFalsy();
-        expect(mockStore.getActions()).toHaveLength(0);
+        expect(mockStore.getState().param.stn_list).toHaveProperty('stn1');
     });
 
     it('Can remove station with 1 parent and 2 children as expected', () => {
@@ -195,19 +200,16 @@ describe('Unit tests for removeStation action', () => {
                 branch: { left: [BranchStyle.through, 'stn4'] },
             },
         } as any as StationDict;
-        const mockStore = createMockStoreWithMockStations(mockStationList);
+        const mockStore = createTestStoreWithStations(mockStationList);
 
         const validity = mockStore.dispatch(checkStationCouldBeRemoved('stn2'));
         expect(validity).toBeTruthy();
 
         mockStore.dispatch(removeStation('stn2'));
 
-        const actions = mockStore.getActions();
-        expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
-
-        const newStationList = actions.find(action => action.type === 'param/setStations').payload;
+        const newStationList = mockStore.getState().param.stn_list;
         expect(newStationList.stn1.children).toEqual(['stn3', 'stn4']);
-        expect(newStationList.stn1.branch.right).toEqual([BranchStyle.through, 'stn4']);
+        expect(newStationList.stn1.branch?.right).toEqual([BranchStyle.through, 'stn4']);
         expect(newStationList.stn3.parents).toEqual(['stn1']);
         expect(newStationList.stn4.parents).toEqual(['stn1']);
     });
@@ -246,21 +248,18 @@ describe('Unit tests for removeStation action', () => {
                 children: [],
             },
         } as any as StationDict;
-        const mockStore = createMockStoreWithMockStations(mockStationList);
+        const mockStore = createTestStoreWithStations(mockStationList);
 
         const validity = mockStore.dispatch(checkStationCouldBeRemoved('stn3'));
         expect(validity).toBeTruthy();
 
         mockStore.dispatch(removeStation('stn3'));
 
-        const actions = mockStore.getActions();
-        expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
-
-        const newStationList = actions.find(action => action.type === 'param/setStations').payload;
+        const newStationList = mockStore.getState().param.stn_list;
         expect(newStationList.stn1.children).toEqual(['stn4']);
         expect(newStationList.stn2.children).toEqual(['stn4']);
         expect(newStationList.stn4.parents).toEqual(['stn1', 'stn2']);
-        expect(newStationList.stn4.branch.left).toEqual([BranchStyle.through, 'stn2']);
+        expect(newStationList.stn4.branch?.left).toEqual([BranchStyle.through, 'stn2']);
     });
 
     it('Can remove entire branch if station is the last station on branch as expected', () => {
@@ -302,21 +301,18 @@ describe('Unit tests for removeStation action', () => {
                 branch: { left: [BranchStyle.through, 'stn3'] },
             },
         } as any as StationDict;
-        const mockStore = createMockStoreWithMockStations(mockStationList);
+        const mockStore = createTestStoreWithStations(mockStationList);
 
         const validity = mockStore.dispatch(checkStationCouldBeRemoved('stn2'));
         expect(validity).toBeTruthy();
 
         mockStore.dispatch(removeStation('stn2'));
 
-        const actions = mockStore.getActions();
-        expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
-
-        const newStationList = actions.find(action => action.type === 'param/setStations').payload;
+        const newStationList = mockStore.getState().param.stn_list;
         expect(newStationList.stn1.children).toEqual(['stn4']);
-        expect(newStationList.stn1.branch.right).toBeUndefined();
+        expect(newStationList.stn1.branch?.right).toBeUndefined();
         expect(newStationList.stn3.parents).toEqual(['stn5']);
-        expect(newStationList.stn3.branch.left).toBeUndefined();
+        expect(newStationList.stn3.branch?.left).toBeUndefined();
     });
 
     it('Can remove station with 1 parent and 1 child as expected', () => {
@@ -354,19 +350,16 @@ describe('Unit tests for removeStation action', () => {
                 branch: { left: [BranchStyle.through, 'stn4'] },
             },
         } as any as StationDict;
-        const mockStore = createMockStoreWithMockStations(mockStationList);
+        const mockStore = createTestStoreWithStations(mockStationList);
 
         const validity = mockStore.dispatch(checkStationCouldBeRemoved('stn3'));
         expect(validity).toBeTruthy();
 
         mockStore.dispatch(removeStation('stn3'));
 
-        const actions = mockStore.getActions();
-        expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
-
-        const newStationList = actions.find(action => action.type === 'param/setStations').payload;
+        const newStationList = mockStore.getState().param.stn_list;
         expect(newStationList.stn1.children).toEqual(['stn2', 'stn4']);
-        expect(newStationList.stn1.branch.right).toEqual([BranchStyle.through, 'stn4']);
+        expect(newStationList.stn1.branch?.right).toEqual([BranchStyle.through, 'stn4']);
         expect(newStationList.stn4.parents).toEqual(['stn1']);
     });
 });
