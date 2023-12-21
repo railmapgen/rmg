@@ -1,15 +1,9 @@
 import rootReducer from '../index';
 import appReducer, { closeGlobalAlert, setGlobalAlert } from './app-slice';
-import { createMockAppStore } from '../../setupTests';
 
 const realStore = rootReducer.getState();
-const mockStore = createMockAppStore({ ...realStore });
 
 describe('AppSlice', () => {
-    afterEach(() => {
-        mockStore.clearActions();
-    });
-
     describe('AppSlice - global alerts', () => {
         const initialState = {
             ...realStore.app,

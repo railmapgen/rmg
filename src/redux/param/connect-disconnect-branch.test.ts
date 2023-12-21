@@ -6,9 +6,9 @@ import {
     getPossibleDirection,
     isStationValid2ConnectBranch,
 } from './connect-disconnect-branch';
-import rootReducer from '../index';
+import rootReducer, { RootStore } from '../index';
 import { getBranches } from '../helper/graph-theory-util';
-import { createMockAppStore } from '../../setupTests';
+import { createTestStore } from '../../setupTests';
 
 /**
  *                      stn6
@@ -58,21 +58,20 @@ const mockStationList = {
 const branches = getBranches(mockStationList);
 
 const realStore = rootReducer.getState();
-const mockStore = createMockAppStore({
-    ...realStore,
-    param: {
-        ...realStore.param,
-        stn_list: mockStationList,
-    },
-    helper: {
-        ...realStore.helper,
-        branches,
-    },
-});
+let mockStore: RootStore;
 
 describe('ConnectDisconnectBranch', () => {
-    afterEach(() => {
-        mockStore.clearActions();
+    beforeEach(() => {
+        mockStore = createTestStore({
+            param: {
+                ...realStore.param,
+                stn_list: mockStationList,
+            },
+            helper: {
+                ...realStore.helper,
+                branches,
+            },
+        });
     });
 
     describe('ConnectDisconnectBranch - get branch type', () => {
@@ -109,10 +108,8 @@ describe('ConnectDisconnectBranch', () => {
     describe('ConnectDisconnectBranch - connect to main line', () => {
         it('Can update station info as expected', () => {
             mockStore.dispatch(connect2MainLine('stn5', 2));
-            const actions = mockStore.getActions();
 
-            expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
-            const newStationList = actions.find(action => action.type === 'param/setStations').payload;
+            const newStationList = mockStore.getState().param.stn_list;
             expect(newStationList.stn5.parents).toStrictEqual(['stn6', 'stn4']);
             expect(newStationList.stn6.children).toStrictEqual(['stn5']);
             expect(newStationList.lineend.parents).toStrictEqual(['stn5']);
@@ -137,10 +134,8 @@ describe('ConnectDisconnectBranch', () => {
     describe('ConnectDisconnectBranch - disconnect to main line', () => {
         it('Can disconnect the left direction', () => {
             mockStore.dispatch(disconnectFromMainLine(Direction.left, 1));
-            const actions = mockStore.getActions();
 
-            expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
-            const newStationList = actions.find(action => action.type === 'param/setStations').payload;
+            const newStationList = mockStore.getState().param.stn_list;
             expect(newStationList.stn1.children).toStrictEqual(['stn2']);
             expect(newStationList.stn3.parents).toStrictEqual(['linestart']);
             expect(newStationList.linestart.children).toStrictEqual(['stn1', 'stn3']);

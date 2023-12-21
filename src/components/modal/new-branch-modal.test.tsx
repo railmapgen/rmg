@@ -1,7 +1,7 @@
 import { BranchStyle, RmgStyle, StationDict } from '../../constants/constants';
 import { getBranches } from '../../redux/helper/graph-theory-util';
-import rootReducer from '../../redux';
-import { createMockAppStore } from '../../setupTests';
+import rootReducer, { RootStore } from '../../redux';
+import { createTestStore } from '../../setupTests';
 import { render } from '../../test-utils';
 import NewBranchModal from './new-branch-modal';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
@@ -59,18 +59,21 @@ describe('NewBranchModal', () => {
      */
 
     describe('NewBranchModal - General', () => {
-        const mockStore = createMockAppStore({
-            ...realStore,
-            param: {
-                ...realStore.param,
-                stn_list: mockStationList,
-            },
-            helper: {
-                ...realStore.helper,
-                branches,
-            },
-        });
+        let mockStore: RootStore;
         const setup = () => render(<NewBranchModal isOpen={true} onClose={vi.fn()} />, { store: mockStore });
+
+        beforeEach(() => {
+            mockStore = createTestStore({
+                param: {
+                    ...realStore.param,
+                    stn_list: mockStationList,
+                },
+                helper: {
+                    ...realStore.helper,
+                    branches,
+                },
+            });
+        });
 
         it('Can render where dropdown as expected', () => {
             setup();
@@ -101,8 +104,8 @@ describe('NewBranchModal', () => {
             fireEvent.change(screen.getAllByRole('combobox')[2], { target: { value: 'lineend' } });
             fireEvent.click(screen.getByText('Confirm'));
 
-            const actions = mockStore.getActions();
-            expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
+            expect(mockStore.getState().param.stn_list.stn3.children).toHaveLength(2);
+            expect(mockStore.getState().param.stn_list.lineend.parents).toHaveLength(2);
         });
 
         it('Can reset from and to selections', async () => {
@@ -124,19 +127,22 @@ describe('NewBranchModal', () => {
     });
 
     describe('NewBranchModal - SHMetro', () => {
-        const mockStore = createMockAppStore({
-            ...realStore,
-            param: {
-                ...realStore.param,
-                style: RmgStyle.SHMetro,
-                stn_list: mockStationList,
-            },
-            helper: {
-                ...realStore.helper,
-                branches,
-            },
-        });
+        let mockStore: RootStore;
         const setup = () => render(<NewBranchModal isOpen={true} onClose={vi.fn()} />, { store: mockStore });
+
+        beforeEach(() => {
+            mockStore = createTestStore({
+                param: {
+                    ...realStore.param,
+                    style: RmgStyle.SHMetro,
+                    stn_list: mockStationList,
+                },
+                helper: {
+                    ...realStore.helper,
+                    branches,
+                },
+            });
+        });
 
         it('Can render where dropdown as expected', () => {
             setup();

@@ -17,11 +17,11 @@ import { Theme } from '@railmapgen/rmg-palette-resources';
 
 export interface ParamState extends RMGParam {}
 
-const initialState: ParamState = initParam(RmgStyle.MTR, 'en');
+const getInitialState = (): ParamState => initParam(RmgStyle.MTR, 'en');
 
 const paramSlice = createSlice({
     name: 'param',
-    initialState,
+    initialState: getInitialState(),
     reducers: {
         setSvgHeight: (state, action: PayloadAction<number>) => {
             state.svg_height = action.payload;

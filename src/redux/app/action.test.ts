@@ -1,13 +1,12 @@
-import { createMockAppStore, createParamInLocalStorage } from '../../setupTests';
+import { createParamInLocalStorage, createTestStore } from '../../setupTests';
 import rmgRuntime from '@railmapgen/rmg-runtime';
-import rootReducer from '../index';
+import { RootStore } from '../index';
 import { LocalStorageKey } from '../../constants/constants';
 import { readParam } from './action';
 import { vi } from 'vitest';
 import * as paramUpdaterUtils from '../../util/param-updater-utils';
 
-const realStore = rootReducer.getState();
-const mockStore = createMockAppStore({ ...realStore });
+let mockStore: RootStore;
 
 const updateThemesSpy = vi.spyOn(paramUpdaterUtils, 'updateThemes');
 
@@ -17,12 +16,9 @@ describe('AppAction', () => {
     });
 
     describe('AppAction - readParam', () => {
-        afterEach(() => {
-            mockStore.clearActions();
-            window.localStorage.clear();
-        });
-
         beforeEach(() => {
+            mockStore = createTestStore();
+            window.localStorage.clear();
             updateThemesSpy.mockImplementation(param => Promise.resolve(param));
         });
 
@@ -32,12 +28,8 @@ describe('AppAction', () => {
             const result = await mockStore.dispatch(readParam('test-id'));
             expect(result).toBeTruthy();
 
-            const actions = mockStore.getActions();
-            expect(actions).toContainEqual({ type: 'app/setParamConfig', payload: { id: 'test-id' } });
-            expect(actions).toContainEqual({
-                type: 'param/setFullParam',
-                payload: expect.objectContaining({ line_num: 'test-id' }),
-            });
+            expect(mockStore.getState().app.paramConfig).toEqual({ id: 'test-id' });
+            expect(mockStore.getState().param.line_num).toBe('test-id');
         });
 
         it('Can read param config and param from localStorage and save to store', async () => {
@@ -54,15 +46,12 @@ describe('AppAction', () => {
             const result = await mockStore.dispatch(readParam('test-id'));
             expect(result).toBeTruthy();
 
-            const actions = mockStore.getActions();
-            expect(actions).toContainEqual({
-                type: 'app/setParamConfig',
-                payload: { id: 'test-id', lastModified: now, name: 'My Masterpiece' },
+            expect(mockStore.getState().app.paramConfig).toEqual({
+                id: 'test-id',
+                lastModified: now,
+                name: 'My Masterpiece',
             });
-            expect(actions).toContainEqual({
-                type: 'param/setFullParam',
-                payload: expect.objectContaining({ line_num: 'test-id' }),
-            });
+            expect(mockStore.getState().param.line_num).toBe('test-id');
         });
 
         it('Can return false if param in localStorage is invalid', async () => {
@@ -71,16 +60,14 @@ describe('AppAction', () => {
             const result = await mockStore.dispatch(readParam('test-id'));
             expect(result).toBeFalsy();
 
-            const actions = mockStore.getActions();
-            expect(actions).toHaveLength(0);
+            expect(mockStore.getState().app.paramConfig).toBeUndefined();
         });
 
         it('Can return false if param not found in localStorage', async () => {
             const result = await mockStore.dispatch(readParam('test-id'));
             expect(result).toBeFalsy();
 
-            const actions = mockStore.getActions();
-            expect(actions).toHaveLength(0);
+            expect(mockStore.getState().app.paramConfig).toBeUndefined();
         });
     });
 });

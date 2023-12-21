@@ -8,7 +8,7 @@ import { BranchStyle, ColineInfo, StationDict } from '../../constants/constants'
 import { getBranches } from '../helper/graph-theory-util';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
 import rootReducer from '../index';
-import { createMockAppStore } from '../../setupTests';
+import { createTestStore } from '../../setupTests';
 
 const realStore = rootReducer.getState();
 
@@ -47,8 +47,7 @@ describe('Unit tests for coline action', () => {
         } as any as StationDict;
         const branches = getBranches(mockStationList);
 
-        const mockStore = createMockAppStore({
-            ...realStore,
+        const mockStore = createTestStore({
             param: {
                 ...realStore.param,
                 stn_list: mockStationList,
@@ -129,8 +128,7 @@ describe('Unit tests for coline action', () => {
         } as any as StationDict;
         const branches = getBranches(mockStationList);
 
-        const mockStore = createMockAppStore({
-            ...realStore,
+        const mockStore = createTestStore({
             param: {
                 ...realStore.param,
                 stn_list: mockStationList,
@@ -222,8 +220,7 @@ describe('Unit tests for coline action', () => {
             },
         };
 
-        const mockStore = createMockAppStore({
-            ...realStore,
+        const mockStore = createTestStore({
             param: {
                 ...realStore.param,
                 stn_list: mockStationList,
@@ -277,8 +274,7 @@ describe('Unit tests for coline action', () => {
         } as any as StationDict;
         const branches = getBranches(mockStationList);
 
-        const mockStore = createMockAppStore({
-            ...realStore,
+        const mockStore = createTestStore({
             param: {
                 ...realStore.param,
                 stn_list: mockStationList,
@@ -333,8 +329,7 @@ describe('Unit tests for coline action', () => {
             },
         };
 
-        const mockStore = createMockAppStore({
-            ...realStore,
+        const mockStore = createTestStore({
             param: {
                 ...realStore.param,
                 stn_list: mockStationList,
@@ -348,12 +343,10 @@ describe('Unit tests for coline action', () => {
 
         mockStore.dispatch(removeColineColor('col1', 1));
 
-        const actions = mockStore.getActions();
-        expect(actions).toHaveLength(1);
-        expect(actions[0].type).toBe('param/setColine');
-        expect(actions[0].payload).toHaveProperty('col1');
-        expect(actions[0].payload.col1.colors).toHaveLength(1);
-        expect(actions[0].payload.col1.colors[0]).toContain('gz1');
+        const nextColine = mockStore.getState().param.coline;
+        expect(nextColine).toHaveProperty('col1');
+        expect(nextColine.col1.colors).toHaveLength(1);
+        expect(nextColine.col1.colors[0]).toContain('gz1');
     });
 
     it('Can remove entire coline if removing the last colour', () => {
@@ -393,7 +386,7 @@ describe('Unit tests for coline action', () => {
             },
         };
 
-        const mockStore = createMockAppStore({
+        const mockStore = createTestStore({
             ...realStore,
             param: {
                 ...realStore.param,
@@ -408,9 +401,7 @@ describe('Unit tests for coline action', () => {
 
         mockStore.dispatch(removeColineColor('col1', 0));
 
-        const actions = mockStore.getActions();
-        expect(actions).toHaveLength(1);
-        expect(actions[0].type).toBe('param/setColine');
-        expect(actions[0].payload).not.toHaveProperty('col1');
+        const nextColine = mockStore.getState().param.coline;
+        expect(nextColine).not.toHaveProperty('col1');
     });
 });

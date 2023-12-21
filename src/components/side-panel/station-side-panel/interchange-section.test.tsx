@@ -1,5 +1,5 @@
 import rootReducer from '../../../redux';
-import { createMockAppStore } from '../../../setupTests';
+import { createTestStore } from '../../../setupTests';
 import InterchangeSection from './interchange-section';
 import { RmgStyle, ShortDirection, StationInfo, StationTransfer } from '../../../constants/constants';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
@@ -7,17 +7,19 @@ import { render } from '../../../test-utils';
 import { fireEvent, screen } from '@testing-library/react';
 
 const realStore = rootReducer.getState();
+const testStationId = realStore.param.stn_list.linestart.children[0];
 
 describe('InterchangeSection', () => {
     it('Can render InterchangeCard with headings as expected', () => {
-        const mockStore = createMockAppStore({
-            ...realStore,
-            app: { ...realStore.app, selectedStation: 'test-station' },
+        const mockStore = createTestStore({
+            app: { ...realStore.app, selectedStation: testStationId },
             param: {
                 ...realStore.param,
                 style: RmgStyle.GZMTR,
                 stn_list: {
-                    'test-station': {
+                    ...realStore.param.stn_list,
+                    [testStationId]: {
+                        ...realStore.param.stn_list[testStationId],
                         transfer: {
                             groups: [{ lines: [] }, { lines: [] }, { lines: [] }],
                             osi_names: [],
@@ -39,15 +41,16 @@ describe('InterchangeSection', () => {
     });
 
     it('Can handle add interchange group as expected', () => {
-        const mockStore = createMockAppStore({
-            ...realStore,
-            app: { ...realStore.app, selectedStation: 'test-station' },
+        const mockStore = createTestStore({
+            app: { ...realStore.app, selectedStation: testStationId },
             param: {
                 ...realStore.param,
                 style: RmgStyle.GZMTR,
                 theme: ['hongkong', 'twl', '#E2231A', MonoColour.white],
                 stn_list: {
-                    'test-station': {
+                    ...realStore.param.stn_list,
+                    [testStationId]: {
+                        ...realStore.param.stn_list[testStationId],
                         transfer: {
                             groups: [{ lines: [] }, { lines: [] }],
                             osi_names: [],
@@ -62,33 +65,24 @@ describe('InterchangeSection', () => {
 
         fireEvent.click(screen.getByRole('button', { name: 'Add interchange group' }));
 
-        const actions = mockStore.getActions();
-        expect(actions).toHaveLength(2);
-
         // new interchange is added to group 2, index 0
-        expect(actions).toContainEqual(
+        expect(mockStore.getState().param.stn_list[testStationId]).toEqual(
             expect.objectContaining({
-                type: 'param/setStations',
-                payload: expect.objectContaining({
-                    'test-station': expect.objectContaining({
-                        transfer: expect.objectContaining({
-                            groups: [
-                                { lines: [] },
-                                { lines: [] },
+                transfer: expect.objectContaining({
+                    groups: [
+                        { lines: [] },
+                        { lines: [] },
+                        {
+                            lines: [
                                 {
-                                    lines: [
-                                        {
-                                            theme: ['hongkong', '', '#AAAAAA', '#fff'],
-                                            name: ['', ''],
-                                        },
-                                    ],
+                                    theme: ['hongkong', '', '#AAAAAA', '#fff'],
+                                    name: ['', ''],
                                 },
                             ],
-                        }),
-                    }),
+                        },
+                    ],
                 }),
             })
         );
-        expect(actions).toContainEqual(expect.objectContaining({ type: 'helper/updateHelper' }));
     });
 });
