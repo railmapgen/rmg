@@ -5,7 +5,6 @@ import { createMockAppStore } from '../../setupTests';
 import { render } from '../../test-utils';
 import NewBranchModal from './new-branch-modal';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
-import { SET_STATIONS_BULK } from '../../redux/param/action';
 import { vi } from 'vitest';
 
 const mockStationList = {
@@ -103,7 +102,7 @@ describe('NewBranchModal', () => {
             fireEvent.click(screen.getByText('Confirm'));
 
             const actions = mockStore.getActions();
-            expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
+            expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
         });
 
         it('Can reset from and to selections', async () => {

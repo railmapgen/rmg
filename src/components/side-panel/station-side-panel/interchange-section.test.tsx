@@ -3,7 +3,6 @@ import { createMockAppStore } from '../../../setupTests';
 import InterchangeSection from './interchange-section';
 import { RmgStyle, ShortDirection, StationInfo, StationTransfer } from '../../../constants/constants';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
-import { SET_STATIONS_BULK } from '../../../redux/param/action';
 import { render } from '../../../test-utils';
 import { fireEvent, screen } from '@testing-library/react';
 
@@ -69,8 +68,8 @@ describe('InterchangeSection', () => {
         // new interchange is added to group 2, index 0
         expect(actions).toContainEqual(
             expect.objectContaining({
-                type: SET_STATIONS_BULK,
-                stations: expect.objectContaining({
+                type: 'param/setStations',
+                payload: expect.objectContaining({
                     'test-station': expect.objectContaining({
                         transfer: expect.objectContaining({
                             groups: [

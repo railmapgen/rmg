@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Button,
     HStack,
@@ -14,7 +14,7 @@ import { canvasConfig, CanvasType, Events, RmgStyle } from '../../constants/cons
 import { useRootDispatch, useRootSelector } from '../../redux';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import JSZip from 'jszip';
-import { setCurrentStation } from '../../redux/param/action';
+import { setCurrentStation } from '../../redux/param/param-slice';
 import { cloneSvgCanvas, test } from '../../util/export-utils';
 import { downloadAs, downloadBlobAs, isSafari, waitForMs } from '../../util/utils';
 import { useTranslation } from 'react-i18next';

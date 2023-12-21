@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Heading } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useRootDispatch, useRootSelector } from '../../../redux';
@@ -11,7 +10,7 @@ import {
     setSvgHeight,
     setSvgWidth,
     setYPercentage,
-} from '../../../redux/param/action';
+} from '../../../redux/param/param-slice';
 import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { MdAdd, MdArrowDropDown, MdArrowDropUp, MdArrowLeft, MdArrowRight, MdRemove } from 'react-icons/md';
 
@@ -36,7 +35,7 @@ export default function LayoutSection() {
             type: 'input',
             label: t(`StyleSidePanel.layout.${canvas}Width`),
             value: svgWidth[canvas].toString(),
-            onChange: val => dispatch(setSvgWidth(Number(val), canvas)),
+            onChange: val => dispatch(setSvgWidth({ width: Number(val), canvas })),
         })),
         {
             type: 'input',

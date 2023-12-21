@@ -4,7 +4,6 @@ import { createMockAppStore } from '../../setupTests';
 import { render } from '../../test-utils';
 import RemoveConfirmModal from './remove-confirm-modal';
 import rootReducer from '../../redux';
-import { SET_STATIONS_BULK } from '../../redux/param/action';
 import { vi } from 'vitest';
 
 const realStore = rootReducer.getState();
@@ -119,6 +118,6 @@ describe('RemoveConfirmModal', () => {
         const actions = mockStore.getActions();
         expect(actions).toContainEqual({ type: 'app/setSidePanelMode', payload: SidePanelMode.CLOSE }); // close side panel
         expect(actions).toContainEqual({ type: 'app/setSelectedStation', payload: 'linestart' }); // reset station selection
-        expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK })); // removal of station
+        expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' })); // removal of station
     });
 });

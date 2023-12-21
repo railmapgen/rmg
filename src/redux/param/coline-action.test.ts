@@ -350,10 +350,10 @@ describe('Unit tests for coline action', () => {
 
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(1);
-        expect(actions[0].type).toBe('SET_COLINE_BULK');
-        expect(actions[0].coline).toHaveProperty('col1');
-        expect(actions[0].coline.col1.colors).toHaveLength(1);
-        expect(actions[0].coline.col1.colors[0]).toContain('gz1');
+        expect(actions[0].type).toBe('param/setColine');
+        expect(actions[0].payload).toHaveProperty('col1');
+        expect(actions[0].payload.col1.colors).toHaveLength(1);
+        expect(actions[0].payload.col1.colors[0]).toContain('gz1');
     });
 
     it('Can remove entire coline if removing the last colour', () => {
@@ -410,7 +410,7 @@ describe('Unit tests for coline action', () => {
 
         const actions = mockStore.getActions();
         expect(actions).toHaveLength(1);
-        expect(actions[0].type).toBe('SET_COLINE_BULK');
-        expect(actions[0].coline).not.toHaveProperty('col1');
+        expect(actions[0].type).toBe('param/setColine');
+        expect(actions[0].payload).not.toHaveProperty('col1');
     });
 });

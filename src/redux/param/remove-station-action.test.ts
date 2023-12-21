@@ -1,7 +1,6 @@
 import { checkStationCouldBeRemoved, removeStation } from './remove-station-action';
 import { createMockAppStore, createMockStoreWithMockStations } from '../../setupTests';
 import { BranchStyle, StationDict } from '../../constants/constants';
-import { SET_STATIONS_BULK } from './action';
 import rootReducer from '../index';
 
 describe('Unit tests for removeStation action', () => {
@@ -204,9 +203,9 @@ describe('Unit tests for removeStation action', () => {
         mockStore.dispatch(removeStation('stn2'));
 
         const actions = mockStore.getActions();
-        expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
+        expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
 
-        const newStationList = actions.find(action => action.type === SET_STATIONS_BULK).stations;
+        const newStationList = actions.find(action => action.type === 'param/setStations').payload;
         expect(newStationList.stn1.children).toEqual(['stn3', 'stn4']);
         expect(newStationList.stn1.branch.right).toEqual([BranchStyle.through, 'stn4']);
         expect(newStationList.stn3.parents).toEqual(['stn1']);
@@ -255,9 +254,9 @@ describe('Unit tests for removeStation action', () => {
         mockStore.dispatch(removeStation('stn3'));
 
         const actions = mockStore.getActions();
-        expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
+        expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
 
-        const newStationList = actions.find(action => action.type === SET_STATIONS_BULK).stations;
+        const newStationList = actions.find(action => action.type === 'param/setStations').payload;
         expect(newStationList.stn1.children).toEqual(['stn4']);
         expect(newStationList.stn2.children).toEqual(['stn4']);
         expect(newStationList.stn4.parents).toEqual(['stn1', 'stn2']);
@@ -311,9 +310,9 @@ describe('Unit tests for removeStation action', () => {
         mockStore.dispatch(removeStation('stn2'));
 
         const actions = mockStore.getActions();
-        expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
+        expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
 
-        const newStationList = actions.find(action => action.type === SET_STATIONS_BULK).stations;
+        const newStationList = actions.find(action => action.type === 'param/setStations').payload;
         expect(newStationList.stn1.children).toEqual(['stn4']);
         expect(newStationList.stn1.branch.right).toBeUndefined();
         expect(newStationList.stn3.parents).toEqual(['stn5']);
@@ -363,9 +362,9 @@ describe('Unit tests for removeStation action', () => {
         mockStore.dispatch(removeStation('stn3'));
 
         const actions = mockStore.getActions();
-        expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
+        expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
 
-        const newStationList = actions.find(action => action.type === SET_STATIONS_BULK).stations;
+        const newStationList = actions.find(action => action.type === 'param/setStations').payload;
         expect(newStationList.stn1.children).toEqual(['stn2', 'stn4']);
         expect(newStationList.stn1.branch.right).toEqual([BranchStyle.through, 'stn4']);
         expect(newStationList.stn4.parents).toEqual(['stn1']);

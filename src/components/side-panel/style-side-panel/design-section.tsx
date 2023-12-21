@@ -5,7 +5,6 @@ import ThemeButton from '../theme-button';
 import {
     customiseDestinationName,
     flipStationNames,
-    flipStationNamesWithFlip,
     setDirection,
     setLineName,
     setLineNum,
@@ -16,7 +15,7 @@ import {
     setTheme,
     staggerStationNames,
     toggleLineNameBeforeDestination,
-} from '../../../redux/param/action';
+} from '../../../redux/param/param-slice';
 import { PanelTypeGZMTR, PanelTypeShmetro, RmgStyle, ShortDirection } from '../../../constants/constants';
 import { MdSwapVert } from 'react-icons/md';
 import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
@@ -191,7 +190,7 @@ export default function DesignSection() {
                     <RmgButtonGroup
                         selections={flipNameSelections}
                         defaultValue={namePosMTR.isFlip ?? true}
-                        onChange={value => dispatch(flipStationNamesWithFlip(value))}
+                        onChange={value => dispatch(flipStationNames(value))}
                     />
                 </HStack>
             ),

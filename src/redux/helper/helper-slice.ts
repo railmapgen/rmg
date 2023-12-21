@@ -45,6 +45,17 @@ const helperSlice = createSlice({
             }
         },
     },
+    extraReducers: builder => {
+        builder.addMatcher(
+            action => {
+                // console.log(action.type);
+                return action.type === 'param/setStations';
+            },
+            () => {
+                // console.log('helper reducer')
+            }
+        );
+    },
 });
 
 export const { updateHelper } = helperSlice.actions;
