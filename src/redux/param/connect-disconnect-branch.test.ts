@@ -111,8 +111,8 @@ describe('ConnectDisconnectBranch', () => {
             mockStore.dispatch(connect2MainLine('stn5', 2));
             const actions = mockStore.getActions();
 
-            expect(actions).toContainEqual(expect.objectContaining({ type: 'SET_STATIONS_BULK' }));
-            const newStationList = actions.find(action => action.type === 'SET_STATIONS_BULK').stations;
+            expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
+            const newStationList = actions.find(action => action.type === 'param/setStations').payload;
             expect(newStationList.stn5.parents).toStrictEqual(['stn6', 'stn4']);
             expect(newStationList.stn6.children).toStrictEqual(['stn5']);
             expect(newStationList.lineend.parents).toStrictEqual(['stn5']);
@@ -139,8 +139,8 @@ describe('ConnectDisconnectBranch', () => {
             mockStore.dispatch(disconnectFromMainLine(Direction.left, 1));
             const actions = mockStore.getActions();
 
-            expect(actions).toContainEqual(expect.objectContaining({ type: 'SET_STATIONS_BULK' }));
-            const newStationList = actions.find(action => action.type === 'SET_STATIONS_BULK').stations;
+            expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
+            const newStationList = actions.find(action => action.type === 'param/setStations').payload;
             expect(newStationList.stn1.children).toStrictEqual(['stn2']);
             expect(newStationList.stn3.parents).toStrictEqual(['linestart']);
             expect(newStationList.linestart.children).toStrictEqual(['stn1', 'stn3']);

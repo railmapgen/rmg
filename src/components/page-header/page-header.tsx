@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useRootDispatch, useRootSelector } from '../../redux';
 import { RmgFields, RmgFieldsField, RmgMultiSelect, RmgPageHeader } from '@railmapgen/rmg-components';
 import { MdZoomIn, MdZoomOut } from 'react-icons/md';
-import { setStyle } from '../../redux/param/action';
+import { setStyle } from '../../redux/param/param-slice';
 
 export default function PageHeader() {
     const { t } = useTranslation();

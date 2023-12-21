@@ -1,6 +1,6 @@
 import { RootDispatch, RootState } from '../index';
 import { ColineColours, ColineInfo, StationDict } from '../../constants/constants';
-import { setColineBulk } from './action';
+import { setColine } from './param-slice';
 import { nanoid } from 'nanoid';
 
 // Cartesian product of multiple arrays in JavaScript
@@ -195,7 +195,7 @@ export const removeInvalidColineOnRemoveStation = (deleteStnId: string) => {
             }
         }, {});
 
-        dispatch(setColineBulk(nextColine));
+        dispatch(setColine(nextColine));
     };
 };
 
@@ -205,7 +205,7 @@ export const addColine = (from: string, to: string, colors: ColineColours[], dis
 
         dispatch(checkColineValidity(from, to));
         dispatch(
-            setColineBulk({
+            setColine({
                 ...colineInfo,
                 [nanoid(4)]: { from: from, to: to, colors: colors, display: display },
             })
@@ -225,7 +225,7 @@ export const updateColine = (colineId: string, from: string, to: string, display
                 [colineId]: { ...colineInfo[colineId], from, to, display },
             };
 
-            dispatch(setColineBulk(newColineInfo));
+            dispatch(setColine(newColineInfo));
         }
     };
 };
@@ -236,7 +236,7 @@ export const removeColine = (colineId: string) => {
 
         if (colineId in colineInfo) {
             const { [colineId]: _, ...nextColine } = colineInfo;
-            dispatch(setColineBulk(nextColine));
+            dispatch(setColine(nextColine));
         }
     };
 };
@@ -252,7 +252,7 @@ export const addColineColor = (colineId: string, interchangeInfo: ColineColours)
 
         colineInfo[colineId].colors = [...colineInfo[colineId].colors, interchangeInfo];
 
-        dispatch(setColineBulk(colineInfo));
+        dispatch(setColine(colineInfo));
     };
 };
 
@@ -265,14 +265,14 @@ export const removeColineColor = (colineId: string, interchangeIndex: number) =>
             if (nextColours.length === 0) {
                 // remove entire coline
                 const { [colineId]: _, ...nextColine } = colineInfo;
-                dispatch(setColineBulk(nextColine));
+                dispatch(setColine(nextColine));
             } else {
                 // update coline colour list
                 const nextColine = {
                     ...colineInfo,
                     [colineId]: { ...colineInfo[colineId], colors: nextColours },
                 };
-                dispatch(setColineBulk(nextColine));
+                dispatch(setColine(nextColine));
             }
         }
     };
@@ -296,7 +296,7 @@ export const updateColineColor = (colineId: string, interchangeIndex: number, in
                     ),
                 },
             };
-            dispatch(setColineBulk(nextColineInfo));
+            dispatch(setColine(nextColineInfo));
         }
     };
 };

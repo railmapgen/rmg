@@ -35,8 +35,8 @@ describe('AppAction', () => {
             const actions = mockStore.getActions();
             expect(actions).toContainEqual({ type: 'app/setParamConfig', payload: { id: 'test-id' } });
             expect(actions).toContainEqual({
-                type: 'SET_FULL_PARAM',
-                fullParam: expect.objectContaining({ line_num: 'test-id' }),
+                type: 'param/setFullParam',
+                payload: expect.objectContaining({ line_num: 'test-id' }),
             });
         });
 
@@ -60,8 +60,8 @@ describe('AppAction', () => {
                 payload: { id: 'test-id', lastModified: now, name: 'My Masterpiece' },
             });
             expect(actions).toContainEqual({
-                type: 'SET_FULL_PARAM',
-                fullParam: expect.objectContaining({ line_num: 'test-id' }),
+                type: 'param/setFullParam',
+                payload: expect.objectContaining({ line_num: 'test-id' }),
             });
         });
 

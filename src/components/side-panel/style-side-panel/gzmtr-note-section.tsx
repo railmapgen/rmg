@@ -1,7 +1,6 @@
-import React from 'react';
 import { Box, Button, Heading, VStack } from '@chakra-ui/react';
 import GZMTRNoteCard from './gzmtr-note-card';
-import { addNote, removeNote, updateNote } from '../../../redux/param/action';
+import { addNote, removeNote, updateNote } from '../../../redux/param/param-slice';
 import { MdAdd } from 'react-icons/md';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +22,7 @@ export default function GZMTRNoteSection() {
                     <GZMTRNoteCard
                         key={i}
                         note={note}
-                        onUpdate={value => dispatch(updateNote(i, value))}
+                        onUpdate={value => dispatch(updateNote({ index: i, note: value }))}
                         onDelete={() => dispatch(removeNote(i))}
                     />
                 ))}

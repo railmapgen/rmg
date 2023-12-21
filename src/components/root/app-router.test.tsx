@@ -65,7 +65,7 @@ describe('AppRouter', () => {
         await waitFor(() => expect(mockStore.getActions().length).toBeGreaterThan(0));
         const actions = mockStore.getActions();
         expect(actions).toContainEqual({ type: 'app/setParamConfig', payload: { id: 'test-id' } });
-        expect(actions).toContainEqual(expect.objectContaining({ type: 'SET_FULL_PARAM' }));
+        expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setFullParam' }));
 
         expect(screen.getByRole('presentation', { name: 'Mock App View' })).toBeInTheDocument();
     });
@@ -111,7 +111,7 @@ describe('AppRouter', () => {
             type: 'app/setParamConfig',
             payload: expect.objectContaining({ name: 'file.json' }),
         });
-        expect(actions).toContainEqual(expect.objectContaining({ type: 'SET_FULL_PARAM' }));
+        expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setFullParam' }));
 
         await screen.findByRole('presentation', { name: 'Mock App View' });
     });

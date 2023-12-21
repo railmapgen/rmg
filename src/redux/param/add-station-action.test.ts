@@ -3,7 +3,6 @@ import { BranchStyle, StationDict } from '../../constants/constants';
 import { getBranches } from '../helper/graph-theory-util';
 import { createMockAppStore } from '../../setupTests';
 import rootReducer from '../index';
-import { SET_STATIONS_BULK } from './action';
 import { vi } from 'vitest';
 
 vi.mock('nanoid', () => ({
@@ -78,9 +77,9 @@ describe('Unit tests for addStation action', () => {
         expect(result).toBeTruthy();
 
         const actions = mockStore.getActions();
-        expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
+        expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
 
-        const newStationList = actions.find(action => action.type === SET_STATIONS_BULK).stations;
+        const newStationList = actions.find(action => action.type === 'param/setStations').payload;
         expect(newStationList.stn1.children).toEqual(['testId']);
         expect(newStationList.stn2.parents).toEqual(['testId', 'stn5']);
         expect(newStationList.stn2.branch.left[1]).toEqual('stn5');
@@ -98,9 +97,9 @@ describe('Unit tests for addStation action', () => {
         expect(result).toBeTruthy();
 
         const actions = mockStore.getActions();
-        expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
+        expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
 
-        const newStationList = actions.find(action => action.type === SET_STATIONS_BULK).stations;
+        const newStationList = actions.find(action => action.type === 'param/setStations').payload;
         expect(newStationList.stn5.children).toEqual(['testId']);
         expect(newStationList.stn2.parents).toEqual(['stn1', 'testId']);
         expect(newStationList.stn2.branch.left[1]).toEqual('testId');
@@ -118,9 +117,9 @@ describe('Unit tests for addStation action', () => {
         expect(result).toBeTruthy();
 
         const actions = mockStore.getActions();
-        expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
+        expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
 
-        const newStationList = actions.find(action => action.type === SET_STATIONS_BULK).stations;
+        const newStationList = actions.find(action => action.type === 'param/setStations').payload;
         expect(newStationList.stn0.children).toEqual(['stn1', 'testId']);
         expect(newStationList.stn0.branch.right[1]).toEqual('testId');
         expect(newStationList.stn5.parents).toEqual(['testId']);
@@ -141,9 +140,9 @@ describe('Unit tests for addStation action', () => {
         expect(result).toBeTruthy();
 
         const actions = mockStore.getActions();
-        expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
+        expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
 
-        const newStationList = actions.find(action => action.type === SET_STATIONS_BULK).stations;
+        const newStationList = actions.find(action => action.type === 'param/setStations').payload;
         expect(newStationList.stn2.children).toEqual(['testId', 'stn3']);
         expect(newStationList.stn2.branch.right[1]).toEqual('testId');
         expect(newStationList.lineend.parents).toEqual(['testId', 'stn4']);

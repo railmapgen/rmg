@@ -1,9 +1,9 @@
 import { Button, HStack } from '@chakra-ui/react';
 import { RmgSidePanelFooter } from '@railmapgen/rmg-components';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import RemoveConfirmModal from '../../modal/remove-confirm-modal';
-import { setCurrentStation } from '../../../redux/param/action';
+import { setCurrentStation } from '../../../redux/param/param-slice';
 import { useTranslation } from 'react-i18next';
 
 export default function StationSidePanelFooter() {

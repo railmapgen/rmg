@@ -3,7 +3,6 @@ import { getBranches } from '../../redux/helper/graph-theory-util';
 import rootReducer from '../../redux';
 import { createMockAppStore } from '../../setupTests';
 import AddStationModal from './add-station-modal';
-import { SET_STATIONS_BULK } from '../../redux/param/action';
 import { render } from '../../test-utils';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { vi } from 'vitest';
@@ -127,7 +126,7 @@ describe('AddStationModal', () => {
             fireEvent.click(screen.getByText('Confirm'));
 
             const actions = mockStore.getActions();
-            expect(actions).toContainEqual(expect.objectContaining({ type: SET_STATIONS_BULK }));
+            expect(actions).toContainEqual(expect.objectContaining({ type: 'param/setStations' }));
 
             // open side panel
             expect(actions).toContainEqual({ type: 'app/setSelectedStation', payload: expect.any(String) });
