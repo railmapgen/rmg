@@ -27,7 +27,7 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/styles/|/fonts/|/rmg-palette/|/rmg-templates/': {
+            '^(/styles/|/fonts/|/rmg/|/rmg-palette/|/rmg-templates/)': {
                 target: 'https://railmapgen.github.io',
                 changeOrigin: true,
                 secure: false,
