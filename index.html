@@ -14,72 +14,33 @@
         user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
         -->
         <link rel="manifest" href="/manifest.json" />
+        <style>
+            @keyframes animation-spinner {
+                0% {transform: rotate(0deg)}
+                100% {transform: rotate(360deg)}
+            }
+            .spinner {
+                border-top: 2px solid currentcolor;
+                border-right: 2px solid currentcolor;
+                border-bottom: 2px solid transparent;
+                border-left: 2px solid transparent;
+                border-radius: 100%;
+                width: 28px;
+                height: 28px;
+                animation: 0.45s linear 0s infinite animation-spinner;
+                position: absolute;
+                top: calc(50% - 16px);
+                left: calc(50% - 16px);
+            }
+        </style>
 
         <title>Rail Map Generator</title>
-
-        <!-- Start Single Page Apps for GitHub Pages -->
-        <script type="text/javascript">
-            // Single Page Apps for GitHub Pages
-            // https://github.com/rafrex/spa-github-pages
-            // Copyright (c) 2016 Rafael Pedicini, licensed under the MIT License
-            // ----------------------------------------------------------------------
-            // This script checks to see if a redirect is present in the query string
-            // and converts it back into the correct url and adds it to the
-            // browser's history using window.history.replaceState(...),
-            // which won't cause the browser to attempt to load the new url.
-            // When the single page app is loaded further down in this file,
-            // the correct url will be waiting in the browser's history for
-            // the single page app to route accordingly.
-            (function (l) {
-                if (l.search) {
-                    var q = {};
-                    l.search
-                        .slice(1)
-                        .split('&')
-                        .forEach(function (v) {
-                            var a = v.split('=');
-                            q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
-                        });
-                    if (q.p !== undefined) {
-                        window.history.replaceState(
-                            null,
-                            null,
-                            l.pathname.slice(0, -1) + (q.p || '') + (q.q ? '?' + q.q : '') + l.hash
-                        );
-                    }
-                }
-            })(window.location);
-        </script>
-        <!-- End Single Page Apps for GitHub Pages -->
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root">
-            <p style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);margin: 0;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;">
-                Loading Rail Map Generator...
-            </p>
-            <p style="position: absolute;top: 75%;left: 50%;transform: translate(-50%, -50%);margin: 0;font-size: small;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;color: gray;">
-                Seeing this page for too long? Try another mirror
-                <a href="https://railmapgen.github.io/?app=rmg" target="_blank" rel="noreferrer">GitHub</a>
-                <a href="https://railmapgen.gitlab.io/?app=rmg" target="_blank" rel="noreferrer">Gitlab</a>
-                or the
-                <a href="https://github.com/railmapgen/railmapgen.github.io/releases" target="_blank" rel="noreferrer">offline applications</a>
-                .    
-                </br>
-                </br>
-                Offline applications also available via mirror.ghproxy.com
-                <a id="win">Windows</a>
-                <a id="mac">MacOS</a>
-                <a id="linux">Linux</a>
-                if you are blocked by GFW :)
-            </p>
+            <div class="spinner"></div>
         </div>
-        <script>
-            const d = new Date();const tag=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2, '0')}01`;const ver=`${String(d.getFullYear()).slice(-2)}.${d.getMonth()+1}.1`;
-            document.getElementById('win').href=`https://mirror.ghproxy.com/https://github.com/railmapgen/railmapgen.github.io/releases/download/tauri-${tag}/railmapgen_${ver}_x64-setup.exe`;
-            document.getElementById('mac').href=`https://mirror.ghproxy.com/https://github.com/railmapgen/railmapgen.github.io/releases/download/tauri-${tag}/railmapgen_${ver}_x64.dmg`;
-            document.getElementById('linux').href=`https://mirror.ghproxy.com/https://github.com/railmapgen/railmapgen.github.io/releases/download/tauri-${tag}/railmapgen_${ver}_amd64.deb`;
-        </script>
         <script type="module" src="src/index.tsx"></script>
     </body>
 </html>
