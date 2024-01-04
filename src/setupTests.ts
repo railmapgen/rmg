@@ -1,9 +1,6 @@
 import { BranchStyle, LocalStorageKey, RmgStyle, StationDict } from './constants/constants';
 import { createStore } from './redux';
 import { initParam } from './redux/param/util';
-import infoJson from '../info.json';
-import { MockBroadcastChannel } from './mock-broadcast-channel';
-import { vi } from 'vitest';
 
 export const createTestStore = createStore;
 
@@ -51,15 +48,13 @@ export const mockSimpleStationList: StationDict = {
     },
 } as any;
 
-vi.stubGlobal('BroadcastChannel', MockBroadcastChannel);
-
 const originalFetch = global.fetch;
-global.fetch = (...args) => {
+global.fetch = vi.fn().mockImplementation((...args: any[]) => {
     if (args[0].toString().includes('/info.json')) {
         return Promise.resolve({
             ok: true,
             status: 200,
-            json: () => Promise.resolve(infoJson),
+            json: () => import('../info.json').then(module => module.default),
         }) as any;
     } else if (args[0].toString().includes('other-company-config.json')) {
         return Promise.resolve({
@@ -69,9 +64,9 @@ global.fetch = (...args) => {
         }) as any;
     } else {
         console.warn('No mocked response for', args[0]);
-        return originalFetch(...args);
+        return originalFetch(args[0], args[1]);
     }
-};
+});
 
 export const createParamInLocalStorage = (id: string) => {
     const rmgParam = initParam(RmgStyle.MTR, 'en');
