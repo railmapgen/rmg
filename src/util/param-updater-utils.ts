@@ -425,15 +425,16 @@ const SANITISATION_RULES: Record<string, (value: any) => boolean> = {
 };
 
 export const sanitiseParam = (param: any) => {
+    const clone = structuredClone(param);
     Object.entries(SANITISATION_RULES).forEach(([path, predicate]) => {
-        Object.entries(dottieGet(param, path)).forEach(([exactPath, value]) => {
+        Object.entries(dottieGet(clone, path)).forEach(([exactPath, value]) => {
             console.debug('[rmg] Sanitising', exactPath, value);
             if (predicate(value)) {
-                dottieSet(param, exactPath, undefined);
+                dottieSet(clone, exactPath, undefined);
             }
         });
     });
 
-    param.version = rmgRuntime.getAppVersion();
-    return param;
+    clone.version = rmgRuntime.getAppVersion();
+    return clone;
 };
