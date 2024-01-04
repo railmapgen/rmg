@@ -1,4 +1,4 @@
-name: Build UI
+name: Build and Release
 
 on:
   workflow_call:
@@ -43,21 +43,15 @@ jobs:
         run: ./scripts/build.sh
         shell: bash
         env:
-          BUMP_VERSION: ${{ github.event.inputs.bump_version }}
+          BUMP_VERSION: ${{ inputs.bump_version }}
 
-      - name: Upload artefacts
-        uses: railmapgen/upload-artefacts@main
+      - name: Release
+        if: ${{ inputs.auto_deploy == 'UAT' || inputs.auto_deploy == 'PRD' }}
+        uses: railmapgen/releaser@main
         with:
           app_name: rmg
           version: ${{ steps.build.outputs.RMG_VER }}
+          environment: ${{ inputs.auto_deploy }}
           dist: dist
-          token: ${{ secrets.RMG_BUILD_AND_RELEASE }}
-
-      - name: Auto deploy
-        if: ${{ github.event.inputs.auto_deploy == 'UAT' || github.event.inputs.auto_deploy == 'PRD' }}
-        run: |
-          curl -XPOST -u "wongchito:${{ secrets.RMG_BUILD_AND_RELEASE }}" \
-            -H "Accept: application/vnd.github.everest-preview+json" \
-            -H "Content-Type: application/json" \
-            https://api.github.com/repos/uat-railmapgen/rmg-repositories/actions/workflows/release.yml/dispatches \
-            --data '{"ref": "main", "inputs": {"app_name": "rmg", "version": "${{ steps.build.outputs.RMG_VER }}", "environment": "${{ github.event.inputs.auto_deploy }}"}}'
+          github_token: ${{ secrets.RMG_BUILD_AND_RELEASE }}
+          gitlab_token: ${{ secrets.GITLAB_RELEASE }}
