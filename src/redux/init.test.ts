@@ -4,7 +4,6 @@ import { createTestStore } from '../setupTests';
 import { initCanvasScale, initCanvasToShow, paramUpdateTrigger } from './init';
 import { CanvasType, LocalStorageKey, RMGParam, RmgStyle } from '../constants/constants';
 import { initParam } from './param/util';
-import { vi } from 'vitest';
 import { getParam } from '../util/param-manager-utils';
 
 let mockStore: RootStore;
@@ -64,7 +63,7 @@ describe('ReduxInit', () => {
         });
 
         it('Can update param and param config in localStorage as expected', () => {
-            const now = Date.now();
+            const now = Date.now() - 1_000;
             const nextParam = getMockParam('test-id');
 
             // current param in localStorage is outdated
