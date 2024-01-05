@@ -1,134 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
+    <head>
+      <script type="module" crossorigin src="/rmg/assets/polyfills-y1ugPfEN.js"></script>
 
-    <title>@storybook/cli - Storybook</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charset="utf-8" />
+        <link rel="icon" href="/rmg/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="description" content="Rail Map Generator" />
+        <base href="./" />
+        <link rel="apple-touch-icon" href="/rmg/logo192.png" />
+        <!--
+        manifest.json provides metadata used when your web app is installed on a
+        user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+        -->
+        <link rel="manifest" href="/rmg/manifest.json" />
+        <style>
+            @keyframes animation-spinner {
+                0% {transform: rotate(0deg)}
+                100% {transform: rotate(360deg)}
+            }
+            .spinner {
+                border-top: 2px solid currentcolor;
+                border-right: 2px solid currentcolor;
+                border-bottom: 2px solid transparent;
+                border-left: 2px solid transparent;
+                border-radius: 100%;
+                width: 28px;
+                height: 28px;
+                animation: 0.45s linear 0s infinite animation-spinner;
+                position: absolute;
+                top: calc(50% - 16px);
+                left: calc(50% - 16px);
+            }
+        </style>
 
-    
-    <link rel="icon" type="image/x-icon" href="./favicon.ico" />
-    
-    <link
-      rel="prefetch"
-      href="./sb-common-assets/nunito-sans-regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="prefetch"
-      href="./sb-common-assets/nunito-sans-bold.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link rel="stylesheet" href="./sb-common-assets/fonts.css" />
-
-    <link href="./sb-manager/runtime.js" rel="modulepreload" />
-
-    
-    <link href="./sb-addons/links-0/manager-bundle.js" rel="modulepreload" />
-    
-    <link href="./sb-addons/essentials-controls-1/manager-bundle.js" rel="modulepreload" />
-    
-    <link href="./sb-addons/essentials-actions-2/manager-bundle.js" rel="modulepreload" />
-    
-    <link href="./sb-addons/essentials-backgrounds-3/manager-bundle.js" rel="modulepreload" />
-    
-    <link href="./sb-addons/essentials-viewport-4/manager-bundle.js" rel="modulepreload" />
-    
-    <link href="./sb-addons/essentials-toolbars-5/manager-bundle.js" rel="modulepreload" />
-    
-    <link href="./sb-addons/essentials-measure-6/manager-bundle.js" rel="modulepreload" />
-    
-    <link href="./sb-addons/essentials-outline-7/manager-bundle.js" rel="modulepreload" />
-    
-    <link href="./sb-addons/interactions-8/manager-bundle.js" rel="modulepreload" />
-       
-
-    <style>
-      #storybook-root[hidden] {
-        display: none !important;
-      }
-    </style>
-
-    
-  </head>
-  <body>
-    <div id="root"></div>
-
-    
-    <script>
-      
-        
-          window['FEATURES'] = {
-  "warnOnLegacyHierarchySeparator": true,
-  "buildStoriesJson": false,
-  "storyStoreV7": true,
-  "argTypeTargetsV7": true,
-  "legacyDecoratorFileOrder": false
-};
-        
-      
-        
-          window['REFS'] = {
-  "@chakra-ui/react": {
-    "id": "@chakra-ui/react",
-    "url": "https://storybook.chakra-ui.com",
-    "title": "Chakra UI",
-    "version": "2.8.0",
-    "type": "server-checked"
-  }
-};
-        
-      
-        
-          window['LOGLEVEL'] = "info";
-        
-      
-        
-          window['DOCS_OPTIONS'] = {
-  "defaultName": "Docs",
-  "autodocs": true
-};
-        
-      
-        
-          window['CONFIG_TYPE'] = "PRODUCTION";
-        
-      
-        
-      
-        
-      
-    </script>
-    
-
-    <script type="module">
-      import './sb-manager/runtime.js';
-
-      
-      import './sb-addons/links-0/manager-bundle.js';
-      
-      import './sb-addons/essentials-controls-1/manager-bundle.js';
-      
-      import './sb-addons/essentials-actions-2/manager-bundle.js';
-      
-      import './sb-addons/essentials-backgrounds-3/manager-bundle.js';
-      
-      import './sb-addons/essentials-viewport-4/manager-bundle.js';
-      
-      import './sb-addons/essentials-toolbars-5/manager-bundle.js';
-      
-      import './sb-addons/essentials-measure-6/manager-bundle.js';
-      
-      import './sb-addons/essentials-outline-7/manager-bundle.js';
-      
-      import './sb-addons/interactions-8/manager-bundle.js';
-      
-    </script>
-
-    <link href="./sb-preview/runtime.js" rel="prefetch" as="script" />
-  </body>
+        <title>Rail Map Generator</title>
+      <script type="module" crossorigin src="/rmg/assets/index-htgbmBq7.js"></script>
+      <link rel="modulepreload" crossorigin href="/rmg/assets/react-v6r63tlm.js">
+      <link rel="modulepreload" crossorigin href="/rmg/assets/chakra-lG-NyWYR.js">
+      <link rel="stylesheet" crossorigin href="/rmg/assets/index-e13pkHY7.css">
+      <script type="module">import.meta.url;import("_").catch(()=>1);(async function*(){})().next();if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script>
+      <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+    </head>
+    <body>
+        <noscript>You need to enable JavaScript to run this app.</noscript>
+        <div id="root">
+            <div class="spinner"></div>
+        </div>
+      <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+      <script nomodule crossorigin id="vite-legacy-polyfill" src="/rmg/assets/polyfills-legacy-70eTpTna.js"></script>
+      <script nomodule crossorigin id="vite-legacy-entry" data-src="/rmg/assets/index-legacy-feAHdh9J.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+    </body>
 </html>

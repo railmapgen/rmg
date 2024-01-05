@@ -1,2 +1,0 @@
-import{I as c}from"./chunk-2GBDXOMA-39401b6c.js";import{f}from"./chunk-ZJJGQIVY-4bd0a974.js";import{r as l}from"./index-76fb7be0.js";import{j as a}from"./jsx-runtime-ffb262ed.js";function j(r){const{viewBox:e="0 0 24 24",d:s,displayName:i,defaultProps:n={}}=r,o=l.Children.toArray(r.path),t=f((p,m)=>a.jsx(c,{ref:m,viewBox:e,...n,...p,children:o.length?o:a.jsx("path",{fill:"currentColor",d:s})}));return t.displayName=i,t}export{j as c};
-//# sourceMappingURL=chunk-DEQZ7DVA-f754cffb.js.map

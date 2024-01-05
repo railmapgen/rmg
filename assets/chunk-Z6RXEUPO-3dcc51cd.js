@@ -1,2 +1,0 @@
-import{f as r,u as t,o as c,c as o,a as n}from"./chunk-ZJJGQIVY-4bd0a974.js";import{j as l}from"./jsx-runtime-ffb262ed.js";var m=r(function(a,s){const e=t("Badge",a),{className:g,...i}=c(a);return l.jsx(o.span,{ref:s,className:n("chakra-badge",a.className),...i,__css:{display:"inline-block",whiteSpace:"nowrap",verticalAlign:"middle",...e}})});m.displayName="Badge";export{m as B};
-//# sourceMappingURL=chunk-Z6RXEUPO-3dcc51cd.js.map
