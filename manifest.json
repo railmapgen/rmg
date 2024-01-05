@@ -1,6 +1,6 @@
 {
-    "short_name": "RMG",
-    "name": "Rail Map Generator",
+    "short_name": "rmg-components",
+    "name": "RMG Components",
     "icons": [
         {
             "src": "favicon.ico",
@@ -20,6 +20,6 @@
     ],
     "start_url": ".",
     "display": "standalone",
-    "theme_color": "#1A202C",
+    "theme_color": "#000000",
     "background_color": "#ffffff"
 }
