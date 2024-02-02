@@ -5,6 +5,7 @@ import { Flex } from '@chakra-ui/react';
 import useCanvasMap from './use-canvas-map';
 import { RmgErrorBoundary, RmgLoader } from '@railmapgen/rmg-components';
 import rmgRuntime from '@railmapgen/rmg-runtime';
+import { STYLE_CONFIG } from './config';
 
 const style = {
     position: 'relative',
@@ -27,8 +28,12 @@ export default function SvgRouter() {
     const canvasMap = useCanvasMap(rmgStyle);
 
     useEffect(() => {
-        (document.getElementById('css_share') as HTMLLinkElement).href =
-            import.meta.env.BASE_URL + `styles/share_${rmgStyle}.css`;
+        const fonts = STYLE_CONFIG[rmgStyle].fonts ?? [];
+        Promise.all(fonts.map(font => rmgRuntime.loadFont(font))).then(() => {
+            document
+                .querySelector<HTMLLinkElement>('#css_share')
+                ?.setAttribute('href', import.meta.env.BASE_URL + `styles/share_${rmgStyle}.css`);
+        });
         rmgRuntime.event(Events.STYLE_CHANGE, { style: rmgStyle });
     }, [rmgStyle]);
 

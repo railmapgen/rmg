@@ -1,17 +1,13 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { CanvasType, RmgStyle } from '../constants/constants';
-
-const modules: Record<RmgStyle, () => Promise<any>> = {
-    mtr: () => import('./mtr'),
-    gzmtr: () => import('./gzmtr'),
-    shmetro: () => import('./shmetro'),
-};
+import { STYLE_CONFIG } from './config';
 
 export default function useCanvasMap(style: RmgStyle) {
     const [canvasMap, setCanvasMap] = useState<Partial<Record<CanvasType, ReactNode>>>({});
 
     useEffect(() => {
-        modules[style]()
+        STYLE_CONFIG[style]
+            .components()
             .then(module => {
                 setCanvasMap(module.default);
             })
