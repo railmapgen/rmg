@@ -73,3 +73,5 @@ export const createParamInLocalStorage = (id: string) => {
     rmgParam.line_num = id;
     window.localStorage.setItem('rmg__' + LocalStorageKey.PARAM_BY_ID + id, JSON.stringify(rmgParam));
 };
+
+Object.defineProperty(document, 'fonts', { value: { load: () => Promise.resolve() } });
