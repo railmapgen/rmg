@@ -1,4 +1,6 @@
 import { CanvasType, RmgStyle } from '../constants/constants';
+import { STYLE_CONFIG } from '../svgs/config';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 const searchSrcRegex = /url\("([\S*]+)"\)/;
 
@@ -38,95 +40,20 @@ export const cloneSvgCanvas = async (
     elem.querySelector('rect#canvas-border')?.setAttribute('stroke', isShowBorder ? 'black' : 'none');
     elem.querySelector('rect#canvas-bg')?.setAttribute('fill', isTransparent ? 'none' : 'white');
 
-    if (rmgStyle === RmgStyle.MTR) {
-        try {
-            const uris = await getBase64FontFace(elem);
-            const s = document.createElement('style');
-            s.textContent = uris.join('\n');
-            elem.prepend(s);
-        } catch (err) {
-            alert('Failed to fonts. Fonts in the exported PNG will be missing.');
-            console.error(err);
-        }
+    try {
+        const fonts = STYLE_CONFIG[rmgStyle].fonts ?? [];
+        const cssPromises = await Promise.allSettled(fonts.map(rmgRuntime.getFontCSS));
+        const csss = cssPromises
+            .filter((promise): promise is PromiseFulfilledResult<string> => promise.status === 'fulfilled')
+            .map(promise => promise.value);
+        const s = document.createElement('style');
+        s.textContent = csss.join('\n');
+        elem.prepend(s);
+    } catch (err) {
+        console.warn('Failed to fonts. Fonts in the exported PNG will be missing.', err);
     }
 
     return elem;
-};
-
-/**
- * Convert a `Blob` into Base64 data URL.
- * @param blob
- */
-const readBlobAsDataURL = (blob: Blob): Promise<string> => {
-    return new Promise((resolve: (value: string) => void) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.readAsDataURL(blob);
-    });
-};
-
-const matchCssRuleByFontFace = (rules: CSSFontFaceRule[], font: FontFace): CSSFontFaceRule | undefined => {
-    return rules.find(rule => {
-        const cssStyle = rule.style;
-        return (
-            cssStyle.getPropertyValue('font-family').replace(/^"(.+)"$/, '$1') === font.family &&
-            cssStyle.getPropertyValue('unicode-range') === font.unicodeRange
-        );
-    });
-};
-
-export const getBase64FontFace = async (svgEl: SVGSVGElement): Promise<string[]> => {
-    const uniqueCharacters = Array.from(
-        new Set(
-            [
-                ...svgEl.querySelectorAll<SVGElement>('.rmg-name__zh'),
-                ...svgEl.querySelectorAll<SVGElement>('.rmg-name__en'),
-            ]
-                .map(el => el.innerHTML)
-                .join('')
-                .replace(/\s/g, '')
-        )
-    ).join('');
-
-    const fontFaceList = await document.fonts.load('80px GenYoMin TW, Vegur', uniqueCharacters);
-    const cssRules = Array.from(
-        (document.querySelector<HTMLLinkElement>('link#css_share')?.sheet?.cssRules?.[0] as CSSImportRule).styleSheet
-            ?.cssRules || []
-    ) as CSSFontFaceRule[];
-    const distinctCssRules = fontFaceList.reduce<CSSFontFaceRule[]>((acc, cur) => {
-        const matchedRule = matchCssRuleByFontFace(cssRules, cur);
-        if (matchedRule) {
-            const existence = acc.find(rule => {
-                const ruleStyle = rule.style;
-                const matchedStyle = matchedRule.style;
-                return (
-                    ruleStyle.getPropertyValue('font-family') === matchedStyle.getPropertyValue('font-family') &&
-                    ruleStyle.getPropertyValue('unicode-range') === matchedStyle.getPropertyValue('unicode-range')
-                );
-            });
-            return existence ? acc : acc.concat(matchedRule);
-        } else {
-            return acc;
-        }
-    }, []);
-
-    return await Promise.all(
-        distinctCssRules.map(async cssRule => {
-            try {
-                const fontResp = await fetch(getAbsoluteUrl(cssRule));
-                const fontDataUri = await readBlobAsDataURL(await fontResp.blob());
-                return cssRule.cssText.replace(searchSrcRegex, `url('${fontDataUri}')`);
-            } catch (err) {
-                console.error(err);
-                return '';
-            }
-        })
-    );
-};
-
-export const getAbsoluteUrl = (cssRule: CSSFontFaceRule) => {
-    const ruleStyleSrc = (cssRule.style as any).src;
-    return '/styles/' + ruleStyleSrc.match(searchSrcRegex)?.[1];
 };
 
 export const test = async (svgEl: SVGSVGElement, scale: number, isWait: boolean): Promise<Blob> => {

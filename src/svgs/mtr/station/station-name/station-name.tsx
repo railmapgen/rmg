@@ -1,6 +1,5 @@
 import { memo, useEffect, useRef } from 'react';
 import { Direction, Name } from '../../../../constants/constants';
-import { waitForFontReady } from '../../utils';
 
 interface StationNameProps {
     stnName: Name;
@@ -22,7 +21,7 @@ export default memo(
 
         useEffect(() => {
             updateNameBBox();
-            waitForFontReady().then().catch(console.log).finally(updateNameBBox);
+            document.fonts.load('12px Vegur, GenYoMin TW', stnName.join('')).then(updateNameBBox);
         }, [stnName.toString(), align]);
 
         const getTextAnchor = (direction?: Direction) => {
