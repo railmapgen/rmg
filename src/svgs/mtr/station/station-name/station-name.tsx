@@ -7,6 +7,8 @@ interface StationNameProps {
     align?: Direction;
 }
 
+const FONT_SPECIFICATION = `12px 'Myriad Pro', 'Vegur', 'GenYoMin TW'`;
+
 export default memo(
     function StationName(props: StationNameProps) {
         const { stnName, onUpdate, align } = props;
@@ -20,8 +22,21 @@ export default memo(
         };
 
         useEffect(() => {
+            const abortController = new AbortController();
             updateNameBBox();
-            document.fonts.load('12px Vegur, GenYoMin TW', stnName.join('')).then(updateNameBBox);
+            document.fonts
+                .load(FONT_SPECIFICATION, stnName.join(''))
+                .then()
+                .finally(() => {
+                    setTimeout(() => {
+                        if (!abortController.signal.aborted) {
+                            updateNameBBox();
+                        }
+                    }, 100);
+                });
+            return () => {
+                abortController.abort();
+            };
         }, [stnName.toString(), align]);
 
         const getTextAnchor = (direction?: Direction) => {
