@@ -62,13 +62,6 @@ interface StationNameGElementProps {
 const StationNameGElement = (props: StationNameGElementProps) => {
     const { name, groups, nameDirection, services } = props;
     const dy = { upward: 60, downward: -30, left: 0, right: 0 }[nameDirection];
-    const osi_dx = { upward: 0, downward: 0, left: 85, right: -85 }[nameDirection];
-    const osi_dy = {
-        upward: -185,
-        downward: 150 + (services.length === 3 ? 40 : 0),
-        left: -30,
-        right: -30,
-    }[nameDirection];
     const osysi_dx =
         // only compute when there is an out-of-system transfer
         groups[2]?.lines?.length
@@ -83,10 +76,18 @@ const StationNameGElement = (props: StationNameGElementProps) => {
         // only compute when there is an out-of-system transfer
         groups[2]?.lines?.length
             ? {
-                  upward: groups[1]?.lines?.length ? -210 : groups[0].lines?.length ? -180 : -100,
+                  upward:
+                      groups[0]?.lines?.length && groups[1]?.lines?.length
+                          ? -210
+                          : groups[0]?.lines?.length || groups[1]?.lines?.length
+                            ? -177.5
+                            : -145,
                   downward:
-                      (groups[1]?.lines?.length ? 190 : groups[0].lines?.length ? 160 : 100) +
-                      (services.length === 3 ? 40 : 0),
+                      (groups[0]?.lines?.length && groups[1]?.lines?.length
+                          ? 185
+                          : groups[0].lines?.length || groups[1]?.lines?.length
+                            ? 157.5
+                            : 125) + (services.length === 3 ? 40 : 0),
                   left: groups[1]?.lines?.length ? -60 : groups[0].lines?.length ? -30 : 0,
                   right: groups[1]?.lines?.length ? -60 : groups[0].lines?.length ? -30 : 0,
               }[nameDirection]
@@ -135,19 +136,13 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 
             {[...(groups[0].lines || []), ...(groups[1]?.lines || [])].length && (
                 <IntBoxGroup
-                    intInfos={[...(groups[0].lines || []), ...(groups[1]?.lines || [])]}
+                    intInfos={[groups[0].lines || [], groups[1]?.lines || []]}
                     arrowDirection={nameDirection}
                     services={services}
                 />
             )}
 
             <StationName ref={nameRef} stnName={name} nameDirection={nameDirection} fill="black" />
-
-            {groups[1]?.lines?.length && (
-                <g transform={`translate(${osi_dx},${osi_dy})`}>
-                    <OSIText osiInfos={groups[1].lines} nameDirection={nameDirection} />
-                </g>
-            )}
 
             {groups[2]?.lines?.length && (
                 <g transform={`translate(${osysi_dx},${osysi_dy})`}>
@@ -211,7 +206,7 @@ const StationName = forwardRef(function StationName(
 });
 
 interface IntBoxGroupProps {
-    intInfos: ExtendedInterchangeInfo[];
+    intInfos: ExtendedInterchangeInfo[][];
     arrowDirection: NameDirection;
     services: Services[];
 }
@@ -220,38 +215,44 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
     const { intInfos, arrowDirection, services } = props;
 
     // name each different linearGradient that will fill the arrow
-    const intNameId = intInfos.map(intInfo => intInfo.theme?.[2]).reduce((name, color) => name + color, '');
+    const intNameId = intInfos
+        .flatMap(intInfo => intInfo.map(info => info.theme?.[2]))
+        .reduce((name, color) => name + color, '');
 
     // get the interchange line names
-    const lineNames = [
-        intInfos
-            .filter(intInfo => intInfo.name[0].match(/^\d+.*$/))
-            .map(intInfo => intInfo.name[0].replace(/^(\d+)(.*)$/, '$1'))
+    const lineNames = intInfos.map(intInfo =>
+        [
+            intInfo
+                .filter(info => info.name[0].match(/^\d+.*$/))
+                .map(info => info.name[0].replace(/^(\d+)(.*)$/, '$1'))
+                .join('，')
+                .concat('号线'),
+            intInfo
+                .filter(info => !info.name[0].match(/^\d+.*$/))
+                .map(info => info.name[0])
+                .join('，'),
+        ]
+            .filter(name => name && name !== '号线')
             .join('，')
-            .concat('号线'),
-        intInfos
-            .filter(intInfo => !intInfo.name[0].match(/^\d+.*$/))
-            .map(intInfo => intInfo.name[0])
-            .join('，'),
-    ]
-        .filter(name => name && name !== '号线')
-        .join('，');
-    const lineNamesEn = [
-        'Line '.concat(
-            // contact number lines to Line 1,2,3...
-            intInfos
-                .filter(intInfo => /^(L|l)ine \d+$/.test(intInfo.name[1]))
-                .map(intInfo => intInfo.name[1].replace('Line', '').replace('line', '').trim())
-                .join(',')
-        ),
-        // and then add text lines without any change
-        intInfos
-            .filter(intInfo => !/^(L|l)ine \d+$/.test(intInfo.name[1]))
-            .map(intInfo => intInfo.name[1])
-            .join(', '),
-    ]
-        .filter(name => name && name !== 'Line ')
-        .join(', ');
+    );
+    const lineNamesEn = intInfos.map(intInfo =>
+        [
+            'Line '.concat(
+                // contact number lines to Line 1,2,3...
+                intInfo
+                    .filter(info => /^(L|l)ine \d+$/.test(info.name[1]))
+                    .map(info => info.name[1].replace('Line', '').replace('line', '').trim())
+                    .join(',')
+            ),
+            // and then add text lines without any change
+            intInfo
+                .filter(info => !/^(L|l)ine \d+$/.test(info.name[1]))
+                .map(info => info.name[1])
+                .join(', '),
+        ]
+            .filter(name => name && name !== 'Line ')
+            .join(', ')
+    );
 
     // for services contains three level (normal, express, direct)
     // additional length is required on transfer arrow otherwise
@@ -267,6 +268,18 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
     const arrow_dr = { upward: 0, downward: 180, left: 90, right: -90 }[arrowDirection];
     const transfer_dx = { upward: 0, downward: 0, left: 85, right: -85 }[arrowDirection];
     const transfer_anchor = { upward: 'middle', downward: 'middle', left: 'start', right: 'end' }[arrowDirection];
+
+    const osi_dx = transfer_dx;
+    const osi_dy = {
+        upward: intInfos.at(0)?.length ?? 0 ? -177.5 : -145,
+        downward: (intInfos.at(0)?.length ?? 0 ? 157.5 : 125) + (services.length === 3 ? 40 : 0),
+        left: -30,
+        right: -30,
+    }[arrowDirection];
+
+    console.log(intInfos);
+    console.log(lineNames, lineNamesEn);
+
     return (
         <g>
             <path
@@ -274,74 +287,55 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
                 stroke="var(--rmg-black)"
                 strokeWidth={1}
                 transform={`translate(${arrow_dx},${arrow_dy})rotate(${arrow_dr})`}
-                fill={intInfos.length === 1 ? intInfos[0].theme?.[2] : `url(#grad${intNameId})`}
+                fill={intInfos.flat().length === 1 ? intInfos.flat()[0].theme?.[2] : `url(#grad${intNameId})`}
                 d={`M -7.5,0 v -${arrowLength} h -7.5 l 15,-15 l 15,15 h -7.5 v ${arrowLength} Z`}
             />
 
-            {intInfos.length > 1 && (
-                <>
-                    <linearGradient
-                        id={`grad${intNameId}`}
-                        y1="0"
-                        y2="0"
-                        x1={arrowDirection === 'upward' ? '25%' : '75%'}
-                        x2={arrowDirection === 'upward' ? '75%' : '25%'}
-                    >
-                        {intInfos.map((intInfo, i) => (
-                            <Fragment key={i}>
-                                {/* more about React.Fragment on https://stackoverflow.com/a/59390967 */}
-                                <stop // start from
-                                    offset={`${(100 / intInfos.length) * i}%`}
-                                    stopColor={intInfo.theme?.[2]}
-                                />
-                                <stop // to
-                                    offset={`${(100 / intInfos.length) * (i + 1)}%`}
-                                    stopColor={intInfo.theme?.[2]}
-                                />
-                            </Fragment>
-                        ))}
-                    </linearGradient>
-
-                    {/* a range inplementation [0, 1, 2 ... intInfos.length - 1] */}
-                    {/* {[...Array(intInfos.length - 1).keys()].map(i => (<line
-                        x1={-7.5 + (15 / intInfos.length) * (i + 1)}
-                        x2={-7.5 + (15 / intInfos.length) * (i + 1)}
-                        y1="-74"
-                        y2={-104 - 7.5 - 7.5 / (intInfos.length - 1) * (i+1)}
-                        stroke="black"
-                    />))} */}
-                </>
+            {intInfos.flat().length > 1 && (
+                <linearGradient
+                    id={`grad${intNameId}`}
+                    y1="0"
+                    y2="0"
+                    x1={arrowDirection === 'upward' ? '25%' : '75%'}
+                    x2={arrowDirection === 'upward' ? '75%' : '25%'}
+                >
+                    {intInfos.flat().map((intInfo, i) => (
+                        <Fragment key={i}>
+                            {/* more about React.Fragment on https://stackoverflow.com/a/59390967 */}
+                            <stop // start from
+                                offset={`${(100 / intInfos.flat().length) * i}%`}
+                                stopColor={intInfo.theme?.[2]}
+                            />
+                            <stop // to
+                                offset={`${(100 / intInfos.flat().length) * (i + 1)}%`}
+                                stopColor={intInfo.theme?.[2]}
+                            />
+                        </Fragment>
+                    ))}
+                </linearGradient>
             )}
 
-            <g transform={`translate(${transfer_dx},${transfer_dy})`} textAnchor={`${transfer_anchor}`}>
-                <text className="rmg-name__zh" dy={-7}>
-                    {`换乘${lineNames}`}
-                </text>
-                <text className="rmg-name__en" dy={5} fontSize={9.6}>
-                    {`Interchange ${lineNamesEn}`}
-                </text>
-            </g>
+            {(intInfos.at(0)?.length ?? 0) > 0 && (
+                <g transform={`translate(${transfer_dx},${transfer_dy})`} textAnchor={`${transfer_anchor}`}>
+                    <text className="rmg-name__zh" dy={-7}>
+                        {`换乘${lineNames[0]}`}
+                    </text>
+                    <text className="rmg-name__en" dy={5} fontSize={9.6}>
+                        {`Interchange ${lineNamesEn[0]}`}
+                    </text>
+                </g>
+            )}
+            {(intInfos.at(1)?.length ?? 0) > 0 && (
+                <g transform={`translate(${osi_dx},${osi_dy})`} textAnchor={`${transfer_anchor}`}>
+                    <text className="rmg-name__zh" dy={-7}>
+                        {`出站换乘${lineNames[1]}`}
+                    </text>
+                    <text className="rmg-name__en" dy={5} fontSize={9.6}>
+                        {`Out-of-station Transfer ${lineNamesEn[1]}`}
+                    </text>
+                </g>
+            )}
         </g>
-    );
-};
-
-const OSIText = (props: { osiInfos: ExtendedInterchangeInfo[]; nameDirection: NameDirection }) => {
-    const anchor = { upward: 'middle', downward: 'middle', left: 'start', right: 'end' }[props.nameDirection];
-    return useMemo(
-        () => (
-            <g textAnchor={`${anchor}`} fontSize="50%">
-                <text className="rmg-name__zh" dy={-5}>
-                    {`换乘${props.osiInfos.map(info => info.name[0]).join('，')}`}
-                </text>
-                <text className="rmg-name__zh" dy={5}>
-                    仅限公共交通卡
-                </text>
-                <text className="rmg-name__en" dy={12.5} fontSize="75%">
-                    Only for Public Transportation Card
-                </text>
-            </g>
-        ),
-        [JSON.stringify(props.osiInfos), props.nameDirection]
     );
 };
 
