@@ -55,6 +55,12 @@ export const DefsSHMetro = memo(function DefsSHMetro() {
                 strokeWidth={4}
                 d="M -5,0 a 5,5 0 1 1 10,0 V40 a 5,5 0 1 1 -10,0Z"
             />
+            <g id="osi_indoor_sh">
+                <line x1="0" x2="0" y1="-12" y2="12" stroke="var(--rmg-black)" strokeWidth={22} />
+                <line x1="0" x2="0" y1="-12" y2="12" stroke="var(--rmg-white)" strokeWidth={10} />
+                <circle cy="-12" fill="var(--rmg-white)" strokeWidth={5} r={8} transform="scale(1.5)" />
+                <circle cy="12" fill="var(--rmg-white)" strokeWidth={5} r={8} transform="scale(1.5)" />
+            </g>
         </defs>
     );
 });

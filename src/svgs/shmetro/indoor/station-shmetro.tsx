@@ -23,6 +23,7 @@ export const StationSHMetro = (props: Props) => {
     let stationIconStyle: string;
     if (stnInfo.services.length === 3) stationIconStyle = 'direct_indoor_sh';
     else if (stnInfo.services.length === 2) stationIconStyle = 'express_indoor_sh';
+    else if (stnInfo.transfer.groups[1]?.lines?.length ?? 0 > 0) stationIconStyle = 'osi_indoor_sh';
     else if (transfer.length > 0) stationIconStyle = 'int2_indoor_sh';
     else stationIconStyle = 'stn_indoor_sh';
 
