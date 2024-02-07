@@ -89,8 +89,18 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                           : groups[0].lines?.length || groups[1]?.lines?.length
                             ? 157.5
                             : 125) + (services.length === 3 ? 40 : 0),
-                  left: groups[1]?.lines?.length ? -60 : groups[0].lines?.length ? -30 : 0,
-                  right: groups[1]?.lines?.length ? -60 : groups[0].lines?.length ? -30 : 0,
+                  left:
+                      groups[0]?.lines?.length && groups[1]?.lines?.length
+                          ? -67
+                          : groups[0].lines?.length || groups[1]?.lines?.length
+                            ? -30
+                            : 0,
+                  right:
+                      groups[0]?.lines?.length && groups[1]?.lines?.length
+                          ? -67
+                          : groups[0].lines?.length || groups[1]?.lines?.length
+                            ? -30
+                            : 0,
               }[nameDirection]
             : 0;
     const nameRef = useRef<SVGGElement | null>(null);
@@ -274,12 +284,9 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
     const osi_dy = {
         upward: intInfos.at(0)?.length ?? 0 ? -177.5 : -145,
         downward: (intInfos.at(0)?.length ?? 0 ? 157.5 : 125) + (services.length === 3 ? 40 : 0),
-        left: -30,
-        right: -30,
+        left: intInfos.at(0)?.length ?? 0 ? -30 : 7,
+        right: intInfos.at(0)?.length ?? 0 ? -30 : 7,
     }[arrowDirection];
-
-    console.log(intInfos);
-    console.log(lineNames, lineNamesEn);
 
     return (
         <g>
