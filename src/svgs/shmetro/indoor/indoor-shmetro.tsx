@@ -55,6 +55,12 @@ export const DefsSHMetro = memo(function DefsSHMetro() {
                 strokeWidth={4}
                 d="M -5,0 a 5,5 0 1 1 10,0 V40 a 5,5 0 1 1 -10,0Z"
             />
+            <g id="osi_indoor_sh">
+                <line x1="0" x2="0" y1="-12" y2="12" stroke="var(--rmg-black)" strokeWidth={22} />
+                <line x1="0" x2="0" y1="-12" y2="12" stroke="var(--rmg-white)" strokeWidth={10} />
+                <circle cy="-12" fill="var(--rmg-white)" strokeWidth={5} r={8} transform="scale(1.5)" />
+                <circle cy="12" fill="var(--rmg-white)" strokeWidth={5} r={8} transform="scale(1.5)" />
+            </g>
         </defs>
     );
 });
@@ -204,54 +210,67 @@ const StationGroup = (props: StationGroupProps) => {
     );
 };
 
-const InfoElements = () => {
+const InfoElements = memo(() => {
     const param = useRootSelector(store => store.param);
 
-    return useMemo(
-        () => (
-            <>
-                <g transform={`translate(${param.svgWidth.indoor / 2},50)`}>
-                    <text textAnchor="middle" fontSize="30" className="rmg-name__zh">
-                        轨道交通{param.line_name[0]}运营线路示意图
+    return (
+        <>
+            <g transform={`translate(${param.svgWidth.indoor / 2},50)`}>
+                <text textAnchor="middle" fontSize="30" className="rmg-name__zh">
+                    轨道交通{param.line_name[0]}运营线路示意图
+                </text>
+            </g>
+            <g transform={`translate(${param.svgWidth.indoor / 2},${param.svg_height - 270})`}>
+                <text textAnchor="middle" fontSize="18" className="rmg-name__zh" dx="-30" dy="230">
+                    友情提示：请留意您需要换乘线路的首末班时间，以免耽误您的出行，末班车进站前三分钟停售该末班车车票。
+                </text>
+                <text textAnchor="middle" fontSize="12" className="rmg-name__en" dx="10" dy="250">
+                    Please pay attention to the interchange schedule if you want to transfer to other lines. Stop
+                    selling tickets 3 minutes before the last train services.
+                </text>
+                <g transform="translate(-700,215)">
+                    <rect x="-5" y="-25" width="200" height="70" fill="none" stroke="black" rx="5" />
+                    <line x1="28" x2="28" y1="-20" y2="40" stroke="black" />
+                    <text className="rmg-name__zh" dx="3" fontSize="18">
+                        图
+                    </text>
+                    <text className="rmg-name__zh" dx="3" dy="18" fontSize="18">
+                        例
+                    </text>
+                    <text className="rmg-name__en" dy="35" fontSize="8">
+                        legend
+                    </text>
+                    <use transform="translate(45,10)" xlinkHref="#int2_indoor_sh" stroke="var(--rmg-black)" />
+                    <text className="rmg-name__zh" dx="65" dy="5" fontSize="10">
+                        换乘站
+                    </text>
+                    <text className="rmg-name__en" dx="65" dy="15" fontSize="6">
+                        Interchange
+                    </text>
+                    <text className="rmg-name__en" dx="65" dy="25" fontSize="6">
+                        Station
+                    </text>
+                    <use
+                        transform="translate(115,10)scale(0.75)"
+                        xlinkHref="#osi_indoor_sh"
+                        stroke="var(--rmg-black)"
+                    />
+                    <text className="rmg-name__zh" dx="130" dy="5" fontSize="10">
+                        出站换乘车站
+                    </text>
+                    <text className="rmg-name__en" dx="130" dy="15" fontSize="6">
+                        Out-of-station Transfer
+                    </text>
+                    <text className="rmg-name__en" dx="130" dy="25" fontSize="6">
+                        Station
                     </text>
                 </g>
-                <g transform={`translate(${param.svgWidth.indoor / 2},${param.svg_height - 270})`}>
-                    <text textAnchor="middle" fontSize="18" className="rmg-name__zh" dx="-30" dy="230">
-                        友情提示：请留意您需要换乘线路的首末班时间，以免耽误您的出行，末班车进站前三分钟停售该末班车车票。
-                    </text>
-                    <text textAnchor="middle" fontSize="12" className="rmg-name__en" dx="10" dy="250">
-                        Please pay attention to the interchange schedule if you want to transfer to other lines. Stop
-                        selling tickets 3 minutes before the last train services.
-                    </text>
-                    <g transform="translate(-600,215)">
-                        <rect x="-5" y="-25" width="100" height="70" fill="none" stroke="black" rx="5" />
-                        <line x1="28" x2="28" y1="-20" y2="40" stroke="black" />
-                        <text className="rmg-name__zh" dx="3" fontSize="18">
-                            图
-                        </text>
-                        <text className="rmg-name__zh" dx="3" dy="18" fontSize="18">
-                            例
-                        </text>
-                        <text className="rmg-name__en" dy="35" fontSize="8">
-                            legend
-                        </text>
-                        <use transform="translate(45,10)" xlinkHref="#int2_indoor_sh" stroke="var(--rmg-black)" />
-                        <text className="rmg-name__zh" dx="60" dy="10" fontSize="10">
-                            换乘站
-                        </text>
-                        <text className="rmg-name__en" dx="60" dy="20" fontSize="6">
-                            Interchange
-                        </text>
-                        <text className="rmg-name__en" dx="60" dy="30" fontSize="6">
-                            Station
-                        </text>
-                    </g>
-                </g>
-            </>
-        ),
-        [param.svgWidth.indoor, param.svg_height, param.line_name]
+            </g>
+        </>
     );
-};
+});
+
+InfoElements.displayName = 'InfoElements';
 
 /* Some unused functions to split branches from the main line.
  * Note the branches here has a slightly different meaning.
