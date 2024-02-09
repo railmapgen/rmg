@@ -3,12 +3,12 @@
 
 .rmg-name__zh {
     dominant-baseline: central;
-    font-family: Vegur, Helvetica, 'GenYoMin TW', HiraMinProN-W6, serif;
+    font-family: Vegur-Bold, Helvetica, GenYoMinTW-SB, HiraMinProN-W6, serif;
 }
 
 .rmg-name__en {
     dominant-baseline: middle;
-    font-family: Myriad Pro, Vegur, Helvetica, sans-serif;
+    font-family: MyriadPro-Semibold, Vegur-Bold, Helvetica, sans-serif;
 }
 
 :root {

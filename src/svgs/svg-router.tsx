@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { CanvasType, Events } from '../constants/constants';
+import { useEffect } from 'react';
+import { CanvasType, Events, RmgStyle } from '../constants/constants';
 import { useRootSelector } from '../redux';
 import { Flex } from '@chakra-ui/react';
 import useCanvasMap from './use-canvas-map';
@@ -21,6 +21,16 @@ const style = {
     },
 };
 
+const loadFontsByStyle = async (style: RmgStyle, signal: AbortSignal) => {
+    const fonts = (await STYLE_CONFIG[style].fonts?.()) ?? [];
+    await Promise.all(fonts.map(font => rmgRuntime.loadFont(font)));
+    if (!signal.aborted) {
+        document
+            .querySelector<HTMLLinkElement>('#css_share')
+            ?.setAttribute('href', import.meta.env.BASE_URL + `styles/share_${style}.css`);
+    }
+};
+
 export default function SvgRouter() {
     const { canvasToShow, canvasScale } = useRootSelector(state => state.app);
     const { svg_height: svgHeight, style: rmgStyle } = useRootSelector(state => state.param);
@@ -28,13 +38,13 @@ export default function SvgRouter() {
     const canvasMap = useCanvasMap(rmgStyle);
 
     useEffect(() => {
-        const fonts = STYLE_CONFIG[rmgStyle].fonts ?? [];
-        Promise.all(fonts.map(font => rmgRuntime.loadFont(font))).then(() => {
-            document
-                .querySelector<HTMLLinkElement>('#css_share')
-                ?.setAttribute('href', import.meta.env.BASE_URL + `styles/share_${rmgStyle}.css`);
-        });
+        const controller = new AbortController();
+        loadFontsByStyle(rmgStyle, controller.signal).then();
         rmgRuntime.event(Events.STYLE_CHANGE, { style: rmgStyle });
+
+        return () => {
+            controller.abort();
+        };
     }, [rmgStyle]);
 
     const filteredCanvas = (Object.keys(canvasMap) as CanvasType[]).filter(canvas => canvasToShow.includes(canvas));
