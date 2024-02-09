@@ -41,7 +41,7 @@ export const cloneSvgCanvas = async (
     elem.querySelector('rect#canvas-bg')?.setAttribute('fill', isTransparent ? 'none' : 'white');
 
     try {
-        const fonts = STYLE_CONFIG[rmgStyle].fonts ?? [];
+        const fonts = (await STYLE_CONFIG[rmgStyle].fonts?.()) ?? [];
         const cssPromises = await Promise.allSettled(fonts.map(rmgRuntime.getFontCSS));
         const csss = cssPromises
             .filter((promise): promise is PromiseFulfilledResult<string> => promise.status === 'fulfilled')
