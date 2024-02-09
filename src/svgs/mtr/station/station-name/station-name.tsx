@@ -7,7 +7,7 @@ interface StationNameProps {
     align?: Direction;
 }
 
-const FONT_SPECIFICATION = `12px 'Myriad Pro', 'Vegur', 'GenYoMin TW'`;
+export const FONTS = ['MyriadPro-Semibold', 'Vegur-Bold', 'GenYoMinTW-SB'];
 
 export default memo(
     function StationName(props: StationNameProps) {
@@ -25,7 +25,7 @@ export default memo(
             const abortController = new AbortController();
             updateNameBBox();
             document.fonts
-                .load(FONT_SPECIFICATION, stnName.join(''))
+                .load('12px ' + FONTS.join(', '), stnName.join(''))
                 .then()
                 .finally(() => {
                     setTimeout(() => {

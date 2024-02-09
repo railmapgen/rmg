@@ -2,13 +2,13 @@ import { RmgStyle } from '../constants/constants';
 
 type StyleConfig = {
     components: () => Promise<any>;
-    fonts?: string[];
+    fonts?: () => Promise<string[]>;
 };
 
 export const STYLE_CONFIG: Record<RmgStyle, StyleConfig> = {
     mtr: {
         components: () => import('./mtr'),
-        fonts: ['Myriad Pro', 'Vegur', 'GenYoMin TW'],
+        fonts: () => import('./mtr').then(module => module.mtrFonts),
     },
     gzmtr: {
         components: () => import('./gzmtr'),
