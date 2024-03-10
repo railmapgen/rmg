@@ -56,3 +56,4 @@ jobs:
           github_token: ${{ secrets.RMG_BUILD_AND_RELEASE }}
           gitlab_token: ${{ secrets.GITLAB_RELEASE }}
           gitee_token: ${{ secrets.GITEE_RELEASE }}
+          gitee_password: ${{ secrets.GITEE_PASSWORD }}
