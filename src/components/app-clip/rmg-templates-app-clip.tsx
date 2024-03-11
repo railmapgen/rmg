@@ -61,7 +61,7 @@ export default function RmgTemplatesAppClip(props: RmgTemplatesAppClipProps) {
 
 const DisabledTemplates = () => (
     <Flex flexDirection="column" p="10">
-        <Text>抱歉，由于托管平台的敏感词限制，画廊已被禁用 ):</Text>
+        <Text>抱歉，由于托管平台的敏感词限制，模板已被禁用 ):</Text>
         <br />
         <Text>欢迎切换到Github或Gitlab镜像以使用完整版本 :)</Text>
         <br style={{ marginBottom: 5 }} />
