@@ -65,12 +65,12 @@ const DisabledTemplates = () => (
         <br />
         <Text>欢迎切换到Github或Gitlab镜像以使用完整版本 :)</Text>
         <br style={{ marginBottom: 5 }} />
-        <Link color="teal.500" href="https://railmapgen.gitlab.io/?app=rmp-gallery" isExternal>
-            https://railmapgen.github.io/?app=rmp-gallery <Icon as={MdOpenInNew} />
+        <Link color="teal.500" href="https://railmapgen.github.io/?app=rmg" isExternal>
+            https://railmapgen.github.io/?app=rmg <Icon as={MdOpenInNew} />
         </Link>
         <br />
-        <Link color="teal.500" href="https://railmapgen.gitlab.io/?app=rmp-gallery" isExternal>
-            https://railmapgen.gitlab.io/?app=rmp-gallery <Icon as={MdOpenInNew} />
+        <Link color="teal.500" href="https://railmapgen.gitlab.io/?app=rmg" isExternal>
+            https://railmapgen.gitlab.io/?app=rmg <Icon as={MdOpenInNew} />
         </Link>
     </Flex>
 );
