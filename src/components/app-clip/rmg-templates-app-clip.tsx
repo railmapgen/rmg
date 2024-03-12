@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
-import rmgRuntime from '@railmapgen/rmg-runtime';
+import { Flex, Icon, Link, SystemStyleObject, Text } from '@chakra-ui/react';
 import { RmgAppClip } from '@railmapgen/rmg-components';
-import { SystemStyleObject } from '@chakra-ui/react';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 import { nanoid } from 'nanoid';
+import { useEffect, useState } from 'react';
+import { MdOpenInNew } from 'react-icons/md';
 
 const CHANNEL_PREFIX = 'rmg-templates-bridge--';
 
@@ -24,6 +25,7 @@ interface RmgTemplatesAppClipProps {
 
 export default function RmgTemplatesAppClip(props: RmgTemplatesAppClipProps) {
     const { isOpen, onClose, onImport } = props;
+    const inst = rmgRuntime.getInstance();
 
     const [appClipId] = useState(nanoid());
     const frameUrl =
@@ -52,7 +54,23 @@ export default function RmgTemplatesAppClip(props: RmgTemplatesAppClipProps) {
 
     return (
         <RmgAppClip size="xl" isOpen={isOpen} onClose={onClose} sx={styles}>
-            <iframe src={frameUrl} loading="eager" />
+            {inst === 'Gitee' ? <DisabledTemplates /> : <iframe src={frameUrl} loading="eager" />}
         </RmgAppClip>
     );
 }
+
+const DisabledTemplates = () => (
+    <Flex flexDirection="column" p="10">
+        <Text>抱歉，由于托管平台的敏感词限制，模板已被禁用 ):</Text>
+        <br />
+        <Text>欢迎切换到Github或Gitlab镜像以使用完整版本 :)</Text>
+        <br style={{ marginBottom: 5 }} />
+        <Link color="teal.500" href="https://railmapgen.github.io/?app=rmg" isExternal>
+            https://railmapgen.github.io/?app=rmg <Icon as={MdOpenInNew} />
+        </Link>
+        <br />
+        <Link color="teal.500" href="https://railmapgen.gitlab.io/?app=rmg" isExternal>
+            https://railmapgen.gitlab.io/?app=rmg <Icon as={MdOpenInNew} />
+        </Link>
+    </Flex>
+);
