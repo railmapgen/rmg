@@ -10,9 +10,15 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { LocalStorageKey } from '../../constants/constants';
+import { getParamConfig } from '../../util/param-manager-utils';
+import useRootSearchParams from '../../hooks/use-root-search-params';
+import { updateTitle } from '../../util/metadata-utils';
 
 export default function AppView() {
     const { t } = useTranslation();
+
+    const [searchParams] = useRootSearchParams();
+    const urlParamId = searchParams.get('project');
 
     const isLoading = useRootSelector(state => state.app.isLoading);
 
@@ -21,6 +27,11 @@ export default function AppView() {
     useEffect(() => {
         if (rmgRuntime.isStandaloneWindow() && !rmgRuntime.storage.get(LocalStorageKey.DO_NOT_SHOW_RMT_MSG)) {
             setIsShowRMTMessage(true);
+        }
+
+        if (urlParamId) {
+            const paramConfig = getParamConfig(urlParamId);
+            updateTitle(paramConfig?.name ?? t('Project') + ' ' + urlParamId);
         }
     }, []);
 

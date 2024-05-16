@@ -52,12 +52,16 @@ export const getParamRegistry = (): ParamConfig[] => {
     return actualParamRegistry;
 };
 
-export const getParam = (id: string): { param: any; config?: ParamConfig } => {
+export const getParamConfig = (id: string): ParamConfig | undefined => {
     const configStr = rmgRuntime.storage.get(LocalStorageKey.PARAM_CONFIG_BY_ID + id);
+    return configStr ? JSON.parse(configStr) : configStr;
+};
+
+export const getParam = (id: string): { param: any; config?: ParamConfig } => {
     const paramStr = rmgRuntime.storage.get(LocalStorageKey.PARAM_BY_ID + id);
     return {
         param: paramStr ? JSON.parse(paramStr) : paramStr,
-        config: configStr ? JSON.parse(configStr) : configStr,
+        config: getParamConfig(id),
     };
 };
 
