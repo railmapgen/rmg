@@ -86,7 +86,7 @@ export default function AppClipView() {
     };
 
     const handleManage = () => {
-        rmgRuntime.openApp('rmg');
+        rmgRuntime.openApp({ appId: 'rmg' });
     };
 
     return (

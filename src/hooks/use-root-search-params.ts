@@ -7,12 +7,10 @@ export default function useRootSearchParams() {
     const handleSet = (searchParamInit: Record<string, string>) => {
         setSearchParams(searchParamInit);
 
-        if (Object.keys(searchParamInit)) {
-            const urlSearchParams = new URLSearchParams(searchParamInit);
-            rmgRuntime.updateUrl('/rmg/#/?' + urlSearchParams);
-        } else {
-            rmgRuntime.updateUrl('/rmg/#/');
-        }
+        const isBackToHome = Object.keys(searchParamInit).length === 0;
+        const hash = isBackToHome ? '/' : encodeURIComponent('/?' + new URLSearchParams(searchParamInit));
+
+        rmgRuntime.updateAppMetadata({ hash });
     };
 
     return [searchParams, handleSet] as [typeof searchParams, typeof handleSet];

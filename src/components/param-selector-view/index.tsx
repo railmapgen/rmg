@@ -8,6 +8,7 @@ import ParamSelector from '../param-selector-view/param-selector';
 import { getParamRegistry } from '../../util/param-manager-utils';
 import SelectorActions from './selector-actions';
 import useRootSearchParams from '../../hooks/use-root-search-params';
+import { updateTitle } from '../../util/metadata-utils';
 
 const paramSelectorCardStyle: SystemStyleObject = {
     flexDirection: 'column',
@@ -40,6 +41,10 @@ export default function ParamSelectorView(props: ParamSelectorViewProps) {
     const selectorRef = useRef<HTMLDivElement>(null);
 
     const toast = useToast();
+
+    useEffect(() => {
+        updateTitle(t('Manage projects'));
+    }, []);
 
     useEffect(() => {
         // init paramRegistry state on mount and when external project is downloaded

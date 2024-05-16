@@ -24,7 +24,7 @@ describe('DownloadActions', () => {
         render(<DownloadActions />, { store: mockStore });
 
         await user.click(screen.getByRole('button', { name: 'Downloads' }));
-        await user.click(screen.getByRole('menuitem', { name: 'Configuration file' }));
+        await user.click(screen.getByText('Configuration file'));
 
         expect(downloadAsSpy).toBeCalledTimes(1);
         expect(downloadAsSpy).toBeCalledWith(
