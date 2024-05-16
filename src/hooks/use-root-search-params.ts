@@ -8,7 +8,7 @@ export default function useRootSearchParams() {
         setSearchParams(searchParamInit);
 
         const isBackToHome = Object.keys(searchParamInit).length === 0;
-        const hash = isBackToHome ? '/' : encodeURIComponent('/?' + new URLSearchParams(searchParamInit));
+        const hash = isBackToHome ? '/' : '/?' + new URLSearchParams(searchParamInit);
 
         rmgRuntime.updateAppMetadata({ hash });
     };
