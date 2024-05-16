@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Button, Flex, SystemStyleObject } from '@chakra-ui/react';
 import { MdAdd, MdInsertDriveFile, MdOpenInBrowser, MdUpload } from 'react-icons/md';
-import rmgRuntime from '@railmapgen/rmg-runtime';
+import rmgRuntime, { logger } from '@railmapgen/rmg-runtime';
 import { Events, RmgStyle } from '../../constants/constants';
 import { insertParam } from '../../util/param-manager-utils';
 import { readFileAsText } from '../../util/utils';
@@ -58,7 +58,7 @@ export default function SelectorActions(props: SelectorActionsProps) {
 
     const handleImportProject = async (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
-        console.log('handleImportProject():: received file', file);
+        logger.info('handleImportProject(), received file', file);
 
         try {
             if (!file) {
@@ -73,7 +73,7 @@ export default function SelectorActions(props: SelectorActionsProps) {
             }
         } catch (err) {
             onError(t('OpenActions.unknownError'));
-            console.error('handleImportProject():: Unknown error occurred while parsing the uploaded file', err);
+            logger.error('handleImportProject(), Unknown error occurred while parsing the uploaded file', err);
         }
 
         // clear field for next upload

@@ -1,7 +1,7 @@
 import { InterchangeGroup, Name, Note, RMGParam, RmgStyle, StationInfo } from '../constants/constants';
 import { nanoid } from 'nanoid';
 import { MonoColour, Theme, updateTheme } from '@railmapgen/rmg-palette-resources';
-import rmgRuntime from '@railmapgen/rmg-runtime';
+import rmgRuntime, { logger } from '@railmapgen/rmg-runtime';
 
 export const updateParam = (param: { [x: string]: any }) => {
     // Version 0.10
@@ -367,7 +367,7 @@ export const updateThemes = async (param: RMGParam): Promise<RMGParam> => {
     const startTimestamp = new Date().getTime();
 
     const matchedThemes = getMatchedThemesWithPaths(param);
-    console.log(`[rmg] Found all themes pending for update`, matchedThemes);
+    logger.info(`Found all themes pending for update`, matchedThemes);
 
     const paramCopy: RMGParam = JSON.parse(JSON.stringify(param));
 
@@ -397,15 +397,11 @@ export const updateThemes = async (param: RMGParam): Promise<RMGParam> => {
 
     try {
         await updatePromise;
-        console.log(
-            `[rmg] Themes update completed, elapsed time ${(new Date().getTime() - startTimestamp) / 1000} sec`
-        );
+        logger.info(`Themes update completed, elapsed time ${(new Date().getTime() - startTimestamp) / 1000} sec`);
         return paramCopy;
     } catch (e) {
-        console.warn(
-            `[rmg] Error occurs when updating themes, elapsed time ${
-                (new Date().getTime() - startTimestamp) / 1000
-            } sec`,
+        logger.warn(
+            `Error occurs when updating themes, elapsed time ${(new Date().getTime() - startTimestamp) / 1000} sec`,
             e
         );
         return paramCopy;
@@ -428,7 +424,7 @@ export const sanitiseParam = (param: any) => {
     const clone = structuredClone(param);
     Object.entries(SANITISATION_RULES).forEach(([path, predicate]) => {
         Object.entries(dottieGet(clone, path)).forEach(([exactPath, value]) => {
-            console.debug('[rmg] Sanitising', exactPath, value);
+            logger.debug('Sanitising', exactPath, value);
             if (predicate(value)) {
                 dottieSet(clone, exactPath, undefined);
             }

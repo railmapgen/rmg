@@ -1,6 +1,6 @@
 import { LocalStorageKey, ParamConfig } from '../constants/constants';
 import { nanoid } from 'nanoid';
-import rmgRuntime from '@railmapgen/rmg-runtime';
+import rmgRuntime, { logger } from '@railmapgen/rmg-runtime';
 
 export const loadParamRegistry = (): ParamConfig[] => {
     const prefix = `${rmgRuntime.getAppName()}__${LocalStorageKey.PARAM_CONFIG_BY_ID}`;
@@ -19,8 +19,8 @@ export const loadParamRegistry = (): ParamConfig[] => {
             }
         });
 
-    console.log(
-        'loadParamRegistry():: Found param config in localStorage',
+    logger.info(
+        'loadParamRegistry(), Found param config in localStorage',
         registry.map(config => config.id)
     );
     return registry;
@@ -39,8 +39,8 @@ export const getParamRegistry = (): ParamConfig[] => {
             return loadedParamRegistry.find(config => config.id === paramId) ?? { id: paramId };
         });
 
-    console.log(
-        'getParamRegistry():: Actual param found in localStorage',
+    logger.info(
+        'getParamRegistry(), Actual param found in localStorage',
         actualParamRegistry.map(config => config.id)
     );
 
@@ -91,11 +91,11 @@ export const downloadParam = async (url: string): Promise<string | null> => {
             const param = await res.text();
             return insertParam(param, name);
         } else {
-            console.warn('Failed to download param');
+            logger.warn('Failed to download param');
             return null;
         }
     } catch (err) {
-        console.warn('Failed to download param.', err);
+        logger.warn('Failed to download param.', err);
         return null;
     }
 };
