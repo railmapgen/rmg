@@ -3,7 +3,9 @@ import { LocalStorageKey } from '../constants/constants';
 import { createParamInLocalStorage } from '../setupTests';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 
-describe('ParamMgrUtils', () => {
+describe('ParamMgrUtils', async () => {
+    await rmgRuntime.ready();
+
     describe('ParamMgrUtils - loadParamRegistry', () => {
         afterEach(() => {
             rmgRuntime.storage.clear();
