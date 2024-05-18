@@ -1,4 +1,3 @@
-import React from 'react';
 import { Flex } from '@chakra-ui/react';
 import { ColourHex } from '@railmapgen/rmg-palette-resources';
 

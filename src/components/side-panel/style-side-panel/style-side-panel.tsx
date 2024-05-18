@@ -1,5 +1,4 @@
 import { Divider } from '@chakra-ui/react';
-import React from 'react';
 import { useRootSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
 import LayoutSection from './layout-section';

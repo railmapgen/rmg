@@ -252,7 +252,7 @@ const IntBoxGroup = forwardRef(function IntBoxGroup(
                 const isLineNumber = Boolean(info.name[0].match(/^\w+(号)?线/));
                 const isMaglev = Boolean(info.name[0].match(/^磁(悬)*浮/));
 
-                if (props.direction === 'r') {
+                if (direction === 'r') {
                     dx -= (isLineNumber || isMaglev ? 20 : info.name[0].length * 14 + 12) + (i === 0 ? 0 : 5);
                 }
 
@@ -277,7 +277,7 @@ const IntBoxGroup = forwardRef(function IntBoxGroup(
                     );
                 }
 
-                if (props.direction === 'l') {
+                if (direction === 'l') {
                     dx += isLineNumber || isMaglev ? 20 + 5 : info.name[0].length * 14 + 12 + 5;
                 }
                 return el;

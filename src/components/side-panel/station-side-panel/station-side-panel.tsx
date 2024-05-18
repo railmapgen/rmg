@@ -1,5 +1,4 @@
 import { Divider } from '@chakra-ui/react';
-import React from 'react';
 import InfoSection from './info-section';
 import InterchangeSection from './interchange-section';
 import MoreSection from './more-section';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { HStack, IconButton } from '@chakra-ui/react';
 import { Note } from '../../../constants/constants';
 import { MdArrowDropDown, MdArrowDropUp, MdArrowLeft, MdArrowRight, MdDelete } from 'react-icons/md';

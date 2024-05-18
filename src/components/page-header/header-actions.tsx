@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, HStack } from '@chakra-ui/react';
 import DownloadActions from './download-actions';
 import { MdFolder, MdPalette } from 'react-icons/md';

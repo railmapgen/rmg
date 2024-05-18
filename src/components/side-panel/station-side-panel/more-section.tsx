@@ -1,5 +1,4 @@
 import { Box, Heading } from '@chakra-ui/react';
-import React from 'react';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import { FACILITIES, Facilities, RmgStyle, Services } from '../../../constants/constants';
 import {
@@ -97,7 +96,7 @@ export default function MoreSection() {
                 <RmgButtonGroup
                     selections={[{ label: t('StationSidePanel.more.apply'), value: '', disabled: false }]}
                     defaultValue=""
-                    onChange={_ => dispatch(updateStationIntPaddingToAll(selectedStation))}
+                    onChange={() => dispatch(updateStationIntPaddingToAll(selectedStation))}
                 />
             ),
             oneLine: true,

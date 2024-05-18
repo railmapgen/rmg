@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Heading, VStack } from '@chakra-ui/react';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AppView from './app-view';
 import { useRootDispatch, useRootSelector } from '../../redux';
 import ParamSelectorView from '../param-selector-view';

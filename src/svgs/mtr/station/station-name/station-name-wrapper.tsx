@@ -1,4 +1,4 @@
-import React, { SVGProps, useState } from 'react';
+import { SVGProps, useState } from 'react';
 import { Direction, Facilities, Name, StationState } from '../../../../constants/constants';
 import StationName from './station-name';
 

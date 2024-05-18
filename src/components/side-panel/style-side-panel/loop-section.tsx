@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Heading } from '@chakra-ui/react';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import { setLoop, setLoopBank, setLoopBottomFactor, setLoopLeftAndRightFactor } from '../../../redux/param/param-slice';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Box, ButtonGroup, Flex, IconButton, SystemStyleObject, Text } from '@chakra-ui/react';
 import { getRelativeTime } from '../../util/utils';
 import { MdDelete, MdEdit } from 'react-icons/md';

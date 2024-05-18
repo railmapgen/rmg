@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import React, { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { Store } from '@reduxjs/toolkit';
 import { I18nextProvider } from 'react-i18next';

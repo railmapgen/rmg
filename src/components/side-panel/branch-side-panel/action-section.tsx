@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Box, Button, Flex, Heading } from '@chakra-ui/react';
 import { MdCached, MdFilter1 } from 'react-icons/md';

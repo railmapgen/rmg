@@ -149,6 +149,7 @@ export class Stations {
     /**
      * Increment of the weight of in-bound edge of a station, which increases the horizontal interval from its parents.
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected leftWideFactor = (stnId: string) => {
         return 0;
     };
@@ -156,11 +157,12 @@ export class Stations {
     /**
      * Increment of the weight of out-bound edge of a station, which increases the horizontal interval from its children.
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected rightWideFactor = (stnId: string) => {
         return 0;
     };
 
-    protected getYShare(stnId: string, branches?: string[][]): number {
+    protected getYShare(stnId: string): number {
         if (stnId in this.yShares) return this.yShares[stnId];
 
         if (
@@ -192,14 +194,14 @@ export class Stations {
         }
     }
 
-    static getYShares(stnList: StationDict, branches?: string[][]) {
+    static getYShares(stnList: StationDict) {
         console.log('computing y shares');
         const stations = new this({ stnList });
 
         Object.keys(stnList).forEach(stnId => {
             if (['linestart', 'lineend'].includes(stnId)) return;
             if (stnId in stations.yShares) return;
-            stations.getYShare(stnId, branches);
+            stations.getYShare(stnId);
         });
 
         return stations.yShares;

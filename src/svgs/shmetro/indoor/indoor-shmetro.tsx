@@ -104,7 +104,7 @@ const IndoorSHMetro = () => {
         {} as typeof xShares
     );
 
-    const yShares = useMemo(() => StationsSHMetro.getYShares(param.stn_list, branches), [deps]);
+    const yShares = useMemo(() => StationsSHMetro.getYShares(param.stn_list), [deps]);
     const ys = Object.keys(yShares).reduce(
         (acc, cur) => ({ ...acc, [cur]: (yShares[cur] * param.branchSpacingPct * param.svg_height) / 200 }),
         {} as typeof yShares

@@ -1,4 +1,3 @@
-import React from 'react';
 import StripGZMTR from './strip-gzmtr';
 import InfoGZMTR from './info-gzmtr';
 import { useRootSelector } from '../../redux';

@@ -1,5 +1,4 @@
 import { RmgSidePanelBody } from '@railmapgen/rmg-components';
-import React from 'react';
 import ColineSection from './coline-section';
 import { Divider } from '@chakra-ui/react';
 import ActionSection from './action-section';

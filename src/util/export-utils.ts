@@ -2,8 +2,6 @@ import { CanvasType, RmgStyle } from '../constants/constants';
 import { STYLE_CONFIG } from '../svgs/config';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 
-const searchSrcRegex = /url\("([\S*]+)"\)/;
-
 export const cloneSvgCanvas = async (
     canvas: CanvasType,
     rmgStyle: RmgStyle,

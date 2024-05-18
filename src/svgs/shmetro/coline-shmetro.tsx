@@ -57,7 +57,7 @@ export const ColineSHMetro = (props: Props) => {
     }, [deps]);
     // filter out all positive yShares to draw the railmap w/ coline and its branches
     const colineYShares = Object.entries(yShares)
-        .filter(([k, v]) => v <= 0)
+        .filter(([, v]) => v <= 0)
         .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {} as typeof yShares);
     const colineYs = Object.keys(colineYShares).reduce(
         (acc, cur) => ({ ...acc, [cur]: (-colineYShares[cur] * branchSpacingPct * svg_height) / 300 }),
@@ -131,8 +131,8 @@ export const ColineSHMetro = (props: Props) => {
                 />
                 <ColineStationGroup
                     stnIds={Object.entries(yShares)
-                        .filter(([k, v]) => v < 0)
-                        .reduce((acc, [k, v]) => [...acc, k], [] as string[])
+                        .filter(([, v]) => v < 0)
+                        .reduce((acc, [k]) => [...acc, k], [] as string[])
                         .filter(stnId => !['linestart', 'lineend'].includes(stnId))
                         .filter(stnId => stn_list[stnId].services.length !== 0)
                         .filter(stnId => colineStations.includes(stnId))}

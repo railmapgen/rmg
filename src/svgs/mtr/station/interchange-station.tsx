@@ -1,4 +1,3 @@
-import React from 'react';
 import { Direction, ExtendedInterchangeInfo, Position } from '../../../constants/constants';
 import InterchangeTick from './interchange-tick';
 import StationIcon from './station-icon';

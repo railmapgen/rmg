@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, HStack, IconButton, Text } from '@chakra-ui/react';
 import { ExtendedInterchangeInfo, Facilities, FACILITIES, RmgStyle } from '../../../constants/constants';
 import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useRootSelector } from '../../redux';
 import { CanvasType } from '../../constants/constants';
 

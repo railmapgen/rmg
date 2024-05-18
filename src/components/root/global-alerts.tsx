@@ -1,4 +1,3 @@
-import React from 'react';
 import { Alert, AlertIcon, AlertStatus, CloseButton, Link } from '@chakra-ui/react';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { useRootDispatch, useRootSelector } from '../../redux';

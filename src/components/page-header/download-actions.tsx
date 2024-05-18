@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { MdExpandMore } from 'react-icons/md';
 import { downloadAs } from '../../util/utils';

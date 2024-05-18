@@ -1,4 +1,4 @@
-import React, { lazy, useState } from 'react';
+import { lazy, useState } from 'react';
 import { Box, Button, HStack, IconButton, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { MdAdd } from 'react-icons/md';
 import AddStationModal from '../modal/add-station-modal';

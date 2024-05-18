@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Button, Flex, Heading, VStack } from '@chakra-ui/react';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import InterchangeCard from './interchange-card';

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { RmgCard, RmgLoader, RmgPage } from '@railmapgen/rmg-components';
 import { Container, Flex, Heading, SystemStyleObject, useOutsideClick, useToast } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';

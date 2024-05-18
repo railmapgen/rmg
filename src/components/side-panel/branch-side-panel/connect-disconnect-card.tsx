@@ -1,6 +1,6 @@
 import { Button, Flex } from '@chakra-ui/react';
 import { RmgCard, RmgDebouncedInput, RmgLabel, RmgSelect } from '@railmapgen/rmg-components';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Direction, Events } from '../../../constants/constants';
 import { useRootDispatch, useRootSelector } from '../../../redux';

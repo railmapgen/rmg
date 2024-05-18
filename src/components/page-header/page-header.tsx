@@ -1,4 +1,3 @@
-import React from 'react';
 import HeaderActions from './header-actions';
 import { setCanvasScale, setCanvasToShow } from '../../redux/app/app-slice';
 import { canvasConfig, CanvasType, RmgStyle } from '../../constants/constants';

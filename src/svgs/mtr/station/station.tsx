@@ -1,4 +1,3 @@
-import React from 'react';
 import { Direction, ShortDirection, StationState } from '../../../constants/constants';
 import InterchangeStation from './interchange-station';
 import { useRootSelector } from '../../../redux';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Name, StationState } from '../../../constants/constants';
 import StationName from './station-name';
 import StationSecondaryName from './station-secondary-name';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Heading } from '@chakra-ui/react';
 import { updateStationName, updateStationNum, updateStationSecondaryName } from '../../../redux/param/action';
 import { useRootDispatch, useRootSelector } from '../../../redux';

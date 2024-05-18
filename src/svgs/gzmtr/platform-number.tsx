@@ -1,4 +1,4 @@
-import React, { SVGProps } from 'react';
+import { SVGProps } from 'react';
 
 interface PlatformNumberProps extends SVGProps<SVGGElement> {
     num: string | false;

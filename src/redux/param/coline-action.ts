@@ -230,32 +230,6 @@ export const updateColine = (colineId: string, from: string, to: string, display
     };
 };
 
-export const removeColine = (colineId: string) => {
-    return (dispatch: RootDispatch, getState: () => RootState) => {
-        const colineInfo = getState().param.coline;
-
-        if (colineId in colineInfo) {
-            const { [colineId]: _, ...nextColine } = colineInfo;
-            dispatch(setColine(nextColine));
-        }
-    };
-};
-
-/**
- *
- * @param colineId
- * @param interchangeInfo
- */
-export const addColineColor = (colineId: string, interchangeInfo: ColineColours) => {
-    return (dispatch: RootDispatch, getState: () => RootState) => {
-        const colineInfo = getState().param.coline;
-
-        colineInfo[colineId].colors = [...colineInfo[colineId].colors, interchangeInfo];
-
-        dispatch(setColine(colineInfo));
-    };
-};
-
 export const removeColineColor = (colineId: string, interchangeIndex: number) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const colineInfo = getState().param.coline;
