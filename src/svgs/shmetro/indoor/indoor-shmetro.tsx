@@ -211,16 +211,26 @@ const StationGroup = (props: StationGroupProps) => {
 };
 
 const InfoElements = memo(() => {
-    const param = useRootSelector(store => store.param);
+    const {
+        svg_height,
+        svgWidth: { indoor: svg_width },
+        line_name,
+        stn_list,
+    } = useRootSelector(store => store.param);
+
+    const maxOutOfStationTransferLength = Math.max(
+        ...Object.values(stn_list).map(info => info.transfer.groups.at(1)?.lines?.length ?? 0)
+    );
+    const legendRectWidth = maxOutOfStationTransferLength > 0 ? 210 : 110;
 
     return (
         <>
-            <g transform={`translate(${param.svgWidth.indoor / 2},50)`}>
+            <g transform={`translate(${svg_width / 2},50)`}>
                 <text textAnchor="middle" fontSize="30" className="rmg-name__zh">
-                    轨道交通{param.line_name[0]}运营线路示意图
+                    轨道交通{line_name[0]}运营线路示意图
                 </text>
             </g>
-            <g transform={`translate(${param.svgWidth.indoor / 2},${param.svg_height - 270})`}>
+            <g transform={`translate(${svg_width / 2},${svg_height - 270})`}>
                 <text textAnchor="middle" fontSize="18" className="rmg-name__zh" dx="-30" dy="230">
                     友情提示：请留意您需要换乘线路的首末班时间，以免耽误您的出行，末班车进站前三分钟停售该末班车车票。
                 </text>
@@ -229,7 +239,7 @@ const InfoElements = memo(() => {
                     selling tickets 3 minutes before the last train services.
                 </text>
                 <g transform="translate(-700,215)">
-                    <rect x="-5" y="-25" width="200" height="70" fill="none" stroke="black" rx="5" />
+                    <rect x="-5" y="-25" width={legendRectWidth} height="70" fill="none" stroke="black" rx="5" />
                     <line x1="28" x2="28" y1="-20" y2="40" stroke="black" />
                     <text className="rmg-name__zh" dx="3" fontSize="18">
                         图
@@ -240,30 +250,34 @@ const InfoElements = memo(() => {
                     <text className="rmg-name__en" dy="35" fontSize="8">
                         legend
                     </text>
-                    <use transform="translate(45,10)" xlinkHref="#int2_indoor_sh" stroke="var(--rmg-black)" />
-                    <text className="rmg-name__zh" dx="65" dy="5" fontSize="10">
+                    <use transform="translate(50,10)" xlinkHref="#int2_indoor_sh" stroke="var(--rmg-black)" />
+                    <text className="rmg-name__zh" dx="70" dy="5" fontSize="10">
                         换乘站
                     </text>
-                    <text className="rmg-name__en" dx="65" dy="15" fontSize="6">
+                    <text className="rmg-name__en" dx="70" dy="15" fontSize="6">
                         Interchange
                     </text>
-                    <text className="rmg-name__en" dx="65" dy="25" fontSize="6">
+                    <text className="rmg-name__en" dx="70" dy="25" fontSize="6">
                         Station
                     </text>
-                    <use
-                        transform="translate(115,10)scale(0.75)"
-                        xlinkHref="#osi_indoor_sh"
-                        stroke="var(--rmg-black)"
-                    />
-                    <text className="rmg-name__zh" dx="130" dy="5" fontSize="10">
-                        出站换乘车站
-                    </text>
-                    <text className="rmg-name__en" dx="130" dy="15" fontSize="6">
-                        Out-of-station Transfer
-                    </text>
-                    <text className="rmg-name__en" dx="130" dy="25" fontSize="6">
-                        Station
-                    </text>
+                    {maxOutOfStationTransferLength > 0 && (
+                        <>
+                            <use
+                                transform="translate(120,10)scale(0.75)"
+                                xlinkHref="#osi_indoor_sh"
+                                stroke="var(--rmg-black)"
+                            />
+                            <text className="rmg-name__zh" dx="135" dy="5" fontSize="10">
+                                出站换乘车站
+                            </text>
+                            <text className="rmg-name__en" dx="135" dy="15" fontSize="6">
+                                Out-of-station Transfer
+                            </text>
+                            <text className="rmg-name__en" dx="135" dy="25" fontSize="6">
+                                Station
+                            </text>
+                        </>
+                    )}
                 </g>
             </g>
         </>
