@@ -294,7 +294,7 @@ const isTheme = (arr: any[]): boolean => {
         arr.length === 4 && // length ok
         arr.every(elem => typeof elem === 'string') && // type ok
         !!arr[2].match(/^#[0-9a-fA-F]{6}$/) && // hex ok
-        Object.values(MonoColour).includes(arr[3]) // bg ok
+        (Object.values(MonoColour) as string[]).includes(arr[3]) // bg ok
     );
 };
 

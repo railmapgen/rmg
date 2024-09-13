@@ -36,7 +36,7 @@ export default tseslint.config(
         plugins: { prettier },
         rules: {
             'prettier/prettier': [
-                'warn',
+                'error',
                 {
                     endOfLine: 'auto',
                 },

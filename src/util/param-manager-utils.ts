@@ -11,7 +11,7 @@ export const loadParamRegistry = (): ParamConfig[] => {
             if (value) {
                 try {
                     return { ...JSON.parse(value), id };
-                } catch (err) {
+                } catch {
                     return { id };
                 }
             } else {

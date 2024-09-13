@@ -60,7 +60,7 @@ describe('InterchangeCard', () => {
 
         // context receive open event
         expect(mockStore.getState().app.paletteAppClipInput).toEqual(mockInterchangeInfo1.theme);
-        expect(mockStore.getState().app.paletteAppClipOutput).toBeUndefined;
+        expect(mockStore.getState().app.paletteAppClipOutput).toBeUndefined();
 
         // rerender with next context
         await act(async () => {

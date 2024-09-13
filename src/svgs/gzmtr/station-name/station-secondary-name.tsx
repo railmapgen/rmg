@@ -17,7 +17,7 @@ export default function StationSecondaryName(props: StationSecondaryNameProps) {
         if (nameEl.current) {
             const nextBBox = nameEl.current.getBBox();
             setBBox(nextBBox);
-            onUpdate && onUpdate(nextBBox);
+            onUpdate?.(nextBBox);
         }
     }, [stnName.toString()]);
 

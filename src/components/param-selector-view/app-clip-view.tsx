@@ -71,6 +71,7 @@ export default function AppClipView() {
             setSelectedParam(undefined);
             setIsError(false);
         } catch (e) {
+            console.error('Unable to update param', e);
             setIsError(true);
         }
     };

@@ -363,13 +363,13 @@ export const flipStationBranchPosition = (stationId: string, direction: Directio
 
         if (direction === Direction.left) {
             const branchStartId = branches.slice(1).find(branch => branch.slice(-1)[0] === stationId)?.[0];
-            branchStartId && dispatch(flipStationBranchPositionLegacy(stationId, branchStartId));
+            if (branchStartId) dispatch(flipStationBranchPositionLegacy(stationId, branchStartId));
         } else {
             const branchEndId = branches
                 .slice(1)
                 .find(branch => branch[0] === stationId)
                 ?.slice(-1)?.[0];
-            branchEndId && dispatch(flipStationBranchPositionLegacy(branchEndId, stationId));
+            if (branchEndId) dispatch(flipStationBranchPositionLegacy(branchEndId, stationId));
         }
     };
 };

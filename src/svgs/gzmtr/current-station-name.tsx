@@ -47,7 +47,7 @@ export const CurrentStationSecondaryName = (props: CurrentStationSecondaryNamePr
 
     const [bBox, setBBox] = useState({ x: 0, width: 0 } as DOMRect);
     useEffect(() => {
-        nameEl.current && setBBox(nameEl.current.getBBox());
+        if (nameEl.current) setBBox(nameEl.current.getBBox());
     }, [secondaryName.toString()]);
 
     return (

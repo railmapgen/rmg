@@ -164,7 +164,7 @@ const NoteBox = memo(
         const [bBox, setBBox] = useState({ width: 0, height: 0, y: 0 } as DOMRect);
 
         useEffect(() => {
-            noteTextEl.current && setBBox(noteTextEl.current.getBBox());
+            if (noteTextEl.current) setBBox(noteTextEl.current.getBBox());
         }, [props.note[0], props.note[1]]);
 
         return (

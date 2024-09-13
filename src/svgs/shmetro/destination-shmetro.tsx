@@ -160,7 +160,7 @@ const Dest = (props: {
     const terminalEl = useRef<SVGGElement | null>(null);
     const [terminalBBox, setTerminalBBox] = useState({ width: 0 } as SVGRect);
     useEffect(() => {
-        terminalEl.current && setTerminalBBox(terminalEl.current.getBBox());
+        if (terminalEl.current) setTerminalBBox(terminalEl.current.getBBox());
     }, [JSON.stringify(dest_names), JSON.stringify(current_stn_id)]);
 
     const [middle, MARGIN, PADDING, LINEBOX_WIDTH, PLATFORM_WIDTH] = [svgWidth.destination / 2, 10, 36, 264, 325];
@@ -279,7 +279,7 @@ const LineNameBoxText = (props: { line_name: Name; line_color: [ColourHex, MonoC
     // the original name position
     const [bBox, setBBox] = useState({ width: 0 } as DOMRect);
     useEffect(() => {
-        stnNameEl.current && setBBox(stnNameEl.current.getBBox());
+        if (stnNameEl.current) setBBox(stnNameEl.current.getBBox());
     }, [...line_name]);
 
     const rectDx = (direction === 'l' ? -bBox.width : 0) - 6;

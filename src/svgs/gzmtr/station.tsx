@@ -56,7 +56,7 @@ export default function Station(props: Props) {
                               },
                               ...(stnInfo.transfer.groups[0].lines ?? []),
                           ]
-                        : stnInfo.transfer.groups[0].lines ?? []
+                        : (stnInfo.transfer.groups[0].lines ?? [])
                 }
                 stnState={stnState}
                 tickRotation={tickRotation}

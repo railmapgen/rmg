@@ -167,10 +167,10 @@ const TerminalStation = (props: { mode: 'terminal' | 'original'; prevStnIds: str
     const nextColineColor =
         nextStnIds.length > 1
             ? 'var(--rmg-theme-colour)' // BranchLine will handle color of next line well
-            : colineStns
+            : (colineStns
                   .filter(co => co.linePath.includes(current_stn_idx) && co.linePath.includes(nextColineColorFrom[0]))
                   // TODO-coline: handle multiple coline colors
-                  .map(co => co.colors[0][2])[0] ?? 'var(--rmg-theme-colour)';
+                  .map(co => co.colors[0][2])[0] ?? 'var(--rmg-theme-colour)');
 
     return (
         <>
@@ -247,10 +247,10 @@ const Line = (props: RunInGeneralProps) => {
     const nextColineColor =
         nextStnIds.length > 1
             ? 'var(--rmg-theme-colour)' // BranchLine will handle color of next line well
-            : colineStns
+            : (colineStns
                   .filter(co => co.linePath.includes(current_stn_idx) && co.linePath.includes(nextColineColorFrom[0]))
                   // TODO-coline: handle multiple coline colors
-                  .map(co => co.colors[0][2])[0] ?? 'var(--rmg-theme-colour)';
+                  .map(co => co.colors[0][2])[0] ?? 'var(--rmg-theme-colour)');
 
     // curr and next/pass segment is in the coline branch
     const isInColineBranch = (

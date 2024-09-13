@@ -15,7 +15,7 @@ import { initParam } from './util';
 import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
 import { Theme } from '@railmapgen/rmg-palette-resources';
 
-export interface ParamState extends RMGParam {}
+export type ParamState = RMGParam;
 
 const getInitialState = (): ParamState => initParam(RmgStyle.MTR, 'en');
 

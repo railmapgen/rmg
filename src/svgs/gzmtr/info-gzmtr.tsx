@@ -99,7 +99,7 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
     const [nextBBox, setNextBBox] = useState({ width: 0 } as DOMRect);
     const nextNameEl = useRef<SVGGElement | null>(null);
     useEffect(() => {
-        nextNameEl.current && setNextBBox(nextNameEl.current.getBBox());
+        if (nextNameEl.current) setNextBBox(nextNameEl.current.getBBox());
     }, [name.toString()]);
 
     const nextNameZHCount = name[0].length;
@@ -201,7 +201,7 @@ const BigNextSec = (props: { secName: Name } & SVGProps<SVGGElement>) => {
     const nameEl = useRef<SVGGElement | null>(null);
     const [bBox, setBBox] = useState({ x: 0, width: 0 } as DOMRect);
     useEffect(() => {
-        nameEl.current && setBBox(nameEl.current.getBBox());
+        if (nameEl.current) setBBox(nameEl.current.getBBox());
     }, [props.secName.toString()]);
 
     return (

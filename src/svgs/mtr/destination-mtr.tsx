@@ -77,7 +77,7 @@ const InfoMTR = () => {
     const destNameEl = useRef<SVGGElement | null>(null);
     const [bBox, setBBox] = useState({ width: 0 } as DOMRect);
     useEffect(() => {
-        destNameEl.current && setBBox(destNameEl.current.getBBox());
+        if (destNameEl.current) setBBox(destNameEl.current.getBBox());
     }, [destNames.toString(), customisedMTRDestination.isLegacy]);
 
     const flagLength = 126 + 120 + bBox.width + 30 + 60;

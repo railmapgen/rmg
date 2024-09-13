@@ -20,6 +20,7 @@ export const readParam = (paramId: string) => {
                 dispatch(setParamConfig(nextParamConfig));
                 dispatch(setFullParam(updatedParam));
             } catch (e) {
+                console.warn('Unable to update themes', e);
                 dispatch(setParamConfig(nextParamConfig));
                 dispatch(setFullParam(nextParam));
             }

@@ -181,7 +181,7 @@ const StationGroup = (props: StationGroupProps) => {
     } = useRootSelector(store => store.param);
     const { xs, ys, services } = props;
 
-    const name_direction_even = isFlip ?? true ? 'upward' : 'downward';
+    const name_direction_even = (isFlip ?? true) ? 'upward' : 'downward';
     const name_direction_odd = name_direction_even === 'upward' ? 'downward' : 'upward';
 
     return (

@@ -38,7 +38,7 @@ export const StationSHMetro = (props: Props) => {
             />
             <use
                 xlinkHref={`#${stationIconStyle}`}
-                stroke={transfer.length > 0 ? 'var(--rmg-black)' : color ?? 'var(--rmg-theme-colour)'}
+                stroke={transfer.length > 0 ? 'var(--rmg-black)' : (color ?? 'var(--rmg-theme-colour)')}
                 transform={`rotate(${dr})`}
             />
             {/* This should be in IntBoxGroupProps, put here because the station icon will cover this */}
@@ -107,7 +107,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     const MIN_NAME_LINE_LENGTH = 60;
     const [nameWidth, setNameWidth] = useState(MIN_NAME_LINE_LENGTH);
     useEffect(() => {
-        nameRef?.current && setNameWidth(Math.max(MIN_NAME_LINE_LENGTH, nameRef.current.getBBox().width));
+        if (nameRef?.current) setNameWidth(Math.max(MIN_NAME_LINE_LENGTH, nameRef.current.getBBox().width));
     }, [...name]);
     return (
         <g transform={`translate(0,${dy})`}>
@@ -282,10 +282,10 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
 
     const osi_dx = transfer_dx;
     const osi_dy = {
-        upward: intInfos.at(0)?.length ?? 0 ? -177.5 : -145,
-        downward: (intInfos.at(0)?.length ?? 0 ? 157.5 : 125) + (services.length === 3 ? 40 : 0),
-        left: intInfos.at(0)?.length ?? 0 ? -30 : 7,
-        right: intInfos.at(0)?.length ?? 0 ? -30 : 7,
+        upward: (intInfos.at(0)?.length ?? 0) ? -177.5 : -145,
+        downward: ((intInfos.at(0)?.length ?? 0) ? 157.5 : 125) + (services.length === 3 ? 40 : 0),
+        left: (intInfos.at(0)?.length ?? 0) ? -30 : 7,
+        right: (intInfos.at(0)?.length ?? 0) ? -30 : 7,
     }[arrowDirection];
 
     return (
