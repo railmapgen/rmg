@@ -48,31 +48,31 @@ const InfoMTR = () => {
     const currentStationIndex = useRootSelector(store => store.param.current_stn_idx);
     const stationList = useRootSelector(store => store.param.stn_list);
 
-    let destNames: Name;
-    if (customisedMTRDestination.terminal !== false) {
-        destNames = customisedMTRDestination.terminal;
-    } else {
-        const validDests = [
-            ...new Set(
-                routes
-                    .filter(route => route.includes(currentStationIndex))
-                    .map(
-                        route =>
-                            route
-                                .filter(stnId => !['linestart', 'lineend'].includes(stnId))
-                                .slice(direction === ShortDirection.left ? 0 : -1)[0]
-                    )
-                    .filter(id => id !== currentStationIndex)
-            ),
-        ];
-        destNames = [
-            validDests.map(stnId => stationList[stnId].name[0]).join('/'),
-            validDests
-                .map(stnId => stationList[stnId].name[1])
-                .join('/')
-                .replace('\\', ' '),
-        ];
-    }
+    const validDestinationIds = [
+        ...new Set(
+            routes
+                .filter(route => route.includes(currentStationIndex))
+                .map(
+                    route =>
+                        route
+                            .filter(stnId => !['linestart', 'lineend'].includes(stnId))
+                            .slice(direction === ShortDirection.left ? 0 : -1)[0]
+                )
+                .filter(id => id !== currentStationIndex)
+        ),
+    ];
+    const isTerminal = validDestinationIds.length === 0;
+
+    const destNames: Name =
+        customisedMTRDestination.terminal !== false
+            ? customisedMTRDestination.terminal
+            : [
+                  validDestinationIds.map(stnId => stationList[stnId].name[0]).join('/'),
+                  validDestinationIds
+                      .map(stnId => stationList[stnId].name[1])
+                      .join('/')
+                      .replace('\\', ' '),
+              ];
 
     const destNameEl = useRef<SVGGElement | null>(null);
     const [bBox, setBBox] = useState({ width: 0 } as DOMRect);
@@ -83,30 +83,40 @@ const InfoMTR = () => {
     const flagLength = 126 + 120 + bBox.width + 30 + 60;
     const arrowX = (svgWidths[CanvasType.Destination] - (direction === ShortDirection.left ? 1 : -1) * flagLength) / 2;
     const platformNumX = arrowX + (direction === ShortDirection.left ? 1 : -1) * (126 + 60 + 60);
+    const terminalPlatformNumX = 'calc(var(--rmg-svg-width) / 2)';
     const destNameX = platformNumX + (direction === ShortDirection.left ? 1 : -1) * (60 + 30);
 
     return (
         <g style={{ transform: 'translateY(calc(var(--rmg-svg-height) / 2 - 5px))' }}>
-            <use
-                xlinkHref="#arrow"
-                transform={`translate(${arrowX},0)scale(0.8)rotate(${direction === ShortDirection.left ? 0 : 180})`}
-            />
-            <g transform={`translate(${platformNumX},0)`}>
+            {!isTerminal && (
+                <use
+                    xlinkHref="#arrow"
+                    transform={`translate(${arrowX},0)scale(0.8)rotate(${direction === ShortDirection.left ? 0 : 180})`}
+                    data-testid="mtr-arrow"
+                />
+            )}
+            <g
+                style={{ transform: `translate(${isTerminal ? terminalPlatformNumX : platformNumX},0)` }}
+                data-testid="mtr-platform"
+            >
                 <PlatformNumber num={platformNumber} />
             </g>
-            <g
-                ref={destNameEl}
-                textAnchor={direction === ShortDirection.left ? 'start' : 'end'}
-                transform={`translate(${destNameX},-25)`}
-                fill="var(--rmg-black)"
-            >
-                <text className="rmg-name__zh" fontSize={72} letterSpacing={1.5}>
-                    {(customisedMTRDestination.isLegacy ? lineName[0] : '') + '往' + destNames[0]}
-                </text>
-                <text className="rmg-name__en" fontSize={42} dy={66}>
-                    {(customisedMTRDestination.isLegacy ? lineName[1] + ' ' : '') + 'to ' + destNames[1]}
-                </text>
-            </g>
+            {!isTerminal && (
+                <g
+                    ref={destNameEl}
+                    textAnchor={direction === ShortDirection.left ? 'start' : 'end'}
+                    transform={`translate(${destNameX},-25)`}
+                    fill="var(--rmg-black)"
+                    data-testid="mtr-destination"
+                >
+                    <text className="rmg-name__zh" fontSize={72} letterSpacing={1.5}>
+                        {(customisedMTRDestination.isLegacy ? lineName[0] : '') + '往' + destNames[0]}
+                    </text>
+                    <text className="rmg-name__en" fontSize={42} dy={66}>
+                        {(customisedMTRDestination.isLegacy ? lineName[1] + ' ' : '') + 'to ' + destNames[1]}
+                    </text>
+                </g>
+            )}
         </g>
     );
 };

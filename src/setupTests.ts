@@ -23,6 +23,7 @@ export const mockSimpleStationList: StationDict = {
     stn0: {
         parents: ['linestart'],
         children: ['stn1'],
+        name: ['車站0', 'Station 0'],
     },
     stn1: {
         parents: ['stn0'],
