@@ -83,7 +83,7 @@ const InfoMTR = () => {
     const flagLength = 126 + 120 + bBox.width + 30 + 60;
     const arrowX = (svgWidths[CanvasType.Destination] - (direction === ShortDirection.left ? 1 : -1) * flagLength) / 2;
     const platformNumX = arrowX + (direction === ShortDirection.left ? 1 : -1) * (126 + 60 + 60);
-    const terminalPlatformNumX = 'calc(var(--rmg-svg-width) / 2)';
+    const terminalPlatformNumX = svgWidths.destination / 2;
     const destNameX = platformNumX + (direction === ShortDirection.left ? 1 : -1) * (60 + 30);
 
     return (
@@ -96,7 +96,7 @@ const InfoMTR = () => {
                 />
             )}
             <g
-                style={{ transform: `translate(${isTerminal ? terminalPlatformNumX : platformNumX},0)` }}
+                transform={`translate(${isTerminal ? terminalPlatformNumX : platformNumX},0)`}
                 data-testid="mtr-platform"
             >
                 <PlatformNumber num={platformNumber} />
