@@ -2,7 +2,7 @@ import { Box, Heading } from '@chakra-ui/react';
 import { updateStationName, updateStationNum, updateStationSecondaryName } from '../../../redux/param/action';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
-import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
 
 export default function InfoSection() {
@@ -36,13 +36,32 @@ export default function InfoSection() {
             onChange: (value: string) => dispatch(updateStationName(selectedStation, [name[0], value])),
         },
         {
+            type: 'custom',
+            label: t('Secondary names'),
+            component: (
+                <RmgButtonGroup
+                    selections={
+                        [
+                            { label: t('Yes'), value: true },
+                            { label: t('No'), value: false },
+                        ] as { label: string; value: boolean }[]
+                    }
+                    defaultValue={!!secondaryName}
+                    onChange={flag =>
+                        dispatch(updateStationSecondaryName(selectedStation, flag ? ['', ''] : undefined))
+                    }
+                />
+            ),
+            hidden: ![RmgStyle.GZMTR].includes(style),
+        },
+        {
             type: 'input',
             label: t('StationSidePanel.info.zhSecondary'),
             value: secondaryName ? secondaryName[0] : '',
             placeholder: '1号航站楼',
             onChange: (value: string) =>
                 dispatch(updateStationSecondaryName(selectedStation, [value, secondaryName ? secondaryName[1] : ''])),
-            hidden: ![RmgStyle.GZMTR].includes(style),
+            hidden: !secondaryName || ![RmgStyle.GZMTR].includes(style),
         },
         {
             type: 'input',
@@ -51,7 +70,7 @@ export default function InfoSection() {
             placeholder: 'Terminal 1',
             onChange: (value: string) =>
                 dispatch(updateStationSecondaryName(selectedStation, [secondaryName ? secondaryName[0] : '', value])),
-            hidden: ![RmgStyle.GZMTR].includes(style),
+            hidden: !secondaryName || ![RmgStyle.GZMTR].includes(style),
         },
     ];
 
