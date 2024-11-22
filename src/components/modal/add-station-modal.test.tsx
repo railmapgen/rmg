@@ -9,43 +9,43 @@ import { vi } from 'vitest';
 
 const mockStationList = {
     linestart: {
-        name: ['路綫左端', 'LEFT END'],
+        localisedName: { en: 'LEFT END' },
         parents: [],
         children: ['stn1', 'stn5'],
         branch: { left: [], right: [BranchStyle.through, 'stn5'] },
     },
     stn1: {
-        name: ['車站1', 'Station 1'],
+        localisedName: { zh: '車站1', en: 'Station 1' },
         parents: ['linestart'],
         children: ['stn2'],
         branch: { left: [], right: [] },
     },
     stn2: {
-        name: ['車站2', 'Station 2'],
+        localisedName: { zh: '車站2', en: 'Station 2' },
         parents: ['stn1', 'stn5'],
         children: ['stn3'],
         branch: { left: [BranchStyle.through, 'stn5'], right: [] },
     },
     stn3: {
-        name: ['車站3', 'Station 3'],
+        localisedName: { zh: '車站3', en: 'Station 3' },
         parents: ['stn2'],
         children: ['stn4'],
         branch: { left: [], right: [] },
     },
     stn4: {
-        name: ['車站4', 'Station 4'],
+        localisedName: { zh: '車站4', en: 'Station 4' },
         parents: ['stn3'],
         children: ['lineend'],
         branch: { left: [], right: [] },
     },
     stn5: {
-        name: ['車站5', 'Station 5'],
+        localisedName: { zh: '車站5', en: 'Station 5' },
         parents: ['linestart'],
         children: ['stn2'],
         branch: { left: [], right: [] },
     },
     lineend: {
-        name: ['路綫右端', 'RIGHT END'],
+        localisedName: { en: 'RIGHT END' },
         parents: ['stn4'],
         children: [],
         branch: { left: [], right: [] },

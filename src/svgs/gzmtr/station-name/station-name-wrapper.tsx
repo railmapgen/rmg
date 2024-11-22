@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { Name, StationState } from '../../../constants/constants';
+import { StationState } from '../../../constants/constants';
 import StationName from './station-name';
 import StationSecondaryName from './station-secondary-name';
 import ExpressTag from './express-tag';
+import { Translation } from '@railmapgen/rmg-translate';
 
 interface StationNameWrapperProps {
-    primaryName: Name;
-    secondaryName?: Name;
+    primaryName: Translation;
+    secondaryName?: Translation;
     stationState: StationState;
     flipped?: boolean;
     express?: boolean;
@@ -29,7 +30,7 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
         }
     };
 
-    const primaryNameEnRows = primaryName[1].split('\\').length;
+    const primaryNameEnRows = primaryName.en?.split('\\')?.length ?? 1;
     const transforms = {
         g: {
             x: 0,

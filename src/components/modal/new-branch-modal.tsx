@@ -54,7 +54,7 @@ export default function NewBranchModal(props: NewBranchModalProps) {
                         ? `(${t('LEFT END')})`
                         : cur === 'lineend'
                           ? `(${t('RIGHT END')})`
-                          : stationList[cur]?.name.join(' - '),
+                          : stationList[cur]?.localisedName.zh + '/' + stationList[cur]?.localisedName.en,
             }),
             { '': t('Please select...') }
         );

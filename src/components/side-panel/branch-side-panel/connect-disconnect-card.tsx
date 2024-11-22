@@ -44,7 +44,7 @@ export default function ConnectDisconnectCard(props: ConnectDisconnectCardProps)
     const options = possibleStations.reduce(
         (acc, cur) => ({
             ...acc,
-            [cur]: stn_list[cur]?.name.join(' - '),
+            [cur]: stn_list[cur]?.localisedName.zh + '/' + stn_list[cur]?.localisedName.en,
         }),
         { '': t('Please select...') }
     );
@@ -71,7 +71,10 @@ export default function ConnectDisconnectCard(props: ConnectDisconnectCardProps)
         <RmgCard direction="column">
             <Flex alignItems="center">
                 <RmgLabel label={t('Station name')} flex={1}>
-                    <RmgDebouncedInput defaultValue={branchEndInfo.name.join(' ')} isDisabled={true} />
+                    <RmgDebouncedInput
+                        defaultValue={branchEndInfo.localisedName.zh + '/' + branchEndInfo.localisedName.en}
+                        isDisabled={true}
+                    />
                 </RmgLabel>
 
                 {isEditing ? (

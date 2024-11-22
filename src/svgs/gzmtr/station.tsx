@@ -30,7 +30,7 @@ export default function Station(props: Props) {
                 stnInfo.children.indexOf(stnInfo.branch?.right?.[1] || '') === 1
               ? 180
               : 0;
-    const nameENLns = stnInfo.name[1].split('\\').length;
+    const nameENLns = stnInfo.localisedName.en?.split('\\')?.length ?? 1;
     const nameDX = isNameShift
         ? tickRotation === 180
             ? 16 + (nameENLns - 1) * 12 * Math.cos(-45)
@@ -71,8 +71,8 @@ export default function Station(props: Props) {
             />
             <g transform={`translate(${-nameDX},0)`}>
                 <StationNameWrapper
-                    primaryName={stnInfo.name}
-                    secondaryName={stnInfo.secondaryName || undefined}
+                    primaryName={stnInfo.localisedName}
+                    secondaryName={stnInfo.localisedSecondaryName}
                     stationState={stnState}
                     flipped={tickRotation === 180}
                     express={stnInfo.services.includes(Services.express)}

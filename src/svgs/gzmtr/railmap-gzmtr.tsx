@@ -132,10 +132,10 @@ const DirectionIndicatorTextGroup = (props: TextGroupProps) => {
     return (
         <g {...others}>
             <text className="rmg-name__zh" fontSize={28}>
-                {destIds.map(stnId => stationList[stnId].name[0]).join('/') + '方向'}
+                {destIds.map(stnId => stationList[stnId].localisedName.zh).join('/') + '方向'}
             </text>
             <text className="rmg-name__en" fontSize={14} dy={22}>
-                {'Towards ' + destIds.map(stnId => stationList[stnId].name[1].replace('\\', ' ')).join('/')}
+                {'Towards ' + destIds.map(stnId => stationList[stnId].localisedName.en?.replace('\\', ' ')).join('/')}
             </text>
         </g>
     );

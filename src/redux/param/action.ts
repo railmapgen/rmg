@@ -13,6 +13,7 @@ import {
 import { RootDispatch, RootState } from '../index';
 import * as paramSlice from './param-slice';
 import { updateHelper } from '../helper/helper-slice';
+import { LanguageCode } from '@railmapgen/rmg-translate';
 
 export const setFullParam = (fullParam: RMGParam) => {
     return (dispatch: RootDispatch) => {
@@ -93,17 +94,38 @@ export const reverseStations = (flipBranch = false) => {
     };
 };
 
-export const updateStationName = (stationId: string, name: Name) => {
+export const updateStationName = (stationId: string, lang: LanguageCode, value: string) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
-        dispatch(setStation(stationId, { ...stationInfo, name }));
+        dispatch(
+            setStation(stationId, {
+                ...stationInfo,
+                localisedName: { ...stationInfo.localisedName, [lang]: value },
+            })
+        );
     };
 };
 
-export const updateStationSecondaryName = (stationId: string, secondaryName?: Name) => {
+export const toggleStationSecondaryName = (stationId: string, flag: boolean) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
+        const { localisedSecondaryName, ...stationInfo } = getState().param.stn_list[stationId];
+        if (flag) {
+            dispatch(setStation(stationId, { ...stationInfo, localisedSecondaryName: {} }));
+        } else {
+            dispatch(setStation(stationId, stationInfo));
+        }
+    };
+};
+
+export const updateStationSecondaryName = (stationId: string, lang: LanguageCode, value: string) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
-        dispatch(setStation(stationId, { ...stationInfo, secondaryName }));
+        dispatch(
+            setStation(stationId, {
+                ...stationInfo,
+                localisedSecondaryName: { ...stationInfo.localisedSecondaryName, [lang]: value },
+            })
+        );
     };
 };
 

@@ -14,7 +14,7 @@ export default function Station(props: StationProps) {
     const { stationId, stationState, isReversed } = props;
 
     const {
-        name,
+        localisedName,
         parents,
         children,
         transfer: { groups, tick_direc, paid_area },
@@ -78,7 +78,7 @@ export default function Station(props: StationProps) {
             )}
 
             <StationNameWrapper
-                stationName={name}
+                stationName={localisedName}
                 stationState={stationState}
                 facility={facility}
                 lower={isReversed}

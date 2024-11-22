@@ -25,7 +25,7 @@ export default function ColineSection() {
     const possibleCombinations = dispatch(getPossibleCombinations(selectedBranch));
 
     const getStationPairDisplayName = (pair: [string, string]) => {
-        return pair.map(id => stationList[id].name.join(' - ')).join(' ~ ');
+        return pair.map(id => stationList[id].localisedName.zh + '/' + stationList[id].localisedName.en).join(' ~ ');
     };
 
     const routeOptions = possibleCombinations.reduce<Record<string, string>>(

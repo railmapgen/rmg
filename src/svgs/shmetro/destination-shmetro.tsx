@@ -65,14 +65,17 @@ const DestSHMetro = () => {
         ),
     ];
     // get the name from the destination id(s)
-    const get_dest_names = (dest_ids: string[], one_line: boolean) =>
+    const get_dest_names = (dest_ids: string[], one_line: boolean): Name[] =>
         !one_line
-            ? dest_ids.map(id => stn_list[id].name.map(s => s.replace('\\', '')) as Name)
+            ? dest_ids.map(id => {
+                  const { zh = '', en = '' } = stn_list[id].localisedName;
+                  return [zh.replace('\\', ''), en.replace('\\', '')];
+              })
             : [
                   // only one line in `sh` type
                   [
-                      dest_ids.map(id => stn_list[id].name[0]).join('，'),
-                      dest_ids.map(id => stn_list[id].name[1]).join(', '),
+                      dest_ids.map(id => stn_list[id].localisedName.zh).join('，'),
+                      dest_ids.map(id => stn_list[id].localisedName.en).join(', '),
                   ].map(s => s.replace('\\', '')) as Name,
               ];
 

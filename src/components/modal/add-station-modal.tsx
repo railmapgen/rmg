@@ -56,7 +56,7 @@ export default function AddStationModal(props: AddStationModalProps) {
         return stationIdList.reduce(
             (acc, cur) => ({
                 ...acc,
-                [cur]: stationList[cur]?.name.join(' - '),
+                [cur]: stationList[cur]?.localisedName.zh + '/' + stationList[cur]?.localisedName.en,
             }),
             { '': t('AddStationModal.pleaseSelect') }
         );

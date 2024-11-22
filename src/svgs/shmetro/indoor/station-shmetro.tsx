@@ -1,7 +1,8 @@
 import { ColourHex } from '@railmapgen/rmg-palette-resources';
 import { Fragment, Ref, SVGProps, forwardRef, useEffect, useMemo, useRef, useState } from 'react';
-import { ExtendedInterchangeInfo, InterchangeGroup, Name, Services } from '../../../constants/constants';
+import { ExtendedInterchangeInfo, InterchangeGroup, Services } from '../../../constants/constants';
 import { useRootSelector } from '../../../redux';
+import { Translation } from '@railmapgen/rmg-translate';
 
 /**
  * Which direction to display station name. Currently shmetro only.
@@ -31,7 +32,7 @@ export const StationSHMetro = (props: Props) => {
     return (
         <>
             <StationNameGElement
-                name={stnInfo.name}
+                name={stnInfo.localisedName}
                 groups={stnInfo.transfer.groups}
                 nameDirection={nameDirection}
                 services={services}
@@ -54,7 +55,7 @@ export const StationSHMetro = (props: Props) => {
 export default StationSHMetro;
 
 interface StationNameGElementProps {
-    name: Name;
+    name: Translation;
     groups: InterchangeGroup[];
     nameDirection: NameDirection;
     services: Services[];
@@ -108,7 +109,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     const [nameWidth, setNameWidth] = useState(MIN_NAME_LINE_LENGTH);
     useEffect(() => {
         if (nameRef?.current) setNameWidth(Math.max(MIN_NAME_LINE_LENGTH, nameRef.current.getBBox().width));
-    }, [...name]);
+    }, [name.zh, name.en]);
     return (
         <g transform={`translate(0,${dy})`}>
             {nameDirection === 'upward' || nameDirection === 'downward' ? (
@@ -165,12 +166,13 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 };
 
 const StationName = forwardRef(function StationName(
-    props: { stnName: Name; nameDirection: NameDirection } & SVGProps<SVGGElement>,
+    props: { stnName: Translation; nameDirection: NameDirection } & SVGProps<SVGGElement>,
     ref: Ref<SVGGElement>
 ) {
     const { stnName, nameDirection, ...others } = props;
-    const name = stnName[0].split('\\');
-    const nameENLn = stnName[1].split('\\').length;
+    const { zh: zhName = '', en: enName = '' } = stnName;
+    const name = zhName.split('\\');
+    const nameENLn = enName.split('\\').length;
     const dx = { upward: 0, downward: 0, left: -60, right: 60 }[nameDirection];
     const dy = {
         upward: -2,
@@ -195,7 +197,7 @@ const StationName = forwardRef(function StationName(
                             </text>
                         ))}
                         <g fontSize={9.6}>
-                            {stnName[1].split('\\').map((txt, i) => (
+                            {enName.split('\\')?.map((txt, i) => (
                                 <text
                                     key={i}
                                     className="rmg-name__en"
@@ -210,7 +212,7 @@ const StationName = forwardRef(function StationName(
                         </g>
                     </>
                 ),
-                [...stnName]
+                [zhName, enName]
             )}
         </g>
     );

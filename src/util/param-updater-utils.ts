@@ -252,6 +252,7 @@ export const updateParam = (param: { [x: string]: any }) => {
 
     // Version pre 5.10
     v5_10_updateInterchangeGroup(param);
+    v5_17_updateLocalisedName(param);
 
     sanitiseParam(param);
     return param;
@@ -281,6 +282,20 @@ export const v5_10_updateInterchangeGroup = (param: Record<string, any>) => {
 
         delete param.stn_list[stnId].transfer.info;
         delete param.stn_list[stnId].transfer.osi_names;
+    }
+};
+
+export const v5_17_updateLocalisedName = (param: Record<string, any>) => {
+    for (const [stnId, stnInfo] of Object.entries(param.stn_list as Record<string, any>)) {
+        const { name, secondaryName, localisedName, localisedSecondaryName } = stnInfo;
+        if (!localisedName && name) {
+            param.stn_list[stnId].localisedName = { zh: name[0], en: name[1] };
+            delete param.stn_list[stnId].name;
+        }
+        if (!localisedSecondaryName && secondaryName) {
+            param.stn_list[stnId].localisedSecondaryName = { zh: secondaryName[0], en: secondaryName[1] };
+            delete param.stn_list[stnId].secondaryName;
+        }
     }
 };
 
@@ -416,7 +431,6 @@ const SANITISATION_RULES: Record<string, (value: any) => boolean> = {
     'stn_list.*.branch.right': value => !value?.length,
     'stn_list.*.branch': value => !value || Object.keys(value).length === 0,
     'stn_list.*.facility': value => !value,
-    'stn_list.*.secondaryName': value => !value || value.join(',') === ',',
     'stn_list.*.transfer.groups.*.lines': value => !value?.length,
 };
 

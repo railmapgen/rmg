@@ -17,7 +17,7 @@ describe('GZMTRStationName', () => {
     it('Can invoke onChange event when name passed through props is updated', () => {
         render(
             <svg>
-                <StationName stnName={['体育西路', 'Tiyu Xilu']} onUpdate={onUpdate} />
+                <StationName stnName={{ zh: '体育西路', en: 'Tiyu Xilu' }} onUpdate={onUpdate} />
             </svg>
         );
 

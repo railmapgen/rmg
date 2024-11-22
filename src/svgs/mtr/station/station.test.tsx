@@ -21,7 +21,7 @@ const mockInterchangeInfo: ExtendedInterchangeInfo = {
 
 const getMockStationInfo = (within: number, outStation: number, end?: Direction): StationInfo => {
     return {
-        name: ['ZH name', 'EN name'],
+        localisedName: { zh: 'ZH name', en: 'EN name' },
         parents: end === Direction.left ? ['linestart'] : ['stn-par'],
         children: end === Direction.right ? ['lineend'] : ['stn-child'],
         transfer: {

@@ -1,4 +1,5 @@
 import { Theme } from '@railmapgen/rmg-palette-resources';
+import { Translation } from '@railmapgen/rmg-translate';
 
 /**
  * At least one key should exist in Partial
@@ -112,8 +113,10 @@ export interface StationInfo {
     /**
      * Station name in two languages.
      */
-    name: Name;
-    secondaryName?: Name;
+    // name?: Name;
+    // secondaryName?: Name;
+    localisedName: Translation;
+    localisedSecondaryName?: Translation;
     /**
      * Station number. (GZMTR specific)
      */

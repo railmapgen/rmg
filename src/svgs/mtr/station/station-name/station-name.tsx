@@ -1,8 +1,9 @@
 import { memo, useEffect, useRef } from 'react';
-import { Direction, Name } from '../../../../constants/constants';
+import { Direction } from '../../../../constants/constants';
+import { Translation } from '@railmapgen/rmg-translate';
 
 interface StationNameProps {
-    stnName: Name;
+    stnName: Translation;
     onUpdate?: (bBox: SVGRect) => void;
     align?: Direction;
 }
@@ -12,6 +13,7 @@ export const FONTS = ['MyriadPro-Semibold', 'Vegur-Bold', 'GenYoMinTW-SB'];
 export default memo(
     function StationName(props: StationNameProps) {
         const { stnName, onUpdate, align } = props;
+        const { zh: zhName = '', en: enName = '' } = stnName;
 
         const nameEl = useRef<SVGGElement>(null);
 
@@ -25,7 +27,7 @@ export default memo(
             const abortController = new AbortController();
             updateNameBBox();
             document.fonts
-                .load('12px ' + FONTS.join(', '), stnName.join(''))
+                .load('12px ' + FONTS.join(', '), zhName + enName)
                 .then()
                 .finally(() => {
                     setTimeout(() => {
@@ -55,10 +57,10 @@ export default memo(
         return (
             <g ref={nameEl} textAnchor={getTextAnchor(align)}>
                 <text className="rmg-name__zh" fontSize={18} transform="scale(1,0.97)">
-                    {stnName[0]}
+                    {zhName}
                 </text>
 
-                {stnName[1].split('\\').map((txt, i) => (
+                {enName.split('\\').map((txt, i) => (
                     <text key={i} className="rmg-name__en" fontSize={10} dy={getDy(i)}>
                         {txt}
                     </text>
@@ -67,5 +69,5 @@ export default memo(
         );
     },
     (prevProps, nextProps) =>
-        prevProps.stnName.toString() === nextProps.stnName.toString() && prevProps.align === nextProps.align
+        JSON.stringify(prevProps.stnName) === JSON.stringify(nextProps.stnName) && prevProps.align === nextProps.align
 );

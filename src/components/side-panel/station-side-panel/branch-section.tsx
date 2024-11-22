@@ -24,7 +24,10 @@ export default function BranchSection() {
 
     const getFirstStationOptions = (direction: Direction) => {
         return (direction === Direction.left ? parents : children).reduce<Record<string, string>>(
-            (acc, cur) => ({ ...acc, [cur]: stationList[cur].name.join(' ') }),
+            (acc, cur) => ({
+                ...acc,
+                [cur]: stationList[cur].localisedName.zh + '/' + stationList[cur].localisedName.en,
+            }),
             {}
         );
     };

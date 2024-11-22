@@ -67,9 +67,9 @@ const InfoMTR = () => {
         customisedMTRDestination.terminal !== false
             ? customisedMTRDestination.terminal
             : [
-                  validDestinationIds.map(stnId => stationList[stnId].name[0]).join('/'),
+                  validDestinationIds.map(stnId => stationList[stnId].localisedName.zh).join('/'),
                   validDestinationIds
-                      .map(stnId => stationList[stnId].name[1])
+                      .map(stnId => stationList[stnId].localisedName.en)
                       .join('/')
                       .replace('\\', ' '),
               ];

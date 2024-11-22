@@ -1,5 +1,10 @@
 import { Box, Heading } from '@chakra-ui/react';
-import { updateStationName, updateStationNum, updateStationSecondaryName } from '../../../redux/param/action';
+import {
+    toggleStationSecondaryName,
+    updateStationName,
+    updateStationNum,
+    updateStationSecondaryName,
+} from '../../../redux/param/action';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
 import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
@@ -12,7 +17,9 @@ export default function InfoSection() {
     const selectedStation = useRootSelector(state => state.app.selectedStation);
     console.log('InfoSection:: Rendering for', selectedStation);
     const style = useRootSelector(state => state.param.style);
-    const { num, name, secondaryName } = useRootSelector(state => state.param.stn_list[selectedStation]);
+    const { num, localisedName, localisedSecondaryName } = useRootSelector(
+        state => state.param.stn_list[selectedStation]
+    );
 
     const fields: RmgFieldsField[] = [
         {
@@ -26,14 +33,14 @@ export default function InfoSection() {
         {
             type: 'input',
             label: t('Chinese name'),
-            value: name[0],
-            onChange: (value: string) => dispatch(updateStationName(selectedStation, [value, name[1]])),
+            value: localisedName.zh ?? '',
+            onChange: (value: string) => dispatch(updateStationName(selectedStation, 'zh', value)),
         },
         {
             type: 'input',
             label: t('English name'),
-            value: name[1],
-            onChange: (value: string) => dispatch(updateStationName(selectedStation, [name[0], value])),
+            value: localisedName.en ?? '',
+            onChange: (value: string) => dispatch(updateStationName(selectedStation, 'en', value)),
         },
         {
             type: 'custom',
@@ -46,10 +53,8 @@ export default function InfoSection() {
                             { label: t('No'), value: false },
                         ] as { label: string; value: boolean }[]
                     }
-                    defaultValue={!!secondaryName}
-                    onChange={flag =>
-                        dispatch(updateStationSecondaryName(selectedStation, flag ? ['', ''] : undefined))
-                    }
+                    defaultValue={!!localisedSecondaryName}
+                    onChange={flag => dispatch(toggleStationSecondaryName(selectedStation, flag))}
                 />
             ),
             hidden: ![RmgStyle.GZMTR].includes(style),
@@ -57,20 +62,18 @@ export default function InfoSection() {
         {
             type: 'input',
             label: t('StationSidePanel.info.zhSecondary'),
-            value: secondaryName ? secondaryName[0] : '',
+            value: localisedSecondaryName?.zh ?? '',
             placeholder: '1号航站楼',
-            onChange: (value: string) =>
-                dispatch(updateStationSecondaryName(selectedStation, [value, secondaryName ? secondaryName[1] : ''])),
-            hidden: !secondaryName || ![RmgStyle.GZMTR].includes(style),
+            onChange: (value: string) => dispatch(updateStationSecondaryName(selectedStation, 'zh', value)),
+            hidden: !localisedSecondaryName || ![RmgStyle.GZMTR].includes(style),
         },
         {
             type: 'input',
             label: t('StationSidePanel.info.enSecondary'),
-            value: secondaryName ? secondaryName[1] : '',
+            value: localisedSecondaryName?.en ?? '',
             placeholder: 'Terminal 1',
-            onChange: (value: string) =>
-                dispatch(updateStationSecondaryName(selectedStation, [secondaryName ? secondaryName[0] : '', value])),
-            hidden: !secondaryName || ![RmgStyle.GZMTR].includes(style),
+            onChange: (value: string) => dispatch(updateStationSecondaryName(selectedStation, 'en', value)),
+            hidden: !localisedSecondaryName || ![RmgStyle.GZMTR].includes(style),
         },
     ];
 

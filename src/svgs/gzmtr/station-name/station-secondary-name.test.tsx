@@ -18,7 +18,7 @@ describe('StationSecondaryName', () => {
     it('Can shift parentheses to expected position', () => {
         render(
             <svg>
-                <StationSecondaryName stnName={['1号航站楼', 'Terminal 1']} onUpdate={onUpdate} />
+                <StationSecondaryName stnName={{ zh: '1号航站楼', en: 'Terminal 1' }} onUpdate={onUpdate} />
             </svg>
         );
 

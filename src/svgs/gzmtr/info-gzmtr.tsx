@@ -1,9 +1,10 @@
 import { Fragment, SVGProps, useEffect, useRef, useState } from 'react';
 import { StationNumber } from '@railmapgen/svg-assets/gzmtr';
-import { CanvasType, Name, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
+import { CanvasType, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import CurrentStationName, { CurrentStationSecondaryName } from './current-station-name';
 import ArrowGzmtr from './arrow-gzmtr';
+import { Translation } from '@railmapgen/rmg-translate';
 
 const InfoGZMTR = () => {
     const {
@@ -20,6 +21,7 @@ const InfoGZMTR = () => {
 
     const [nameBBox, setNameBBox] = useState({ width: 0 } as SVGRect);
 
+    const enNameRows = curStnInfo.localisedName.en?.split('\\')?.length ?? 1;
     const nextStnId = curStnInfo[direction === ShortDirection.left ? 'parents' : 'children'];
 
     const otisTransforms = {
@@ -30,15 +32,11 @@ const InfoGZMTR = () => {
     const transforms = {
         nameGroup: {
             x: svgWidths.runin / 2,
-            y:
-                0.5 * svgHeight -
-                50 -
-                (curStnInfo.name[1].split('\\').length - 1) * 18 -
-                (curStnInfo.secondaryName ? 29 : 0),
+            y: 0.5 * svgHeight - 50 - (enNameRows - 1) * 18 - (curStnInfo.localisedSecondaryName ? 29 : 0),
         },
         secondaryName: {
             x: 0,
-            y: 70 + curStnInfo.name[1].split('\\').length * 36,
+            y: 70 + enNameRows * 36,
         },
     };
 
@@ -46,10 +44,10 @@ const InfoGZMTR = () => {
         <g>
             <g transform={infoPanelType === PanelTypeGZMTR.gz2otis ? otisTransforms.name : ''}>
                 <g textAnchor="middle" transform={`translate(${transforms.nameGroup.x},${transforms.nameGroup.y})`}>
-                    <CurrentStationName stnName={curStnInfo.name} onUpdate={setNameBBox} />
-                    {curStnInfo.secondaryName && (
+                    <CurrentStationName stnName={curStnInfo.localisedName} onUpdate={setNameBBox} />
+                    {curStnInfo.localisedSecondaryName && (
                         <CurrentStationSecondaryName
-                            secondaryName={curStnInfo.secondaryName}
+                            secondaryName={curStnInfo.localisedSecondaryName}
                             transform={`translate(${transforms.secondaryName.x},${transforms.secondaryName.y})`}
                         />
                     )}
@@ -65,8 +63,8 @@ const InfoGZMTR = () => {
                         ['--translate-y' as any]: `${
                             0.5 * svgHeight -
                             30 -
-                            (curStnInfo.name[1].split('\\').length - 1) * 18 -
-                            (curStnInfo.secondaryName ? 58 / 2 : 0)
+                            (enNameRows - 1) * 18 -
+                            (curStnInfo.localisedSecondaryName ? 58 / 2 : 0)
                         }px`,
                         transform: 'translate(var(--translate-x, 800px), var(--translate-y, 145px))',
                     }}
@@ -94,15 +92,16 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
     const svgWidths = useRootSelector(store => store.param.svgWidth);
     const direction = useRootSelector(store => store.param.direction);
     const nextInfo = useRootSelector(store => store.param.stn_list[nextId]);
-    const { name, secondaryName } = nextInfo;
+    const { localisedName, localisedSecondaryName } = nextInfo;
+    const { zh: zhName = '', en: enName = '' } = localisedName;
 
     const [nextBBox, setNextBBox] = useState({ width: 0 } as DOMRect);
     const nextNameEl = useRef<SVGGElement | null>(null);
     useEffect(() => {
         if (nextNameEl.current) setNextBBox(nextNameEl.current.getBBox());
-    }, [name.toString()]);
+    }, [zhName, enName]);
 
-    const nextNameZHCount = name[0].length;
+    const nextNameZHCount = zhName.length;
     const nameBcrX = (svgWidths[CanvasType.RunIn] - nameBBox.width) / 2;
 
     return (
@@ -139,17 +138,17 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
                     }}
                 >
                     <text className="rmg-name__zh" fontSize={35}>
-                        {name[0]}
+                        {zhName}
                     </text>
                     <g fontSize={17}>
-                        {name[1].split('\\').map((txt: string, i: number) => (
+                        {enName.split('\\').map((txt: string, i: number) => (
                             <text className="rmg-name__en" dy={30 + i * 17} key={i}>
                                 {txt}
                             </text>
                         ))}
                     </g>
                 </g>
-                {secondaryName && (
+                {localisedSecondaryName && (
                     <g
                         textAnchor="middle"
                         style={{
@@ -162,8 +161,8 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
                         }}
                     >
                         <BigNextSec
-                            secName={secondaryName}
-                            transform={`translate(${nextBBox.width / 2},${30 + name[1].split('\\').length * 17 + 5})`}
+                            secName={localisedSecondaryName}
+                            transform={`translate(${nextBBox.width / 2},${30 + enName.split('\\').length * 17 + 5})`}
                         />
                     </g>
                 )}
@@ -195,14 +194,15 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
     );
 };
 
-const BigNextSec = (props: { secName: Name } & SVGProps<SVGGElement>) => {
+const BigNextSec = (props: { secName: Translation } & SVGProps<SVGGElement>) => {
     const { secName, ...others } = props;
+    const { zh, en } = secName;
 
     const nameEl = useRef<SVGGElement | null>(null);
     const [bBox, setBBox] = useState({ x: 0, width: 0 } as DOMRect);
     useEffect(() => {
         if (nameEl.current) setBBox(nameEl.current.getBBox());
-    }, [props.secName.toString()]);
+    }, [zh, en]);
 
     return (
         <g {...others}>
@@ -216,10 +216,10 @@ const BigNextSec = (props: { secName: Name } & SVGProps<SVGGElement>) => {
             </g>
             <g ref={nameEl}>
                 <text className="rmg-name__zh" fontSize={18}>
-                    {secName[0]}
+                    {zh}
                 </text>
                 <text className="rmg-name__en" fontSize={10} dy={15}>
-                    {secName[1]}
+                    {en}
                 </text>
             </g>
         </g>
@@ -233,7 +233,7 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
     const direction = useRootSelector(store => store.param.direction);
     const stationList = useRootSelector(store => store.param.stn_list);
 
-    const nextNames = nextIds.map(id => stationList[id].name);
+    const nextNames = nextIds.map(id => stationList[id].localisedName);
     const [nextBBox, setNextBBox] = useState({ width: 0 } as DOMRect);
     const nextNameEls = useRef<(SVGGElement | null)[]>([]);
     useEffect(() => {
@@ -266,7 +266,7 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
         )
     );
 
-    const nextNameZHCount = Math.max(...nextNames.map(names => names[0].length));
+    const nextNameZHCount = Math.max(...nextNames.map(names => names.zh?.length ?? 0));
     const nameBcrX = (svgWidths[CanvasType.RunIn] - nameBBox.width) / 2;
 
     return (
@@ -299,19 +299,19 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                                             : `${svgWidths[CanvasType.RunIn] - 45 - nextBBox.width}px`,
                                 }}
                             >
-                                <text className="rmg-name__zh">{name[0]}</text>
-                                {name[1].split('\\').map((txt, j) => (
+                                <text className="rmg-name__zh">{name.zh}</text>
+                                {name.en?.split('\\')?.map((txt, j) => (
                                     <text key={j} className="rmg-name__en" y={22 + j * 13}>
                                         {txt}
                                     </text>
                                 ))}
                                 <text className="rmg-name__zh" y={-35}>
-                                    {validEnds[i].map(s => stationList[s].name[0]).join('/') + '方向'}
+                                    {validEnds[i].map(s => stationList[s].localisedName.zh).join('/') + '方向'}
                                 </text>
                                 <text className="rmg-name__en rmg-name__gzmtr--next2-dest" y={-20}>
                                     {'Towards ' +
                                         validEnds[i]
-                                            .map(s => stationList[s].name[1])
+                                            .map(s => stationList[s].localisedName.en)
                                             .join('/')
                                             .replace('\\', ' ')}
                                 </text>
