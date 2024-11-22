@@ -3,13 +3,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { useRootDispatch, useRootSelector } from '../../redux';
 import { ColDef, SelectionChangedEvent } from 'ag-grid-community';
-import { Name, RmgStyle, SidePanelMode, StationInfo, StationTransfer } from '../../constants/constants';
+import { RmgStyle, SidePanelMode, StationInfo, StationTransfer } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { HStack } from '@chakra-ui/react';
 import { setIsShareTrackEnabled, setSelectedStation, setSidePanelMode } from '../../redux/app/app-slice';
 import { getRowSpanForColine } from '../../redux/param/coline-action';
 import GzmtrStationCode from './gzmtr-station-code';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
+import { Translation } from '@railmapgen/rmg-translate';
 
 interface StationAgGridProps {
     branchIndex: number;
@@ -59,22 +60,22 @@ export default function StationAgGrid(props: StationAgGridProps) {
             },
             {
                 headerName: t('Chinese name'),
-                field: 'name',
+                field: 'localisedName',
                 valueFormatter: ({ value, data }) =>
-                    value[0] +
-                    (style === RmgStyle.GZMTR && data?.secondaryName && data?.secondaryName[0]
-                        ? ` (${data.secondaryName[0]})`
+                    value.zh +
+                    (style === RmgStyle.GZMTR && data?.localisedSecondaryName?.zh
+                        ? ` (${data.localisedSecondaryName.zh})`
                         : ''),
             },
             {
                 headerName: t('English name'),
-                field: 'name',
-                cellRenderer: ({ value, data }: { value: Name; data: RowDataType }) => (
+                field: 'localisedName',
+                cellRenderer: ({ value, data }: { value: Translation; data: RowDataType }) => (
                     <RmgMultiLineString
                         text={
-                            value[1] +
-                            (style === RmgStyle.GZMTR && data.secondaryName && data.secondaryName[1]
-                                ? ` (${data.secondaryName[1]})`
+                            value.en +
+                            (style === RmgStyle.GZMTR && data.localisedSecondaryName?.en
+                                ? ` (${data.localisedSecondaryName.en})`
                                 : '')
                         }
                     />

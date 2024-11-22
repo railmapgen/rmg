@@ -18,11 +18,11 @@ export default function SidePanel() {
     const dispatch = useDispatch();
 
     const { sidePanelMode, selectedStation, paletteAppClipInput } = useRootSelector(state => state.app);
-    const name = useRootSelector(state => state.param.stn_list[selectedStation]?.name);
+    const name = useRootSelector(state => state.param.stn_list[selectedStation]?.localisedName);
 
     const mode: Record<SidePanelMode, { header: ReactNode; body?: ReactNode; footer?: ReactNode }> = {
         STATION: {
-            header: <RmgMultiLineString text={name?.join(' - ') || ''} />,
+            header: <RmgMultiLineString text={name?.zh + '/' + name?.en || ''} />,
             body: <StationSidePanel />,
             footer: <StationSidePanelFooter />,
         },

@@ -150,7 +150,7 @@ export default function DownloadModal(props: DownloadModalProps) {
             // (but not for gzmtr and have no idea why)
             document.body.appendChild(elem);
 
-            const filename = `rmg.${stnId}.${stationList[stnId].name[0]}.${stationList[stnId].name[1]}`.replaceAll(
+            const filename = `rmg.${stnId}.${stationList[stnId].localisedName.en}`.replaceAll(
                 /\\|\/|\||\*|:|\?|<|>|"/g,
                 '_'
             ); // forbidden characters on windows \ / : * ? " < > |

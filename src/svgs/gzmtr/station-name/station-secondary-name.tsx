@@ -1,14 +1,15 @@
 import { SVGProps, useEffect, useRef, useState } from 'react';
-import { Name } from '../../../constants/constants';
+import { Translation } from '@railmapgen/rmg-translate';
 
 interface StationSecondaryNameProps extends SVGProps<SVGGElement> {
-    stnName: Name;
+    stnName: Translation;
     onUpdate?: (bBox: SVGRect) => void;
     passed?: boolean;
 }
 
 export default function StationSecondaryName(props: StationSecondaryNameProps) {
     const { stnName, onUpdate, passed, ...others } = props;
+    const { zh: zhName = '', en: enName = '' } = stnName;
 
     const nameEl = useRef<SVGGElement | null>(null);
     const [bBox, setBBox] = useState({ x: 0, width: 0 } as SVGRect);
@@ -21,7 +22,7 @@ export default function StationSecondaryName(props: StationSecondaryNameProps) {
         }
     }, [stnName.toString()]);
 
-    if (!stnName[0] && !stnName[1]) {
+    if (!zhName && !enName) {
         return <></>;
     }
 
@@ -37,10 +38,10 @@ export default function StationSecondaryName(props: StationSecondaryNameProps) {
             </g>
             <g ref={nameEl} textAnchor="middle">
                 <text className="rmg-name__zh" fontSize={13}>
-                    {stnName[0]}
+                    {zhName}
                 </text>
                 <text dy={10} className="rmg-name__en" fontSize={6.5}>
-                    {stnName[1]}
+                    {enName}
                 </text>
             </g>
         </g>

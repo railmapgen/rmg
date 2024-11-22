@@ -13,7 +13,7 @@ export function DoubleDestinations(props: DoubleDestinationsProps) {
     const direction = useRootSelector(store => store.param.direction);
     const stationList = useRootSelector(store => store.param.stn_list);
 
-    const charCounts = destIds.map(stnId => stationList[stnId].name[0].length);
+    const charCounts = destIds.map(stnId => stationList[stnId].localisedName.zh?.length ?? 0);
     const minCharCounts = Math.min(...charCounts);
     const charSpacing =
         minCharCounts > 1 && charCounts[0] !== charCounts[1]
@@ -35,7 +35,7 @@ export function DoubleDestinations(props: DoubleDestinationsProps) {
                             letterSpacing={isLonger ? '0em' : `${charSpacing}em`}
                             dx={!offsetRequired ? '0em' : `${charSpacing}em`}
                         >
-                            {stationList[id].name[0]}
+                            {stationList[id].localisedName.zh}
                         </text>
                         <text
                             className="rmg-name__en"
@@ -43,7 +43,7 @@ export function DoubleDestinations(props: DoubleDestinationsProps) {
                             x={direction === ShortDirection.left ? 0 : -75}
                             y={-1 + 42 * i}
                         >
-                            {'Towards ' + stationList[id].name[1].replace('\\', ' ')}
+                            {'Towards ' + stationList[id].localisedName.en?.replace('\\', ' ')}
                         </text>
                     </Fragment>
                 );

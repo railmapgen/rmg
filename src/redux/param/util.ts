@@ -37,7 +37,8 @@ const initLineName = (language: LanguageCode): Name => {
 };
 
 export const initStationInfo = (id: string): StationInfo => ({
-    name: ['未命名 ' + id, 'Unnamed ' + id],
+    localisedName: { zh: '未命名 ' + id, en: 'Unnamed ' + id },
+    localisedSecondaryName: {},
     num: '00',
     services: [Services.local],
     parents: [],
@@ -55,10 +56,10 @@ export const initStationInfo = (id: string): StationInfo => ({
 export const initParam = (style: RmgStyle, language: LanguageCode): RMGParam => {
     // init station info
     const lineStartInfo = initStationInfo('linestart');
-    lineStartInfo.name = ['LEFT END', 'LEFT END'];
+    lineStartInfo.localisedName = { en: 'LEFT END' };
 
     const lineEndInfo = initStationInfo('lineend');
-    lineEndInfo.name = ['RIGHT END', 'RIGHT END'];
+    lineEndInfo.localisedName = { en: 'RIGHT END' };
 
     const station1Id = nanoid(6);
     const station1Info = initStationInfo(station1Id);

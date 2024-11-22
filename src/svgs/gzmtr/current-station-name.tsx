@@ -1,8 +1,8 @@
 import { memo, SVGProps, useEffect, useRef, useState } from 'react';
-import { Name } from '../../constants/constants';
+import { Translation } from '@railmapgen/rmg-translate';
 
 interface CurrentStationNameProps {
-    stnName: Name;
+    stnName: Translation;
     onUpdate?: (bBox: SVGRect) => void;
 }
 
@@ -21,10 +21,10 @@ export default memo(
         return (
             <g ref={nameEl}>
                 <text className="rmg-name__zh" fontSize={90}>
-                    {stnName[0]}
+                    {stnName.zh}
                 </text>
                 <g fontSize={36}>
-                    {stnName[1].split('\\').map((txt, i) => (
+                    {stnName.en?.split('\\')?.map((txt, i) => (
                         <text className="rmg-name__en" key={i} dy={70 + i * 36}>
                             {txt}
                         </text>
@@ -33,11 +33,11 @@ export default memo(
             </g>
         );
     },
-    (prevProps, nextProps) => prevProps.stnName.toString() === nextProps.stnName.toString()
+    (prevProps, nextProps) => JSON.stringify(prevProps.stnName) === JSON.stringify(nextProps.stnName)
 );
 
 interface CurrentStationSecondaryNameProps extends SVGProps<SVGGElement> {
-    secondaryName: Name;
+    secondaryName: Translation;
 }
 
 export const CurrentStationSecondaryName = (props: CurrentStationSecondaryNameProps) => {
@@ -62,10 +62,10 @@ export const CurrentStationSecondaryName = (props: CurrentStationSecondaryNamePr
             </g>
             <g ref={nameEl} textAnchor="middle">
                 <text className="rmg-name__zh" fontSize={26}>
-                    {secondaryName[0]}
+                    {secondaryName.zh}
                 </text>
                 <text dy={22} className="rmg-name__en" fontSize={14}>
-                    {secondaryName[1]}
+                    {secondaryName.en}
                 </text>
             </g>
         </g>

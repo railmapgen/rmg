@@ -4,6 +4,7 @@ import {
     getMatchedThemesWithPaths,
     updateThemes,
     v5_10_updateInterchangeGroup,
+    v5_17_updateLocalisedName,
 } from './param-updater-utils';
 import { vi } from 'vitest';
 import { waitForMs } from './utils';
@@ -94,6 +95,42 @@ describe('ParamUpdaterUtils', () => {
         expect(param.stn_list.stn0.transfer.groups[0]).toEqual({
             lines: [{ theme: ['hongkong', 'twl', '#E2231A', MonoColour.white], name: ['荃灣綫', 'Tsuen Wan Line'] }],
         });
+    });
+
+    it('v5_17_updateLocalisedName', () => {
+        const param: Record<string, any> = {
+            stn_list: {
+                stn0: {
+                    name: ['車站0', 'Station 0'],
+                    secondaryName: ['次要站名0', 'Additional Name 0'],
+                },
+            },
+        };
+        v5_17_updateLocalisedName(param);
+
+        expect(param.stn_list.stn0.localisedName).toEqual({ zh: '車站0', en: 'Station 0' });
+        expect(param.stn_list.stn0.localisedSecondaryName).toEqual({
+            zh: '次要站名0',
+            en: 'Additional Name 0',
+        });
+        expect(param.stn_list.stn0).not.toHaveProperty('name');
+        expect(param.stn_list.stn0).not.toHaveProperty('secondaryName');
+    });
+
+    it('v5_17_updateLocalisedName - no secondary name', () => {
+        const param: Record<string, any> = {
+            stn_list: {
+                stn0: {
+                    name: ['車站0', 'Station 0'],
+                },
+            },
+        };
+        v5_17_updateLocalisedName(param);
+
+        expect(param.stn_list.stn0.localisedName).toEqual({ zh: '車站0', en: 'Station 0' });
+        expect(param.stn_list.stn0).not.toHaveProperty('localisedSecondaryName');
+        expect(param.stn_list.stn0).not.toHaveProperty('name');
+        expect(param.stn_list.stn0).not.toHaveProperty('secondaryName');
     });
 
     it('Can find all matched themes with paths as expected', () => {

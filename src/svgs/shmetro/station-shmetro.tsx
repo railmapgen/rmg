@@ -1,7 +1,8 @@
 import { ColourHex } from '@railmapgen/rmg-palette-resources';
-import { ExtendedInterchangeInfo, Facilities, InterchangeGroup, Name } from '../../constants/constants';
+import { ExtendedInterchangeInfo, Facilities, InterchangeGroup } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import { forwardRef, memo, Ref, SVGProps, useEffect, useMemo, useRef, useState } from 'react';
+import { Translation } from '@railmapgen/rmg-translate';
 
 interface Props {
     stnId: string;
@@ -22,7 +23,7 @@ const StationSHMetro = (props: Props) => {
     const branchNameDX = loop
         ? 0
         : (stnInfo.parents.length > 1 || stnInfo.children.length > 1
-              ? 8 + 12 * stnInfo.name[1].split('\\').length
+              ? 8 + 12 * (stnInfo.localisedName.en?.split('\\')?.length ?? 1)
               : 0) * (direction === 'r' ? -1 : 1);
 
     let stationIconStyle: string;
@@ -59,7 +60,7 @@ const StationSHMetro = (props: Props) => {
             />
             <g transform={`translate(${dx},${dy})rotate(${dr})`}>
                 <StationNameGElement
-                    name={stnInfo.name}
+                    name={stnInfo.localisedName}
                     groups={stnInfo.transfer.groups}
                     stnState={stnState}
                     direction={direction}
@@ -77,7 +78,7 @@ const StationSHMetro = (props: Props) => {
 export default StationSHMetro;
 
 interface StationNameGElementProps {
-    name: Name;
+    name: Translation;
     groups: InterchangeGroup[];
     stnState: -1 | 0 | 1;
     direction: 'l' | 'r';
@@ -159,17 +160,18 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 };
 
 const StationName = forwardRef(function StationName(
-    props: { stnName: Name; oneLine: boolean; directionPolarity: 1 | -1 } & SVGProps<SVGGElement>,
+    props: { stnName: Translation; oneLine: boolean; directionPolarity: 1 | -1 } & SVGProps<SVGGElement>,
     ref: Ref<SVGGElement>
 ) {
     const { stnName, oneLine, directionPolarity, ...others } = props;
+    const { zh: zhName = '', en: enName = '' } = stnName;
 
     const zhEl = useRef<SVGGElement | null>(null);
     const [enDx, setEnDx] = useState(0);
     useEffect(() => {
         if (oneLine && zhEl.current) setEnDx(zhEl.current.getBBox().width + 5);
         else setEnDx(0);
-    }, [...stnName, oneLine]);
+    }, [stnName.zh, stnName.en, oneLine]);
 
     const [ZH_HEIGHT, EN_HEIGHT] = [20, 8];
 
@@ -179,13 +181,13 @@ const StationName = forwardRef(function StationName(
                 () => (
                     <>
                         <g ref={zhEl}>
-                            {stnName[0].split('\\').map((txt, i, arr) => (
+                            {zhName.split('\\').map((txt, i, arr) => (
                                 <text
                                     key={i}
                                     className="rmg-name__zh rmg-outline"
                                     dy={
                                         (arr.length - 1 - i) * -ZH_HEIGHT +
-                                        (oneLine ? EN_HEIGHT : (stnName[1].split('\\').length - 1) * -EN_HEIGHT)
+                                        (oneLine ? EN_HEIGHT : (enName.split('\\').length - 1) * -EN_HEIGHT)
                                     }
                                 >
                                     {txt}
@@ -193,7 +195,7 @@ const StationName = forwardRef(function StationName(
                             ))}
                         </g>
                         <g fontSize={8} transform={`translate(${enDx * directionPolarity},0)`}>
-                            {stnName[1].split('\\').map((txt, i, arr) => (
+                            {enName.split('\\').map((txt, i, arr) => (
                                 <text
                                     key={i}
                                     className="rmg-name__en rmg-outline"
@@ -205,7 +207,7 @@ const StationName = forwardRef(function StationName(
                         </g>
                     </>
                 ),
-                [...stnName, oneLine, enDx, directionPolarity]
+                [zhName, enName, oneLine, enDx, directionPolarity]
             )}
         </g>
     );

@@ -1,6 +1,7 @@
 import { SVGProps, useState } from 'react';
-import { Direction, Facilities, Name, StationState } from '../../../../constants/constants';
+import { Direction, Facilities, StationState } from '../../../../constants/constants';
 import StationName from './station-name';
+import { Translation } from '@railmapgen/rmg-translate';
 
 /**
  * Top (in pixels) of station's Chinese name.
@@ -32,7 +33,7 @@ export const NAME_FULL_HEIGHT = -NAME_ZH_TOP + NAME_ZH_EN_GAP + NAME_EN_HEIGHT +
 const STN_NAME_LINE_GAP = 14;
 
 interface StationNameWrapperProps extends SVGProps<SVGGElement> {
-    stationName: Name;
+    stationName: Translation;
     stationState: StationState;
     facility?: Facilities;
     lower?: boolean;
@@ -60,7 +61,7 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
         }
     };
 
-    const nameEnRows = stationName[1].split('\\').length;
+    const nameEnRows = stationName.en?.split('\\')?.length ?? 1;
     const transforms = {
         g: {
             x: align ? (align === Direction.right ? -3 : 3) : 0,

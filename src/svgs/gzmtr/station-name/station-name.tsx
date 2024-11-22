@@ -1,14 +1,15 @@
 import { memo, useEffect, useRef } from 'react';
-import { Name } from '../../../constants/constants';
+import { Translation } from '@railmapgen/rmg-translate';
 
 interface StationNameProps {
-    stnName: Name;
+    stnName: Translation;
     onUpdate?: (bBox: SVGRect) => void;
 }
 
 export default memo(
     function StationName(props: StationNameProps) {
         const { stnName, onUpdate } = props;
+        const { zh: zhName = '', en: enName = '' } = stnName;
 
         const nameEl = useRef<SVGGElement | null>(null);
 
@@ -21,10 +22,10 @@ export default memo(
         return (
             <g ref={nameEl}>
                 <text className="rmg-name__zh" fontSize={18}>
-                    {stnName[0]}
+                    {zhName}
                 </text>
                 <g fontSize={10.5}>
-                    {stnName[1].split('\\').map((txt, i) => (
+                    {enName.split('\\').map((txt, i) => (
                         <text key={i} className="rmg-name__en" dy={16 + i * 11}>
                             {txt}
                         </text>
@@ -33,5 +34,5 @@ export default memo(
             </g>
         );
     },
-    (prevProps, nextProps) => prevProps.stnName.toString() === nextProps.stnName.toString()
+    (prevProps, nextProps) => JSON.stringify(prevProps.stnName) === JSON.stringify(nextProps.stnName)
 );

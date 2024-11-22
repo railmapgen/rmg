@@ -1,11 +1,12 @@
 /* eslint @typescript-eslint/no-non-null-assertion: 0 */
 import { memo, SVGProps, useMemo } from 'react';
-import { CanvasType, Name, StationDict } from '../../constants/constants';
+import { CanvasType, StationDict } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { calculateColineStations } from '../methods/shmetro-coline';
 import SvgWrapper from '../svg-wrapper';
 import PujiangLineDefs from './pujiang-line-filter';
+import { Translation } from '@railmapgen/rmg-translate';
 
 const LINE_WIDTH = 12;
 
@@ -110,16 +111,19 @@ const GeneralStation = (props: RunInGeneralProps) => {
     const terminal = nextStnIds.length === 1 && ['linestart', 'lineend'].includes(nextStnIds[0]);
     const original = prevStnIds.length === 1 && ['linestart', 'lineend'].includes(prevStnIds[0]);
 
-    const nextNames = nextStnIds.map(stnId => stn_list[stnId].name);
-    const prevNames = prevStnIds.map(stnId => stn_list[stnId].name);
+    const nextNames = nextStnIds.map(stnId => stn_list[stnId].localisedName);
+    const prevNames = prevStnIds.map(stnId => stn_list[stnId].localisedName);
+
+    const [{ zh: nextZhName = '', en: nextEnName = '' }] = nextNames;
+    const [{ zh: prevZhName = '', en: prevEnName = '' }] = prevNames;
 
     const nextBranchLineDy =
         (nextStnIds.length > 1
-            ? (nextNames[0][0].split('\\').length - 1) * -50 + (nextNames[0][1].split('\\').length - 1) * -30
+            ? (nextZhName.split('\\').length - 1) * -50 + (nextEnName.split('\\').length - 1) * -30
             : 0) + 10;
     const prevBranchLineDy =
         (prevStnIds.length > 1
-            ? (prevNames[0][0].split('\\').length - 1) * -50 + (prevNames[0][1].split('\\').length - 1) * -30
+            ? (prevZhName.split('\\').length - 1) * -50 + (prevEnName.split('\\').length - 1) * -30
             : 0) + 10;
 
     return (
@@ -447,40 +451,42 @@ const BranchLine = (props: RunInBranchLineProps) => {
 
 const CurrentText = () => {
     const param = useRootSelector(store => store.param);
-    const { name } = param.stn_list[param.current_stn_idx];
+    const { localisedName } = param.stn_list[param.current_stn_idx];
+    const { zh: zhName = '', en: enName = '' } = localisedName;
     return useMemo(
         () => (
             <>
                 <text className="rmg-name__zh rmg-outline" fontSize={112}>
-                    {name[0].replace('\\', '')}
+                    {zhName.replace('\\', '')}
                 </text>
                 <text className="rmg-name__en rmg-outline" fontSize={36} dy={50}>
-                    {name[1].replace('\\', '')}
+                    {enName.replace('\\', '')}
                 </text>
             </>
         ),
-        [...name]
+        [zhName, enName]
     );
 };
 
-const NextText = (props: { nextName: Name } & SVGProps<SVGGElement>) => {
+const NextText = (props: { nextName: Translation } & SVGProps<SVGGElement>) => {
     const { nextName, ...others } = props;
+    const { zh: zhName = '', en: enName = '' } = nextName;
     return (
         <g {...others}>
             {useMemo(
                 () => (
                     <>
-                        {nextName[0].split('\\').map((name, i, array) => (
+                        {zhName.split('\\').map((name, i, array) => (
                             <text
                                 className="rmg-name__zh rmg-outline"
                                 fontSize={48}
                                 key={name}
-                                dy={(array.length - 1 - i) * -50 - (nextName[1].split('\\').length - 1) * 30}
+                                dy={(array.length - 1 - i) * -50 - (enName.split('\\').length - 1) * 30}
                             >
                                 {name}
                             </text>
                         ))}
-                        {nextName[1].split('\\').map((name, i, array) => (
+                        {enName.split('\\').map((name, i, array) => (
                             <text
                                 className="rmg-name__en rmg-outline"
                                 fontSize={24}
@@ -492,7 +498,7 @@ const NextText = (props: { nextName: Name } & SVGProps<SVGGElement>) => {
                         ))}
                     </>
                 ),
-                [...nextName]
+                [zhName, enName]
             )}
         </g>
     );
@@ -500,14 +506,17 @@ const NextText = (props: { nextName: Name } & SVGProps<SVGGElement>) => {
 
 const PrevStn = (props: { stnIds: string[] }) => {
     const param = useRootSelector(store => store.param);
-    const nextNames = props.stnIds.map(stnId => param.stn_list[stnId].name);
+    const prevNames = props.stnIds.map(stnId => param.stn_list[stnId].localisedName);
     const prevHintDy =
         (props.stnIds.length > 1 ? 15 : 125) +
-        nextNames.map(name => name[0].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -50 +
-        nextNames.map(name => name[1].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -30;
+        prevNames.map(name => name.zh?.split('\\')?.length ?? 1).reduce((acc, cur) => acc + cur, -prevNames.length) *
+            -50 +
+        prevNames.map(name => name.en?.split('\\')?.length ?? 1).reduce((acc, cur) => acc + cur, -prevNames.length) *
+            -30;
+    const [{ zh: prevZhName = '', en: prevEnName = '' }] = prevNames;
     const nextBranchTextDy =
         (props.stnIds.length > 1
-            ? (nextNames[0][0].split('\\').length - 1) * -50 + (nextNames[0][1].split('\\').length - 1) * -30
+            ? (prevZhName.split('\\').length - 1) * -50 + (prevEnName.split('\\').length - 1) * -30
             : 0) + 70;
 
     return (
@@ -516,9 +525,9 @@ const PrevStn = (props: { stnIds: string[] }) => {
             textAnchor={param.direction === 'l' ? 'end' : 'start'}
             transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},0)`}
         >
-            <NextText nextName={nextNames[0]} transform="translate(0,183)" />
+            <NextText nextName={prevNames[0]} transform="translate(0,183)" />
             {props.stnIds.length > 1 && (
-                <NextText nextName={nextNames[1]} transform={`translate(0,${nextBranchTextDy})`} />
+                <NextText nextName={prevNames[1]} transform={`translate(0,${nextBranchTextDy})`} />
             )}
             <g transform={`translate(0, ${prevHintDy})`}>
                 <text className="rmg-name__zh rmg-outline" fontSize={22}>
@@ -534,14 +543,17 @@ const PrevStn = (props: { stnIds: string[] }) => {
 
 const NextStn = (props: { stnIds: string[] }) => {
     const param = useRootSelector(store => store.param);
-    const nextNames = props.stnIds.map(stnId => param.stn_list[stnId].name);
+    const nextNames = props.stnIds.map(stnId => param.stn_list[stnId].localisedName);
     const nextHintDy =
         (props.stnIds.length > 1 ? 15 : 125) +
-        nextNames.map(name => name[0].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -50 +
-        nextNames.map(name => name[1].split('\\').length).reduce((acc, cur) => acc + cur, -nextNames.length) * -30;
+        nextNames.map(name => name.zh?.split('\\')?.length ?? 1).reduce((acc, cur) => acc + cur, -nextNames.length) *
+            -50 +
+        nextNames.map(name => name.en?.split('\\')?.length ?? 1).reduce((acc, cur) => acc + cur, -nextNames.length) *
+            -30;
+    const [{ zh: nextZhName = '', en: nextEnName = '' }] = nextNames;
     const nextBranchTextDy =
         (props.stnIds.length > 1
-            ? (nextNames[0][0].split('\\').length - 1) * -50 + (nextNames[0][1].split('\\').length - 1) * -30
+            ? (nextZhName.split('\\').length - 1) * -50 + (nextEnName.split('\\').length - 1) * -30
             : 0) + 70;
 
     return (
@@ -549,10 +561,10 @@ const NextStn = (props: { stnIds: string[] }) => {
             textAnchor={param.direction === 'l' ? 'start' : 'end'}
             transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},0)`}
         >
-            <NextText nextName={param.stn_list[props.stnIds[0]].name} transform="translate(0,183)" />
+            <NextText nextName={param.stn_list[props.stnIds[0]].localisedName} transform="translate(0,183)" />
             {props.stnIds.length > 1 && (
                 <NextText
-                    nextName={param.stn_list[props.stnIds[1]].name}
+                    nextName={param.stn_list[props.stnIds[1]].localisedName}
                     transform={`translate(0,${nextBranchTextDy})`}
                 />
             )}

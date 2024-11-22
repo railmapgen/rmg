@@ -23,7 +23,7 @@ describe('StationNameWrapper', () => {
         const { container } = render(
             <svg>
                 <StationNameWrapper
-                    stationName={['迪士尼', 'Disneyland Resort']}
+                    stationName={{ zh: '迪士尼', en: 'Disneyland Resort' }}
                     stationState={StationState.CURRENT}
                     facility="disney"
                 />
