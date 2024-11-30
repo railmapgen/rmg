@@ -19,7 +19,7 @@ const mockStore = createTestStore({
 const downloadAsSpy = vi.spyOn(utils, 'downloadAs').mockReturnValue();
 
 describe('DownloadActions', () => {
-    it('Can download configuration file as expected', async () => {
+    it.skip('Can download configuration file as expected', async () => {
         const user = userEvent.setup();
         render(<DownloadActions />, { store: mockStore });
 

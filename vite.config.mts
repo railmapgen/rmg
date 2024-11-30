@@ -41,7 +41,7 @@ export default defineConfig({
         setupFiles: './src/setupTests.ts',
         server: {
             deps: {
-                fallbackCJS: true,
+                fallbackCJS: false,
             },
         },
         watch: false,
