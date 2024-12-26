@@ -303,12 +303,12 @@ export const v5_17_updateLocalisedName = (param: Record<string, any>) => {
 export const v5_18_addStationNameSpacingAndSvgWidthPlatform = (param: Record<string, any>) => {
     const { svgWidth } = param;
     if (!(CanvasType.Platform in svgWidth)) {
-        param.svgWidth.platform = 1000;
+        param.svgWidth.platform = 1200;
     }
 
     for (const [stnId, stnInfo] of Object.entries(param.stn_list as Record<string, any>)) {
         const { character_spacing } = stnInfo;
-        if (!character_spacing) {
+        if (character_spacing === undefined) {
             param.stn_list[stnId].character_spacing = 75;
         }
     }
