@@ -160,7 +160,8 @@
             "oneLine": "在一行內展示中英文站名",
             "intPadding": "車站名與換乘線路間的間距",
             "intPaddingApplyGlobal": "將當前的間距應用到所有車站上",
-            "apply": "應用"
+            "apply": "應用",
+            "characterSpacing": "車站名文字間距"
         },
         "footer": {
             "current": "設定為當前車站",
@@ -286,11 +287,13 @@
         "destination": "終點站牌",
         "runin": "當前站名牌",
         "railmap": "幕門路綫圖",
-        "indoor": "車內路綫圖"
+        "indoor": "車內路綫圖",
+        "platform": "站台編號"
     },
     "RmgStyle": {
         "mtr": "港鐵",
         "gzmtr": "廣州地鐵",
-        "shmetro": "上海地鐵"
+        "shmetro": "上海地鐵",
+        "shsubrwy": "上海市域鐵路"
     }
 }

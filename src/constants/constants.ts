@@ -11,6 +11,7 @@ export enum RmgStyle {
     MTR = 'mtr',
     GZMTR = 'gzmtr',
     SHMetro = 'shmetro',
+    SHSuburbanRailway = 'shsubrwy',
 }
 
 export enum CanvasType {
@@ -18,12 +19,14 @@ export enum CanvasType {
     RunIn = 'runin',
     RailMap = 'railmap',
     Indoor = 'indoor',
+    Platform = 'platform',
 }
 
 export const canvasConfig: { [s in RmgStyle]: CanvasType[] } = {
     [RmgStyle.MTR]: [CanvasType.Destination, CanvasType.RailMap],
     [RmgStyle.GZMTR]: [CanvasType.RunIn, CanvasType.RailMap],
     [RmgStyle.SHMetro]: [CanvasType.Destination, CanvasType.RunIn, CanvasType.RailMap, CanvasType.Indoor],
+    [RmgStyle.SHSuburbanRailway]: [CanvasType.Destination, CanvasType.RunIn, CanvasType.Platform],
 };
 
 export enum SidePanelMode {
@@ -154,11 +157,17 @@ export interface StationInfo {
      */
     one_line: boolean;
     /**
-     * Padding between int box and station name. Default to 355 in updateParam.
+     * Padding between int box and station name in shmetro/station.
+     * Default to 355 in updateParam.
      * This is calculated from (svg_height - 200) * 1.414 where typical svg_height
      * is 450 and station element is tilted at a 45-degree angle.
      */
     int_padding: number;
+    /**
+     * Controls spacing between text characters in station names.
+     * Default to 20 in updateParam.
+     */
+    character_spacing: number;
 }
 
 export type StationDict = Record<string, StationInfo>;

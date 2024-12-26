@@ -1,7 +1,7 @@
-import { InterchangeGroup, Name, Note, RMGParam, RmgStyle, StationInfo } from '../constants/constants';
-import { nanoid } from 'nanoid';
 import { MonoColour, Theme, updateTheme } from '@railmapgen/rmg-palette-resources';
 import rmgRuntime, { logger } from '@railmapgen/rmg-runtime';
+import { nanoid } from 'nanoid';
+import { CanvasType, InterchangeGroup, Name, Note, RMGParam, RmgStyle, StationInfo } from '../constants/constants';
 
 export const updateParam = (param: { [x: string]: any }) => {
     // Version 0.10
@@ -253,6 +253,7 @@ export const updateParam = (param: { [x: string]: any }) => {
     // Version pre 5.10
     v5_10_updateInterchangeGroup(param);
     v5_17_updateLocalisedName(param);
+    v5_18_addStationNameSpacingAndSvgWidthPlatform(param);
 
     sanitiseParam(param);
     return param;
@@ -295,6 +296,20 @@ export const v5_17_updateLocalisedName = (param: Record<string, any>) => {
         if (!localisedSecondaryName && secondaryName) {
             param.stn_list[stnId].localisedSecondaryName = { zh: secondaryName[0], en: secondaryName[1] };
             delete param.stn_list[stnId].secondaryName;
+        }
+    }
+};
+
+export const v5_18_addStationNameSpacingAndSvgWidthPlatform = (param: Record<string, any>) => {
+    const { svgWidth } = param;
+    if (!(CanvasType.Platform in svgWidth)) {
+        param.svgWidth.platform = 1000;
+    }
+
+    for (const [stnId, stnInfo] of Object.entries(param.stn_list as Record<string, any>)) {
+        const { character_spacing } = stnInfo;
+        if (!character_spacing) {
+            param.stn_list[stnId].character_spacing = 75;
         }
     }
 };
