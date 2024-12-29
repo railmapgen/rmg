@@ -173,7 +173,8 @@
             "oneLine": "Display Chinese and English in one line",
             "intPadding": "Padding between station name and interchange box",
             "intPaddingApplyGlobal": "Apply current padding to all stations",
-            "apply": "Apply"
+            "apply": "Apply",
+            "characterSpacing": "Station Name Letter Spacing"
         },
         "footer": {
             "current": "Set as current",
@@ -225,12 +226,14 @@
         "destination": "Destination",
         "runin": "Running-in",
         "railmap": "Rail map",
-        "indoor": "Indoor"
+        "indoor": "Indoor",
+        "platform": "Platform Num"
     },
 
     "RmgStyle": {
         "mtr": "MTR",
         "gzmtr": "Guangzhou Metro",
-        "shmetro": "Shanghai Metro"
+        "shmetro": "Shanghai Metro",
+        "shsubrwy": "Shanghai Suburban Railway"
     }
 }

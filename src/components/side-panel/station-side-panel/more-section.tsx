@@ -1,7 +1,11 @@
 import { Box, Heading } from '@chakra-ui/react';
-import { useRootDispatch, useRootSelector } from '../../../redux';
+import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import { useTranslation } from 'react-i18next';
 import { FACILITIES, Facilities, RmgStyle, Services } from '../../../constants/constants';
+import { useRootDispatch, useRootSelector } from '../../../redux';
 import {
+    updateStationCharacterSpacing,
+    updateStationCharacterSpacingToAll,
     updateStationFacility,
     updateStationIntPadding,
     updateStationIntPaddingToAll,
@@ -9,8 +13,6 @@ import {
     updateStationOneLine,
     updateStationServices,
 } from '../../../redux/param/action';
-import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
-import { useTranslation } from 'react-i18next';
 
 export default function MoreSection() {
     const { t } = useTranslation();
@@ -18,7 +20,7 @@ export default function MoreSection() {
 
     const selectedStation = useRootSelector(state => state.app.selectedStation);
     const { style, loop } = useRootSelector(state => state.param);
-    const { services, facility, loop_pivot, one_line, int_padding } = useRootSelector(
+    const { services, facility, loop_pivot, one_line, int_padding, character_spacing } = useRootSelector(
         state => state.param.stn_list[selectedStation]
     );
 
@@ -101,6 +103,27 @@ export default function MoreSection() {
             ),
             oneLine: true,
             hidden: ![RmgStyle.SHMetro].includes(style),
+        },
+        {
+            type: 'input',
+            label: t('StationSidePanel.more.characterSpacing'),
+            value: character_spacing.toString(),
+            validator: val => Number.isInteger(val),
+            onChange: val => dispatch(updateStationCharacterSpacing(selectedStation, Number(val))),
+            hidden: ![RmgStyle.SHSuburbanRailway].includes(style),
+        },
+        {
+            type: 'custom',
+            label: t('StationSidePanel.more.intPaddingApplyGlobal'),
+            component: (
+                <RmgButtonGroup
+                    selections={[{ label: t('StationSidePanel.more.apply'), value: '', disabled: false }]}
+                    defaultValue=""
+                    onChange={() => dispatch(updateStationCharacterSpacingToAll(selectedStation))}
+                />
+            ),
+            oneLine: true,
+            hidden: ![RmgStyle.SHSuburbanRailway].includes(style),
         },
     ];
 

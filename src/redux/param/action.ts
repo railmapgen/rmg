@@ -481,9 +481,31 @@ export const updateStationIntPaddingToAll = (stationId: string) => {
         const stationInfo = getState().param.stn_list[stationId];
         const int_padding = stationInfo.int_padding;
 
-        const stationList = JSON.parse(JSON.stringify(getState().param.stn_list)) as StationDict;
+        const stationList = structuredClone(getState().param.stn_list);
         Object.values(stationList).forEach(stnInfo => {
             stnInfo.int_padding = int_padding;
+        });
+
+        dispatch(setStationsBulk(stationList));
+    };
+};
+
+export const updateStationCharacterSpacing = (stationId: string, character_spacing: number) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+
+        dispatch(setStation(stationId, { ...stationInfo, character_spacing }));
+    };
+};
+
+export const updateStationCharacterSpacingToAll = (stationId: string) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+        const character_spacing = stationInfo.character_spacing;
+
+        const stationList = structuredClone(getState().param.stn_list);
+        Object.values(stationList).forEach(stnInfo => {
+            stnInfo.character_spacing = character_spacing;
         });
 
         dispatch(setStationsBulk(stationList));

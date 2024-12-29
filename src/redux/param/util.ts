@@ -51,6 +51,7 @@ export const initStationInfo = (id: string): StationInfo => ({
     loop_pivot: false,
     one_line: true,
     int_padding: 355,
+    character_spacing: 75,
 });
 
 export const initParam = (style: RmgStyle, language: LanguageCode): RMGParam => {
@@ -86,6 +87,7 @@ export const initParam = (style: RmgStyle, language: LanguageCode): RMGParam => 
             runin: 1200,
             railmap: 1200,
             indoor: 1200,
+            platform: 1200,
         },
         svg_height: 300,
         style: style,

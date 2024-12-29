@@ -1,12 +1,13 @@
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
+import { vi } from 'vitest';
 import {
     dottieGet,
     getMatchedThemesWithPaths,
     updateThemes,
     v5_10_updateInterchangeGroup,
     v5_17_updateLocalisedName,
+    v5_18_addStationNameSpacingAndSvgWidthPlatform,
 } from './param-updater-utils';
-import { vi } from 'vitest';
 import { waitForMs } from './utils';
 
 const originalFetch = global.fetch;
@@ -131,6 +132,15 @@ describe('ParamUpdaterUtils', () => {
         expect(param.stn_list.stn0).not.toHaveProperty('localisedSecondaryName');
         expect(param.stn_list.stn0).not.toHaveProperty('name');
         expect(param.stn_list.stn0).not.toHaveProperty('secondaryName');
+    });
+
+    it('v5_18_addStationNameSpacingAndSvgWidthPlatform', () => {
+        const param: Record<string, any> = { svgWidth: {}, stn_list: { stn0: {}, stn1: { character_spacing: 0 } } };
+        v5_18_addStationNameSpacingAndSvgWidthPlatform(param);
+
+        expect(param.svgWidth.platform).toEqual(1200);
+        expect(param.stn_list.stn0.character_spacing).toEqual(75);
+        expect(param.stn_list.stn1.character_spacing).toEqual(0);
     });
 
     it('Can find all matched themes with paths as expected', () => {

@@ -166,7 +166,8 @@
             "oneLine": "在一行内展示中英文站名",
             "intPadding": "车站名与换乘线路间的间距",
             "intPaddingApplyGlobal": "将当前的间距应用到所有车站上",
-            "apply": "应用"
+            "apply": "应用",
+            "characterSpacing": "车站名文字间距"
         },
         "footer": {
             "current": "设置为当前车站",
@@ -295,12 +296,14 @@
         "destination": "终点站站牌",
         "runin": "当前站名牌",
         "railmap": "站台门路线图",
-        "indoor": "车内路线图"
+        "indoor": "车内路线图",
+        "platform": "站台编号"
     },
 
     "RmgStyle": {
         "mtr": "港铁",
         "gzmtr": "广州地铁",
-        "shmetro": "上海地铁"
+        "shmetro": "上海地铁",
+        "shsubrwy": "上海市域铁路"
     }
 }

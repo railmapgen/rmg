@@ -16,4 +16,7 @@ export const STYLE_CONFIG: Record<RmgStyle, StyleConfig> = {
     shmetro: {
         components: () => import('./shmetro'),
     },
+    shsubrwy: {
+        components: () => import('./shanghaisuburbanrailway'),
+    },
 };
