@@ -2,7 +2,13 @@ import { RmgAgGrid, RmgLineBadge, RmgMultiLineString } from '@railmapgen/rmg-com
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { useRootDispatch, useRootSelector } from '../../redux';
-import { ColDef, SelectionChangedEvent } from 'ag-grid-community';
+import {
+    AllCommunityModule,
+    ColDef,
+    ModuleRegistry,
+    provideGlobalGridOptions,
+    SelectionChangedEvent,
+} from 'ag-grid-community';
 import { RmgStyle, SidePanelMode, StationInfo, StationTransfer } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { HStack } from '@chakra-ui/react';
@@ -11,6 +17,12 @@ import { getRowSpanForColine } from '../../redux/param/coline-action';
 import GzmtrStationCode from './gzmtr-station-code';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
 import { Translation } from '@railmapgen/rmg-translate';
+
+// Register all community features
+ModuleRegistry.registerModules([AllCommunityModule]);
+
+// Mark all grids as using legacy themes
+provideGlobalGridOptions({ theme: 'legacy' });
 
 interface StationAgGridProps {
     branchIndex: number;
