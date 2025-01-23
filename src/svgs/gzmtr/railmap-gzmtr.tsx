@@ -6,6 +6,7 @@ import { useRootSelector } from '../../redux';
 import SvgWrapper from '../svg-wrapper';
 import ArrowGzmtr from './arrow-gzmtr';
 import { DoubleDestinations } from './destination-indicator/double-destinations';
+import LoopMain from './loop-main';
 
 const CANVAS_TYPE = CanvasType.RailMap;
 
@@ -21,6 +22,7 @@ const RailMapGZMTR = () => {
         current_stn_idx: currentStationIndex,
         stn_list: stationList,
         theme,
+        loop,
     } = useRootSelector(store => store.param);
 
     const svgWidth = svgWidths[CANVAS_TYPE];
@@ -47,8 +49,8 @@ const RailMapGZMTR = () => {
                 <TerminusFlag />
             ) : (
                 <>
-                    <MainGZMTR />
-                    <DirectionIndicator />
+                    {loop ? <LoopMain /> : <MainGZMTR />}
+                    {!loop && <DirectionIndicator />}
                     {notes?.map((note, i) => <NoteBox key={i} note={note} />)}
                 </>
             )}

@@ -142,6 +142,14 @@ const paramSlice = createSlice({
             state.loop_info.bottom_factor = action.payload;
         },
 
+        setLoopMidpointStation: (state, action: PayloadAction<string>) => {
+            state.loop_info.midpoint_station = action.payload;
+        },
+
+        setLoopClockwise: (state, action: PayloadAction<boolean>) => {
+            state.loop_info.clockwise = action.payload;
+        },
+
         setCurrentStation: (state, action: PayloadAction<string>) => {
             state.current_stn_idx = action.payload;
         },
@@ -190,6 +198,8 @@ export const {
     setLoopBank,
     setLoopLeftAndRightFactor,
     setLoopBottomFactor,
+    setLoopMidpointStation,
+    setLoopClockwise,
     setCurrentStation,
     setStation,
     setStations,
