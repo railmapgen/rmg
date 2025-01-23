@@ -268,6 +268,8 @@ export interface RMGParam {
          * Also, this factor is subject to several rules, see shmetro-loop for more info.
          */
         bottom_factor: number;
+        midpoint_station?: string;
+        clockwise?: boolean;
     };
     version?: string; // RMG version
 }

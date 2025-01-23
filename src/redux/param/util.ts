@@ -38,7 +38,6 @@ const initLineName = (language: LanguageCode): Name => {
 
 export const initStationInfo = (id: string): StationInfo => ({
     localisedName: { zh: '未命名 ' + id, en: 'Unnamed ' + id },
-    localisedSecondaryName: {},
     num: '00',
     services: [Services.local],
     parents: [],

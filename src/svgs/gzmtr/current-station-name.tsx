@@ -16,7 +16,7 @@ export default memo(
             if (nameEl.current && onUpdate) {
                 onUpdate(nameEl.current.getBBox());
             }
-        }, [stnName.toString()]);
+        }, [JSON.stringify(stnName)]);
 
         return (
             <g ref={nameEl}>

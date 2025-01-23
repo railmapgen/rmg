@@ -20,7 +20,7 @@ export default function StationSecondaryName(props: StationSecondaryNameProps) {
             setBBox(nextBBox);
             onUpdate?.(nextBBox);
         }
-    }, [stnName.toString()]);
+    }, [JSON.stringify(stnName)]);
 
     if (!zhName && !enName) {
         return <></>;

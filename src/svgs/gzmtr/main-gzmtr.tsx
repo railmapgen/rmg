@@ -1,10 +1,10 @@
 import { memo, useMemo } from 'react';
-import Station from './station';
 import { adjacencyList, criticalPathMethod, drawLine, getStnState } from '../methods/share';
 import { CanvasType, ShortDirection, StationDict } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import { LineIcon } from '@railmapgen/svg-assets/gzmtr';
 import { ColourHex, MonoColour } from '@railmapgen/rmg-palette-resources';
+import StationGroup from './station-group';
 
 const wideFactor = (stnList: StationDict, stnId: string) =>
     stnList[stnId].parents.length === 2 || stnList[stnId].children.length === 2 ? 0.25 : 0;
@@ -238,33 +238,4 @@ const _linePath = (stnIds: string[], realXs: { [stnId: string]: number }, realYs
 
     // simplify path
     return path.join(' ').replace(/( H ([\d.]+))+/g, ' H $2');
-};
-
-interface StationGroupProps {
-    xs: { [stnId: string]: number };
-    ys: { [stnId: string]: number };
-    stnStates: { [stnId: string]: -1 | 0 | 1 };
-}
-
-const StationGroup = (props: StationGroupProps) => {
-    const { xs, ys, stnStates } = props;
-
-    const stationList = useRootSelector(store => store.param.stn_list);
-
-    return (
-        <g id="stn_icons">
-            {Object.keys(stationList)
-                .filter(stnId => !['linestart', 'lineend'].includes(stnId))
-                .map(stnId => (
-                    <g
-                        key={stnId}
-                        style={{
-                            transform: `translate(${xs[stnId]}px,${ys[stnId]}px)`,
-                        }}
-                    >
-                        <Station stnId={stnId} stnState={stnStates[stnId]} stnY={ys[stnId]} />
-                    </g>
-                ))}
-        </g>
-    );
 };

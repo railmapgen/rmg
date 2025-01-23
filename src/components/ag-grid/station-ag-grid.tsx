@@ -131,7 +131,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
                 hide: ![RmgStyle.SHMetro].includes(style),
             },
         ],
-        [style, theme.toString(), i18n.language]
+        [style, theme.toString(), i18n.language, lineNumber]
     );
 
     const gridRef = useRef<AgGridReact>(null);

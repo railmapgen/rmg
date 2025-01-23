@@ -1,8 +1,9 @@
 import { ExtendedInterchangeInfo, Services } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
-import { LineIcon, StationNumber } from '@railmapgen/svg-assets/gzmtr';
+import { LineIcon, MidpointStation, StationNumber } from '@railmapgen/svg-assets/gzmtr';
 import StationNameWrapper from './station-name/station-name-wrapper';
 import { MonoColour, Theme } from '@railmapgen/rmg-palette-resources';
+import { useEffect, useRef, useState } from 'react';
 
 interface Props {
     stnId: string;
@@ -19,8 +20,18 @@ export default function Station(props: Props) {
         line_num: lineNumber,
         spanLineNum,
         stn_list,
+        loop_info: { midpoint_station, clockwise },
     } = useRootSelector(store => store.param);
     const stnInfo = stn_list[stnId];
+    const isMidpoint = midpoint_station === stnId;
+
+    const [nameBBox, setNameBBox] = useState({ height: 0 } as DOMRect);
+    const stationNameEl = useRef<SVGGElement>(null);
+    useEffect(() => {
+        if (stationNameEl.current) {
+            setNameBBox(stationNameEl.current.getBBox());
+        }
+    }, [stationNameEl.current, stnY, stnInfo.localisedName, stnInfo.localisedSecondaryName, stnInfo.services]);
 
     const isNameShift = stnInfo.parents.length === 2 || stnInfo.children.length === 2;
     const tickRotation =
@@ -38,6 +49,8 @@ export default function Station(props: Props) {
         : tickRotation === 180
           ? -6
           : (25 + (nameENLns - 1) * 15) * Math.cos(-45);
+
+    const midpointDY = stnY > 0 ? nameBBox.height + 23 : -nameBBox.height - 23;
 
     return (
         <>
@@ -68,8 +81,10 @@ export default function Station(props: Props) {
                 strokeColour={theme[2]}
                 textClassName="rmg-name__zh"
                 passed={stnState === -1}
+                bolderBorder
+                useSameScale
             />
-            <g transform={`translate(${-nameDX},0)`}>
+            <g ref={stationNameEl} transform={`translate(${-nameDX},0)`}>
                 <StationNameWrapper
                     primaryName={stnInfo.localisedName}
                     secondaryName={stnInfo.localisedSecondaryName}
@@ -78,6 +93,13 @@ export default function Station(props: Props) {
                     express={stnInfo.services.includes(Services.express)}
                 />
             </g>
+            {isMidpoint && (
+                <MidpointStation
+                    transform={`translate(0,${midpointDY})`}
+                    clockwise={clockwise}
+                    anchorAt={stnY > 0 ? 'text' : 'circle'}
+                />
+            )}
         </>
     );
 }

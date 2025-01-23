@@ -20,7 +20,7 @@ export default function GridTabs() {
     const [isNewBranchModalOpen, setIsNewBranchModalOpen] = useState(false);
 
     const selectedBranch = useRootSelector(state => state.app.selectedBranch);
-    const { style, stn_list: stationList } = useRootSelector(state => state.param);
+    const { style, stn_list: stationList, loop } = useRootSelector(state => state.param);
     const branches = useRootSelector(state => state.helper.branches);
 
     const handleEditLineSection = () => {
@@ -40,7 +40,7 @@ export default function GridTabs() {
                 <TabList>
                     {branches.map((branch, i) => {
                         if (i === 0) {
-                            return <Tab key={i}>{t('GridTabs.main')}</Tab>;
+                            return <Tab key={i}>{loop ? t('Loop line') : t('GridTabs.main')}</Tab>;
                         } else {
                             if (style !== RmgStyle.SHMetro || !isColineBranch(branch, stationList)) {
                                 return <Tab key={i}>{t('GridTabs.branch') + ' ' + i}</Tab>;
@@ -56,6 +56,7 @@ export default function GridTabs() {
                         aria-label="New branch"
                         onClick={() => setIsNewBranchModalOpen(true)}
                         icon={<MdAdd />}
+                        isDisabled={loop}
                     />
 
                     <HStack marginLeft="auto" marginRight={1}>

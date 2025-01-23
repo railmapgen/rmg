@@ -18,19 +18,19 @@ export default function StyleSidePanel() {
 
             <DesignSection />
 
+            {[RmgStyle.GZMTR, RmgStyle.SHMetro].includes(style) && (
+                <>
+                    <Divider />
+
+                    <LoopSection />
+                </>
+            )}
+
             {style === RmgStyle.GZMTR && (
                 <>
                     <Divider />
 
                     <GZMTRNoteSection />
-                </>
-            )}
-
-            {style === RmgStyle.SHMetro && (
-                <>
-                    <Divider />
-
-                    <LoopSection />
                 </>
             )}
         </RmgSidePanelBody>
