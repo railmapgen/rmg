@@ -24,9 +24,8 @@ export default function RunInGZMTR() {
 
     const svgWidth = svgWidths[CANVAS_TYPE];
 
-    const platformNumY = [PanelTypeGZMTR.gz7w, PanelTypeGZMTR.gz11].includes(infoPanelType as PanelTypeGZMTR)
-        ? svgHeight - 60
-        : svgHeight / 2 - 30;
+    const post2022 = [PanelTypeGZMTR.gz7w, PanelTypeGZMTR.gz11].includes(infoPanelType as PanelTypeGZMTR);
+    const platformNumY = post2022 ? svgHeight - 60 : svgHeight / 2 - 30;
     const otisTransforms = {
         platform: `translate(${direction === ShortDirection.left ? 50 : -50},45)`,
     };
@@ -55,7 +54,9 @@ export default function RunInGZMTR() {
                 />
             </g>
 
-            <CoachNumber coachNumber={coachNum} transform={`translate(${svgWidth * 0.85},${svgHeight * 0.65})`} />
+            {post2022 && (
+                <CoachNumber coachNumber={coachNum} transform={`translate(${svgWidth * 0.85},${svgHeight * 0.65})`} />
+            )}
 
             <InfoGZMTR />
 
