@@ -1,4 +1,4 @@
-import { StationState } from '../../constants/constants';
+import { StationState } from '../../../constants/constants';
 
 export const getLineXs = (
     width: number,
