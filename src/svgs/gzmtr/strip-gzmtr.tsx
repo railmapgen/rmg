@@ -22,6 +22,9 @@ const StripGZMTR = (props: Props) => {
             case 'gz4':
             case 'gz5':
             case 'gz1421':
+            case 'gz11':
+            case 'gz1822':
+            case 'gz7w':
                 return 20;
             default:
                 return 0;
@@ -47,6 +50,9 @@ const StripGZMTR = (props: Props) => {
                 return <rect x={-50} y={-50} height={25} width={100} fill="whitesmoke" />;
             case 'gzgf':
                 return <rect x={-30} y={-58} height={30} width={60} fill="orange" />;
+            case 'gz7w':
+            case 'gz11':
+                return <ellipse cy={-40} rx={28} ry={14} fill="orange" />;
             default:
                 return <></>;
         }
@@ -93,8 +99,20 @@ const PSD = memo(
                     return '80px';
                 case 'gz1421':
                     return '62px';
+                case 'gz7w':
+                case 'gz11':
+                    return '70px';
                 default:
                     return '58px';
+            }
+        })(props.variant);
+        const scale = ((variant: PanelTypeGZMTR | PanelTypeShmetro) => {
+            switch (variant) {
+                case 'gz7w':
+                case 'gz11':
+                    return 1.1;
+                default:
+                    return 1;
             }
         })(props.variant);
 
@@ -104,9 +122,10 @@ const PSD = memo(
                 inStrip={isInStrip}
                 style={{
                     ['--psd-dy' as any]: psdDy,
-                    transform: 'translate(var(--translate-x), var(--translate-y))',
+                    transform: 'translate(var(--translate-x), var(--translate-y))scale(var(--scale))',
                     ['--translate-x' as any]: 'calc(var(--rmg-svg-width) / 2 + 80px)',
                     ['--translate-y' as any]: 'calc(var(--rmg-svg-height) - var(--psd-dy, 58px))',
+                    ['--scale' as any]: scale,
                 }}
             />
         );

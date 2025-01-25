@@ -115,6 +115,7 @@ export const initParam = (style: RmgStyle, language: LanguageCode): RMGParam => 
         line_num: '1',
         spanLineNum: true,
         psd_num: '1',
+        coachNum: '1',
         info_panel_type: style === RmgStyle.SHMetro ? PanelTypeShmetro.sh : PanelTypeGZMTR.gz1,
         direction_gz_x: 40,
         direction_gz_y: 70,

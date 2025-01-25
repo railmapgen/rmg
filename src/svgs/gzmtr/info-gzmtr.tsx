@@ -6,6 +6,9 @@ import CurrentStationName, { CurrentStationSecondaryName } from './current-stati
 import ArrowGzmtr from './arrow-gzmtr';
 import { Translation } from '@railmapgen/rmg-translate';
 
+const NAME_NUM_GAP = 55;
+const NUM_WIDTH = 18.5 * 1.4;
+
 const InfoGZMTR = () => {
     const {
         svg_height: svgHeight,
@@ -18,25 +21,40 @@ const InfoGZMTR = () => {
         stn_list: stationList,
     } = useRootSelector(store => store.param);
     const curStnInfo = stationList[currentStationIndex];
+    const { localisedName, localisedSecondaryName } = curStnInfo;
 
     const [nameBBox, setNameBBox] = useState({ width: 0 } as SVGRect);
 
-    const enNameRows = curStnInfo.localisedName.en?.split('\\')?.length ?? 1;
+    const enNameRows = localisedName.en?.split('\\')?.length ?? 1;
     const nextStnId = curStnInfo[direction === ShortDirection.left ? 'parents' : 'children'];
+
+    const post2022 = [PanelTypeGZMTR.gz7w, PanelTypeGZMTR.gz11].includes(infoPanelType as PanelTypeGZMTR);
 
     const otisTransforms = {
         name: `translate(${((direction === ShortDirection.left ? 1 : -1) * svgWidths[CanvasType.RunIn]) / 4},45)`,
         next: `translate(${((direction === ShortDirection.left ? 1 : -1) * svgWidths[CanvasType.RunIn]) / 10},45)`,
     };
 
+    const stationNumberX = (svgWidths[CanvasType.RunIn] + nameBBox.width) / 2 + NAME_NUM_GAP;
     const transforms = {
         nameGroup: {
             x: svgWidths.runin / 2,
-            y: 0.5 * svgHeight - 50 - (enNameRows - 1) * 18 - (curStnInfo.localisedSecondaryName ? 29 : 0),
+            y: 0.5 * svgHeight - 50 - (enNameRows - 1) * 18 - (localisedSecondaryName ? 29 : 0),
         },
         secondaryName: {
             x: 0,
             y: 70 + enNameRows * 36,
+        },
+        stationNumber: {
+            x: stationNumberX,
+            y: 0.5 * svgHeight - 30 - (enNameRows - 1) * 18 - (localisedSecondaryName ? 58 / 2 : 0),
+        },
+        stationNumberPost2022: {
+            x:
+                direction === ShortDirection.left
+                    ? stationNumberX
+                    : (svgWidths[CanvasType.RunIn] - nameBBox.width) / 2 - NAME_NUM_GAP,
+            y: 0.5 * svgHeight - (enNameRows - 1) * 18 - (localisedSecondaryName ? 58 / 2 : 0),
         },
     };
 
@@ -44,10 +62,10 @@ const InfoGZMTR = () => {
         <g>
             <g transform={infoPanelType === PanelTypeGZMTR.gz2otis ? otisTransforms.name : ''}>
                 <g textAnchor="middle" transform={`translate(${transforms.nameGroup.x},${transforms.nameGroup.y})`}>
-                    <CurrentStationName stnName={curStnInfo.localisedName} onUpdate={setNameBBox} />
-                    {curStnInfo.localisedSecondaryName && (
+                    <CurrentStationName stnName={localisedName} onUpdate={setNameBBox} />
+                    {localisedSecondaryName && (
                         <CurrentStationSecondaryName
-                            secondaryName={curStnInfo.localisedSecondaryName}
+                            secondaryName={localisedSecondaryName}
                             transform={`translate(${transforms.secondaryName.x},${transforms.secondaryName.y})`}
                         />
                     )}
@@ -58,16 +76,11 @@ const InfoGZMTR = () => {
                     stnNum={curStnInfo.num}
                     strokeColour={theme[2]}
                     textClassName="rmg-name__zh"
-                    style={{
-                        ['--translate-x' as any]: `${(svgWidths[CanvasType.RunIn] + nameBBox.width) / 2 + 55}px`,
-                        ['--translate-y' as any]: `${
-                            0.5 * svgHeight -
-                            30 -
-                            (enNameRows - 1) * 18 -
-                            (curStnInfo.localisedSecondaryName ? 58 / 2 : 0)
-                        }px`,
-                        transform: 'translate(var(--translate-x, 800px), var(--translate-y, 145px))',
-                    }}
+                    transform={
+                        post2022
+                            ? `translate(${transforms.stationNumberPost2022.x},${transforms.stationNumberPost2022.y})`
+                            : `translate(${transforms.stationNumber.x},${transforms.stationNumber.y})`
+                    }
                     size="lg"
                 />
             </g>
@@ -76,9 +89,9 @@ const InfoGZMTR = () => {
                 {!nextStnId || nextStnId.includes('linestart') || nextStnId.includes('lineend') ? (
                     <></>
                 ) : nextStnId.length === 1 ? (
-                    <BigNext nextId={nextStnId[0]} nameBBox={nameBBox} />
+                    <BigNext nextId={nextStnId[0]} nameBBox={nameBBox} ignoreNumWidth={post2022} />
                 ) : (
-                    <BigNext2 nextIds={nextStnId} nameBBox={nameBBox} />
+                    <BigNext2 nextIds={nextStnId} nameBBox={nameBBox} ignoreNumWidth={post2022} />
                 )}
             </g>
         </g>
@@ -87,8 +100,8 @@ const InfoGZMTR = () => {
 
 export default InfoGZMTR;
 
-const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
-    const { nextId, nameBBox } = props;
+const BigNext = (props: { nextId: string; nameBBox: DOMRect; ignoreNumWidth?: boolean }) => {
+    const { nextId, nameBBox, ignoreNumWidth } = props;
     const svgWidths = useRootSelector(store => store.param.svgWidth);
     const direction = useRootSelector(store => store.param.direction);
     const nextInfo = useRootSelector(store => store.param.stn_list[nextId]);
@@ -182,8 +195,7 @@ const BigNext = (props: { nextId: string; nameBBox: DOMRect }) => {
                                       (nextNameZHCount <= 2 ? 70 + 35 : 35 * 2.5) +
                                       nameBcrX +
                                       props.nameBBox.width +
-                                      55 +
-                                      18.5 * 1.4) /
+                                      (ignoreNumWidth ? 0 : NAME_NUM_GAP + NUM_WIDTH)) /
                                       2 +
                                   20
                               }px`,
@@ -226,8 +238,8 @@ const BigNextSec = (props: { secName: Translation } & SVGProps<SVGGElement>) => 
     );
 };
 
-const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
-    const { nextIds, nameBBox } = props;
+const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect; ignoreNumWidth?: boolean }) => {
+    const { nextIds, nameBBox, ignoreNumWidth } = props;
     const { routes } = useRootSelector(store => store.helper);
     const svgWidths = useRootSelector(store => store.param.svgWidth);
     const direction = useRootSelector(store => store.param.direction);
@@ -334,8 +346,7 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect }) => {
                                       27 +
                                       nameBcrX +
                                       props.nameBBox.width +
-                                      55 +
-                                      18.5 * 1.4) /
+                                      (ignoreNumWidth ? 0 : NAME_NUM_GAP + NUM_WIDTH)) /
                                       2 +
                                   20
                               }px`,

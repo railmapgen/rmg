@@ -20,12 +20,12 @@ export default memo(
 
         return (
             <g ref={nameEl}>
-                <text className="rmg-name__zh" fontSize={90}>
+                <text className="rmg-name__zh" fontSize={92}>
                     {stnName.zh}
                 </text>
-                <g fontSize={36}>
+                <g fontSize={40}>
                     {stnName.en?.split('\\')?.map((txt, i) => (
-                        <text className="rmg-name__en" key={i} dy={70 + i * 36}>
+                        <text className="rmg-name__en" key={i} dy={72 + i * 42}>
                             {txt}
                         </text>
                     ))}

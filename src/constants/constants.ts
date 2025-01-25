@@ -179,9 +179,12 @@ export enum PanelTypeGZMTR {
     gz3 = 'gz3',
     gz4 = 'gz4',
     gz5 = 'gz5',
-    gz1421 = 'gz1421',
+    gz11 = 'gz11',
+    gz1822 = 'gz1822',
     gz6 = 'gz6',
     gzgf = 'gzgf',
+    gz1421 = 'gz1421',
+    gz7w = 'gz7w',
 }
 
 export enum PanelTypeShmetro {
@@ -247,6 +250,7 @@ export interface RMGParam {
     line_num: string;
     spanLineNum?: boolean;
     psd_num: string;
+    coachNum: string;
     info_panel_type: PanelTypeGZMTR | PanelTypeShmetro;
     notesGZMTR?: Note[];
     direction_gz_x: number;

@@ -84,6 +84,10 @@ const paramSlice = createSlice({
             state.psd_num = action.payload;
         },
 
+        setCoachNum: (state, action: PayloadAction<string>) => {
+            state.coachNum = action.payload;
+        },
+
         setPanelType: (state, action: PayloadAction<PanelTypeGZMTR | PanelTypeShmetro>) => {
             state.info_panel_type = action.payload;
         },
@@ -186,6 +190,7 @@ export const {
     setLineNum,
     setSpanLineNum,
     setPsdNum,
+    setCoachNum,
     setPanelType,
     addNote,
     updateNote,
