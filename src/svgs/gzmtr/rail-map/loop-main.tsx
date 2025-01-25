@@ -1,8 +1,10 @@
-import { CanvasType } from '../../constants/constants';
-import { useRootSelector } from '../../redux';
+import { CanvasType } from '../../../constants/constants';
+import { useRootSelector } from '../../../redux';
 import { useMemo } from 'react';
-import StationGroup from './station-group';
+import StationGroup from '../station-group';
 import { getLineXs, getLoopPath, getStationStates } from './loop-utils';
+import NextStationArrow from './next-station-arrow';
+import LoopDirection from './loop-direction';
 
 export default function LoopMain() {
     const { branches } = useRootSelector(store => store.helper);
@@ -38,11 +40,11 @@ export default function LoopMain() {
 
     const yGap = (branchSpacingPct * svgH * 2) / 100;
     const lineXs = getLineXs(svgWidths[CanvasType.RailMap], paddingPercentage, halfStationCount, yGap);
-    const xMultiplier = (lineXs[1] - lineXs[0]) / (halfStationCount - 1);
+    const stationGap = (lineXs[1] - lineXs[0]) / (halfStationCount - 1);
     const xs = Object.keys(xShares).reduce(
         (acc, cur) => ({
             ...acc,
-            [cur]: lineXs[0] + xShares[cur] * xMultiplier,
+            [cur]: lineXs[0] + xShares[cur] * stationGap,
         }),
         {} as typeof xShares
     );
@@ -68,8 +70,22 @@ export default function LoopMain() {
                 transform: 'translateY(calc(var(--y-percentage) * var(--rmg-svg-height) / 100))',
             }}
         >
-            <path d={getLoopPath(xs, ys, xMultiplier)} fill="none" strokeWidth={6} stroke="var(--rmg-theme-colour)" />
+            <path d={getLoopPath(xs, ys, stationGap)} fill="none" strokeWidth={6} stroke="var(--rmg-theme-colour)" />
             <StationGroup xs={xs} ys={ys} stnStates={stnStates} />
+
+            <NextStationArrow
+                currentStationX={xs[currentStation]}
+                currentStationY={ys[currentStation]}
+                stationGap={stationGap}
+                loopClockwise={clockwise}
+            />
+
+            <LoopDirection
+                cxLeft={lineXs[0] - stationGap / 2}
+                cxRight={lineXs[1] + stationGap / 2}
+                yGap={yGap}
+                clockwise={clockwise}
+            />
         </g>
     );
 }

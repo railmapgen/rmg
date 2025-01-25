@@ -1,4 +1,4 @@
-import { ExtendedInterchangeInfo, Services } from '../../constants/constants';
+import { ExtendedInterchangeInfo, Services, StationState } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import { LineIcon, MidpointStation, StationNumber } from '@railmapgen/svg-assets/gzmtr';
 import StationNameWrapper from './station-name/station-name-wrapper';
@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 
 interface Props {
     stnId: string;
-    stnState: -1 | 0 | 1;
+    stnState: StationState;
     stnY: number;
 }
 
@@ -20,6 +20,7 @@ export default function Station(props: Props) {
         line_num: lineNumber,
         spanLineNum,
         stn_list,
+        loop,
         loop_info: { midpoint_station, clockwise },
     } = useRootSelector(store => store.param);
     const stnInfo = stn_list[stnId];
@@ -71,7 +72,7 @@ export default function Station(props: Props) {
                           ]
                         : (stnInfo.transfer.groups[0].lines ?? [])
                 }
-                stnState={stnState}
+                stnState={loop ? StationState.FUTURE : stnState}
                 tickRotation={tickRotation}
                 spanDigits={spanLineNum}
             />
@@ -81,6 +82,7 @@ export default function Station(props: Props) {
                 strokeColour={theme[2]}
                 textClassName="rmg-name__zh"
                 passed={stnState === -1}
+                alwaysShowColouredBorder={loop}
                 bolderBorder
                 useSameScale
             />
@@ -106,7 +108,7 @@ export default function Station(props: Props) {
 
 interface IntGroupProps {
     intInfos: ExtendedInterchangeInfo[];
-    stnState: -1 | 0 | 1;
+    stnState: StationState;
     tickRotation: 0 | 180;
     spanDigits?: boolean;
 }

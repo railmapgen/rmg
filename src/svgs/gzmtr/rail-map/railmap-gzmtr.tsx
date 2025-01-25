@@ -1,11 +1,11 @@
 import { memo, SVGProps, useEffect, useMemo, useRef, useState } from 'react';
-import StripGZMTR from './strip-gzmtr';
-import MainGZMTR from './main-gzmtr';
-import { CanvasType, Note, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
-import { useRootSelector } from '../../redux';
-import SvgWrapper from '../svg-wrapper';
-import ArrowGzmtr from './arrow-gzmtr';
-import { DoubleDestinations } from './destination-indicator/double-destinations';
+import StripGZMTR from '../strip-gzmtr';
+import MainGZMTR from '../main-gzmtr';
+import { CanvasType, Note, PanelTypeGZMTR, ShortDirection } from '../../../constants/constants';
+import { useRootSelector } from '../../../redux';
+import SvgWrapper from '../../svg-wrapper';
+import ArrowGzmtr from '../arrow-gzmtr';
+import { DoubleDestinations } from '../destination-indicator/double-destinations';
 import LoopMain from './loop-main';
 
 const CANVAS_TYPE = CanvasType.RailMap;
@@ -68,6 +68,9 @@ const DefsGZMTR = memo(function DefsGZMTR() {
     return (
         <defs>
             <path id="inttick" d="M 0,0 v 18" strokeLinecap="square" />
+            <marker id="loop_arrow" refX={0.05} refY={0.5} orient="auto">
+                <path d="M0,0V2L2,0z" fill="black" />
+            </marker>
         </defs>
     );
 });
