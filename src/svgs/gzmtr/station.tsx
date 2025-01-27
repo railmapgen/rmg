@@ -93,6 +93,7 @@ export default function Station(props: Props) {
                     stationState={stnState}
                     flipped={tickRotation === 180}
                     express={stnInfo.services.includes(Services.express)}
+                    underConstruction={stnInfo.underConstruction}
                 />
             </g>
             {isMidpoint && (

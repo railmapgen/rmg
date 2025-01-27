@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { StationState } from '../../../constants/constants';
+import { StationState, TEMP } from '../../../constants/constants';
 import StationName from './station-name';
 import StationSecondaryName from './station-secondary-name';
 import ExpressTag from './express-tag';
 import { Translation } from '@railmapgen/rmg-translate';
+import UnderConstructionTag from './under-construction-tag';
 
 interface StationNameWrapperProps {
     primaryName: Translation;
@@ -11,12 +12,14 @@ interface StationNameWrapperProps {
     stationState: StationState;
     flipped?: boolean;
     express?: boolean;
+    underConstruction?: boolean | TEMP;
 }
 
 export default function StationNameWrapper(props: StationNameWrapperProps) {
-    const { primaryName, secondaryName, stationState, flipped, express } = props;
+    const { primaryName, secondaryName, stationState, flipped, express, underConstruction } = props;
 
     const [primaryBBox, setPrimaryBBox] = useState({ width: 0 } as SVGRect);
+    const [primaryEnNameBBox, setPrimaryEnNameBBox] = useState({ width: 0 } as SVGRect);
     const [secondaryBBox, setSecondaryBBox] = useState({ x: 0, width: -20 } as SVGRect);
 
     const getFill = (state: StationState) => {
@@ -44,6 +47,10 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
             x: (primaryBBox.width + secondaryBBox.width + 20 + 35) * (flipped ? -1 : 1),
             y: 2 + 5 * (primaryNameEnRows - 1),
         },
+        UnderConstructionTag: {
+            x: (primaryEnNameBBox.width + 5 + 20) * (flipped ? -1 : 1),
+            y: primaryBBox.y + primaryBBox.height - 14,
+        },
     };
 
     return (
@@ -52,7 +59,7 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
             fill={getFill(stationState)}
             transform={`translate(${transforms.g.x},${transforms.g.y})rotate(-45)`}
         >
-            <StationName stnName={primaryName} onUpdate={setPrimaryBBox} />
+            <StationName stnName={primaryName} onUpdate={setPrimaryBBox} onEnNameUpdate={setPrimaryEnNameBBox} />
 
             {secondaryName && (
                 <StationSecondaryName
@@ -67,6 +74,14 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
                 <ExpressTag
                     passed={stationState === StationState.PASSED}
                     transform={`translate(${transforms.ExpressTag.x},${transforms.ExpressTag.y})`}
+                />
+            )}
+
+            {underConstruction && (
+                <UnderConstructionTag
+                    passed={stationState === StationState.PASSED}
+                    temporary={underConstruction === 'temp'}
+                    transform={`translate(${transforms.UnderConstructionTag.x},${transforms.UnderConstructionTag.y})`}
                 />
             )}
         </g>

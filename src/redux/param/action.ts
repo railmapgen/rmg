@@ -9,6 +9,7 @@ import {
     ShortDirection,
     StationDict,
     StationInfo,
+    TEMP,
 } from '../../constants/constants';
 import { RootDispatch, RootState } from '../index';
 import * as paramSlice from './param-slice';
@@ -424,6 +425,14 @@ export const updateStationServices = (stationId: string, services: Services[]) =
         const stationInfo = getState().param.stn_list[stationId];
 
         dispatch(setStation(stationId, { ...stationInfo, services }));
+    };
+};
+
+export const updateStationUnderConstruction = (stationId: string, underConstruction: boolean | TEMP) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+
+        dispatch(setStation(stationId, { ...stationInfo, underConstruction }));
     };
 };
 
