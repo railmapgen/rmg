@@ -1,7 +1,7 @@
 import { Box, Heading } from '@chakra-ui/react';
 import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
-import { FACILITIES, Facilities, RmgStyle, Services } from '../../../constants/constants';
+import { FACILITIES, Facilities, RmgStyle, Services, TEMP } from '../../../constants/constants';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import {
     updateStationCharacterSpacing,
@@ -12,7 +12,9 @@ import {
     updateStationLoopPivot,
     updateStationOneLine,
     updateStationServices,
+    updateStationUnderConstruction,
 } from '../../../redux/param/action';
+import { setLoopClockwise } from '../../../redux/param/param-slice';
 
 export default function MoreSection() {
     const { t } = useTranslation();
@@ -20,9 +22,8 @@ export default function MoreSection() {
 
     const selectedStation = useRootSelector(state => state.app.selectedStation);
     const { style, loop } = useRootSelector(state => state.param);
-    const { services, facility, loop_pivot, one_line, int_padding, character_spacing } = useRootSelector(
-        state => state.param.stn_list[selectedStation]
-    );
+    const { services, facility, loop_pivot, one_line, int_padding, character_spacing, underConstruction } =
+        useRootSelector(state => state.param.stn_list[selectedStation]);
 
     const serviceSelections = Object.values(Services).map(service => {
         return {
@@ -124,6 +125,24 @@ export default function MoreSection() {
             ),
             oneLine: true,
             hidden: ![RmgStyle.SHSuburbanRailway].includes(style),
+        },
+        {
+            type: 'custom',
+            label: t('Under construction'),
+            component: (
+                <RmgButtonGroup
+                    selections={
+                        [
+                            { label: t('No'), value: false },
+                            { label: t('Temporary'), value: 'temp' },
+                            { label: t('Yes'), value: true },
+                        ] as { label: string; value: boolean | TEMP }[]
+                    }
+                    defaultValue={underConstruction ?? false}
+                    onChange={uc => dispatch(updateStationUnderConstruction(selectedStation, uc))}
+                />
+            ),
+            hidden: ![RmgStyle.GZMTR].includes(style),
         },
     ];
 

@@ -111,6 +111,7 @@ export const FACILITIES = {
 };
 export type Facilities = keyof typeof FACILITIES;
 
+export type TEMP = 'temp';
 export interface StationInfo {
     title?: string;
     /**
@@ -168,6 +169,7 @@ export interface StationInfo {
      * Default to 20 in updateParam.
      */
     character_spacing: number;
+    underConstruction?: boolean | TEMP;
 }
 
 export type StationDict = Record<string, StationInfo>;

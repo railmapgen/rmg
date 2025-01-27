@@ -4,20 +4,25 @@ import { Translation } from '@railmapgen/rmg-translate';
 interface StationNameProps {
     stnName: Translation;
     onUpdate?: (bBox: SVGRect) => void;
+    onEnNameUpdate?: (bBox: SVGRect) => void;
 }
 
 export default memo(
     function StationName(props: StationNameProps) {
-        const { stnName, onUpdate } = props;
+        const { stnName, onUpdate, onEnNameUpdate } = props;
         const { zh: zhName = '', en: enName = '' } = stnName;
 
         const nameEl = useRef<SVGGElement | null>(null);
 
         useEffect(() => {
-            if (nameEl.current && onUpdate) {
-                onUpdate(nameEl.current.getBBox());
+            if (nameEl.current) {
+                onUpdate?.(nameEl.current.getBBox());
+                const enNameGroup = nameEl.current.querySelector('g');
+                if (enNameGroup) {
+                    onEnNameUpdate?.(enNameGroup.getBBox());
+                }
             }
-        }, [JSON.stringify(stnName)]);
+        }, [JSON.stringify(stnName), nameEl.current]);
 
         return (
             <g ref={nameEl}>
