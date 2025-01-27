@@ -14,7 +14,6 @@ import {
     updateStationServices,
     updateStationUnderConstruction,
 } from '../../../redux/param/action';
-import { setLoopClockwise } from '../../../redux/param/param-slice';
 
 export default function MoreSection() {
     const { t } = useTranslation();
