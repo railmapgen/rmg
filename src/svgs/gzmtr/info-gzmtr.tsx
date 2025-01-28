@@ -6,7 +6,7 @@ import CurrentStationName, { CurrentStationSecondaryName } from './current-stati
 import ArrowGzmtr from './arrow-gzmtr';
 import NextViaStations from './runin/next-via-stations';
 import NextStation from './runin/next-station';
-import { NAME_NUM_GAP, NUM_WIDTH } from './runin/runin-utils';
+import { NAME_NUM_GAP, NEXT_ARROW_SCALE, NUM_WIDTH } from './runin/runin-utils';
 
 const InfoGZMTR = () => {
     const {
@@ -108,12 +108,20 @@ const InfoGZMTR = () => {
 
 export default InfoGZMTR;
 
+const NEXT_ZH_NAME_FONT_SIZE = 27;
+const NEXT_EN_NAME_FONT_SIZE = 13;
+const DIRECTION_GAP = 110;
+
 const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect; ignoreNumWidth?: boolean }) => {
     const { nextIds, nameBBox, ignoreNumWidth } = props;
     const { routes } = useRootSelector(store => store.helper);
-    const svgWidths = useRootSelector(store => store.param.svgWidth);
-    const direction = useRootSelector(store => store.param.direction);
-    const stationList = useRootSelector(store => store.param.stn_list);
+    const {
+        svgWidth: svgWidths,
+        svg_height: svgHeight,
+        direction,
+        stn_list: stationList,
+    } = useRootSelector(store => store.param);
+    const svgWidth = svgWidths[CanvasType.RunIn];
 
     const nextNames = nextIds.map(id => stationList[id].localisedName);
     const [nextBBox, setNextBBox] = useState({ width: 0 } as DOMRect);
@@ -149,79 +157,81 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect; ignoreNumWidth?
     );
 
     const nextNameZHCount = Math.max(...nextNames.map(names => names.zh?.length ?? 0));
-    const nameBcrX = (svgWidths[CanvasType.RunIn] - nameBBox.width) / 2;
+    const nameBcrX = (svgWidth - nameBBox.width) / 2;
+
+    const transforms = {
+        next: {
+            x: direction === ShortDirection.left ? 72 : svgWidth - 45 - nextBBox.width - 41,
+        },
+        nextName: {
+            x: direction === ShortDirection.left ? 113 : svgWidth - 45 - nextBBox.width,
+        },
+        arrow: {
+            x:
+                direction === ShortDirection.left
+                    ? (99 + 27 * (1 + nextNameZHCount) + nameBcrX) / 2 - 20
+                    : (svgWidth -
+                          45 -
+                          nextBBox.width -
+                          41 -
+                          27 +
+                          nameBcrX +
+                          props.nameBBox.width +
+                          (ignoreNumWidth ? 0 : NAME_NUM_GAP + NUM_WIDTH)) /
+                          2 +
+                      20,
+            y: svgHeight / 2 - 30,
+            rotate: direction === ShortDirection.left ? 0 : 180,
+        },
+    };
 
     return (
         <>
-            <g id="big_next_2">
-                {nextNames.map((name, i) => {
-                    return (
-                        <Fragment key={i}>
-                            <g
-                                textAnchor="middle"
-                                style={{
-                                    ['--translate-x' as any]:
-                                        direction === ShortDirection.left
-                                            ? '72px'
-                                            : `${svgWidths[CanvasType.RunIn] - 45 - nextBBox.width - 41}px`,
-                                }}
-                            >
-                                <text className="rmg-name__zh">下站</text>
-                                <text className="rmg-name__en" y={22}>
-                                    Next
+            <g transform={`translate(0,${svgHeight / 2 - 70})`}>
+                {nextNames.map((name, i) => (
+                    <Fragment key={i}>
+                        <g textAnchor="middle" transform={`translate(${transforms.next.x},${DIRECTION_GAP * i})`}>
+                            <text className="rmg-name__zh" fontSize={NEXT_ZH_NAME_FONT_SIZE}>
+                                下站
+                            </text>
+                            <text className="rmg-name__en" fontSize={NEXT_EN_NAME_FONT_SIZE} y={22}>
+                                Next
+                            </text>
+                        </g>
+                        <g
+                            ref={el => (nextNameEls.current[i] = el)}
+                            textAnchor="start"
+                            transform={`translate(${transforms.nextName.x},${DIRECTION_GAP * i})`}
+                        >
+                            <text className="rmg-name__zh" fontSize={NEXT_ZH_NAME_FONT_SIZE}>
+                                {name.zh}
+                            </text>
+                            {name.en?.split('\\')?.map((txt, j) => (
+                                <text
+                                    key={j}
+                                    className="rmg-name__en"
+                                    fontSize={NEXT_EN_NAME_FONT_SIZE}
+                                    y={22 + j * NEXT_EN_NAME_FONT_SIZE}
+                                >
+                                    {txt}
                                 </text>
-                            </g>
-                            <g
-                                ref={el => (nextNameEls.current[i] = el)}
-                                textAnchor="start"
-                                style={{
-                                    ['--translate-x' as any]:
-                                        direction === ShortDirection.left
-                                            ? '113px'
-                                            : `${svgWidths[CanvasType.RunIn] - 45 - nextBBox.width}px`,
-                                }}
-                            >
-                                <text className="rmg-name__zh">{name.zh}</text>
-                                {name.en?.split('\\')?.map((txt, j) => (
-                                    <text key={j} className="rmg-name__en" y={22 + j * 13}>
-                                        {txt}
-                                    </text>
-                                ))}
-                                <text className="rmg-name__zh" y={-35}>
-                                    {validEnds[i].map(s => stationList[s].localisedName.zh).join('/') + '方向'}
-                                </text>
-                                <text className="rmg-name__en rmg-name__gzmtr--next2-dest" y={-20}>
-                                    {'Towards ' +
-                                        validEnds[i]
-                                            .map(s => stationList[s].localisedName.en)
-                                            .join('/')
-                                            .replace('\\', ' ')}
-                                </text>
-                            </g>
-                        </Fragment>
-                    );
-                })}
+                            ))}
+                            <text className="rmg-name__zh" fontSize={18.5} y={-35}>
+                                {validEnds[i].map(s => stationList[s].localisedName.zh).join('/') + '方向'}
+                            </text>
+                            <text className="rmg-name__en rmg-name__gzmtr--next2-dest" y={-20}>
+                                {'Towards ' +
+                                    validEnds[i]
+                                        .map(s => stationList[s].localisedName.en)
+                                        .join('/')
+                                        .replace('\\', ' ')}
+                            </text>
+                        </g>
+                    </Fragment>
+                ))}
             </g>
             <ArrowGzmtr
-                id="arrow"
-                style={{
-                    ['--translate-x' as any]:
-                        direction === ShortDirection.left
-                            ? `${(99 + 27 * (1 + nextNameZHCount) + nameBcrX) / 2 - 20}px`
-                            : `${
-                                  (svgWidths[CanvasType.RunIn] -
-                                      45 -
-                                      nextBBox.width -
-                                      41 -
-                                      27 +
-                                      nameBcrX +
-                                      props.nameBBox.width +
-                                      (ignoreNumWidth ? 0 : NAME_NUM_GAP + NUM_WIDTH)) /
-                                      2 +
-                                  20
-                              }px`,
-                    ['--rotate' as any]: direction === ShortDirection.left ? '0deg' : '180deg',
-                }}
+                transform={`translate(${transforms.arrow.x},${transforms.arrow.y})scale(${NEXT_ARROW_SCALE})rotate(${transforms.arrow.rotate})`}
             />
         </>
     );
