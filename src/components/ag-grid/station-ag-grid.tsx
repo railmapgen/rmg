@@ -75,8 +75,8 @@ export default function StationAgGrid(props: StationAgGridProps) {
                 field: 'localisedName',
                 valueFormatter: ({ value, data }) =>
                     value.zh +
-                    (style === RmgStyle.GZMTR && data?.localisedSecondaryName?.zh
-                        ? ` (${data.localisedSecondaryName.zh})`
+                    (style === RmgStyle.GZMTR && data?.currentLocalisedSecondaryName?.zh
+                        ? ` (${data.currentLocalisedSecondaryName.zh})`
                         : ''),
             },
             {
@@ -86,8 +86,8 @@ export default function StationAgGrid(props: StationAgGridProps) {
                     <RmgMultiLineString
                         text={
                             value.en +
-                            (style === RmgStyle.GZMTR && data.localisedSecondaryName?.en
-                                ? ` (${data.localisedSecondaryName.en})`
+                            (style === RmgStyle.GZMTR && data.currentLocalisedSecondaryName?.en
+                                ? ` (${data.currentLocalisedSecondaryName.en})`
                                 : '')
                         }
                     />

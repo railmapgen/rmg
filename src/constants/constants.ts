@@ -120,7 +120,7 @@ export interface StationInfo {
     // name?: Name;
     // secondaryName?: Name;
     localisedName: Translation;
-    localisedSecondaryName?: Translation;
+    currentLocalisedSecondaryName?: Translation;
     /**
      * Station number. (GZMTR specific)
      */

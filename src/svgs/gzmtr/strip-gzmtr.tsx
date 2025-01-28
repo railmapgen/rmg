@@ -22,10 +22,11 @@ const StripGZMTR = (props: Props) => {
             case 'gz4':
             case 'gz5':
             case 'gz1421':
+                return 20;
             case 'gz11':
             case 'gz1822':
             case 'gz7w':
-                return 20;
+                return 30;
             default:
                 return 0;
         }
@@ -52,7 +53,7 @@ const StripGZMTR = (props: Props) => {
                 return <rect x={-30} y={-58} height={30} width={60} fill="orange" />;
             case 'gz7w':
             case 'gz11':
-                return <ellipse cy={-40} rx={28} ry={14} fill="orange" />;
+                return <ellipse cy={-58} rx={36} ry={18} fill="darkorange" />;
             default:
                 return <></>;
         }
@@ -101,7 +102,7 @@ const PSD = memo(
                     return '62px';
                 case 'gz7w':
                 case 'gz11':
-                    return '70px';
+                    return '96px';
                 default:
                     return '58px';
             }
@@ -110,20 +111,25 @@ const PSD = memo(
             switch (variant) {
                 case 'gz7w':
                 case 'gz11':
-                    return 1.1;
+                    return 1.4;
                 default:
                     return 1;
             }
         })(props.variant);
 
+        const post2022 = [PanelTypeGZMTR.gz7w, PanelTypeGZMTR.gz11].includes(props.variant as PanelTypeGZMTR);
+
         return (
             <PsdNumber
                 num={props.isShowPSD as string}
                 inStrip={isInStrip}
+                showAsPlatformDoor={props.variant === PanelTypeGZMTR.gz11}
                 style={{
                     ['--psd-dy' as any]: psdDy,
                     transform: 'translate(var(--translate-x), var(--translate-y))scale(var(--scale))',
-                    ['--translate-x' as any]: 'calc(var(--rmg-svg-width) / 2 + 80px)',
+                    ['--translate-x' as any]: post2022
+                        ? 'calc(var(--rmg-svg-width) / 2 + 110px)'
+                        : 'calc(var(--rmg-svg-width) / 2 + 80px)',
                     ['--translate-y' as any]: 'calc(var(--rmg-svg-height) - var(--psd-dy, 58px))',
                     ['--scale' as any]: scale,
                 }}

@@ -109,9 +109,9 @@ export const updateStationName = (stationId: string, lang: LanguageCode, value: 
 
 export const toggleStationSecondaryName = (stationId: string, flag: boolean) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
-        const { localisedSecondaryName, ...stationInfo } = getState().param.stn_list[stationId];
+        const { currentLocalisedSecondaryName, ...stationInfo } = getState().param.stn_list[stationId];
         if (flag) {
-            dispatch(setStation(stationId, { ...stationInfo, localisedSecondaryName: {} }));
+            dispatch(setStation(stationId, { ...stationInfo, currentLocalisedSecondaryName: {} }));
         } else {
             dispatch(setStation(stationId, stationInfo));
         }
@@ -124,7 +124,7 @@ export const updateStationSecondaryName = (stationId: string, lang: LanguageCode
         dispatch(
             setStation(stationId, {
                 ...stationInfo,
-                localisedSecondaryName: { ...stationInfo.localisedSecondaryName, [lang]: value },
+                currentLocalisedSecondaryName: { ...stationInfo.currentLocalisedSecondaryName, [lang]: value },
             })
         );
     };

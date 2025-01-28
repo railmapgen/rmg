@@ -17,7 +17,7 @@ export default function InfoSection() {
     const selectedStation = useRootSelector(state => state.app.selectedStation);
     console.log('InfoSection:: Rendering for', selectedStation);
     const style = useRootSelector(state => state.param.style);
-    const { num, localisedName, localisedSecondaryName } = useRootSelector(
+    const { num, localisedName, currentLocalisedSecondaryName } = useRootSelector(
         state => state.param.stn_list[selectedStation]
     );
 
@@ -53,7 +53,7 @@ export default function InfoSection() {
                             { label: t('No'), value: false },
                         ] as { label: string; value: boolean }[]
                     }
-                    defaultValue={!!localisedSecondaryName}
+                    defaultValue={!!currentLocalisedSecondaryName}
                     onChange={flag => dispatch(toggleStationSecondaryName(selectedStation, flag))}
                 />
             ),
@@ -62,18 +62,18 @@ export default function InfoSection() {
         {
             type: 'input',
             label: t('StationSidePanel.info.zhSecondary'),
-            value: localisedSecondaryName?.zh ?? '',
+            value: currentLocalisedSecondaryName?.zh ?? '',
             placeholder: '1号航站楼',
             onChange: (value: string) => dispatch(updateStationSecondaryName(selectedStation, 'zh', value)),
-            hidden: !localisedSecondaryName || ![RmgStyle.GZMTR].includes(style),
+            hidden: !currentLocalisedSecondaryName || ![RmgStyle.GZMTR].includes(style),
         },
         {
             type: 'input',
             label: t('StationSidePanel.info.enSecondary'),
-            value: localisedSecondaryName?.en ?? '',
+            value: currentLocalisedSecondaryName?.en ?? '',
             placeholder: 'Terminal 1',
             onChange: (value: string) => dispatch(updateStationSecondaryName(selectedStation, 'en', value)),
-            hidden: !localisedSecondaryName || ![RmgStyle.GZMTR].includes(style),
+            hidden: !currentLocalisedSecondaryName || ![RmgStyle.GZMTR].includes(style),
         },
     ];
 

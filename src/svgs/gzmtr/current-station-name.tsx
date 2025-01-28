@@ -3,12 +3,13 @@ import { Translation } from '@railmapgen/rmg-translate';
 
 interface CurrentStationNameProps {
     stnName: Translation;
+    bold?: boolean;
     onUpdate?: (bBox: SVGRect) => void;
 }
 
 export default memo(
     function CurrentStationName(props: CurrentStationNameProps) {
-        const { stnName, onUpdate } = props;
+        const { stnName, bold, onUpdate } = props;
 
         const nameEl = useRef<SVGGElement | null>(null);
 
@@ -16,10 +17,10 @@ export default memo(
             if (nameEl.current && onUpdate) {
                 onUpdate(nameEl.current.getBBox());
             }
-        }, [JSON.stringify(stnName)]);
+        }, [JSON.stringify(stnName), bold]);
 
         return (
-            <g ref={nameEl}>
+            <g ref={nameEl} fontWeight={bold ? 'bold' : 'normal'}>
                 <text className="rmg-name__zh" fontSize={92}>
                     {stnName.zh}
                 </text>

@@ -32,7 +32,7 @@ export default function Station(props: Props) {
         if (stationNameEl.current) {
             setNameBBox(stationNameEl.current.getBBox());
         }
-    }, [stationNameEl.current, stnY, stnInfo.localisedName, stnInfo.localisedSecondaryName, stnInfo.services]);
+    }, [stationNameEl.current, stnY, stnInfo.localisedName, stnInfo.currentLocalisedSecondaryName, stnInfo.services]);
 
     const isNameShift = stnInfo.parents.length === 2 || stnInfo.children.length === 2;
     const tickRotation =
@@ -89,7 +89,7 @@ export default function Station(props: Props) {
             <g ref={stationNameEl} transform={`translate(${-nameDX},0)`}>
                 <StationNameWrapper
                     primaryName={stnInfo.localisedName}
-                    secondaryName={stnInfo.localisedSecondaryName}
+                    secondaryName={stnInfo.currentLocalisedSecondaryName}
                     stationState={stnState}
                     flipped={tickRotation === 180}
                     express={stnInfo.services.includes(Services.express)}
