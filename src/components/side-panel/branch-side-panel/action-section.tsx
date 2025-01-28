@@ -37,7 +37,7 @@ export default function ActionSection() {
                         flexShrink: 0,
                         flexBasis: '100%',
 
-                        '&:not(:first-child)': {
+                        '&:not(:first-of-type), &:not(button)': {
                             marginTop: 2,
                         },
                     },

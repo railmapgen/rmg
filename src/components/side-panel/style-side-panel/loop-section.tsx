@@ -36,11 +36,19 @@ export default function LoopSection() {
             </Heading>
 
             <RmgFields fields={fields} />
-            <Flex p={1}>
-                <Button size="sm" variant="outline" leftIcon={<MdSettings />} onClick={handleOpenMoreSettings} flex={1}>
-                    {t('More settings')}
-                </Button>
-            </Flex>
+            {loop && (
+                <Flex p={1}>
+                    <Button
+                        size="sm"
+                        variant="outline"
+                        leftIcon={<MdSettings />}
+                        onClick={handleOpenMoreSettings}
+                        flex={1}
+                    >
+                        {t('More settings')}
+                    </Button>
+                </Flex>
+            )}
         </Box>
     );
 }
