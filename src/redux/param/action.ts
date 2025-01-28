@@ -95,6 +95,92 @@ export const reverseStations = (flipBranch = false) => {
     };
 };
 
+export const rotateStations = (clockwise: boolean) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
+        const { stn_list: stationList } = getState().param;
+        const { branches } = getState().helper;
+        const firstStation = branches[0][1];
+        const secondStation = branches[0][2];
+        const lastStation = branches[0].slice(-2)[0];
+        const lastButOneStation = branches[0].slice(-3)[0];
+        if (!clockwise) {
+            const newStationList = {
+                ...stationList,
+                linestart: {
+                    ...stationList.linestart,
+                    children: stationList.linestart.children.map(stnId =>
+                        stnId === firstStation ? lastStation : stnId
+                    ),
+                },
+                [firstStation]: {
+                    ...stationList[firstStation],
+                    parent: stationList[firstStation].parents.map(stnId =>
+                        stnId === 'linestart' ? lastStation : stnId
+                    ),
+                },
+                [lastButOneStation]: {
+                    ...stationList[lastButOneStation],
+                    children: stationList[lastButOneStation].children.map(stnId =>
+                        stnId === lastStation ? 'lineend' : stnId
+                    ),
+                },
+                [lastStation]: {
+                    ...stationList[lastStation],
+                    parents: stationList[lastStation].parents.map(stnId =>
+                        stnId === lastButOneStation ? 'linestart' : stnId
+                    ),
+                    children: stationList[lastStation].children.map(stnId =>
+                        stnId === 'lineend' ? firstStation : stnId
+                    ),
+                },
+                lineend: {
+                    ...stationList.lineend,
+                    parents: stationList.lineend.parents.map(stnId =>
+                        stnId === lastStation ? lastButOneStation : stnId
+                    ),
+                },
+            };
+            dispatch(setStationsBulk(newStationList));
+        } else {
+            const newStationList = {
+                ...stationList,
+                linestart: {
+                    ...stationList.linestart,
+                    children: stationList.linestart.children.map(stnId =>
+                        stnId === firstStation ? secondStation : stnId
+                    ),
+                },
+                [firstStation]: {
+                    ...stationList[firstStation],
+                    parent: stationList[firstStation].parents.map(stnId =>
+                        stnId === 'linestart' ? lastStation : stnId
+                    ),
+                    children: stationList[firstStation].children.map(stnId =>
+                        stnId === secondStation ? 'lineend' : stnId
+                    ),
+                },
+                [secondStation]: {
+                    ...stationList[secondStation],
+                    parent: stationList[secondStation].parents.map(stnId =>
+                        stnId === firstStation ? 'linestart' : stnId
+                    ),
+                },
+                [lastStation]: {
+                    ...stationList[lastStation],
+                    children: stationList[lastStation].children.map(stnId =>
+                        stnId === 'lineend' ? firstStation : stnId
+                    ),
+                },
+                lineend: {
+                    ...stationList.lineend,
+                    parents: stationList.lineend.parents.map(stnId => (stnId === lastStation ? firstStation : stnId)),
+                },
+            };
+            dispatch(setStationsBulk(newStationList));
+        }
+    };
+};
+
 export const updateStationName = (stationId: string, lang: LanguageCode, value: string) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];

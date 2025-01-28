@@ -5,10 +5,11 @@ import ActionSection from './action-section';
 import { useRootSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
 import { isColineBranch } from '../../../redux/param/coline-action';
+import LoopSection from './loop-section';
 
 export default function BranchSidePanel() {
     const selectedBranch = useRootSelector(state => state.app.selectedBranch);
-    const { style, stn_list: stationList } = useRootSelector(state => state.param);
+    const { style, stn_list: stationList, loop } = useRootSelector(state => state.param);
     const branches = useRootSelector(state => state.helper.branches);
 
     return (
@@ -20,6 +21,13 @@ export default function BranchSidePanel() {
                         <Divider />
                     </>
                 )}
+
+            {loop && (
+                <>
+                    <LoopSection />
+                    <Divider />
+                </>
+            )}
 
             <ActionSection />
         </RmgSidePanelBody>

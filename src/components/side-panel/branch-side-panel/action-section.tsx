@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, Button, Flex, Heading } from '@chakra-ui/react';
-import { MdCached, MdFilter1 } from 'react-icons/md';
+import { Box, Button, Flex, Heading, HStack } from '@chakra-ui/react';
+import { MdCached, MdFilter1, MdRotateLeft, MdRotateRight } from 'react-icons/md';
 import AutoNumModal from '../../modal/auto-num-modal';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import { Direction, Events, RmgStyle } from '../../../constants/constants';
-import { reverseStations } from '../../../redux/param/action';
+import { reverseStations, rotateStations } from '../../../redux/param/action';
 import ConnectDisconnectCard from './connect-disconnect-card';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 
@@ -13,7 +13,7 @@ export default function ActionSection() {
     const { t } = useTranslation();
     const dispatch = useRootDispatch();
 
-    const style = useRootSelector(state => state.param.style);
+    const { style, loop } = useRootSelector(state => state.param);
     const selectedBranch = useRootSelector(state => state.app.selectedBranch);
     const [isAutoNumModalOpen, setIsAutoNumModalOpen] = useState(false);
 
@@ -37,7 +37,7 @@ export default function ActionSection() {
                         flexShrink: 0,
                         flexBasis: '100%',
 
-                        '&:not(:first-of-type)': {
+                        '&:not(:first-child)': {
                             marginTop: 2,
                         },
                     },
@@ -79,6 +79,29 @@ export default function ActionSection() {
                         ? t('BranchSidePanel.action.flip')
                         : t('BranchSidePanel.action.reverse')}
                 </Button>
+
+                {loop && style === RmgStyle.GZMTR && (
+                    <HStack>
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            leftIcon={<MdRotateLeft />}
+                            onClick={() => dispatch(rotateStations(false))}
+                            flex={1}
+                        >
+                            {t('Rotate anticlockwise')}
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            leftIcon={<MdRotateRight />}
+                            onClick={() => dispatch(rotateStations(true))}
+                            flex={1}
+                        >
+                            {t('Rotate clockwise')}
+                        </Button>
+                    </HStack>
+                )}
             </Flex>
 
             <AutoNumModal isOpen={isAutoNumModalOpen} onClose={() => setIsAutoNumModalOpen(false)} />
