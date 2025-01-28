@@ -64,6 +64,7 @@ const InfoGZMTR = () => {
                     <CurrentStationName
                         stnName={localisedName}
                         bold={infoPanelType === PanelTypeGZMTR.gz11}
+                        sparse={infoPanelType === PanelTypeGZMTR.gz11}
                         onUpdate={setNameBBox}
                     />
                     {currentLocalisedSecondaryName && (

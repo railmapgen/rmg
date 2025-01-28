@@ -1,13 +1,13 @@
 import { useRootSelector } from '../../../redux';
 import { CanvasType, ShortDirection } from '../../../constants/constants';
 import ArrowGzmtr, { ARROW_WIDTH } from '../arrow-gzmtr';
-import ViaStation from './via-station';
 import {
     COACH_NUMBER_WIDTH,
     COACH_NUMBER_X_PERCENTAGE,
     getNextViaStations,
     LOOP_NEXT_ARROW_SCALE,
 } from './runin-utils';
+import ViaStations from './via-stations';
 
 type NextViaStationsProps = {
     nameBBox: DOMRect;
@@ -42,6 +42,7 @@ export default function NextViaStations({ nameBBox }: NextViaStationsProps) {
     const {
         localisedName: { zh: zhName = '', en: enName = '' },
     } = stationList[nextStation];
+    const enNameRows = enName.split('\\').length;
     const nameBcrX = (svgWidth - nameBBox.width) / 2;
 
     const transforms = {
@@ -50,6 +51,9 @@ export default function NextViaStations({ nameBBox }: NextViaStationsProps) {
         },
         nextName: {
             x: 80 + 44 * 1.7,
+        },
+        via: {
+            dy: 75 + 25 * (enNameRows - 1),
         },
         arrow: {
             x:
@@ -69,7 +73,7 @@ export default function NextViaStations({ nameBBox }: NextViaStationsProps) {
 
     return (
         <>
-            <g transform={`translate(0,${svgHeight / 2 - 75})`}>
+            <g transform={`translate(0,${svgHeight / 2 + 5 - transforms.via.dy})`}>
                 <g textAnchor="middle" transform={`translate(${transforms.next.x},0)`}>
                     <g fontWeight="bold">
                         <text className="rmg-name__zh" fontSize={44}>
@@ -79,7 +83,7 @@ export default function NextViaStations({ nameBBox }: NextViaStationsProps) {
                             Next
                         </text>
                     </g>
-                    <g transform={`translate(0,75)`}>
+                    <g transform={`translate(0,${transforms.via.dy})`}>
                         <text className="rmg-name__zh" fontSize={20}>
                             途经
                         </text>
@@ -101,14 +105,8 @@ export default function NextViaStations({ nameBBox }: NextViaStationsProps) {
                             ))}
                         </g>
                     </g>
-                    <g transform={`translate(0,75)`}>
-                        {viaStations.map((stationId, i) => (
-                            <ViaStation
-                                key={stationId}
-                                stationInfo={stationList[stationId]}
-                                transform={`translate(0,${42 * i})`}
-                            />
-                        ))}
+                    <g transform={`translate(0,${transforms.via.dy})`}>
+                        <ViaStations viaStations={viaStations} stationList={stationList} />
                     </g>
                 </g>
             </g>
