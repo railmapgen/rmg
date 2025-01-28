@@ -1,6 +1,6 @@
 import { lazy, useState } from 'react';
 import { Box, Button, HStack, IconButton, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
-import { MdAdd } from 'react-icons/md';
+import { MdAdd, MdWarning } from 'react-icons/md';
 import AddStationModal from '../modal/add-station-modal';
 import { useRootDispatch, useRootSelector } from '../../redux';
 import { RmgStyle, SidePanelMode } from '../../constants/constants';
@@ -43,7 +43,17 @@ export default function GridTabs() {
                             return <Tab key={i}>{loop ? t('Loop line') : t('GridTabs.main')}</Tab>;
                         } else {
                             if (style !== RmgStyle.SHMetro || !isColineBranch(branch, stationList)) {
-                                return <Tab key={i}>{t('GridTabs.branch') + ' ' + i}</Tab>;
+                                return (
+                                    <Tab key={i}>
+                                        {t('GridTabs.branch') + ' ' + i}
+                                        {loop && (
+                                            <MdWarning
+                                                style={{ marginLeft: 5 }}
+                                                title={t('Branches are not supported in the loop line.')}
+                                            />
+                                        )}
+                                    </Tab>
+                                );
                             } else {
                                 return <Tab key={i}>{t('GridTabs.external') + ' ' + i}</Tab>;
                             }

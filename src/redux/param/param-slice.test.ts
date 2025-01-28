@@ -28,6 +28,7 @@ import {
     removeInterchange,
     removeStationService,
     reverseStations,
+    rotateStations,
     setFullParam,
     setStationsBulk,
     updateInterchange,
@@ -521,6 +522,72 @@ describe('ParamSlice', () => {
             expect(nextStationList.stn3.num).toBe('10');
             expect(nextStationList.stn4.num).toBe('09');
             expect(nextStationList.lineend.num).toBeUndefined();
+        });
+    });
+
+    describe('ParamAction - rotate stations', () => {
+        const branches = getBranches(mockSimpleStationList);
+        let mockStore: RootStore;
+
+        beforeEach(() => {
+            mockStore = createTestStore({
+                param: {
+                    ...realStore.param,
+                    stn_list: mockSimpleStationList,
+                },
+                helper: {
+                    ...realStore.helper,
+                    branches: branches,
+                },
+            });
+        });
+
+        it('sanity', () => {
+            const branches = mockStore.getState().helper.branches;
+            expect(branches[0]).toEqual(['linestart', 'stn0', 'stn1', 'stn2', 'lineend']);
+            expect(branches[1]).toEqual(['stn1', 'stn3', 'stn4', 'lineend']);
+        });
+
+        it('Can rotate stations anticlockwise by one station', () => {
+            {
+                mockStore.dispatch(rotateStations(false));
+                const branches = mockStore.getState().helper.branches;
+                expect(branches[0]).toEqual(['linestart', 'stn2', 'stn0', 'stn1', 'lineend']);
+                expect(branches[1]).toEqual(['stn1', 'stn3', 'stn4', 'lineend']);
+            }
+            {
+                mockStore.dispatch(rotateStations(false));
+                const branches = mockStore.getState().helper.branches;
+                expect(branches[0]).toEqual(['linestart', 'stn1', 'stn2', 'stn0', 'lineend']);
+                expect(branches[1]).toEqual(['stn1', 'stn3', 'stn4', 'lineend']);
+            }
+            {
+                mockStore.dispatch(rotateStations(false));
+                const branches = mockStore.getState().helper.branches;
+                expect(branches[0]).toEqual(['linestart', 'stn0', 'stn1', 'stn2', 'lineend']);
+                expect(branches[1]).toEqual(['stn1', 'stn3', 'stn4', 'lineend']);
+            }
+        });
+
+        it('Can rotate stations clockwise by one station', () => {
+            {
+                mockStore.dispatch(rotateStations(true));
+                const branches = mockStore.getState().helper.branches;
+                expect(branches[0]).toEqual(['linestart', 'stn1', 'stn2', 'stn0', 'lineend']);
+                expect(branches[1]).toEqual(['stn1', 'stn3', 'stn4', 'lineend']);
+            }
+            {
+                mockStore.dispatch(rotateStations(true));
+                const branches = mockStore.getState().helper.branches;
+                expect(branches[0]).toEqual(['linestart', 'stn2', 'stn0', 'stn1', 'lineend']);
+                expect(branches[1]).toEqual(['stn1', 'stn3', 'stn4', 'lineend']);
+            }
+            {
+                mockStore.dispatch(rotateStations(true));
+                const branches = mockStore.getState().helper.branches;
+                expect(branches[0]).toEqual(['linestart', 'stn0', 'stn1', 'stn2', 'lineend']);
+                expect(branches[1]).toEqual(['stn1', 'stn3', 'stn4', 'lineend']);
+            }
         });
     });
 });

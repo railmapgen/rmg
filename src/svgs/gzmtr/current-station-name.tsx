@@ -27,7 +27,7 @@ export default memo(
 
         const nameEl = useRef<SVGGElement | null>(null);
 
-        const letterSpacing = getLetterSpacing(stnName.zh?.length);
+        const letterSpacing = sparse ? getLetterSpacing(stnName.zh?.length) : 0;
 
         useEffect(() => {
             if (nameEl.current && onUpdate) {
