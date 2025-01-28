@@ -1,27 +1,53 @@
 import { memo, SVGProps, useEffect, useRef, useState } from 'react';
 import { Translation } from '@railmapgen/rmg-translate';
 
+const ZH_NAME_FONT_SIZE = 92;
+
+const getLetterSpacing = (zhNameCount?: number) => {
+    switch (zhNameCount) {
+        case 2:
+            return 0.2;
+        case 3:
+            return 0.1;
+        default:
+            return 0;
+    }
+};
+
 interface CurrentStationNameProps {
     stnName: Translation;
     bold?: boolean;
+    sparse?: boolean;
     onUpdate?: (bBox: SVGRect) => void;
 }
 
 export default memo(
     function CurrentStationName(props: CurrentStationNameProps) {
-        const { stnName, bold, onUpdate } = props;
+        const { stnName, bold, sparse, onUpdate } = props;
 
         const nameEl = useRef<SVGGElement | null>(null);
 
+        const letterSpacing = getLetterSpacing(stnName.zh?.length);
+
         useEffect(() => {
             if (nameEl.current && onUpdate) {
-                onUpdate(nameEl.current.getBBox());
+                const bBox = nameEl.current.getBBox();
+                onUpdate({
+                    ...bBox,
+                    x: bBox.x + (letterSpacing * ZH_NAME_FONT_SIZE) / 2,
+                    width: bBox.width - letterSpacing * ZH_NAME_FONT_SIZE,
+                });
             }
-        }, [JSON.stringify(stnName), bold]);
+        }, [nameEl.current, JSON.stringify(stnName), bold, sparse]);
 
         return (
             <g ref={nameEl} fontWeight={bold ? 'bold' : 'normal'}>
-                <text className="rmg-name__zh" fontSize={92}>
+                <text
+                    className="rmg-name__zh"
+                    fontSize={ZH_NAME_FONT_SIZE}
+                    x={letterSpacing / 2 + 'em'}
+                    letterSpacing={letterSpacing + 'em'}
+                >
                     {stnName.zh}
                 </text>
                 <g fontSize={40}>

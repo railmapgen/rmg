@@ -1,13 +1,13 @@
 import { StationInfo } from '../../../constants/constants';
 import { LineIcon } from '@railmapgen/svg-assets/gzmtr';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
-import { SVGProps, useEffect, useRef, useState } from 'react';
+import { forwardRef, SVGProps, useEffect, useRef, useState } from 'react';
 
 type ViaStationProps = {
     stationInfo: StationInfo;
 } & SVGProps<SVGGElement>;
 
-export default function ViaStation({ stationInfo, ...others }: ViaStationProps) {
+const ViaStation = forwardRef<SVGGElement, ViaStationProps>(function ViaStation({ stationInfo, ...others }, ref) {
     const {
         localisedName,
         transfer: {
@@ -25,14 +25,16 @@ export default function ViaStation({ stationInfo, ...others }: ViaStationProps) 
     }, [nameRef.current, JSON.stringify(localisedName)]);
 
     return (
-        <g {...others}>
+        <g ref={ref} {...others}>
             <g ref={nameRef}>
                 <text className="rmg-name__zh" fontSize={20}>
                     {localisedName.zh}
                 </text>
-                <text className="rmg-name__en" fontSize={12} dy={19}>
-                    {localisedName.en}
-                </text>
+                {localisedName.en?.split('\\')?.map((text, i) => (
+                    <text key={i} className="rmg-name__en" fontSize={12} dy={19 + 12 * i}>
+                        {text}
+                    </text>
+                ))}
             </g>
             <g transform={`translate(${nameBBox.width + 2},7)`}>
                 {lines?.length && (
@@ -53,4 +55,6 @@ export default function ViaStation({ stationInfo, ...others }: ViaStationProps) 
             </g>
         </g>
     );
-}
+});
+
+export default ViaStation;
