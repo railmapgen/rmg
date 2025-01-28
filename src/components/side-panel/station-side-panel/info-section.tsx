@@ -17,7 +17,7 @@ export default function InfoSection() {
     const selectedStation = useRootSelector(state => state.app.selectedStation);
     console.log('InfoSection:: Rendering for', selectedStation);
     const style = useRootSelector(state => state.param.style);
-    const { num, localisedName, currentLocalisedSecondaryName } = useRootSelector(
+    const { num, localisedName, localisedSecondaryName } = useRootSelector(
         state => state.param.stn_list[selectedStation]
     );
 
@@ -53,7 +53,7 @@ export default function InfoSection() {
                             { label: t('No'), value: false },
                         ] as { label: string; value: boolean }[]
                     }
-                    defaultValue={!!currentLocalisedSecondaryName}
+                    defaultValue={!!localisedSecondaryName}
                     onChange={flag => dispatch(toggleStationSecondaryName(selectedStation, flag))}
                 />
             ),
@@ -62,18 +62,18 @@ export default function InfoSection() {
         {
             type: 'input',
             label: t('StationSidePanel.info.zhSecondary'),
-            value: currentLocalisedSecondaryName?.zh ?? '',
+            value: localisedSecondaryName?.zh ?? '',
             placeholder: '1号航站楼',
             onChange: (value: string) => dispatch(updateStationSecondaryName(selectedStation, 'zh', value)),
-            hidden: !currentLocalisedSecondaryName || ![RmgStyle.GZMTR].includes(style),
+            hidden: !localisedSecondaryName || ![RmgStyle.GZMTR].includes(style),
         },
         {
             type: 'input',
             label: t('StationSidePanel.info.enSecondary'),
-            value: currentLocalisedSecondaryName?.en ?? '',
+            value: localisedSecondaryName?.en ?? '',
             placeholder: 'Terminal 1',
             onChange: (value: string) => dispatch(updateStationSecondaryName(selectedStation, 'en', value)),
-            hidden: !currentLocalisedSecondaryName || ![RmgStyle.GZMTR].includes(style),
+            hidden: !localisedSecondaryName || ![RmgStyle.GZMTR].includes(style),
         },
     ];
 

@@ -20,7 +20,7 @@ const InfoGZMTR = () => {
         stn_list: stationList,
     } = useRootSelector(store => store.param);
     const curStnInfo = stationList[currentStationIndex];
-    const { localisedName, currentLocalisedSecondaryName } = curStnInfo;
+    const { localisedName, localisedSecondaryName } = curStnInfo;
 
     const [nameBBox, setNameBBox] = useState({ width: 0 } as SVGRect);
 
@@ -38,7 +38,7 @@ const InfoGZMTR = () => {
     const transforms = {
         nameGroup: {
             x: svgWidths.runin / 2,
-            y: 0.5 * svgHeight - 50 - (enNameRows - 1) * 18 - (currentLocalisedSecondaryName ? 29 : 0),
+            y: 0.5 * svgHeight - 50 - (enNameRows - 1) * 18 - (localisedSecondaryName ? 29 : 0),
         },
         secondaryName: {
             x: 0,
@@ -46,14 +46,14 @@ const InfoGZMTR = () => {
         },
         stationNumber: {
             x: stationNumberX,
-            y: 0.5 * svgHeight - 30 - (enNameRows - 1) * 18 - (currentLocalisedSecondaryName ? 58 / 2 : 0),
+            y: 0.5 * svgHeight - 30 - (enNameRows - 1) * 18 - (localisedSecondaryName ? 58 / 2 : 0),
         },
         stationNumberPost2022: {
             x:
                 direction === ShortDirection.left
                     ? stationNumberX
                     : (svgWidths[CanvasType.RunIn] - nameBBox.width) / 2 - NAME_NUM_GAP,
-            y: 0.5 * svgHeight - (enNameRows - 2) * 18 - (currentLocalisedSecondaryName ? 58 / 2 : 0),
+            y: 0.5 * svgHeight - (enNameRows - 2) * 18 - (localisedSecondaryName ? 58 / 2 : 0),
         },
     };
 
@@ -67,9 +67,9 @@ const InfoGZMTR = () => {
                         sparse={infoPanelType === PanelTypeGZMTR.gz11}
                         onUpdate={setNameBBox}
                     />
-                    {currentLocalisedSecondaryName && (
+                    {localisedSecondaryName && (
                         <CurrentStationSecondaryName
-                            secondaryName={currentLocalisedSecondaryName}
+                            secondaryName={localisedSecondaryName}
                             transform={`translate(${transforms.secondaryName.x},${transforms.secondaryName.y})`}
                         />
                     )}

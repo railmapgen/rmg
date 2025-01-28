@@ -17,7 +17,7 @@ type NextStationProps = {
 export default function NextStation({ nextId, nameBBox, ignoreNumWidth }: NextStationProps) {
     const { svgWidth: svgWidths, svg_height: svgHeight, direction } = useRootSelector(store => store.param);
     const nextInfo = useRootSelector(store => store.param.stn_list[nextId]);
-    const { localisedName, currentLocalisedSecondaryName } = nextInfo;
+    const { localisedName, localisedSecondaryName } = nextInfo;
     const { zh: zhName = '', en: enName = '' } = localisedName;
     const svgWidth = svgWidths[CanvasType.RunIn];
 
@@ -84,10 +84,10 @@ export default function NextStation({ nextId, nameBBox, ignoreNumWidth }: NextSt
                         ))}
                     </g>
                 </g>
-                {currentLocalisedSecondaryName && (
+                {localisedSecondaryName && (
                     <g textAnchor="middle" transform={`translate(${transforms.nextName.x},0)`}>
                         <NextStationSecondary
-                            secName={currentLocalisedSecondaryName}
+                            secName={localisedSecondaryName}
                             transform={`translate(${nextBBox.width / 2},${30 + enName.split('\\').length * 17 + 5})`}
                         />
                     </g>
