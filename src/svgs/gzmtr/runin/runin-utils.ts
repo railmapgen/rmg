@@ -7,6 +7,7 @@ export const COACH_NUMBER_R = 30;
 export const COACH_NUMBER_WIDTH = COACH_NUMBER_R * 4;
 export const COACH_NUMBER_X_PERCENTAGE = 0.85;
 
+export const NEXT_ARROW_SCALE = 0.25;
 export const LOOP_NEXT_ARROW_SCALE = 0.4;
 
 export const getNextViaStations = (

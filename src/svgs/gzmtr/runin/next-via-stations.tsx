@@ -9,6 +9,9 @@ import {
 } from './runin-utils';
 import ViaStations from './via-stations';
 
+const NEXT_ZH_NAME_FONT_SIZE = 44;
+const NEXT_EN_NAME_FONT_SIZE = 25;
+
 type NextViaStationsProps = {
     nameBBox: DOMRect;
 };
@@ -50,7 +53,7 @@ export default function NextViaStations({ nameBBox }: NextViaStationsProps) {
             x: 80,
         },
         nextName: {
-            x: 80 + 44 * 1.7,
+            x: 80 + NEXT_ZH_NAME_FONT_SIZE * 1.7,
         },
         via: {
             dy: 75 + 25 * (enNameRows - 1),
@@ -76,10 +79,10 @@ export default function NextViaStations({ nameBBox }: NextViaStationsProps) {
             <g transform={`translate(0,${svgHeight / 2 + 5 - transforms.via.dy})`}>
                 <g textAnchor="middle" transform={`translate(${transforms.next.x},0)`}>
                     <g fontWeight="bold">
-                        <text className="rmg-name__zh" fontSize={44}>
+                        <text className="rmg-name__zh" fontSize={NEXT_ZH_NAME_FONT_SIZE}>
                             下站
                         </text>
-                        <text className="rmg-name__en" fontSize={25} dy={40}>
+                        <text className="rmg-name__en" fontSize={NEXT_EN_NAME_FONT_SIZE} dy={40}>
                             Next
                         </text>
                     </g>
@@ -94,12 +97,12 @@ export default function NextViaStations({ nameBBox }: NextViaStationsProps) {
                 </g>
                 <g textAnchor="start" transform={`translate(${transforms.nextName.x},0)`}>
                     <g fontWeight="bold">
-                        <text className="rmg-name__zh" fontSize={44}>
+                        <text className="rmg-name__zh" fontSize={NEXT_ZH_NAME_FONT_SIZE}>
                             {zhName}
                         </text>
-                        <g fontSize={25}>
+                        <g fontSize={NEXT_EN_NAME_FONT_SIZE}>
                             {enName.split('\\').map((txt, i) => (
-                                <text className="rmg-name__en" dy={40 + i * 25} key={i}>
+                                <text className="rmg-name__en" dy={40 + i * NEXT_EN_NAME_FONT_SIZE} key={i}>
                                     {txt}
                                 </text>
                             ))}
