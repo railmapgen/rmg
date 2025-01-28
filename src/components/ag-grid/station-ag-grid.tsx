@@ -7,16 +7,16 @@ import {
     ColDef,
     ModuleRegistry,
     provideGlobalGridOptions,
+    RowSelectionOptions,
     SelectionChangedEvent,
 } from 'ag-grid-community';
-import { RmgStyle, SidePanelMode, StationInfo, StationTransfer } from '../../constants/constants';
+import { RmgStyle, SidePanelMode, StationInfo } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { HStack } from '@chakra-ui/react';
 import { setIsShareTrackEnabled, setSelectedStation, setSidePanelMode } from '../../redux/app/app-slice';
 import { getRowSpanForColine } from '../../redux/param/coline-action';
 import GzmtrStationCode from './gzmtr-station-code';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
-import { Translation } from '@railmapgen/rmg-translate';
 
 // Register all community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -29,6 +29,12 @@ interface StationAgGridProps {
 }
 
 type RowDataType = StationInfo & { id: string; rowSpan: [number, string | undefined] };
+
+const rowSelection: RowSelectionOptions = {
+    mode: 'singleRow',
+    checkboxes: false,
+    enableClickSelection: true,
+};
 
 export default function StationAgGrid(props: StationAgGridProps) {
     const { branchIndex } = props;
@@ -75,19 +81,19 @@ export default function StationAgGrid(props: StationAgGridProps) {
                 field: 'localisedName',
                 valueFormatter: ({ value, data }) =>
                     value.zh +
-                    (style === RmgStyle.GZMTR && data?.currentLocalisedSecondaryName?.zh
-                        ? ` (${data.currentLocalisedSecondaryName.zh})`
+                    (style === RmgStyle.GZMTR && data?.localisedSecondaryName?.zh
+                        ? ` (${data.localisedSecondaryName.zh})`
                         : ''),
             },
             {
                 headerName: t('English name'),
-                field: 'localisedName',
-                cellRenderer: ({ value, data }: { value: Translation; data: RowDataType }) => (
+                // field: 'localisedName',
+                cellRenderer: ({ data }: { data: RowDataType }) => (
                     <RmgMultiLineString
                         text={
-                            value.en +
-                            (style === RmgStyle.GZMTR && data.currentLocalisedSecondaryName?.en
-                                ? ` (${data.currentLocalisedSecondaryName.en})`
+                            data.localisedName.en +
+                            (style === RmgStyle.GZMTR && data.localisedSecondaryName?.en
+                                ? ` (${data.localisedSecondaryName.en})`
                                 : '')
                         }
                     />
@@ -96,10 +102,10 @@ export default function StationAgGrid(props: StationAgGridProps) {
             },
             {
                 headerName: t('StationAgGrid.interchange'),
-                field: 'transfer',
-                cellRenderer: ({ value }: { value: StationTransfer }) => (
+                // field: 'transfer',
+                cellRenderer: ({ data }: { data: RowDataType }) => (
                     <HStack>
-                        {value.groups
+                        {data.transfer.groups
                             .map(group => group.lines ?? [])
                             .flat()
                             .map((it, i) => (
@@ -116,14 +122,14 @@ export default function StationAgGrid(props: StationAgGridProps) {
             },
             {
                 headerName: t('StationAgGrid.coline'),
-                field: 'rowSpan',
+                // field: 'rowSpan',
                 rowSpan: ({ data }) => data?.rowSpan[0] ?? 0,
                 cellClassRules: {
-                    'rmg-ag-grid--spanned-cell': ({ value }) => value[0] > 0,
+                    'rmg-ag-grid--spanned-cell': ({ data }) => !!data && data.rowSpan[0] > 0,
                 },
-                cellRenderer: ({ value }: { value: RowDataType['rowSpan'] }) => (
+                cellRenderer: ({ data }: { data: RowDataType }) => (
                     <HStack>
-                        {coline[value[1] as string]?.colors?.map((it, i) => (
+                        {coline[data.rowSpan[1] as string]?.colors?.map((it, i) => (
                             <RmgLineBadge key={i} name={[it[4], it[5]]} bg={it[2]} fg={it[3]} showShortName />
                         ))}
                     </HStack>
@@ -182,7 +188,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
                 suppressCellFocus={true}
                 suppressMovableColumns={true}
                 suppressRowTransform={true}
-                rowSelection={'single'}
+                rowSelection={rowSelection}
                 onSelectionChanged={handleSelectionChanged}
                 onGridReady={handleGridReady}
                 debug={import.meta.env.DEV}

@@ -40,7 +40,7 @@ export default function NextViaStations({ nameBBox }: NextViaStationsProps) {
 
     const {
         localisedName: { en: currentEnName = '' },
-        currentLocalisedSecondaryName,
+        localisedSecondaryName,
     } = stationList[currentStation];
     const {
         localisedName: { zh: zhName = '', en: enName = '' },
@@ -66,10 +66,7 @@ export default function NextViaStations({ nameBBox }: NextViaStationsProps) {
                           (svgWidth * COACH_NUMBER_X_PERCENTAGE - COACH_NUMBER_WIDTH / 2)) /
                           2 +
                       (ARROW_WIDTH * LOOP_NEXT_ARROW_SCALE) / 2,
-            y:
-                0.5 * svgHeight -
-                (currentEnName.split('\\').length - 2) * 18 -
-                (currentLocalisedSecondaryName ? 58 / 2 : 0),
+            y: 0.5 * svgHeight - (currentEnName.split('\\').length - 2) * 18 - (localisedSecondaryName ? 58 / 2 : 0),
             rotate: direction === ShortDirection.left ? 0 : 180,
         },
     };
