@@ -44,8 +44,9 @@ const RailMapGZMTR = () => {
                 isShowPSD={infoPanelType === PanelTypeGZMTR.gz2otis && psdNumber}
             />
 
-            {(direction === ShortDirection.left && curStnInfo.parents.includes('linestart')) ||
-            (direction === ShortDirection.right && curStnInfo.children.includes('lineend')) ? (
+            {!loop &&
+            ((direction === ShortDirection.left && curStnInfo.parents.includes('linestart')) ||
+                (direction === ShortDirection.right && curStnInfo.children.includes('lineend'))) ? (
                 <TerminusFlag />
             ) : (
                 <>
