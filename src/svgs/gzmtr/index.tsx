@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { CanvasType } from '../../constants/constants';
 import RailMapGZMTR from './rail-map/railmap-gzmtr';
-import RunInGZMTR from './runin-gzmtr';
+import RunInGZMTR from './runin/runin-gzmtr';
 
 const gzmtrSvgs: Partial<Record<CanvasType, ReactNode>> = {
     runin: <RunInGZMTR />,

@@ -56,7 +56,11 @@ export default function LayoutSection() {
         },
         {
             type: 'slider',
-            label: !loop ? t('Branch spacing') : t('StyleSidePanel.layout.branchSpacingLoop'),
+            label: !loop
+                ? t('Branch spacing')
+                : rmgStyle === RmgStyle.GZMTR
+                  ? t('StyleSidePanel.layout.loopSpacing')
+                  : t('StyleSidePanel.layout.branchSpacingLoop'),
             value: branchSpacingPct,
             min: 0,
             max: loop ? 50 : 100,

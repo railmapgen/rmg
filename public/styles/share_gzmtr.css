@@ -57,7 +57,7 @@ g#big_next_2 text:nth-child(3) {
 }
 
 #runin #arrow {
-    transform: translate(var(--translate-x, 300px), var(--translate-y)) scale(0.25) rotate(var(--rotate, 0deg));
+    transform: translate(var(--translate-x, 300px), var(--translate-y)) scale(var(--scale, 0.25)) rotate(var(--rotate, 0deg));
     --translate-y: calc(var(--rmg-svg-height) / 2 - 30px);
 }
 

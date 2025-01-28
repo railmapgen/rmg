@@ -1,11 +1,12 @@
-import StripGZMTR from './strip-gzmtr';
-import InfoGZMTR from './info-gzmtr';
-import { useRootSelector } from '../../redux';
-import { CanvasType, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
-import PlatformNumber from './platform-number';
-import SvgWrapper from '../svg-wrapper';
-import OtisFrame from './otis-frame';
-import CoachNumber from './runin/coach-number';
+import StripGZMTR from '../strip-gzmtr';
+import InfoGZMTR from '../info-gzmtr';
+import { useRootSelector } from '../../../redux';
+import { CanvasType, PanelTypeGZMTR, ShortDirection } from '../../../constants/constants';
+import PlatformNumber from '../platform-number';
+import SvgWrapper from '../../svg-wrapper';
+import OtisFrame from '../otis-frame';
+import CoachNumber from './coach-number';
+import { COACH_NUMBER_X_PERCENTAGE } from './runin-utils';
 
 const CANVAS_TYPE = CanvasType.RunIn;
 
@@ -25,7 +26,7 @@ export default function RunInGZMTR() {
     const svgWidth = svgWidths[CANVAS_TYPE];
 
     const post2022 = [PanelTypeGZMTR.gz7w, PanelTypeGZMTR.gz11].includes(infoPanelType as PanelTypeGZMTR);
-    const platformNumY = post2022 ? svgHeight - 60 : svgHeight / 2 - 30;
+    const platformNumY = post2022 ? svgHeight - 78 : svgHeight / 2 - 30;
     const otisTransforms = {
         platform: `translate(${direction === ShortDirection.left ? 50 : -50},45)`,
     };
@@ -47,15 +48,19 @@ export default function RunInGZMTR() {
                 <PlatformNumber
                     num={platformNumber}
                     style={{
-                        ['--translate-x' as any]: `${direction === ShortDirection.left ? svgWidth - 100 : 100}px`,
+                        ['--translate-x' as any]: `${direction === ShortDirection.left || infoPanelType === PanelTypeGZMTR.gz11 ? svgWidth - 100 : 100}px`,
                         ['--translate-y' as any]: platformNumY + 'px',
-                        transform: 'translate(var(--translate-x, 100px), var(--translate-y))',
+                        ['--scale' as any]: post2022 ? 1.15 : 1,
+                        transform: 'translate(var(--translate-x, 100px), var(--translate-y))scale(var(--scale))',
                     }}
                 />
             </g>
 
             {post2022 && (
-                <CoachNumber coachNumber={coachNum} transform={`translate(${svgWidth * 0.85},${svgHeight * 0.65})`} />
+                <CoachNumber
+                    coachNumber={coachNum}
+                    transform={`translate(${svgWidth * COACH_NUMBER_X_PERCENTAGE},${svgHeight * 0.58})`}
+                />
             )}
 
             <InfoGZMTR />
