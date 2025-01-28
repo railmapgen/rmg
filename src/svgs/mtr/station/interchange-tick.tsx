@@ -51,7 +51,7 @@ function InterchangeTick(props: InterchangeTickProps) {
         },
         [Position.UP]: {
             path: { rotate: 180 },
-            use: { x: 0, y: -41 },
+            use: { x: repel === Direction.left ? -7 : 7, y: -41 },
             g: {
                 x: (facility ? (repel === Direction.left ? -14 : repel === Direction.right ? 14 : 10) : 0) + repelDX,
                 y: -36 - extraHeights,
@@ -59,7 +59,7 @@ function InterchangeTick(props: InterchangeTickProps) {
         },
         [Position.DOWN]: {
             path: { rotate: 0 },
-            use: { x: 0, y: 26 },
+            use: { x: repel === Direction.left ? -7 : 7, y: 26 },
             g: {
                 x: (facility ? (repel === Direction.left ? -14 : repel === Direction.right ? 14 : 10) : 0) + repelDX,
                 y: 31,

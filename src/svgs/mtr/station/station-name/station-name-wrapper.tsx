@@ -25,12 +25,14 @@ const NAME_EN_HEIGHT = 13.21875;
 const NAME_ZH_EN_GAP = 16;
 /**
  * Height (in pixels) from the top of station's Chinese name to the bottom of English name (1 line).
+ * This is also the width and height of the facility icon.
  */
 export const NAME_FULL_HEIGHT = -NAME_ZH_TOP + NAME_ZH_EN_GAP + NAME_EN_HEIGHT + NAME_EN_TOP;
 /**
  * Height (in pixels) of the gap between the centre of the line and the top of station's Chinese name.
  */
 const STN_NAME_LINE_GAP = 14;
+const MULTI_INTERCHANGES_EXTRA_GAP = 11;
 
 interface StationNameWrapperProps extends SVGProps<SVGGElement> {
     stationName: Translation;
@@ -38,10 +40,11 @@ interface StationNameWrapperProps extends SVGProps<SVGGElement> {
     facility?: Facilities;
     lower?: boolean;
     align?: Direction;
+    interchangeCount?: number;
 }
 
 export default function StationNameWrapper(props: StationNameWrapperProps) {
-    const { stationName, stationState, lower, align, facility, ...others } = props;
+    const { stationName, stationState, lower, align, facility, interchangeCount = 0, ...others } = props;
 
     /**
      * align = undefined: { x: -40, width: 80 }
@@ -87,25 +90,32 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
             height: NAME_FULL_HEIGHT + 2 + 11 * (nameEnRows - 1),
         },
         use: {
-            x: align
-                ? align === Direction.right
-                    ? -(NAME_FULL_HEIGHT + 2) / 2 - bBox.width - 3
-                    : (NAME_FULL_HEIGHT + 2) / 2 - 2
-                : -(bBox.width + 3) / 2,
+            x:
+                align === Direction.right
+                    ? -(NAME_FULL_HEIGHT + 2) / 2 -
+                      bBox.width -
+                      3 -
+                      (interchangeCount > 1 ? MULTI_INTERCHANGES_EXTRA_GAP : 0)
+                    : align === Direction.left
+                      ? (NAME_FULL_HEIGHT + 2) / 2 - 2 + (interchangeCount > 1 ? MULTI_INTERCHANGES_EXTRA_GAP : 0)
+                      : -(bBox.width + 3) / 2,
             y: NAME_ZH_TOP - 1 + 5.5 * (nameEnRows - 1),
         },
         StationName: {
-            x: !facility
-                ? 0
-                : align
-                  ? align === Direction.right
-                      ? 0
-                      : NAME_FULL_HEIGHT + 3
-                  : (NAME_FULL_HEIGHT + 5) / 2,
+            x:
+                align === Direction.right
+                    ? interchangeCount > 1
+                        ? -MULTI_INTERCHANGES_EXTRA_GAP
+                        : 0
+                    : align === Direction.left
+                      ? (interchangeCount > 1 ? MULTI_INTERCHANGES_EXTRA_GAP : 0) +
+                        (facility ? NAME_FULL_HEIGHT + 3 : 0)
+                      : facility
+                        ? (NAME_FULL_HEIGHT + 5) / 2
+                        : 0,
             y: 0,
         },
     };
-
     return (
         <g {...others}>
             <g fill={getFill(stationState)} transform={`translate(${transforms.g.x},${transforms.g.y})`}>

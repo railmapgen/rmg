@@ -78,7 +78,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
             type: 'select',
             label: t('Line icon'),
             value: it.facility,
-            options: facilityOptions,
+            options: { '': t('None'), ...facilityOptions },
             onChange: val => onUpdate?.(i, { ...it, facility: val as Facilities }),
             hidden: ![RmgStyle.MTR].includes(style),
         },
