@@ -89,6 +89,7 @@ export default function Station(props: StationProps) {
                             : Direction.right
                         : undefined
                 }
+                interchangeCount={groups[0].lines?.length}
             />
         </g>
     );
