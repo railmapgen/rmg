@@ -78,6 +78,18 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
             x:
                 bBox.x -
                 3 +
+                (align === Direction.right
+                    ? facility
+                        ? -3 - NAME_FULL_HEIGHT - (interchangeCount > 1 ? MULTI_INTERCHANGES_EXTRA_GAP : 0)
+                        : 0
+                    : align === Direction.left
+                      ? 0
+                      : facility
+                        ? (NAME_FULL_HEIGHT + 5) / 2 - 3 - NAME_FULL_HEIGHT
+                        : 0),
+            x2:
+                bBox.x -
+                3 +
                 (!facility
                     ? 0
                     : align
