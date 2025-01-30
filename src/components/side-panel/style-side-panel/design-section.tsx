@@ -161,7 +161,7 @@ export default function DesignSection() {
             label: t('StyleSidePanel.design.panelType'),
             value: info_panel_type,
             options: style === RmgStyle.GZMTR ? panelTypeGZMTROptions : panelTypeSHMetroOptions,
-            disabledOptions: [PanelTypeGZMTR.gz1822],
+            disabledOptions: loop ? [PanelTypeGZMTR.gz1822] : [PanelTypeGZMTR.gz11, PanelTypeGZMTR.gz1822],
             onChange: value => dispatch(setPanelType(value as PanelTypeGZMTR | PanelTypeShmetro)),
             hidden: ![RmgStyle.GZMTR, RmgStyle.SHMetro].includes(style),
         },
