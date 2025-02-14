@@ -1,4 +1,4 @@
-import { SVGProps, useState } from 'react';
+import { SVGProps, useEffect, useRef, useState } from 'react';
 import { Direction, Facilities, StationState } from '../../../../constants/constants';
 import StationName from './station-name';
 import { Translation } from '@railmapgen/rmg-translate';
@@ -52,6 +52,14 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
      * align = right: { x: -80, width: 80 }
      */
     const [bBox, setBBox] = useState({ x: 0, width: 0 } as SVGRect);
+    const [gBBox, setGBBox] = useState({ x: 0, width: 0 } as SVGRect);
+    const gRef = useRef<SVGGElement>(null);
+
+    useEffect(() => {
+        if (gRef.current) {
+            setGBBox(gRef.current.getBBox());
+        }
+    }, [gRef.current, JSON.stringify(stationName), facility, align, interchangeCount]);
 
     const getFill = (state: StationState) => {
         switch (state) {
@@ -69,37 +77,8 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
         g: {
             x: align ? (align === Direction.right ? -3 : 3) : 0,
             y:
-                (lower
-                    ? STN_NAME_LINE_GAP - NAME_ZH_TOP
-                    : -STN_NAME_LINE_GAP - NAME_ZH_TOP - NAME_FULL_HEIGHT - 11 * (nameEnRows - 1)) +
+                (lower ? STN_NAME_LINE_GAP - NAME_ZH_TOP : -STN_NAME_LINE_GAP - NAME_ZH_TOP - gBBox.height) +
                 (align ? (lower ? 10 : -10) : 0),
-        },
-        rect: {
-            x:
-                bBox.x -
-                3 +
-                (align === Direction.right
-                    ? facility
-                        ? -3 - NAME_FULL_HEIGHT - (interchangeCount > 1 ? MULTI_INTERCHANGES_EXTRA_GAP : 0)
-                        : 0
-                    : align === Direction.left
-                      ? 0
-                      : facility
-                        ? (NAME_FULL_HEIGHT + 5) / 2 - 3 - NAME_FULL_HEIGHT
-                        : 0),
-            x2:
-                bBox.x -
-                3 +
-                (!facility
-                    ? 0
-                    : align
-                      ? align === Direction.right
-                          ? -3 - NAME_FULL_HEIGHT
-                          : 0
-                      : (NAME_FULL_HEIGHT + 5) / 2 - 3 - NAME_FULL_HEIGHT),
-            y: NAME_ZH_TOP - 1,
-            width: bBox.width + 6 + (!facility ? 0 : NAME_FULL_HEIGHT + 3),
-            height: NAME_FULL_HEIGHT + 2 + 11 * (nameEnRows - 1),
         },
         use: {
             x:
@@ -129,18 +108,18 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
         },
     };
     return (
-        <g {...others}>
-            <g fill={getFill(stationState)} transform={`translate(${transforms.g.x},${transforms.g.y})`}>
-                {stationState === StationState.CURRENT && (
-                    <rect
-                        x={transforms.rect.x}
-                        y={transforms.rect.y}
-                        width={transforms.rect.width}
-                        height={transforms.rect.height}
-                        fill="var(--rmg-black)"
-                    />
-                )}
+        <g fill={getFill(stationState)} transform={`translate(${transforms.g.x},${transforms.g.y})`} {...others}>
+            {stationState === StationState.CURRENT && (
+                <rect
+                    x={gBBox.x - 3}
+                    y={gBBox.y - 1}
+                    width={gBBox.width + 6}
+                    height={gBBox.height + 2}
+                    fill="var(--rmg-black)"
+                />
+            )}
 
+            <g ref={gRef}>
                 {facility && (
                     <use
                         xlinkHref={`#${facility}`}
@@ -149,7 +128,6 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
                         y={transforms.use.y}
                     />
                 )}
-
                 <g transform={`translate(${transforms.StationName.x},${transforms.StationName.y})`}>
                     <StationName stnName={stationName} onUpdate={setBBox} align={align} />
                 </g>
