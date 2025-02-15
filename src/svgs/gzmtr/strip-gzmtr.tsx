@@ -67,6 +67,15 @@ const StripGZMTR = (props: Props) => {
                     ['--height' as any]: `${stripHeight}px`,
                 }}
             />
+            {props.variant === PanelTypeGZMTR.gz1 && (
+                <rect
+                    height={2}
+                    style={{
+                        width: 'var(--rmg-svg-width)',
+                        transform: `translateY(calc(var(--rmg-svg-height) - ${stripHeight + 2}px))`,
+                    }}
+                />
+            )}
             <g
                 style={{
                     transform: 'translate(calc(var(--rmg-svg-width) / 2),var(--rmg-svg-height))',
