@@ -56,10 +56,16 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
     const gRef = useRef<SVGGElement>(null);
 
     useEffect(() => {
-        if (gRef.current) {
-            setGBBox(gRef.current.getBBox());
-        }
-    }, [gRef.current, JSON.stringify(stationName), facility, align, interchangeCount]);
+        const timeoutId = setTimeout(() => {
+            if (gRef.current) {
+                setGBBox(gRef.current.getBBox());
+            }
+        }, 100);
+
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, [gRef.current, bBox, facility, align, interchangeCount]);
 
     const getFill = (state: StationState) => {
         switch (state) {
