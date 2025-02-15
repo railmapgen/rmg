@@ -50,7 +50,7 @@ export default function RunInGZMTR() {
                     style={{
                         ['--translate-x' as any]: `${direction === ShortDirection.left || infoPanelType === PanelTypeGZMTR.gz11 ? svgWidth - 100 : 100}px`,
                         ['--translate-y' as any]: platformNumY + 'px',
-                        ['--scale' as any]: 1.15,
+                        ['--scale' as any]: post2022 ? 1.15 : 1,
                         transform: 'translate(var(--translate-x, 100px), var(--translate-y))scale(var(--scale))',
                     }}
                 />

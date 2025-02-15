@@ -13,13 +13,12 @@ const StripGZMTR = (props: Props) => {
         switch (variant) {
             case 'gz28':
             case 'gz2otis':
-                return 60;
             case 'gz6':
             case 'gzgf':
-                return 74;
+                return 60;
             case 'gz1':
             case 'gz3':
-                return 48;
+                return 40;
             case 'gz4':
             case 'gz5':
             case 'gz1421':
@@ -35,20 +34,20 @@ const StripGZMTR = (props: Props) => {
     const indicatorLight = useMemo(() => {
         switch (props.variant) {
             case 'gz1':
-                return <circle cy={-48} r={20} fill="red" />;
+                return <circle cy={-65} r={20} fill="red" />;
             case 'gz28':
             case 'gz2otis':
                 return <ellipse cy={-30} rx={24} ry={12} fill="orange" />;
             case 'gz3':
-                return <rect x={-18} y={-65} height={36} width={36} fill="red" />;
+                return <rect x={-18} y={-58} height={36} width={36} fill="red" />;
             case 'gz6':
-                return <ellipse cy={-37} rx={36} ry={18} fill="white" />;
+                return <ellipse cy={-30} rx={24} ry={12} fill="white" />;
             case 'gz5':
-                return <rect x={-30} y={-75} height={30} width={60} fill="orange" />;
+                return <rect x={-30} y={-80} height={35} width={60} fill="whitesmoke" />;
             case 'gz4':
                 return <rect x={-60} y={-68} height={30} width={120} fill="whitesmoke" />;
             case 'gzgf':
-                return <rect x={-36} y={-62} height={36} width={72} fill="orange" />;
+                return <rect x={-30} y={-58} height={30} width={60} fill="orange" />;
             case 'gz1421':
             case 'gz7w':
             case 'gz11':
@@ -92,20 +91,17 @@ const PSD = memo(
             switch (variant) {
                 case 'gz1':
                 case 'gz3':
-                    return '110px';
+                    return '93px';
                 case 'gz4':
-                    return '92px';
+                    return '86px';
                 case 'gz5':
-                    return '100px';
-                case 'gz6':
-                case 'gzgf':
-                    return '70px';
+                    return '90px';
                 case 'gz1421':
                 case 'gz7w':
                 case 'gz11':
                     return '96px';
                 default:
-                    return '58px';
+                    return '56px';
             }
         })(props.variant);
         const scale = ((variant: PanelTypeGZMTR | PanelTypeShmetro) => {
@@ -114,8 +110,7 @@ const PSD = memo(
                 case 'gz3':
                 case 'gz4':
                 case 'gz5':
-                case 'gz6':
-                case 'gzgf':
+                    return 1.2;
                 case 'gz1421':
                 case 'gz7w':
                 case 'gz11':
@@ -130,8 +125,6 @@ const PSD = memo(
             PanelTypeGZMTR.gz3,
             PanelTypeGZMTR.gz4,
             PanelTypeGZMTR.gz5,
-            PanelTypeGZMTR.gz6,
-            PanelTypeGZMTR.gzgf,
             PanelTypeGZMTR.gz1421,
             PanelTypeGZMTR.gz7w,
             PanelTypeGZMTR.gz11,
