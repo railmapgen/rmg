@@ -3,6 +3,7 @@
     font-family: Arial, SimHei, STHeitiSC-Medium, 'PingFang SC', sans-serif;
     font-weight: normal;
 }
+
 .rmg-name__en {
     dominant-baseline: middle;
     font-family: Arial, sans-serif;
@@ -11,8 +12,14 @@
 rect#strip_gz {
     fill: var(--rmg-theme-colour);
     width: var(--rmg-svg-width);
-    transform: translateY(calc(var(--rmg-svg-height) - var(--height, 60px)));
-    height: var(--height, 60px);
+    transform: translateY(calc(var(--rmg-svg-height) - var(--strip-height)));
+    height: var(--strip-height);
+}
+
+.gz1-gap {
+    width: var(--rmg-svg-width);
+    transform: translateY(calc(var(--rmg-svg-height) - var(--strip-height) - 2px));
+    height: 2px;
 }
 
 .rmg-name__gzmtr--white-fg {
@@ -33,12 +40,15 @@ g#big_sec {
 .Name.Pass {
     fill: #aaa;
 }
+
 .Name.Current {
     fill: #fff;
 }
+
 .Name.CurrentGZ {
     fill: #f00;
 }
+
 .Name.Future {
     fill: #000;
 }
