@@ -60,22 +60,12 @@ const StripGZMTR = (props: Props) => {
     const stripDy = -15;
 
     return (
-        <g transform={`translate(0,${props.variant === 'gz4' ? stripDy : 0})`}>
-            <rect
-                id="strip_gz"
-                style={{
-                    ['--height' as any]: `${stripHeight}px`,
-                }}
-            />
-            {props.variant === PanelTypeGZMTR.gz1 && (
-                <rect
-                    height={2}
-                    style={{
-                        width: 'var(--rmg-svg-width)',
-                        transform: `translateY(calc(var(--rmg-svg-height) - ${stripHeight + 2}px))`,
-                    }}
-                />
-            )}
+        <g
+            transform={`translate(0,${props.variant === 'gz4' ? stripDy : 0})`}
+            style={{ ['--strip-height' as any]: `${stripHeight}px` }}
+        >
+            <rect id="strip_gz" />
+            {props.variant === PanelTypeGZMTR.gz1 && <rect className="gz1-gap" />}
             <g
                 style={{
                     transform: 'translate(calc(var(--rmg-svg-width) / 2),var(--rmg-svg-height))',
