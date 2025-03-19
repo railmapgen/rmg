@@ -12,7 +12,7 @@
         "@emotion/styled": "^11.14.0",
         "@railmapgen/rmg-components": "^10.1.12",
         "@railmapgen/rmg-palette-resources": "^2.2.5",
-        "@railmapgen/rmg-runtime": "^10.4.0",
+        "@railmapgen/rmg-runtime": "^12.0.0",
         "@railmapgen/rmg-translate": "^3.4.1",
         "@railmapgen/svg-assets": "^5.0.12",
         "@reduxjs/toolkit": "^2.6.1",
