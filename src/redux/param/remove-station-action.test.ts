@@ -362,4 +362,54 @@ describe('Unit tests for removeStation action', () => {
         expect(newStationList.stn1.branch?.right).toEqual([BranchStyle.through, 'stn4']);
         expect(newStationList.stn4.parents).toEqual(['stn1']);
     });
+
+    it('Can remove station which is the end of a bypass', () => {
+        /**
+         * stn1 - stn2 - - - - stn4
+         *         ^   \      /
+         *               stn3
+         */
+        const mockStationList = {
+            linestart: {
+                parents: [],
+                children: ['stn1'],
+            },
+            stn1: {
+                parents: ['linestart'],
+                children: ['stn2'],
+            },
+            stn2: {
+                parents: ['stn1'],
+                children: ['stn4', 'stn3'],
+                branch: { right: [BranchStyle.through, 'stn3'] },
+            },
+            stn3: {
+                parents: ['stn2'],
+                children: ['stn4'],
+            },
+            stn4: {
+                parents: ['stn2', 'stn3'],
+                children: ['lineend'],
+                branch: { left: [BranchStyle.through, 'stn3'] },
+            },
+            lineend: {
+                parents: ['stn4'],
+                children: [],
+            },
+        } as any as StationDict;
+        const mockStore = createTestStoreWithStations(mockStationList);
+
+        const validity = mockStore.dispatch(checkStationCouldBeRemoved('stn2'));
+        expect(validity).toBeTruthy();
+
+        mockStore.dispatch(removeStation('stn2'));
+
+        const newStationList = mockStore.getState().param.stn_list;
+        expect(newStationList.stn1.children).toEqual(['stn4', 'stn3']);
+        expect(newStationList.stn1.branch?.right).toEqual([BranchStyle.through, 'stn3']);
+        expect(newStationList.stn3.parents).toEqual(['stn1']);
+        expect(newStationList.stn3.children).toEqual(['stn4']);
+        expect(newStationList.stn4.parents).toEqual(['stn1', 'stn3']);
+        expect(newStationList.stn4.branch?.left).toEqual([BranchStyle.through, 'stn3']);
+    });
 });
