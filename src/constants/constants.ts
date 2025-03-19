@@ -192,6 +192,7 @@ export enum PanelTypeGZMTR {
 export enum PanelTypeShmetro {
     sh = 'sh',
     sh2020 = 'sh2020',
+    sh2024 = 'sh2024',
 }
 
 /**
