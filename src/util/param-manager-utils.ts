@@ -54,7 +54,7 @@ export const getParamRegistry = (): ParamConfig[] => {
 
 export const getParamConfig = (id: string): ParamConfig | undefined => {
     const configStr = rmgRuntime.storage.get(LocalStorageKey.PARAM_CONFIG_BY_ID + id);
-    return configStr ? JSON.parse(configStr) : configStr;
+    return configStr ? JSON.parse(configStr) : undefined;
 };
 
 export const getParam = (id: string): { param: any; config?: ParamConfig } => {
