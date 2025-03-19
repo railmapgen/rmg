@@ -505,8 +505,8 @@ const NextText = (props: { nextName: Translation } & SVGProps<SVGGElement>) => {
 };
 
 const PrevStn = (props: { stnIds: string[] }) => {
-    const param = useRootSelector(store => store.param);
-    const prevNames = props.stnIds.map(stnId => param.stn_list[stnId].localisedName);
+    const { stn_list, direction, svgWidth, info_panel_type } = useRootSelector(store => store.param);
+    const prevNames = props.stnIds.map(stnId => stn_list[stnId].localisedName);
     const prevHintDy =
         (props.stnIds.length > 1 ? 15 : 125) +
         prevNames.map(name => name.zh?.split('\\')?.length ?? 1).reduce((acc, cur) => acc + cur, -prevNames.length) *
@@ -519,11 +519,13 @@ const PrevStn = (props: { stnIds: string[] }) => {
             ? (prevZhName.split('\\').length - 1) * -50 + (prevEnName.split('\\').length - 1) * -30
             : 0) + 70;
 
+    const previousText = info_panel_type === 'sh2024' ? 'Previous Stop' : 'Past Stop';
+
     return (
         <g
             fill="gray"
-            textAnchor={param.direction === 'l' ? 'end' : 'start'}
-            transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},0)`}
+            textAnchor={direction === 'l' ? 'end' : 'start'}
+            transform={`translate(${direction === 'l' ? svgWidth.runin - 36 : 36},0)`}
         >
             <NextText nextName={prevNames[0]} transform="translate(0,183)" />
             {props.stnIds.length > 1 && (
@@ -533,8 +535,8 @@ const PrevStn = (props: { stnIds: string[] }) => {
                 <text className="rmg-name__zh rmg-outline" fontSize={22}>
                     上一站
                 </text>
-                <text className="rmg-name__en rmg-outline" fontSize={12} dx={param.direction === 'l' ? -70 : 70}>
-                    Past Stop
+                <text className="rmg-name__en rmg-outline" fontSize={12} dx={direction === 'l' ? -70 : 70}>
+                    {previousText}
                 </text>
             </g>
         </g>
@@ -542,8 +544,8 @@ const PrevStn = (props: { stnIds: string[] }) => {
 };
 
 const NextStn = (props: { stnIds: string[] }) => {
-    const param = useRootSelector(store => store.param);
-    const nextNames = props.stnIds.map(stnId => param.stn_list[stnId].localisedName);
+    const { stn_list, direction, svgWidth } = useRootSelector(store => store.param);
+    const nextNames = props.stnIds.map(stnId => stn_list[stnId].localisedName);
     const nextHintDy =
         (props.stnIds.length > 1 ? 15 : 125) +
         nextNames.map(name => name.zh?.split('\\')?.length ?? 1).reduce((acc, cur) => acc + cur, -nextNames.length) *
@@ -558,13 +560,13 @@ const NextStn = (props: { stnIds: string[] }) => {
 
     return (
         <g
-            textAnchor={param.direction === 'l' ? 'start' : 'end'}
-            transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},0)`}
+            textAnchor={direction === 'l' ? 'start' : 'end'}
+            transform={`translate(${direction === 'l' ? 36 : svgWidth.runin - 36},0)`}
         >
-            <NextText nextName={param.stn_list[props.stnIds[0]].localisedName} transform="translate(0,183)" />
+            <NextText nextName={stn_list[props.stnIds[0]].localisedName} transform="translate(0,183)" />
             {props.stnIds.length > 1 && (
                 <NextText
-                    nextName={param.stn_list[props.stnIds[1]].localisedName}
+                    nextName={stn_list[props.stnIds[1]].localisedName}
                     transform={`translate(0,${nextBranchTextDy})`}
                 />
             )}
@@ -572,7 +574,7 @@ const NextStn = (props: { stnIds: string[] }) => {
                 <text className="rmg-name__zh rmg-outline" fontSize={22}>
                     下一站
                 </text>
-                <text className="rmg-name__en rmg-outline" fontSize={12} dx={param.direction === 'l' ? 70 : -70}>
+                <text className="rmg-name__en rmg-outline" fontSize={12} dx={direction === 'l' ? 70 : -70}>
                     Next Stop
                 </text>
             </g>
