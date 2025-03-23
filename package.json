@@ -58,5 +58,5 @@
         "lint:fix": "eslint ./src --fix",
         "preview": "vite preview"
     },
-    "version": "5.19.16"
+    "version": "5.19.17"
 }
