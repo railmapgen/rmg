@@ -14,7 +14,7 @@
         "@railmapgen/rmg-palette-resources": "^2.2.5",
         "@railmapgen/rmg-runtime": "^12.0.0",
         "@railmapgen/rmg-translate": "^3.4.1",
-        "@railmapgen/svg-assets": "^6.0.1",
+        "@railmapgen/svg-assets": "^6.0.2",
         "@reduxjs/toolkit": "^2.6.1",
         "ag-grid-community": "^33.1.1",
         "ag-grid-react": "^33.1.1",
