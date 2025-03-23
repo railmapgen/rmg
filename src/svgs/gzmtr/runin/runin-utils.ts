@@ -23,6 +23,10 @@ export const getNextViaStations = (
     const nextStation = comingStations[0];
     const comingInterchangeStations = comingStations.slice(1).reduce<string[]>((acc, cur) => {
         if (stationList[cur].transfer.groups[0].lines?.length) {
+            // interchange station
+            return [...acc, cur];
+        } else if (stationList[cur].loop_pivot) {
+            // pivot station (non-interchange)
             return [...acc, cur];
         } else {
             return acc;

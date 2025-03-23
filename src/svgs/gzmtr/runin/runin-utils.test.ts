@@ -14,7 +14,7 @@ describe('GZMTRRuninUtils', () => {
                     ],
                 },
             },
-            c: { transfer: { groups: [{ lines: [] }] } },
+            c: { transfer: { groups: [{ lines: [] }] }, loop_pivot: true },
             d: {
                 transfer: {
                     groups: [
@@ -41,7 +41,7 @@ describe('GZMTRRuninUtils', () => {
         it('Can get next station and via stations for all scenarios', () => {
             expect(getNextViaStations(stations, stationList, 'g', 'e', false)).toEqual({
                 nextStation: 'a',
-                viaStations: ['b', 'd', 'e'],
+                viaStations: ['b', 'c', 'e'],
             });
             expect(getNextViaStations(stations, stationList, 'a', 'c', true)).toEqual({
                 nextStation: 'g',
@@ -50,11 +50,11 @@ describe('GZMTRRuninUtils', () => {
 
             expect(getNextViaStations(stations, stationList, 'g', undefined, false)).toEqual({
                 nextStation: 'a',
-                viaStations: ['b', 'd', 'f'],
+                viaStations: ['b', 'c', 'd'],
             });
             expect(getNextViaStations(stations, stationList, 'a', undefined, true)).toEqual({
                 nextStation: 'g',
-                viaStations: ['f', 'd', 'b'],
+                viaStations: ['f', 'd', 'c'],
             });
         });
     });
