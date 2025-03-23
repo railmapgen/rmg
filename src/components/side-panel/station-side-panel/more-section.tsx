@@ -70,7 +70,7 @@ export default function MoreSection() {
             label: t('StationSidePanel.more.pivot'),
             isChecked: loop_pivot,
             onChange: checked => dispatch(updateStationLoopPivot(selectedStation, checked)),
-            hidden: ![RmgStyle.SHMetro].includes(style) || !loop,
+            hidden: ![RmgStyle.GZMTR, RmgStyle.SHMetro].includes(style) || !loop,
             minW: 'full',
             oneLine: true,
         },
