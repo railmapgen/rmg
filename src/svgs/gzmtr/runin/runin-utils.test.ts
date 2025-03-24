@@ -1,8 +1,8 @@
-import { getNextViaStations } from './runin-utils';
+import { getLoopNextViaStations } from './runin-utils';
 import { StationInfo } from '../../../constants/constants';
 
 describe('GZMTRRuninUtils', () => {
-    describe('getNextViaStations', () => {
+    describe('getLoopNextViaStations', () => {
         const stationList = {
             a: { transfer: { groups: [{ lines: [] }] } },
             b: {
@@ -39,21 +39,21 @@ describe('GZMTRRuninUtils', () => {
         const stations = Object.keys(stationList);
 
         it('Can get next station and via stations for all scenarios', () => {
-            expect(getNextViaStations(stations, stationList, 'g', 'e', false)).toEqual({
-                nextStation: 'a',
+            expect(getLoopNextViaStations(stations, stationList, 'g', 'e', false)).toEqual({
+                nextStations: ['a'],
                 viaStations: ['b', 'c', 'e'],
             });
-            expect(getNextViaStations(stations, stationList, 'a', 'c', true)).toEqual({
-                nextStation: 'g',
+            expect(getLoopNextViaStations(stations, stationList, 'a', 'c', true)).toEqual({
+                nextStations: ['g'],
                 viaStations: ['f', 'd', 'c'],
             });
 
-            expect(getNextViaStations(stations, stationList, 'g', undefined, false)).toEqual({
-                nextStation: 'a',
+            expect(getLoopNextViaStations(stations, stationList, 'g', undefined, false)).toEqual({
+                nextStations: ['a'],
                 viaStations: ['b', 'c', 'd'],
             });
-            expect(getNextViaStations(stations, stationList, 'a', undefined, true)).toEqual({
-                nextStation: 'g',
+            expect(getLoopNextViaStations(stations, stationList, 'a', undefined, true)).toEqual({
+                nextStations: ['g'],
                 viaStations: ['f', 'd', 'c'],
             });
         });
