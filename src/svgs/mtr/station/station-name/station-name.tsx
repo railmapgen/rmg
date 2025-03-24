@@ -1,6 +1,7 @@
 import { memo, useEffect, useRef } from 'react';
 import { Direction } from '../../../../constants/constants';
 import { Translation } from '@railmapgen/rmg-translate';
+import { logger } from '@railmapgen/rmg-runtime';
 
 interface StationNameProps {
     stnName: Translation;
@@ -28,7 +29,9 @@ export default memo(
             updateNameBBox();
             document.fonts
                 .load('12px ' + FONTS.join(', '), zhName + enName)
-                .then()
+                .then(result => {
+                    logger.debug(`Resolved ${result.length} FontFaces for ${zhName + enName}`, result);
+                })
                 .finally(() => {
                     setTimeout(() => {
                         if (!abortController.signal.aborted) {
@@ -39,7 +42,7 @@ export default memo(
             return () => {
                 abortController.abort();
             };
-        }, [stnName.toString(), align]);
+        }, [JSON.stringify(stnName), align]);
 
         const getTextAnchor = (direction?: Direction) => {
             switch (direction) {
