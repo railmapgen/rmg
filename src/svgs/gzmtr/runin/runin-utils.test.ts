@@ -14,6 +14,16 @@ describe('GZMTRRuninUtils', () => {
                     ],
                 },
             },
+            bprime: {
+                transfer: {
+                    groups: [
+                        {
+                            lines: [{ name: ['4号线', 'Line 4'] }],
+                        },
+                    ],
+                },
+                underConstruction: 'temp',
+            },
             c: { transfer: { groups: [{ lines: [] }] }, loop_pivot: true },
             d: {
                 transfer: {
