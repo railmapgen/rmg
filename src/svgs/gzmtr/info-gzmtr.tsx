@@ -20,14 +20,14 @@ const InfoGZMTR = () => {
         current_stn_idx: currentStationIndex,
         stn_list: stationList,
     } = param;
-    const { branches } = useRootSelector(store => store.helper);
+    const { branches, routes } = useRootSelector(store => store.helper);
     const curStnInfo = stationList[currentStationIndex];
     const { localisedName, localisedSecondaryName } = curStnInfo;
 
     const [nameBBox, setNameBBox] = useState({ width: 0 } as SVGRect);
 
     const enNameRows = localisedName.en?.split('\\')?.length ?? 1;
-    const { nextStations } = getNextViaStations(param, branches);
+    const { nextStations } = getNextViaStations(param, branches, routes);
 
     const post2022 = [PanelTypeGZMTR.gz7w, PanelTypeGZMTR.gz11].includes(infoPanelType as PanelTypeGZMTR);
 
