@@ -65,8 +65,7 @@ const InfoGZMTR = () => {
                 <g textAnchor="middle" transform={`translate(${transforms.nameGroup.x},${transforms.nameGroup.y})`}>
                     <CurrentStationName
                         stnName={localisedName}
-                        bold={infoPanelType === PanelTypeGZMTR.gz11}
-                        sparse={infoPanelType === PanelTypeGZMTR.gz11}
+                        panelType={infoPanelType as PanelTypeGZMTR}
                         onUpdate={setNameBBox}
                     />
                     {localisedSecondaryName && (
