@@ -12,10 +12,10 @@ export const LOOP_NEXT_ARROW_SCALE = 0.4;
 
 type NextViaStations = {
     nextStations: string[];
-    viaStations?: string[];
+    viaStations: string[];
 };
 
-export const getNextViaStations = (param: RMGParam, branches: string[][]): NextViaStations => {
+export const getNextViaStations = (param: RMGParam, branches: string[][], routes: string[][]): NextViaStations => {
     const {
         stn_list: stationList,
         current_stn_idx: currentStation,
@@ -26,10 +26,11 @@ export const getNextViaStations = (param: RMGParam, branches: string[][]): NextV
 
     return loop
         ? getLoopNextViaStations(branches[0].slice(1, -1), stationList, currentStation, midpointStation, clockwise)
-        : getNormalNextStations(stationList, currentStation, direction);
+        : getNormalNextStations(routes, stationList, currentStation, direction);
 };
 
-const getNormalNextStations = (
+export const getNormalNextStations = (
+    routes: string[][],
     stationList: Record<string, StationInfo>,
     currentStation: string,
     direction: ShortDirection
@@ -44,7 +45,28 @@ const getNormalNextStations = (
             }
         })
         .flat();
-    return { nextStations };
+
+    // Branches cannot be properly supported. Only the branch containing the first 'next' station is used.
+    const route = routes.find(route => route.includes(currentStation) && route.includes(nextStations[0]));
+    if (route) {
+        const currentStationIndex = route.indexOf(currentStation);
+        const comingStations =
+            direction === 'l' ? route.slice(0, currentStationIndex).toReversed() : route.slice(currentStationIndex + 1);
+        const viaStations = comingStations
+            .filter(station => !['linestart', 'lineend'].includes(station))
+            .reduce<string[]>((acc, cur) => {
+                if (stationList[cur].transfer.groups[0].lines?.length) {
+                    // interchange station
+                    return [...acc, cur];
+                } else {
+                    return acc;
+                }
+            }, [])
+            .slice(0, 3);
+        return { nextStations, viaStations };
+    } else {
+        return { nextStations, viaStations: [] };
+    }
 };
 
 export const getLoopNextViaStations = (

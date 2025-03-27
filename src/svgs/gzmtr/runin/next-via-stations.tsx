@@ -25,14 +25,14 @@ export default function NextViaStations({ nameBBox }: NextViaStationsProps) {
         current_stn_idx: currentStation,
         stn_list: stationList,
     } = param;
-    const { branches } = useRootSelector(store => store.helper);
+    const { branches, routes } = useRootSelector(store => store.helper);
 
     const svgWidth = svgWidths[CanvasType.RunIn];
 
     const {
         nextStations: [nextStation],
         viaStations,
-    } = getNextViaStations(param, branches);
+    } = getNextViaStations(param, branches, routes);
 
     const {
         localisedName: { en: currentEnName = '' },
