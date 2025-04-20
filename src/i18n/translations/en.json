@@ -53,6 +53,7 @@
             "runinWidth": "Running-in width",
             "railmapWidth": "Rail map width",
             "indoorWidth": "Indoor width",
+            "platformWidth": "Platform width",
             "verticalPosition": "Vertical position",
             "branchSpacing": "Branch spacing",
             "branchSpacingLoop": "Vertical padding",
