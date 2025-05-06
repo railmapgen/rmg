@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { adjacencyList, criticalPathMethod, drawLine, getStnState } from '../methods/share';
 import { CanvasType, ShortDirection, StationDict } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
@@ -75,6 +75,7 @@ const getXShare = (stnId: string, adjMat: ReturnType<typeof adjacencyList>, bran
 
 const MainGZMTR = () => {
     const { branches, routes, depsStr: deps } = useRootSelector(store => store.helper);
+    const [lineBoxWidth, setLineBoxWidth] = useState(45);
 
     const {
         svgWidth: svgWidths,
@@ -88,6 +89,19 @@ const MainGZMTR = () => {
         current_stn_idx: currentStationIndex,
         stn_list: stationList,
     } = useRootSelector(store => store.param);
+
+    const lineIconRef = useRef<SVGGElement>(null);
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            if (lineIconRef.current) {
+                setLineBoxWidth(lineIconRef.current.getBBox().width);
+            }
+        }, 100);
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, [lineIconRef.current, lineName[0], lineName[1], spanLineNum]);
 
     const adjMat = adjacencyList(stationList, wideFactor, wideFactor);
 
@@ -160,6 +174,8 @@ const MainGZMTR = () => {
         {} as { [key in keyof ReturnType<typeof drawLine>]: string[] }
     );
 
+    const lineBoxOffset = lineBoxWidth + 20; // default is 65
+
     return (
         <g
             id="main"
@@ -171,13 +187,16 @@ const MainGZMTR = () => {
             <Line paths={paths} />
             <StationGroup xs={xs} ys={ys} stnStates={stnStates} />
             <g
-                id="line_name"
+                className="line_name"
                 style={{
                     ['--translate-x' as any]:
-                        direction === ShortDirection.right ? `${lineXs[0] - 65}px` : `${lineXs[1] + 65}px`,
+                        direction === ShortDirection.right
+                            ? `${lineXs[0] - lineBoxOffset}px`
+                            : `${lineXs[1] + lineBoxOffset}px`,
                 }}
             >
                 <LineIcon
+                    ref={lineIconRef}
                     zhName={lineName[0]}
                     enName={lineName[1]}
                     foregroundColour={'var(--rmg-theme-fg)' as MonoColour}
