@@ -53,7 +53,7 @@ g#big_sec {
     fill: #000;
 }
 
-g#line_name {
+.line_name {
     transform: translate(var(--translate-x, 0px), -18px) scale(1.5);
 }
 
