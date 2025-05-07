@@ -1,5 +1,5 @@
 import { ColourHex } from '@railmapgen/rmg-palette-resources';
-import { ExtendedInterchangeInfo, Facilities, InterchangeGroup } from '../../constants/constants';
+import { ExtendedInterchangeInfo, Facilities, InterchangeGroup, PanelTypeShmetro } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import { forwardRef, memo, Ref, SVGProps, useEffect, useMemo, useRef, useState } from 'react';
 import { Translation } from '@railmapgen/rmg-translate';
@@ -28,7 +28,34 @@ const StationSHMetro = (props: Props) => {
 
     let stationIconStyle: string;
     const stationIconColor: { [pos: string]: string } = {};
-    if (info_panel_type === 'sh2020') {
+    if (info_panel_type === 'sh2024') {
+        const int_length = stnInfo.transfer.groups.at(0)?.lines?.length ?? 0;
+        const osi_osysi_length = [
+            ...(stnInfo.transfer.groups.at(1)?.lines || []),
+            ...(stnInfo.transfer.groups.at(2)?.lines || []),
+        ].length;
+
+        if (stnInfo.services.length === 3) stationIconStyle = 'stn_sh_2020_direct';
+        else if (stnInfo.services.length === 2) stationIconStyle = 'stn_sh_2020_express';
+        else if (int_length > 0 && osi_osysi_length === 0) {
+            // 仅换乘车站
+            stationIconStyle = 'stn_sh_2024_int';
+            stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
+        } else if (int_length > 0 && osi_osysi_length > 0) {
+            // 站内换乘+出站换乘
+            stationIconStyle = 'stn_sh_2024_int_osysi';
+            stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
+        } else if (int_length === 0 && osi_osysi_length === 1) {
+            // 仅2线出站换乘
+            stationIconStyle = 'stn_sh_2024_osysi2';
+            stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
+        } else if (int_length === 0 && osi_osysi_length === 2) {
+            // 仅3线出站换乘
+            stationIconStyle = 'stn_sh_2024_osysi3';
+            stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
+        } else stationIconStyle = 'stn_sh_2020';
+        stationIconColor.fill = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
+    } else if (info_panel_type === 'sh2020') {
         if (stnInfo.services.length === 3) stationIconStyle = 'stn_sh_2020_direct';
         else if (stnInfo.services.length === 2) stationIconStyle = 'stn_sh_2020_express';
         else stationIconStyle = 'stn_sh_2020';
@@ -45,7 +72,8 @@ const StationSHMetro = (props: Props) => {
 
     const bank = bank_ ?? 0;
     const dx = (direction === 'l' ? 6 : -6) + branchNameDX + bank * 30;
-    const dy = (info_panel_type === 'sh2020' ? -20 : -6) + Math.abs(bank) * (info_panel_type === 'sh2020' ? 25 : 11);
+    const is2020or2024 = info_panel_type === 'sh2020' || info_panel_type === 'sh2024';
+    const dy = (is2020or2024 ? -20 : -6) + Math.abs(bank) * (is2020or2024 ? 25 : 11);
     const dr = bank ? 0 : direction === 'l' ? -45 : 45;
     return (
         <>
@@ -90,6 +118,7 @@ interface StationNameGElementProps {
 
 const StationNameGElement = (props: StationNameGElementProps) => {
     const { name, groups, stnState, direction, facility, bank, oneLine, intPadding } = props;
+    const { info_panel_type } = useRootSelector(store => store.param);
 
     // legacy ref to get the exact station name width
     const stnNameEl = useRef<SVGGElement | null>(null);
@@ -142,7 +171,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 />
 
                 {/* this is out-of-station text displayed above the IntBoxGroup */}
-                {groups[1]?.lines?.length && (
+                {groups[1]?.lines?.length && info_panel_type !== PanelTypeShmetro.sh2024 && (
                     <g transform={`translate(${(intDx + intWidth / 2) * directionPolarity},-30)`}>
                         <OSIText osiInfos={groups[1].lines} />
                     </g>
