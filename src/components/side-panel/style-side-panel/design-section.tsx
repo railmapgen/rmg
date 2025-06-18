@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Heading, HStack, IconButton } from '@chakra-ui/react';
+import { HStack, IconButton } from '@chakra-ui/react';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import ThemeButton from '../theme-button';
 import {
@@ -22,6 +22,9 @@ import { MdSwapVert } from 'react-icons/md';
 import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
 import { openPaletteAppClip } from '../../../redux/app/app-slice';
+import { Group, Title } from '@mantine/core';
+import { RMSection, RMSectionBody, RMSectionHeader, RMThemeButton } from '@railmapgen/mantine-components';
+import classes from '../side-panel.module.css';
 
 export default function DesignSection() {
     const { t } = useTranslation();
@@ -84,20 +87,6 @@ export default function DesignSection() {
     );
 
     const fields: RmgFieldsField[] = [
-        {
-            type: 'custom',
-            label: t('Colour'),
-            component: (
-                <ThemeButton
-                    theme={theme}
-                    onClick={() => {
-                        setIsThemeRequested(true);
-                        dispatch(openPaletteAppClip(theme));
-                    }}
-                />
-            ),
-            minW: '40px',
-        },
         {
             type: 'input',
             label: t('StyleSidePanel.design.zhLineName'),
@@ -289,12 +278,30 @@ export default function DesignSection() {
     ];
 
     return (
-        <Box p={1}>
-            <Heading as="h5" size="sm">
-                {t('StyleSidePanel.design.title')}
-            </Heading>
+        <RMSection>
+            <RMSectionHeader>
+                <Title order={3} size="h4">
+                    {t('StyleSidePanel.design.title')}
+                </Title>
+            </RMSectionHeader>
 
-            <RmgFields fields={[...fields, ...mtrSpecifiedFields, ...shmetroSpecifiedFields]} minW={130} />
-        </Box>
+            <RMSectionBody className={classes['section-body']}>
+                <Group gap="xs">
+                    <RMThemeButton
+                        bg={theme[2]}
+                        fg={theme[3]}
+                        aria-label={t('Colour')}
+                        title={t('Colour')}
+                        onClick={() => {
+                            setIsThemeRequested(true);
+                            dispatch(openPaletteAppClip(theme));
+                        }}
+                    >
+                        Aa
+                    </RMThemeButton>
+                </Group>
+                <RmgFields fields={[...fields, ...mtrSpecifiedFields, ...shmetroSpecifiedFields]} minW={130} />
+            </RMSectionBody>
+        </RMSection>
     );
 }

@@ -1,22 +1,9 @@
+import classes from './svg-router.module.css';
 import { CanvasType } from '../constants/constants';
 import { useRootSelector } from '../redux';
-import { Flex } from '@chakra-ui/react';
 import useCanvasMap from './use-canvas-map';
-import { RmgErrorBoundary, RmgLoader } from '@railmapgen/rmg-components';
-
-const style = {
-    position: 'relative',
-    flexDirection: 'row',
-    overflowX: 'auto',
-    '&::before, &::after': {
-        content: '""',
-        margin: 'auto',
-    },
-    '& > svg': {
-        flex: '0 0 auto',
-        border: '1px solid black',
-    },
-};
+import { LoadingOverlay, Stack } from '@mantine/core';
+import { RMErrorBoundary } from '@railmapgen/mantine-components';
 
 export default function SvgRouter() {
     const { canvasToShow, canvasScale } = useRootSelector(state => state.app);
@@ -28,16 +15,16 @@ export default function SvgRouter() {
     const scaledHeight = svgHeight * canvasScale;
 
     return (
-        <Flex minH={scaledHeight} sx={style}>
+        <Stack className={classes.wrapper}>
             {Object.keys(canvasMap).length === 0 ? (
-                <RmgLoader isIndeterminate={true} />
+                <LoadingOverlay visible />
             ) : (
                 filteredCanvas.map(canvas => (
-                    <RmgErrorBoundary key={canvas + rmgStyle} sx={{ minWidth: 750, height: scaledHeight }}>
-                        {canvasMap[canvas]}
-                    </RmgErrorBoundary>
+                    <div key={canvas + rmgStyle}>
+                        <RMErrorBoundary style={{ height: scaledHeight }}>{canvasMap[canvas]}</RMErrorBoundary>
+                    </div>
                 ))
             )}
-        </Flex>
+        </Stack>
     );
 }

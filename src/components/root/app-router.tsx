@@ -3,11 +3,10 @@ import AppView from './app-view';
 import { useRootDispatch, useRootSelector } from '../../redux';
 import ParamSelectorView from '../param-selector-view';
 import { readParam } from '../../redux/app/action';
-import { useToast } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import useRootSearchParams from '../../hooks/use-root-search-params';
 import { downloadParam } from '../../util/param-manager-utils';
-import { logger } from '@railmapgen/rmg-runtime';
+import rmgRuntime, { logger } from '@railmapgen/rmg-runtime';
 
 export default function AppRouter() {
     const { t } = useTranslation();
@@ -21,17 +20,13 @@ export default function AppRouter() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [downloading, setDownloading] = useState<string>();
 
-    const toast = useToast();
-
     useEffect(() => {
         logger.info(`searchParam: project=${paramId}, external=${externalUrl}`);
         if (paramId && externalUrl) {
             logger.warn('<AppRouter/>, Both param ID and external URL are provided. External URL will be ignored.');
             setSearchParams({ project: paramId });
         } else if (paramId) {
-            // clear existing toast to avoid duplicate messages
-            toast.closeAll();
-
+            // TODO: clear existing toast to avoid duplicate messages?
             if (paramId === paramConfig?.id) {
                 logger.info('<AppRouter/>, Store param ID matches URL param ID. Rendering app view...');
                 setIsLoaded(true);
@@ -44,11 +39,11 @@ export default function AppRouter() {
                         logger.info(
                             `<AppRouter/>, Failed to read param (ID=${paramId}). Rendering param selector view...`
                         );
-                        toast({
-                            description: t('Project selected is invalid or corrupted.'),
-                            status: 'error',
+                        rmgRuntime.sendNotification({
+                            title: t('Unable to open project'),
+                            message: t('Project selected is invalid or corrupted.'),
+                            type: 'error',
                             duration: 10000,
-                            isClosable: true,
                         });
                         setSearchParams({});
                     }
@@ -63,11 +58,11 @@ export default function AppRouter() {
                     setSearchParams({ project: id });
                 } else {
                     logger.info(`<AppRouter/>, Failed to download param from ${url}. Rendering param selector view...`);
-                    toast({
-                        description: t('External URL cannot be opened.'),
-                        status: 'error',
+                    rmgRuntime.sendNotification({
+                        title: t('Unable to open project'),
+                        message: t('External URL cannot be opened.'),
+                        type: 'error',
                         duration: 10000,
-                        isClosable: true,
                     });
                     setSearchParams({});
                 }

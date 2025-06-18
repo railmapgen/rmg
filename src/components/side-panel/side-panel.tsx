@@ -5,11 +5,13 @@ import { useDispatch } from 'react-redux';
 import { SidePanelMode } from '../../constants/constants';
 import StationSidePanel from './station-side-panel/station-side-panel';
 import StyleSidePanel from './style-side-panel/style-side-panel';
-import { RmgMultiLineString, RmgSidePanel, RmgSidePanelHeader } from '@railmapgen/rmg-components';
+import { RmgMultiLineString, RmgSidePanelHeader } from '@railmapgen/rmg-components';
 import StationSidePanelFooter from './station-side-panel/station-side-panel-footer';
 import BranchSidePanel from './branch-side-panel/branch-side-panel';
 import { useTranslation } from 'react-i18next';
 import RmgPaletteAppClip from '../app-clip/rmg-palette-app-clip';
+import { RMSidePanel } from '@railmapgen/mantine-components';
+import { Tabs } from '@mantine/core';
 
 const SIDE_PANEL_WIDTH = 410;
 
@@ -36,8 +38,18 @@ export default function SidePanel() {
     };
 
     return (
-        <RmgSidePanel isOpen={sidePanelMode !== SidePanelMode.CLOSE} width={SIDE_PANEL_WIDTH} header="Dummy header">
-            <RmgSidePanelHeader onClose={handleClose}>{mode[sidePanelMode].header}</RmgSidePanelHeader>
+        <RMSidePanel opened={sidePanelMode !== SidePanelMode.CLOSE} onClose={handleClose} width={SIDE_PANEL_WIDTH}>
+            {/*<RmgSidePanelHeader onClose={handleClose}>{mode[sidePanelMode].header}</RmgSidePanelHeader>*/}
+
+            <Tabs>
+                <Tabs.List>
+                    {[SidePanelMode.STYLE, SidePanelMode.BRANCH, SidePanelMode.STATION].map(mode => (
+                        <Tabs.Tab key={mode} value={mode}>
+                            {mode}
+                        </Tabs.Tab>
+                    ))}
+                </Tabs.List>
+            </Tabs>
 
             {mode[sidePanelMode]?.body}
 
@@ -49,6 +61,6 @@ export default function SidePanel() {
                 defaultTheme={paletteAppClipInput}
                 onSelect={nextTheme => dispatch(onPaletteAppClipEmit(nextTheme))}
             />
-        </RmgSidePanel>
+        </RMSidePanel>
     );
 }

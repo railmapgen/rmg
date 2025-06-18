@@ -1,4 +1,4 @@
-import { Box, Heading } from '@chakra-ui/react';
+import classes from '../side-panel.module.css';
 import { useTranslation } from 'react-i18next';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import { canvasConfig, RmgStyle } from '../../../constants/constants';
@@ -11,8 +11,16 @@ import {
     setSvgWidth,
     setYPercentage,
 } from '../../../redux/param/param-slice';
-import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
-import { MdAdd, MdArrowDropDown, MdArrowDropUp, MdArrowLeft, MdArrowRight, MdRemove } from 'react-icons/md';
+import {
+    MdOutlineAdd,
+    MdOutlineArrowDropDown,
+    MdOutlineArrowDropUp,
+    MdOutlineArrowLeft,
+    MdOutlineArrowRight,
+    MdOutlineRemove,
+} from 'react-icons/md';
+import { RMLabelledSlider, RMSection, RMSectionBody, RMSectionHeader } from '@railmapgen/mantine-components';
+import { Group, NumberInput, Title } from '@mantine/core';
 
 export default function LayoutSection() {
     const { t } = useTranslation();
@@ -30,85 +38,115 @@ export default function LayoutSection() {
         loop,
     } = useRootSelector(state => state.param);
 
-    const fields: RmgFieldsField[] = [
-        ...canvasConfig[rmgStyle].map<RmgFieldsField>(canvas => ({
-            type: 'input',
-            label: t(`StyleSidePanel.layout.${canvas}Width`),
-            value: svgWidth[canvas].toString(),
-            onChange: val => dispatch(setSvgWidth({ width: Number(val), canvas })),
-        })),
-        {
-            type: 'input',
-            label: t('StyleSidePanel.layout.canvasHeight'),
-            value: svg_height.toString(),
-            onChange: val => dispatch(setSvgHeight(Number(val))),
-        },
-        {
-            type: 'slider',
-            label: t('StyleSidePanel.layout.verticalPosition'),
-            value: y_pc,
-            min: 0,
-            max: 100,
-            onChange: val => dispatch(setYPercentage(val)),
-            leftIcon: <MdArrowDropUp />,
-            rightIcon: <MdArrowDropDown />,
-            hidden: ![RmgStyle.MTR, RmgStyle.GZMTR].includes(rmgStyle),
-        },
-        {
-            type: 'slider',
-            label: !loop
-                ? t('Branch spacing')
-                : rmgStyle === RmgStyle.GZMTR
-                  ? t('StyleSidePanel.layout.loopSpacing')
-                  : t('StyleSidePanel.layout.branchSpacingLoop'),
-            value: branchSpacingPct,
-            min: 0,
-            max: loop ? 50 : 100,
-            onChange: val => dispatch(setBranchSpacingPct(val)),
-            leftIcon: <MdRemove />,
-            rightIcon: <MdAdd />,
-        },
-        {
-            type: 'slider',
-            label: t('StyleSidePanel.layout.padding'),
-            value: padding,
-            min: 0,
-            max: 50,
-            onChange: val => dispatch(setPaddingPercentage(val)),
-            leftIcon: <MdRemove />,
-            rightIcon: <MdAdd />,
-        },
-        {
-            type: 'slider',
-            label: t('StyleSidePanel.layout.directionGzX'),
-            value: direction_gz_x,
-            min: 0,
-            max: 100,
-            onChange: val => dispatch(setDirectionIndicatorX(val)),
-            leftIcon: <MdArrowLeft />,
-            rightIcon: <MdArrowRight />,
-            hidden: ![RmgStyle.GZMTR].includes(rmgStyle),
-        },
-        {
-            type: 'slider',
-            label: t('StyleSidePanel.layout.directionGzY'),
-            value: direction_gz_y,
-            min: 0,
-            max: 100,
-            onChange: val => dispatch(setDirectionIndicatorY(val)),
-            leftIcon: <MdArrowDropUp />,
-            rightIcon: <MdArrowDropDown />,
-            hidden: ![RmgStyle.GZMTR].includes(rmgStyle),
-        },
-    ];
-
     return (
-        <Box p={1}>
-            <Heading as="h5" size="sm">
-                {t('StyleSidePanel.layout.title')}
-            </Heading>
+        <RMSection>
+            <RMSectionHeader>
+                <Title order={3} size="h4">
+                    {t('StyleSidePanel.layout.title')}
+                </Title>
+            </RMSectionHeader>
 
-            <RmgFields fields={fields} minW={130} />
-        </Box>
+            <RMSectionBody className={classes['section-body']}>
+                <Group gap="xs">
+                    {...canvasConfig[rmgStyle].map(canvas => (
+                        <NumberInput
+                            key={canvas}
+                            label={t(`StyleSidePanel.layout.${canvas}Width`)}
+                            value={svgWidth[canvas]}
+                            onChange={value => dispatch(setSvgWidth({ width: Number(value), canvas }))}
+                        />
+                    ))}
+                    <NumberInput
+                        label={t('StyleSidePanel.layout.canvasHeight')}
+                        value={svg_height}
+                        onChange={value => dispatch(setSvgHeight(Number(value)))}
+                    />
+                </Group>
+                <Group gap="xs">
+                    {[RmgStyle.MTR, RmgStyle.GZMTR].includes(rmgStyle) && (
+                        <RMLabelledSlider
+                            size="sm"
+                            fieldLabel={t('StyleSidePanel.layout.verticalPosition')}
+                            defaultValue={y_pc}
+                            min={0}
+                            max={100}
+                            step={0.01}
+                            onChangeEnd={value => dispatch(setYPercentage(value))}
+                            withExternalControls
+                            leftIcon={<MdOutlineArrowDropUp />}
+                            leftIconLabel={t('Move up')}
+                            rightIcon={<MdOutlineArrowDropDown />}
+                            rightIconLabel={t('Move down')}
+                        />
+                    )}
+                    <RMLabelledSlider
+                        size="sm"
+                        fieldLabel={
+                            !loop
+                                ? t('Branch spacing')
+                                : rmgStyle === RmgStyle.GZMTR
+                                  ? t('StyleSidePanel.layout.loopSpacing')
+                                  : t('StyleSidePanel.layout.branchSpacingLoop')
+                        }
+                        defaultValue={branchSpacingPct}
+                        min={0}
+                        max={loop ? 50 : 100}
+                        step={0.01}
+                        onChangeEnd={value => dispatch(setBranchSpacingPct(value))}
+                        withExternalControls
+                        leftIcon={<MdOutlineRemove />}
+                        leftIconLabel={t('Decrease')}
+                        rightIcon={<MdOutlineAdd />}
+                        rightIconLabel={t('Increase')}
+                    />
+                    <RMLabelledSlider
+                        size="sm"
+                        fieldLabel={t('StyleSidePanel.layout.padding')}
+                        defaultValue={padding}
+                        min={0}
+                        max={50}
+                        step={0.01}
+                        onChangeEnd={value => dispatch(setPaddingPercentage(value))}
+                        withExternalControls
+                        leftIcon={<MdOutlineRemove />}
+                        leftIconLabel={t('Decrease')}
+                        rightIcon={<MdOutlineAdd />}
+                        rightIconLabel={t('Increase')}
+                    />
+                </Group>
+                {rmgStyle === RmgStyle.GZMTR && (
+                    <Group gap="xs">
+                        <RMLabelledSlider
+                            size="sm"
+                            fieldLabel={t('StyleSidePanel.layout.directionGzX')}
+                            defaultValue={direction_gz_x}
+                            min={0}
+                            max={100}
+                            step={0.01}
+                            onChangeEnd={value => dispatch(setDirectionIndicatorX(value))}
+                            withExternalControls
+                            leftIcon={<MdOutlineArrowLeft />}
+                            leftIconLabel={t('Move left')}
+                            rightIcon={<MdOutlineArrowRight />}
+                            rightIconLabel={t('Move right')}
+                        />
+                        <RMLabelledSlider
+                            size="sm"
+                            fieldLabel={t('StyleSidePanel.layout.directionGzY')}
+                            defaultValue={direction_gz_y}
+                            min={0}
+                            max={100}
+                            step={0.01}
+                            onChangeEnd={value => dispatch(setDirectionIndicatorY(value))}
+                            withExternalControls
+                            leftIcon={<MdOutlineArrowDropUp />}
+                            leftIconLabel={t('Move up')}
+                            rightIcon={<MdOutlineArrowDropDown />}
+                            rightIconLabel={t('Move down')}
+                        />
+                    </Group>
+                )}
+            </RMSectionBody>
+        </RMSection>
     );
 }

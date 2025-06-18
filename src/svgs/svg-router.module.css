@@ -1,0 +1,26 @@
+.wrapper {
+    overflow-y: auto;
+    flex: 1;
+
+    > div {
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        width: 100%;
+        flex-shrink: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        &::before, &::after {
+            content: '';
+            /*margin: auto;*/
+        }
+
+        > svg {
+            flex: 0 0 auto;
+            border: 1px solid black;
+        }
+    }
+
+
+}

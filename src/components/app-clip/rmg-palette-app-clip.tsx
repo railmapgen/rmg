@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import rmgRuntime from '@railmapgen/rmg-runtime';
-import { RmgAppClip } from '@railmapgen/rmg-components';
-import { CloseButton, SystemStyleObject } from '@chakra-ui/react';
+import { SystemStyleObject } from '@chakra-ui/react';
 import { Theme } from '@railmapgen/rmg-palette-resources';
 import { nanoid } from 'nanoid';
+import { RMAppClip } from '@railmapgen/mantine-components';
 
 const CHANNEL_PREFIX = 'rmg-palette-bridge--';
 
@@ -75,9 +75,9 @@ export default function RmgPaletteAppClip(props: RmgPaletteAppClip) {
     }, [isLoaded, defaultTheme?.toString()]);
 
     return (
-        <RmgAppClip size="md" isOpen={isOpen} onClose={onClose} sx={styles}>
-            <CloseButton onClick={onClose} />
+        <RMAppClip size="md" opened={isOpen} onClose={onClose} styles={{ content: { height: 460 } }}>
+            {/*<CloseButton onClick={onClose} />*/}
             <iframe src={frameUrl} loading="eager" />
-        </RmgAppClip>
+        </RMAppClip>
     );
 }

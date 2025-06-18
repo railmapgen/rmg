@@ -1,11 +1,11 @@
-import { Button, HStack } from '@chakra-ui/react';
 import DownloadActions from './download-actions';
-import { MdFolder, MdPalette } from 'react-icons/md';
+import { MdOutlineFolder, MdOutlinePalette } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { SidePanelMode } from '../../constants/constants';
 import { setParamConfig, setSidePanelMode } from '../../redux/app/app-slice';
 import { useTranslation } from 'react-i18next';
 import useRootSearchParams from '../../hooks/use-root-search-params';
+import { Button } from '@mantine/core';
 
 export default function HeaderActions() {
     const { t } = useTranslation();
@@ -21,22 +21,16 @@ export default function HeaderActions() {
     };
 
     return (
-        <HStack ml="auto" w="fit-content">
-            <Button variant="ghost" size="sm" leftIcon={<MdFolder />} onClick={handleGoToSelectorView}>
+        <>
+            <Button variant="default" leftSection={<MdOutlineFolder />} ml="auto" onClick={handleGoToSelectorView}>
                 {t('All projects')}
             </Button>
 
             <DownloadActions />
 
-            <Button
-                variant="solid"
-                size="sm"
-                colorScheme="primary"
-                leftIcon={<MdPalette />}
-                onClick={() => dispatch(setSidePanelMode(SidePanelMode.STYLE))}
-            >
+            <Button leftSection={<MdOutlinePalette />} onClick={() => dispatch(setSidePanelMode(SidePanelMode.STYLE))}>
                 {t('HeaderActions.editStyle')}
             </Button>
-        </HStack>
+        </>
     );
 }

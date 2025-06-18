@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Heading, HStack, IconButton } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { MdHelp } from 'react-icons/md';
+import { MdOutlineHelpOutline } from 'react-icons/md';
 import HelpModal from '../modal/help-modal';
-import { RmgEnvBadge, RmgWindowHeader } from '@railmapgen/rmg-components';
 import rmgRuntime from '@railmapgen/rmg-runtime';
+import { RMEnvBadge, RMWindowHeader } from '@railmapgen/mantine-components';
+import { ActionIcon, Group, Title } from '@mantine/core';
 
 export const WindowHeader = () => {
     const { t } = useTranslation();
@@ -15,24 +15,24 @@ export const WindowHeader = () => {
     const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
     return (
-        <RmgWindowHeader>
-            <Heading as="h4" size="md">
-                {t('Rail Map Generator')}
-            </Heading>
-            <RmgEnvBadge environment={environment} version={appVersion} />
+        <RMWindowHeader>
+            <Title>{t('Rail Map Generator')}</Title>
+            <RMEnvBadge env={environment} ver={appVersion} />
 
-            <HStack ml="auto">
-                <IconButton
+            <Group gap="xs" ml="auto">
+                <ActionIcon
                     size="sm"
-                    variant="ghost"
+                    variant="subtle"
+                    color="gray"
                     aria-label="Help"
-                    icon={<MdHelp />}
                     onClick={() => setIsHelpModalOpen(true)}
-                />
-            </HStack>
+                >
+                    <MdOutlineHelpOutline />
+                </ActionIcon>
+            </Group>
 
             <HelpModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
-        </RmgWindowHeader>
+        </RMWindowHeader>
     );
 };
 
@@ -40,10 +40,8 @@ export const ImportViewWindowHeader = () => {
     const { t } = useTranslation();
 
     return (
-        <RmgWindowHeader isAppClipHeader>
-            <Heading as="h4" size="md">
-                {t('Rail Map Generator') + ' - ' + t('Project Selector')}
-            </Heading>
-        </RmgWindowHeader>
+        <RMWindowHeader isAppClipHeader>
+            <Title>{t('Rail Map Generator') + ' - ' + t('Project Selector')}</Title>
+        </RMWindowHeader>
     );
 };
