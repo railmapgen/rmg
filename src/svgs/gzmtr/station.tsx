@@ -152,8 +152,8 @@ const IntBoxs = (props: IntGroupProps & React.SVGProps<SVGGElement>) => {
                         enName={info.name[1]}
                         foregroundColour={info.theme?.[3] ?? MonoColour.white}
                         backgroundColour={info.theme?.[2] ?? '#aaaaaa'}
-                        zhClassName="rmg-name__zh"
-                        enClassName="rmg-name__en"
+                        zhClassName="rmg-font__zh"
+                        enClassName="rmg-font__en"
                         passed={stnState === -1}
                         spanDigits={spanDigits}
                     />
