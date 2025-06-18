@@ -1,12 +1,26 @@
+:root {
+    --font-family-zh: Arial, SimHei, STHeitiSC-Medium, 'PingFang SC';
+    --font-family-en: Arial;
+}
+
 .rmg-name__zh {
     dominant-baseline: central;
-    font-family: Arial, SimHei, STHeitiSC-Medium, 'PingFang SC', sans-serif;
+    font-family: var(--font-family-zh), sans-serif;
     font-weight: normal;
 }
 
 .rmg-name__en {
     dominant-baseline: middle;
-    font-family: Arial, sans-serif;
+    font-family: var(--font-family-en), sans-serif;
+}
+
+.rmg-font__zh {
+    font-family: var(--font-family-zh), sans-serif;
+    font-weight: normal;
+}
+
+.rmg-font__en {
+    font-family: var(--font-family-en), sans-serif;
 }
 
 rect#strip_gz {
