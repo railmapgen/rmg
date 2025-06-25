@@ -2,7 +2,7 @@
     overflow-y: auto;
     flex: 1;
 
-    > div {
+    > div > div {
         position: relative;
         display: flex;
         align-items: flex-start;

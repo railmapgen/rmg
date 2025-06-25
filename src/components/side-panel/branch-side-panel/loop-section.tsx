@@ -1,8 +1,7 @@
+import classes from '../side-panel.module.css';
 import { useTranslation } from 'react-i18next';
-import { Box, Heading } from '@chakra-ui/react';
 import { useRootDispatch, useRootSelector } from '../../../redux';
-import { RmgStyle } from '../../../constants/constants';
-import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import { FALSE, RmgStyle, TRUE } from '../../../constants/constants';
 import {
     setLoopBank,
     setLoopBottomFactor,
@@ -10,6 +9,16 @@ import {
     setLoopLeftAndRightFactor,
     setLoopMidpointStation,
 } from '../../../redux/param/param-slice';
+import {
+    RMLabelledSegmentedControl,
+    RMLabelledSlider,
+    RMSection,
+    RMSectionBody,
+    RMSectionHeader,
+} from '@railmapgen/mantine-components';
+import { Checkbox, Group, Select, Title } from '@mantine/core';
+import { MdOutlineAdd, MdOutlineRemove } from 'react-icons/md';
+import clsx from 'clsx';
 
 export default function LoopSection() {
     const { t } = useTranslation();
@@ -37,74 +46,79 @@ export default function LoopSection() {
               (arc === 'minor' ? Math.min : Math.max)(branches[0].length - 2 - _, _)
             : Math.floor((branches[0].length - 2 - bottom_factor * 2) / 2);
 
-    const fields: RmgFieldsField[] = [
-        {
-            type: 'switch',
-            label: t('StyleSidePanel.loop.isBank'),
-            isChecked: bank,
-            onChange: checked => dispatch(setLoopBank(checked)),
-            minW: 'full',
-            oneLine: true,
-            hidden: style !== RmgStyle.SHMetro,
-        },
-        {
-            type: 'slider',
-            label: t('StyleSidePanel.loop.leftRightFactor'),
-            value: left_and_right_factor,
-            min: 0,
-            max: left_and_right_factor_max,
-            onChange: val => dispatch(setLoopLeftAndRightFactor(Math.floor(val))),
-            hidden: style !== RmgStyle.SHMetro,
-        },
-        {
-            type: 'slider',
-            label: t('StyleSidePanel.loop.bottomFactor'),
-            value: bottom_factor,
-            min: 0,
-            max: Math.floor((branches[0].length - 2 - left_and_right_factor * 2) / 2),
-            onChange: val => dispatch(setLoopBottomFactor(Math.floor(val))),
-            hidden: branches.length > 2 || style !== RmgStyle.SHMetro,
-        },
-        {
-            type: 'custom',
-            label: t('Loop direction'),
-            component: (
-                <RmgButtonGroup
-                    selections={
-                        [
-                            { label: t('Anticlockwise'), value: false },
-                            { label: t('Clockwise'), value: true },
-                        ] as { label: string; value: boolean }[]
-                    }
-                    defaultValue={clockwise ?? false}
-                    onChange={ccw => dispatch(setLoopClockwise(ccw))}
-                />
-            ),
-            hidden: ![RmgStyle.GZMTR].includes(style),
-        },
-        {
-            type: 'select',
-            label: t('Midpoint station'),
-            options: branches[0].slice(1, -1).reduce((acc, cur) => {
-                const { zh, en } = stationList[cur].localisedName;
-                return {
-                    ...acc,
-                    [cur]: `${zh}/${en}`,
-                };
-            }, {}),
-            value: loop_info.midpoint_station,
-            onChange: value => dispatch(setLoopMidpointStation(value as string)),
-            hidden: ![RmgStyle.GZMTR].includes(style),
-        },
-    ];
-
     return (
-        <Box p={1}>
-            <Heading as="h5" size="sm">
-                {t('StyleSidePanel.loop.title')}
-            </Heading>
+        <RMSection>
+            <RMSectionHeader>
+                <Title order={3} size="h4">
+                    {t('StyleSidePanel.loop.title')}
+                </Title>
+            </RMSectionHeader>
 
-            <RmgFields fields={fields} />
-        </Box>
+            <RMSectionBody className={clsx(classes['section-body'], classes.fields)}>
+                {style === RmgStyle.SHMetro && (
+                    <Group gap="xs">
+                        <Checkbox
+                            label={t('StyleSidePanel.loop.isBank')}
+                            checked={bank}
+                            onChange={({ currentTarget: { checked } }) => dispatch(setLoopBank(checked))}
+                            style={{ width: '100%', flexBasis: '100%' }}
+                        />
+                        <RMLabelledSlider
+                            fieldLabel={t('StyleSidePanel.loop.leftRightFactor')}
+                            defaultValue={left_and_right_factor}
+                            min={0}
+                            max={left_and_right_factor_max}
+                            step={1}
+                            onChangeEnd={value => dispatch(setLoopLeftAndRightFactor(Math.floor(value)))}
+                            withExternalControls
+                            leftIcon={<MdOutlineRemove />}
+                            leftIconLabel={t('Decrease')}
+                            rightIcon={<MdOutlineAdd />}
+                            rightIconLabel={t('Increase')}
+                        />
+                        {branches.length <= 2 && (
+                            <RMLabelledSlider
+                                fieldLabel={t('StyleSidePanel.loop.bottomFactor')}
+                                defaultValue={bottom_factor}
+                                min={0}
+                                max={Math.floor((branches[0].length - 2 - left_and_right_factor * 2) / 2)}
+                                step={1}
+                                onChangeEnd={value => dispatch(setLoopBottomFactor(Math.floor(value)))}
+                                withExternalControls
+                                leftIcon={<MdOutlineRemove />}
+                                leftIconLabel={t('Decrease')}
+                                rightIcon={<MdOutlineAdd />}
+                                rightIconLabel={t('Increase')}
+                            />
+                        )}
+                    </Group>
+                )}
+                {style === RmgStyle.GZMTR && (
+                    <Group gap="xs">
+                        <RMLabelledSegmentedControl
+                            label={t('Loop direction')}
+                            data={[
+                                { label: t('Anticlockwise'), value: FALSE },
+                                { label: t('Clockwise'), value: TRUE },
+                            ]}
+                            value={clockwise?.toString() ?? FALSE}
+                            onChange={value => dispatch(setLoopClockwise(value === TRUE))}
+                        />
+                        <Select
+                            label={t('Midpoint station')}
+                            value={loop_info.midpoint_station}
+                            data={branches[0].slice(1, -1).map(value => {
+                                const { zh, en } = stationList[value].localisedName;
+                                return { value, label: `${zh}/${en}` };
+                            })}
+                            onChange={value => dispatch(setLoopMidpointStation(value as string))}
+                            allowDeselect={false}
+                            searchable
+                            style={{ width: '100%', flexBasis: '100%' }}
+                        />
+                    </Group>
+                )}
+            </RMSectionBody>
+        </RMSection>
     );
 }

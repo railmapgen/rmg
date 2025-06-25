@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { HStack, IconButton } from '@chakra-ui/react';
 import { useRootDispatch, useRootSelector } from '../../../redux';
-import ThemeButton from '../theme-button';
 import {
     customiseDestinationName,
     flipStationNames,
@@ -22,9 +21,16 @@ import { MdSwapVert } from 'react-icons/md';
 import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
 import { openPaletteAppClip } from '../../../redux/app/app-slice';
-import { Group, Title } from '@mantine/core';
-import { RMSection, RMSectionBody, RMSectionHeader, RMThemeButton } from '@railmapgen/mantine-components';
+import { Checkbox, Group, NativeSelect, TextInput, Title } from '@mantine/core';
+import {
+    RMLabelledSegmentedControl,
+    RMSection,
+    RMSectionBody,
+    RMSectionHeader,
+    RMThemeButton,
+} from '@railmapgen/mantine-components';
 import classes from '../side-panel.module.css';
+import clsx from 'clsx';
 
 export default function DesignSection() {
     const { t } = useTranslation();
@@ -70,104 +76,16 @@ export default function DesignSection() {
         },
     ];
 
-    const panelTypeGZMTROptions = Object.values(PanelTypeGZMTR).reduce<Record<string, string>>(
-        (acc, cur) => ({
-            ...acc,
-            [cur]: t('StyleSidePanel.design.' + cur),
-        }),
-        {}
-    );
+    const panelTypeGZMTROptions = Object.values(PanelTypeGZMTR).map(value => ({
+        value,
+        label: t('StyleSidePanel.design.' + value),
+        disabled: value === PanelTypeGZMTR.gz1822,
+    }));
 
-    const panelTypeSHMetroOptions = Object.values(PanelTypeShmetro).reduce<Record<string, string>>(
-        (acc, cur) => ({
-            ...acc,
-            [cur]: t('StyleSidePanel.design.' + cur),
-        }),
-        {}
-    );
-
-    const fields: RmgFieldsField[] = [
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.zhLineName'),
-            value: lineName[0],
-            onChange: value => dispatch(setLineName([value, lineName[1]])),
-            minW: 130,
-        },
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.enLineName'),
-            value: lineName[1],
-            onChange: value => dispatch(setLineName([lineName[0], value])),
-            minW: 130,
-        },
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.lineNum'),
-            value: lineNum,
-            onChange: value => dispatch(setLineNum(value)),
-            hidden: ![RmgStyle.GZMTR].includes(style),
-        },
-        {
-            type: 'custom',
-            label: t('Span digits over rows'),
-            component: (
-                <RmgButtonGroup
-                    selections={
-                        [
-                            { label: t('Yes'), value: true },
-                            { label: t('No'), value: false },
-                        ] as { label: string; value: boolean }[]
-                    }
-                    defaultValue={spanLineNum ?? false}
-                    onChange={span => dispatch(setSpanLineNum(span))}
-                />
-            ),
-            hidden: ![RmgStyle.GZMTR].includes(style),
-        },
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.platformNum'),
-            value: platformNum || '',
-            onChange: value => dispatch(setPlatform(value)),
-        },
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.psdNum'),
-            value: psdNum,
-            onChange: value => dispatch(setPsdNum(value)),
-            hidden: ![RmgStyle.GZMTR].includes(style),
-        },
-        {
-            type: 'input',
-            label: t('Coach number'),
-            value: coachNum,
-            onChange: value => dispatch(setCoachNum(value)),
-            hidden: ![RmgStyle.GZMTR].includes(style),
-        },
-        {
-            type: 'select',
-            label: t('StyleSidePanel.design.panelType'),
-            value: info_panel_type,
-            options: style === RmgStyle.GZMTR ? panelTypeGZMTROptions : panelTypeSHMetroOptions,
-            disabledOptions: [PanelTypeGZMTR.gz1822],
-            onChange: value => dispatch(setPanelType(value as PanelTypeGZMTR | PanelTypeShmetro)),
-            hidden: ![RmgStyle.GZMTR, RmgStyle.SHMetro].includes(style),
-        },
-        {
-            type: 'custom',
-            label: t('StyleSidePanel.design.direction'),
-            component: (
-                <RmgButtonGroup
-                    selections={directionSelections}
-                    defaultValue={direction}
-                    onChange={nextDirection => dispatch(setDirection(nextDirection))}
-                />
-            ),
-            minW: 'full',
-            oneLine: true,
-        },
-    ];
+    const panelTypeSHMetroOptions = Object.values(PanelTypeShmetro).map(value => ({
+        value,
+        label: t('StyleSidePanel.design.' + value),
+    }));
 
     const flipNameSelections = [
         {
@@ -285,7 +203,7 @@ export default function DesignSection() {
                 </Title>
             </RMSectionHeader>
 
-            <RMSectionBody className={classes['section-body']}>
+            <RMSectionBody className={clsx(classes['section-body'], classes.fields)}>
                 <Group gap="xs">
                     <RMThemeButton
                         bg={theme[2]}
@@ -296,11 +214,71 @@ export default function DesignSection() {
                             setIsThemeRequested(true);
                             dispatch(openPaletteAppClip(theme));
                         }}
+                        style={{ minWidth: 15 }}
                     >
                         Aa
                     </RMThemeButton>
+                    <TextInput
+                        label={t('StyleSidePanel.design.zhLineName')}
+                        value={lineName[0]}
+                        onChange={({ currentTarget: { value } }) => dispatch(setLineName([value, lineName[1]]))}
+                    />
+                    <TextInput
+                        label={t('StyleSidePanel.design.enLineName')}
+                        value={lineName[1]}
+                        onChange={({ currentTarget: { value } }) => dispatch(setLineName([lineName[0], value]))}
+                    />
+                    {style === RmgStyle.GZMTR && (
+                        <>
+                            <TextInput
+                                label={t('StyleSidePanel.design.lineNum')}
+                                value={lineNum}
+                                onChange={({ currentTarget: { value } }) => dispatch(setLineNum(value))}
+                            />
+                            <Checkbox
+                                label={t('Span digits over rows')}
+                                checked={!!spanLineNum}
+                                onChange={({ currentTarget: { checked } }) => dispatch(setSpanLineNum(checked))}
+                            />
+                        </>
+                    )}
+                    <TextInput
+                        label={t('StyleSidePanel.design.platformNum')}
+                        value={platformNum || ''}
+                        onChange={({ currentTarget: { value } }) => dispatch(setPlatform(value))}
+                    />
+                    {style === RmgStyle.GZMTR && (
+                        <>
+                            <TextInput
+                                label={t('StyleSidePanel.design.psdNum')}
+                                value={psdNum}
+                                onChange={({ currentTarget: { value } }) => dispatch(setPsdNum(value))}
+                            />
+                            <TextInput
+                                label={t('Coach number')}
+                                value={coachNum}
+                                onChange={({ currentTarget: { value } }) => dispatch(setCoachNum(value))}
+                            />
+                        </>
+                    )}
+                    {[RmgStyle.GZMTR, RmgStyle.SHMetro].includes(style) && (
+                        <NativeSelect
+                            label={t('StyleSidePanel.design.panelType')}
+                            value={info_panel_type}
+                            data={style === RmgStyle.GZMTR ? panelTypeGZMTROptions : panelTypeSHMetroOptions}
+                            onChange={({ currentTarget: { value } }) =>
+                                dispatch(setPanelType(value as PanelTypeGZMTR | PanelTypeShmetro))
+                            }
+                        />
+                    )}
+                    <RMLabelledSegmentedControl
+                        label={t('StyleSidePanel.design.direction')}
+                        data={directionSelections}
+                        value={direction}
+                        onChange={value => dispatch(setDirection(value as ShortDirection))}
+                    />
                 </Group>
-                <RmgFields fields={[...fields, ...mtrSpecifiedFields, ...shmetroSpecifiedFields]} minW={130} />
+                <RmgFields fields={[...mtrSpecifiedFields, ...shmetroSpecifiedFields]} minW={130} />
             </RMSectionBody>
         </RMSection>
     );

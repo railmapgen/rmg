@@ -1,17 +1,16 @@
-import { Divider } from '@chakra-ui/react';
 import { useRootSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
 import LayoutSection from './layout-section';
 import DesignSection from './design-section';
 import LoopSection from './loop-section';
-import { RmgSidePanelBody } from '@railmapgen/rmg-components';
 import GZMTRNoteSection from './gzmtr-note-section';
+import { Divider, Stack } from '@mantine/core';
 
 export default function StyleSidePanel() {
     const { style } = useRootSelector(state => state.param);
 
     return (
-        <RmgSidePanelBody>
+        <Stack gap="xs">
             <LayoutSection />
 
             <Divider />
@@ -33,6 +32,6 @@ export default function StyleSidePanel() {
                     <GZMTRNoteSection />
                 </>
             )}
-        </RmgSidePanelBody>
+        </Stack>
     );
 }

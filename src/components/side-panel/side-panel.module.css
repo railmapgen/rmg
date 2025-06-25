@@ -1,8 +1,27 @@
+.body {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.tab-panel {
+    overflow-y: auto;
+    padding: 0 var(--mantine-spacing-xs);
+}
+
 .section-body {
     flex-direction: column;
+    gap: var(--mantine-spacing-xs);
 
     > :global(.mantine-Group-root) > * {
-        flex: 1;
+        /*flex: 1;*/
+        flex-grow: 1;
         min-width: 150px;
+    }
+
+    &.fields {
+        > :global(.mantine-Group-root) > * {
+            flex: 1;
+        }
     }
 }

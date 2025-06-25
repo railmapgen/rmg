@@ -1,3 +1,4 @@
+import classes from './side-panel.module.css';
 import { ReactNode } from 'react';
 import { useRootSelector } from '../../redux';
 import { closePaletteAppClip, onPaletteAppClipEmit, setSidePanelMode } from '../../redux/app/app-slice';
@@ -22,7 +23,7 @@ export default function SidePanel() {
     const { sidePanelMode, selectedStation, paletteAppClipInput } = useRootSelector(state => state.app);
     const name = useRootSelector(state => state.param.stn_list[selectedStation]?.localisedName);
 
-    const mode: Record<SidePanelMode, { header: ReactNode; body?: ReactNode; footer?: ReactNode }> = {
+    const modes: Record<SidePanelMode, { header: ReactNode; body?: ReactNode; footer?: ReactNode }> = {
         STATION: {
             header: <RmgMultiLineString text={name?.zh + '/' + name?.en || ''} />,
             body: <StationSidePanel />,
@@ -38,22 +39,32 @@ export default function SidePanel() {
     };
 
     return (
-        <RMSidePanel opened={sidePanelMode !== SidePanelMode.CLOSE} onClose={handleClose} width={SIDE_PANEL_WIDTH}>
+        <RMSidePanel
+            opened={sidePanelMode !== SidePanelMode.CLOSE}
+            onClose={handleClose}
+            title={t('Settings')}
+            width={SIDE_PANEL_WIDTH}
+            withCloseButton
+        >
             {/*<RmgSidePanelHeader onClose={handleClose}>{mode[sidePanelMode].header}</RmgSidePanelHeader>*/}
 
-            <Tabs>
-                <Tabs.List>
+            <Tabs classNames={{ root: classes.body, panel: classes['tab-panel'] }}>
+                <Tabs.List grow>
                     {[SidePanelMode.STYLE, SidePanelMode.BRANCH, SidePanelMode.STATION].map(mode => (
                         <Tabs.Tab key={mode} value={mode}>
                             {mode}
                         </Tabs.Tab>
                     ))}
                 </Tabs.List>
+
+                {[SidePanelMode.STYLE, SidePanelMode.BRANCH, SidePanelMode.STATION].map(mode => (
+                    <Tabs.Panel key={mode} value={mode}>
+                        {modes[mode]?.body}
+
+                        {modes[mode]?.footer}
+                    </Tabs.Panel>
+                ))}
             </Tabs>
-
-            {mode[sidePanelMode]?.body}
-
-            {mode[sidePanelMode]?.footer}
 
             <RmgPaletteAppClip
                 isOpen={!!paletteAppClipInput}

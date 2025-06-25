@@ -112,6 +112,7 @@ export const FACILITIES = {
 export type Facilities = keyof typeof FACILITIES;
 
 export type TEMP = 'temp';
+
 export interface StationInfo {
     title?: string;
     /**
@@ -346,3 +347,6 @@ export enum Events {
     APP_CLIP_VIEW_CLOSED = 'APP_CLIP_VIEW_CLOSED',
     APP_CLIP_VIEW_IMPORT = 'APP_CLIP_VIEW_IMPORT',
 }
+
+export const FALSE = false.toString();
+export const TRUE = true.toString();

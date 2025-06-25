@@ -21,6 +21,7 @@ import {
 } from 'react-icons/md';
 import { RMLabelledSlider, RMSection, RMSectionBody, RMSectionHeader } from '@railmapgen/mantine-components';
 import { Group, NumberInput, Title } from '@mantine/core';
+import clsx from 'clsx';
 
 export default function LayoutSection() {
     const { t } = useTranslation();
@@ -46,7 +47,7 @@ export default function LayoutSection() {
                 </Title>
             </RMSectionHeader>
 
-            <RMSectionBody className={classes['section-body']}>
+            <RMSectionBody className={clsx(classes['section-body'], classes.fields)}>
                 <Group gap="xs">
                     {...canvasConfig[rmgStyle].map(canvas => (
                         <NumberInput
@@ -65,7 +66,6 @@ export default function LayoutSection() {
                 <Group gap="xs">
                     {[RmgStyle.MTR, RmgStyle.GZMTR].includes(rmgStyle) && (
                         <RMLabelledSlider
-                            size="sm"
                             fieldLabel={t('StyleSidePanel.layout.verticalPosition')}
                             defaultValue={y_pc}
                             min={0}
@@ -80,7 +80,6 @@ export default function LayoutSection() {
                         />
                     )}
                     <RMLabelledSlider
-                        size="sm"
                         fieldLabel={
                             !loop
                                 ? t('Branch spacing')
@@ -100,7 +99,6 @@ export default function LayoutSection() {
                         rightIconLabel={t('Increase')}
                     />
                     <RMLabelledSlider
-                        size="sm"
                         fieldLabel={t('StyleSidePanel.layout.padding')}
                         defaultValue={padding}
                         min={0}
@@ -117,7 +115,6 @@ export default function LayoutSection() {
                 {rmgStyle === RmgStyle.GZMTR && (
                     <Group gap="xs">
                         <RMLabelledSlider
-                            size="sm"
                             fieldLabel={t('StyleSidePanel.layout.directionGzX')}
                             defaultValue={direction_gz_x}
                             min={0}
@@ -131,7 +128,6 @@ export default function LayoutSection() {
                             rightIconLabel={t('Move right')}
                         />
                         <RMLabelledSlider
-                            size="sm"
                             fieldLabel={t('StyleSidePanel.layout.directionGzY')}
                             defaultValue={direction_gz_y}
                             min={0}

@@ -2,7 +2,7 @@ import classes from './svg-router.module.css';
 import { CanvasType } from '../constants/constants';
 import { useRootSelector } from '../redux';
 import useCanvasMap from './use-canvas-map';
-import { LoadingOverlay, Stack } from '@mantine/core';
+import { Flex, LoadingOverlay, Stack, Text } from '@mantine/core';
 import { RMErrorBoundary } from '@railmapgen/mantine-components';
 
 export default function SvgRouter() {
@@ -20,9 +20,12 @@ export default function SvgRouter() {
                 <LoadingOverlay visible />
             ) : (
                 filteredCanvas.map(canvas => (
-                    <div key={canvas + rmgStyle}>
-                        <RMErrorBoundary style={{ height: scaledHeight }}>{canvasMap[canvas]}</RMErrorBoundary>
-                    </div>
+                    <Flex key={canvas + rmgStyle} direction="column">
+                        <Text>{canvas}</Text>
+                        <div>
+                            <RMErrorBoundary style={{ height: scaledHeight }}>{canvasMap[canvas]}</RMErrorBoundary>
+                        </div>
+                    </Flex>
                 ))
             )}
         </Stack>
