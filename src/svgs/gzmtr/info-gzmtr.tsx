@@ -80,7 +80,7 @@ const InfoGZMTR = () => {
                     lineNum={lineNumber}
                     stnNum={curStnInfo.num}
                     strokeColour={theme[2]}
-                    textClassName="rmg-name__zh"
+                    classNames={{ digits: 'rmg-font__en' }}
                     transform={
                         post2022
                             ? `translate(${transforms.stationNumberPost2022.x},${transforms.stationNumberPost2022.y})`

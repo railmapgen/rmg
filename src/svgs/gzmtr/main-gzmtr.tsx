@@ -201,9 +201,8 @@ const MainGZMTR = () => {
                     enName={lineName[1]}
                     foregroundColour={'var(--rmg-theme-fg)' as MonoColour}
                     backgroundColour={'var(--rmg-theme-colour)' as ColourHex}
-                    zhClassName="rmg-name__zh"
-                    enClassName="rmg-name__en"
                     spanDigits={spanLineNum}
+                    classNames={{ digits: 'rmg-font__en', zh: 'rmg-font__zh', en: 'rmg-font__en' }}
                 />
             </g>
         </g>
