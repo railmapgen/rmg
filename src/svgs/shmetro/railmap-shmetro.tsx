@@ -62,6 +62,30 @@ const DefsSHMetro = memo(function DefsSHMetro() {
             <rect id="stn_sh_2020" stroke="none" height={24} width={12} x={-6} y={-18} />
             <rect id="stn_sh_2020_express" stroke="none" height={49} width={12} x={-6} y={-18} />
             <rect id="stn_sh_2020_direct" stroke="none" height={74} width={12} x={-6} y={-18} />
+            <path
+                id="stn_sh_2024_int"
+                fill="var(--rmg-white)"
+                strokeWidth={2}
+                d="M 0,-12 a 5,5 0 1 1 10,0 V0 a 5,5 0 1 1 -10,0 Z"
+            />
+            <g id="stn_sh_2024_int_osysi" filter='url("#station-border")'>
+                <circle cx="5" cy="-14" r="4" fill="var(--rmg-white)" strokeWidth={2} />
+                <path fill="var(--rmg-white)" strokeWidth={2} d="M 1,-4 a 4,4 0 1 1 8,0 V0 a 4,4 0 1 1 -8,0 Z" />
+            </g>
+            <g id="stn_sh_2024_osysi2">
+                <circle cx="5" cy="-12" r="5.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cx="5" cy="0" r="5.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cx="5" cy="-12" r="5" fill="var(--rmg-white)" strokeWidth={2} />
+                <circle cx="5" cy="0" r="5" fill="var(--rmg-white)" strokeWidth={2} />
+            </g>
+            <g id="stn_sh_2024_osysi3">
+                <circle cx="5" cy="-15" r="3.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cx="5" cy="-7" r="3.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cx="5" cy="1" r="3.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cx="5" cy="-15" r="3" fill="var(--rmg-white)" strokeWidth={2} />
+                <circle cx="5" cy="-7" r="3" fill="var(--rmg-white)" strokeWidth={2} />
+                <circle cx="5" cy="1" r="3" fill="var(--rmg-white)" strokeWidth={2} />
+            </g>
 
             <rect id="intbox_number" height={22} width={20} y={-11} />
 
@@ -146,6 +170,23 @@ const DefsSHMetro = memo(function DefsSHMetro() {
 
             {/* Outline filter of white pass color in Pujiang Line */}
             <PujiangLineDefs />
+
+            {/* 2024 Station border white outline */}
+            <filter id="station-border" filterUnits="userSpaceOnUse" x="-30" y="-30" width="60" height="60">
+                <feMorphology operator="dilate" in="SourceAlpha" radius="0" result="e1" />
+                <feMorphology operator="dilate" in="SourceAlpha" radius="0.25" result="e2" />
+                <feComposite in="e1" in2="e2" operator="xor" result="outline" />
+                <feColorMatrix
+                    type="matrix"
+                    in="outline"
+                    values="0 0 0 0 1
+                            0 0 0 0 1
+                            0 0 0 0 1
+                            0 0 0 1 0"
+                    result="outline2"
+                />
+                <feComposite in="outline2" in2="SourceGraphic" operator="over" result="output" />
+            </filter>
         </defs>
     );
 });
