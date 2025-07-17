@@ -206,13 +206,11 @@ export const updateParam = (param: { [x: string]: any }) => {
     // Add coline and loop default value
     param.coline = param.coline ?? [];
     param.loop = param.loop ?? false;
-    param.loop_info =
-        param.loop_info === undefined
-            ? { bank: true, left_and_right_factor: 0, bottom_factor: 1 }
-            : {
-                  ...param.loop_info,
-                  bottom_factor: Math.max(param.loop_info.bottom_factor, 1),
-              };
+    param.loop_info = param.loop_info ?? { bank: true, left_and_right_factor: 0, bottom_factor: 1 };
+    if (param.loop_info.left_and_right_factor + param.loop_info.bottom_factor === 0) {
+        // make sure left_and_right_factor + bottom_factor > 0
+        param.loop_info.left_and_right_factor = 1;
+    }
     for (const [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('loop_pivot' in stnInfo)) {
             param.stn_list[stnId].loop_pivot = false;
