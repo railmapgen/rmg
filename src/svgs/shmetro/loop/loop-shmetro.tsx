@@ -245,7 +245,7 @@ const LoopStationGroup = (props: {
     };
 }) => {
     const { canvas, loop_stns, xs, ys } = props;
-    const { current_stn_idx: current_stn_id } = useRootSelector(store => store.param);
+    const { current_stn_idx: current_stn_id, stn_list } = useRootSelector(store => store.param);
 
     const railmap_bank: Record<keyof LoopStns, -1 | 0 | 1> = {
         top: 0,
@@ -270,28 +270,32 @@ const LoopStationGroup = (props: {
         <g id="loop_stations">
             {canvas === CanvasType.RailMap &&
                 Object.entries(loop_stns).map(([side, stn_ids]) =>
-                    stn_ids.map(stn_id => (
-                        <g key={stn_id} transform={`translate(${xs[stn_id]},${ys[stn_id]})`}>
-                            <StationSHMetro
-                                stnId={stn_id}
-                                stnState={current_stn_id === stn_id ? 0 : 1}
-                                bank={railmap_bank[side as keyof LoopStns]}
-                                direction={railmap_direction[side as keyof LoopStns]}
-                            />
-                        </g>
-                    ))
+                    stn_ids
+                        .filter(stn_id => stn_list[stn_id].services.length)
+                        .map(stn_id => (
+                            <g key={stn_id} transform={`translate(${xs[stn_id]},${ys[stn_id]})`}>
+                                <StationSHMetro
+                                    stnId={stn_id}
+                                    stnState={current_stn_id === stn_id ? 0 : 1}
+                                    bank={railmap_bank[side as keyof LoopStns]}
+                                    direction={railmap_direction[side as keyof LoopStns]}
+                                />
+                            </g>
+                        ))
                 )}
             {canvas === CanvasType.Indoor &&
                 Object.entries(loop_stns).map(([side, stn_ids]) =>
-                    stn_ids.map((stn_id, i) => (
-                        <g key={stn_id} transform={`translate(${xs[stn_id]},${ys[stn_id]})`}>
-                            <StationSHMetroIndoor
-                                stnId={stn_id}
-                                nameDirection={indoor_name_direction(side as keyof LoopStns, i)}
-                                services={[Services.local]}
-                            />
-                        </g>
-                    ))
+                    stn_ids
+                        .filter(stn_id => stn_list[stn_id].services.length)
+                        .map((stn_id, i) => (
+                            <g key={stn_id} transform={`translate(${xs[stn_id]},${ys[stn_id]})`}>
+                                <StationSHMetroIndoor
+                                    stnId={stn_id}
+                                    nameDirection={indoor_name_direction(side as keyof LoopStns, i)}
+                                    services={[Services.local]}
+                                />
+                            </g>
+                        ))
                 )}
         </g>
     );
