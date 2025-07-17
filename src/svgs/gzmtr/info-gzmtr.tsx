@@ -6,9 +6,10 @@ import CurrentStationName, { CurrentStationSecondaryName } from './current-stati
 import ArrowGzmtr from './arrow-gzmtr';
 import NextViaStations from './runin/next-via-stations';
 import NextStation from './runin/next-station';
-import { NAME_NUM_GAP, NEXT_ARROW_SCALE, NUM_WIDTH } from './runin/runin-utils';
+import { getNextViaStations, NAME_NUM_GAP, NEXT_ARROW_SCALE, NUM_WIDTH } from './runin/runin-utils';
 
 const InfoGZMTR = () => {
+    const param = useRootSelector(store => store.param);
     const {
         svg_height: svgHeight,
         svgWidth: svgWidths,
@@ -18,14 +19,15 @@ const InfoGZMTR = () => {
         line_num: lineNumber,
         current_stn_idx: currentStationIndex,
         stn_list: stationList,
-    } = useRootSelector(store => store.param);
+    } = param;
+    const { branches, routes } = useRootSelector(store => store.helper);
     const curStnInfo = stationList[currentStationIndex];
     const { localisedName, localisedSecondaryName } = curStnInfo;
 
     const [nameBBox, setNameBBox] = useState({ width: 0 } as SVGRect);
 
     const enNameRows = localisedName.en?.split('\\')?.length ?? 1;
-    const nextStnId = curStnInfo[direction === ShortDirection.left ? 'parents' : 'children'];
+    const { nextStations } = getNextViaStations(param, branches, routes);
 
     const post2022 = [PanelTypeGZMTR.gz7w, PanelTypeGZMTR.gz11].includes(infoPanelType as PanelTypeGZMTR);
 
@@ -63,8 +65,7 @@ const InfoGZMTR = () => {
                 <g textAnchor="middle" transform={`translate(${transforms.nameGroup.x},${transforms.nameGroup.y})`}>
                     <CurrentStationName
                         stnName={localisedName}
-                        bold={infoPanelType === PanelTypeGZMTR.gz11}
-                        sparse={infoPanelType === PanelTypeGZMTR.gz11}
+                        panelType={infoPanelType as PanelTypeGZMTR}
                         onUpdate={setNameBBox}
                     />
                     {localisedSecondaryName && (
@@ -79,7 +80,7 @@ const InfoGZMTR = () => {
                     lineNum={lineNumber}
                     stnNum={curStnInfo.num}
                     strokeColour={theme[2]}
-                    textClassName="rmg-name__zh"
+                    classNames={{ digits: 'rmg-font__en' }}
                     transform={
                         post2022
                             ? `translate(${transforms.stationNumberPost2022.x},${transforms.stationNumberPost2022.y})`
@@ -93,12 +94,12 @@ const InfoGZMTR = () => {
                 <NextViaStations nameBBox={nameBBox} />
             ) : (
                 <g transform={infoPanelType === PanelTypeGZMTR.gz2otis ? otisTransforms.next : ''}>
-                    {!nextStnId || nextStnId.includes('linestart') || nextStnId.includes('lineend') ? (
+                    {!nextStations || nextStations.includes('linestart') || nextStations.includes('lineend') ? (
                         <></>
-                    ) : nextStnId.length === 1 ? (
-                        <NextStation nextId={nextStnId[0]} nameBBox={nameBBox} ignoreNumWidth={post2022} />
+                    ) : nextStations.length === 1 ? (
+                        <NextStation nextId={nextStations[0]} nameBBox={nameBBox} ignoreNumWidth={post2022} />
                     ) : (
-                        <BigNext2 nextIds={nextStnId} nameBBox={nameBBox} ignoreNumWidth={post2022} />
+                        <BigNext2 nextIds={nextStations} nameBBox={nameBBox} ignoreNumWidth={post2022} />
                     )}
                 </g>
             )}

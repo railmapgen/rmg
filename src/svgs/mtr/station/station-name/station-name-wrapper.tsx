@@ -52,7 +52,7 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
      * align = right: { x: -80, width: 80 }
      */
     const [bBox, setBBox] = useState({ x: 0, width: 0 } as SVGRect);
-    const [gBBox, setGBBox] = useState({ x: 0, width: 0 } as SVGRect);
+    const [gBBox, setGBBox] = useState({ x: 0, y: 0, height: 0, width: 0 } as SVGRect);
     const gRef = useRef<SVGGElement>(null);
 
     useEffect(() => {

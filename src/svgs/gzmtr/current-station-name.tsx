@@ -1,12 +1,13 @@
 import { memo, SVGProps, useEffect, useRef, useState } from 'react';
 import { Translation } from '@railmapgen/rmg-translate';
+import { PanelTypeGZMTR } from '../../constants/constants';
 
 const ZH_NAME_FONT_SIZE = 92;
 
-const getLetterSpacing = (zhNameCount?: number) => {
+const getLetterSpacing = (panelType: PanelTypeGZMTR, zhNameCount?: number) => {
     switch (zhNameCount) {
         case 2:
-            return 0.2;
+            return panelType === 'gz11' ? 0.2 : 0.5;
         case 3:
             return 0.1;
         default:
@@ -16,18 +17,17 @@ const getLetterSpacing = (zhNameCount?: number) => {
 
 interface CurrentStationNameProps {
     stnName: Translation;
-    bold?: boolean;
-    sparse?: boolean;
+    panelType: PanelTypeGZMTR;
     onUpdate?: (bBox: SVGRect) => void;
 }
 
 export default memo(
     function CurrentStationName(props: CurrentStationNameProps) {
-        const { stnName, bold, sparse, onUpdate } = props;
+        const { stnName, panelType, onUpdate } = props;
 
         const nameEl = useRef<SVGGElement | null>(null);
 
-        const letterSpacing = sparse ? getLetterSpacing(stnName.zh?.length) : 0;
+        const letterSpacing = getLetterSpacing(panelType, stnName.zh?.length);
 
         useEffect(() => {
             if (nameEl.current && onUpdate) {
@@ -38,10 +38,10 @@ export default memo(
                     width: bBox.width - letterSpacing * ZH_NAME_FONT_SIZE,
                 });
             }
-        }, [nameEl.current, JSON.stringify(stnName), bold, sparse]);
+        }, [nameEl.current, JSON.stringify(stnName), panelType]);
 
         return (
-            <g ref={nameEl} fontWeight={bold ? 'bold' : 'normal'}>
+            <g ref={nameEl} fontWeight={panelType === 'gz11' ? 'bold' : 'normal'}>
                 <text
                     className="rmg-name__zh"
                     fontSize={ZH_NAME_FONT_SIZE}
@@ -60,7 +60,9 @@ export default memo(
             </g>
         );
     },
-    (prevProps, nextProps) => JSON.stringify(prevProps.stnName) === JSON.stringify(nextProps.stnName)
+    (prevProps, nextProps) =>
+        JSON.stringify(prevProps.stnName) === JSON.stringify(nextProps.stnName) &&
+        prevProps.panelType === nextProps.panelType
 );
 
 interface CurrentStationSecondaryNameProps extends SVGProps<SVGGElement> {

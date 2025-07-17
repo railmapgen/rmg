@@ -17,26 +17,22 @@ type NextViaStationsProps = {
 };
 
 export default function NextViaStations({ nameBBox }: NextViaStationsProps) {
+    const param = useRootSelector(store => store.param);
     const {
         svg_height: svgHeight,
         svgWidth: svgWidths,
         direction,
         current_stn_idx: currentStation,
         stn_list: stationList,
-        loop_info: { midpoint_station: midpointStation, clockwise },
-    } = useRootSelector(store => store.param);
-    const { branches } = useRootSelector(store => store.helper);
+    } = param;
+    const { branches, routes } = useRootSelector(store => store.helper);
 
     const svgWidth = svgWidths[CanvasType.RunIn];
 
-    const stationsInScope = branches[0].slice(1, -1);
-    const { nextStation, viaStations } = getNextViaStations(
-        stationsInScope,
-        stationList,
-        currentStation,
-        midpointStation,
-        clockwise
-    );
+    const {
+        nextStations: [nextStation],
+        viaStations,
+    } = getNextViaStations(param, branches, routes);
 
     const {
         localisedName: { en: currentEnName = '' },
@@ -105,9 +101,11 @@ export default function NextViaStations({ nameBBox }: NextViaStationsProps) {
                             ))}
                         </g>
                     </g>
-                    <g transform={`translate(0,${transforms.via.dy})`}>
-                        <ViaStations viaStations={viaStations} stationList={stationList} />
-                    </g>
+                    {viaStations && (
+                        <g transform={`translate(0,${transforms.via.dy})`}>
+                            <ViaStations viaStations={viaStations} stationList={stationList} />
+                        </g>
+                    )}
                 </g>
             </g>
             <ArrowGzmtr

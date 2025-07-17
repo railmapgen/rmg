@@ -125,20 +125,24 @@ const DestSHMetro = () => {
             />
             {coline_dest_ids.length &&
                 // multiple coline dest is not supported yet
-                coline_dest_ids.map(coline_dest_id => (
-                    <g key={`coline_${coline_dest_id}`} transform={`translate(0,${-coline_dy})`}>
-                        <Dest
-                            dest_names={[coline_dest_names.at(0)!]}
-                            line_name={colines[coline_dest_id]?.colors.at(0)!.slice(4) as Name}
-                            line_color={[
-                                colines[coline_dest_id]?.colors.at(0)![2],
-                                colines[coline_dest_id]?.colors.at(0)![3],
-                            ]}
-                            coline
-                            upper={false}
-                        />
-                    </g>
-                ))}
+                coline_dest_ids
+                    .filter(coline_dest_id =>
+                        Object.values(coline).some(co => co.from === coline_dest_id || co.to === coline_dest_id)
+                    )
+                    .map(coline_dest_id => (
+                        <g key={`coline_${coline_dest_id}`} transform={`translate(0,${-coline_dy})`}>
+                            <Dest
+                                dest_names={[coline_dest_names.at(0)!]}
+                                line_name={colines[coline_dest_id]?.colors.at(0)!.slice(4) as Name}
+                                line_color={[
+                                    colines[coline_dest_id]?.colors.at(0)![2],
+                                    colines[coline_dest_id]?.colors.at(0)![3],
+                                ]}
+                                coline
+                                upper={false}
+                            />
+                        </g>
+                    ))}
         </>
     );
 };

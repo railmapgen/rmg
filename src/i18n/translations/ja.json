@@ -1,1 +1,329 @@
-{}
+{
+    "HeaderActions": {
+        "editStyle": "風格設定"
+    },
+
+    "DownloadActions": {
+        "downloads": "ダウンロード",
+        "configFile": "設定ファイル",
+        "images": "画像"
+    },
+
+    "OpenActions": {
+        "invalidType": "無効なファイル形式です！JSONファイルのみ受け付けます。",
+        "unknownError": "アップロードしたファイルのインポート中にエラーが発生しました。再度お試しください。"
+    },
+
+    "DownloadModal": {
+        "title": "画像をダウンロード",
+        "canvas": "キャンバス",
+        "transparent": "透明背景",
+        "showBorder": "枠線を表示",
+        "scale": "表示倍率",
+        "format": "ファイル形式",
+        "pleaseSelect": "選択してください...",
+        "png": "PNG画像",
+        "svg": "SVG画像（ウェブ用）",
+        "downloadOne": "現在の駅をダウンロード",
+        "downloadAll": "全駅をダウンロード"
+    },
+
+    "GridTabs": {
+        "main": "本線",
+        "branch": "支線",
+        "external": "外部路線",
+        "addStation": "駅を追加",
+        "editLine":  "路線区間設定"
+    },
+
+    "StationAgGrid": {
+        "num": "駅番号",
+        "interchange": "乗り換え",
+        "coline": "共線"
+    },
+
+    "StyleSidePanel": {
+        "header": "風格設定",
+        "layout": {
+            "title": "レイアウト",
+            "canvasHeight": "キャンバスの高さ",
+            "destinationWidth": "終着駅表示板の幅",
+            "runinWidth": "現在駅名表示板の幅",
+            "railmapWidth": "ホームドア路線図の幅",
+            "indoorWidth": "車内路線図の幅",
+            "platformWidth": "ホーム番号の幅",
+            "verticalPosition": "垂直方向位置",
+            "branchSpacing": "支線間隔",
+            "branchSpacingLoop": "垂直余白",
+            "loopSpacing": "環状線間隔",
+            "padding": "路線図の余白",
+            "directionGzX": "終着駅 水平方向位置",
+            "directionGzY": "終着駅 垂直方向位置"
+        },
+        "design": {
+            "title": "デザイン",
+            "zhLineName": "路線の日本語名",
+            "enLineName": "路線の英語名",
+            "lineNum": "路線番号",
+            "direction": "現在の駅の進行方向",
+            "left": "左",
+            "right": "右",
+            "platformNum": "ホーム番号",
+            "psdNum": "ホームドア番号",
+            "panelType": "ホームドアカバーデザイン",
+            "gz1": "1号線",
+            "gz28": "2/8号線（パナソニック）",
+            "gz2otis": "2/8号線（オーティス）",
+            "gz3": "3号線",
+            "gz4": "4号線",
+            "gz5": "5号線",
+            "gz11": "11号線",
+            "gz1822": "18/22号線",
+            "gz6": "2010風格",
+            "gzgf": "2016風格",
+            "gz1421": "2017風格",
+            "gz7w": "2022風格",
+            "sh": "デフォルト",
+            "sh2020": "2020風格（プレビュー版）",
+            "nameDisplay": "駅名表示",
+            "alternatively": "交互表示",
+            "onOneSide": "片側表示",
+            "flip": "位置を反転",
+            "firstStationNameDisplay": "最初の駅の名前を表示",
+            "upwards": "上",
+            "downward": "下",
+            "legacyDestination": "終着駅表示板に路線名を表示",
+            "overrideTerminal": "終着駅を上書き",
+            "terminalZhName": "終着駅の日本語名",
+            "terminalEnName": "終着駅の英語名"
+        },
+        "note": {
+            "title": "備考",
+            "add": "備考を追加",
+            "zhNote": "日本語備考",
+            "enNote": "英語備考",
+            "positionX": "水平方向位置",
+            "positionY": "垂直方向位置",
+            "border": "枠線を表示",
+            "remove": "備考を削除"
+        },
+        "loop": {
+            "title": "環状線",
+            "isLoop": "環状線とみなす",
+            "isBank": "ホームドア路線図で環状線を平行四辺形で表示",
+            "leftRightFactor": "左右パラメータ",
+            "bottomFactor": "下部パラメータ"
+        }
+    },
+
+    "BranchSidePanel": {
+        "header": "路線区間設定",
+        "branch": {
+            "title": "支線"
+        },
+        "coline": {
+            "title": "共線",
+            "add": "共線を追加"
+        },
+        "action": {
+            "title": "操作",
+            "autoNum": "駅の自動採番",
+            "reverse": "路線全体を反転",
+            "flip": "路線全体を左右反転"
+        }
+    },
+
+    "StationSidePanel": {
+        "info": {
+            "title": "駅情報",
+            "num": "駅番号",
+            "zhSecondary": "日本語サブ名称",
+            "enSecondary": "英語サブ名称"
+        },
+        "interchange": {
+            "title": "乗り換え",
+            "within": "同一駅乗り換え",
+            "outStation": "駅外乗り換え",
+            "outSystem": "システム外乗り換え",
+            "addGroup": "乗り換えグループを追加",
+            "noInterchanges": "乗り換えなし",
+            "add": "乗り換えを追加",
+            "copy": "乗り換えをコピー",
+            "remove": "乗り換えを削除"
+        },
+        "branch": {
+            "type": "種類",
+            "through": "直通（乗り換え不要）",
+            "nonThrough": "非直通（乗り換え必要）",
+            "firstStation": "最初の駅",
+            "position": "位置",
+            "upper": "上",
+            "lower": "下"
+        },
+        "more": {
+            "title": "詳細設定",
+            "service": "列車種別",
+            "local": "普通",
+            "express": "快速",
+            "direct": "直通",
+            "facility": "周辺施設",
+            "pivot": "環状線のハブ駅",
+            "oneLine": "日本語・英語駅名を1行で表示",
+            "intPadding": "駅名と乗り換え路線の間隔",
+            "intPaddingApplyGlobal": "現在の間隔を全駅に適用",
+            "apply": "適用",
+            "characterSpacing": "駅名の文字間隔"
+        },
+        "footer": {
+            "current": "現在の駅として設定",
+            "remove": "削除"
+        }
+    },
+
+    "AddStationModal": {
+        "title": "駅を追加",
+        "where": "対象位置",
+        "main": "本線",
+        "branch": "支線",
+        "external": "外部路線",
+        "preposition": "相対位置",
+        "before": "前に",
+        "after": "後に",
+        "pivot": "基準駅",
+        "pleaseSelect": "選択してください...",
+        "error": "駅の追加に失敗しました。オプションを確認して再度お試しください。"
+    },
+
+    "NewBranchModal": {
+        "title": "支線または外部路線を追加",
+        "where": "対象位置",
+        "new": "支線を追加",
+        "ext": "外部路線を追加",
+        "from": "間",
+        "to": "と",
+        "position": "位置",
+        "upper": "上",
+        "lower": "下"
+    },
+
+    "AutoNumModal": {
+        "title": "駅の自動採番",
+        "where": "対象位置",
+        "main": "本線",
+        "branch": "支線",
+        "external": "外部路線",
+        "from": "開始番号",
+        "maxLength": "番号桁数",
+        "sort": "並べ替え順序",
+        "asc": "昇順",
+        "desc": "降順"
+    },
+
+    "Airport": "空港",
+    "All projects": "すべてのプロジェクト",
+    "Anticlockwise": "反時計回り",
+    "Are you sure to remove station? You cannot undo this action.": "この駅を削除してもよろしいですか？この操作は元に戻せません。",
+    "Blank project": "空のプロジェクト",
+    "Branches are not supported in the loop line.": "環状線では支線はサポートされていません。",
+    "Branch left end": "支線左端",
+    "Branch on the left": "左側の支線",
+    "Branch on the right": "右側の支線",
+    "Branch right end": "支線右端",
+    "Branch spacing": "支線間隔",
+    "Branches": "支線",
+    "by": "作成者：",
+    "Canvas scale": "キャンバス表示倍率",
+    "Chinese name": "日本語名",
+    "Circle line": "環状線",
+    "Clockwise": "時計回り",
+    "Close": "閉じる",
+    "Coach number": "車両番号",
+    "Colour": "色",
+    "Connect to main line": "本線に接続",
+    "day ago": "日前",
+    "days ago": "日前",
+    "Disconnect from main line": "本線から切断",
+    "Disneyland resort": "ディズニーリゾート",
+    "Don't show me again": "次回から表示しない",
+    "Edit project info": "プロジェクト情報を編集",
+    "Empty template": "空のテンプレート",
+    "English name": "英語名",
+    "Help and support": "ヘルプとサポート",
+    "High speed rail": "高速鉄道",
+    "hour ago": "時間前",
+    "hours ago": "時間前",
+    "Import": "インポート",
+    "Import project": "プロジェクトをインポート",
+    "Just now": "たった今",
+    "Last modified": "最終更新",
+    "LEFT END": "路線左端",
+    "Line icon": "路線アイコン",
+    "Loop direction": "環状線方向",
+    "Loop line": "環状線",
+    "Manage": "管理",
+    "Manage projects": "プロジェクトを管理",
+    "minute ago": "分前",
+    "minutes ago": "分前",
+    "Midpoint station": "半環駅",
+    "More settings": "詳細設定",
+    "National rail": "ナショナル・レール",
+    "Ngong Ping 360": "昂坪360",
+    "No": "いいえ",
+    "No branches found": "支線が見つかりませんでした",
+    "None": "なし",
+    "now and enjoy an even better rail map design experience!": "、さらに快適な路線図デザイン体験を！",
+    "Open selected": "選択したプロジェクトを開く",
+    "Open template": "テンプレートを開く",
+    "Paid area": "有料エリア乗り換え",
+    "Project": "プロジェクト",
+    "Project selected is invalid or corrupted.": "選択されたプロジェクトは無効であるか破損しています。",
+    "Project Selector": "プロジェクトセレクター",
+    "Project name": "プロジェクト名",
+    "Reload": "リロード",
+    "Remove project": "プロジェクトを削除",
+    "Remove station": "駅を削除",
+    "RIGHT END": "路線右端",
+    "Rotate anticlockwise": "反時計回りに回転",
+    "Rotate clockwise": "時計回りに回転",
+    "Saved projects": "保存されたプロジェクト",
+    "Secondary names": "サブ名称",
+    "Select canvas": "キャンバスを選択",
+    "Set as midpoint": "半環駅に設定",
+    "Span digits over rows": "数字を複数行に表示",
+    "Style": "風格",
+    "Station Chinese name": "駅の日本語名",
+    "Station English name": "駅の英語名",
+    "Station name": "駅名",
+    "Target station": "対象駅",
+    "Temporary": "一時的",
+    "Terms and conditions": "利用規約",
+    "Text on the left": "乗り換えテキストを左に",
+    "Text on the right": "乗り換えテキストを右に",
+    "Try out": "試す",
+    "Unable to connect to main line.": "本線に接続できません。",
+    "Unable to disconnect from main line.": "本線から切断できません。",
+    "Unable to remove this station.": "この駅を削除できません。",
+    "Under construction": "建設中",
+    "Unknown": "不明",
+    "View": "表示",
+    "Visit": "アクセス",
+    "Visit GitHub": "GitHubにアクセス",
+    "Yes": "はい",
+    "You have reached the maximum number of projects.": "プロジェクト数の上限に達しました。",
+
+    "CanvasType": {
+        "all": "全て",
+        "destination": "終着駅表示板",
+        "runin": "現在駅名表示板",
+        "railmap": "ホームドア路線図",
+        "indoor": "車内路線図",
+        "platform": "ホーム番号"
+    },
+
+    "RmgStyle": {
+        "mtr": "香港MTR",
+        "gzmtr": "広州地下鉄",
+        "shmetro": "上海地下鉄",
+        "shsubrwy": "上海市域鉄道"
+    }
+}

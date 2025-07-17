@@ -54,11 +54,20 @@ export const removeStation = (stationId: string) => {
              *         ^   \
              *               stn4
              */
+            /**
+             * stn1 - stn2 - - - - stn3
+             *         ^   \      /
+             *               stn4
+             */
             parents.forEach(parId => {
-                newStnList[parId].children = children;
+                newStnList[parId].children = newStnList[parId].children
+                    .map(c => (c === stationId ? children : c))
+                    .flat();
             });
             children.forEach(childId => {
-                newStnList[childId].parents = parents;
+                newStnList[childId].parents = newStnList[childId].parents
+                    .map(p => (p === stationId ? parents : p))
+                    .flat();
             });
             if (parents.length === 1) {
                 newStnList[parents[0]].branch = {

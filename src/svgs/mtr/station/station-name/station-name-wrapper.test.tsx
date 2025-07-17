@@ -3,10 +3,6 @@ import { StationState } from '../../../../constants/constants';
 import { render } from '../../../../test-utils';
 import { vi } from 'vitest';
 
-(Document.prototype as any).fonts = {
-    ready: Promise.resolve([]),
-};
-
 const mockGetBBox = vi.fn();
 (SVGElement.prototype as any).getBBox = mockGetBBox;
 

@@ -8,10 +8,6 @@ import rootReducer from '../../../redux';
 
 const realStore = rootReducer.getState();
 
-(Document.prototype as any).fonts = {
-    ready: Promise.resolve([]),
-};
-
 (SVGElement.prototype as any).getBBox = () => ({ x: -40, width: 80 });
 
 const mockInterchangeInfo: ExtendedInterchangeInfo = {

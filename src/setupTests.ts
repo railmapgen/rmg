@@ -1,6 +1,9 @@
+import { setupBroadcastChannelMock } from '@railmapgen/rmg-runtime/util';
 import { BranchStyle, LocalStorageKey, RmgStyle, StationDict } from './constants/constants';
 import { createStore } from './redux';
 import { initParam } from './redux/param/util';
+
+setupBroadcastChannelMock();
 
 export const createTestStore = createStore;
 
@@ -75,4 +78,4 @@ export const createParamInLocalStorage = (id: string) => {
     window.localStorage.setItem('rmg__' + LocalStorageKey.PARAM_BY_ID + id, JSON.stringify(rmgParam));
 };
 
-Object.defineProperty(document, 'fonts', { value: { load: () => Promise.resolve() } });
+Object.defineProperty(document, 'fonts', { value: { ready: Promise.resolve([]), load: () => Promise.resolve([]) } });
