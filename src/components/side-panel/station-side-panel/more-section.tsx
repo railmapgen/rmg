@@ -1,7 +1,7 @@
 import { Box, Heading } from '@chakra-ui/react';
 import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
-import { FACILITIES, Facilities, RmgStyle, Services, TEMP } from '../../../constants/constants';
+import { FACILITIES, Facilities, PanelTypeShmetro, RmgStyle, Services, TEMP } from '../../../constants/constants';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import {
     updateStationCharacterSpacing,
@@ -20,7 +20,7 @@ export default function MoreSection() {
     const dispatch = useRootDispatch();
 
     const selectedStation = useRootSelector(state => state.app.selectedStation);
-    const { style, loop } = useRootSelector(state => state.param);
+    const { style, loop, info_panel_type } = useRootSelector(state => state.param);
     const { services, facility, loop_pivot, one_line, int_padding, character_spacing, underConstruction } =
         useRootSelector(state => state.param.stn_list[selectedStation]);
 
@@ -79,7 +79,7 @@ export default function MoreSection() {
             label: t('StationSidePanel.more.oneLine'),
             isChecked: one_line,
             onChange: checked => dispatch(updateStationOneLine(selectedStation, checked)),
-            hidden: ![RmgStyle.SHMetro].includes(style),
+            hidden: !(style === RmgStyle.SHMetro && info_panel_type !== PanelTypeShmetro.sh2024),
             minW: 'full',
             oneLine: true,
         },

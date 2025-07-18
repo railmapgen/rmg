@@ -1,12 +1,12 @@
 /* eslint @typescript-eslint/no-non-null-assertion: 0 */
+import { Translation } from '@railmapgen/rmg-translate';
 import { memo, SVGProps, useMemo } from 'react';
-import { CanvasType, StationDict } from '../../constants/constants';
+import { CanvasType, PanelTypeShmetro, StationDict } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { calculateColineStations } from '../methods/shmetro-coline';
 import SvgWrapper from '../svg-wrapper';
 import PujiangLineDefs from './pujiang-line-filter';
-import { Translation } from '@railmapgen/rmg-translate';
 
 const LINE_WIDTH = 12;
 
@@ -519,7 +519,7 @@ const PrevStn = (props: { stnIds: string[] }) => {
             ? (prevZhName.split('\\').length - 1) * -50 + (prevEnName.split('\\').length - 1) * -30
             : 0) + 70;
 
-    const previousText = info_panel_type === 'sh2024' ? 'Previous Stop' : 'Past Stop';
+    const previousText = info_panel_type === PanelTypeShmetro.sh2024 ? 'Previous Stop' : 'Past Stop';
 
     return (
         <g
