@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 import { adjacencyList, criticalPathMethod, getStnState, getXShareMTR } from '../../methods/share';
 import StationSHMetro from './station-shmetro';
 import { StationsSHMetro } from '../../methods/mtr';
-import { CanvasType, Services, StationDict } from '../../../constants/constants';
+import { CanvasType, PanelTypeShmetro, Services, StationDict } from '../../../constants/constants';
 import { useRootSelector } from '../../../redux';
 import LoopSHMetro from '../loop/loop-shmetro';
 import SvgWrapper from '../../svg-wrapper';
@@ -11,7 +11,13 @@ const CANVAS_TYPE = CanvasType.Indoor;
 
 export default function IndoorWrapperSHMetro() {
     const { canvasScale } = useRootSelector(state => state.app);
-    const { svgWidth: svgWidths, svg_height: svgHeight, theme, loop } = useRootSelector(store => store.param);
+    const {
+        svgWidth: svgWidths,
+        svg_height: svgHeight,
+        theme,
+        loop,
+        info_panel_type,
+    } = useRootSelector(store => store.param);
 
     const svgWidth = svgWidths[CANVAS_TYPE];
 
@@ -25,7 +31,7 @@ export default function IndoorWrapperSHMetro() {
         >
             <DefsSHMetro />
             {loop ? <LoopSHMetro bank_angle={false} canvas={CanvasType.Indoor} /> : <IndoorSHMetro />}
-            <InfoElements />
+            {info_panel_type !== PanelTypeShmetro.sh2024 && <InfoElements />}
         </SvgWrapper>
     );
 }
@@ -60,6 +66,32 @@ export const DefsSHMetro = memo(function DefsSHMetro() {
                 <line x1="0" x2="0" y1="-12" y2="12" stroke="var(--rmg-white)" strokeWidth={10} />
                 <circle cy="-12" fill="var(--rmg-white)" strokeWidth={5} r={8} transform="scale(1.5)" />
                 <circle cy="12" fill="var(--rmg-white)" strokeWidth={5} r={8} transform="scale(1.5)" />
+            </g>
+
+            <rect id="stn_sh_2024" stroke="none" height={24} width={12} x={-6} y={-18} />
+            <path
+                id="stn_sh_2024_int"
+                fill="var(--rmg-white)"
+                strokeWidth={2}
+                d="M -5,-12 a 5,5 0 1 1 10,0 V0 a 5,5 0 1 1 -10,0 Z"
+            />
+            <g id="stn_sh_2024_int_osysi" filter='url("#station-border")'>
+                <circle cy="-14" r="4" fill="var(--rmg-white)" strokeWidth={2} />
+                <path fill="var(--rmg-white)" strokeWidth={2} d="M -4,-4 a 4,4 0 1 1 8,0 V0 a 4,4 0 1 1 -8,0 Z" />
+            </g>
+            <g id="stn_sh_2024_osysi2">
+                <circle cy="-12" r="5.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="0" r="5.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="-12" r="5" fill="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="0" r="5" fill="var(--rmg-white)" strokeWidth={2} />
+            </g>
+            <g id="stn_sh_2024_osysi3">
+                <circle cy="-15" r="3.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="-7" r="3.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="1" r="3.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="-15" r="3" fill="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="-7" r="3" fill="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="1" r="3" fill="var(--rmg-white)" strokeWidth={2} />
             </g>
         </defs>
     );
