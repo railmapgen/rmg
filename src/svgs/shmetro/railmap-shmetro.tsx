@@ -66,25 +66,25 @@ const DefsSHMetro = memo(function DefsSHMetro() {
                 id="stn_sh_2024_int"
                 fill="var(--rmg-white)"
                 strokeWidth={2}
-                d="M 0,-12 a 5,5 0 1 1 10,0 V0 a 5,5 0 1 1 -10,0 Z"
+                d="M -5,-12 a 5,5 0 1 1 10,0 V0 a 5,5 0 1 1 -10,0 Z"
             />
             <g id="stn_sh_2024_int_osysi" filter='url("#station-border")'>
-                <circle cx="5" cy="-14" r="4" fill="var(--rmg-white)" strokeWidth={2} />
-                <path fill="var(--rmg-white)" strokeWidth={2} d="M 1,-4 a 4,4 0 1 1 8,0 V0 a 4,4 0 1 1 -8,0 Z" />
+                <circle cy="-14" r="4" fill="var(--rmg-white)" strokeWidth={2} />
+                <path fill="var(--rmg-white)" strokeWidth={2} d="M -4,-4 a 4,4 0 1 1 8,0 V0 a 4,4 0 1 1 -8,0 Z" />
             </g>
             <g id="stn_sh_2024_osysi2">
-                <circle cx="5" cy="-12" r="5.5" stroke="var(--rmg-white)" strokeWidth={2} />
-                <circle cx="5" cy="0" r="5.5" stroke="var(--rmg-white)" strokeWidth={2} />
-                <circle cx="5" cy="-12" r="5" fill="var(--rmg-white)" strokeWidth={2} />
-                <circle cx="5" cy="0" r="5" fill="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="-12" r="5.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="0" r="5.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="-12" r="5" fill="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="0" r="5" fill="var(--rmg-white)" strokeWidth={2} />
             </g>
             <g id="stn_sh_2024_osysi3">
-                <circle cx="5" cy="-15" r="3.5" stroke="var(--rmg-white)" strokeWidth={2} />
-                <circle cx="5" cy="-7" r="3.5" stroke="var(--rmg-white)" strokeWidth={2} />
-                <circle cx="5" cy="1" r="3.5" stroke="var(--rmg-white)" strokeWidth={2} />
-                <circle cx="5" cy="-15" r="3" fill="var(--rmg-white)" strokeWidth={2} />
-                <circle cx="5" cy="-7" r="3" fill="var(--rmg-white)" strokeWidth={2} />
-                <circle cx="5" cy="1" r="3" fill="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="-15" r="3.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="-7" r="3.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="1" r="3.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="-15" r="3" fill="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="-7" r="3" fill="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="1" r="3" fill="var(--rmg-white)" strokeWidth={2} />
             </g>
 
             <rect id="intbox_number" height={22} width={20} y={-11} />

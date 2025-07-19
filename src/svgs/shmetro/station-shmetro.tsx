@@ -55,7 +55,7 @@ const StationSHMetro = (props: Props) => {
             stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
         } else stationIconStyle = 'stn_sh_2020';
         stationIconColor.fill = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
-    } else if (info_panel_type === 'sh2020') {
+    } else if (info_panel_type === PanelTypeShmetro.sh2020) {
         if (stnInfo.services.length === 3) stationIconStyle = 'stn_sh_2020_direct';
         else if (stnInfo.services.length === 2) stationIconStyle = 'stn_sh_2020_express';
         else stationIconStyle = 'stn_sh_2020';
@@ -71,7 +71,8 @@ const StationSHMetro = (props: Props) => {
     }
 
     const bank = bank_ ?? 0;
-    const dx = (direction === 'l' ? 6 : -6) + branchNameDX + bank * 30;
+    const dx2024 = info_panel_type === PanelTypeShmetro.sh2024 ? (direction === 'l' ? -5 : 5) : 0;
+    const dx = (direction === 'l' ? 6 : -6) + branchNameDX + bank * 30 + dx2024;
     const is2020or2024 = info_panel_type === PanelTypeShmetro.sh2020 || info_panel_type === PanelTypeShmetro.sh2024;
     const dy = (is2020or2024 ? -20 : -6) + Math.abs(bank) * (is2020or2024 ? 25 : 11);
     const dr = bank ? 0 : direction === 'l' ? -45 : 45;
@@ -81,10 +82,7 @@ const StationSHMetro = (props: Props) => {
                 xlinkHref={`#${stationIconStyle}`}
                 {...stationIconColor} // different styles use either `fill` or `stroke`
                 // sh and sh2020 have different headings of int_sh, so -1 | 1 is multiplied
-                transform={
-                    `translate(${bank * (info_panel_type === 'sh2020' ? 5 : 0)},0)` +
-                    `rotate(${bank * 90 * (info_panel_type === 'sh2020' ? 1 : -1)})`
-                }
+                transform={`translate(${bank * (is2020or2024 ? 5 : 0)},0)rotate(${bank * 90 * (is2020or2024 ? 1 : -1)})`}
             />
             <g transform={`translate(${dx},${dy})rotate(${dr})`}>
                 <StationNameGElement
