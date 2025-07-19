@@ -4,6 +4,15 @@ import { forwardRef, memo, Ref, SVGProps, useEffect, useMemo, useRef, useState }
 import { ExtendedInterchangeInfo, Facilities, InterchangeGroup, PanelTypeShmetro } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 
+const INT_BOX_SIZE = {
+    width: {
+        singleDigit: 19.8,
+        doubleDigit: 24.2,
+    },
+    height: 22,
+    padding: 2,
+};
+
 interface Props {
     stnId: string;
     stnState: -1 | 0 | 1;
@@ -352,9 +361,13 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
         const getBBoxWidth = (info: ExtendedInterchangeInfo) => {
             const key = info.name[0];
             const lineNumber = key.match(/^(\d+)号线$/);
-            const boxWidth = lineNumber ? (Number(lineNumber[1]) >= 10 ? 22 : 20) : textLineWidth[info.name[0]];
+            const boxWidth = lineNumber
+                ? Number(lineNumber[1]) >= 10
+                    ? INT_BOX_SIZE.width.doubleDigit
+                    : INT_BOX_SIZE.width.singleDigit
+                : textLineWidth[info.name[0]];
             intBoxDX[key] = dx * directionPolarity + (lineNumber && direction === 'r' ? -boxWidth : 0);
-            return boxWidth + 2;
+            return boxWidth + INT_BOX_SIZE.padding;
         };
 
         let dx = 0; // update in every box
@@ -364,14 +377,17 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
         });
         let outOfSystemLine = [0, 0];
         if (transfer[1].length) {
+            // there will be a line and a text element for 出站换乘
+            // each will take 22px
+            const elementWidth = INT_BOX_SIZE.height;
             if (transfer[0].length) {
-                outOfSystemLine = [dx, dx + 22];
-                dx += 22 * 2;
+                outOfSystemLine = [dx, dx + elementWidth];
+                dx += elementWidth * 2;
             } else {
-                dx += 2; // padding
-                // hide this line if no previous transfer
+                dx += INT_BOX_SIZE.padding;
+                // hide this line if there is no previous transfer
                 outOfSystemLine = [dx, dx];
-                dx += 22;
+                dx += elementWidth;
             }
             transfer[1].forEach(info => {
                 dx += getBBoxWidth(info);
@@ -394,7 +410,7 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
                 ref={el => {
                     if (el && !isLineNumber) textLineRefs.current[key] = el;
                 }}
-                transform={`translate(${intBoxesDX[key] ?? 0},-11)`}
+                transform={`translate(${intBoxesDX[key] ?? 0},${-INT_BOX_SIZE.height / 2})`}
             >
                 {isLineNumber ? (
                     <IntBoxNumber2024 info={info} />
@@ -407,7 +423,7 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
 
     const intBoxDX = (intPadding - intBoxGroupWidth) * directionPolarity;
     return (
-        <g ref={ref} fontSize={14} textAnchor="middle" transform={`translate(${intBoxDX},0)`}>
+        <g ref={ref} fontSize={24} textAnchor="middle" transform={`translate(${intBoxDX},0)`}>
             {transfer[0].map(makeBoxElement)}
             {transfer[1].length && (
                 <>
@@ -422,7 +438,7 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
                     <g
                         transform={`translate(${outOfSystemLine[1] * directionPolarity},-13.5)`}
                         fill={stnState < 0 ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
-                        fontSize="75%"
+                        fontSize="10.5"
                         textAnchor={direction === 'l' ? 'start' : 'end'}
                         className="rmg-name__zh"
                     >
@@ -468,11 +484,18 @@ const IntBoxNumber2024 = (props: { info: ExtendedInterchangeInfo }) => {
         info: { name, theme },
     } = props;
     const num = name[0].match(/^(\d+)号线$/)?.[1] ?? '';
-    const width = num.length > 1 ? 22 : 18; // 22 for 10+ lines, 18 for 1-9 lines
+    const width = num.length > 1 ? INT_BOX_SIZE.width.doubleDigit : INT_BOX_SIZE.width.singleDigit;
+    const letterSpacing = num.length > 1 ? -2.5 : 0;
     return (
         <g>
-            <rect height={22} width={width} y={-11} fill={theme?.at(2)} />
-            <text x={10} className="rmg-name__zh" fill={theme?.at(3)} dominantBaseline="central">
+            <rect height={INT_BOX_SIZE.height} width={width} y={-11} fill={theme?.at(2)} />
+            <text
+                x={10}
+                className="rmg-name__zh"
+                fill={theme?.at(3)}
+                dominantBaseline="central"
+                letterSpacing={letterSpacing}
+            >
                 {num}
             </text>
         </g>
@@ -512,7 +535,7 @@ const IntBoxText2024 = (props: { info: ExtendedInterchangeInfo; state: -1 | 0 | 
             fill={state < 0 ? 'gray' : 'black'}
             dominantBaseline="central"
             textAnchor={direction === 'l' ? 'start' : 'end'}
-            fontSize="50%"
+            fontSize="7"
         >
             <text dy="0">{name[0]}</text>
             <text dy="7">{name[1]}</text>
