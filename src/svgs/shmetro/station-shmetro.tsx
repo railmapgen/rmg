@@ -4,7 +4,7 @@ import { forwardRef, memo, Ref, SVGProps, useEffect, useMemo, useRef, useState }
 import { ExtendedInterchangeInfo, Facilities, InterchangeGroup, PanelTypeShmetro } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 
-const INT_BOX_SIZE = {
+export const INT_BOX_SIZE = {
     width: {
         singleDigit: 19.8,
         doubleDigit: 24.2,
@@ -438,7 +438,7 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
                     <g
                         transform={`translate(${outOfSystemLine[1] * directionPolarity},-13.5)`}
                         fill={stnState < 0 ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
-                        fontSize="10.5"
+                        fontSize="10"
                         textAnchor={direction === 'l' ? 'start' : 'end'}
                         className="rmg-name__zh"
                     >
@@ -479,7 +479,7 @@ const IntBoxNumber = memo(
     (prevProps, nextProps) => JSON.stringify(prevProps.info) === JSON.stringify(nextProps.info)
 );
 
-const IntBoxNumber2024 = (props: { info: ExtendedInterchangeInfo }) => {
+export const IntBoxNumber2024 = (props: { info: ExtendedInterchangeInfo }) => {
     const {
         info: { name, theme },
     } = props;
@@ -523,7 +523,7 @@ const IntBoxLetter = memo(
     (prevProps, nextProps) => JSON.stringify(prevProps.info) === JSON.stringify(nextProps.info)
 );
 
-const IntBoxText2024 = (props: { info: ExtendedInterchangeInfo; state: -1 | 0 | 1; direction: 'l' | 'r' }) => {
+export const IntBoxText2024 = (props: { info: ExtendedInterchangeInfo; state: -1 | 0 | 1; direction: 'l' | 'r' }) => {
     const {
         info: { name },
         state,
@@ -535,10 +535,13 @@ const IntBoxText2024 = (props: { info: ExtendedInterchangeInfo; state: -1 | 0 | 
             fill={state < 0 ? 'gray' : 'black'}
             dominantBaseline="central"
             textAnchor={direction === 'l' ? 'start' : 'end'}
-            fontSize="7"
         >
-            <text dy="0">{name[0]}</text>
-            <text dy="7">{name[1]}</text>
+            <text dy="-4" fontSize="13">
+                {name[0]}
+            </text>
+            <text dy="7" fontSize="8">
+                {name[1]}
+            </text>
         </g>
     );
 };
