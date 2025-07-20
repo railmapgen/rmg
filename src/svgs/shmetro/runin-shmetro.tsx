@@ -519,7 +519,7 @@ const PrevStn = (props: { stnIds: string[] }) => {
             ? (prevZhName.split('\\').length - 1) * -50 + (prevEnName.split('\\').length - 1) * -30
             : 0) + 70;
 
-    const previousText = info_panel_type === PanelTypeShmetro.sh2024 ? 'Previous Stop' : 'Past Stop';
+    const previousTextEn = info_panel_type === PanelTypeShmetro.sh2024 ? 'Previous Station' : 'Past Stop';
 
     return (
         <g
@@ -536,7 +536,7 @@ const PrevStn = (props: { stnIds: string[] }) => {
                     上一站
                 </text>
                 <text className="rmg-name__en rmg-outline" fontSize={12} dx={direction === 'l' ? -70 : 70}>
-                    {previousText}
+                    {previousTextEn}
                 </text>
             </g>
         </g>
@@ -544,7 +544,7 @@ const PrevStn = (props: { stnIds: string[] }) => {
 };
 
 const NextStn = (props: { stnIds: string[] }) => {
-    const { stn_list, direction, svgWidth } = useRootSelector(store => store.param);
+    const { stn_list, direction, svgWidth, info_panel_type } = useRootSelector(store => store.param);
     const nextNames = props.stnIds.map(stnId => stn_list[stnId].localisedName);
     const nextHintDy =
         (props.stnIds.length > 1 ? 15 : 125) +
@@ -557,6 +557,8 @@ const NextStn = (props: { stnIds: string[] }) => {
         (props.stnIds.length > 1
             ? (nextZhName.split('\\').length - 1) * -50 + (nextEnName.split('\\').length - 1) * -30
             : 0) + 70;
+
+    const nextTextEn = info_panel_type === PanelTypeShmetro.sh2024 ? 'Next Station' : 'Next Stop';
 
     return (
         <g
@@ -575,7 +577,7 @@ const NextStn = (props: { stnIds: string[] }) => {
                     下一站
                 </text>
                 <text className="rmg-name__en rmg-outline" fontSize={12} dx={direction === 'l' ? 70 : -70}>
-                    Next Stop
+                    {nextTextEn}
                 </text>
             </g>
         </g>

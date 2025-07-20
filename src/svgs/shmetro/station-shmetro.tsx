@@ -58,7 +58,7 @@ const StationSHMetro = (props: Props) => {
             // 仅2线出站换乘
             stationIconStyle = 'stn_sh_2024_osysi2';
             stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
-        } else if (int_length === 0 && osi_osysi_length === 2) {
+        } else if (int_length === 0 && osi_osysi_length >= 2) {
             // 仅3线出站换乘
             stationIconStyle = 'stn_sh_2024_osysi3';
             stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
@@ -105,7 +105,7 @@ const StationSHMetro = (props: Props) => {
                     intPadding={stnInfo.int_padding}
                 />
             </g>
-            {stnState === 0 ? <CurrentStationText /> : undefined}
+            {stnState === 0 && <CurrentStationText />}
         </>
     );
 };
@@ -191,6 +191,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                     stnName={name}
                     oneLine={info_panel_type === PanelTypeShmetro.sh2024 ? true : oneLine}
                     directionPolarity={directionPolarity}
+                    stnState={stnState}
                     fill={stnState === -1 ? 'gray' : stnState === 0 ? 'red' : 'black'}
                 />
 
@@ -216,11 +217,17 @@ const StationNameGElement = (props: StationNameGElementProps) => {
 };
 
 const StationName = forwardRef(function StationName(
-    props: { stnName: Translation; oneLine: boolean; directionPolarity: 1 | -1 } & SVGProps<SVGGElement>,
+    props: {
+        stnName: Translation;
+        oneLine: boolean;
+        directionPolarity: 1 | -1;
+        stnState: -1 | 0 | 1;
+    } & SVGProps<SVGGElement>,
     ref: Ref<SVGGElement>
 ) {
-    const { stnName, oneLine, directionPolarity, ...others } = props;
+    const { stnName, oneLine, directionPolarity, stnState, ...others } = props;
     const { zh: zhName = '', en: enName = '' } = stnName;
+    const { info_panel_type } = useRootSelector(store => store.param);
 
     const zhEl = useRef<SVGGElement | null>(null);
     const [enDx, setEnDx] = useState(0);
@@ -231,9 +238,14 @@ const StationName = forwardRef(function StationName(
 
     const [ZH_HEIGHT, EN_HEIGHT] = [20, 8];
 
+    const fontSize = {
+        zh: info_panel_type === PanelTypeShmetro.sh2024 && !stnState ? 18 : 16,
+        en: info_panel_type === PanelTypeShmetro.sh2024 && !stnState ? 8 : 9,
+    };
+
     return (
         <g ref={ref} {...others}>
-            <g ref={zhEl}>
+            <g ref={zhEl} fontSize={fontSize.zh}>
                 {zhName.split('\\').map((txt, i, arr) => (
                     <text
                         key={i}
@@ -247,7 +259,7 @@ const StationName = forwardRef(function StationName(
                     </text>
                 ))}
             </g>
-            <g fontSize={8} transform={`translate(${enDx * directionPolarity},0)`}>
+            <g fontSize={fontSize.en} transform={`translate(${enDx * directionPolarity},0)`}>
                 {enName.split('\\').map((txt, i, arr) => (
                     <text key={i} className="rmg-name__en rmg-outline" dy={(arr.length - 2 - i) * -EN_HEIGHT + 2}>
                         {txt}
@@ -259,17 +271,21 @@ const StationName = forwardRef(function StationName(
 });
 
 const CurrentStationText = () => {
-    const { stn_list } = useRootSelector(store => store.param);
+    const { stn_list, info_panel_type } = useRootSelector(store => store.param);
     const servicesPresent = new Set(
         Object.values(stn_list)
             .map(stn => stn.services)
             .flat()
     );
-    const dy = [-1, 35, 50, 75][servicesPresent.size];
+    const dy = {
+        [PanelTypeShmetro.sh]: [-1, 35, 45, 70],
+        [PanelTypeShmetro.sh2020]: [-1, 20, 45, 70],
+        [PanelTypeShmetro.sh2024]: [-1, 20, 45, 70],
+    }[info_panel_type as PanelTypeShmetro][servicesPresent.size];
 
     return (
         <g transform={`translate(0, ${dy})`}>
-            <text className="rmg-name__zh" fill="red" textAnchor="middle">
+            <text className="rmg-name__zh" fill="red" textAnchor="middle" fontSize="12">
                 本站
             </text>
         </g>
