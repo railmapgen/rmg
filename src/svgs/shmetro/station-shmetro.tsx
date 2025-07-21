@@ -4,7 +4,7 @@ import { forwardRef, memo, Ref, SVGProps, useEffect, useMemo, useRef, useState }
 import { ExtendedInterchangeInfo, Facilities, InterchangeGroup, PanelTypeShmetro } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 
-export const INT_BOX_SIZE = {
+const INT_BOX_SIZE = {
     width: {
         singleDigit: 19.8,
         doubleDigit: 24.2,
@@ -46,6 +46,7 @@ const StationSHMetro = (props: Props) => {
 
         if (stnInfo.services.length === 3) stationIconStyle = 'stn_sh_2020_direct';
         else if (stnInfo.services.length === 2) stationIconStyle = 'stn_sh_2020_express';
+        // TODO: 不管多少条站内换乘，只要有超过1个的出站换乘就是3个圆了
         else if (int_length > 0 && osi_osysi_length === 0) {
             // 仅换乘车站
             stationIconStyle = 'stn_sh_2024_int';
@@ -58,7 +59,7 @@ const StationSHMetro = (props: Props) => {
             // 仅2线出站换乘
             stationIconStyle = 'stn_sh_2024_osysi2';
             stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
-        } else if (int_length === 0 && osi_osysi_length >= 2) {
+        } else if (int_length === 0 && osi_osysi_length === 2) {
             // 仅3线出站换乘
             stationIconStyle = 'stn_sh_2024_osysi3';
             stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
@@ -495,7 +496,7 @@ const IntBoxNumber = memo(
     (prevProps, nextProps) => JSON.stringify(prevProps.info) === JSON.stringify(nextProps.info)
 );
 
-export const IntBoxNumber2024 = (props: { info: ExtendedInterchangeInfo }) => {
+const IntBoxNumber2024 = (props: { info: ExtendedInterchangeInfo }) => {
     const {
         info: { name, theme },
     } = props;
@@ -539,7 +540,7 @@ const IntBoxLetter = memo(
     (prevProps, nextProps) => JSON.stringify(prevProps.info) === JSON.stringify(nextProps.info)
 );
 
-export const IntBoxText2024 = (props: { info: ExtendedInterchangeInfo; state: -1 | 0 | 1; direction: 'l' | 'r' }) => {
+const IntBoxText2024 = (props: { info: ExtendedInterchangeInfo; state: -1 | 0 | 1; direction: 'l' | 'r' }) => {
     const {
         info: { name },
         state,

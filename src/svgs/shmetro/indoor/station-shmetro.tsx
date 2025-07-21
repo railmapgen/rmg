@@ -1,9 +1,14 @@
 import { ColourHex } from '@railmapgen/rmg-palette-resources';
 import { Translation } from '@railmapgen/rmg-translate';
 import { Fragment, Ref, SVGProps, forwardRef, useEffect, useMemo, useRef, useState } from 'react';
-import { ExtendedInterchangeInfo, InterchangeGroup, PanelTypeShmetro, Services } from '../../../constants/constants';
+import {
+    ExtendedInterchangeInfo,
+    InterchangeGroup,
+    PanelTypeGZMTR,
+    PanelTypeShmetro,
+    Services,
+} from '../../../constants/constants';
 import { useRootSelector } from '../../../redux';
-import { INT_BOX_SIZE, IntBoxNumber2024, IntBoxText2024 } from '../station-shmetro';
 
 /**
  * Which direction to display station name. Currently shmetro only.
@@ -93,6 +98,25 @@ export const StationSHMetro = (props: Props) => {
 
 export default StationSHMetro;
 
+const stationNameDY = (
+    info_panel_type: PanelTypeShmetro | PanelTypeGZMTR,
+    nameDirection: NameDirection,
+    nameENLn: number
+) => {
+    if (info_panel_type === PanelTypeShmetro.sh2024) {
+        if (nameDirection === 'upward') return 5;
+        if (nameDirection === 'downward') return -45 - 12 * (nameENLn - 1);
+        if (nameDirection === 'left' || nameDirection === 'right') return -10 * (nameENLn - 1);
+    } else {
+        if (nameDirection === 'upward') return -2;
+        if (nameDirection === 'downward') return -30 - 12 * (nameENLn - 1);
+        if (nameDirection === 'left' || nameDirection === 'right') return -10 * (nameENLn - 1);
+    }
+    return 0;
+};
+
+const STATION_NAME_2024_ZH_FONT_SIZE = 22;
+
 interface StationNameGElementProps {
     name: Translation;
     groups: InterchangeGroup[];
@@ -102,6 +126,8 @@ interface StationNameGElementProps {
 
 const StationNameGElement = (props: StationNameGElementProps) => {
     const { name, groups, nameDirection, services } = props;
+    const { en: enName = '' } = name;
+    const nameENLn = enName.split('\\').length;
     const { info_panel_type } = useRootSelector(store => store.param);
     const dy = { upward: 60, downward: -30, left: 0, right: 0 }[nameDirection];
     const osysi_dx =
@@ -146,10 +172,27 @@ const StationNameGElement = (props: StationNameGElementProps) => {
             : 0;
     const nameRef = useRef<SVGGElement | null>(null);
     const MIN_NAME_LINE_LENGTH = 60;
-    const [nameSize, setNameSize] = useState({ width: MIN_NAME_LINE_LENGTH, height: 0 });
+    const [nameSize, setNameSize] = useState({ width: MIN_NAME_LINE_LENGTH, height: 0, x: 0, y: 0 });
     useEffect(() => {
         if (nameRef?.current) setNameSize(nameRef.current.getBBox());
     }, [name.zh, name.en]);
+
+    const panel_type = info_panel_type as PanelTypeShmetro;
+    const verticalLineY = {
+        [PanelTypeShmetro.sh2024]: { upward: -15, downward: -30 },
+        [PanelTypeShmetro.sh2020]: { upward: -23, downward: -10 },
+        [PanelTypeShmetro.sh]: { upward: -23, downward: -10 },
+    };
+    const intBoxGroup2024DY = {
+        upward: stationNameDY(info_panel_type, nameDirection, nameENLn) + nameSize.height + INT_BOX_SIZE.height / 2,
+        downward:
+            stationNameDY(info_panel_type, nameDirection, nameENLn) -
+            STATION_NAME_2024_ZH_FONT_SIZE / 2 -
+            INT_BOX_SIZE.height / 2,
+        left: 7,
+        right: 7,
+    };
+
     return (
         <g transform={`translate(0,${dy})`}>
             {nameDirection === 'upward' || nameDirection === 'downward' ? (
@@ -158,13 +201,13 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                         <line
                             x1={-nameSize.width / 2}
                             x2={nameSize.width / 2}
-                            y1={nameDirection === 'upward' ? -23 : -10}
-                            y2={nameDirection === 'upward' ? -23 : -10}
+                            y1={verticalLineY[panel_type][nameDirection]}
+                            y2={verticalLineY[panel_type][nameDirection]}
                             stroke="black"
                         />
                     )}
                     <line
-                        y1={nameDirection === 'upward' ? -23 : -10}
+                        y1={verticalLineY[panel_type][nameDirection]}
                         y2={
                             // TODO: this is too ugly
                             nameDirection === 'upward'
@@ -204,7 +247,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                     />
                 )
             ) : (
-                <IntBoxGroup2024 groups={groups} dy={nameSize.height * 1.6 * (nameDirection === 'upward' ? 1 : -1)} />
+                <IntBoxGroup2024 groups={groups} dy={intBoxGroup2024DY[nameDirection]} />
             )}
 
             <StationName ref={nameRef} stnName={name} nameDirection={nameDirection} fill="black" />
@@ -222,18 +265,19 @@ const StationName = forwardRef(function StationName(
     props: { stnName: Translation; nameDirection: NameDirection } & SVGProps<SVGGElement>,
     ref: Ref<SVGGElement>
 ) {
+    const { info_panel_type } = useRootSelector(store => store.param);
     const { stnName, nameDirection, ...others } = props;
     const { zh: zhName = '', en: enName = '' } = stnName;
     const name = zhName.split('\\');
     const nameENLn = enName.split('\\').length;
     const dx = { upward: 0, downward: 0, left: -60, right: 60 }[nameDirection];
-    const dy = {
-        upward: -2,
-        downward: -30 - 12 * (nameENLn - 1),
-        left: -10 * (nameENLn - 1),
-        right: -10 * (nameENLn - 1),
-    }[nameDirection];
+    const dy = stationNameDY(info_panel_type, nameDirection, nameENLn);
     const anchor = { upward: 'middle', downward: 'middle', left: 'end', right: 'start' }[nameDirection];
+
+    const fontSize = {
+        zh: info_panel_type === PanelTypeShmetro.sh2024 ? STATION_NAME_2024_ZH_FONT_SIZE : 16,
+        en: info_panel_type === PanelTypeShmetro.sh2024 ? 11 : 9.6,
+    };
 
     return (
         <g ref={ref} {...others} textAnchor={anchor} transform={`translate(${dx},${dy})`}>
@@ -242,11 +286,12 @@ const StationName = forwardRef(function StationName(
                     key={i}
                     className="rmg-name__zh"
                     dy={nameDirection === 'upward' ? 16 * i : (array.length - 1 - i) * -16}
+                    fontSize={fontSize.zh}
                 >
                     {txt}
                 </text>
             ))}
-            <g fontSize={9.6}>
+            <g fontSize={fontSize.en}>
                 {enName.split('\\')?.map((txt, i) => (
                     <text
                         key={i}
@@ -260,6 +305,15 @@ const StationName = forwardRef(function StationName(
         </g>
     );
 });
+
+const INT_BOX_SIZE = {
+    width: {
+        singleDigit: 19.8,
+        doubleDigit: 33,
+    },
+    height: 30,
+    padding: 2,
+};
 
 interface IntBoxGroupProps {
     intInfos: ExtendedInterchangeInfo[][];
@@ -460,6 +514,8 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
         setIntBoxGroupWidth(dx);
     }, [JSON.stringify(transfer)]);
 
+    const onlyOneTextInt = transfer.flat().length === 1 && !transfer.flat()[0].name[0].match(/^(\d+)号线$/);
+
     const makeBoxElement = (info: ExtendedInterchangeInfo) => {
         const key = info.name[0];
         const isLineNumber = Boolean(key.match(/^(\d+)号线$/));
@@ -474,14 +530,15 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
                 {isLineNumber ? (
                     <IntBoxNumber2024 info={info} />
                 ) : (
-                    <IntBoxText2024 info={info} state={1} direction="l" />
+                    <IntBoxText2024 info={info} onlyOne={onlyOneTextInt} />
                 )}
             </g>
         );
     };
 
+    const dx = onlyOneTextInt ? 0 : -intBoxGroupWidth / 2;
     return (
-        <g ref={ref} fontSize={24} textAnchor="middle" transform={`translate(${-intBoxGroupWidth / 2},${dy})`}>
+        <g ref={ref} fontSize={30} textAnchor="middle" transform={`translate(${dx},${dy})`}>
             {transfer[0].map(makeBoxElement)}
             {transfer[1].length && (
                 <>
@@ -497,12 +554,12 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
                     <g
                         transform={`translate(${outOfSystemLine},-13.5)`}
                         fill="var(--rmg-black)"
-                        fontSize="10"
+                        fontSize="15"
                         textAnchor="start"
                         className="rmg-name__zh"
                     >
-                        <text dy="1.5">出站</text>
-                        <text dy="12.5">换乘</text>
+                        <text dy="-4">出站</text>
+                        <text dy="11">换乘</text>
                     </g>
                     {transfer[1].map(makeBoxElement)}
                 </>
@@ -511,6 +568,52 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
         </g>
     );
 });
+
+const IntBoxNumber2024 = (props: { info: ExtendedInterchangeInfo }) => {
+    const {
+        info: { name, theme },
+    } = props;
+    const num = name[0].match(/^(\d+)号线$/)?.[1] ?? '';
+    const width = num.length > 1 ? INT_BOX_SIZE.width.doubleDigit : INT_BOX_SIZE.width.singleDigit;
+    const letterSpacing = num.length > 1 ? -3 : 0;
+    return (
+        <g>
+            <rect height={INT_BOX_SIZE.height} width={width} y={-INT_BOX_SIZE.height / 2} fill={theme?.at(2)} />
+            <text
+                x={width / 2}
+                className="rmg-name__zh"
+                fill={theme?.at(3)}
+                dominantBaseline="central"
+                textAnchor="middle"
+                letterSpacing={letterSpacing}
+            >
+                {num}
+            </text>
+        </g>
+    );
+};
+
+const IntBoxText2024 = (props: { info: ExtendedInterchangeInfo; onlyOne: boolean }) => {
+    const {
+        info: { name },
+        onlyOne,
+    } = props;
+    return (
+        <g
+            className="rmg-name__zh"
+            fill={'var(--rmg-black)'}
+            dominantBaseline="central"
+            textAnchor={onlyOne ? 'middle' : 'start'}
+        >
+            <text dy="-4" fontSize="13">
+                {name[0]}
+            </text>
+            <text dy="7" fontSize="8">
+                {name[1]}
+            </text>
+        </g>
+    );
+};
 
 const OSysIText = (props: { osysiInfos: ExtendedInterchangeInfo[]; nameDirection: NameDirection }) => {
     const anchor = { upward: 'middle', downward: 'middle', left: 'start', right: 'end' }[props.nameDirection];
