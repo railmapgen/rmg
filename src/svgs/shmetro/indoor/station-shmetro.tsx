@@ -585,7 +585,7 @@ const IntBoxNumber2024 = (props: { info: ExtendedInterchangeInfo }) => {
         <g>
             <rect height={INT_BOX_SIZE.height} width={width} y={-INT_BOX_SIZE.height / 2} fill={theme?.at(2)} />
             <text
-                x={width / 2}
+                x={14}
                 className="rmg-name__zh"
                 fill={theme?.at(3)}
                 dominantBaseline="central"

@@ -328,20 +328,21 @@ const LineBadge = (props: { dx: number }) => {
     const { dx } = props;
     const { line_name, theme } = useRootSelector(store => store.param);
     const num = line_name[0].match(/^(\d+)号线$/)?.[1] ?? '';
-    const width = num.length > 1 ? 20 : 15;
+    const width = num.length > 1 ? 26.4 : 21.6;
+    const textDX = num.length > 1 ? 12 : 11;
     const letterSpacing = num.length > 1 ? -1.5 : 0;
     const padding = 15;
     return (
         <g transform={`translate(${dx - width - padding},0)`}>
-            <rect height={24} width={width} y={-19} fill={theme[2]} />
+            <rect height={24} width={width} y={-18} fill={theme[2]} />
             <text
-                x={width / 2}
+                x={textDX}
                 y={-6}
                 className="rmg-name__zh"
                 fill={theme[3]}
                 dominantBaseline="central"
-                textAnchor="middle"
                 letterSpacing={letterSpacing}
+                fontSize="24"
             >
                 {num}
             </text>
