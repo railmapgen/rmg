@@ -36,7 +36,7 @@ export default function IndoorWrapperSHMetro() {
     );
 }
 
-export const DefsSHMetro = memo(function DefsSHMetro() {
+const DefsSHMetro = memo(function DefsSHMetro() {
     return (
         <defs>
             <circle id="stn_indoor_sh" fill="var(--rmg-white)" strokeWidth={5} r={8} transform="scale(1.5)" />
@@ -121,7 +121,7 @@ const IndoorSHMetro = () => {
     const realCP = criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat);
 
     const xShares = useMemo(() => {
-        console.log('computing x shares');
+        console.debug('computing x shares');
         return Object.keys(param.stn_list).reduce(
             (acc, cur) => ({ ...acc, [cur]: getXShareMTR(cur, adjMat, branches) }),
             {} as { [stnId: string]: number }
@@ -174,10 +174,16 @@ const IndoorSHMetro = () => {
         0
     );
 
+    const lineBadgeDX = Math.min(
+        ...Object.entries(xs)
+            .filter(([k]) => !['linestart', 'lineend'].includes(k))
+            .map(([, v]) => v)
+    );
     return (
         <g id="main" transform={`translate(0,${param.svg_height / 2})`}>
             <Lines paths={linePaths} services={servicesPresent} />
             <StationGroup xs={xs} ys={ys} services={servicesPresent} />
+            {param.info_panel_type === PanelTypeShmetro.sh2024 && <LineBadge dx={lineBadgeDX} />}
         </g>
     );
 };
@@ -317,6 +323,31 @@ const InfoElements = memo(() => {
 });
 
 InfoElements.displayName = 'InfoElements';
+
+const LineBadge = (props: { dx: number }) => {
+    const { dx } = props;
+    const { line_name, theme } = useRootSelector(store => store.param);
+    const num = line_name[0].match(/^(\d+)号线$/)?.[1] ?? '';
+    const width = num.length > 1 ? 20 : 15;
+    const letterSpacing = num.length > 1 ? -1.5 : 0;
+    const padding = 15;
+    return (
+        <g transform={`translate(${dx - width - padding},0)`}>
+            <rect height={24} width={width} y={-19} fill={theme[2]} />
+            <text
+                x={width / 2}
+                y={-6}
+                className="rmg-name__zh"
+                fill={theme[3]}
+                dominantBaseline="central"
+                textAnchor="middle"
+                letterSpacing={letterSpacing}
+            >
+                {num}
+            </text>
+        </g>
+    );
+};
 
 /* Some unused functions to split branches from the main line.
  * Note the branches here has a slightly different meaning.

@@ -41,6 +41,9 @@ export const StationSHMetro = (props: Props) => {
             stationIconStyle = 'stn_sh_2020_direct';
         } else if (stnInfo.services.length === 2) {
             stationIconStyle = 'stn_sh_2020_express';
+        } else if (osi_osysi_length > 1) {
+            // 不管多少条站内换乘，只要有超过1个的出站换乘就是3个圆了
+            stationIconStyle = 'stn_sh_2024_osysi3';
         } else if (int_length > 0 && osi_osysi_length === 0) {
             // 仅换乘车站
             stationIconStyle = 'stn_sh_2024_int';
@@ -50,9 +53,6 @@ export const StationSHMetro = (props: Props) => {
         } else if (int_length === 0 && osi_osysi_length === 1) {
             // 仅2线出站换乘
             stationIconStyle = 'stn_sh_2024_osysi2';
-        } else if (int_length === 0 && osi_osysi_length === 2) {
-            // 仅3线出站换乘
-            stationIconStyle = 'stn_sh_2024_osysi3';
         } else {
             stationIconStyle = 'stn_sh_2024';
             delete stationIconColor.stroke;
@@ -308,7 +308,7 @@ const StationName = forwardRef(function StationName(
 
 const INT_BOX_SIZE = {
     width: {
-        singleDigit: 19.8,
+        singleDigit: 27,
         doubleDigit: 33,
     },
     height: 30,
@@ -514,7 +514,12 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
         setIntBoxGroupWidth(dx);
     }, [JSON.stringify(transfer)]);
 
-    const onlyOneTextInt = transfer.flat().length === 1 && !transfer.flat()[0].name[0].match(/^(\d+)号线$/);
+    // only in case of one non out-of-station text line transfer, the text will be centered
+    const nonOutOfStationTransfer = [groups.at(0)?.lines ?? [], groups.at(2)?.lines ?? []];
+    const onlyOneNonOutOfStationTextInt =
+        transfer.flat().length === 1 &&
+        nonOutOfStationTransfer.flat().length === 1 &&
+        !nonOutOfStationTransfer.flat()[0].name[0].match(/^(\d+)号线$/);
 
     const makeBoxElement = (info: ExtendedInterchangeInfo) => {
         const key = info.name[0];
@@ -530,13 +535,13 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
                 {isLineNumber ? (
                     <IntBoxNumber2024 info={info} />
                 ) : (
-                    <IntBoxText2024 info={info} onlyOne={onlyOneTextInt} />
+                    <IntBoxText2024 info={info} onlyOne={onlyOneNonOutOfStationTextInt} />
                 )}
             </g>
         );
     };
 
-    const dx = onlyOneTextInt ? 0 : -intBoxGroupWidth / 2;
+    const dx = onlyOneNonOutOfStationTextInt ? 0 : -intBoxGroupWidth / 2;
     return (
         <g ref={ref} fontSize={30} textAnchor="middle" transform={`translate(${dx},${dy})`}>
             {transfer[0].map(makeBoxElement)}
@@ -605,10 +610,10 @@ const IntBoxText2024 = (props: { info: ExtendedInterchangeInfo; onlyOne: boolean
             dominantBaseline="central"
             textAnchor={onlyOne ? 'middle' : 'start'}
         >
-            <text dy="-4" fontSize="13">
+            <text dy="-5" fontSize="18">
                 {name[0]}
             </text>
-            <text dy="7" fontSize="8">
+            <text dy="10" fontSize="9">
                 {name[1]}
             </text>
         </g>

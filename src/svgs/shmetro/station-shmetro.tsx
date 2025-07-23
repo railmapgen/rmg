@@ -46,8 +46,11 @@ const StationSHMetro = (props: Props) => {
 
         if (stnInfo.services.length === 3) stationIconStyle = 'stn_sh_2020_direct';
         else if (stnInfo.services.length === 2) stationIconStyle = 'stn_sh_2020_express';
-        // TODO: 不管多少条站内换乘，只要有超过1个的出站换乘就是3个圆了
-        else if (int_length > 0 && osi_osysi_length === 0) {
+        else if (osi_osysi_length > 1) {
+            // 不管多少条站内换乘，只要有超过1个的出站换乘就是3个圆了
+            stationIconStyle = 'stn_sh_2024_osysi3';
+            stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
+        } else if (int_length > 0 && osi_osysi_length === 0) {
             // 仅换乘车站
             stationIconStyle = 'stn_sh_2024_int';
             stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
@@ -58,10 +61,6 @@ const StationSHMetro = (props: Props) => {
         } else if (int_length === 0 && osi_osysi_length === 1) {
             // 仅2线出站换乘
             stationIconStyle = 'stn_sh_2024_osysi2';
-            stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
-        } else if (int_length === 0 && osi_osysi_length === 2) {
-            // 仅3线出站换乘
-            stationIconStyle = 'stn_sh_2024_osysi3';
             stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
         } else stationIconStyle = 'stn_sh_2020';
         stationIconColor.fill = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
