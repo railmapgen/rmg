@@ -31,7 +31,7 @@ export default function IndoorWrapperSHMetro() {
         >
             <DefsSHMetro />
             {loop ? <LoopSHMetro bank_angle={false} canvas={CanvasType.Indoor} /> : <IndoorSHMetro />}
-            {info_panel_type !== PanelTypeShmetro.sh2024 && <InfoElements />}
+            {info_panel_type !== PanelTypeShmetro.sh2024 ? <InfoElements /> : <InfoElements2024 />}
         </SvgWrapper>
     );
 }
@@ -324,12 +324,31 @@ const InfoElements = memo(() => {
 
 InfoElements.displayName = 'InfoElements';
 
+const InfoElements2024 = () => {
+    const {
+        svg_height,
+        svgWidth: { indoor: svg_width },
+    } = useRootSelector(store => store.param);
+
+    return (
+        <g transform={`translate(${svg_width},${svg_height - 20})`}>
+            <text textAnchor="end" fontSize="14" className="rmg-name__zh" dx="-670">
+                友情提示：请留意您需要换乘线路的首末班时间，以免耽误您的出行，末班车进站前三分钟停售该末班车车票。
+            </text>
+            <text textAnchor="end" fontSize="10" className="rmg-name__en" dx="-30">
+                Please pay attention to the interchange schedule if you want to transfer to other lines. Stop selling
+                tickets 3 minutes before the last train services.
+            </text>
+        </g>
+    );
+};
+
 const LineBadge = (props: { dx: number }) => {
     const { dx } = props;
     const { line_name, theme } = useRootSelector(store => store.param);
     const num = line_name[0].match(/^(\d+)号线$/)?.[1] ?? '';
     const width = num.length > 1 ? 26.4 : 21.6;
-    const textDX = num.length > 1 ? 12 : 11;
+    const textDX = num.length > 1 ? 0 : 4;
     const letterSpacing = num.length > 1 ? -1.5 : 0;
     const padding = 15;
     return (

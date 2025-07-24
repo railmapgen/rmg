@@ -453,18 +453,15 @@ const CurrentText = () => {
     const param = useRootSelector(store => store.param);
     const { localisedName } = param.stn_list[param.current_stn_idx];
     const { zh: zhName = '', en: enName = '' } = localisedName;
-    return useMemo(
-        () => (
-            <>
-                <text className="rmg-name__zh rmg-outline" fontSize={112}>
-                    {zhName.replace('\\', '')}
-                </text>
-                <text className="rmg-name__en rmg-outline" fontSize={36} dy={50}>
-                    {enName.replace('\\', '')}
-                </text>
-            </>
-        ),
-        [zhName, enName]
+    return (
+        <>
+            <text className="rmg-name__zh rmg-outline" fontSize={112}>
+                {zhName.replace('\\', '')}
+            </text>
+            <text className="rmg-name__en rmg-outline" fontSize={36} dy={50}>
+                {enName.replace('\\', '')}
+            </text>
+        </>
     );
 };
 
