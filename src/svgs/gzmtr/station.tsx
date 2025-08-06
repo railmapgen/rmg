@@ -80,7 +80,7 @@ export default function Station(props: Props) {
                 lineNum={lineNumber}
                 stnNum={stnInfo.num}
                 strokeColour={theme[2]}
-                textClassName="rmg-name__zh"
+                classNames={{ digits: 'rmg-name__zh' }}
                 passed={stnState === -1}
                 alwaysShowColouredBorder={loop}
                 bolderBorder
@@ -152,10 +152,9 @@ const IntBoxs = (props: IntGroupProps & React.SVGProps<SVGGElement>) => {
                         enName={info.name[1]}
                         foregroundColour={info.theme?.[3] ?? MonoColour.white}
                         backgroundColour={info.theme?.[2] ?? '#aaaaaa'}
-                        zhClassName="rmg-font__zh"
-                        enClassName="rmg-font__en"
                         passed={stnState === -1}
                         spanDigits={spanDigits}
+                        classNames={{ digits: 'rmg-font__en', zh: 'rmg-font__zh', en: 'rmg-font__en' }}
                     />
                 </g>
             ))}

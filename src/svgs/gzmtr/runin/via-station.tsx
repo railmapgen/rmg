@@ -45,10 +45,9 @@ const ViaStation = forwardRef<SVGGElement, ViaStationProps>(function ViaStation(
                             enName={lines[0].name[1]}
                             backgroundColour={lines[0].theme?.[2] ?? '#aaa'}
                             foregroundColour={lines[0].theme?.[3] ?? MonoColour.white}
-                            zhClassName="rmg-name__zh"
-                            enClassName="rmg-name__en"
                             spanDigits
                             transform={`translate(27,-8.5)scale(0.75)`}
+                            classNames={{ digits: 'rmg-font__en', zh: 'rmg-font__zh', en: 'rmg-font__en' }}
                         />
                     </>
                 )}

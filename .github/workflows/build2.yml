@@ -57,3 +57,13 @@ jobs:
           gitlab_token: ${{ secrets.GITLAB_RELEASE }}
           gitee_token: ${{ secrets.GITEE_RELEASE }}
           gitee_password: ${{ secrets.GITEE_PASSWORD }}
+
+  release-org:
+    needs: build
+    if: ${{ success() && inputs.auto_deploy == 'PRD' }}
+    runs-on: self-hosted
+    steps:
+      - name: Release Org
+        uses: railmapgen/releaser-org@main
+        with:
+          app_name: rmg

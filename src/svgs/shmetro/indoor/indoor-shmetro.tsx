@@ -188,7 +188,7 @@ const StationGroup = (props: StationGroupProps) => {
         <g>
             {Object.keys(stn_list)
                 .filter(stnId => !['linestart', 'lineend'].includes(stnId))
-                .filter(stnId => stn_list[stnId].services.length !== 0)
+                .filter(stnId => stn_list[stnId].services.length)
                 .map(stnId => (
                     <g key={stnId} transform={`translate(${xs[stnId]},${ys[stnId]})`}>
                         <StationSHMetro
