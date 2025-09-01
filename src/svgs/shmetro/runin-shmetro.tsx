@@ -516,8 +516,6 @@ const PrevStn = (props: { stnIds: string[] }) => {
             ? (prevZhName.split('\\').length - 1) * -50 + (prevEnName.split('\\').length - 1) * -30
             : 0) + 70;
 
-    const previousTextEn = info_panel_type === PanelTypeShmetro.sh2024 ? 'Previous Station' : 'Past Stop';
-
     return (
         <g
             fill="gray"
@@ -529,12 +527,25 @@ const PrevStn = (props: { stnIds: string[] }) => {
                 <NextText nextName={prevNames[1]} transform={`translate(0,${nextBranchTextDy})`} />
             )}
             <g transform={`translate(0, ${prevHintDy})`}>
-                <text className="rmg-name__zh rmg-outline" fontSize={22}>
-                    上一站
-                </text>
-                <text className="rmg-name__en rmg-outline" fontSize={12} dx={direction === 'l' ? -70 : 70}>
-                    {previousTextEn}
-                </text>
+                {info_panel_type === PanelTypeShmetro.sh2024 ? (
+                    <>
+                        <text className="rmg-name__zh rmg-outline" fontSize={22} dx={direction === 'l' ? -90 : 90}>
+                            上一站
+                        </text>
+                        <text className="rmg-name__en rmg-outline" fontSize={12}>
+                            Previous Station
+                        </text>
+                    </>
+                ) : (
+                    <>
+                        <text className="rmg-name__zh rmg-outline" fontSize={22}>
+                            上一站
+                        </text>
+                        <text className="rmg-name__en rmg-outline" fontSize={12} dx={direction === 'l' ? -70 : 70}>
+                            Past Stop
+                        </text>
+                    </>
+                )}
             </g>
         </g>
     );
