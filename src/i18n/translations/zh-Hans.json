@@ -50,7 +50,7 @@
             "destinationWidth": "终点站牌宽度",
             "runinWidth": "当前站名牌宽度",
             "railmapWidth": "站台门路线图宽度",
-            "indoorWidth": "车內路线图宽度",
+            "indoorWidth": "车内路线图宽度",
             "platformWidth": "站台编号宽度",
             "verticalPosition": "垂直方向位置",
             "branchSpacing": "支线间距",
