@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 import { adjacencyList, criticalPathMethod, getStnState, getXShareMTR } from '../../methods/share';
 import StationSHMetro from './station-shmetro';
 import { StationsSHMetro } from '../../methods/mtr';
-import { CanvasType, Services, StationDict } from '../../../constants/constants';
+import { CanvasType, PanelTypeShmetro, Services, StationDict } from '../../../constants/constants';
 import { useRootSelector } from '../../../redux';
 import LoopSHMetro from '../loop/loop-shmetro';
 import SvgWrapper from '../../svg-wrapper';
@@ -11,7 +11,13 @@ const CANVAS_TYPE = CanvasType.Indoor;
 
 export default function IndoorWrapperSHMetro() {
     const { canvasScale } = useRootSelector(state => state.app);
-    const { svgWidth: svgWidths, svg_height: svgHeight, theme, loop } = useRootSelector(store => store.param);
+    const {
+        svgWidth: svgWidths,
+        svg_height: svgHeight,
+        theme,
+        loop,
+        info_panel_type,
+    } = useRootSelector(store => store.param);
 
     const svgWidth = svgWidths[CANVAS_TYPE];
 
@@ -25,12 +31,12 @@ export default function IndoorWrapperSHMetro() {
         >
             <DefsSHMetro />
             {loop ? <LoopSHMetro bank_angle={false} canvas={CanvasType.Indoor} /> : <IndoorSHMetro />}
-            <InfoElements />
+            {info_panel_type !== PanelTypeShmetro.sh2024 ? <InfoElements /> : <InfoElements2024 />}
         </SvgWrapper>
     );
 }
 
-export const DefsSHMetro = memo(function DefsSHMetro() {
+const DefsSHMetro = memo(function DefsSHMetro() {
     return (
         <defs>
             <circle id="stn_indoor_sh" fill="var(--rmg-white)" strokeWidth={5} r={8} transform="scale(1.5)" />
@@ -61,6 +67,32 @@ export const DefsSHMetro = memo(function DefsSHMetro() {
                 <circle cy="-12" fill="var(--rmg-white)" strokeWidth={5} r={8} transform="scale(1.5)" />
                 <circle cy="12" fill="var(--rmg-white)" strokeWidth={5} r={8} transform="scale(1.5)" />
             </g>
+
+            <rect id="stn_sh_2024" stroke="none" height={24} width={12} x={-6} y={-18} />
+            <path
+                id="stn_sh_2024_int"
+                fill="var(--rmg-white)"
+                strokeWidth={2}
+                d="M -5,-12 a 5,5 0 1 1 10,0 V0 a 5,5 0 1 1 -10,0 Z"
+            />
+            <g id="stn_sh_2024_int_osysi" filter='url("#station-border")'>
+                <circle cy="-14" r="4" fill="var(--rmg-white)" strokeWidth={2} />
+                <path fill="var(--rmg-white)" strokeWidth={2} d="M -4,-4 a 4,4 0 1 1 8,0 V0 a 4,4 0 1 1 -8,0 Z" />
+            </g>
+            <g id="stn_sh_2024_osysi2">
+                <circle cy="-12" r="5.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="0" r="5.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="-12" r="5" fill="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="0" r="5" fill="var(--rmg-white)" strokeWidth={2} />
+            </g>
+            <g id="stn_sh_2024_osysi3">
+                <circle cy="-15" r="3.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="-7" r="3.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="1" r="3.5" stroke="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="-15" r="3" fill="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="-7" r="3" fill="var(--rmg-white)" strokeWidth={2} />
+                <circle cy="1" r="3" fill="var(--rmg-white)" strokeWidth={2} />
+            </g>
         </defs>
     );
 });
@@ -89,7 +121,7 @@ const IndoorSHMetro = () => {
     const realCP = criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat);
 
     const xShares = useMemo(() => {
-        console.log('computing x shares');
+        console.debug('computing x shares');
         return Object.keys(param.stn_list).reduce(
             (acc, cur) => ({ ...acc, [cur]: getXShareMTR(cur, adjMat, branches) }),
             {} as { [stnId: string]: number }
@@ -142,10 +174,16 @@ const IndoorSHMetro = () => {
         0
     );
 
+    const lineBadgeDX = Math.min(
+        ...Object.entries(xs)
+            .filter(([k]) => !['linestart', 'lineend'].includes(k))
+            .map(([, v]) => v)
+    );
     return (
         <g id="main" transform={`translate(0,${param.svg_height / 2})`}>
             <Lines paths={linePaths} services={servicesPresent} />
             <StationGroup xs={xs} ys={ys} services={servicesPresent} />
+            {param.info_panel_type === PanelTypeShmetro.sh2024 && <LineBadge dx={lineBadgeDX} />}
         </g>
     );
 };
@@ -285,6 +323,51 @@ const InfoElements = memo(() => {
 });
 
 InfoElements.displayName = 'InfoElements';
+
+const InfoElements2024 = () => {
+    const {
+        svg_height,
+        svgWidth: { indoor: svg_width },
+    } = useRootSelector(store => store.param);
+
+    return (
+        <g transform={`translate(${svg_width},${svg_height - 20})`}>
+            <text textAnchor="end" fontSize="14" className="rmg-name__zh" dx="-670">
+                友情提示：请留意您需要换乘线路的首末班时间，以免耽误您的出行，末班车进站前三分钟停售该末班车车票。
+            </text>
+            <text textAnchor="end" fontSize="10" className="rmg-name__en" dx="-30">
+                Please pay attention to the interchange schedule if you want to transfer to other lines. Stop selling
+                tickets 3 minutes before the last train services.
+            </text>
+        </g>
+    );
+};
+
+const LineBadge = (props: { dx: number }) => {
+    const { dx } = props;
+    const { line_name, theme } = useRootSelector(store => store.param);
+    const num = line_name[0].match(/^(\d+)号线$/)?.[1] ?? '';
+    const width = num.length > 1 ? 26.4 : 21.6;
+    const textDX = num.length > 1 ? 0 : 4;
+    const letterSpacing = num.length > 1 ? -1.5 : 0;
+    const padding = 15;
+    return (
+        <g transform={`translate(${dx - width - padding},0)`}>
+            <rect height={24} width={width} y={-18} fill={theme[2]} />
+            <text
+                x={textDX}
+                y={-6}
+                className="rmg-name__zh"
+                fill={theme[3]}
+                dominantBaseline="central"
+                letterSpacing={letterSpacing}
+                fontSize="24"
+            >
+                {num}
+            </text>
+        </g>
+    );
+};
 
 /* Some unused functions to split branches from the main line.
  * Note the branches here has a slightly different meaning.

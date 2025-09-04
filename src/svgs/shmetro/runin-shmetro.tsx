@@ -1,12 +1,12 @@
 /* eslint @typescript-eslint/no-non-null-assertion: 0 */
+import { Translation } from '@railmapgen/rmg-translate';
 import { memo, SVGProps, useMemo } from 'react';
-import { CanvasType, StationDict } from '../../constants/constants';
+import { CanvasType, PanelTypeShmetro, StationDict } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
 import { calculateColineStations } from '../methods/shmetro-coline';
 import SvgWrapper from '../svg-wrapper';
 import PujiangLineDefs from './pujiang-line-filter';
-import { Translation } from '@railmapgen/rmg-translate';
 
 const LINE_WIDTH = 12;
 
@@ -453,18 +453,15 @@ const CurrentText = () => {
     const param = useRootSelector(store => store.param);
     const { localisedName } = param.stn_list[param.current_stn_idx];
     const { zh: zhName = '', en: enName = '' } = localisedName;
-    return useMemo(
-        () => (
-            <>
-                <text className="rmg-name__zh rmg-outline" fontSize={112}>
-                    {zhName.replace('\\', '')}
-                </text>
-                <text className="rmg-name__en rmg-outline" fontSize={36} dy={50}>
-                    {enName.replace('\\', '')}
-                </text>
-            </>
-        ),
-        [zhName, enName]
+    return (
+        <>
+            <text className="rmg-name__zh rmg-outline" fontSize={112}>
+                {zhName.replace('\\', '')}
+            </text>
+            <text className="rmg-name__en rmg-outline" fontSize={36} dy={50}>
+                {enName.replace('\\', '')}
+            </text>
+        </>
     );
 };
 
@@ -505,8 +502,8 @@ const NextText = (props: { nextName: Translation } & SVGProps<SVGGElement>) => {
 };
 
 const PrevStn = (props: { stnIds: string[] }) => {
-    const param = useRootSelector(store => store.param);
-    const prevNames = props.stnIds.map(stnId => param.stn_list[stnId].localisedName);
+    const { stn_list, direction, svgWidth, info_panel_type } = useRootSelector(store => store.param);
+    const prevNames = props.stnIds.map(stnId => stn_list[stnId].localisedName);
     const prevHintDy =
         (props.stnIds.length > 1 ? 15 : 125) +
         prevNames.map(name => name.zh?.split('\\')?.length ?? 1).reduce((acc, cur) => acc + cur, -prevNames.length) *
@@ -522,28 +519,41 @@ const PrevStn = (props: { stnIds: string[] }) => {
     return (
         <g
             fill="gray"
-            textAnchor={param.direction === 'l' ? 'end' : 'start'}
-            transform={`translate(${param.direction === 'l' ? param.svgWidth.runin - 36 : 36},0)`}
+            textAnchor={direction === 'l' ? 'end' : 'start'}
+            transform={`translate(${direction === 'l' ? svgWidth.runin - 36 : 36},0)`}
         >
             <NextText nextName={prevNames[0]} transform="translate(0,183)" />
             {props.stnIds.length > 1 && (
                 <NextText nextName={prevNames[1]} transform={`translate(0,${nextBranchTextDy})`} />
             )}
             <g transform={`translate(0, ${prevHintDy})`}>
-                <text className="rmg-name__zh rmg-outline" fontSize={22}>
-                    上一站
-                </text>
-                <text className="rmg-name__en rmg-outline" fontSize={12} dx={param.direction === 'l' ? -70 : 70}>
-                    Past Stop
-                </text>
+                {info_panel_type === PanelTypeShmetro.sh2024 ? (
+                    <>
+                        <text className="rmg-name__zh rmg-outline" fontSize={22} dx={direction === 'l' ? -90 : 90}>
+                            上一站
+                        </text>
+                        <text className="rmg-name__en rmg-outline" fontSize={12}>
+                            Previous Station
+                        </text>
+                    </>
+                ) : (
+                    <>
+                        <text className="rmg-name__zh rmg-outline" fontSize={22}>
+                            上一站
+                        </text>
+                        <text className="rmg-name__en rmg-outline" fontSize={12} dx={direction === 'l' ? -70 : 70}>
+                            Past Stop
+                        </text>
+                    </>
+                )}
             </g>
         </g>
     );
 };
 
 const NextStn = (props: { stnIds: string[] }) => {
-    const param = useRootSelector(store => store.param);
-    const nextNames = props.stnIds.map(stnId => param.stn_list[stnId].localisedName);
+    const { stn_list, direction, svgWidth, info_panel_type } = useRootSelector(store => store.param);
+    const nextNames = props.stnIds.map(stnId => stn_list[stnId].localisedName);
     const nextHintDy =
         (props.stnIds.length > 1 ? 15 : 125) +
         nextNames.map(name => name.zh?.split('\\')?.length ?? 1).reduce((acc, cur) => acc + cur, -nextNames.length) *
@@ -556,15 +566,17 @@ const NextStn = (props: { stnIds: string[] }) => {
             ? (nextZhName.split('\\').length - 1) * -50 + (nextEnName.split('\\').length - 1) * -30
             : 0) + 70;
 
+    const nextTextEn = info_panel_type === PanelTypeShmetro.sh2024 ? 'Next Station' : 'Next Stop';
+
     return (
         <g
-            textAnchor={param.direction === 'l' ? 'start' : 'end'}
-            transform={`translate(${param.direction === 'l' ? 36 : param.svgWidth.runin - 36},0)`}
+            textAnchor={direction === 'l' ? 'start' : 'end'}
+            transform={`translate(${direction === 'l' ? 36 : svgWidth.runin - 36},0)`}
         >
-            <NextText nextName={param.stn_list[props.stnIds[0]].localisedName} transform="translate(0,183)" />
+            <NextText nextName={stn_list[props.stnIds[0]].localisedName} transform="translate(0,183)" />
             {props.stnIds.length > 1 && (
                 <NextText
-                    nextName={param.stn_list[props.stnIds[1]].localisedName}
+                    nextName={stn_list[props.stnIds[1]].localisedName}
                     transform={`translate(0,${nextBranchTextDy})`}
                 />
             )}
@@ -572,8 +584,8 @@ const NextStn = (props: { stnIds: string[] }) => {
                 <text className="rmg-name__zh rmg-outline" fontSize={22}>
                     下一站
                 </text>
-                <text className="rmg-name__en rmg-outline" fontSize={12} dx={param.direction === 'l' ? 70 : -70}>
-                    Next Stop
+                <text className="rmg-name__en rmg-outline" fontSize={12} dx={direction === 'l' ? 70 : -70}>
+                    {nextTextEn}
                 </text>
             </g>
         </g>

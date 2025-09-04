@@ -1,7 +1,7 @@
 import { adjacencyList, criticalPathMethod, drawLine, getStnState, getXShareMTR } from '../methods/share';
 import StationSHMetro from './station-shmetro';
 import ColineSHMetro from './coline-shmetro';
-import { AtLeastOneOfPartial, Services, StationDict } from '../../constants/constants';
+import { AtLeastOneOfPartial, PanelTypeShmetro, Services, StationDict } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import { useMemo } from 'react';
 
@@ -425,64 +425,60 @@ const ServicesElements = (props: { servicesLevel: Services[]; lineXs: number[] }
 
     const dx_hint = props.servicesLevel.length === 2 ? 350 : 500;
 
-    return useMemo(
-        () => (
-            <g>
-                {servicesLevel.map((service, i) => (
-                    <g key={service} transform={`translate(${labelX},${i * 25})`}>
-                        <rect x={-27.5} height={10} width={55} fill={'white'} stroke={'black'} y={-5} />
-                        <text
-                            className="rmg-name__zh"
-                            fontSize={9}
-                            y={3}
-                            textAnchor="middle"
-                        >{`${service}运行线`}</text>
+    return (
+        <g>
+            {servicesLevel.map((service, i) => (
+                <g key={service} transform={`translate(${labelX},${i * 25})`}>
+                    <rect x={-27.5} height={10} width={55} fill={'white'} stroke={'black'} y={-5} />
+                    <text className="rmg-name__zh" fontSize={9} y={3} textAnchor="middle">{`${service}运行线`}</text>
+                </g>
+            ))}
+            <g transform={`translate(${direction === 'r' ? 30 : svgWidth.railmap - dx_hint},${dy})`}>
+                <text className="rmg-name__zh">图例：</text>
+                {servicesLevel.map((serviceLevel, i) => (
+                    <g key={`serviceLevel${i}`} transform={`translate(${i * 150 + 50},0)`}>
+                        <line
+                            x1="0"
+                            x2="35"
+                            y1="-5"
+                            y2="-5"
+                            stroke="var(--rmg-theme-colour)"
+                            strokeWidth="12"
+                            filter={i === 2 ? 'url(#contrast-direct)' : i === 1 ? 'url(#contrast-express)' : ''}
+                        />
+                        <use x="17.5" y="-5" xlinkHref="#stn_sh" fill="var(--rmg-theme-colour)" />
+                        <text x="40" className="rmg-name__zh">{`${serviceLevel}停靠站`}</text>
                     </g>
                 ))}
-                <g transform={`translate(${direction === 'r' ? 30 : svgWidth.railmap - dx_hint},${dy})`}>
-                    <text className="rmg-name__zh">图例：</text>
-                    {servicesLevel.map((serviceLevel, i) => (
-                        <g key={`serviceLevel${i}`} transform={`translate(${i * 150 + 50},0)`}>
-                            <line
-                                x1="0"
-                                x2="35"
-                                y1="-5"
-                                y2="-5"
-                                stroke="var(--rmg-theme-colour)"
-                                strokeWidth="12"
-                                filter={i === 2 ? 'url(#contrast-direct)' : i === 1 ? 'url(#contrast-express)' : ''}
-                            />
-                            <use x="17.5" y="-5" xlinkHref="#stn_sh" fill="var(--rmg-theme-colour)" />
-                            <text x="40" className="rmg-name__zh">{`${serviceLevel}停靠站`}</text>
-                        </g>
-                    ))}
-                </g>
             </g>
-        ),
-        [svg_height, direction, svgWidth, props.servicesLevel, props.lineXs]
+        </g>
     );
 };
 
 export const DirectionElements = () => {
-    const { direction, svgWidth, coline } = useRootSelector(store => store.param);
+    const { direction, svgWidth, coline, info_panel_type } = useRootSelector(store => store.param);
     // arrow will be black stroke with white fill in coline
     const isColine = !!Object.keys(coline).length;
 
-    return useMemo(
-        () => (
-            <g transform={`translate(${direction === 'l' ? 50 : svgWidth.railmap - 150},50)`}>
-                <text className="rmg-name__zh">列车前进方向</text>
-                <path
-                    d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
-                    stroke={!isColine ? undefined : 'var(--rmg-black)'}
-                    strokeWidth={!isColine ? undefined : 5}
-                    fill={!isColine ? 'var(--rmg-theme-colour)' : 'var(--rmg-white)'}
-                    transform={`translate(${direction === 'l' ? -30 : 125},-5)rotate(${
-                        direction === 'l' ? 0 : 180
-                    })scale(0.15)`}
-                />
-            </g>
-        ),
-        [direction, coline, svgWidth.railmap]
+    const arrowColor =
+        info_panel_type === PanelTypeShmetro.sh2024
+            ? 'var(--rmg-black)'
+            : !isColine
+              ? 'var(--rmg-theme-colour)'
+              : 'var(--rmg-white)';
+
+    return (
+        <g transform={`translate(${direction === 'l' ? 50 : svgWidth.railmap - 150},50)`}>
+            <text className="rmg-name__zh">列车前进方向</text>
+            <path
+                d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
+                stroke={!isColine ? undefined : 'var(--rmg-black)'}
+                strokeWidth={!isColine ? undefined : 5}
+                fill={arrowColor}
+                transform={`translate(${direction === 'l' ? -30 : 125},-5)rotate(${
+                    direction === 'l' ? 0 : 180
+                })scale(0.15)`}
+            />
+        </g>
     );
 };
