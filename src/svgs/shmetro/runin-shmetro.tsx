@@ -1,5 +1,5 @@
 /* eslint @typescript-eslint/no-non-null-assertion: 0 */
-import { memo, SVGProps, useMemo } from 'react';
+import { memo, SVGAttributes, SVGProps, useMemo } from 'react';
 import { CanvasType, StationDict } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import { isColineBranch } from '../../redux/param/coline-action';
@@ -201,7 +201,7 @@ const TerminalStation = (props: { mode: 'terminal' | 'original'; prevStnIds: str
 
             <g
                 transform={`translate(${textProps[direction][mode].x},160)`}
-                textAnchor={textProps[direction][mode].anchor}
+                textAnchor={textProps[direction][mode].anchor as SVGAttributes<SVGGElement>['textAnchor']}
             >
                 <CurrentText />
             </g>

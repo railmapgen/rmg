@@ -1,5 +1,5 @@
 import { ColourHex } from '@railmapgen/rmg-palette-resources';
-import { Fragment, Ref, SVGProps, forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, Ref, SVGProps, forwardRef, useEffect, useMemo, useRef, useState, SVGAttributes } from 'react';
 import { ExtendedInterchangeInfo, InterchangeGroup, Services } from '../../../constants/constants';
 import { useRootSelector } from '../../../redux';
 import { Translation } from '@railmapgen/rmg-translate';
@@ -180,7 +180,12 @@ const StationName = forwardRef(function StationName(
         left: -10 * (nameENLn - 1),
         right: -10 * (nameENLn - 1),
     }[nameDirection];
-    const anchor = { upward: 'middle', downward: 'middle', left: 'end', right: 'start' }[nameDirection];
+    const anchor = (
+        { upward: 'middle', downward: 'middle', left: 'end', right: 'start' } satisfies Record<
+            string,
+            SVGAttributes<SVGGElement>['textAnchor']
+        >
+    )[nameDirection];
 
     return (
         <g ref={ref} {...others} textAnchor={anchor} transform={`translate(${dx},${dy})`}>
@@ -280,7 +285,12 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
     const arrow_dy = { upward: -74, downward: 44, left: 0, right: 0 }[arrowDirection];
     const arrow_dr = { upward: 0, downward: 180, left: 90, right: -90 }[arrowDirection];
     const transfer_dx = { upward: 0, downward: 0, left: 85, right: -85 }[arrowDirection];
-    const transfer_anchor = { upward: 'middle', downward: 'middle', left: 'start', right: 'end' }[arrowDirection];
+    const transfer_anchor = (
+        { upward: 'middle', downward: 'middle', left: 'start', right: 'end' } satisfies Record<
+            string,
+            SVGAttributes<SVGGElement>['textAnchor']
+        >
+    )[arrowDirection];
 
     const osi_dx = transfer_dx;
     const osi_dy = {
@@ -350,7 +360,12 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
 };
 
 const OSysIText = (props: { osysiInfos: ExtendedInterchangeInfo[]; nameDirection: NameDirection }) => {
-    const anchor = { upward: 'middle', downward: 'middle', left: 'start', right: 'end' }[props.nameDirection];
+    const anchor = (
+        { upward: 'middle', downward: 'middle', left: 'start', right: 'end' } satisfies Record<
+            string,
+            SVGAttributes<SVGGElement>['textAnchor']
+        >
+    )[props.nameDirection];
     return useMemo(
         () => (
             <g textAnchor={`${anchor}`}>
