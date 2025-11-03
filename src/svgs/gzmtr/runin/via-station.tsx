@@ -39,16 +39,28 @@ const ViaStation = forwardRef<SVGGElement, ViaStationProps>(function ViaStation(
             <g transform={`translate(${nameBBox.width + 2},7)`}>
                 {lines?.length && (
                     <>
-                        <path d="M0,0 H8" stroke={lines[0].theme?.[2] ?? '#aaa'} strokeWidth={3.5} />
-                        <LineIcon
-                            zhName={lines[0].name[0]}
-                            enName={lines[0].name[1]}
-                            backgroundColour={lines[0].theme?.[2] ?? '#aaa'}
-                            foregroundColour={lines[0].theme?.[3] ?? MonoColour.white}
-                            spanDigits
-                            transform={`translate(27,-8.5)scale(0.75)`}
-                            classNames={{ digits: 'rmg-font__en', zh: 'rmg-font__zh', en: 'rmg-font__en' }}
-                        />
+                        <g transform={`translate(0,-${(3.5 * (lines.length - 1)) / 2})`}>
+                            {lines.map(({ theme }, i) => (
+                                <path
+                                    key={`tick-${i}`}
+                                    d={`M0,${3.5 * i} H8`}
+                                    stroke={theme?.[2] ?? '#aaa'}
+                                    strokeWidth={3.5}
+                                />
+                            ))}
+                        </g>
+                        {lines.map((line, i) => (
+                            <LineIcon
+                                key={`line-icon-${i}`}
+                                zhName={line.name[0]}
+                                enName={line.name[1]}
+                                backgroundColour={line.theme?.[2] ?? '#aaa'}
+                                foregroundColour={line.theme?.[3] ?? MonoColour.white}
+                                spanDigits
+                                transform={`translate(${27 + 36 * i},-8.5)scale(0.75)`}
+                                classNames={{ digits: 'rmg-font__en', zh: 'rmg-font__zh', en: 'rmg-font__en' }}
+                            />
+                        ))}
                     </>
                 )}
             </g>
