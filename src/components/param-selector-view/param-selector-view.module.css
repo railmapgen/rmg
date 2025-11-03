@@ -7,6 +7,7 @@
 
 .card {
     max-width: 100%;
+    min-width: 500px;
     margin-bottom: 10vh;
     box-shadow: var(--mantine-shadow-lg);
 
@@ -19,6 +20,10 @@
         @media (max-width: $mantine-breakpoint-xs) {
             flex-direction: column;
         }
+    }
+
+    @media (max-width: $mantine-breakpoint-xs) {
+        min-width: 80%;
     }
 }
 

@@ -21,7 +21,7 @@ import { MdSwapVert } from 'react-icons/md';
 import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
 import { openPaletteAppClip } from '../../../redux/app/app-slice';
-import { Checkbox, Group, NativeSelect, TextInput, Title } from '@mantine/core';
+import { Group, NativeSelect, Switch, TextInput, Title } from '@mantine/core';
 import {
     RMLabelledSegmentedControl,
     RMSection,
@@ -235,7 +235,7 @@ export default function DesignSection() {
                                 value={lineNum}
                                 onChange={({ currentTarget: { value } }) => dispatch(setLineNum(value))}
                             />
-                            <Checkbox
+                            <Switch
                                 label={t('Span digits over rows')}
                                 checked={!!spanLineNum}
                                 onChange={({ currentTarget: { checked } }) => dispatch(setSpanLineNum(checked))}

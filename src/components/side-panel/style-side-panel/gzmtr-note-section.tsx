@@ -1,9 +1,12 @@
-import { Box, Button, Heading, VStack } from '@chakra-ui/react';
+import classes from '../side-panel.module.css';
 import GZMTRNoteCard from './gzmtr-note-card';
 import { addNote, removeNote, updateNote } from '../../../redux/param/param-slice';
 import { MdAdd } from 'react-icons/md';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import { useTranslation } from 'react-i18next';
+import { RMSection, RMSectionBody, RMSectionHeader } from '@railmapgen/mantine-components';
+import { Button, Title } from '@mantine/core';
+import clsx from 'clsx';
 
 export default function GZMTRNoteSection() {
     const { t } = useTranslation();
@@ -12,12 +15,14 @@ export default function GZMTRNoteSection() {
     const notesGZMTR = useRootSelector(state => state.param.notesGZMTR);
 
     return (
-        <Box p={1}>
-            <Heading as="h5" size="sm">
-                {t('StyleSidePanel.note.title')}
-            </Heading>
+        <RMSection>
+            <RMSectionHeader>
+                <Title order={3} size="h4">
+                    {t('StyleSidePanel.note.title')}
+                </Title>
+            </RMSectionHeader>
 
-            <VStack spacing={0.5}>
+            <RMSectionBody className={clsx(classes['section-body'], classes.fields)}>
                 {notesGZMTR?.map((note, i) => (
                     <GZMTRNoteCard
                         key={i}
@@ -27,16 +32,10 @@ export default function GZMTRNoteSection() {
                     />
                 ))}
 
-                <Button
-                    size="xs"
-                    variant="ghost"
-                    leftIcon={<MdAdd />}
-                    alignSelf="flex-end"
-                    onClick={() => dispatch(addNote())}
-                >
+                <Button variant="default" leftSection={<MdAdd />} onClick={() => dispatch(addNote())}>
                     {t('StyleSidePanel.note.add')}
                 </Button>
-            </VStack>
-        </Box>
+            </RMSectionBody>
+        </RMSection>
     );
 }

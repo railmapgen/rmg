@@ -1,8 +1,9 @@
 import { HStack, IconButton } from '@chakra-ui/react';
 import { Note } from '../../../constants/constants';
 import { MdArrowDropDown, MdArrowDropUp, MdArrowLeft, MdArrowRight, MdDelete } from 'react-icons/md';
-import { RmgCard, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
+import { Card, Textarea } from '@mantine/core';
 
 interface GZMTRNoteCardProps {
     note: Note;
@@ -15,18 +16,6 @@ export default function GZMTRNoteCard(props: GZMTRNoteCardProps) {
     const { t } = useTranslation();
 
     const fields1: RmgFieldsField[] = [
-        {
-            type: 'textarea',
-            label: t('StyleSidePanel.note.zhNote'),
-            value: note[0],
-            onChange: value => onUpdate?.([value, note[1], note[2], note[3], note[4]]),
-        },
-        {
-            type: 'textarea',
-            label: t('StyleSidePanel.note.enNote'),
-            value: note[1],
-            onChange: value => onUpdate?.([note[0], value, note[2], note[3], note[4]]),
-        },
         {
             type: 'switch',
             label: t('StyleSidePanel.note.border'),
@@ -60,7 +49,17 @@ export default function GZMTRNoteCard(props: GZMTRNoteCardProps) {
     ];
 
     return (
-        <RmgCard direction="column">
+        <Card withBorder>
+            <Textarea
+                label={t('StyleSidePanel.note.zhNote')}
+                value={note[0]}
+                onChange={({ currentTarget: { value } }) => onUpdate?.([value, note[1], note[2], note[3], note[4]])}
+            />
+            <Textarea
+                label={t('StyleSidePanel.note.enNote')}
+                value={note[1]}
+                onChange={({ currentTarget: { value } }) => onUpdate?.([note[0], value, note[2], note[3], note[4]])}
+            />
             <RmgFields fields={fields1} minW="full" />
             <HStack spacing={0.5} sx={{ '&>div': { flex: 1 } }}>
                 <RmgFields fields={fields2} />
@@ -73,6 +72,6 @@ export default function GZMTRNoteCard(props: GZMTRNoteCardProps) {
                     icon={<MdDelete />}
                 />
             </HStack>
-        </RmgCard>
+        </Card>
     );
 }
