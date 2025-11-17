@@ -52,6 +52,11 @@ export enum ShortDirection {
     right = 'r',
 }
 
+export enum PsdLabel {
+    screen = 'screen',
+    platform = 'platform',
+}
+
 export enum BranchStyle {
     through = 'through',
     nonThrough = 'nonthrough',
@@ -252,6 +257,7 @@ export interface RMGParam {
     line_num: string;
     spanLineNum?: boolean;
     psd_num: string;
+    psdLabel: PsdLabel;
     coachNum: string;
     info_panel_type: PanelTypeGZMTR | PanelTypeShmetro;
     notesGZMTR?: Note[];

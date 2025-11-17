@@ -11,13 +11,14 @@ import {
     setLineNum,
     setPanelType,
     setPlatform,
+    setPsdLabel,
     setPsdNum,
     setSpanLineNum,
     setTheme,
     staggerStationNames,
     toggleLineNameBeforeDestination,
 } from '../../../redux/param/param-slice';
-import { PanelTypeGZMTR, PanelTypeShmetro, RmgStyle, ShortDirection } from '../../../constants/constants';
+import { PanelTypeGZMTR, PanelTypeShmetro, PsdLabel, RmgStyle, ShortDirection } from '../../../constants/constants';
 import { MdSwapVert } from 'react-icons/md';
 import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
@@ -37,6 +38,7 @@ export default function DesignSection() {
         direction,
         platform_num: platformNum,
         psd_num: psdNum,
+        psdLabel,
         coachNum,
         namePosMTR,
         customiseMTRDest,
@@ -147,6 +149,21 @@ export default function DesignSection() {
             label: t('StyleSidePanel.design.psdNum'),
             value: psdNum,
             onChange: value => dispatch(setPsdNum(value)),
+            hidden: ![RmgStyle.GZMTR].includes(style),
+        },
+        {
+            type: 'custom',
+            label: t('Platform door label'),
+            component: (
+                <RmgButtonGroup
+                    selections={[
+                        { label: t('Screen door'), value: PsdLabel.screen },
+                        { label: t('Platform door'), value: PsdLabel.platform },
+                    ]}
+                    defaultValue={psdLabel}
+                    onChange={label => dispatch(setPsdLabel(label))}
+                />
+            ),
             hidden: ![RmgStyle.GZMTR].includes(style),
         },
         {

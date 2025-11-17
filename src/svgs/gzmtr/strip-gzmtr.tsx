@@ -1,4 +1,4 @@
-import { PanelTypeGZMTR, PanelTypeShmetro } from '../../constants/constants';
+import { PanelTypeGZMTR, PanelTypeShmetro, PsdLabel } from '../../constants/constants';
 import PsdNumber from './psd-number';
 import { memo, useMemo } from 'react';
 
@@ -6,6 +6,7 @@ interface Props {
     variant: PanelTypeGZMTR | PanelTypeShmetro;
     isShowLight: boolean;
     isShowPSD: false | string;
+    psdLabel: PsdLabel;
 }
 
 const StripGZMTR = (props: Props) => {
@@ -132,8 +133,8 @@ const PSD = memo(
         return (
             <PsdNumber
                 num={props.isShowPSD as string}
+                psdLabel={props.psdLabel}
                 inStrip={isInStrip}
-                showAsPlatformDoor={props.variant === PanelTypeGZMTR.gz11}
                 style={{
                     ['--psd-dy' as any]: psdDy,
                     transform: 'translate(var(--translate-x), var(--translate-y))scale(var(--scale))',
@@ -146,5 +147,8 @@ const PSD = memo(
             />
         );
     },
-    (prevProps, nextProps) => prevProps.variant === nextProps.variant && prevProps.isShowPSD === nextProps.isShowPSD
+    (prevProps, nextProps) =>
+        prevProps.variant === nextProps.variant &&
+        prevProps.isShowPSD === nextProps.isShowPSD &&
+        prevProps.psdLabel === nextProps.psdLabel
 );
