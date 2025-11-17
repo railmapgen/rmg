@@ -5,6 +5,7 @@ import {
     Note,
     PanelTypeGZMTR,
     PanelTypeShmetro,
+    PsdLabel,
     RMGParam,
     RmgStyle,
     ShortDirection,
@@ -82,6 +83,10 @@ const paramSlice = createSlice({
 
         setPsdNum: (state, action: PayloadAction<string>) => {
             state.psd_num = action.payload;
+        },
+
+        setPsdLabel: (state, action: PayloadAction<PsdLabel>) => {
+            state.psdLabel = action.payload;
         },
 
         setCoachNum: (state, action: PayloadAction<string>) => {
@@ -190,6 +195,7 @@ export const {
     setLineNum,
     setSpanLineNum,
     setPsdNum,
+    setPsdLabel,
     setCoachNum,
     setPanelType,
     addNote,

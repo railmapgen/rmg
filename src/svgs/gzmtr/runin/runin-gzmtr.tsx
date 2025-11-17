@@ -19,6 +19,7 @@ export default function RunInGZMTR() {
         info_panel_type: infoPanelType,
         platform_num: platformNumber,
         psd_num: psdNumber,
+        psdLabel,
         coachNum,
         theme,
     } = useRootSelector(store => store.param);
@@ -42,6 +43,7 @@ export default function RunInGZMTR() {
                 variant={infoPanelType}
                 isShowLight={infoPanelType !== PanelTypeGZMTR.gz2otis}
                 isShowPSD={infoPanelType !== PanelTypeGZMTR.gz2otis && psdNumber}
+                psdLabel={psdLabel}
             />
 
             <g transform={infoPanelType === PanelTypeGZMTR.gz2otis ? otisTransforms.platform : ''}>
