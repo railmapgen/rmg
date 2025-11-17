@@ -1,7 +1,16 @@
 import { MonoColour, Theme, updateTheme } from '@railmapgen/rmg-palette-resources';
 import rmgRuntime, { logger } from '@railmapgen/rmg-runtime';
 import { nanoid } from 'nanoid';
-import { CanvasType, InterchangeGroup, Name, Note, RMGParam, RmgStyle, StationInfo } from '../constants/constants';
+import {
+    CanvasType,
+    InterchangeGroup,
+    Name,
+    Note,
+    PsdLabel,
+    RMGParam,
+    RmgStyle,
+    StationInfo,
+} from '../constants/constants';
 
 export const updateParam = (param: { [x: string]: any }) => {
     // Version 0.10
@@ -252,6 +261,7 @@ export const updateParam = (param: { [x: string]: any }) => {
     v5_10_updateInterchangeGroup(param);
     v5_17_updateLocalisedName(param);
     v5_18_addStationNameSpacingAndSvgWidthPlatform(param);
+    v5_21_addPsdLabel(param);
 
     sanitiseParam(param);
     return param;
@@ -309,6 +319,12 @@ export const v5_18_addStationNameSpacingAndSvgWidthPlatform = (param: Record<str
         if (character_spacing === undefined) {
             param.stn_list[stnId].character_spacing = 75;
         }
+    }
+};
+
+export const v5_21_addPsdLabel = (param: Record<string, any>) => {
+    if (!('psdLabel' in param)) {
+        param.psdLabel = PsdLabel.screen;
     }
 };
 

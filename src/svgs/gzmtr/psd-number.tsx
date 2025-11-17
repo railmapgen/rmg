@@ -1,14 +1,15 @@
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
 import { SVGProps } from 'react';
+import { PsdLabel } from '../../constants/constants';
 
 interface PsdNumberProps extends SVGProps<SVGGElement> {
     num: string;
+    psdLabel: PsdLabel;
     inStrip?: boolean;
-    showAsPlatformDoor?: boolean;
 }
 
 export default function PsdNumber(props: PsdNumberProps) {
-    const { num, inStrip, showAsPlatformDoor, ...others } = props;
+    const { num, psdLabel, inStrip, ...others } = props;
 
     return (
         <g textAnchor="middle" fill={inStrip ? MonoColour.black : 'var(--rmg-theme-fg)'} {...others}>
@@ -16,7 +17,7 @@ export default function PsdNumber(props: PsdNumberProps) {
             <text className="rmg-name__en" fontSize={20} dy={12}>
                 {num}
             </text>
-            {showAsPlatformDoor ? (
+            {psdLabel === PsdLabel.platform ? (
                 <>
                     <text className="rmg-name__zh" fontSize={11} dy={26}>
                         站台门

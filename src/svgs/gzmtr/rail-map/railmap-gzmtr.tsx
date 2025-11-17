@@ -17,6 +17,7 @@ const RailMapGZMTR = () => {
         svg_height: svgHeight,
         direction,
         psd_num: psdNumber,
+        psdLabel,
         info_panel_type: infoPanelType,
         notesGZMTR: notes,
         current_stn_idx: currentStationIndex,
@@ -42,6 +43,7 @@ const RailMapGZMTR = () => {
                 variant={infoPanelType}
                 isShowLight={infoPanelType === PanelTypeGZMTR.gz2otis}
                 isShowPSD={infoPanelType === PanelTypeGZMTR.gz2otis && psdNumber}
+                psdLabel={psdLabel}
             />
 
             {!loop &&
