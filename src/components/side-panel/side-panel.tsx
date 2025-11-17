@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { SidePanelMode } from '../../constants/constants';
 import StationSidePanel from './station-side-panel/station-side-panel';
 import StyleSidePanel from './style-side-panel/style-side-panel';
-import { RmgMultiLineString, RmgSidePanelHeader } from '@railmapgen/rmg-components';
+import { RmgMultiLineString } from '@railmapgen/rmg-components';
 import StationSidePanelFooter from './station-side-panel/station-side-panel-footer';
 import BranchSidePanel from './branch-side-panel/branch-side-panel';
 import { useTranslation } from 'react-i18next';

@@ -1,28 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import rmgRuntime from '@railmapgen/rmg-runtime';
-import { SystemStyleObject } from '@chakra-ui/react';
 import { Theme } from '@railmapgen/rmg-palette-resources';
 import { nanoid } from 'nanoid';
 import { RMAppClip } from '@railmapgen/mantine-components';
 
 const CHANNEL_PREFIX = 'rmg-palette-bridge--';
-
-const styles: SystemStyleObject = {
-    position: 'relative',
-    h: 460,
-    maxH: '70%',
-
-    '& > button': {
-        position: 'absolute',
-        right: 1,
-        top: 1,
-    },
-
-    '& iframe': {
-        h: '100%',
-        w: '100%',
-    },
-};
 
 interface RmgPaletteAppClip {
     isOpen: boolean;

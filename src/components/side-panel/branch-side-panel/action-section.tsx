@@ -1,7 +1,7 @@
 import classes from '../side-panel.module.css';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Heading, HStack } from '@chakra-ui/react';
+import { Heading } from '@chakra-ui/react';
 import { MdCached, MdFilter1, MdRotateLeft, MdRotateRight } from 'react-icons/md';
 import AutoNumModal from '../../modal/auto-num-modal';
 import { useRootDispatch, useRootSelector } from '../../../redux';
