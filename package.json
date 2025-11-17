@@ -29,7 +29,6 @@
         "react-router-dom": "^7.9.6"
     },
     "devDependencies": {
-        "@eslint/eslintrc": "^3.3.1",
         "@eslint/js": "^9.39.1",
         "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.0",
@@ -40,6 +39,7 @@
         "@types/react-router-dom": "^5.3.3",
         "@vitejs/plugin-legacy": "^7.2.1",
         "@vitejs/plugin-react": "^5.1.1",
+        "@vitest/coverage-v8": "^4.0.10",
         "eslint": "^9.39.1",
         "eslint-plugin-prettier": "^5.5.4",
         "eslint-plugin-react": "^7.37.5",
@@ -54,10 +54,10 @@
     "scripts": {
         "dev": "vite --host",
         "build": "tsc && vite build",
-        "test": "vitest",
+        "test": "vitest run --coverage",
         "lint": "eslint ./src",
         "lint:fix": "eslint ./src --fix",
         "preview": "vite preview"
     },
-    "version": "5.20.11"
+    "version": "5.21.0-0"
 }
