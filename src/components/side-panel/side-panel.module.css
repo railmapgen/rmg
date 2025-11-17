@@ -25,3 +25,7 @@
         }
     }
 }
+
+.mw-320 {
+    min-width: 320px !important;
+}

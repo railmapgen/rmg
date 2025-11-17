@@ -1,3 +1,4 @@
+import classes from '../side-panel.module.css';
 import { useEffect, useState } from 'react';
 import { HStack, IconButton } from '@chakra-ui/react';
 import { useRootDispatch, useRootSelector } from '../../../redux';
@@ -10,13 +11,14 @@ import {
     setLineNum,
     setPanelType,
     setPlatform,
+    setPsdLabel,
     setPsdNum,
     setSpanLineNum,
     setTheme,
     staggerStationNames,
     toggleLineNameBeforeDestination,
 } from '../../../redux/param/param-slice';
-import { PanelTypeGZMTR, PanelTypeShmetro, RmgStyle, ShortDirection } from '../../../constants/constants';
+import { PanelTypeGZMTR, PanelTypeShmetro, PsdLabel, RmgStyle, ShortDirection } from '../../../constants/constants';
 import { MdSwapVert } from 'react-icons/md';
 import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +31,6 @@ import {
     RMSectionHeader,
     RMThemeButton,
 } from '@railmapgen/mantine-components';
-import classes from '../side-panel.module.css';
 import clsx from 'clsx';
 
 export default function DesignSection() {
@@ -46,6 +47,7 @@ export default function DesignSection() {
         direction,
         platform_num: platformNum,
         psd_num: psdNum,
+        psdLabel,
         coachNum,
         namePosMTR,
         customiseMTRDest,
@@ -74,6 +76,11 @@ export default function DesignSection() {
             label: t('StyleSidePanel.design.right'),
             value: ShortDirection.right,
         },
+    ];
+
+    const psdLabelSelections = [
+        { label: '屏蔽门 Screen Door', value: PsdLabel.screen },
+        { label: '站台门 Platform Door', value: PsdLabel.platform },
     ];
 
     const panelTypeGZMTROptions = Object.values(PanelTypeGZMTR).map(value => ({
@@ -253,6 +260,13 @@ export default function DesignSection() {
                                 label={t('StyleSidePanel.design.psdNum')}
                                 value={psdNum}
                                 onChange={({ currentTarget: { value } }) => dispatch(setPsdNum(value))}
+                            />
+                            <RMLabelledSegmentedControl
+                                label={t('Platform door label')}
+                                data={psdLabelSelections}
+                                value={psdLabel}
+                                onChange={value => dispatch(setPsdLabel(value as PsdLabel))}
+                                classNames={{ root: classes['mw-320'] }}
                             />
                             <TextInput
                                 label={t('Coach number')}
