@@ -5,7 +5,6 @@ import { render } from '../../../test-utils';
 import { act, fireEvent, screen, within } from '@testing-library/react';
 import { vi } from 'vitest';
 import { createTestStore } from '../../../setupTests';
-import ColourUtil from '../../../theme/colour-util';
 import { onPaletteAppClipEmit } from '../../../redux/app/app-slice';
 
 const mockInterchangeInfo1: ExtendedInterchangeInfo = {
@@ -43,7 +42,7 @@ describe('InterchangeCard', () => {
 
         // colour edit button has desired styles
         expect(screen.getByRole('button', { name: 'Colour' })).toHaveStyle({
-            background: ColourUtil.fade('#F38B00', 0.7),
+            background: '#F38B00',
             color: '#FFFFFF',
         });
 

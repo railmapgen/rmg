@@ -12,12 +12,8 @@ export default function ViaStations({ viaStations, stationList }: ViaStationsPro
     const [stationHeights, setStationHeights] = useState<number[]>([]);
 
     useEffect(() => {
-        stationsRef.current = [];
-    }, [viaStations, stationList]);
-
-    useEffect(() => {
         setStationHeights(stationsRef.current.map(el => el?.getBBox()?.height ?? 0));
-    }, [stationsRef.current]);
+    }, [viaStations, stationsRef.current]);
 
     const getHeightsUpTo = useCallback(
         (index: number) => {

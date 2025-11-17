@@ -1,11 +1,9 @@
-import { setupBroadcastChannelMock } from '@railmapgen/rmg-runtime/util';
 import { BranchStyle, LocalStorageKey, RmgStyle, StationDict } from './constants/constants';
 import { createStore } from './redux';
 import { initParam } from './redux/param/util';
 import { setupTest } from '@railmapgen/mantine-components/utils';
 
 setupTest();
-setupBroadcastChannelMock();
 
 export const createTestStore = createStore;
 

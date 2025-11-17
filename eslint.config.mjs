@@ -1,17 +1,9 @@
 // @ts-check
 
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
-import { FlatCompat } from '@eslint/eslintrc';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import react from 'eslint-plugin-react';
 import prettier from 'eslint-plugin-prettier';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const compat = new FlatCompat({ baseDirectory: __dirname });
 
 export default tseslint.config(
     eslint.configs.recommended,
@@ -25,12 +17,16 @@ export default tseslint.config(
     },
     {
         files: ['**/*.{js,jsx,ts,tsx}'],
-        extends: [...compat.config(react.configs.recommended), ...compat.config(react.configs['jsx-runtime'])],
+        ...react.configs.flat.recommended,
         settings: {
             react: {
                 version: 'detect',
             },
         },
+    },
+    {
+        files: ['**/*.{js,jsx,ts,tsx}'],
+        ...react.configs.flat['jsx-runtime'],
     },
     {
         plugins: { prettier },
