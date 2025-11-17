@@ -157,14 +157,15 @@ export default function DesignSection() {
             component: (
                 <RmgButtonGroup
                     selections={[
-                        { label: t('Screen door'), value: PsdLabel.screen },
-                        { label: t('Platform door'), value: PsdLabel.platform },
+                        { label: '屏蔽门 Screen door', value: PsdLabel.screen },
+                        { label: '站台门 Platform door', value: PsdLabel.platform },
                     ]}
                     defaultValue={psdLabel}
                     onChange={label => dispatch(setPsdLabel(label))}
                 />
             ),
             hidden: ![RmgStyle.GZMTR].includes(style),
+            minW: 260,
         },
         {
             type: 'input',
