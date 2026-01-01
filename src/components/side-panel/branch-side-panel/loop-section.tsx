@@ -16,7 +16,7 @@ import {
     RMSectionBody,
     RMSectionHeader,
 } from '@railmapgen/mantine-components';
-import { Checkbox, Group, Select, Title } from '@mantine/core';
+import { Group, Select, Switch, Title } from '@mantine/core';
 import { MdOutlineAdd, MdOutlineRemove } from 'react-icons/md';
 import clsx from 'clsx';
 
@@ -57,7 +57,7 @@ export default function LoopSection() {
             <RMSectionBody className={clsx(classes['section-body'], classes.fields)}>
                 {style === RmgStyle.SHMetro && (
                     <Group gap="xs">
-                        <Checkbox
+                        <Switch
                             label={t('StyleSidePanel.loop.isBank')}
                             checked={bank}
                             onChange={({ currentTarget: { checked } }) => dispatch(setLoopBank(checked))}

@@ -30,10 +30,13 @@
 .selectors {
     gap: var(--mantine-spacing-xs);
     min-width: 240px;
+    max-width: 360px;
+    flex-grow: 1;
 
     @media (max-width: $mantine-breakpoint-xs) {
         width: 100%;
         min-width: unset;
+        max-width: unset;
     }
 
     > div {

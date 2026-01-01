@@ -1,4 +1,4 @@
-import { Box, Heading, Text } from '@chakra-ui/react';
+import { Heading, Text } from '@chakra-ui/react';
 import { BranchStyle, Direction } from '../../../constants/constants';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import {
@@ -8,6 +8,8 @@ import {
 } from '../../../redux/param/action';
 import { RmgCard, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
+import { RMSection, RMSectionHeader } from '@railmapgen/mantine-components';
+import { Title } from '@mantine/core';
 
 export default function BranchSection() {
     const { t } = useTranslation();
@@ -71,10 +73,12 @@ export default function BranchSection() {
     };
 
     return (
-        <Box p={1}>
-            <Heading as="h5" size="sm">
-                {t('Branches')}
-            </Heading>
+        <RMSection>
+            <RMSectionHeader>
+                <Title order={3} size="h4">
+                    {t('Branches')}
+                </Title>
+            </RMSectionHeader>
 
             <Heading as="h6" size="xs">
                 {t('Branch on the left')}
@@ -103,6 +107,6 @@ export default function BranchSection() {
                     </Text>
                 )}
             </RmgCard>
-        </Box>
+        </RMSection>
     );
 }

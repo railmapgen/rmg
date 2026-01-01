@@ -1,3 +1,4 @@
+import classes from '../side-panel.module.css';
 import { useRootSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
 import LayoutSection from './layout-section';
@@ -10,7 +11,7 @@ export default function StyleSidePanel() {
     const { style } = useRootSelector(state => state.param);
 
     return (
-        <Stack gap="xs">
+        <Stack className={classes['tab-body']} gap="xs">
             <LayoutSection />
 
             <Divider />

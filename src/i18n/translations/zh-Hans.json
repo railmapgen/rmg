@@ -170,7 +170,7 @@
             "pivot": "环线上的枢纽车站",
             "oneLine": "在一行内展示中英文站名",
             "intPadding": "车站名与换乘线路间的间距",
-            "intPaddingApplyGlobal": "将当前的间距应用到所有车站上",
+            "intPaddingApplyGlobal": "应用到所有车站",
             "apply": "应用",
             "characterSpacing": "车站名文字间距"
         },

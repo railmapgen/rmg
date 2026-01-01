@@ -1,5 +1,4 @@
-import { Button, Flex } from '@chakra-ui/react';
-import { RmgCard, RmgDebouncedInput, RmgLabel, RmgSelect } from '@railmapgen/rmg-components';
+import classes from './connect-disconnect-card.module.css';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Direction, Events } from '../../../constants/constants';
@@ -13,6 +12,7 @@ import {
     getPossibleStations,
 } from '../../../redux/param/connect-disconnect-branch';
 import rmgRuntime from '@railmapgen/rmg-runtime';
+import { Button, Card, Group, Select, TextInput } from '@mantine/core';
 
 interface ConnectDisconnectCardProps {
     direction: Direction;
@@ -41,13 +41,13 @@ export default function ConnectDisconnectCard(props: ConnectDisconnectCardProps)
     const isConnectable = branchType === 1 && !branches[0].includes(branchEndId);
     const isDisconnectable = possibleDirection.includes(direction);
 
-    const options = possibleStations.reduce(
-        (acc, cur) => ({
-            ...acc,
-            [cur]: stn_list[cur]?.localisedName.zh + '/' + stn_list[cur]?.localisedName.en,
-        }),
-        { '': t('Please select...') }
-    );
+    const options = [
+        { value: '', label: t('Please select...'), disabled: true },
+        ...possibleStations.map(value => ({
+            value,
+            label: stn_list[value]?.localisedName.zh + '/' + stn_list[value]?.localisedName.en,
+        })),
+    ];
 
     const handleConnect = () => {
         const result = dispatch(connect2MainLine(selection, selectedBranch));
@@ -68,60 +68,40 @@ export default function ConnectDisconnectCard(props: ConnectDisconnectCardProps)
     };
 
     return (
-        <RmgCard direction="column">
-            <Flex alignItems="center">
-                <RmgLabel label={t('Station name')} flex={1}>
-                    <RmgDebouncedInput
-                        defaultValue={branchEndInfo.localisedName.zh + '/' + branchEndInfo.localisedName.en}
-                        isDisabled={true}
-                    />
-                </RmgLabel>
+        <Card className={classes.card} withBorder>
+            <Group gap="xs">
+                <TextInput
+                    label={t('Station name')}
+                    value={branchEndInfo.localisedName.zh + '/' + branchEndInfo.localisedName.en}
+                    readOnly
+                />
 
                 {isEditing ? (
-                    <Button mx={1} size="sm" variant="outline" onClick={() => setIsEditing(false)}>
+                    <Button variant="default" onClick={() => setIsEditing(false)}>
                         {t('Cancel')}
                     </Button>
                 ) : isConnectable ? (
-                    <Button mx={1} size="sm" variant="solid" colorScheme="primary" onClick={() => setIsEditing(true)}>
-                        {t('Connect to main line')}
-                    </Button>
+                    <Button onClick={() => setIsEditing(true)}>{t('Connect to main line')}</Button>
                 ) : (
-                    <Button
-                        mx={1}
-                        size="sm"
-                        variant="solid"
-                        colorScheme="primary"
-                        onClick={handleDisconnect}
-                        isDisabled={!isDisconnectable}
-                    >
+                    <Button onClick={handleDisconnect} disabled={!isDisconnectable}>
                         {t('Disconnect from main line')}
                     </Button>
                 )}
-            </Flex>
+            </Group>
 
             {isEditing && (
-                <Flex alignItems="center">
-                    <RmgLabel label={t('Target station')} flex={1}>
-                        <RmgSelect
-                            defaultValue={selection}
-                            options={options}
-                            disabledOptions={['']}
-                            onChange={({ target: { value } }) => setSelection(value)}
-                        />
-                    </RmgLabel>
-
-                    <Button
-                        mx={1}
-                        size="sm"
-                        variant="solid"
-                        colorScheme="primary"
-                        onClick={handleConnect}
-                        isDisabled={!selection}
-                    >
+                <Group gap="xs">
+                    <Select
+                        label={t('Target station')}
+                        value={selection}
+                        data={options}
+                        onChange={value => value && setSelection(value)}
+                    />
+                    <Button onClick={handleConnect} disabled={!selection}>
                         {t('Confirm')}
                     </Button>
-                </Flex>
+                </Group>
             )}
-        </RmgCard>
+        </Card>
     );
 }

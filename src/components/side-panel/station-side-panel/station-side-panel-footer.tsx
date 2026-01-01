@@ -1,42 +1,57 @@
-import { Button, HStack } from '@chakra-ui/react';
-import { RmgSidePanelFooter } from '@railmapgen/rmg-components';
+import classes from '../side-panel.module.css';
 import { useState } from 'react';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import RemoveConfirmModal from '../../modal/remove-confirm-modal';
 import { setCurrentStation, setLoopMidpointStation } from '../../../redux/param/param-slice';
 import { useTranslation } from 'react-i18next';
 import { RmgStyle } from '../../../constants/constants';
+import { Button, Divider, Group, Stack } from '@mantine/core';
+import { MdOutlineContrast, MdOutlineDeleteOutline, MdOutlineMyLocation } from 'react-icons/md';
 
 export default function StationSidePanelFooter() {
     const { t } = useTranslation();
     const dispatch = useRootDispatch();
 
     const { selectedStation } = useRootSelector(state => state.app);
-    const { loop, style } = useRootSelector(state => state.param);
+    const {
+        loop,
+        loop_info: loopInfo,
+        style,
+        current_stn_idx: currentStationId,
+    } = useRootSelector(state => state.param);
 
     const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 
     return (
-        <RmgSidePanelFooter>
-            <HStack>
-                <Button size="sm" variant="outline" onClick={() => dispatch(setCurrentStation(selectedStation))}>
-                    {t('StationSidePanel.footer.current')}
+        <Stack component="footer" className={classes['tab-footer']} gap="xs">
+            <Divider />
+            <Group gap="xs" grow>
+                <Button
+                    variant={selectedStation === currentStationId ? 'filled' : 'default'}
+                    leftSection={<MdOutlineMyLocation />}
+                    onClick={() => dispatch(setCurrentStation(selectedStation))}
+                >
+                    {t('Current')}
                 </Button>
                 {style === RmgStyle.GZMTR && loop && (
                     <Button
-                        size="sm"
-                        variant="outline"
+                        variant={selectedStation === loopInfo?.midpoint_station ? 'filled' : 'default'}
+                        leftSection={<MdOutlineContrast />}
                         onClick={() => dispatch(setLoopMidpointStation(selectedStation))}
                     >
-                        {t('Set as midpoint')}
+                        {t('Midpoint')}
                     </Button>
                 )}
-                <Button size="sm" variant="outline" onClick={() => setIsRemoveModalOpen(true)}>
+                <Button
+                    variant="default"
+                    leftSection={<MdOutlineDeleteOutline />}
+                    onClick={() => setIsRemoveModalOpen(true)}
+                >
                     {t('StationSidePanel.footer.remove')}
                 </Button>
-            </HStack>
+            </Group>
 
             <RemoveConfirmModal isOpen={isRemoveModalOpen} onClose={() => setIsRemoveModalOpen(false)} />
-        </RmgSidePanelFooter>
+        </Stack>
     );
 }

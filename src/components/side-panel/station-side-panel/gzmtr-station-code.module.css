@@ -1,0 +1,38 @@
+.root {
+    display: flex;
+    height: 24px;
+    position: relative;
+    color: black;
+
+    /* background */
+    &::before {
+        content: '';
+        width: calc(100% + 2px);
+        height: 26px;
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        background: white;
+        border-radius: 13px;
+    }
+
+    span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 3px;
+        min-width: 24px;
+        border: 2px solid;
+        border-color: var(--gzmtr-station-code-border-color);
+        z-index: 1;
+
+        &:first-of-type {
+            border-radius: 12px 0 0 12px;
+        }
+
+        &:last-of-type {
+            border-radius: 0 12px 12px 0;
+            margin-left: -2px;
+        }
+    }
+}

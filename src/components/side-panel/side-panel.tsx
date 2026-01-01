@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import RmgPaletteAppClip from '../app-clip/rmg-palette-app-clip';
 import { RMSidePanel } from '@railmapgen/mantine-components';
 import { Tabs } from '@mantine/core';
+import { MdOutlinePalette, MdOutlineShare, MdOutlineTrain } from 'react-icons/md';
 
 const SIDE_PANEL_WIDTH = 410;
 
@@ -23,15 +24,16 @@ export default function SidePanel() {
     const { sidePanelMode, selectedStation, paletteAppClipInput } = useRootSelector(state => state.app);
     const name = useRootSelector(state => state.param.stn_list[selectedStation]?.localisedName);
 
-    const modes: Record<SidePanelMode, { header: ReactNode; body?: ReactNode; footer?: ReactNode }> = {
+    const modes: Record<SidePanelMode, { icon: ReactNode; header: ReactNode; body?: ReactNode; footer?: ReactNode }> = {
         STATION: {
+            icon: <MdOutlineTrain />,
             header: <RmgMultiLineString text={name?.zh + '/' + name?.en || ''} />,
             body: <StationSidePanel />,
             footer: <StationSidePanelFooter />,
         },
-        STYLE: { header: t('StyleSidePanel.header'), body: <StyleSidePanel /> },
-        BRANCH: { header: t('BranchSidePanel.header'), body: <BranchSidePanel /> },
-        CLOSE: { header: 'Close' },
+        STYLE: { icon: <MdOutlinePalette />, header: t('StyleSidePanel.header'), body: <StyleSidePanel /> },
+        BRANCH: { icon: <MdOutlineShare />, header: t('BranchSidePanel.header'), body: <BranchSidePanel /> },
+        CLOSE: { icon: <></>, header: 'Close' },
     };
 
     const handleClose = () => {
@@ -51,7 +53,7 @@ export default function SidePanel() {
             <Tabs classNames={{ root: classes.body, panel: classes['tab-panel'] }}>
                 <Tabs.List grow>
                     {[SidePanelMode.STYLE, SidePanelMode.BRANCH, SidePanelMode.STATION].map(mode => (
-                        <Tabs.Tab key={mode} value={mode}>
+                        <Tabs.Tab key={mode} value={mode} leftSection={modes[mode].icon}>
                             {mode}
                         </Tabs.Tab>
                     ))}

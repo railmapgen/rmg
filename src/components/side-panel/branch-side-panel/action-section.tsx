@@ -1,7 +1,6 @@
 import classes from '../side-panel.module.css';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Heading } from '@chakra-ui/react';
 import { MdCached, MdFilter1, MdRotateLeft, MdRotateRight } from 'react-icons/md';
 import AutoNumModal from '../../modal/auto-num-modal';
 import { useRootDispatch, useRootSelector } from '../../../redux';
@@ -36,13 +35,13 @@ export default function ActionSection() {
             <RMSectionBody className={classes['section-body']}>
                 {selectedBranch !== 0 && style !== RmgStyle.SHMetro && (
                     <>
-                        <Heading as="h6" size="xs">
+                        <Title order={4} size="h5">
                             {t('Branch left end')}
-                        </Heading>
+                        </Title>
                         <ConnectDisconnectCard direction={Direction.left} />
-                        <Heading as="h6" size="xs">
+                        <Title order={4} size="h5">
                             {t('Branch right end')}
-                        </Heading>
+                        </Title>
                         <ConnectDisconnectCard direction={Direction.right} />
                     </>
                 )}

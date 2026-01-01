@@ -1,3 +1,4 @@
+import classes from '../side-panel.module.css';
 import ColineSection from './coline-section';
 import ActionSection from './action-section';
 import { useRootDispatch, useRootSelector } from '../../../redux';
@@ -7,6 +8,7 @@ import LoopSection from './loop-section';
 import { Divider, NativeSelect, Stack } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { setSelectedBranch } from '../../../redux/app/app-slice';
+import useBranchOptions from '../../../hooks/use-branch-options';
 
 export default function BranchSidePanel() {
     const { t } = useTranslation();
@@ -16,33 +18,10 @@ export default function BranchSidePanel() {
     const { style, stn_list: stationList, loop } = useRootSelector(state => state.param);
     const branches = useRootSelector(state => state.helper.branches);
 
-    const branchOptions = branches.map((branch, i) => {
-        if (i === 0) {
-            return {
-                value: i.toString(),
-                label: loop ? t('Loop line') : t('GridTabs.main'),
-            };
-        } else {
-            if (style !== RmgStyle.SHMetro || !isColineBranch(branch, stationList)) {
-                return {
-                    value: i.toString(),
-                    label: t('GridTabs.branch') + ' ' + i,
-                    disabled: loop,
-                };
-                // {loop && (
-                //   <MdWarning
-                //     style={{ marginLeft: 5 }}
-                //     title={t('Branches are not supported in the loop line.')}
-                //   />
-                // )}
-            } else {
-                return { value: i.toString(), label: t('GridTabs.external') + ' ' + i };
-            }
-        }
-    });
+    const branchOptions = useBranchOptions();
 
     return (
-        <Stack gap="xs">
+        <Stack className={classes['tab-body']} gap="xs">
             <NativeSelect
                 label={t('Line section')}
                 value={selectedBranch}

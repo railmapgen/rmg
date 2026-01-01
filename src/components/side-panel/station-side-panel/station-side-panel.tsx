@@ -1,26 +1,108 @@
-import { Divider } from '@chakra-ui/react';
+import classes from '../side-panel.module.css';
 import InfoSection from './info-section';
 import InterchangeSection from './interchange-section';
 import MoreSection from './more-section';
 import BranchSection from './branch-section';
-import { RmgSidePanelBody } from '@railmapgen/rmg-components';
+import { Divider, Select, SelectProps, Stack } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
+import { useRootDispatch, useRootSelector } from '../../../redux';
+import useBranchOptions from '../../../hooks/use-branch-options';
+import { setSelectedBranch, setSelectedStation } from '../../../redux/app/app-slice';
+import { MdOutlineCheck } from 'react-icons/md';
+import { RmgStyle } from '../../../constants/constants';
+import GzmtrStationCode from './gzmtr-station-code';
+import { MonoColour } from '@railmapgen/rmg-palette-resources';
+import RMLineBadge from '../../common/RMLineBadge';
+
+const stationOptionIdMapper = {
+    construct: (branchId: number | string, stationId: string) => `${branchId}-${stationId}`,
+    destruct: (id: string) => {
+        const matches = id.match(/^(\d+)-(.+)$/)!;
+        return { branchId: Number(matches[1]), stationId: matches[2] };
+    },
+};
+
+const isValidStation = (stationId: string) => !['linestart', 'lineend'].includes(stationId);
 
 export default function StationSidePanel() {
+    const { t } = useTranslation();
+
+    const dispatch = useRootDispatch();
+    const { selectedBranch, selectedStation } = useRootSelector(state => state.app);
+    const { style, line_num: lineNumber, theme, stn_list: stationList } = useRootSelector(state => state.param);
+    const { branches } = useRootSelector(state => state.helper);
+
+    const branchOptions = useBranchOptions();
+    const stationOptions = branchOptions.map(branch => ({
+        group: branch.label,
+        items: branches[Number(branch.value)].filter(isValidStation).map(stationId => ({
+            value: stationOptionIdMapper.construct(branch.value, stationId),
+            label: stationList[stationId]?.localisedName.zh + '/' + stationList[stationId]?.localisedName.en,
+        })),
+    }));
+
+    const renderOption: SelectProps['renderOption'] = ({ option, checked }) => {
+        const { stationId } = stationOptionIdMapper.destruct(option.value);
+        const stationInfo = stationList[stationId];
+        return (
+            <>
+                {checked && <MdOutlineCheck />}
+                {style === RmgStyle.GZMTR && (
+                    <GzmtrStationCode lineNumber={lineNumber} stationNumber={stationInfo.num} lineColour={theme[2]} />
+                )}
+                <span>{option.label}</span>
+                {stationInfo.transfer.groups
+                    .map(group => group.lines ?? [])
+                    .flat()
+                    .map((it, i) => (
+                        <RMLineBadge
+                            key={i}
+                            name={it.name}
+                            bg={it.theme?.[2] ?? '#aaaaaa'}
+                            fg={it.theme?.[3] ?? MonoColour.white}
+                            showShortName
+                        />
+                    ))}
+            </>
+        );
+    };
+
+    const handleSelectStation = (optionId: string) => {
+        const { branchId, stationId } = stationOptionIdMapper.destruct(optionId);
+        dispatch(setSelectedBranch(branchId));
+        dispatch(setSelectedStation(stationId));
+    };
+
     return (
-        <RmgSidePanelBody>
-            <InfoSection />
+        <Stack className={classes['tab-body']} gap="xs">
+            {/* TODO: Use below component globally */}
+            <Select
+                label={t('Station')}
+                value={stationOptionIdMapper.construct(selectedBranch, selectedStation)}
+                placeholder={t('Type to search or select...')}
+                data={stationOptions}
+                renderOption={renderOption}
+                onChange={value => value && handleSelectStation(value)}
+                searchable
+            />
 
-            <Divider />
+            {isValidStation(selectedStation) && (
+                <>
+                    <InfoSection />
 
-            <InterchangeSection />
+                    <Divider />
 
-            <Divider />
+                    <InterchangeSection />
 
-            <BranchSection />
+                    <Divider />
 
-            <Divider />
+                    <BranchSection />
 
-            <MoreSection />
-        </RmgSidePanelBody>
+                    <Divider />
+
+                    <MoreSection />
+                </>
+            )}
+        </Stack>
     );
 }

@@ -2,11 +2,40 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    flex: 1;
 }
 
 .tab-panel {
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
     padding: 0 var(--mantine-spacing-xs);
+}
+
+.tab-body {
+    padding-bottom: var(--mantine-spacing-xs);
+    flex: 1;
+    overflow-y: auto;
+    transform: translateZ(0);
+
+    :global(.rm-section__header) {
+        @mixin light {
+            background-color: var(--mantine-color-white);
+        }
+
+        @mixin dark {
+            background-color: var(--mantine-color-dark-6);
+        }
+    }
+
+    &:not(:has(+ .tab-footer)) {
+        padding-bottom: calc(env(safe-area-inset-bottom) + var(--mantine-spacing-xs));
+    }
+}
+
+.tab-footer {
+    padding-bottom: calc(env(safe-area-inset-bottom) + var(--mantine-spacing-xs));
 }
 
 .section-body {
@@ -21,6 +50,10 @@
 
     &.fields {
         > :global(.mantine-Group-root) > * {
+            flex: 1;
+        }
+
+        > :global(.mantine-Group-root) :global(.mantine-Switch-labelWrapper) {
             flex: 1;
         }
     }

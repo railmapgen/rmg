@@ -16,6 +16,14 @@
 
 html {
     height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+}
+
+@media (display-mode: standalone) {
+    html {
+        height: 100vh;
+    }
 }
 
 body {
@@ -24,12 +32,17 @@ body {
     height: 100%;
     width: 100%;
     width: -webkit-fill-available;
-    padding: env(safe-area-inset-top, 20px) env(safe-area-inset-right, 20px) env(safe-area-inset-bottom, 20px) env(safe-area-inset-left, 20px);
 }
 
 div#root {
     height: 100%;
     width: 100%;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+
+    .rm-window {
+        padding-top: env(safe-area-inset-top);
+    }
 }
 
 * {
