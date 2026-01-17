@@ -1,15 +1,3 @@
-.card {
-    padding-inline: var(--mantine-spacing-xs);
-
-    @mixin light {
-        background-color: var(--mantine-color-white);
-    }
-
-    @mixin dark {
-        background-color: var(--mantine-color-dark-6);
-    }
-}
-
 .empty-stack {
     p {
         flex: 1;

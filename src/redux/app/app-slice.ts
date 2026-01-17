@@ -60,6 +60,19 @@ const appSlice = createSlice({
             state.canvasToShow = action.payload;
         },
 
+        addCanvasToShow: (state, action: PayloadAction<CanvasType>) => {
+            if (!state.canvasToShow.includes(action.payload)) {
+                state.canvasToShow.push(action.payload);
+            }
+        },
+
+        removeCanvasToShow: (state, action: PayloadAction<CanvasType>) => {
+            const index = state.canvasToShow.indexOf(action.payload);
+            if (index >= 0) {
+                state.canvasToShow.splice(index, 1);
+            }
+        },
+
         setSidePanelMode: (state, action: PayloadAction<SidePanelMode>) => {
             state.sidePanelMode = action.payload;
         },
@@ -130,6 +143,8 @@ export const {
     updateParamModifiedTime,
     setCanvasScale,
     setCanvasToShow,
+    addCanvasToShow,
+    removeCanvasToShow,
     setSidePanelMode,
     setSelectedStation,
     setSelectedColine,

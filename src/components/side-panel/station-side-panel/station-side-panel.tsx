@@ -12,7 +12,7 @@ import { MdOutlineCheck } from 'react-icons/md';
 import { RmgStyle } from '../../../constants/constants';
 import GzmtrStationCode from './gzmtr-station-code';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
-import RMLineBadge from '../../common/RMLineBadge';
+import RMLineBadge from '../../common/rm-line-badge';
 
 const stationOptionIdMapper = {
     construct: (branchId: number | string, stationId: string) => `${branchId}-${stationId}`,

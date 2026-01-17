@@ -57,6 +57,27 @@
             flex: 1;
         }
     }
+
+    fieldset {
+        padding-inline: var(--mantine-spacing-xs);
+
+        @mixin light {
+            background-color: var(--mantine-color-white);
+        }
+
+        @mixin dark {
+            background-color: var(--mantine-color-dark-6);
+        }
+    }
+
+    :global(.mantine-Card-root) {
+        box-shadow: var(--mantine-shadow-sm);
+
+        > :global(.mantine-Group-root) > * {
+            flex: 1
+        }
+    }
+
 }
 
 .mw-320 {

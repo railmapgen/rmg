@@ -41,9 +41,10 @@ describe('InterchangeCard', () => {
         render(<InterchangeCard title="Test group" interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />);
 
         // colour edit button has desired styles
-        expect(screen.getByRole('button', { name: 'Colour' })).toHaveStyle({
+        const themeButton = screen.getByRole('button', { name: 'Colour' });
+        expect(themeButton).toHaveStyle({ color: '#FFFFFF' });
+        expect(themeButton.querySelector('.mantine-ColorSwatch-colorOverlay')).toHaveStyle({
             background: '#F38B00',
-            color: '#FFFFFF',
         });
 
         expect(screen.getByRole('combobox', { name: 'Chinese name' })).toHaveDisplayValue('東涌綫');

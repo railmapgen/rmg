@@ -1,7 +1,0 @@
-.card {
-    box-shadow: var(--mantine-shadow-sm);
-
-    > :global(.mantine-Group-root) > * {
-        flex: 1
-    }
-}

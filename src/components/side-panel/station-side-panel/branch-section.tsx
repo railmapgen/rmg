@@ -1,15 +1,11 @@
-import { Heading, Text } from '@chakra-ui/react';
+import classes from '../side-panel.module.css';
 import { BranchStyle, Direction } from '../../../constants/constants';
 import { useRootDispatch, useRootSelector } from '../../../redux';
-import {
-    flipStationBranchPosition,
-    updateStationBranchFirstStation,
-    updateStationBranchType,
-} from '../../../redux/param/action';
-import { RmgCard, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import { updateStationBranchFirstStation } from '../../../redux/param/action';
 import { useTranslation } from 'react-i18next';
-import { RMSection, RMSectionHeader } from '@railmapgen/mantine-components';
-import { Title } from '@mantine/core';
+import { RMLabelledSegmentedControl, RMSection, RMSectionBody, RMSectionHeader } from '@railmapgen/mantine-components';
+import { Fieldset, Group, NativeSelect, Switch, Text, Title } from '@mantine/core';
+import clsx from 'clsx';
 
 export default function BranchSection() {
     const { t } = useTranslation();
@@ -19,57 +15,42 @@ export default function BranchSection() {
     const stationList = useRootSelector(state => state.param.stn_list);
     const { parents, children, branch } = stationList[selectedStation];
 
-    const branchOptions = {
-        [BranchStyle.through]: t('StationSidePanel.branch.through'),
-        [BranchStyle.nonThrough]: t('StationSidePanel.branch.nonThrough'),
-    };
-
     const getFirstStationOptions = (direction: Direction) => {
-        return (direction === Direction.left ? parents : children).reduce<Record<string, string>>(
-            (acc, cur) => ({
-                ...acc,
-                [cur]: stationList[cur].localisedName.zh + '/' + stationList[cur].localisedName.en,
-            }),
-            {}
-        );
+        return (direction === Direction.left ? parents : children).map(id => ({
+            value: id,
+            label: stationList[id].localisedName.zh + '/' + stationList[id].localisedName.en,
+        }));
     };
 
-    const positionOptions = {
-        upper: t('StationSidePanel.branch.upper'),
-        lower: t('StationSidePanel.branch.lower'),
-    };
+    const positionOptions = [
+        { value: 'upper', label: t('StationSidePanel.branch.upper') },
+        { value: 'lower', label: t('StationSidePanel.branch.lower') },
+    ];
 
-    const getFields = (direction: Direction): RmgFieldsField[] => {
+    const getFields = (direction: Direction) => {
         const branchInfo = branch?.[direction];
-        if (branchInfo) {
-            return [
-                {
-                    type: 'select',
-                    label: t('StationSidePanel.branch.type'),
-                    options: branchOptions,
-                    value: branchInfo[0],
-                    onChange: value =>
-                        dispatch(updateStationBranchType(selectedStation, direction, value as BranchStyle)),
-                },
-                {
-                    type: 'select',
-                    label: t('StationSidePanel.branch.firstStation'),
-                    options: getFirstStationOptions(direction),
-                    value: branchInfo[1],
-                    onChange: value =>
-                        dispatch(updateStationBranchFirstStation(selectedStation, direction, value as string)),
-                },
-                {
-                    type: 'select',
-                    label: t('StationSidePanel.branch.position'),
-                    options: positionOptions,
-                    value: (direction === Direction.left ? parents : children)[0] === branchInfo[1] ? 'upper' : 'lower',
-                    onChange: () => dispatch(flipStationBranchPosition(selectedStation, direction)),
-                },
-            ];
-        } else {
-            return [];
-        }
+        if (!branchInfo) return <></>;
+        return (
+            <Group gap="xs">
+                <Switch size="xs" label={t('Through')} checked={branchInfo[0] === BranchStyle.through} />
+                <NativeSelect
+                    size="xs"
+                    label={t('StationSidePanel.branch.firstStation')}
+                    value={branchInfo[1]}
+                    data={getFirstStationOptions(direction)}
+                    onChange={({ currentTarget: { value } }) =>
+                        dispatch(updateStationBranchFirstStation(selectedStation, direction, value))
+                    }
+                    flex={1}
+                />
+                <RMLabelledSegmentedControl
+                    size="xs"
+                    label={t('StationSidePanel.branch.position')}
+                    value={(direction === Direction.left ? parents : children)[0] === branchInfo[1] ? 'upper' : 'lower'}
+                    data={positionOptions}
+                />
+            </Group>
+        );
     };
 
     return (
@@ -80,33 +61,27 @@ export default function BranchSection() {
                 </Title>
             </RMSectionHeader>
 
-            <Heading as="h6" size="xs">
-                {t('Branch on the left')}
-            </Heading>
+            <RMSectionBody className={clsx(classes['section-body'], classes.fields)}>
+                <Fieldset legend={t('Branch on the left')}>
+                    {parents.length === 2 ? (
+                        getFields(Direction.left)
+                    ) : (
+                        <Text fs="italic" style={{ textAlign: 'center' }}>
+                            {t('No branches found')}
+                        </Text>
+                    )}
+                </Fieldset>
 
-            <RmgCard direction="column">
-                {parents.length === 2 ? (
-                    <RmgFields fields={getFields(Direction.left)} />
-                ) : (
-                    <Text as="i" flex={1} align="center" fontSize="md" colorScheme="gray">
-                        {t('No branches found')}
-                    </Text>
-                )}
-            </RmgCard>
-
-            <Heading as="h6" size="xs">
-                {t('Branch on the right')}
-            </Heading>
-
-            <RmgCard direction="column">
-                {children.length === 2 ? (
-                    <RmgFields fields={getFields(Direction.right)} />
-                ) : (
-                    <Text as="i" flex={1} align="center" fontSize="md" colorScheme="gray">
-                        {t('No branches found')}
-                    </Text>
-                )}
-            </RmgCard>
+                <Fieldset legend={t('Branch on the right')}>
+                    {children.length === 2 ? (
+                        getFields(Direction.right)
+                    ) : (
+                        <Text fs="italic" style={{ textAlign: 'center' }}>
+                            {t('No branches found')}
+                        </Text>
+                    )}
+                </Fieldset>
+            </RMSectionBody>
         </RMSection>
     );
 }

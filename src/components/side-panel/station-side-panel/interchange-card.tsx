@@ -119,7 +119,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
                             <Input.Wrapper size="xs" label={i === 0 && t('English name')}>
                                 <Input
                                     size="xs"
-                                    value={it.name[0]}
+                                    value={it.name[1]}
                                     list={`${cardId}-${i}-en-list`}
                                     onChange={({ currentTarget: { value } }) =>
                                         onUpdate?.(i, { ...it, name: [it.name[0], value] })

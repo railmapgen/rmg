@@ -1,4 +1,3 @@
-import classes from './gzmtr-note-card.module.css';
 import { Note } from '../../../constants/constants';
 import {
     MdOutlineArrowDropDown,
@@ -22,7 +21,7 @@ export default function GZMTRNoteCard(props: GZMTRNoteCardProps) {
     const { t } = useTranslation();
 
     return (
-        <Card className={classes.card} withBorder>
+        <Card withBorder>
             <Textarea
                 label={t('StyleSidePanel.note.zhNote')}
                 value={note[0]}
