@@ -31,7 +31,7 @@ export default function StationSidePanelFooter() {
                     variant={selectedStation === currentStationId ? 'filled' : 'default'}
                     leftSection={<MdOutlineMyLocation />}
                     onClick={() => dispatch(setCurrentStation(selectedStation))}
-                    disabled={Object.keys(stationList).includes(selectedStation)}
+                    disabled={!Object.keys(stationList).includes(selectedStation)}
                 >
                     {t('Current')}
                 </Button>
@@ -40,7 +40,7 @@ export default function StationSidePanelFooter() {
                         variant={selectedStation === loopInfo?.midpoint_station ? 'filled' : 'default'}
                         leftSection={<MdOutlineContrast />}
                         onClick={() => dispatch(setLoopMidpointStation(selectedStation))}
-                        disabled={Object.keys(stationList).includes(selectedStation)}
+                        disabled={!Object.keys(stationList).includes(selectedStation)}
                     >
                         {t('Midpoint')}
                     </Button>
@@ -49,7 +49,7 @@ export default function StationSidePanelFooter() {
                     variant="default"
                     leftSection={<MdOutlineDeleteOutline />}
                     onClick={() => setIsRemoveModalOpen(true)}
-                    disabled={Object.keys(stationList).includes(selectedStation)}
+                    disabled={!Object.keys(stationList).includes(selectedStation)}
                 >
                     {t('StationSidePanel.footer.remove')}
                 </Button>
