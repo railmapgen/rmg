@@ -66,6 +66,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
             value: it.name[0],
             onChange: val => onUpdate?.(i, { ...it, name: [val, it.name[1]] }),
             optionList: usedNameList[0],
+            debouncedDelay: 300,
         },
         {
             type: 'input',
@@ -73,6 +74,7 @@ export default function InterchangeCard(props: InterchangeCardProps) {
             value: it.name[1],
             onChange: val => onUpdate?.(i, { ...it, name: [it.name[0], val] }),
             optionList: usedNameList[1],
+            debouncedDelay: 300,
         },
         {
             type: 'select',

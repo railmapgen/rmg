@@ -4,6 +4,7 @@ import { updateParam, updateThemes } from '../../util/param-updater-utils';
 import { setFullParam } from '../param/action';
 import { setParamConfig } from './app-slice';
 import { getParam } from '../../util/param-manager-utils';
+import { clearHistory } from '../undo/undo-middleware';
 
 export const readParam = (paramId: string) => {
     return async (dispatch: RootDispatch): Promise<boolean> => {
@@ -19,10 +20,12 @@ export const readParam = (paramId: string) => {
                 const updatedParam = await updateThemes(nextParam);
                 dispatch(setParamConfig(nextParamConfig));
                 dispatch(setFullParam(updatedParam));
+                dispatch(clearHistory());
             } catch (e) {
                 console.warn('Unable to update themes', e);
                 dispatch(setParamConfig(nextParamConfig));
                 dispatch(setFullParam(nextParam));
+                dispatch(clearHistory());
             }
             return true;
         } catch (err) {

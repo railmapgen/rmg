@@ -29,18 +29,21 @@ export default function InfoSection() {
             placeholder: '01',
             onChange: (value: string) => dispatch(updateStationNum(selectedStation, value)),
             hidden: ![RmgStyle.GZMTR].includes(style),
+            debouncedDelay: 300,
         },
         {
             type: 'input',
             label: t('Chinese name'),
             value: localisedName.zh ?? '',
             onChange: (value: string) => dispatch(updateStationName(selectedStation, 'zh', value)),
+            debouncedDelay: 300,
         },
         {
             type: 'input',
             label: t('English name'),
             value: localisedName.en ?? '',
             onChange: (value: string) => dispatch(updateStationName(selectedStation, 'en', value)),
+            debouncedDelay: 300,
         },
         {
             type: 'custom',
@@ -66,6 +69,7 @@ export default function InfoSection() {
             placeholder: '1号航站楼',
             onChange: (value: string) => dispatch(updateStationSecondaryName(selectedStation, 'zh', value)),
             hidden: !localisedSecondaryName || ![RmgStyle.GZMTR].includes(style),
+            debouncedDelay: 300,
         },
         {
             type: 'input',
@@ -74,6 +78,7 @@ export default function InfoSection() {
             placeholder: 'Terminal 1',
             onChange: (value: string) => dispatch(updateStationSecondaryName(selectedStation, 'en', value)),
             hidden: !localisedSecondaryName || ![RmgStyle.GZMTR].includes(style),
+            debouncedDelay: 300,
         },
     ];
 
