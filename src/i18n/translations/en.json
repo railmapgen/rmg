@@ -131,7 +131,8 @@
             "title": "Actions",
             "autoNum": "Auto numbering stations",
             "reverse": "Rotate entire line",
-            "flip": "Flip entire line"
+            "flip": "Flip entire line",
+            "swap": "Swap branch"
         }
     },
 
