@@ -1,11 +1,13 @@
+import { isColineBranch } from '../../../redux/param/coline-action';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Box, Button, Flex, Heading, HStack } from '@chakra-ui/react';
-import { MdCached, MdFilter1, MdRotateLeft, MdRotateRight } from 'react-icons/md';
+import { MdCached, MdFilter1, MdRotateLeft, MdRotateRight, MdSwapHoriz } from 'react-icons/md';
 import AutoNumModal from '../../modal/auto-num-modal';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import { Direction, Events, RmgStyle } from '../../../constants/constants';
 import { reverseStations, rotateStations } from '../../../redux/param/action';
+import { swapBranch } from '../../../redux/param/swap-branch';
 import ConnectDisconnectCard from './connect-disconnect-card';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 
@@ -13,14 +15,17 @@ export default function ActionSection() {
     const { t } = useTranslation();
     const dispatch = useRootDispatch();
 
-    const { style, loop } = useRootSelector(state => state.param);
+    const { style, loop, stn_list } = useRootSelector(state => state.param);
     const selectedBranch = useRootSelector(state => state.app.selectedBranch);
+    const branches = useRootSelector(state => state.helper.branches);
     const [isAutoNumModalOpen, setIsAutoNumModalOpen] = useState(false);
 
     const handleReverseStations = () => {
         dispatch(reverseStations(style === RmgStyle.SHMetro));
         rmgRuntime.event(Events.REVERSE_STATIONS, { style });
     };
+
+    const isExternalLine = selectedBranch !== 0 && isColineBranch(branches[selectedBranch], stn_list);
 
     return (
         <Box p={1}>
@@ -79,6 +84,18 @@ export default function ActionSection() {
                         ? t('BranchSidePanel.action.flip')
                         : t('BranchSidePanel.action.reverse')}
                 </Button>
+
+                {selectedBranch !== 0 && !isExternalLine && (
+                    <Button
+                        size="sm"
+                        variant="outline"
+                        leftIcon={<MdSwapHoriz />}
+                        alignSelf="flex-end"
+                        onClick={() => dispatch(swapBranch(selectedBranch))}
+                    >
+                        {t('BranchSidePanel.action.swap')}
+                    </Button>
+                )}
 
                 {loop && style === RmgStyle.GZMTR && (
                     <HStack>
