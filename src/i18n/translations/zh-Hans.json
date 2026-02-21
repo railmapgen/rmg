@@ -134,6 +134,8 @@
     },
 
     "StationSidePanel": {
+        "batch_edit": "批量编辑",
+        "batch_selected": "已选中 {{count}} 个车站",
         "info": {
             "title": "车站资讯",
             "num": "车站编号",

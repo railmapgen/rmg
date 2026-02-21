@@ -12,7 +12,7 @@ const testStationId = realStore.param.stn_list.linestart.children[0];
 describe('InterchangeSection', () => {
     it('Can render InterchangeCard with headings as expected', () => {
         const mockStore = createTestStore({
-            app: { ...realStore.app, selectedStation: testStationId },
+            app: { ...realStore.app, selectedStations: [testStationId] },
             param: {
                 ...realStore.param,
                 style: RmgStyle.GZMTR,
@@ -42,7 +42,7 @@ describe('InterchangeSection', () => {
 
     it('Can handle add interchange group as expected', () => {
         const mockStore = createTestStore({
-            app: { ...realStore.app, selectedStation: testStationId },
+            app: { ...realStore.app, selectedStations: [testStationId] },
             param: {
                 ...realStore.param,
                 style: RmgStyle.GZMTR,

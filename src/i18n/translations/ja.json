@@ -134,6 +134,8 @@
     },
 
     "StationSidePanel": {
+        "batch_edit": "一括編集",
+        "batch_selected": "{{count}} 駅を選択中",
         "info": {
             "title": "駅情報",
             "num": "駅番号",

@@ -630,3 +630,23 @@ export const autoNumbering = (branchIndex: number, from: number, maxLength = 2, 
         }
     };
 };
+
+export const updateStationsProperty = <K extends keyof StationInfo>(
+    stationIds: string[],
+    key: K,
+    value: StationInfo[K]
+) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
+        const { stn_list } = getState().param;
+        const nextStationList = { ...stn_list };
+
+        const uniqueIds = Array.from(new Set(stationIds));
+        uniqueIds.forEach(id => {
+            if (nextStationList[id]) {
+                nextStationList[id] = { ...nextStationList[id], [key]: value };
+            }
+        });
+
+        dispatch(setStationsBulk(nextStationList));
+    };
+};

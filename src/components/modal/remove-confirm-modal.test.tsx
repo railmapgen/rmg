@@ -42,7 +42,7 @@ describe('RemoveConfirmModal', () => {
         const mockStore = createTestStore({
             app: {
                 ...realStore.app,
-                selectedStation: 'stn1',
+                selectedStations: ['stn1'],
             },
             param: {
                 ...realStore.param,
@@ -99,7 +99,7 @@ describe('RemoveConfirmModal', () => {
         const mockStore = createTestStore({
             app: {
                 ...realStore.app,
-                selectedStation: 'stn2',
+                selectedStations: ['stn2'],
             },
             param: {
                 ...realStore.param,
@@ -115,6 +115,6 @@ describe('RemoveConfirmModal', () => {
         // assertions
         expect(mockStore.getState().param.stn_list).not.toHaveProperty('stn2'); // removal of station
         expect(mockStore.getState().app.sidePanelMode).toBe(SidePanelMode.CLOSE); // close side panel
-        expect(mockStore.getState().app.selectedStation).toBe('linestart'); // reset station selection
+        expect(mockStore.getState().app.selectedStations[0]).toBe('linestart'); // reset station selection
     });
 });

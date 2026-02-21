@@ -131,7 +131,7 @@ describe('AddStationModal', () => {
             expect(addedStations).toHaveLength(1);
 
             // open side panel
-            expect(mockStore.getState().app.selectedStation).toBe(addedStations[0]);
+            expect(mockStore.getState().app.selectedStations[0]).toBe(addedStations[0]);
             expect(mockStore.getState().app.sidePanelMode).toBe(SidePanelMode.STATION);
         });
     });

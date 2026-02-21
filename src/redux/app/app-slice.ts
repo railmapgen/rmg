@@ -13,7 +13,8 @@ interface AppState {
     canvasScale: number;
     canvasToShow: CanvasType[];
     sidePanelMode: SidePanelMode;
-    selectedStation: string;
+    // selectedStation: string; // Removed as redundant
+    selectedStations: string[];
     selectedColine?: number;
     selectedBranch: number;
     isShareTrackEnabled?: string[]; // for main line only, store the selections
@@ -29,7 +30,8 @@ const initialState: AppState = {
     canvasScale: 1,
     canvasToShow: Object.values(CanvasType),
     sidePanelMode: SidePanelMode.CLOSE,
-    selectedStation: 'linestart',
+    // selectedStation: 'linestart',
+    selectedStations: ['linestart'],
     selectedColine: undefined,
     selectedBranch: 0,
     isShareTrackEnabled: undefined,
@@ -65,7 +67,8 @@ const appSlice = createSlice({
         },
 
         setSelectedStation: (state, action: PayloadAction<string>) => {
-            state.selectedStation = action.payload;
+            // state.selectedStation = action.payload;
+            state.selectedStations = [action.payload];
         },
 
         setSelectedColine: (state, action: PayloadAction<number>) => {
@@ -122,6 +125,10 @@ const appSlice = createSlice({
             state.paletteAppClipOutput = action.payload;
             state.paletteAppClipInput = undefined;
         },
+
+        setSelectedStations: (state, action: PayloadAction<string[]>) => {
+            state.selectedStations = action.payload;
+        },
     },
 });
 
@@ -143,6 +150,7 @@ export const {
     openPaletteAppClip,
     closePaletteAppClip,
     onPaletteAppClipEmit,
+    setSelectedStations,
 } = appSlice.actions;
 
 const appReducer = appSlice.reducer;

@@ -14,7 +14,7 @@ export default function InfoSection() {
     const { t } = useTranslation();
     const dispatch = useRootDispatch();
 
-    const selectedStation = useRootSelector(state => state.app.selectedStation);
+    const selectedStation = useRootSelector(state => state.app.selectedStations[0]);
     console.log('InfoSection:: Rendering for', selectedStation);
     const style = useRootSelector(state => state.param.style);
     const { num, localisedName, localisedSecondaryName } = useRootSelector(

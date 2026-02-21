@@ -133,6 +133,8 @@
     },
 
     "StationSidePanel": {
+        "batch_edit": "일괄 편집",
+        "batch_selected": "{{count}}개 역 선택됨",
         "info": {
             "title": "역 정보",
             "num": "역 번호",

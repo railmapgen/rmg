@@ -30,7 +30,7 @@ export default function RemoveConfirmModal(props: RemoveConfirmModalProps) {
     const { t } = useTranslation();
 
     const dispatch = useRootDispatch();
-    const selectedStation = useRootSelector(state => state.app.selectedStation);
+    const selectedStation = useRootSelector(state => state.app.selectedStations[0]);
 
     const [error, setError] = useState(false);
 

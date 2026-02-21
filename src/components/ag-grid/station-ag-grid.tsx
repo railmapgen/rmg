@@ -13,7 +13,7 @@ import {
 import { RmgStyle, SidePanelMode, StationInfo } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { HStack } from '@chakra-ui/react';
-import { setIsShareTrackEnabled, setSelectedStation, setSidePanelMode } from '../../redux/app/app-slice';
+import { setIsShareTrackEnabled, setSelectedStations, setSidePanelMode } from '../../redux/app/app-slice';
 import { getRowSpanForColine } from '../../redux/param/coline-action';
 import GzmtrStationCode from './gzmtr-station-code';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
@@ -31,7 +31,7 @@ interface StationAgGridProps {
 type RowDataType = StationInfo & { id: string; rowSpan: [number, string | undefined] };
 
 const rowSelection: RowSelectionOptions = {
-    mode: 'singleRow',
+    mode: 'multiRow',
     checkboxes: false,
     enableClickSelection: true,
 };
@@ -168,7 +168,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
 
         if (selectedRowIds?.length) {
             dispatch(setSidePanelMode(SidePanelMode.STATION));
-            dispatch(setSelectedStation(selectedRowIds[0]));
+            dispatch(setSelectedStations(selectedRowIds));
             dispatch(setIsShareTrackEnabled(undefined));
         }
     }, []);

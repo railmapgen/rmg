@@ -136,6 +136,8 @@
     },
 
     "StationSidePanel": {
+        "batch_edit": "Batch Edit",
+        "batch_selected": "Selected {{count}} stations",
         "info": {
             "title": "Station info",
             "num": "Station code",

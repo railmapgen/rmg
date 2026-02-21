@@ -3,6 +3,7 @@ import { useRootSelector } from '../../redux';
 import { closePaletteAppClip, onPaletteAppClipEmit, setSidePanelMode } from '../../redux/app/app-slice';
 import { useDispatch } from 'react-redux';
 import { SidePanelMode } from '../../constants/constants';
+import BatchStationEditPanel from './batch-station-edit-panel';
 import StationSidePanel from './station-side-panel/station-side-panel';
 import StyleSidePanel from './style-side-panel/style-side-panel';
 import { RmgMultiLineString, RmgSidePanel, RmgSidePanelHeader } from '@railmapgen/rmg-components';
@@ -17,14 +18,20 @@ export default function SidePanel() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
-    const { sidePanelMode, selectedStation, paletteAppClipInput } = useRootSelector(state => state.app);
+    const { sidePanelMode, selectedStations, paletteAppClipInput } = useRootSelector(state => state.app);
+    const selectedStation = selectedStations[0] || 'linestart';
     const name = useRootSelector(state => state.param.stn_list[selectedStation]?.localisedName);
 
     const mode: Record<SidePanelMode, { header: ReactNode; body?: ReactNode; footer?: ReactNode }> = {
         STATION: {
-            header: <RmgMultiLineString text={name?.zh + '/' + name?.en || ''} />,
-            body: <StationSidePanel />,
-            footer: <StationSidePanelFooter />,
+            header:
+                selectedStations && selectedStations.length > 1 ? (
+                    t('StationSidePanel.batch_edit')
+                ) : (
+                    <RmgMultiLineString text={name?.zh + '/' + name?.en || ''} />
+                ),
+            body: selectedStations && selectedStations.length > 1 ? <BatchStationEditPanel /> : <StationSidePanel />,
+            footer: selectedStations && selectedStations.length > 1 ? null : <StationSidePanelFooter />,
         },
         STYLE: { header: t('StyleSidePanel.header'), body: <StyleSidePanel /> },
         BRANCH: { header: t('BranchSidePanel.header'), body: <BranchSidePanel /> },

@@ -11,7 +11,7 @@ export default function StationSidePanelFooter() {
     const { t } = useTranslation();
     const dispatch = useRootDispatch();
 
-    const { selectedStation } = useRootSelector(state => state.app);
+    const selectedStation = useRootSelector(state => state.app.selectedStations[0]);
     const { loop, style } = useRootSelector(state => state.param);
 
     const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);

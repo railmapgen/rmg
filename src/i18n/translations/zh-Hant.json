@@ -127,6 +127,8 @@
         }
     },
     "StationSidePanel": {
+        "batch_edit": "批次編輯",
+        "batch_selected": "已選取 {{count}} 個車站",
         "info": {
             "title": "車站資訊",
             "num": "車站編碼",

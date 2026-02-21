@@ -20,7 +20,7 @@ export default function InterchangeSection() {
     const { t } = useTranslation();
     const dispatch = useRootDispatch();
 
-    const selectedStation = useRootSelector(state => state.app.selectedStation);
+    const selectedStation = useRootSelector(state => state.app.selectedStations[0]);
     const { theme, style } = useRootSelector(state => state.param);
     const { transfer } = useRootSelector(state => state.param.stn_list[selectedStation]);
 
