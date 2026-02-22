@@ -354,7 +354,9 @@ export const _linePath = (
         const [xm, ym] = path['end'];
 
         // turnX: vertical turn position, offset from bifurcation point towards branch
-        const branchDirection = xBranch > xBifurcate ? 1 : -1;
+        // Offset moves turnX in the opposite direction of train travel (towards branch)
+        const branchOnRight = xBranch > xBifurcate;
+        const branchDirection = branchOnRight ? 1 : -1;
         const turnX = xBifurcate + branchDirection * branchOffset;
 
         if (type === 'main') {
@@ -369,7 +371,7 @@ export const _linePath = (
                 } else {
                     // main line, left direction, upper to center (merging back to main line)
                     if (bend === 'rightangle') {
-                        return `M ${x},${y} V ${ym} H ${turnX} H ${xm}`;
+                        return `M ${x},${y} H ${turnX} V ${ym} H ${xm}`;
                     }
                     // upper to center/rightangle, center to lower/diagonal
                     else return `M ${x - e1},${y} H ${xBranch + e2} L ${xm - e2},${ym} H ${xm}`;
@@ -404,7 +406,7 @@ export const _linePath = (
                 } else {
                     // pass line, left direction, upper to center (merging)
                     if (bend === 'rightangle') {
-                        return `M ${x},${y} V ${ym} H ${turnX} H ${xm + e1}`;
+                        return `M ${x},${y} H ${turnX} V ${ym} H ${xm + e1}`;
                     }
                     // upper to center/rightangle, center to lower/diagonal
                     else return `M ${x - e1},${y} H ${xBranch + e2} L ${xm - e2},${ym} H ${xm}`;
