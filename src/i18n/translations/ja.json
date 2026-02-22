@@ -95,7 +95,9 @@
             "legacyDestination": "終着駅表示板に路線名を表示",
             "overrideTerminal": "終着駅を上書き",
             "terminalZhName": "終着駅の日本語名",
-            "terminalEnName": "終着駅の英語名"
+            "terminalEnName": "終着駅の英語名",
+            "branchDistanceFactor": "分岐水平距離倍率",
+            "branchFirstStationOffset": "分岐水平曲がりオフセット"
         },
         "note": {
             "title": "備考",

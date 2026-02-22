@@ -263,6 +263,13 @@ export const updateParam = (param: { [x: string]: any }) => {
     v5_18_addStationNameSpacingAndSvgWidthPlatform(param);
     v5_21_addPsdLabel(param);
 
+    // Version 5.x
+    // Add default shmetro2020_info for SHMetro 2020 style branch layout control
+    param.shmetro2020_info = param.shmetro2020_info ?? {
+        branch_distance_factor: 1,
+        branch_first_station_offset: 0,
+    };
+
     sanitiseParam(param);
     return param;
 };

@@ -283,6 +283,21 @@ export interface RMGParam {
         midpoint_station?: string;
         clockwise?: boolean;
     };
+    /**
+     * SHMetro 2020 style branch layout control.
+     */
+    shmetro2020_info: {
+        /**
+         * Factor for the horizontal distance from bifurcation point to first branch station.
+         * Default is 1, meaning normal spacing.
+         */
+        branch_distance_factor: number;
+        /**
+         * Horizontal offset from bifurcation point where the vertical turn begins.
+         * Default is 0, meaning turn starts at bifurcation point.
+         */
+        branch_first_station_offset: number;
+    };
     version?: string; // RMG version
 }
 

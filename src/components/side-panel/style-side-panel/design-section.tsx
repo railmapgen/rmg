@@ -17,6 +17,8 @@ import {
     setTheme,
     staggerStationNames,
     toggleLineNameBeforeDestination,
+    setShmetro2020BranchDistanceFactor,
+    setShmetro2020BranchFirstStationOffset,
 } from '../../../redux/param/param-slice';
 import { PanelTypeGZMTR, PanelTypeShmetro, PsdLabel, RmgStyle, ShortDirection } from '../../../constants/constants';
 import { MdSwapVert } from 'react-icons/md';
@@ -45,6 +47,10 @@ export default function DesignSection() {
         info_panel_type,
         stn_list,
         loop,
+        shmetro2020_info: {
+            branch_distance_factor: branchDistanceFactor,
+            branch_first_station_offset: branchFirstStationOffset,
+        } = { branch_distance_factor: 1, branch_first_station_offset: 0 },
     } = useRootSelector(state => state.param);
 
     const lineServices = Math.max(...Object.values(stn_list).map(s => s.services.length));
@@ -225,6 +231,30 @@ export default function DesignSection() {
             minW: 'full',
             oneLine: true,
             hidden: ![RmgStyle.SHMetro].includes(style) || lineServices > 1 || loop,
+        },
+        {
+            type: 'slider',
+            label: t('StyleSidePanel.design.branchDistanceFactor'),
+            value: branchDistanceFactor,
+            min: 1,
+            max: 3,
+            step: 0.05,
+            onChange: value => {
+                dispatch(setShmetro2020BranchDistanceFactor(value));
+            },
+            hidden: ![RmgStyle.SHMetro].includes(style) || info_panel_type !== 'sh2020' || loop,
+        },
+        {
+            type: 'slider',
+            label: t('StyleSidePanel.design.branchFirstStationOffset'),
+            value: branchFirstStationOffset,
+            min: 0,
+            max: 3,
+            step: 0.05,
+            onChange: value => {
+                dispatch(setShmetro2020BranchFirstStationOffset(value));
+            },
+            hidden: ![RmgStyle.SHMetro].includes(style) || info_panel_type !== 'sh2020' || loop,
         },
     ];
 

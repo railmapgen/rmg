@@ -159,6 +159,14 @@ const paramSlice = createSlice({
             state.loop_info.clockwise = action.payload;
         },
 
+        setShmetro2020BranchDistanceFactor: (state, action: PayloadAction<number>) => {
+            state.shmetro2020_info!.branch_distance_factor = action.payload;
+        },
+
+        setShmetro2020BranchFirstStationOffset: (state, action: PayloadAction<number>) => {
+            state.shmetro2020_info!.branch_first_station_offset = action.payload;
+        },
+
         setCurrentStation: (state, action: PayloadAction<string>) => {
             state.current_stn_idx = action.payload;
         },
@@ -211,6 +219,8 @@ export const {
     setLoopBottomFactor,
     setLoopMidpointStation,
     setLoopClockwise,
+    setShmetro2020BranchDistanceFactor,
+    setShmetro2020BranchFirstStationOffset,
     setCurrentStation,
     setStation,
     setStations,

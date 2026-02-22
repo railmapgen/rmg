@@ -1,7 +1,7 @@
 import { adjacencyList, criticalPathMethod, drawLine, getStnState, getXShareMTR } from '../methods/share';
 import StationSHMetro from './station-shmetro';
 import ColineSHMetro from './coline-shmetro';
-import { AtLeastOneOfPartial, Services, StationDict } from '../../constants/constants';
+import { AtLeastOneOfPartial, PanelTypeShmetro, Services, StationDict, StationInfo } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import { useMemo } from 'react';
 
@@ -13,16 +13,40 @@ interface servicesPath {
 
 type Paths = AtLeastOneOfPartial<Record<Services, servicesPath>>;
 
+/** LeftW callback for SHMetro 2020: adds weight at merge points (multiple parents). */
+const createSh2020LeftW =
+    (k1: number) =>
+    (stnList: { [stnId: string]: StationInfo }, stnId: string): number => {
+        const stn = stnList[stnId];
+        if (!stn) return 0;
+        return stn.parents.length > 1 ? k1 - 1 : 0;
+    };
+
+/** RightW callback for SHMetro 2020: adds weight at bifurcation points (multiple children). */
+const createSh2020RightW =
+    (k1: number) =>
+    (stnList: { [stnId: string]: StationInfo }, stnId: string): number => {
+        const stn = stnList[stnId];
+        if (!stn) return 0;
+        return stn.children.length > 1 ? k1 - 1 : 0;
+    };
+
 const MainSHMetro = () => {
     const { routes, branches, depsStr: deps } = useRootSelector(store => store.helper);
     const param = useRootSelector(store => store.param);
-    const { svg_height, stn_list, branchSpacingPct, coline, direction } = useRootSelector(store => store.param);
+    const { svg_height, stn_list, branchSpacingPct, coline, direction, info_panel_type, shmetro2020_info } =
+        useRootSelector(store => store.param);
 
-    const adjMat = adjacencyList(
-        param.stn_list,
-        () => 0,
-        () => 0
-    );
+    const k1 = info_panel_type === PanelTypeShmetro.sh2020 ? (shmetro2020_info?.branch_distance_factor ?? 1) : 1;
+    const k2 = info_panel_type === PanelTypeShmetro.sh2020 ? (shmetro2020_info?.branch_first_station_offset ?? 0) : 0;
+
+    const adjMat = useMemo(() => {
+        return adjacencyList(
+            param.stn_list,
+            info_panel_type === PanelTypeShmetro.sh2020 ? createSh2020LeftW(k1) : () => 0,
+            info_panel_type === PanelTypeShmetro.sh2020 ? createSh2020RightW(k1) : () => 0
+        );
+    }, [JSON.stringify(param.stn_list), info_panel_type, k1]);
 
     const criticalPath = criticalPathMethod('linestart', 'lineend', adjMat);
     const realCP = criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat);
@@ -42,6 +66,9 @@ const MainSHMetro = () => {
         (acc, cur) => ({ ...acc, [cur]: lineXs[0] + (xShares[cur] / realCP.len) * (lineXs[1] - lineXs[0]) }),
         {} as typeof xShares
     );
+
+    const stationSpacing = (lineXs[1] - lineXs[0]) / realCP.len;
+    const branchOffset = k2 * stationSpacing;
 
     // const yShares = React.useMemo(
     //     () => {
@@ -125,8 +152,9 @@ const MainSHMetro = () => {
                                 direction,
                                 service,
                                 servicesPresent.length,
-                                stn_list
-                                // info_panel_type === 'sh2020' ? 'rightangle' : 'diagonal'
+                                stn_list,
+                                'rightangle',
+                                branchOffset
                             )
                         )
                         .filter(path => path !== ''),
@@ -220,7 +248,8 @@ export const _linePath = (
     services: Services,
     servicesMax: number,
     stn_list: StationDict, // only used to determine startFromTerminal or endAtTerminal
-    bend: 'rightangle' | 'diagonal' = 'rightangle'
+    bend: 'rightangle' | 'diagonal' = 'rightangle',
+    branchOffset: number = 0 // k_2: offset from bifurcation point where vertical turn begins
 ) => {
     let [prevY, prevX] = [] as number[];
     const path: { [key: string]: number[] } = {};
@@ -261,12 +290,12 @@ export const _linePath = (
         if (y === 0) {
             // merge back to main line
             if (y !== prevY) {
-                path['bifurcate'] = [prevX, prevY];
+                path['bifurcate'] = [prevX, prevY, x]; // [branchX, branchY, bifurcateX]
             }
         } else {
             // on the branch line
             if (y !== prevY) {
-                path['bifurcate'] = [x, y];
+                path['bifurcate'] = [x, y, prevX]; // [branchX, branchY, bifurcateX]
             }
         }
         path['end'] = [x, y];
@@ -318,68 +347,83 @@ export const _linePath = (
             }
         }
     } else {
-        // main line bifurcate here to become the branch line
-        // and path return here are only branch line
-        // keys in path: start, bifurcate, end
-        // TODO: make diagonal available to `sh`
-
+        // branch line path, keys: start, bifurcate, end
         const [x, y] = path['start'];
-        const xb = path['bifurcate'][0];
+        const xBranch = path['bifurcate'][0];
+        const xBifurcate = path['bifurcate'][2];
         const [xm, ym] = path['end'];
+
+        // turnX: vertical turn position, offset from bifurcation point towards branch
+        const branchDirection = xBranch > xBifurcate ? 1 : -1;
+        const turnX = xBifurcate + branchDirection * branchOffset;
+
         if (type === 'main') {
             if (direction === 'l') {
                 if (ym > y) {
-                    console.log(path);
-                    // main line, left direction, center to upper
-                    if (bend === 'rightangle') return `M ${x - e1},${y} H ${xm} V ${ym}`;
+                    // main line, left direction, center to upper (diverging from main line)
+                    if (bend === 'rightangle') {
+                        return `M ${x - e1},${y} H ${turnX} V ${ym} H ${xm}`;
+                    }
                     // center to upper/rightangle, lower to center/diagonal
-                    else return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm}`;
+                    else return `M ${x},${y} H ${x + e2} L ${xBranch - e2},${ym} H ${xm}`;
                 } else {
-                    // wrong marker
-                    // main line, left direction, upper to center
-                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm}`;
+                    // main line, left direction, upper to center (merging back to main line)
+                    if (bend === 'rightangle') {
+                        return `M ${x},${y} V ${ym} H ${turnX} H ${xm}`;
+                    }
                     // upper to center/rightangle, center to lower/diagonal
-                    else return `M ${x - e1},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
+                    else return `M ${x - e1},${y} H ${xBranch + e2} L ${xm - e2},${ym} H ${xm}`;
                 }
             } else {
                 if (ym > y) {
-                    // wrong marker
-                    // main line, right direction, upper to center
-                    if (bend === 'rightangle') return `M ${x},${y} H ${xm} V ${ym}`;
+                    // main line, right direction, upper to center (merging back)
+                    if (bend === 'rightangle') {
+                        return `M ${x},${y} H ${turnX} V ${ym} H ${xm}`;
+                    }
                     // upper to center/rightangle, center to lower/diagonal
-                    else return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm + e1}`;
+                    else return `M ${x},${y} H ${x + e2} L ${xBranch - e2},${ym} H ${xm + e1}`;
                 } else {
-                    // main line, right direction, center to upper
-                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e1}`;
+                    // main line, right direction, center to upper (diverging)
+                    if (bend === 'rightangle') {
+                        return `M ${x},${y} H ${turnX} V ${ym} H ${xm + e1}`;
+                    }
                     // center to upper/rightangle, lower to center/diagonal
-                    else return `M ${x},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
+                    else return `M ${x},${y} H ${xBranch + e2} L ${xm - e2},${ym} H ${xm}`;
                 }
             }
         } else {
             // type === 'pass'
             if (direction === 'l') {
                 if (ym > y) {
-                    // pass line, left direction, center to upper
-                    if (bend === 'rightangle') return `M ${x - e1},${y} H ${xm} V ${ym}`;
+                    // pass line, left direction, center to upper (diverging)
+                    if (bend === 'rightangle') {
+                        return `M ${x - e1},${y} H ${turnX} V ${ym} H ${xm}`;
+                    }
                     // center to upper/rightangle, lower to center/diagonal
-                    else return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm + e1}`;
+                    else return `M ${x},${y} H ${x + e2} L ${xBranch - e2},${ym} H ${xm + e1}`;
                 } else {
-                    // pass line, left direction, upper to center
-                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e1}`;
+                    // pass line, left direction, upper to center (merging)
+                    if (bend === 'rightangle') {
+                        return `M ${x},${y} V ${ym} H ${turnX} H ${xm + e1}`;
+                    }
                     // upper to center/rightangle, center to lower/diagonal
-                    else return `M ${x - e1},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
+                    else return `M ${x - e1},${y} H ${xBranch + e2} L ${xm - e2},${ym} H ${xm}`;
                 }
             } else {
                 if (ym > y) {
-                    // pass line, right direction, upper to center
-                    if (bend === 'rightangle') return `M ${x - e1},${y} H ${xm} V ${ym}`;
+                    // pass line, right direction, upper to center (merging)
+                    if (bend === 'rightangle') {
+                        return `M ${x - e1},${y} H ${turnX} V ${ym} H ${xm}`;
+                    }
                     // upper to center/rightangle, center to lower/diagonal
-                    return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm + e1}`;
+                    return `M ${x},${y} H ${x + e2} L ${xBranch - e2},${ym} H ${xm + e1}`;
                 } else {
-                    // pass line, right direction, center to upper
-                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e1}`;
+                    // pass line, right direction, center to upper (diverging)
+                    if (bend === 'rightangle') {
+                        return `M ${x},${y} H ${turnX} V ${ym} H ${xm + e1}`;
+                    }
                     // center to upper/rightangle, lower to center/diagonal
-                    return `M ${x - e1},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
+                    return `M ${x - e1},${y} H ${xBranch + e2} L ${xm - e2},${ym} H ${xm}`;
                 }
             }
         }
@@ -474,9 +518,9 @@ export const DirectionElements = () => {
                 <text className="rmg-name__zh">列车前进方向</text>
                 <path
                     d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
-                    stroke={!isColine ? undefined : 'var(--rmg-black)'}
-                    strokeWidth={!isColine ? undefined : 5}
-                    fill={!isColine ? 'var(--rmg-theme-colour)' : 'var(--rmg-white)'}
+                    stroke={isColine ? 'var(--rmg-black)' : 'var(--rmg-theme-colour)'}
+                    strokeWidth={7}
+                    fill={'none'}
                     transform={`translate(${direction === 'l' ? -30 : 125},-5)rotate(${
                         direction === 'l' ? 0 : 180
                     })scale(0.15)`}
