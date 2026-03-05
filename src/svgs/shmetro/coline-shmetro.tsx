@@ -94,6 +94,7 @@ export const ColineSHMetro = (props: Props) => {
                                 service,
                                 servicesPresent.length,
                                 stn_list,
+                                undefined,
                                 'diagonal'
                             ),
                             colors: colineStn.colors,

@@ -153,6 +153,7 @@ const MainSHMetro = () => {
                                 service,
                                 servicesPresent.length,
                                 stn_list,
+                                stnStates,
                                 'rightangle',
                                 branchOffset
                             )
@@ -248,6 +249,7 @@ export const _linePath = (
     services: Services,
     servicesMax: number,
     stn_list: StationDict, // only used to determine startFromTerminal or endAtTerminal
+    stnStates?: { [stnId: string]: -1 | 0 | 1 }, // when provided, terminal caps on main paths are only drawn for state=1 stations
     bend: 'rightangle' | 'diagonal' = 'rightangle',
     branchOffset: number = 0 // k_2: offset from bifurcation point where vertical turn begins
 ) => {
@@ -261,20 +263,22 @@ export const _linePath = (
     }[services]; // TODO: enum Services could be a better idea?
     const servicesPassDelta = servicesMax > 1 ? 50 : 0;
 
-    // extra short line on either end
-    let e1 = 30;
     // check if path starts from or ends at the terminal
-    // and change e1 to 0 if it matches
+    let endAtTerminal = false;
+    let startFromTerminal = false;
     if (stnIds.length > 0) {
-        let startFromTerminal = false,
-            endAtTerminal = false;
         if (stn_list[stnIds.at(-1) || 0].children.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
             endAtTerminal = true;
-        } else if (stn_list[stnIds.at(0) || 0].parents.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
+        }
+        if (stn_list[stnIds.at(0) || 0].parents.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
             startFromTerminal = true;
         }
-        e1 = startFromTerminal || endAtTerminal ? e1 : 0;
     }
+    // extra short line on either end (only at terminals)
+    const e1 = startFromTerminal || endAtTerminal ? 30 : 0;
+    // main-path terminal caps: only drawn when the terminal station is truly colored (state=1)
+    const startCap = startFromTerminal && stnStates?.[stnIds.at(0) ?? ''] === 1 ? e1 + servicesDelta : 0;
+    const endCap = endAtTerminal && stnStates?.[stnIds.at(-1) ?? ''] === 1 ? e1 + servicesDelta : 0;
 
     // diagonal use e2 to make soft line
     const e2 = 30;
@@ -333,11 +337,7 @@ export const _linePath = (
         const [x, y] = path['start'],
             h = path['end'][0];
         if (type === 'main') {
-            if (direction === 'l') {
-                return `M ${x - e1 - servicesDelta},${y} H ${h}`;
-            } else {
-                return `M ${x},${y} H ${h + e1 + servicesDelta}`;
-            }
+            return `M ${x - startCap},${y} H ${h + endCap}`;
         } else {
             // type === 'pass'
             if (direction === 'l') {
@@ -360,73 +360,29 @@ export const _linePath = (
         const turnX = xBifurcate + branchDirection * branchOffset;
 
         if (type === 'main') {
-            if (direction === 'l') {
-                if (ym > y) {
-                    // main line, left direction, center to upper (diverging from main line)
-                    if (bend === 'rightangle') {
-                        return `M ${x - e1},${y} H ${turnX} V ${ym} H ${xm}`;
-                    }
-                    // center to upper/rightangle, lower to center/diagonal
-                    else return `M ${x},${y} H ${x + e2} L ${xBranch - e2},${ym} H ${xm}`;
-                } else {
-                    // main line, left direction, upper to center (merging back to main line)
-                    if (bend === 'rightangle') {
-                        return `M ${x},${y} H ${turnX} V ${ym} H ${xm}`;
-                    }
-                    // upper to center/rightangle, center to lower/diagonal
-                    else return `M ${x - e1},${y} H ${xBranch + e2} L ${xm - e2},${ym} H ${xm}`;
-                }
+            if (bend === 'rightangle') {
+                return `M ${x - startCap},${y} H ${turnX} V ${ym} H ${xm + endCap}`;
+            }
+            // diagonal — branch position determines curve direction, not train direction
+            if (ym > y) {
+                // branch is at start (upper), main line is at end (center)
+                return `M ${x - startCap},${y} H ${x + e2} L ${xBranch - e2},${ym} H ${xm + endCap}`;
             } else {
-                if (ym > y) {
-                    // main line, right direction, upper to center (merging back)
-                    if (bend === 'rightangle') {
-                        return `M ${x},${y} H ${turnX} V ${ym} H ${xm}`;
-                    }
-                    // upper to center/rightangle, center to lower/diagonal
-                    else return `M ${x},${y} H ${x + e2} L ${xBranch - e2},${ym} H ${xm + e1}`;
-                } else {
-                    // main line, right direction, center to upper (diverging)
-                    if (bend === 'rightangle') {
-                        return `M ${x},${y} H ${turnX} V ${ym} H ${xm + e1}`;
-                    }
-                    // center to upper/rightangle, lower to center/diagonal
-                    else return `M ${x},${y} H ${xBranch + e2} L ${xm - e2},${ym} H ${xm}`;
-                }
+                // branch is at end (upper), main line is at start (center)
+                return `M ${x - startCap},${y} H ${xBranch + e2} L ${xm - e2},${ym} H ${xm + endCap}`;
             }
         } else {
-            // type === 'pass'
-            if (direction === 'l') {
-                if (ym > y) {
-                    // pass line, left direction, center to upper (diverging)
-                    if (bend === 'rightangle') {
-                        return `M ${x - e1},${y} H ${turnX} V ${ym} H ${xm}`;
-                    }
-                    // center to upper/rightangle, lower to center/diagonal
-                    else return `M ${x},${y} H ${x + e2} L ${xBranch - e2},${ym} H ${xm + e1}`;
-                } else {
-                    // pass line, left direction, upper to center (merging)
-                    if (bend === 'rightangle') {
-                        return `M ${x},${y} H ${turnX} V ${ym} H ${xm + e1}`;
-                    }
-                    // upper to center/rightangle, center to lower/diagonal
-                    else return `M ${x - e1},${y} H ${xBranch + e2} L ${xm - e2},${ym} H ${xm}`;
-                }
+            // type === 'pass' — direction-independent, e1 is always applied
+            if (bend === 'rightangle') {
+                // ym > y: pass starts at center, ends at main; ym < y: reversed
+                return ym > y
+                    ? `M ${x - e1},${y} H ${turnX} V ${ym} H ${xm}`
+                    : `M ${x},${y} H ${turnX} V ${ym} H ${xm + e1}`;
+            }
+            if (ym > y) {
+                return `M ${x},${y} H ${x + e2} L ${xBranch - e2},${ym} H ${xm + e1}`;
             } else {
-                if (ym > y) {
-                    // pass line, right direction, upper to center (merging)
-                    if (bend === 'rightangle') {
-                        return `M ${x - e1},${y} H ${turnX} V ${ym} H ${xm}`;
-                    }
-                    // upper to center/rightangle, center to lower/diagonal
-                    return `M ${x},${y} H ${x + e2} L ${xBranch - e2},${ym} H ${xm + e1}`;
-                } else {
-                    // pass line, right direction, center to upper (diverging)
-                    if (bend === 'rightangle') {
-                        return `M ${x},${y} H ${turnX} V ${ym} H ${xm + e1}`;
-                    }
-                    // center to upper/rightangle, lower to center/diagonal
-                    return `M ${x - e1},${y} H ${xBranch + e2} L ${xm - e2},${ym} H ${xm}`;
-                }
+                return `M ${x - e1},${y} H ${xBranch + e2} L ${xm - e2},${ym} H ${xm}`;
             }
         }
     }
