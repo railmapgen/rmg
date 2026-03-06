@@ -167,6 +167,14 @@ const paramSlice = createSlice({
             state.shmetro2020_info!.branch_first_station_offset = action.payload;
         },
 
+        setShmetro2020BranchBendType: (state, action: PayloadAction<'rightangle' | '45degree'>) => {
+            state.shmetro2020_info!.branch_bend_type = action.payload;
+        },
+
+        setShmetro2020BranchAlignEndpoints: (state, action: PayloadAction<boolean>) => {
+            state.shmetro2020_info!.branch_align_endpoints = action.payload;
+        },
+
         setCurrentStation: (state, action: PayloadAction<string>) => {
             state.current_stn_idx = action.payload;
         },
@@ -221,6 +229,8 @@ export const {
     setLoopClockwise,
     setShmetro2020BranchDistanceFactor,
     setShmetro2020BranchFirstStationOffset,
+    setShmetro2020BranchBendType,
+    setShmetro2020BranchAlignEndpoints,
     setCurrentStation,
     setStation,
     setStations,

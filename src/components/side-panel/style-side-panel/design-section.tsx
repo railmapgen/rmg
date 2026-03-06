@@ -19,6 +19,8 @@ import {
     toggleLineNameBeforeDestination,
     setShmetro2020BranchDistanceFactor,
     setShmetro2020BranchFirstStationOffset,
+    setShmetro2020BranchBendType,
+    setShmetro2020BranchAlignEndpoints,
 } from '../../../redux/param/param-slice';
 import { PanelTypeGZMTR, PanelTypeShmetro, PsdLabel, RmgStyle, ShortDirection } from '../../../constants/constants';
 import { MdSwapVert } from 'react-icons/md';
@@ -50,7 +52,14 @@ export default function DesignSection() {
         shmetro2020_info: {
             branch_distance_factor: branchDistanceFactor,
             branch_first_station_offset: branchFirstStationOffset,
-        } = { branch_distance_factor: 1, branch_first_station_offset: 0 },
+            branch_bend_type: branchBendType,
+            branch_align_endpoints: branchAlignEndpoints,
+        } = {
+            branch_distance_factor: 1,
+            branch_first_station_offset: 0,
+            branch_bend_type: 'rightangle' as const,
+            branch_align_endpoints: false,
+        },
     } = useRootSelector(state => state.param);
 
     const lineServices = Math.max(...Object.values(stn_list).map(s => s.services.length));
@@ -237,7 +246,7 @@ export default function DesignSection() {
             label: t('StyleSidePanel.design.branchDistanceFactor'),
             value: branchDistanceFactor,
             min: 1,
-            max: 3,
+            max: 5,
             step: 0.05,
             onChange: value => {
                 dispatch(setShmetro2020BranchDistanceFactor(value));
@@ -249,10 +258,32 @@ export default function DesignSection() {
             label: t('StyleSidePanel.design.branchFirstStationOffset'),
             value: branchFirstStationOffset,
             min: 0,
-            max: 3,
+            max: 5,
             step: 0.05,
             onChange: value => {
                 dispatch(setShmetro2020BranchFirstStationOffset(value));
+            },
+            hidden: ![RmgStyle.SHMetro].includes(style) || info_panel_type !== 'sh2020' || loop,
+        },
+        {
+            type: 'select',
+            label: t('StyleSidePanel.design.branchBendType'),
+            value: branchBendType,
+            options: {
+                rightangle: t('StyleSidePanel.design.branchBendRightAngle'),
+                '45degree': t('StyleSidePanel.design.branchBendDiagonal'),
+            },
+            onChange: value => {
+                dispatch(setShmetro2020BranchBendType(value as 'rightangle' | '45degree'));
+            },
+            hidden: ![RmgStyle.SHMetro].includes(style) || info_panel_type !== 'sh2020' || loop,
+        },
+        {
+            type: 'switch',
+            label: t('StyleSidePanel.design.branchAlignEndpoints'),
+            isChecked: branchAlignEndpoints,
+            onChange: value => {
+                dispatch(setShmetro2020BranchAlignEndpoints(value));
             },
             hidden: ![RmgStyle.SHMetro].includes(style) || info_panel_type !== 'sh2020' || loop,
         },

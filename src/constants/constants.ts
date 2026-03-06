@@ -297,6 +297,16 @@ export interface RMGParam {
          * Default is 0, meaning turn starts at bifurcation point.
          */
         branch_first_station_offset: number;
+        /**
+         * Type of bend at bifurcation: 'rightangle' (90°) or '45degree' (45°).
+         * Default is 'rightangle'.
+         */
+        branch_bend_type: 'rightangle' | '45degree';
+        /**
+         * Whether to align shorter branch endpoints to match the longer parallel branch.
+         * Default is false.
+         */
+        branch_align_endpoints: boolean;
     };
     version?: string; // RMG version
 }

@@ -92,7 +92,11 @@
             "terminalZhName": "終點站中文名稱",
             "terminalEnName": "終點站英文名稱",
             "branchDistanceFactor": "分支水平間距倍數",
-            "branchFirstStationOffset": "分支水平轉彎偏移量"
+            "branchFirstStationOffset": "分支水平轉彎偏移量",
+            "branchBendType": "分支彎道類型",
+            "branchBendRightAngle": "直角 (90°)",
+            "branchBendDiagonal": "斜線 (45°)",
+            "branchAlignEndpoints": "對齊分支端點"
         },
         "note": {
             "title": "備註",

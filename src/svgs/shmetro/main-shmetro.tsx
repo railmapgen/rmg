@@ -37,14 +37,18 @@ const MainSHMetro = () => {
     const { svg_height, stn_list, branchSpacingPct, coline, direction, info_panel_type, shmetro2020_info } =
         useRootSelector(store => store.param);
 
-    const k1 = info_panel_type === PanelTypeShmetro.sh2020 ? (shmetro2020_info?.branch_distance_factor ?? 1) : 1;
-    const k2 = info_panel_type === PanelTypeShmetro.sh2020 ? (shmetro2020_info?.branch_first_station_offset ?? 0) : 0;
+    // Only apply SHMetro 2020-specific layout when the panel type matches.
+    const sh2020 = info_panel_type === PanelTypeShmetro.sh2020 ? shmetro2020_info : undefined;
+    const k1 = sh2020?.branch_distance_factor ?? 1;
+    const k2 = sh2020?.branch_first_station_offset ?? 0;
+    const bendType = sh2020?.branch_bend_type ?? 'rightangle';
+    const alignBranchEndpoints = sh2020?.branch_align_endpoints ?? false;
 
     const adjMat = useMemo(() => {
         return adjacencyList(
             param.stn_list,
-            info_panel_type === PanelTypeShmetro.sh2020 ? createSh2020LeftW(k1) : () => 0,
-            info_panel_type === PanelTypeShmetro.sh2020 ? createSh2020RightW(k1) : () => 0
+            sh2020 ? createSh2020LeftW(k1) : () => 0,
+            sh2020 ? createSh2020RightW(k1) : () => 0
         );
     }, [JSON.stringify(param.stn_list), info_panel_type, k1]);
 
@@ -62,13 +66,48 @@ const MainSHMetro = () => {
         (param.svgWidth.railmap * param.padding) / 100,
         param.svgWidth.railmap * (1 - param.padding / 100),
     ];
-    const xs = Object.keys(xShares).reduce(
-        (acc, cur) => ({ ...acc, [cur]: lineXs[0] + (xShares[cur] / realCP.len) * (lineXs[1] - lineXs[0]) }),
-        {} as typeof xShares
-    );
-
     const stationSpacing = (lineXs[1] - lineXs[0]) / realCP.len;
     const branchOffset = k2 * stationSpacing;
+
+    // Derive pixel x-positions from xShares, then optionally redistribute shorter
+    // parallel branch segments so their endpoints align with the longer segment.
+    const xs = useMemo(() => {
+        const result = Object.keys(xShares).reduce(
+            (acc, cur) => ({ ...acc, [cur]: lineXs[0] + (xShares[cur] / realCP.len) * (lineXs[1] - lineXs[0]) }),
+            {} as typeof xShares
+        );
+
+        // Align parallel branch endpoints: the segment with more exclusive stations
+        // defines the x-range; the shorter segment is redistributed to match.
+        if (alignBranchEndpoints) {
+            const mainLine = branches[0];
+
+            branches.slice(1).forEach(branch => {
+                const junctions = branch.filter(stnId => mainLine.includes(stnId));
+                if (junctions.length < 2) return;
+                const [jStart, jEnd] = [junctions[0], junctions[junctions.length - 1]];
+
+                const mainExcl = mainLine.slice(mainLine.indexOf(jStart) + 1, mainLine.indexOf(jEnd));
+                const branchExcl = branch.slice(branch.indexOf(jStart) + 1, branch.indexOf(jEnd));
+                if (mainExcl.length < 1 || branchExcl.length < 1) return;
+
+                const longer = mainExcl.length >= branchExcl.length ? mainExcl : branchExcl;
+                const shorter = mainExcl.length >= branchExcl.length ? branchExcl : mainExcl;
+                const firstX = result[longer[0]];
+                const lastX = result[longer[longer.length - 1]];
+
+                if (shorter.length === 1) {
+                    result[shorter[0]] = (firstX + lastX) / 2;
+                } else {
+                    shorter.forEach((stnId, i) => {
+                        result[stnId] = firstX + (i / (shorter.length - 1)) * (lastX - firstX);
+                    });
+                }
+            });
+        }
+
+        return result;
+    }, [xShares, lineXs[0], lineXs[1], realCP.len, alignBranchEndpoints, branches.toString()]);
 
     // const yShares = React.useMemo(
     //     () => {
@@ -154,7 +193,7 @@ const MainSHMetro = () => {
                                 servicesPresent.length,
                                 stn_list,
                                 stnStates,
-                                'rightangle',
+                                bendType,
                                 branchOffset
                             )
                         )
@@ -250,7 +289,7 @@ export const _linePath = (
     servicesMax: number,
     stn_list: StationDict, // only used to determine startFromTerminal or endAtTerminal
     stnStates?: { [stnId: string]: -1 | 0 | 1 }, // when provided, terminal caps on main paths are only drawn for state=1 stations
-    bend: 'rightangle' | 'diagonal' = 'rightangle',
+    bend: 'rightangle' | 'diagonal' | '45degree' = 'rightangle',
     branchOffset: number = 0 // k_2: offset from bifurcation point where vertical turn begins
 ) => {
     let [prevY, prevX] = [] as number[];
@@ -280,7 +319,7 @@ export const _linePath = (
     const startCap = startFromTerminal && stnStates?.[stnIds.at(0) ?? ''] === 1 ? e1 + servicesDelta : 0;
     const endCap = endAtTerminal && stnStates?.[stnIds.at(-1) ?? ''] === 1 ? e1 + servicesDelta : 0;
 
-    // diagonal use e2 to make soft line
+    // smooth diagonal offset (used by 'diagonal' bend for coline)
     const e2 = 30;
 
     stnIds.forEach(stnId => {
@@ -359,26 +398,52 @@ export const _linePath = (
         const branchDirection = branchOnRight ? 1 : -1;
         const turnX = xBifurcate + branchDirection * branchOffset;
 
+        // For 45° diagonal: dx = |dy|
+        // Right branch: diagonal goes right from turnX  → diagX = turnX + dy
+        // Left branch:  diagonal arrives at turnX from left → diagX = turnX - dy
+        const dy = Math.abs(ym - y);
+        const diagX = turnX + branchDirection * dy;
+        // TODO: When bend === '45degree', k1 (branch_distance_factor) effectively absorbs one
+        // extra station-spacing worth of horizontal room — without it, diagX would overshoot
+        // xBranch (the first branch station) for a right-branch, which is nonsensical.
+        // Consequently, k1 values smaller than one station spacing are meaningless in this mode.
+        // Enforcing a proper lower bound on k1 for 45° bends is non-trivial under the current
+        // architecture (k1 feeds into the adjacency-matrix weights before x-positions are known),
+        // so this constraint is left as a known limitation for now.
+
+        // For right-branch: diagonal STARTS at turnX → H turnX, L diagX
+        // For left-branch:  diagonal ENDS at turnX   → H diagX, L turnX
+        const diagH = branchOnRight ? turnX : diagX; // horizontal target (start y-level)
+        const diagL = branchOnRight ? diagX : turnX; // diagonal target (end y-level)
+
         if (type === 'main') {
             if (bend === 'rightangle') {
                 return `M ${x - startCap},${y} H ${turnX} V ${ym} H ${xm + endCap}`;
             }
-            // diagonal — branch position determines curve direction, not train direction
+            if (bend === '45degree') {
+                return `M ${x - startCap},${y} H ${diagH} L ${diagL},${ym} H ${xm + endCap}`;
+            }
+            // diagonal — smooth free-form slope (used by coline)
             if (ym > y) {
-                // branch is at start (upper), main line is at end (center)
                 return `M ${x - startCap},${y} H ${x + e2} L ${xBranch - e2},${ym} H ${xm + endCap}`;
             } else {
-                // branch is at end (upper), main line is at start (center)
                 return `M ${x - startCap},${y} H ${xBranch + e2} L ${xm - e2},${ym} H ${xm + endCap}`;
             }
         } else {
             // type === 'pass' — direction-independent, e1 is always applied
             if (bend === 'rightangle') {
-                // ym > y: pass starts at center, ends at main; ym < y: reversed
                 return ym > y
                     ? `M ${x - e1},${y} H ${turnX} V ${ym} H ${xm}`
                     : `M ${x},${y} H ${turnX} V ${ym} H ${xm + e1}`;
             }
+            if (bend === '45degree') {
+                // diagH/diagL depend only on branchOnRight, not on ym direction;
+                // ym only determines which end carries the e1 terminal cap.
+                return ym > y
+                    ? `M ${x - e1},${y} H ${diagH} L ${diagL},${ym} H ${xm}`
+                    : `M ${x},${y} H ${diagH} L ${diagL},${ym} H ${xm + e1}`;
+            }
+            // diagonal — smooth free-form slope (used by coline)
             if (ym > y) {
                 return `M ${x},${y} H ${x + e2} L ${xBranch - e2},${ym} H ${xm + e1}`;
             } else {

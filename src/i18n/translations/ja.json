@@ -97,7 +97,11 @@
             "terminalZhName": "終着駅の日本語名",
             "terminalEnName": "終着駅の英語名",
             "branchDistanceFactor": "分岐水平距離倍率",
-            "branchFirstStationOffset": "分岐水平曲がりオフセット"
+            "branchFirstStationOffset": "分岐水平曲がりオフセット",
+            "branchBendType": "分岐カーブ形状",
+            "branchBendRightAngle": "直角 (90°)",
+            "branchBendDiagonal": "斜め (45°)",
+            "branchAlignEndpoints": "分岐端点を揃える"
         },
         "note": {
             "title": "備考",

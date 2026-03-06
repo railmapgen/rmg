@@ -265,9 +265,12 @@ export const updateParam = (param: { [x: string]: any }) => {
 
     // Version 5.x
     // Add default shmetro2020_info for SHMetro 2020 style branch layout control
-    param.shmetro2020_info = param.shmetro2020_info ?? {
+    param.shmetro2020_info = {
         branch_distance_factor: 1,
         branch_first_station_offset: 0,
+        branch_bend_type: 'rightangle',
+        branch_align_endpoints: false,
+        ...param.shmetro2020_info,
     };
 
     sanitiseParam(param);
