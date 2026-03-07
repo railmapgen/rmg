@@ -301,7 +301,6 @@ const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
         // only take the coline stations in the first branch(general main line)
         // as coline stations in lower branches will be taken care by ColineStationGroup
         .filter(stn => branches[0].includes(stn.curStn));
-    console.log(colineStations);
 
     return (
         <g id="stations_in_mainline">
@@ -309,6 +308,7 @@ const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
                 const { curStn, x, y, color } = colineStation;
                 const height = (stnStates[curStn] === -1 ? 0 : LINE_WIDTH) + COLINE_GAP + LINE_WIDTH;
                 const dy = (stnStates[curStn] === -1 ? 0 : -LINE_WIDTH) - COLINE_GAP - LINE_WIDTH / 2;
+
                 return (
                     <g key={curStn} transform={`translate(${x},${y})`}>
                         {info_panel_type === 'sh2020' ? (
@@ -320,7 +320,9 @@ const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
                                 y={dy}
                                 fill={stnStates[curStn] === -1 ? 'var(--rmg-grey)' : color[2]}
                             />
-                        ) : (
+                        ) : info_panel_type === 'sh2024' ? null : (
+                            // sh (old style): use int2_sh to bridge toward coline line
+                            // sh2024: icon fully handled by StationGroup/StationSHMetro (Sh2024ColineCapsule)
                             <use
                                 xlinkHref="#int2_sh"
                                 stroke="var(--rmg-theme-colour)"

@@ -9,6 +9,7 @@ import {
     Services,
 } from '../../../constants/constants';
 import { useRootSelector } from '../../../redux';
+import { calculateColineStations } from '../../methods/shmetro-coline';
 
 /**
  * Which direction to display station name. Currently shmetro only.
@@ -20,12 +21,34 @@ interface Props {
     nameDirection: NameDirection;
     services: Services[];
     color?: ColourHex; // Control the station color if coline is in effect.
+    colineAbove?: boolean; // When true (loop top segment), the coline track is visually above the main track, so topColor/bottomColor are swapped.
 }
 
 export const StationSHMetro = (props: Props) => {
-    const { stnId, nameDirection, services, color } = props;
-    const { stn_list, info_panel_type } = useRootSelector(store => store.param);
+    const { stnId, nameDirection, services, color, colineAbove = false } = props;
+    const { stn_list, info_panel_type, coline } = useRootSelector(store => store.param);
+    const { branches } = useRootSelector(store => store.helper);
     const stnInfo = stn_list[stnId];
+
+    // Compute coline membership and color in one pass to avoid calling calculateColineStations twice.
+    const { isColineStation, colineEntryColor } = useMemo(() => {
+        if (info_panel_type !== PanelTypeShmetro.sh2024 || Object.keys(coline).length === 0)
+            return { isColineStation: false, colineEntryColor: null };
+        // External-branch-only stations (not on the main line) are never coline stations.
+        // Without this guard, a coline entry whose linePath endpoints land on branches[0]
+        // (e.g. the merge/split point) would incorrectly flag every non-shared station
+        // on that external branch as a coline station.
+        if (!branches[0].includes(stnId)) return { isColineStation: false, colineEntryColor: null };
+        const entry = calculateColineStations(
+            Object.values(coline).filter(co => co.display),
+            branches
+        ).find(co => co.linePath.includes(stnId));
+        return {
+            isColineStation: !!entry,
+            colineEntryColor: entry?.colors?.at(0)?.[2] ?? null,
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [info_panel_type, JSON.stringify(coline), branches.toString(), stnId]);
 
     let stationIconStyle: string;
     const stationIconColor: { [pos: string]: string } = {};
@@ -36,7 +59,7 @@ export const StationSHMetro = (props: Props) => {
             ...(stnInfo.transfer.groups.at(2)?.lines || []),
         ].length;
 
-        stationIconColor.stroke = 'var(--rmg-theme-colour)';
+        stationIconColor.stroke = color ?? 'var(--rmg-theme-colour)';
         if (stnInfo.services.length === 3) {
             stationIconStyle = 'stn_sh_2020_direct';
         } else if (stnInfo.services.length === 2) {
@@ -46,17 +69,19 @@ export const StationSHMetro = (props: Props) => {
             stationIconStyle = 'stn_sh_2024_osysi3';
         } else if (int_length > 0 && osi_osysi_length === 0) {
             // 仅换乘车站
-            stationIconStyle = 'stn_sh_2024_int';
+            stationIconStyle = isColineStation ? 'stn_sh_2024_int_coline' : 'stn_sh_2024_int';
         } else if (int_length > 0 && osi_osysi_length > 0) {
             // 站内换乘+出站换乘
-            stationIconStyle = 'stn_sh_2024_int_osysi';
+            stationIconStyle = isColineStation ? 'stn_sh_2024_int_osysi_coline' : 'stn_sh_2024_int_osysi';
         } else if (int_length === 0 && osi_osysi_length === 1) {
             // 仅2线出站换乘
-            stationIconStyle = 'stn_sh_2024_osysi2';
+            stationIconStyle = isColineStation ? 'stn_sh_2024_osysi2_coline' : 'stn_sh_2024_osysi2';
+        } else if (isColineStation) {
+            stationIconStyle = 'stn_sh_2024_coline';
         } else {
             stationIconStyle = 'stn_sh_2024';
             delete stationIconColor.stroke;
-            stationIconColor.fill = 'var(--rmg-theme-colour)';
+            stationIconColor.fill = color ?? 'var(--rmg-theme-colour)';
         }
     } else {
         const non_osysi_transfer = [
@@ -72,7 +97,14 @@ export const StationSHMetro = (props: Props) => {
             non_osysi_transfer.length > 0 ? 'var(--rmg-black)' : (color ?? 'var(--rmg-theme-colour)');
     }
 
-    const dr = nameDirection === 'left' || nameDirection === 'right' ? 90 : 0;
+    const dr =
+        nameDirection === 'left' || nameDirection === 'right'
+            ? info_panel_type === PanelTypeShmetro.sh2024
+                ? nameDirection === 'left'
+                    ? -90
+                    : 90
+                : 90
+            : 0;
     return (
         <>
             <StationNameGElement
@@ -81,11 +113,21 @@ export const StationSHMetro = (props: Props) => {
                 nameDirection={nameDirection}
                 services={services}
             />
-            <use
-                xlinkHref={`#${stationIconStyle}`}
-                transform={`rotate(${dr})`}
-                {...stationIconColor} // different styles use either `fill` or `stroke`
-            />
+            {stationIconStyle.endsWith('_coline') ? (
+                <g transform={`rotate(${dr})`} filter='url("#station-border")'>
+                    <IndoorSh2024ColineCapsule
+                        hasOsysi={stationIconStyle === 'stn_sh_2024_int_osysi_coline'}
+                        topColor={colineAbove ? (colineEntryColor ?? 'var(--rmg-theme-colour)') : 'var(--rmg-theme-colour)'}
+                        bottomColor={colineAbove ? 'var(--rmg-theme-colour)' : (colineEntryColor ?? 'var(--rmg-theme-colour)')}
+                    />
+                </g>
+            ) : (
+                <use
+                    xlinkHref={`#${stationIconStyle}`}
+                    transform={`rotate(${dr})`}
+                    {...stationIconColor} // different styles use either `fill` or `stroke`
+                />
+            )}
             {/* This should be in IntBoxGroupProps, put here because the station icon will cover this */}
             {stnInfo.services.length > 1 && (
                 <text className="rmg-name__zh" writingMode="tb" fontSize="60%" dy="-12">
@@ -97,6 +139,32 @@ export const StationSHMetro = (props: Props) => {
 };
 
 export default StationSHMetro;
+
+/**
+ * Two-tone elongated capsule for sh2024 indoor coline stations.
+ * upper half (y≤0): topColor    lower half (y≥0): bottomColor
+ */
+const IndoorSh2024ColineCapsule = (props: { hasOsysi: boolean; topColor: string; bottomColor: string }) => {
+    const { hasOsysi, topColor, bottomColor } = props;
+    if (hasOsysi) {
+        return (
+            <>
+                <circle cy="-14" r="4" fill="var(--rmg-white)" stroke="none" />
+                <path fill="var(--rmg-white)" stroke="none" d="M -4,-4 a 4,4 0 1 1 8,0 V12 a 4,4 0 1 1 -8,0 Z" />
+                <circle cy="-14" r="4" fill="none" strokeWidth={2} stroke={topColor} />
+                <path fill="none" strokeWidth={2} stroke={topColor} d="M -4,6 V-4 a 4,4 0 1 1 8,0 V6" />
+                <path fill="none" strokeWidth={2} stroke={bottomColor} d="M 4,6 V12 a 4,4 0 1 1 -8,0 V6" />
+            </>
+        );
+    }
+    return (
+        <>
+            <path fill="var(--rmg-white)" stroke="none" d="M -5,-12 a 5,5 0 1 1 10,0 V12 a 5,5 0 1 1 -10,0 Z" />
+            <path fill="none" strokeWidth={2} stroke={topColor} d="M -5,6 V-12 a 5,5 0 1 1 10,0 V6" />
+            <path fill="none" strokeWidth={2} stroke={bottomColor} d="M 5,6 V12 a 5,5 0 1 1 -10,0 V6" />
+        </>
+    );
+};
 
 const stationNameDY = (
     info_panel_type: PanelTypeShmetro | PanelTypeGZMTR,
@@ -189,8 +257,8 @@ const StationNameGElement = (props: StationNameGElementProps) => {
             stationNameDY(info_panel_type, nameDirection, nameENLn) -
             STATION_NAME_2024_ZH_FONT_SIZE / 2 -
             INT_BOX_SIZE.height / 2,
-        left: 7,
-        right: 7,
+        left: 12,
+        right: 12,
     };
 
     return (
@@ -219,22 +287,27 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 </>
             ) : (
                 <>
-                    {info_panel_type !== PanelTypeShmetro.sh2024 && (
-                        <line
-                            x1={nameDirection === 'left' ? -50 : 15}
-                            x2={nameDirection === 'left' ? -15 : 50}
-                            y1={0}
-                            y2={0}
-                            stroke="black"
-                        />
+                    {info_panel_type !== PanelTypeShmetro.sh2024 ? (
+                        <>
+                            <line
+                                x1={nameDirection === 'left' ? -50 : 15}
+                                x2={nameDirection === 'left' ? -15 : 50}
+                                y1={0}
+                                y2={0}
+                                stroke="black"
+                            />
+                            <line
+                                x1={nameDirection === 'left' ? -50 : 50}
+                                x2={nameDirection === 'left' ? -50 : 50}
+                                y1={-30}
+                                y2={30}
+                                stroke="black"
+                            />
+                        </>
+                    ) : (
+                        /* sh2024: horizontal lead going outward from station icon to name position */
+                        <line x1={0} x2={nameDirection === 'left' ? -60 : 60} y1={0} y2={0} stroke="black" />
                     )}
-                    <line
-                        x1={nameDirection === 'left' ? -50 : 50}
-                        x2={nameDirection === 'left' ? -50 : 50}
-                        y1={-30}
-                        y2={30}
-                        stroke="black"
-                    />
                 </>
             )}
 
@@ -246,6 +319,20 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                         services={services}
                     />
                 )
+            ) : nameDirection === 'left' || nameDirection === 'right' ? (
+                // For side stations, place int boxes OUTSIDE the station name (further from main line).
+                // StationName has its own translate(±60, dy), so add that offset to nameSize coords.
+                <g
+                    transform={`translate(${
+                        nameDirection === 'left' ? nameSize.x - 65 : nameSize.x + nameSize.width + 65
+                    },0)`}
+                >
+                    <IntBoxGroup2024
+                        groups={groups}
+                        dy={intBoxGroup2024DY[nameDirection]}
+                        align={nameDirection === 'left' ? 'end' : 'start'}
+                    />
+                </g>
             ) : (
                 <IntBoxGroup2024 groups={groups} dy={intBoxGroup2024DY[nameDirection]} />
             )}
@@ -447,15 +534,16 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
 };
 
 const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
-    props: { groups: InterchangeGroup[]; dy: number },
+    props: { groups: InterchangeGroup[]; dy: number; align?: 'start' | 'center' | 'end' },
     ref: Ref<SVGGElement>
 ) {
-    const { groups, dy } = props;
+    const { groups, dy, align = 'center' } = props;
     const directionPolarity = 1;
 
     const transfer = [groups.at(0)?.lines ?? [], groups.at(1)?.lines ?? [], groups.at(2)?.lines ?? []];
 
-    const [outOfSystemLine, setOutOfSystemLine] = useState(0); // also for start point of 出站换乘
+    const [outOfSystemLine, setOutOfSystemLine] = useState(0); // also for start point of 出站换乘 (groups[1])
+    const [outOfSystemLine2, setOutOfSystemLine2] = useState(0); // for start point of 出站换乘 (groups[2])
     const [intBoxesDX, setIntBoxesDX] = useState<{ [k in string]: number }>({});
     const textLineRefs = useRef<{ [k in string]: SVGGElement }>({});
     const [intBoxGroupWidth, setIntBoxGroupWidth] = useState(0);
@@ -506,11 +594,25 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
                 dx += getBBoxWidth(info);
             });
         }
-        transfer[2].forEach(info => {
-            dx += getBBoxWidth(info);
-        });
+        let outOfSystemLine2 = 0;
+        if (transfer[2].length) {
+            const elementWidth = INT_BOX_SIZE.height;
+            const hasPrevious = transfer[0].length > 0 || transfer[1].length > 0;
+            if (hasPrevious) {
+                outOfSystemLine2 = dx + INT_BOX_SIZE.padding;
+                dx += elementWidth + 2 * INT_BOX_SIZE.padding;
+            } else {
+                dx += INT_BOX_SIZE.padding;
+                outOfSystemLine2 = 0;
+                dx += elementWidth;
+            }
+            transfer[2].forEach(info => {
+                dx += getBBoxWidth(info);
+            });
+        }
         setIntBoxesDX(intBoxDX);
         setOutOfSystemLine(outOfStationLine);
+        setOutOfSystemLine2(outOfSystemLine2);
         setIntBoxGroupWidth(dx);
     }, [JSON.stringify(transfer)]);
 
@@ -541,7 +643,14 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
         );
     };
 
-    const dx = onlyOneNonOutOfStationTextInt ? 0 : -intBoxGroupWidth / 2;
+    const dx =
+        align === 'end'
+            ? -intBoxGroupWidth // right-align: all boxes end at the origin (outer side for left stations)
+            : align === 'start'
+              ? 0 // left-align: all boxes start at the origin (outer side for right stations)
+              : onlyOneNonOutOfStationTextInt
+                ? 0
+                : -intBoxGroupWidth / 2; // center (default)
     return (
         <g ref={ref} fontSize={30} textAnchor="middle" transform={`translate(${dx},${dy})`}>
             {transfer[0].map(makeBoxElement)}
@@ -569,7 +678,30 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
                     {transfer[1].map(makeBoxElement)}
                 </>
             )}
-            {transfer[2].map(makeBoxElement)}
+            {transfer[2].length > 0 && (
+                <>
+                    {(transfer[0].length > 0 || transfer[1].length > 0) && (
+                        <line
+                            y1={-INT_BOX_SIZE.height}
+                            y2={0}
+                            x1={outOfSystemLine2 - 2}
+                            x2={outOfSystemLine2 - 2}
+                            stroke="var(--rmg-black)"
+                        />
+                    )}
+                    <g
+                        transform={`translate(${outOfSystemLine2},-13.5)`}
+                        fill="var(--rmg-black)"
+                        fontSize="15"
+                        textAnchor="start"
+                        className="rmg-name__zh"
+                    >
+                        <text dy="-4">出站</text>
+                        <text dy="11">换乘</text>
+                    </g>
+                    {transfer[2].map(makeBoxElement)}
+                </>
+            )}
         </g>
     );
 });

@@ -3,6 +3,7 @@ import { Translation } from '@railmapgen/rmg-translate';
 import { forwardRef, memo, Ref, SVGProps, useEffect, useMemo, useRef, useState } from 'react';
 import { ExtendedInterchangeInfo, Facilities, InterchangeGroup, PanelTypeShmetro } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
+import { calculateColineStations } from '../methods/shmetro-coline';
 
 const INT_BOX_SIZE = {
     width: {
@@ -19,12 +20,44 @@ interface Props {
     color?: ColourHex; // Control the station color if coline is in effect.
     bank?: -1 | 0 | 1; // Loopline requires station element to be horizontal. Default to 0 (no bank to other side).
     direction?: 'l' | 'r'; // Loopline requires station element to change direction. Default to current param.
+    colineAbove?: boolean; // When true (loop top segment), the coline track is visually above the main track, so topColor/bottomColor are swapped.
 }
 
 const StationSHMetro = (props: Props) => {
-    const { stnId, stnState, color, bank: bank_, direction: direction_override } = props;
-    const { direction: direction_param, info_panel_type, stn_list, loop } = useRootSelector(store => store.param);
+    const { stnId, stnState, color, bank: bank_, direction: direction_override, colineAbove = false } = props;
+    const {
+        direction: direction_param,
+        info_panel_type,
+        stn_list,
+        loop,
+        coline,
+        loop_info,
+    } = useRootSelector(store => store.param);
+    const { branches } = useRootSelector(store => store.helper);
     const stnInfo = stn_list[stnId];
+
+    // Compute coline membership and color in one pass to avoid calling calculateColineStations twice.
+    // isColineStation is used for both sh2024 (capsule icon) and sh2020 ("本站" offset).
+    const { isColineStation, colineEntryColor } = useMemo(() => {
+        if (
+            (info_panel_type !== PanelTypeShmetro.sh2024 && info_panel_type !== PanelTypeShmetro.sh2020) ||
+            Object.keys(coline).length === 0
+        )
+            return { isColineStation: false, colineEntryColor: null };
+        // External-branch-only stations (not on the main line) are never coline stations.
+        // Without this guard, a coline entry whose linePath endpoints land on branches[0]
+        // (e.g. the merge/split point) would incorrectly flag every non-shared station
+        // on that external branch as a coline station.
+        if (!branches[0].includes(stnId)) return { isColineStation: false, colineEntryColor: null };
+        const entry = calculateColineStations(
+            Object.values(coline).filter(co => co.display),
+            branches
+        ).find(co => co.linePath.includes(stnId));
+        return {
+            isColineStation: !!entry,
+            colineEntryColor: entry?.colors?.at(0)?.[2] ?? null,
+        };
+    }, [info_panel_type, JSON.stringify(coline), branches.toString(), stnId]);
     const direction = direction_override ?? direction_param;
 
     // shift station name if the line bifurcate here
@@ -52,17 +85,17 @@ const StationSHMetro = (props: Props) => {
             stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
         } else if (int_length > 0 && osi_osysi_length === 0) {
             // 仅换乘车站
-            stationIconStyle = 'stn_sh_2024_int';
+            stationIconStyle = isColineStation ? 'stn_sh_2024_int_coline' : 'stn_sh_2024_int';
             stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
         } else if (int_length > 0 && osi_osysi_length > 0) {
             // 站内换乘+出站换乘
-            stationIconStyle = 'stn_sh_2024_int_osysi';
+            stationIconStyle = isColineStation ? 'stn_sh_2024_int_osysi_coline' : 'stn_sh_2024_int_osysi';
             stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
         } else if (int_length === 0 && osi_osysi_length === 1) {
             // 仅2线出站换乘
-            stationIconStyle = 'stn_sh_2024_osysi2';
+            stationIconStyle = isColineStation ? 'stn_sh_2024_osysi2_coline' : 'stn_sh_2024_osysi2';
             stationIconColor.stroke = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
-        } else stationIconStyle = 'stn_sh_2020';
+        } else stationIconStyle = isColineStation ? 'stn_sh_2024_coline' : 'stn_sh_2020';
         stationIconColor.fill = stnState === -1 ? 'gray' : color ? color : 'var(--rmg-theme-colour)';
     } else if (info_panel_type === PanelTypeShmetro.sh2020) {
         if (stnInfo.services.length === 3) stationIconStyle = 'stn_sh_2020_direct';
@@ -85,14 +118,43 @@ const StationSHMetro = (props: Props) => {
     const is2020or2024 = info_panel_type === PanelTypeShmetro.sh2020 || info_panel_type === PanelTypeShmetro.sh2024;
     const dy = (is2020or2024 ? -20 : -6) + Math.abs(bank) * (is2020or2024 ? 25 : 11);
     const dr = bank ? 0 : direction === 'l' ? -45 : 45;
+    // Ordinary stations (no transfer icon) keep the outward offset in parallelogram mode;
+    // all other icons are shifted inward (iconBankX=0) regardless of parallelogram mode.
+    const isOrdinaryStation = stationIconStyle === 'stn_sh_2020' || stationIconStyle === 'stn_sh';
+    const iconBankX = is2020or2024 ? (loop_info.bank && isOrdinaryStation ? bank * 5 : 0) : 0;
     return (
         <>
-            <use
-                xlinkHref={`#${stationIconStyle}`}
-                {...stationIconColor} // different styles use either `fill` or `stroke`
-                // sh and sh2020 have different headings of int_sh, so -1 | 1 is multiplied
-                transform={`translate(${bank * (is2020or2024 ? 5 : 0)},0)rotate(${bank * 90 * (is2020or2024 ? 1 : -1)})`}
-            />
+            {stationIconStyle.endsWith('_coline') ? (
+                <g
+                    transform={`translate(${iconBankX},0)rotate(${bank * 90 * (is2020or2024 ? 1 : -1)})`}
+                    filter='url("#station-border")'
+                >
+                    <Sh2024ColineCapsule
+                        hasOsysi={stationIconStyle === 'stn_sh_2024_int_osysi_coline'}
+                        topColor={
+                            stnState === -1
+                                ? 'gray'
+                                : colineAbove
+                                  ? (colineEntryColor ?? 'var(--rmg-theme-colour)')
+                                  : 'var(--rmg-theme-colour)'
+                        }
+                        bottomColor={
+                            stnState === -1
+                                ? 'gray'
+                                : colineAbove
+                                  ? 'var(--rmg-theme-colour)'
+                                  : (colineEntryColor ?? 'var(--rmg-theme-colour)')
+                        }
+                    />
+                </g>
+            ) : (
+                <use
+                    xlinkHref={`#${stationIconStyle}`}
+                    {...stationIconColor} // different styles use either `fill` or `stroke`
+                    // sh and sh2020 have different headings of int_sh, so -1 | 1 is multiplied
+                    transform={`translate(${iconBankX},0)rotate(${bank * 90 * (is2020or2024 ? 1 : -1)})`}
+                />
+            )}
             <g transform={`translate(${dx},${dy})rotate(${dr})`}>
                 <StationNameGElement
                     name={stnInfo.localisedName}
@@ -105,12 +167,51 @@ const StationSHMetro = (props: Props) => {
                     intPadding={stnInfo.int_padding}
                 />
             </g>
-            {stnState === 0 && <CurrentStationText />}
+            {stnState === 0 &&
+                (isColineStation ? (
+                    <g transform="translate(0,12)">
+                        <CurrentStationText />
+                    </g>
+                ) : (
+                    <CurrentStationText />
+                ))}
         </>
     );
 };
 
 export default StationSHMetro;
+
+/**
+ * Two-tone elongated capsule for sh2024 coline stations.
+ * upper half (y≤0): topColor    lower half (y≥0): bottomColor
+ */
+const Sh2024ColineCapsule = (props: { hasOsysi: boolean; topColor: string; bottomColor: string }) => {
+    const { hasOsysi, topColor, bottomColor } = props;
+    if (hasOsysi) {
+        return (
+            <>
+                {/* white fill background */}
+                <circle cy="-14" r="4" fill="var(--rmg-white)" stroke="none" />
+                <path fill="var(--rmg-white)" stroke="none" d="M -4,-4 a 4,4 0 1 1 8,0 V12 a 4,4 0 1 1 -8,0 Z" />
+                {/* upper half (y≤6): circle + upper arc */}
+                <circle cy="-14" r="4" fill="none" strokeWidth={2} stroke={topColor} />
+                <path fill="none" strokeWidth={2} stroke={topColor} d="M -4,6 V-4 a 4,4 0 1 1 8,0 V6" />
+                {/* lower half (y≥6): lower arc */}
+                <path fill="none" strokeWidth={2} stroke={bottomColor} d="M 4,6 V12 a 4,4 0 1 1 -8,0 V6" />
+            </>
+        );
+    }
+    return (
+        <>
+            {/* white fill background */}
+            <path fill="var(--rmg-white)" stroke="none" d="M -5,-12 a 5,5 0 1 1 10,0 V12 a 5,5 0 1 1 -10,0 Z" />
+            {/* upper half (y≤6): top cap + sides */}
+            <path fill="none" strokeWidth={2} stroke={topColor} d="M -5,6 V-12 a 5,5 0 1 1 10,0 V6" />
+            {/* lower half (y≥6): sides + bottom cap */}
+            <path fill="none" strokeWidth={2} stroke={bottomColor} d="M 5,6 V12 a 5,5 0 1 1 -10,0 V6" />
+        </>
+    );
+};
 
 interface StationNameGElementProps {
     name: Translation;
@@ -358,7 +459,8 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
 
     const transfer = [groups.at(0)?.lines ?? [], groups.at(1)?.lines ?? [], groups.at(2)?.lines ?? []];
 
-    const [outOfSystemLine, setOutOfSystemLine] = useState([0, 0]); // also for start point of 出站换乘
+    const [outOfSystemLine, setOutOfSystemLine] = useState([0, 0]); // also for start point of 出站换乘 (groups[1])
+    const [outOfSystemLine2, setOutOfSystemLine2] = useState([0, 0]); // for start point of 出站换乘 (groups[2])
     const [intBoxesDX, setIntBoxesDX] = useState<{ [k in string]: number }>({});
     const textLineRefs = useRef<{ [k in string]: SVGGElement }>({});
     const [intBoxGroupWidth, setIntBoxGroupWidth] = useState(0);
@@ -409,11 +511,27 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
                 dx += getBBoxWidth(info);
             });
         }
-        transfer[2].forEach(info => {
-            dx += getBBoxWidth(info);
-        });
+        let outOfSystemLine2 = [0, 0];
+        if (transfer[2].length) {
+            // same label logic as transfer[1]: show 出站换乘 before out-of-system transfer boxes
+            const elementWidth = INT_BOX_SIZE.height;
+            const hasPrevious = transfer[0].length > 0 || transfer[1].length > 0;
+            if (hasPrevious) {
+                outOfSystemLine2 = [dx, dx + elementWidth];
+                dx += elementWidth * 2;
+            } else {
+                dx += INT_BOX_SIZE.padding;
+                // hide this line if there is no previous transfer
+                outOfSystemLine2 = [dx, dx];
+                dx += elementWidth;
+            }
+            transfer[2].forEach(info => {
+                dx += getBBoxWidth(info);
+            });
+        }
         setIntBoxesDX(intBoxDX);
         setOutOfSystemLine(outOfSystemLine);
+        setOutOfSystemLine2(outOfSystemLine2);
         setIntBoxGroupWidth(dx);
     }, [JSON.stringify(transfer), direction]);
 
@@ -464,7 +582,29 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
                     {transfer[1].map(makeBoxElement)}
                 </>
             )}
-            {transfer[2].map(makeBoxElement)}
+            {transfer[2].length > 0 && (
+                <>
+                    {(transfer[0].length > 0 || transfer[1].length > 0) && (
+                        <line
+                            x1={(outOfSystemLine2[0] - 2) * directionPolarity}
+                            x2={(outOfSystemLine2[1] - 2) * directionPolarity}
+                            stroke={stnState < 0 ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
+                            strokeWidth={0.5}
+                        />
+                    )}
+                    <g
+                        transform={`translate(${outOfSystemLine2[1] * directionPolarity},-13.5)`}
+                        fill={stnState < 0 ? 'var(--rmg-grey)' : 'var(--rmg-black)'}
+                        fontSize="10"
+                        textAnchor={direction === 'l' ? 'start' : 'end'}
+                        className="rmg-name__zh"
+                    >
+                        <text dy="1.5">出站</text>
+                        <text dy="12.5">换乘</text>
+                    </g>
+                    {transfer[2].map(makeBoxElement)}
+                </>
+            )}
         </g>
     );
 });
