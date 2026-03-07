@@ -116,7 +116,7 @@ export const StationSHMetro = (props: Props) => {
             {stationIconStyle.endsWith('_coline') ? (
                 <g transform={`rotate(${dr})`} filter='url("#station-border")'>
                     <IndoorSh2024ColineCapsule
-                        hasOsysi={stationIconStyle === 'stn_sh_2024_int_osysi_coline'}
+                        hasOsysi={stationIconStyle === 'stn_sh_2024_int_osysi_coline' || stationIconStyle === 'stn_sh_2024_osysi2_coline'}
                         topColor={colineAbove ? (colineEntryColor ?? 'var(--rmg-theme-colour)') : 'var(--rmg-theme-colour)'}
                         bottomColor={colineAbove ? 'var(--rmg-theme-colour)' : (colineEntryColor ?? 'var(--rmg-theme-colour)')}
                     />
