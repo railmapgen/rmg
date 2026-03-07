@@ -191,13 +191,13 @@ const Sh2024ColineCapsule = (props: { hasOsysi: boolean; topColor: string; botto
         return (
             <>
                 {/* white fill background */}
-                <circle cy="-14" r="4" fill="var(--rmg-white)" stroke="none" />
-                <path fill="var(--rmg-white)" stroke="none" d="M -4,-4 a 4,4 0 1 1 8,0 V12 a 4,4 0 1 1 -8,0 Z" />
+                <circle cy="-12" r="5" fill="var(--rmg-white)" stroke="none" />
+                <path fill="var(--rmg-white)" stroke="none" d="M -5,0 a 5,5 0 1 1 10,0 V12 a 5,5 0 1 1 -10,0 Z" />
                 {/* upper half (y≤6): circle + upper arc */}
-                <circle cy="-14" r="4" fill="none" strokeWidth={2} stroke={topColor} />
-                <path fill="none" strokeWidth={2} stroke={topColor} d="M -4,6 V-4 a 4,4 0 1 1 8,0 V6" />
+                <circle cy="-12" r="5" fill="none" strokeWidth={2} stroke={topColor} />
+                <path fill="none" strokeWidth={2} stroke={topColor} d="M -5,6 V0 a 5,5 0 1 1 10,0 V6" />
                 {/* lower half (y≥6): lower arc */}
-                <path fill="none" strokeWidth={2} stroke={bottomColor} d="M 4,6 V12 a 4,4 0 1 1 -8,0 V6" />
+                <path fill="none" strokeWidth={2} stroke={bottomColor} d="M 5,6 V12 a 5,5 0 1 1 -10,0 V6" />
             </>
         );
     }
