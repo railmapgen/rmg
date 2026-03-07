@@ -10,6 +10,7 @@ import {
 } from '../../../constants/constants';
 import { useRootSelector } from '../../../redux';
 import { calculateColineStations } from '../../methods/shmetro-coline';
+import { MultiSegmentCapsule } from '../sh2024-capsule';
 
 /**
  * Which direction to display station name. Currently shmetro only.
@@ -142,27 +143,37 @@ export default StationSHMetro;
 
 /**
  * Two-tone elongated capsule for sh2024 indoor coline stations.
- * upper half (y≤0): topColor    lower half (y≥0): bottomColor
+ * topColor covers the upper portion, bottomColor the lower portion.
+ * When hasOsysi is true, a separate indicator circle is shown above the capsule body.
  */
 const IndoorSh2024ColineCapsule = (props: { hasOsysi: boolean; topColor: string; bottomColor: string }) => {
     const { hasOsysi, topColor, bottomColor } = props;
     if (hasOsysi) {
         return (
             <>
-                <circle cy="-12" r="5" fill="var(--rmg-white)" stroke="none" />
-                <path fill="var(--rmg-white)" stroke="none" d="M -5,0 a 5,5 0 1 1 10,0 V12 a 5,5 0 1 1 -10,0 Z" />
-                <circle cy="-12" r="5" fill="none" strokeWidth={2} stroke={topColor} />
-                <path fill="none" strokeWidth={2} stroke={topColor} d="M -5,6 V0 a 5,5 0 1 1 10,0 V6" />
-                <path fill="none" strokeWidth={2} stroke={bottomColor} d="M 5,6 V12 a 5,5 0 1 1 -10,0 V6" />
+                {/* indicator circle above the capsule body */}
+                <circle cy={-12} r={5} fill="var(--rmg-white)" stroke="none" />
+                <circle cy={-12} r={5} fill="none" strokeWidth={2} stroke={topColor} />
+                <MultiSegmentCapsule
+                    r={5}
+                    yTop={-5}
+                    segments={[
+                        { h: 11, color: topColor },
+                        { h: 11, color: bottomColor },
+                    ]}
+                />
             </>
         );
     }
     return (
-        <>
-            <path fill="var(--rmg-white)" stroke="none" d="M -5,-12 a 5,5 0 1 1 10,0 V12 a 5,5 0 1 1 -10,0 Z" />
-            <path fill="none" strokeWidth={2} stroke={topColor} d="M -5,6 V-12 a 5,5 0 1 1 10,0 V6" />
-            <path fill="none" strokeWidth={2} stroke={bottomColor} d="M 5,6 V12 a 5,5 0 1 1 -10,0 V6" />
-        </>
+        <MultiSegmentCapsule
+            r={5}
+            yTop={-17}
+            segments={[
+                { h: 23, color: topColor },
+                { h: 11, color: bottomColor },
+            ]}
+        />
     );
 };
 
