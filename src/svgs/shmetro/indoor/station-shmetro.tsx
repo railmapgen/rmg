@@ -62,9 +62,9 @@ export const StationSHMetro = (props: Props) => {
 
         stationIconColor.stroke = color ?? 'var(--rmg-theme-colour)';
         if (stnInfo.services.length === 3) {
-            stationIconStyle = 'stn_sh_2020_direct';
+            stationIconStyle = 'direct_indoor_sh';
         } else if (stnInfo.services.length === 2) {
-            stationIconStyle = 'stn_sh_2020_express';
+            stationIconStyle = 'express_indoor_sh';
         } else if (osi_osysi_length > 1) {
             // 不管多少条站内换乘，只要有超过1个的出站换乘就是3个圆了
             stationIconStyle = 'stn_sh_2024_osysi3';

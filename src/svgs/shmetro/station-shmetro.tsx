@@ -197,10 +197,10 @@ const Sh2024ColineCapsule = (props: { hasOsysi: boolean; topColor: string; botto
                 <circle cy={-12} r={5} fill="none" strokeWidth={2} stroke={topColor} />
                 <MultiSegmentCapsule
                     r={5}
-                    yTop={-5}
+                    yTop={-6}
                     segments={[
-                        { h: 11, color: topColor },
-                        { h: 11, color: bottomColor },
+                        { h: 12, color: topColor },
+                        { h: 12, color: bottomColor },
                     ]}
                 />
             </>
@@ -209,10 +209,10 @@ const Sh2024ColineCapsule = (props: { hasOsysi: boolean; topColor: string; botto
     return (
         <MultiSegmentCapsule
             r={5}
-            yTop={-17}
+            yTop={-18}
             segments={[
-                { h: 23, color: topColor },
-                { h: 11, color: bottomColor },
+                { h: 24, color: topColor },
+                { h: 12, color: bottomColor },
             ]}
         />
     );
