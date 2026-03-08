@@ -17,10 +17,10 @@ import {
     setTheme,
     staggerStationNames,
     toggleLineNameBeforeDestination,
-    setShmetro2020BranchDistanceFactor,
-    setShmetro2020BranchFirstStationOffset,
-    setShmetro2020BranchBendType,
-    setShmetro2020BranchAlignEndpoints,
+    setBranchInfoDistanceFactor,
+    setBranchInfoFirstStationOffset,
+    setBranchInfoBendType,
+    setBranchInfoAlignEndpoints,
 } from '../../../redux/param/param-slice';
 import { PanelTypeGZMTR, PanelTypeShmetro, PsdLabel, RmgStyle, ShortDirection } from '../../../constants/constants';
 import { MdSwapVert } from 'react-icons/md';
@@ -49,16 +49,11 @@ export default function DesignSection() {
         info_panel_type,
         stn_list,
         loop,
-        shmetro2020_info: {
-            branch_distance_factor: branchDistanceFactor,
-            branch_first_station_offset: branchFirstStationOffset,
-            branch_bend_type: branchBendType,
-            branch_align_endpoints: branchAlignEndpoints,
-        } = {
-            branch_distance_factor: 1,
-            branch_first_station_offset: 0,
-            branch_bend_type: 'rightangle' as const,
-            branch_align_endpoints: false,
+        branch_info: {
+            distance_factor: branchDistanceFactor,
+            first_station_offset: branchFirstStationOffset,
+            bend_type: branchBendType,
+            align_endpoints: branchAlignEndpoints,
         },
     } = useRootSelector(state => state.param);
 
@@ -249,7 +244,7 @@ export default function DesignSection() {
             max: 5,
             step: 0.05,
             onChange: value => {
-                dispatch(setShmetro2020BranchDistanceFactor(value));
+                dispatch(setBranchInfoDistanceFactor(value));
             },
             hidden: ![RmgStyle.SHMetro].includes(style) || info_panel_type !== 'sh2020' || loop,
         },
@@ -261,7 +256,7 @@ export default function DesignSection() {
             max: 5,
             step: 0.05,
             onChange: value => {
-                dispatch(setShmetro2020BranchFirstStationOffset(value));
+                dispatch(setBranchInfoFirstStationOffset(value));
             },
             hidden: ![RmgStyle.SHMetro].includes(style) || info_panel_type !== 'sh2020' || loop,
         },
@@ -274,7 +269,7 @@ export default function DesignSection() {
                 '45degree': t('StyleSidePanel.design.branchBendDiagonal'),
             },
             onChange: value => {
-                dispatch(setShmetro2020BranchBendType(value as 'rightangle' | '45degree'));
+                dispatch(setBranchInfoBendType(value as 'rightangle' | '45degree'));
             },
             hidden: ![RmgStyle.SHMetro].includes(style) || info_panel_type !== 'sh2020' || loop,
         },
@@ -283,7 +278,7 @@ export default function DesignSection() {
             label: t('StyleSidePanel.design.branchAlignEndpoints'),
             isChecked: branchAlignEndpoints,
             onChange: value => {
-                dispatch(setShmetro2020BranchAlignEndpoints(value));
+                dispatch(setBranchInfoAlignEndpoints(value));
             },
             hidden: ![RmgStyle.SHMetro].includes(style) || info_panel_type !== 'sh2020' || loop,
         },

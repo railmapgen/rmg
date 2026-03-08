@@ -34,15 +34,17 @@ const createSh2020RightW =
 const MainSHMetro = () => {
     const { routes, branches, depsStr: deps } = useRootSelector(store => store.helper);
     const param = useRootSelector(store => store.param);
-    const { svg_height, stn_list, branchSpacingPct, coline, direction, info_panel_type, shmetro2020_info } =
-        useRootSelector(store => store.param);
+    const { svg_height, stn_list, branch_info, coline, direction, info_panel_type } = useRootSelector(
+        store => store.param
+    );
+    const { spacing_pct: branchSpacingPct } = branch_info;
 
     // Only apply SHMetro 2020-specific layout when the panel type matches.
-    const sh2020 = info_panel_type === PanelTypeShmetro.sh2020 ? shmetro2020_info : undefined;
-    const k1 = sh2020?.branch_distance_factor ?? 1;
-    const k2 = sh2020?.branch_first_station_offset ?? 0;
-    const bendType = sh2020?.branch_bend_type ?? 'rightangle';
-    const alignBranchEndpoints = sh2020?.branch_align_endpoints ?? false;
+    const sh2020 = info_panel_type === PanelTypeShmetro.sh2020 ? branch_info : undefined;
+    const k1 = sh2020?.distance_factor ?? 1;
+    const k2 = sh2020?.first_station_offset ?? 0;
+    const bendType = sh2020?.bend_type ?? 'rightangle';
+    const alignBranchEndpoints = sh2020?.align_endpoints ?? false;
 
     const adjMat = useMemo(() => {
         return adjacencyList(

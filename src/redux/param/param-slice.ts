@@ -42,7 +42,7 @@ const paramSlice = createSlice({
         },
 
         setBranchSpacingPct: (state, action: PayloadAction<number>) => {
-            state.branchSpacingPct = action.payload;
+            state.branch_info.spacing_pct = action.payload;
         },
 
         setPaddingPercentage: (state, action: PayloadAction<number>) => {
@@ -159,20 +159,20 @@ const paramSlice = createSlice({
             state.loop_info.clockwise = action.payload;
         },
 
-        setShmetro2020BranchDistanceFactor: (state, action: PayloadAction<number>) => {
-            state.shmetro2020_info!.branch_distance_factor = action.payload;
+        setBranchInfoDistanceFactor: (state, action: PayloadAction<number>) => {
+            state.branch_info.distance_factor = action.payload;
         },
 
-        setShmetro2020BranchFirstStationOffset: (state, action: PayloadAction<number>) => {
-            state.shmetro2020_info!.branch_first_station_offset = action.payload;
+        setBranchInfoFirstStationOffset: (state, action: PayloadAction<number>) => {
+            state.branch_info.first_station_offset = action.payload;
         },
 
-        setShmetro2020BranchBendType: (state, action: PayloadAction<'rightangle' | '45degree'>) => {
-            state.shmetro2020_info!.branch_bend_type = action.payload;
+        setBranchInfoBendType: (state, action: PayloadAction<'rightangle' | '45degree'>) => {
+            state.branch_info.bend_type = action.payload;
         },
 
-        setShmetro2020BranchAlignEndpoints: (state, action: PayloadAction<boolean>) => {
-            state.shmetro2020_info!.branch_align_endpoints = action.payload;
+        setBranchInfoAlignEndpoints: (state, action: PayloadAction<boolean>) => {
+            state.branch_info.align_endpoints = action.payload;
         },
 
         setCurrentStation: (state, action: PayloadAction<string>) => {
@@ -227,10 +227,10 @@ export const {
     setLoopBottomFactor,
     setLoopMidpointStation,
     setLoopClockwise,
-    setShmetro2020BranchDistanceFactor,
-    setShmetro2020BranchFirstStationOffset,
-    setShmetro2020BranchBendType,
-    setShmetro2020BranchAlignEndpoints,
+    setBranchInfoDistanceFactor,
+    setBranchInfoFirstStationOffset,
+    setBranchInfoBendType,
+    setBranchInfoAlignEndpoints,
     setCurrentStation,
     setStation,
     setStations,
