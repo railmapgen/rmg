@@ -264,10 +264,15 @@ export default function DesignSection() {
             type: 'select',
             label: t('StyleSidePanel.design.branchBendType'),
             value: branchBendType,
-            options: {
-                rightangle: t('StyleSidePanel.design.branchBendRightAngle'),
-                '45degree': t('StyleSidePanel.design.branchBendDiagonal'),
-            },
+            options:
+                info_panel_type === 'sh2024'
+                    ? {
+                          rightangle: t('StyleSidePanel.design.branchBendRightAngle'),
+                          '45degree': t('StyleSidePanel.design.branchBendDiagonal'),
+                      }
+                    : {
+                          rightangle: t('StyleSidePanel.design.branchBendRightAngle'),
+                      },
             onChange: value => {
                 dispatch(setBranchInfoBendType(value as 'rightangle' | '45degree'));
             },

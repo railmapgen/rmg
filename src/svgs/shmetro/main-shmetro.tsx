@@ -43,7 +43,9 @@ const MainSHMetro = () => {
     const sh2020 = info_panel_type === PanelTypeShmetro.sh2020 ? branch_info : undefined;
     const k1 = sh2020?.distance_factor ?? 1;
     const k2 = sh2020?.first_station_offset ?? 0;
-    const bendType = sh2020?.bend_type ?? 'rightangle';
+    // Bend type: allow '45degree' only for sh2024 panel; otherwise fall back to 'rightangle'
+    const rawBend = branch_info?.bend_type;
+    const bendType = rawBend === '45degree' && info_panel_type !== 'sh2024' ? 'rightangle' : (rawBend ?? 'rightangle');
     const alignBranchEndpoints = sh2020?.align_endpoints ?? false;
 
     const adjMat = useMemo(() => {
