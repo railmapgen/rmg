@@ -6,8 +6,8 @@ import { useRootSelector } from '../../redux';
 
 const INT_BOX_SIZE = {
     width: {
-        singleDigit: 19.8,
-        doubleDigit: 24.2,
+        singleDigit: 18.9,
+        doubleDigit: 23.1,
     },
     height: 22,
     padding: 2,
@@ -495,22 +495,43 @@ const IntBoxNumber = memo(
     (prevProps, nextProps) => JSON.stringify(prevProps.info) === JSON.stringify(nextProps.info)
 );
 
+/**
+ * Text positioning by line number range for 2024 interchange boxes.
+ * Reference: kyuri-shmetro-line-id-block-generator
+ */
+const getIntBoxTextStyle = (
+    numVal: number
+): { x: number; letterSpacing: number; fontSize?: number; transform?: string } => {
+    if (numVal < 10) return { x: 9.6, letterSpacing: 0 };
+    if (numVal === 11) return { x: 10.5, letterSpacing: -2.4 };
+    if (numVal <= 19) return { x: 9.5, letterSpacing: -3.0 };
+    if (numVal === 21) return { x: 12.2, letterSpacing: -2.1 };
+    if (numVal >= 20) return { x: 11.5, letterSpacing: -1.2, fontSize: 22.5, transform: 'scale(.98,1)' };
+    return { x: 11.55, letterSpacing: -2.5 };
+};
+
 const IntBoxNumber2024 = (props: { info: ExtendedInterchangeInfo }) => {
     const {
         info: { name, theme },
     } = props;
     const num = name[0].match(/^(\d+)号线$/)?.[1] ?? '';
-    const width = num.length > 1 ? INT_BOX_SIZE.width.doubleDigit : INT_BOX_SIZE.width.singleDigit;
-    const letterSpacing = num.length > 1 ? -2.5 : 0;
+    const numVal = parseInt(num, 10);
+    const width = numVal >= 10 ? INT_BOX_SIZE.width.doubleDigit : INT_BOX_SIZE.width.singleDigit;
+    const textStyle = getIntBoxTextStyle(numVal);
+
     return (
         <g>
             <rect height={INT_BOX_SIZE.height} width={width} y={-11} fill={theme?.at(2)} />
             <text
-                x={10}
+                x={textStyle.x}
+                dy={0.5}
                 className="rmg-name__zh"
                 fill={theme?.at(3)}
                 dominantBaseline="central"
-                letterSpacing={letterSpacing}
+                textAnchor="middle"
+                letterSpacing={textStyle.letterSpacing}
+                fontSize={textStyle.fontSize}
+                transform={textStyle.transform}
             >
                 {num}
             </text>
