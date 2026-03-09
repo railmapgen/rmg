@@ -1,4 +1,3 @@
-
 import appReducer from './app/app-slice';
 import paramReducer from './param/param-slice';
 import helperReducer from './helper/helper-slice';
@@ -21,7 +20,7 @@ const undoMiddleware = createUndoMiddleware();
 export const createStore = (preloadedState: Partial<RootState> = {}) =>
     configureStore({
         reducer: rootReducer,
-        middleware: getDefaultMiddleware => 
+        middleware: getDefaultMiddleware =>
             getDefaultMiddleware({ serializableCheck: false })
                 .prepend(listenerMiddleware.middleware)
                 .concat(undoMiddleware),

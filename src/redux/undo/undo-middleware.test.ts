@@ -1,4 +1,3 @@
-
 import { describe, expect, it } from 'vitest';
 import { createUndoMiddleware, undo, clearHistory } from './undo-middleware';
 import { configureStore, createSlice } from '@reduxjs/toolkit';
@@ -33,7 +32,7 @@ describe('undo middleware', () => {
                     return state;
                 },
             },
-            middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(undoMiddleware),
+            middleware: getDefaultMiddleware => getDefaultMiddleware().concat(undoMiddleware),
         });
     };
 
@@ -49,7 +48,7 @@ describe('undo middleware', () => {
         // 2. Perform actions (starts with param/)
         store.dispatch(paramSlice.actions.update(1)); // param/update
         store.dispatch(paramSlice.actions.update(2)); // param/update
-        
+
         expect(getParamState().value).toBe(2);
         expect(getUndoState().pastCount).toBe(2);
 
@@ -62,7 +61,7 @@ describe('undo middleware', () => {
         store.dispatch(clearHistory());
         expect(getUndoState().pastCount).toBe(0);
         expect(getUndoState().futureCount).toBe(0);
-        
+
         // 5. Undo should do nothing (past is empty)
         store.dispatch(undo());
         expect(getParamState().value).toBe(1); // Still 1
@@ -72,22 +71,22 @@ describe('undo middleware', () => {
         const store = createTestStore();
         const getUndoState = () => (store.getState() as any).undo;
         const getParamState = () => (store.getState() as any).param;
-        
+
         // 1. We have some state
-        store.dispatch(paramSlice.actions.update(1)); 
+        store.dispatch(paramSlice.actions.update(1));
         expect(getUndoState().pastCount).toBe(1);
 
         // 2. Load new project (param/setFullParam)
         // param/setFullParam matches middleware filter
         store.dispatch(paramSlice.actions.setFullParam({ value: 99 }));
-        
+
         // Middleware should capture old state (1)
         expect(getUndoState().pastCount).toBe(2);
         expect(getParamState().value).toBe(99);
 
         // 3. Clear History immediately
         store.dispatch(clearHistory());
-        
+
         expect(getUndoState().pastCount).toBe(0);
         expect(getUndoState().futureCount).toBe(0);
         expect(getParamState().value).toBe(99);

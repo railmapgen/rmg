@@ -26,7 +26,7 @@ export const createUndoMiddleware = (): Middleware<object, RootState> => {
         if (typeof action === 'function') {
             return next(action);
         }
-        
+
         // Helper to update store counts
         const updateCounts = () => {
             store.dispatch(updateUndoCounts({ past: past.length, future: future.length }));
@@ -78,14 +78,14 @@ export const createUndoMiddleware = (): Middleware<object, RootState> => {
 
             // Clear future on new action
             future = [];
-            
+
             // Allow the action to proceed first, then update counts?
             // Actually, we capture state BEFORE action.
             // But we can update counts now.
             // past.length has increased by 1.
             updateCounts();
         }
-        
+
         return next(action);
     };
 };

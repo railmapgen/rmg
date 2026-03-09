@@ -1,4 +1,3 @@
-
 import { AnyAction, Reducer, UnknownAction } from '@reduxjs/toolkit';
 
 // Actions
@@ -60,7 +59,7 @@ export const undoable = <T>(reducer: Reducer<T, AnyAction | UnknownAction>) => {
                 // If the action is an initialization or internal redux action, don't update history
                 // But typically we only want to track user actions.
                 // For now, let's just track everything that changes state.
-                
+
                 // Limit history size
                 const MAX_HISTORY = 50;
                 let nextPast = [...past, present];
