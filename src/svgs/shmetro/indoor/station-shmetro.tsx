@@ -575,6 +575,7 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
 });
 
 // Text positioning by line number range for 2024 interchange boxes (indoor).
+// Reference: kyuri-shmetro-line-id-block-generator
 const getIntBoxTextStyleIndoor = (
     numVal: number
 ): { x: number; letterSpacing: number; fontSize?: number; transform?: string } => {
