@@ -1,7 +1,7 @@
 import { adjacencyList, criticalPathMethod, drawLine, getStnState, getXShareMTR } from '../methods/share';
 import StationSHMetro from './station-shmetro';
 import ColineSHMetro from './coline-shmetro';
-import { AtLeastOneOfPartial, Services, StationDict } from '../../constants/constants';
+import { AtLeastOneOfPartial, PanelTypeShmetro, Services, StationDict, StationInfo } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import { useMemo } from 'react';
 
@@ -13,16 +13,48 @@ interface servicesPath {
 
 type Paths = AtLeastOneOfPartial<Record<Services, servicesPath>>;
 
+/** LeftW callback for SHMetro 2020: adds weight at merge points (multiple parents). */
+const createSh2020LeftW =
+    (k1: number) =>
+    (stnList: { [stnId: string]: StationInfo }, stnId: string): number => {
+        const stn = stnList[stnId];
+        if (!stn) return 0;
+        return stn.parents.length > 1 ? k1 - 1 : 0;
+    };
+
+/** RightW callback for SHMetro 2020: adds weight at bifurcation points (multiple children). */
+const createSh2020RightW =
+    (k1: number) =>
+    (stnList: { [stnId: string]: StationInfo }, stnId: string): number => {
+        const stn = stnList[stnId];
+        if (!stn) return 0;
+        return stn.children.length > 1 ? k1 - 1 : 0;
+    };
+
 const MainSHMetro = () => {
     const { routes, branches, depsStr: deps } = useRootSelector(store => store.helper);
     const param = useRootSelector(store => store.param);
-    const { svg_height, stn_list, branchSpacingPct, coline, direction } = useRootSelector(store => store.param);
-
-    const adjMat = adjacencyList(
-        param.stn_list,
-        () => 0,
-        () => 0
+    const { svg_height, stn_list, branch_info, coline, direction, info_panel_type } = useRootSelector(
+        store => store.param
     );
+    const { spacing_pct: branchSpacingPct } = branch_info;
+
+    // Only apply SHMetro 2020-specific layout when the panel type matches.
+    const sh2020 = info_panel_type === PanelTypeShmetro.sh2020 ? branch_info : undefined;
+    const k1 = sh2020?.distance_factor ?? 1;
+    const k2 = sh2020?.first_station_offset ?? 0;
+    // Bend type: allow '45degree' only for sh2024 panel; otherwise fall back to 'rightangle'
+    const rawBend = branch_info?.bend_type;
+    const bendType = rawBend === '45degree' && info_panel_type !== 'sh2024' ? 'rightangle' : (rawBend ?? 'rightangle');
+    const alignBranchEndpoints = sh2020?.align_endpoints ?? false;
+
+    const adjMat = useMemo(() => {
+        return adjacencyList(
+            param.stn_list,
+            sh2020 ? createSh2020LeftW(k1) : () => 0,
+            sh2020 ? createSh2020RightW(k1) : () => 0
+        );
+    }, [JSON.stringify(param.stn_list), info_panel_type, k1]);
 
     const criticalPath = criticalPathMethod('linestart', 'lineend', adjMat);
     const realCP = criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat);
@@ -38,10 +70,48 @@ const MainSHMetro = () => {
         (param.svgWidth.railmap * param.padding) / 100,
         param.svgWidth.railmap * (1 - param.padding / 100),
     ];
-    const xs = Object.keys(xShares).reduce(
-        (acc, cur) => ({ ...acc, [cur]: lineXs[0] + (xShares[cur] / realCP.len) * (lineXs[1] - lineXs[0]) }),
-        {} as typeof xShares
-    );
+    const stationSpacing = (lineXs[1] - lineXs[0]) / realCP.len;
+    const branchOffset = k2 * stationSpacing;
+
+    // Derive pixel x-positions from xShares, then optionally redistribute shorter
+    // parallel branch segments so their endpoints align with the longer segment.
+    const xs = useMemo(() => {
+        const result = Object.keys(xShares).reduce(
+            (acc, cur) => ({ ...acc, [cur]: lineXs[0] + (xShares[cur] / realCP.len) * (lineXs[1] - lineXs[0]) }),
+            {} as typeof xShares
+        );
+
+        // Align parallel branch endpoints: the segment with more exclusive stations
+        // defines the x-range; the shorter segment is redistributed to match.
+        if (alignBranchEndpoints) {
+            const mainLine = branches[0];
+
+            branches.slice(1).forEach(branch => {
+                const junctions = branch.filter(stnId => mainLine.includes(stnId));
+                if (junctions.length < 2) return;
+                const [jStart, jEnd] = [junctions[0], junctions[junctions.length - 1]];
+
+                const mainExcl = mainLine.slice(mainLine.indexOf(jStart) + 1, mainLine.indexOf(jEnd));
+                const branchExcl = branch.slice(branch.indexOf(jStart) + 1, branch.indexOf(jEnd));
+                if (mainExcl.length < 1 || branchExcl.length < 1) return;
+
+                const longer = mainExcl.length >= branchExcl.length ? mainExcl : branchExcl;
+                const shorter = mainExcl.length >= branchExcl.length ? branchExcl : mainExcl;
+                const firstX = result[longer[0]];
+                const lastX = result[longer[longer.length - 1]];
+
+                if (shorter.length === 1) {
+                    result[shorter[0]] = (firstX + lastX) / 2;
+                } else {
+                    shorter.forEach((stnId, i) => {
+                        result[stnId] = firstX + (i / (shorter.length - 1)) * (lastX - firstX);
+                    });
+                }
+            });
+        }
+
+        return result;
+    }, [xShares, lineXs[0], lineXs[1], realCP.len, alignBranchEndpoints, branches.toString()]);
 
     // const yShares = React.useMemo(
     //     () => {
@@ -125,8 +195,10 @@ const MainSHMetro = () => {
                                 direction,
                                 service,
                                 servicesPresent.length,
-                                stn_list
-                                // info_panel_type === 'sh2020' ? 'rightangle' : 'diagonal'
+                                stn_list,
+                                stnStates,
+                                bendType,
+                                branchOffset
                             )
                         )
                         .filter(path => path !== ''),
@@ -220,7 +292,9 @@ export const _linePath = (
     services: Services,
     servicesMax: number,
     stn_list: StationDict, // only used to determine startFromTerminal or endAtTerminal
-    bend: 'rightangle' | 'diagonal' = 'rightangle'
+    stnStates?: { [stnId: string]: -1 | 0 | 1 }, // when provided, terminal caps on main paths are only drawn for state=1 stations
+    bend: 'rightangle' | 'diagonal' | '45degree' = 'rightangle',
+    branchOffset: number = 0 // k_2: offset from bifurcation point where vertical turn begins
 ) => {
     let [prevY, prevX] = [] as number[];
     const path: { [key: string]: number[] } = {};
@@ -232,22 +306,24 @@ export const _linePath = (
     }[services]; // TODO: enum Services could be a better idea?
     const servicesPassDelta = servicesMax > 1 ? 50 : 0;
 
-    // extra short line on either end
-    let e1 = 30;
     // check if path starts from or ends at the terminal
-    // and change e1 to 0 if it matches
+    let endAtTerminal = false;
+    let startFromTerminal = false;
     if (stnIds.length > 0) {
-        let startFromTerminal = false,
-            endAtTerminal = false;
         if (stn_list[stnIds.at(-1) || 0].children.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
             endAtTerminal = true;
-        } else if (stn_list[stnIds.at(0) || 0].parents.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
+        }
+        if (stn_list[stnIds.at(0) || 0].parents.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
             startFromTerminal = true;
         }
-        e1 = startFromTerminal || endAtTerminal ? e1 : 0;
     }
+    // extra short line on either end (only at terminals)
+    const e1 = startFromTerminal || endAtTerminal ? 30 : 0;
+    // main-path terminal caps: only drawn when the terminal station is truly colored (state=1)
+    const startCap = startFromTerminal && stnStates?.[stnIds.at(0) ?? ''] === 1 ? e1 + servicesDelta : 0;
+    const endCap = endAtTerminal && stnStates?.[stnIds.at(-1) ?? ''] === 1 ? e1 + servicesDelta : 0;
 
-    // diagonal use e2 to make soft line
+    // smooth diagonal offset (used by 'diagonal' bend for coline)
     const e2 = 30;
 
     stnIds.forEach(stnId => {
@@ -261,12 +337,12 @@ export const _linePath = (
         if (y === 0) {
             // merge back to main line
             if (y !== prevY) {
-                path['bifurcate'] = [prevX, prevY];
+                path['bifurcate'] = [prevX, prevY, x]; // [branchX, branchY, bifurcateX]
             }
         } else {
             // on the branch line
             if (y !== prevY) {
-                path['bifurcate'] = [x, y];
+                path['bifurcate'] = [x, y, prevX]; // [branchX, branchY, bifurcateX]
             }
         }
         path['end'] = [x, y];
@@ -304,11 +380,7 @@ export const _linePath = (
         const [x, y] = path['start'],
             h = path['end'][0];
         if (type === 'main') {
-            if (direction === 'l') {
-                return `M ${x - e1 - servicesDelta},${y} H ${h}`;
-            } else {
-                return `M ${x},${y} H ${h + e1 + servicesDelta}`;
-            }
+            return `M ${x - startCap},${y} H ${h + endCap}`;
         } else {
             // type === 'pass'
             if (direction === 'l') {
@@ -318,69 +390,68 @@ export const _linePath = (
             }
         }
     } else {
-        // main line bifurcate here to become the branch line
-        // and path return here are only branch line
-        // keys in path: start, bifurcate, end
-        // TODO: make diagonal available to `sh`
-
+        // branch line path, keys: start, bifurcate, end
         const [x, y] = path['start'];
-        const xb = path['bifurcate'][0];
+        const xBranch = path['bifurcate'][0];
+        const xBifurcate = path['bifurcate'][2];
         const [xm, ym] = path['end'];
+
+        // turnX: vertical turn position, offset from bifurcation point towards branch
+        // Offset moves turnX in the opposite direction of train travel (towards branch)
+        const branchOnRight = xBranch > xBifurcate;
+        const branchDirection = branchOnRight ? 1 : -1;
+        const turnX = xBifurcate + branchDirection * branchOffset;
+
+        // For 45° diagonal: dx = |dy|
+        // Right branch: diagonal goes right from turnX  → diagX = turnX + dy
+        // Left branch:  diagonal arrives at turnX from left → diagX = turnX - dy
+        const dy = Math.abs(ym - y);
+        const diagX = turnX + branchDirection * dy;
+        // TODO: When bend === '45degree', k1 (branch_distance_factor) effectively absorbs one
+        // extra station-spacing worth of horizontal room — without it, diagX would overshoot
+        // xBranch (the first branch station) for a right-branch, which is nonsensical.
+        // Consequently, k1 values smaller than one station spacing are meaningless in this mode.
+        // Enforcing a proper lower bound on k1 for 45° bends is non-trivial under the current
+        // architecture (k1 feeds into the adjacency-matrix weights before x-positions are known),
+        // so this constraint is left as a known limitation for now.
+
+        // For right-branch: diagonal STARTS at turnX → H turnX, L diagX
+        // For left-branch:  diagonal ENDS at turnX   → H diagX, L turnX
+        const diagH = branchOnRight ? turnX : diagX; // horizontal target (start y-level)
+        const diagL = branchOnRight ? diagX : turnX; // diagonal target (end y-level)
+
         if (type === 'main') {
-            if (direction === 'l') {
-                if (ym > y) {
-                    console.log(path);
-                    // main line, left direction, center to upper
-                    if (bend === 'rightangle') return `M ${x - e1},${y} H ${xm} V ${ym}`;
-                    // center to upper/rightangle, lower to center/diagonal
-                    else return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm}`;
-                } else {
-                    // wrong marker
-                    // main line, left direction, upper to center
-                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm}`;
-                    // upper to center/rightangle, center to lower/diagonal
-                    else return `M ${x - e1},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
-                }
+            if (bend === 'rightangle') {
+                return `M ${x - startCap},${y} H ${turnX} V ${ym} H ${xm + endCap}`;
+            }
+            if (bend === '45degree') {
+                return `M ${x - startCap},${y} H ${diagH} L ${diagL},${ym} H ${xm + endCap}`;
+            }
+            // diagonal — smooth free-form slope (used by coline)
+            if (ym > y) {
+                return `M ${x - startCap},${y} H ${x + e2} L ${xBranch - e2},${ym} H ${xm + endCap}`;
             } else {
-                if (ym > y) {
-                    // wrong marker
-                    // main line, right direction, upper to center
-                    if (bend === 'rightangle') return `M ${x},${y} H ${xm} V ${ym}`;
-                    // upper to center/rightangle, center to lower/diagonal
-                    else return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm + e1}`;
-                } else {
-                    // main line, right direction, center to upper
-                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e1}`;
-                    // center to upper/rightangle, lower to center/diagonal
-                    else return `M ${x},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
-                }
+                return `M ${x - startCap},${y} H ${xBranch + e2} L ${xm - e2},${ym} H ${xm + endCap}`;
             }
         } else {
-            // type === 'pass'
-            if (direction === 'l') {
-                if (ym > y) {
-                    // pass line, left direction, center to upper
-                    if (bend === 'rightangle') return `M ${x - e1},${y} H ${xm} V ${ym}`;
-                    // center to upper/rightangle, lower to center/diagonal
-                    else return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm + e1}`;
-                } else {
-                    // pass line, left direction, upper to center
-                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e1}`;
-                    // upper to center/rightangle, center to lower/diagonal
-                    else return `M ${x - e1},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
-                }
+            // type === 'pass' — direction-independent, e1 is always applied
+            if (bend === 'rightangle') {
+                return ym > y
+                    ? `M ${x - e1},${y} H ${turnX} V ${ym} H ${xm}`
+                    : `M ${x},${y} H ${turnX} V ${ym} H ${xm + e1}`;
+            }
+            if (bend === '45degree') {
+                // diagH/diagL depend only on branchOnRight, not on ym direction;
+                // ym only determines which end carries the e1 terminal cap.
+                return ym > y
+                    ? `M ${x - e1},${y} H ${diagH} L ${diagL},${ym} H ${xm}`
+                    : `M ${x},${y} H ${diagH} L ${diagL},${ym} H ${xm + e1}`;
+            }
+            // diagonal — smooth free-form slope (used by coline)
+            if (ym > y) {
+                return `M ${x},${y} H ${x + e2} L ${xBranch - e2},${ym} H ${xm + e1}`;
             } else {
-                if (ym > y) {
-                    // pass line, right direction, upper to center
-                    if (bend === 'rightangle') return `M ${x - e1},${y} H ${xm} V ${ym}`;
-                    // upper to center/rightangle, center to lower/diagonal
-                    return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm + e1}`;
-                } else {
-                    // pass line, right direction, center to upper
-                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e1}`;
-                    // center to upper/rightangle, lower to center/diagonal
-                    return `M ${x - e1},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
-                }
+                return `M ${x - e1},${y} H ${xBranch + e2} L ${xm - e2},${ym} H ${xm}`;
             }
         }
     }
@@ -464,9 +535,10 @@ const ServicesElements = (props: { servicesLevel: Services[]; lineXs: number[] }
 };
 
 export const DirectionElements = () => {
-    const { direction, svgWidth, coline } = useRootSelector(store => store.param);
+    const { direction, svgWidth, coline, info_panel_type } = useRootSelector(store => store.param);
     // arrow will be black stroke with white fill in coline
     const isColine = !!Object.keys(coline).length;
+    const isSh2024 = info_panel_type === PanelTypeShmetro.sh2024;
 
     return useMemo(
         () => (
@@ -474,15 +546,15 @@ export const DirectionElements = () => {
                 <text className="rmg-name__zh">列车前进方向</text>
                 <path
                     d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
-                    stroke={!isColine ? undefined : 'var(--rmg-black)'}
-                    strokeWidth={!isColine ? undefined : 5}
-                    fill={!isColine ? 'var(--rmg-theme-colour)' : 'var(--rmg-white)'}
+                    stroke={isSh2024 ? 'var(--rmg-black)' : isColine ? 'var(--rmg-black)' : 'var(--rmg-theme-colour)'}
+                    strokeWidth={7}
+                    fill={isSh2024 ? 'var(--rmg-black)' : 'none'}
                     transform={`translate(${direction === 'l' ? -30 : 125},-5)rotate(${
                         direction === 'l' ? 0 : 180
                     })scale(0.15)`}
                 />
             </g>
         ),
-        [direction, coline, svgWidth.railmap]
+        [direction, coline, svgWidth.railmap, info_panel_type]
     );
 };

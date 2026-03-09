@@ -97,7 +97,13 @@
             "legacyDestination": "Display line name on direction sign",
             "overrideTerminal": "Override terminal",
             "terminalZhName": "Terminal Chinese name",
-            "terminalEnName": "Terminal English name"
+            "terminalEnName": "Terminal English name",
+            "branchDistanceFactor": "Branch horizontal distance factor",
+            "branchFirstStationOffset": "Branch horizontal turn offset",
+            "branchBendType": "Branch bend type",
+            "branchBendRightAngle": "Right angle (90°)",
+            "branchBendDiagonal": "Diagonal (45°)",
+            "branchAlignEndpoints": "Align branch endpoints"
         },
         "note": {
             "title": "Notes",

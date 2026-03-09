@@ -95,7 +95,13 @@
             "legacyDestination": "在终点站牌显示路线名称",
             "overrideTerminal": "重写终点站",
             "terminalZhName": "终点站中文名称",
-            "terminalEnName": "终点站英文名称"
+            "terminalEnName": "终点站英文名称",
+            "branchDistanceFactor": "分支水平间距倍数",
+            "branchFirstStationOffset": "分支水平转弯偏移量",
+            "branchBendType": "分支弯道类型",
+            "branchBendRightAngle": "直角 (90°)",
+            "branchBendDiagonal": "斜线 (45°)",
+            "branchAlignEndpoints": "对齐分支端点"
         },
         "note": {
             "title": "备注",

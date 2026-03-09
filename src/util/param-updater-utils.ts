@@ -263,6 +263,17 @@ export const updateParam = (param: { [x: string]: any }) => {
     v5_18_addStationNameSpacingAndSvgWidthPlatform(param);
     v5_21_addPsdLabel(param);
 
+    // Migrate branchSpacingPct → branch_info
+    param.branch_info = {
+        spacing_pct: param.branchSpacingPct ?? 33,
+        distance_factor: 1,
+        first_station_offset: 0,
+        bend_type: 'rightangle',
+        align_endpoints: false,
+        ...param.branch_info,
+    };
+    delete param.branchSpacingPct;
+
     sanitiseParam(param);
     return param;
 };

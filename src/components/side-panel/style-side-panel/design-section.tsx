@@ -17,6 +17,10 @@ import {
     setTheme,
     staggerStationNames,
     toggleLineNameBeforeDestination,
+    setBranchInfoDistanceFactor,
+    setBranchInfoFirstStationOffset,
+    setBranchInfoBendType,
+    setBranchInfoAlignEndpoints,
 } from '../../../redux/param/param-slice';
 import { PanelTypeGZMTR, PanelTypeShmetro, PsdLabel, RmgStyle, ShortDirection } from '../../../constants/constants';
 import { MdSwapVert } from 'react-icons/md';
@@ -45,6 +49,12 @@ export default function DesignSection() {
         info_panel_type,
         stn_list,
         loop,
+        branch_info: {
+            distance_factor: branchDistanceFactor,
+            first_station_offset: branchFirstStationOffset,
+            bend_type: branchBendType,
+            align_endpoints: branchAlignEndpoints,
+        },
     } = useRootSelector(state => state.param);
 
     const lineServices = Math.max(...Object.values(stn_list).map(s => s.services.length));
@@ -225,6 +235,57 @@ export default function DesignSection() {
             minW: 'full',
             oneLine: true,
             hidden: ![RmgStyle.SHMetro].includes(style) || lineServices > 1 || loop,
+        },
+        {
+            type: 'slider',
+            label: t('StyleSidePanel.design.branchDistanceFactor'),
+            value: branchDistanceFactor,
+            min: 1,
+            max: 5,
+            step: 0.05,
+            onChange: value => {
+                dispatch(setBranchInfoDistanceFactor(value));
+            },
+            hidden: ![RmgStyle.SHMetro].includes(style) || info_panel_type !== 'sh2020' || loop,
+        },
+        {
+            type: 'slider',
+            label: t('StyleSidePanel.design.branchFirstStationOffset'),
+            value: branchFirstStationOffset,
+            min: 0,
+            max: 5,
+            step: 0.05,
+            onChange: value => {
+                dispatch(setBranchInfoFirstStationOffset(value));
+            },
+            hidden: ![RmgStyle.SHMetro].includes(style) || info_panel_type !== 'sh2020' || loop,
+        },
+        {
+            type: 'select',
+            label: t('StyleSidePanel.design.branchBendType'),
+            value: branchBendType,
+            options:
+                info_panel_type === 'sh2024'
+                    ? {
+                          rightangle: t('StyleSidePanel.design.branchBendRightAngle'),
+                          '45degree': t('StyleSidePanel.design.branchBendDiagonal'),
+                      }
+                    : {
+                          rightangle: t('StyleSidePanel.design.branchBendRightAngle'),
+                      },
+            onChange: value => {
+                dispatch(setBranchInfoBendType(value as 'rightangle' | '45degree'));
+            },
+            hidden: ![RmgStyle.SHMetro].includes(style) || info_panel_type !== 'sh2020' || loop,
+        },
+        {
+            type: 'switch',
+            label: t('StyleSidePanel.design.branchAlignEndpoints'),
+            isChecked: branchAlignEndpoints,
+            onChange: value => {
+                dispatch(setBranchInfoAlignEndpoints(value));
+            },
+            hidden: ![RmgStyle.SHMetro].includes(style) || info_panel_type !== 'sh2020' || loop,
         },
     ];
 
