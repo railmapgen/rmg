@@ -1,21 +1,12 @@
+import classes from './common-modal.module.css';
 import { useEffect, useState } from 'react';
-import {
-    Button,
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    ModalOverlay,
-} from '@chakra-ui/react';
-import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
 import { useRootDispatch, useRootSelector } from '../../redux';
-import { Events, RmgStyle } from '../../constants/constants';
-import { isColineBranch } from '../../redux/param/coline-action';
+import { Events } from '../../constants/constants';
 import { autoNumbering } from '../../redux/param/action';
 import rmgRuntime from '@railmapgen/rmg-runtime';
+import { Button, Group, Modal, NativeSelect, NumberInput, Stack } from '@mantine/core';
+import useBranchOptions from '../../hooks/use-branch-options';
 
 interface AutoNumModalProps {
     isOpen: boolean;
@@ -28,66 +19,17 @@ export default function AutoNumModal(props: AutoNumModalProps) {
     const dispatch = useRootDispatch();
 
     const selectedBranch = useRootSelector(state => state.app.selectedBranch);
-    const { style, stn_list: stationList } = useRootSelector(state => state.param);
-    const branches = useRootSelector(state => state.helper.branches);
 
     const [where, setWhere] = useState(selectedBranch);
     const [from, setFrom] = useState('1');
     const [maxLength, setMaxLength] = useState('2');
     const [sort, setSort] = useState<'asc' | 'desc'>('asc');
 
+    const branchOptions = useBranchOptions();
+
     useEffect(() => {
         setWhere(selectedBranch);
     }, [selectedBranch]);
-
-    const fields: RmgFieldsField[] = [
-        {
-            type: 'select',
-            label: t('AutoNumModal.where'),
-            value: where,
-            options: {
-                ...branches.reduce(
-                    (acc, cur, idx) => ({
-                        ...acc,
-                        [idx]:
-                            idx === 0
-                                ? t('AutoNumModal.main')
-                                : style !== RmgStyle.SHMetro || !isColineBranch(cur, stationList)
-                                  ? t('AutoNumModal.branch') + ' ' + idx
-                                  : t('AutoNumModal.external') + ' ' + idx,
-                    }),
-                    {}
-                ),
-            },
-            onChange: value => setWhere(value as number),
-        },
-        {
-            type: 'input',
-            label: t('AutoNumModal.from'),
-            value: from,
-            validator: value => !isNaN(Number(value)),
-            onChange: setFrom,
-            debouncedDelay: 0,
-        },
-        {
-            type: 'input',
-            label: t('AutoNumModal.maxLength'),
-            validator: value => !isNaN(Number(value)),
-            value: maxLength,
-            onChange: setMaxLength,
-            debouncedDelay: 0,
-        },
-        {
-            type: 'select',
-            label: t('AutoNumModal.sort'),
-            value: sort,
-            options: {
-                asc: t('AutoNumModal.asc'),
-                desc: t('AutoNumModal.desc'),
-            },
-            onChange: value => setSort(value as 'asc' | 'desc'),
-        },
-    ];
 
     const handleSubmit = () => {
         dispatch(autoNumbering(where, Number(from), Number(maxLength), sort));
@@ -98,22 +40,42 @@ export default function AutoNumModal(props: AutoNumModalProps) {
     const isSubmitDisabled = !from || !maxLength || isNaN(Number(from)) || isNaN(Number(maxLength));
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-                <ModalHeader>{t('AutoNumModal.title')}</ModalHeader>
-                <ModalCloseButton />
+        <Modal opened={isOpen} onClose={onClose} size="md" title={t('AutoNumModal.title')}>
+            <Stack>
+                <Group className={classes.body}>
+                    <NativeSelect
+                        label={t('AutoNumModal.where')}
+                        value={where}
+                        data={branchOptions}
+                        onChange={({ currentTarget: { value } }) => setWhere(Number(value))}
+                    />
+                    <NumberInput
+                        label={t('AutoNumModal.from')}
+                        value={from}
+                        onChange={value => setFrom(String(value))}
+                    />
+                    <NumberInput
+                        label={t('AutoNumModal.maxLength')}
+                        value={maxLength}
+                        onChange={value => setMaxLength(String(value))}
+                    />
+                    <NativeSelect
+                        label={t('AutoNumModal.sort')}
+                        value={sort}
+                        data={[
+                            { value: 'asc', label: t('AutoNumModal.asc') },
+                            { value: 'desc', label: t('AutoNumModal.desc') },
+                        ]}
+                        onChange={({ currentTarget: { value } }) => setSort(value as 'asc' | 'desc')}
+                    />
+                </Group>
 
-                <ModalBody>
-                    <RmgFields fields={fields} />
-                </ModalBody>
-
-                <ModalFooter>
-                    <Button colorScheme="primary" isDisabled={isSubmitDisabled} onClick={handleSubmit}>
+                <Group className={classes.footer}>
+                    <Button disabled={isSubmitDisabled} onClick={handleSubmit}>
                         {t('Confirm')}
                     </Button>
-                </ModalFooter>
-            </ModalContent>
+                </Group>
+            </Stack>
         </Modal>
     );
 }

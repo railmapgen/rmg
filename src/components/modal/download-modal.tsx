@@ -1,18 +1,7 @@
+import classes from './common-modal.module.css';
 import { useEffect, useState } from 'react';
-import {
-    Button,
-    HStack,
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    ModalOverlay,
-} from '@chakra-ui/react';
 import { canvasConfig, CanvasType, Events, RmgStyle } from '../../constants/constants';
 import { useRootDispatch, useRootSelector } from '../../redux';
-import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import JSZip from 'jszip';
 import { setCurrentStation } from '../../redux/param/param-slice';
 import { cloneSvgCanvas, test } from '../../util/export-utils';
@@ -20,6 +9,7 @@ import { downloadAs, downloadBlobAs, isSafari, waitForMs } from '../../util/util
 import { useTranslation } from 'react-i18next';
 import { setLoadingProgress, stopLoading } from '../../redux/app/app-slice';
 import rmgRuntime from '@railmapgen/rmg-runtime';
+import { Button, Group, Modal, NativeSelect, Stack, Switch } from '@mantine/core';
 
 interface DownloadModalProps {
     isOpen: boolean;
@@ -53,72 +43,21 @@ export default function DownloadModal(props: DownloadModalProps) {
         }
     }, [canvasToShow]);
 
-    const canvasOptions = canvasConfig[style].reduce<Record<string, string>>(
-        (acc, cur) => {
-            if (canvasToShow.includes(cur)) {
-                return { ...acc, [cur]: t('CanvasType.' + cur) };
-            } else {
-                return { ...acc };
-            }
-        },
-        { '': t('DownloadModal.pleaseSelect') }
-    );
+    const canvasOptions = [
+        { value: '', label: t('Please select...'), disabled: true },
+        ...canvasConfig[style]
+            .filter(canvas => canvasToShow.includes(canvas))
+            .map(canvas => ({ value: canvas, label: t('CanvasType.' + canvas) })),
+    ];
 
-    const scaleOptions = [25, 33, 50, 67, 75, 80, 90, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500].reduce<
-        Record<number, string>
-    >(
-        (acc, cur) => ({
-            ...acc,
-            [cur]: `${cur}%`,
-        }),
-        {}
-    );
+    const scaleOptions = [25, 33, 50, 67, 75, 80, 90, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500].map(pct => ({
+        value: String(pct),
+        label: `${pct}%`,
+    }));
 
-    const formatOptions = {
-        png: t('DownloadModal.png'),
-        svg: t('DownloadModal.svg'),
-    };
-
-    const fields: RmgFieldsField[] = [
-        {
-            type: 'select',
-            label: t('DownloadModal.canvas'),
-            value: canvasToDownload,
-            options: canvasOptions,
-            disabledOptions: [''],
-            onChange: value => setCanvasToDownload(value as CanvasType),
-            minW: 'full',
-        },
-        {
-            type: 'switch',
-            label: t('DownloadModal.transparent'),
-            isChecked: isTransparent,
-            onChange: setIsTransparent,
-            oneLine: true,
-            minW: 'full',
-        },
-        {
-            type: 'switch',
-            label: t('DownloadModal.showBorder'),
-            isChecked: isShowBorder,
-            onChange: setIsShowBorder,
-            oneLine: true,
-            minW: 'full',
-        },
-        {
-            type: 'select',
-            label: t('DownloadModal.scale'),
-            value: scale,
-            options: scaleOptions,
-            onChange: value => setScale(value as number),
-        },
-        {
-            type: 'select',
-            label: t('DownloadModal.format'),
-            value: format,
-            options: formatOptions,
-            onChange: value => setFormat(value as string),
-        },
+    const formatOptions = [
+        { value: 'png', label: t('DownloadModal.png') },
+        { value: 'svg', label: t('DownloadModal.svg') },
     ];
 
     const handleDownload = async (option: 'current' | 'all') => {
@@ -197,41 +136,50 @@ export default function DownloadModal(props: DownloadModalProps) {
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-                <ModalHeader>{t('DownloadModal.title')}</ModalHeader>
-                <ModalCloseButton />
+        <Modal opened={isOpen} onClose={onClose} size="md" title={t('DownloadModal.title')}>
+            <Stack>
+                <Stack className={classes.body}>
+                    <NativeSelect
+                        label={t('DownloadModal.canvas')}
+                        value={canvasToDownload}
+                        data={canvasOptions}
+                        onChange={({ currentTarget: { value } }) => setCanvasToDownload(value)}
+                    />
+                    <Switch
+                        label={t('DownloadModal.transparent')}
+                        checked={isTransparent}
+                        onChange={({ currentTarget: { checked } }) => setIsTransparent(checked)}
+                    />
+                    <Switch
+                        label={t('DownloadModal.showBorder')}
+                        checked={isShowBorder}
+                        onChange={({ currentTarget: { checked } }) => setIsShowBorder(checked)}
+                    />
+                    <NativeSelect
+                        label={t('DownloadModal.scale')}
+                        value={scale}
+                        data={scaleOptions}
+                        onChange={({ currentTarget: { value } }) => setScale(Number(value))}
+                    />
+                    <NativeSelect
+                        label={t('DownloadModal.format')}
+                        value={format}
+                        data={formatOptions}
+                        onChange={({ currentTarget: { value } }) => setFormat(value)}
+                    />
+                </Stack>
 
-                <ModalBody>
-                    <RmgFields fields={fields} />
-                </ModalBody>
-
-                <ModalFooter>
-                    <HStack>
-                        <Button
-                            colorScheme="primary"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleDownload('current')}
-                            isDisabled={!canvasToDownload}
-                        >
-                            {t('DownloadModal.downloadOne')}
+                <Group className={classes.footer}>
+                    <Button onClick={() => handleDownload('current')} disabled={!canvasToDownload}>
+                        {t('DownloadModal.downloadOne')}
+                    </Button>
+                    {style !== RmgStyle.GZMTR && (
+                        <Button variant="default" onClick={() => handleDownload('all')} disabled={!canvasToDownload}>
+                            {t('DownloadModal.downloadAll')}
                         </Button>
-                        {style !== RmgStyle.GZMTR && (
-                            <Button
-                                colorScheme="primary"
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleDownload('all')}
-                                isDisabled={!canvasToDownload}
-                            >
-                                {t('DownloadModal.downloadAll')}
-                            </Button>
-                        )}
-                    </HStack>
-                </ModalFooter>
-            </ModalContent>
+                    )}
+                </Group>
+            </Stack>
         </Modal>
     );
 }

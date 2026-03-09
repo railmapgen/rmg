@@ -3,8 +3,8 @@ import rootReducer from '../../redux';
 import { getBranches } from '../../redux/helper/graph-theory-util';
 import { render } from '../../test-utils';
 import AutoNumModal from './auto-num-modal';
-import { act, fireEvent, screen } from '@testing-library/react';
-import { vi } from 'vitest';
+import { screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 const realStore = rootReducer.getState();
 const mockStore = createTestStore({
@@ -19,59 +19,49 @@ const mockStore = createTestStore({
 });
 
 describe('AutoNumModal', () => {
+    const user = userEvent.setup();
+
     it('Can disable submit button if starting index is invalid', async () => {
         render(<AutoNumModal isOpen={true} onClose={vi.fn()} />, { store: mockStore });
 
-        expect(screen.getByText('Confirm')).not.toBeDisabled();
-        vi.useFakeTimers();
+        const confirmButton = screen.getByRole('button', { name: 'Confirm' });
+        expect(confirmButton).not.toBeDisabled();
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Starting index' }), { target: { value: '' } });
-        await act(async () => {
-            vi.advanceTimersByTime(0);
-        });
-        expect(screen.getByRole('combobox', { name: 'Starting index' })).toBeValid();
-        expect(screen.getByText('Confirm')).toBeDisabled();
+        const fromInput = screen.getByRole('textbox', { name: 'Starting index' });
+        expect(fromInput).toHaveDisplayValue('1');
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Starting index' }), { target: { value: 'abc' } });
-        await act(async () => {
-            vi.advanceTimersByTime(0);
-        });
-        expect(screen.getByRole('combobox', { name: 'Starting index' })).not.toBeValid();
-        expect(screen.getByText('Confirm')).toBeDisabled();
+        await user.clear(fromInput);
+        expect(fromInput).toHaveDisplayValue('');
+        expect(confirmButton).toBeDisabled();
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Starting index' }), { target: { value: '10' } });
-        await act(async () => {
-            vi.advanceTimersByTime(0);
-        });
-        expect(screen.getByRole('combobox', { name: 'Starting index' })).toBeValid();
-        expect(screen.getByText('Confirm')).not.toBeDisabled();
+        await user.type(fromInput, 'abc');
+        expect(fromInput).toHaveDisplayValue('');
+        expect(confirmButton).toBeDisabled();
+
+        await user.type(fromInput, '10');
+        expect(fromInput).toHaveDisplayValue('10');
+        expect(confirmButton).toBeEnabled();
     });
 
     it('Can disable submit button if number of digits is invalid', async () => {
         render(<AutoNumModal isOpen={true} onClose={vi.fn()} />, { store: mockStore });
 
-        expect(screen.getByText('Confirm')).not.toBeDisabled();
-        vi.useFakeTimers();
+        const confirmButton = screen.getByRole('button', { name: 'Confirm' });
+        expect(confirmButton).not.toBeDisabled();
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Number of digits' }), { target: { value: '' } });
-        await act(async () => {
-            vi.advanceTimersByTime(0);
-        });
-        expect(screen.getByRole('combobox', { name: 'Number of digits' })).toBeValid();
-        expect(screen.getByText('Confirm')).toBeDisabled();
+        const maxLengthInput = screen.getByRole('textbox', { name: 'Number of digits' });
+        expect(maxLengthInput).toHaveDisplayValue('2');
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Number of digits' }), { target: { value: 'abc' } });
-        await act(async () => {
-            vi.advanceTimersByTime(0);
-        });
-        expect(screen.getByRole('combobox', { name: 'Number of digits' })).not.toBeValid();
-        expect(screen.getByText('Confirm')).toBeDisabled();
+        await user.clear(maxLengthInput);
+        expect(maxLengthInput).toHaveDisplayValue('');
+        expect(confirmButton).toBeDisabled();
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Number of digits' }), { target: { value: '3' } });
-        await act(async () => {
-            vi.advanceTimersByTime(0);
-        });
-        expect(screen.getByRole('combobox', { name: 'Number of digits' })).toBeValid();
-        expect(screen.getByText('Confirm')).not.toBeDisabled();
+        await user.type(maxLengthInput, 'abc');
+        expect(maxLengthInput).toHaveDisplayValue('');
+        expect(confirmButton).toBeDisabled();
+
+        await user.type(maxLengthInput, '3');
+        expect(maxLengthInput).toHaveDisplayValue('3');
+        expect(confirmButton).toBeEnabled();
     });
 });

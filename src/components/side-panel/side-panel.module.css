@@ -52,10 +52,6 @@
         > :global(.mantine-Group-root) > * {
             flex: 1;
         }
-
-        > :global(.mantine-Group-root) :global(.mantine-Switch-labelWrapper) {
-            flex: 1;
-        }
     }
 
     fieldset {

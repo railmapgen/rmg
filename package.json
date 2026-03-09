@@ -12,7 +12,7 @@
         "@emotion/styled": "^11.14.1",
         "@mantine/core": "^8.3.16",
         "@mantine/hooks": "^8.3.16",
-        "@railmapgen/mantine-components": "^0.2.4",
+        "@railmapgen/mantine-components": "^0.2.5",
         "@railmapgen/rmg-components": "^10.1.13",
         "@railmapgen/rmg-palette-resources": "^3.0.2",
         "@railmapgen/rmg-runtime": "^12.0.6",
