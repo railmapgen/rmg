@@ -34,6 +34,7 @@ export default function InterchangeSection() {
                 dispatch(
                     updateStationOsiName(selectedStation, setIndex, [value, transfer.groups[setIndex].name?.[1] ?? ''])
                 ),
+            debouncedDelay: 300,
         },
         {
             type: 'input',
@@ -44,6 +45,7 @@ export default function InterchangeSection() {
                 dispatch(
                     updateStationOsiName(selectedStation, setIndex, [transfer.groups[setIndex].name?.[0] ?? '', value])
                 ),
+            debouncedDelay: 300,
         },
         {
             type: 'switch',

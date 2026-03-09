@@ -76,6 +76,7 @@ export default function ColineCard(props: ColineCardProps) {
                     value,
                     colineInfo.colors[0][5],
                 ]),
+            debouncedDelay: 300,
         },
         {
             type: 'input',
@@ -91,6 +92,7 @@ export default function ColineCard(props: ColineCardProps) {
                     colineInfo.colors[0][4],
                     value,
                 ]),
+            debouncedDelay: 300,
         },
     ];
 

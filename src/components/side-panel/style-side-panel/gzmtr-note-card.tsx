@@ -20,12 +20,14 @@ export default function GZMTRNoteCard(props: GZMTRNoteCardProps) {
             label: t('StyleSidePanel.note.zhNote'),
             value: note[0],
             onChange: value => onUpdate?.([value, note[1], note[2], note[3], note[4]]),
+            debouncedDelay: 300,
         },
         {
             type: 'textarea',
             label: t('StyleSidePanel.note.enNote'),
             value: note[1],
             onChange: value => onUpdate?.([note[0], value, note[2], note[3], note[4]]),
+            debouncedDelay: 300,
         },
         {
             type: 'switch',

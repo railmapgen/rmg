@@ -90,6 +90,7 @@ export default function MoreSection() {
             validator: val => Number.isInteger(val),
             onChange: val => dispatch(updateStationIntPadding(selectedStation, Number(val))),
             hidden: ![RmgStyle.SHMetro].includes(style),
+            debouncedDelay: 300,
         },
         {
             type: 'custom',
@@ -111,6 +112,7 @@ export default function MoreSection() {
             validator: val => Number.isInteger(val),
             onChange: val => dispatch(updateStationCharacterSpacing(selectedStation, Number(val))),
             hidden: ![RmgStyle.SHSuburbanRailway].includes(style),
+            debouncedDelay: 300,
         },
         {
             type: 'custom',
