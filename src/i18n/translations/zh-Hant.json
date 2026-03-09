@@ -123,7 +123,8 @@
             "title": "動作",
             "autoNum": "車站自動編碼",
             "reverse": "旋轉整條路綫",
-            "flip": "反轉整條路綫"
+            "flip": "反轉整條路綫",
+            "swap": "交換支綫"
         }
     },
     "StationSidePanel": {
