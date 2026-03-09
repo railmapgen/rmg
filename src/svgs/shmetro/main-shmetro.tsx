@@ -535,9 +535,10 @@ const ServicesElements = (props: { servicesLevel: Services[]; lineXs: number[] }
 };
 
 export const DirectionElements = () => {
-    const { direction, svgWidth, coline } = useRootSelector(store => store.param);
+    const { direction, svgWidth, coline, info_panel_type } = useRootSelector(store => store.param);
     // arrow will be black stroke with white fill in coline
     const isColine = !!Object.keys(coline).length;
+    const isSh2024 = info_panel_type === PanelTypeShmetro.sh2024;
 
     return useMemo(
         () => (
@@ -545,15 +546,15 @@ export const DirectionElements = () => {
                 <text className="rmg-name__zh">列车前进方向</text>
                 <path
                     d="M60,60L0,0L60-60H100L55-15H160V15H55L100,60z"
-                    stroke={isColine ? 'var(--rmg-black)' : 'var(--rmg-theme-colour)'}
+                    stroke={isSh2024 ? 'var(--rmg-black)' : isColine ? 'var(--rmg-black)' : 'var(--rmg-theme-colour)'}
                     strokeWidth={7}
-                    fill={'none'}
+                    fill={isSh2024 ? 'var(--rmg-black)' : 'none'}
                     transform={`translate(${direction === 'l' ? -30 : 125},-5)rotate(${
                         direction === 'l' ? 0 : 180
                     })scale(0.15)`}
                 />
             </g>
         ),
-        [direction, coline, svgWidth.railmap]
+        [direction, coline, svgWidth.railmap, info_panel_type]
     );
 };
