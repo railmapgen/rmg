@@ -76,14 +76,10 @@ export const reverseStations = (flipBranch = false) => {
                             const mappedChildren = stn_list[id].parents.map(id =>
                                 id === 'linestart' ? 'lineend' : id === 'lineend' ? 'linestart' : id
                             );
-
-                            // If we have multiple children (branches), we DO NOT reverse the children array.
-                            // This preserves the "External Line" status (Index > 0) relative to the Main Line (Index 0).
-                            // If we have 0 or 1 child, reversing is a no-op. So we simply use mappedChildren as is.
                             return {
                                 ...stn_list[id],
                                 parents: flipBranch ? mappedParents : mappedParents.reverse(),
-                                children: mappedChildren,
+                                children: flipBranch ? mappedChildren : mappedChildren.reverse(),
                                 branch: {
                                     left: stn_list[id].branch?.right,
                                     right: stn_list[id].branch?.left,
