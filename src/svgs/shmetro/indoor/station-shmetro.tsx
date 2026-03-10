@@ -48,7 +48,6 @@ export const StationSHMetro = (props: Props) => {
             isColineStation: !!entry,
             colineEntryColor: entry?.colors?.at(0)?.[2] ?? null,
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [info_panel_type, JSON.stringify(coline), branches.toString(), stnId]);
 
     let stationIconStyle: string;
@@ -117,9 +116,16 @@ export const StationSHMetro = (props: Props) => {
             {stationIconStyle.endsWith('_coline') ? (
                 <g transform={`rotate(${dr})`} filter='url("#station-border")'>
                     <IndoorSh2024ColineCapsule
-                        hasOsysi={stationIconStyle === 'stn_sh_2024_int_osysi_coline' || stationIconStyle === 'stn_sh_2024_osysi2_coline'}
-                        topColor={colineAbove ? (colineEntryColor ?? 'var(--rmg-theme-colour)') : 'var(--rmg-theme-colour)'}
-                        bottomColor={colineAbove ? 'var(--rmg-theme-colour)' : (colineEntryColor ?? 'var(--rmg-theme-colour)')}
+                        hasOsysi={
+                            stationIconStyle === 'stn_sh_2024_int_osysi_coline' ||
+                            stationIconStyle === 'stn_sh_2024_osysi2_coline'
+                        }
+                        topColor={
+                            colineAbove ? (colineEntryColor ?? 'var(--rmg-theme-colour)') : 'var(--rmg-theme-colour)'
+                        }
+                        bottomColor={
+                            colineAbove ? 'var(--rmg-theme-colour)' : (colineEntryColor ?? 'var(--rmg-theme-colour)')
+                        }
                     />
                 </g>
             ) : (

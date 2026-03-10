@@ -131,7 +131,10 @@ const StationSHMetro = (props: Props) => {
                     filter='url("#station-border")'
                 >
                     <Sh2024ColineCapsule
-                        hasOsysi={stationIconStyle === 'stn_sh_2024_int_osysi_coline' || stationIconStyle === 'stn_sh_2024_osysi2_coline'}
+                        hasOsysi={
+                            stationIconStyle === 'stn_sh_2024_int_osysi_coline' ||
+                            stationIconStyle === 'stn_sh_2024_osysi2_coline'
+                        }
                         topColor={
                             stnState === -1
                                 ? 'gray'
