@@ -21,7 +21,7 @@ export default function ActionSection() {
     const [isAutoNumModalOpen, setIsAutoNumModalOpen] = useState(false);
 
     const handleReverseStations = () => {
-        dispatch(reverseStations(style === RmgStyle.SHMetro));
+        dispatch(reverseStations());
         rmgRuntime.event(Events.REVERSE_STATIONS, { style });
     };
 
