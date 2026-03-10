@@ -288,6 +288,13 @@ const LoopStationGroup = (props: {
             left: 'left',
             right: 'right',
         })[side] as NameDirection;
+    // Int boxes on the inner side of the loop.
+    const indoor_intbox_direction: Record<keyof LoopStns, NameDirection> = {
+        top: 'upward',
+        bottom: 'downward',
+        left: 'right',
+        right: 'left',
+    };
     return (
         <g id="loop_stations">
             {canvas === CanvasType.RailMap &&
@@ -301,7 +308,6 @@ const LoopStationGroup = (props: {
                                     stnState={current_stn_id === stn_id ? 0 : 1}
                                     bank={railmap_bank[side as keyof LoopStns]}
                                     direction={railmap_direction[side as keyof LoopStns]}
-                                    colineAbove={side === 'top'}
                                 />
                             </g>
                         ))
@@ -321,7 +327,11 @@ const LoopStationGroup = (props: {
                                         stnId={stn_id}
                                         nameDirection={indoor_name_direction(side as keyof LoopStns, i)}
                                         services={[Services.local]}
-                                        colineAbove={side === 'top'}
+                                        intBoxDirection={
+                                            shouldShiftInward
+                                                ? indoor_intbox_direction[side as keyof LoopStns]
+                                                : undefined
+                                        }
                                     />
                                 </g>
                             );
