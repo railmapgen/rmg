@@ -52,9 +52,7 @@ const RailMapGZMTR = () => {
                 <>
                     {loop ? <LoopMain /> : <MainGZMTR />}
                     {!loop && <DirectionIndicator />}
-                    {notes?.map((note, i) => (
-                        <NoteBox key={i} note={note} />
-                    ))}
+                    {notes?.map((note, i) => <NoteBox key={i} note={note} />)}
                 </>
             )}
 
