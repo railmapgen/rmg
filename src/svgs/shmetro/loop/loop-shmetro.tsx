@@ -142,11 +142,13 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
 
     // FIXME: branches with only one station could not display properly
     const dy = loop_branches.length ? 0 : ((line_ys[1] - line_ys[0]) * bank) / 2;
+    // sh2024 with coline needs stations rendered AFTER the coline track for correct z-order
+    const sh2024WithColine = info_panel_type === 'sh2024' && Object.keys(coline).length > 0;
     return (
         <g id="loop" transform={`translate(${dy},0)`}>
             <path stroke="var(--rmg-theme-colour)" strokeWidth={12} fill="none" d={path} strokeLinejoin="round" />
-            {/* Order matters. The LoopColine should cover the station in RailMap. */}
-            {canvas === CanvasType.RailMap && (
+            {/* For non-sh2024-coline: render stations before coline (existing z-order) */}
+            {canvas === CanvasType.RailMap && !sh2024WithColine && (
                 <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />
             )}
             <g transform={`translate(0,${Object.keys(coline).length > 0 ? -LINE_WIDTH - COLINE_GAP : 0})`}>
@@ -167,6 +169,10 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
                     />
                 )}
             </g>
+            {/* For sh2024-coline: render stations AFTER coline so icons/names appear on top of coline line */}
+            {canvas === CanvasType.RailMap && sh2024WithColine && (
+                <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />
+            )}
             {/* Order matters. The station should cover LoopColine's main path in Indoor. */}
             {canvas === CanvasType.Indoor && <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />}
         </g>
@@ -245,7 +251,23 @@ const LoopStationGroup = (props: {
     };
 }) => {
     const { canvas, loop_stns, xs, ys } = props;
-    const { current_stn_idx: current_stn_id, stn_list } = useRootSelector(store => store.param);
+    const {
+        current_stn_idx: current_stn_id,
+        stn_list,
+        info_panel_type,
+        coline,
+    } = useRootSelector(store => store.param);
+
+    // In sh2024 indoor loop without coline, shift station icons inward by 6px
+    // so they appear to "penetrate" through the loop line.
+    const shouldShiftInward =
+        canvas === CanvasType.Indoor && info_panel_type === 'sh2024' && Object.keys(coline).length === 0;
+    const inwardOffset: Record<keyof LoopStns, { dx: number; dy: number }> = {
+        top: { dx: 0, dy: 6 },
+        bottom: { dx: 0, dy: 6 },
+        left: { dx: 6, dy: 0 },
+        right: { dx: -6, dy: 0 },
+    };
 
     const railmap_bank: Record<keyof LoopStns, -1 | 0 | 1> = {
         top: 0,
@@ -261,8 +283,8 @@ const LoopStationGroup = (props: {
     };
     const indoor_name_direction = (side: keyof LoopStns, i: number) =>
         ({
-            top: i % 2 === 0 ? 'upward' : 'downward',
-            bottom: i % 2 === 0 ? 'upward' : 'downward',
+            top: shouldShiftInward ? 'downward' : i % 2 === 0 ? 'upward' : 'downward',
+            bottom: shouldShiftInward ? 'upward' : i % 2 === 0 ? 'upward' : 'downward',
             left: 'left',
             right: 'right',
         })[side] as NameDirection;
@@ -279,6 +301,7 @@ const LoopStationGroup = (props: {
                                     stnState={current_stn_id === stn_id ? 0 : 1}
                                     bank={railmap_bank[side as keyof LoopStns]}
                                     direction={railmap_direction[side as keyof LoopStns]}
+                                    colineAbove={side === 'top'}
                                 />
                             </g>
                         ))
@@ -287,15 +310,22 @@ const LoopStationGroup = (props: {
                 Object.entries(loop_stns).map(([side, stn_ids]) =>
                     stn_ids
                         .filter(stn_id => stn_list[stn_id].services.length)
-                        .map((stn_id, i) => (
-                            <g key={stn_id} transform={`translate(${xs[stn_id]},${ys[stn_id]})`}>
-                                <StationSHMetroIndoor
-                                    stnId={stn_id}
-                                    nameDirection={indoor_name_direction(side as keyof LoopStns, i)}
-                                    services={[Services.local]}
-                                />
-                            </g>
-                        ))
+                        .map((stn_id, i) => {
+                            const offset = shouldShiftInward ? inwardOffset[side as keyof LoopStns] : { dx: 0, dy: 0 };
+                            return (
+                                <g
+                                    key={stn_id}
+                                    transform={`translate(${xs[stn_id] + offset.dx},${ys[stn_id] + offset.dy})`}
+                                >
+                                    <StationSHMetroIndoor
+                                        stnId={stn_id}
+                                        nameDirection={indoor_name_direction(side as keyof LoopStns, i)}
+                                        services={[Services.local]}
+                                        colineAbove={side === 'top'}
+                                    />
+                                </g>
+                            );
+                        })
                 )}
         </g>
     );
