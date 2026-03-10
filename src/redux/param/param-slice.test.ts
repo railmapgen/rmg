@@ -216,7 +216,7 @@ describe('ParamSlice', () => {
             const linestartInfo = updatedStationList.linestart;
             expect(linestartInfo).toBeDefined();
             expect(linestartInfo.parents).toHaveLength(0);
-            expect(linestartInfo.children).toEqual(['stn4', 'stn2']); // reverse lineend's parents
+            expect(linestartInfo.children).toEqual(['stn2', 'stn4']); // lineend's parents, order preserved
             expect(linestartInfo.branch?.left).toBeUndefined();
             expect(linestartInfo.branch?.right).toEqual([BranchStyle.through, 'stn4']); // lineend's left branch
 
@@ -229,15 +229,15 @@ describe('ParamSlice', () => {
 
             const stn1Info = updatedStationList.stn1;
             expect(stn1Info).toBeDefined();
-            expect(stn1Info.parents).toEqual(['stn3', 'stn2']); // reverse self children
-            expect(stn1Info.children).toEqual(['stn0']); // reverse self parent and swap linestart and lineend
+            expect(stn1Info.parents).toEqual(['stn2', 'stn3']); // self children mapped, order preserved
+            expect(stn1Info.children).toEqual(['stn0']);
             expect(stn1Info.branch?.left).toEqual([BranchStyle.through, 'stn3']); // self right branch
             expect(stn1Info.branch?.right).toBeUndefined();
 
             const stn2Info = updatedStationList.stn2;
             expect(stn2Info).toBeDefined();
             expect(stn2Info.parents).toEqual(['linestart']);
-            expect(stn2Info.children).toEqual(['stn1']); // swap parents and children and swap linestart and lineend
+            expect(stn2Info.children).toEqual(['stn1']);
             expect(stn2Info.branch?.left).toBeUndefined();
             expect(stn2Info.branch?.right).toBeUndefined();
 
@@ -263,25 +263,23 @@ describe('ParamSlice', () => {
             expect(lineendInfo.branch?.right).toBeUndefined();
         });
 
-        it('Can flip stations as expected - SHMetro', () => {
-            mockStore.dispatch(reverseStations(true));
+        it('Can reverse stations twice and return to original topology', () => {
+            mockStore.dispatch(reverseStations());
+            mockStore.dispatch(reverseStations());
 
             const updatedStationList = mockStore.getState().param.stn_list;
-            expect(updatedStationList).toBeDefined();
 
-            const linestartInfo = updatedStationList.linestart;
-            expect(linestartInfo).toBeDefined();
-            expect(linestartInfo.parents).toHaveLength(0);
-            expect(linestartInfo.children).toEqual(['stn2', 'stn4']); // lineend's parents not reversed
-            expect(linestartInfo.branch?.left).toBeUndefined();
-            expect(linestartInfo.branch?.right).toEqual([BranchStyle.through, 'stn4']); // lineend's left branch
+            // linestart should be back to original
+            expect(updatedStationList.linestart.children).toEqual(mockSimpleStationList.linestart.children);
 
-            const stn1Info = updatedStationList.stn1;
-            expect(stn1Info).toBeDefined();
-            expect(stn1Info.parents).toEqual(['stn2', 'stn3']); // self children not reversed
-            expect(stn1Info.children).toEqual(['stn0']);
-            expect(stn1Info.branch?.left).toEqual([BranchStyle.through, 'stn3']);
-            expect(stn1Info.branch?.right).toBeUndefined();
+            // stn1 branch node should preserve children order and branch info
+            expect(updatedStationList.stn1.children).toEqual(mockSimpleStationList.stn1.children);
+            expect(updatedStationList.stn1.parents).toEqual(mockSimpleStationList.stn1.parents);
+            expect(updatedStationList.stn1.branch).toEqual(mockSimpleStationList.stn1.branch);
+
+            // lineend should preserve parents order and branch info
+            expect(updatedStationList.lineend.parents).toEqual(mockSimpleStationList.lineend.parents);
+            expect(updatedStationList.lineend.branch).toEqual(mockSimpleStationList.lineend.branch);
         });
     });
 

@@ -43,54 +43,29 @@ export const setStationsBulk = (stations: StationDict) => {
 };
 
 /**
- * @param flipBranch Set as false if you want to rotate the line but keeping the topology ordering (TPO). Set as true if you want to flip branches and break the TPO (for SHMetro).
+ * Reverses the direction of the entire line by swapping parents/children
+ * and mirroring branch.left/right for every station.
  */
-export const reverseStations = (flipBranch = false) => {
+export const reverseStations = () => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const { stn_list } = getState().param;
-        const newStationList = Object.keys(stn_list).reduce(
-            (acc, stnId) => ({
+        const swapId = (id: string) => (id === 'linestart' ? 'lineend' : id === 'lineend' ? 'linestart' : id);
+
+        const newStationList = Object.keys(stn_list).reduce((acc, stnId) => {
+            const source = stn_list[swapId(stnId)];
+            return {
                 ...acc,
-                [stnId]: (id => {
-                    switch (id) {
-                        case 'linestart':
-                            return {
-                                ...stn_list.lineend,
-                                parents: [],
-                                children: flipBranch ? stn_list.lineend.parents : stn_list.lineend.parents.toReversed(),
-                                branch: { right: stn_list.lineend.branch?.left },
-                            };
-                        case 'lineend':
-                            return {
-                                ...stn_list.linestart,
-                                parents: flipBranch
-                                    ? stn_list.linestart.children
-                                    : stn_list.linestart.children.toReversed(),
-                                children: [],
-                                branch: { left: stn_list.linestart.branch?.right },
-                            };
-                        default: {
-                            const mappedParents = stn_list[id].children.map(id =>
-                                id === 'linestart' ? 'lineend' : id === 'lineend' ? 'linestart' : id
-                            );
-                            const mappedChildren = stn_list[id].parents.map(id =>
-                                id === 'linestart' ? 'lineend' : id === 'lineend' ? 'linestart' : id
-                            );
-                            return {
-                                ...stn_list[id],
-                                parents: flipBranch ? mappedParents : mappedParents.reverse(),
-                                children: flipBranch ? mappedChildren : mappedChildren.reverse(),
-                                branch: {
-                                    left: stn_list[id].branch?.right,
-                                    right: stn_list[id].branch?.left,
-                                },
-                            };
-                        }
-                    }
-                })(stnId),
-            }),
-            {} as StationDict
-        );
+                [stnId]: {
+                    ...source,
+                    parents: source.children.map(swapId),
+                    children: source.parents.map(swapId),
+                    branch: {
+                        left: source.branch?.right,
+                        right: source.branch?.left,
+                    },
+                },
+            };
+        }, {} as StationDict);
         dispatch(setStationsBulk(newStationList));
     };
 };
