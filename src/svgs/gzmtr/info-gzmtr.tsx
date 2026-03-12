@@ -200,7 +200,9 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect; ignoreNumWidth?
                             </text>
                         </g>
                         <g
-                            ref={el => (nextNameEls.current[i] = el)}
+                            ref={el => {
+                                nextNameEls.current[i] = el;
+                            }}
                             textAnchor="start"
                             transform={`translate(${transforms.nextName.x},${DIRECTION_GAP * i})`}
                         >

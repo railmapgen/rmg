@@ -27,7 +27,9 @@ export default function ViaStations({ viaStations, stationList }: ViaStationsPro
             {viaStations.map((stationId, i) => (
                 <ViaStation
                     key={stationId}
-                    ref={el => (stationsRef.current[i] = el)}
+                    ref={el => {
+                        stationsRef.current[i] = el;
+                    }}
                     stationInfo={stationList[stationId]}
                     transform={`translate(0,${getHeightsUpTo(i)})`}
                 />

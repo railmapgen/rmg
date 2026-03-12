@@ -24,7 +24,7 @@ export default function AppClipView() {
     const [selectedParam, setSelectedParam] = useState<string>();
     const [isError, setIsError] = useState(false);
 
-    const channelRef = useRef<BroadcastChannel>();
+    const channelRef = useRef<BroadcastChannel>(null);
 
     useEffect(() => {
         // channel that talks to parent (RMP import modal, RMG Templates upload modal)
