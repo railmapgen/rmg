@@ -49,41 +49,41 @@ export const LoopColine = (props: {
     const LINE_WIDTH = 12;
     const COLINE_GAP = canvas === CanvasType.RailMap && info_panel_type === 'sh2020' ? 3 : 0;
 
-    const coline_segments = [X_LEFT, ...loop_stns.top.map(id => xs[id]), X_RIGHT]
-        .map((x, i, arr) => {
-            if (i === arr.length - 1) return null;
+    // past coline stations form a contiguous block on the top (monotonicity),
+    // so scan from the front (travel direction) to find the first past/current station as the split point
+    const top = loop_stns.top;
+    const ordered = direction === 'l' ? top : [...top].reverse();
+    const isPast = (id: string) => colinePastStationIds?.has(id) ?? false;
+    const first_past_or_current_idx =
+        canvas !== CanvasType.Indoor ? ordered.findIndex(id => isPast(id) || id === current_stn_id) : -1;
 
-            const prev_id = i === 0 ? null : loop_stns.top[i - 1];
-            const next_id = i === loop_stns.top.length ? null : loop_stns.top[i];
+    let gray_path: string | null = null;
+    let colored_path: string | null = null;
 
-            // Use the station in the travel direction's "behind" side to decide if this segment is past.
-            // For direction 'l' (leftward), the segment after a station is the one to its right (prev_id).
-            // For direction 'r' (rightward), the segment after a station is the one to its left (next_id).
-            const ref_id = direction === 'l' ? prev_id : next_id;
-            // If ref_id is at the edge (null), fall back to the station on the other side of the segment.
-            const fallback_id = direction === 'l' ? next_id : prev_id;
-            const is_past =
-                canvas !== CanvasType.Indoor &&
-                (ref_id
-                    ? (colinePastStationIds?.has(ref_id) ?? false) || ref_id === current_stn_id
-                    : fallback_id
-                      ? (colinePastStationIds?.has(fallback_id) ?? false)
-                      : false);
-
-            return { from: x, to: arr[i + 1], gray: is_past };
-        })
-        .filter(Boolean) as { from: number; to: number; gray: boolean }[];
+    if (first_past_or_current_idx === -1) {
+        // no past or current station on top, all colored
+        colored_path = `M ${X_LEFT},${Y_TOP} H ${X_RIGHT}`;
+    } else if (first_past_or_current_idx === 0 && isPast(ordered[0])) {
+        // first station is truly past (not just current), entire line is gray
+        gray_path = `M ${X_LEFT},${Y_TOP} H ${X_RIGHT}`;
+    } else {
+        // split at the found station, the edge segment before it stays colored
+        const split_x = xs[ordered[first_past_or_current_idx]];
+        if (direction === 'l') {
+            colored_path = `M ${X_LEFT},${Y_TOP} H ${split_x}`;
+            gray_path = `M ${split_x},${Y_TOP} H ${X_RIGHT}`;
+        } else {
+            gray_path = `M ${X_LEFT},${Y_TOP} H ${split_x}`;
+            colored_path = `M ${split_x},${Y_TOP} H ${X_RIGHT}`;
+        }
+    }
 
     return (
         <g id="coline_main">
-            {coline_segments.map(({ from, to, gray }, j) => (
-                <path
-                    key={j}
-                    d={`M${from},${Y_TOP} H${to}`}
-                    strokeWidth={12}
-                    stroke={gray ? 'var(--rmg-grey)' : coline_main_color?.at(0)?.at(2)}
-                />
-            ))}
+            {gray_path && <path d={gray_path} fill="none" strokeWidth={12} stroke="var(--rmg-grey)" />}
+            {colored_path && (
+                <path d={colored_path} fill="none" strokeWidth={12} stroke={coline_main_color?.at(0)?.at(2)} />
+            )}
             {
                 // additional station cover on the rail map
                 canvas === CanvasType.RailMap &&
@@ -93,24 +93,45 @@ export const LoopColine = (props: {
                         return (
                             <g key={stn_id} transform={`translate(${xs[stn_id]},${ys[stn_id]})`}>
                                 {info_panel_type === 'sh2020' ? (
-                                    <>
-                                        <rect
-                                            stroke="none"
-                                            height={24}
-                                            width={12}
-                                            x={-6}
-                                            y={-COLINE_GAP - 1}
-                                            fill={is_stn_past ? 'var(--rmg-grey)' : coline_main_color?.at(0)?.at(2)}
-                                        />
-                                        <rect
-                                            stroke="none"
-                                            height={COLINE_GAP + LINE_WIDTH}
-                                            width={12}
-                                            x={-6}
-                                            y={LINE_WIDTH - 2}
-                                            fill={is_stn_past ? 'var(--rmg-grey)' : 'var(--rmg-theme-colour)'}
-                                        />
-                                    </>
+                                    is_stn_past ? (
+                                        <>
+                                            <rect
+                                                stroke="none"
+                                                height={COLINE_GAP + LINE_WIDTH}
+                                                width={12}
+                                                x={-6}
+                                                y={LINE_WIDTH - 2}
+                                                fill="var(--rmg-theme-colour)"
+                                            />
+                                            <rect
+                                                stroke="none"
+                                                height={24}
+                                                width={12}
+                                                x={-6}
+                                                y={-COLINE_GAP - 1}
+                                                fill="var(--rmg-grey)"
+                                            />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <rect
+                                                stroke="none"
+                                                height={24}
+                                                width={12}
+                                                x={-6}
+                                                y={-COLINE_GAP - 1}
+                                                fill={coline_main_color?.at(0)?.at(2)}
+                                            />
+                                            <rect
+                                                stroke="none"
+                                                height={COLINE_GAP + LINE_WIDTH}
+                                                width={12}
+                                                x={-6}
+                                                y={LINE_WIDTH - 2}
+                                                fill="var(--rmg-theme-colour)"
+                                            />
+                                        </>
+                                    )
                                 ) : (
                                     <use
                                         xlinkHref="#int2_sh"
