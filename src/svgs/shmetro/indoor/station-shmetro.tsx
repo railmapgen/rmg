@@ -20,10 +20,11 @@ interface Props {
     nameDirection: NameDirection;
     services: Services[];
     color?: ColourHex; // Control the station color if coline is in effect.
+    intBoxDirection?: NameDirection; // When set, place IntBoxGroup2024 on this side instead of nameDirection side.
 }
 
 export const StationSHMetro = (props: Props) => {
-    const { stnId, nameDirection, services, color } = props;
+    const { stnId, nameDirection, services, color, intBoxDirection } = props;
     const { stn_list, info_panel_type } = useRootSelector(store => store.param);
     const stnInfo = stn_list[stnId];
 
@@ -36,11 +37,11 @@ export const StationSHMetro = (props: Props) => {
             ...(stnInfo.transfer.groups.at(2)?.lines || []),
         ].length;
 
-        stationIconColor.stroke = 'var(--rmg-theme-colour)';
+        stationIconColor.stroke = color ?? 'var(--rmg-theme-colour)';
         if (stnInfo.services.length === 3) {
-            stationIconStyle = 'stn_sh_2020_direct';
+            stationIconStyle = 'direct_indoor_sh';
         } else if (stnInfo.services.length === 2) {
-            stationIconStyle = 'stn_sh_2020_express';
+            stationIconStyle = 'express_indoor_sh';
         } else if (osi_osysi_length > 1) {
             // 不管多少条站内换乘，只要有超过1个的出站换乘就是3个圆了
             stationIconStyle = 'stn_sh_2024_osysi3';
@@ -56,7 +57,7 @@ export const StationSHMetro = (props: Props) => {
         } else {
             stationIconStyle = 'stn_sh_2024';
             delete stationIconColor.stroke;
-            stationIconColor.fill = 'var(--rmg-theme-colour)';
+            stationIconColor.fill = color ?? 'var(--rmg-theme-colour)';
         }
     } else {
         const non_osysi_transfer = [
@@ -72,7 +73,14 @@ export const StationSHMetro = (props: Props) => {
             non_osysi_transfer.length > 0 ? 'var(--rmg-black)' : (color ?? 'var(--rmg-theme-colour)');
     }
 
-    const dr = nameDirection === 'left' || nameDirection === 'right' ? 90 : 0;
+    const dr =
+        nameDirection === 'left' || nameDirection === 'right'
+            ? info_panel_type === PanelTypeShmetro.sh2024
+                ? nameDirection === 'left'
+                    ? -90
+                    : 90
+                : 90
+            : 0;
     return (
         <>
             <StationNameGElement
@@ -80,6 +88,7 @@ export const StationSHMetro = (props: Props) => {
                 groups={stnInfo.transfer.groups}
                 nameDirection={nameDirection}
                 services={services}
+                intBoxDirection={intBoxDirection}
             />
             <use
                 xlinkHref={`#${stationIconStyle}`}
@@ -122,10 +131,11 @@ interface StationNameGElementProps {
     groups: InterchangeGroup[];
     nameDirection: NameDirection;
     services: Services[];
+    intBoxDirection?: NameDirection;
 }
 
 const StationNameGElement = (props: StationNameGElementProps) => {
-    const { name, groups, nameDirection, services } = props;
+    const { name, groups, nameDirection, services, intBoxDirection } = props;
     const { en: enName = '' } = name;
     const nameENLn = enName.split('\\').length;
     const { info_panel_type } = useRootSelector(store => store.param);
@@ -189,9 +199,26 @@ const StationNameGElement = (props: StationNameGElementProps) => {
             stationNameDY(info_panel_type, nameDirection, nameENLn) -
             STATION_NAME_2024_ZH_FONT_SIZE / 2 -
             INT_BOX_SIZE.height / 2,
-        left: 7,
-        right: 7,
+        left: 12,
+        right: 12,
     };
+    // When intBoxDirection is set, place int boxes on that side instead of the nameDirection side.
+    const dyByDir: Record<NameDirection, number> = { upward: 60, downward: -30, left: 0, right: 0 };
+    const effectiveIntBoxDir = intBoxDirection ?? nameDirection;
+    const intBoxDYCompensation = intBoxDirection ? dyByDir[intBoxDirection] - dy : 0;
+    // stn_sh_2024 icon edges: y=-18 (top) .. 6 (bottom). IntBoxGroup2024 dy = box bottom edge.
+    const intBoxGap = 5;
+    const effectiveIntBoxDY = (() => {
+        if (!intBoxDirection) return intBoxGroup2024DY[nameDirection];
+        if (intBoxDirection === 'upward' || intBoxDirection === 'downward') {
+            const undoParent = -dy;
+            const iconEdge = intBoxDirection === 'upward' ? 6 : -18;
+            return intBoxDirection === 'upward'
+                ? undoParent + iconEdge + intBoxGap + INT_BOX_SIZE.height
+                : undoParent + iconEdge - intBoxGap;
+        }
+        return intBoxGroup2024DY[intBoxDirection] + intBoxDYCompensation;
+    })();
 
     return (
         <g transform={`translate(0,${dy})`}>
@@ -219,22 +246,27 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                 </>
             ) : (
                 <>
-                    {info_panel_type !== PanelTypeShmetro.sh2024 && (
-                        <line
-                            x1={nameDirection === 'left' ? -50 : 15}
-                            x2={nameDirection === 'left' ? -15 : 50}
-                            y1={0}
-                            y2={0}
-                            stroke="black"
-                        />
+                    {info_panel_type !== PanelTypeShmetro.sh2024 ? (
+                        <>
+                            <line
+                                x1={nameDirection === 'left' ? -50 : 15}
+                                x2={nameDirection === 'left' ? -15 : 50}
+                                y1={0}
+                                y2={0}
+                                stroke="black"
+                            />
+                            <line
+                                x1={nameDirection === 'left' ? -50 : 50}
+                                x2={nameDirection === 'left' ? -50 : 50}
+                                y1={-30}
+                                y2={30}
+                                stroke="black"
+                            />
+                        </>
+                    ) : (
+                        /* sh2024: horizontal lead going outward from station icon to name position */
+                        <line x1={0} x2={nameDirection === 'left' ? -60 : 60} y1={0} y2={0} stroke="black" />
                     )}
-                    <line
-                        x1={nameDirection === 'left' ? -50 : 50}
-                        x2={nameDirection === 'left' ? -50 : 50}
-                        y1={-30}
-                        y2={30}
-                        stroke="black"
-                    />
                 </>
             )}
 
@@ -246,8 +278,21 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                         services={services}
                     />
                 )
+            ) : effectiveIntBoxDir === 'left' || effectiveIntBoxDir === 'right' ? (
+                // For side stations, place int boxes on the effectiveIntBoxDir side.
+                <g
+                    transform={`translate(${
+                        effectiveIntBoxDir === 'left' ? nameSize.x - 10 : nameSize.x + nameSize.width + 10
+                    },${intBoxDYCompensation})`}
+                >
+                    <IntBoxGroup2024
+                        groups={groups}
+                        dy={intBoxGroup2024DY[effectiveIntBoxDir]}
+                        align={effectiveIntBoxDir === 'left' ? 'end' : 'start'}
+                    />
+                </g>
             ) : (
-                <IntBoxGroup2024 groups={groups} dy={intBoxGroup2024DY[nameDirection]} />
+                <IntBoxGroup2024 groups={groups} dy={effectiveIntBoxDY} />
             )}
 
             <StationName ref={nameRef} stnName={name} nameDirection={nameDirection} fill="black" />
@@ -447,15 +492,16 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
 };
 
 const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
-    props: { groups: InterchangeGroup[]; dy: number },
+    props: { groups: InterchangeGroup[]; dy: number; align?: 'start' | 'center' | 'end' },
     ref: Ref<SVGGElement>
 ) {
-    const { groups, dy } = props;
+    const { groups, dy, align = 'center' } = props;
     const directionPolarity = 1;
 
     const transfer = [groups.at(0)?.lines ?? [], groups.at(1)?.lines ?? [], groups.at(2)?.lines ?? []];
 
-    const [outOfSystemLine, setOutOfSystemLine] = useState(0); // also for start point of 出站换乘
+    const [outOfSystemLine, setOutOfSystemLine] = useState(0); // also for start point of 出站换乘 (groups[1])
+    const [outOfSystemLine2, setOutOfSystemLine2] = useState(0); // for start point of 出站换乘 (groups[2])
     const [intBoxesDX, setIntBoxesDX] = useState<{ [k in string]: number }>({});
     const textLineRefs = useRef<{ [k in string]: SVGGElement }>({});
     const [intBoxGroupWidth, setIntBoxGroupWidth] = useState(0);
@@ -506,11 +552,25 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
                 dx += getBBoxWidth(info);
             });
         }
-        transfer[2].forEach(info => {
-            dx += getBBoxWidth(info);
-        });
+        let outOfSystemLine2 = 0;
+        if (transfer[2].length) {
+            const elementWidth = INT_BOX_SIZE.height;
+            const hasPrevious = transfer[0].length > 0 || transfer[1].length > 0;
+            if (hasPrevious) {
+                outOfSystemLine2 = dx + INT_BOX_SIZE.padding;
+                dx += elementWidth + 2 * INT_BOX_SIZE.padding;
+            } else {
+                dx += INT_BOX_SIZE.padding;
+                outOfSystemLine2 = 0;
+                dx += elementWidth;
+            }
+            transfer[2].forEach(info => {
+                dx += getBBoxWidth(info);
+            });
+        }
         setIntBoxesDX(intBoxDX);
         setOutOfSystemLine(outOfStationLine);
+        setOutOfSystemLine2(outOfSystemLine2);
         setIntBoxGroupWidth(dx);
     }, [JSON.stringify(transfer)]);
 
@@ -541,7 +601,14 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
         );
     };
 
-    const dx = onlyOneNonOutOfStationTextInt ? 0 : -intBoxGroupWidth / 2;
+    const dx =
+        align === 'end'
+            ? -intBoxGroupWidth // right-align: all boxes end at the origin (outer side for left stations)
+            : align === 'start'
+              ? 0 // left-align: all boxes start at the origin (outer side for right stations)
+              : onlyOneNonOutOfStationTextInt
+                ? 0
+                : -intBoxGroupWidth / 2; // center (default)
     return (
         <g ref={ref} fontSize={30} textAnchor="middle" transform={`translate(${dx},${dy})`}>
             {transfer[0].map(makeBoxElement)}
@@ -569,7 +636,30 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
                     {transfer[1].map(makeBoxElement)}
                 </>
             )}
-            {transfer[2].map(makeBoxElement)}
+            {transfer[2].length > 0 && (
+                <>
+                    {(transfer[0].length > 0 || transfer[1].length > 0) && (
+                        <line
+                            y1={-INT_BOX_SIZE.height}
+                            y2={0}
+                            x1={outOfSystemLine2 - 2}
+                            x2={outOfSystemLine2 - 2}
+                            stroke="var(--rmg-black)"
+                        />
+                    )}
+                    <g
+                        transform={`translate(${outOfSystemLine2},-13.5)`}
+                        fill="var(--rmg-black)"
+                        fontSize="15"
+                        textAnchor="start"
+                        className="rmg-name__zh"
+                    >
+                        <text dy="-4">出站</text>
+                        <text dy="11">换乘</text>
+                    </g>
+                    {transfer[2].map(makeBoxElement)}
+                </>
+            )}
         </g>
     );
 });
