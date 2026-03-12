@@ -1,7 +1,7 @@
 /* eslint @typescript-eslint/no-non-null-assertion: 0 */
 import StationSHMetro from '../station-shmetro';
 import { NameDirection, StationSHMetro as StationSHMetroIndoor } from '../indoor/station-shmetro';
-import { CanvasType, Services, ShortDirection } from '../../../constants/constants';
+import { CanvasType, ColineInfo, Services, ShortDirection, StationDict } from '../../../constants/constants';
 import { useRootSelector } from '../../../redux';
 import { isColineBranch } from '../../../redux/param/coline-action';
 import {
@@ -11,8 +11,136 @@ import {
     split_loop_stns_with_branch,
     split_loop_stns_with_branches,
 } from '../../methods/shmetro-loop';
-import { get_loop_branches, LoopBranches } from './loop-branches-shmetro';
+import { find_branch_connection, get_loop_branches, LoopBranches } from './loop-branches-shmetro';
 import { LoopColine } from './loop-coline-shmetro';
+
+/**
+ * Get the set of stations on the shorter arc of the displayed coline.
+ * Only one coline in loop line is supported (Shanghai Metro Lines 3/4).
+ *
+ * @param loopline The loop line aka branches[0].
+ * @param coline The coline record from param.
+ * @returns Set of station ids on the shorter arc, or empty set if no coline is displayed.
+ */
+export const get_coline_arc_stations = (loopline: string[], coline: Record<string, ColineInfo>): Set<string> => {
+    const co = Object.values(coline).find(co => co.display);
+    if (!co) return new Set();
+    const n = loopline.length;
+    const from_idx = loopline.indexOf(co.from);
+    const to_idx = loopline.indexOf(co.to);
+    if (from_idx === -1 || to_idx === -1) return new Set();
+    const len = Math.min((to_idx - from_idx + n) % n, (from_idx - to_idx + n) % n);
+    const step = (to_idx - from_idx + n) % n <= (from_idx - to_idx + n) % n ? 1 : -1;
+    return new Set(Array.from({ length: len + 1 }, (_, i) => loopline[(from_idx + step * i + n) % n]));
+};
+
+/**
+ * Get the list of branch stations that are past (already visited) based on the current station and direction.
+ *
+ * @param branches All branches including the loop line.
+ * @param loopline The loop line aka branches[0].
+ * @param current_stn_id Current station id.
+ * @param direction Current travel direction.
+ * @param branch_stn_ids Station ids that appear in multiple branches (connection stations).
+ * @param loop_past Set of loop stations already marked as past.
+ * @returns Array of past branch station ids.
+ */
+export const get_branch_past_stations = (
+    branches: string[][],
+    loopline: string[],
+    current_stn_id: string,
+    direction: ShortDirection,
+    branch_stn_ids: string[],
+    loop_past: Set<string>
+): string[] => {
+    const result: string[] = [];
+    branches.slice(1, 3).forEach(raw_branch => {
+        const branch_stns = raw_branch.filter(
+            stn => !loopline.includes(stn) && !['linestart', 'lineend'].includes(stn)
+        );
+        if (branch_stns.length === 0) return;
+
+        if (raw_branch.includes(current_stn_id)) {
+            const cur_branch_idx = raw_branch.indexOf(current_stn_id);
+            branch_stns.forEach(stn => {
+                const stn_branch_idx = raw_branch.indexOf(stn);
+                if (direction === 'l' ? stn_branch_idx > cur_branch_idx : stn_branch_idx < cur_branch_idx) {
+                    result.push(stn);
+                }
+            });
+        } else {
+            const conn = find_branch_connection(raw_branch, loopline, branch_stn_ids);
+            if (conn && loop_past.has(conn.connection_stn)) {
+                result.push(...branch_stns);
+            }
+        }
+    });
+    return result;
+};
+
+/**
+ * Calculate the set of station ids that should be displayed as past (gray) on the coline.
+ * Includes both loop arc stations and branch stations.
+ *
+ * @param loopline The loop line aka branches[0].
+ * @param coline The coline record from param.
+ * @param branches All branches including the loop line.
+ * @param current_stn_id Current station id.
+ * @param direction Current travel direction.
+ * @param stn_list Station dictionary, used to check if a branch is a coline branch.
+ * @param branch_stn_ids Station ids that appear in multiple branches (connection stations).
+ * @returns Set of station ids that are past.
+ */
+export const get_coline_past_station_ids = (
+    loopline: string[],
+    coline: Record<string, ColineInfo>,
+    branches: string[][],
+    current_stn_id: string,
+    direction: ShortDirection,
+    stn_list: StationDict,
+    branch_stn_ids: string[]
+): Set<string> => {
+    const past = new Set<string>();
+    if (Object.keys(coline).length === 0) return past;
+
+    const coline_arc_stations = get_coline_arc_stations(loopline, coline);
+    const n = loopline.length;
+
+    const active_branch = branches.slice(1, 3).find(branch => branch.includes(current_stn_id));
+    const is_on_coline_branch =
+        active_branch && isColineBranch(active_branch, stn_list) && !loopline.includes(current_stn_id);
+
+    if (!is_on_coline_branch && !coline_arc_stations.has(current_stn_id)) return past;
+
+    const cur_idx = loopline.indexOf(current_stn_id);
+    const conn =
+        cur_idx === -1 && active_branch ? find_branch_connection(active_branch, loopline, branch_stn_ids) : undefined;
+
+    const effective_cur_idx = conn ? loopline.indexOf(conn.connection_stn) : cur_idx;
+    if (effective_cur_idx === -1) return past;
+
+    // Mark loop arc stations that are behind the current station in the travel direction
+    coline_arc_stations.forEach(arc_stn => {
+        const idx = loopline.indexOf(arc_stn);
+        if (idx === effective_cur_idx) return;
+        const past_dist = direction === 'l' ? (idx - effective_cur_idx + n) % n : (effective_cur_idx - idx + n) % n;
+        if (past_dist > 0 && past_dist <= Math.floor(n / 2)) past.add(arc_stn);
+    });
+
+    // If current station is on a branch, also mark its connection station as past when appropriate
+    if (
+        conn &&
+        ((!conn.connection_is_origin && direction === 'l') || (conn.connection_is_origin && direction === 'r'))
+    ) {
+        past.add(conn.connection_stn);
+    }
+
+    // Mark branch stations that are past
+    for (const stn of get_branch_past_stations(branches, loopline, current_stn_id, direction, branch_stn_ids, past)) {
+        past.add(stn);
+    }
+    return past;
+};
 
 const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | CanvasType.Indoor }) => {
     const { bank_angle, canvas } = props;
@@ -127,6 +255,16 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
 
     const xs = { ...xs_branches, ...xs_loop };
 
+    const coline_past_station_ids = get_coline_past_station_ids(
+        loopline,
+        coline,
+        branches,
+        current_stn_id,
+        direction,
+        stn_list,
+        branch_stn_ids
+    );
+
     // generate loop path used in svg
     const path = _linePath(loop_stns, xs, ys, bank, [...line_xs, ...line_ys], direction);
 
@@ -147,7 +285,13 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
             <path stroke="var(--rmg-theme-colour)" strokeWidth={12} fill="none" d={path} strokeLinejoin="round" />
             {/* Order matters. The LoopColine should cover the station in RailMap. */}
             {canvas === CanvasType.RailMap && (
-                <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />
+                <LoopStationGroup
+                    canvas={canvas}
+                    loop_stns={loop_stns}
+                    xs={xs}
+                    ys={ys}
+                    colinePastStationIds={coline_past_station_ids}
+                />
             )}
             <g transform={`translate(0,${Object.keys(coline).length > 0 ? -LINE_WIDTH - COLINE_GAP : 0})`}>
                 <LoopBranches
@@ -156,6 +300,7 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
                     xs={xs}
                     ys={ys}
                     canvas={canvas}
+                    colinePastStationIds={coline_past_station_ids}
                 />
                 {Object.keys(coline).length > 0 && (
                     <LoopColine
@@ -164,11 +309,20 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
                         xs={xs}
                         ys={ys}
                         canvas={canvas}
+                        colinePastStationIds={coline_past_station_ids}
                     />
                 )}
             </g>
             {/* Order matters. The station should cover LoopColine's main path in Indoor. */}
-            {canvas === CanvasType.Indoor && <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />}
+            {canvas === CanvasType.Indoor && (
+                <LoopStationGroup
+                    canvas={canvas}
+                    loop_stns={loop_stns}
+                    xs={xs}
+                    ys={ys}
+                    colinePastStationIds={coline_past_station_ids}
+                />
+            )}
         </g>
     );
 };
@@ -243,9 +397,13 @@ const LoopStationGroup = (props: {
     ys: {
         [k: string]: number;
     };
+    colinePastStationIds?: Set<string>;
 }) => {
-    const { canvas, loop_stns, xs, ys } = props;
+    const { canvas, loop_stns, xs, ys, colinePastStationIds } = props;
     const { current_stn_idx: current_stn_id, stn_list } = useRootSelector(store => store.param);
+
+    const getStnState = (stn_id: string): -1 | 0 | 1 =>
+        current_stn_id === stn_id ? 0 : colinePastStationIds?.has(stn_id) ? -1 : 1;
 
     const railmap_bank: Record<keyof LoopStns, -1 | 0 | 1> = {
         top: 0,
@@ -276,7 +434,7 @@ const LoopStationGroup = (props: {
                             <g key={stn_id} transform={`translate(${xs[stn_id]},${ys[stn_id]})`}>
                                 <StationSHMetro
                                     stnId={stn_id}
-                                    stnState={current_stn_id === stn_id ? 0 : 1}
+                                    stnState={getStnState(stn_id)}
                                     bank={railmap_bank[side as keyof LoopStns]}
                                     direction={railmap_direction[side as keyof LoopStns]}
                                 />
