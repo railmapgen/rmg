@@ -1,5 +1,5 @@
 import DownloadActions from './download-actions';
-import { MdOutlineFolder, MdOutlinePalette } from 'react-icons/md';
+import { MdOutlineFolder, MdOutlineSettings } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { SidePanelMode } from '../../constants/constants';
 import { setParamConfig, setSidePanelMode } from '../../redux/app/app-slice';
@@ -28,8 +28,8 @@ export default function HeaderActions() {
 
             <DownloadActions />
 
-            <Button leftSection={<MdOutlinePalette />} onClick={() => dispatch(setSidePanelMode(SidePanelMode.STYLE))}>
-                {t('HeaderActions.editStyle')}
+            <Button leftSection={<MdOutlineSettings />} onClick={() => dispatch(setSidePanelMode(SidePanelMode.STYLE))}>
+                {t('Settings')}
             </Button>
         </>
     );

@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Direction, Events } from '../../../constants/constants';
 import { useRootDispatch, useRootSelector } from '../../../redux';
-import { setGlobalAlert } from '../../../redux/app/app-slice';
 import {
     connect2MainLine,
     disconnectFromMainLine,
@@ -12,7 +11,8 @@ import {
     getPossibleStations,
 } from '../../../redux/param/connect-disconnect-branch';
 import rmgRuntime from '@railmapgen/rmg-runtime';
-import { Button, Card, Group, Select, TextInput } from '@mantine/core';
+import { Button, Card, Group, Notification, Select, TextInput } from '@mantine/core';
+import { MdOutlineClose } from 'react-icons/md';
 
 interface ConnectDisconnectCardProps {
     direction: Direction;
@@ -29,6 +29,7 @@ export default function ConnectDisconnectCard(props: ConnectDisconnectCardProps)
 
     const [isEditing, setIsEditing] = useState(false);
     const [selection, setSelection] = useState('');
+    const [error, setError] = useState<string>();
 
     const trimedBranch = branches[selectedBranch].filter(id => !['linestart', 'lineend'].includes(id));
     const branchEndId = direction === Direction.left ? trimedBranch[0] : trimedBranch.slice(-1)[0];
@@ -54,7 +55,7 @@ export default function ConnectDisconnectCard(props: ConnectDisconnectCardProps)
         if (result) {
             setIsEditing(false);
         } else {
-            dispatch(setGlobalAlert({ status: 'error', message: t('Unable to connect to main line.') }));
+            setError(t('Unable to connect to main line.'));
         }
         rmgRuntime.event(Events.CONNECT_BRANCH, { style, success: result });
     };
@@ -62,13 +63,19 @@ export default function ConnectDisconnectCard(props: ConnectDisconnectCardProps)
     const handleDisconnect = () => {
         const result = dispatch(disconnectFromMainLine(direction, selectedBranch));
         if (!result) {
-            dispatch(setGlobalAlert({ status: 'error', message: t('Unable to disconnect from main line.') }));
+            setError(t('Unable to disconnect from main line.'));
         }
         rmgRuntime.event(Events.DISCONNECT_BRANCH, { style, success: result });
     };
 
     return (
         <Card className={classes.card} withBorder>
+            {error && (
+                <Notification icon={<MdOutlineClose />} color="red" onClose={() => setError(undefined)}>
+                    {error}
+                </Notification>
+            )}
+
             <Group gap="xs">
                 <TextInput
                     label={t('Station name')}

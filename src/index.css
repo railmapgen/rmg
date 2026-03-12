@@ -46,3 +46,8 @@ div#root {
 * {
     box-sizing: border-box;
 }
+
+.mw-full {
+    width: 100%;
+    flex-basis: 100%;
+}

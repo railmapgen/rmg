@@ -8,14 +8,14 @@ import {
     updateColineColor,
 } from '../../../redux/param/coline-action';
 import ColineCard from './coline-card';
-import { MdAdd } from 'react-icons/md';
-import { setGlobalAlert } from '../../../redux/app/app-slice';
+import { MdAdd, MdOutlineClose } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
-import { Button, Title } from '@mantine/core';
+import { Button, Notification, Title } from '@mantine/core';
 import { RMSection, RMSectionBody, RMSectionHeader } from '@railmapgen/mantine-components';
 import clsx from 'clsx';
 import classes from '../side-panel.module.css';
+import { useState } from 'react';
 
 export default function ColineSection() {
     const { t } = useTranslation();
@@ -23,6 +23,8 @@ export default function ColineSection() {
 
     const selectedBranch = useRootSelector(state => state.app.selectedBranch);
     const { theme, stn_list: stationList } = useRootSelector(state => state.param);
+
+    const [error, setError] = useState<string>();
 
     const colineInfoList = dispatch(findAllColinesInBranch(selectedBranch));
     const possibleCombinations = dispatch(getPossibleCombinations(selectedBranch));
@@ -55,7 +57,7 @@ export default function ColineSection() {
         try {
             dispatch(updateColine(colineId, from, to));
         } catch {
-            dispatch(setGlobalAlert({ status: 'error', message: 'Unable to draw this share track.' }));
+            setError(t('Unable to draw this share track.'));
         }
     };
 
@@ -72,6 +74,12 @@ export default function ColineSection() {
             </RMSectionHeader>
 
             <RMSectionBody className={clsx(classes['section-body'], classes.fields)}>
+                {error && (
+                    <Notification icon={<MdOutlineClose />} color="red" onClose={() => setError(undefined)}>
+                        {error}
+                    </Notification>
+                )}
+
                 {Object.entries(colineInfoList).map(([id, colineInfo]) => (
                     <ColineCard
                         key={id}

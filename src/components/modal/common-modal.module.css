@@ -14,3 +14,8 @@
         margin-left: auto;
     }
 }
+
+.mw-full {
+    width: 100%;
+    flex-basis: 100%;
+}

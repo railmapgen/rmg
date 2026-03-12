@@ -40,7 +40,7 @@ export default function AutoNumModal(props: AutoNumModalProps) {
     const isSubmitDisabled = !from || !maxLength || isNaN(Number(from)) || isNaN(Number(maxLength));
 
     return (
-        <Modal opened={isOpen} onClose={onClose} size="md" title={t('AutoNumModal.title')}>
+        <Modal opened={isOpen} onClose={onClose} title={t('AutoNumModal.title')}>
             <Stack>
                 <Group className={classes.body}>
                     <NativeSelect

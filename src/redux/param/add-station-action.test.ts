@@ -152,7 +152,7 @@ describe('Unit tests for addStation action', () => {
 
     it('Can reject incorrect ordering for new branch', () => {
         const result = mockStore.dispatch(verifyNewBranchEnds('stn4', 'stn2'));
-        expect(result).toContain('ordering');
+        expect(result).toBe('Not in correct order');
     });
 
     it('Can reject open jaw from last station', () => {

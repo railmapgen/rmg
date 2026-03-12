@@ -42,14 +42,14 @@
     flex-direction: column;
     gap: var(--mantine-spacing-xs);
 
-    > :global(.mantine-Group-root) > * {
+    > :global(.mantine-Group-root) > *:not(:global(.mw-full)) {
         /*flex: 1;*/
         flex-grow: 1;
         min-width: 150px;
     }
 
     &.fields {
-        > :global(.mantine-Group-root) > * {
+        > :global(.mantine-Group-root) > *:not(:global(.mw-full)) {
             flex: 1;
         }
     }

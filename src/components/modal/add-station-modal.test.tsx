@@ -4,8 +4,8 @@ import rootReducer from '../../redux';
 import { createTestStore } from '../../setupTests';
 import AddStationModal from './add-station-modal';
 import { render } from '../../test-utils';
-import { fireEvent, screen, within } from '@testing-library/react';
-import { vi } from 'vitest';
+import { screen, within } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 const mockStationList = {
     linestart: {
@@ -57,6 +57,8 @@ const branches = getBranches(mockStationList);
 const realStore = rootReducer.getState();
 
 describe('AddStationModal', () => {
+    const user = userEvent.setup();
+
     /**
      * stn1 - stn2 - stn3 - stn4
      *        /
@@ -79,51 +81,53 @@ describe('AddStationModal', () => {
         it('Can render where dropdown as expected', () => {
             setup();
 
-            const fields = screen.getAllByRole('group');
-            expect(fields.length).toBe(3); // where, prep, pivot
+            const whereSelect = screen.getByRole('combobox', { name: 'Target location' });
+            expect(whereSelect).toBeInTheDocument();
+            expect(screen.getByRole('radiogroup', { name: 'Preposition' })).toBeInTheDocument();
+            expect(screen.getByRole('combobox', { name: 'Pivot station' })).toBeInTheDocument();
 
-            expect(within(fields[0]).getAllByRole('option')).toHaveLength(2);
-            expect(within(fields[0]).getByText(/main/i)).not.toBeNull();
-            expect(within(fields[0]).getByText(/branch/i)).not.toBeNull();
+            expect(within(whereSelect).getAllByRole('option')).toHaveLength(2);
+            expect(within(whereSelect).getByRole('option', { name: 'Main line' }));
+            expect(within(whereSelect).getByRole('option', { name: 'Branch 1' }));
         });
 
         it('Can render from and to dropdowns for main line as expected', () => {
             setup();
 
-            const fields = screen.getAllByRole('group');
+            const pivotSelect = screen.getByRole('combobox', { name: 'Pivot station' });
 
             // 4 stations in main line + please select
-            expect(within(fields[2]).getAllByRole('option')).toHaveLength(5);
-            expect(within(fields[2]).queryByText(/Station 5/)).toBeNull();
+            expect(within(pivotSelect).getAllByRole('option')).toHaveLength(5);
+            expect(within(pivotSelect).queryByRole('option', { name: '車站5/Station 5' })).not.toBeInTheDocument();
         });
 
-        it('Submit button is disabled by default (without selection)', () => {
+        it('Submit button is disabled by default (without selection)', async () => {
             setup();
 
             expect(screen.getByDisplayValue(/Please select/)).not.toBeNull();
-            expect(screen.getByText('Confirm')).toBeDisabled();
+            expect(screen.getByRole('button', { name: 'Confirm' })).toBeDisabled();
 
-            fireEvent.change(screen.getAllByRole('combobox')[2], { target: { value: 'stn3' } });
+            await user.selectOptions(screen.getByRole('combobox', { name: 'Pivot station' }), '車站3/Station 3');
 
-            expect(screen.getByText('Confirm')).not.toBeDisabled();
+            expect(screen.getByRole('button', { name: 'Confirm' })).toBeEnabled();
         });
 
-        it('Can reset pivot selection when where is changed', () => {
+        it('Can reset pivot selection when where is changed', async () => {
             setup();
 
-            fireEvent.change(screen.getAllByRole('combobox')[2], { target: { value: 'stn3' } });
+            await user.selectOptions(screen.getByRole('combobox', { name: 'Pivot station' }), '車站3/Station 3');
             expect(screen.queryByDisplayValue(/Please select/)).toBeNull();
 
-            fireEvent.change(screen.getAllByRole('combobox')[0], { target: { value: 1 } });
+            await user.selectOptions(screen.getByRole('combobox', { name: 'Target location' }), 'Branch 1');
             expect(screen.getByDisplayValue(/Please select/)).not.toBeNull();
         });
 
-        it('Can add station in existing branch as expected', () => {
+        it('Can add station in existing branch as expected', async () => {
             setup();
             const prevStations = Object.keys(mockStore.getState().param.stn_list);
 
-            fireEvent.change(screen.getAllByRole('combobox')[2], { target: { value: 'stn3' } });
-            fireEvent.click(screen.getByText('Confirm'));
+            await user.selectOptions(screen.getByRole('combobox', { name: 'Pivot station' }), '車站3/Station 3');
+            await user.click(screen.getByRole('button', { name: 'Confirm' }));
 
             const addedStations = Object.keys(mockStore.getState().param.stn_list).filter(
                 id => !prevStations.includes(id)
@@ -153,13 +157,15 @@ describe('AddStationModal', () => {
         it('Can render where dropdown for SHMetro style as expected', () => {
             setup();
 
-            const fields = screen.getAllByRole('group');
-            expect(fields.length).toBe(3); // where, prep, pivot
+            const whereSelect = screen.getByRole('combobox', { name: 'Target location' });
+            expect(whereSelect).toBeInTheDocument();
+            expect(screen.getByRole('radiogroup', { name: 'Preposition' })).toBeInTheDocument();
+            expect(screen.getByRole('combobox', { name: 'Pivot station' })).toBeInTheDocument();
 
-            expect(within(fields[0]).getAllByRole('option')).toHaveLength(2);
-            expect(within(fields[0]).getByText(/main/i)).not.toBeNull();
-            expect(within(fields[0]).queryByText(/branch/i)).toBeNull();
-            expect(within(fields[0]).getByText(/external/i)).not.toBeNull();
+            expect(within(whereSelect).getAllByRole('option')).toHaveLength(2);
+            expect(within(whereSelect).getByRole('option', { name: 'Main line' })).toBeInTheDocument();
+            expect(within(whereSelect).queryByRole('option', { name: 'Branch 1' })).not.toBeInTheDocument();
+            expect(within(whereSelect).getByRole('option', { name: 'External line 1' })).toBeInTheDocument();
         });
     });
 });

@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux';
 import { SidePanelMode } from '../../constants/constants';
 import StationSidePanel from './station-side-panel/station-side-panel';
 import StyleSidePanel from './style-side-panel/style-side-panel';
-import { RmgMultiLineString } from '@railmapgen/rmg-components';
 import StationSidePanelFooter from './station-side-panel/station-side-panel-footer';
 import BranchSidePanel from './branch-side-panel/branch-side-panel';
 import { useTranslation } from 'react-i18next';
@@ -21,19 +20,17 @@ export default function SidePanel() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
-    const { sidePanelMode, selectedStation, paletteAppClipInput } = useRootSelector(state => state.app);
-    const name = useRootSelector(state => state.param.stn_list[selectedStation]?.localisedName);
+    const { sidePanelMode, paletteAppClipInput } = useRootSelector(state => state.app);
 
-    const modes: Record<SidePanelMode, { icon: ReactNode; header: ReactNode; body?: ReactNode; footer?: ReactNode }> = {
+    const modes: Record<SidePanelMode, { icon: ReactNode; body?: ReactNode; footer?: ReactNode }> = {
         STATION: {
             icon: <MdOutlineTrain />,
-            header: <RmgMultiLineString text={name?.zh + '/' + name?.en || ''} />,
             body: <StationSidePanel />,
             footer: <StationSidePanelFooter />,
         },
-        STYLE: { icon: <MdOutlinePalette />, header: t('StyleSidePanel.header'), body: <StyleSidePanel /> },
-        BRANCH: { icon: <MdOutlineShare />, header: t('BranchSidePanel.header'), body: <BranchSidePanel /> },
-        CLOSE: { icon: <></>, header: 'Close' },
+        STYLE: { icon: <MdOutlinePalette />, body: <StyleSidePanel /> },
+        BRANCH: { icon: <MdOutlineShare />, body: <BranchSidePanel /> },
+        CLOSE: { icon: <></> },
     };
 
     const handleClose = () => {
@@ -48,8 +45,6 @@ export default function SidePanel() {
             width={SIDE_PANEL_WIDTH}
             withCloseButton
         >
-            {/*<RmgSidePanelHeader onClose={handleClose}>{mode[sidePanelMode].header}</RmgSidePanelHeader>*/}
-
             <Tabs classNames={{ root: classes.body, panel: classes['tab-panel'] }}>
                 <Tabs.List grow>
                     {[SidePanelMode.STYLE, SidePanelMode.BRANCH, SidePanelMode.STATION].map(mode => (

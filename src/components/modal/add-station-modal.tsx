@@ -1,25 +1,15 @@
+import classes from './common-modal.module.css';
 import { useEffect, useState } from 'react';
-import {
-    Alert,
-    AlertIcon,
-    Box,
-    Button,
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    ModalOverlay,
-} from '@chakra-ui/react';
-import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useRootDispatch, useRootSelector } from '../../redux';
-import { Events, RmgStyle, SidePanelMode } from '../../constants/constants';
-import { isColineBranch } from '../../redux/param/coline-action';
+import { Events, SidePanelMode } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import { addStationToExistingBranch } from '../../redux/param/add-station-action';
 import { setSelectedStation, setSidePanelMode } from '../../redux/app/app-slice';
 import rmgRuntime from '@railmapgen/rmg-runtime';
+import { Button, Group, Modal, NativeSelect, Notification, Stack } from '@mantine/core';
+import { MdOutlineClose } from 'react-icons/md';
+import useBranchOptions from '../../hooks/use-branch-options';
+import { RMLabelledSegmentedControl } from '@railmapgen/mantine-components';
 
 interface AddStationModalProps {
     isOpen: boolean;
@@ -40,6 +30,8 @@ export default function AddStationModal(props: AddStationModalProps) {
     const [pivot, setPivot] = useState('');
     const [error, setError] = useState(false);
 
+    const branchOptions = useBranchOptions();
+
     useEffect(() => {
         setWhere(selectedBranch);
     }, [selectedBranch]);
@@ -51,57 +43,12 @@ export default function AddStationModal(props: AddStationModalProps) {
     }, [isOpen]);
 
     const selectableStations = branches[Number(where)]?.slice(1, -1) ?? [];
-
-    const getStationOptions = (stationIdList: string[]): Record<string, string> => {
-        return stationIdList.reduce(
-            (acc, cur) => ({
-                ...acc,
-                [cur]: stationList[cur]?.localisedName.zh + '/' + stationList[cur]?.localisedName.en,
-            }),
-            { '': t('AddStationModal.pleaseSelect') }
-        );
-    };
-
-    const fields: RmgFieldsField[] = [
-        {
-            type: 'select',
-            label: t('AddStationModal.where'),
-            value: where,
-            options: {
-                ...branches.reduce(
-                    (acc, cur, idx) => ({
-                        ...acc,
-                        [idx]:
-                            idx === 0
-                                ? t('AddStationModal.main')
-                                : style !== RmgStyle.SHMetro || !isColineBranch(cur, stationList)
-                                  ? t('AddStationModal.branch') + ' ' + idx
-                                  : t('AddStationModal.external') + ' ' + idx,
-                    }),
-                    {}
-                ),
-            },
-            onChange: value => handleSelectWhere(value as number),
-            minW: 'full',
-        },
-        {
-            type: 'select',
-            label: t('AddStationModal.preposition'),
-            value: preposition,
-            options: {
-                before: t('AddStationModal.before'),
-                after: t('AddStationModal.after'),
-            },
-            onChange: value => setPreposition(value as 'before' | 'after'),
-        },
-        {
-            type: 'select',
-            label: t('AddStationModal.pivot'),
-            value: pivot,
-            options: getStationOptions(selectableStations),
-            disabledOptions: [''],
-            onChange: value => setPivot(value as string),
-        },
+    const stationOptions = [
+        { value: '', label: t('AddStationModal.pleaseSelect'), disabled: true },
+        ...selectableStations.map(id => ({
+            value: id,
+            label: stationList[id]?.localisedName.zh + '/' + stationList[id]?.localisedName.en,
+        })),
     ];
 
     const handleSelectWhere = (value: number) => {
@@ -124,30 +71,45 @@ export default function AddStationModal(props: AddStationModalProps) {
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-                {error && (
-                    <Alert status="error" variant="solid" size="xs">
-                        <AlertIcon />
-                        {t('AddStationModal.error')}
-                    </Alert>
-                )}
-                <Box position="relative">
-                    <ModalHeader>{t('AddStationModal.title')}</ModalHeader>
-                    <ModalCloseButton />
-                </Box>
+        <Modal opened={isOpen} onClose={onClose} title={t('AddStationModal.title')}>
+            {error && (
+                <Notification icon={<MdOutlineClose />} color="red" withCloseButton={false} mb="xs">
+                    {t('AddStationModal.error')}
+                </Notification>
+            )}
 
-                <ModalBody>
-                    <RmgFields fields={fields} />
-                </ModalBody>
+            <Stack>
+                <Group className={classes.body}>
+                    <NativeSelect
+                        label={t('AddStationModal.where')}
+                        value={where}
+                        data={branchOptions}
+                        onChange={({ currentTarget: { value } }) => handleSelectWhere(Number(value))}
+                        className={classes['mw-full']}
+                    />
+                    <RMLabelledSegmentedControl
+                        label={t('AddStationModal.preposition')}
+                        value={preposition}
+                        data={[
+                            { value: 'before', label: t('AddStationModal.before') },
+                            { value: 'after', label: t('AddStationModal.after') },
+                        ]}
+                        onChange={value => setPreposition(value as 'before' | 'after')}
+                    />
+                    <NativeSelect
+                        label={t('AddStationModal.pivot')}
+                        value={pivot}
+                        data={stationOptions}
+                        onChange={({ currentTarget: { value } }) => setPivot(value)}
+                    />
+                </Group>
 
-                <ModalFooter>
-                    <Button colorScheme="primary" onClick={handleSubmit} isDisabled={!pivot}>
+                <Group className={classes.footer}>
+                    <Button onClick={handleSubmit} disabled={!pivot}>
                         {t('Confirm')}
                     </Button>
-                </ModalFooter>
-            </ModalContent>
+                </Group>
+            </Stack>
         </Modal>
     );
 }

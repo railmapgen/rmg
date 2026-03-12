@@ -1,7 +1,4 @@
 {
-    "HeaderActions": {
-        "editStyle": "風格化設定"
-    },
     "DownloadActions": {
         "downloads": "下載",
         "configFile": "設定檔",
@@ -193,7 +190,7 @@
         "where": "目標位置",
         "new": "新增一條支綫",
         "ext": "新增一條外部路綫",
-        "from": "介乎於",
+        "from": "介於",
         "to": "與",
         "position": "位置",
         "upper": "上方",

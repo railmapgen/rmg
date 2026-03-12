@@ -1,5 +1,4 @@
 import { CanvasType, ParamConfig, RmgStyle, SidePanelMode } from '../../constants/constants';
-import { AlertStatus } from '@chakra-ui/react';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Theme } from '@railmapgen/rmg-palette-resources';
 
@@ -17,7 +16,6 @@ interface AppState {
     selectedColine?: number;
     selectedBranch: number;
     isShareTrackEnabled?: string[]; // for main line only, store the selections
-    globalAlerts: Partial<Record<AlertStatus, { message: string; url?: string; linkedApp?: string }>>;
     isLoading?: number; // undefined: not loading, -1: loading, 0-100: progress
     paletteAppClipInput?: Theme;
     paletteAppClipOutput?: Theme;
@@ -33,7 +31,6 @@ const initialState: AppState = {
     selectedColine: undefined,
     selectedBranch: 0,
     isShareTrackEnabled: undefined,
-    globalAlerts: {},
     isLoading: undefined,
 };
 
@@ -93,23 +90,6 @@ const appSlice = createSlice({
             state.isShareTrackEnabled = action.payload;
         },
 
-        /**
-         * If linkedApp is true, alert will try to open link in the current domain.
-         * E.g. linkedApp=true, url='/rmp' will open https://railmapgen.github.io/rmp/
-         * If you want to open a url outside the domain, DO NOT set or pass FALSE to linkedApp.
-         */
-        setGlobalAlert: (
-            state,
-            action: PayloadAction<{ status: AlertStatus; message: string; url?: string; linkedApp?: string }>
-        ) => {
-            const { status, message, url, linkedApp } = action.payload;
-            state.globalAlerts[status] = { message, url, linkedApp };
-        },
-
-        closeGlobalAlert: (state, action: PayloadAction<AlertStatus>) => {
-            delete state.globalAlerts[action.payload];
-        },
-
         startLoading: state => {
             state.isLoading = -1;
         },
@@ -150,8 +130,6 @@ export const {
     setSelectedColine,
     setSelectedBranch,
     setIsShareTrackEnabled,
-    setGlobalAlert,
-    closeGlobalAlert,
     startLoading,
     setLoadingProgress,
     stopLoading,

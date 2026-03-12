@@ -1,6 +1,5 @@
 import classes from '../side-panel.module.css';
 import { useEffect, useState } from 'react';
-import { HStack, IconButton } from '@chakra-ui/react';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import {
     customiseDestinationName,
@@ -18,12 +17,19 @@ import {
     staggerStationNames,
     toggleLineNameBeforeDestination,
 } from '../../../redux/param/param-slice';
-import { PanelTypeGZMTR, PanelTypeShmetro, PsdLabel, RmgStyle, ShortDirection } from '../../../constants/constants';
-import { MdSwapVert } from 'react-icons/md';
-import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import {
+    FALSE,
+    PanelTypeGZMTR,
+    PanelTypeShmetro,
+    PsdLabel,
+    RmgStyle,
+    ShortDirection,
+    TRUE,
+} from '../../../constants/constants';
+import { MdOutlineSwapVert } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { openPaletteAppClip } from '../../../redux/app/app-slice';
-import { Group, NativeSelect, Switch, TextInput, Title } from '@mantine/core';
+import { Button, Group, NativeSelect, Switch, TextInput, Title } from '@mantine/core';
 import {
     RMLabelledSegmentedControl,
     RMSection,
@@ -97,108 +103,22 @@ export default function DesignSection() {
     const flipNameSelections = [
         {
             label: t('StyleSidePanel.design.upwards'),
-            value: true,
+            value: TRUE,
         },
         {
             label: t('StyleSidePanel.design.downward'),
-            value: false,
-        },
-    ];
-
-    const shmetroSpecifiedFields: RmgFieldsField[] = [
-        {
-            type: 'custom',
-            label: t('StyleSidePanel.design.firstStationNameDisplay'),
-            component: (
-                <HStack spacing={0.5}>
-                    <RmgButtonGroup
-                        selections={flipNameSelections}
-                        defaultValue={namePosMTR.isFlip ?? true}
-                        onChange={value => dispatch(flipStationNames(value))}
-                    />
-                </HStack>
-            ),
-            minW: 'full',
-            oneLine: true,
-            hidden: ![RmgStyle.SHMetro].includes(style) || lineServices > 1 || loop,
+            value: FALSE,
         },
     ];
 
     const staggerNameSelections = [
         {
             label: t('StyleSidePanel.design.alternatively'),
-            value: true,
+            value: TRUE,
         },
         {
             label: t('StyleSidePanel.design.onOneSide'),
-            value: false,
-        },
-    ];
-
-    const mtrSpecifiedFields: RmgFieldsField[] = [
-        {
-            type: 'custom',
-            label: t('StyleSidePanel.design.nameDisplay'),
-            component: (
-                <HStack spacing={0.5}>
-                    <IconButton
-                        size="xs"
-                        variant="ghost"
-                        aria-label={t('StyleSidePanel.design.flip')}
-                        title={t('StyleSidePanel.design.flip')}
-                        icon={<MdSwapVert />}
-                        onClick={() => dispatch(flipStationNames())}
-                    />
-                    <RmgButtonGroup
-                        selections={staggerNameSelections}
-                        defaultValue={namePosMTR.isStagger}
-                        onChange={value => dispatch(staggerStationNames(value))}
-                    />
-                </HStack>
-            ),
-            minW: 'full',
-            oneLine: true,
-            hidden: ![RmgStyle.MTR].includes(style),
-        },
-        {
-            type: 'switch',
-            label: t('StyleSidePanel.design.legacyDestination'),
-            isChecked: customiseMTRDest.isLegacy,
-            onChange: checked => dispatch(toggleLineNameBeforeDestination(checked)),
-            hidden: ![RmgStyle.MTR].includes(style),
-            minW: 'full',
-            oneLine: true,
-        },
-        {
-            type: 'switch',
-            label: t('StyleSidePanel.design.overrideTerminal'),
-            isChecked: customiseMTRDest.terminal !== false,
-            onChange: checked => dispatch(customiseDestinationName(checked ? ['', ''] : false)),
-            hidden: ![RmgStyle.MTR].includes(style),
-            minW: 'full',
-            oneLine: true,
-        },
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.terminalZhName'),
-            value: customiseMTRDest.terminal ? customiseMTRDest.terminal[0] : '',
-            placeholder: '機場及博覽館',
-            onChange: value =>
-                dispatch(
-                    customiseDestinationName([value, customiseMTRDest.terminal ? customiseMTRDest.terminal[1] : ''])
-                ),
-            hidden: ![RmgStyle.MTR].includes(style) || customiseMTRDest.terminal === false,
-        },
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.terminalEnName'),
-            value: customiseMTRDest.terminal ? customiseMTRDest.terminal[1] : '',
-            placeholder: 'Airport and AsiaWorld-Expo',
-            onChange: value =>
-                dispatch(
-                    customiseDestinationName([customiseMTRDest.terminal ? customiseMTRDest.terminal[0] : '', value])
-                ),
-            hidden: ![RmgStyle.MTR].includes(style) || customiseMTRDest.terminal === false,
+            value: FALSE,
         },
     ];
 
@@ -291,8 +211,79 @@ export default function DesignSection() {
                         value={direction}
                         onChange={value => dispatch(setDirection(value as ShortDirection))}
                     />
+                    {style === RmgStyle.MTR && (
+                        <>
+                            <RMLabelledSegmentedControl
+                                label={t('StyleSidePanel.design.nameDisplay')}
+                                value={String(namePosMTR.isStagger)}
+                                data={staggerNameSelections}
+                                onChange={value => dispatch(staggerStationNames(value === TRUE))}
+                            />
+                            <Button
+                                variant="light"
+                                leftSection={<MdOutlineSwapVert />}
+                                onClick={() => dispatch(flipStationNames())}
+                                style={{ alignSelf: 'flex-end' }}
+                            >
+                                {t('StyleSidePanel.design.flip')}
+                            </Button>
+                            <Switch
+                                label={t('StyleSidePanel.design.legacyDestination')}
+                                checked={customiseMTRDest.isLegacy}
+                                onChange={({ currentTarget: { checked } }) =>
+                                    dispatch(toggleLineNameBeforeDestination(checked))
+                                }
+                                className="mw-full"
+                            />
+                            <Switch
+                                label={t('StyleSidePanel.design.overrideTerminal')}
+                                checked={customiseMTRDest.terminal !== false}
+                                onChange={({ currentTarget: { checked } }) =>
+                                    dispatch(customiseDestinationName(checked ? ['', ''] : false))
+                                }
+                                className="mw-full"
+                            />
+                            {customiseMTRDest.terminal && (
+                                <>
+                                    <TextInput
+                                        label={t('StyleSidePanel.design.terminalZhName')}
+                                        value={customiseMTRDest.terminal ? customiseMTRDest.terminal[0] : ''}
+                                        placeholder="機場及博覽館"
+                                        onChange={({ currentTarget: { value } }) =>
+                                            dispatch(
+                                                customiseDestinationName([
+                                                    value,
+                                                    customiseMTRDest.terminal ? customiseMTRDest.terminal[1] : '',
+                                                ])
+                                            )
+                                        }
+                                    />
+                                    <TextInput
+                                        label={t('StyleSidePanel.design.terminalEnName')}
+                                        value={customiseMTRDest.terminal ? customiseMTRDest.terminal[1] : ''}
+                                        placeholder="Airport and AsiaWorld-Expo"
+                                        onChange={({ currentTarget: { value } }) =>
+                                            dispatch(
+                                                customiseDestinationName([
+                                                    customiseMTRDest.terminal ? customiseMTRDest.terminal[0] : '',
+                                                    value,
+                                                ])
+                                            )
+                                        }
+                                    />
+                                </>
+                            )}
+                        </>
+                    )}
+                    {style === RmgStyle.SHMetro && lineServices === 1 && !loop && (
+                        <RMLabelledSegmentedControl
+                            label={t('StyleSidePanel.design.firstStationNameDisplay')}
+                            value={String(namePosMTR.isFlip)}
+                            data={flipNameSelections}
+                            onChange={value => dispatch(flipStationNames(value === TRUE))}
+                        />
+                    )}
                 </Group>
-                <RmgFields fields={[...mtrSpecifiedFields, ...shmetroSpecifiedFields]} minW={130} />
             </RMSectionBody>
         </RMSection>
     );
