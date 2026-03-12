@@ -159,15 +159,16 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
     } = useRootSelector(store => store.param);
 
     const loopline = branches[0].filter(stn_id => !['linestart', 'lineend'].includes(stn_id));
-    const branch_stn_ids = (() => {
-        const counts = new Map<string, number>();
-        for (const stn of branches.slice(0, 3).flat()) {
-            counts.set(stn, (counts.get(stn) ?? 0) + 1);
-        }
-        return [...counts.entries()]
-            .filter(([id, count]) => count >= 2 && !['linestart', 'lineend'].includes(id))
-            .map(([id]) => id);
-    })();
+    const branch_stn_ids = branches
+        .slice(0, 3) // drop additional branches
+        .flat()
+        .filter(
+            (
+                o => v =>
+                    (o[v] = (o[v] || 0) + 1) === 2
+            )({} as { [stn_id: string]: number })
+        ) // count each occurrence
+        .filter(stn_id => !['linestart', 'lineend'].includes(stn_id)); // find branch stations
 
     // find which arc would be displayed on the top side from coline info
     const arc =
