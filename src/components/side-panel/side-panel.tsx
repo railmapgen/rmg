@@ -1,7 +1,12 @@
 import classes from './side-panel.module.css';
 import { ReactNode } from 'react';
 import { useRootSelector } from '../../redux';
-import { closePaletteAppClip, onPaletteAppClipEmit, setSidePanelMode } from '../../redux/app/app-slice';
+import {
+    closePaletteAppClip,
+    onPaletteAppClipEmit,
+    setIsSidePanelOpen,
+    setSidePanelMode,
+} from '../../redux/app/app-slice';
 import { useDispatch } from 'react-redux';
 import { SidePanelMode } from '../../constants/constants';
 import StationSidePanel from './station-side-panel/station-side-panel';
@@ -20,36 +25,36 @@ export default function SidePanel() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
-    const { sidePanelMode, paletteAppClipInput } = useRootSelector(state => state.app);
+    const { isSidePanelOpen, sidePanelMode, paletteAppClipInput } = useRootSelector(state => state.app);
 
-    const modes: Record<SidePanelMode, { icon: ReactNode; body?: ReactNode; footer?: ReactNode }> = {
+    const modes: Record<SidePanelMode, { icon: ReactNode; label: string; body?: ReactNode; footer?: ReactNode }> = {
         STATION: {
             icon: <MdOutlineTrain />,
+            label: t('Station'),
             body: <StationSidePanel />,
             footer: <StationSidePanelFooter />,
         },
-        STYLE: { icon: <MdOutlinePalette />, body: <StyleSidePanel /> },
-        BRANCH: { icon: <MdOutlineShare />, body: <BranchSidePanel /> },
-        CLOSE: { icon: <></> },
-    };
-
-    const handleClose = () => {
-        dispatch(setSidePanelMode(SidePanelMode.CLOSE));
+        STYLE: { icon: <MdOutlinePalette />, label: t('Style'), body: <StyleSidePanel /> },
+        BRANCH: { icon: <MdOutlineShare />, label: t('Line section'), body: <BranchSidePanel /> },
     };
 
     return (
         <RMSidePanel
-            opened={sidePanelMode !== SidePanelMode.CLOSE}
-            onClose={handleClose}
+            opened={isSidePanelOpen}
+            onClose={() => dispatch(setIsSidePanelOpen(false))}
             title={t('Settings')}
             width={SIDE_PANEL_WIDTH}
             withCloseButton
         >
-            <Tabs classNames={{ root: classes.body, panel: classes['tab-panel'] }}>
+            <Tabs
+                value={sidePanelMode}
+                onChange={mode => dispatch(setSidePanelMode(mode as SidePanelMode))}
+                classNames={{ root: classes.body, panel: classes['tab-panel'] }}
+            >
                 <Tabs.List grow>
                     {[SidePanelMode.STYLE, SidePanelMode.BRANCH, SidePanelMode.STATION].map(mode => (
                         <Tabs.Tab key={mode} value={mode} leftSection={modes[mode].icon}>
-                            {mode}
+                            {modes[mode].label}
                         </Tabs.Tab>
                     ))}
                 </Tabs.List>

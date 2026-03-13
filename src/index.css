@@ -7,7 +7,7 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        background-color: #1A202C;
+        background-color: #242424;
         color: white;
     }
 }
@@ -30,17 +30,15 @@ body {
     height: 100%;
     width: 100%;
     width: -webkit-fill-available;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
 }
 
 div#root {
     height: 100%;
     width: 100%;
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-
-    .rm-window {
-        padding-top: env(safe-area-inset-top);
-    }
+    background: inherit;
+    overflow: hidden;
 }
 
 * {

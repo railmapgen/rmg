@@ -26,7 +26,6 @@ export default function AppRouter() {
             logger.warn('<AppRouter/>, Both param ID and external URL are provided. External URL will be ignored.');
             setSearchParams({ project: paramId });
         } else if (paramId) {
-            // TODO: clear existing toast to avoid duplicate messages?
             if (paramId === paramConfig?.id) {
                 logger.info('<AppRouter/>, Store param ID matches URL param ID. Rendering app view...');
                 setIsLoaded(true);

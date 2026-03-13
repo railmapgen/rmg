@@ -5,11 +5,11 @@ import { useRootDispatch, useRootSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
 import { isColineBranch } from '../../../redux/param/coline-action';
 import LoopSection from './loop-section';
-import { Button, Divider, Group, NativeSelect, Stack } from '@mantine/core';
+import { Button, Divider, Group, Notification, Select, Stack } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { setSelectedBranch } from '../../../redux/app/app-slice';
 import useBranchOptions from '../../../hooks/use-branch-options';
-import { MdOutlineAdd } from 'react-icons/md';
+import { MdOutlineAdd, MdOutlineClose } from 'react-icons/md';
 import { useState } from 'react';
 import NewBranchModal from '../../modal/new-branch-modal';
 
@@ -27,12 +27,11 @@ export default function BranchSidePanel() {
 
     return (
         <Stack className={classes['tab-body']} gap="xs">
-            <Group gap="xs" align="flex-end">
-                <NativeSelect
-                    label={t('Line section')}
-                    value={selectedBranch}
+            <Group gap="xs" mt="xs" align="flex-end">
+                <Select
+                    value={selectedBranch.toString()}
                     data={branchOptions}
-                    onChange={({ currentTarget: { value } }) => dispatch(setSelectedBranch(Number(value)))}
+                    onChange={value => dispatch(setSelectedBranch(Number(value)))}
                     flex={1}
                 />
                 <Button leftSection={<MdOutlineAdd />} onClick={() => setIsNewBranchModalOpen(true)}>
@@ -40,24 +39,32 @@ export default function BranchSidePanel() {
                 </Button>
             </Group>
 
-            {style === RmgStyle.SHMetro &&
-                (selectedBranch === 0 || isColineBranch(branches[selectedBranch], stationList)) && (
-                    <>
-                        <ColineSection />
-                        <Divider />
-                    </>
-                )}
-
-            {loop && (
+            {selectedBranch >= branches.length ? (
+                <Notification icon={<MdOutlineClose />} color="red" withCloseButton={false} mb="xs">
+                    {t('Invalid selection')}
+                </Notification>
+            ) : (
                 <>
-                    <LoopSection />
-                    <Divider />
+                    {style === RmgStyle.SHMetro &&
+                        (selectedBranch === 0 || isColineBranch(branches[selectedBranch], stationList)) && (
+                            <>
+                                <ColineSection />
+                                <Divider />
+                            </>
+                        )}
+
+                    {loop && (
+                        <>
+                            <LoopSection />
+                            <Divider />
+                        </>
+                    )}
+
+                    <ActionSection />
+
+                    <NewBranchModal isOpen={isNewBranchModalOpen} onClose={() => setIsNewBranchModalOpen(false)} />
                 </>
             )}
-
-            <ActionSection />
-
-            <NewBranchModal isOpen={isNewBranchModalOpen} onClose={() => setIsNewBranchModalOpen(false)} />
         </Stack>
     );
 }

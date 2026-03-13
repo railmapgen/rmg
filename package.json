@@ -9,7 +9,7 @@
     "dependencies": {
         "@mantine/core": "^8.3.16",
         "@mantine/hooks": "^8.3.16",
-        "@railmapgen/mantine-components": "^0.2.6",
+        "@railmapgen/mantine-components": "^0.2.7",
         "@railmapgen/rmg-palette-resources": "^3.0.2",
         "@railmapgen/rmg-runtime": "^13.0.0",
         "@railmapgen/rmg-translate": "^3.4.4",
@@ -34,7 +34,7 @@
         "@types/react": "^19.2.14",
         "@types/react-dom": "^19.2.3",
         "@types/react-router-dom": "^5.3.3",
-        "@vitejs/plugin-react": "^5.2.0",
+        "@vitejs/plugin-react": "^6.0.1",
         "@vitest/coverage-v8": "^4.1.0",
         "eslint": "^9.39.4",
         "eslint-plugin-prettier": "^5.5.5",
@@ -47,7 +47,7 @@
         "terser": "^5.46.0",
         "typescript": "^5.9.3",
         "typescript-eslint": "^8.57.0",
-        "vite": "^7.3.1",
+        "vite": "^8.0.0",
         "vitest": "^4.1.0"
     },
     "scripts": {

@@ -11,6 +11,7 @@ interface AppState {
     paramConfig?: ParamConfig;
     canvasScale: number;
     canvasToShow: CanvasType[];
+    isSidePanelOpen: boolean;
     sidePanelMode: SidePanelMode;
     selectedStation: string;
     selectedColine?: number;
@@ -26,7 +27,8 @@ const initialState: AppState = {
     paramConfig: undefined,
     canvasScale: 1,
     canvasToShow: Object.values(CanvasType),
-    sidePanelMode: SidePanelMode.CLOSE,
+    isSidePanelOpen: false,
+    sidePanelMode: SidePanelMode.STYLE,
     selectedStation: 'linestart',
     selectedColine: undefined,
     selectedBranch: 0,
@@ -67,6 +69,15 @@ const appSlice = createSlice({
             const index = state.canvasToShow.indexOf(action.payload);
             if (index >= 0) {
                 state.canvasToShow.splice(index, 1);
+            }
+        },
+
+        setIsSidePanelOpen: (state, action: PayloadAction<boolean>) => {
+            state.isSidePanelOpen = action.payload;
+            if (!action.payload) {
+                state.selectedStation = 'linestart';
+                state.selectedBranch = 0;
+                state.selectedColine = undefined;
             }
         },
 
@@ -125,6 +136,7 @@ export const {
     setCanvasToShow,
     addCanvasToShow,
     removeCanvasToShow,
+    setIsSidePanelOpen,
     setSidePanelMode,
     setSelectedStation,
     setSelectedColine,

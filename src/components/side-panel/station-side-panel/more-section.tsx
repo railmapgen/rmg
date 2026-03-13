@@ -153,7 +153,7 @@ export default function MoreSection() {
                                 </Button>
                             }
                             rightSectionWidth={170}
-                            style={{ width: '100%', flexBasis: '100%' }}
+                            className="mw-full"
                         />
                     )}
                 </Group>

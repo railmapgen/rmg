@@ -1,7 +1,7 @@
 import classes from '../side-panel.module.css';
 import { BranchStyle, Direction } from '../../../constants/constants';
 import { useRootDispatch, useRootSelector } from '../../../redux';
-import { updateStationBranchFirstStation } from '../../../redux/param/action';
+import { flipStationBranchPosition, updateStationBranchFirstStation } from '../../../redux/param/action';
 import { useTranslation } from 'react-i18next';
 import { RMLabelledSegmentedControl, RMSection, RMSectionBody, RMSectionHeader } from '@railmapgen/mantine-components';
 import { Fieldset, Group, NativeSelect, Switch, Text, Title } from '@mantine/core';
@@ -48,6 +48,7 @@ export default function BranchSection() {
                     label={t('StationSidePanel.branch.position')}
                     value={(direction === Direction.left ? parents : children)[0] === branchInfo[1] ? 'upper' : 'lower'}
                     data={positionOptions}
+                    onChange={() => dispatch(flipStationBranchPosition(selectedStation, direction))}
                 />
             </Group>
         );

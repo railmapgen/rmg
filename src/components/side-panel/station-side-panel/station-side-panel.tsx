@@ -79,16 +79,16 @@ export default function StationSidePanel() {
 
     return (
         <Stack className={classes['tab-body']} gap="xs">
-            <Group gap="xs" align="flex-end">
+            <Group gap="xs" mt="xs" align="flex-end">
                 {/* TODO: Use below component globally */}
                 <Select
-                    label={t('Station')}
                     value={stationOptionIdMapper.construct(selectedBranch, selectedStation)}
                     placeholder={t('Type to search or select...')}
                     data={stationOptions}
                     renderOption={renderOption}
                     onChange={value => value && handleSelectStation(value)}
-                    searchable
+                    // searchable
+                    maxDropdownHeight={320}
                     flex={1}
                 />
                 <Button leftSection={<MdOutlineAdd />} onClick={() => setIsAddStationModalOpen(true)}>

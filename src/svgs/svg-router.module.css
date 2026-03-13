@@ -1,26 +1,31 @@
 .wrapper {
     overflow-y: auto;
     flex: 1;
+    gap: var(--mantine-spacing-xl);
+    padding-bottom: env(safe-area-inset-bottom);
+}
 
-    > div > div {
-        position: relative;
-        display: flex;
-        align-items: flex-start;
-        width: 100%;
-        flex-shrink: 0;
-        overflow-x: auto;
-        overflow-y: hidden;
+.header {
+    padding: 0 var(--mantine-spacing-xs);
+}
 
-        &::before, &::after {
-            content: '';
-            /*margin: auto;*/
-        }
+.body {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    flex-shrink: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 var(--mantine-spacing-xs);
 
-        > svg {
-            flex: 0 0 auto;
-            border: 1px solid black;
-        }
+    &::before, &::after {
+        content: '';
+        /*margin: auto;*/
     }
 
-
+    > svg {
+        flex: 0 0 auto;
+        border: 1px solid black;
+    }
 }

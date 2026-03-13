@@ -141,7 +141,7 @@ export default function DesignSection() {
                             setIsThemeRequested(true);
                             dispatch(openPaletteAppClip(theme));
                         }}
-                        style={{ minWidth: 15 }}
+                        style={{ minWidth: 30, flex: 'none' }}
                     >
                         Aa
                     </RMThemeButton>

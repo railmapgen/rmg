@@ -11,29 +11,31 @@ export default function App() {
     return (
         <HashRouter>
             <RMMantineProvider>
-                <RMWindow>
-                    <Routes>
-                        <Route
-                            path="/import"
-                            element={
+                <Routes>
+                    <Route
+                        path="/import"
+                        element={
+                            <RMWindow isAppClip>
+                                <ImportViewWindowHeader />
                                 <RMErrorBoundary suspenseFallback={<LoadingOverlay visible />}>
-                                    <ImportViewWindowHeader />
                                     <AppClipView />
                                 </RMErrorBoundary>
-                            }
-                        />
-                        <Route
-                            path="/"
-                            element={
+                            </RMWindow>
+                        }
+                    />
+                    <Route
+                        path="/"
+                        element={
+                            <RMWindow>
+                                <WindowHeader />
                                 <RMErrorBoundary suspenseFallback={<LoadingOverlay visible />} allowReset>
-                                    <WindowHeader />
                                     <AppRouter />
                                 </RMErrorBoundary>
-                            }
-                        />
-                        <Route path="*" element={<Navigate to="/" />} />
-                    </Routes>
-                </RMWindow>
+                            </RMWindow>
+                        }
+                    />
+                    <Route path="*" element={<Navigate to="/" />} />
+                </Routes>
             </RMMantineProvider>
         </HashRouter>
     );

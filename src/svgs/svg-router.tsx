@@ -2,7 +2,7 @@ import classes from './svg-router.module.css';
 import { CanvasType } from '../constants/constants';
 import { useRootDispatch, useRootSelector } from '../redux';
 import useCanvasMap from './use-canvas-map';
-import { ActionIcon, Flex, Group, LoadingOverlay, Stack, Text } from '@mantine/core';
+import { ActionIcon, Group, LoadingOverlay, Stack, Title } from '@mantine/core';
 import { RMErrorBoundary } from '@railmapgen/mantine-components';
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
@@ -25,9 +25,11 @@ export default function SvgRouter() {
             {(Object.keys(canvasMap) as CanvasType[]).map(canvas => {
                 const visible = canvasToShow.includes(canvas);
                 return (
-                    <Flex key={canvas + rmgStyle} direction="column">
-                        <Group>
-                            <Text>{t('CanvasType.' + canvas)}</Text>
+                    <Stack key={canvas + rmgStyle} gap="xs">
+                        <Group className={classes.header}>
+                            <Title order={3} size="h4">
+                                {t('CanvasType.' + canvas)}
+                            </Title>
                             {visible ? (
                                 <ActionIcon
                                     variant="default"
@@ -49,11 +51,11 @@ export default function SvgRouter() {
                             )}
                         </Group>
                         {visible && (
-                            <div>
+                            <div className={classes.body}>
                                 <RMErrorBoundary style={{ height: scaledHeight }}>{canvasMap[canvas]}</RMErrorBoundary>
                             </div>
                         )}
-                    </Flex>
+                    </Stack>
                 );
             })}
         </Stack>
