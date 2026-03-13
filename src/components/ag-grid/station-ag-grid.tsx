@@ -42,6 +42,7 @@ export default function StationAgGrid(props: StationAgGridProps) {
     const dispatch = useRootDispatch();
 
     const sidePanelMode = useRootSelector(state => state.app.sidePanelMode);
+    const selectedBranch = useRootSelector(state => state.app.selectedBranch);
     const { style, theme, stn_list: stationList, line_num: lineNumber, coline } = useRootSelector(state => state.param);
     const branches = useRootSelector(state => state.helper.branches);
 
@@ -153,6 +154,13 @@ export default function StationAgGrid(props: StationAgGridProps) {
             }
         }
     }, [isGridReadyRef.current, sidePanelMode]);
+
+    useEffect(() => {
+        // clear row selection when switching branch tabs
+        if (isGridReadyRef.current && gridRef.current) {
+            gridRef.current.api.deselectAll();
+        }
+    }, [selectedBranch]);
 
     const [defaultColDef] = useState({
         resizable: true,
