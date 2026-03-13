@@ -1,3 +1,9 @@
+.root {
+    @media (max-width: $mantine-breakpoint-xs) {
+        --side-panel-width: 100% !important;
+    }
+}
+
 .body {
     display: flex;
     flex-direction: column;
@@ -10,10 +16,10 @@
     flex-direction: column;
     flex: 1;
     overflow: hidden;
-    padding: 0 var(--mantine-spacing-xs);
 }
 
 .tab-body {
+    padding-inline: var(--mantine-spacing-xs);
     padding-bottom: var(--mantine-spacing-xs);
     flex: 1;
     overflow-y: auto;
@@ -25,6 +31,7 @@
 }
 
 .tab-footer {
+    padding-inline: var(--mantine-spacing-xs);
     padding-bottom: calc(env(safe-area-inset-bottom) + var(--mantine-spacing-xs));
 }
 

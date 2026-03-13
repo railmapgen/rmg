@@ -45,6 +45,7 @@ export default function SidePanel() {
             title={t('Settings')}
             width={SIDE_PANEL_WIDTH}
             withCloseButton
+            className={classes.root}
         >
             <Tabs
                 value={sidePanelMode}

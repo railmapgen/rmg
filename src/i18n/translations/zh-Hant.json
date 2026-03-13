@@ -144,8 +144,6 @@
         },
         "branch": {
             "type": "種類",
-            "through": "直通（無需轉車）",
-            "nonThrough": "非直通（需轉車）",
             "firstStation": "首站",
             "position": "位置",
             "upper": "上方",
@@ -296,6 +294,7 @@
     "Temporary": "臨時",
     "Terms and conditions": "條款及細則",
     "Text position": "轉乘文字",
+    "Through": "直通",
     "Try out": "立即試用",
     "Unable to connect to main line.": "無法連接至主綫。",
     "Unable to disconnect from main line.": "無法從主綫斷開。",

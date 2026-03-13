@@ -150,8 +150,6 @@
         },
         "branch": {
             "type": "类型",
-            "through": "贯通（无需换乘）",
-            "nonThrough": "非贯通（需换乘）",
             "firstStation": "首站",
             "position": "位置",
             "upper": "上方",
@@ -303,6 +301,7 @@
     "Temporary": "临时",
     "Terms and conditions": "条款及细则",
     "Text position": "换乘文字方向",
+    "Through": "贯通",
     "Try out": "马上试用",
     "Unable to connect to main line.": "无法连接至主线。",
     "Unable to disconnect from main line.": "无法从主线断开。",

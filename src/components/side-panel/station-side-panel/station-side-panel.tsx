@@ -83,11 +83,9 @@ export default function StationSidePanel() {
                 {/* TODO: Use below component globally */}
                 <Select
                     value={stationOptionIdMapper.construct(selectedBranch, selectedStation)}
-                    placeholder={t('Type to search or select...')}
                     data={stationOptions}
                     renderOption={renderOption}
                     onChange={value => value && handleSelectStation(value)}
-                    // searchable
                     maxDropdownHeight={320}
                     flex={1}
                 />
