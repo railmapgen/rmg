@@ -2,9 +2,9 @@ import classes from './common-modal.module.css';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { checkStationCouldBeRemoved, removeStation } from '../../redux/param/remove-station-action';
-import { setSelectedStation, setSidePanelMode } from '../../redux/app/app-slice';
+import { setSelectedStation } from '../../redux/app/app-slice';
 import { useRootDispatch, useRootSelector } from '../../redux';
-import { Events, SidePanelMode } from '../../constants/constants';
+import { Events } from '../../constants/constants';
 import { removeInvalidColineOnRemoveStation } from '../../redux/param/coline-action';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { Button, Group, Modal, Notification, Stack, Text } from '@mantine/core';
@@ -34,9 +34,6 @@ export default function RemoveConfirmModal(props: RemoveConfirmModalProps) {
         const result = dispatch(checkStationCouldBeRemoved(selectedStation));
         if (result) {
             onClose();
-
-            // close side panel
-            dispatch(setSidePanelMode(SidePanelMode.CLOSE));
 
             // reset selected station
             dispatch(setSelectedStation('linestart'));
