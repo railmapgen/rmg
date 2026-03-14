@@ -93,6 +93,23 @@ const DefsSHMetro = memo(function DefsSHMetro() {
                 <circle cy="-7" r="3" fill="var(--rmg-white)" strokeWidth={2} />
                 <circle cy="1" r="3" fill="var(--rmg-white)" strokeWidth={2} />
             </g>
+
+            {/* White outline filter for int_osysi */}
+            <filter id="station-border" filterUnits="userSpaceOnUse" x="-30" y="-30" width="60" height="60">
+                <feMorphology operator="dilate" in="SourceAlpha" radius="0" result="e1" />
+                <feMorphology operator="dilate" in="SourceAlpha" radius="1" result="e2" />
+                <feComposite in="e1" in2="e2" operator="xor" result="outline" />
+                <feColorMatrix
+                    type="matrix"
+                    in="outline"
+                    values="0 0 0 0 1
+                            0 0 0 0 1
+                            0 0 0 0 1
+                            0 0 0 1 0"
+                    result="outline2"
+                />
+                <feComposite in="outline2" in2="SourceGraphic" operator="over" result="output" />
+            </filter>
         </defs>
     );
 });

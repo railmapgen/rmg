@@ -142,11 +142,13 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
 
     // FIXME: branches with only one station could not display properly
     const dy = loop_branches.length ? 0 : ((line_ys[1] - line_ys[0]) * bank) / 2;
+    // sh2024 with coline needs stations rendered AFTER the coline track for correct z-order
+    const sh2024WithColine = info_panel_type === 'sh2024' && Object.keys(coline).length > 0;
     return (
         <g id="loop" transform={`translate(${dy},0)`}>
             <path stroke="var(--rmg-theme-colour)" strokeWidth={12} fill="none" d={path} strokeLinejoin="round" />
-            {/* Order matters. The LoopColine should cover the station in RailMap. */}
-            {canvas === CanvasType.RailMap && (
+            {/* For non-sh2024-coline: render stations before coline (existing z-order) */}
+            {canvas === CanvasType.RailMap && !sh2024WithColine && (
                 <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />
             )}
             <g transform={`translate(0,${Object.keys(coline).length > 0 ? -LINE_WIDTH - COLINE_GAP : 0})`}>
@@ -167,6 +169,10 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
                     />
                 )}
             </g>
+            {/* For sh2024-coline: render stations AFTER coline so icons/names appear on top of coline line */}
+            {canvas === CanvasType.RailMap && sh2024WithColine && (
+                <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />
+            )}
             {/* Order matters. The station should cover LoopColine's main path in Indoor. */}
             {canvas === CanvasType.Indoor && <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />}
         </g>
@@ -279,6 +285,7 @@ const LoopStationGroup = (props: {
                                     stnState={current_stn_id === stn_id ? 0 : 1}
                                     bank={railmap_bank[side as keyof LoopStns]}
                                     direction={railmap_direction[side as keyof LoopStns]}
+                                    colineAbove={side === 'top'}
                                 />
                             </g>
                         ))
@@ -293,6 +300,7 @@ const LoopStationGroup = (props: {
                                     stnId={stn_id}
                                     nameDirection={indoor_name_direction(side as keyof LoopStns, i)}
                                     services={[Services.local]}
+                                    colineAbove={side === 'top'}
                                 />
                             </g>
                         ))
