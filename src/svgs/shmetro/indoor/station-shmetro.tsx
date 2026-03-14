@@ -308,8 +308,8 @@ const StationName = forwardRef(function StationName(
 
 const INT_BOX_SIZE = {
     width: {
-        singleDigit: 27,
-        doubleDigit: 33,
+        singleDigit: 25.8,
+        doubleDigit: 31.5,
     },
     height: 30,
     padding: 2,
@@ -574,23 +574,41 @@ const IntBoxGroup2024 = forwardRef(function IntBoxGroup2024(
     );
 });
 
+// Text positioning by line number range for 2024 interchange boxes (indoor).
+// Reference: kyuri-shmetro-line-id-block-generator
+const getIntBoxTextStyleIndoor = (
+    numVal: number
+): { x: number; letterSpacing: number; fontSize?: number; transform?: string } => {
+    if (numVal < 10) return { x: 13, letterSpacing: 0 };
+    if (numVal === 11) return { x: 14.3, letterSpacing: -3.0 };
+    if (numVal <= 19) return { x: 13, letterSpacing: -3.8 };
+    if (numVal === 21) return { x: 16.7, letterSpacing: -2.7 };
+    if (numVal >= 20) return { x: 15.6, letterSpacing: -1.5, fontSize: 30.6, transform: 'scale(.98,1)' };
+    return { x: 15.75, letterSpacing: -3 };
+};
+
 const IntBoxNumber2024 = (props: { info: ExtendedInterchangeInfo }) => {
     const {
         info: { name, theme },
     } = props;
     const num = name[0].match(/^(\d+)号线$/)?.[1] ?? '';
-    const width = num.length > 1 ? INT_BOX_SIZE.width.doubleDigit : INT_BOX_SIZE.width.singleDigit;
-    const letterSpacing = num.length > 1 ? -3 : 0;
+    const numVal = parseInt(num, 10);
+    const width = numVal >= 10 ? INT_BOX_SIZE.width.doubleDigit : INT_BOX_SIZE.width.singleDigit;
+    const textStyle = getIntBoxTextStyleIndoor(numVal);
+
     return (
         <g>
             <rect height={INT_BOX_SIZE.height} width={width} y={-INT_BOX_SIZE.height / 2} fill={theme?.at(2)} />
             <text
-                x={14}
+                x={textStyle.x}
+                dy={0.5}
                 className="rmg-name__zh"
                 fill={theme?.at(3)}
                 dominantBaseline="central"
                 textAnchor="middle"
-                letterSpacing={letterSpacing}
+                letterSpacing={textStyle.letterSpacing}
+                fontSize={textStyle.fontSize}
+                transform={textStyle.transform}
             >
                 {num}
             </text>
