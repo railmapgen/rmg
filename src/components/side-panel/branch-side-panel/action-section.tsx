@@ -25,7 +25,8 @@ export default function ActionSection() {
         rmgRuntime.event(Events.REVERSE_STATIONS, { style });
     };
 
-    const isExternalLine = selectedBranch !== 0 && isColineBranch(branches[selectedBranch], stn_list);
+    const isColine =
+        selectedBranch !== 0 && style === RmgStyle.SHMetro && isColineBranch(branches[selectedBranch], stn_list);
 
     return (
         <Box p={1}>
@@ -85,7 +86,7 @@ export default function ActionSection() {
                         : t('BranchSidePanel.action.reverse')}
                 </Button>
 
-                {selectedBranch !== 0 && !isExternalLine && (
+                {selectedBranch !== 0 && !isColine && (
                     <Button
                         size="sm"
                         variant="outline"
