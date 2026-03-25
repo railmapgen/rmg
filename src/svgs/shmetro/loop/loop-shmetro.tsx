@@ -147,7 +147,7 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
     return (
         <g id="loop" transform={`translate(${dy},0)`}>
             <path stroke="var(--rmg-theme-colour)" strokeWidth={12} fill="none" d={path} strokeLinejoin="round" />
-            {/* For non-sh2024-coline: render stations before coline (existing z-order) */}
+            {/* For non-sh2024-coline: The LoopColine should cover the station in RailMap. */}
             {canvas === CanvasType.RailMap && !sh2024WithColine && (
                 <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />
             )}
@@ -260,7 +260,7 @@ const LoopStationGroup = (props: {
 
     // In sh2024 indoor loop without coline, shift station icons inward by 6px
     // so they appear to "penetrate" through the loop line.
-    const shouldShiftInward =
+    const isSh2024IndoorLoop =
         canvas === CanvasType.Indoor && info_panel_type === 'sh2024' && Object.keys(coline).length === 0;
     const inwardOffset: Record<keyof LoopStns, { dx: number; dy: number }> = {
         top: { dx: 0, dy: 6 },
@@ -281,19 +281,17 @@ const LoopStationGroup = (props: {
         top: undefined,
         bottom: undefined,
     };
-    const indoor_name_direction = (side: keyof LoopStns, i: number) =>
-        ({
-            top: shouldShiftInward ? 'downward' : i % 2 === 0 ? 'upward' : 'downward',
-            bottom: shouldShiftInward ? 'upward' : i % 2 === 0 ? 'upward' : 'downward',
-            left: 'left',
-            right: 'right',
-        })[side] as NameDirection;
-    // Int boxes on the inner side of the loop.
-    const indoor_intbox_direction: Record<keyof LoopStns, NameDirection> = {
-        top: 'upward',
-        bottom: 'downward',
-        left: 'right',
-        right: 'left',
+    const indoor_name_direction = (side: keyof LoopStns, i: number): NameDirection => {
+        switch (side) {
+            case 'top':
+                return isSh2024IndoorLoop ? 'downward' : i % 2 === 0 ? 'upward' : 'downward';
+            case 'bottom':
+                return isSh2024IndoorLoop ? 'upward' : i % 2 === 0 ? 'upward' : 'downward';
+            case 'left':
+                return 'left';
+            case 'right':
+                return 'right';
+        }
     };
     return (
         <g id="loop_stations">
@@ -317,7 +315,7 @@ const LoopStationGroup = (props: {
                     stn_ids
                         .filter(stn_id => stn_list[stn_id].services.length)
                         .map((stn_id, i) => {
-                            const offset = shouldShiftInward ? inwardOffset[side as keyof LoopStns] : { dx: 0, dy: 0 };
+                            const offset = isSh2024IndoorLoop ? inwardOffset[side as keyof LoopStns] : { dx: 0, dy: 0 };
                             return (
                                 <g
                                     key={stn_id}
@@ -327,11 +325,7 @@ const LoopStationGroup = (props: {
                                         stnId={stn_id}
                                         nameDirection={indoor_name_direction(side as keyof LoopStns, i)}
                                         services={[Services.local]}
-                                        intBoxDirection={
-                                            shouldShiftInward
-                                                ? indoor_intbox_direction[side as keyof LoopStns]
-                                                : undefined
-                                        }
+                                        isSh2024IndoorLoop={isSh2024IndoorLoop}
                                     />
                                 </g>
                             );
