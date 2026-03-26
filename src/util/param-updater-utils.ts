@@ -264,11 +264,14 @@ export const updateParam = (param: { [x: string]: any }) => {
     v5_21_addPsdLabel(param);
 
     // Version 5.x
-    // Add default shmetro2020_info for SHMetro 2020 style branch layout control
-    param.shmetro2020_info = param.shmetro2020_info ?? {
-        branch_distance_factor: 1,
-        branch_first_station_offset: 0,
-    };
+    // branchSpacingPct is moved into branch_info to pair with
+    // distance_factor
+    if (param.branch_info === undefined) {
+        param.branch_info.spacing_pct = param.branchSpacingPct;
+        delete param.branchSpacingPct;
+
+        param.branch_info.distance_factor = 1;
+    }
 
     sanitiseParam(param);
     return param;

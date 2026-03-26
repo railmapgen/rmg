@@ -13,40 +13,36 @@ interface servicesPath {
 
 type Paths = AtLeastOneOfPartial<Record<Services, servicesPath>>;
 
-/** LeftW callback for SHMetro 2020: adds weight at merge points (multiple parents). */
-const createSh2020LeftW =
-    (k1: number) =>
+/** Callback for SHMetro 2020: adds weight at merge points. */
+const createSh2020W =
+    (mapper: (_: StationInfo) => string[], k1: number) =>
     (stnList: { [stnId: string]: StationInfo }, stnId: string): number => {
         const stn = stnList[stnId];
         if (!stn) return 0;
-        return stn.parents.length > 1 ? k1 - 1 : 0;
-    };
-
-/** RightW callback for SHMetro 2020: adds weight at bifurcation points (multiple children). */
-const createSh2020RightW =
-    (k1: number) =>
-    (stnList: { [stnId: string]: StationInfo }, stnId: string): number => {
-        const stn = stnList[stnId];
-        if (!stn) return 0;
-        return stn.children.length > 1 ? k1 - 1 : 0;
+        return mapper(stn).length > 1 ? k1 - 1 : 0;
     };
 
 const MainSHMetro = () => {
     const { routes, branches, depsStr: deps } = useRootSelector(store => store.helper);
     const param = useRootSelector(store => store.param);
-    const { svg_height, stn_list, branchSpacingPct, coline, direction, info_panel_type, shmetro2020_info } =
-        useRootSelector(store => store.param);
+    const {
+        svg_height,
+        stn_list,
+        branch_info: { spacing_pct: branchSpacingPct, distance_factor: distanceFactor },
+        coline,
+        direction,
+        info_panel_type,
+    } = useRootSelector(store => store.param);
 
-    const k1 = info_panel_type === PanelTypeShmetro.sh2020 ? (shmetro2020_info?.branch_distance_factor ?? 1) : 1;
-    const k2 = info_panel_type === PanelTypeShmetro.sh2020 ? (shmetro2020_info?.branch_first_station_offset ?? 0) : 0;
+    const distance_factor = info_panel_type === PanelTypeShmetro.sh2020 ? distanceFactor : 1;
 
     const adjMat = useMemo(() => {
         return adjacencyList(
             param.stn_list,
-            info_panel_type === PanelTypeShmetro.sh2020 ? createSh2020LeftW(k1) : () => 0,
-            info_panel_type === PanelTypeShmetro.sh2020 ? createSh2020RightW(k1) : () => 0
+            info_panel_type === PanelTypeShmetro.sh2020 ? createSh2020W(_ => _.parents, distance_factor) : () => 0,
+            info_panel_type === PanelTypeShmetro.sh2020 ? createSh2020W(_ => _.children, distance_factor) : () => 0
         );
-    }, [JSON.stringify(param.stn_list), info_panel_type, k1]);
+    }, [JSON.stringify(param.stn_list), info_panel_type, distance_factor]);
 
     const criticalPath = criticalPathMethod('linestart', 'lineend', adjMat);
     const realCP = criticalPathMethod(criticalPath.nodes[1], criticalPath.nodes.slice(-2)[0], adjMat);
@@ -68,7 +64,7 @@ const MainSHMetro = () => {
     );
 
     const stationSpacing = (lineXs[1] - lineXs[0]) / realCP.len;
-    const branchOffset = k2 * stationSpacing;
+    const branchOffset = (distance_factor - 1) * stationSpacing;
 
     // const yShares = React.useMemo(
     //     () => {

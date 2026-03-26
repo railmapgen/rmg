@@ -82,7 +82,7 @@ const MainGZMTR = () => {
         svg_height: svgH,
         y_pc: yPercentage,
         padding: paddingPercentage,
-        branchSpacingPct,
+        branch_info: { spacing_pct: branchSpacingPct },
         direction,
         line_name: lineName,
         spanLineNum,

@@ -214,10 +214,16 @@ export interface RMGParam {
      * Left and right margin of line (in percentage).
      */
     padding: number;
-    /** Branch spacing percentage (space between upper and lower branch).
-     *  In SHMetro loop line, this is also used in determining vertical padding.
-     */
-    branchSpacingPct: number;
+    branch_info: {
+        /** Branch spacing percentage (space between upper and lower branch).
+         *  In SHMetro loop line, this is also used in determining vertical padding.
+         */
+        spacing_pct: number;
+        /**
+         * Factor for the horizontal distance from bifurcation point to first branch station.
+         */
+        distance_factor: number;
+    };
     direction: ShortDirection;
     /**
      * Platform number of the destination canvas. Set to '' will hide the element.
@@ -282,21 +288,6 @@ export interface RMGParam {
         bottom_factor: number;
         midpoint_station?: string;
         clockwise?: boolean;
-    };
-    /**
-     * SHMetro 2020 style branch layout control.
-     */
-    shmetro2020_info: {
-        /**
-         * Factor for the horizontal distance from bifurcation point to first branch station.
-         * Default is 1, meaning normal spacing.
-         */
-        branch_distance_factor: number;
-        /**
-         * Horizontal offset from bifurcation point where the vertical turn begins.
-         * Default is 0, meaning turn starts at bifurcation point.
-         */
-        branch_first_station_offset: number;
     };
     version?: string; // RMG version
 }
