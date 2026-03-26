@@ -95,8 +95,7 @@
             "overrideTerminal": "끝점 다시 쓰기",
             "terminalZhName": "터미널 한자 명칭",
             "terminalEnName": "터미널 영문 명칭",
-            "branchDistanceFactor": "분기 수평 거리 배수",
-            "branchFirstStationOffset": "분기 수평 회전 오프셋"
+            "branchDistanceFactor": "분기 수평 거리 배수"
         },
         "note": {
             "title": "설명",

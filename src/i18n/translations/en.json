@@ -98,8 +98,7 @@
             "overrideTerminal": "Override terminal",
             "terminalZhName": "Terminal Chinese name",
             "terminalEnName": "Terminal English name",
-            "branchDistanceFactor": "Branch horizontal distance factor",
-            "branchFirstStationOffset": "Branch horizontal turn offset"
+            "branchDistanceFactor": "Branch horizontal distance factor"
         },
         "note": {
             "title": "Notes",
