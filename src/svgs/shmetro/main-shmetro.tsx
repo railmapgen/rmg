@@ -1,4 +1,5 @@
-import { adjacencyList, criticalPathMethod, drawLine, getStnState, getXShareMTR } from '../methods/share';
+import { adjacencyList, criticalPathMethod, drawLine, getXShareMTR } from '../methods/share';
+import { getStnStateShmetro } from '../methods/shmetro-share';
 import StationSHMetro from './station-shmetro';
 import ColineSHMetro from './coline-shmetro';
 import { AtLeastOneOfPartial, PanelTypeShmetro, Services, StationDict, StationInfo } from '../../constants/constants';
@@ -102,7 +103,7 @@ const MainSHMetro = () => {
     );
 
     const stnStates = useMemo(
-        () => getStnState(param.current_stn_idx, routes, param.direction),
+        () => getStnStateShmetro(param.current_stn_idx, routes, param.stn_list, param.direction),
         [param.current_stn_idx, param.direction, routes.toString()]
     );
 

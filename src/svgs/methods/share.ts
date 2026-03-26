@@ -110,77 +110,27 @@ const _isSuccessor = (stnId1: string, stnId2: string, routes: string[][]) => {
     return false;
 };
 
-/**
- * Compute each station's state relative to the current station and travel direction.
- * State: 1 = ahead (colored), 0 = current, -1 = behind (gray).
- * Stations on parallel branches are promoted to 1 when their forward junction is ahead.
- * @param currentId ID of the current station
- * @param routes All possible routes through the line graph
- * @param direction Travel direction
- */
 export const getStnState = (
     currentId: string,
     routes: string[][],
     direction: 'l' | 'r'
 ): { [stnId: string]: -1 | 0 | 1 } => {
     console.log("computing stations' states");
-    const allStations = [...new Set(([] as string[]).concat(...routes))];
-
-    // initial states based on successor/predecessor relationship
-    const initialStates = allStations.reduce(
+    return [...new Set(([] as string[]).concat(...routes))].reduce(
         (acc, cur: string) => ({
             ...acc,
-            [cur]: (cur === currentId
-                ? 0
-                : (
-                        direction === ShortDirection.right
-                            ? _isSuccessor(currentId, cur, routes)
-                            : _isPredecessor(currentId, cur, routes)
-                    )
-                  ? 1
-                  : -1) as -1 | 0 | 1,
+            [cur]:
+                cur === currentId
+                    ? 0
+                    : (
+                            direction === ShortDirection.right
+                                ? _isSuccessor(currentId, cur, routes)
+                                : _isPredecessor(currentId, cur, routes)
+                        )
+                      ? 1
+                      : -1,
         }),
-        {} as { [stnId: string]: -1 | 0 | 1 }
-    );
-
-    // promote stations on parallel branches whose forward junction is in the future
-    const stationsInCurrentRoutes = new Set<string>(
-        ([] as string[]).concat(...routes.filter(route => route.includes(currentId)))
-    );
-
-    return allStations.reduce(
-        (acc, stnId) => {
-            if (initialStates[stnId] !== -1 || stationsInCurrentRoutes.has(stnId)) {
-                return { ...acc, [stnId]: initialStates[stnId] };
-            }
-
-            // find the nearest current-route station in the forward direction;
-            // linestart/lineend are virtual nodes and are not valid junctions
-            const shouldPromote = routes.some(route => {
-                const idx = route.indexOf(stnId);
-                if (idx === -1) return false;
-
-                if (direction === ShortDirection.right) {
-                    for (let i = idx + 1; i < route.length; i++) {
-                        if (['linestart', 'lineend'].includes(route[i])) continue;
-                        if (stationsInCurrentRoutes.has(route[i])) {
-                            return initialStates[route[i]] === 1;
-                        }
-                    }
-                } else {
-                    for (let i = idx - 1; i >= 0; i--) {
-                        if (['linestart', 'lineend'].includes(route[i])) continue;
-                        if (stationsInCurrentRoutes.has(route[i])) {
-                            return initialStates[route[i]] === 1;
-                        }
-                    }
-                }
-                return false;
-            });
-
-            return { ...acc, [stnId]: shouldPromote ? 1 : -1 };
-        },
-        {} as { [stnId: string]: -1 | 0 | 1 }
+        {}
     );
 };
 
