@@ -267,6 +267,7 @@ export const updateParam = (param: { [x: string]: any }) => {
     // branchSpacingPct is moved into branch_info to pair with
     // distance_factor
     if (param.branch_info === undefined) {
+        param.branch_info = {};
         param.branch_info.spacing_pct = param.branchSpacingPct;
         delete param.branchSpacingPct;
 
