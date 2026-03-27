@@ -2,11 +2,14 @@
     overflow-y: auto;
     flex: 1;
     gap: var(--mantine-spacing-xl);
-    padding-bottom: env(safe-area-inset-bottom);
+    padding-top: var(--mantine-spacing-xs);
+    padding-bottom: max(env(safe-area-inset-bottom), var(--mantine-spacing-xs));
+    background-color: light-dark(var(--mantine-color-dark-light-hover), var(--mantine-color-gray-light-hover));
 }
 
 .header {
     padding: 0 var(--mantine-spacing-xs);
+    gap: var(--mantine-spacing-xs);
 }
 
 .body {
