@@ -24,10 +24,12 @@ import { setStationsBulk } from './action';
  *
  * Implementation Details:
  * 1. Diverge Point (D):
- *    - Swap `children` nodes (Main <-> Branch).
+ *    - Swap `children` nodes, to ensure the index of the branch start node
+ *      which decides drawing details unchanged.
  *    - Update `branch.right` to point to the *new* branch start node (old Main).
  * 2. Converge Point (G):
- *    - Swap `parents` nodes.
+ *    - Swap `parents` nodes, to ensure the index of the branch start node
+ *      which decides drawing details unchanged.
  *    - Update `branch.left` to point to the *new* branch end node (old Main).
  *
  * Assumption: Strict 2-way split/merge at D/G.
@@ -61,24 +63,26 @@ export const swapBranch = (branchIndex: number) => {
 
         let modified = false;
 
-        // Swap children of divergePoint, then assign the new children[0] to branch.right[1]
+        // Swap children of divergePoint, then assigned the child preserving index in children to branch.right[1]
         if (divergePoint.branch && divergePoint.branch.right) {
+            const indexOfRightInChildren = divergePoint.children.indexOf(divergePoint.branch.right[1]);
             const [child1, child2] = divergePoint.children;
             divergePoint.children = [child2, child1];
             divergePoint.branch = {
                 ...divergePoint.branch,
-                right: [divergePoint.branch.right[0], divergePoint.children[0]],
+                right: [divergePoint.branch.right[0], divergePoint.children[indexOfRightInChildren]],
             };
 
             modified = true;
         }
-        // Swap parents of convergePoint, then assign the new parents[0] to branch.left[1]
+        // Swap parents of convergePoint, then assigned the parent preserving index in parents to branch.left[1]
         if (convergePoint.branch && convergePoint.branch.left) {
+            const indexOfLeftInParents = convergePoint.parents.indexOf(convergePoint.branch.left[1]);
             const [parent1, parent2] = convergePoint.parents;
             convergePoint.parents = [parent2, parent1];
             convergePoint.branch = {
                 ...convergePoint.branch,
-                left: [convergePoint.branch.left[0], convergePoint.parents[0]],
+                left: [convergePoint.branch.left[0], convergePoint.parents[indexOfLeftInParents]],
             };
 
             modified = true;
