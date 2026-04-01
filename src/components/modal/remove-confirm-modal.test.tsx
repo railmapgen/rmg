@@ -1,10 +1,9 @@
 import { fireEvent, screen } from '@testing-library/react';
-import { SidePanelMode, StationDict } from '../../constants/constants';
+import { StationDict } from '../../constants/constants';
 import { createTestStore } from '../../setupTests';
 import { render } from '../../test-utils';
 import RemoveConfirmModal from './remove-confirm-modal';
 import rootReducer from '../../redux';
-import { vi } from 'vitest';
 
 const realStore = rootReducer.getState();
 const mockCallbacks = {
@@ -114,7 +113,6 @@ describe('RemoveConfirmModal', () => {
 
         // assertions
         expect(mockStore.getState().param.stn_list).not.toHaveProperty('stn2'); // removal of station
-        expect(mockStore.getState().app.sidePanelMode).toBe(SidePanelMode.CLOSE); // close side panel
         expect(mockStore.getState().app.selectedStation).toBe('linestart'); // reset station selection
     });
 });

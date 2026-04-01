@@ -1,8 +1,4 @@
 {
-    "HeaderActions": {
-        "editStyle": "风格化设置"
-    },
-
     "DownloadActions": {
         "downloads": "下载",
         "configFile": "配置文件",
@@ -33,7 +29,7 @@
         "branch": "支线",
         "external": "外部路线",
         "addStation": "添加车站",
-        "editLine":  "路线段设置"
+        "editLine": "路线段设置"
     },
 
     "StationAgGrid": {
@@ -154,8 +150,6 @@
         },
         "branch": {
             "type": "类型",
-            "through": "贯通（无需换乘）",
-            "nonThrough": "非贯通（需换乘）",
             "firstStation": "首站",
             "position": "位置",
             "upper": "上方",
@@ -171,7 +165,7 @@
             "pivot": "环线上的枢纽车站",
             "oneLine": "在一行内展示中英文站名",
             "intPadding": "车站名与换乘线路间的间距",
-            "intPaddingApplyGlobal": "将当前的间距应用到所有车站上",
+            "intPaddingApplyGlobal": "应用到所有车站",
             "apply": "应用",
             "characterSpacing": "车站名文字间距"
         },
@@ -228,7 +222,7 @@
     "Branches are not supported in the loop line.": "环线内不支持使用支线。",
     "Branch left end": "支线左端",
     "Branch on the left": "左侧支线",
-    "Branch on the right": "右侧支线",   
+    "Branch on the right": "右侧支线",
     "Branch right end": "支线右端",
     "Branch spacing": "支线间距",
     "Branches": "支线",
@@ -241,6 +235,7 @@
     "Coach number": "车厢编号",
     "Colour": "颜色",
     "Connect to main line": "连接至主线",
+    "Current": "当前",
     "day ago": "天前",
     "days ago": "天前",
     "Disconnect from main line": "从主线断开",
@@ -259,6 +254,7 @@
     "Last modified": "上次编辑",
     "LEFT END": "线路左端",
     "Line icon": "线路图标",
+    "Line section": "路线段",
     "Loop direction": "环线方向",
     "Loop line": "环线",
     "Manage": "管理",
@@ -268,11 +264,15 @@
     "Midpoint station": "半环站",
     "More settings": "更多设置",
     "National rail": "国家铁路",
+    "New branch": "添加支线",
+    "New station": "添加车站",
     "Ngong Ping 360": "昂坪360",
     "No": "否",
     "No branches found": "未找到支线",
     "None": "无",
     "now and enjoy an even better rail map design experience!": "，享受更好的线路图设计体验！",
+    "On the left": "靠左",
+    "On the right": "靠右",
     "Open selected": "打开选中项目",
     "Open template": "打开模板",
     "Paid area": "付费区换乘",
@@ -292,6 +292,7 @@
     "Select canvas": "选择画面",
     "Set as midpoint": "设置为半环站",
     "Span digits over rows": "跨行显示数字",
+    "Station": "车站",
     "Style": "风格",
     "Station Chinese name": "车站中文名称",
     "Station English name": "车站英文名称",
@@ -299,11 +300,12 @@
     "Target station": "目标车站",
     "Temporary": "临时",
     "Terms and conditions": "条款及细则",
-    "Text on the left": "换乘文字靠左",
-    "Text on the right": "换乘文字靠右",
+    "Text position": "换乘文字方向",
+    "Through": "贯通",
     "Try out": "马上试用",
     "Unable to connect to main line.": "无法连接至主线。",
     "Unable to disconnect from main line.": "无法从主线断开。",
+    "Unable to open project": "无法打开项目",
     "Unable to remove this station.": "无法删除此车站。",
     "Under construction": "尚未开通",
     "Unknown": "未知",

@@ -1,5 +1,4 @@
 import { CanvasType, ParamConfig, RmgStyle, SidePanelMode } from '../../constants/constants';
-import { AlertStatus } from '@chakra-ui/react';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Theme } from '@railmapgen/rmg-palette-resources';
 
@@ -12,12 +11,12 @@ interface AppState {
     paramConfig?: ParamConfig;
     canvasScale: number;
     canvasToShow: CanvasType[];
+    isSidePanelOpen: boolean;
     sidePanelMode: SidePanelMode;
     selectedStation: string;
     selectedColine?: number;
     selectedBranch: number;
     isShareTrackEnabled?: string[]; // for main line only, store the selections
-    globalAlerts: Partial<Record<AlertStatus, { message: string; url?: string; linkedApp?: string }>>;
     isLoading?: number; // undefined: not loading, -1: loading, 0-100: progress
     paletteAppClipInput?: Theme;
     paletteAppClipOutput?: Theme;
@@ -28,12 +27,12 @@ const initialState: AppState = {
     paramConfig: undefined,
     canvasScale: 1,
     canvasToShow: Object.values(CanvasType),
-    sidePanelMode: SidePanelMode.CLOSE,
+    isSidePanelOpen: false,
+    sidePanelMode: SidePanelMode.STYLE,
     selectedStation: 'linestart',
     selectedColine: undefined,
     selectedBranch: 0,
     isShareTrackEnabled: undefined,
-    globalAlerts: {},
     isLoading: undefined,
 };
 
@@ -60,6 +59,28 @@ const appSlice = createSlice({
             state.canvasToShow = action.payload;
         },
 
+        addCanvasToShow: (state, action: PayloadAction<CanvasType>) => {
+            if (!state.canvasToShow.includes(action.payload)) {
+                state.canvasToShow.push(action.payload);
+            }
+        },
+
+        removeCanvasToShow: (state, action: PayloadAction<CanvasType>) => {
+            const index = state.canvasToShow.indexOf(action.payload);
+            if (index >= 0) {
+                state.canvasToShow.splice(index, 1);
+            }
+        },
+
+        setIsSidePanelOpen: (state, action: PayloadAction<boolean>) => {
+            state.isSidePanelOpen = action.payload;
+            if (!action.payload) {
+                state.selectedStation = 'linestart';
+                state.selectedBranch = 0;
+                state.selectedColine = undefined;
+            }
+        },
+
         setSidePanelMode: (state, action: PayloadAction<SidePanelMode>) => {
             state.sidePanelMode = action.payload;
         },
@@ -78,23 +99,6 @@ const appSlice = createSlice({
 
         setIsShareTrackEnabled: (state, action: PayloadAction<string[] | undefined>) => {
             state.isShareTrackEnabled = action.payload;
-        },
-
-        /**
-         * If linkedApp is true, alert will try to open link in the current domain.
-         * E.g. linkedApp=true, url='/rmp' will open https://railmapgen.github.io/rmp/
-         * If you want to open a url outside the domain, DO NOT set or pass FALSE to linkedApp.
-         */
-        setGlobalAlert: (
-            state,
-            action: PayloadAction<{ status: AlertStatus; message: string; url?: string; linkedApp?: string }>
-        ) => {
-            const { status, message, url, linkedApp } = action.payload;
-            state.globalAlerts[status] = { message, url, linkedApp };
-        },
-
-        closeGlobalAlert: (state, action: PayloadAction<AlertStatus>) => {
-            delete state.globalAlerts[action.payload];
         },
 
         startLoading: state => {
@@ -130,13 +134,14 @@ export const {
     updateParamModifiedTime,
     setCanvasScale,
     setCanvasToShow,
+    addCanvasToShow,
+    removeCanvasToShow,
+    setIsSidePanelOpen,
     setSidePanelMode,
     setSelectedStation,
     setSelectedColine,
     setSelectedBranch,
     setIsShareTrackEnabled,
-    setGlobalAlert,
-    closeGlobalAlert,
     startLoading,
     setLoadingProgress,
     stopLoading,

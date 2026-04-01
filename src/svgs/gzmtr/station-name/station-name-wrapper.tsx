@@ -12,7 +12,7 @@ interface StationNameWrapperProps {
     stationState: StationState;
     flipped?: boolean;
     express?: boolean;
-    underConstruction?: boolean | TEMP;
+    underConstruction?: boolean | typeof TEMP;
 }
 
 export default function StationNameWrapper(props: StationNameWrapperProps) {

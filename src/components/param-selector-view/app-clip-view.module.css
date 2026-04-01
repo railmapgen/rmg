@@ -1,0 +1,10 @@
+.selector {
+    flex: 1;
+    overflow: hidden;
+    padding: 0 var(--mantine-spacing-xs);
+    padding-bottom: var(--mantine-spacing-xs);
+
+    & > div {
+        height: 100% !important;
+    }
+}

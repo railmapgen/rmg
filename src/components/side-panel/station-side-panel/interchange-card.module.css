@@ -1,0 +1,39 @@
+.empty-stack {
+    p {
+        flex: 1;
+        text-align: center;
+    }
+}
+
+.stack {
+    flex: 1;
+    align-items: flex-end;
+
+    &:not(:first-of-type) {
+        padding-top: 4px;
+    }
+
+    > div:first-of-type {
+        > button {
+            max-width: 36px;
+            align-self: flex-end;
+        }
+
+        > * {
+            flex: 1
+        }
+    }
+
+    > div:last-of-type {
+        margin-left: 8px;
+        flex-wrap: nowrap;
+
+        > :first-child {
+            width: 22px;
+        }
+
+        > :not(:first-child) {
+            margin-left: 4px;
+        }
+    }
+}

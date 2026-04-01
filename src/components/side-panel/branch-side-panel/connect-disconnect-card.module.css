@@ -1,0 +1,11 @@
+.card {
+    box-shadow: var(--mantine-shadow-sm);
+
+    > :global(.mantine-Group-root) {
+        align-items: flex-end;
+
+        > :not(:global(.mantine-Button-root)) {
+            flex: 1;
+        }
+    }
+}

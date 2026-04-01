@@ -5,7 +5,7 @@ import { createTestStore } from '../../setupTests';
 import { render } from '../../test-utils';
 import NewBranchModal from './new-branch-modal';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
-import { vi } from 'vitest';
+import { userEvent } from '@testing-library/user-event';
 
 const mockStationList = {
     linestart: {
@@ -52,6 +52,8 @@ const branches = getBranches(mockStationList);
 const realStore = rootReducer.getState();
 
 describe('NewBranchModal', () => {
+    const user = userEvent.setup();
+
     /**
      * stn1 - stn2 - stn3 - stn4
      *        /
@@ -78,21 +80,24 @@ describe('NewBranchModal', () => {
         it('Can render where dropdown as expected', () => {
             setup();
 
-            const fields = screen.getAllByRole('group');
-            expect(fields.length).toBe(4); // where, from, to, position
+            const whereSelect = screen.getByRole('combobox', { name: 'Target location' });
+            expect(whereSelect).toBeInTheDocument();
+            expect(screen.getByRole('combobox', { name: 'Between' })).toBeInTheDocument();
+            expect(screen.getByRole('combobox', { name: 'and' })).toBeInTheDocument();
+            expect(screen.getByRole('radiogroup', { name: 'Position' })).toBeInTheDocument();
 
-            expect(within(fields[0]).getAllByRole('option')).toHaveLength(2);
-            expect(within(fields[0]).getByText(/new branch/)).not.toBeDisabled();
-            expect(within(fields[0]).getByText(/external/)).toBeDisabled();
+            expect(within(whereSelect).getAllByRole('option')).toHaveLength(2);
+            expect(within(whereSelect).getByRole('option', { name: 'Create a new branch' })).toBeEnabled();
+            expect(within(whereSelect).getByRole('option', { name: 'Create an external line' })).toBeDisabled();
         });
 
-        it('Can display error if failed at verification step', () => {
+        it('Can display error if failed at verification step', async () => {
             setup();
 
-            fireEvent.change(screen.getAllByRole('combobox')[1], { target: { value: 'stn4' } });
-            fireEvent.change(screen.getAllByRole('combobox')[2], { target: { value: 'lineend' } });
+            await user.selectOptions(screen.getByRole('combobox', { name: 'Between' }), '車站4/Station 4');
+            await user.selectOptions(screen.getByRole('combobox', { name: 'and' }), '(RIGHT END)');
 
-            const submitBtn = screen.getByText('Confirm');
+            const submitBtn = screen.getByRole('button', { name: 'Confirm' });
             expect(submitBtn).toBeDisabled();
             expect(submitBtn.title).toContain('should not be open jaw from the last station');
         });
@@ -147,17 +152,19 @@ describe('NewBranchModal', () => {
         it('Can render where dropdown as expected', () => {
             setup();
 
-            const fields = screen.getAllByRole('group');
-            expect(within(fields[0]).getByText(/new branch/)).not.toBeDisabled();
-            expect(within(fields[0]).getByText(/external/)).not.toBeDisabled();
+            const whereSelect = screen.getByRole('combobox', { name: 'Target location' });
+            expect(within(whereSelect).getByRole('option', { name: 'Create a new branch' })).toBeEnabled();
+            expect(within(whereSelect).getByRole('option', { name: 'Create an external line' })).toBeEnabled();
         });
 
-        it('Position selection is not available for new branch in SHMetro style', () => {
+        it('Position selection is not available for new branch in SHMetro style', async () => {
             setup();
 
-            fireEvent.change(screen.getAllByRole('combobox')[0], { target: { value: 'ext' } });
-
-            expect(screen.getAllByRole('group')).toHaveLength(3);
+            await user.selectOptions(
+                screen.getByRole('combobox', { name: 'Target location' }),
+                'Create an external line'
+            );
+            expect(screen.queryByRole('radiogroup', { name: 'Position' })).not.toBeInTheDocument();
         });
     });
 });

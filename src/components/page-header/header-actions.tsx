@@ -1,11 +1,10 @@
-import { Button, HStack } from '@chakra-ui/react';
 import DownloadActions from './download-actions';
-import { MdFolder, MdPalette } from 'react-icons/md';
+import { MdOutlineFolder, MdOutlineSettings } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
-import { SidePanelMode } from '../../constants/constants';
-import { setParamConfig, setSidePanelMode } from '../../redux/app/app-slice';
+import { setIsSidePanelOpen, setParamConfig } from '../../redux/app/app-slice';
 import { useTranslation } from 'react-i18next';
 import useRootSearchParams from '../../hooks/use-root-search-params';
+import { ActionIcon, Button } from '@mantine/core';
 
 export default function HeaderActions() {
     const { t } = useTranslation();
@@ -15,28 +14,52 @@ export default function HeaderActions() {
 
     const handleGoToSelectorView = () => {
         // reset param config to stop param update trigger
-        dispatch(setSidePanelMode(SidePanelMode.CLOSE));
+        dispatch(setIsSidePanelOpen(false));
         dispatch(setParamConfig(undefined));
         setSearchParams({});
     };
 
     return (
-        <HStack ml="auto" w="fit-content">
-            <Button variant="ghost" size="sm" leftIcon={<MdFolder />} onClick={handleGoToSelectorView}>
+        <>
+            <Button
+                visibleFrom="xs"
+                variant="default"
+                leftSection={<MdOutlineFolder />}
+                ml="auto"
+                onClick={handleGoToSelectorView}
+            >
                 {t('All projects')}
             </Button>
+            <ActionIcon
+                hiddenFrom="xs"
+                variant="default"
+                size="2.25rem"
+                aria-label={t('All projects')}
+                title={t('All projects')}
+                ml="auto"
+                onClick={handleGoToSelectorView}
+            >
+                <MdOutlineFolder />
+            </ActionIcon>
 
             <DownloadActions />
 
             <Button
-                variant="solid"
-                size="sm"
-                colorScheme="primary"
-                leftIcon={<MdPalette />}
-                onClick={() => dispatch(setSidePanelMode(SidePanelMode.STYLE))}
+                visibleFrom="xs"
+                leftSection={<MdOutlineSettings />}
+                onClick={() => dispatch(setIsSidePanelOpen(true))}
             >
-                {t('HeaderActions.editStyle')}
+                {t('Settings')}
             </Button>
-        </HStack>
+            <ActionIcon
+                hiddenFrom="xs"
+                size="2.25rem"
+                aria-label={t('Settings')}
+                title={t('Settings')}
+                onClick={() => dispatch(setIsSidePanelOpen(true))}
+            >
+                <MdOutlineSettings />
+            </ActionIcon>
+        </>
     );
 }

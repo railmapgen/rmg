@@ -30,7 +30,6 @@ export const canvasConfig: { [s in RmgStyle]: CanvasType[] } = {
 };
 
 export enum SidePanelMode {
-    CLOSE = 'CLOSE',
     STATION = 'STATION',
     STYLE = 'STYLE',
     BRANCH = 'BRANCH',
@@ -116,7 +115,8 @@ export const FACILITIES = {
 };
 export type Facilities = keyof typeof FACILITIES;
 
-export type TEMP = 'temp';
+export const TEMP = 'temp';
+
 export interface StationInfo {
     title?: string;
     /**
@@ -174,7 +174,7 @@ export interface StationInfo {
      * Default to 20 in updateParam.
      */
     character_spacing: number;
-    underConstruction?: boolean | TEMP;
+    underConstruction?: boolean | typeof TEMP;
 }
 
 export type StationDict = Record<string, StationInfo>;
@@ -352,3 +352,6 @@ export enum Events {
     APP_CLIP_VIEW_CLOSED = 'APP_CLIP_VIEW_CLOSED',
     APP_CLIP_VIEW_IMPORT = 'APP_CLIP_VIEW_IMPORT',
 }
+
+export const FALSE = false.toString();
+export const TRUE = true.toString();

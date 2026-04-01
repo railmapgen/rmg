@@ -1,35 +1,70 @@
-import { RmgSidePanelBody } from '@railmapgen/rmg-components';
+import classes from '../side-panel.module.css';
 import ColineSection from './coline-section';
-import { Divider } from '@chakra-ui/react';
 import ActionSection from './action-section';
-import { useRootSelector } from '../../../redux';
+import { useRootDispatch, useRootSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';
 import { isColineBranch } from '../../../redux/param/coline-action';
 import LoopSection from './loop-section';
+import { Button, Divider, Group, Notification, Select, Stack } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
+import { setSelectedBranch } from '../../../redux/app/app-slice';
+import useBranchOptions from '../../../hooks/use-branch-options';
+import { MdOutlineAdd, MdOutlineClose } from 'react-icons/md';
+import { useState } from 'react';
+import NewBranchModal from '../../modal/new-branch-modal';
 
 export default function BranchSidePanel() {
+    const { t } = useTranslation();
+
+    const dispatch = useRootDispatch();
     const selectedBranch = useRootSelector(state => state.app.selectedBranch);
     const { style, stn_list: stationList, loop } = useRootSelector(state => state.param);
     const branches = useRootSelector(state => state.helper.branches);
 
-    return (
-        <RmgSidePanelBody>
-            {style === RmgStyle.SHMetro &&
-                (selectedBranch === 0 || isColineBranch(branches[selectedBranch], stationList)) && (
-                    <>
-                        <ColineSection />
-                        <Divider />
-                    </>
-                )}
+    const [isNewBranchModalOpen, setIsNewBranchModalOpen] = useState(false);
 
-            {loop && (
+    const branchOptions = useBranchOptions();
+
+    return (
+        <Stack className={classes['tab-body']} gap="xs">
+            <Group gap="xs" mt="xs" align="flex-end">
+                <Select
+                    value={selectedBranch.toString()}
+                    data={branchOptions}
+                    onChange={value => dispatch(setSelectedBranch(Number(value)))}
+                    flex={1}
+                />
+                <Button leftSection={<MdOutlineAdd />} onClick={() => setIsNewBranchModalOpen(true)}>
+                    {t('New branch')}
+                </Button>
+            </Group>
+
+            {selectedBranch >= branches.length ? (
+                <Notification icon={<MdOutlineClose />} color="red" withCloseButton={false} mb="xs">
+                    {t('Invalid selection')}
+                </Notification>
+            ) : (
                 <>
-                    <LoopSection />
-                    <Divider />
+                    {style === RmgStyle.SHMetro &&
+                        (selectedBranch === 0 || isColineBranch(branches[selectedBranch], stationList)) && (
+                            <>
+                                <ColineSection />
+                                <Divider />
+                            </>
+                        )}
+
+                    {loop && (
+                        <>
+                            <LoopSection />
+                            <Divider />
+                        </>
+                    )}
+
+                    <ActionSection />
+
+                    <NewBranchModal isOpen={isNewBranchModalOpen} onClose={() => setIsNewBranchModalOpen(false)} />
                 </>
             )}
-
-            <ActionSection />
-        </RmgSidePanelBody>
+        </Stack>
     );
 }

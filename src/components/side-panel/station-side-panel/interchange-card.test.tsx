@@ -28,7 +28,7 @@ describe('InterchangeCard', () => {
     });
 
     it('Can render card with empty interchange list as expected', () => {
-        render(<InterchangeCard interchangeList={[]} {...mockCallbacks} />);
+        render(<InterchangeCard title="Test group" interchangeList={[]} {...mockCallbacks} />);
 
         expect(screen.getByText('No interchanges')).toBeInTheDocument();
 
@@ -38,12 +38,13 @@ describe('InterchangeCard', () => {
     });
 
     it('Can render card with 1 interchange info as expected', () => {
-        render(<InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />);
+        render(<InterchangeCard title="Test group" interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />);
 
         // colour edit button has desired styles
-        expect(screen.getByRole('button', { name: 'Colour' })).toHaveStyle({
+        const themeButton = screen.getByRole('button', { name: 'Colour' });
+        expect(themeButton).toHaveStyle({ color: '#FFFFFF' });
+        expect(themeButton.querySelector('.mantine-ColorSwatch-colorOverlay')).toHaveStyle({
             background: '#F38B00',
-            color: '#FFFFFF',
         });
 
         expect(screen.getByRole('combobox', { name: 'Chinese name' })).toHaveDisplayValue('東涌綫');
@@ -52,7 +53,9 @@ describe('InterchangeCard', () => {
 
     it('Can request theme update and receive updated theme from store', async () => {
         const mockStore = createTestStore();
-        render(<InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />, { store: mockStore });
+        render(<InterchangeCard title="Test group" interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />, {
+            store: mockStore,
+        });
 
         // click theme button
         fireEvent.click(screen.getByRole('button', { name: 'Colour' }));
@@ -75,7 +78,7 @@ describe('InterchangeCard', () => {
     });
 
     it('Can duplicate and delete interchange info as expected', () => {
-        render(<InterchangeCard interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />);
+        render(<InterchangeCard title="Test group" interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />);
 
         // copy current interchange info
         fireEvent.click(screen.getByRole('button', { name: 'Copy interchange' }));
@@ -89,7 +92,13 @@ describe('InterchangeCard', () => {
     });
 
     it('Can render card with multiple interchange info as expected', () => {
-        render(<InterchangeCard interchangeList={[mockInterchangeInfo1, mockInterchangeInfo2]} {...mockCallbacks} />);
+        render(
+            <InterchangeCard
+                title="Test group"
+                interchangeList={[mockInterchangeInfo1, mockInterchangeInfo2]}
+                {...mockCallbacks}
+            />
+        );
 
         // only the first stack has labels
         const stack0 = screen.getByTestId('interchange-card-stack-0');

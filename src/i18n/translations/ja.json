@@ -1,8 +1,4 @@
 {
-    "HeaderActions": {
-        "editStyle": "風格設定"
-    },
-
     "DownloadActions": {
         "downloads": "ダウンロード",
         "configFile": "設定ファイル",

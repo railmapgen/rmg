@@ -1,0 +1,70 @@
+.root {
+    @media (max-width: $mantine-breakpoint-xs) {
+        --side-panel-width: 100% !important;
+    }
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 1;
+}
+
+.tab-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+.tab-body {
+    padding-inline: var(--mantine-spacing-xs);
+    padding-bottom: var(--mantine-spacing-xs);
+    flex: 1;
+    overflow-y: auto;
+    transform: translateZ(0);
+
+    &:not(:has(+ .tab-footer)) {
+        padding-bottom: calc(env(safe-area-inset-bottom) + var(--mantine-spacing-xs));
+    }
+}
+
+.tab-footer {
+    padding-inline: var(--mantine-spacing-xs);
+    padding-bottom: calc(env(safe-area-inset-bottom) + var(--mantine-spacing-xs));
+}
+
+.section-body {
+    flex-direction: column;
+    gap: var(--mantine-spacing-xs);
+
+    > :global(.mantine-Group-root) > *:not(:global(.mw-full)) {
+        /*flex: 1;*/
+        flex-grow: 1;
+        min-width: 150px;
+    }
+
+    &.fields {
+        > :global(.mantine-Group-root) > *:not(:global(.mw-full)) {
+            flex: 1;
+        }
+    }
+
+    fieldset {
+        padding-inline: var(--mantine-spacing-xs);
+    }
+
+    :global(.mantine-Card-root) {
+        box-shadow: var(--mantine-shadow-sm);
+
+        > :global(.mantine-Group-root) > * {
+            flex: 1
+        }
+    }
+
+}
+
+.mw-320 {
+    min-width: 320px !important;
+}

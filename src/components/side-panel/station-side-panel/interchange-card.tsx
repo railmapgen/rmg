@@ -1,23 +1,25 @@
-import { useEffect, useState } from 'react';
-import { Box, HStack, IconButton, Text } from '@chakra-ui/react';
-import { ExtendedInterchangeInfo, Facilities, FACILITIES, RmgStyle } from '../../../constants/constants';
-import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
+import classes from './interchange-card.module.css';
+import { ReactNode, useEffect, useId, useState } from 'react';
+import { ExtendedInterchangeInfo, FACILITIES, RmgStyle } from '../../../constants/constants';
+import { MdOutlineAdd, MdOutlineContentCopy, MdOutlineDeleteOutline } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { useRootDispatch, useRootSelector } from '../../../redux';
-import ThemeButton from '../theme-button';
-import { RmgCard, RmgFields, RmgFieldsField, RmgLabel } from '@railmapgen/rmg-components';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
 import { openPaletteAppClip } from '../../../redux/app/app-slice';
+import { ActionIcon, Box, Fieldset, Flex, Group, Input, NativeSelect, Text } from '@mantine/core';
+import { RMThemeButton } from '@railmapgen/mantine-components';
 
 interface InterchangeCardProps {
+    title: string;
     interchangeList: ExtendedInterchangeInfo[];
+    beforeChildren?: ReactNode;
     onAdd?: (info: ExtendedInterchangeInfo) => void;
     onDelete?: (index: number) => void;
     onUpdate?: (index: number, info: ExtendedInterchangeInfo) => void;
 }
 
 export default function InterchangeCard(props: InterchangeCardProps) {
-    const { interchangeList, onAdd, onDelete, onUpdate } = props;
+    const { title, interchangeList, beforeChildren, onAdd, onDelete, onUpdate } = props;
 
     const { t } = useTranslation();
     const dispatch = useRootDispatch();
@@ -26,6 +28,8 @@ export default function InterchangeCard(props: InterchangeCardProps) {
 
     const { paletteAppClipOutput } = useRootSelector(state => state.app);
     const { style, theme, stn_list: stationList } = useRootSelector(state => state.param);
+
+    const cardId = useId();
 
     useEffect(() => {
         if (indexRequestedTheme !== undefined && paletteAppClipOutput) {
@@ -53,92 +57,119 @@ export default function InterchangeCard(props: InterchangeCardProps) {
         [[], []]
     );
 
-    const facilityOptions = Object.fromEntries(
-        Object.entries(FACILITIES)
+    const facilityOptions = [
+        { value: '', label: t('None') },
+        ...Object.entries(FACILITIES)
             .filter(([p]) => !['railway'].includes(p))
-            .map(([f, name]) => [f, t(name)])
-    );
-
-    const interchangeFields: RmgFieldsField[][] = interchangeList.map((it, i) => [
-        {
-            type: 'input',
-            label: t('Chinese name'),
-            value: it.name[0],
-            onChange: val => onUpdate?.(i, { ...it, name: [val, it.name[1]] }),
-            optionList: usedNameList[0],
-        },
-        {
-            type: 'input',
-            label: t('English name'),
-            value: it.name[1],
-            onChange: val => onUpdate?.(i, { ...it, name: [it.name[0], val] }),
-            optionList: usedNameList[1],
-        },
-        {
-            type: 'select',
-            label: t('Line icon'),
-            value: it.facility,
-            options: { '': t('None'), ...facilityOptions },
-            onChange: val => onUpdate?.(i, { ...it, facility: val as Facilities }),
-            hidden: ![RmgStyle.MTR].includes(style),
-        },
-    ]);
+            .map(([f, name]) => ({ value: f, label: t(name) })),
+    ];
 
     return (
-        <RmgCard direction="column">
-            {interchangeList.length === 0 && (
-                <HStack spacing={0.5} data-testid={`interchange-card-stack`}>
-                    <Text as="i" flex={1} align="center" fontSize="md" colorScheme="gray">
-                        {t('StationSidePanel.interchange.noInterchanges')}
-                    </Text>
+        <Fieldset className={classes.card} legend={title}>
+            {beforeChildren}
 
-                    <IconButton
+            {interchangeList.length === 0 && (
+                <Group className={classes['empty-stack']} gap="xs" data-testid={`interchange-card-stack`}>
+                    <Text fs="italic">{t('StationSidePanel.interchange.noInterchanges')}</Text>
+
+                    <ActionIcon
                         size="sm"
-                        variant="ghost"
+                        variant="filled"
                         aria-label={t('StationSidePanel.interchange.add')}
+                        title={t('StationSidePanel.interchange.add')}
                         onClick={() => onAdd?.({ theme: [theme[0], '', '#aaaaaa', MonoColour.white], name: ['', ''] })}
-                        icon={<MdAdd />}
-                    />
-                </HStack>
+                    >
+                        <MdOutlineAdd />
+                    </ActionIcon>
+                </Group>
             )}
 
-            {interchangeList.map((it, i) => (
-                <HStack key={i} spacing={0.5} data-testid={`interchange-card-stack-${i}`}>
-                    <RmgLabel label={t('Colour')} minW="40px" noLabel={i !== 0}>
-                        <ThemeButton
-                            theme={it.theme}
-                            onClick={() => {
-                                setIndexRequestedTheme(i);
-                                dispatch(openPaletteAppClip(it.theme ?? [theme[0], '', '#aaaaaa', MonoColour.white]));
-                            }}
-                        />
-                    </RmgLabel>
+            {interchangeList.map((it, i) => {
+                const interchangeTheme = it.theme ?? [theme[0], '', '#aaaaaa', MonoColour.white];
+                return (
+                    <Flex key={i} className={classes.stack} data-testid={`interchange-card-stack-${i}`}>
+                        <Group gap="xs">
+                            <RMThemeButton
+                                bg={interchangeTheme[2]}
+                                fg={interchangeTheme[3]}
+                                aria-label={t('Colour')}
+                                title={t('Colour')}
+                                onClick={() => {
+                                    setIndexRequestedTheme(i);
+                                    dispatch(openPaletteAppClip(interchangeTheme));
+                                }}
+                            >
+                                Aa
+                            </RMThemeButton>
+                            <Input.Wrapper size="xs" label={i === 0 && t('Chinese name')} style={{ minWidth: 85 }}>
+                                <Input
+                                    size="xs"
+                                    value={it.name[0]}
+                                    list={`${cardId}-${i}-zh-list`}
+                                    onChange={({ currentTarget: { value } }) =>
+                                        onUpdate?.(i, { ...it, name: [value, it.name[1]] })
+                                    }
+                                />
+                                <datalist id={`${cardId}-${i}-zh-list`}>
+                                    {usedNameList[0].map((value, j) => (
+                                        <option key={j}>{value}</option>
+                                    ))}
+                                </datalist>
+                            </Input.Wrapper>
+                            <Input.Wrapper size="xs" label={i === 0 && t('English name')}>
+                                <Input
+                                    size="xs"
+                                    value={it.name[1]}
+                                    list={`${cardId}-${i}-en-list`}
+                                    onChange={({ currentTarget: { value } }) =>
+                                        onUpdate?.(i, { ...it, name: [it.name[0], value] })
+                                    }
+                                />
+                                <datalist id={`${cardId}-${i}-en-list`}>
+                                    {usedNameList[1].map((value, j) => (
+                                        <option key={j}>{value}</option>
+                                    ))}
+                                </datalist>
+                            </Input.Wrapper>
+                            {style === RmgStyle.MTR && (
+                                <NativeSelect
+                                    size="xs"
+                                    label={i === 0 && t('Line icon')}
+                                    value={it.facility}
+                                    data={facilityOptions}
+                                />
+                            )}
+                        </Group>
+                        <Flex>
+                            {onAdd && i === interchangeList.length - 1 ? (
+                                <ActionIcon
+                                    size="sm"
+                                    variant="filled"
+                                    aria-label={t('StationSidePanel.interchange.copy')}
+                                    title={t('StationSidePanel.interchange.copy')}
+                                    onClick={() => onAdd?.(interchangeList.slice(-1)[0])} // duplicate last leg
+                                >
+                                    <MdOutlineContentCopy />
+                                </ActionIcon>
+                            ) : (
+                                <Box />
+                            )}
 
-                    <RmgFields fields={interchangeFields[i]} noLabel={i !== 0} />
-
-                    {onAdd && i === interchangeFields.length - 1 ? (
-                        <IconButton
-                            size="sm"
-                            variant="ghost"
-                            aria-label={t('StationSidePanel.interchange.copy')}
-                            onClick={() => onAdd?.(interchangeList.slice(-1)[0])} // duplicate last leg
-                            icon={<MdContentCopy />}
-                        />
-                    ) : (
-                        <Box minW={8} />
-                    )}
-
-                    {onDelete && (
-                        <IconButton
-                            size="sm"
-                            variant="ghost"
-                            aria-label={t('StationSidePanel.interchange.remove')}
-                            onClick={() => onDelete?.(i)}
-                            icon={<MdDelete />}
-                        />
-                    )}
-                </HStack>
-            ))}
-        </RmgCard>
+                            {onDelete && (
+                                <ActionIcon
+                                    size="sm"
+                                    variant="outline"
+                                    aria-label={t('StationSidePanel.interchange.remove')}
+                                    title={t('StationSidePanel.interchange.remove')}
+                                    onClick={() => onDelete?.(i)}
+                                >
+                                    <MdOutlineDeleteOutline />
+                                </ActionIcon>
+                            )}
+                        </Flex>
+                    </Flex>
+                );
+            })}
+        </Fieldset>
     );
 }

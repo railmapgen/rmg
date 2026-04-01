@@ -1,7 +1,6 @@
+import classes from '../side-panel.module.css';
 import { useEffect, useState } from 'react';
-import { Box, Heading, HStack, IconButton } from '@chakra-ui/react';
 import { useRootDispatch, useRootSelector } from '../../../redux';
-import ThemeButton from '../theme-button';
 import {
     customiseDestinationName,
     flipStationNames,
@@ -18,11 +17,27 @@ import {
     staggerStationNames,
     toggleLineNameBeforeDestination,
 } from '../../../redux/param/param-slice';
-import { PanelTypeGZMTR, PanelTypeShmetro, PsdLabel, RmgStyle, ShortDirection } from '../../../constants/constants';
-import { MdSwapVert } from 'react-icons/md';
-import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import {
+    FALSE,
+    PanelTypeGZMTR,
+    PanelTypeShmetro,
+    PsdLabel,
+    RmgStyle,
+    ShortDirection,
+    TRUE,
+} from '../../../constants/constants';
+import { MdOutlineSwapVert } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { openPaletteAppClip } from '../../../redux/app/app-slice';
+import { Button, Group, NativeSelect, Switch, TextInput, Title } from '@mantine/core';
+import {
+    RMLabelledSegmentedControl,
+    RMSection,
+    RMSectionBody,
+    RMSectionHeader,
+    RMThemeButton,
+} from '@railmapgen/mantine-components';
+import clsx from 'clsx';
 
 export default function DesignSection() {
     const { t } = useTranslation();
@@ -69,250 +84,207 @@ export default function DesignSection() {
         },
     ];
 
-    const panelTypeGZMTROptions = Object.values(PanelTypeGZMTR).reduce<Record<string, string>>(
-        (acc, cur) => ({
-            ...acc,
-            [cur]: t('StyleSidePanel.design.' + cur),
-        }),
-        {}
-    );
-
-    const panelTypeSHMetroOptions = Object.values(PanelTypeShmetro).reduce<Record<string, string>>(
-        (acc, cur) => ({
-            ...acc,
-            [cur]: t('StyleSidePanel.design.' + cur),
-        }),
-        {}
-    );
-
-    const fields: RmgFieldsField[] = [
-        {
-            type: 'custom',
-            label: t('Colour'),
-            component: (
-                <ThemeButton
-                    theme={theme}
-                    onClick={() => {
-                        setIsThemeRequested(true);
-                        dispatch(openPaletteAppClip(theme));
-                    }}
-                />
-            ),
-            minW: '40px',
-        },
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.zhLineName'),
-            value: lineName[0],
-            onChange: value => dispatch(setLineName([value, lineName[1]])),
-            minW: 130,
-        },
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.enLineName'),
-            value: lineName[1],
-            onChange: value => dispatch(setLineName([lineName[0], value])),
-            minW: 130,
-        },
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.lineNum'),
-            value: lineNum,
-            onChange: value => dispatch(setLineNum(value)),
-            hidden: ![RmgStyle.GZMTR].includes(style),
-        },
-        {
-            type: 'custom',
-            label: t('Span digits over rows'),
-            component: (
-                <RmgButtonGroup
-                    selections={
-                        [
-                            { label: t('Yes'), value: true },
-                            { label: t('No'), value: false },
-                        ] as { label: string; value: boolean }[]
-                    }
-                    defaultValue={spanLineNum ?? false}
-                    onChange={span => dispatch(setSpanLineNum(span))}
-                />
-            ),
-            hidden: ![RmgStyle.GZMTR].includes(style),
-        },
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.platformNum'),
-            value: platformNum || '',
-            onChange: value => dispatch(setPlatform(value)),
-        },
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.psdNum'),
-            value: psdNum,
-            onChange: value => dispatch(setPsdNum(value)),
-            hidden: ![RmgStyle.GZMTR].includes(style),
-        },
-        {
-            type: 'custom',
-            label: t('Platform door label'),
-            component: (
-                <RmgButtonGroup
-                    selections={[
-                        { label: '屏蔽门 Screen door', value: PsdLabel.screen },
-                        { label: '站台门 Platform door', value: PsdLabel.platform },
-                    ]}
-                    defaultValue={psdLabel}
-                    onChange={label => dispatch(setPsdLabel(label))}
-                />
-            ),
-            hidden: ![RmgStyle.GZMTR].includes(style),
-            minW: 260,
-        },
-        {
-            type: 'input',
-            label: t('Coach number'),
-            value: coachNum,
-            onChange: value => dispatch(setCoachNum(value)),
-            hidden: ![RmgStyle.GZMTR].includes(style),
-        },
-        {
-            type: 'select',
-            label: t('StyleSidePanel.design.panelType'),
-            value: info_panel_type,
-            options: style === RmgStyle.GZMTR ? panelTypeGZMTROptions : panelTypeSHMetroOptions,
-            disabledOptions: [PanelTypeGZMTR.gz1822],
-            onChange: value => dispatch(setPanelType(value as PanelTypeGZMTR | PanelTypeShmetro)),
-            hidden: ![RmgStyle.GZMTR, RmgStyle.SHMetro].includes(style),
-        },
-        {
-            type: 'custom',
-            label: t('StyleSidePanel.design.direction'),
-            component: (
-                <RmgButtonGroup
-                    selections={directionSelections}
-                    defaultValue={direction}
-                    onChange={nextDirection => dispatch(setDirection(nextDirection))}
-                />
-            ),
-            minW: 'full',
-            oneLine: true,
-        },
+    const psdLabelSelections = [
+        { label: '屏蔽门 Screen Door', value: PsdLabel.screen },
+        { label: '站台门 Platform Door', value: PsdLabel.platform },
     ];
+
+    const panelTypeGZMTROptions = Object.values(PanelTypeGZMTR).map(value => ({
+        value,
+        label: t('StyleSidePanel.design.' + value),
+        disabled: value === PanelTypeGZMTR.gz1822,
+    }));
+
+    const panelTypeSHMetroOptions = Object.values(PanelTypeShmetro).map(value => ({
+        value,
+        label: t('StyleSidePanel.design.' + value),
+    }));
 
     const flipNameSelections = [
         {
             label: t('StyleSidePanel.design.upwards'),
-            value: true,
+            value: TRUE,
         },
         {
             label: t('StyleSidePanel.design.downward'),
-            value: false,
-        },
-    ];
-
-    const shmetroSpecifiedFields: RmgFieldsField[] = [
-        {
-            type: 'custom',
-            label: t('StyleSidePanel.design.firstStationNameDisplay'),
-            component: (
-                <HStack spacing={0.5}>
-                    <RmgButtonGroup
-                        selections={flipNameSelections}
-                        defaultValue={namePosMTR.isFlip ?? true}
-                        onChange={value => dispatch(flipStationNames(value))}
-                    />
-                </HStack>
-            ),
-            minW: 'full',
-            oneLine: true,
-            hidden: ![RmgStyle.SHMetro].includes(style) || lineServices > 1 || loop,
+            value: FALSE,
         },
     ];
 
     const staggerNameSelections = [
         {
             label: t('StyleSidePanel.design.alternatively'),
-            value: true,
+            value: TRUE,
         },
         {
             label: t('StyleSidePanel.design.onOneSide'),
-            value: false,
-        },
-    ];
-
-    const mtrSpecifiedFields: RmgFieldsField[] = [
-        {
-            type: 'custom',
-            label: t('StyleSidePanel.design.nameDisplay'),
-            component: (
-                <HStack spacing={0.5}>
-                    <IconButton
-                        size="xs"
-                        variant="ghost"
-                        aria-label={t('StyleSidePanel.design.flip')}
-                        title={t('StyleSidePanel.design.flip')}
-                        icon={<MdSwapVert />}
-                        onClick={() => dispatch(flipStationNames())}
-                    />
-                    <RmgButtonGroup
-                        selections={staggerNameSelections}
-                        defaultValue={namePosMTR.isStagger}
-                        onChange={value => dispatch(staggerStationNames(value))}
-                    />
-                </HStack>
-            ),
-            minW: 'full',
-            oneLine: true,
-            hidden: ![RmgStyle.MTR].includes(style),
-        },
-        {
-            type: 'switch',
-            label: t('StyleSidePanel.design.legacyDestination'),
-            isChecked: customiseMTRDest.isLegacy,
-            onChange: checked => dispatch(toggleLineNameBeforeDestination(checked)),
-            hidden: ![RmgStyle.MTR].includes(style),
-            minW: 'full',
-            oneLine: true,
-        },
-        {
-            type: 'switch',
-            label: t('StyleSidePanel.design.overrideTerminal'),
-            isChecked: customiseMTRDest.terminal !== false,
-            onChange: checked => dispatch(customiseDestinationName(checked ? ['', ''] : false)),
-            hidden: ![RmgStyle.MTR].includes(style),
-            minW: 'full',
-            oneLine: true,
-        },
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.terminalZhName'),
-            value: customiseMTRDest.terminal ? customiseMTRDest.terminal[0] : '',
-            placeholder: '機場及博覽館',
-            onChange: value =>
-                dispatch(
-                    customiseDestinationName([value, customiseMTRDest.terminal ? customiseMTRDest.terminal[1] : ''])
-                ),
-            hidden: ![RmgStyle.MTR].includes(style) || customiseMTRDest.terminal === false,
-        },
-        {
-            type: 'input',
-            label: t('StyleSidePanel.design.terminalEnName'),
-            value: customiseMTRDest.terminal ? customiseMTRDest.terminal[1] : '',
-            placeholder: 'Airport and AsiaWorld-Expo',
-            onChange: value =>
-                dispatch(
-                    customiseDestinationName([customiseMTRDest.terminal ? customiseMTRDest.terminal[0] : '', value])
-                ),
-            hidden: ![RmgStyle.MTR].includes(style) || customiseMTRDest.terminal === false,
+            value: FALSE,
         },
     ];
 
     return (
-        <Box p={1}>
-            <Heading as="h5" size="sm">
-                {t('StyleSidePanel.design.title')}
-            </Heading>
+        <RMSection>
+            <RMSectionHeader>
+                <Title order={3} size="h4">
+                    {t('StyleSidePanel.design.title')}
+                </Title>
+            </RMSectionHeader>
 
-            <RmgFields fields={[...fields, ...mtrSpecifiedFields, ...shmetroSpecifiedFields]} minW={130} />
-        </Box>
+            <RMSectionBody className={clsx(classes['section-body'], classes.fields)}>
+                <Group gap="xs">
+                    <RMThemeButton
+                        bg={theme[2]}
+                        fg={theme[3]}
+                        aria-label={t('Colour')}
+                        title={t('Colour')}
+                        onClick={() => {
+                            setIsThemeRequested(true);
+                            dispatch(openPaletteAppClip(theme));
+                        }}
+                        style={{ minWidth: 30, flex: 'none' }}
+                    >
+                        Aa
+                    </RMThemeButton>
+                    <TextInput
+                        label={t('StyleSidePanel.design.zhLineName')}
+                        value={lineName[0]}
+                        onChange={({ currentTarget: { value } }) => dispatch(setLineName([value, lineName[1]]))}
+                    />
+                    <TextInput
+                        label={t('StyleSidePanel.design.enLineName')}
+                        value={lineName[1]}
+                        onChange={({ currentTarget: { value } }) => dispatch(setLineName([lineName[0], value]))}
+                    />
+                    {style === RmgStyle.GZMTR && (
+                        <>
+                            <TextInput
+                                label={t('StyleSidePanel.design.lineNum')}
+                                value={lineNum}
+                                onChange={({ currentTarget: { value } }) => dispatch(setLineNum(value))}
+                            />
+                            <Switch
+                                label={t('Span digits over rows')}
+                                checked={!!spanLineNum}
+                                onChange={({ currentTarget: { checked } }) => dispatch(setSpanLineNum(checked))}
+                            />
+                        </>
+                    )}
+                    <TextInput
+                        label={t('StyleSidePanel.design.platformNum')}
+                        value={platformNum || ''}
+                        onChange={({ currentTarget: { value } }) => dispatch(setPlatform(value))}
+                    />
+                    {style === RmgStyle.GZMTR && (
+                        <>
+                            <TextInput
+                                label={t('StyleSidePanel.design.psdNum')}
+                                value={psdNum}
+                                onChange={({ currentTarget: { value } }) => dispatch(setPsdNum(value))}
+                            />
+                            <RMLabelledSegmentedControl
+                                label={t('Platform door label')}
+                                data={psdLabelSelections}
+                                value={psdLabel}
+                                onChange={value => dispatch(setPsdLabel(value as PsdLabel))}
+                                classNames={{ root: classes['mw-320'] }}
+                            />
+                            <TextInput
+                                label={t('Coach number')}
+                                value={coachNum}
+                                onChange={({ currentTarget: { value } }) => dispatch(setCoachNum(value))}
+                            />
+                        </>
+                    )}
+                    {[RmgStyle.GZMTR, RmgStyle.SHMetro].includes(style) && (
+                        <NativeSelect
+                            label={t('StyleSidePanel.design.panelType')}
+                            value={info_panel_type}
+                            data={style === RmgStyle.GZMTR ? panelTypeGZMTROptions : panelTypeSHMetroOptions}
+                            onChange={({ currentTarget: { value } }) =>
+                                dispatch(setPanelType(value as PanelTypeGZMTR | PanelTypeShmetro))
+                            }
+                        />
+                    )}
+                    <RMLabelledSegmentedControl
+                        label={t('StyleSidePanel.design.direction')}
+                        data={directionSelections}
+                        value={direction}
+                        onChange={value => dispatch(setDirection(value as ShortDirection))}
+                    />
+                    {style === RmgStyle.MTR && (
+                        <>
+                            <RMLabelledSegmentedControl
+                                label={t('StyleSidePanel.design.nameDisplay')}
+                                value={String(namePosMTR.isStagger)}
+                                data={staggerNameSelections}
+                                onChange={value => dispatch(staggerStationNames(value === TRUE))}
+                            />
+                            <Button
+                                variant="light"
+                                leftSection={<MdOutlineSwapVert />}
+                                onClick={() => dispatch(flipStationNames())}
+                                style={{ alignSelf: 'flex-end' }}
+                            >
+                                {t('StyleSidePanel.design.flip')}
+                            </Button>
+                            <Switch
+                                label={t('StyleSidePanel.design.legacyDestination')}
+                                checked={customiseMTRDest.isLegacy}
+                                onChange={({ currentTarget: { checked } }) =>
+                                    dispatch(toggleLineNameBeforeDestination(checked))
+                                }
+                                className="mw-full"
+                            />
+                            <Switch
+                                label={t('StyleSidePanel.design.overrideTerminal')}
+                                checked={customiseMTRDest.terminal !== false}
+                                onChange={({ currentTarget: { checked } }) =>
+                                    dispatch(customiseDestinationName(checked ? ['', ''] : false))
+                                }
+                                className="mw-full"
+                            />
+                            {customiseMTRDest.terminal && (
+                                <>
+                                    <TextInput
+                                        label={t('StyleSidePanel.design.terminalZhName')}
+                                        value={customiseMTRDest.terminal ? customiseMTRDest.terminal[0] : ''}
+                                        placeholder="機場及博覽館"
+                                        onChange={({ currentTarget: { value } }) =>
+                                            dispatch(
+                                                customiseDestinationName([
+                                                    value,
+                                                    customiseMTRDest.terminal ? customiseMTRDest.terminal[1] : '',
+                                                ])
+                                            )
+                                        }
+                                    />
+                                    <TextInput
+                                        label={t('StyleSidePanel.design.terminalEnName')}
+                                        value={customiseMTRDest.terminal ? customiseMTRDest.terminal[1] : ''}
+                                        placeholder="Airport and AsiaWorld-Expo"
+                                        onChange={({ currentTarget: { value } }) =>
+                                            dispatch(
+                                                customiseDestinationName([
+                                                    customiseMTRDest.terminal ? customiseMTRDest.terminal[0] : '',
+                                                    value,
+                                                ])
+                                            )
+                                        }
+                                    />
+                                </>
+                            )}
+                        </>
+                    )}
+                    {style === RmgStyle.SHMetro && lineServices === 1 && !loop && (
+                        <RMLabelledSegmentedControl
+                            label={t('StyleSidePanel.design.firstStationNameDisplay')}
+                            value={String(namePosMTR.isFlip)}
+                            data={flipNameSelections}
+                            onChange={value => dispatch(flipStationNames(value === TRUE))}
+                        />
+                    )}
+                </Group>
+            </RMSectionBody>
+        </RMSection>
     );
 }

@@ -7,20 +7,19 @@ export default defineConfig({
     base: '/rmg/',
     plugins: [react()],
     build: {
-        rollupOptions: {
+        rolldownOptions: {
             output: {
-                manualChunks: {
-                    react: [
-                        'react',
-                        'react-dom',
-                        'react-router-dom',
-                        '@reduxjs/toolkit',
-                        'react-redux',
-                        'react-i18next',
+                codeSplitting: {
+                    groups: [
+                        {
+                            test: /node_modules\/react/,
+                            name: 'react',
+                        },
+                        {
+                            test: /node_modules\/@mantine/,
+                            name: 'mantine',
+                        },
                     ],
-                    chakra: ['@chakra-ui/react', '@emotion/react', '@emotion/styled', 'framer-motion', 'react-icons'],
-                    'ag-grid-community': ['ag-grid-community'],
-                    'ag-grid-react': ['ag-grid-react'],
                 },
             },
         },

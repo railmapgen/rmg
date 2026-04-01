@@ -1,6 +1,6 @@
+import './index.css';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { createRoot, Root } from 'react-dom/client';
-import './index.css';
 import i18n from './i18n/config';
 import App from './App';
 import * as serviceWorker from './serviceWorker';

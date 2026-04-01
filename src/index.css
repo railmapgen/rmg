@@ -1,5 +1,5 @@
-@import "ag-grid-community/styles/ag-grid.css";
-@import "ag-grid-community/styles/ag-theme-alpine.css";
+@import '@mantine/core/styles.css';
+@import "@railmapgen/mantine-components/styles.css";
 
 :root {
     background-color: #FFFFFF;
@@ -7,13 +7,21 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        background-color: #1A202C;
+        background-color: #242424;
         color: white;
     }
 }
 
 html {
     height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+}
+
+@media (display-mode: standalone) {
+    html {
+        height: 100vh;
+    }
 }
 
 body {
@@ -22,14 +30,22 @@ body {
     height: 100%;
     width: 100%;
     width: -webkit-fill-available;
-    padding: env(safe-area-inset-top, 20px) env(safe-area-inset-right, 20px) env(safe-area-inset-bottom, 20px) env(safe-area-inset-left, 20px);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
 }
 
 div#root {
     height: 100%;
     width: 100%;
+    background: inherit;
+    overflow: hidden;
 }
 
 * {
     box-sizing: border-box;
+}
+
+.mw-full {
+    width: 100%;
+    flex-basis: 100%;
 }
