@@ -3,7 +3,6 @@ import StationSHMetro from '../station-shmetro';
 import { NameDirection, StationSHMetro as StationSHMetroIndoor } from '../indoor/station-shmetro';
 import { CanvasType, Services, ShortDirection } from '../../../constants/constants';
 import { useRootSelector } from '../../../redux';
-import { isColineBranch } from '../../../redux/param/coline-action';
 import {
     get_xshares_yshares_of_loop,
     LoopStns,
@@ -12,13 +11,21 @@ import {
     split_loop_stns_with_branches,
 } from '../../methods/shmetro-loop';
 import { get_loop_branches, LoopBranches } from './loop-branches-shmetro';
+import {
+    getBranchStnIds,
+    getColineArcInfo,
+    getColineOrder,
+    getColineStnStates,
+    resolveIndexInTop,
+    resolveIndexInBranch,
+} from './loop-coline-order';
 import { LoopColine } from './loop-coline-shmetro';
 
 const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | CanvasType.Indoor }) => {
     const { bank_angle, canvas } = props;
     const { branches } = useRootSelector(store => store.helper);
     const {
-        current_stn_idx: current_stn_id,
+        current_stn_idx: cur_stn_id,
         svgWidth: svg_width,
         svg_height,
         padding,
@@ -31,44 +38,19 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
     } = useRootSelector(store => store.param);
 
     const loopline = branches[0].filter(stn_id => !['linestart', 'lineend'].includes(stn_id));
-    const branch_stn_ids = branches
-        .slice(0, 3) // drop additional branches
-        .flat()
-        .filter(
-            (
-                o => v =>
-                    (o[v] = (o[v] || 0) + 1) === 2
-            )({} as { [stn_id: string]: number })
-        ) // count each occurrence
-        .filter(stn_id => !['linestart', 'lineend'].includes(stn_id)); // find branch stations
+    const branch_stn_ids = getBranchStnIds(branches);
+
+    const arcInfo = getColineArcInfo(loopline, coline, branches, stn_list);
 
     // find which arc would be displayed on the top side from coline info
-    const arc =
-        Object.values(coline)
-            .filter(co =>
-                [co.from, co.to].every(stn_id =>
-                    branches
-                        .slice(1, 3)
-                        .filter(branch => isColineBranch(branch, stn_list))
-                        .flat()
-                        .includes(stn_id)
-                )
-            )
-            .map(co => {
-                const from_idx = loopline.findIndex(stn_id => stn_id === co.from);
-                const to_idx = loopline.findIndex(stn_id => stn_id === co.to);
-                return Math.abs(to_idx - from_idx) > loopline.length - 2 - Math.abs(to_idx - from_idx)
-                    ? 'major'
-                    : 'minor';
-            })
-            .at(0) ?? 'minor';
+    const arc = arcInfo?.arcType ?? 'minor';
 
     // use different split methods for different numbers of branches
     const loop_stns = branch_stn_ids.at(1)
         ? split_loop_stns_with_branches(loopline, branch_stn_ids as [string, string], left_and_right_factor, arc)
         : branch_stn_ids.at(0)
           ? split_loop_stns_with_branch(loopline, branch_stn_ids[0], bottom_factor, left_and_right_factor)
-          : split_loop_stns(loopline, current_stn_id, bottom_factor, left_and_right_factor);
+          : split_loop_stns(loopline, cur_stn_id, bottom_factor, left_and_right_factor);
     const { x_shares: x_shares_loop, y_shares: y_shares_loop } = get_xshares_yshares_of_loop(loopline, loop_stns);
 
     // calculate xs and ys for branches
@@ -127,6 +109,17 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
 
     const xs = { ...xs_branches, ...xs_loop };
 
+    const coline_order = arcInfo ? getColineOrder(branches, arcInfo, coline) : undefined;
+    const coline_stn_states: Record<string, -1 | 0 | 1> | undefined =
+        coline_order &&
+        (coline_order.stnIds.includes(cur_stn_id)
+            ? getColineStnStates({
+                  order: coline_order,
+                  curStnId: cur_stn_id,
+                  direction,
+              })
+            : Object.fromEntries(coline_order.stnIds.map(stnId => [stnId, 1 as const])));
+
     // generate loop path used in svg
     const path = _linePath(loop_stns, xs, ys, bank, [...line_xs, ...line_ys], direction);
 
@@ -147,7 +140,13 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
             <path stroke="var(--rmg-theme-colour)" strokeWidth={12} fill="none" d={path} strokeLinejoin="round" />
             {/* Order matters. The LoopColine should cover the station in RailMap. */}
             {canvas === CanvasType.RailMap && (
-                <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />
+                <LoopStationGroup
+                    canvas={canvas}
+                    loop_stns={loop_stns}
+                    xs={xs}
+                    ys={ys}
+                    colineStnStates={coline_stn_states}
+                />
             )}
             <g transform={`translate(0,${Object.keys(coline).length > 0 ? -LINE_WIDTH - COLINE_GAP : 0})`}>
                 <LoopBranches
@@ -156,6 +155,13 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
                     xs={xs}
                     ys={ys}
                     canvas={canvas}
+                    indexsInLoopBranches={loop_branches.map(
+                        (branch, index) => resolveIndexInBranch(cur_stn_id, coline_order!, index + 1) // is index in the global branches array
+                    )}
+                    isLeftLoopBranch={loop_branches.map(
+                        (branch, index) => index + 1 === coline_order!.leftBranchIndexInBranches // leftBranchIndex is index in the global branches array
+                    )}
+                    colineStnStates={coline_stn_states}
                 />
                 {Object.keys(coline).length > 0 && (
                     <LoopColine
@@ -164,11 +170,21 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
                         xs={xs}
                         ys={ys}
                         canvas={canvas}
+                        indexInTop={resolveIndexInTop(cur_stn_id, coline_order!)}
+                        colineStnStates={coline_stn_states}
                     />
                 )}
             </g>
             {/* Order matters. The station should cover LoopColine's main path in Indoor. */}
-            {canvas === CanvasType.Indoor && <LoopStationGroup canvas={canvas} loop_stns={loop_stns} xs={xs} ys={ys} />}
+            {canvas === CanvasType.Indoor && (
+                <LoopStationGroup
+                    canvas={canvas}
+                    loop_stns={loop_stns}
+                    xs={xs}
+                    ys={ys}
+                    colineStnStates={coline_stn_states}
+                />
+            )}
         </g>
     );
 };
@@ -243,9 +259,13 @@ const LoopStationGroup = (props: {
     ys: {
         [k: string]: number;
     };
+    colineStnStates?: Record<string, -1 | 0 | 1>;
 }) => {
-    const { canvas, loop_stns, xs, ys } = props;
+    const { canvas, loop_stns, xs, ys, colineStnStates: colineStationStates } = props;
     const { current_stn_idx: current_stn_id, stn_list } = useRootSelector(store => store.param);
+
+    const getStnState = (stn_id: string): -1 | 0 | 1 =>
+        current_stn_id === stn_id ? 0 : (colineStationStates?.[stn_id] ?? 1);
 
     const railmap_bank: Record<keyof LoopStns, -1 | 0 | 1> = {
         top: 0,
@@ -276,7 +296,7 @@ const LoopStationGroup = (props: {
                             <g key={stn_id} transform={`translate(${xs[stn_id]},${ys[stn_id]})`}>
                                 <StationSHMetro
                                     stnId={stn_id}
-                                    stnState={current_stn_id === stn_id ? 0 : 1}
+                                    stnState={getStnState(stn_id)}
                                     bank={railmap_bank[side as keyof LoopStns]}
                                     direction={railmap_direction[side as keyof LoopStns]}
                                 />
