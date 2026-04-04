@@ -9,7 +9,6 @@
 import { ColineInfo, ShortDirection, StationDict } from '../../../constants/constants';
 import { isColineBranch } from '../../../redux/param/coline-action';
 
-export type ColineStnState = -1 | 0 | 1;
 export type LoopColineArc = 'major' | 'minor';
 
 /**
@@ -167,7 +166,7 @@ export const getColineStnStates = (args: {
     order: ColineOrder;
     curStnId: string;
     direction: ShortDirection;
-}): Record<string, ColineStnState> => {
+}): Record<string, -1 | 0 | 1> => {
     const { order, curStnId, direction } = args;
 
     const curStnIndex = order.stnIds.indexOf(curStnId);

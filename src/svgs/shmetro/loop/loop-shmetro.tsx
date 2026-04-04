@@ -12,13 +12,12 @@ import {
 } from '../../methods/shmetro-loop';
 import { get_loop_branches, LoopBranches } from './loop-branches-shmetro';
 import {
-    ColineStnState,
     getBranchStnIds,
+    getColineArcInfo,
     getColineOrder,
     getColineStnStates,
     resolveIndexInTop,
     resolveIndexInBranch,
-    getColineArcInfo,
 } from './loop-coline-order';
 import { LoopColine } from './loop-coline-shmetro';
 
@@ -111,13 +110,15 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
     const xs = { ...xs_branches, ...xs_loop };
 
     const coline_order = arcInfo ? getColineOrder(branches, arcInfo, coline) : undefined;
-    const coline_stn_states =
+    const coline_stn_states: Record<string, -1 | 0 | 1> | undefined =
         coline_order &&
-        getColineStnStates({
-            order: coline_order,
-            curStnId: cur_stn_id,
-            direction,
-        });
+        (coline_order.stnIds.includes(cur_stn_id)
+            ? getColineStnStates({
+                  order: coline_order,
+                  curStnId: cur_stn_id,
+                  direction,
+              })
+            : Object.fromEntries(coline_order.stnIds.map(stnId => [stnId, 1 as const])));
 
     // generate loop path used in svg
     const path = _linePath(loop_stns, xs, ys, bank, [...line_xs, ...line_ys], direction);
@@ -258,7 +259,7 @@ const LoopStationGroup = (props: {
     ys: {
         [k: string]: number;
     };
-    colineStnStates?: Record<string, ColineStnState>;
+    colineStnStates?: Record<string, -1 | 0 | 1>;
 }) => {
     const { canvas, loop_stns, xs, ys, colineStnStates: colineStationStates } = props;
     const { current_stn_idx: current_stn_id, stn_list } = useRootSelector(store => store.param);
