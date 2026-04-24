@@ -55,7 +55,7 @@
         color: light-dark(var(--mantine-color-dark-light-color), var(--mantine-color-gray-light-color));
 
         @mixin hover {
-            background-color: light-dark(var(--mantine-color-dark-light-hover), var(--mantine-color-gray-light-hover));
+            background-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
             color: light-dark(var(--mantine-color-dark-light-color), var(--mantine-color-gray-light-color));
         }
     }

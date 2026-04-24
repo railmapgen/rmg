@@ -61,7 +61,7 @@
             "zhLineName": "路線の日本語名",
             "enLineName": "路線の英語名",
             "lineNum": "路線番号",
-            "direction": "現在の駅の進行方向",
+            "direction": "進行方向",
             "left": "左",
             "right": "右",
             "platformNum": "ホーム番号",

@@ -61,7 +61,7 @@
             "zhLineName": "路线中文名称",
             "enLineName": "路线英文名称",
             "lineNum": "路线编号",
-            "direction": "当前车站行车方向",
+            "direction": "行车方向",
             "left": "向左",
             "right": "向右",
             "platformNum": "站台编号",

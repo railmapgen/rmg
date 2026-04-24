@@ -57,7 +57,7 @@
             "zhLineName": "路綫中文名稱",
             "enLineName": "路綫英文名稱",
             "lineNum": "路綫編碼",
-            "direction": "當前車站行車方向",
+            "direction": "行車方向",
             "left": "向左",
             "right": "向右",
             "platformNum": "月台編號",

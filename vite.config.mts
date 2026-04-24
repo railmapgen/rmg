@@ -11,14 +11,8 @@ export default defineConfig({
             output: {
                 codeSplitting: {
                     groups: [
-                        {
-                            test: /node_modules\/react/,
-                            name: 'react',
-                        },
-                        {
-                            test: /node_modules\/@mantine/,
-                            name: 'mantine',
-                        },
+                        { test: /node_modules\/react/, name: 'react' },
+                        { test: /node_modules\/@mantine/, name: 'mantine' },
                     ],
                 },
             },

@@ -218,6 +218,7 @@ export default function DesignSection() {
                                 value={String(namePosMTR.isStagger)}
                                 data={staggerNameSelections}
                                 onChange={value => dispatch(staggerStationNames(value === TRUE))}
+                                classNames={{ root: classes['mw-200'] }}
                             />
                             <Button
                                 variant="light"

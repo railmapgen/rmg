@@ -63,7 +63,7 @@
             "zhLineName": "Chinese line name",
             "enLineName": "English line name",
             "lineNum": "Line code",
-            "direction": "Train direction at this station",
+            "direction": "Train direction",
             "left": "Left",
             "right": "Right",
             "platformNum": "Platform number",

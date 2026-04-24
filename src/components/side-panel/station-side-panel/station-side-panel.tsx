@@ -16,15 +16,18 @@ import RMLineBadge from '../../common/rm-line-badge';
 import { useState } from 'react';
 import AddStationModal from '../../modal/add-station-modal';
 
+const isValidStation = (stationId: string) => !['linestart', 'lineend'].includes(stationId);
+
 const stationOptionIdMapper = {
-    construct: (branchId: number | string, stationId: string) => `${branchId}-${stationId}`,
+    construct: (branchId: number | string, stationId: string) => {
+        if (!isValidStation(stationId)) return null;
+        return `${branchId}-${stationId}`;
+    },
     destruct: (id: string) => {
         const matches = id.match(/^(\d+)-(.+)$/)!;
         return { branchId: Number(matches[1]), stationId: matches[2] };
     },
 };
-
-const isValidStation = (stationId: string) => !['linestart', 'lineend'].includes(stationId);
 
 export default function StationSidePanel() {
     const { t } = useTranslation();
@@ -40,7 +43,7 @@ export default function StationSidePanel() {
     const stationOptions = branchOptions.map(branch => ({
         group: branch.label,
         items: branches[Number(branch.value)].filter(isValidStation).map(stationId => ({
-            value: stationOptionIdMapper.construct(branch.value, stationId),
+            value: stationOptionIdMapper.construct(branch.value, stationId)!,
             label: stationList[stationId]?.localisedName.zh + '/' + stationList[stationId]?.localisedName.en,
         })),
     }));
@@ -85,6 +88,7 @@ export default function StationSidePanel() {
                     value={stationOptionIdMapper.construct(selectedBranch, selectedStation)}
                     data={stationOptions}
                     renderOption={renderOption}
+                    placeholder={t('Please select...')}
                     onChange={value => value && handleSelectStation(value)}
                     maxDropdownHeight={320}
                     flex={1}

@@ -4,7 +4,8 @@
     gap: var(--mantine-spacing-xl);
     padding-top: var(--mantine-spacing-xs);
     padding-bottom: max(env(safe-area-inset-bottom), var(--mantine-spacing-xs));
-    background-color: light-dark(var(--mantine-color-dark-light-hover), var(--mantine-color-gray-light-hover));
+    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
+    border-top: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 }
 
 .header {
