@@ -44,7 +44,7 @@ describe('InterchangeCard', () => {
         const themeButton = screen.getByRole('button', { name: 'Colour' });
         expect(themeButton).toHaveStyle({ color: '#FFFFFF' });
         expect(themeButton.querySelector('.mantine-ColorSwatch-colorOverlay')).toHaveStyle({
-            background: '#F38B00',
+            backgroundColor: '#F38B00',
         });
 
         expect(screen.getByRole('combobox', { name: 'Chinese name' })).toHaveDisplayValue('東涌綫');
