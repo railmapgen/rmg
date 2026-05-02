@@ -93,7 +93,8 @@
             "legacyDestination": "Display line name on direction sign",
             "overrideTerminal": "Override terminal",
             "terminalZhName": "Terminal Chinese name",
-            "terminalEnName": "Terminal English name"
+            "terminalEnName": "Terminal English name",
+            "branchDistanceFactor": "Branch horizontal distance factor"
         },
         "note": {
             "title": "Notes",

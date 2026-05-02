@@ -1,5 +1,6 @@
 import { memo, useMemo } from 'react';
-import { adjacencyList, criticalPathMethod, getStnState, getXShareMTR } from '../../methods/share';
+import { adjacencyList, criticalPathMethod, getXShareMTR } from '../../methods/share';
+import { getStnStateShmetro } from '../../methods/shmetro-share';
 import StationSHMetro from './station-shmetro';
 import { StationsSHMetro } from '../../methods/mtr';
 import { CanvasType, Services, StationDict } from '../../../constants/constants';
@@ -106,12 +107,12 @@ const IndoorSHMetro = () => {
 
     const yShares = useMemo(() => StationsSHMetro.getYShares(param.stn_list), [deps]);
     const ys = Object.keys(yShares).reduce(
-        (acc, cur) => ({ ...acc, [cur]: (yShares[cur] * param.branchSpacingPct * param.svg_height) / 200 }),
+        (acc, cur) => ({ ...acc, [cur]: (yShares[cur] * param.branch_info.spacing_pct * param.svg_height) / 200 }),
         {} as typeof yShares
     );
 
     const stnStates = useMemo(
-        () => getStnState(param.current_stn_idx, routes, param.direction),
+        () => getStnStateShmetro(param.current_stn_idx, routes, param.stn_list, param.direction),
         [param.current_stn_idx, param.direction, routes.toString()]
     );
 
@@ -137,7 +138,7 @@ const IndoorSHMetro = () => {
         lineXs,
         xs,
         ys,
-        (param.branchSpacingPct * param.svg_height) / 200,
+        (param.branch_info.spacing_pct * param.svg_height) / 200,
         criticalPath,
         0
     );

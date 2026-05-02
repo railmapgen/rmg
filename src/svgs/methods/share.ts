@@ -328,7 +328,7 @@ export const drawLine = (branch: string[], stnStates: { [stnId: string]: -1 | 0 
         ) {
             linePassStns = branch;
             lineMainStns = [];
-        } else {
+        } else if (linePassStns.length > 0) {
             // 1 1 -1 -1
             linePassStns.unshift(lineMainStns[lineMainStns.length - 1]);
         }

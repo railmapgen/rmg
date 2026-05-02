@@ -16,6 +16,7 @@ import {
     setTheme,
     staggerStationNames,
     toggleLineNameBeforeDestination,
+    setShmetro2020BranchDistanceFactor,
 } from '../../../redux/param/param-slice';
 import {
     FALSE,
@@ -60,6 +61,7 @@ export default function DesignSection() {
         info_panel_type,
         stn_list,
         loop,
+        branch_info: { distance_factor: branchDistanceFactor } = { distance_factor: 1 },
     } = useRootSelector(state => state.param);
 
     const lineServices = Math.max(...Object.values(stn_list).map(s => s.services.length));
@@ -108,6 +110,18 @@ export default function DesignSection() {
         {
             label: t('StyleSidePanel.design.downward'),
             value: FALSE,
+        },
+        {
+            type: 'slider',
+            label: t('StyleSidePanel.design.branchDistanceFactor'),
+            value: branchDistanceFactor,
+            min: 1,
+            max: 3,
+            step: 0.05,
+            onChange: value => {
+                dispatch(setShmetro2020BranchDistanceFactor(value));
+            },
+            hidden: ![RmgStyle.SHMetro].includes(style) || info_panel_type !== 'sh2020' || loop,
         },
     ];
 

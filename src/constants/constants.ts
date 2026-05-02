@@ -214,10 +214,16 @@ export interface RMGParam {
      * Left and right margin of line (in percentage).
      */
     padding: number;
-    /** Branch spacing percentage (space between upper and lower branch).
-     *  In SHMetro loop line, this is also used in determining vertical padding.
-     */
-    branchSpacingPct: number;
+    branch_info: {
+        /** Branch spacing percentage (space between upper and lower branch).
+         *  In SHMetro loop line, this is also used in determining vertical padding.
+         */
+        spacing_pct: number;
+        /**
+         * Factor for the horizontal distance from bifurcation point to first branch station.
+         */
+        distance_factor: number;
+    };
     direction: ShortDirection;
     /**
      * Platform number of the destination canvas. Set to '' will hide the element.

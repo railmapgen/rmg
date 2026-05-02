@@ -22,7 +22,7 @@ const LoopSHMetro = (props: { bank_angle: boolean; canvas: CanvasType.RailMap | 
         svgWidth: svg_width,
         svg_height,
         padding,
-        branchSpacingPct,
+        branch_info: { spacing_pct: branchSpacingPct },
         direction,
         info_panel_type,
         stn_list,
