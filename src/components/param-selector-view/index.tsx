@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { RmgCard, RmgLoader, RmgPage } from '@railmapgen/rmg-components';
-import { Container, Flex, Heading, SystemStyleObject, useOutsideClick, useToast } from '@chakra-ui/react';
+import classes from './param-selector-view.module.css';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { Events, LocalStorageKey, ParamConfig } from '../../constants/constants';
@@ -9,21 +8,9 @@ import { getParamRegistry } from '../../util/param-manager-utils';
 import SelectorActions from './selector-actions';
 import useRootSearchParams from '../../hooks/use-root-search-params';
 import { updateTitle } from '../../util/metadata-utils';
-
-const paramSelectorCardStyle: SystemStyleObject = {
-    flexDirection: 'column',
-    p: 2,
-
-    h3: {
-        m: 2,
-    },
-
-    '& > div': {
-        m: 2,
-        flexWrap: 'wrap',
-        flexDirection: { base: 'column', md: 'row' },
-    },
-};
+import { RMPage, RMPageBody } from '@railmapgen/mantine-components';
+import { Card, Flex, LoadingOverlay, Title } from '@mantine/core';
+import { useClickOutside } from '@mantine/hooks';
 
 interface ParamSelectorViewProps {
     downloading?: string;
@@ -38,9 +25,6 @@ export default function ParamSelectorView(props: ParamSelectorViewProps) {
 
     const [paramRegistry, setParamRegistry] = useState<ParamConfig[]>([]);
     const [selectedParam, setSelectedParam] = useState<string>();
-    const selectorRef = useRef<HTMLDivElement>(null);
-
-    const toast = useToast();
 
     useEffect(() => {
         updateTitle(t('Manage projects'));
@@ -51,7 +35,7 @@ export default function ParamSelectorView(props: ParamSelectorViewProps) {
         setParamRegistry(getParamRegistry());
     }, [downloading]);
 
-    useOutsideClick({ ref: selectorRef, handler: () => setSelectedParam(undefined) });
+    const selectorRef = useClickOutside(() => setSelectedParam(undefined));
 
     const handleUpdate = (config: ParamConfig) => {
         const { id, name, lastModified } = config;
@@ -76,17 +60,22 @@ export default function ParamSelectorView(props: ParamSelectorViewProps) {
     };
 
     const handleError = (message: string) => {
-        toast({ description: message, status: 'error', duration: 10000, isClosable: true });
+        rmgRuntime.sendNotification({
+            title: t('Unable to open project'),
+            message,
+            type: 'error',
+            duration: 10_000,
+        });
     };
 
     return (
-        <RmgPage justifyContent="center">
-            {urlParamId && <RmgLoader isIndeterminate />}
-            <Container>
-                <RmgCard sx={paramSelectorCardStyle}>
-                    <Heading as="h3" size="lg">
+        <RMPage>
+            {urlParamId && <LoadingOverlay visible />}
+            <RMPageBody className={classes.container}>
+                <Card className={classes.card} withBorder>
+                    <Title order={2} size="h2">
                         {t('Saved projects')}
-                    </Heading>
+                    </Title>
 
                     <Flex ref={selectorRef}>
                         <ParamSelector
@@ -104,8 +93,8 @@ export default function ParamSelectorView(props: ParamSelectorViewProps) {
                             onError={handleError}
                         />
                     </Flex>
-                </RmgCard>
-            </Container>
-        </RmgPage>
+                </Card>
+            </RMPageBody>
+        </RMPage>
     );
 }

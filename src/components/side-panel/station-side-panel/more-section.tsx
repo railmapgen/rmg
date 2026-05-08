@@ -1,7 +1,6 @@
-import { Box, Heading } from '@chakra-ui/react';
-import { RmgButtonGroup, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import classes from '../side-panel.module.css';
 import { useTranslation } from 'react-i18next';
-import { FACILITIES, Facilities, RmgStyle, Services, TEMP } from '../../../constants/constants';
+import { FACILITIES, Facilities, FALSE, RmgStyle, Services, TEMP, TRUE } from '../../../constants/constants';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import {
     updateStationCharacterSpacing,
@@ -14,6 +13,9 @@ import {
     updateStationServices,
     updateStationUnderConstruction,
 } from '../../../redux/param/action';
+import { RMLabelledSegmentedControl, RMSection, RMSectionBody, RMSectionHeader } from '@railmapgen/mantine-components';
+import { Button, Group, MultiSelect, NativeSelect, NumberInput, Switch, Title } from '@mantine/core';
+import clsx from 'clsx';
 
 export default function MoreSection() {
     const { t } = useTranslation();
@@ -28,130 +30,134 @@ export default function MoreSection() {
         return {
             label: t('StationSidePanel.more.' + service),
             value: service,
-            disabled: service === Services.local && style !== RmgStyle.SHMetro,
+            disabled:
+                (service === Services.local && style !== RmgStyle.SHMetro) ||
+                (service === Services.direct && style !== RmgStyle.SHMetro),
         };
     });
 
-    const mtrFacilityOptions = Object.fromEntries(
-        Object.entries(FACILITIES)
+    const mtrFacilityOptions = [
+        { value: '', label: t('None') },
+        ...Object.entries(FACILITIES)
             .filter(([f]) => !['railway'].includes(f))
-            .map(([f, name]) => [f, t(name)])
-    );
-    const shmetroFacilityOptions = Object.fromEntries(
-        Object.entries(FACILITIES)
+            .map(([f, name]) => ({ value: f, label: t(name) })),
+    ];
+    const shmetroFacilityOptions = [
+        { value: '', label: t('None') },
+        ...Object.entries(FACILITIES)
             .filter(([f]) => !['np360'].includes(f))
-            .map(([f, name]) => [f, t(name)])
-    );
-
-    const fields: RmgFieldsField[] = [
-        {
-            type: 'custom',
-            label: t('StationSidePanel.more.service'),
-            component: (
-                <RmgButtonGroup
-                    selections={serviceSelections}
-                    defaultValue={services}
-                    onChange={services => dispatch(updateStationServices(selectedStation, services))}
-                    multiSelect
-                />
-            ),
-            hidden: ![RmgStyle.GZMTR, RmgStyle.SHMetro].includes(style),
-        },
-        {
-            type: 'select',
-            label: t('StationSidePanel.more.facility'),
-            value: facility || '',
-            options: { '': t('None'), ...(style === RmgStyle.MTR ? mtrFacilityOptions : shmetroFacilityOptions) },
-            onChange: value => dispatch(updateStationFacility(selectedStation, value as Facilities | '')),
-            hidden: ![RmgStyle.MTR, RmgStyle.SHMetro].includes(style),
-        },
-        {
-            type: 'switch',
-            label: t('StationSidePanel.more.pivot'),
-            isChecked: loop_pivot,
-            onChange: checked => dispatch(updateStationLoopPivot(selectedStation, checked)),
-            hidden: ![RmgStyle.GZMTR, RmgStyle.SHMetro].includes(style) || !loop,
-            minW: 'full',
-            oneLine: true,
-        },
-        {
-            type: 'switch',
-            label: t('StationSidePanel.more.oneLine'),
-            isChecked: one_line,
-            onChange: checked => dispatch(updateStationOneLine(selectedStation, checked)),
-            hidden: ![RmgStyle.SHMetro].includes(style),
-            minW: 'full',
-            oneLine: true,
-        },
-        {
-            type: 'input',
-            label: t('StationSidePanel.more.intPadding'),
-            value: int_padding.toString(),
-            validator: val => Number.isInteger(val),
-            onChange: val => dispatch(updateStationIntPadding(selectedStation, Number(val))),
-            hidden: ![RmgStyle.SHMetro].includes(style),
-        },
-        {
-            type: 'custom',
-            label: t('StationSidePanel.more.intPaddingApplyGlobal'),
-            component: (
-                <RmgButtonGroup
-                    selections={[{ label: t('StationSidePanel.more.apply'), value: '', disabled: false }]}
-                    defaultValue=""
-                    onChange={() => dispatch(updateStationIntPaddingToAll(selectedStation))}
-                />
-            ),
-            oneLine: true,
-            hidden: ![RmgStyle.SHMetro].includes(style),
-        },
-        {
-            type: 'input',
-            label: t('StationSidePanel.more.characterSpacing'),
-            value: character_spacing.toString(),
-            validator: val => Number.isInteger(val),
-            onChange: val => dispatch(updateStationCharacterSpacing(selectedStation, Number(val))),
-            hidden: ![RmgStyle.SHSuburbanRailway].includes(style),
-        },
-        {
-            type: 'custom',
-            label: t('StationSidePanel.more.intPaddingApplyGlobal'),
-            component: (
-                <RmgButtonGroup
-                    selections={[{ label: t('StationSidePanel.more.apply'), value: '', disabled: false }]}
-                    defaultValue=""
-                    onChange={() => dispatch(updateStationCharacterSpacingToAll(selectedStation))}
-                />
-            ),
-            oneLine: true,
-            hidden: ![RmgStyle.SHSuburbanRailway].includes(style),
-        },
-        {
-            type: 'custom',
-            label: t('Under construction'),
-            component: (
-                <RmgButtonGroup
-                    selections={
-                        [
-                            { label: t('No'), value: false },
-                            { label: t('Temporary'), value: 'temp' },
-                            { label: t('Yes'), value: true },
-                        ] as { label: string; value: boolean | TEMP }[]
-                    }
-                    defaultValue={underConstruction ?? false}
-                    onChange={uc => dispatch(updateStationUnderConstruction(selectedStation, uc))}
-                />
-            ),
-            hidden: ![RmgStyle.GZMTR].includes(style),
-        },
+            .map(([f, name]) => ({ value: f, label: t(name) })),
     ];
 
     return (
-        <Box p={1}>
-            <Heading as="h5" size="sm">
-                {t('StationSidePanel.more.title')}
-            </Heading>
+        <RMSection>
+            <RMSectionHeader>
+                <Title order={3} size="h4">
+                    {t('StationSidePanel.more.title')}
+                </Title>
+            </RMSectionHeader>
 
-            <RmgFields fields={fields} />
-        </Box>
+            <RMSectionBody className={clsx(classes['section-body'], classes.fields)}>
+                <Group gap="xs">
+                    {[RmgStyle.GZMTR, RmgStyle.SHMetro].includes(style) && (
+                        <MultiSelect
+                            label={t('StationSidePanel.more.service')}
+                            value={services}
+                            data={serviceSelections}
+                            onChange={services =>
+                                dispatch(updateStationServices(selectedStation, services as Services[]))
+                            }
+                            style={{ width: '100%', flexBasis: '100%' }}
+                        />
+                    )}
+                    {style === RmgStyle.GZMTR && (
+                        <RMLabelledSegmentedControl
+                            label={t('Under construction')}
+                            value={String(underConstruction ?? false)}
+                            data={[
+                                { label: t('No'), value: FALSE },
+                                { label: t('Temporary'), value: TEMP },
+                                { label: t('Yes'), value: TRUE },
+                            ]}
+                            onChange={value =>
+                                dispatch(
+                                    updateStationUnderConstruction(
+                                        selectedStation,
+                                        value === TRUE ? true : value === FALSE ? false : TEMP
+                                    )
+                                )
+                            }
+                        />
+                    )}
+                    {[RmgStyle.MTR, RmgStyle.SHMetro].includes(style) && (
+                        <NativeSelect
+                            label={t('StationSidePanel.more.facility')}
+                            value={facility ?? ''}
+                            data={style === RmgStyle.MTR ? mtrFacilityOptions : shmetroFacilityOptions}
+                            onChange={({ currentTarget: { value } }) =>
+                                dispatch(updateStationFacility(selectedStation, value as Facilities | ''))
+                            }
+                        />
+                    )}
+                    {style === RmgStyle.SHMetro && (
+                        <>
+                            <Switch
+                                label={t('StationSidePanel.more.oneLine')}
+                                checked={one_line}
+                                onChange={({ currentTarget: { checked } }) =>
+                                    dispatch(updateStationOneLine(selectedStation, checked))
+                                }
+                                style={{ width: '100%', flexBasis: '100%' }}
+                            />
+                            <NumberInput
+                                label={t('StationSidePanel.more.intPadding')}
+                                value={int_padding}
+                                allowDecimal={false}
+                                onChange={value => dispatch(updateStationIntPadding(selectedStation, Number(value)))}
+                                rightSection={
+                                    <Button
+                                        variant="light"
+                                        w={170}
+                                        onClick={() => dispatch(updateStationIntPaddingToAll(selectedStation))}
+                                    >
+                                        {t('StationSidePanel.more.intPaddingApplyGlobal')}
+                                    </Button>
+                                }
+                                rightSectionWidth={170}
+                                style={{ width: '100%', flexBasis: '100%' }}
+                            />
+                        </>
+                    )}
+                    {[RmgStyle.GZMTR, RmgStyle.SHMetro].includes(style) && loop && (
+                        <Switch
+                            label={t('StationSidePanel.more.pivot')}
+                            checked={loop_pivot}
+                            onChange={({ currentTarget: { checked } }) =>
+                                dispatch(updateStationLoopPivot(selectedStation, checked))
+                            }
+                        />
+                    )}
+                    {style === RmgStyle.SHSuburbanRailway && (
+                        <NumberInput
+                            label={t('StationSidePanel.more.characterSpacing')}
+                            value={character_spacing}
+                            allowDecimal={false}
+                            onChange={value => dispatch(updateStationCharacterSpacing(selectedStation, Number(value)))}
+                            rightSection={
+                                <Button
+                                    variant="light"
+                                    w={170}
+                                    onClick={() => dispatch(updateStationCharacterSpacingToAll(selectedStation))}
+                                >
+                                    {t('StationSidePanel.more.intPaddingApplyGlobal')}
+                                </Button>
+                            }
+                            rightSectionWidth={170}
+                            className="mw-full"
+                        />
+                    )}
+                </Group>
+            </RMSectionBody>
+        </RMSection>
     );
 }

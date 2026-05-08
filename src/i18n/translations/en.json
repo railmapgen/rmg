@@ -1,8 +1,4 @@
 {
-    "HeaderActions": {
-        "editStyle": "Edit style"
-    },
-
     "DownloadActions": {
         "downloads": "Downloads",
         "configFile": "Configuration file",
@@ -67,7 +63,7 @@
             "zhLineName": "Chinese line name",
             "enLineName": "English line name",
             "lineNum": "Line code",
-            "direction": "Train direction at this station",
+            "direction": "Train direction",
             "left": "Left",
             "right": "Right",
             "platformNum": "Platform number",
@@ -178,7 +174,7 @@
             "pivot": "Pivot station on loop line",
             "oneLine": "Display Chinese and English in one line",
             "intPadding": "Padding between station name and interchange box",
-            "intPaddingApplyGlobal": "Apply current padding to all stations",
+            "intPaddingApplyGlobal": "Apply to all stations",
             "apply": "Apply",
             "characterSpacing": "Station Name Letter Spacing"
         },

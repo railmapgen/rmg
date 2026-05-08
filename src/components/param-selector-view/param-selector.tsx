@@ -1,13 +1,14 @@
+import classes from './param-selector-view.module.css';
 import { useState } from 'react';
-import { Box, ButtonGroup, Flex, IconButton, SystemStyleObject, Text } from '@chakra-ui/react';
 import { getRelativeTime } from '../../util/utils';
-import { MdDelete, MdEdit } from 'react-icons/md';
+import { MdOutlineDeleteOutline, MdOutlineEdit } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
-import { RmgEnrichedButton } from '@railmapgen/rmg-components';
 import { ParamConfig } from '../../constants/constants';
 import ParamConfigEditModal from '../modal/param-config-edit-modal';
+import { Button, Card, Group, Stack, StackProps, Text } from '@mantine/core';
+import clsx from 'clsx';
 
-interface ParamSelectorProps {
+interface ParamSelectorProps extends StackProps {
     paramRegistry: ParamConfig[];
     downloading?: string;
     selectedParam?: string;
@@ -16,36 +17,16 @@ interface ParamSelectorProps {
     onParamUpdate?: (config: ParamConfig) => void;
 }
 
-const styles: SystemStyleObject = {
-    flex: '2 1 0%',
-    overflow: 'hidden',
-    minW: { base: 'unset', md: 240 },
-    w: { base: '100%', md: 'unset' },
-    mr: { base: 0, md: 2 },
-    mb: { base: 2, md: 0 },
-
-    '& > div': {
-        flexDirection: 'column',
-        h: 200,
-        overflowX: 'hidden',
-        overflowY: 'auto',
-        borderRadius: 'md',
-        borderWidth: 2,
-
-        '& >.chakra-button': {
-            alignItems: 'center',
-        },
-
-        '& .chakra-button__group': {
-            '& button:not(:first-of-type)': {
-                h: '100%',
-            },
-        },
-    },
-};
-
-export default function ParamSelector(props: ParamSelectorProps) {
-    const { paramRegistry, downloading, selectedParam, onParamSelect, onParamRemove, onParamUpdate } = props;
+export default function ParamSelector({
+    paramRegistry,
+    downloading,
+    selectedParam,
+    onParamSelect,
+    onParamRemove,
+    onParamUpdate,
+    className,
+    ...others
+}: ParamSelectorProps) {
     const { t } = useTranslation();
 
     const [configEditing, setConfigEditing] = useState<ParamConfig>();
@@ -56,15 +37,22 @@ export default function ParamSelector(props: ParamSelectorProps) {
     };
 
     return (
-        <Box sx={styles}>
-            <Flex>
+        <Stack className={clsx(classes.selectors, className)} {...others}>
+            <Card withBorder>
                 {downloading && (
-                    <RmgEnrichedButton
-                        variant="ghost"
-                        primaryText={t('Downloading') + '...'}
-                        secondaryText={downloading}
-                        isDisabled={true}
-                    />
+                    <Group grow>
+                        <Button
+                            variant="subtle"
+                            classNames={{
+                                inner: classes['selector-main-inner'],
+                                label: classes['selector-main-label'],
+                            }}
+                            disabled
+                        >
+                            <span>{t('Downloading') + '...'}</span>
+                            <span>{downloading}</span>
+                        </Button>
+                    </Group>
                 )}
                 {paramRegistry
                     .slice()
@@ -72,46 +60,52 @@ export default function ParamSelector(props: ParamSelectorProps) {
                         return (b.lastModified ?? 0) - (a.lastModified ?? 0);
                     })
                     .map(config => (
-                        <ButtonGroup
+                        <Button.Group
                             key={config.id}
-                            size="sm"
-                            isAttached
-                            colorScheme={selectedParam === config.id ? 'primary' : undefined}
-                            variant={selectedParam === config.id ? 'solid' : 'ghost'}
+                            className={clsx(classes.selector, { selected: selectedParam === config.id })}
                         >
-                            <RmgEnrichedButton
-                                primaryText={config.name ?? t('Project') + ' ' + config.id}
-                                secondaryText={
-                                    t('Last modified') +
-                                    ': ' +
-                                    getRelativeTime(config.lastModified)
-                                        .map(v => t(v))
-                                        .join(' ')
-                                }
-                                aria-pressed={selectedParam === config.id}
+                            <Button
+                                variant={selectedParam === config.id ? 'filled' : 'subtle'}
+                                classNames={{
+                                    inner: classes['selector-main-inner'],
+                                    label: classes['selector-main-label'],
+                                }}
                                 onClick={() => onParamSelect(config.id)}
-                            />
+                            >
+                                <span>{config.name ?? t('Project') + ' ' + config.id}</span>
+                                <span>
+                                    {t('Last modified') +
+                                        ': ' +
+                                        getRelativeTime(config.lastModified)
+                                            .map(v => t(v))
+                                            .join(' ')}
+                                </span>
+                            </Button>
                             {onParamUpdate && (
-                                <IconButton
+                                <Button
+                                    variant={selectedParam === config.id ? 'filled' : 'subtle'}
                                     aria-label={t('Edit project info')}
                                     title={t('Edit project info')}
-                                    icon={<MdEdit />}
                                     onClick={() => setConfigEditing(config)}
-                                />
+                                >
+                                    <MdOutlineEdit />
+                                </Button>
                             )}
                             {onParamRemove && (
-                                <IconButton
+                                <Button
+                                    variant={selectedParam === config.id ? 'filled' : 'subtle'}
                                     aria-label={t('Remove project')}
                                     title={t('Remove project')}
-                                    icon={<MdDelete />}
                                     onClick={() => onParamRemove(config.id)}
-                                />
+                                >
+                                    <MdOutlineDeleteOutline />
+                                </Button>
                             )}
-                        </ButtonGroup>
+                        </Button.Group>
                     ))}
-            </Flex>
+            </Card>
             {paramRegistry.length >= 10 && (
-                <Text as="em" fontSize="xs">
+                <Text size="xs" fs="italic">
                     {t('You have reached the maximum number of projects.')}
                 </Text>
             )}
@@ -121,6 +115,6 @@ export default function ParamSelector(props: ParamSelectorProps) {
                 onClose={() => setConfigEditing(undefined)}
                 onUpdate={handleConfigUpdate}
             />
-        </Box>
+        </Stack>
     );
 }

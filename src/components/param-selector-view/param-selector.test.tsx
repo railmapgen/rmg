@@ -1,8 +1,8 @@
 import { render } from '../../test-utils';
 import ParamSelector from './param-selector';
-import { act, fireEvent, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { ParamConfig } from '../../constants/constants';
-import { vi } from 'vitest';
+import { userEvent } from '@testing-library/user-event';
 
 const mockCallbacks = {
     onParamSelect: vi.fn(),
@@ -11,6 +11,8 @@ const mockCallbacks = {
 };
 
 describe('ParamSelector', () => {
+    const user = userEvent.setup();
+
     afterEach(() => {
         vi.clearAllMocks();
     });
@@ -39,18 +41,12 @@ describe('ParamSelector', () => {
         expect(screen.getAllByRole('button')[0]).toHaveAccessibleName(/Project test-01/);
 
         // click edit and open modal
-        fireEvent.click(screen.getByRole('button', { name: 'Edit project info' }));
+        await user.click(screen.getByRole('button', { name: 'Edit project info' }));
         await screen.findByRole('dialog');
 
-        vi.useFakeTimers();
         // input project name and submit
-        fireEvent.change(screen.getByRole('combobox', { name: 'Project name' }), {
-            target: { value: 'My Masterpiece' },
-        });
-        await act(async () => {
-            vi.advanceTimersByTime(0);
-        });
-        fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
+        await user.type(screen.getByRole('textbox', { name: 'Project name' }), 'My Masterpiece');
+        await user.click(screen.getByRole('button', { name: 'Confirm' }));
 
         expect(mockCallbacks.onParamUpdate).toBeCalledTimes(1);
         expect(mockCallbacks.onParamUpdate).lastCalledWith({

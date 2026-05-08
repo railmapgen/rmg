@@ -32,9 +32,9 @@ describe('InterchangeSection', () => {
 
         render(<InterchangeSection />, { store: mockStore });
 
-        expect(screen.getByRole('heading', { name: 'Within-station interchange' })).toBeInTheDocument();
-        expect(screen.getByRole('heading', { name: 'Out-of-station interchange' })).toBeInTheDocument();
-        expect(screen.getByRole('heading', { name: 'Out-of-system interchange' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'Within-station interchange' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'Out-of-station interchange' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'Out-of-system interchange' })).toBeInTheDocument();
 
         // no add interchange group button
         expect(screen.queryByRole('button', { name: 'Add interchange group' })).not.toBeInTheDocument();

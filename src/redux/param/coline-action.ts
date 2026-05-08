@@ -70,58 +70,6 @@ export const getPossibleCombinations = (branchIndex: number) => {
 };
 
 /**
- * Calculate row span for displaying track sharing column in StationAgGrid
- * @param stationId id of station that begins to span rows
- * @param branchIndex index of branch that the grid is displaying
- */
-export const getRowSpanForColine = (stationId: string, branchIndex: number) => {
-    return (dispatch: RootDispatch, getState: () => RootState): [number, string | undefined] => {
-        const coline = getState().param.coline;
-        const branch = getState().helper.branches[branchIndex];
-
-        for (const [clId, cl] of Object.entries(coline)) {
-            if (cl.from === stationId && branch.includes(cl.to)) {
-                const thisIndex = branch.indexOf(stationId);
-                const thatIndex = branch.indexOf(cl.to);
-                if (thatIndex > thisIndex) {
-                    return [thatIndex - thisIndex + 1, clId];
-                }
-            } else if (cl.to === stationId && branch.includes(cl.to)) {
-                const thisIndex = branch.indexOf(stationId);
-                const thatIndex = branch.indexOf(cl.from);
-                if (thatIndex > thisIndex) {
-                    return [thatIndex - thisIndex + 1, clId];
-                }
-            }
-        }
-        return [0, undefined];
-    };
-};
-
-/**
- * Verify station selections from table are consecutive, which is the prerequisite for track sharing.
- * @param selectedIds IDs of the selected stations (get by gridApi)
- * @param branchIndex
- */
-export const verifyAreSelectionsConsecutive = (selectedIds: string[], branchIndex: number) => {
-    return (dispatch: RootDispatch, getState: () => RootState): boolean => {
-        const branch = getState().helper.branches[branchIndex];
-
-        const from = selectedIds[0];
-        const to = selectedIds.slice(-1)[0];
-
-        const areConsecutiveSelections =
-            branch.slice(branch.indexOf(from), branch.indexOf(to) + 1).toString() === selectedIds.toString();
-        if (!areConsecutiveSelections) {
-            console.log('verifyAreSelectionsConsecutive():: Selections are NOT consecutive');
-            return false;
-        } else {
-            return true;
-        }
-    };
-};
-
-/**
  *  Checks the validity of from and to. Currently, we accept coline if it:
  1. Start from either ends of the mainline or branch stations and
  terminate at either ends of the mainline or branch stations.

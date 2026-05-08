@@ -1,10 +1,10 @@
 import { createTestStore } from '../../setupTests';
 import rootReducer from '../../redux';
 import { render } from '../../test-utils';
-import DownloadActions from './download-actions';
 import { userEvent } from '@testing-library/user-event';
 import { screen } from '@testing-library/react';
 import * as utils from '../../util/utils';
+import PageHeader from './page-header';
 
 const realStore = rootReducer.getState();
 const mockStore = createTestStore({
@@ -21,7 +21,7 @@ const downloadAsSpy = vi.spyOn(utils, 'downloadAs').mockReturnValue();
 describe('DownloadActions', () => {
     it.skip('Can download configuration file as expected', async () => {
         const user = userEvent.setup();
-        render(<DownloadActions />, { store: mockStore });
+        render(<PageHeader />, { store: mockStore });
 
         await user.click(screen.getByRole('button', { name: 'Downloads' }));
         await user.click(screen.getByText('Configuration file'));

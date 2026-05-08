@@ -1,8 +1,14 @@
-import { HStack, IconButton } from '@chakra-ui/react';
 import { Note } from '../../../constants/constants';
-import { MdArrowDropDown, MdArrowDropUp, MdArrowLeft, MdArrowRight, MdDelete } from 'react-icons/md';
-import { RmgCard, RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
+import {
+    MdOutlineArrowDropDown,
+    MdOutlineArrowDropUp,
+    MdOutlineArrowLeft,
+    MdOutlineArrowRight,
+    MdOutlineDeleteOutline,
+} from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
+import { Button, Card, Group, Switch, Textarea } from '@mantine/core';
+import { RMLabelledSlider } from '@railmapgen/mantine-components';
 
 interface GZMTRNoteCardProps {
     note: Note;
@@ -14,65 +20,61 @@ export default function GZMTRNoteCard(props: GZMTRNoteCardProps) {
     const { note, onUpdate, onDelete } = props;
     const { t } = useTranslation();
 
-    const fields1: RmgFieldsField[] = [
-        {
-            type: 'textarea',
-            label: t('StyleSidePanel.note.zhNote'),
-            value: note[0],
-            onChange: value => onUpdate?.([value, note[1], note[2], note[3], note[4]]),
-        },
-        {
-            type: 'textarea',
-            label: t('StyleSidePanel.note.enNote'),
-            value: note[1],
-            onChange: value => onUpdate?.([note[0], value, note[2], note[3], note[4]]),
-        },
-        {
-            type: 'switch',
-            label: t('StyleSidePanel.note.border'),
-            isChecked: note[4],
-            onChange: value => onUpdate?.([note[0], note[1], note[2], note[3], value]),
-            oneLine: true,
-        },
-    ];
-
-    const fields2: RmgFieldsField[] = [
-        {
-            type: 'slider',
-            label: t('StyleSidePanel.note.positionX'),
-            value: note[2],
-            min: 0,
-            max: 100,
-            onChange: value => onUpdate?.([note[0], note[1], value, note[3], note[4]]),
-            leftIcon: <MdArrowLeft />,
-            rightIcon: <MdArrowRight />,
-        },
-        {
-            type: 'slider',
-            label: t('StyleSidePanel.note.positionY'),
-            value: note[3],
-            min: 0,
-            max: 100,
-            onChange: value => onUpdate?.([note[0], note[1], note[2], value, note[4]]),
-            leftIcon: <MdArrowDropUp />,
-            rightIcon: <MdArrowDropDown />,
-        },
-    ];
-
     return (
-        <RmgCard direction="column">
-            <RmgFields fields={fields1} minW="full" />
-            <HStack spacing={0.5} sx={{ '&>div': { flex: 1 } }}>
-                <RmgFields fields={fields2} />
-
-                <IconButton
+        <Card withBorder>
+            <Textarea
+                label={t('StyleSidePanel.note.zhNote')}
+                value={note[0]}
+                onChange={({ currentTarget: { value } }) => onUpdate?.([value, note[1], note[2], note[3], note[4]])}
+            />
+            <Textarea
+                label={t('StyleSidePanel.note.enNote')}
+                value={note[1]}
+                onChange={({ currentTarget: { value } }) => onUpdate?.([note[0], value, note[2], note[3], note[4]])}
+            />
+            <Group gap="xs">
+                <RMLabelledSlider
+                    fieldLabel={t('StyleSidePanel.note.positionX')}
                     size="sm"
-                    variant="ghost"
-                    aria-label={t('StyleSidePanel.note.remove')}
-                    onClick={() => onDelete?.()}
-                    icon={<MdDelete />}
+                    defaultValue={note[2]}
+                    min={0}
+                    max={100}
+                    step={0.01}
+                    onChangeEnd={value => onUpdate?.([note[0], note[1], value, note[3], note[4]])}
+                    withExternalControls
+                    leftIcon={<MdOutlineArrowLeft />}
+                    leftIconLabel={t('Move left')}
+                    rightIcon={<MdOutlineArrowRight />}
+                    rightIconLabel={t('Move right')}
                 />
-            </HStack>
-        </RmgCard>
+                <RMLabelledSlider
+                    fieldLabel={t('StyleSidePanel.note.positionY')}
+                    size="sm"
+                    defaultValue={note[3]}
+                    min={0}
+                    max={100}
+                    step={0.01}
+                    onChangeEnd={value => onUpdate?.([note[0], note[1], note[2], value, note[4]])}
+                    withExternalControls
+                    leftIcon={<MdOutlineArrowDropUp />}
+                    leftIconLabel={t('Move up')}
+                    rightIcon={<MdOutlineArrowDropDown />}
+                    rightIconLabel={t('Move down')}
+                />
+            </Group>
+
+            <Group gap="xs">
+                <Switch
+                    label={t('StyleSidePanel.note.border')}
+                    checked={note[4]}
+                    onChange={({ currentTarget: { checked } }) =>
+                        onUpdate?.([note[0], note[1], note[2], note[3], checked])
+                    }
+                />
+                <Button variant="default" leftSection={<MdOutlineDeleteOutline />} onClick={() => onDelete?.()}>
+                    {t('StyleSidePanel.note.remove')}
+                </Button>
+            </Group>
+        </Card>
     );
 }

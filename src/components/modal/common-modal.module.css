@@ -1,0 +1,21 @@
+.body {
+    gap: var(--mantine-spacing-xs);
+
+    > * {
+        flex: 1;
+        min-width: 120px;
+    }
+}
+
+.footer {
+    gap: var(--mantine-spacing-xs);
+
+    & > :first-child {
+        margin-left: auto;
+    }
+}
+
+.mw-full {
+    width: 100%;
+    flex-basis: 100%;
+}

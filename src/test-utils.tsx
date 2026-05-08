@@ -7,6 +7,7 @@ import i18n from './i18n/config';
 import { Provider } from 'react-redux';
 import { createTestStore } from './setupTests';
 import { MemoryRouter } from 'react-router-dom';
+import { RMMantineProvider } from '@railmapgen/mantine-components';
 
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
     store: Store;
@@ -29,7 +30,9 @@ export const TestingProvider = (props: TestingProviderProps) => {
     return (
         <I18nextProvider i18n={i18n}>
             <Provider store={store}>
-                <MemoryRouter initialEntries={[route ?? '/']}>{children}</MemoryRouter>
+                <MemoryRouter initialEntries={[route ?? '/']}>
+                    <RMMantineProvider>{children}</RMMantineProvider>
+                </MemoryRouter>
             </Provider>
         </I18nextProvider>
     );

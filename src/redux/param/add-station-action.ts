@@ -135,7 +135,7 @@ export const verifyNewBranchEnds = (from: string, to: string) => {
 
         // from should come before to
         if (branches[0].indexOf(from) >= branches[0].indexOf(to)) {
-            return 'Not in correct ordering';
+            return 'Not in correct order';
         }
 
         // should not from linestart to lineend

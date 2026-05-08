@@ -1,0 +1,8 @@
+.mobile-action-icon {
+    --ai-size: var(--ai-size-lg);
+
+    svg {
+        height: 1.1rem;
+        width: 1.1rem;
+    }
+}

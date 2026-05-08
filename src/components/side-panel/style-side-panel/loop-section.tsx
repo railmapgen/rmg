@@ -1,11 +1,13 @@
-import { Box, Button, Flex, Heading } from '@chakra-ui/react';
+import classes from '../side-panel.module.css';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import { setLoop } from '../../../redux/param/param-slice';
-import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
-import { MdSettings } from 'react-icons/md';
+import { MdOutlineSettings } from 'react-icons/md';
 import { SidePanelMode } from '../../../constants/constants';
 import { setSelectedBranch, setSidePanelMode } from '../../../redux/app/app-slice';
+import { RMSection, RMSectionBody, RMSectionHeader } from '@railmapgen/mantine-components';
+import { Button, Group, Switch, Title } from '@mantine/core';
+import clsx from 'clsx';
 
 export default function LoopSection() {
     const { t } = useTranslation();
@@ -13,42 +15,36 @@ export default function LoopSection() {
 
     const { loop } = useRootSelector(state => state.param);
 
-    const fields: RmgFieldsField[] = [
-        {
-            type: 'switch',
-            label: t('StyleSidePanel.loop.isLoop'),
-            isChecked: loop,
-            onChange: checked => dispatch(setLoop(checked)),
-            minW: 'full',
-            oneLine: true,
-        },
-    ];
-
     const handleOpenMoreSettings = () => {
         dispatch(setSelectedBranch(0));
         dispatch(setSidePanelMode(SidePanelMode.BRANCH));
     };
 
     return (
-        <Box p={1}>
-            <Heading as="h5" size="sm">
-                {t('Loop line')}
-            </Heading>
+        <RMSection>
+            <RMSectionHeader>
+                <Title order={3} size="h4">
+                    {t('Loop line')}
+                </Title>
+            </RMSectionHeader>
 
-            <RmgFields fields={fields} />
-            {loop && (
-                <Flex p={1}>
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        leftIcon={<MdSettings />}
-                        onClick={handleOpenMoreSettings}
-                        flex={1}
-                    >
-                        {t('More settings')}
-                    </Button>
-                </Flex>
-            )}
-        </Box>
+            <RMSectionBody className={clsx(classes['section-body'], classes.fields)}>
+                <Group gap="xs">
+                    <Switch
+                        label={t('StyleSidePanel.loop.isLoop')}
+                        checked={loop}
+                        onChange={({ currentTarget: { checked } }) => dispatch(setLoop(checked))}
+                    />
+                </Group>
+
+                {loop && (
+                    <Group gap="xs">
+                        <Button variant="default" leftSection={<MdOutlineSettings />} onClick={handleOpenMoreSettings}>
+                            {t('More settings')}
+                        </Button>
+                    </Group>
+                )}
+            </RMSectionBody>
+        </RMSection>
     );
 }

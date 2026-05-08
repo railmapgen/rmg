@@ -1,20 +1,12 @@
+import classes from './common-modal.module.css';
 import { useEffect, useState } from 'react';
-import {
-    Button,
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    ModalOverlay,
-} from '@chakra-ui/react';
-import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useRootDispatch, useRootSelector } from '../../redux';
 import { addStation, getNewBranchAllowedEnds, verifyNewBranchEnds } from '../../redux/param/add-station-action';
 import { Events, RmgStyle } from '../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import rmgRuntime from '@railmapgen/rmg-runtime';
+import { Button, Group, Modal, NativeSelect, Stack } from '@mantine/core';
+import { RMLabelledSegmentedControl } from '@railmapgen/mantine-components';
 
 interface NewBranchModalProps {
     isOpen: boolean;
@@ -45,67 +37,22 @@ export default function NewBranchModal(props: NewBranchModalProps) {
         }
     }, [isOpen]);
 
-    const getStationOptions = (stationIdList: string[]): Record<string, string> => {
-        return stationIdList.reduce(
-            (acc, cur) => ({
-                ...acc,
-                [cur]:
-                    cur === 'linestart'
+    const getStationOptions = (stationIdList: string[]) => {
+        return [
+            { value: '', label: t('Please select...'), disabled: true },
+            ...stationIdList.map(id => ({
+                value: id,
+                label:
+                    id === 'linestart'
                         ? `(${t('LEFT END')})`
-                        : cur === 'lineend'
+                        : id === 'lineend'
                           ? `(${t('RIGHT END')})`
-                          : stationList[cur]?.localisedName.zh + '/' + stationList[cur]?.localisedName.en,
-            }),
-            { '': t('Please select...') }
-        );
+                          : stationList[id]?.localisedName.zh + '/' + stationList[id]?.localisedName.en,
+            })),
+        ];
     };
 
     const newBranchEndStationOptions = getStationOptions(dispatch(getNewBranchAllowedEnds()));
-
-    const fields: RmgFieldsField[] = [
-        {
-            type: 'select',
-            label: t('NewBranchModal.where'),
-            value: where,
-            options: {
-                new: t('NewBranchModal.new'),
-                ext: t('NewBranchModal.ext'),
-            },
-            disabledOptions: style === RmgStyle.SHMetro ? [] : ['ext'],
-            onChange: value => handleSelectWhere(value as 'new' | 'ext'),
-            minW: 'full',
-        },
-        {
-            type: 'select',
-            label: t('NewBranchModal.from'),
-            value: from,
-            options: newBranchEndStationOptions,
-            disabledOptions: [''],
-            onChange: value => handleSelectFrom(value as string),
-            isInvalid: Boolean(fromError),
-        },
-        {
-            type: 'select',
-            label: t('NewBranchModal.to'),
-            value: to,
-            options: newBranchEndStationOptions,
-            disabledOptions: [''],
-            onChange: value => handleSelectTo(value as string),
-            isInvalid: Boolean(toError),
-        },
-        {
-            type: 'select',
-            label: t('NewBranchModal.position'),
-            value: position,
-            options: {
-                upper: t('NewBranchModal.upper'),
-                lower: t('NewBranchModal.lower'),
-            },
-            onChange: value => setPosition(value as 'upper' | 'lower'),
-            minW: 'full',
-            hidden: where !== 'new' || style === RmgStyle.SHMetro,
-        },
-    ];
 
     const handleSelectWhere = (value: 'new' | 'ext') => {
         setWhere(value);
@@ -155,27 +102,57 @@ export default function NewBranchModal(props: NewBranchModalProps) {
     const isSubmitDisabled = Boolean(!from || !to || fromError || toError);
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-                <ModalHeader>{t('NewBranchModal.title')}</ModalHeader>
-                <ModalCloseButton />
+        <Modal opened={isOpen} onClose={onClose} title={t('NewBranchModal.title')}>
+            <Stack>
+                <Group className={classes.body} align="flex-start">
+                    <NativeSelect
+                        label={t('NewBranchModal.where')}
+                        value={where}
+                        data={[
+                            { value: 'new', label: t('NewBranchModal.new') },
+                            { value: 'ext', label: t('NewBranchModal.ext'), disabled: style !== RmgStyle.SHMetro },
+                        ]}
+                        onChange={({ currentTarget: { value } }) => handleSelectWhere(value as 'new' | 'ext')}
+                        className={classes['mw-full']}
+                    />
+                    <NativeSelect
+                        label={t('NewBranchModal.from')}
+                        value={from}
+                        data={newBranchEndStationOptions}
+                        onChange={({ currentTarget: { value } }) => handleSelectFrom(value)}
+                        error={fromError}
+                    />
+                    <NativeSelect
+                        label={t('NewBranchModal.to')}
+                        value={to}
+                        data={newBranchEndStationOptions}
+                        onChange={({ currentTarget: { value } }) => handleSelectTo(value)}
+                        error={toError}
+                    />
+                    {where === 'new' && style !== RmgStyle.SHMetro && (
+                        <RMLabelledSegmentedControl
+                            label={t('NewBranchModal.position')}
+                            value={position}
+                            data={[
+                                { value: 'upper', label: t('NewBranchModal.upper') },
+                                { value: 'lower', label: t('NewBranchModal.lower') },
+                            ]}
+                            onChange={value => setPosition(value as 'upper' | 'lower')}
+                            classNames={{ root: classes['mw-full'] }}
+                        />
+                    )}
+                </Group>
 
-                <ModalBody>
-                    <RmgFields fields={fields} />
-                </ModalBody>
-
-                <ModalFooter>
+                <Group className={classes.footer}>
                     <Button
-                        colorScheme="primary"
                         title={isSubmitDisabled ? fromError || toError : t('Confirm')}
                         onClick={handleSubmit}
-                        isDisabled={isSubmitDisabled}
+                        disabled={isSubmitDisabled}
                     >
                         {t('Confirm')}
                     </Button>
-                </ModalFooter>
-            </ModalContent>
+                </Group>
+            </Stack>
         </Modal>
     );
 }

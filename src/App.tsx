@@ -1,7 +1,8 @@
 import { lazy } from 'react';
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { RmgErrorBoundary, RmgLoader, RmgThemeProvider, RmgWindow } from '@railmapgen/rmg-components';
 import { ImportViewWindowHeader, WindowHeader } from './components/root/window-header';
+import { RMErrorBoundary, RMMantineProvider, RMWindow } from '@railmapgen/mantine-components';
+import { LoadingOverlay } from '@mantine/core';
 
 const AppRouter = lazy(() => import('./components/root/app-router'));
 const AppClipView = lazy(() => import('./components/param-selector-view/app-clip-view'));
@@ -9,31 +10,33 @@ const AppClipView = lazy(() => import('./components/param-selector-view/app-clip
 export default function App() {
     return (
         <HashRouter>
-            <RmgThemeProvider>
-                <RmgWindow>
-                    <Routes>
-                        <Route
-                            path="/import"
-                            element={
-                                <RmgErrorBoundary suspenseFallback={<RmgLoader isIndeterminate={true} />}>
-                                    <ImportViewWindowHeader />
+            <RMMantineProvider>
+                <Routes>
+                    <Route
+                        path="/import"
+                        element={
+                            <RMWindow isAppClip>
+                                <ImportViewWindowHeader />
+                                <RMErrorBoundary suspenseFallback={<LoadingOverlay visible />}>
                                     <AppClipView />
-                                </RmgErrorBoundary>
-                            }
-                        />
-                        <Route
-                            path="/"
-                            element={
-                                <RmgErrorBoundary suspenseFallback={<RmgLoader isIndeterminate={true} />} allowReset>
-                                    <WindowHeader />
+                                </RMErrorBoundary>
+                            </RMWindow>
+                        }
+                    />
+                    <Route
+                        path="/"
+                        element={
+                            <RMWindow>
+                                <WindowHeader />
+                                <RMErrorBoundary suspenseFallback={<LoadingOverlay visible />} allowReset>
                                     <AppRouter />
-                                </RmgErrorBoundary>
-                            }
-                        />
-                        <Route path="*" element={<Navigate to="/" />} />
-                    </Routes>
-                </RmgWindow>
-            </RmgThemeProvider>
+                                </RMErrorBoundary>
+                            </RMWindow>
+                        }
+                    />
+                    <Route path="*" element={<Navigate to="/" />} />
+                </Routes>
+            </RMMantineProvider>
         </HashRouter>
     );
 }

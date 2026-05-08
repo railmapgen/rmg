@@ -1,17 +1,8 @@
+import classes from './common-modal.module.css';
 import { useEffect, useState } from 'react';
-import {
-    Button,
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    ModalOverlay,
-} from '@chakra-ui/react';
-import { RmgFields, RmgFieldsField } from '@railmapgen/rmg-components';
 import { useTranslation } from 'react-i18next';
 import { ParamConfig } from '../../constants/constants';
+import { Button, Group, Modal, Stack, TextInput } from '@mantine/core';
 
 interface ParamConfigEditModalProps {
     config?: ParamConfig;
@@ -31,16 +22,6 @@ export default function ParamConfigEditModal(props: ParamConfigEditModalProps) {
         }
     }, [config]);
 
-    const fields: RmgFieldsField[] = [
-        {
-            type: 'input',
-            label: t('Project name'),
-            value: name,
-            onChange: setName,
-            debouncedDelay: 0,
-        },
-    ];
-
     const handleSubmit = () => {
         if (config) {
             if ((config.name ?? '') !== name) {
@@ -50,22 +31,20 @@ export default function ParamConfigEditModal(props: ParamConfigEditModalProps) {
     };
 
     return (
-        <Modal isOpen={!!config} onClose={onClose} isCentered>
-            <ModalOverlay />
-            <ModalContent>
-                <ModalHeader>{t('Edit project info')}</ModalHeader>
-                <ModalCloseButton />
+        <Modal opened={!!config} onClose={onClose} title={t('Edit project info')}>
+            <Stack>
+                <Group className={classes.body}>
+                    <TextInput
+                        label={t('Project name')}
+                        value={name}
+                        onChange={({ currentTarget: { value } }) => setName(value)}
+                    />
+                </Group>
 
-                <ModalBody>
-                    <RmgFields fields={fields} />
-                </ModalBody>
-
-                <ModalFooter>
-                    <Button colorScheme="primary" onClick={handleSubmit}>
-                        {t('Confirm')}
-                    </Button>
-                </ModalFooter>
-            </ModalContent>
+                <Group className={classes.footer}>
+                    <Button onClick={handleSubmit}>{t('Confirm')}</Button>
+                </Group>
+            </Stack>
         </Modal>
     );
 }

@@ -1,5 +1,5 @@
+import classes from './param-selector-view.module.css';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { Button, Flex, SystemStyleObject } from '@chakra-ui/react';
 import { MdAdd, MdInsertDriveFile, MdOpenInBrowser, MdUpload } from 'react-icons/md';
 import rmgRuntime, { logger } from '@railmapgen/rmg-runtime';
 import { Events, RmgStyle } from '../../constants/constants';
@@ -10,23 +10,13 @@ import useRootSearchParams from '../../hooks/use-root-search-params';
 import { initParam } from '../../redux/param/util';
 import { LanguageCode } from '@railmapgen/rmg-translate';
 import RmgTemplatesAppClip from '../app-clip/rmg-templates-app-clip';
+import { Button, Stack } from '@mantine/core';
 
 interface SelectorActionsProps {
     selectedParam?: string;
     disableNew?: boolean;
     onError: (msg: string) => void;
 }
-
-const styles: SystemStyleObject = {
-    flexWrap: 'wrap',
-    flex: '1 1 0%',
-    minW: 120,
-
-    '& button': {
-        w: '100%',
-        m: 1,
-    },
-};
 
 export default function SelectorActions(props: SelectorActionsProps) {
     const { selectedParam, disableNew, onError } = props;
@@ -88,26 +78,31 @@ export default function SelectorActions(props: SelectorActionsProps) {
     };
 
     return (
-        <Flex sx={styles}>
-            <Button leftIcon={<MdAdd />} onClick={handleNew} isDisabled={disableNew}>
+        <Stack className={classes.actions}>
+            <Button variant="light" leftSection={<MdAdd />} onClick={handleNew} disabled={disableNew}>
                 {t('Blank project')}
             </Button>
             <Button
-                leftIcon={<MdInsertDriveFile />}
+                variant="default"
+                leftSection={<MdInsertDriveFile />}
                 onClick={() => setIsTemplateModalOpen(true)}
-                isDisabled={disableNew}
+                disabled={disableNew}
             >
                 {t('Open template')}
             </Button>
-            <Button leftIcon={<MdUpload />} onClick={() => fileInputRef.current?.click()} isDisabled={disableNew}>
+            <Button
+                variant="default"
+                leftSection={<MdUpload />}
+                onClick={() => fileInputRef.current?.click()}
+                disabled={disableNew}
+            >
                 {t('Import project')}
             </Button>
             <Button
                 ref={openSelectedRef}
-                colorScheme="primary"
-                leftIcon={<MdOpenInBrowser />}
+                leftSection={<MdOpenInBrowser />}
                 onClick={handleOpenSelected}
-                isDisabled={selectedParam === undefined}
+                disabled={selectedParam === undefined}
             >
                 {t('Open selected')}
             </Button>
@@ -125,6 +120,6 @@ export default function SelectorActions(props: SelectorActionsProps) {
                 onClose={() => setIsTemplateModalOpen(false)}
                 onImport={handleOpenTemplate}
             />
-        </Flex>
+        </Stack>
     );
 }

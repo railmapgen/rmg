@@ -514,7 +514,7 @@ export const updateStationServices = (stationId: string, services: Services[]) =
     };
 };
 
-export const updateStationUnderConstruction = (stationId: string, underConstruction: boolean | TEMP) => {
+export const updateStationUnderConstruction = (stationId: string, underConstruction: boolean | typeof TEMP) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
 
