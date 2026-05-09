@@ -38,7 +38,7 @@ export const getNormalNextStations = (
     const key = direction === 'l' ? 'parents' : 'children';
     const nextStations = stationList[currentStation][key]
         .map(station => {
-            if (stationList[station].underConstruction) {
+            if (!stationList[station].services.length) {
                 return stationList[station][key];
             } else {
                 return station;
@@ -76,7 +76,7 @@ export const getLoopNextViaStations = (
     midpointStation?: string,
     clockwise?: boolean
 ): NextViaStations => {
-    const filteredStations = stations.filter(station => !stationList[station].underConstruction);
+    const filteredStations = stations.filter(station => !!stationList[station].services.length);
     const sortedStations = clockwise ? filteredStations.toReversed() : filteredStations;
     const currentStationIndex = sortedStations.indexOf(currentStation);
     const comingStations = [...sortedStations, ...sortedStations].slice(currentStationIndex + 1);

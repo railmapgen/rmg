@@ -3,7 +3,7 @@ import { useRootSelector } from '../../redux';
 import { LineIcon, MidpointStation, StationNumber } from '@railmapgen/svg-assets/gzmtr';
 import StationNameWrapper from './station-name/station-name-wrapper';
 import { MonoColour, Theme } from '@railmapgen/rmg-palette-resources';
-import { useEffect, useRef, useState } from 'react';
+import { SVGProps, useEffect, useRef, useState } from 'react';
 
 interface Props {
     stnId: string;
@@ -93,7 +93,8 @@ export default function Station(props: Props) {
                     stationState={stnState}
                     flipped={tickRotation === 180}
                     express={stnInfo.services.includes(Services.express)}
-                    underConstruction={stnInfo.underConstruction}
+                    noServiceType={!stnInfo.services.length ? stnInfo.noServiceType : undefined}
+                    noServiceWithBorder={stnInfo.noServiceWithBorder}
                 />
             </g>
             {isMidpoint && (
@@ -121,7 +122,7 @@ const IntGroup = (props: IntGroupProps) => (
     </>
 );
 
-const IntTicks = (props: IntGroupProps & React.SVGProps<SVGGElement>) => {
+const IntTicks = (props: IntGroupProps & SVGProps<SVGGElement>) => {
     const { intInfos, stnState, tickRotation, spanDigits, ...others } = props;
 
     return (
@@ -140,7 +141,7 @@ const IntTicks = (props: IntGroupProps & React.SVGProps<SVGGElement>) => {
     );
 };
 
-const IntBoxs = (props: IntGroupProps & React.SVGProps<SVGGElement>) => {
+const IntBoxs = (props: IntGroupProps & SVGProps<SVGGElement>) => {
     const { intInfos, tickRotation, stnState, spanDigits, ...other } = props;
 
     return (

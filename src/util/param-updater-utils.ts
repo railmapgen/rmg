@@ -262,6 +262,7 @@ export const updateParam = (param: { [x: string]: any }) => {
     v5_17_updateLocalisedName(param);
     v5_18_addStationNameSpacingAndSvgWidthPlatform(param);
     v5_21_addPsdLabel(param);
+    v6_0_4_serviceSuspended(param);
 
     sanitiseParam(param);
     return param;
@@ -325,6 +326,22 @@ export const v5_18_addStationNameSpacingAndSvgWidthPlatform = (param: Record<str
 export const v5_21_addPsdLabel = (param: Record<string, any>) => {
     if (!('psdLabel' in param)) {
         param.psdLabel = PsdLabel.screen;
+    }
+};
+
+export const v6_0_4_serviceSuspended = (param: Record<string, any>) => {
+    for (const [stnId, stnInfo] of Object.entries(param.stn_list as Record<string, any>)) {
+        const legacyUC = stnInfo.underConstruction;
+        if (legacyUC === 'temp') {
+            param.stn_list[stnId].services = [];
+            param.stn_list[stnId].noServiceType = 'under-construction';
+            param.stn_list[stnId].noServiceWithBorder = true;
+        }
+        if (legacyUC === true) {
+            param.stn_list[stnId].services = [];
+            param.stn_list[stnId].noServiceType = 'under-construction';
+        }
+        delete param.stn_list[stnId].underConstruction;
     }
 };
 

@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { StationState, TEMP } from '../../../constants/constants';
+import { SERVICE_SUSPENDED, StationInfo, StationState, UNDER_CONSTRUCTION } from '../../../constants/constants';
 import StationName from './station-name';
 import StationSecondaryName from './station-secondary-name';
 import ExpressTag from './express-tag';
 import { Translation } from '@railmapgen/rmg-translate';
 import UnderConstructionTag from './under-construction-tag';
+import ServiceSuspendedTag from './service-suspended-tag';
 
 interface StationNameWrapperProps {
     primaryName: Translation;
@@ -12,11 +13,12 @@ interface StationNameWrapperProps {
     stationState: StationState;
     flipped?: boolean;
     express?: boolean;
-    underConstruction?: boolean | typeof TEMP;
+    noServiceType?: StationInfo['noServiceType'];
+    noServiceWithBorder?: boolean;
 }
 
 export default function StationNameWrapper(props: StationNameWrapperProps) {
-    const { primaryName, secondaryName, stationState, flipped, express, underConstruction } = props;
+    const { primaryName, secondaryName, stationState, flipped, express, noServiceType, noServiceWithBorder } = props;
 
     const [primaryBBox, setPrimaryBBox] = useState({ width: 0 } as SVGRect);
     const [primaryEnNameBBox, setPrimaryEnNameBBox] = useState({ width: 0 } as SVGRect);
@@ -51,6 +53,10 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
             x: (primaryEnNameBBox.width + 5 + 20) * (flipped ? -1 : 1),
             y: primaryBBox.y + primaryBBox.height - 14,
         },
+        ServiceSuspendedTag: {
+            x: (primaryBBox.width + 2 + 42) * (flipped ? -1 : 1),
+            y: primaryBBox.y + primaryBBox.height - 20,
+        },
     };
 
     return (
@@ -77,11 +83,19 @@ export default function StationNameWrapper(props: StationNameWrapperProps) {
                 />
             )}
 
-            {underConstruction && (
+            {noServiceType === UNDER_CONSTRUCTION && (
                 <UnderConstructionTag
                     passed={stationState === StationState.PASSED}
-                    temporary={underConstruction === 'temp'}
+                    temporary={noServiceWithBorder}
                     transform={`translate(${transforms.UnderConstructionTag.x},${transforms.UnderConstructionTag.y})`}
+                />
+            )}
+
+            {noServiceType === SERVICE_SUSPENDED && (
+                <ServiceSuspendedTag
+                    passed={stationState === StationState.PASSED}
+                    temporary={noServiceWithBorder}
+                    transform={`translate(${transforms.ServiceSuspendedTag.x},${transforms.ServiceSuspendedTag.y})`}
                 />
             )}
         </g>

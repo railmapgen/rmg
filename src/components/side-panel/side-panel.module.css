@@ -72,3 +72,8 @@
 .mw-320 {
     min-width: 320px !important;
 }
+
+.mw-full {
+    width: 100%;
+    flex-basis: 100% !important;
+}

@@ -1,6 +1,16 @@
 import classes from '../side-panel.module.css';
 import { useTranslation } from 'react-i18next';
-import { FACILITIES, Facilities, FALSE, RmgStyle, Services, TEMP, TRUE } from '../../../constants/constants';
+import {
+    FACILITIES,
+    Facilities,
+    FALSE,
+    RmgStyle,
+    SERVICE_SUSPENDED,
+    Services,
+    TRUE,
+    UNDEFINED,
+    UNDER_CONSTRUCTION,
+} from '../../../constants/constants';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import {
     updateStationCharacterSpacing,
@@ -9,9 +19,10 @@ import {
     updateStationIntPadding,
     updateStationIntPaddingToAll,
     updateStationLoopPivot,
+    updateStationNoServiceType,
+    updateStationNoServiceWithBorder,
     updateStationOneLine,
     updateStationServices,
-    updateStationUnderConstruction,
 } from '../../../redux/param/action';
 import { RMLabelledSegmentedControl, RMSection, RMSectionBody, RMSectionHeader } from '@railmapgen/mantine-components';
 import { Button, Group, MultiSelect, NativeSelect, NumberInput, Switch, Title } from '@mantine/core';
@@ -23,15 +34,23 @@ export default function MoreSection() {
 
     const selectedStation = useRootSelector(state => state.app.selectedStation);
     const { style, loop } = useRootSelector(state => state.param);
-    const { services, facility, loop_pivot, one_line, int_padding, character_spacing, underConstruction } =
-        useRootSelector(state => state.param.stn_list[selectedStation]);
+    const {
+        services,
+        facility,
+        loop_pivot,
+        one_line,
+        int_padding,
+        character_spacing,
+        noServiceType,
+        noServiceWithBorder,
+    } = useRootSelector(state => state.param.stn_list[selectedStation]);
 
     const serviceSelections = Object.values(Services).map(service => {
         return {
             label: t('StationSidePanel.more.' + service),
             value: service,
             disabled:
-                (service === Services.local && style !== RmgStyle.SHMetro) ||
+                (service === Services.local && ![RmgStyle.GZMTR, RmgStyle.SHMetro].includes(style)) ||
                 (service === Services.direct && style !== RmgStyle.SHMetro),
         };
     });
@@ -64,30 +83,47 @@ export default function MoreSection() {
                             label={t('StationSidePanel.more.service')}
                             value={services}
                             data={serviceSelections}
+                            placeholder={!services.length ? t('No train service at this station') : undefined}
                             onChange={services =>
                                 dispatch(updateStationServices(selectedStation, services as Services[]))
                             }
                             style={{ width: '100%', flexBasis: '100%' }}
                         />
                     )}
-                    {style === RmgStyle.GZMTR && (
-                        <RMLabelledSegmentedControl
-                            label={t('Under construction')}
-                            value={String(underConstruction ?? false)}
-                            data={[
-                                { label: t('No'), value: FALSE },
-                                { label: t('Temporary'), value: TEMP },
-                                { label: t('Yes'), value: TRUE },
-                            ]}
-                            onChange={value =>
-                                dispatch(
-                                    updateStationUnderConstruction(
-                                        selectedStation,
-                                        value === TRUE ? true : value === FALSE ? false : TEMP
+                    {style === RmgStyle.GZMTR && !services.length && (
+                        <>
+                            <RMLabelledSegmentedControl
+                                label={t('No service type')}
+                                value={String(noServiceType)}
+                                data={[
+                                    { label: t('None'), value: UNDEFINED },
+                                    { label: t('Under construction'), value: UNDER_CONSTRUCTION },
+                                    { label: t('Suspended'), value: SERVICE_SUSPENDED },
+                                ]}
+                                onChange={value =>
+                                    dispatch(
+                                        updateStationNoServiceType(
+                                            selectedStation,
+                                            value === UNDEFINED
+                                                ? undefined
+                                                : (value as typeof UNDER_CONSTRUCTION | typeof SERVICE_SUSPENDED)
+                                        )
                                     )
-                                )
-                            }
-                        />
+                                }
+                                classNames={{ root: classes['mw-full'] }}
+                            />
+                            <RMLabelledSegmentedControl
+                                label={t('Show border')}
+                                value={String(noServiceWithBorder ?? false)}
+                                data={[
+                                    { label: t('No'), value: FALSE },
+                                    { label: t('Yes'), value: TRUE },
+                                ]}
+                                onChange={value =>
+                                    dispatch(updateStationNoServiceWithBorder(selectedStation, value === TRUE))
+                                }
+                            />
+                        </>
                     )}
                     {[RmgStyle.MTR, RmgStyle.SHMetro].includes(style) && (
                         <NativeSelect

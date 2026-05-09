@@ -9,7 +9,6 @@ import {
     ShortDirection,
     StationDict,
     StationInfo,
-    TEMP,
 } from '../../constants/constants';
 import { RootDispatch, RootState } from '../index';
 import * as paramSlice from './param-slice';
@@ -514,11 +513,17 @@ export const updateStationServices = (stationId: string, services: Services[]) =
     };
 };
 
-export const updateStationUnderConstruction = (stationId: string, underConstruction: boolean | typeof TEMP) => {
+export const updateStationNoServiceType = (stationId: string, noServiceType: StationInfo['noServiceType']) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationInfo = getState().param.stn_list[stationId];
+        dispatch(setStation(stationId, { ...stationInfo, noServiceType }));
+    };
+};
 
-        dispatch(setStation(stationId, { ...stationInfo, underConstruction }));
+export const updateStationNoServiceWithBorder = (stationId: string, noServiceWithBorder: boolean) => {
+    return (dispatch: RootDispatch, getState: () => RootState) => {
+        const stationInfo = getState().param.stn_list[stationId];
+        dispatch(setStation(stationId, { ...stationInfo, noServiceWithBorder }));
     };
 };
 

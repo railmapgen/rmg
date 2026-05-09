@@ -1,5 +1,4 @@
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
-import { vi } from 'vitest';
 import {
     dottieGet,
     getMatchedThemesWithPaths,
@@ -7,6 +6,7 @@ import {
     v5_10_updateInterchangeGroup,
     v5_17_updateLocalisedName,
     v5_18_addStationNameSpacingAndSvgWidthPlatform,
+    v6_0_4_serviceSuspended,
 } from './param-updater-utils';
 import { waitForMs } from './utils';
 
@@ -141,6 +141,36 @@ describe('ParamUpdaterUtils', () => {
         expect(param.svgWidth.platform).toEqual(1200);
         expect(param.stn_list.stn0.character_spacing).toEqual(75);
         expect(param.stn_list.stn1.character_spacing).toEqual(0);
+    });
+
+    it('v6_0_4_serviceSuspended', () => {
+        const param = {
+            stn_list: {
+                a: { services: ['local'], underConstruction: true },
+                b: { services: ['local'], underConstruction: 'temp' },
+                c: { services: ['local'] },
+                d: { services: ['local'], underConstruction: false },
+            },
+        };
+        v6_0_4_serviceSuspended(param);
+
+        expect(param.stn_list.a.services).toHaveLength(0);
+        expect(param.stn_list.a).toHaveProperty('noServiceType', 'under-construction');
+        expect(param.stn_list.a).not.toHaveProperty('noServiceWithBorder');
+        expect(param.stn_list.a).not.toHaveProperty('underConstruction');
+
+        expect(param.stn_list.b.services).toHaveLength(0);
+        expect(param.stn_list.b).toHaveProperty('noServiceType', 'under-construction');
+        expect(param.stn_list.b).toHaveProperty('noServiceWithBorder', true);
+        expect(param.stn_list.b).not.toHaveProperty('underConstruction');
+
+        expect(param.stn_list.c.services).toHaveLength(1);
+        expect(param.stn_list.c).not.toHaveProperty('noServiceType');
+        expect(param.stn_list.c).not.toHaveProperty('underConstruction');
+
+        expect(param.stn_list.c.services).toHaveLength(1);
+        expect(param.stn_list.d).not.toHaveProperty('noServiceType');
+        expect(param.stn_list.d).not.toHaveProperty('underConstruction');
     });
 
     it('Can find all matched themes with paths as expected', () => {

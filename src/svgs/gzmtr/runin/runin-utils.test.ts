@@ -5,7 +5,7 @@ import { getRoutes } from '../../../redux/helper/graph-theory-util';
 describe('GZMTRRuninUtils', () => {
     describe('getLoopNextViaStations', () => {
         const stationList = {
-            a: { transfer: { groups: [{ lines: [] }] } },
+            a: { transfer: { groups: [{ lines: [] }] }, services: ['local'] },
             b: {
                 transfer: {
                     groups: [
@@ -14,6 +14,7 @@ describe('GZMTRRuninUtils', () => {
                         },
                     ],
                 },
+                services: ['local'],
             },
             bprime: {
                 transfer: {
@@ -23,9 +24,9 @@ describe('GZMTRRuninUtils', () => {
                         },
                     ],
                 },
-                underConstruction: 'temp',
+                services: [],
             },
-            c: { transfer: { groups: [{ lines: [] }] }, loop_pivot: true },
+            c: { transfer: { groups: [{ lines: [] }] }, loop_pivot: true, services: ['local'] },
             d: {
                 transfer: {
                     groups: [
@@ -34,8 +35,9 @@ describe('GZMTRRuninUtils', () => {
                         },
                     ],
                 },
+                services: ['local'],
             },
-            e: { transfer: { groups: [{ lines: [] }] } },
+            e: { transfer: { groups: [{ lines: [] }] }, services: ['local'] },
             f: {
                 transfer: {
                     groups: [
@@ -44,8 +46,9 @@ describe('GZMTRRuninUtils', () => {
                         },
                     ],
                 },
+                services: ['local'],
             },
-            g: { transfer: { groups: [{ lines: [] }] } },
+            g: { transfer: { groups: [{ lines: [] }] }, services: ['local'] },
         } as unknown as Record<string, StationInfo>;
         const stations = Object.keys(stationList);
 
@@ -91,17 +94,20 @@ describe('GZMTRRuninUtils', () => {
                         },
                     ],
                 },
+                services: ['local'],
             },
             stn1: {
                 parents: ['stn0'],
                 children: ['stn2', 'stn4'],
                 branch: { right: [BranchStyle.through, 'stn2'] },
                 transfer: { groups: [{ lines: [] }] },
+                services: ['local'],
             },
             stn2: {
                 parents: ['stn1'],
                 children: ['stn3'],
                 transfer: { groups: [{ lines: [] }] },
+                services: ['local'],
             },
             stn3: {
                 parents: ['stn2'],
@@ -113,11 +119,13 @@ describe('GZMTRRuninUtils', () => {
                         },
                     ],
                 },
+                services: ['local'],
             },
             stn4: {
                 parents: ['stn1'],
                 children: ['stn5'],
                 transfer: { groups: [{ lines: [] }] },
+                services: ['local'],
             },
             stn5: {
                 parents: ['stn4'],
@@ -129,6 +137,7 @@ describe('GZMTRRuninUtils', () => {
                         },
                     ],
                 },
+                services: ['local'],
             },
             lineend: {
                 parents: ['stn3', 'stn5'],

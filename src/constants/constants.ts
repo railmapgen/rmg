@@ -115,7 +115,8 @@ export const FACILITIES = {
 };
 export type Facilities = keyof typeof FACILITIES;
 
-export const TEMP = 'temp';
+export const UNDER_CONSTRUCTION = 'under-construction';
+export const SERVICE_SUSPENDED = 'service-suspended';
 
 export interface StationInfo {
     title?: string;
@@ -174,7 +175,11 @@ export interface StationInfo {
      * Default to 20 in updateParam.
      */
     character_spacing: number;
-    underConstruction?: boolean | typeof TEMP;
+    noServiceType?: typeof UNDER_CONSTRUCTION | typeof SERVICE_SUSPENDED;
+    /**
+     * A temporary sticker on the route map represented by a border.
+     */
+    noServiceWithBorder?: boolean;
 }
 
 export type StationDict = Record<string, StationInfo>;
@@ -355,3 +360,4 @@ export enum Events {
 
 export const FALSE = false.toString();
 export const TRUE = true.toString();
+export const UNDEFINED = String(undefined);
