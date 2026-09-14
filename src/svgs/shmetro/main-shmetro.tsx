@@ -1,4 +1,5 @@
-import { adjacencyList, criticalPathMethod, drawLine, getStnState, getXShareMTR } from '../methods/share';
+import { adjacencyList, criticalPathMethod, drawLine, getXShareMTR } from '../methods/share';
+import { getStnStateShmetro } from '../methods/shmetro-share';
 import StationSHMetro from './station-shmetro';
 import ColineSHMetro from './coline-shmetro';
 import { AtLeastOneOfPartial, Services, StationDict } from '../../constants/constants';
@@ -79,7 +80,7 @@ const MainSHMetro = () => {
     );
 
     const stnStates = useMemo(
-        () => getStnState(param.current_stn_idx, routes, param.direction),
+        () => getStnStateShmetro(param.current_stn_idx, routes, param.stn_list, param.direction),
         [param.current_stn_idx, param.direction, routes.toString()]
     );
 
@@ -125,7 +126,9 @@ const MainSHMetro = () => {
                                 direction,
                                 service,
                                 servicesPresent.length,
-                                stn_list
+                                stn_list,
+                                cur === 'main' && shouldUseExtraColoring(stns, stn_list, direction, stnStates),
+                                'rightangle'
                                 // info_panel_type === 'sh2020' ? 'rightangle' : 'diagonal'
                             )
                         )
@@ -211,6 +214,38 @@ const Line = (props: { paths: Paths; direction: 'l' | 'r' }) => {
     );
 };
 
+const SERVICES_DELTA: Record<Services, number> = {
+    local: 0,
+    express: 20,
+    direct: 40,
+};
+
+const TERMINAL_STUB = 30;
+
+type StnStates = { [stnId: string]: -1 | 0 | 1 };
+
+/**
+ * Whether this main path needs extra-coloring terminal-cap logic.
+ * True when the anti-direction end is a line terminus with state=1
+ * (parallel sibling branch at a merge, or loop coline).
+ */
+export const shouldUseExtraColoring = (
+    stnIds: string[],
+    stn_list: StationDict,
+    direction: 'l' | 'r',
+    stnStates: StnStates
+): boolean => {
+    if (stnIds.length === 0) {
+        return false;
+    }
+    if (direction === 'l') {
+        const endId = stnIds[stnIds.length - 1];
+        return stn_list[endId].children.some(id => ['linestart', 'lineend'].includes(id)) && stnStates[endId] === 1;
+    }
+    const startId = stnIds[0];
+    return stn_list[startId].parents.some(id => ['linestart', 'lineend'].includes(id)) && stnStates[startId] === 1;
+};
+
 export const _linePath = (
     stnIds: string[],
     type: 'main' | 'pass',
@@ -219,32 +254,52 @@ export const _linePath = (
     direction: 'l' | 'r',
     services: Services,
     servicesMax: number,
-    stn_list: StationDict, // only used to determine startFromTerminal or endAtTerminal
+    stn_list: StationDict, // terminal detection for pass stubs and main color caps
+    /**
+     * false: direction-side terminus only (refined legacy).
+     * true: every terminus end (parallel sibling branch).
+     * Pass paths and coline paths pass false.
+     */
+    isExtraColoring: boolean = false,
     bend: 'rightangle' | 'diagonal' = 'rightangle'
 ) => {
     let [prevY, prevX] = [] as number[];
     const path: { [key: string]: number[] } = {};
 
-    const servicesDelta = {
-        local: 0,
-        express: 20,
-        direct: 40,
-    }[services]; // TODO: enum Services could be a better idea?
+    const servicesDelta = SERVICES_DELTA[services];
     const servicesPassDelta = servicesMax > 1 ? 50 : 0;
+    const colorStub = TERMINAL_STUB + servicesDelta;
 
-    // extra short line on either end
-    let e1 = 30;
-    // check if path starts from or ends at the terminal
-    // and change e1 to 0 if it matches
+    let endAtTerminal = false;
+    let startFromTerminal = false;
     if (stnIds.length > 0) {
-        let startFromTerminal = false,
-            endAtTerminal = false;
         if (stn_list[stnIds.at(-1) || 0].children.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
             endAtTerminal = true;
         } else if (stn_list[stnIds.at(0) || 0].parents.some(stnId => ['linestart', 'lineend'].includes(stnId))) {
             startFromTerminal = true;
         }
-        e1 = startFromTerminal || endAtTerminal ? e1 : 0;
+    }
+    // pass stubs: legacy OR (either end is terminus)
+    const e1 = startFromTerminal || endAtTerminal ? TERMINAL_STUB : 0;
+
+    let startCap = 0;
+    let endCap = 0;
+    if (type === 'main' && stnIds.length > 0) {
+        if (!isExtraColoring) {
+            if (direction === 'l' && startFromTerminal) {
+                startCap = colorStub;
+            }
+            if (direction === 'r' && endAtTerminal) {
+                endCap = colorStub;
+            }
+        } else {
+            if (startFromTerminal) {
+                startCap = colorStub;
+            }
+            if (endAtTerminal) {
+                endCap = colorStub;
+            }
+        }
     }
 
     // diagonal use e2 to make soft line
@@ -283,12 +338,10 @@ export const _linePath = (
         // keys in path: start
         const [x, y] = path['start'];
         if (type === 'main') {
-            // current at terminal(end) station, draw the litte main line
-            if (direction === 'l') {
-                return `M ${x - e1 - servicesDelta},${y} H ${x}`;
-            } else {
-                return `M ${x},${y} H ${x + e1 + servicesDelta}`;
+            if (startCap === 0 && endCap === 0) {
+                return '';
             }
+            return `M ${x - startCap},${y} H ${x + endCap}`;
         } else {
             // type === 'pass'
             // current at terminal(start) station, draw the litte pass line
@@ -304,11 +357,7 @@ export const _linePath = (
         const [x, y] = path['start'],
             h = path['end'][0];
         if (type === 'main') {
-            if (direction === 'l') {
-                return `M ${x - e1 - servicesDelta},${y} H ${h}`;
-            } else {
-                return `M ${x},${y} H ${h + e1 + servicesDelta}`;
-            }
+            return `M ${x - startCap},${y} H ${h + endCap}`;
         } else {
             // type === 'pass'
             if (direction === 'l') {
@@ -331,28 +380,28 @@ export const _linePath = (
                 if (ym > y) {
                     console.log(path);
                     // main line, left direction, center to upper
-                    if (bend === 'rightangle') return `M ${x - e1},${y} H ${xm} V ${ym}`;
+                    if (bend === 'rightangle') return `M ${x - startCap},${y} H ${xm} V ${ym}`;
                     // center to upper/rightangle, lower to center/diagonal
-                    else return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm}`;
+                    else return `M ${x - startCap},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm + endCap}`;
                 } else {
                     // wrong marker
                     // main line, left direction, upper to center
-                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm}`;
+                    if (bend === 'rightangle') return `M ${x - startCap},${y} V ${ym} H ${xm + endCap}`;
                     // upper to center/rightangle, center to lower/diagonal
-                    else return `M ${x - e1},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
+                    else return `M ${x - startCap},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm + endCap}`;
                 }
             } else {
                 if (ym > y) {
                     // wrong marker
                     // main line, right direction, upper to center
-                    if (bend === 'rightangle') return `M ${x},${y} H ${xm} V ${ym}`;
+                    if (bend === 'rightangle') return `M ${x - startCap},${y} H ${xm} V ${ym}`;
                     // upper to center/rightangle, center to lower/diagonal
-                    else return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm + e1}`;
+                    else return `M ${x - startCap},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm + endCap}`;
                 } else {
                     // main line, right direction, center to upper
-                    if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e1}`;
+                    if (bend === 'rightangle') return `M ${x - startCap},${y} V ${ym} H ${xm + endCap}`;
                     // center to upper/rightangle, lower to center/diagonal
-                    else return `M ${x},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
+                    else return `M ${x - startCap},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm + endCap}`;
                 }
             }
         } else {
