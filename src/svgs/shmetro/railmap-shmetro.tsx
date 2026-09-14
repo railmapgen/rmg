@@ -174,7 +174,7 @@ const DefsSHMetro = memo(function DefsSHMetro() {
             {/* 2024 Station border white outline */}
             <filter id="station-border" filterUnits="userSpaceOnUse" x="-30" y="-30" width="60" height="60">
                 <feMorphology operator="dilate" in="SourceAlpha" radius="0" result="e1" />
-                <feMorphology operator="dilate" in="SourceAlpha" radius="0.25" result="e2" />
+                <feMorphology operator="dilate" in="SourceAlpha" radius="1" result="e2" />
                 <feComposite in="e1" in2="e2" operator="xor" result="outline" />
                 <feColorMatrix
                     type="matrix"

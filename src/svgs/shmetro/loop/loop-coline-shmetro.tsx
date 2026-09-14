@@ -69,7 +69,8 @@ export const LoopColine = (props: {
                                         fill="var(--rmg-theme-colour)"
                                     />
                                 </>
-                            ) : (
+                            ) : info_panel_type ===
+                              'sh2024' ? null /* sh2024 coline station icons are rendered by StationSHMetro via Sh2024ColineCapsule */ : (
                                 <use
                                     xlinkHref="#int2_sh"
                                     stroke="var(--rmg-theme-colour)"
