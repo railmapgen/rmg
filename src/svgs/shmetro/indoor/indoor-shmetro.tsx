@@ -106,7 +106,7 @@ const IndoorSHMetro = () => {
 
     const yShares = useMemo(() => StationsSHMetro.getYShares(param.stn_list), [deps]);
     const ys = Object.keys(yShares).reduce(
-        (acc, cur) => ({ ...acc, [cur]: (yShares[cur] * param.branchSpacingPct * param.svg_height) / 200 }),
+        (acc, cur) => ({ ...acc, [cur]: (yShares[cur] * param.branch_info.spacing_pct * param.svg_height) / 200 }),
         {} as typeof yShares
     );
 
@@ -137,7 +137,7 @@ const IndoorSHMetro = () => {
         lineXs,
         xs,
         ys,
-        (param.branchSpacingPct * param.svg_height) / 200,
+        (param.branch_info.spacing_pct * param.svg_height) / 200,
         criticalPath,
         0
     );

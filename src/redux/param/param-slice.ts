@@ -42,7 +42,7 @@ const paramSlice = createSlice({
         },
 
         setBranchSpacingPct: (state, action: PayloadAction<number>) => {
-            state.branchSpacingPct = action.payload;
+            state.branch_info.spacing_pct = action.payload;
         },
 
         setPaddingPercentage: (state, action: PayloadAction<number>) => {
@@ -159,6 +159,10 @@ const paramSlice = createSlice({
             state.loop_info.clockwise = action.payload;
         },
 
+        setShmetro2020BranchDistanceFactor: (state, action: PayloadAction<number>) => {
+            state.branch_info.distance_factor = action.payload;
+        },
+
         setCurrentStation: (state, action: PayloadAction<string>) => {
             state.current_stn_idx = action.payload;
         },
@@ -211,6 +215,7 @@ export const {
     setLoopBottomFactor,
     setLoopMidpointStation,
     setLoopClockwise,
+    setShmetro2020BranchDistanceFactor,
     setCurrentStation,
     setStation,
     setStations,

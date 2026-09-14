@@ -14,7 +14,7 @@ export default function LoopMain() {
         svg_height: svgH,
         y_pc: yPercentage,
         padding: paddingPercentage,
-        branchSpacingPct,
+        branch_info: { spacing_pct: branchSpacingPct },
         current_stn_idx: currentStation,
         loop_info: { midpoint_station: midpointStation, clockwise },
     } = useRootSelector(store => store.param);

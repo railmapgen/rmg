@@ -35,7 +35,7 @@ export const ColineSHMetro = (props: Props) => {
         direction,
         stn_list,
         current_stn_idx,
-        branchSpacingPct,
+        branch_info: { spacing_pct: branchSpacingPct },
         info_panel_type,
         coline: colineInfo,
     } = useRootSelector(store => store.param);
