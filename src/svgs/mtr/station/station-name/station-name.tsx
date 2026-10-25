@@ -1,3 +1,4 @@
+// 港铁站名排版：站名。
 import { memo, useEffect, useRef } from 'react';
 import { Direction } from '../../../../constants/constants';
 import { Translation } from '@railmapgen/rmg-translate';

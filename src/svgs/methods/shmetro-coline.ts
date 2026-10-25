@@ -1,3 +1,4 @@
+// 线路图几何与拓扑算法：上海地铁共线工具。
 import { ColineColours, ColineInfo } from '../../constants/constants';
 import { drawLine } from './share';
 
@@ -13,7 +14,7 @@ export interface ColineLinePath {
 }
 
 /**
- * Return all stations from ColineInfo's `from` and `to` with coline color preserved.
+ * 返回 `ColineInfo` 中 `from` 到 `to` 的全部车站，并保留共线颜色。
  */
 export const calculateColineStations = (colineInfoList: ColineInfo[], branches: string[][]) =>
     colineInfoList
@@ -22,8 +23,8 @@ export const calculateColineStations = (colineInfoList: ColineInfo[], branches: 
                 branch => branch.includes(coLine.from) && branch.includes(coLine.to)
             );
 
-            // the current coLineInfo fall on two separate branches,
-            // which should not be possible in current design.
+            // 当前共线信息跨越两条独立支线，
+            // 这在当前设计中不应出现。
             if (involvedBranches.length !== 1) return { linePath: [], colors: coLine.colors };
 
             const branch = involvedBranches.flat();
@@ -38,7 +39,7 @@ export const calculateColineStations = (colineInfoList: ColineInfo[], branches: 
         .filter(branchWithColine => branchWithColine.linePath.length !== 0);
 
 /**
- * Return coline segments with stations in main/pass order.
+ * 按主线与经过线的顺序返回共线车站区段。
  */
 export const calculateColine = (
     branchWithColine: ReturnType<typeof calculateColineStations>,

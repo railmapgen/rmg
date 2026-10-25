@@ -1,3 +1,4 @@
+/* 上海地铁风格的共享 SVG 导出样式。 */
 .rmg-name__zh {
     font-family: Arial, SimHei, STHeitiSC-Medium, PingFangSC-Regular, sans-serif;
 }
@@ -16,7 +17,7 @@
     --rmg-white: white;
 }
 
-/* for railmap */
+/* 线路图样式 */
 .rmg-stn__mtr--pass {
     stroke: #aaa;
 }

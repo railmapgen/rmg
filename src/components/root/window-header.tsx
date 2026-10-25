@@ -1,3 +1,4 @@
+// 应用窗口标题与导入视图页头。
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdOutlineHelpOutline } from 'react-icons/md';

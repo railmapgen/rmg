@@ -1,3 +1,4 @@
+// 广州地铁 SVG 画布：屏蔽门编号。
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
 import { SVGProps } from 'react';
 import { PsdLabel } from '../../constants/constants';

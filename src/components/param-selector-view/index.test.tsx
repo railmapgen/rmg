@@ -1,3 +1,4 @@
+// 验证项目选择与管理界面入口。
 import { render } from '../../test-utils';
 import ParamSelectorView from './index';
 import { createParamInLocalStorage } from '../../setupTests';
@@ -16,14 +17,14 @@ describe('ParamSelectorView', () => {
             render(<ParamSelectorView />);
         });
 
-        // display 2 projects for selecting
+        // 显示两个可供选择的项目
         expect(screen.getByText(/test-1/)).toBeInTheDocument();
         expect(screen.getByText(/test-2/)).toBeInTheDocument();
 
-        // open button is disabled
+        // 打开按钮处于禁用状态
         expect(screen.getByRole('button', { name: 'Open selected' })).toBeDisabled();
 
-        // select test-2 and open
+        // 选择 test-2 并打开
         fireEvent.click(screen.getByText(/test-2/));
         expect(screen.getByRole('button', { name: 'Open selected' })).toBeEnabled();
     });
@@ -37,9 +38,10 @@ describe('ParamSelectorView', () => {
             render(<ParamSelectorView />);
         });
 
-        // new/template/upload buttons are disabled
+        // 新建、模板和上传按钮均处于禁用状态
         expect(screen.getByRole('button', { name: 'Blank project' })).toBeDisabled();
         expect(screen.getByRole('button', { name: 'Open template' })).toBeDisabled();
-        expect(screen.getByRole('button', { name: 'Import project' })).toBeDisabled();
+        expect(screen.getByRole('button', { name: 'Import project (.json)' })).toBeDisabled();
+        expect(screen.getByRole('button', { name: 'Import station list (.txt)' })).toBeDisabled();
     });
 });

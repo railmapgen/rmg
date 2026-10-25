@@ -1,3 +1,4 @@
+// SVG 风格注册表：按线路样式懒加载对应画布模块和字体。
 import { RmgStyle } from '../constants/constants';
 
 type StyleConfig = {

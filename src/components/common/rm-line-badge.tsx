@@ -1,3 +1,4 @@
+// 通用界面组件：线路徽标。
 import { Name } from '../../constants/constants';
 import { ColourHex, MonoColour } from '@railmapgen/rmg-palette-resources';
 import { Badge } from '@mantine/core';

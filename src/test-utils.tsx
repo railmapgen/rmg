@@ -1,3 +1,4 @@
+// 测试工具：为组件测试提供带 Redux 与国际化上下文的渲染器。
 import '@testing-library/jest-dom';
 import { ReactElement, ReactNode } from 'react';
 import { render, RenderOptions } from '@testing-library/react';

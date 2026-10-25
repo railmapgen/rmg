@@ -1,3 +1,4 @@
+// 广州地铁 SVG 画布：广州地铁主线路图。
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { adjacencyList, criticalPathMethod, drawLine, getStnState } from '../methods/share';
 import { CanvasType, ShortDirection, StationDict } from '../../constants/constants';
@@ -14,7 +15,7 @@ const getXShare = (stnId: string, adjMat: ReturnType<typeof adjacencyList>, bran
     if (criticalPath.nodes.includes(stnId)) {
         return criticalPathMethod(criticalPath.nodes[1], stnId, adjMat).len;
     } else {
-        // must have 1 parent and 1 child only
+        // 必须且只能有一个父站和一个子站
         const branchOfStn = branches.filter(branch => branch.includes(stnId))[0];
         let partSource = stnId;
         while (!criticalPath.nodes.includes(partSource)) {
@@ -29,7 +30,7 @@ const getXShare = (stnId: string, adjMat: ReturnType<typeof adjacencyList>, bran
         const rightOpenJaw = partSink === 'lineend';
 
         if (branchOfStn.toString() === branches[0].toString()) {
-            // station on main line, expand to fit
+            // 主线车站按内容扩展尺寸
             const lens = [];
             if (!leftOpenJaw && !rightOpenJaw) {
                 lens[0] = criticalPathMethod(criticalPath.nodes[1], partSource, adjMat).len;
@@ -42,7 +43,7 @@ const getXShare = (stnId: string, adjMat: ReturnType<typeof adjacencyList>, bran
                 lens[2] = criticalPathMethod(branchOfStn[1], stnId, adjMat).len;
                 lens[3] = criticalPathMethod(stnId, partSink, adjMat).len;
             } else {
-                // right open jaw
+                // 右侧开口支线
                 lens[0] = criticalPathMethod(criticalPath.nodes[1], partSource, adjMat).len;
                 lens[1] = criticalPathMethod(partSource, criticalPath.nodes.slice(-2)[0], adjMat).len;
                 lens[2] = criticalPathMethod(partSource, stnId, adjMat).len;
@@ -63,7 +64,7 @@ const getXShare = (stnId: string, adjMat: ReturnType<typeof adjacencyList>, bran
                     criticalPathMethod(stnId, partSink, adjMat).len
                 );
             } else {
-                // right open jaw
+                // 右侧开口支线
                 return (
                     criticalPathMethod(criticalPath.nodes[1], partSource, adjMat).len +
                     criticalPathMethod(partSource, stnId, adjMat).len
@@ -254,6 +255,6 @@ const _linePath = (stnIds: string[], realXs: { [stnId: string]: number }, realYs
         prevY = y;
     });
 
-    // simplify path
+    // 简化路径
     return path.join(' ').replace(/( H ([\d.]+))+/g, ' H $2');
 };

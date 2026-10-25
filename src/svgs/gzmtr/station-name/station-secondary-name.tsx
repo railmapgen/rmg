@@ -1,3 +1,4 @@
+// 广州地铁站名：次要站名。
 import { SVGProps, useEffect, useRef, useState } from 'react';
 import { Translation } from '@railmapgen/rmg-translate';
 

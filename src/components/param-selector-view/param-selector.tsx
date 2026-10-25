@@ -1,3 +1,4 @@
+// 项目选择与管理界面：项目选择器。
 import classes from './param-selector-view.module.css';
 import { useState } from 'react';
 import { getRelativeTime } from '../../util/utils';

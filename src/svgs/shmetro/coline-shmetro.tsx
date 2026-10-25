@@ -1,3 +1,4 @@
+// 上海地铁 SVG 画布：上海地铁共线。
 import { Fragment, useMemo } from 'react';
 import { drawLine } from '../methods/share';
 import { calculateColine, calculateColineStations } from '../methods/shmetro-coline';
@@ -55,7 +56,7 @@ export const ColineSHMetro = (props: Props) => {
             {} as { [stnId: string]: number }
         );
     }, [deps]);
-    // filter out all positive yShares to draw the railmap w/ coline and its branches
+    // 筛选出所有正纵向份额，绘制带共线及其支线的线路图
     const colineYShares = Object.entries(yShares)
         .filter(([, v]) => v <= 0)
         .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {} as typeof yShares);
@@ -64,7 +65,7 @@ export const ColineSHMetro = (props: Props) => {
         {} as typeof yShares
     );
 
-    // coline color and all stations in the coline segments
+    // 共线颜色及共线区段内的全部车站
     const colineStns = useMemo(
         () =>
             calculateColine(
@@ -106,7 +107,7 @@ export const ColineSHMetro = (props: Props) => {
         {} as ColinePath
     );
 
-    // only display coline stations when coline in effect
+    // 仅在共线生效时显示共线车站
     const colineStations = calculateColineStations(
         Object.values(colineInfo).filter(co => co.display),
         branches
@@ -183,7 +184,7 @@ const CoLine = (props: { paths: ColinePath; direction: 'l' | 'r' }) => {
                                     >
                                         {colinePath.colors.map((color, i) => (
                                             <Fragment key={i}>
-                                                {/* more about React.Fragment on https://stackoverflow.com/a/59390967 */}
+                                                {/* React.Fragment 说明：https://stackoverflow.com/a/59390967 */}
                                                 <stop // from
                                                     offset={`${(100 / colinePath.colors.length) * (i + 0)}%`}
                                                     stopColor={color[2]}
@@ -269,16 +270,16 @@ interface ColineStationInMainLineProps {
 }
 
 /**
- * A small rect overlay on the main branch where coline is present.
+ * 在存在共线的主线支路上叠加的小矩形。
  */
 const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
     const { colineStns, branches, xs, ys, stnStates, lineWidth: LINE_WIDTH, colineGap: COLINE_GAP } = props;
     const { line_name, theme, info_panel_type } = useRootSelector(store => store.param);
 
-    // data to draw the station elements.
+    // 绘制车站元素所需的数据。
     const colineStations = [...colineStns.main, ...colineStns.pass]
-        // Merge main and pass station together to minimize the code duplication
-        // and its state can obtained by stnStates.
+        // 合并主线与经过线车站，减少重复代码
+        // 其状态可从 `stnStates` 获取。
         .map(stns =>
             stns.linePath.map(stnId => ({
                 curStn: stnId,
@@ -289,7 +290,7 @@ const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
         )
         .flat()
         .reduce(
-            // remove current station as it appears in both main and pass
+            // 移除同时出现在主线与经过线中的当前车站
             (acc, cur) => (acc.find(x => x.curStn === cur.curStn) ? acc : acc.concat(cur)),
             [] as {
                 curStn: string;
@@ -298,8 +299,8 @@ const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
                 color: ColineColours;
             }[]
         )
-        // only take the coline stations in the first branch(general main line)
-        // as coline stations in lower branches will be taken care by ColineStationGroup
+        // 只处理第一支线（通常为主线）中的共线车站
+        // 下层支线中的共线车站由 `ColineStationGroup` 处理
         .filter(stn => branches[0].includes(stn.curStn));
     console.log(colineStations);
 
@@ -335,14 +336,14 @@ const ColineStationInMainLine = (props: ColineStationInMainLineProps) => {
 };
 
 /**
- * Complete station component for stations in lower branches.
+ * 下层支线车站使用的完整车站组件。
  */
 const ColineStationGroup = (props: StationGroupProps) => {
     const { xs, ys, stnStates, stnIds } = props;
     const { branches, depsStr: deps } = useRootSelector(store => store.helper);
     const { line_name, theme, coline } = useRootSelector(store => store.param);
 
-    // get colors of stations in coline branches, they use different colors than var(--rmg-theme-colour)
+    // 获取共线支线车站颜色，它们不同于 `var(--rmg-theme-colour)`
     const colines = useMemo(
         () => calculateColineStations(Object.values(coline), branches),
         [JSON.stringify(coline), deps]
@@ -354,7 +355,7 @@ const ColineStationGroup = (props: StationGroupProps) => {
                 .filter(coline => coline.linePath.includes(stnId))
                 .map(coline => coline.colors)
                 .flat()
-                // TODO-coline: support multiple colines
+                // 待办（共线）：支持多条共线
                 .at(0) ?? [...theme, ...line_name],
         }),
         {} as { [stnId: string]: ColineColours }

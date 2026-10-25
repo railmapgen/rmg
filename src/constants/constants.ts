@@ -1,8 +1,9 @@
+// 领域常量与类型定义：描述线路参数、车站拓扑、画布和样式枚举。
 import { Theme } from '@railmapgen/rmg-palette-resources';
 import { Translation } from '@railmapgen/rmg-translate';
 
 /**
- * At least one key should exist in Partial
+ * `Partial` 至少要保留一个必选键
  * https://stackoverflow.com/questions/48230773/how-to-create-a-partial-like-that-requires-a-single-property-to-be-set
  */
 export type AtLeastOneOfPartial<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
@@ -36,8 +37,8 @@ export enum SidePanelMode {
 }
 
 /**
- * @property {string} 0 - Chinese characters
- * @property {string} 1 - Latin characters
+ * @property {string} 0 - 中文字符
+ * @property {string} 1 - 拉丁字符
  */
 export type Name = [string, string];
 
@@ -62,9 +63,9 @@ export enum BranchStyle {
 }
 
 /**
- * Information of branch on both side.
- * @property 0 - branch type
- * @property 1 - ID of the first station of the branch (should also be one of the station's parents/children) or empty
+ * 车站两侧支线的信息。
+ * @property 0 - 支线类型
+ * @property 1 - 支线首站 ID，应同时属于该车站的父站或子站；没有支线时为空
  */
 export type BranchInfo = Partial<Record<Direction, [BranchStyle, string]>>;
 
@@ -96,11 +97,11 @@ export interface InterchangeGroup {
 
 export interface StationTransfer {
     /**
-     * Direction of text/tick of interchanges.
+     * 换乘文字或刻度的方向。
      */
     tick_direc: ShortDirection;
     /**
-     * Flag of paid area within out-of-station interchange.
+     * 出站换乘区域是否位于付费区内。
      */
     paid_area: boolean;
     groups: [InterchangeGroup, ...InterchangeGroup[]];
@@ -121,63 +122,63 @@ export const SERVICE_SUSPENDED = 'service-suspended';
 export interface StationInfo {
     title?: string;
     /**
-     * Station name in two languages.
+     * 双语车站名称。
      */
-    // name?: Name;
-    // secondaryName?: Name;
+    // 旧字段 name?: Name;
+    // 旧字段 secondaryName?: Name;
     localisedName: Translation;
     localisedSecondaryName?: Translation;
     /**
-     * Station number. (GZMTR specific)
+     * 车站编号，仅广州地铁样式使用。
      */
     num: string;
     /**
-     * Dictionary of the information of branch on the station's both side.
+     * 车站两侧支线信息的字典。
      */
     branch?: BranchInfo;
     /**
-     * Array of parents' IDs.
+     * 父车站 ID 数组。
      */
     parents: string[];
     /**
-     * Array of children's IDs.
+     * 子车站 ID 数组。
      */
     children: string[];
     /**
-     * Detail of interchanges.
+     * 换乘信息详情。
      */
     transfer: StationTransfer;
     /**
-     * Array of services at this station.
+     * 本站提供的列车服务类型。
      */
     services: Services[];
     /**
-     * Facility near the station.
+     * 车站附近设施信息。
      */
     facility?: Facilities;
     /**
-     * Is a pivot station in the loop.
+     * 是否为环线中的枢轴车站。
      */
     loop_pivot: boolean;
     /**
-     * Whether display Chinese and English in the same line.
+     * 是否在同一行显示中英文站名。
      */
     one_line: boolean;
     /**
-     * Padding between int box and station name in shmetro/station.
-     * Default to 355 in updateParam.
-     * This is calculated from (svg_height - 200) * 1.414 where typical svg_height
-     * is 450 and station element is tilted at a 45-degree angle.
+     * 上海地铁车站图中换乘框与站名之间的间距。
+     * `updateParam` 中的默认值为 355。
+     * 由 `(svg_height - 200) * 1.414` 计算，常见 `svg_height`
+     * 为 450，车站元素倾斜 45 度。
      */
     int_padding: number;
     /**
-     * Controls spacing between text characters in station names.
-     * Default to 20 in updateParam.
+     * 控制站名文字之间的字符间距。
+     * `updateParam` 中的默认值为 20。
      */
     character_spacing: number;
     noServiceType?: typeof UNDER_CONSTRUCTION | typeof SERVICE_SUSPENDED;
     /**
-     * A temporary sticker on the route map represented by a border.
+     * 以边框表示的临时线路提示标记。
      */
     noServiceWithBorder?: boolean;
 }
@@ -205,57 +206,57 @@ export enum PanelTypeShmetro {
 }
 
 /**
- * Dictionary of configuration parameters for RMG, stored in `localStorage` as string.
+ * RMG 配置参数字典，以字符串形式保存在 `localStorage` 中。
  */
 export interface RMGParam {
     svgWidth: Record<CanvasType, number>;
     svg_height: number;
     style: RmgStyle;
     /**
-     * Vertical position (in percentage) of line.
+     * 线路纵向位置，单位为百分比。
      */
     y_pc: number;
     /**
-     * Left and right margin of line (in percentage).
+     * 线路左右边距，单位为百分比。
      */
     padding: number;
-    /** Branch spacing percentage (space between upper and lower branch).
-     *  In SHMetro loop line, this is also used in determining vertical padding.
+    /** 支线间距百分比，即上下支线之间的留白。
+     * 上海地铁环线也用它计算纵向内边距。
      */
     branchSpacingPct: number;
     direction: ShortDirection;
     /**
-     * Platform number of the destination canvas. Set to '' will hide the element.
+     * 目的地画布的站台编号；设为空字符串将隐藏该元素。
      */
     platform_num: string;
     theme: Theme;
     line_name: Name;
     current_stn_idx: keyof StationDict;
     /**
-     * Key-value pairs of the information of each station.
+     * 各车站信息的键值对。
      */
     stn_list: StationDict;
     namePosMTR: {
         /**
-         * Flag of whether station names staggered. If false, place name above line.
+         * 是否交错放置站名；为 `false` 时将站名放在线路上方。
          */
         isStagger: boolean;
         /**
-         * Flag of flipping station names.
-         * When `isStagger === false`, names are above line if `isFlip === false`.
+         * 是否翻转站名位置。
+         * 当 `isStagger === false` 时，若 `isFlip === false`，站名位于线路上方。
          */
         isFlip: boolean;
     };
     /**
-     * Customise destination sign of MTR style.
+     * 自定义港铁样式目的地指示牌。
      */
     customiseMTRDest: {
         /**
-         * Flag of legacy style. (Show line name before 'to').
+         * 是否启用旧版样式，即在线路名后显示“往”。
          */
         isLegacy: boolean;
         /**
-         * Customise terminal stations.
+         * 自定义终点站。
          */
         terminal: false | Name;
     };
@@ -272,17 +273,17 @@ export interface RMGParam {
     loop: boolean;
     loop_info: {
         /**
-         * Bank the closed rectangular path (railmap) or not.
+         * 是否将闭合线路图路径转为矩形环线。
          */
         bank: boolean;
         /**
-         * Station size on the left and right side. Integer only, will be `Math.floor`ed.
-         * Also, this factor is subject to several rules, see shmetro-loop for more info.
+         * 左右两侧的车站尺寸，仅接受整数并向下取整。
+         * 该系数还受多条规则约束，详见 `shmetro-loop`。
          */
         left_and_right_factor: number;
         /**
-         * Station size on the bottom side. Integer only, will be `Math.floor`ed.
-         * Also, this factor is subject to several rules, see shmetro-loop for more info.
+         * 底部的车站尺寸，仅接受整数并向下取整。
+         * 该系数还受多条规则约束，详见 `shmetro-loop`。
          */
         bottom_factor: number;
         midpoint_station?: string;
@@ -292,12 +293,12 @@ export interface RMGParam {
 }
 
 /**
- * Array of a single note entry for Guangzhou Metro style.
- * @property 0 - text in Chinese characters
- * @property 1 - text in Latin characters
- * @property 2 - percentage of horizontal position
- * @property 3 - percentage of vertical position
- * @property 4 - flag of showing border
+ * 广州地铁样式中的单条说明文字数组。
+ * @property 0 - 中文文字
+ * @property 1 - 拉丁文字
+ * @property 2 - 横向位置百分比
+ * @property 3 - 纵向位置百分比
+ * @property 4 - 是否显示边框
  */
 export type Note = [...Name, number, number, boolean];
 
@@ -320,7 +321,7 @@ export interface ParamConfig {
     lastModified?: number;
 }
 
-// localStorage keys
+// 浏览器存储键名
 export enum LocalStorageKey {
     CANVAS_TO_SHOW = 'canvasToShow',
     CANVAS_SCALE = 'canvasScale',

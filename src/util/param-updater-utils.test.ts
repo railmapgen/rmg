@@ -1,3 +1,4 @@
+// 测试：验证参数迁移工具所覆盖的通用工具行为。
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
 import {
     dottieGet,
@@ -45,7 +46,7 @@ describe('ParamUpdaterUtils', () => {
         };
         v5_10_updateInterchangeGroup(param);
 
-        // data upgraded
+        // 数据已升级
         expect(param.stn_list.stn0.transfer.groups[0]).toEqual({ lines: [] });
         expect(param.stn_list.stn0.transfer.groups[1]).toBeUndefined();
 
@@ -62,7 +63,7 @@ describe('ParamUpdaterUtils', () => {
             lines: [{ theme: ['hongkong', 'ktl', '#00AF41', MonoColour.white], name: ['觀塘綫', 'Kwun Tong Line'] }],
         });
 
-        // legacy fields removed
+        // 旧字段已移除
         expect(param.stn_list.stn0.transfer.info).toBeUndefined();
         expect(param.stn_list.stn0.transfer.osi_names).toBeUndefined();
         expect(param.stn_list.stn1.transfer.info).toBeUndefined();
@@ -92,7 +93,7 @@ describe('ParamUpdaterUtils', () => {
         };
         v5_10_updateInterchangeGroup(param);
 
-        // nothing changed
+        // 未发生更改
         expect(param.stn_list.stn0.transfer.groups[0]).toEqual({
             lines: [{ theme: ['hongkong', 'twl', '#E2231A', MonoColour.white], name: ['荃灣綫', 'Tsuen Wan Line'] }],
         });

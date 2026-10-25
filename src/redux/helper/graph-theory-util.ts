@@ -1,7 +1,8 @@
+// 线路图拓扑工具：遍历分支与交路并计算稳定的车站绘制顺序。
 import { StationDict } from '../../constants/constants';
 
 /**
- * Getter of all branches (支線段) of the line (both ends included). The first branch must be the main line.
+ * 获取线路中的全部支线段（含两端），第一段必须是主线。
  * @example MTREastRailLine.branches
  * /*
  * [0]: [LineStart, Lo Wu, ..., Hung Hom, LineEnd]
@@ -40,7 +41,7 @@ export const getBranches = (stnList: StationDict) => {
                         if (branchCount === 0) {
                             branches.push([prevId]);
                             stack.push(branchNextId);
-                            // all branching out nodes are added to stack in the first loop
+                            // 首轮遍历将所有分叉节点加入栈
                         }
                     }
                     curId = children.filter(stnId => stnId !== branchNextId)[0];
@@ -61,7 +62,7 @@ export const getBranches = (stnList: StationDict) => {
 };
 
 /**
- * Getter of all routes (行車交路) of the line (both ends included). The first branch must be the main line.
+ * 获取线路中的全部行车交路（含两端），第一段必须是主线。
  * @example MTREastRailLine.branches
  * /*
  * [0]: [LineStart, Lo Wu, Sheung Shui, ..., Hung Hom, LineEnd]
@@ -124,7 +125,7 @@ export const getRoutes = (stnList: StationDict) => {
 };
 
 /**
- * Calculate topology ordering for all stations by stacking all branches into an 1-dimension array
+ * 将所有支线压入一维数组，计算全部车站的拓扑绘制顺序
  */
 export const getTpo = (branches: string[][]) => {
     if (branches.length === 1) {
@@ -133,7 +134,7 @@ export const getTpo = (branches: string[][]) => {
         return branches
             .reduce(
                 (acc, cur) => {
-                    // insert the other branch before the rest of the main branch
+                    // 在主线的剩余部分之前插入另一条支线
                     const idx = acc.indexOf(cur[cur.length - 1]);
                     return [...acc.slice(0, idx), ...cur.slice(1), ...acc.slice(idx + 1)];
                 },

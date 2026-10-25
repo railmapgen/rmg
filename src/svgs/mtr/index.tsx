@@ -1,3 +1,4 @@
+// 港铁画布集合：注册目的地指示和线路图视图及字体。
 import { CanvasType } from '../../constants/constants';
 import { ReactNode } from 'react';
 import DestinationMTR from './destination-mtr';

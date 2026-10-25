@@ -1,3 +1,4 @@
+// 侧边栏样式编辑：布局设置区。
 import classes from '../side-panel.module.css';
 import { useTranslation } from 'react-i18next';
 import { useRootDispatch, useRootSelector } from '../../../redux';

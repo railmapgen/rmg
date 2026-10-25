@@ -1,3 +1,4 @@
+// 测试：验证项目选择器所覆盖的项目选择与管理界面行为。
 import { render } from '../../test-utils';
 import ParamSelector from './param-selector';
 import { screen } from '@testing-library/react';
@@ -37,14 +38,14 @@ describe('ParamSelector', () => {
         const paramRegistry: ParamConfig[] = [{ id: 'test-01', lastModified: now }];
         render(<ParamSelector paramRegistry={paramRegistry} {...mockCallbacks} />);
 
-        // button display as project id
+        // 按钮显示项目 ID
         expect(screen.getAllByRole('button')[0]).toHaveAccessibleName(/Project test-01/);
 
-        // click edit and open modal
+        // 点击编辑并打开对话框
         await user.click(screen.getByRole('button', { name: 'Edit project info' }));
         await screen.findByRole('dialog');
 
-        // input project name and submit
+        // 输入项目名称并提交
         await user.type(screen.getByRole('textbox', { name: 'Project name' }), 'My Masterpiece');
         await user.click(screen.getByRole('button', { name: 'Confirm' }));
 

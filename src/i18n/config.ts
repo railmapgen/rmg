@@ -1,3 +1,4 @@
+// 国际化配置：注册中英日韩语言包并提供译文字段回退。
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { initReactI18next } from 'react-i18next';
 import { defaultTranslation, LanguageCode, Translation } from '@railmapgen/rmg-translate';

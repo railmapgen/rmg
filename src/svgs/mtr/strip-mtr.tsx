@@ -1,3 +1,4 @@
+// 港铁 SVG 画布：港铁信息带。
 import { memo } from 'react';
 
 export default memo(function StripMTR() {

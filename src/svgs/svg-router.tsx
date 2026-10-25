@@ -1,3 +1,4 @@
+// SVG 画布路由：按当前风格渲染各画布并管理显示、缩放与错误隔离。
 import classes from './svg-router.module.css';
 import { CanvasType } from '../constants/constants';
 import { useRootDispatch, useRootSelector } from '../redux';

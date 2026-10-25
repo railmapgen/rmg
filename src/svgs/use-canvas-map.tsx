@@ -1,3 +1,4 @@
+// 画布加载 Hook：切换风格时加载字体、共享样式和对应 SVG 组件。
 import { ReactNode, useEffect, useState } from 'react';
 import { CanvasType, Events, RmgStyle } from '../constants/constants';
 import { STYLE_CONFIG } from './config';
@@ -30,7 +31,7 @@ export default function useCanvasMap(style: RmgStyle) {
 
         rmgRuntime.event(Events.STYLE_CHANGE, { style });
 
-        // reset canvas map while loading module for next style
+        // 加载下一种风格时重置画布映射
         return () => {
             controller.abort();
             setCanvasMap({});

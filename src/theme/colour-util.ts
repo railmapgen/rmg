@@ -1,3 +1,4 @@
+// 颜色工具：颜色格式转换、对比度与最近颜色计算。
 import { ColourHex } from '@railmapgen/rmg-palette-resources';
 
 export default class ColourUtil {

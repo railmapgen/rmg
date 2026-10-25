@@ -1,3 +1,4 @@
+// 上海地铁 SVG 画布：上海地铁主线路图。
 import { adjacencyList, criticalPathMethod, drawLine, getStnState, getXShareMTR } from '../methods/share';
 import StationSHMetro from './station-shmetro';
 import ColineSHMetro from './coline-shmetro';
@@ -69,7 +70,7 @@ const MainSHMetro = () => {
         );
     }, [deps]);
 
-    // filter out all negative yShares to draw the traditional railmap w/o coline and its branches
+    // 筛选出所有负纵向份额，绘制不含共线及其支线的传统线路图
     const lineYShares = Object.entries(yShares)
         .filter(([, v]) => v >= 0)
         .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {} as typeof yShares);
@@ -171,9 +172,9 @@ const Line = (props: { paths: Paths; direction: 'l' | 'r' }) => {
                 <g
                     key={`servicePath${i}`}
                     transform={`translate(0,${i * 25})`}
-                    // the following line is a special case for pujiang line
-                    // where its pass line color should be white with outline
-                    // surrounding it, see #161 for details.
+                    // 下一行是浦江线的特殊情况
+                    // 其中经过线应为带轮廓的白色
+                    // 周围细节请参阅 #161。
                     filter={theme[2] === '#B5B5B6' ? 'url(#pujiang_outline)' : undefined}
                 >
                     <g>
@@ -229,13 +230,13 @@ export const _linePath = (
         local: 0,
         express: 20,
         direct: 40,
-    }[services]; // TODO: enum Services could be a better idea?
+    }[services]; // 待办：enum Services could be a better idea?
     const servicesPassDelta = servicesMax > 1 ? 50 : 0;
 
-    // extra short line on either end
+    // 两端额外短线段
     let e1 = 30;
-    // check if path starts from or ends at the terminal
-    // and change e1 to 0 if it matches
+    // 检查路径是否从终点开始或结束
+    // 若匹配则将 e1 改为 0
     if (stnIds.length > 0) {
         let startFromTerminal = false,
             endAtTerminal = false;
@@ -247,7 +248,7 @@ export const _linePath = (
         e1 = startFromTerminal || endAtTerminal ? e1 : 0;
     }
 
-    // diagonal use e2 to make soft line
+    // 斜线使用 e2 绘制平滑连接
     const e2 = 30;
 
     stnIds.forEach(stnId => {
@@ -259,12 +260,12 @@ export const _linePath = (
             return;
         }
         if (y === 0) {
-            // merge back to main line
+            // 重新汇入主线
             if (y !== prevY) {
                 path['bifurcate'] = [prevX, prevY];
             }
         } else {
-            // on the branch line
+            // 位于支线
             if (y !== prevY) {
                 path['bifurcate'] = [x, y];
             }
@@ -273,17 +274,17 @@ export const _linePath = (
         [prevX, prevY] = [x, y];
     });
 
-    // generate path
+    // 生成路径
     if (!('start' in path)) {
-        // no line generated
-        // keys in path: none
+        // 未生成线路
+        // 路径中无关键节点
         return '';
     } else if (!('end' in path)) {
-        // little line (only beyond terminal station)
-        // keys in path: start
+        // 终点站外的短线段
+        // 路径关键节点：起点
         const [x, y] = path['start'];
         if (type === 'main') {
-            // current at terminal(end) station, draw the litte main line
+            // 当前位于终点站，绘制短主线段
             if (direction === 'l') {
                 return `M ${x - e1 - servicesDelta},${y} H ${x}`;
             } else {
@@ -291,7 +292,7 @@ export const _linePath = (
             }
         } else {
             // type === 'pass'
-            // current at terminal(start) station, draw the litte pass line
+            // 当前位于起点站，绘制短经过线段
             if (direction === 'l') {
                 return `M ${x},${y} L ${x + e1 + servicesPassDelta},${y}`;
             } else {
@@ -299,8 +300,8 @@ export const _linePath = (
             }
         }
     } else if (!('bifurcate' in path)) {
-        // general main line
-        // keys in path: start, end
+        // 普通主线
+        // 路径关键节点：起点、终点
         const [x, y] = path['start'],
             h = path['end'][0];
         if (type === 'main') {
@@ -318,10 +319,10 @@ export const _linePath = (
             }
         }
     } else {
-        // main line bifurcate here to become the branch line
-        // and path return here are only branch line
-        // keys in path: start, bifurcate, end
-        // TODO: make diagonal available to `sh`
+        // 主线在此分叉为支线
+        // 此处返回的路径仅为支线
+        // 路径关键节点：起点、分叉点、终点
+        // 待办：让 `sh` 类型支持斜线
 
         const [x, y] = path['start'];
         const xb = path['bifurcate'][0];
@@ -330,28 +331,28 @@ export const _linePath = (
             if (direction === 'l') {
                 if (ym > y) {
                     console.log(path);
-                    // main line, left direction, center to upper
+                    // 主线向左，从中心到上方
                     if (bend === 'rightangle') return `M ${x - e1},${y} H ${xm} V ${ym}`;
-                    // center to upper/rightangle, lower to center/diagonal
+                    // 中心到上方或直角；下方到中心或斜线
                     else return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm}`;
                 } else {
-                    // wrong marker
-                    // main line, left direction, upper to center
+                    // 标记错误
+                    // 主线向左，从上方到中心
                     if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm}`;
-                    // upper to center/rightangle, center to lower/diagonal
+                    // 上方到中心或直角；中心到下方或斜线
                     else return `M ${x - e1},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
                 }
             } else {
                 if (ym > y) {
-                    // wrong marker
-                    // main line, right direction, upper to center
+                    // 标记错误
+                    // 主线向右，从上方到中心
                     if (bend === 'rightangle') return `M ${x},${y} H ${xm} V ${ym}`;
-                    // upper to center/rightangle, center to lower/diagonal
+                    // 上方到中心或直角；中心到下方或斜线
                     else return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm + e1}`;
                 } else {
-                    // main line, right direction, center to upper
+                    // 主线向右，从中心到上方
                     if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e1}`;
-                    // center to upper/rightangle, lower to center/diagonal
+                    // 中心到上方或直角；下方到中心或斜线
                     else return `M ${x},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
                 }
             }
@@ -359,26 +360,26 @@ export const _linePath = (
             // type === 'pass'
             if (direction === 'l') {
                 if (ym > y) {
-                    // pass line, left direction, center to upper
+                    // 经过线向左，从中心到上方
                     if (bend === 'rightangle') return `M ${x - e1},${y} H ${xm} V ${ym}`;
-                    // center to upper/rightangle, lower to center/diagonal
+                    // 中心到上方或直角；下方到中心或斜线
                     else return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm + e1}`;
                 } else {
-                    // pass line, left direction, upper to center
+                    // 经过线向左，从上方到中心
                     if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e1}`;
-                    // upper to center/rightangle, center to lower/diagonal
+                    // 上方到中心或直角；中心到下方或斜线
                     else return `M ${x - e1},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
                 }
             } else {
                 if (ym > y) {
-                    // pass line, right direction, upper to center
+                    // 经过线向右，从上方到中心
                     if (bend === 'rightangle') return `M ${x - e1},${y} H ${xm} V ${ym}`;
-                    // upper to center/rightangle, center to lower/diagonal
+                    // 上方到中心或直角；中心到下方或斜线
                     return `M ${x},${y} H ${x + e2} L ${xb - e2},${ym} H ${xm + e1}`;
                 } else {
-                    // pass line, right direction, center to upper
+                    // 经过线向右，从中心到上方
                     if (bend === 'rightangle') return `M ${x},${y} V ${ym} H ${xm + e1}`;
-                    // center to upper/rightangle, lower to center/diagonal
+                    // 中心到上方或直角；下方到中心或斜线
                     return `M ${x - e1},${y} H ${xb + e2} L ${xm - e2},${ym} H ${xm}`;
                 }
             }
@@ -465,7 +466,7 @@ const ServicesElements = (props: { servicesLevel: Services[]; lineXs: number[] }
 
 export const DirectionElements = () => {
     const { direction, svgWidth, coline } = useRootSelector(store => store.param);
-    // arrow will be black stroke with white fill in coline
+    // 共线区域中的箭头使用黑色描边和白色填充
     const isColine = !!Object.keys(coline).length;
 
     return useMemo(

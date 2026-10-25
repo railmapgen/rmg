@@ -1,3 +1,4 @@
+// 编辑对话框：自动编号对话框。
 import classes from './common-modal.module.css';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

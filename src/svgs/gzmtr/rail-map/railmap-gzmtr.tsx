@@ -1,3 +1,4 @@
+// 广州地铁线路图：广州地铁线路图。
 import { memo, SVGProps, useEffect, useMemo, useRef, useState } from 'react';
 import StripGZMTR from '../strip-gzmtr';
 import MainGZMTR from '../main-gzmtr';

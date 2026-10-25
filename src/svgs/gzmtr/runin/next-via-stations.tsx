@@ -1,3 +1,4 @@
+// 广州地铁进站信息：途经站提示。
 import { useRootSelector } from '../../../redux';
 import { CanvasType, ShortDirection } from '../../../constants/constants';
 import ArrowGzmtr, { ARROW_WIDTH } from '../arrow-gzmtr';

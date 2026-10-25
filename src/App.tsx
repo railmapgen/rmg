@@ -1,3 +1,4 @@
+// 应用根组件：配置哈希路由、主题、窗口外壳、懒加载视图和错误边界。
 import { lazy } from 'react';
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { ImportViewWindowHeader, WindowHeader } from './components/root/window-header';

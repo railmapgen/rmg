@@ -1,3 +1,4 @@
+// 页头操作区：返回项目列表、下载 JSON 或图像并打开设置面板。
 import classes from './page-header.module.css';
 import { MdOutlineDownload, MdOutlineExpandMore, MdOutlineFolder, MdOutlineSettings } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
@@ -30,7 +31,7 @@ export default function HeaderActions() {
     };
 
     const handleGoToSelectorView = () => {
-        // reset param config to stop param update trigger
+        // 清除项目配置，停止参数自动保存监听
         dispatch(setIsSidePanelOpen(false));
         dispatch(setParamConfig(undefined));
         setSearchParams({});

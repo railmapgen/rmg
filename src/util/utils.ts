@@ -1,3 +1,4 @@
+// 通用工具：下载、延时、环境识别和安全文件名辅助。
 export const downloadAs = (filename: string, type: string, data: any) => {
     const blob = new Blob([data], { type });
     downloadBlobAs(filename, blob);

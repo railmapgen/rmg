@@ -1,3 +1,4 @@
+// 参数迁移与主题更新：逐步升级历史线路数据并补齐默认字段。
 import { MonoColour, Theme, updateTheme } from '@railmapgen/rmg-palette-resources';
 import rmgRuntime, { logger } from '@railmapgen/rmg-runtime';
 import { nanoid } from 'nanoid';
@@ -13,18 +14,18 @@ import {
 } from '../constants/constants';
 
 export const updateParam = (param: { [x: string]: any }) => {
-    // Version 0.10
+    // 版本 0.10
     if (!('line_name' in param)) {
         param.line_name = ['路線名', 'Name of Line'];
     }
 
-    // Version 0.11
+    // 版本 0.11
     delete param.fontZH;
     delete param.fontEN;
     delete param.weightZH;
     delete param.weightEN;
 
-    // Version 0.12
+    // 版本 0.12
     for (const [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('branch' in stnInfo)) {
             param.stn_list[stnId].branch = {};
@@ -40,7 +41,7 @@ export const updateParam = (param: { [x: string]: any }) => {
         }
     }
 
-    // Version 1.2
+    // 版本 1.2
     if (!('psd_num' in param)) {
         param.psd_num = '1';
     } else {
@@ -54,7 +55,7 @@ export const updateParam = (param: { [x: string]: any }) => {
         param.theme.push('#fff');
     }
 
-    // Version 1.3
+    // 版本 1.3
     for (const [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('num' in stnInfo)) {
             param.stn_list[stnId].num = '00';
@@ -70,7 +71,7 @@ export const updateParam = (param: { [x: string]: any }) => {
         }
     }
 
-    // Version 1.5
+    // 版本 1.5
     for (const [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (stnInfo.change_type === 'osi22_end_p') {
             param.stn_list[stnId].change_type = 'osi22_pr';
@@ -80,16 +81,16 @@ export const updateParam = (param: { [x: string]: any }) => {
         }
     }
 
-    // Version 2.1
+    // 版本 2.1
     for (const [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('interchange' in stnInfo)) {
             param.stn_list[stnId].interchange = [[]];
         }
     }
 
-    // Version 1.4
-    // Version 2.2
-    // Version 2.3
+    // 版本 1.4
+    // 版本 2.2
+    // 版本 2.3
     if (!('info_panel_type' in param)) {
         param.info_panel_type = 'gz28';
     } else {
@@ -115,7 +116,7 @@ export const updateParam = (param: { [x: string]: any }) => {
         param.direction_gz_y = 70;
     }
 
-    // Version 2.6
+    // 版本 2.6
     for (const [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('transfer' in stnInfo)) {
             param.stn_list[stnId].transfer = {
@@ -137,8 +138,8 @@ export const updateParam = (param: { [x: string]: any }) => {
         delete param.stn_list[stnId].interchange;
     }
 
-    // Version 2.8
-    // Version 3.0
+    // 版本 2.8
+    // 版本 3.0
     for (const [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
         if (!('services' in stnInfo)) {
             param.stn_list[stnId].services = ['local'];
@@ -151,13 +152,13 @@ export const updateParam = (param: { [x: string]: any }) => {
         delete param.stn_list[stnId].usage;
     }
 
-    // Version 3.4
+    // 版本 3.4
     if (!('customiseMTRDest' in param)) {
         param.customiseMTRDest = { isLegacy: param.dest_legacy || false, terminal: false };
     }
     delete param.dest_legacy;
 
-    // Version 3.4
+    // 版本 3.4
     if (!('svgWidth' in param)) {
         param.svgWidth = {
             destination: param.svg_dest_width,
@@ -166,7 +167,7 @@ export const updateParam = (param: { [x: string]: any }) => {
             indoor: param.svg_width,
         };
     }
-    // Version 3.8
+    // 版本 3.8
     if (!('indoor' in param.svgWidth)) {
         param.svgWidth.indoor = param.svgWidth.railmap;
     }
@@ -177,13 +178,13 @@ export const updateParam = (param: { [x: string]: any }) => {
         note.length === 4 ? note.concat([false]) : note
     ) as Note[];
 
-    // Version 3.5.3
+    // 版本 3.5.3
     delete param.char_form;
     delete param.show_outer;
     delete param.strip_pc;
     delete param.txt_bg_gap;
 
-    // Version 3.5.4
+    // 版本 3.5.4
     if (!('namePosMTR' in param)) {
         param.namePosMTR = {
             isStagger: true,
@@ -192,8 +193,8 @@ export const updateParam = (param: { [x: string]: any }) => {
     }
     delete param.txt_flip;
 
-    // Version 3.5.6
-    // Version 3.6.2
+    // 版本 3.5.6
+    // 版本 3.6.2
     Object.keys(param.stn_list).forEach(stnId => {
         if ('secondaryName' in param.stn_list[stnId]) {
             if (param.stn_list[stnId].secondaryName === false) {
@@ -206,18 +207,18 @@ export const updateParam = (param: { [x: string]: any }) => {
         }
     });
 
-    // Version 3.9.36
-    // Set unknown and missing style to mtr
+    // 版本 3.9.36
+    // 将未知或缺失样式回退为港铁样式
     param.style =
         param.style === undefined || !Object.values(RmgStyle).includes(param.style) ? RmgStyle.MTR : param.style;
 
-    // Version 5.0
-    // Add coline and loop default value
+    // 版本 5.0
+    // 补齐共线与环线默认值
     param.coline = param.coline ?? [];
     param.loop = param.loop ?? false;
     param.loop_info = param.loop_info ?? { bank: true, left_and_right_factor: 0, bottom_factor: 1 };
     if (param.loop_info.left_and_right_factor + param.loop_info.bottom_factor === 0) {
-        // make sure left_and_right_factor + bottom_factor > 0
+        // 确保 `left_and_right_factor + bottom_factor > 0`
         param.loop_info.left_and_right_factor = 1;
     }
     for (const [stnId, stnInfo] of Object.entries(param.stn_list as { [x: string]: any })) {
@@ -226,27 +227,27 @@ export const updateParam = (param: { [x: string]: any }) => {
         }
     }
 
-    // Version 5.0.0-19
-    // convert list of coline to key-value pairs
+    // 版本 5.0.0-19
+    // 将共线列表转换为键值对
     if (Array.isArray(param.coline)) {
         param.coline = param.coline.reduce((acc, cur) => ({ ...acc, [nanoid(4)]: cur }), {});
     }
 
-    // Version 5.0.4
-    // Convert platform_num from `string | false` to `''`
+    // 版本 5.0.4
+    // 将 `platform_num` 从 `string | false` 统一为 `''`
     if (param.platform_num === false) {
         param.platform_num = '';
     }
 
-    // Version 5.4.4
-    // Add one_line switch and int_padding for station
+    // 版本 5.4.4
+    // 为车站补齐单行开关与换乘内边距
     Object.values(param.stn_list).forEach(stn => {
         const s = stn as StationInfo;
         s.one_line = s.one_line ?? false;
         s.int_padding = s.int_padding ?? (param.loop ? 250 : 355);
     });
 
-    // Version 5.4.19
+    // 版本 5.4.19
     if (param.branchSpacingPct === undefined) {
         if (param.style === RmgStyle.SHMetro) {
             param.branchSpacingPct = Math.round((param.branch_spacing / param.svg_height) * 300);
@@ -257,7 +258,7 @@ export const updateParam = (param: { [x: string]: any }) => {
         delete param.branch_spacing;
     }
 
-    // Version pre 5.10
+    // 版本 5.10 之前
     v5_10_updateInterchangeGroup(param);
     v5_17_updateLocalisedName(param);
     v5_18_addStationNameSpacingAndSvgWidthPlatform(param);
@@ -364,7 +365,7 @@ export const getMatchedThemesWithPaths = (obj: any): MatchedThemeWithPaths[] => 
 
     const search = (o: any, currentPath?: string) => {
         if (Array.isArray(o) && isTheme(o)) {
-            // push itself if it's theme
+            // 若为当前主题则加入自身
             results.push({ path: currentPath || '', value: o as Theme });
             return;
         }
@@ -447,7 +448,7 @@ export const updateThemes = async (param: RMGParam): Promise<RMGParam> => {
                     throw new Error('Update aborted');
                 }
 
-                // do not use Promise.all to void firing hundreds of same requests
+                // 避免用 `Promise.all` 同时发出大量重复请求
                 const updatedTheme = await updateTheme(value);
                 dottieSet(paramCopy, path, updatedTheme);
             }

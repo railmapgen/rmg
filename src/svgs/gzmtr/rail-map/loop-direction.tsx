@@ -1,3 +1,4 @@
+// 广州地铁线路图：环线方向。
 import LoopDirectionText from './loop-direction-text';
 
 type LoopDirectionProps = {

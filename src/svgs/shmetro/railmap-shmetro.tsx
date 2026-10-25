@@ -1,3 +1,4 @@
+// 上海地铁 SVG 画布：上海地铁线路图。
 import { CanvasType } from '../../constants/constants';
 import MainSHMetro, { DirectionElements } from './main-shmetro';
 import LoopSHMetro from './loop/loop-shmetro';
@@ -98,7 +99,7 @@ const DefsSHMetro = memo(function DefsSHMetro() {
                     transform="translate(-28.9697 0.13398)"
                 />
             </g>
-            {/* Special thanks to Wikimedia Commons, see https://commons.wikimedia.org/wiki/File:China_Railways.svg */}
+            {/* 素材致谢 Wikimedia Commons：https://commons.wikimedia.org/wiki/File:China_Railways.svg */}
             <g id="railway">
                 <circle
                     cx="0"
@@ -114,7 +115,7 @@ const DefsSHMetro = memo(function DefsSHMetro() {
                 />
             </g>
 
-            {/* An extension of the line/path. Remember to minus the stroke-width.  */}
+            {/* 线路路径的延伸段；计算时需减去描边宽度。  */}
             <marker id="arrow_gray" viewBox="-1.5 0 3 1.5" refY={0.5}>
                 <path d="M0,0L1,1H-1z" fill="var(--rmg-grey)" />
             </marker>
@@ -128,7 +129,7 @@ const DefsSHMetro = memo(function DefsSHMetro() {
                 <path d="M0,1H2L1,0z" fill="var(--rmg-theme-colour)" />
             </marker>
 
-            {/* Contrast filters for lines. */}
+            {/* 线路对比度滤镜。 */}
             <filter id="contrast-direct" filterUnits="userSpaceOnUse">
                 <feComponentTransfer>
                     <feFuncR type="linear" slope={0.5} intercept={0.25} />
@@ -144,7 +145,7 @@ const DefsSHMetro = memo(function DefsSHMetro() {
                 </feComponentTransfer>
             </filter>
 
-            {/* Outline filter of white pass color in Pujiang Line */}
+            {/* 浦江线白色经过线的轮廓滤镜 */}
             <PujiangLineDefs />
         </defs>
     );

@@ -1,3 +1,4 @@
+// 广州地铁站名：未开通标签。
 import { SVGProps } from 'react';
 
 interface UnderConstructionTagProps extends SVGProps<SVGGElement> {

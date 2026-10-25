@@ -1,3 +1,4 @@
+// 上海地铁站内图：上海地铁站内图。
 import { memo, useMemo } from 'react';
 import { adjacencyList, criticalPathMethod, getStnState, getXShareMTR } from '../../methods/share';
 import StationSHMetro from './station-shmetro';
@@ -286,21 +287,21 @@ const InfoElements = memo(() => {
 
 InfoElements.displayName = 'InfoElements';
 
-/* Some unused functions to split branches from the main line.
- * Note the branches here has a slightly different meaning.
- * It refers to all the line sections that have a parallel line
- * rather than the upper or the bottom branch section.
+/* 一组暂未使用的主线与支线拆分函数。
+ * 此处的“支线”含义略有不同。
+ * 它指所有带有并行线路的区段，
+ * 并非仅指上方或下方支线区段。
  *
- * Currently these functions only can be used on a line that
- * branches in the middle and ends at the linestart, which also
- * means that linestart has two children in the adjMat.
+ * 目前这些函数仅适用于一条线路，
+ * 该线路在中间分叉并结束于 `linestart`，也就是
+ * 在邻接矩阵中 `linestart` 拥有两个子节点。
  */
 /*
 const getPathLength = (adjMat: ReturnType<typeof adjacencyList>, from: string, to: string): number => {
     let cnt = 0, cur = from
     while (Object.keys(adjMat[cur]).length > 0) {
         cnt += 1
-        // we choose the first for all the cases so that the length for different branches will end in the same node
+        // 所有情况均选择第一项，使不同支线的长度最终落在同一节点
         cur = Object.keys(adjMat[cur])[0]
     }
     return cnt

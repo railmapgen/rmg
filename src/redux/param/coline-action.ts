@@ -1,11 +1,12 @@
+// 线路参数与编辑操作：共线区段操作。
 import { RootDispatch, RootState } from '../index';
 import { ColineColours, ColineInfo, StationDict } from '../../constants/constants';
 import { setColine } from './param-slice';
 import { nanoid } from 'nanoid';
 
-// Cartesian product of multiple arrays in JavaScript
+// JavaScript 中多个数组的笛卡尔积
 // https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
-// Equivalent typescript version
+// 等价的 TypeScript 版本
 // https://gist.github.com/ssippe/1f92625532eef28be6974f898efb23ef?permalink_comment_id=3364149#gistcomment-3364149
 function cartesian<T>(...allEntries: T[][]): T[][] {
     return allEntries.reduce<T[][]>(
@@ -18,7 +19,7 @@ function cartesian<T>(...allEntries: T[][]): T[][] {
 }
 
 /**
- * Coline branch is also known as the lower branch.
+ * 共线支线也称为下层支线。
  */
 export const isColineBranch = (branch: string[], stnList: StationDict) =>
     !!stnList[branch[0]].children.indexOf(branch[1]);
@@ -27,13 +28,13 @@ export const getPossibleStnIdsFromMainLine = (branches: string[][], stnList: Sta
     branches[0][1], // skip linestart
     branches[0][branches[0].length - 2], // skip lineend
     ...branches[0].filter(stnId =>
-        // for every station in the main line, find if it branches out at this station
+        // 遍历主线车站，判断当前车站是否产生分支
         branches
             .slice(1)
             .filter(branch => isColineBranch(branch, stnList))
-            // branches after the first/main line may not have linestart or lineend
+            // 主线之后的支线可能没有线路起点或终点节点
             .map(branch => branch.filter(stnId => !['linestart', 'lineend'].includes(stnId)))
-            // only stations at both ends need to be taken into consideration
+            // 只需考虑两端车站
             .map(branch => [branch[0], branch[branch.length - 1]])
             .flat()
             .includes(stnId)
@@ -70,14 +71,12 @@ export const getPossibleCombinations = (branchIndex: number) => {
 };
 
 /**
- *  Checks the validity of from and to. Currently, we accept coline if it:
- 1. Start from either ends of the mainline or branch stations and
- terminate at either ends of the mainline or branch stations.
- 2. Start from the one end of the branch line and
- terminate at the other end of the same branch line.
+ * 校验共线起止点。当前允许以下两种共线：
+ * 1. 从主线或支线的某一端开始，并在主线或支线的另一端结束。
+ * 2. 从支线的一端开始，并在同一条支线的另一端结束。
 
- * @param from station id from
- * @param to station id to
+ * @param from 共线起始车站 ID
+ * @param to 共线结束车站 ID
  */
 export const checkColineValidity = (from: string, to: string) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
@@ -87,19 +86,19 @@ export const checkColineValidity = (from: string, to: string) => {
         if (from === to) {
             throw new Error('addColine():: failed for same stnId');
         }
-        // calculate if coline is in the main line
+        // 判断共线是否位于主线
         const colineInMainLine = getPossibleStnIdsFromMainLine(branches, stnList).filter(stnId =>
             [from, to].includes(stnId)
         );
-        // calculate if coline is in one branch line
+        // 判断共线是否位于某条支线
         const colineInBranches = getPossibleStnIdsFromBranchLine(branches, stnList).filter(terminals =>
             [from, to].every(stnId => terminals.includes(stnId))
         );
-        // see if coline is in the main line
+        // 检查共线是否位于主线
         if (colineInMainLine.length === 2 && colineInBranches.length > 0) {
             throw new Error(`addColine():: main check failed for ${from}, ${to}`);
         }
-        // see if coline is in one branch line
+        // 检查共线是否位于某条支线
         if (colineInMainLine.length !== 2 && colineInBranches.length !== 1) {
             throw new Error(`addColine():: branch check failed for ${from}, ${to}`);
         }
@@ -127,7 +126,7 @@ export const findAllColinesInBranch = (branchIndex: number) => {
 };
 
 /**
- * Remove related coline when the deleteStn is the coline `from` or `to` station.
+ * 删除车站时，同时移除以该车站为 `from` 或 `to` 的共线信息。
  */
 export const removeInvalidColineOnRemoveStation = (deleteStnId: string) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
@@ -185,11 +184,11 @@ export const removeColineColor = (colineId: string, interchangeIndex: number) =>
         if (colineId in colineInfo && colineInfo[colineId].colors.length > interchangeIndex) {
             const nextColours = colineInfo[colineId].colors.filter((_, colineIdx) => colineIdx !== interchangeIndex);
             if (nextColours.length === 0) {
-                // remove entire coline
+                // 整段移除共线信息
                 const { [colineId]: _, ...nextColine } = colineInfo;
                 dispatch(setColine(nextColine));
             } else {
-                // update coline colour list
+                // 更新共线颜色列表
                 const nextColine = {
                     ...colineInfo,
                     [colineId]: { ...colineInfo[colineId], colors: nextColours },
@@ -223,7 +222,7 @@ export const updateColineColor = (colineId: string, interchangeIndex: number, in
     };
 };
 
-// DEBUG PROXY
+// 调试代理
 // declare const window: any;
 // window.addColine = addColine;
 // window.updateColine = updateColine;

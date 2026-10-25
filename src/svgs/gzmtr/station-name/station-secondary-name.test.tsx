@@ -1,3 +1,4 @@
+// 测试：验证次要站名所覆盖的广州地铁站名行为。
 import StationSecondaryName from './station-secondary-name';
 import { render } from '../../../test-utils';
 import { screen } from '@testing-library/react';

@@ -1,3 +1,4 @@
+// 线路参数初始化工具：创建默认车站、线路和样式数据。
 import {
     Name,
     PanelTypeGZMTR,
@@ -55,7 +56,7 @@ export const initStationInfo = (id: string): StationInfo => ({
 });
 
 export const initParam = (style: RmgStyle, language: LanguageCode): RMGParam => {
-    // init station info
+    // 初始化车站信息
     const lineStartInfo = initStationInfo('linestart');
     lineStartInfo.localisedName = { en: 'LEFT END' };
 
@@ -70,7 +71,7 @@ export const initParam = (style: RmgStyle, language: LanguageCode): RMGParam => 
     const station2Info = initStationInfo(station2Id);
     station2Info.num = '02';
 
-    // set parents and children
+    // 设置父子车站关系
     lineStartInfo.children = [station1Id];
 
     station1Info.parents = ['linestart'];

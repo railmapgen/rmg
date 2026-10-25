@@ -1,19 +1,20 @@
+// 线路图几何与拓扑算法：上海地铁环线工具。
 import { ShortDirection, StationDict } from '../../constants/constants';
 
 /**
- * Split the loopline into four sides according to left_and_right_factor and bottom_factor.
- * It assumes parameters will follow these rules:
- *     1. loopline.length > bottom_factor + left_and_right_factor * 2
- *     2. bottom_factor >= 0
- *     3. left_and_right_factor >= 0
- *     4. left_and_right_factor + bottom_factor > 0
+ * 根据 `left_and_right_factor` 与 `bottom_factor` 将环线拆分为四边。
+ * 该函数假设参数满足以下规则：
+ *     1. `loopline.length > bottom_factor + left_and_right_factor * 2`
+ *     2. `bottom_factor >= 0`
+ *     3. `left_and_right_factor >= 0`
+ *     4. `left_and_right_factor + bottom_factor > 0`
  *
- * @param loopline The loop line aka branches[0].
- * @param current_stn_id Current station id.
- * @param bottom_factor How many stations the bottom side will have.
- * @param left_and_right_factor How many stations the left and right side will have.
- * @returns Each array returned should be consecutive, and when combined in top -> right -> bottom -> left order,
- * it will also be consecutive. Note that the length of right, bottom, and left can be 0.
+ * @param loopline 环线，即 `branches[0]`
+ * @param current_stn_id 当前车站 ID
+ * @param bottom_factor 底边包含的车站数量
+ * @param left_and_right_factor 左右两侧各包含的车站数量
+ * @returns 各数组在按上、右、下、左顺序拼接后应保持连续，
+ * 并且整体保持连续；右、下、左三边的长度均可为 0。
  */
 export const split_loop_stns = (
     loopline: string[],
@@ -38,21 +39,21 @@ export const split_loop_stns = (
 };
 
 /**
- * Split the loopline with one branch into four sides according to left_and_right_factor and bottom_factor.
- * Note that the top side must start from the branch_stn_id.
+ * 根据 `left_and_right_factor` 与 `bottom_factor` 将带一条支线的环线拆为四边。
+ * 注意顶边必须从 `branch_stn_id` 开始。
  *
- * It assumes parameters will follow these rules:
- *     1. loopline.length > bottom_factor + left_and_right_factor * 2
- *     2. bottom_factor >= 0
- *     3. left_and_right_factor >= 0
- *     4. left_and_right_factor + bottom_factor > 0
+ * 该函数假设参数满足以下规则：
+ *     1. `loopline.length > bottom_factor + left_and_right_factor * 2`
+ *     2. `bottom_factor >= 0`
+ *     3. `left_and_right_factor >= 0`
+ *     4. `left_and_right_factor + bottom_factor > 0`
  *
- * @param loopline The loop line aka branches[0].
- * @param branch_stn_id Branch station id.
- * @param bottom_factor How many stations the bottom side will have.
- * @param left_and_right_factor How many stations the left and right side will have.
- * @returns Each array returned should be consecutive, and when combined in top -> right -> bottom -> left order,
- * it will also be consecutive. Note that the length of right, bottom, and left can be 0.
+ * @param loopline 环线，即 `branches[0]`
+ * @param branch_stn_id 分支车站 ID
+ * @param bottom_factor 底边包含的车站数量
+ * @param left_and_right_factor 左右两侧各包含的车站数量
+ * @returns 各数组在按上、右、下、左顺序拼接后应保持连续，
+ * 并且整体保持连续；右、下、左三边的长度均可为 0。
  */
 export const split_loop_stns_with_branch = (
     loopline: string[],
@@ -80,21 +81,21 @@ export const split_loop_stns_with_branch = (
 };
 
 /**
- * Split the loopline with two branches into four sides according to left_and_right_factor and arc.
- * Note that the top side must start from one of the branch_stn_ids and end at another.
- * Also the top side will be the major or the minor arc between branch_stn_ids.
+ * 根据 `left_and_right_factor` 与圆弧选择将带两条支线的环线拆为四边。
+ * 注意顶边必须从一个 `branch_stn_ids` 元素开始，并在另一个元素结束。
+ * 顶边取 `branch_stn_ids` 之间的大弧或小弧。
  *
- * It assumes parameters will follow these rules:
- *     1. loopline.length > the major or the minor arc length between branch_stn_ids +
- *                          left_and_right_factor * 2
- *     2. left_and_right_factor >= 0
+ * 该函数假设参数满足以下规则：
+ *     1. `loopline.length >` `branch_stn_ids` 之间的大弧或小弧长度 `+`
+ *        `left_and_right_factor * 2`
+ *     2. `left_and_right_factor >= 0`
  *
- * @param loopline The loop line aka branches[0].
- * @param branch_stn_ids Branches station id.
- * @param left_and_right_factor How many stations the left and right side will have.
- * @param arc Which arc will be the top side, the major or the minor.
- * @returns Each array returned should be consecutive, and when combined in top -> right -> bottom -> left order,
- * it will also be consecutive. Note that the length of right, bottom, and left can be 0.
+ * @param loopline 环线，即 `branches[0]`
+ * @param branch_stn_ids 分支车站 ID 列表
+ * @param left_and_right_factor 左右两侧各包含的车站数量
+ * @param arc 顶边采用大弧还是小弧
+ * @returns 各数组在按上、右、下、左顺序拼接后应保持连续，
+ * 并且整体保持连续；右、下、左三边的长度均可为 0。
  */
 export const split_loop_stns_with_branches = (
     loopline: string[],
@@ -104,14 +105,14 @@ export const split_loop_stns_with_branches = (
 ) => {
     let split_a = loopline.findIndex(val => val === branch_stn_ids[0]);
     let split_b = loopline.findIndex(val => val === branch_stn_ids[1]);
-    // swap a and b if a is bigger than b
+    // 若 a 大于 b 则交换两者
     [split_a, split_b, branch_stn_ids[0], branch_stn_ids[1]] =
         split_a > split_b
             ? [split_b, split_a, branch_stn_ids[1], branch_stn_ids[0]]
             : [split_a, split_b, branch_stn_ids[0], branch_stn_ids[1]];
     const top_a = loopline.slice(split_a, split_b + 1);
     const top_b = loopline.filter(stn => !top_a.filter(stn => !branch_stn_ids.includes(stn)).includes(stn));
-    // which arc we use on the top will result to different bottom factor
+    // 顶边选用不同圆弧会得到不同的底部系数
     const bottom_factor =
         loopline.length -
         (arc === 'major' ? Math.max : Math.min)(top_a.length, top_b.length) -
@@ -130,11 +131,11 @@ export const split_loop_stns_with_branches = (
 export type LoopStns = ReturnType<typeof split_loop_stns>;
 
 /**
- * Calculate the xshares and yshares of the loop stations.
+ * 计算环线车站的横向与纵向份额。
  *
- * @param loopline The loop line aka branches[0].
- * @param loop_stns Object returned from split_loop_stns.
- * @returns Values sit between 0 and 1.
+ * @param loopline 环线，即 `branches[0]`
+ * @param loop_stns `split_loop_stns` 返回的对象
+ * @returns 返回值介于 0 和 1 之间
  */
 export const get_xshares_yshares_of_loop = (loopline: string[], loop_stns: LoopStns) => {
     const x_shares = Object.fromEntries(loopline.map(stn_id => [stn_id, -1]));
@@ -142,7 +143,7 @@ export const get_xshares_yshares_of_loop = (loopline: string[], loop_stns: LoopS
 
     const [Y_TOP, Y_BOTTOM, X_LEFT, X_RIGHT] = [0, 1, 0, 1];
 
-    // loop's inner padding for xs
+    // 环线横向内边距
     const e = 0; // 0 <= e <= 1
 
     loop_stns.top.forEach((stn_id, i) => {
@@ -169,7 +170,7 @@ export const get_xshares_yshares_of_loop = (loopline: string[], loop_stns: LoopS
 };
 
 /**
- * Get pivot stations from the loop line.
+ * 获取环线中的枢轴车站。
  */
 export const get_pivot_stations = (
     branches: string[][],

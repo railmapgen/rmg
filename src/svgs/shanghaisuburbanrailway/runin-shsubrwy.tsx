@@ -1,3 +1,4 @@
+// 上海市域铁路 SVG 画布：上海市域铁路进站信息。
 import { memo } from 'react';
 import { CanvasType } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
@@ -10,7 +11,7 @@ const RunInSHSuburbanRailway = () => {
     const { svgWidth: svgWidths, svg_height, theme } = useRootSelector(store => store.param);
 
     const svgWidth = svgWidths[CANVAS_TYPE];
-    // get the height
+    // 获取高度
     const dh = svg_height - 300;
 
     return (
@@ -34,7 +35,7 @@ export default RunInSHSuburbanRailway;
 const DefsSHSuburbanRailway = memo(function DefsSHSuburbanRailway() {
     return (
         <defs>
-            {/* An extension of the line/path. Remember to minus the stroke-width.  */}
+            {/* 线路路径的延伸段；计算时需减去描边宽度。  */}
             <marker id="slope" viewBox="-1.5 0 3 1.5" refY={0.5}>
                 <path d="M0,0L1,1H-1z" fill="var(--rmg-theme-colour)" />
             </marker>

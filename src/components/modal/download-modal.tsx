@@ -1,3 +1,4 @@
+// 图像下载对话框：配置画布、格式与倍率，并导出单张或多站 ZIP。
 import classes from './common-modal.module.css';
 import { useEffect, useState } from 'react';
 import { canvasConfig, CanvasType, Events, RmgStyle } from '../../constants/constants';
@@ -37,7 +38,7 @@ export default function DownloadModal(props: DownloadModalProps) {
     } = useRootSelector(state => state.param);
 
     useEffect(() => {
-        // reset canvas to download if on-screen canvas changed
+        // 画布显示范围变化时重置待下载画布
         if (canvasToDownload !== '' && !canvasToShow.includes(canvasToDownload as CanvasType)) {
             setCanvasToDownload('');
         }
@@ -73,7 +74,7 @@ export default function DownloadModal(props: DownloadModalProps) {
             dispatch(setLoadingProgress(((Number(index) + 1) / stationIdListToDownload.length) * 100));
 
             const stnId = stationIdListToDownload[index];
-            // wait for svg elements updated for station A before we dispatch the current station to B.
+            // 等待车站 A 的 SVG 更新完成，再切换到车站 B。
             dispatch(setCurrentStation(stnId));
             await waitForMs(500);
 
@@ -85,8 +86,8 @@ export default function DownloadModal(props: DownloadModalProps) {
                 scale
             );
 
-            // append svg to the document so the bbox will be loaded correctly
-            // (but not for gzmtr and have no idea why)
+            // 临时挂载 SVG，以正确计算边界框
+            // 广州地铁样式无需挂载，原因尚未确认
             document.body.appendChild(elem);
 
             const filename = `rmg.${stnId}.${stationList[stnId].localisedName.en}`.replaceAll(
@@ -98,7 +99,7 @@ export default function DownloadModal(props: DownloadModalProps) {
                 const blob = await test(elem, scale / 100, isWait);
 
                 if (stationIdListToDownload.length > 1) {
-                    // batch download and split base64 for this
+                    // 批量下载时将二进制内容拆分后写入 ZIP
                     // https://stackoverflow.com/questions/31305485/export-resized-image-in-canvas-to-new-jszip-package
                     zip.file(`${filename}.png`, blob);
                 } else {
@@ -115,21 +116,21 @@ export default function DownloadModal(props: DownloadModalProps) {
                 }
             }
 
-            // don't forget to release it after use
+            // 使用后释放临时 SVG
             document.body.removeChild(elem);
         }
 
-        // generate the zip for batch download
+        // 生成批量下载 ZIP
         if (stationIdListToDownload.length > 1) {
             const zipData = await zip.generateAsync({ type: 'blob' });
             const filename = `rmg.${lineName[0]}.${lineName[1]}.zip`.replaceAll(' ', '_');
             downloadBlobAs(filename, zipData);
         }
 
-        // event
+        // 记录导出事件
         rmgRuntime.event(Events.DOWNLOAD_IMAGES, { canvasToDownload, style, option, format });
 
-        // revert to original station
+        // 恢复原选中的车站
         dispatch(setCurrentStation(currentStationId));
         dispatch(stopLoading());
         onClose();

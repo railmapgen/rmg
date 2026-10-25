@@ -1,3 +1,4 @@
+// 广州地铁进站信息：广州地铁进站信息。
 import StripGZMTR from '../strip-gzmtr';
 import InfoGZMTR from '../info-gzmtr';
 import { useRootSelector } from '../../../redux';

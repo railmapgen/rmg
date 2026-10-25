@@ -1,3 +1,4 @@
+// 测试：验证项目管理工具所覆盖的通用工具行为。
 import { getParamRegistry, loadParamRegistry } from './param-manager-utils';
 import { LocalStorageKey } from '../constants/constants';
 import { createParamInLocalStorage } from '../setupTests';
@@ -33,7 +34,7 @@ describe('ParamMgrUtils', async () => {
         });
 
         it('Can sync loaded param registry with actual param stored in localStorage as expected', () => {
-            // 01: keep, 02: remove, 03: add
+            // 01：保留，02：移除，03：新增
 
             createParamInLocalStorage('test-01');
             createParamInLocalStorage('test-03');
@@ -46,13 +47,13 @@ describe('ParamMgrUtils', async () => {
                 JSON.stringify({ lastModified: Date.now() })
             );
 
-            // get actual param registry
+            // 获取实际项目清单
             const result = getParamRegistry();
             expect(result).toHaveLength(2);
             expect(result).toContainEqual(expect.objectContaining({ id: 'test-01' }));
             expect(result).toContainEqual(expect.objectContaining({ id: 'test-03' }));
 
-            // remove invalid param config from localStorage
+            // 从 localStorage 移除无效项目配置
             expect(rmgRuntime.storage.get(LocalStorageKey.PARAM_CONFIG_BY_ID + 'test-02')).toBeNull();
         });
     });

@@ -1,3 +1,4 @@
+// 帮助对话框：展示版权、素材来源、字体许可与使用说明。
 import { Anchor, Button, Group, List, Modal, Title } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { MdOpenInNew } from 'react-icons/md';

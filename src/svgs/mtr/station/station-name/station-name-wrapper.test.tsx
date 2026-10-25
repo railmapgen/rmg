@@ -1,3 +1,4 @@
+// 测试：验证站名排版所覆盖的港铁站名排版行为。
 import StationNameWrapper, { NAME_FULL_HEIGHT } from './station-name-wrapper';
 import { StationState } from '../../../../constants/constants';
 import { render } from '../../../../test-utils';

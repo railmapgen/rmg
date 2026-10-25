@@ -1,3 +1,4 @@
+// 宿主应用内嵌桥接：内嵌模板桥接。
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';

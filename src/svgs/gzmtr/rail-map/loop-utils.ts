@@ -1,3 +1,4 @@
+// 广州地铁线路图：环线几何工具。
 import { StationState } from '../../../constants/constants';
 
 export const getLineXs = (

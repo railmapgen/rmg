@@ -1,3 +1,4 @@
+// 测试：验证页面标题所覆盖的页面标题栏行为。
 import { createTestStore } from '../../setupTests';
 import rootReducer from '../../redux';
 import { render } from '../../test-utils';

@@ -1,3 +1,4 @@
+// 上海地铁环线画布：上海地铁环线共线。
 import { useRootSelector } from '../../../redux';
 import { isColineBranch } from '../../../redux/param/coline-action';
 import { CanvasType } from '../../../constants/constants';
@@ -25,7 +26,7 @@ export const LoopColine = (props: {
 
     const { branches } = useRootSelector(store => store.helper);
 
-    // find the coline color on the main/loop line
+    // 查找主线或环线上的共线颜色
     const coline_main_color = Object.values(coline)
         .filter(co =>
             [co.from, co.to].every(stn_id =>
@@ -45,7 +46,7 @@ export const LoopColine = (props: {
         <g id="coline_main">
             <path d={`M ${X_LEFT},${Y_TOP} H${X_RIGHT}`} strokeWidth={12} stroke={coline_main_color?.at(0)?.at(2)} />
             {
-                // additional station cover on the rail map
+                // 线路图上的额外车站覆盖层
                 canvas === CanvasType.RailMap &&
                     Object.keys(coline).length > 0 &&
                     loop_stns.top.map(stn_id => (

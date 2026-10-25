@@ -1,3 +1,4 @@
+// 测试：验证换乘设置区所覆盖的侧边栏车站编辑行为。
 import rootReducer from '../../../redux';
 import { createTestStore } from '../../../setupTests';
 import InterchangeSection from './interchange-section';
@@ -36,7 +37,7 @@ describe('InterchangeSection', () => {
         expect(screen.getByRole('group', { name: 'Out-of-station interchange' })).toBeInTheDocument();
         expect(screen.getByRole('group', { name: 'Out-of-system interchange' })).toBeInTheDocument();
 
-        // no add interchange group button
+        // 不显示新增换乘组按钮
         expect(screen.queryByRole('button', { name: 'Add interchange group' })).not.toBeInTheDocument();
     });
 
@@ -65,7 +66,7 @@ describe('InterchangeSection', () => {
 
         fireEvent.click(screen.getByRole('button', { name: 'Add interchange group' }));
 
-        // new interchange is added to group 2, index 0
+        // 新增换乘被放入第 2 组索引 0
         expect(mockStore.getState().param.stn_list[testStationId]).toEqual(
             expect.objectContaining({
                 transfer: expect.objectContaining({

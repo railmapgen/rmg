@@ -1,3 +1,4 @@
+// 侧边栏车站编辑：换乘卡片。
 import classes from './interchange-card.module.css';
 import { ReactNode, useEffect, useId, useState } from 'react';
 import { ExtendedInterchangeInfo, FACILITIES, RmgStyle } from '../../../constants/constants';

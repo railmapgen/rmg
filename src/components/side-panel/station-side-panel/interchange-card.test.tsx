@@ -1,3 +1,4 @@
+// 测试：验证换乘卡片所覆盖的侧边栏车站编辑行为。
 import InterchangeCard from './interchange-card';
 import { ExtendedInterchangeInfo } from '../../../constants/constants';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
@@ -40,7 +41,7 @@ describe('InterchangeCard', () => {
     it('Can render card with 1 interchange info as expected', () => {
         render(<InterchangeCard title="Test group" interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />);
 
-        // colour edit button has desired styles
+        // 颜色编辑按钮具有预期样式
         const themeButton = screen.getByRole('button', { name: 'Colour' });
         expect(themeButton).toHaveStyle({ color: '#FFFFFF' });
         expect(themeButton.querySelector('.mantine-ColorSwatch-colorOverlay')).toHaveStyle({
@@ -57,19 +58,19 @@ describe('InterchangeCard', () => {
             store: mockStore,
         });
 
-        // click theme button
+        // 点击主题按钮
         fireEvent.click(screen.getByRole('button', { name: 'Colour' }));
 
-        // context receive open event
+        // 上下文接收到打开事件
         expect(mockStore.getState().app.paletteAppClipInput).toEqual(mockInterchangeInfo1.theme);
         expect(mockStore.getState().app.paletteAppClipOutput).toBeUndefined();
 
-        // rerender with next context
+        // 使用下一份上下文重新渲染
         await act(async () => {
             mockStore.dispatch(onPaletteAppClipEmit(mockInterchangeInfo2.theme!));
         });
 
-        // update theme to parent
+        // 将主题更新回父组件
         expect(mockCallbacks.onUpdate).toBeCalledTimes(1);
         expect(mockCallbacks.onUpdate).toBeCalledWith(0, {
             ...mockInterchangeInfo1,
@@ -80,12 +81,12 @@ describe('InterchangeCard', () => {
     it('Can duplicate and delete interchange info as expected', () => {
         render(<InterchangeCard title="Test group" interchangeList={[mockInterchangeInfo1]} {...mockCallbacks} />);
 
-        // copy current interchange info
+        // 复制当前换乘信息
         fireEvent.click(screen.getByRole('button', { name: 'Copy interchange' }));
         expect(mockCallbacks.onAdd).toBeCalledTimes(1);
         expect(mockCallbacks.onAdd).toBeCalledWith(mockInterchangeInfo1); // current info
 
-        // delete current interchange info
+        // 删除当前换乘信息
         fireEvent.click(screen.getByRole('button', { name: 'Remove interchange' }));
         expect(mockCallbacks.onDelete).toBeCalledTimes(1);
         expect(mockCallbacks.onDelete).toBeCalledWith(0); // current index
@@ -100,7 +101,7 @@ describe('InterchangeCard', () => {
             />
         );
 
-        // only the first stack has labels
+        // 仅第一组显示标签
         const stack0 = screen.getByTestId('interchange-card-stack-0');
         within(stack0)
             .getAllByRole('combobox')
@@ -108,7 +109,7 @@ describe('InterchangeCard', () => {
         expect(within(stack0).queryByRole('button', { name: 'Copy interchange' })).not.toBeInTheDocument();
         expect(within(stack0).getByRole('button', { name: 'Remove interchange' })).toBeInTheDocument();
 
-        // only the last stack has copy button
+        // 仅最后一组显示复制按钮
         const stack1 = screen.getByTestId('interchange-card-stack-1');
         within(stack1)
             .getAllByRole('combobox')

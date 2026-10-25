@@ -1,3 +1,4 @@
+// 广州地铁线路图：环线主路径。
 import { CanvasType } from '../../../constants/constants';
 import { useRootSelector } from '../../../redux';
 import { useMemo } from 'react';

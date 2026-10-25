@@ -1,3 +1,4 @@
+# 代码检查工作流：在提交与合并请求时运行 lint、测试和构建。
 name: Code Quality Check
 
 on:

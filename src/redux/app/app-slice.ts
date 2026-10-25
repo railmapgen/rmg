@@ -1,3 +1,4 @@
+// 应用界面状态：管理项目上下文、画布显示、选中对象、加载状态与内嵌调色板。
 import { CanvasType, ParamConfig, RmgStyle, SidePanelMode } from '../../constants/constants';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Theme } from '@railmapgen/rmg-palette-resources';
@@ -5,8 +6,8 @@ import { Theme } from '@railmapgen/rmg-palette-resources';
 interface AppState {
     rmgStyle: RmgStyle;
 
-    /** keep only 1 param config in redux store to
-     *  avoid semantic error in multi-instance mode
+    /** Redux 中只保留一个项目配置，
+     * 避免多实例模式出现语义错误
      */
     paramConfig?: ParamConfig;
     canvasScale: number;
@@ -44,7 +45,7 @@ const appSlice = createSlice({
             state.paramConfig = action.payload;
         },
 
-        // to be called in ListenerMiddleware only
+        // 仅供 ListenerMiddleware 调用
         updateParamModifiedTime: (state, action: PayloadAction<number>) => {
             if (state.paramConfig) {
                 state.paramConfig.lastModified = action.payload;

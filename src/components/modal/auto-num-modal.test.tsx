@@ -1,3 +1,4 @@
+// 测试：验证自动编号对话框所覆盖的编辑对话框行为。
 import { createTestStore, mockSimpleStationList } from '../../setupTests';
 import rootReducer from '../../redux';
 import { getBranches } from '../../redux/helper/graph-theory-util';

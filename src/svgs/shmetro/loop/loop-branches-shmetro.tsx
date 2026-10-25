@@ -1,3 +1,4 @@
+// 上海地铁环线画布：上海地铁环线支线。
 import { useRootSelector } from '../../../redux';
 import { CanvasType, Services } from '../../../constants/constants';
 import StationSHMetro from '../station-shmetro';
@@ -16,7 +17,7 @@ export const get_loop_branches = (
     const loopline = branches[0].filter(stn_id => !['linestart', 'lineend'].includes(stn_id));
 
     const loop_branches = branches.slice(1, 3).map(branch => branch.slice(1, branch.length - 1));
-    // calculate the length of top stations + branch(es) stations
+    // 计算顶边车站与支线车站的总长度
     const critical_path_length =
         loop_branches.reduce(
             (acc, cur) =>
@@ -26,10 +27,10 @@ export const get_loop_branches = (
         loopline.length -
         bottom_factor -
         left_and_right_factor * 2;
-    // interval for each station on the top side with branches
-    // note the interval of station for the top side will be smaller because of e = 0.1 in get_xshares_yshares_of_loop
+    // 计算带支线时顶边每个车站的间距
+    // 由于 `get_xshares_yshares_of_loop` 中 `e = 0.1`，顶边车站间距会较小
     const x_interval = (svg_width - ((svg_width * padding) / 100) * 2) / (1 + critical_path_length);
-    // split lines_xs for branches, used to shrink loop line's lines_xs
+    // 拆分支线横向坐标，用于收缩环线横向坐标
     const line_xs_branches = [
         (svg_width * padding) / 100 + (loop_branches.at(0) ?? []).length * x_interval,
         svg_width * (1 - padding / 100) - (loop_branches.at(1) ?? []).length * x_interval,
@@ -79,9 +80,9 @@ export const LoopBranches = (props: {
             {loop_branches.map((loop_branch, i) => (
                 <React.Fragment key={loop_branch.at(0)}>
                     {branches_coline_color
-                        // remove duplicate
+                        // 移除重复项
                         .filter((c, i, self) => i === self.findIndex(t => t.at(0)?.at(2) === c.at(0)?.at(2)))
-                        // generate marker with coline color
+                        // 生成共线颜色的标记
                         .map(color => (
                             <marker key={color[0][2]} id={`arrow_theme_${color[0][2]}`} refX={1} refY={0.5}>
                                 <path d="M0,1H2L1,0z" fill={color[0][2]} />

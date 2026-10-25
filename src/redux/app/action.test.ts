@@ -1,3 +1,4 @@
+// 测试：验证线路操作所覆盖的应用界面状态行为。
 import { createParamInLocalStorage, createTestStore } from '../../setupTests';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { RootStore } from '../index';

@@ -1,3 +1,4 @@
+// 港铁 SVG 画布：线路图布局工具。
 import { StationDict } from '../../constants/constants';
 
 /**
@@ -7,9 +8,9 @@ export const getStationYShare = (stationId: string, branches: string[][], statio
     const mainBranch = branches[0];
 
     if (mainBranch.includes(stationId)) {
-        // on main branch
+        // 位于主线
         if (branches.slice(1).find(branch => branch.includes(stationId))) {
-            // node shared by multiple branches
+            // 多条支线共享的节点
             return 0;
         } else {
             const openJawSiblingBranch = branches.slice(1).find(branch => {
@@ -27,17 +28,17 @@ export const getStationYShare = (stationId: string, branches: string[][], statio
             });
 
             if (openJawSiblingBranch) {
-                // on main branch but open jaw
-                // NOTE: determine y share of node by children ordering, not by whether it's a branch or not (like GZMTR)
-                // TODO: Remove requirement on stationList arg
+                // 位于主线但属于开口支线
+                // 注意：依据子站顺序确定节点纵向份额，不依据是否为支线（与广州地铁样式不同）
+                // 待办：移除对 `stationList` 参数的依赖
                 return stationList[openJawSiblingBranch[0]].children.indexOf(openJawSiblingBranch[1]) === 1 ? -1 : 1;
             } else {
-                // pure main branch without siblings or main branch with sidings
+                // 无同级站点的纯主线，或带侧线的主线
                 return 0;
             }
         }
     } else {
-        // on branch/sidings
+        // 位于支线或侧线上
         const branchBelongsTo = branches.slice(1).find(branch => branch.includes(stationId));
         if (branchBelongsTo) {
             const isSiding = branchBelongsTo[0] !== 'linestart' && branchBelongsTo.slice(-1)[0] !== 'lineend';
@@ -47,7 +48,7 @@ export const getStationYShare = (stationId: string, branches: string[][], statio
                 return stationList[branchBelongsTo[0]].children.indexOf(branchBelongsTo[1]) === 1 ? 1 : -1;
             }
         } else {
-            // fallback
+            // 回退方案
             return 0;
         }
     }
@@ -68,19 +69,19 @@ export const getSidingPath = (coords: [number, number][]): string => {
             paths.push('M' + coord.join(','));
         } else {
             if (coord[1] === prevCoord[1]) {
-                // horizontal
+                // 水平方向
                 paths.push('H' + coord[0]);
             } else {
                 const midPointX = (coord[0] + prevCoord[0]) / 2 - (prevCoord[1] === 0 ? 0 : TURNING_RADIUS * 2);
                 paths.push('H' + midPointX);
 
                 if (coord[1] > prevCoord[1]) {
-                    // turn to below
+                    // 转向线路之下
                     paths.push(RIGHT_DOWN_ARC);
                     paths.push('V' + (coord[1] - TURNING_RADIUS));
                     paths.push(DOWN_RIGHT_ARC);
                 } else {
-                    // turn to above
+                    // 转向线路之上
                     paths.push(RIGHT_UP_ARC);
                     paths.push('V' + (coord[1] + TURNING_RADIUS));
                     paths.push(UP_RIGHT_ARC);
@@ -89,7 +90,7 @@ export const getSidingPath = (coords: [number, number][]): string => {
                 paths.push('H' + coord[0]);
             }
         }
-        // update prev coordinate
+        // 更新上一坐标
         prevCoord = coord;
     }
 

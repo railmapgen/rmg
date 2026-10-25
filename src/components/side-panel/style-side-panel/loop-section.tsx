@@ -1,3 +1,4 @@
+// 侧边栏样式编辑：环线设置区。
 import classes from '../side-panel.module.css';
 import { useRootDispatch, useRootSelector } from '../../../redux';
 import { setLoop } from '../../../redux/param/param-slice';

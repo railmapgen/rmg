@@ -1,3 +1,4 @@
+// 测试：验证支线接线与拆线所覆盖的线路参数与编辑操作行为。
 import { BranchStyle, Direction, StationDict } from '../../constants/constants';
 import {
     connect2MainLine,

@@ -1,3 +1,4 @@
+// 测试：验证新建支线对话框所覆盖的编辑对话框行为。
 import { BranchStyle, RmgStyle, StationDict } from '../../constants/constants';
 import { getBranches } from '../../redux/helper/graph-theory-util';
 import rootReducer, { RootStore } from '../../redux';

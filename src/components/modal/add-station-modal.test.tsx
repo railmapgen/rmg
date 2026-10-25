@@ -1,3 +1,4 @@
+// 测试：验证新增车站对话框所覆盖的编辑对话框行为。
 import { BranchStyle, RmgStyle, SidePanelMode, StationDict } from '../../constants/constants';
 import { getBranches } from '../../redux/helper/graph-theory-util';
 import rootReducer from '../../redux';
@@ -96,7 +97,7 @@ describe('AddStationModal', () => {
 
             const pivotSelect = screen.getByRole('combobox', { name: 'Pivot station' });
 
-            // 4 stations in main line + please select
+            // 主线包含 4 个车站，并显示“请选择”
             expect(within(pivotSelect).getAllByRole('option')).toHaveLength(5);
             expect(within(pivotSelect).queryByRole('option', { name: '車站5/Station 5' })).not.toBeInTheDocument();
         });
@@ -134,7 +135,7 @@ describe('AddStationModal', () => {
             );
             expect(addedStations).toHaveLength(1);
 
-            // open side panel
+            // 打开侧边面板
             expect(mockStore.getState().app.selectedStation).toBe(addedStations[0]);
             expect(mockStore.getState().app.sidePanelMode).toBe(SidePanelMode.STATION);
         });

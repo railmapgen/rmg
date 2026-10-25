@@ -1,3 +1,4 @@
+// 测试：验证应用路由所覆盖的应用根视图行为。
 import { render } from '../../test-utils';
 import AppRouter from './app-router';
 import rootReducer, { RootStore } from '../../redux';

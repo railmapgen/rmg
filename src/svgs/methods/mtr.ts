@@ -1,3 +1,4 @@
+// 线路图几何与拓扑算法：港铁。
 import { Stations } from './share';
 import { StationDict, StationInfo } from '../../constants/constants';
 import { getSidingPath } from '../mtr/line-diagram-utils';
@@ -7,13 +8,13 @@ export const leftWideFactor = (stnList: StationDict, stnId: string) => {
     const { transfer } = stnList[stnId];
     const ls = transfer.groups.map(val => val.lines?.length || 0);
     if (transfer.tick_direc === 'l') {
-        // int3 or above
+        // 三段及以上换乘
         if (!ls[1] && ls[0] > 1) res += 0.4;
-        // osi except osi22
+        // 除 osi22 外的出站换乘
         if (ls[1] && (ls[0] !== 1 || ls[1] !== 2)) res += 0.4;
     }
     if (ls[0] === 1 && ls[1] === 2) {
-        // osi22 not end
+        // 非端点 osi22 换乘
         if (stnList[stnId].parents[0] !== 'linestart' && stnList[stnId].children[0] !== 'lineend') res += 0.8;
     }
     // let { type, tick_direc } = stnList[stnId].transfer;
@@ -28,9 +29,9 @@ export const rightWideFactor = (stnList: StationDict, stnId: string) => {
     const { transfer } = stnList[stnId];
     const ls = transfer.groups.map(val => val.lines?.length || 0);
     if (transfer.tick_direc === 'r') {
-        // int3 or above
+        // 三段及以上换乘
         if (!ls[1] && ls[0] > 1) res += 0.4;
-        // osi except osi22
+        // 除 osi22 外的出站换乘
         if (ls[1] && (ls[0] !== 1 || ls[1] !== 2)) res += 0.4;
     }
     if (ls[0] === 1 && ls[1] === 2) {
@@ -82,7 +83,7 @@ export class StationsMTR extends Stations {
             }
 
             if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length === 0 && lineMainStns.length) {
-                // if two set disjoint
+                // 若两个集合不相交
                 if (linePassStns[0] === branch[0]) {
                     // -1 -1 1 1
                     linePassStns.push(lineMainStns[0]);
@@ -163,7 +164,7 @@ export class StationsSHMetro extends StationsMTR {
             }
 
             if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length === 0 && lineMainStns.length) {
-                // if two set disjoint
+                // 若两个集合不相交
                 if (linePassStns[0] === branch[0]) {
                     // -1 -1 1 1
                     linePassStns.push(lineMainStns[0]);

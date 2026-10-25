@@ -1,3 +1,4 @@
+// 测试：验证线路图布局工具所覆盖的港铁行为。
 import { BranchStyle, StationDict } from '../../constants/constants';
 import { getBranches } from '../../redux/helper/graph-theory-util';
 import { getSidingPath, getStationYShare } from './line-diagram-utils';
@@ -88,7 +89,7 @@ describe('LineDiagramUtils', () => {
             'a6,6,0,0,1,6,6',
             'V44', // 50 - 6
             'a6,6,0,0,0,6,6',
-            // H50 is removed as simplification
+            // 简化时移除 H50
             'H63', // 75 - 2 * 6
             'a6,6,0,0,0,6,-6',
             'V6',

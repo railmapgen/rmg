@@ -1,3 +1,4 @@
+// 广州地铁进站信息：下一站辅助信息。
 import { SVGProps, useEffect, useRef, useState } from 'react';
 import { Translation } from '@railmapgen/rmg-translate';
 

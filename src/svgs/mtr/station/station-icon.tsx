@@ -1,3 +1,4 @@
+// 港铁车站图形：车站图标。
 interface StationIconProps {
     length: number;
     isPassed?: boolean;

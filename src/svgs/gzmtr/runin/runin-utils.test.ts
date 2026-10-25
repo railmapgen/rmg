@@ -1,3 +1,4 @@
+// 测试：验证进站信息工具所覆盖的广州地铁进站信息行为。
 import { getLoopNextViaStations, getNormalNextStations } from './runin-utils';
 import { BranchStyle, ShortDirection, StationDict, StationInfo } from '../../../constants/constants';
 import { getRoutes } from '../../../redux/helper/graph-theory-util';

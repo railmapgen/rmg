@@ -1,3 +1,4 @@
+/* 港铁风格的共享 SVG 导出样式。 */
 .rmg-name__zh {
     dominant-baseline: central;
     font-family: Vegur-Bold, Helvetica, GenYoMinTW-SB, HiraMinProN-W6, serif;
@@ -13,7 +14,7 @@
     --rmg-grey: #a2aaad;
 }
 
-/* for railmap */
+/* 线路图样式 */
 .rmg-stn__mtr {
     fill: #fff;
     stroke-width: 2.69;

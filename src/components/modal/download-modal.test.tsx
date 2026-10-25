@@ -1,3 +1,4 @@
+// 测试：验证图像下载对话框所覆盖的编辑对话框行为。
 import { render } from '../../test-utils';
 import DownloadModal from './download-modal';
 import rootReducer from '../../redux';
@@ -28,20 +29,20 @@ describe('DownloadModal', () => {
     });
 
     it('Can reset canvas to download selection if on-screen canvas is changed', async () => {
-        // step 1: render download modal with all canvases shown on screen
+        // 步骤 1：在全部画布可见时渲染下载对话框
         const mockStore = createTestStore();
         render(<DownloadModal isOpen={true} {...mockCallbacks} />, { store: mockStore });
 
-        // step 2: select destination as the canvas to download
+        // 步骤 2：选择目的地画布进行下载
         fireEvent.change(screen.getByRole('combobox', { name: 'Canvas' }), { target: { value: 'destination' } });
         expect(screen.getByDisplayValue('Destination')).toBeInTheDocument();
 
-        // step 3: rerender with only rail map is shown on screen
+        // 步骤 3：仅在线路图可见时重新渲染
         await act(async () => {
             mockStore.dispatch(setCanvasToShow([CanvasType.RailMap]));
         });
 
-        // assertion - selection is reset
+        // 断言：下载选择已重置
         expect(screen.queryByDisplayValue('Destination')).not.toBeInTheDocument();
         expect(screen.getByDisplayValue('Please select...')).toBeInTheDocument();
     });

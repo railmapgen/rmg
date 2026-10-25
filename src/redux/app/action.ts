@@ -1,3 +1,4 @@
+// 项目载入操作：读取、迁移、刷新主题后写入应用和参数状态。
 import { RootDispatch } from '../index';
 import { RMGParam } from '../../constants/constants';
 import { updateParam, updateThemes } from '../../util/param-updater-utils';

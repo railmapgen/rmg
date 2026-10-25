@@ -1,3 +1,4 @@
+// 侧边栏样式编辑：样式编辑面板。
 import classes from '../side-panel.module.css';
 import { useRootSelector } from '../../../redux';
 import { RmgStyle } from '../../../constants/constants';

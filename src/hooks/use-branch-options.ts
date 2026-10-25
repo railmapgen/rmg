@@ -1,3 +1,4 @@
+// 分支选项 Hook：由当前线路拓扑派生可用的支线操作与选项。
 import { useTranslation } from 'react-i18next';
 import { useRootSelector } from '../redux';
 import { RmgStyle } from '../constants/constants';
