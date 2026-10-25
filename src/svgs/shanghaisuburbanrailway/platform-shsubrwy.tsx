@@ -1,3 +1,4 @@
+// 上海市域铁路 SVG 画布：上海市域铁路站台。
 import { CanvasType } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import SvgWrapper from '../svg-wrapper';

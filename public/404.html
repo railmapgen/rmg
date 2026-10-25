@@ -1,28 +1,29 @@
 <!DOCTYPE html>
+<!-- GitHub Pages 单页应用回退页：把深层路径重定向为带查询参数和哈希的入口。 -->
 <html>
     <head>
         <meta charset="utf-8" />
         <title>Rail Map Generator</title>
         <script type="text/javascript">
-            // Single Page Apps for GitHub Pages
+            // GitHub Pages 单页应用回退脚本
             // https://github.com/rafrex/spa-github-pages
-            // Copyright (c) 2016 Rafael Pedicini, licensed under the MIT License
+            // 版权所有 (c) 2016 Rafael Pedicini，依据 MIT 许可证授权
             // ----------------------------------------------------------------------
-            // This script takes the current url and converts the path and query
-            // string into just a query string, and then redirects the browser
-            // to the new url with only a query string and hash fragment,
-            // e.g. http://www.foo.tld/one/two?a=b&c=d#qwe, becomes
+            // 该脚本读取当前 URL，将路径与查询部分
+            // 转换为查询字符串，再将浏览器重定向到
+            // 只包含查询字符串与哈希片段的新 URL。
+            // 例如 `http://www.foo.tld/one/two?a=b&c=d#qwe` 会转换为
             // http://www.foo.tld/?p=/one/two&q=a=b~and~c=d#qwe
-            // Note: this 404.html file must be at least 512 bytes for it to work
-            // with Internet Explorer (it is currently > 512 bytes)
+            // 注意：该 404.html 必须至少为 512 字节，
+            // 才能在 Internet Explorer 中生效（当前已超过 512 字节）
 
-            // If you're creating a Project Pages site and NOT using a custom domain,
-            // then set segmentCount to 1 (enterprise users may need to set it to > 1).
-            // This way the code will only replace the route part of the path, and not
-            // the real directory in which the app resides, for example:
+            // 如果创建的是项目页面且未使用自定义域名，
+            // 应将 `segmentCount` 设为 1（企业版用户可能需要设为大于 1）。
+            // 这样代码只替换路径中的路由部分，而不修改
+            // 应用所在的真实目录。例如：
             // https://username.github.io/repo-name/one/two?a=b&c=d#qwe becomes
             // https://username.github.io/repo-name/?p=/one/two&q=a=b~and~c=d#qwe
-            // Otherwise, leave segmentCount as 0.
+            // 否则应保持 `segmentCount` 为 0。
             var segmentCount = 1;
 
             var l = window.location;

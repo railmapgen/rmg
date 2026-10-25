@@ -1,3 +1,4 @@
+// 浏览器应用入口：初始化宿主运行时、Redux 和国际化后挂载 React 根节点。
 import './index.css';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { createRoot, Root } from 'react-dom/client';
@@ -11,12 +12,11 @@ import { StrictMode } from 'react';
 import { Provider } from 'react-redux';
 import { I18nextProvider } from 'react-i18next';
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
+// 若需启用离线缓存，可将下方的 unregister() 改为 register()，但需注意缓存更新行为。
+// Service Worker 说明：https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 
-// load empty stylesheet elements
+// 预创建空样式表元素，供画布按需加载共享样式
 document.head.append(
     ...['share', ...Object.values(CanvasType)].map(tag => {
         const link = document.createElement('link');

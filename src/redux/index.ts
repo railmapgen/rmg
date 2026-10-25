@@ -1,3 +1,4 @@
+// Redux 根存储：组合应用、参数和拓扑辅助状态，并注册监听中间件。
 import appReducer from './app/app-slice';
 import paramReducer from './param/param-slice';
 import helperReducer from './helper/helper-slice';

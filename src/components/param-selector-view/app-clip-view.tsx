@@ -1,3 +1,4 @@
+// 项目选择与管理界面：内嵌项目导入视图。
 import classes from './app-clip-view.module.css';
 import ParamSelector from './param-selector';
 import { useEffect, useRef, useState } from 'react';
@@ -27,11 +28,11 @@ export default function AppClipView() {
     const channelRef = useRef<BroadcastChannel>(null);
 
     useEffect(() => {
-        // channel that talks to parent (RMP import modal, RMG Templates upload modal)
+        // 与父页面通信的通道，用于 RMP 导入框和 RMG Templates 上传框
         channelRef.current = new BroadcastChannel(CHANNEL_PREFIX + parentId);
         rmgRuntime.event(Events.APP_CLIP_VIEW_OPENED, { parentComponent });
 
-        // init paramRegistry state update
+        // 初始化项目清单状态更新
         setParamRegistry(getParamRegistry());
 
         return () => {

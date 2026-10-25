@@ -1,3 +1,4 @@
+// 宿主应用内嵌桥接：内嵌调色板桥接。
 import { useEffect, useRef, useState } from 'react';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { Theme } from '@railmapgen/rmg-palette-resources';
@@ -40,7 +41,7 @@ export default function RmgPaletteAppClip(props: RmgPaletteAppClip) {
             } else if (event === 'SELECT') {
                 onSelect(data);
             } else if (event === 'LOADED') {
-                // force trigger default theme update again when app clip first opened
+                // 首次打开内嵌组件时再次触发默认主题更新
                 setIsLoaded(true);
             }
         };

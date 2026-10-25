@@ -1,3 +1,4 @@
+// 广州地铁 SVG 画布：广州地铁信息带。
 import { PanelTypeGZMTR, PanelTypeShmetro, PsdLabel } from '../../constants/constants';
 import PsdNumber from './psd-number';
 import { memo, useMemo } from 'react';
@@ -84,7 +85,7 @@ export default StripGZMTR;
 const PSD = memo(
     function PSD(props: Props) {
         /**
-         * Flag of whether PSD number is stick within the strip area. If `true`, should fill with white, otherwise, fill with theme colour.
+         * 屏蔽门编号是否位于信息带内；为 `true` 时使用白色，否则使用主题色。
          */
         const isInStrip = ['gz28', 'gz2otis', 'gz6', 'gzgf'].includes(props.variant);
         const psdDy = ((variant: PanelTypeGZMTR | PanelTypeShmetro) => {

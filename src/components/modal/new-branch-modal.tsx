@@ -1,3 +1,4 @@
+// 编辑对话框：新建支线对话框。
 import classes from './common-modal.module.css';
 import { useEffect, useState } from 'react';
 import { useRootDispatch, useRootSelector } from '../../redux';
@@ -29,7 +30,7 @@ export default function NewBranchModal(props: NewBranchModalProps) {
     const { style, stn_list: stationList } = useRootSelector(state => state.param);
 
     useEffect(() => {
-        // reset whenever modal is closed
+        // 对话框关闭时重置状态
         if (!isOpen) {
             setWhere('new');
             setFrom('');
@@ -83,7 +84,7 @@ export default function NewBranchModal(props: NewBranchModalProps) {
     const handleSubmit = () => {
         let result: false | string;
         if (where === 'ext') {
-            // SHMetro specific - treat lower branch as external line
+            // 上海地铁规则：将下层支线视为外部线路
             result = dispatch(addStation('new', from, to, 'lower'));
         } else {
             if (style === RmgStyle.SHMetro) {

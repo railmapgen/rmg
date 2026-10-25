@@ -1,3 +1,4 @@
+// 广州地铁线路图：环线方向文字。
 import { SVGProps } from 'react';
 
 type LoopDirectionTextProps = {

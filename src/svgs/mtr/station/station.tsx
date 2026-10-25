@@ -1,3 +1,4 @@
+// 港铁车站图形：车站。
 import { Direction, ShortDirection, StationState } from '../../../constants/constants';
 import InterchangeStation from './interchange-station';
 import { useRootSelector } from '../../../redux';

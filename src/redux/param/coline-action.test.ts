@@ -1,3 +1,4 @@
+// 测试：验证共线区段操作所覆盖的线路参数与编辑操作行为。
 import { checkColineValidity, removeColineColor } from './coline-action';
 import { ColineInfo, StationDict } from '../../constants/constants';
 import { getBranches } from '../helper/graph-theory-util';
@@ -72,7 +73,7 @@ describe('Unit tests for coline action', () => {
          *         ^                 \
          *                             stnZ
          *
-         * Coline between any of stn1, stn3, stn4 and stn3 - stnZ should be allowed.
+         * stn1、stn3、stn4 之间的任意共线，以及 stn3 到 stnZ 的共线都应被允许。
          */
         const mockStationList = {
             linestart: {

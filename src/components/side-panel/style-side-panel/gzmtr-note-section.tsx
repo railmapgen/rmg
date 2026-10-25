@@ -1,3 +1,4 @@
+// 侧边栏样式编辑：广州地铁说明文字设置区。
 import classes from '../side-panel.module.css';
 import GZMTRNoteCard from './gzmtr-note-card';
 import { addNote, removeNote, updateNote } from '../../../redux/param/param-slice';

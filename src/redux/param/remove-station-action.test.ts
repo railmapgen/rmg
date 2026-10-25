@@ -1,3 +1,4 @@
+// 测试：验证删除车站操作所覆盖的线路参数与编辑操作行为。
 import { checkStationCouldBeRemoved, removeStation } from './remove-station-action';
 import { createTestStore } from '../../setupTests';
 import { BranchStyle, StationDict } from '../../constants/constants';

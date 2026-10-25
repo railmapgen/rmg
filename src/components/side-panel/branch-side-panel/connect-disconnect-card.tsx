@@ -1,3 +1,4 @@
+// 侧边栏线路区段编辑：接线与拆线卡片。
 import classes from './connect-disconnect-card.module.css';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';

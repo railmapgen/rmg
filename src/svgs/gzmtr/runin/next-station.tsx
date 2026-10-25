@@ -1,3 +1,4 @@
+// 广州地铁进站信息：下一站。
 import { useRootSelector } from '../../../redux';
 import { useEffect, useRef, useState } from 'react';
 import { CanvasType, ShortDirection } from '../../../constants/constants';

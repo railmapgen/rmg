@@ -1,3 +1,4 @@
+// 测试：验证接线与拆线卡片所覆盖的侧边栏线路区段编辑行为。
 import { render } from '../../../test-utils';
 import { BranchStyle, Direction, StationDict } from '../../../constants/constants';
 import { getBranches } from '../../../redux/helper/graph-theory-util';

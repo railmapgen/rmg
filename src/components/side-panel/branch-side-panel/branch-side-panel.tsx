@@ -1,3 +1,4 @@
+// 侧边栏线路区段编辑：线路区段编辑面板。
 import classes from '../side-panel.module.css';
 import ColineSection from './coline-section';
 import ActionSection from './action-section';

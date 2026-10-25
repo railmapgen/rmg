@@ -1,3 +1,4 @@
+// 广州地铁进站信息：途经站。
 import { StationInfo } from '../../../constants/constants';
 import { LineIcon } from '@railmapgen/svg-assets/gzmtr';
 import { MonoColour } from '@railmapgen/rmg-palette-resources';

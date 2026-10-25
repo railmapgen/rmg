@@ -1,3 +1,4 @@
+// 广州地铁 SVG 画布：当前站名。
 import { memo, SVGProps, useEffect, useRef, useState } from 'react';
 import { Translation } from '@railmapgen/rmg-translate';
 import { PanelTypeGZMTR } from '../../constants/constants';

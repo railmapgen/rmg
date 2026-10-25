@@ -1,3 +1,4 @@
+// 广州地铁 SVG 画布：广州地铁方向箭头。
 import { SVGProps } from 'react';
 
 export const ARROW_WIDTH = 150;

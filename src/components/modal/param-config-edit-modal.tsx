@@ -1,3 +1,4 @@
+// 项目元数据对话框：编辑项目名称等保存信息。
 import classes from './common-modal.module.css';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

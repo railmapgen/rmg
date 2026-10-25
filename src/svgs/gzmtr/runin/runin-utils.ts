@@ -1,3 +1,4 @@
+// 广州地铁进站信息：进站信息工具。
 import { RMGParam, ShortDirection, StationInfo } from '../../../constants/constants';
 
 export const NAME_NUM_GAP = 55;
@@ -46,7 +47,7 @@ export const getNormalNextStations = (
         })
         .flat();
 
-    // Branches cannot be properly supported. Only the branch containing the first 'next' station is used.
+    // 当前无法完整支持分支，只使用包含第一个下一站的分支。
     const route = routes.find(route => route.includes(currentStation) && route.includes(nextStations[0]));
     if (route) {
         const currentStationIndex = route.indexOf(currentStation);
@@ -56,7 +57,7 @@ export const getNormalNextStations = (
             .filter(station => !['linestart', 'lineend'].includes(station))
             .reduce<string[]>((acc, cur) => {
                 if (stationList[cur].transfer.groups[0].lines?.length) {
-                    // interchange station
+                    // 换乘站
                     return [...acc, cur];
                 } else {
                     return acc;
@@ -83,10 +84,10 @@ export const getLoopNextViaStations = (
     const nextStations = [comingStations[0]];
     const comingInterchangeStations = comingStations.slice(1).reduce<string[]>((acc, cur) => {
         if (stationList[cur].transfer.groups[0].lines?.length) {
-            // interchange station
+            // 换乘站
             return [...acc, cur];
         } else if (stationList[cur].loop_pivot) {
-            // pivot station (non-interchange)
+            // 枢轴站（非换乘站）
             return [...acc, cur];
         } else {
             return acc;

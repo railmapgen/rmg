@@ -1,3 +1,4 @@
+// 项目路由分发：解析项目 ID 或外部 URL，载入成功后进入编辑工作台。
 import { useEffect, useState } from 'react';
 import AppView from './app-view';
 import { useRootDispatch, useRootSelector } from '../../redux';

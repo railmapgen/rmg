@@ -1,3 +1,4 @@
+// 线路参数 Reducer：维护画布、样式、站名、环线和换乘等全部编辑字段。
 import {
     CanvasType,
     ColineInfo,

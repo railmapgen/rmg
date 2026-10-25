@@ -1,3 +1,4 @@
+// 广州地铁站名：站名。
 import { memo, useEffect, useRef } from 'react';
 import { Translation } from '@railmapgen/rmg-translate';
 

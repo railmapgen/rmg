@@ -1,3 +1,4 @@
+// Vite 构建配置：设置部署基路径、开发代理、代码分包与 Vitest 环境。
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { coverageConfigDefaults } from 'vitest/config';

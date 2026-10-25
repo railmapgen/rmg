@@ -1,3 +1,4 @@
+// 测试：验证线路图拓扑工具所覆盖的线路拓扑派生状态行为。
 import { getBranches, getRoutes, getTpo } from './graph-theory-util';
 import { BranchStyle } from '../../constants/constants';
 import { mockSimpleStationList } from '../../setupTests';

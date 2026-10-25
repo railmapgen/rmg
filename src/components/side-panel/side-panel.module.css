@@ -1,3 +1,4 @@
+/* 侧边 / panel.module模块。 */
 .root {
     @media (max-width: $mantine-breakpoint-xs) {
         --side-panel-width: 100% !important;

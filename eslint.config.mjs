@@ -1,3 +1,4 @@
+// ESLint 扁平配置：约束 TypeScript、React 与 Prettier 规则。
 // @ts-check
 
 import eslint from '@eslint/js';

@@ -1,3 +1,4 @@
+// 广州地铁进站信息：车厢编号。
 import { SVGProps } from 'react';
 import { COACH_NUMBER_R } from './runin-utils';
 

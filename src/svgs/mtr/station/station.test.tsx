@@ -1,3 +1,4 @@
+// 测试：验证车站所覆盖的港铁车站图形行为。
 import { act, screen } from '@testing-library/react';
 import Station from './station';
 import { render } from '../../../test-utils';
@@ -54,7 +55,7 @@ describe('MTR Station', () => {
                 setup(0, 1);
             });
 
-            // normal osi link
+            // 普通出站换乘连线
             const link = screen.getByTestId('station-icon-wrapper').querySelector(osiLinkSelector);
             expect(link?.getAttribute('d')).toContain('V26');
         });
@@ -64,7 +65,7 @@ describe('MTR Station', () => {
                 setup(0, 2);
             });
 
-            // normal osi link
+            // 普通出站换乘连线
             const link = screen.getByTestId('station-icon-wrapper').querySelector(osiLinkSelector);
             expect(link?.getAttribute('d')).toContain('V26');
         });
@@ -74,7 +75,7 @@ describe('MTR Station', () => {
                 setup(0, 1, Direction.left);
             });
 
-            // normal osi link (do not rotate to horizontal)
+            // 普通出站换乘连线，不旋转为水平
             const link = screen.getByTestId('station-icon-wrapper').querySelector(osiLinkSelector);
             expect(link?.getAttribute('d')).toContain('V26');
         });
@@ -84,7 +85,7 @@ describe('MTR Station', () => {
                 setup(0, 2, Direction.right);
             });
 
-            // normal osi link (do not rotate to horizontal)
+            // 普通出站换乘连线，不旋转为水平
             const link = screen.getByTestId('station-icon-wrapper').querySelector(osiLinkSelector);
             expect(link?.getAttribute('d')).toContain('V26');
         });
@@ -94,7 +95,7 @@ describe('MTR Station', () => {
                 setup(1, 1, Direction.left);
             });
 
-            // rotate osi link to horizontal (to the left)
+            // 将出站换乘连线旋转为向左水平
             const link = screen.getByTestId('station-icon-wrapper').querySelector(osiLinkSelector);
             expect(link?.getAttribute('d')).toContain('H41');
 
@@ -107,7 +108,7 @@ describe('MTR Station', () => {
                 setup(1, 2, Direction.right);
             });
 
-            // rotate osi link to horizontal (to the right)
+            // 将出站换乘连线旋转为向右水平
             const link = screen.getByTestId('station-icon-wrapper').querySelector(osiLinkSelector);
             expect(link?.getAttribute('d')).toContain('H41');
 

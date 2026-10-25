@@ -5,8 +5,21 @@
         "images": "圖像"
     },
     "OpenActions": {
-        "invalidType": "無效的檔案種類！只接受JSON種類的檔案。",
-        "unknownError": "讀取上載的檔案時發生錯誤！請重試。"
+        "invalidType": "無效的檔案種類！只接受JSON專案檔案。",
+        "invalidTextType": "無效的檔案種類！請選擇TXT車站列表。",
+        "invalidStationList": "車站列表格式無效。每個非空行必須以車站名稱開頭；普通路綫至少需要2個不同車站，環綫至少需要3個。",
+        "unknownError": "讀取上載的檔案時發生錯誤！請重試。",
+        "importStationList": "匯入車站列表（TXT）",
+        "fileSelected": "檔案已選擇",
+        "dropzoneTitle": "將 TXT 檔案拖到此處",
+        "dropzoneDescription": "或點擊選擇檔案",
+        "formatLabel": "TXT 檔案解析規則",
+        "formatRules": "每個非空行表示一個車站。每行按空白分隔：第一個詞是車站名稱，其後的所有詞均為該站可轉乘的路綫名稱。例如「體育西路 1號綫 3號綫」表示體育西路站可轉乘1號綫和3號綫。\n\n空行會被忽略。第一行和最後一行車站名稱相同時，會識別為環綫，最後一行不會重複建立首站。普通路綫至少需要2個不同車站，環綫至少需要3個。英文站名優先從目標城市樣式的離線資料中尋找，找不到時自動使用拼音。",
+        "zhLineName": "中文路綫號",
+        "enLineName": "英文路綫號",
+        "targetStyle": "目標城市樣式",
+        "cancel": "取消",
+        "create": "建立"
     },
     "DownloadModal": {
         "title": "下載圖像",

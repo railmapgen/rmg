@@ -1,3 +1,4 @@
+// SVG 公共容器：统一画布尺寸、视口和样式变量。
 import { CanvasType } from '../constants/constants';
 import { ReactNode } from 'react';
 import { Theme } from '@railmapgen/rmg-palette-resources';

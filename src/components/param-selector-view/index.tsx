@@ -1,3 +1,4 @@
+// 项目管理器：加载本地项目清单并协调选择、重命名与删除操作。
 import classes from './param-selector-view.module.css';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +32,7 @@ export default function ParamSelectorView(props: ParamSelectorViewProps) {
     }, []);
 
     useEffect(() => {
-        // init paramRegistry state on mount and when external project is downloaded
+        // 挂载或下载外部项目后初始化项目清单状态
         setParamRegistry(getParamRegistry());
     }, [downloading]);
 

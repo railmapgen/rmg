@@ -1,3 +1,4 @@
+// 测试：验证删除确认对话框所覆盖的编辑对话框行为。
 import { fireEvent, screen } from '@testing-library/react';
 import { StationDict } from '../../constants/constants';
 import { createTestStore } from '../../setupTests';
@@ -52,13 +53,13 @@ describe('RemoveConfirmModal', () => {
 
         render(<RemoveConfirmModal isOpen={true} {...mockCallbacks} />, { store: mockStore });
 
-        // click confirm button
+        // 点击确认按钮
         fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
 
-        // redux state not modified
+        // Redux 状态未被修改
         expect(mockStore.getState().param).toEqual(prevState);
 
-        // display error message
+        // 显示错误消息
         expect(screen.getByRole('alert')).toBeInTheDocument();
         expect(screen.getByRole('alert')).toHaveTextContent('Unable to remove this station.');
     });
@@ -108,10 +109,10 @@ describe('RemoveConfirmModal', () => {
 
         render(<RemoveConfirmModal isOpen={true} {...mockCallbacks} />, { store: mockStore });
 
-        // click confirm button
+        // 点击确认按钮
         fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
 
-        // assertions
+        // 断言
         expect(mockStore.getState().param.stn_list).not.toHaveProperty('stn2'); // removal of station
         expect(mockStore.getState().app.selectedStation).toBe('linestart'); // reset station selection
     });

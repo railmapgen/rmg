@@ -1,3 +1,4 @@
+// 广州地铁 SVG 画布：车站。
 import { ExtendedInterchangeInfo, Services, StationState } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
 import { LineIcon, MidpointStation, StationNumber } from '@railmapgen/svg-assets/gzmtr';

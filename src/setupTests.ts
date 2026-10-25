@@ -1,3 +1,4 @@
+// 测试环境初始化：注册 DOM 断言、重置状态并复用测试数据构造器。
 import { BranchStyle, LocalStorageKey, RmgStyle, StationDict } from './constants/constants';
 import { createStore } from './redux';
 import { initParam } from './redux/param/util';
@@ -8,15 +9,15 @@ setupTest();
 export const createTestStore = createStore;
 
 /**
- * Before reversing:
- * stn0 - stn1 - stn2 (main)
+ * 反向之前：
+ * stn0 - stn1 - stn2（主线）
  *             \
- *              stn3 - stn4 (branch)
+ *              stn3 - stn4（支线）
  *
- * After reversing:
- * (branch) stn4 - stn3
+ * 反向之后：
+ *（支线）stn4 - stn3
  *                      \
- *          (main) stn2 - stn1 - stn0
+ *          （主线）stn2 - stn1 - stn0
  */
 export const mockSimpleStationList: StationDict = {
     linestart: {

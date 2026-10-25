@@ -1,10 +1,11 @@
+/* 侧边栏车站编辑：广州地铁 / 车站 / code.module。 */
 .root {
     display: flex;
     height: 24px;
     position: relative;
     color: black;
 
-    /* background */
+    /* 背景 */
     &::before {
         content: '';
         width: calc(100% + 2px);

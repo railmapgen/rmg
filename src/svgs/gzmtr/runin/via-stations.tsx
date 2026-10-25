@@ -1,3 +1,4 @@
+// 广州地铁进站信息：途经站列表。
 import { StationInfo } from '../../../constants/constants';
 import ViaStation from './via-station';
 import { useCallback, useEffect, useRef, useState } from 'react';

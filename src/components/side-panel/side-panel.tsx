@@ -1,3 +1,4 @@
+// 主侧边面板：在风格、线路区段和车站三类编辑视图间切换。
 import classes from './side-panel.module.css';
 import { ReactNode } from 'react';
 import { useRootSelector } from '../../redux';

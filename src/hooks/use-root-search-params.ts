@@ -1,3 +1,4 @@
+// 根路由查询参数 Hook：封装 React Router 的搜索参数读写。
 import { useSearchParams } from 'react-router-dom';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 

@@ -1,3 +1,4 @@
+// 广州地铁 SVG 画布：广州地铁信息面板。
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { StationNumber } from '@railmapgen/svg-assets/gzmtr';
 import { CanvasType, PanelTypeGZMTR, ShortDirection } from '../../constants/constants';
@@ -144,12 +145,12 @@ const BigNext2 = (props: { nextIds: string[]; nameBBox: DOMRect; ignoreNumWidth?
     const validEnds = props.nextIds.map(stnId =>
         routes.reduce(
             (acc, route) =>
-                // filter routes not containing next station's id
+                // 过滤掉不包含下一站 ID 的线路
                 route.includes(stnId)
                     ? acc.concat(
                           route
                               .filter(s => !['linestart', 'lineend'].includes(s))
-                              // select first/last station's id
+                              // 选择首站或末站的 ID
                               .slice(direction === ShortDirection.left ? 0 : -1)[0]
                       )
                     : acc,

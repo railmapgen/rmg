@@ -6,8 +6,21 @@
     },
 
     "OpenActions": {
-        "invalidType": "无效的文件种类！只接受JSON种类的文件。",
-        "unknownError": "导入上传的文件时发生错误！请重试。"
+        "invalidType": "无效的文件种类！只接受JSON项目文件。",
+        "invalidTextType": "无效的文件种类！请选择TXT车站列表。",
+        "invalidStationList": "车站列表格式无效。每个非空行必须以车站名称开头；普通线路至少需要2个不同车站，环线至少需要3个。",
+        "unknownError": "导入上传的文件时发生错误！请重试。",
+        "importStationList": "导入车站列表（TXT）",
+        "fileSelected": "文件已选择",
+        "dropzoneTitle": "将 TXT 文件拖到此处",
+        "dropzoneDescription": "或点击选择文件",
+        "formatLabel": "TXT 文件解析规则",
+        "formatRules": "每个非空行表示一个车站。每行按空白分隔：第一个词是车站名称，其后的所有词均为该站可换乘的线路名称。例如“体育西路 1号线 3号线”表示体育西路站可换乘1号线和3号线。\n\n空行会被忽略。第一行和最后一行车站名称相同时，会识别为环线，最后一行不会重复创建首站。普通线路至少需要2个不同车站，环线至少需要3个。英文站名优先从目标城市样式的离线数据中查找，找不到时自动使用拼音。",
+        "zhLineName": "中文路线号",
+        "enLineName": "英文路线号",
+        "targetStyle": "目标城市样式",
+        "cancel": "取消",
+        "create": "创建"
     },
 
     "DownloadModal": {

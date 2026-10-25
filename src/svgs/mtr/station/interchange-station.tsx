@@ -1,3 +1,4 @@
+// 港铁车站图形：换乘站。
 import { Direction, ExtendedInterchangeInfo, Position } from '../../../constants/constants';
 import InterchangeTick from './interchange-tick';
 import StationIcon from './station-icon';

@@ -1,3 +1,4 @@
+// 上海市域铁路 SVG 画布：上海市域铁路目的地信息。
 import { memo, useRef, useState, useEffect } from 'react';
 import { CanvasType, Name, ShortDirection } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
@@ -28,7 +29,7 @@ export default function DestinationSHSuburbanRailway() {
 const DefsSHSuburbanRailway = memo(function DefsSHSuburbanRailway() {
     return (
         <defs>
-            {/* An extension of the line/path. Remember to minus the stroke-width.  */}
+            {/* 线路路径的延伸段；计算时需减去描边宽度。  */}
             <marker id="slope" viewBox="-1.5 0 3 1.5" refY={0.5}>
                 <path d="M0,0L1,1H-1z" fill="var(--rmg-theme-colour)" />
             </marker>
@@ -40,7 +41,7 @@ const DestSHSuburbanRailway = () => {
     const { routes } = useRootSelector(store => store.helper);
     const { current_stn_idx: current_stn_id, direction, stn_list } = useRootSelector(store => store.param);
 
-    // get valid destination of each branch
+    // 获取每条支线的有效目的地
     const get_valid_destinations = (routes: string[][], direction: ShortDirection, current_stn_id: string) => [
         ...new Set(
             routes
@@ -52,10 +53,10 @@ const DestSHSuburbanRailway = () => {
         ),
     ];
 
-    // get destination id(s)
+    // 获取目的地 ID
     const dest_ids = get_valid_destinations(routes, direction, current_stn_id);
 
-    // turn destination id into name
+    // 将目的地 ID 转换为站名
     const dest_name = dest_ids
         .map(
             id =>
@@ -97,7 +98,7 @@ const Terminal = (props: { dest_name: Name }) => {
 
     const stnNameZhEl = useRef<SVGGElement | null>(null);
     const stnNameEnEl = useRef<SVGGElement | null>(null);
-    // the original name position
+    // 站名原始位置
     const [nameWidth, setNameWidth] = useState(0);
     useEffect(() => {
         if (stnNameZhEl.current && stnNameEnEl.current) {

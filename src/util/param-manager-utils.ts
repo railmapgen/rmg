@@ -1,3 +1,4 @@
+// 项目存储工具：维护浏览器中的项目清单、参数读取和下载写入。
 import { LocalStorageKey, ParamConfig } from '../constants/constants';
 import { nanoid } from 'nanoid';
 import rmgRuntime, { logger } from '@railmapgen/rmg-runtime';
@@ -27,10 +28,10 @@ export const loadParamRegistry = (): ParamConfig[] => {
 };
 
 export const getParamRegistry = (): ParamConfig[] => {
-    // load all paramConfig from localStorage
+    // 从 localStorage 加载全部项目配置
     const loadedParamRegistry = loadParamRegistry();
 
-    // sync paramRegistry with actual localStorage param items
+    // 用实际存储项同步项目清单
     const prefix = `${rmgRuntime.getAppName()}__${LocalStorageKey.PARAM_BY_ID}`;
     const actualParamRegistry: ParamConfig[] = Object.keys(rmgRuntime.storage.getAll())
         .filter(key => key.startsWith(prefix))
@@ -44,7 +45,7 @@ export const getParamRegistry = (): ParamConfig[] => {
         actualParamRegistry.map(config => config.id)
     );
 
-    // remove invalid paramConfig from localStorage
+    // 从 localStorage 移除无效项目配置
     loadedParamRegistry
         .filter(config => actualParamRegistry.every(c => c.id !== config.id))
         .forEach(config => rmgRuntime.storage.remove(LocalStorageKey.PARAM_CONFIG_BY_ID + config.id));
@@ -66,9 +67,9 @@ export const getParam = (id: string): { param: any; config?: ParamConfig } => {
 };
 
 /**
- * @param param Accept any param string and save to localStorage. It will not be validated until opening it.
- * @param name Project name stored in paramConfig in localStorage.
- * @return ID assigned
+ * @param param 接受任意参数字符串并写入 localStorage，直到打开项目时才校验
+ * @param name 写入 localStorage 项目配置中的名称
+ * @return 分配的项目 ID
  */
 export const insertParam = (param: string, name?: string): string => {
     const id = nanoid();

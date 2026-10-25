@@ -1,3 +1,4 @@
+// 测试：验证出站换乘站所覆盖的港铁车站图形行为。
 import { MonoColour } from '@railmapgen/rmg-palette-resources';
 import { Direction, InterchangeGroup } from '../../../constants/constants';
 import OsiStation from './osi-station';

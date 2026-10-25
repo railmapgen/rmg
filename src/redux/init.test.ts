@@ -1,3 +1,4 @@
+// 测试：验证init模块的关键行为。
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { RootStore } from './index';
 import { createTestStore } from '../setupTests';
@@ -66,12 +67,12 @@ describe('ReduxInit', () => {
             const now = Date.now() - 1_000;
             const nextParam = getMockParam('test-id');
 
-            // current param in localStorage is outdated
+            // localStorage 中的线路参数已过期
             expect(rmgRuntime.storage.get(LocalStorageKey.PARAM_BY_ID + 'test-id')).not.toEqual(
                 JSON.stringify(nextParam)
             );
 
-            // receive changes in param redux store
+            // 接收 Redux 参数状态的变化
             const mockListenerApi = {
                 getState: () => ({
                     app: {
@@ -83,7 +84,7 @@ describe('ReduxInit', () => {
             } as any;
             paramUpdateTrigger({ type: 'MOCK_ACTION' }, mockListenerApi);
 
-            // param and config in localStorage are updated
+            // localStorage 中的参数和配置均已更新
             const { config, param } = getParam('test-id');
             expect(param).toEqual(nextParam);
 
@@ -101,7 +102,7 @@ describe('ReduxInit', () => {
             rmgRuntime.storage.set(LocalStorageKey.PARAM_BY_ID + 'test-id', JSON.stringify(nextParam));
             rmgRuntime.storage.set(LocalStorageKey.PARAM_CONFIG_BY_ID + 'test-id', JSON.stringify({ lastModified }));
 
-            // receive null change in param redux store
+            // 接收 Redux 参数状态的空值变化
             const mockListenerApi = {
                 getState: () => ({
                     app: {
@@ -113,7 +114,7 @@ describe('ReduxInit', () => {
             } as any;
             paramUpdateTrigger({ type: 'MOCK_ACTION' }, mockListenerApi);
 
-            // param and config in localStorage are unchanged
+            // localStorage 中的参数和配置均未变化
             const { config, param } = getParam('test-id');
             expect(param).toEqual(nextParam);
             expect(mockDispatch).toBeCalledTimes(0);
@@ -122,6 +123,6 @@ describe('ReduxInit', () => {
     });
 
     it('Do not update param or param config in localStorage if no param selected', () => {
-        // TODO: add unit test
+        // 待办：补充单元测试
     });
 });

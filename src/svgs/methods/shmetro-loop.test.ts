@@ -1,3 +1,4 @@
+// 测试：验证上海地铁环线工具所覆盖的线路图几何与拓扑算法行为。
 import { ShortDirection, StationDict } from '../../constants/constants';
 import {
     split_loop_stns,
@@ -151,18 +152,18 @@ describe('Unit tests for loop methods', () => {
         ({ loopline, current_stn_id, bottom_factor, left_and_right_factor }) => {
             const loop_stns = split_loop_stns(loopline, current_stn_id, bottom_factor, left_and_right_factor);
 
-            // every side is valid
+            // 每一侧都有效
             expect(loop_stns.top.length).toBeGreaterThanOrEqual(1);
             expect(loop_stns.right.length).toBeGreaterThanOrEqual(left_and_right_factor);
             expect(loop_stns.bottom.length).toBeGreaterThanOrEqual(bottom_factor);
             expect(loop_stns.left.length).toBeGreaterThanOrEqual(left_and_right_factor);
 
-            // Each array returned should be consecutive, and when combined in top -> right -> bottom -> left order,
-            // it will also be consecutive. Note that the length of right, bottom, and left can be 0.
+            // 各数组在按上、右、下、左顺序拼接后应保持连续，
+            // 并且整体保持连续；右、下、左三边的长度均可为 0。
             const _ = [...loop_stns.top, ...loop_stns.right, ...loop_stns.left, ...loop_stns.bottom];
             expect(_.length).toBe(loopline.length);
 
-            // expect arrays to be equal ignoring order
+            // 忽略顺序时数组应相等
             expect(_.sort()).toEqual(loopline.sort());
         }
     );
@@ -177,21 +178,21 @@ describe('Unit tests for loop methods', () => {
                 left_and_right_factor
             );
 
-            // every side is valid
+            // 每一侧都有效
             expect(loop_stns.top.length).toBeGreaterThanOrEqual(1);
             expect(loop_stns.right.length).toBeGreaterThanOrEqual(left_and_right_factor);
             expect(loop_stns.bottom.length).toBeGreaterThanOrEqual(bottom_factor);
             expect(loop_stns.left.length).toBeGreaterThanOrEqual(left_and_right_factor);
 
-            // top side will start from branch_stn_id
+            // 顶边从 `branch_stn_id` 开始
             expect(loop_stns.top.at(0)).toBe(branch_stn_id);
 
-            // Each array returned should be consecutive, and when combined in top -> right -> bottom -> left order,
-            // it will also be consecutive. Note that the length of right, bottom, and left can be 0.
+            // 各数组在按上、右、下、左顺序拼接后应保持连续，
+            // 并且整体保持连续；右、下、左三边的长度均可为 0。
             const _ = [...loop_stns.top, ...loop_stns.right, ...loop_stns.left, ...loop_stns.bottom];
             expect(_.length).toBe(loopline.length);
 
-            // expect arrays to be equal ignoring order
+            // 忽略顺序时数组应相等
             expect(_.sort()).toEqual(loopline.sort());
         }
     );
@@ -201,22 +202,22 @@ describe('Unit tests for loop methods', () => {
         ({ loopline, branch_stn_ids, left_and_right_factor, arc }) => {
             const loop_stns = split_loop_stns_with_branches(loopline, branch_stn_ids, left_and_right_factor, arc);
 
-            // every side is valid
+            // 每一侧都有效
             expect(loop_stns.top.length).toBeGreaterThanOrEqual(1);
             expect(loop_stns.right.length).toBeGreaterThanOrEqual(left_and_right_factor);
             expect(loop_stns.bottom.length).toBeGreaterThanOrEqual(0);
             expect(loop_stns.left.length).toBeGreaterThanOrEqual(left_and_right_factor);
 
-            // top side will start from branch_stn_ids[0] and end at branch_stn_ids[1]
+            // 顶边从 `branch_stn_ids[0]` 开始并在 `branch_stn_ids[1]` 结束
             expect(loop_stns.top.at(0)).toMatch(new RegExp(branch_stn_ids.join('|')));
             expect(loop_stns.top.at(-1)).toMatch(new RegExp(branch_stn_ids.join('|')));
 
-            // Each array returned should be consecutive, and when combined in top -> right -> bottom -> left order,
-            // it will also be consecutive. Note that the length of right, bottom, and left can be 0.
+            // 各数组在按上、右、下、左顺序拼接后应保持连续，
+            // 并且整体保持连续；右、下、左三边的长度均可为 0。
             const _ = [...loop_stns.top, ...loop_stns.right, ...loop_stns.left, ...loop_stns.bottom];
             expect(_.length).toBe(loopline.length);
 
-            // expect arrays to be equal ignoring order
+            // 忽略顺序时数组应相等
             expect(_.sort()).toEqual(loopline.sort());
         }
     );
@@ -227,12 +228,12 @@ describe('Unit tests for loop methods', () => {
 
         let pivots: string[];
 
-        // no error when no pivot is set
+        // 未设置枢轴站时不报错
         pivots = get_pivot_stations(branches, ShortDirection.left, stn_list, 'b');
         expect(pivots.length).toBe(0);
 
-        // one pivot is not supported
-        // we just make sure no error is returned
+        // 不支持仅有一个枢轴站
+        // 这里仅验证不会返回错误
         stn_list['c'].loop_pivot = true;
         pivots = get_pivot_stations(branches, ShortDirection.left, stn_list, 'b');
         expect(pivots.length).toBe(1);

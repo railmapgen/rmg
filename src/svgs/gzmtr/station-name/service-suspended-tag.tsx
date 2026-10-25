@@ -1,3 +1,4 @@
+// 广州地铁站名：暂停服务标签。
 import { SVGProps } from 'react';
 
 interface ServiceSuspendedTagProps extends SVGProps<SVGGElement> {

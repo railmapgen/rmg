@@ -1,3 +1,4 @@
+// 页面标题栏：页面标题。
 import classes from './page-header.module.css';
 import HeaderActions from './header-actions';
 import { setCanvasScale } from '../../redux/app/app-slice';

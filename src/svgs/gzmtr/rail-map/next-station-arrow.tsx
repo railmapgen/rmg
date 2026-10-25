@@ -1,3 +1,4 @@
+// 广州地铁线路图：下一站箭头。
 type NextStationArrowProps = {
     currentStationX: number;
     currentStationY: number;

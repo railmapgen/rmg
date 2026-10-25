@@ -1,3 +1,4 @@
+// 拓扑辅助状态：缓存从车站图派生出的分支、交路与排序。
 import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
 import { StationDict } from '../../constants/constants';
 import { getBranches, getRoutes, getTpo } from './graph-theory-util';

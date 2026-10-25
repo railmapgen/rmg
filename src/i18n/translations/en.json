@@ -6,8 +6,21 @@
     },
 
     "OpenActions": {
-        "invalidType": "Invalid file type! Only file in JSON format is accepted.",
-        "unknownError": "Unknown error occurred while parsing the uploaded file! Please try again."
+        "invalidType": "Invalid file type! Only JSON project files are accepted.",
+        "invalidTextType": "Invalid file type! Please select a TXT station list.",
+        "invalidStationList": "Invalid station list. Each non-empty line must start with a station name. A line needs at least two different stations, and a loop needs at least three.",
+        "unknownError": "Unknown error occurred while parsing the uploaded file! Please try again.",
+        "importStationList": "Import station list (.txt)",
+        "fileSelected": "File selected",
+        "dropzoneTitle": "Drop a TXT file here",
+        "dropzoneDescription": "or click to select a file",
+        "formatLabel": "TXT parsing rules",
+        "formatRules": "Each non-empty line represents one station. The first whitespace-delimited token is the station name; every remaining token is an interchange line name. For example, \"体育西路 1号线 3号线\" means that Tiyu Xilu can interchange with Lines 1 and 3.\n\nBlank lines are ignored. If the first and last station names are identical, the list is treated as a loop and the final line is not created as a duplicate station. A normal line needs at least 2 different stations; a loop needs at least 3. English station names are selected from the offline data for the target style, or generated from pinyin when unavailable.",
+        "zhLineName": "Chinese route number",
+        "enLineName": "English route number",
+        "targetStyle": "Target city style",
+        "cancel": "Cancel",
+        "create": "Create"
     },
 
     "DownloadModal": {
@@ -29,7 +42,7 @@
         "branch": "Branch",
         "external": "External line",
         "addStation": "Add station",
-        "editLine":  "Edit line section"
+        "editLine": "Edit line section"
     },
 
     "StationAgGrid": {

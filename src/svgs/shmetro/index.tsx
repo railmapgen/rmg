@@ -1,3 +1,4 @@
+// 上海地铁画布集合：注册目的地、进站、线路图和站内图视图。
 import { CanvasType } from '../../constants/constants';
 import { ReactNode } from 'react';
 import DestinationSHMetro from './destination-shmetro';

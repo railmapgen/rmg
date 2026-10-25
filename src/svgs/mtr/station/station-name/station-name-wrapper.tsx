@@ -1,3 +1,4 @@
+// 港铁站名排版：站名排版。
 import { SVGProps, useEffect, useRef, useState } from 'react';
 import { Direction, Facilities, StationState } from '../../../../constants/constants';
 import StationName from './station-name';
@@ -20,12 +21,12 @@ const NAME_EN_TOP = -8;
  */
 const NAME_EN_HEIGHT = 13.21875;
 /**
- * Difference of `y`s of station's Chinese name and English name (1 line). (This number should use as the `dy` of the English `text` element after Chinese `text` elements. )
+ * 中文站名与单行英文站名 `y` 坐标的差值；可用作中文文字后英文 `text` 元素的 `dy`。
  */
 const NAME_ZH_EN_GAP = 16;
 /**
  * Height (in pixels) from the top of station's Chinese name to the bottom of English name (1 line).
- * This is also the width and height of the facility icon.
+ * 设施图标的宽高也使用该值。
  */
 export const NAME_FULL_HEIGHT = -NAME_ZH_TOP + NAME_ZH_EN_GAP + NAME_EN_HEIGHT + NAME_EN_TOP;
 /**

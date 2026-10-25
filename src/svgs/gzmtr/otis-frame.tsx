@@ -1,3 +1,4 @@
+// 广州地铁 SVG 画布：OTIS 外框。
 import { useRootSelector } from '../../redux';
 import { CanvasType } from '../../constants/constants';
 

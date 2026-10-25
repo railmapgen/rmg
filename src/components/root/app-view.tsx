@@ -1,3 +1,4 @@
+// 编辑工作台容器：组合页头、SVG 画布和侧边编辑面板。
 import { useRootSelector } from '../../redux';
 import SvgRouter from '../../svgs/svg-router';
 import SidePanel from '../side-panel/side-panel';

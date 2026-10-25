@@ -6,8 +6,21 @@
     },
 
     "OpenActions": {
-        "invalidType": "잘못된 파일 종류! JSON 종류의 파일만 받습니다.",
-        "unknownError": "업로드한 파일을 가져오는 중 오류가 발생했습니다! 다시 시도해 주세요."
+        "invalidType": "잘못된 파일 종류! JSON 프로젝트 파일만 사용할 수 있습니다.",
+        "invalidTextType": "잘못된 파일 종류! TXT 역 목록을 선택하세요.",
+        "invalidStationList": "역 목록 형식이 올바르지 않습니다. 비어 있지 않은 각 줄은 역 이름으로 시작해야 하며, 일반 노선에는 서로 다른 역이 2개 이상, 순환선에는 3개 이상 필요합니다.",
+        "unknownError": "업로드한 파일을 가져오는 중 오류가 발생했습니다! 다시 시도해 주세요.",
+        "importStationList": "역 목록 가져오기 (TXT)",
+        "fileSelected": "파일 선택됨",
+        "dropzoneTitle": "TXT 파일을 여기에 놓으세요",
+        "dropzoneDescription": "또는 클릭하여 파일 선택",
+        "formatLabel": "TXT 파일 구문 분석 규칙",
+        "formatRules": "비어 있지 않은 각 줄은 역 하나를 나타냅니다. 줄의 첫 번째 공백 구분 단어가 역명이며, 그 뒤의 모든 단어는 환승 노선명입니다. 예: \"体育西路 1号线 3号线\"는 톈허시루역에서 1호선과 3호선으로 환승할 수 있음을 뜻합니다.\n\n빈 줄은 무시됩니다. 첫 번째와 마지막 역명이 같으면 순환선으로 처리하며 마지막 줄은 중복 역으로 만들지 않습니다. 일반 노선에는 서로 다른 역이 2개 이상, 순환선에는 3개 이상 필요합니다. 영어 역명은 대상 도시 스타일의 오프라인 데이터에서 찾고, 없으면 병음으로 생성합니다.",
+        "zhLineName": "중국어 노선 번호",
+        "enLineName": "영어 노선 번호",
+        "targetStyle": "대상 도시 스타일",
+        "cancel": "취소",
+        "create": "만들기"
     },
 
     "DownloadModal": {
@@ -29,7 +42,7 @@
         "branch": "지노선",
         "external": "외부 노선",
         "addStation": "역 추가",
-        "editLine":  "노선 구간 설정"
+        "editLine": "노선 구간 설정"
     },
 
     "StationAgGrid": {

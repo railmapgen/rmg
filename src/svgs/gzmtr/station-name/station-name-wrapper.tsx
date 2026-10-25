@@ -1,3 +1,4 @@
+// 广州地铁站名：站名排版。
 import { useState } from 'react';
 import { SERVICE_SUSPENDED, StationInfo, StationState, UNDER_CONSTRUCTION } from '../../../constants/constants';
 import StationName from './station-name';

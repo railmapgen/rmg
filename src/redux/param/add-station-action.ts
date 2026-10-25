@@ -1,3 +1,4 @@
+// 线路参数与编辑操作：新增车站操作。
 import { nanoid } from 'nanoid';
 import { RootDispatch, RootState } from '../index';
 import { BranchStyle } from '../../constants/constants';
@@ -9,7 +10,7 @@ export const addStation = (where: `${number}` | 'new', from: string, to: string,
     return (dispatch: RootDispatch, getState: () => RootState): string | false => {
         const stationList = getState().param.stn_list;
 
-        // get new id
+        // 生成新 ID
         let newId = nanoid(6);
         while (newId in stationList) {
             newId = nanoid(6);
@@ -128,37 +129,37 @@ export const verifyNewBranchEnds = (from: string, to: string) => {
         const stationList = getState().param.stn_list;
         const branches = getState().helper.branches;
 
-        // should be included in main line
+        // 应包含在主线上
         if (!branches[0].includes(from) || !branches[0].includes(to)) {
             return 'Branch should end at main line';
         }
 
-        // from should come before to
+        // 起点应位于终点之前
         if (branches[0].indexOf(from) >= branches[0].indexOf(to)) {
             return 'Not in correct order';
         }
 
-        // should not from linestart to lineend
+        // 不能直接从线路起点连到线路终点
         if (from === 'linestart' && to === 'lineend') {
             return 'Should not be parallel to main line';
         }
 
-        // should not be open jaw from the first station
+        // 不能从首站开始形成开口支线
         if (from === 'linestart' && branches[0].indexOf(to) === 1) {
             return 'Branch should not be open jaw from the first station';
         }
 
-        // should not be open jaw from the last station
+        // 不能从末站开始形成开口支线
         if (to === 'lineend' && branches[0].indexOf(from) === branches[0].length - 2) {
             return 'Branch should not be open jaw from the last station';
         }
 
-        // from has one child, to has one parent
+        // 起点须只有一个子站，终点须只有一个父站
         if (stationList[from].children.length > 1 || stationList[to].parents.length > 1) {
             return 'Branch already exist';
         }
 
-        // end station won't be a middle station of any branch except main line
+        // 终点站不能成为除主线外任何支线的中间站
         const isExistBranchIncludesEndStation = branches
             .slice(1)
             .some(branch => branch.slice(1, -1).includes(from) || branch.slice(1, -1).includes(to));
@@ -166,7 +167,7 @@ export const verifyNewBranchEnds = (from: string, to: string) => {
             return 'Cannot branch out from existing branch';
         }
 
-        // stations between both ends should be stations which isn't branching out
+        // 两端之间的车站都不能是分叉站
         const isStationsBetweenNotBranchOut = branches[0]
             .slice(branches[0].indexOf(from) + 1, branches[0].indexOf(to))
             .every(id => stationList[id].parents.length === 1 && stationList[id].children.length === 1);

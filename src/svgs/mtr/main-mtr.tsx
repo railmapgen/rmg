@@ -1,3 +1,4 @@
+// 港铁 SVG 画布：港铁主线路图。
 import { memo, useMemo } from 'react';
 import { adjacencyList, criticalPathMethod, getStnState, getXShareMTR } from '../methods/share';
 import { leftWideFactor, rightWideFactor, StationsMTR } from '../methods/mtr';

@@ -1,3 +1,4 @@
+// 测试：验证港铁目的地信息所覆盖的港铁行为。
 import DestinationMTR from './destination-mtr';
 import { render } from '../../test-utils';
 import { createTestStore, mockSimpleStationList } from '../../setupTests';

@@ -1,11 +1,12 @@
+// 线路参数与编辑操作：删除车站操作。
 import { RootDispatch, RootState } from '../index';
 import { getYShareMTR } from '../../methods';
 import { BranchStyle, StationDict } from '../../constants/constants';
 import { setStationsBulk } from './action';
 
 /**
- * Return false when current algo can not handle this kind of station removal.
- * MUST BE CALLED AND CHECKED BEFORE removeStation!!!
+ * 当前算法无法处理此类车站删除时返回 `false`。
+ * 必须在 `removeStation` 之前调用并检查结果！
  */
 export const checkStationCouldBeRemoved = (stationId: string) => {
     return (dispatch: RootDispatch, getState: () => RootState): boolean => {
@@ -22,12 +23,12 @@ export const checkStationCouldBeRemoved = (stationId: string) => {
             console.log('removeStation():: failed as only 2 stations remaining');
             return false;
         } else if (parents.length === 2 && children.length === 2) {
-            // Todo: rewrite, join two branches rather than reject?
+            // 待办：重写为合并两条支线，而非直接拒绝
             console.log('removeStation():: failed as branches on both sides cannot be combined');
             return false;
         }
 
-        // reject if station is the last one on main branch
+        // 若车站是主线最后一个车站则拒绝删除
         const isNotLastMainBranchStn = Object.keys(stationList).some(
             id => ![stationId, 'linestart', 'lineend'].includes(id) && getYShareMTR(id, stationList) === 0
         );
@@ -41,7 +42,7 @@ export const checkStationCouldBeRemoved = (stationId: string) => {
 };
 
 export const removeStation = (stationId: string) => {
-    // checkStationCouldBeRemoved BEFORE removeStation!!!
+    // 必须在 `removeStation` 之前调用 `checkStationCouldBeRemoved`！
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const stationList = getState().param.stn_list;
         const { parents, children } = stationList[stationId];
@@ -114,13 +115,13 @@ export const removeStation = (stationId: string) => {
              *         ^
              */
 
-            // parents have length 1
+            // 父节点数量为 1
             parents.forEach(parId => {
                 const idx = newStnList[parId].children.indexOf(stationId);
                 if (children.length) {
                     newStnList[parId].children[idx] = children[0];
                 } else {
-                    // Right dest
+                    // 右侧目的地
                     newStnList[parId].children.splice(idx, 1);
                 }
 
@@ -132,13 +133,13 @@ export const removeStation = (stationId: string) => {
                 }
             });
 
-            // children have length 1
+            // 子节点数量为 1
             children.forEach(childId => {
                 const idx = newStnList[childId].parents.indexOf(stationId);
                 if (parents.length) {
                     newStnList[childId].parents[idx] = parents[0];
                 } else {
-                    // Left dest
+                    // 左侧目的地
                     newStnList[childId].parents.splice(idx, 1);
                 }
 

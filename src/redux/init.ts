@@ -1,3 +1,4 @@
+// Redux 启动与持久化：恢复界面偏好，并在参数变化时写回浏览器存储。
 import { LocalStorageKey } from '../constants/constants';
 import { setCanvasScale, setCanvasToShow, updateParamModifiedTime } from './app/app-slice';
 import { RootDispatch, RootState, RootStore, startRootListening } from './index';
@@ -36,7 +37,7 @@ export const initStore = (store: RootStore) => {
     initCanvasScale(store);
     initCanvasToShow(store);
 
-    // listen to canvas scale change
+    // 监听画布缩放变化
     startRootListening({
         predicate: (action, currentState, previousState) => {
             return currentState.app.canvasScale.toString() !== previousState.app.canvasScale.toString();
@@ -46,7 +47,7 @@ export const initStore = (store: RootStore) => {
         },
     });
 
-    // listen to canvas to show change
+    // 监听可见画布变化
     startRootListening({
         predicate: (action, currentState, previousState) => {
             return currentState.app.canvasToShow.toString() !== previousState.app.canvasToShow.toString();
@@ -59,7 +60,7 @@ export const initStore = (store: RootStore) => {
         },
     });
 
-    // listen to current param change - update lastModifiedTime in paramRegistry and update param in localStorage
+    // 监听线路参数变化，更新项目清单时间戳并写回 localStorage
     startRootListening({
         predicate: (action, currentState, previousState) => {
             return JSON.stringify(currentState.param) !== JSON.stringify(previousState.param);
@@ -71,11 +72,11 @@ export const initStore = (store: RootStore) => {
 export const paramUpdateTrigger: ListenerEffect<AnyAction, RootState, RootDispatch> = (action, listenerApi) => {
     const { id, ...others } = listenerApi.getState().app.paramConfig ?? {};
     if (id) {
-        // write param to localStorage
+        // 将线路参数写入 localStorage
         const prevParamStr = rmgRuntime.storage.get(LocalStorageKey.PARAM_BY_ID + id);
         const nextParamStr = JSON.stringify(listenerApi.getState().param);
 
-        // update lostModified in paramConfig only if param localStorage value is actually updated
+        // 仅当 localStorage 中的参数确实变化时才更新时间戳
         if (prevParamStr !== nextParamStr) {
             console.log('ListenerMiddleware:: Writing param and paramConfig to localStorage, ID=' + id);
 

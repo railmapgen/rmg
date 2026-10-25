@@ -1,3 +1,4 @@
+// 港铁车站图形：换乘刻度。
 import { memo } from 'react';
 import { Direction, ExtendedInterchangeInfo, Position } from '../../../constants/constants';
 

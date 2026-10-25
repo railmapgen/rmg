@@ -1,3 +1,4 @@
+// 上海地铁 SVG 画布：上海地铁进站信息。
 /* eslint @typescript-eslint/no-non-null-assertion: 0 */
 import { memo, SVGAttributes, SVGProps, useMemo } from 'react';
 import { CanvasType, StationDict } from '../../constants/constants';
@@ -25,7 +26,7 @@ const RunInSHMetro = () => {
     } = useRootSelector(store => store.param);
 
     const svgWidth = svgWidths[CANVAS_TYPE];
-    // get the height
+    // 获取高度
     const dh = svg_height - 300;
 
     const prevStnIds = useMemo(() => {
@@ -33,7 +34,7 @@ const RunInSHMetro = () => {
             .filter(route => route.includes(current_stn_idx))
             .map(route => route[route.indexOf(current_stn_idx) + (direction === 'l' ? 1 : -1)])
             .filter(stnId => stnId !== undefined)
-            // remove duplicate
+            // 移除重复项
             .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]);
         if (
             loop && // if it is a loop
@@ -41,7 +42,7 @@ const RunInSHMetro = () => {
             prevStnIds.length === 1 && // and it is the first station of that direction
             ['linestart', 'lineend'].includes(prevStnIds[0])
         ) {
-            // get the station from the other end
+            // 从另一端获取车站
             prevStnIds = direction === 'l' ? [branches[0][1]] : [branches[0][branches[0].length - 2]];
         }
         return prevStnIds;
@@ -52,7 +53,7 @@ const RunInSHMetro = () => {
             .filter(route => route.includes(current_stn_idx))
             .map(route => route[route.indexOf(current_stn_idx) + (direction === 'l' ? -1 : 1)])
             .filter(stnId => stnId !== undefined)
-            // remove duplicate
+            // 移除重复项
             .reduce((acc, cur) => (acc.includes(cur) ? acc : acc.concat(cur)), [] as string[]);
         if (
             loop && // if it is a loop
@@ -60,7 +61,7 @@ const RunInSHMetro = () => {
             nextStnIds.length === 1 && // and it is the last station of that direction
             ['linestart', 'lineend'].includes(nextStnIds[0])
         ) {
-            // get the station from the other end
+            // 从另一端获取车站
             nextStnIds = direction === 'l' ? [branches[0][branches[0].length - 2]] : [branches[0][1]];
         }
         return nextStnIds;
@@ -87,12 +88,12 @@ export default RunInSHMetro;
 const DefsSHMetro = memo(function DefsSHMetro() {
     return (
         <defs>
-            {/* An extension of the line/path. Remember to minus the stroke-width.  */}
+            {/* 线路路径的延伸段；计算时需减去描边宽度。  */}
             <marker id="slope" viewBox="-1.5 0 3 1.5" refY={0.5}>
                 <path d="M0,0L1,1H-1z" fill="var(--rmg-theme-colour)" />
             </marker>
 
-            {/* Outline filter of white pass color in Pujiang Line */}
+            {/* 浦江线白色经过线的轮廓滤镜 */}
             <PujiangLineDefs />
         </defs>
     );
@@ -141,7 +142,7 @@ const GeneralStation = (props: RunInGeneralProps) => {
                 <TerminalStation mode="original" prevStnIds={prevStnIds} nextStnIds={nextStnIds} />
             ) : (
                 <>
-                    {/* General Station */}
+                    {/* 普通车站 */}
                     <Line prevStnIds={prevStnIds} nextStnIds={nextStnIds} />
 
                     <g transform={`translate(${middle},160)`} textAnchor="middle">
@@ -173,7 +174,7 @@ const TerminalStation = (props: { mode: 'terminal' | 'original'; prevStnIds: str
             ? 'var(--rmg-theme-colour)' // BranchLine will handle color of next line well
             : (colineStns
                   .filter(co => co.linePath.includes(current_stn_idx) && co.linePath.includes(nextColineColorFrom[0]))
-                  // TODO-coline: handle multiple coline colors
+                  // 待办（共线）：处理多种共线颜色
                   .map(co => co.colors[0][2])[0] ?? 'var(--rmg-theme-colour)');
 
     return (
@@ -222,14 +223,14 @@ const Line = (props: RunInGeneralProps) => {
     const { branches } = useRootSelector(store => store.helper);
     const middle = svgWidth.runin / 2;
 
-    // determine the end with linestart/lineend or .length === 0
+    // 通过线路端点或 `.length === 0` 判断终点
     const isEnd = (stnIds: string[]) => stnIds.includes('linestart') || stnIds.includes('lineend');
 
     const colineStns = calculateColineStations(Object.values(coline), branches);
 
-    // whether the next line is single color(var(--rmg-theme-colour) or coline color) or multiple colors
+    // 判断下一段线路使用单色（主题色或共线色）还是多色
     // let nextColineMode: 'single' | 'multiple' = 'single';
-    // TODO-coline: if coline is allowed in other segments, then this should be considered more precisely
+    // 待办（共线）：若允许其他区段共线，此处需要更精确处理
     const nextColineMode =
         nextStnIds.length > 1
             ? // needs to be single since BranchLine is in effect
@@ -241,7 +242,7 @@ const Line = (props: RunInGeneralProps) => {
                     'multiple'
                   : 'single'
               : [current_stn_idx, nextStnIds[0]].every(stnId => branches[0].includes(stnId)) && // is in the main line
-                  // and has coline from current_stn_idx to nextStnIds[0]
+                  // 并且从 `current_stn_idx` 到 `nextStnIds[0]` 存在共线
                   colineStns.filter(co => [current_stn_idx, nextStnIds[0]].every(stnId => co.linePath.includes(stnId)))
                       .length > 0
                 ? 'multiple'
@@ -253,10 +254,10 @@ const Line = (props: RunInGeneralProps) => {
             ? 'var(--rmg-theme-colour)' // BranchLine will handle color of next line well
             : (colineStns
                   .filter(co => co.linePath.includes(current_stn_idx) && co.linePath.includes(nextColineColorFrom[0]))
-                  // TODO-coline: handle multiple coline colors
+                  // 待办（共线）：处理多种共线颜色
                   .map(co => co.colors[0][2])[0] ?? 'var(--rmg-theme-colour)');
 
-    // curr and next/pass segment is in the coline branch
+    // 当前站与下一站或经过线段位于共线支线
     const isInColineBranch = (
         branches: string[][],
         current_stn_idx: string,
@@ -268,13 +269,13 @@ const Line = (props: RunInGeneralProps) => {
             .filter(branch => [current_stn_idx, nextOrPassStnIds[0]].every(stnId => branch.includes(stnId)))
             .filter(branch => isColineBranch(branch, stnList)).length > 0;
 
-    // change color to coline color only if it has coline and the curr and next stations are in the coline branch
+    // 仅当存在共线且当前站与下一站都位于共线支线时改用共线颜色
     const nextColor =
         Object.keys(coline).length > 0 && isInColineBranch(branches, current_stn_idx, nextStnIds, stnList)
             ? nextColineColor
             : 'var(--rmg-theme-colour)';
 
-    // stretch the next line element if curr and next stations aren't in main line with coline
+    // 若当前站和下一站不在带共线的主线上，则拉伸下一段线路
     const nextLineStretch =
         Object.keys(coline).length > 0 &&
         nextStnIds.length === 1 && // BranchLine will add branch next line so no stretch is needed
@@ -286,7 +287,7 @@ const Line = (props: RunInGeneralProps) => {
                       .length !== 0
               )); // no stretch if it is in main line with coline
 
-    // stretch the pass line element if BranchLine is not in effect
+    // 支线未生效时拉伸经过线元素
     const passLineStretch = Object.keys(coline).length > 0 && prevStnIds.length === 1;
 
     return (
@@ -350,7 +351,7 @@ const BranchLine = (props: RunInBranchLineProps) => {
 
     const LINE_BRANCH_Y = 125;
 
-    // draw a line between these dots
+    // 在这些点之间绘制连线
     const dotToPos = (dot: [number, number]) => `${dot[0]},${dot[1]}`;
     const dotsToPath = (dots: [number, number][]) =>
         `M${dotToPos(dots.at(0)!)} ` +
@@ -391,8 +392,8 @@ const BranchLine = (props: RunInBranchLineProps) => {
     if (Object.keys(coline).length > 0) {
         const colineStns = calculateColineStations(Object.values(coline), branches);
 
-        // If the next stns have coline branch here,
-        // uplift branch a little bit with coline color.
+        // 若下一站方向存在共线支线，
+        // 用共线颜色将支线略微上移。
         if (
             nextStnIds.length > 1 &&
             colineStns.filter(
@@ -400,7 +401,7 @@ const BranchLine = (props: RunInBranchLineProps) => {
                     stns.linePath.includes(current_stn_idx) && nextStnIds.some(stnId => stns.linePath.includes(stnId))
             )
         ) {
-            // no idea why strokeWidth is 12 but only when dy = -11 will be perfect
+            // 描边宽度为 12 时，仅 `dy = -11` 能获得理想效果，原因尚未确认
             nextDots[0][1] -= LINE_WIDTH - 1;
             nextDots.unshift([middle, LINE_BRANCH_Y - LINE_WIDTH + 1]);
             nextColor = colineStns
@@ -409,13 +410,13 @@ const BranchLine = (props: RunInBranchLineProps) => {
                         stns.linePath.includes(current_stn_idx) &&
                         nextStnIds.some(stnId => stns.linePath.includes(stnId))
                 )
-                // TODO-coline: known undefined issues when coline is removed if the station is removed via removeInvalidColineOnRemoveStation
+                // 待办（共线）：通过 `removeInvalidColineOnRemoveStation` 删除车站后，共线移除存在已知未定义问题
                 .at(0)!
                 .colors.at(0)![2];
         }
 
-        // If the prev stns have coline branch here,
-        // uplift branch a little bit.
+        // 若上一站方向存在共线支线，
+        // 将支线略微上移。
         if (
             prevStnIds.length > 1 &&
             colineStns.filter(
@@ -423,7 +424,7 @@ const BranchLine = (props: RunInBranchLineProps) => {
                     stns.linePath.includes(current_stn_idx) && prevStnIds.some(stnId => stns.linePath.includes(stnId))
             )
         ) {
-            // no idea why strokeWidth is 12 but only when dy = -11 will be perfect
+            // 描边宽度为 12 时，仅 `dy = -11` 能获得理想效果，原因尚未确认
             prevDots[0][1] -= LINE_WIDTH - 1;
             prevDots.unshift([middle, LINE_BRANCH_Y - LINE_WIDTH + 1]);
         }
@@ -436,7 +437,7 @@ const BranchLine = (props: RunInBranchLineProps) => {
             fill="none"
             filter={theme[2] === '#B5B5B6' ? 'url(#pujiang_outline)' : undefined}
         >
-            {/* An extension of the line/path with coline color. */}
+            {/* 使用共线颜色的线路路径延伸段。 */}
             <marker id="slope_branch" viewBox="-1.5 0 3 1.5" refY={0.5}>
                 <path d="M0,0L1,1H-1z" fill={nextColor} />
             </marker>

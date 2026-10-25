@@ -1,3 +1,4 @@
+/* 应用全局基础样式与公共排版规则。 */
 @import '@mantine/core/styles.css';
 @import "@railmapgen/mantine-components/styles.css";
 

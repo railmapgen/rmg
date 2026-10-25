@@ -1,3 +1,4 @@
+// 测试：验证线路参数状态切片所覆盖的线路参数与编辑操作行为。
 import rootReducer, { RootStore } from '../index';
 import paramReducer, {
     addNote,
@@ -428,12 +429,12 @@ describe('ParamSlice', () => {
         expect(stationTransferGroups[0].lines).toContainEqual(mockUpdatedThemeInterchange);
     });
 
-    // TODO
+    // 待办
     it('Can update first station of the branch of a station', () => {
         expect(1).toBe(1);
     });
 
-    // TODO
+    // 待办
     it('Can flip branch position of a station', () => {
         expect(1).toBe(1);
     });

@@ -1,3 +1,4 @@
+// 港铁 SVG 画布：站台编号。
 import { memo } from 'react';
 
 interface PlatformNumberProps {

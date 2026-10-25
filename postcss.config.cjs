@@ -1,3 +1,4 @@
+// PostCSS 配置：启用 Mantine 预设及跨断点 CSS 变量。
 module.exports = {
     plugins: {
         'postcss-preset-mantine': {

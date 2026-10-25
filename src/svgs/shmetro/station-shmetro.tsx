@@ -1,3 +1,4 @@
+// 上海地铁 SVG 画布：上海地铁车站。
 import { ColourHex } from '@railmapgen/rmg-palette-resources';
 import { ExtendedInterchangeInfo, Facilities, InterchangeGroup } from '../../constants/constants';
 import { useRootSelector } from '../../redux';
@@ -18,8 +19,8 @@ const StationSHMetro = (props: Props) => {
     const stnInfo = stn_list[stnId];
     const direction = direction_override ?? direction_param;
 
-    // shift station name if the line bifurcate here
-    // no shift for loop as there is no vertical line covering the station
+    // 线路在此分叉时偏移站名
+    // 环线没有覆盖车站的竖线，因此不偏移
     const branchNameDX = loop
         ? 0
         : (stnInfo.parents.length > 1 || stnInfo.children.length > 1
@@ -52,7 +53,7 @@ const StationSHMetro = (props: Props) => {
             <use
                 xlinkHref={`#${stationIconStyle}`}
                 {...stationIconColor} // different styles use either `fill` or `stroke`
-                // sh and sh2020 have different headings of int_sh, so -1 | 1 is multiplied
+                // `sh` 与 `sh2020` 的 `int_sh` 朝向不同，因此乘以 -1 或 1
                 transform={
                     `translate(${bank * (info_panel_type === 'sh2020' ? 5 : 0)},0)` +
                     `rotate(${bank * 90 * (info_panel_type === 'sh2020' ? 1 : -1)})`
@@ -91,16 +92,16 @@ interface StationNameGElementProps {
 const StationNameGElement = (props: StationNameGElementProps) => {
     const { name, groups, stnState, direction, facility, bank, oneLine, intPadding } = props;
 
-    // legacy ref to get the exact station name width
+    // 使用旧引用获取站名精确宽度
     const stnNameEl = useRef<SVGGElement | null>(null);
 
-    // simplify the calculation times
+    // 简化重复计算
     const directionPolarity = direction === 'l' ? 1 : -1;
 
-    // main elements icon's dx will change if there is a facility icon or not
+    // 是否显示设施图标会影响主图标的 `dx`
     const mainDx = facility ? 30 : 0;
 
-    // interchange will have a line under the name, and should be stretched when placed horizontal in loop
+    // 换乘名称下方会绘制线条，在环线中水平放置时需要拉伸
     const lineDx = bank ? -12 : 0;
 
     const intEl = useRef<SVGGElement | null>(null);
@@ -141,14 +142,14 @@ const StationNameGElement = (props: StationNameGElementProps) => {
                     fill={stnState === -1 ? 'gray' : stnState === 0 ? 'red' : 'black'}
                 />
 
-                {/* this is out-of-station text displayed above the IntBoxGroup */}
+                {/* 显示在 `IntBoxGroup` 上方的出站换乘文字 */}
                 {groups[1]?.lines?.length && (
                     <g transform={`translate(${(intDx + intWidth / 2) * directionPolarity},-30)`}>
                         <OSIText osiInfos={groups[1].lines} />
                     </g>
                 )}
 
-                {/* deal out-of-system here as it's dx is fixed and has nothing to do with IntBoxGroup */}
+                {/* 出站换乘在此处理，因为其 `dx` 固定，与 `IntBoxGroup` 无关 */}
                 {groups[2]?.lines?.length && (
                     <g transform={`translate(${(intPadding + 5) * directionPolarity},0)`}>
                         <OSysIText osysiInfos={groups[2].lines} direction={props.direction} />
@@ -237,12 +238,12 @@ const IntBoxGroup = forwardRef(function IntBoxGroup(
 ) {
     const { groups, direction, ...others } = props;
 
-    // also known as non out-of-system transfers
+    // 也称为非出站换乘
     const boxInfos: ExtendedInterchangeInfo[] = [
         ...(groups[0].lines || []),
         ...(groups[1]?.lines || []),
-        // some dirty tricks here as shmetro shows maglev icon even it is an out-of-system transfer
-        // and display a maglev icon is much easier in boxInfos than in OSysIText
+        // 上海地铁在跨系统换乘时仍显示磁浮图标，因此此处采用兼容性处理
+        // 在 `boxInfos` 中显示磁浮图标比在 `OSysIText` 中更简单
         ...(groups[2]?.lines?.filter(info => Boolean(info.name[0].match(/^磁(悬)*浮/))) || []),
     ];
 
@@ -305,7 +306,7 @@ const IntBoxNumber = memo(
             <>
                 <use xlinkHref="#intbox_number" fill={props.info.theme?.[2]} />
                 <text x={10} className="rmg-name__zh" fill={props.info.theme?.[3]} dominantBaseline="central">
-                    {/* // line starts with numbers */}
+                    {/* 线路名以数字开头 */}
                     {props.info.name[0].match(/(\d*)\w+/)?.[0]}
                 </text>
             </>
@@ -316,7 +317,7 @@ const IntBoxNumber = memo(
 
 const IntBoxLetter = memo(
     function IntBoxLetter(props: { info: ExtendedInterchangeInfo }) {
-        // box width: 16 * number of characters + 12
+        // 框宽：16 × 字符数 + 12
         const textCount = props.info.name[0].split('\\')[0].length;
         return (
             <>
@@ -336,7 +337,7 @@ const IntBoxLetter = memo(
 );
 
 const OSIText = (props: { osiInfos: ExtendedInterchangeInfo[] }) => {
-    // get the all names from the out of station interchanges
+    // 获取全部出站换乘线路名
     const lineNames = props.osiInfos.map(info => info.name[0]).join('，');
     return useMemo(
         () => (
@@ -357,7 +358,7 @@ const OSIText = (props: { osiInfos: ExtendedInterchangeInfo[] }) => {
 };
 
 const OSysIText = (props: { osysiInfos: ExtendedInterchangeInfo[]; direction: 'l' | 'r' }) => {
-    // get the all names from out of system transfers
+    // 获取全部跨系统换乘线路名
     const lineNames = props.osysiInfos.map(info => info.name[0]).join('，');
     const lineNamesEn = props.osysiInfos.map(info => info.name[1]).join(', ');
 

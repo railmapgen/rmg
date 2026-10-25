@@ -1,3 +1,4 @@
+// 线路参数编辑操作：更新车站拓扑、反向、旋转和换乘信息。
 import {
     BranchStyle,
     Direction,
@@ -381,9 +382,9 @@ export const updateStationBranchType = (stationId: string, direction: Direction,
     };
 };
 
-// TODO: replace with branch swapping in future change
+// 待办：后续改用支线交换逻辑
 export const updateStationBranchFirstStation = (stationId: string, direction: Direction, firstId: string) => {
-    // update both end of the branch
+    // 更新支线两端的连接关系
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const branches = getState().helper.branches;
 
@@ -429,7 +430,7 @@ export const updateStationBranchFirstStation = (stationId: string, direction: Di
 export type UpdateStationBranchFirstStationLegacyArgType = { stnId: string; direction: Direction; first: string };
 
 /**
- * @deprecated For V3 legacy support
+ * @deprecated 用于兼容 V3 旧数据
  */
 export const updateStationBranchFirstStationLegacy = (
     branches: [UpdateStationBranchFirstStationLegacyArgType, UpdateStationBranchFirstStationLegacyArgType]
@@ -465,7 +466,7 @@ export const updateStationBranchFirstStationLegacy = (
 };
 
 export const flipStationBranchPosition = (stationId: string, direction: Direction) => {
-    // flip both end of the branch
+    // 翻转支线两端的连接关系
     return (dispatch: RootDispatch, getState: () => RootState) => {
         const branches = getState().helper.branches;
 
@@ -483,7 +484,7 @@ export const flipStationBranchPosition = (stationId: string, direction: Directio
 };
 
 /**
- * @deprecated For V3 legacy support
+ * @deprecated 用于兼容 V3 旧数据
  */
 export const flipStationBranchPositionLegacy = (left: string, right: string) => {
     return (dispatch: RootDispatch, getState: () => RootState) => {
@@ -617,7 +618,7 @@ export const autoNumbering = (branchIndex: number, from: number, maxLength = 2, 
         const stationList = getState().param.stn_list;
         const branches = getState().helper.branches;
 
-        // not altering station code of linestart, lineend, branch out station
+        // 不修改线路端点及分叉站的车站编号
         const branch = branches[branchIndex]?.slice(1, -1);
 
         if (branch) {

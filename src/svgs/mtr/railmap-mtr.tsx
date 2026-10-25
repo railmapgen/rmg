@@ -1,3 +1,4 @@
+// 港铁 SVG 画布：港铁线路图。
 import StripMTR from './strip-mtr';
 import MainMTR from './main-mtr';
 import { CanvasType } from '../../constants/constants';

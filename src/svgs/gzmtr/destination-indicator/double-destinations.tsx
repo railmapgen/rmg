@@ -1,3 +1,4 @@
+// 广州地铁目的地指示：双终点指示。
 import { useRootSelector } from '../../../redux';
 import { Fragment, SVGProps } from 'react';
 import { ShortDirection } from '../../../constants/constants';

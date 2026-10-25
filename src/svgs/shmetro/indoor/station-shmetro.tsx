@@ -1,3 +1,4 @@
+// 上海地铁站内图：上海地铁车站。
 import { ColourHex } from '@railmapgen/rmg-palette-resources';
 import { Fragment, Ref, SVGProps, forwardRef, useEffect, useMemo, useRef, useState, SVGAttributes } from 'react';
 import { ExtendedInterchangeInfo, InterchangeGroup, Services } from '../../../constants/constants';
@@ -5,7 +6,7 @@ import { useRootSelector } from '../../../redux';
 import { Translation } from '@railmapgen/rmg-translate';
 
 /**
- * Which direction to display station name. Currently shmetro only.
+ * 站名显示方向，目前仅上海地铁样式使用。
  */
 export type NameDirection = 'upward' | 'downward' | 'left' | 'right';
 
@@ -42,7 +43,7 @@ export const StationSHMetro = (props: Props) => {
                 stroke={transfer.length > 0 ? 'var(--rmg-black)' : (color ?? 'var(--rmg-theme-colour)')}
                 transform={`rotate(${dr})`}
             />
-            {/* This should be in IntBoxGroupProps, put here because the station icon will cover this */}
+            {/* 该属性本应位于 `IntBoxGroupProps`，因会被车站图标覆盖而放在此处 */}
             {stnInfo.services.length > 1 && (
                 <text className="rmg-name__zh" writingMode="tb" fontSize="60%" dy="-12">
                     {`大站车${stnInfo.services.length > 2 ? ' 直达车' : ''}停靠`}
@@ -65,7 +66,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
     const { name, groups, nameDirection, services } = props;
     const dy = { upward: 60, downward: -30, left: 0, right: 0 }[nameDirection];
     const osysi_dx =
-        // only compute when there is an out-of-system transfer
+        // 仅在存在跨系统换乘时计算
         groups[2]?.lines?.length
             ? {
                   upward: 0,
@@ -75,7 +76,7 @@ const StationNameGElement = (props: StationNameGElementProps) => {
               }[nameDirection]
             : 0;
     const osysi_dy =
-        // only compute when there is an out-of-system transfer
+        // 仅在存在跨系统换乘时计算
         groups[2]?.lines?.length
             ? {
                   upward:
@@ -232,12 +233,12 @@ interface IntBoxGroupProps {
 const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
     const { intInfos, arrowDirection, services } = props;
 
-    // name each different linearGradient that will fill the arrow
+    // 为填充箭头的各线性渐变命名
     const intNameId = intInfos
         .flatMap(intInfo => intInfo.map(info => info.theme?.[2]))
         .reduce((name, color) => name + color, '');
 
-    // get the interchange line names
+    // 获取换乘线路名称
     const lineNames = intInfos.map(intInfo =>
         [
             intInfo
@@ -256,13 +257,13 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
     const lineNamesEn = intInfos.map(intInfo =>
         [
             'Line '.concat(
-                // contact number lines to Line 1,2,3...
+                // 把数字线路名拼接为“1号线、2号线、3号线……”
                 intInfo
                     .filter(info => /^(L|l)ine \d+$/.test(info.name[1]))
                     .map(info => info.name[1].replace('Line', '').replace('line', '').trim())
                     .join(',')
             ),
-            // and then add text lines without any change
+            // 随后直接追加其他线路文字
             intInfo
                 .filter(info => !/^(L|l)ine \d+$/.test(info.name[1]))
                 .map(info => info.name[1])
@@ -272,15 +273,15 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
             .join(', ')
     );
 
-    // for services contains three level (normal, express, direct)
-    // additional length is required on transfer arrow otherwise
-    // the station icon will be longer than the arrow itself
+    // 服务包含普通车、快车和直达车三个等级时
+    // 否则还需为换乘箭头增加长度，
+    // 导致车站图标比箭头本身更长
     const arrowLength = services.length === 3 ? 80 : 45;
     const transfer_dy = { upward: -145, downward: 125 + (services.length === 3 ? 40 : 0), left: 7, right: 7 }[
         arrowDirection
     ];
 
-    // bunch of constants for all four directions
+    // 四个方向使用的常量集合
     const arrow_dx = { upward: 0, downward: 0, left: 20, right: -20 }[arrowDirection];
     const arrow_dy = { upward: -74, downward: 44, left: 0, right: 0 }[arrowDirection];
     const arrow_dr = { upward: 0, downward: 180, left: 90, right: -90 }[arrowDirection];
@@ -321,7 +322,7 @@ const IntBoxGroup = (props: IntBoxGroupProps & SVGProps<SVGGElement>) => {
                 >
                     {intInfos.flat().map((intInfo, i) => (
                         <Fragment key={i}>
-                            {/* more about React.Fragment on https://stackoverflow.com/a/59390967 */}
+                            {/* React.Fragment 说明：https://stackoverflow.com/a/59390967 */}
                             <stop // start from
                                 offset={`${(100 / intInfos.flat().length) * i}%`}
                                 stopColor={intInfo.theme?.[2]}

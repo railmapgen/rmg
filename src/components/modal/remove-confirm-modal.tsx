@@ -1,3 +1,4 @@
+// 编辑对话框：删除确认对话框。
 import classes from './common-modal.module.css';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -35,7 +36,7 @@ export default function RemoveConfirmModal(props: RemoveConfirmModalProps) {
         if (result) {
             onClose();
 
-            // reset selected station
+            // 重置选中车站
             dispatch(setSelectedStation('linestart'));
 
             dispatch(removeInvalidColineOnRemoveStation(selectedStation));

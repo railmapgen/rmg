@@ -1,3 +1,4 @@
+// 测试：验证站名所覆盖的广州地铁站名行为。
 import StationName from './station-name';
 import { render } from '../../../test-utils';
 import { vi } from 'vitest';

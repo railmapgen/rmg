@@ -1,3 +1,4 @@
+# 自动发布工作流：执行检查、构建、版本更新、提交和制品上传。
 name: Build and Release
 
 on:

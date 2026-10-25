@@ -1,3 +1,4 @@
+// 港铁 SVG 画布：港铁目的地信息。
 import { memo, useEffect, useRef, useState } from 'react';
 import StripMTR from './strip-mtr';
 import { CanvasType, Name, ShortDirection } from '../../constants/constants';

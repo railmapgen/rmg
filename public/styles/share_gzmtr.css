@@ -1,3 +1,4 @@
+/* 广州地铁风格的共享 SVG 导出样式。 */
 :root {
     --font-family-zh: Arial, SimHei, STHeitiSC-Medium, 'PingFang SC';
     --font-family-en: Arial;
@@ -40,7 +41,7 @@ rect#strip_gz {
     fill: #fff;
 }
 
-/* for runin */
+/* 进站信息样式 */
 .rmg-name__en.rmg-name__gzmtr--next2-dest {
     font-size: 8.5px;
 }
@@ -50,7 +51,7 @@ g#big_sec {
     --translate-x: calc(var(--rmg-svg-width) / 2);
 }
 
-/* for railmap */
+/* 线路图样式 */
 .Name.Pass {
     fill: #aaa;
 }

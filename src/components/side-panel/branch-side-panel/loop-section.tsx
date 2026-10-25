@@ -1,3 +1,4 @@
+// 侧边栏线路区段编辑：环线设置区。
 import classes from '../side-panel.module.css';
 import { useTranslation } from 'react-i18next';
 import { useRootDispatch, useRootSelector } from '../../../redux';
@@ -28,7 +29,7 @@ export default function LoopSection() {
     const { loop_info, style, stn_list: stationList } = useRootSelector(state => state.param);
     const { bank, left_and_right_factor, bottom_factor, clockwise } = loop_info;
 
-    // loop line with 2 branches has no bottom_factor and a specialized left_and_right_factor_max
+    // 带两条支线的环线没有 `bottom_factor`，并使用专门的 `left_and_right_factor_max`
     const arc: 'major' | 'minor' = 'minor';
     const branch_stn_ids = branches
         .flat()

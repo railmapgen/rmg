@@ -1,3 +1,4 @@
+// 测试：验证环线几何工具所覆盖的广州地铁线路图行为。
 import { getStationStates } from './loop-utils';
 
 const stations = ['a', 'b', 'c', 'd', 'e'];

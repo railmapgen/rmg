@@ -1,3 +1,4 @@
+// 图像导出工具：克隆 SVG、内联样式与字体，并通过 Canvas 生成 PNG。
 import { CanvasType, RmgStyle } from '../constants/constants';
 import { STYLE_CONFIG } from '../svgs/config';
 import rmgRuntime from '@railmapgen/rmg-runtime';
@@ -70,7 +71,7 @@ export const test = async (svgEl: SVGSVGElement, scale: number, isWait: boolean)
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // bypass Chrome min font size (to be improved)
+    // 绕过 Chrome 的最小字号限制（后续可改进）
 
     svgEl
         .querySelectorAll('.rmg-name__en.rmg-name__gzmtr--next2-dest')

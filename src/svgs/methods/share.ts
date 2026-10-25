@@ -1,10 +1,11 @@
+// 线路图几何与拓扑算法：共享绘制工具。
 import { ShortDirection, StationDict, StationInfo } from '../../constants/constants';
 
 /**
- * Compute the adjacency list of the graph.
- * @param stnList Key-value pairs of station info
- * @param leftW Callback of left wide factor
- * @param rightW Callback of right wide factor
+ * 计算线路图的邻接表。
+ * @param stnList 车站信息键值对
+ * @param leftW 左侧宽度系数回调
+ * @param rightW 右侧宽度系数回调
  */
 export const adjacencyList = (
     stnList: { [stnId: string]: StationInfo },
@@ -24,10 +25,10 @@ export const adjacencyList = (
 };
 
 /**
- * Compute critical path and its length from `from` node to `to` node with critical path method.
- * @param from ID of station on the left
- * @param to ID of station on the right
- * @param adjMat Adjacency matrix in the form of `Object` returned from `adjacencyList` method.
+ * 使用关键路径法计算 `from` 到 `to` 的最长路径及其长度。
+ * @param from 左侧车站 ID
+ * @param to 右侧车站 ID
+ * @param adjMat `adjacencyList` 返回的对象形式邻接矩阵
  */
 export const criticalPathMethod = (from: string, to: string, adjMat: ReturnType<typeof adjacencyList>) => {
     if (from === to) {
@@ -54,7 +55,7 @@ export const getXShareMTR = (stnId: string, adjMat: ReturnType<typeof adjacencyL
     if (criticalPath.nodes.includes(stnId)) {
         return criticalPathMethod(criticalPath.nodes[1], stnId, adjMat).len;
     } else {
-        // must has 1 parent and 1 child only
+        // 必须且只能有一个父站和一个子站
         const branchOfStn = branches.filter(branch => branch.includes(stnId))[0];
 
         let partSource = stnId;
@@ -69,7 +70,7 @@ export const getXShareMTR = (stnId: string, adjMat: ReturnType<typeof adjacencyL
         const leftOpenJaw = partSource === 'linestart';
         const rightOpenJaw = partSink === 'lineend';
 
-        // expand to fit
+        // 扩展以适配内容
         const lens = [];
         if (!leftOpenJaw && !rightOpenJaw) {
             lens[0] = criticalPathMethod(criticalPath.nodes[1], partSource, adjMat).len;
@@ -82,7 +83,7 @@ export const getXShareMTR = (stnId: string, adjMat: ReturnType<typeof adjacencyL
             lens[2] = criticalPathMethod(branchOfStn[1], stnId, adjMat).len;
             lens[3] = criticalPathMethod(stnId, partSink, adjMat).len;
         } else {
-            // right open jaw
+            // 右侧开口支线
             lens[0] = criticalPathMethod(criticalPath.nodes[1], partSource, adjMat).len;
             lens[1] = criticalPathMethod(partSource, criticalPath.nodes.slice(-2)[0], adjMat).len;
             lens[2] = criticalPathMethod(partSource, stnId, adjMat).len;
@@ -147,7 +148,7 @@ export class Stations {
     }
 
     /**
-     * Increment of the weight of in-bound edge of a station, which increases the horizontal interval from its parents.
+     * 增加车站入边权重，从而扩大它与父站之间的水平间距。
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected leftWideFactor = (stnId: string) => {
@@ -155,7 +156,7 @@ export class Stations {
     };
 
     /**
-     * Increment of the weight of out-bound edge of a station, which increases the horizontal interval from its children.
+     * 增加车站出边权重，从而扩大它与子站之间的水平间距。
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected rightWideFactor = (stnId: string) => {
@@ -175,20 +176,20 @@ export class Stations {
         }
         const stnPred = this.stnList[stnId].parents[0];
         if (stnPred) {
-            // parent exist
+            // 存在父车站
             if (this.stnList[stnPred].children.length === 1) {
-                // no sibling, then y same as parent
+                // 没有同级车站时，纵向位置与父车站相同
                 const res = this.getYShare(stnPred);
                 this.yShares[stnId] = res;
                 return res;
             } else {
-                // sibling exists, then y depends on its idx of being children
+                // 存在同级车站时，纵向位置取决于它在子车站中的索引
                 const res: 1 | -1 = this.stnList[stnPred].children.indexOf(stnId) === 0 ? 1 : -1;
                 this.yShares[stnId] = res;
                 return res;
             }
         } else {
-            // no parent, must be linestart
+            // 没有父车站时，该节点必须是线路起点
             this.yShares[stnId] = 0;
             return 0;
         }
@@ -208,7 +209,7 @@ export class Stations {
     }
 
     /**
-     * Parameters of the arcs involved in the `<path>` element.
+     * `<path>` 元素中圆弧的参数。
      */
     private pathTurnParams = (branchSpacing: number) => {
         const tr = 35; // turning radius
@@ -220,7 +221,7 @@ export class Stations {
     };
 
     /**
-     * Path segment from a station towards its southeast (lower-right).
+     * 从车站朝东南方向绘制的路径段。
      */
     private pathTurnSE = (branchSpacing: number) => {
         const { tr, dx_a, dy_a, dx_l, dy_l } = this.pathTurnParams(branchSpacing);
@@ -228,7 +229,7 @@ export class Stations {
     };
 
     /**
-     * Path segment from a station towards its northeast (upper-right).
+     * 从车站朝东北方向绘制的路径段。
      */
     private pathTurnNE = (branchSpacing: number) => {
         const { tr, dx_a, dy_a, dx_l, dy_l } = this.pathTurnParams(branchSpacing);
@@ -236,7 +237,7 @@ export class Stations {
     };
 
     /**
-     * Generate `d` attribute of `<path>` element through all stations input.
+     * 根据全部输入车站生成 `<path>` 元素的 `d` 属性。
      */
     protected _linePath(
         stnIds: string[],
@@ -267,13 +268,13 @@ export class Stations {
                 if (stnIds.length === 1) {
                     path.push(`M ${x},${y}`);
                 } else if (!branches[0].includes(stnId)) {
-                    // started from branch
+                    // 从支线开始
                     path.push(`M ${x},${y}`);
                 } else if (branches[0].includes(stnIds[1])) {
-                    // started from branching station, this is main line
+                    // 从分叉站开始，当前路径为主线
                     path.push(`M ${x},${y}`);
                 } else {
-                    // started form branching station, this is branch line
+                    // 从分叉站开始，当前路径为支线
                     if (realXs[stnIds[1]] > 0) {
                         path.push(`M ${x},${y + e}`);
                     }
@@ -302,7 +303,7 @@ export class Stations {
             [prevId, prevX, prevY] = [stnId, x, y];
         });
 
-        // simplify path
+        // 简化路径
         return path.join(' ').replace(/( H ([\d.]+))+/g, ' H $2');
     }
 }
@@ -317,7 +318,7 @@ export const drawLine = (branch: string[], stnStates: { [stnId: string]: -1 | 0 
     }
 
     if (lineMainStns.filter(stnId => linePassStns.indexOf(stnId) !== -1).length === 0 && lineMainStns.length) {
-        // if two set disjoint
+        // 若两个集合不相交
         if (linePassStns[0] === branch[0]) {
             // -1 -1 1 1
             linePassStns.push(lineMainStns[0]);

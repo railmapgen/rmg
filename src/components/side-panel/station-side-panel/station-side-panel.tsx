@@ -1,3 +1,4 @@
+// 侧边栏车站编辑：车站编辑面板。
 import classes from '../side-panel.module.css';
 import InfoSection from './info-section';
 import InterchangeSection from './interchange-section';
@@ -83,7 +84,7 @@ export default function StationSidePanel() {
     return (
         <Stack className={classes['tab-body']} gap="xs">
             <Group gap="xs" mt="xs" align="flex-end">
-                {/* TODO: Use below component globally */}
+                {/* 待办：改为全局复用下方组件 */}
                 <Select
                     value={stationOptionIdMapper.construct(selectedBranch, selectedStation)}
                     data={stationOptions}

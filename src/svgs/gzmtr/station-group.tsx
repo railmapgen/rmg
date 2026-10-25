@@ -1,3 +1,4 @@
+// 广州地铁 SVG 画布：车站组合。
 import { useRootSelector } from '../../redux';
 import Station from './station';
 import { StationState } from '../../constants/constants';

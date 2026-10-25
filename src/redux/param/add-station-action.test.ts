@@ -1,3 +1,4 @@
+// 测试：验证新增车站操作所覆盖的线路参数与编辑操作行为。
 import { addStation, getNewBranchAllowedEnds, verifyNewBranchEnds } from './add-station-action';
 import { BranchStyle, StationDict } from '../../constants/constants';
 import { getBranches } from '../helper/graph-theory-util';

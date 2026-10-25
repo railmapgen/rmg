@@ -1,3 +1,4 @@
+// 广州地铁 SVG 画布：站台编号。
 import { SVGProps } from 'react';
 
 interface PlatformNumberProps extends SVGProps<SVGGElement> {

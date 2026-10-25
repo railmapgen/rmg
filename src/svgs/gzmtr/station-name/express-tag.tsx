@@ -1,3 +1,4 @@
+// 广州地铁站名：快车标签。
 import { SVGProps } from 'react';
 
 interface ExpressTagProps extends SVGProps<SVGGElement> {
