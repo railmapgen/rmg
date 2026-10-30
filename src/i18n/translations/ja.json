@@ -29,13 +29,15 @@
         "branch": "支線",
         "external": "外部路線",
         "addStation": "駅を追加",
-        "editLine":  "路線区間設定"
+        "editLine": "路線区間設定"
     },
 
     "StationAgGrid": {
         "num": "駅番号",
         "interchange": "乗り換え",
-        "coline": "共線"
+        "coline": "共線",
+        "zhName": "中国語名",
+        "enName": "英語名"
     },
 
     "StyleSidePanel": {
@@ -135,7 +137,9 @@
             "title": "駅情報",
             "num": "駅番号",
             "zhSecondary": "日本語サブ名称",
-            "enSecondary": "英語サブ名称"
+            "enSecondary": "英語サブ名称",
+            "zhName": "中国語名",
+            "enName": "英語名"
         },
         "interchange": {
             "title": "乗り換え",
@@ -146,7 +150,9 @@
             "noInterchanges": "乗り換えなし",
             "add": "乗り換えを追加",
             "copy": "乗り換えをコピー",
-            "remove": "乗り換えを削除"
+            "remove": "乗り換えを削除",
+            "zhName": "中国語名",
+            "enName": "英語名"
         },
         "branch": {
             "type": "種類",
@@ -169,7 +175,8 @@
             "intPadding": "駅名と乗り換え路線の間隔",
             "intPaddingApplyGlobal": "現在の間隔を全駅に適用",
             "apply": "適用",
-            "characterSpacing": "駅名の文字間隔"
+            "characterSpacing": "駅名の文字間隔",
+            "none": "なし"
         },
         "footer": {
             "current": "現在の駅として設定",
@@ -337,5 +344,23 @@
         "gzmtr": "広州地下鉄",
         "shmetro": "上海地下鉄",
         "shsubrwy": "上海市域鉄道"
-    }
+    },
+    "Hide canvas": "描画領域を非表示",
+    "Show canvas": "描画領域を表示",
+    "Zoom out": "縮小",
+    "Zoom in": "拡大",
+    "Downloading": "取得中",
+    "External URL cannot be opened.": "外部 URL を開けません。",
+    "Invalid selection": "選択が無効です",
+    "Route": "経路",
+    "Delete colour for route": "経路の色を削除",
+    "Unable to draw this share track.": "この共用区間を描画できません。",
+    "Decrease": "減らす",
+    "Increase": "増やす",
+    "Midpoint": "中点",
+    "Move left": "左へ移動",
+    "Move right": "右へ移動",
+    "Move up": "上へ移動",
+    "Move down": "下へ移動",
+    "Help": "操作案内"
 }

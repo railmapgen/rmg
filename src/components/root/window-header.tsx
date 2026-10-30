@@ -24,7 +24,7 @@ export const WindowHeader = () => {
                     size="sm"
                     variant="subtle"
                     color="gray"
-                    aria-label="Help"
+                    aria-label={t('Help')}
                     onClick={() => setIsHelpModalOpen(true)}
                 >
                     <MdOutlineHelpOutline />
