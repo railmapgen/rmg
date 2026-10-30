@@ -29,13 +29,15 @@
         "branch": "支線",
         "external": "外部路線",
         "addStation": "駅を追加",
-        "editLine":  "路線区間設定"
+        "editLine": "路線区間設定"
     },
 
     "StationAgGrid": {
         "num": "駅番号",
         "interchange": "乗り換え",
-        "coline": "共線"
+        "coline": "共線",
+        "zhName": "中国語名",
+        "enName": "英語名"
     },
 
     "StyleSidePanel": {
@@ -135,7 +137,9 @@
             "title": "駅情報",
             "num": "駅番号",
             "zhSecondary": "日本語サブ名称",
-            "enSecondary": "英語サブ名称"
+            "enSecondary": "英語サブ名称",
+            "zhName": "中国語名",
+            "enName": "英語名"
         },
         "interchange": {
             "title": "乗り換え",
@@ -146,7 +150,9 @@
             "noInterchanges": "乗り換えなし",
             "add": "乗り換えを追加",
             "copy": "乗り換えをコピー",
-            "remove": "乗り換えを削除"
+            "remove": "乗り換えを削除",
+            "zhName": "中国語名",
+            "enName": "英語名"
         },
         "branch": {
             "type": "種類",
@@ -169,7 +175,8 @@
             "intPadding": "駅名と乗り換え路線の間隔",
             "intPaddingApplyGlobal": "現在の間隔を全駅に適用",
             "apply": "適用",
-            "characterSpacing": "駅名の文字間隔"
+            "characterSpacing": "駅名の文字間隔",
+            "none": "なし"
         },
         "footer": {
             "current": "現在の駅として設定",
@@ -337,5 +344,30 @@
         "gzmtr": "広州地下鉄",
         "shmetro": "上海地下鉄",
         "shsubrwy": "上海市域鉄道"
+    },
+    "Hide canvas": "描画領域を非表示",
+    "Show canvas": "描画領域を表示",
+    "Zoom out": "縮小",
+    "Zoom in": "拡大",
+    "Downloading": "取得中",
+    "External URL cannot be opened.": "外部 URL を開けません。",
+    "Invalid selection": "選択が無効です",
+    "Route": "経路",
+    "Delete colour for route": "経路の色を削除",
+    "Unable to draw this share track.": "この共用区間を描画できません。",
+    "Decrease": "減らす",
+    "Increase": "増やす",
+    "Midpoint": "中点",
+    "Move left": "左へ移動",
+    "Move right": "右へ移動",
+    "Move up": "上へ移動",
+    "Move down": "下へ移動",
+    "Help": "操作案内",
+    "termsReference": {
+        "layout": "案内表示や路線図の要素の配置は、選択した様式に応じて Guangzhou Metro Group、MTR Corporation、Shanghai Shentong Metro Group が設計したものです。生成した画像を商用利用する際に許可や利用許諾が必要な場合は、事前に該当する会社から取得してください。",
+        "elements": "画像内の図形や線は、上記各社の設計基準に基づき Chito Wong と thekingofcity が描画したものです。どのような目的にも使用できますが、ソフトウェアの名称とリンクを併記することを推奨します。",
+        "fonts": "著作権、利用許諾などの法的制約により、{{app}} は MTR 様式の案内表示において、MTRSung と Myriad Pro の代わりに、それぞれ ButTaiwan の GenYoMin と Vegur を使用します。生成した画像を商用利用する前に、書体の提供元から適切な許可や利用許諾を取得してください。",
+        "images": "書き出した PNG または SVG 形式の画像は、上記の条件に従って、改変、公開、その他の目的に使用できます。",
+        "changes": "これらの条項を予告なく変更、追加、削除する権利を留保します。中国語訳は参考用であり、英語版と中国語版に相違がある場合は英語版が優先します。"
     }
 }

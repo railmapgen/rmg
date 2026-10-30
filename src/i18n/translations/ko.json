@@ -29,13 +29,15 @@
         "branch": "지노선",
         "external": "외부 노선",
         "addStation": "역 추가",
-        "editLine":  "노선 구간 설정"
+        "editLine": "노선 구간 설정"
     },
 
     "StationAgGrid": {
         "num": "역 번호",
         "interchange": "환승",
-        "coline": "공용"
+        "coline": "공용",
+        "zhName": "중국어 이름",
+        "enName": "영어 이름"
     },
 
     "StyleSidePanel": {
@@ -53,7 +55,8 @@
             "branchSpacingLoop": "수직 여백",
             "padding": "로드맵 여백",
             "directionGzX": "터미널 수평 방향 위치",
-            "directionGzY": "터미널 수직 방향 위치"
+            "directionGzY": "터미널 수직 방향 위치",
+            "loopSpacing": "순환선 여백"
         },
         "design": {
             "title": "디자인",
@@ -134,7 +137,9 @@
             "title": "역 정보",
             "num": "역 번호",
             "zhSecondary": "한자 제2명칭",
-            "enSecondary": "영문 제2명칭"
+            "enSecondary": "영문 제2명칭",
+            "zhName": "중국어 이름",
+            "enName": "영어 이름"
         },
         "interchange": {
             "title": "환승",
@@ -145,7 +150,9 @@
             "noInterchanges": "비환승역",
             "add": "환승 추가",
             "copy": "환승 복사",
-            "remove": "환승 삭제"
+            "remove": "환승 삭제",
+            "zhName": "중국어 이름",
+            "enName": "영어 이름"
         },
         "branch": {
             "type": "유형",
@@ -167,7 +174,9 @@
             "oneLine": "한 줄 안에 한자와 영문의 역명을 전시하기",
             "intPadding": "역명과 환승 노선 사이의 간격",
             "intPaddingApplyGlobal": "현재 간격을 모든 역에 적용",
-            "apply": "응용"
+            "apply": "응용",
+            "none": "없음",
+            "characterSpacing": "역 이름 자간"
         },
         "footer": {
             "current": "현재 역으로 설정",
@@ -326,12 +335,39 @@
         "destination": "터미널 번호판",
         "runin": "현재 역 번호판",
         "railmap": "플랫폼 도어 노선도",
-        "indoor": "차내 노선도"
+        "indoor": "차내 노선도",
+        "platform": "승강장 번호"
     },
 
     "RmgStyle": {
         "mtr": "홍콩 지하철",
         "gzmtr": "광저우 지하철",
-        "shmetro": "상해 지하철"
+        "shmetro": "상해 지하철",
+        "shsubrwy": "상하이 광역철도"
+    },
+    "Hide canvas": "캔버스 숨기기",
+    "Show canvas": "캔버스 표시",
+    "Zoom out": "축소",
+    "Zoom in": "확대",
+    "Downloading": "다운로드 중",
+    "External URL cannot be opened.": "외부 URL을 열 수 없습니다.",
+    "Invalid selection": "잘못된 선택",
+    "Route": "경로",
+    "Delete colour for route": "경로 색상 삭제",
+    "Unable to draw this share track.": "이 공용 구간을 그릴 수 없습니다.",
+    "Decrease": "줄이기",
+    "Increase": "늘리기",
+    "Midpoint": "중점",
+    "Move left": "왼쪽으로 이동",
+    "Move right": "오른쪽으로 이동",
+    "Move up": "위로 이동",
+    "Move down": "아래로 이동",
+    "Help": "도움말",
+    "termsReference": {
+        "layout": "안내판이나 노선도 요소의 배치는 선택한 양식에 따라 Guangzhou Metro Group, MTR Corporation 또는 Shanghai Shentong Metro Group이 설계한 것입니다. 생성한 이미지를 상업적으로 이용할 때 허가나 이용허락이 필요한 경우 해당 회사에서 미리 받아야 합니다.",
+        "elements": "이미지의 도형과 선은 위 회사들의 설계 기준에 따라 Chito Wong과 thekingofcity가 그렸습니다. 어떤 목적으로도 사용할 수 있으나 소프트웨어의 이름과 링크를 함께 표시할 것을 권장합니다.",
+        "fonts": "저작권, 이용허락 및 기타 법적 제약으로 인해 {{app}}은 MTR 양식의 안내판에 MTRSung과 Myriad Pro 대신 각각 ButTaiwan의 GenYoMin과 Vegur를 사용합니다. 생성한 이미지를 상업적으로 이용하기 전에 글꼴 제작자로부터 적절한 허가나 이용허락을 받아야 합니다.",
+        "images": "내보낸 PNG 또는 SVG 이미지는 위 조건에 따라 수정, 게시하거나 다른 목적으로 사용할 수 있습니다.",
+        "changes": "이 약관을 사전 통지 없이 수정, 추가 또는 삭제할 권리를 보유합니다. 중국어 번역은 참고용이며 영어판과 중국어판에 차이가 있으면 영어판이 우선합니다."
     }
 }

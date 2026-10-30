@@ -9,7 +9,7 @@ interface HelpModalProps {
 
 export default function HelpModal(props: HelpModalProps) {
     const { isOpen, onClose } = props;
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     return (
         <Modal opened={isOpen} onClose={onClose} size="xl" title={t('Help and support')}>
@@ -47,6 +47,9 @@ export default function HelpModal(props: HelpModalProps) {
                         上海申通地鐵集團 <MdOpenInNew />
                     </Anchor>
                     所設計。在產生之圖像用作商業用途前，你應向相關公司取得適當之許可證或授權。
+                    {['ja', 'ko'].includes(i18n.resolvedLanguage ?? '') && (
+                        <p>{t('termsReference.layout', { app: 'Rail Map Generator' })}</p>
+                    )}
                 </List.Item>
                 <List.Item>
                     The elements including shapes and lines on the image are drawn by{' '}
@@ -69,6 +72,9 @@ export default function HelpModal(props: HelpModalProps) {
                         thekingofcity <MdOpenInNew />
                     </Anchor>
                     基於上述公司之設計標準或準則繪製。你可將其用於任何目的，但我們建議你於使用同時附以我們之名字以及該軟件之連結。
+                    {['ja', 'ko'].includes(i18n.resolvedLanguage ?? '') && (
+                        <p>{t('termsReference.elements', { app: 'Rail Map Generator' })}</p>
+                    )}
                 </List.Item>
                 <List.Item>
                     Due to copyright, licensing and other legal restrictions, Rail Map Generator uses{' '}
@@ -85,12 +91,18 @@ export default function HelpModal(props: HelpModalProps) {
                     </Anchor>
                     ，以及Vegur，以代替港鐵樣式標誌牌所使用之地鐵宋及Myriad
                     Pro。在產生之圖像用作商業用途前，你應向字型生產廠商取得適當之許可證或授權。
+                    {['ja', 'ko'].includes(i18n.resolvedLanguage ?? '') && (
+                        <p>{t('termsReference.fonts', { app: 'Rail Map Generator' })}</p>
+                    )}
                 </List.Item>
                 <List.Item>
                     The exported images in PNG or SVG format may be modified, published, or used for other purposes,
                     under the conditions above.
                     <br />
                     輸出之PNG或SVG種類之圖像可基於上述條款，用於修改、發行或其他用途。
+                    {['ja', 'ko'].includes(i18n.resolvedLanguage ?? '') && (
+                        <p>{t('termsReference.images', { app: 'Rail Map Generator' })}</p>
+                    )}
                 </List.Item>
                 <List.Item>
                     We reserve the rights, without prior notice, to modify, add, or remove these terms. The Chinese
@@ -98,6 +110,9 @@ export default function HelpModal(props: HelpModalProps) {
                     Chinese version, the English version shall prevail.
                     <br />
                     我們保留修改、新增或移除上述條款之權利，而無需另行通知。中文譯本僅供參考，文義如與英文有歧異，概以英文本為準。
+                    {['ja', 'ko'].includes(i18n.resolvedLanguage ?? '') && (
+                        <p>{t('termsReference.changes', { app: 'Rail Map Generator' })}</p>
+                    )}
                 </List.Item>
             </List>
 

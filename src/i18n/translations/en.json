@@ -29,7 +29,7 @@
         "branch": "Branch",
         "external": "External line",
         "addStation": "Add station",
-        "editLine":  "Edit line section"
+        "editLine": "Edit line section"
     },
 
     "StationAgGrid": {
@@ -237,5 +237,12 @@
         "gzmtr": "Guangzhou Metro",
         "shmetro": "Shanghai Metro",
         "shsubrwy": "Shanghai Suburban Railway"
+    },
+    "termsReference": {
+        "layout": "The layout of the elements on the signage or rail map is designed by Guangzhou Metro Group, MTR Corporation or Shanghai Shentong Metro Group, depending on your selection. Obtain any required permission or licence from the relevant company before using generated images commercially.",
+        "elements": "The shapes and lines are drawn by Chito Wong and thekingofcity based on the listed companies’ design standards. They may be used for any purpose; including the software name and link is recommended.",
+        "fonts": "Due to copyright, licensing and other legal restrictions, {{app}} uses GenYoMin by ButTaiwan and Vegur instead of MTRSung and Myriad Pro for MTR-style signage. Obtain appropriate permission or licences from the font makers before using these generated images commercially.",
+        "images": "PNG or SVG images may be modified, published or used for other purposes under the conditions above.",
+        "changes": "We reserve the right to modify, add or remove these terms without prior notice. The Chinese translation is for reference; the English version prevails in case of discrepancies."
     }
 }
