@@ -86,7 +86,7 @@ describe('InterchangeCard', () => {
         expect(mockCallbacks.onAdd).toBeCalledWith(mockInterchangeInfo1); // current info
 
         // delete current interchange info
-        fireEvent.click(screen.getByRole('button', { name: 'Remove interchange' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Delete interchange' }));
         expect(mockCallbacks.onDelete).toBeCalledTimes(1);
         expect(mockCallbacks.onDelete).toBeCalledWith(0); // current index
     });
@@ -106,7 +106,7 @@ describe('InterchangeCard', () => {
             .getAllByRole('combobox')
             .forEach(el => expect(el).toHaveAccessibleName());
         expect(within(stack0).queryByRole('button', { name: 'Copy interchange' })).not.toBeInTheDocument();
-        expect(within(stack0).getByRole('button', { name: 'Remove interchange' })).toBeInTheDocument();
+        expect(within(stack0).getByRole('button', { name: 'Delete interchange' })).toBeInTheDocument();
 
         // only the last stack has copy button
         const stack1 = screen.getByTestId('interchange-card-stack-1');
@@ -114,6 +114,6 @@ describe('InterchangeCard', () => {
             .getAllByRole('combobox')
             .forEach(el => expect(el).not.toHaveAccessibleName());
         expect(within(stack1).getByRole('button', { name: 'Copy interchange' })).toBeInTheDocument();
-        expect(within(stack1).getByRole('button', { name: 'Remove interchange' })).toBeInTheDocument();
+        expect(within(stack1).getByRole('button', { name: 'Delete interchange' })).toBeInTheDocument();
     });
 });

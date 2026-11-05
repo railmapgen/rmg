@@ -2,23 +2,23 @@
     "DownloadActions": {
         "downloads": "下载",
         "configFile": "配置文件",
-        "images": "图像"
+        "images": "图片"
     },
 
     "OpenActions": {
-        "invalidType": "无效的文件种类！只接受JSON种类的文件。",
-        "unknownError": "导入上传的文件时发生错误！请重试。"
+        "invalidType": "无效的文件类型！只接受JSON种类的文件。",
+        "unknownError": "解析上传文件时发生未知错误！请重试。"
     },
 
     "DownloadModal": {
         "title": "下载图像",
-        "canvas": "画面",
+        "canvas": "画布",
         "transparent": "透明背景",
         "showBorder": "显示边框",
-        "scale": "缩放级别",
-        "format": "文件种类",
+        "scale": "缩放比例",
+        "format": "格式",
         "pleaseSelect": "请选择...",
-        "png": "PNG图像",
+        "png": "PNG",
         "svg": "SVG图像（网页用）",
         "downloadOne": "下载当前车站",
         "downloadAll": "下载所有车站"
@@ -27,7 +27,7 @@
     "GridTabs": {
         "main": "主线",
         "branch": "支线",
-        "external": "外部路线",
+        "external": "外部线路",
         "addStation": "添加车站",
         "editLine": "路线段设置"
     },
@@ -39,7 +39,7 @@
     },
 
     "StyleSidePanel": {
-        "header": "风格化设置",
+        "header": "样式化设置",
         "layout": {
             "title": "布局",
             "canvasHeight": "画面高度",
@@ -58,12 +58,12 @@
         },
         "design": {
             "title": "设计",
-            "zhLineName": "路线中文名称",
-            "enLineName": "路线英文名称",
-            "lineNum": "路线编号",
+            "zhLineName": "中文线路名称",
+            "enLineName": "英文线路名称",
+            "lineNum": "线路代码",
             "direction": "行车方向",
-            "left": "向左",
-            "right": "向右",
+            "left": "左侧",
+            "right": "右侧",
             "platformNum": "站台编号",
             "psdNum": "站台门编号",
             "panelType": "站台门盖板样式",
@@ -143,7 +143,7 @@
             "outStation": "出站换乘",
             "outSystem": "系统外换乘",
             "addGroup": "添加换乘组合",
-            "noInterchanges": "非换乘站",
+            "noInterchanges": "无换乘",
             "add": "添加换乘",
             "copy": "复制换乘",
             "remove": "删除换乘"
@@ -158,9 +158,9 @@
         "more": {
             "title": "更多设置",
             "service": "列车类别",
-            "local": "普通车",
-            "express": "快车",
-            "direct": "直达车",
+            "local": "普通列车",
+            "express": "快速列车",
+            "direct": "直达列车",
             "facility": "附近设施",
             "pivot": "环线上的枢纽车站",
             "oneLine": "在一行内展示中英文站名",
@@ -180,7 +180,7 @@
         "where": "目标位置",
         "main": "主线",
         "branch": "支线",
-        "external": "外部路线",
+        "external": "外部线路",
         "preposition": "相对位置",
         "before": "先于",
         "after": "后于",
@@ -206,7 +206,7 @@
         "where": "目标位置",
         "main": "主线",
         "branch": "支线",
-        "external": "外部路线",
+        "external": "外部线路",
         "from": "起始编号",
         "maxLength": "编号位数",
         "sort": "排序方式",
@@ -244,7 +244,7 @@
     "Edit project info": "编辑项目信息",
     "Empty template": "空白模板",
     "English name": "英文名称",
-    "Help and support": "帮助和支持",
+    "Help and support": "帮助与支持",
     "High speed rail": "高速铁路",
     "hour ago": "小时前",
     "hours ago": "小时前",
@@ -254,7 +254,7 @@
     "Last modified": "上次编辑",
     "LEFT END": "线路左端",
     "Line icon": "线路图标",
-    "Line section": "路线段",
+    "Line section": "线路区间",
     "Loop direction": "环线方向",
     "Loop line": "环线",
     "Manage": "管理",
@@ -263,7 +263,7 @@
     "minutes ago": "分钟前",
     "Midpoint station": "半环站",
     "More settings": "更多设置",
-    "National rail": "国家铁路",
+    "National rail": "国铁",
     "New branch": "添加支线",
     "New station": "添加车站",
     "Ngong Ping 360": "昂坪360",
@@ -296,22 +296,22 @@
     "Show border": "显示边框",
     "Span digits over rows": "跨行显示数字",
     "Station": "车站",
-    "Style": "风格",
-    "Station Chinese name": "车站中文名称",
-    "Station English name": "车站英文名称",
+    "Style": "样式",
+    "Station Chinese name": "中文站名",
+    "Station English name": "英文站名",
     "Station name": "车站名称",
     "Suspended": "暂停服务",
     "Target station": "目标车站",
     "Temporary": "临时",
     "Terms and conditions": "条款及细则",
     "Text position": "换乘文字方向",
-    "Through": "贯通",
+    "Through": "贯通运营",
     "Try out": "马上试用",
     "Unable to connect to main line.": "无法连接至主线。",
     "Unable to disconnect from main line.": "无法从主线断开。",
     "Unable to open project": "无法打开项目",
     "Unable to remove this station.": "无法删除此车站。",
-    "Under construction": "尚未开通",
+    "Under construction": "建设中",
     "Unknown": "未知",
     "View": "查看",
     "Visit": "访问",
@@ -333,5 +333,7 @@
         "gzmtr": "广州地铁",
         "shmetro": "上海地铁",
         "shsubrwy": "上海市域铁路"
-    }
+    },
+    "Confirm": "确认",
+    "Remove": "移除"
 }
