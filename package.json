@@ -12,7 +12,7 @@
         "@railmapgen/mantine-components": "^1.1.3",
         "@railmapgen/rmg-palette-resources": "^3.0.4",
         "@railmapgen/rmg-runtime": "^13.1.0",
-        "@railmapgen/rmg-translate": "^3.5.0",
+        "@railmapgen/rmg-translate": "^3.5.4",
         "@railmapgen/svg-assets": "^8.1.0",
         "@reduxjs/toolkit": "^2.11.2",
         "clsx": "^2.1.1",

@@ -2,7 +2,7 @@
     "DownloadActions": {
         "downloads": "Downloads",
         "configFile": "Configuration file",
-        "images": "Images"
+        "images": "Image"
     },
 
     "OpenActions": {
@@ -14,7 +14,7 @@
         "title": "Download images",
         "canvas": "Canvas",
         "transparent": "Transparent background",
-        "showBorder": "Display border",
+        "showBorder": "Show border",
         "scale": "Scale",
         "format": "Format",
         "pleaseSelect": "Please select...",
@@ -34,10 +34,10 @@
 
     "StationAgGrid": {
         "num": "Station code",
-        "zhName": "Chinese name",
-        "enName": "English name",
-        "interchange": "Interchanges",
-        "coline": "Tracks sharing"
+        "zhName": "Chinese station name",
+        "enName": "English station name",
+        "interchange": "Interchange",
+        "coline": "Track sharing"
     },
 
     "StyleSidePanel": {
@@ -102,11 +102,11 @@
             "enNote": "English note",
             "positionX": "Horizontal position",
             "positionY": "Vertical position",
-            "border": "Display border",
+            "border": "Show border",
             "remove": "Remove note"
         },
         "loop": {
-            "title": "Loop",
+            "title": "Loop line",
             "isLoop": "Treat as loop line",
             "isBank": "Display loop as a parallelogram in Rail map",
             "leftRightFactor": "Left and right factor",
@@ -120,11 +120,11 @@
             "title": "Branch"
         },
         "coline": {
-            "title": "Tracks sharing",
+            "title": "Track sharing",
             "add": "Add sharing track"
         },
         "action": {
-            "title": "Actions",
+            "title": "Action",
             "autoNum": "Auto numbering stations",
             "reverse": "Rotate entire line",
             "flip": "Flip entire line",
@@ -136,28 +136,28 @@
         "info": {
             "title": "Station info",
             "num": "Station code",
-            "zhName": "Chinese name",
-            "enName": "English name",
+            "zhName": "Chinese station name",
+            "enName": "English station name",
             "zhSecondary": "Chinese secondary",
             "enSecondary": "English secondary"
         },
         "interchange": {
-            "title": "Interchanges",
+            "title": "Interchange",
             "within": "Within-station interchange",
             "outStation": "Out-of-station interchange",
             "outSystem": "Out-of-system interchange",
             "addGroup": "Add interchange group",
             "noInterchanges": "No interchanges",
-            "zhName": "Chinese name",
-            "enName": "English name",
+            "zhName": "Chinese line name",
+            "enName": "English line name",
             "add": "Add interchange",
             "copy": "Copy interchange",
-            "remove": "Remove interchange"
+            "remove": "Delete interchange"
         },
         "branch": {
             "type": "Type",
-            "through": "Through",
-            "nonThrough": "Non-through",
+            "through": "Through service",
+            "nonThrough": "Non-through service",
             "firstStation": "First station",
             "position": "Position",
             "upper": "Upper",
@@ -166,9 +166,9 @@
         "more": {
             "title": "More settings",
             "service": "Train services",
-            "local": "Local",
-            "express": "Express",
-            "direct": "Direct",
+            "local": "Local train",
+            "express": "Express train",
+            "direct": "Direct train",
             "facility": "Nearby facility",
             "none": "None",
             "pivot": "Pivot station on loop line",
@@ -180,7 +180,7 @@
         },
         "footer": {
             "current": "Set as current",
-            "remove": "Remove"
+            "remove": "Delete"
         }
     },
 
@@ -237,5 +237,13 @@
         "gzmtr": "Guangzhou Metro",
         "shmetro": "Shanghai Metro",
         "shsubrwy": "Shanghai Suburban Railway"
-    }
+    },
+    "Branches": "Branch",
+    "Station Chinese name": "Chinese station name",
+    "Don't show me again": "Don't show again",
+    "Station English name": "English station name",
+    "High speed rail": "High-speed rail",
+    "Route": "Line",
+    "Circle line": "Loop line",
+    "Through": "Through service"
 }
