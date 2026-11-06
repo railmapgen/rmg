@@ -276,7 +276,6 @@
     "New branch": "지선 추가",
     "New station": "역 추가",
     "Ngong Ping 360": "옹핑 360",
-    "No": "아니요",
     "No service type": "서비스 유형 없음",
     "No train service at this station": "이 역에는 열차 서비스가 없습니다",
     "No branches found": "지선을 찾지 못했다.",
@@ -327,7 +326,6 @@
     "View": "찾아 보기",
     "Visit": "방문",
     "Visit GitHub": "GitHub 방문",
-    "Yes": "예",
     "You have reached the maximum number of projects.": "프로젝트 수량 상한에 도달했습니다.",
 
     "CanvasType": {
@@ -362,8 +360,5 @@
     "Move right": "오른쪽으로 이동",
     "Move up": "위로 이동",
     "Move down": "아래로 이동",
-    "Help": "도움말",
-    "Configuration file": "설정 파일",
-    "Remove": "제거",
-    "Settings": "설정"
+    "Help": "도움말"
 }

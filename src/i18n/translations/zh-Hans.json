@@ -267,7 +267,6 @@
     "New branch": "添加支线",
     "New station": "添加车站",
     "Ngong Ping 360": "昂坪360",
-    "No": "否",
     "No branches found": "未找到支线",
     "No service type": "没有服务类型",
     "No train service at this station": "本站没有列车服务",
@@ -316,7 +315,6 @@
     "View": "查看",
     "Visit": "访问",
     "Visit GitHub": "访问GitHub",
-    "Yes": "是",
     "You have reached the maximum number of projects.": "您已到达项目数量上限。",
 
     "CanvasType": {
@@ -333,7 +331,5 @@
         "gzmtr": "广州地铁",
         "shmetro": "上海地铁",
         "shsubrwy": "上海市域铁路"
-    },
-    "Confirm": "确认",
-    "Remove": "移除"
+    }
 }

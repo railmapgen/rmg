@@ -276,7 +276,6 @@
     "New branch": "支線を追加",
     "New station": "駅を追加",
     "Ngong Ping 360": "昂坪360",
-    "No": "いいえ",
     "No branches found": "支線が見つかりませんでした",
     "No service type": "サービス種別なし",
     "No train service at this station": "この駅には列車サービスがありません",
@@ -327,7 +326,6 @@
     "View": "表示",
     "Visit": "アクセス",
     "Visit GitHub": "GitHubを訪問",
-    "Yes": "はい",
     "You have reached the maximum number of projects.": "プロジェクト数の上限に達しました。",
 
     "CanvasType": {
@@ -362,6 +360,5 @@
     "Move right": "右へ移動",
     "Move up": "上へ移動",
     "Move down": "下へ移動",
-    "Help": "操作案内",
-    "Cancel": "取消"
+    "Help": "操作案内"
 }
