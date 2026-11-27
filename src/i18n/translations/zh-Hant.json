@@ -87,7 +87,8 @@
             "legacyDestination": "於終點站牌顯示路綫名稱",
             "overrideTerminal": "覆寫終點站",
             "terminalZhName": "終點站中文名稱",
-            "terminalEnName": "終點站英文名稱"
+            "terminalEnName": "終點站英文名稱",
+            "branchDistanceFactor": "分支水平間距倍數"
         },
         "note": {
             "title": "備註",

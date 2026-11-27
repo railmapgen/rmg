@@ -32,7 +32,7 @@ export default function LayoutSection() {
         svgWidth,
         svg_height,
         y_pc,
-        branchSpacingPct,
+        branch_info: { spacing_pct: branchSpacingPct },
         padding,
         direction_gz_x,
         direction_gz_y,

@@ -264,6 +264,17 @@ export const updateParam = (param: { [x: string]: any }) => {
     v5_21_addPsdLabel(param);
     v6_0_4_serviceSuspended(param);
 
+    // Version 5.x
+    // branchSpacingPct is moved into branch_info to pair with
+    // distance_factor
+    if (param.branch_info === undefined) {
+        param.branch_info = {};
+        param.branch_info.spacing_pct = param.branchSpacingPct;
+        delete param.branchSpacingPct;
+
+        param.branch_info.distance_factor = 1;
+    }
+
     sanitiseParam(param);
     return param;
 };
